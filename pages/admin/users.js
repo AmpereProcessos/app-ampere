@@ -54,19 +54,13 @@ export default function UsersControl() {
     admin: userIsAdmin == "N" ? false : true,
   });*/
   }
-  console.log({
-    nome: name,
-    login: login,
-    password: password,
-    accessibleRoutes: userAcessibleRoutes,
-    admin: userIsAdmin == "N" ? false : true,
-  });
   return (
     <div className="bg-[#1D7ED7] flex flex-col w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">
       <Header
         title={"Controle de Usuários"}
         color="#0a2a48"
         icon={<FiUsers style={{ color: "white", fontSize: "30px" }} />}
+        url={"/"}
       />
       <div className="grid px-24 grid-cols-3 grid-rows-2 mt-20 gap-x-4">
         <h1 className="text-center text-lg text-white font-bold uppercase col-span-3">

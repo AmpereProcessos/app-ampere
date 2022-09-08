@@ -1,11 +1,10 @@
-import connectToDatabase from "../../../utils/proposesDb";
+import connectToDatabase from "../../../utils/usersDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { user, password } = req.body;
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("users");
-    let credential = await collection.findOne({ user: user });
+    /*let credential = await collection.findOne({ user: user });
     try {
       if (!credential) {
         throw "Usuário inexistente";
@@ -16,7 +15,8 @@ export default async function handler(req, res) {
       }
     } catch (err) {
       res.json({ error: err });
-    }
-    // await collection.insertOne({ user, password, admin });
+    }*/
+    await collection.insertOne(req.body);
+    return res.json("Usuário criado");
   }
 }

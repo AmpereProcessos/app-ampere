@@ -9,7 +9,7 @@ function Auth({ setCredentials }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   function handleLogin() {
-    axios.post("/api/auth", { user, password }).then((res) => {
+    axios.post("/api/auth/login", { email: user, password }).then((res) => {
       if (res.data.error) {
         setMessage(res.data.error);
       } else {
@@ -33,7 +33,7 @@ function Auth({ setCredentials }) {
                 <input
                   type="text"
                   className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  placeholder="Usuário"
+                  placeholder="Email"
                   value={user}
                   onChange={(e) => setUser(e.target.value)}
                 />

@@ -109,13 +109,10 @@ export default function ProposesManagement({ credentials }) {
       <Header
         color={"#073b4c"}
         icon={<MdManageAccounts style={{ color: "white", fontSize: "25px" }} />}
-        title="O&M"
+        title="Controle de Propostas"
         url={"/o&m"}
       />
-      <h1 className="self-center text-center text-white text-3xl font-raleway font-bold uppercase">
-        Controle de propostas O&M
-      </h1>
-      <div className="flex flex-col px-4">
+      <div className="flex flex-col px-4 mt-4">
         <h1 className="text-[#f6c228] self-center text-1xl font-raleway font-bold">
           Geração de propostas
         </h1>

@@ -157,12 +157,9 @@ export default function ServiceOrder(props) {
       <Header
         color={"#073b4c"}
         icon={<MdManageAccounts style={{ color: "white", fontSize: "25px" }} />}
-        title="O&M"
+        title="Controle de OSs"
         url={"/o&m"}
       />
-      <h1 className="self-center text-center text-white text-3xl font-raleway font-bold uppercase">
-        Controle OSs
-      </h1>
       <div className="flex flex-col px-4">
         <h1 className="text-[#f6c228] self-center text-1xl font-raleway font-bold">
           Dados do cliente

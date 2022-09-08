@@ -12,7 +12,6 @@ import { validateAuth } from "../../utils/functions";
 const acessKey = "O&M";
 function Index({ credentials }) {
   const router = useRouter();
-  const [infos, setInfos] = useState({});
   useEffect(() => {
     if (!validateAuth(acessKey, credentials)) {
       router.push("/");
@@ -24,7 +23,7 @@ function Index({ credentials }) {
         <Header
           color={"#073b4c"}
           icon={<AiFillHome style={{ color: "white", fontSize: "25px" }} />}
-          title="Home"
+          title="O&M"
           url={"/"}
         />
       </div>

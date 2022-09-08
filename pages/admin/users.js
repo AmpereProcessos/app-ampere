@@ -6,6 +6,7 @@ import RoutesCard from "../../components/RoutesCard";
 
 import { acessAuth, routes } from "../../utils/constants";
 import { useEffect, useState } from "react";
+import axios from "axios";
 let positions = Object.keys(acessAuth);
 export default function UsersControl() {
   const [name, setName] = useState("");
@@ -15,6 +16,50 @@ export default function UsersControl() {
   const [userAcessibleRoutes, setUserRoutes] = useState();
   const [additionalRoutes, setAdditionalRoutes] = useState();
   const [userIsAdmin, setUserIsAdmin] = useState("N");
+
+  const [message, setMessage] = useState("");
+  function resetStates() {
+    setName("");
+    setLogin("");
+    setPassword("");
+    setUserPosition(positions[0]);
+    setUserRoutes(acessAuth[positions[0]].accessibleRoutes);
+    setAdditionalRoutes(undefined);
+    setUserIsAdmin("N");
+  }
+  function checkInputs() {
+    try {
+      if (name.trim().length == 0) {
+        setMessage("Nome não válido.");
+        throw false;
+      } else if (login.trim().length == 0) {
+        setMessage("Login não válido.");
+        throw false;
+      } else if (password.trim().length == 0) {
+        setMessage("Senha não válida.");
+        throw false;
+      } else {
+        throw true;
+      }
+    } catch (result) {
+      return result;
+    }
+  }
+  function handleUserCreation() {
+    if (checkInputs()) {
+      let obj = {
+        nome: name,
+        email: login,
+        password: password,
+        accessibleRoutes: userAcessibleRoutes,
+        admin: userIsAdmin == "N" ? false : true,
+      };
+      axios.post("/api/auth/user", obj).then((res) => {
+        setMessage(res.data);
+        resetStates();
+      });
+    }
+  }
   //handling events
   function handlePositionChange(value) {
     setUserPosition(value);
@@ -96,6 +141,15 @@ export default function UsersControl() {
           />
         </div>
       </div>
+      {message && (
+        <div
+          className={`text-center my-2 font-bold ${
+            message == "Usuário criado" ? "text-green-500" : "text-red-400"
+          }`}
+        >
+          {message}
+        </div>
+      )}
       <div className="grid grid-cols-5 mt-4 px-12">
         <div className="flex flex-col col-span-1">
           <span className="font-bold pb-4 text-white uppercase">Posição</span>
@@ -163,6 +217,14 @@ export default function UsersControl() {
             />
           </div>
         </div>
+      </div>
+      <div className="flex w-full mt-5 justify-center">
+        <button
+          onClick={handleUserCreation}
+          className="bg-green-400 rounded p-2 text-white"
+        >
+          Criar novo usuário
+        </button>
       </div>
     </div>
   );

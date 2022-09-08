@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import Header from "../components/Header";
 import { AiFillHome } from "react-icons/ai";
-
+import { useRouter } from "next/router";
 const routes = [
   {
     title: "Projetos",
@@ -54,7 +54,13 @@ const routes = [
   },
 ];
 
-function Home() {
+function Home({ credentials }) {
+  const router = useRouter();
+  useEffect(() => {
+    if (!credentials.nome) {
+      router.push("/auth");
+    }
+  }, []);
   return (
     <div className="bg-[#1D7ED7] flex flex-col w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">
       <Header

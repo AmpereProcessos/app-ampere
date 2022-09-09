@@ -70,15 +70,27 @@ function Home({ credentials }) {
         url={"/"}
       />
       <div className="flex gap-4 justify-around mt-24 flex-wrap px-12">
-        {routes.map((route) => (
+        {/*{routes.map((route) => (
           <Link key={route.url} href={`/${route.url}`}>
             <div className="h-[200px] shadow-md cursor-pointer flex items-center justify-center bg-white w-[200px] rounded">
               <p className="text-lg text-gray-600 font-bold uppercase">
                 {route.title}
               </p>
             </div>
-          </Link>
-        ))}
+        </Link>
+        ))}*/}
+        <Link href="/projectsManagement/inProgress">
+          <div className="h-[200px] shadow-md cursor-pointer flex items-center justify-center bg-white w-[200px] rounded">
+            <p className="text-lg text-center text-gray-600 font-bold uppercase">
+              Projetos em andamento
+            </p>
+          </div>
+        </Link>
+        <div className="h-[200px] shadow-md cursor-pointer flex items-center justify-center bg-white w-[200px] rounded">
+          <p className="text-lg text-center text-gray-600 font-bold uppercase">
+            Gestão de projetos
+          </p>
+        </div>
       </div>
     </div>
   );

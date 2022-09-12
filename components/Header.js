@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import WhiteLogo from "../utils/whitelogo.png";
 import { BiLogIn } from "react-icons/bi";
-function Header({ toggleSidebar }) {
+function Header({ toggleSidebar, credentials, logout }) {
   const router = useRouter();
   if (router.pathname.includes("pdf")) return null;
   return (
@@ -22,9 +22,10 @@ function Header({ toggleSidebar }) {
       <div className="flex justify-end items-center">
         <p>
           Seja bem vindo,{" "}
-          <strong className="text-[#15599a]">Lucas Fernandes</strong> !
+          <strong className="text-[#15599a]">{credentials.nome}</strong> !
         </p>
         <BiLogIn
+          onClick={logout}
           style={{
             fontSize: "25px",
             marginLeft: "10px",

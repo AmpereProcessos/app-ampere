@@ -11,7 +11,11 @@ function MyApp({ Component, pageProps }) {
     <DndProvider backend={HTML5Backend}>
       {credentials.nome ? (
         <div className="flex flex-col bg-[#fff] w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">
-          <Header toggleSidebar={() => setSidebarVisible(!sidebarVisible)} />
+          <Header
+            logout={() => setCredentials({})}
+            credentials={credentials}
+            toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
+          />
           <div className="flex min-h-[100%] grow">
             <Sidebar sidebarVisible={sidebarVisible} />
             <div className="flex flex-col grow w-full">

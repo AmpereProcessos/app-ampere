@@ -14,6 +14,10 @@ function Auth({ setCredentials }) {
         setMessage(res.data.error);
       } else {
         if (res.data.credentials._id) {
+          localStorage.setItem(
+            "credentials",
+            JSON.stringify(res.data.credentials)
+          );
           setCredentials(res.data.credentials);
           router.push("/");
         }

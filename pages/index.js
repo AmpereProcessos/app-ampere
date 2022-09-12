@@ -67,33 +67,57 @@ const routes = [
   },
 ];
 
-function Home({ credentials }) {
+function Home({ credentials, setCredentials }) {
   const router = useRouter();
-  const [potPicoData, setPotPicoData] = useState([]);
+  const [installedData, setInstalledData] = useState([]);
+  const [averageHomoData, setHomoData] = useState([]);
   useEffect(() => {
-    if (!credentials.nome) {
-      router.push("/auth/authHome");
+    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
+    if (storedCredentials) {
+      setCredentials(storedCredentials);
+      axios.get("/api/stats").then((res) => {
+        setInstalledData(res.data.installedInfo);
+        setHomoData(res.data.averageHomoData);
+      });
     } else {
-      axios.get("/api/stats").then((res) => setPotPicoData(res.data));
+      if (!credentials.nome) {
+        router.push("/auth/authHome");
+      } else {
+        axios.get("/api/stats").then((res) => {
+          setInstalledData(res.data.installedInfo);
+          setHomoData(res.data.averageHomoData);
+        });
+      }
     }
   }, []);
-  var parcialPotLastMonth = (new Date().getDate() / 30) * potPicoData[2]?.total;
+  var parcialPotLastMonth =
+    (new Date().getDate() / 30) * installedData[2]?.total;
+  var parcialHomoPotLastMonth =
+    (new Date().getDate() / 30) * averageHomoData[0]?.homoPeakPot;
   var parcialJobsLastMonth =
-    (new Date().getDate() / 30) * potPicoData[2]?.count;
+    (new Date().getDate() / 30) * installedData[2]?.count;
   var diffPotInstalled = (
     1 -
-    potPicoData[3]?.total / parcialPotLastMonth
+    installedData[3]?.total / parcialPotLastMonth
   ).toFixed(2);
-  var diffJobsDone = (1 - potPicoData[3]?.count / parcialJobsLastMonth).toFixed(
-    2
-  );
+  var diffHomoPot = (
+    1 -
+    averageHomoData[1]?.homoPeakPot / parcialHomoPotLastMonth
+  ).toFixed(2);
+  var diffJobsDone = (
+    1 -
+    installedData[3]?.count / parcialJobsLastMonth
+  ).toFixed(2);
+  var diffHomoTime = (
+    averageHomoData[0]?.averageTime / averageHomoData[1]?.averageTime -
+    1
+  ).toFixed(2);
   const data = [
-    { name: `${potPicoData[0]?._id.mes}/22`, Total: potPicoData[0]?.total },
-    { name: `${potPicoData[1]?._id.mes}/22`, Total: potPicoData[1]?.total },
-    { name: `${potPicoData[2]?._id.mes}/22`, Total: potPicoData[2]?.total },
-    { name: `${potPicoData[3]?._id.mes}/22`, Total: potPicoData[3]?.total },
+    { name: `${installedData[0]?._id.mes}/22`, Total: installedData[0]?.total },
+    { name: `${installedData[1]?._id.mes}/22`, Total: installedData[1]?.total },
+    { name: `${installedData[2]?._id.mes}/22`, Total: installedData[2]?.total },
+    { name: `${installedData[3]?._id.mes}/22`, Total: installedData[3]?.total },
   ];
-  console.log(diffJobsDone);
   return (
     <div className="p-6 grow">
       <div className="grid grid-cols-4 gap-x-3 w-full">
@@ -123,10 +147,10 @@ function Home({ credentials }) {
             </div>
           </div>
           <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-            {potPicoData[3]?.count} obras
+            {installedData[3]?.count} obras
           </p>
           <p className="text-center text-xs text-gray-600">
-            Últimos mês: <strong>{potPicoData[2]?.count} obras</strong>
+            Últimos mês: <strong>{installedData[2]?.count} obras</strong>
           </p>
         </div>
         <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
@@ -155,10 +179,11 @@ function Home({ credentials }) {
             </div>
           </div>
           <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-            {potPicoData[3]?.total} kWp
+            {installedData[3]?.total} kWp
           </p>
           <p className="text-center text-xs text-gray-600">
-            Últimos mês: <strong>{potPicoData[2]?.total.toFixed(2)} kWp</strong>
+            Últimos mês:{" "}
+            <strong>{installedData[2]?.total.toFixed(2)} kWp</strong>
           </p>
         </div>
         <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
@@ -166,33 +191,65 @@ function Home({ credentials }) {
             <h1 className="uppercase text-gray-600">
               Potência Pico homologada no mês
             </h1>
-            <div className="flex items-center text-green-500">
-              <MdOutlineKeyboardArrowUp fontSize={"25px"} />
-              <p>5%</p>
+            <div
+              className={
+                diffHomoPot > 1
+                  ? `flex items-center text-green-500`
+                  : "flex items-center text-red-500"
+              }
+            >
+              {diffHomoPot > 1 ? (
+                <MdOutlineKeyboardArrowUp fontSize={"25px"} />
+              ) : (
+                <MdOutlineKeyboardArrowDown fontSize={"25px"} />
+              )}
+              <p>
+                {diffHomoPot > 1
+                  ? (Math.abs(1 - diffHomoPot) * 100).toFixed(2)
+                  : (diffHomoPot * 100).toFixed(2)}
+                %
+              </p>
             </div>
           </div>
           <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-            72 dias
+            {averageHomoData[1]?.homoPeakPot.toFixed(2)} kWp
           </p>
           <p className="text-center text-xs text-gray-600">
-            Últimos mês: <strong>55 dias</strong>
+            Últimos mês:{" "}
+            <strong>{averageHomoData[0]?.homoPeakPot.toFixed(2)} kWp</strong>
           </p>
         </div>
         <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
             <h1 className="uppercase text-gray-600">
-              Percentual de retrabalho
+              TEMPO MÉDIO DE APROVAÇÃO
             </h1>
-            <div className="flex items-center text-green-500">
-              <MdOutlineKeyboardArrowUp fontSize={"25px"} />
-              <p>5%</p>
+            <div
+              className={
+                diffHomoTime > 0
+                  ? `flex items-center text-green-500`
+                  : "flex items-center text-red-500"
+              }
+            >
+              {diffHomoTime > 0 ? (
+                <MdOutlineKeyboardArrowUp fontSize={"25px"} />
+              ) : (
+                <MdOutlineKeyboardArrowDown fontSize={"25px"} />
+              )}
+              <p>
+                {diffHomoTime > 0
+                  ? (diffHomoTime * 100).toFixed(2)
+                  : (Math.abs(diffHomoTime) * 100).toFixed(2)}
+                %
+              </p>
             </div>
           </div>
           <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-            72 dias
+            {averageHomoData[1]?.averageTime.toFixed(0)} dias
           </p>
           <p className="text-center text-xs text-gray-600">
-            Últimos mês: <strong>55 dias</strong>
+            Últimos mês:{" "}
+            <strong>{averageHomoData[0]?.averageTime.toFixed(0)} dias</strong>
           </p>
         </div>
       </div>

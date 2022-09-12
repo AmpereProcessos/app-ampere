@@ -3,7 +3,7 @@ import { ImSad2 } from "react-icons/im";
 import Link from "next/link";
 function AccessDenied() {
   return (
-    <div className="flex justify-center items-center flex-col w-screen max-w-full xl:min-h-[100vh] min-h-[100vh] bg-[#15599b]">
+    <div className="p-6 grow bg-[#15599a] flex justify-center items-center">
       <div className="flex flex-col items-center">
         <ImSad2 style={{ color: "white", fontSize: "30px" }} />
         <p className="text-white text-2xl text-center">Acesso não permitido</p>

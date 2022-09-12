@@ -90,7 +90,6 @@ function Home({ credentials, setCredentials }) {
       }
     }
   }, []);
-  console.log(credentials);
   var parcialPotLastMonth =
     (new Date().getDate() / 30) * installedData[2]?.total;
   var parcialHomoPotLastMonth =
@@ -151,7 +150,7 @@ function Home({ credentials, setCredentials }) {
             {installedData[3]?.count} obras
           </p>
           <p className="text-center text-xs text-gray-600">
-            Últimos mês: <strong>{installedData[2]?.count} obras</strong>
+            Último mês: <strong>{installedData[2]?.count} obras</strong>
           </p>
         </div>
         <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
@@ -183,7 +182,7 @@ function Home({ credentials, setCredentials }) {
             {installedData[3]?.total} kWp
           </p>
           <p className="text-center text-xs text-gray-600">
-            Últimos mês:{" "}
+            Último mês:{" "}
             <strong>{installedData[2]?.total.toFixed(2)} kWp</strong>
           </p>
         </div>
@@ -216,7 +215,7 @@ function Home({ credentials, setCredentials }) {
             {averageHomoData[1]?.homoPeakPot.toFixed(2)} kWp
           </p>
           <p className="text-center text-xs text-gray-600">
-            Últimos mês:{" "}
+            Último mês:{" "}
             <strong>{averageHomoData[0]?.homoPeakPot.toFixed(2)} kWp</strong>
           </p>
         </div>
@@ -249,7 +248,7 @@ function Home({ credentials, setCredentials }) {
             {averageHomoData[1]?.averageTime.toFixed(0)} dias
           </p>
           <p className="text-center text-xs text-gray-600">
-            Últimos mês:{" "}
+            Último mês:{" "}
             <strong>{averageHomoData[0]?.averageTime.toFixed(0)} dias</strong>
           </p>
         </div>

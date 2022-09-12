@@ -21,26 +21,28 @@ function Sidebar({ sidebarVisible }) {
         <div className="flex flex-col py-4 px-2">
           <div>
             <h2 className="text-sm text-gray-500">PRINCIPAL</h2>
-            <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-              <RiDashboardFill style={{ color: "#15599a", fontSize: "20px" }} />
-              <Link href="/">
+            <Link href="/">
+              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <RiDashboardFill
+                  style={{ color: "#15599a", fontSize: "20px" }}
+                />
                 <p className="pl-3 text-gray-600">Dashboard</p>
-              </Link>
-            </div>
+              </div>
+            </Link>
           </div>
           <div className="mt-6">
             <h2 className="text-sm text-gray-500">GESTÃO DE PROJETOS</h2>
-            <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-              <TbRecharging
-                style={{
-                  color: "#15599a",
-                  fontSize: "20px",
-                }}
-              />
-              <Link href="/projectsManagement/inProgress">
-                <a className="pl-3 text-gray-600">Em andamento</a>
-              </Link>
-            </div>
+            <Link href="/projectsManagement/inProgress">
+              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <TbRecharging
+                  style={{
+                    color: "#15599a",
+                    fontSize: "20px",
+                  }}
+                />
+                <p className="pl-3 text-gray-600">Em andamento</p>
+              </div>
+            </Link>
             <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
               <FaDatabase
                 style={{
@@ -53,12 +55,12 @@ function Sidebar({ sidebarVisible }) {
           </div>
           <div className="mt-6">
             <h2 className="text-sm text-gray-500">SETORES</h2>
-            <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-              <MdSell style={{ color: "#15599a", fontSize: "20px" }} />
-              <Link href="/vendas/comercialHome">
+            <Link href="/vendas/comercialHome">
+              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <MdSell style={{ color: "#15599a", fontSize: "20px" }} />
                 <p className="pl-3 text-gray-600">Comercial</p>
-              </Link>
-            </div>
+              </div>
+            </Link>
             <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
               <FaShoppingCart style={{ color: "#15599a", fontSize: "20px" }} />
               <p className="pl-3 text-gray-600">Suprimentos</p>
@@ -82,10 +84,12 @@ function Sidebar({ sidebarVisible }) {
           </div>
           <div className="mt-6">
             <h2 className="text-sm text-gray-500">OUTROS</h2>
-            <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-              <FaTasks style={{ color: "#15599a", fontSize: "20px" }} />
-              <p className="pl-3 text-gray-600">Chamados</p>
-            </div>
+            <Link href="/calls">
+              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <FaTasks style={{ color: "#15599a", fontSize: "20px" }} />
+                <p className="pl-3 text-gray-600">Chamados</p>
+              </div>
+            </Link>
           </div>
         </div>
         <p className="justify-self-end mt-10 text-center text-sm">

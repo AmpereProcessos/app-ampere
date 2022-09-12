@@ -105,13 +105,7 @@ export default function ProposesManagement({ credentials }) {
     }
   }, []);
   return (
-    <div className="flex flex-col w-screen max-w-full xl:min-h-[100vh] min-h-[100vh] bg-[#15599b]">
-      <Header
-        color={"#073b4c"}
-        icon={<MdManageAccounts style={{ color: "white", fontSize: "25px" }} />}
-        title="Controle de Propostas"
-        url={"/o&m"}
-      />
+    <div className="bg-[#15599a] grow">
       <div className="flex flex-col px-4 mt-4">
         <h1 className="text-[#f6c228] self-center text-1xl font-raleway font-bold">
           Geração de propostas

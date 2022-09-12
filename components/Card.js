@@ -111,7 +111,7 @@ function Card({ propose, fetchProposes }) {
           {propose.clientName}
         </p>
         <div className="flex col-span-1">
-          <Link href={`/o&m/pdf/propose/${propose._id}`}>
+          <Link href={`/oem/pdf/propose/${propose._id}`}>
             <button className="bg-[#f6c228] h-[24px] w-[40px] px-2 rounded">
               Ver
             </button>

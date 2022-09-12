@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Header from "../../components/Header";
+import Sidebar from "../../components/Sidebar";
 import { AiFillHome } from "react-icons/ai";
 import { GiSolarPower } from "react-icons/gi";
 import { HiFolder } from "react-icons/hi";
@@ -10,29 +11,18 @@ import { useRouter } from "next/router";
 import { validateAuth } from "../../utils/functions";
 
 const acessKey = "O&M";
-function Index({ credentials }) {
-  const router = useRouter();
+function Oem({ credentials }) {
+  {
+    /*  const router = useRouter();
   useEffect(() => {
     if (!validateAuth(acessKey, credentials)) {
       router.push("/");
     }
-  }, []);
+  }, []); */
+  }
   return (
-    <div className="flex flex-col bg-zinc-100 w-screen h-screen">
-      <div>
-        <Header
-          color={"#073b4c"}
-          icon={<AiFillHome style={{ color: "white", fontSize: "25px" }} />}
-          title="O&M"
-          url={"/"}
-        />
-      </div>
-      <div className="w-full flex flex-col items-center justify-center h-52">
-        <h1 className="text-3xl text-[#15599b] text-center font-raleway pt-3 uppercase font-bold">
-          Suporte técnico
-        </h1>
-      </div>
-      <h1 className="text-3xl self-center text-[#15599b] mb-6 font-raleway font-bold">
+    <div className="flex flex-col grow p-6 w-full">
+      <h1 className="uppercase font-raleway text-3xl self-center text-[#15599b] mb-6 font-raleway font-bold">
         Serviços
       </h1>
       <div
@@ -41,7 +31,7 @@ function Index({ credentials }) {
         }
       >
         <div className="cursor-pointer h-full">
-          <Link href="/o&m/proposes">
+          <Link href="/oem/proposes">
             <div className="flex items-center justify-center h-full bg-blue-500 hover:bg-blue-700 px-2 py-4">
               <HiFolder style={{ fontSize: "50px", color: "white" }} />
               <p className="text-white font-raleway font-semibold cursor-pointer">
@@ -52,7 +42,7 @@ function Index({ credentials }) {
         </div>
 
         <div className="cursor-pointer h-full">
-          <Link href="/o&m/serviceOrder">
+          <Link href="/oem/serviceOrder">
             <div className="flex items-center justify-center bg-amber-400 hover:bg-amber-500 h-full px-2 py-4">
               <BsTools style={{ fontSize: "50px", color: "white" }} />
               <p className="text-white font-raleway font-semibold cursor-pointer">
@@ -62,7 +52,7 @@ function Index({ credentials }) {
           </Link>
         </div>
         <div className="cursor-pointer h-full">
-          <Link href="/o&m/projects">
+          <Link href="/oem/projects">
             <div className="flex items-center justify-center bg-green-400 hover:bg-green-500 h-full px-2 py-4">
               <GiSolarPower style={{ fontSize: "50px", color: "white" }} />
               <p className="text-white font-raleway font-semibold cursor-pointer">
@@ -76,4 +66,4 @@ function Index({ credentials }) {
   );
 }
 
-export default Index;
+export default Oem;

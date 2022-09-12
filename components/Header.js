@@ -1,18 +1,38 @@
 import React from "react";
-import GrUserSettings from "react-icons/gr";
+import { FaBars } from "react-icons/fa";
 import Link from "next/link";
-function Header({ title, icon, color, url }) {
+import Image from "next/image";
+import { useRouter } from "next/router";
+import WhiteLogo from "../utils/whitelogo.png";
+import { BiLogIn } from "react-icons/bi";
+function Header({ toggleSidebar }) {
+  const router = useRouter();
+  if (router.pathname.includes("pdf")) return null;
   return (
-    <div
-      style={{ backgroundColor: color }}
-      className={`w-full  flex items-center gap-x-4 justify-center h-[70px] border-b border-white`}
-    >
-      <Link href={url}>
-        <div className="flex gap-x-2 cursor-pointer">
-          {icon}
-          <h1 className="text-xl uppercase text-white font-bold">{title}</h1>
+    <div className="w-full bg-[#fff] grid grid-cols-3 items-center px-12 h-[70px] border-b border-gray-200">
+      <FaBars
+        onClick={toggleSidebar}
+        style={{ fontSize: "23px", color: "#15599a", cursor: "pointer" }}
+      />
+      <Link href="/">
+        <div className="flex cursor-pointer items-center justify-center">
+          <Image width={"65px"} height={"65px"} src={WhiteLogo} />
         </div>
       </Link>
+      <div className="flex justify-end items-center">
+        <p>
+          Seja bem vindo,{" "}
+          <strong className="text-[#15599a]">Lucas Fernandes</strong> !
+        </p>
+        <BiLogIn
+          style={{
+            fontSize: "25px",
+            marginLeft: "10px",
+            cursor: "pointer",
+            color: "#fead61",
+          }}
+        />
+      </div>
     </div>
   );
 }

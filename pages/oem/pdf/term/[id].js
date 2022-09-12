@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import Logo from "../../../../utils/whitelogo.png";
 import connectToDatabase2 from "../../../../utils/ossDb";
 import { ObjectId } from "mongodb";
@@ -8,7 +8,7 @@ function termPDF({ info }) {
   console.log(info);
   return (
     <div className="w-[21cm] h-[29.7cm] p-4">
-      <Link href="/o&m/serviceOrder">
+      <Link href="/oem/serviceOrder">
         <div className="flex justify-center">
           <Image height="70px" width="70px" src={Logo} />
         </div>

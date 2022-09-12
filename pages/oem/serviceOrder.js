@@ -153,13 +153,7 @@ export default function ServiceOrder(props) {
     getOss();
   }, []);
   return (
-    <div className="flex flex-col w-screen max-w-full xl:min-h-[100vh] min-h-[100vh] bg-[#15599b]">
-      <Header
-        color={"#073b4c"}
-        icon={<MdManageAccounts style={{ color: "white", fontSize: "25px" }} />}
-        title="Controle de OSs"
-        url={"/o&m"}
-      />
+    <div className="grow bg-[#15599a]">
       <div className="flex flex-col px-4">
         <h1 className="text-[#f6c228] self-center text-1xl font-raleway font-bold">
           Dados do cliente
@@ -547,13 +541,13 @@ export default function ServiceOrder(props) {
                           {os.generalInfos.city}
                         </td>
                         <td className="flex justify-center gap-2 items-center  px-2 text-sm font-medium text-gray-900">
-                          <Link href={`/o&m/pdf/term/${os._id}`}>
+                          <Link href={`/oem/pdf/term/${os._id}`}>
                             <button className="bg-[#f6c228] text-center w-18 lg:w-32 px-2 py-1 rounded">
                               Termo
                             </button>
                           </Link>
                           {os.osInfos && (
-                            <Link href={`/o&m/pdf/os/${os._id}`}>
+                            <Link href={`/oem/pdf/os/${os._id}`}>
                               <button className="bg-[#f6c228] ml-0 w-18 lg:w-32 px-2 py-1 rounded">
                                 OS
                               </button>

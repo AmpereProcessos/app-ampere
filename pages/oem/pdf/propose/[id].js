@@ -19,7 +19,6 @@ function pdfPage({ info }) {
     info.price * info.modulesQty +
     1.5 * 2 * info.distance
   ).toFixed(2);
-
   function quotaCreditNumber() {
     console.log(mtPrice / 250);
     if (Math.floor(mtPrice / 250) < 1) {
@@ -50,7 +49,7 @@ function pdfPage({ info }) {
           <p className="text-xl font-bold">{info.city}</p>
           <p className="text-xl font-bold">{new Date().toLocaleDateString()}</p>
         </div>
-        <Link href="/o&m/proposes">
+        <Link href="/oem/proposes">
           <div className="flex justify-center">
             <Image
               width="80px"

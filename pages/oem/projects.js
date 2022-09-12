@@ -11,13 +11,6 @@ function Projects(props) {
   function fetchProjects() {
     axios.get("/api/o&m/projects").then((res) => setProjects(res.data));
   }
-  useEffect(() => {
-    if (!validateAuth(acessKey, credentials)) {
-      router.push("/");
-    } else {
-      fetchProjects();
-    }
-  }, []);
   const plans = [
     {
       id: 0,
@@ -31,13 +24,7 @@ function Projects(props) {
     },
   ];
   return (
-    <div className="flex flex-col w-screen max-w-full xl:min-h-[100vh] min-h-[100vh] bg-[#15599b]">
-      <Header
-        color={"#073b4c"}
-        icon={<MdManageAccounts style={{ color: "white", fontSize: "25px" }} />}
-        title="O&M"
-        url={"/o&m"}
-      />
+    <div className="grow bg-[#15599a]">
       <h1 className="text-center text-white text-2xl uppercase font-bold my-4">
         Controle de Projetos
       </h1>

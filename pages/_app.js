@@ -12,7 +12,10 @@ function MyApp({ Component, pageProps }) {
       {credentials.nome ? (
         <div className="flex flex-col bg-[#fff] w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">
           <Header
-            logout={() => setCredentials({})}
+            logout={() => {
+              localStorage.removeItem("credentials");
+              setCredentials({});
+            }}
             credentials={credentials}
             toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
           />

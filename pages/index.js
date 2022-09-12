@@ -90,6 +90,7 @@ function Home({ credentials, setCredentials }) {
       }
     }
   }, []);
+  console.log(credentials);
   var parcialPotLastMonth =
     (new Date().getDate() / 30) * installedData[2]?.total;
   var parcialHomoPotLastMonth =

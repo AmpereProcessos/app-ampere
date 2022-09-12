@@ -22,7 +22,7 @@ function Header({ toggleSidebar, credentials, logout }) {
       <div className="flex justify-end items-center">
         <p>
           Seja bem vindo,{" "}
-          <strong className="text-[#15599a]">{credentials.nome}</strong> !
+          <strong className="text-[#15599a]">{credentials?.nome}</strong> !
         </p>
         <BiLogIn
           onClick={logout}

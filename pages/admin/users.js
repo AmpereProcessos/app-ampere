@@ -8,7 +8,7 @@ import { acessAuth, routes } from "../../utils/constants";
 import { useEffect, useState } from "react";
 import axios from "axios";
 let positions = Object.keys(acessAuth);
-export default function UsersControl() {
+export default function UsersControl({ credentials }) {
   const [name, setName] = useState("");
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -16,7 +16,6 @@ export default function UsersControl() {
   const [userAcessibleRoutes, setUserRoutes] = useState();
   const [additionalRoutes, setAdditionalRoutes] = useState();
   const [userIsAdmin, setUserIsAdmin] = useState("N");
-
   const [message, setMessage] = useState("");
   function resetStates() {
     setName("");

@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { RiDashboardFill } from "react-icons/ri";
 import { TbRecharging } from "react-icons/tb";
-import { FaDatabase, FaShoppingCart, FaTools, FaTasks } from "react-icons/fa";
+import {
+  FaDatabase,
+  FaShoppingCart,
+  FaTools,
+  FaTasks,
+  FaSolarPanel,
+} from "react-icons/fa";
 import { MdSell, MdEngineering } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
-import { IoMdSettings } from "react-icons/io";
 import Link from "next/link";
 import { useRouter } from "next/router";
 function Sidebar({ sidebarVisible }) {
@@ -19,7 +24,7 @@ function Sidebar({ sidebarVisible }) {
             <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
               <RiDashboardFill style={{ color: "#15599a", fontSize: "20px" }} />
               <Link href="/">
-                <a className="pl-3 text-gray-600">Dashboard</a>
+                <p className="pl-3 text-gray-600">Dashboard</p>
               </Link>
             </div>
           </div>
@@ -67,14 +72,12 @@ function Sidebar({ sidebarVisible }) {
               <p className="pl-3 text-gray-600">Obras</p>
             </div>
             <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-              <BiSupport style={{ color: "#15599a", fontSize: "20px" }} />
-              <Link href="/oem/oemHome">
-                <p className="pl-3 text-gray-600">Oem</p>
-              </Link>
+              <FaSolarPanel style={{ color: "#15599a", fontSize: "20px" }} />
+              <p className="pl-3 text-gray-600">O&M</p>
             </div>
             <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
               <BiSupport style={{ color: "#15599a", fontSize: "20px" }} />
-              <p className="pl-3 text-gray-600">Oem</p>
+              <p className="pl-3 text-gray-600">Pós-Venda</p>
             </div>
           </div>
           <div className="mt-6">

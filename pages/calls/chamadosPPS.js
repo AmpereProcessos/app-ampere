@@ -41,6 +41,7 @@ function ChamadosPPS({ setCredentials }) {
         <div className="flex justify-around gap-3 mt-4 flex-wrap">
           {inProgress.map((call) => (
             <div
+              key={call._id}
               onClick={handleOpenModal}
               className="min-w-[300px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >

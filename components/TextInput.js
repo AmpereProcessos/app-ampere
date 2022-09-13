@@ -10,7 +10,6 @@ function TextInput({ value }) {
       setShowConfirmationButtons(true);
     }
   }, [valueHolder]);
-  console.log(valueHolder != value);
   return (
     <div
       onMouseLeave={() => setshowEditButton(false)}
@@ -18,7 +17,7 @@ function TextInput({ value }) {
       className="flex items-center"
     >
       <input
-        className="pl-4 font-sm text-gray-600 outline-none"
+        className="pl-4 text-xs w-[200px] text-gray-600 outline-none"
         value={valueHolder}
         readOnly={readOnly}
         onChange={(e) => setValueHolder(e.target.value)}

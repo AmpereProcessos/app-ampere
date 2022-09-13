@@ -49,6 +49,6 @@ export default async function handler(req, res) {
       },
     ])
     .toArray();
-  console.log(projectPhase.length);
-  return res.json(projectPhase);
+  console.log(supplyPhase.length);
+  return res.json(supplyPhase);
 }

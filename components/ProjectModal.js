@@ -23,16 +23,16 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function ProjectModal({ open, setModalIsOpen }) {
+function ProjectModal({ open, setModalIsOpen, project }) {
   if (!open) return null;
   return (
     <>
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
-          <div className="flex flex-col">
+          <div className="flex flex-col h-full">
             <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-cyan-700 pl-6  font-bold">
-                João Alves Silva
+              <h1 className="text-[#15599a] pl-6  font-bold">
+                {project.qtde} - {project.nomedoprojeto}
               </h1>
               <button>
                 <VscChromeClose
@@ -41,75 +41,116 @@ function ProjectModal({ open, setModalIsOpen }) {
                 />
               </button>
             </div>
-            <div className="flex flex-col mt-4">
-              <h1 className="font-bold uppercase">
-                Informações pessoais do cliente
-              </h1>
-              <div className="mt-3">
-                <div className="flex gap-x-4">
-                  <h2 className="font-bold text-blue-700">Nome completo</h2>
-                  <button>
-                    <AiFillEdit style={{ fontSize: "16px" }} />
-                  </button>
+            <div className="grid grid-cols-2 grow h-[100%]">
+              <div className="flex flex-col mt-4">
+                <h1 className="font-bold uppercase">
+                  Informações pessoais do cliente
+                </h1>
+                <div className="grid grid-cols-3">
+                  <div className="mt-3">
+                    <div className="flex gap-x-4">
+                      <h2 className="font-bold text-[#15599a] uppercase">
+                        Nome do Contrato
+                      </h2>
+                    </div>
+                    <TextInput value={project.nomedocontrato} />
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex gap-x-4">
+                      <h2 className="font-bold text-[#15599a] uppercase">
+                        Nome do Projeto
+                      </h2>
+                    </div>
+                    <TextInput value={project.nomedoprojeto} />
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex gap-x-4">
+                      <h2 className="font-bold text-[#15599a] uppercase">
+                        Vendedor
+                      </h2>
+                    </div>
+                    <TextInput value={project.vendedor} />
+                  </div>
                 </div>
-                <TextInput value={"João Alves Silva"} />
-              </div>
-              <div className="mt-3">
-                <div className="flex gap-x-4">
-                  <h2 className="font-bold text-blue-700">CPF/CNPJ</h2>
-                  <button>
-                    <AiFillEdit style={{ fontSize: "16px" }} />
-                  </button>
+                <div className="grid grid-cols-3">
+                  <div className="mt-3">
+                    <div className="flex gap-x-4">
+                      <h2 className="font-bold text-[#15599a] uppercase">
+                        Cidade
+                      </h2>
+                    </div>
+                    <TextInput value={project.cidade} />
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex gap-x-4">
+                      <h2 className="font-bold text-[#15599a] uppercase">
+                        Regional
+                      </h2>
+                    </div>
+                    <TextInput value={project.regional} />
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex gap-x-4">
+                      <h2 className="font-bold text-[#15599a]">CPF/CNPJ</h2>
+                    </div>
+                    <TextInput value={project.cpfcnpj} />
+                  </div>
                 </div>
-                <input
-                  className="pl-4 font-sm text-gray-600 outline-none"
-                  type="text"
-                  readOnly={true}
-                  value={"999.999.999-99"}
-                />
-              </div>
-              <div className="mt-3">
-                <div className="flex gap-x-4">
-                  <h2 className="font-bold text-blue-700">Contato</h2>
-                  <button>
-                    <AiFillEdit style={{ fontSize: "16px" }} />
-                  </button>
+                <div className="grid grid-cols-3">
+                  <div className="mt-3">
+                    <div className="flex gap-x-4">
+                      <h2 className="font-bold text-[#15599a] uppercase">
+                        Tipo de serviço
+                      </h2>
+                    </div>
+                    <TextInput value={project.tipodeservico} />
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex gap-x-4">
+                      <h2 className="font-bold text-[#15599a] uppercase">
+                        Telefone
+                      </h2>
+                    </div>
+                    <TextInput value={project.telefone} />
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex gap-x-4">
+                      <h2 className="font-bold text-[#15599a] uppercase">
+                        Data solicitação de contrato
+                      </h2>
+                    </div>
+                    <TextInput value={project.datasolicitacaocontrato} />
+                  </div>
                 </div>
-                <input
-                  className="pl-4 font-sm text-gray-600 outline-none"
-                  type="text"
-                  readOnly={true}
-                  value={"(34) 99999-9999"}
-                />
+                <div className="grid grid-cols-3">
+                  <div className="mt-3">
+                    <div className="flex gap-x-4">
+                      <h2 className="font-bold text-[#15599a] uppercase">
+                        Visita Técnica
+                      </h2>
+                    </div>
+                    <TextInput value={project.visitatecnica} />
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex gap-x-4">
+                      <h2 className="font-bold text-[#15599a] uppercase">
+                        Telefone
+                      </h2>
+                    </div>
+                    <TextInput value={project.telefone} />
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex gap-x-4">
+                      <h2 className="font-bold text-[#15599a] uppercase">
+                        Data solicitação de contrato
+                      </h2>
+                    </div>
+                    <TextInput value={project.datasolicitacaocontrato} />
+                  </div>
+                </div>
               </div>
-              <div className="mt-3">
-                <h2 className="font-bold text-blue-700">Cidade / Estado</h2>
-                <p className="pl-4 font-sm text-gray-600">Ituiutaba/MG</p>
-              </div>
-            </div>
-            <div className="flex flex-col mt-4">
-              <h1 className="font-bold uppercase">
-                Informações do projeto proposto
-              </h1>
-              <div className="mt-3">
-                <h2 className="font-bold text-blue-700">Módulos</h2>
-                <p className="pl-4 font-sm text-gray-600">
-                  (12) Painel Solar DAH 550W
-                </p>
-              </div>
-              <div className="mt-3">
-                <h2 className="font-bold text-blue-700">Topologia - Modelo</h2>
-                <p className="pl-4 font-sm text-gray-600">
-                  Inversor - Growatt 3K
-                </p>
-              </div>
-              <div className="mt-3">
-                <h2 className="font-bold text-blue-700">Contato</h2>
-                <p className="pl-4 font-sm text-gray-600">(34) 99999-9999</p>
-              </div>
-              <div className="mt-3">
-                <h2 className="font-bold text-blue-700">Cidade / Estado</h2>
-                <p className="pl-4 font-sm text-gray-600">Ituiutaba/MG</p>
+              <div className="flex flex-col mt-4">
+                <h1>Olá</h1>
               </div>
             </div>
           </div>

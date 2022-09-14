@@ -74,7 +74,7 @@ function ChamadoSuporte() {
     }
   }
   return (
-    <section className="h-screen flex items-center justify-center bg-[#15599a]">
+    <section className="min-h-[100vh] flex items-center justify-center bg-[#15599a]">
       <div className="flex flex-col bg-[#fff] p-4 rounded">
         <div className="flex self-center items-center h-[80px] w-[80px]">
           <Image src={Logo} />

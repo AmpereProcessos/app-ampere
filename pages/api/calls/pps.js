@@ -28,6 +28,9 @@ export default async function handler(req, res) {
             status: { $in: ["EM ANDAMENTO", "AGUARDANDO VENDEDOR"] },
           },
         },
+        {
+          $sort: { carimboDataHora: -1 },
+        },
       ])
       .toArray();
     return res.json({ closedCalls, inProgress });

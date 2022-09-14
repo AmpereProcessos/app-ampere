@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import ModalCallPPS from "../../components/ModalCallPPS";
-
+import Link from "next/link";
 function ChamadosPPS({ setCredentials }) {
   const [inProgress, setInProgress] = useState([]);
   const [closedCalls, setClosedCalls] = useState([]);
@@ -100,9 +100,11 @@ function ChamadosPPS({ setCredentials }) {
           ))}
         </div>
       </div>
-      <div className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-        <p className="uppercase font-bold text-sm">Novo chamado</p>
-      </div>
+      <Link href="/publico/chamadosPPS">
+        <div className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">Novo chamado</p>
+        </div>
+      </Link>
       <ModalCallPPS setModalIsOpen={setModalIsOpen} open={modalIsOpen} />
     </div>
   );

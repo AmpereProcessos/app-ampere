@@ -7,7 +7,8 @@ import WhiteLogo from "../utils/whitelogo.png";
 import { BiLogIn } from "react-icons/bi";
 function Header({ toggleSidebar, credentials, logout }) {
   const router = useRouter();
-  if (router.pathname.includes("pdf")) return null;
+  if (router.pathname.includes("pdf") || router.pathname.includes("publico"))
+    return null;
   return (
     <div className="w-full bg-[#fff] grid grid-cols-3 items-center px-12 h-[70px] border-b border-gray-200">
       <FaBars

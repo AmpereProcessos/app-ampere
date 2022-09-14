@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProjectList from "../../components/ProjectList";
 import ProjectModal from "../../components/ProjectModal";
-function InProgress() {
+function InProgress({ setCredentials, credentials }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [InProgressProjects, setProjects] = useState({
     comercialPhase: [],
@@ -21,6 +21,27 @@ function InProgress() {
       .then((res) =>
         setProjects({ ...InProgressProjects, supplyPhase: res.data })
       );
+  }, []);
+  useEffect(() => {
+    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
+    if (storedCredentials) {
+      setCredentials(storedCredentials);
+      axios
+        .get("/api/inProgressInfo")
+        .then((res) =>
+          setProjects({ ...InProgressProjects, supplyPhase: res.data })
+        );
+    } else {
+      if (!credentials.nome) {
+        router.push("/auth/authHome");
+      } else {
+        axios
+          .get("/api/inProgressInfo")
+          .then((res) =>
+            setProjects({ ...InProgressProjects, supplyPhase: res.data })
+          );
+      }
+    }
   }, []);
   return (
     <>

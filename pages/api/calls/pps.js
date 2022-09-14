@@ -3,20 +3,33 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("pps");
-    let calls = await collection
-      .find({
-        carimboDataHora: { $gte: "2022-08-31T00:19:00.000Z" },
-      })
+    var dateFilterParam = new Date();
+    dateFilterParam.setDate(dateFilterParam.getDate() - 2);
+    let filter = dateFilterParam.toJSON();
+    console.log(filter);
+    let closedCalls = await collection
+      .aggregate([
+        {
+          $match: {
+            status: "REALIZADO",
+          },
+        },
+        {
+          $match: {
+            carimboDataHora: { $gte: filter },
+          },
+        },
+      ])
       .toArray();
     let inProgress = await collection
       .aggregate([
         {
           $match: {
-            status: "EM ANDAMENTO",
+            status: { $in: ["EM ANDAMENTO", "AGUARDANDO VENDEDOR"] },
           },
         },
       ])
       .toArray();
-    return res.json({ calls, inProgress });
+    return res.json({ closedCalls, inProgress });
   }
 }

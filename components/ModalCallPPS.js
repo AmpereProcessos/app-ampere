@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 const MODAL_STYLES = {
   position: "fixed",
@@ -42,11 +42,9 @@ const statusStyles = {
 };
 function ModalCallPPS({ open, setModalIsOpen, info }) {
   if (!open) return null;
-  const [renderInfo, setRenderInfo] = useState(info);
-  let infoResponsavel = info.responsavel ? info.responsavel : "A DEFINIR";
-  const [responsavel, setResponsavel] = useState(infoResponsavel);
-  let infoNotes = info.anotacoes ? info.anotacoes : "";
-  const [notes, setNotes] = useState(infoNotes);
+  const [renderInfo, setRenderInfo] = useState();
+  const [responsavel, setResponsavel] = useState();
+  const [notes, setNotes] = useState();
   const [message, setMessage] = useState("");
   function updateRenderInfos() {
     axios
@@ -83,6 +81,13 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
       })
       .then((res) => updateRenderInfos());
   }
+  useEffect(() => {
+    let infoResponsavel = info.responsavel ? info.responsavel : "A DEFINIR";
+    let infoNotes = info.anotacoes ? info.anotacoes : "";
+    setRenderInfo(info);
+    setResponsavel(infoResponsavel);
+    setNotes(infoNotes);
+  }, []);
   return (
     <>
       <div style={OVERLAY_STYLES}>

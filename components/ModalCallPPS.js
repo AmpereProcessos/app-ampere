@@ -41,19 +41,16 @@ const statusStyles = {
   },
 };
 function ModalCallPPS({ open, setModalIsOpen, info }) {
-  const [renderInfo, setRenderInfo] = useState();
-  const [responsavel, setResponsavel] = useState();
-  const [notes, setNotes] = useState();
+  const [responsavel, setResponsavel] = useState(info.responsavel);
+  const [notes, setNotes] = useState(info.anotacoes);
   const [message, setMessage] = useState("");
   function updateRenderInfos() {
-    axios
-      .get(`/api/calls/getPPS/${renderInfo._id}`)
-      .then((res) => setRenderInfo(res.data));
+    axios.get(`/api/calls/getPPS/${info._id}`).then((res) => (info = res.data));
   }
   function saveProject() {
     axios
       .put("/api/calls/updatePPS", {
-        ...renderInfo,
+        ...info,
         anotacoes: notes,
         responsavel: responsavel,
       })
@@ -80,13 +77,7 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
       })
       .then((res) => updateRenderInfos());
   }
-  useEffect(() => {
-    let infoResponsavel = info.responsavel ? info.responsavel : "A DEFINIR";
-    let infoNotes = info.anotacoes ? info.anotacoes : "";
-    setRenderInfo(info);
-    setResponsavel(infoResponsavel);
-    setNotes(infoNotes);
-  }, []);
+  console.log(responsavel);
   if (!open) return null;
   return (
     <>
@@ -95,11 +86,16 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
           <div className="flex flex-col h-full">
             <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
               <h1 className="text-[#15599a] pl-6  font-bold">
-                {renderInfo.tipoDeSolicitacao}
+                {info.tipoDeSolicitacao}
               </h1>
               <button>
                 <VscChromeClose
-                  onClick={() => setModalIsOpen(false)}
+                  onClick={() => {
+                    setMessage("");
+                    setResponsavel("");
+                    setNotes("");
+                    setModalIsOpen(false);
+                  }}
                   style={{ color: "red" }}
                 />
               </button>
@@ -110,10 +106,10 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
                 <div className="flex justify-center grow">
                   <p
                     className={`text-xs font-bold border p-3 w-fit text-center rounded-lg ${
-                      statusStyles[renderInfo.status].textColor
-                    } ${statusStyles[renderInfo.status].borderColor}`}
+                      info && statusStyles[info?.status].textColor
+                    } ${info && statusStyles[info.status].borderColor}`}
                   >
-                    {renderInfo.status}
+                    {info?.status}
                   </p>
                 </div>
               </div>
@@ -122,7 +118,7 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
                   VENDEDOR
                 </span>
                 <span className="grow text-center font-raleway">
-                  {renderInfo.vendedor}
+                  {info.vendedor}
                 </span>
               </div>
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
@@ -130,7 +126,7 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
                   CÓDIGO SOLAR MARKET (SBV)
                 </span>
                 <span className="grow text-center font-raleway">
-                  {renderInfo.codigoDoProjeto}
+                  {info.codigoDoProjeto}
                 </span>
               </div>
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
@@ -138,16 +134,16 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
                   ABERTURA
                 </span>
                 <span className="grow text-center font-raleway">
-                  {new Date(renderInfo.carimboDataHora).toLocaleString()}
+                  {new Date(info.carimboDataHora).toLocaleString()}
                 </span>
               </div>
-              {renderInfo.dataDeConclusao && (
+              {info.dataDeConclusao && (
                 <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                   <span className="text-center font-bold font-raleway">
                     FECHAMENTO
                   </span>
                   <span className="grow text-center font-raleway">
-                    {new Date(renderInfo.dataDeConclusao).toLocaleString()}
+                    {new Date(info.dataDeConclusao).toLocaleString()}
                   </span>
                 </div>
               )}
@@ -157,13 +153,13 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
                   OBSERVAÇÕES
                 </span>
                 <span className="grow text-center font-raleway text-sm bg-gray-100 p-4 italic">
-                  {renderInfo.observacoes}
+                  {info.observacoes}
                 </span>
               </div>
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center font-bold">RESPONSÁVEL</span>
                 <select
-                  value={responsavel}
+                  value={responsavel ? responsavel : info.responsavel}
                   onChange={(e) => setResponsavel(e.target.value)}
                   className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
                 >
@@ -178,13 +174,13 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
                   ANOTAÇÕES
                 </span>
                 <textarea
-                  value={notes}
+                  value={notes ? notes : info.anotacoes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Digite aqui as anotações do chamado"
                   className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
                 />
               </div>
-              {renderInfo.dataDeConclusao ? (
+              {info.dataDeConclusao ? (
                 <div className="text-center">
                   <button
                     onClick={reopenCall}

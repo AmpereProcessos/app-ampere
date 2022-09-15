@@ -74,6 +74,7 @@ function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
       })
       .then((res) => updateModalInfo(info._id));
   }
+  console.log(info);
   return (
     <>
       <div style={OVERLAY_STYLES}>

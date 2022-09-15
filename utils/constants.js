@@ -171,6 +171,31 @@ export const prices = [
     price: 17.72,
   },
 ];
+export const sellers = [
+  "ADAILSON COSTAS",
+  "ADRIANO ARANTES",
+  "ARIADNNY MACEDO",
+  "ARTHUR CARVALHO",
+  "ARTUR MILANE",
+  "CARLOS MARQUES",
+  "DÁFINY VILANO",
+  "DEVISSON LIMA",
+  "DIOGO",
+  "EURIPEDES JR",
+  "FELIPE RIBEIRO",
+  "GETULIO EDUARDO",
+  "GLAIDSTONE JOSÉ",
+  "JESSICA PARANAIBA",
+  "JULIANO SILVA",
+  "LEANDRO LOPES",
+  "MATHEUS OLIVEIRA",
+  "NEIDSON BUIU",
+  "RODRIGO RCA",
+  "ROMES ROCHA",
+  "RONIVALDO MARTINS",
+  "STENIO DE ASSIS",
+  "SETOR O&M",
+];
 export const cities = [
   {
     name: "Ituiutaba",
@@ -228,4 +253,20 @@ export const cities = [
     name: "São Simão",
     annualGenFactor: 120.52,
   },
+];
+export const ppsSolicitations = [
+  "ANÁLISE DE CRÉDITO",
+  "ASSINATURA DE CONTRATO",
+  "ASSINATURA DE PROPOSTA",
+  "ATUALIZAR PROPOSTA",
+  "AUXÍLIO TÉCNICO(CADASTRO)",
+  "CONTRATO",
+  "CORREÇÃO DE CONTRATO",
+  "COTAÇÃO",
+  "COTAÇÃO DE PADRÃO",
+  "DISTRATO",
+  "PROPOSTA COMERCIAL PERSONALIZADA",
+  "PROPOSTA COMERCIAL SIMPLES(CADASTRO)",
+  "SIMULAÇÃO FINANCEIRA(CADASTRO)",
+  "SOLICITAÇÃO DE CONTRATO",
 ];

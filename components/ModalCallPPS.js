@@ -62,7 +62,7 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
   function closedCall() {
     axios
       .post("/api/calls/updatePPS", {
-        ...renderInfo,
+        ...info,
         dataDeConclusao: new Date(),
         status: "REALIZADO",
       })
@@ -71,7 +71,7 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
   function reopenCall() {
     axios
       .post("/api/calls/updatePPS", {
-        ...renderInfo,
+        ...info,
         dataDeConclusao: "",
         status: "PENDENTE",
       })

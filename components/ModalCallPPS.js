@@ -146,7 +146,7 @@ function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
               </div>
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center font-bold font-raleway">
-                  CÓDIGO SOLAR MARKET (SBV)
+                  CÓDIGO SOLAR MARKET (SVB)
                 </span>
                 <span className="grow text-center font-raleway">
                   {info.codigoDoProjeto}

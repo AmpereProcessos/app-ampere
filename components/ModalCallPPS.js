@@ -41,7 +41,6 @@ const statusStyles = {
   },
 };
 function ModalCallPPS({ open, setModalIsOpen, info }) {
-  if (!open) return null;
   const [renderInfo, setRenderInfo] = useState();
   const [responsavel, setResponsavel] = useState();
   const [notes, setNotes] = useState();
@@ -88,6 +87,7 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
     setResponsavel(infoResponsavel);
     setNotes(infoNotes);
   }, []);
+  if (!open) return null;
   return (
     <>
       <div style={OVERLAY_STYLES}>

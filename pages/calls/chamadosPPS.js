@@ -7,19 +7,45 @@ import { MdDateRange } from "react-icons/md";
 import Link from "next/link";
 var dateFilterParam = new Date();
 dateFilterParam.setDate(dateFilterParam.getDate() - 2);
+const statusStyles = {
+  "EM ANDAMENTO": {
+    textColor: "text-[#15599a]",
+    borderColor: "border-[#15599a]",
+  },
+  "AGUARDANDO VENDEDOR": {
+    textColor: "text-orange-400",
+    borderColor: "border-orange-400",
+  },
+  REALIZADO: {
+    textColor: "text-green-400",
+    borderColor: "border-green-400",
+  },
+  PENDENTE: {
+    textColor: "text-red-400",
+    borderColor: "border-red-400",
+  },
+};
+
 function ChamadosPPS({ setCredentials }) {
   const [inProgress, setInProgress] = useState([]);
   const [closedCalls, setClosedCalls] = useState([]);
   const [stats, setStats] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalCall, setModalCall] = useState({});
-  const [closedFilterDate, setClosedFilterDate] = useState(dateFilterParam);
+  const [closedFilterDate, setClosedFilterDate] = useState({
+    after: dateFilterParam,
+    before: new Date(),
+  });
+  const [respFilter, setRespFilter] = useState([]);
+  const [statusFilter, setStatusFilter] = useState([]);
   const router = useRouter();
   function getCalls() {
     axios.get("/api/calls/pps").then((res) => {
       setStats(res.data.stats);
       setInProgress(res.data.inProgress);
       setClosedCalls(res.data.closedCalls);
+      setRespFilter([]);
+      setStatusFilter([]);
     });
   }
   useEffect(() => {
@@ -31,35 +57,38 @@ function ChamadosPPS({ setCredentials }) {
       router.push("/auth/authHome");
     }
   }, []);
-  const statusStyles = {
-    "EM ANDAMENTO": {
-      textColor: "text-yellow-500",
-      borderColor: "border-yellow-500",
-    },
-    "AGUARDANDO VENDEDOR": {
-      textColor: "text-orange-400",
-      borderColor: "border-orange-400",
-    },
-    REALIZADO: {
-      textColor: "text-green-400",
-      borderColor: "border-green-400",
-    },
-    PENDENTE: {
-      textColor: "text-red-400",
-      borderColor: "border-red-400",
-    },
-  };
   function filterClosedCallsByDate() {
     axios
       .post("/api/calls/filteredByDate", {
-        date: new Date(closedFilterDate).toJSON(),
+        date: closedFilterDate,
       })
       .then((res) => setClosedCalls(res.data));
   }
-  function filterOpenCallsByResp(responsavel) {
+  function filterOpenCallsByResp(responsavel, status) {
+    if (responsavel) {
+      if (respFilter.includes(responsavel)) {
+        let index = respFilter.indexOf(responsavel);
+        respFilter.splice(index, 1);
+      } else {
+        respFilter.push(responsavel);
+      }
+    }
+    if (status) {
+      if (statusFilter.includes(status)) {
+        let index = statusFilter.indexOf(status);
+        statusFilter.splice(index, 1);
+      } else {
+        statusFilter.push(status);
+      }
+    }
+    setRespFilter(respFilter);
+    setStatusFilter(statusFilter);
     axios
       .post("/api/calls/filteredByResp", {
-        responsavel: responsavel,
+        responsavel:
+          respFilter.length > 0 ? respFilter : ["ADRIANO", "ARTHUR", "MATHEUS"],
+        status:
+          statusFilter.length > 0 ? statusFilter : ["EM ANDAMENTO", "PENDENTE"],
       })
       .then((res) => setInProgress(res.data));
   }
@@ -95,20 +124,54 @@ function ChamadosPPS({ setCredentials }) {
           </h1>
           <div className="flex items-center gap-x-2">
             <p
+              onClick={() => filterOpenCallsByResp(undefined, "PENDENTE")}
+              className={`border cursor-pointer border-gray-200 ${
+                statusFilter.includes("PENDENTE")
+                  ? "bg-blue-200 hover:bg-transparent"
+                  : "hover:bg-blue-200 bg-transparent"
+              } p-2 text-xs text-gray-600`}
+            >
+              PENDENTE
+            </p>
+            <p
+              onClick={() => filterOpenCallsByResp(undefined, "EM ANDAMENTO")}
+              className={`border cursor-pointer border-gray-200 ${
+                statusFilter.includes("EM ANDAMENTO")
+                  ? "bg-blue-200 hover:bg-transparent"
+                  : "hover:bg-blue-200 bg-transparent"
+              } p-2 text-xs text-gray-600`}
+            >
+              EM ANDAMENTO
+            </p>
+          </div>
+          <div className="flex items-center gap-x-2">
+            <p
               onClick={() => filterOpenCallsByResp("ADRIANO")}
-              className="border cursor-pointer border-gray-200 hover:bg-blue-200 p-2 text-xs text-gray-600"
+              className={`border cursor-pointer border-gray-200 ${
+                respFilter.includes("ADRIANO")
+                  ? "bg-blue-200 hover:bg-transparent"
+                  : "hover:bg-blue-200 bg-transparent"
+              } p-2 text-xs text-gray-600`}
             >
               ADRIANO
             </p>
             <p
               onClick={() => filterOpenCallsByResp("ARTHUR")}
-              className="border cursor-pointer border-gray-200 hover:bg-blue-200 p-2 text-xs text-gray-600"
+              className={`border cursor-pointer border-gray-200 ${
+                respFilter.includes("ARTHUR")
+                  ? "bg-blue-200 hover:bg-transparent"
+                  : "hover:bg-blue-200 bg-transparent"
+              } p-2 text-xs text-gray-600`}
             >
               ARTHUR
             </p>
             <p
               onClick={() => filterOpenCallsByResp("MATHEUS")}
-              className="border cursor-pointer border-gray-200 hover:bg-blue-200 p-2 text-xs text-gray-600"
+              className={`border cursor-pointer border-gray-200 ${
+                respFilter.includes("MATHEUS")
+                  ? "bg-blue-200 hover:bg-transparent"
+                  : "hover:bg-blue-200 bg-transparent"
+              } p-2 text-xs text-gray-600`}
             >
               MATHEUS
             </p>
@@ -150,17 +213,37 @@ function ChamadosPPS({ setCredentials }) {
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             CHAMADOS FINALIZADOS
           </h1>
-          <input
-            value={closedFilterDate}
-            onChange={(e) => setClosedFilterDate(e.target.value)}
-            type="date"
-            className="border border-gray-200 outline-none p-2"
-          />
+          <div className="flex gap-x-2 items-center">
+            <p>Entre:</p>
+            <input
+              value={closedFilterDate.after}
+              onChange={(e) =>
+                setClosedFilterDate({
+                  ...closedFilterDate,
+                  after: e.target.value,
+                })
+              }
+              type="date"
+              className="border border-gray-200 outline-none p-2"
+            />
+            <p>&</p>
+            <input
+              value={closedFilterDate.before}
+              onChange={(e) =>
+                setClosedFilterDate({
+                  ...closedFilterDate,
+                  before: e.target.value,
+                })
+              }
+              type="date"
+              className="border border-gray-200 outline-none p-2"
+            />
+          </div>
           <div
             onClick={filterClosedCallsByDate}
             className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg"
           >
-            <p className="mr-2 text-sm">Filtrar por data</p>
+            <p className="mr-2 text-sm">Filtrar</p>
             <MdDateRange />
           </div>
         </div>

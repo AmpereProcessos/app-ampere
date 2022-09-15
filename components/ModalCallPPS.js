@@ -24,8 +24,8 @@ const OVERLAY_STYLES = {
 };
 const statusStyles = {
   "EM ANDAMENTO": {
-    textColor: "text-yellow-500",
-    borderColor: "border-yellow-500",
+    textColor: "text-[#15599a]",
+    borderColor: "border-[#15599a]",
   },
   "AGUARDANDO VENDEDOR": {
     textColor: "text-orange-400",
@@ -41,8 +41,9 @@ const statusStyles = {
   },
 };
 function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
+  let initialNote = info.anotacoes ? info.anotacoes : "";
   const [responsavel, setResponsavel] = useState(info.responsavel);
-  const [notes, setNotes] = useState(info.anotacoes);
+  const [notes, setNotes] = useState(initialNote);
   const [selectedStatus, setSelectedStatus] = useState(info.status);
   const [message, setMessage] = useState("");
   function saveProject() {
@@ -55,7 +56,6 @@ function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
       })
       .then((res) => {
         setMessage(res.data);
-        setNotes("");
         updateModalInfo(info._id);
       });
   }
@@ -77,17 +77,19 @@ function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
       })
       .then((res) => updateModalInfo(info._id));
   }
-  console.log(info);
+  console.log(info.anotacoes, notes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-[#15599a] pl-6  font-bold">
-                {info.tipoDeSolicitacao}
-              </h1>
-              <p className="text-gray-300 text-xs">#{info._id}</p>
+              <div className="flex flex-col">
+                <h1 className="text-[#15599a] pl-6  font-bold">
+                  {info.tipoDeSolicitacao}
+                </h1>
+                <p className="text-gray-500 text-center text-xs">#{info._id}</p>
+              </div>
               <button>
                 <VscChromeClose
                   onClick={() => {
@@ -102,26 +104,34 @@ function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
               <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="font-bold font-raleway">STATUS</span>
                 <div className="flex gap-x-2 justify-center grow">
-                  <p
-                    onClick={() => setSelectedStatus("PENDENTE")}
-                    className={`${
-                      selectedStatus != "PENDENTE" && "opacity-30"
-                    } text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg ${
-                      info && statusStyles[info?.status].textColor
-                    } ${info && statusStyles[info.status].borderColor}`}
-                  >
-                    {info?.status}
-                  </p>
-                  {info.status == "PENDENTE" && (
+                  {info.status == "PENDENTE" ? (
+                    <>
+                      <p
+                        onClick={() => setSelectedStatus("PENDENTE")}
+                        className={`${
+                          selectedStatus != "PENDENTE" && "opacity-30"
+                        } text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg ${
+                          info && statusStyles[info?.status].textColor
+                        } ${info && statusStyles[info.status].borderColor}`}
+                      >
+                        {info?.status}
+                      </p>
+                      <p
+                        onClick={() => setSelectedStatus("EM ANDAMENTO")}
+                        className={`${
+                          selectedStatus != "EM ANDAMENTO" && "opacity-30"
+                        } text-xs font-bold border p-3 w-fit hover:opacity-100 cursor-pointer text-center rounded-lg ${
+                          statusStyles["EM ANDAMENTO"].textColor
+                        } ${statusStyles["EM ANDAMENTO"].borderColor}`}
+                      >
+                        EM ANDAMENTO
+                      </p>
+                    </>
+                  ) : (
                     <p
-                      onClick={() => setSelectedStatus("EM ANDAMENTO")}
-                      className={`${
-                        selectedStatus != "EM ANDAMENTO" && "opacity-30"
-                      } text-xs font-bold border p-3 w-fit hover:opacity-100 cursor-pointer text-center rounded-lg ${
-                        statusStyles["EM ANDAMENTO"].textColor
-                      } ${statusStyles["EM ANDAMENTO"].borderColor}`}
+                      className={`text-xs font-bold border p-3 w-fit hover:opacity-100 text-center rounded-lg ${statusStyles["EM ANDAMENTO"].textColor} ${statusStyles["EM ANDAMENTO"].borderColor}`}
                     >
-                      EM ANDAMENTO
+                      {info.status}
                     </p>
                   )}
                 </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import ModalCallPPS from "../../components/ModalCallPPS";
+import ModalCallSuporte from "../../components/ModalCallSuporte";
 import Link from "next/link";
 const statusStyles = {
   ABERTO: {
@@ -25,6 +25,8 @@ function ChamadosSuporte({ credentials, setCredentials }) {
   const router = useRouter();
   const [inProgress, setInProgress] = useState([]);
   const [closedCalls, setClosedCalls] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalCall, setModalCall] = useState({});
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
@@ -38,6 +40,10 @@ function ChamadosSuporte({ credentials, setCredentials }) {
       router.push("/auth/authHome");
     }
   }, []);
+  function handleOpenModal(call) {
+    setModalCall(call);
+    setModalIsOpen(true);
+  }
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
       <div className="w-full border max-h-[400px] overflow-y-auto overscroll-y-auto border-gray-200 bg-[#fff] shadow-xl p-4">
@@ -47,6 +53,7 @@ function ChamadosSuporte({ credentials, setCredentials }) {
         <div className="flex justify-around gap-3 mt-4 flex-wrap">
           {inProgress.map((call) => (
             <div
+              onClick={() => handleOpenModal(call)}
               key={call._id}
               className="w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
@@ -86,11 +93,14 @@ function ChamadosSuporte({ credentials, setCredentials }) {
         <div className="flex mt-2 flex-wrap gap-2 justify-around">
           {closedCalls.map((call) => (
             <div
+              onClick={() => handleOpenModal(call)}
               key={call._id}
               className="w-[300px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
               <div className="flex justify-between items-center w-full">
-                <h1 className="uppercase text-sm">{call.nomeUsina}</h1>
+                <h1 className="uppercase text-sm">
+                  {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
+                </h1>
                 {call.cidade && (
                   <p className="text-xs text-gray-700">{call.cidade}</p>
                 )}
@@ -116,6 +126,9 @@ function ChamadosSuporte({ credentials, setCredentials }) {
           ))}
         </div>
       </div>
+      {modalIsOpen && (
+        <ModalCallSuporte setModalIsOpen={setModalIsOpen} info={modalCall} />
+      )}
     </div>
   );
 }

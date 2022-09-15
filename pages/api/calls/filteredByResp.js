@@ -8,13 +8,15 @@ export default async function handler(req, res) {
         {
           $match: {
             status: {
-              $in: ["EM ANDAMENTO", "AGUARDANDO VENDEDOR", "PENDENTE"],
+              $in: req.body.status,
             },
           },
         },
         {
           $match: {
-            responsavel: req.body.responsavel,
+            responsavel: {
+              $in: req.body.responsavel,
+            },
           },
         },
         {

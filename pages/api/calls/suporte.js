@@ -27,6 +27,11 @@ export default async function handler(req, res) {
             statusChamado: "RESOLVIDO",
           },
         },
+        {
+          $sort: {
+            abertura: -1,
+          },
+        },
       ])
       .toArray();
     return res.json({ openCalls, closedCalls });

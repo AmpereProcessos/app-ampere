@@ -29,6 +29,7 @@ export default async function handler(req, res) {
         $set: {
           anotacoes: req.body.anotacoes,
           responsavel: req.body.responsavel,
+          status: req.body.status,
         },
       },
       { returnNewDocument: true }

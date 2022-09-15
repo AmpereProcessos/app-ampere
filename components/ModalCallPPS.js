@@ -43,16 +43,19 @@ const statusStyles = {
 function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
   const [responsavel, setResponsavel] = useState(info.responsavel);
   const [notes, setNotes] = useState(info.anotacoes);
+  const [selectedStatus, setSelectedStatus] = useState(info.status);
   const [message, setMessage] = useState("");
   function saveProject() {
     axios
       .put("/api/calls/updatePPS", {
         ...info,
+        status: selectedStatus,
         anotacoes: notes,
         responsavel: responsavel ? responsavel : info.responsavel,
       })
       .then((res) => {
         setMessage(res.data);
+        setNotes("");
         updateModalInfo(info._id);
       });
   }
@@ -80,10 +83,11 @@ function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full">
-            <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
+            <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
               <h1 className="text-[#15599a] pl-6  font-bold">
                 {info.tipoDeSolicitacao}
               </h1>
+              <p className="text-gray-300 text-xs">#{info._id}</p>
               <button>
                 <VscChromeClose
                   onClick={() => {
@@ -94,17 +98,32 @@ function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
                 />
               </button>
             </div>
-            <div>
+            <div className="overflow-y-auto">
               <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="font-bold font-raleway">STATUS</span>
-                <div className="flex justify-center grow">
+                <div className="flex gap-x-2 justify-center grow">
                   <p
-                    className={`text-xs font-bold border p-3 w-fit text-center rounded-lg ${
+                    onClick={() => setSelectedStatus("PENDENTE")}
+                    className={`${
+                      selectedStatus != "PENDENTE" && "opacity-30"
+                    } text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg ${
                       info && statusStyles[info?.status].textColor
                     } ${info && statusStyles[info.status].borderColor}`}
                   >
                     {info?.status}
                   </p>
+                  {info.status == "PENDENTE" && (
+                    <p
+                      onClick={() => setSelectedStatus("EM ANDAMENTO")}
+                      className={`${
+                        selectedStatus != "EM ANDAMENTO" && "opacity-30"
+                      } text-xs font-bold border p-3 w-fit hover:opacity-100 cursor-pointer text-center rounded-lg ${
+                        statusStyles["EM ANDAMENTO"].textColor
+                      } ${statusStyles["EM ANDAMENTO"].borderColor}`}
+                    >
+                      EM ANDAMENTO
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
@@ -168,7 +187,7 @@ function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
                   ANOTAÇÕES
                 </span>
                 <textarea
-                  value={notes ? notes : info.anotacoes}
+                  value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Digite aqui as anotações do chamado"
                   className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"

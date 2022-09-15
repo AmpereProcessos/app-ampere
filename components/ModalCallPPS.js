@@ -40,23 +40,20 @@ const statusStyles = {
     borderColor: "border-red-400",
   },
 };
-function ModalCallPPS({ open, setModalIsOpen, info }) {
+function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
   const [responsavel, setResponsavel] = useState(info.responsavel);
   const [notes, setNotes] = useState(info.anotacoes);
   const [message, setMessage] = useState("");
-  function updateRenderInfos() {
-    axios.get(`/api/calls/getPPS/${info._id}`).then((res) => (info = res.data));
-  }
   function saveProject() {
     axios
       .put("/api/calls/updatePPS", {
         ...info,
         anotacoes: notes,
-        responsavel: responsavel,
+        responsavel: responsavel ? responsavel : info.responsavel,
       })
       .then((res) => {
         setMessage(res.data);
-        updateRenderInfos();
+        updateModalInfo(info._id);
       });
   }
   function closedCall() {
@@ -66,7 +63,7 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
         dataDeConclusao: new Date(),
         status: "REALIZADO",
       })
-      .then((res) => updateRenderInfos());
+      .then((res) => updateModalInfo(info._id));
   }
   function reopenCall() {
     axios
@@ -75,10 +72,8 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
         dataDeConclusao: "",
         status: "PENDENTE",
       })
-      .then((res) => updateRenderInfos());
+      .then((res) => updateModalInfo(info._id));
   }
-  console.log(responsavel);
-  if (!open) return null;
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -92,8 +87,6 @@ function ModalCallPPS({ open, setModalIsOpen, info }) {
                 <VscChromeClose
                   onClick={() => {
                     setMessage("");
-                    setResponsavel("");
-                    setNotes("");
                     setModalIsOpen(false);
                   }}
                   style={{ color: "red" }}

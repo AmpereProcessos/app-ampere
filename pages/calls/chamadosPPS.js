@@ -3,13 +3,17 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import ModalCallPPS from "../../components/ModalCallPPS";
 import { AiOutlineReload } from "react-icons/ai";
+import { MdDateRange } from "react-icons/md";
 import Link from "next/link";
+var dateFilterParam = new Date();
+dateFilterParam.setDate(dateFilterParam.getDate() - 2);
 function ChamadosPPS({ setCredentials }) {
   const [inProgress, setInProgress] = useState([]);
   const [closedCalls, setClosedCalls] = useState([]);
   const [stats, setStats] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalCall, setModalCall] = useState({});
+  const [closedFilterDate, setClosedFilterDate] = useState(dateFilterParam);
   const router = useRouter();
   function getCalls() {
     axios.get("/api/calls/pps").then((res) => {
@@ -45,13 +49,33 @@ function ChamadosPPS({ setCredentials }) {
       borderColor: "border-red-400",
     },
   };
+  function filterClosedCallsByDate() {
+    axios
+      .post("/api/calls/filteredByDate", {
+        date: new Date(closedFilterDate).toJSON(),
+      })
+      .then((res) => setClosedCalls(res.data));
+  }
+  function filterOpenCallsByResp(responsavel) {
+    axios
+      .post("/api/calls/filteredByResp", {
+        responsavel: responsavel,
+      })
+      .then((res) => setInProgress(res.data));
+  }
+  function updateModalInfo(id) {
+    axios.get(`/api/calls/getPPS/${id}`).then((res) => {
+      setModalCall(res.data);
+      getCalls();
+    });
+  }
   function handleOpenModal(call) {
     setModalCall(call);
     setModalIsOpen(true);
   }
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
-      <div className="flex justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
+      <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex gap-x-2">
           <p>CHAMADOS ABERTOS:</p>
           <p>{stats.openCallsCount}</p>
@@ -65,9 +89,31 @@ function ChamadosPPS({ setCredentials }) {
         </div>
       </div>
       <div className="w-full border max-h-[400px] overflow-y-auto overscroll-y-auto border-gray-200 bg-[#fff] shadow-xl p-4">
-        <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
-          Chamados abertos
-        </h1>
+        <div className="flex items-center justify-around">
+          <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
+            Chamados abertos
+          </h1>
+          <div className="flex items-center gap-x-2">
+            <p
+              onClick={() => filterOpenCallsByResp("ADRIANO")}
+              className="border cursor-pointer border-gray-200 hover:bg-blue-200 p-2 text-xs text-gray-600"
+            >
+              ADRIANO
+            </p>
+            <p
+              onClick={() => filterOpenCallsByResp("ARTHUR")}
+              className="border cursor-pointer border-gray-200 hover:bg-blue-200 p-2 text-xs text-gray-600"
+            >
+              ARTHUR
+            </p>
+            <p
+              onClick={() => filterOpenCallsByResp("MATHEUS")}
+              className="border cursor-pointer border-gray-200 hover:bg-blue-200 p-2 text-xs text-gray-600"
+            >
+              MATHEUS
+            </p>
+          </div>
+        </div>
         <div className="flex justify-around gap-3 mt-4 flex-wrap">
           {inProgress.map((call) => (
             <div
@@ -100,9 +146,24 @@ function ChamadosPPS({ setCredentials }) {
         </div>
       </div>
       <div className="w-full border max-h-[450px] overflow-y-auto overscroll-y-auto border-gray-200 bg-[#fff] shadow-xl p-4">
-        <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
-          CHAMADOS FINALIZADOS
-        </h1>
+        <div className="flex items-center justify-around">
+          <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
+            CHAMADOS FINALIZADOS
+          </h1>
+          <input
+            value={closedFilterDate}
+            onChange={(e) => setClosedFilterDate(e.target.value)}
+            type="date"
+            className="border border-gray-200 outline-none p-2"
+          />
+          <div
+            onClick={filterClosedCallsByDate}
+            className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg"
+          >
+            <p className="mr-2 text-sm">Filtrar por data</p>
+            <MdDateRange />
+          </div>
+        </div>
         <div className="flex mt-2 flex-wrap gap-2 justify-around">
           {closedCalls.map((call) => (
             <div
@@ -132,11 +193,14 @@ function ChamadosPPS({ setCredentials }) {
           <p className="uppercase font-bold text-sm">Novo chamado</p>
         </div>
       </Link>
-      <ModalCallPPS
-        info={modalCall}
-        setModalIsOpen={setModalIsOpen}
-        open={modalIsOpen}
-      />
+      {modalIsOpen && (
+        <ModalCallPPS
+          updateModalInfo={updateModalInfo}
+          info={modalCall}
+          setModalIsOpen={setModalIsOpen}
+          open={modalIsOpen}
+        />
+      )}
     </div>
   );
 }

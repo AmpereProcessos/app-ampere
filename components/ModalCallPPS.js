@@ -43,10 +43,10 @@ const statusStyles = {
 function ModalCallPPS({ open, setModalIsOpen, info }) {
   if (!open) return null;
   const [renderInfo, setRenderInfo] = useState(info);
-  const [responsavel, setResponsavel] = useState(
-    info.responsavel ? info.responsavel : "A DEFINIR"
-  );
-  const [notes, setNotes] = useState(info.anotacoes ? info.anotacoes : "");
+  let infoResponsavel = info.responsavel ? info.responsavel : "A DEFINIR";
+  const [responsavel, setResponsavel] = useState(infoResponsavel);
+  let infoNotes = info.anotacoes ? info.anotacoes : "";
+  const [notes, setNotes] = useState(infoNotes);
   const [message, setMessage] = useState("");
   function updateRenderInfos() {
     axios

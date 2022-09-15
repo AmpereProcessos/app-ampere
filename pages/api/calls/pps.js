@@ -6,7 +6,6 @@ export default async function handler(req, res) {
     var dateFilterParam = new Date();
     dateFilterParam.setDate(dateFilterParam.getDate() - 2);
     let filter = dateFilterParam.toJSON();
-    console.log(filter);
     let closedCalls = await collection
       .aggregate([
         {
@@ -19,13 +18,18 @@ export default async function handler(req, res) {
             carimboDataHora: { $gte: filter },
           },
         },
+        {
+          $sort: { dataDeConclusao: -1 },
+        },
       ])
       .toArray();
     let inProgress = await collection
       .aggregate([
         {
           $match: {
-            status: { $in: ["EM ANDAMENTO", "AGUARDANDO VENDEDOR"] },
+            status: {
+              $in: ["EM ANDAMENTO", "AGUARDANDO VENDEDOR", "PENDENTE"],
+            },
           },
         },
         {
@@ -33,6 +37,29 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    return res.json({ closedCalls, inProgress });
+    let stats = await collection
+      .aggregate([
+        {
+          $match: {
+            status: {
+              $in: ["EM ANDAMENTO", "AGUARDANDO VENDEDOR", "PENDENTE"],
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            total: {
+              $count: {},
+            },
+          },
+        },
+      ])
+      .toArray();
+    return res.json({
+      closedCalls,
+      inProgress,
+      stats: { openCallsCount: stats[0].total },
+    });
   }
 }

@@ -26,7 +26,7 @@ const statusStyles = {
   },
 };
 
-function ChamadosPPS({ setCredentials }) {
+function ChamadosPPS({ setCredentials, credentials }) {
   const [inProgress, setInProgress] = useState([]);
   const [closedCalls, setClosedCalls] = useState([]);
   const [stats, setStats] = useState({});
@@ -278,6 +278,7 @@ function ChamadosPPS({ setCredentials }) {
       </Link>
       {modalIsOpen && (
         <ModalCallPPS
+          credentials={credentials}
           updateModalInfo={updateModalInfo}
           info={modalCall}
           setModalIsOpen={setModalIsOpen}

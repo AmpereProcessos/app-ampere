@@ -40,19 +40,60 @@ const statusStyles = {
     borderColor: "border-red-400",
   },
 };
-function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
+function ModalCallPPS({
+  open,
+  setModalIsOpen,
+  info,
+  updateModalInfo,
+  credentials,
+}) {
+  var ultAlteracoes = {
+    anotAlteracoes: {
+      usuario: info.ultAlteracoes?.anotAlteracoes
+        ? info.ultAlteracoes?.anotAlteracoes.usuario
+        : "",
+      antes: info.ultAlteracoes?.anotAlteracoes
+        ? info.ultAlteracoes?.anotAlteracoes.antes
+        : "",
+      depois: info.ultAlteracoes?.anotAlteracoes
+        ? info.ultAlteracoes?.anotAlteracoes.depois
+        : "",
+    },
+    statusAlteracoes: {
+      usuario: info.ultAlteracoes?.statusAlteracoes
+        ? info.ultAlteracoes?.statusAlteracoes.usuario
+        : "",
+      antes: info.ultAlteracoes?.statusAlteracoes
+        ? info.ultAlteracoes?.statusAlteracoes.antes
+        : "",
+      depois: info.ultAlteracoes?.statusAlteracoes
+        ? info.ultAlteracoes?.statusAlteracoes.depois
+        : "",
+    },
+  };
   let initialNote = info.anotacoes ? info.anotacoes : "";
   const [responsavel, setResponsavel] = useState(info.responsavel);
   const [notes, setNotes] = useState(initialNote);
   const [selectedStatus, setSelectedStatus] = useState(info.status);
   const [message, setMessage] = useState("");
   function saveProject() {
+    if (info.status != selectedStatus) {
+      ultAlteracoes.statusAlteracoes.usuario = credentials._id;
+      ultAlteracoes.statusAlteracoes.antes = info.status;
+      ultAlteracoes.statusAlteracoes.depois = selectedStatus;
+    }
+    if (notes != info.anotacoes) {
+      ultAlteracoes.anotAlteracoes.usuario = credentials._id;
+      ultAlteracoes.anotAlteracoes.antes = info.anotacoes;
+      ultAlteracoes.anotAlteracoes.depois = notes;
+    }
     axios
       .put("/api/calls/updatePPS", {
         ...info,
         status: selectedStatus,
         anotacoes: notes,
         responsavel: responsavel ? responsavel : info.responsavel,
+        ultAlteracoes: ultAlteracoes,
       })
       .then((res) => {
         setMessage(res.data);
@@ -60,24 +101,46 @@ function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
       });
   }
   function closedCall() {
+    if (info.status != "REALIZADO") {
+      ultAlteracoes.statusAlteracoes.usuario = credentials._id;
+      ultAlteracoes.statusAlteracoes.antes = info.status;
+      ultAlteracoes.statusAlteracoes.depois = "REALIZADO";
+    }
+    if (notes != info.anotacoes) {
+      ultAlteracoes.anotAlteracoes.usuario = credentials._id;
+      ultAlteracoes.anotAlteracoes.antes = info.anotacoes;
+      ultAlteracoes.anotAlteracoes.depois = notes;
+    }
     axios
       .post("/api/calls/updatePPS", {
         ...info,
         dataDeConclusao: new Date(),
         status: "REALIZADO",
+        ultAlteracoes: ultAlteracoes,
       })
       .then((res) => updateModalInfo(info._id));
   }
   function reopenCall() {
+    if (info.status != "PENDENTE") {
+      ultAlteracoes.statusAlteracoes.usuario = credentials._id;
+      ultAlteracoes.statusAlteracoes.antes = info.status;
+      ultAlteracoes.statusAlteracoes.depois = "PENDENTE";
+    }
+    if (notes != info.anotacoes) {
+      ultAlteracoes.anotAlteracoes.usuario = credentials._id;
+      ultAlteracoes.anotAlteracoes.antes = info.anotacoes;
+      ultAlteracoes.anotAlteracoes.depois = notes;
+    }
     axios
       .post("/api/calls/updatePPS", {
         ...info,
         dataDeConclusao: "",
         status: "PENDENTE",
+        ultAlteracoes: ultAlteracoes,
       })
       .then((res) => updateModalInfo(info._id));
   }
-  console.log(info.anotacoes, notes);
+  console.log(info);
   return (
     <>
       <div style={OVERLAY_STYLES}>

@@ -13,6 +13,7 @@ export default async function handler(req, res) {
         $set: {
           dataDeConclusao: exists ? new Date().toJSON() : "",
           status: req.body.status,
+          ultAlteracoes: req.body.ultAlteracoes,
         },
       },
       { returnNewDocument: true }
@@ -20,6 +21,7 @@ export default async function handler(req, res) {
     return res.json(newDocument);
   } else if (req.method === "PUT") {
     const db = await connectToDatabase(process.env.DB_KEY);
+    console.log(req.body.ultAlteracoes);
     const collection = db.collection("pps");
     let newDocument = await collection.findOneAndUpdate(
       {
@@ -30,6 +32,7 @@ export default async function handler(req, res) {
           anotacoes: req.body.anotacoes,
           responsavel: req.body.responsavel,
           status: req.body.status,
+          ultAlteracoes: req.body.ultAlteracoes,
         },
       },
       { returnNewDocument: true }

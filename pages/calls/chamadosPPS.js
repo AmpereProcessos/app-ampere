@@ -86,7 +86,9 @@ function ChamadosPPS({ setCredentials, credentials }) {
     axios
       .post("/api/calls/filteredByResp", {
         responsavel:
-          respFilter.length > 0 ? respFilter : ["ADRIANO", "ARTHUR", "MATHEUS"],
+          respFilter.length > 0
+            ? respFilter
+            : ["ADRIANO", "ARTHUR", "MATHEUS", "A DEFINIR"],
         status:
           statusFilter.length > 0 ? statusFilter : ["EM ANDAMENTO", "PENDENTE"],
       })
@@ -102,6 +104,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
     setModalCall(call);
     setModalIsOpen(true);
   }
+  console.log(inProgress);
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
       <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
@@ -146,7 +149,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
           </div>
           <div className="flex items-center gap-x-2">
             <p
-              onClick={() => filterOpenCallsByResp("ADRIANO")}
+              onClick={() => filterOpenCallsByResp("ADRIANO", undefined)}
               className={`border cursor-pointer border-gray-200 ${
                 respFilter.includes("ADRIANO")
                   ? "bg-blue-200 hover:bg-transparent"
@@ -156,7 +159,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
               ADRIANO
             </p>
             <p
-              onClick={() => filterOpenCallsByResp("ARTHUR")}
+              onClick={() => filterOpenCallsByResp("ARTHUR", undefined)}
               className={`border cursor-pointer border-gray-200 ${
                 respFilter.includes("ARTHUR")
                   ? "bg-blue-200 hover:bg-transparent"
@@ -166,7 +169,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
               ARTHUR
             </p>
             <p
-              onClick={() => filterOpenCallsByResp("MATHEUS")}
+              onClick={() => filterOpenCallsByResp("MATHEUS", undefined)}
               className={`border cursor-pointer border-gray-200 ${
                 respFilter.includes("MATHEUS")
                   ? "bg-blue-200 hover:bg-transparent"
@@ -174,6 +177,16 @@ function ChamadosPPS({ setCredentials, credentials }) {
               } p-2 text-xs text-gray-600`}
             >
               MATHEUS
+            </p>
+            <p
+              onClick={() => filterOpenCallsByResp("A DEFINIR", undefined)}
+              className={`border cursor-pointer border-gray-200 ${
+                respFilter.includes("A DEFINIR")
+                  ? "bg-blue-200 hover:bg-transparent"
+                  : "hover:bg-blue-200 bg-transparent"
+              } p-2 text-xs text-gray-600`}
+            >
+              A DEFINIR
             </p>
           </div>
         </div>

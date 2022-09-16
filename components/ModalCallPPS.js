@@ -58,6 +58,9 @@ function ModalCallPPS({
       depois: info.ultAlteracoes?.anotAlteracoes
         ? info.ultAlteracoes?.anotAlteracoes.depois
         : "",
+      data: info.ultAlteracoes?.anotAlteracoes
+        ? info.ultAlteracoes?.anotAlteracoes.data
+        : "",
     },
     statusAlteracoes: {
       usuario: info.ultAlteracoes?.statusAlteracoes
@@ -68,6 +71,9 @@ function ModalCallPPS({
         : "",
       depois: info.ultAlteracoes?.statusAlteracoes
         ? info.ultAlteracoes?.statusAlteracoes.depois
+        : "",
+      data: info.ultAlteracoes?.statusAlteracoes
+        ? info.ultAlteracoes?.statusAlteracoes.data
         : "",
     },
   };
@@ -81,11 +87,13 @@ function ModalCallPPS({
       ultAlteracoes.statusAlteracoes.usuario = credentials._id;
       ultAlteracoes.statusAlteracoes.antes = info.status;
       ultAlteracoes.statusAlteracoes.depois = selectedStatus;
+      ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
     }
-    if (notes != info.anotacoes) {
+    if (info.anotacoes != notes) {
       ultAlteracoes.anotAlteracoes.usuario = credentials._id;
       ultAlteracoes.anotAlteracoes.antes = info.anotacoes;
       ultAlteracoes.anotAlteracoes.depois = notes;
+      ultAlteracoes.anotAlteracoes.data = new Date().toJSON();
     }
     axios
       .put("/api/calls/updatePPS", {
@@ -105,11 +113,7 @@ function ModalCallPPS({
       ultAlteracoes.statusAlteracoes.usuario = credentials._id;
       ultAlteracoes.statusAlteracoes.antes = info.status;
       ultAlteracoes.statusAlteracoes.depois = "REALIZADO";
-    }
-    if (notes != info.anotacoes) {
-      ultAlteracoes.anotAlteracoes.usuario = credentials._id;
-      ultAlteracoes.anotAlteracoes.antes = info.anotacoes;
-      ultAlteracoes.anotAlteracoes.depois = notes;
+      ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
     }
     axios
       .post("/api/calls/updatePPS", {
@@ -125,11 +129,7 @@ function ModalCallPPS({
       ultAlteracoes.statusAlteracoes.usuario = credentials._id;
       ultAlteracoes.statusAlteracoes.antes = info.status;
       ultAlteracoes.statusAlteracoes.depois = "PENDENTE";
-    }
-    if (notes != info.anotacoes) {
-      ultAlteracoes.anotAlteracoes.usuario = credentials._id;
-      ultAlteracoes.anotAlteracoes.antes = info.anotacoes;
-      ultAlteracoes.anotAlteracoes.depois = notes;
+      ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
     }
     axios
       .post("/api/calls/updatePPS", {
@@ -192,7 +192,9 @@ function ModalCallPPS({
                     </>
                   ) : (
                     <p
-                      className={`text-xs font-bold border p-3 w-fit hover:opacity-100 text-center rounded-lg ${statusStyles["EM ANDAMENTO"].textColor} ${statusStyles["EM ANDAMENTO"].borderColor}`}
+                      className={`text-xs font-bold border p-3 w-fit hover:opacity-100 text-center rounded-lg ${
+                        statusStyles[info.status].textColor
+                      } ${statusStyles[info.status].borderColor}`}
                     >
                       {info.status}
                     </p>

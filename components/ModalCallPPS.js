@@ -96,7 +96,7 @@ function ModalCallPPS({
       ultAlteracoes.anotAlteracoes.data = new Date().toJSON();
     }
     axios
-      .put("/api/calls/updatePPS", {
+      .put("/api/calls/pps/updatePPS", {
         ...info,
         status: selectedStatus,
         anotacoes: notes,
@@ -116,7 +116,7 @@ function ModalCallPPS({
       ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
     }
     axios
-      .post("/api/calls/updatePPS", {
+      .post("/api/calls/pps/updatePPS", {
         ...info,
         dataDeConclusao: new Date(),
         status: "REALIZADO",
@@ -132,7 +132,7 @@ function ModalCallPPS({
       ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
     }
     axios
-      .post("/api/calls/updatePPS", {
+      .post("/api/calls/pps/updatePPS", {
         ...info,
         dataDeConclusao: "",
         status: "PENDENTE",

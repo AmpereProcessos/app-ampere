@@ -1,13 +1,14 @@
-import connectToDatabase from "../../../utils/callsDb";
+import connectToDatabase from "../../../../utils/callsDb";
 export default async function handler(req, res) {
   if (req.method === "POST") {
     const db = await connectToDatabase(process.env.DB_KEY);
-    const collection = db.collection("pps");
+    const collection = db.collection("suporte");
+    console.log(req.bod);
     let calls = await collection
       .aggregate([
         {
           $match: {
-            status: {
+            statusChamado: {
               $in: req.body.status,
             },
           },
@@ -20,7 +21,7 @@ export default async function handler(req, res) {
           },
         },
         {
-          $sort: { carimboDataHora: -1 },
+          $sort: { abertura: -1 },
         },
       ])
       .toArray();

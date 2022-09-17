@@ -1,4 +1,4 @@
-import connectToDatabase from "../../../utils/callsDb";
+import connectToDatabase from "../../../../utils/callsDb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
     var dateFilterParam = new Date();
@@ -34,7 +34,26 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    return res.json({ openCalls, closedCalls });
+    let stats = await collection
+      .aggregate([
+        {
+          $match: {
+            statusChamado: {
+              $in: ["ABERTO", "PENDENTE"],
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            total: {
+              $count: {},
+            },
+          },
+        },
+      ])
+      .toArray();
+    return res.json({ openCalls, closedCalls, stats: stats[0].total });
   }
   if (req.method === "POST") {
     let date = new Date().toJSON();

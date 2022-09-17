@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }) {
             toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
           />
           <div className="flex min-h-[100%] grow">
-            <Sidebar sidebarVisible={sidebarVisible} />
+            {sidebarVisible && <Sidebar />}
             <div className="flex flex-col grow w-full">
               <Component
                 sidebarVisible={sidebarVisible}

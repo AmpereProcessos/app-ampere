@@ -40,7 +40,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
   const [statusFilter, setStatusFilter] = useState([]);
   const router = useRouter();
   function getCalls() {
-    axios.get("/api/calls/pps").then((res) => {
+    axios.get("/api/calls/pps/mainData").then((res) => {
       setStats(res.data.stats);
       setInProgress(res.data.inProgress);
       setClosedCalls(res.data.closedCalls);
@@ -59,7 +59,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
   }, []);
   function filterClosedCallsByDate() {
     axios
-      .post("/api/calls/filteredByDate", {
+      .post("/api/calls/pps/filteredByDate", {
         date: closedFilterDate,
       })
       .then((res) => setClosedCalls(res.data));
@@ -84,7 +84,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
     setRespFilter(respFilter);
     setStatusFilter(statusFilter);
     axios
-      .post("/api/calls/filteredByResp", {
+      .post("/api/calls/pps/filteredByResp", {
         responsavel:
           respFilter.length > 0
             ? respFilter
@@ -104,7 +104,6 @@ function ChamadosPPS({ setCredentials, credentials }) {
     setModalCall(call);
     setModalIsOpen(true);
   }
-  console.log(inProgress);
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
       <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
@@ -190,7 +189,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
             </p>
           </div>
         </div>
-        <div className="flex justify-around gap-3 mt-4 flex-wrap">
+        <div className="flex justify-around overflow-y-auto gap-3 mt-4 flex-wrap">
           {inProgress.map((call) => (
             <div
               key={call._id}

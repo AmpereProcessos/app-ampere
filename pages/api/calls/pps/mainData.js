@@ -1,4 +1,4 @@
-import connectToDatabase from "../../../utils/callsDb";
+import connectToDatabase from "../../../../utils/callsDb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY);

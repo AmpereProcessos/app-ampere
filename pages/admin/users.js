@@ -1,14 +1,12 @@
-import { FiUsers } from "react-icons/fi";
 import { TiDelete } from "react-icons/ti";
 import { RiAddCircleFill } from "react-icons/ri";
-import Header from "../../components/Header";
+import { AiFillEyeInvisible } from "react-icons/ai";
 import RoutesCard from "../../components/RoutesCard";
-
 import { acessAuth, routes } from "../../utils/constants";
 import { useEffect, useState } from "react";
 import axios from "axios";
 let positions = Object.keys(acessAuth);
-export default function UsersControl({ credentials }) {
+export default function UsersControl({ credentials, setCredentials }) {
   const [name, setName] = useState("");
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +15,7 @@ export default function UsersControl({ credentials }) {
   const [additionalRoutes, setAdditionalRoutes] = useState();
   const [userIsAdmin, setUserIsAdmin] = useState("N");
   const [message, setMessage] = useState("");
+  const [passwordInputType, setPasswordInputType] = useState(false);
   function resetStates() {
     setName("");
     setLogin("");
@@ -98,14 +97,15 @@ export default function UsersControl({ credentials }) {
     admin: userIsAdmin == "N" ? false : true,
   });*/
   }
+  useEffect(() => {
+    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
+    if (storedCredentials) {
+      setCredentials(storedCredentials);
+    }
+  }, []);
+  console.log(credentials);
   return (
-    <div className="bg-[#1D7ED7] flex flex-col w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">
-      <Header
-        title={"Controle de Usuários"}
-        color="#0a2a48"
-        icon={<FiUsers style={{ color: "white", fontSize: "30px" }} />}
-        url={"/"}
-      />
+    <div className="p-6 grow bg-[#15599a]">
       <div className="grid px-24 grid-cols-3 grid-rows-2 mt-20 gap-x-4">
         <h1 className="text-center text-lg text-white font-bold uppercase col-span-3">
           Informações para autenticação
@@ -132,12 +132,18 @@ export default function UsersControl({ credentials }) {
         </div>
         <div className="flex gap-y-2 items-center flex-col">
           <span className="text-white font-bold uppercase">Senha</span>
-          <input
-            value={password}
-            type={"password"}
-            className="outline-none px-4 text-gray-600 py-1 w-2/3 rounded"
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="flex bg-[#fff] items-center px-2 w-2/3 rounded">
+            <input
+              value={password}
+              type={passwordInputType ? "text" : "password"}
+              className="outline-none grow bg-transparent px-4 text-gray-600 py-1 w-2/3 rounded"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <AiFillEyeInvisible
+              onClick={() => setPasswordInputType(!passwordInputType)}
+              style={{ color: "gray", cursor: "pointer" }}
+            />
+          </div>
         </div>
       </div>
       {message && (

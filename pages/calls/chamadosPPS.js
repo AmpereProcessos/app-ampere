@@ -119,7 +119,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
           <AiOutlineReload />
         </div>
       </div>
-      <div className="w-full border max-h-[400px] overflow-y-auto overscroll-y-auto border-gray-200 bg-[#fff] shadow-xl p-4">
+      <div className="w-full border max-h-[400px]  border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex items-center justify-around">
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             Chamados abertos
@@ -189,7 +189,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
             </p>
           </div>
         </div>
-        <div className="flex justify-around overflow-y-auto gap-3 mt-4 flex-wrap">
+        <div className="flex justify-around max-h-[350px] overflow-y-auto overscroll-y-auto gap-3 mt-4 flex-wrap">
           {inProgress.map((call) => (
             <div
               key={call._id}
@@ -220,11 +220,12 @@ function ChamadosPPS({ setCredentials, credentials }) {
           ))}
         </div>
       </div>
-      <div className="w-full border max-h-[450px] overflow-y-auto overscroll-y-auto border-gray-200 bg-[#fff] shadow-xl p-4">
+      <div className="w-full border max-h-[450px] border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex items-center justify-around">
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             CHAMADOS FINALIZADOS
           </h1>
+          <p>{closedCalls.length} resolvidos no período</p>
           <div className="flex gap-x-2 items-center">
             <p>Entre:</p>
             <input
@@ -259,7 +260,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
             <MdDateRange />
           </div>
         </div>
-        <div className="flex mt-2 flex-wrap gap-2 justify-around">
+        <div className="flex mt-2 max-h-[350px] overflow-y-auto overscroll-y-auto flex-wrap gap-2 justify-around">
           {closedCalls.map((call) => (
             <div
               key={call._id}

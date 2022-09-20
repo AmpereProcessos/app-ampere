@@ -69,16 +69,28 @@ const routes = [
 
 function Home({ credentials, setCredentials }) {
   const router = useRouter();
+  const [regionalFilter, setRegionalFilter] = useState();
   const [installedData, setInstalledData] = useState([]);
   const [averageHomoData, setHomoData] = useState([]);
+  const [statsData, setStatsData] = useState({
+    diffPotInstalled: 0,
+    diffHomoPot: 0,
+    diffJobsDone: 0,
+    diffHomoTime: 0,
+    graphData: {},
+  });
+  function getStats() {
+    setRegionalFilter("GERAL");
+    axios.get("/api/stats").then((res) => {
+      setInstalledData(res.data.installedInfo);
+      setHomoData(res.data.averageHomoData);
+    });
+  }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      axios.get("/api/stats").then((res) => {
-        setInstalledData(res.data.installedInfo);
-        setHomoData(res.data.averageHomoData);
-      });
+      getStats();
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
@@ -90,36 +102,92 @@ function Home({ credentials, setCredentials }) {
       }
     }
   }, []);
-  var parcialPotLastMonth =
-    (new Date().getDate() / 30) * installedData[2]?.total;
-  var parcialHomoPotLastMonth =
-    (new Date().getDate() / 30) * averageHomoData[0]?.homoPeakPot;
-  var parcialJobsLastMonth =
-    (new Date().getDate() / 30) * installedData[2]?.count;
-  var diffPotInstalled = (
-    1 -
-    installedData[3]?.total / parcialPotLastMonth
-  ).toFixed(2);
-  var diffHomoPot = (
-    1 -
-    averageHomoData[1]?.homoPeakPot / parcialHomoPotLastMonth
-  ).toFixed(2);
-  var diffJobsDone = (
-    1 -
-    installedData[3]?.count / parcialJobsLastMonth
-  ).toFixed(2);
-  var diffHomoTime = (
-    averageHomoData[0]?.averageTime / averageHomoData[1]?.averageTime -
-    1
-  ).toFixed(2);
-  const data = [
-    { name: `${installedData[0]?._id.mes}/22`, Total: installedData[0]?.total },
-    { name: `${installedData[1]?._id.mes}/22`, Total: installedData[1]?.total },
-    { name: `${installedData[2]?._id.mes}/22`, Total: installedData[2]?.total },
-    { name: `${installedData[3]?._id.mes}/22`, Total: installedData[3]?.total },
-  ];
+  function filterByRegional(regional) {
+    setRegionalFilter(regional);
+    axios.post("/api/stats", { regional: regional }).then((res) => {
+      setInstalledData(res.data.installedInfo);
+      setHomoData(res.data.averageHomoData);
+    });
+  }
+  console.log(averageHomoData);
+  useEffect(() => {
+    var parcialPotLastMonth =
+      (new Date().getDate() / 30) * installedData[2]?.total;
+    var parcialHomoPotLastMonth =
+      (new Date().getDate() / 30) * averageHomoData[0]?.homoPeakPot;
+    var parcialJobsLastMonth =
+      (new Date().getDate() / 30) * installedData[2]?.count;
+    setStatsData({
+      diffPotInstalled: (
+        1 -
+        installedData[3]?.total / parcialPotLastMonth
+      ).toFixed(2),
+      diffHomoPot: (
+        1 -
+        averageHomoData[1]?.homoPeakPot / parcialHomoPotLastMonth
+      ).toFixed(2),
+      diffJobsDone: (
+        1 -
+        installedData[3]?.count / parcialJobsLastMonth
+      ).toFixed(2),
+      diffHomoTime: (
+        1 -
+        installedData[3]?.count / parcialJobsLastMonth
+      ).toFixed(2),
+      graphData: [
+        {
+          name: `${installedData[0]?._id.mes}/22`,
+          Total: installedData[0]?.total,
+        },
+        {
+          name: `${installedData[1]?._id.mes}/22`,
+          Total: installedData[1]?.total,
+        },
+        {
+          name: `${installedData[2]?._id.mes}/22`,
+          Total: installedData[2]?.total,
+        },
+        {
+          name: `${installedData[3]?._id.mes}/22`,
+          Total: installedData[3]?.total,
+        },
+      ],
+    });
+  }, [installedData, averageHomoData]);
   return (
     <div className="p-6 grow">
+      <div className="flex justify-center gap-x-2 bg-[#fff] py-2 mb-2 border border-gray-200 shadow-lg">
+        <p
+          onClick={() => filterByRegional("REGIONAL ITUIUTABA")}
+          className={`border ${
+            regionalFilter == "REGIONAL ITUIUTABA"
+              ? "bg-blue-200"
+              : "bg-[#fff] hover:bg-blue-200"
+          }  cursor-pointer p-1 px-2 font-semibold text-gray-600 text-sm text-center border-gray-200 font-raleway`}
+        >
+          REGIONAL ITUIUTABA
+        </p>
+        <p
+          onClick={() => filterByRegional("REGIONAL UBERLÂNDIA")}
+          className={`border ${
+            regionalFilter == "REGIONAL UBERLÂNDIA"
+              ? "bg-blue-200"
+              : "bg-[#fff] hover:bg-blue-200"
+          }  cursor-pointer p-1 px-2 font-semibold text-gray-600 text-sm text-center border-gray-200 font-raleway`}
+        >
+          REGIONAL UBERLÂNDIA
+        </p>
+        <p
+          onClick={getStats}
+          className={`border ${
+            regionalFilter == "GERAL"
+              ? "bg-blue-200"
+              : "bg-[#fff] hover:bg-blue-200"
+          }  cursor-pointer p-1 px-2 font-semibold text-gray-600 text-sm text-center border-gray-200 font-raleway`}
+        >
+          GERAL
+        </p>
+      </div>
       <div className="grid grid-cols-4 gap-x-3 w-full">
         <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
@@ -128,20 +196,20 @@ function Home({ credentials, setCredentials }) {
             </h1>
             <div
               className={
-                diffJobsDone > 1
+                statsData.diffJobsDone > 1
                   ? `flex items-center text-green-500`
                   : "flex items-center text-red-500"
               }
             >
-              {diffJobsDone > 1 ? (
+              {statsData.diffJobsDone > 1 ? (
                 <MdOutlineKeyboardArrowUp fontSize={"25px"} />
               ) : (
                 <MdOutlineKeyboardArrowDown fontSize={"25px"} />
               )}
               <p>
-                {diffJobsDone > 1
-                  ? (Math.abs(1 - diffJobsDone) * 100).toFixed(2)
-                  : (diffJobsDone * 100).toFixed(2)}
+                {statsData.diffJobsDone > 1
+                  ? (Math.abs(1 - statsData.diffJobsDone) * 100).toFixed(2)
+                  : (statsData.diffJobsDone * 100).toFixed(2)}
                 %
               </p>
             </div>
@@ -160,20 +228,20 @@ function Home({ credentials, setCredentials }) {
             </h1>
             <div
               className={
-                diffPotInstalled > 1
+                statsData.diffPotInstalled > 1
                   ? `flex items-center text-green-500`
                   : "flex items-center text-red-500"
               }
             >
-              {diffPotInstalled > 1 ? (
+              {statsData.diffPotInstalled > 1 ? (
                 <MdOutlineKeyboardArrowUp fontSize={"25px"} />
               ) : (
                 <MdOutlineKeyboardArrowDown fontSize={"25px"} />
               )}
               <p>
-                {diffPotInstalled > 1
-                  ? (Math.abs(1 - diffPotInstalled) * 100).toFixed(2)
-                  : (diffPotInstalled * 100).toFixed(2)}
+                {statsData.diffPotInstalled > 1
+                  ? (Math.abs(1 - statsData.diffPotInstalled) * 100).toFixed(2)
+                  : (statsData.diffPotInstalled * 100).toFixed(2)}
                 %
               </p>
             </div>
@@ -193,20 +261,20 @@ function Home({ credentials, setCredentials }) {
             </h1>
             <div
               className={
-                diffHomoPot > 1
+                statsData.diffHomoPot > 1
                   ? `flex items-center text-green-500`
                   : "flex items-center text-red-500"
               }
             >
-              {diffHomoPot > 1 ? (
+              {statsData.diffHomoPot > 1 ? (
                 <MdOutlineKeyboardArrowUp fontSize={"25px"} />
               ) : (
                 <MdOutlineKeyboardArrowDown fontSize={"25px"} />
               )}
               <p>
-                {diffHomoPot > 1
-                  ? (Math.abs(1 - diffHomoPot) * 100).toFixed(2)
-                  : (diffHomoPot * 100).toFixed(2)}
+                {statsData.diffHomoPot > 1
+                  ? (Math.abs(1 - statsData.diffHomoPot) * 100).toFixed(2)
+                  : (statsData.diffHomoPot * 100).toFixed(2)}
                 %
               </p>
             </div>
@@ -226,20 +294,20 @@ function Home({ credentials, setCredentials }) {
             </h1>
             <div
               className={
-                diffHomoTime > 0
+                statsData.diffHomoTime > 0
                   ? `flex items-center text-green-500`
                   : "flex items-center text-red-500"
               }
             >
-              {diffHomoTime > 0 ? (
+              {statsData.diffHomoTime > 0 ? (
                 <MdOutlineKeyboardArrowUp fontSize={"25px"} />
               ) : (
                 <MdOutlineKeyboardArrowDown fontSize={"25px"} />
               )}
               <p>
-                {diffHomoTime > 0
-                  ? (diffHomoTime * 100).toFixed(2)
-                  : (Math.abs(diffHomoTime) * 100).toFixed(2)}
+                {statsData.diffHomoTime > 0
+                  ? (statsData.diffHomoTime * 100).toFixed(2)
+                  : (Math.abs(statsData.diffHomoTime) * 100).toFixed(2)}
                 %
               </p>
             </div>
@@ -291,7 +359,7 @@ function Home({ credentials, setCredentials }) {
             <AreaChart
               width={530}
               height={250}
-              data={data}
+              data={statsData.graphData}
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
             >
               <defs>

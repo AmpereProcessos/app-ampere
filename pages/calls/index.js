@@ -1,7 +1,19 @@
 import Link from "next/link";
-import React from "react";
-
-function Calls() {
+import React, { useEffect } from "react";
+import { useRouter } from "next/router";
+function Calls({ credentials, setCredentials }) {
+  const router = useRouter();
+  console.log(credentials);
+  useEffect(() => {
+    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
+    if (storedCredentials) {
+      setCredentials(storedCredentials);
+    } else {
+      if (!credentials.nome) {
+        router.push("/auth/authHome");
+      }
+    }
+  }, []);
   return (
     <div className="flex flex-col bg-gray-100 grow p-6 w-full">
       <h1 className="text-center text-[#15599a] text-xl font-bold uppercase font-ralewayBlack">

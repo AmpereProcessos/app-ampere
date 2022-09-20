@@ -88,7 +88,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
         responsavel:
           respFilter.length > 0
             ? respFilter
-            : ["ADRIANO", "ARTHUR", "MATHEUS", "A DEFINIR"],
+            : ["ADRIANO", "ARTHUR", "MATHEUS", "A DEFINIR", null],
         status:
           statusFilter.length > 0 ? statusFilter : ["EM ANDAMENTO", "PENDENTE"],
       })

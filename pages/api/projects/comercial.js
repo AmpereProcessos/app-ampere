@@ -52,5 +52,10 @@ export default async function handler(req, res) {
     projetos.length,
     obras.length
   );
-  res.json(comercial);
+  res.json({
+    comercial: comercial.length,
+    suprimentos: suprimentos.length,
+    projetos: projetos.length,
+    obras: obras.length,
+  });
 }

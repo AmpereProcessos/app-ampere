@@ -116,8 +116,6 @@ function Home({ credentials, setCredentials }) {
   function getGraphDataByYear(year) {
     setSelectedYear(year);
     axios.get(`/api/stats/getByYear/${year}`).then((res) => {
-      let max = Math.max(...statsData.graphData.map((x) => x.Total));
-      setMaxGraphNumber(max);
       setStatsData({ ...statsData, graphData: res.data });
     });
   }
@@ -166,7 +164,6 @@ function Home({ credentials, setCredentials }) {
     });
   }, [installedData, averageHomoData]);
   // var max = Math.max(...statsData.graphData.map((x) => x.total));
-  console.log(Math.max(...statsData.graphData.map((x) => x.Total)));
   return (
     <div className="p-6 grow">
       <div className="flex justify-center gap-x-2 bg-[#fff] py-2 mb-2 border border-gray-200 shadow-lg">
@@ -415,14 +412,7 @@ function Home({ credentials, setCredentials }) {
                 </linearGradient>
               </defs>
               <XAxis dataKey="name" stroke="gray" />
-              <YAxis
-                domain={[
-                  0,
-                  maxGraphNumber
-                    ? Math.max(...statsData.graphData.map((x) => x.Total))
-                    : 500,
-                ]}
-              />
+              <YAxis domain={[0, 500]} />
               <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
               <Tooltip />
               <Area

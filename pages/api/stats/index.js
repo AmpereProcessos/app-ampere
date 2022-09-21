@@ -234,47 +234,6 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    let graphData = await collection
-      .aggregate([
-        {
-          $match: {
-            regional: regional,
-            saidadeobra: { $ne: "-" },
-          },
-        },
-        {
-          $group: {
-            _id: {
-              ano: {
-                $year: { $dateFromString: { dateString: "$saidadeobra" } },
-              },
-              mes: {
-                $month: { $dateFromString: { dateString: "$saidadeobra" } },
-              },
-            },
-            total: {
-              $sum: "$potpico",
-            },
-            count: { $count: {} },
-          },
-        },
-        {
-          $sort: {
-            "_id.ano": 1,
-            "_id.mes": 1,
-          },
-        },
-        {
-          $match: {
-            "_id.ano": req.data.year ? req.data.year : 2022,
-          },
-        },
-      ])
-      .toArray();
-    var graph = graphData.map((info) => {
-      return { name: `${info._id.mes}/${info._id.ano}`, Total: info._id.total };
-    });
-    console.log(graph);
     return res.status(201).json({
       installedInfo,
       averageHomoData,

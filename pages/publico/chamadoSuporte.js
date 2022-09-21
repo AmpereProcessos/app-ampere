@@ -56,7 +56,7 @@ function ChamadoSuporte() {
     });
     if (checkObligatoryFields()) {
       axios
-        .post("/api/calls/suporte", {
+        .post("/api/calls/suporte/mainData", {
           clientName: clientName,
           clientCity: clientCity,
           cpfCnpj: cpfCnpj,

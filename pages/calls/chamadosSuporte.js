@@ -311,6 +311,11 @@ function ChamadosSuporte({ credentials, setCredentials }) {
           ))}
         </div>
       </div>
+      <Link href="/publico/chamadoSuporte">
+        <div className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">Novo chamado</p>
+        </div>
+      </Link>
       {modalIsOpen && (
         <ModalCallSuporte
           credentials={credentials}

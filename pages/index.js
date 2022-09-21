@@ -70,8 +70,10 @@ const routes = [
 function Home({ credentials, setCredentials }) {
   const router = useRouter();
   const [regionalFilter, setRegionalFilter] = useState();
+  const [selectedYear, setSelectedYear] = useState();
   const [installedData, setInstalledData] = useState([]);
   const [averageHomoData, setHomoData] = useState([]);
+  const [maxGraphNumber, setMaxGraphNumber] = useState(0);
   const [nps, setNps] = useState(0);
   const [statsData, setStatsData] = useState({
     diffPotInstalled: 0,
@@ -107,12 +109,18 @@ function Home({ credentials, setCredentials }) {
   function filterByRegional(regional) {
     setRegionalFilter(regional);
     axios.post("/api/stats", { regional: regional }).then((res) => {
-      console.log(regional, res.data);
       setInstalledData(res.data.installedInfo);
       setHomoData(res.data.averageHomoData);
     });
   }
-  console.log(averageHomoData);
+  function getGraphDataByYear(year) {
+    setSelectedYear(year);
+    axios.get(`/api/stats/getByYear/${year}`).then((res) => {
+      let max = Math.max(...statsData.graphData.map((x) => x.Total));
+      setMaxGraphNumber(max);
+      setStatsData({ ...statsData, graphData: res.data });
+    });
+  }
   useEffect(() => {
     var parcialPotLastMonth =
       (new Date().getDate() / 30) * installedData[2]?.total;
@@ -157,6 +165,8 @@ function Home({ credentials, setCredentials }) {
       ],
     });
   }, [installedData, averageHomoData]);
+  // var max = Math.max(...statsData.graphData.map((x) => x.total));
+  console.log(Math.max(...statsData.graphData.map((x) => x.Total)));
   return (
     <div className="p-6 grow">
       <div className="flex justify-center gap-x-2 bg-[#fff] py-2 mb-2 border border-gray-200 shadow-lg">
@@ -325,7 +335,7 @@ function Home({ credentials, setCredentials }) {
         </div>
       </div>
       <div className="grid mt-4 grid-cols-4 gap-x-3">
-        <div className="flex flex-col p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl col-span-1">
+        <div className="flex flex-col p-4 h-[400px] border border-gray-200 bg-[#fff] shadow-xl col-span-1">
           <h1 className="text-gray-600 text-xl text-center">NPS</h1>
           <div className="flex grow items-center justify-center">
             <div className="w-[150px] h-[150px]">
@@ -354,25 +364,65 @@ function Home({ credentials, setCredentials }) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl col-span-3">
-          <h1 className="text-gray-600 text-xl text-center">
-            Potência pico instalada
-          </h1>
+        <div className="flex flex-col p-4 h-[400px] border border-gray-200 bg-[#fff] shadow-xl col-span-3">
+          <div className="grid grid-cols-2 py-2">
+            <h1 className="text-gray-600 uppercase text-xl text-center">
+              Potência pico instalada
+            </h1>
+            <div className="flex items-center gap-x-2 justify-center">
+              <p
+                onClick={() => getGraphDataByYear(2020)}
+                className={`border cursor-pointer border-gray-200 ${
+                  selectedYear == 2020
+                    ? "bg-blue-200 hover:bg-transparent"
+                    : "hover:bg-blue-200 bg-transparent"
+                } p-2 text-xs text-gray-600`}
+              >
+                2020
+              </p>
+              <p
+                onClick={() => getGraphDataByYear(2021)}
+                className={`border cursor-pointer border-gray-200 ${
+                  selectedYear == 2021
+                    ? "bg-blue-200 hover:bg-transparent"
+                    : "hover:bg-blue-200 bg-transparent"
+                } p-2 text-xs text-gray-600`}
+              >
+                2021
+              </p>
+              <p
+                onClick={() => getGraphDataByYear(2021)}
+                className={`border cursor-pointer border-gray-200 ${
+                  selectedYear == 2022
+                    ? "bg-blue-200 hover:bg-transparent"
+                    : "hover:bg-blue-200 bg-transparent"
+                } p-2 text-xs text-gray-600`}
+              >
+                2022
+              </p>
+            </div>
+          </div>
           <ResponsiveContainer width="100%">
             <AreaChart
               width={530}
-              height={250}
+              height={300}
               data={statsData.graphData}
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
             >
               <defs>
                 <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#15599a" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#15599a" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis dataKey="name" stroke="gray" />
-              <YAxis />
+              <YAxis
+                domain={[
+                  0,
+                  maxGraphNumber
+                    ? Math.max(...statsData.graphData.map((x) => x.Total))
+                    : 500,
+                ]}
+              />
               <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
               <Tooltip />
               <Area

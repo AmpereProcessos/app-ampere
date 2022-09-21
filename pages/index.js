@@ -72,6 +72,7 @@ function Home({ credentials, setCredentials }) {
   const [regionalFilter, setRegionalFilter] = useState();
   const [installedData, setInstalledData] = useState([]);
   const [averageHomoData, setHomoData] = useState([]);
+  const [nps, setNps] = useState(0);
   const [statsData, setStatsData] = useState({
     diffPotInstalled: 0,
     diffHomoPot: 0,
@@ -82,6 +83,7 @@ function Home({ credentials, setCredentials }) {
   function getStats() {
     setRegionalFilter("GERAL");
     axios.get("/api/stats").then((res) => {
+      setNps(res.data.nps);
       setInstalledData(res.data.installedInfo);
       setHomoData(res.data.averageHomoData);
     });
@@ -105,6 +107,7 @@ function Home({ credentials, setCredentials }) {
   function filterByRegional(regional) {
     setRegionalFilter(regional);
     axios.post("/api/stats", { regional: regional }).then((res) => {
+      console.log(regional, res.data);
       setInstalledData(res.data.installedInfo);
       setHomoData(res.data.averageHomoData);
     });
@@ -344,8 +347,8 @@ function Home({ credentials, setCredentials }) {
                   trailColor: "#d6d6d6",
                   backgroundColor: "#3e98c7",
                 })}
-                value={70}
-                text={"70%"}
+                value={Number(nps)}
+                text={`${nps}%`}
                 strokeWidth={6}
               />
             </div>

@@ -10,6 +10,9 @@ export default async function handler(req, res) {
     let installedInfo = await collection
       .aggregate([
         {
+          $match: { saidadeobra: { $ne: "-" } },
+        },
+        {
           $group: {
             _id: {
               ano: {
@@ -52,10 +55,10 @@ export default async function handler(req, res) {
           $group: {
             _id: {
               ano: {
-                $year: { $dateFromString: { dateString: "$parecerdeacesso" } },
+                $year: { $dateFromString: { dateString: "$pareceracesso" } },
               },
               mes: {
-                $month: { $dateFromString: { dateString: "$parecerdeacesso" } },
+                $month: { $dateFromString: { dateString: "$pareceracesso" } },
               },
             },
             averageTime: {
@@ -65,7 +68,7 @@ export default async function handler(req, res) {
                     $dateFromString: { dateString: "$documentacaoassinada" },
                   },
                   endDate: {
-                    $dateFromString: { dateString: "$parecerdeacesso" },
+                    $dateFromString: { dateString: "$pareceracesso" },
                   },
                   unit: "day",
                 },
@@ -88,9 +91,51 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
+
+    let promotores = await collection
+      .aggregate([
+        {
+          $match: {
+            nps: { $in: [9, 10] },
+          },
+        },
+        {
+          $count: "nps",
+        },
+      ])
+      .toArray();
+    let detratores = await collection
+      .aggregate([
+        {
+          $match: {
+            nps: { $in: [0, 1, 2, 3, 4, 5, 6] },
+          },
+        },
+        {
+          $count: "nps",
+        },
+      ])
+      .toArray();
+    let consultasTotais = await collection
+      .aggregate([
+        {
+          $match: {
+            nps: { $in: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
+          },
+        },
+        {
+          $count: "nps",
+        },
+      ])
+      .toArray();
+    var nps = (
+      ((promotores[0].nps - detratores[0].nps) * 100) /
+      consultasTotais[0].nps
+    ).toFixed(2);
     return res.status(201).json({
       installedInfo,
       averageHomoData,
+      nps,
     });
   }
   if (req.method === "POST") {
@@ -106,6 +151,7 @@ export default async function handler(req, res) {
         {
           $match: {
             regional: regional,
+            saidadeobra: { $ne: "-" },
           },
         },
         {
@@ -152,26 +198,20 @@ export default async function handler(req, res) {
           $group: {
             _id: {
               ano: {
-                $year: {
-                  $dateFromString: { dateString: "$parecerdeacesso" },
-                },
+                $year: { $dateFromString: { dateString: "$pareceracesso" } },
               },
               mes: {
-                $month: {
-                  $dateFromString: { dateString: "$parecerdeacesso" },
-                },
+                $month: { $dateFromString: { dateString: "$pareceracesso" } },
               },
             },
             averageTime: {
               $avg: {
                 $dateDiff: {
                   startDate: {
-                    $dateFromString: {
-                      dateString: "$documentacaoassinada",
-                    },
+                    $dateFromString: { dateString: "$documentacaoassinada" },
                   },
                   endDate: {
-                    $dateFromString: { dateString: "$parecerdeacesso" },
+                    $dateFromString: { dateString: "$pareceracesso" },
                   },
                   unit: "day",
                 },
@@ -189,7 +229,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "_id.ano": { $gte: currentYear },
-            "_id.mes": { $gte: currentMonth - 1 },
+            "_id.mes": { $gte: currentMonth - 2 },
           },
         },
       ])

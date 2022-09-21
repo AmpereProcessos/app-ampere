@@ -10,6 +10,9 @@ import "react-circular-progressbar/dist/styles.css";
 import {
   AreaChart,
   Area,
+  LineChart,
+  Legend,
+  Line,
   XAxis,
   CartesianGrid,
   Tooltip,
@@ -122,6 +125,7 @@ function Home({ credentials, setCredentials }) {
   useEffect(() => {
     var parcialPotLastMonth =
       (new Date().getDate() / 30) * installedData[2]?.total;
+    console.log(parcialPotLastMonth);
     var parcialHomoPotLastMonth =
       (new Date().getDate() / 30) * averageHomoData[0]?.homoPeakPot;
     var parcialJobsLastMonth =
@@ -164,6 +168,7 @@ function Home({ credentials, setCredentials }) {
     });
   }, [installedData, averageHomoData]);
   // var max = Math.max(...statsData.graphData.map((x) => x.total));
+  console.log(averageHomoData);
   return (
     <div className="p-6 grow">
       <div className="flex justify-center gap-x-2 bg-[#fff] py-2 mb-2 border border-gray-200 shadow-lg">
@@ -206,19 +211,19 @@ function Home({ credentials, setCredentials }) {
             </h1>
             <div
               className={
-                statsData.diffJobsDone > 1
+                statsData.diffJobsDone < 0
                   ? `flex items-center text-green-500`
                   : "flex items-center text-red-500"
               }
             >
-              {statsData.diffJobsDone > 1 ? (
+              {statsData.diffJobsDone < 0 ? (
                 <MdOutlineKeyboardArrowUp fontSize={"25px"} />
               ) : (
                 <MdOutlineKeyboardArrowDown fontSize={"25px"} />
               )}
               <p>
-                {statsData.diffJobsDone > 1
-                  ? (Math.abs(1 - statsData.diffJobsDone) * 100).toFixed(2)
+                {statsData.diffJobsDone < 0
+                  ? (Math.abs(statsData.diffJobsDone) * 100).toFixed(2)
                   : (statsData.diffJobsDone * 100).toFixed(2)}
                 %
               </p>
@@ -238,19 +243,19 @@ function Home({ credentials, setCredentials }) {
             </h1>
             <div
               className={
-                statsData.diffPotInstalled > 1
+                statsData.diffPotInstalled < 0
                   ? `flex items-center text-green-500`
                   : "flex items-center text-red-500"
               }
             >
-              {statsData.diffPotInstalled > 1 ? (
+              {statsData.diffPotInstalled < 0 ? (
                 <MdOutlineKeyboardArrowUp fontSize={"25px"} />
               ) : (
                 <MdOutlineKeyboardArrowDown fontSize={"25px"} />
               )}
               <p>
-                {statsData.diffPotInstalled > 1
-                  ? (Math.abs(1 - statsData.diffPotInstalled) * 100).toFixed(2)
+                {statsData.diffPotInstalled < 0
+                  ? (Math.abs(statsData.diffPotInstalled) * 100).toFixed(2)
                   : (statsData.diffPotInstalled * 100).toFixed(2)}
                 %
               </p>
@@ -388,7 +393,7 @@ function Home({ credentials, setCredentials }) {
                 2021
               </p>
               <p
-                onClick={() => getGraphDataByYear(2021)}
+                onClick={() => getGraphDataByYear(2022)}
                 className={`border cursor-pointer border-gray-200 ${
                   selectedYear == 2022
                     ? "bg-blue-200 hover:bg-transparent"
@@ -400,29 +405,24 @@ function Home({ credentials, setCredentials }) {
             </div>
           </div>
           <ResponsiveContainer width="100%">
-            <AreaChart
-              width={530}
+            <LineChart
+              width={550}
               height={300}
               data={statsData.graphData}
-              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
-              <defs>
-                <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#15599a" stopOpacity={0.8} />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="name" stroke="gray" />
-              <YAxis domain={[0, 500]} />
-              <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis dataKey={"Total"} domain={[0, 500]} />
               <Tooltip />
-              <Area
+              <Legend />
+              <Line
                 type="monotone"
                 dataKey="Total"
-                stroke="#fead61"
-                fillOpacity={1}
-                fill="url(#total)"
+                strokeWidth={4}
+                stroke="#15599a"
               />
-            </AreaChart>
+            </LineChart>
           </ResponsiveContainer>
         </div>
       </div>

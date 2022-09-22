@@ -152,7 +152,6 @@ function ModalCallSuporte({
     setMessage("");
   }, [notes, responsavel]);
   console.log(info);
-  console.log(cidade);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -291,7 +290,7 @@ function ModalCallSuporte({
                   className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
                 />
               </div>
-              {info.fechamento ? (
+              {info.statusChamado != "ABERTO" ? (
                 <div className="text-center">
                   <button
                     onClick={reopenCall}

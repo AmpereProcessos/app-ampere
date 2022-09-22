@@ -59,10 +59,16 @@ function Suprimentos({ credentials, setCredentials }) {
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-xxs">MATERIAL</span>
+                <span className="text-xxs">STATUS KIT</span>
                 <p className="text-xs text-yellow-500">
-                  {project.materialalmoxarifado
-                    ? project.materialalmoxarifado
+                  {project.statusentrega ? project.statusentrega : "-"}
+                </p>
+              </div>
+              <div>
+                <span className="text-xxs">PREVISÃO DE ENTREGA</span>
+                <p className="text-xs text-gray-600 text-center">
+                  {project.previsaoentrega
+                    ? new Date(project.previsaoentrega).toLocaleDateString()
                     : "-"}
                 </p>
               </div>

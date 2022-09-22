@@ -4,9 +4,13 @@ import { useRouter } from "next/router";
 function Comercial({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
+  const [currentFilter, setCurrentFilter] = useState("");
+  const [filteredProjects, setFilteredProjects] = useState([]);
   function getProjects() {
     axios.get("/api/projects/filteredByStage").then((res) => {
+      setCurrentFilter("TODOS");
       setProjects(res.data.comercial);
+      setFilteredProjects(res.data.comercial);
     });
   }
   useEffect(() => {
@@ -22,19 +26,68 @@ function Comercial({ credentials, setCredentials }) {
       }
     }
   }, []);
+  function filterByContractCondition(condition) {
+    setCurrentFilter(condition);
+    var newArr = projects.filter((p) => p.statuscontrato == condition);
+    setFilteredProjects(newArr);
+  }
   console.log(projects);
   return (
     <div className="p-6 grow">
-      <div className="flex items-center gap-x-2 border-b border-gray-200 p-1">
-        <p className="font-bold uppercase text-2xl text-[#15599a] font-ralewayBlack">
-          Projetos no estágio comercial
-        </p>
-        <p className="font-raleway font-bold text-[#fead61]">
-          ({projects.length})
-        </p>
+      <div className="flex items-center justify-between border-b border-gray-200 p-1">
+        <div className="flex items-center gap-x-2">
+          <p className="font-bold uppercase text-2xl text-[#15599a] font-ralewayBlack">
+            Projetos no estágio comercial
+          </p>
+          <p className="font-raleway font-bold text-[#fead61]">
+            ({filteredProjects.length})
+          </p>
+        </div>
+        <div className="flex gap-x-2">
+          <p
+            onClick={() => filterByContractCondition("AGUARDANDO SOLICITAÇÃO")}
+            className={`text-sm text-gray-600 p-1 ${
+              currentFilter == "AGUARDANDO SOLICITAÇÃO"
+                ? "bg-blue-200"
+                : "bg-tranparent hover:bg-blue-200"
+            } cursor-pointer border border-gray-200`}
+          >
+            AGUARDANDO SOLICITAÇÃO
+          </p>
+          <p
+            onClick={() => filterByContractCondition("SOLICITADO")}
+            className={`text-sm text-gray-600 p-1 ${
+              currentFilter == "SOLICITADO"
+                ? "bg-blue-200"
+                : "bg-tranparent hover:bg-blue-200"
+            } cursor-pointer border border-gray-200`}
+          >
+            SOLICITADO
+          </p>
+          <p
+            onClick={() => filterByContractCondition("NÃO ASSINADO")}
+            className={`text-sm text-gray-600 p-1 ${
+              currentFilter == "NÃO ASSINADO"
+                ? "bg-blue-200"
+                : "bg-tranparent hover:bg-blue-200"
+            } cursor-pointer border border-gray-200`}
+          >
+            NÃO ASSINADO
+          </p>
+          <p
+            onClick={getProjects}
+            className={`text-sm text-gray-600 p-1 ${
+              currentFilter == "TODOS"
+                ? "bg-blue-200"
+                : "bg-tranparent hover:bg-blue-200"
+            } cursor-pointer border border-gray-200`}
+          >
+            TODOS
+          </p>
+        </div>
       </div>
       <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-        {projects.map((project) => (
+        {filteredProjects.map((project) => (
           <div
             key={project._id}
             className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
@@ -44,10 +97,16 @@ function Comercial({ credentials, setCredentials }) {
               <p className="text-xs text-[#15599a]">#{project.qtde}</p>
             </div>
             <div className="flex items-center justify-between">
-              <div>
+              <div className="hidden lg:flex lg:flex-col">
                 <span className="text-xxs">CONTRATO</span>
                 <p className="text-xs text-yellow-500">
                   {project.statuscontrato && project.statuscontrato}
+                </p>
+              </div>
+              <div>
+                <span className="text-xxs">VENDEDOR</span>
+                <p className="text-xs text-[#15599a]">
+                  {project.vendedor && project.vendedor}
                 </p>
               </div>
               <div>

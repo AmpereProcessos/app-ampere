@@ -118,7 +118,7 @@ function ChamadosSuporte({ credentials, setCredentials }) {
           <AiOutlineReload />
         </div>
       </div>
-      <div className="w-full border max-h-[400px]  border-gray-200 bg-[#fff] shadow-xl p-4">
+      <div className="w-full border max-h-[450px]  border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             Chamados abertos
@@ -200,7 +200,7 @@ function ChamadosSuporte({ credentials, setCredentials }) {
             </p>
           </div>
         </div>
-        <div className="flex max-h-[350px] overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
+        <div className="flex max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
           {inProgress.map((call) => (
             <div
               onClick={() => handleOpenModal(call)}

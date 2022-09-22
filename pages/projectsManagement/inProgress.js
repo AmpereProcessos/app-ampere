@@ -15,62 +15,57 @@ function InProgress({ setCredentials, credentials }) {
   function handleOpenModal() {
     setModalIsOpen(true);
   }
-  useEffect(() => {
-    axios
-      .get("/api/inProgressInfo")
-      .then((res) =>
-        setProjects({ ...InProgressProjects, supplyPhase: res.data })
-      );
-  }, []);
+  function getData() {
+    axios.get("/api/projects/filteredByStage").then((res) =>
+      setProjects({
+        ...InProgressProjects,
+        comercialPhase: res.data.comercial,
+        supplyPhase: res.data.suprimentos,
+        projectPhase: res.data.projetos,
+        installPhase: res.data.obras,
+      })
+    );
+  }
+
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      axios
-        .get("/api/inProgressInfo")
-        .then((res) =>
-          setProjects({ ...InProgressProjects, supplyPhase: res.data })
-        );
+      getData();
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        axios
-          .get("/api/inProgressInfo")
-          .then((res) =>
-            setProjects({ ...InProgressProjects, supplyPhase: res.data })
-          );
+        getData();
       }
     }
   }, []);
   return (
     <>
       <div className="flex flex-col bg-gray-100 grow p-6 w-full">
-        <div className="grid lg:grid-cols-5 lg:grid-rows-1 grid-rows-5 grid-cols-1  w-full px-6 py-2 gap-4 mt-5">
+        <div className="grid lg:grid-cols-4 lg:grid-rows-1 grid-rows-4 grid-cols-1  w-full px-6 py-2 gap-4 mt-5">
           <ProjectList
             setModalProject={setModalProject}
             title={"Comercial"}
-            openModal={handleOpenModal}
-          />
-          <ProjectList
-            setModalProject={setModalProject}
-            title={"Suprimentos"}
-            openModal={handleOpenModal}
-          />
-          <ProjectList
-            setModalProject={setModalProject}
-            title={"Projetos"}
+            projects={InProgressProjects.comercialPhase}
             openModal={handleOpenModal}
           />
           <ProjectList
             setModalProject={setModalProject}
             projects={InProgressProjects.supplyPhase}
-            title={"Obras"}
+            title={"Suprimentos"}
             openModal={handleOpenModal}
           />
           <ProjectList
             setModalProject={setModalProject}
-            title={"Suporte"}
+            projects={InProgressProjects.projectPhase}
+            title={"Projetos"}
+            openModal={handleOpenModal}
+          />
+          <ProjectList
+            setModalProject={setModalProject}
+            projects={InProgressProjects.installPhase}
+            title={"Obras"}
             openModal={handleOpenModal}
           />
         </div>

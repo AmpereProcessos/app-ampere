@@ -60,11 +60,12 @@ export default async function handler(req, res) {
     var obj = {
       abertura: date,
       nomeCliente: req.body.clientName,
+      nomeUsina: req.body.plantName ? req.body.plantName : "",
       cidade: req.body.clientCity,
       tipoChamado: req.body.problemType,
       descricaoProblema: req.body.problemDesc,
       statusChamado: "ABERTO",
-      responsavel: "DEFINIR",
+      responsavel: req.body.responsavel ? req.body.responsavel : "DEFINIR",
     };
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("suporte");

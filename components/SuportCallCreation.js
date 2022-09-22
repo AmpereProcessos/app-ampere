@@ -24,11 +24,18 @@ const OVERLAY_STYLES = {
   zIndex: 1000,
 };
 function CreateModal({ setModalIsOpen }) {
-  const [responsavel, setResponsavel] = useState("");
-  const [notes, setNotes] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState();
-  const [cidade, setCidade] = useState(initialCidade);
-  const [message, setMessage] = useState("");
+  const [callInfo, setCallInfo] = useState({
+    clientName: "",
+    plantName: "",
+    clientCity: cities[0].name,
+    responsavel: "A DEFINIR",
+    demanda: "INTERNA",
+    tipoChamado: "OUTRO",
+    descricaoProblema: "",
+  });
+  function createCall() {
+    console.log(callInfo);
+  }
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -46,6 +53,154 @@ function CreateModal({ setModalIsOpen }) {
                   }}
                   style={{ color: "red" }}
                 />
+              </button>
+            </div>
+            <div className="flex flex-col overflow-y-auto">
+              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center uppercase font-bold">
+                  Nome do cliente
+                </span>
+                <input
+                  value={callInfo.nomeCliente}
+                  onChange={(e) =>
+                    setCallInfo({ ...callInfo, nomeCliente: e.target.value })
+                  }
+                  className="outline-none text-sm text-center grow placeholder:italic"
+                  type="text"
+                />
+              </div>
+              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center uppercase font-bold">
+                  Nome da usina
+                </span>
+                <input
+                  value={callInfo.nomeUsina}
+                  onChange={(e) =>
+                    setCallInfo({ ...callInfo, nomeUsina: e.target.value })
+                  }
+                  className="outline-none text-sm text-center grow placeholder:italic"
+                  type="text"
+                />
+              </div>
+              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center uppercase font-bold">Cidade</span>
+                <select
+                  value={callInfo.cidade}
+                  onChange={(e) =>
+                    setCallInfo({ ...callInfo, cidade: e.target.value })
+                  }
+                  className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
+                >
+                  {cities.map((city) => (
+                    <option key={city.name} value={city.name}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center uppercase font-bold">
+                  Responsável
+                </span>
+                <select
+                  value={callInfo.responsavel}
+                  onChange={(e) =>
+                    setCallInfo({ ...callInfo, responsavel: e.target.value })
+                  }
+                  className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
+                >
+                  <option value={"A DEFINIR"}>A DEFINIR</option>
+                  <option value={"GABRIEL MARTINS"}>GABRIEL MARTINS</option>
+                  <option value={"LUCAS FERNANDES"}>LUCAS FERNANDES</option>
+                  <option value={"LUIS EDUARDO"}>LUIS EDUARDO</option>
+                </select>
+              </div>
+              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center uppercase font-bold">Demanda</span>
+                <select
+                  value={callInfo.demanda}
+                  onChange={(e) =>
+                    setCallInfo({ ...callInfo, demanda: e.target.value })
+                  }
+                  className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
+                >
+                  <option value={"INTERNA"}>INTERNA</option>
+                  <option value={"EXTERNA"}>EXTERNA</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center uppercase font-bold">
+                  TIPO DE CHAMADO
+                </span>
+                <select
+                  value={callInfo.tipoChamado}
+                  onChange={(e) =>
+                    setCallInfo({ ...callInfo, tipoChamado: e.target.value })
+                  }
+                  className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
+                >
+                  <option value={"CONTA DE LUZ ALTA"}>CONTA DE LUZ ALTA</option>
+                  <option value={"APP OFFLINE"}>APP OFFLINE</option>
+                  <option value={"INVERSOR NÃO CONFIGURADO"}>
+                    INVERSOR NÃO CONFIGURADO
+                  </option>
+                  <option value={"SISTEMA SEM GERAÇÃO"}>
+                    SISTEMA SEM GERAÇÃO
+                  </option>
+                  <option value={"ATUALIZAÇÃO DE FIRMWARE"}>
+                    ATUALIZAÇÃO DE FIRMWARE
+                  </option>
+                  <option value={"PROBLEMA NO DISJUNTOR CA"}>
+                    PROBLEMA NO DISJUNTOR CA
+                  </option>
+                  <option value={"GOTEIRA"}>GOTEIRA</option>
+                  <option value={"MEDIDOR TRAVADO"}>MEDIDOR TRAVADO</option>
+                  <option value={"ERRO DE LEITURA"}>ERRO DE LEITURA</option>
+                  <option value={"RETRABALHO EM ESTRUTURA"}>
+                    RETRABALHO EM ESTRUTURA
+                  </option>
+                  <option value={"PROBLEMA COM PLACA"}>
+                    PROBLEMA COM PLACA
+                  </option>
+                  <option value={"PROBLEMA COM DATALOGGER/DTU"}>
+                    PROBLEMA COM DATALOGGER/DTU
+                  </option>
+                  <option value={"DISTRIBUIÇÃO DE CRÉDITOS"}>
+                    DISTRIBUIÇÃO DE CRÉDITOS
+                  </option>
+                  <option value={"SISTEMA COM BAIXA GERAÇÃO"}>
+                    SISTEMA COM BAIXA GERAÇÃO
+                  </option>
+                  <option value={"INVERSOR/MICRO COM ERRO"}>
+                    INVERSOR/MICRO COM ERRO
+                  </option>
+                  <option value={"MANUTENÇÃO PREVENTIVA"}>
+                    MANUTENÇÃO PREVENTIVA
+                  </option>
+                  <option value={"OUTRO"}>OUTRO</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="font-bold text-center font-raleway">
+                  DESCRIÇÃO DO CHAMADO
+                </span>
+                <textarea
+                  value={callInfo.descricaoProblema}
+                  onChange={(e) =>
+                    setCallInfo({
+                      ...callInfo,
+                      descricaoProblema: e.target.value,
+                    })
+                  }
+                  placeholder="Digite aqui as anotações do chamado"
+                  className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-200 min-h-[100px] h-fit text-center grow"
+                />
+              </div>
+              <button
+                onClick={createCall}
+                className="bg-blue-600 mt-1 hover:text-white font-bold hover:bg-[#15599a] p-2"
+              >
+                CRIAR CHAMADO
               </button>
             </div>
           </div>

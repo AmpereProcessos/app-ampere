@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import ModalCallSuporte from "../../components/ModalCallSuporte";
+import CreateModal from "../../components/SuportCallCreation";
 import { AiOutlineReload } from "react-icons/ai";
 import { MdDateRange } from "react-icons/md";
 import Link from "next/link";
@@ -31,6 +32,7 @@ function ChamadosSuporte({ credentials, setCredentials }) {
   const [closedCalls, setClosedCalls] = useState([]);
   const [stats, setStats] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [creationModal, setCreationModal] = useState(false);
   const [modalCall, setModalCall] = useState({});
   const [closedFilterDate, setClosedFilterDate] = useState({
     after: dateFilterParam,
@@ -311,11 +313,14 @@ function ChamadosSuporte({ credentials, setCredentials }) {
           ))}
         </div>
       </div>
-      <Link href="/publico/chamadoSuporte">
-        <div className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-          <p className="uppercase font-bold text-sm">Novo chamado</p>
-        </div>
-      </Link>
+
+      <div
+        onClick={() => setCreationModal(true)}
+        className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
+      >
+        <p className="uppercase font-bold text-sm">Novo chamado</p>
+      </div>
+      {creationModal && <CreateModal setModalIsOpen={setCreationModal} />}
       {modalIsOpen && (
         <ModalCallSuporte
           credentials={credentials}

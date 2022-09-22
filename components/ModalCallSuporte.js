@@ -171,7 +171,7 @@ function ModalCallSuporte({
                 />
               </button>
             </div>
-            <div>
+            <div className="overflow-y-auto">
               <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="font-bold font-raleway">STATUS</span>
                 <div className="flex gap-x-2 justify-center grow">

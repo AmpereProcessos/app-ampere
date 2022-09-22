@@ -166,7 +166,6 @@ function Home({ credentials, setCredentials }) {
     });
   }, [installedData, averageHomoData]);
   // var max = Math.max(...statsData.graphData.map((x) => x.total));
-  console.log(Math.max(...statsData.graphData.map((x) => x.Total)));
   return (
     <div className="p-6 grow">
       <div className="flex justify-center gap-x-2 bg-[#fff] py-2 mb-2 border border-gray-200 shadow-lg">
@@ -437,7 +436,9 @@ function Home({ credentials, setCredentials }) {
         </div>
       </div>
       <div className="flex mt-4 grow flex-col p-4  border border-gray-200 bg-[#fff] shadow-xl">
-        <h1 className="text-gray-600">CLIENTES ANIVERSARIANDO HOJE</h1>
+        <h1 className="text-gray-600 uppercase">
+          CLIENTES ANIVERSARIANDO HOJE
+        </h1>
       </div>
     </div>
   );

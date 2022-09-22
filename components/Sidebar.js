@@ -87,10 +87,12 @@ function Sidebar({ sidebarVisible }) {
               <FaSolarPanel style={{ color: "#15599a", fontSize: "20px" }} />
               <p className="pl-3 text-gray-600">O&M</p>
             </div>
-            <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-              <BiSupport style={{ color: "#15599a", fontSize: "20px" }} />
-              <p className="pl-3 text-gray-600">Pós-Venda</p>
-            </div>
+            <Link href="/posvenda">
+              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <BiSupport style={{ color: "#15599a", fontSize: "20px" }} />
+                <p className="pl-3 text-gray-600">Pós-Venda</p>
+              </div>
+            </Link>
           </div>
           <div className="mt-6">
             <h2 className="text-sm text-gray-500">OUTROS</h2>

@@ -42,11 +42,23 @@ export default async function handler(req, res) {
             statusobra: {
               $in: ["AGENDADA", "AGUARDANDO AGENDAMENTO", "EM ANDAMENTO"],
             },
+            statuscontrato: "ASSINADO",
+            statuspagamento: "PAGO",
           },
         },
       ])
       .toArray();
-    //obras - entregue
+    let posvenda = await collection
+      .aggregate([
+        {
+          $match: {
+            statuscontrato: "ASSINADO",
+            statustrocamedidor: { $ne: "REALIZADA" },
+          },
+        },
+      ])
+      .toArray();
+    //obras - FILTRAR POR CONTRATO ASSINADO E STATUS DE PAGAMENTO PAGO
     console.log(
       comercial.length,
       suprimentos.length,
@@ -58,6 +70,7 @@ export default async function handler(req, res) {
       suprimentos,
       projetos,
       obras,
+      posvenda,
     });
   }
 }

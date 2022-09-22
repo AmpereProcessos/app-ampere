@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     .aggregate([
       {
         $match: {
-          saidadeobra: { $ne: "-" },
+          dataassinatura: { $ne: "-" },
         },
       },
       {
@@ -16,12 +16,12 @@ export default async function handler(req, res) {
           _id: {
             ano: {
               $year: {
-                $dateFromString: { dateString: "$saidadeobra" },
+                $dateFromString: { dateString: "$dataassinatura" },
               },
             },
             mes: {
               $month: {
-                $dateFromString: { dateString: "$saidadeobra" },
+                $dateFromString: { dateString: "$dataassinatura" },
               },
             },
           },

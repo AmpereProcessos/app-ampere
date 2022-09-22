@@ -68,6 +68,7 @@ export default async function handler(req, res) {
     };
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("suporte");
+    console.log(req.body);
     let created = await collection.insertOne({
       abertura: date,
       nomeCliente: req.body.clientName,

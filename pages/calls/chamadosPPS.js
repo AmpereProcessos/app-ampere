@@ -120,7 +120,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
         </div>
       </div>
       <div className="w-full border max-h-[400px]  border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="flex items-center justify-around">
+        <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             Chamados abertos
           </h1>
@@ -189,7 +189,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
             </p>
           </div>
         </div>
-        <div className="flex justify-around max-h-[350px] overflow-y-auto overscroll-y-auto gap-3 mt-4 flex-wrap">
+        <div className="flex justify-around max-h-[350px] pb-2 overflow-y-auto overscroll-y-auto gap-3 mt-4 flex-wrap">
           {inProgress.map((call) => (
             <div
               key={call._id}
@@ -221,7 +221,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
         </div>
       </div>
       <div className="w-full border max-h-[450px] border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="flex items-center justify-around">
+        <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             CHAMADOS FINALIZADOS
           </h1>

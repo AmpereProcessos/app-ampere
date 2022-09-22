@@ -167,11 +167,6 @@ function Home({ credentials, setCredentials }) {
       ],
     });
   }, [installedData, averageHomoData]);
-  // var max = Math.max(...statsData.graphData.map((x) => x.total));
-<<<<<<< HEAD
-=======
-  console.log(averageHomoData);
->>>>>>> eb091488161a6a76ede6dfe20567f5558aecd7ee
   return (
     <div className="p-6 grow">
       <div className="flex justify-center gap-x-2 bg-[#fff] py-2 mb-2 border border-gray-200 shadow-lg">
@@ -206,7 +201,7 @@ function Home({ credentials, setCredentials }) {
           GERAL
         </p>
       </div>
-      <div className="grid grid-cols-4 gap-x-3 w-full">
+      <div className="grid grid-rows-4 grid-cols-1 gap-y-2 lg:grid-cols-4 lg:grid-rows-1  lg:gap-x-3 w-full">
         <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
             <h1 className="uppercase text-gray-600">
@@ -232,7 +227,7 @@ function Home({ credentials, setCredentials }) {
               </p>
             </div>
           </div>
-          <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
+          <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
             {installedData[3]?.count} obras
           </p>
           <p className="text-center text-xs text-gray-600">
@@ -339,7 +334,7 @@ function Home({ credentials, setCredentials }) {
           </p>
         </div>
       </div>
-      <div className="grid mt-4 grid-cols-4 gap-x-3">
+      <div className="grid grid-rows-2 grid-cols-1 gap-y-2 mt-4 lg:grid-cols-4 lg:grid-rows-1 lg:gap-x-3">
         <div className="flex flex-col p-4 h-[400px] border border-gray-200 bg-[#fff] shadow-xl col-span-1">
           <h1 className="text-gray-600 text-xl text-center">NPS</h1>
           <div className="flex grow items-center justify-center">

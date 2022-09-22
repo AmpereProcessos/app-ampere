@@ -119,7 +119,7 @@ function ChamadosSuporte({ credentials, setCredentials }) {
         </div>
       </div>
       <div className="w-full border max-h-[400px]  border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="flex items-center justify-around">
+        <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             Chamados abertos
           </h1>
@@ -237,7 +237,7 @@ function ChamadosSuporte({ credentials, setCredentials }) {
         </div>
       </div>
       <div className="w-full border max-h-[450px]  border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="flex items-center justify-around">
+        <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             CHAMADOS FINALIZADOS
           </h1>

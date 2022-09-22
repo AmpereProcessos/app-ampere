@@ -57,24 +57,32 @@ function Sidebar({ sidebarVisible }) {
           </div>
           <div className="mt-6">
             <h2 className="text-sm text-gray-500">SETORES</h2>
-            <Link href="/vendas/comercialHome">
+            <Link href="/comercial">
               <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                 <SiCashapp style={{ color: "#15599a", fontSize: "20px" }} />
                 <p className="pl-3 text-gray-600">Comercial</p>
               </div>
             </Link>
-            <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-              <FaShoppingCart style={{ color: "#15599a", fontSize: "20px" }} />
-              <p className="pl-3 text-gray-600">Suprimentos</p>
-            </div>
-            <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-              <MdEngineering style={{ color: "#15599a", fontSize: "20px" }} />
-              <p className="pl-3 text-gray-600">Projetos</p>
-            </div>
-            <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-              <FaTools style={{ color: "#15599a", fontSize: "20px" }} />
-              <p className="pl-3 text-gray-600">Obras</p>
-            </div>
+            <Link href="/suprimentos">
+              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <FaShoppingCart
+                  style={{ color: "#15599a", fontSize: "20px" }}
+                />
+                <p className="pl-3 text-gray-600">Suprimentos</p>
+              </div>
+            </Link>
+            <Link href="/projetos">
+              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <MdEngineering style={{ color: "#15599a", fontSize: "20px" }} />
+                <p className="pl-3 text-gray-600">Projetos</p>
+              </div>
+            </Link>
+            <Link href="/obras">
+              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <FaTools style={{ color: "#15599a", fontSize: "20px" }} />
+                <p className="pl-3 text-gray-600">Obras</p>
+              </div>
+            </Link>
             <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
               <FaSolarPanel style={{ color: "#15599a", fontSize: "20px" }} />
               <p className="pl-3 text-gray-600">O&M</p>

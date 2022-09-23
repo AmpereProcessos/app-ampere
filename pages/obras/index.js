@@ -45,8 +45,10 @@ function Suprimentos({ credentials, setCredentials }) {
   function getListCumulativePeakPot() {
     var totalSum = 0;
     for (var i = 0; i < filteredProjects.length; i++) {
-      let pot = filteredProjects[i].potpico;
-      if (isNaN(filteredProjects[i].potpico)) {
+      let pot = filteredProjects[i].potpico
+        ? filteredProjects[i].potpico
+        : null;
+      if (isNaN(pot)) {
         totalSum = totalSum;
       } else {
         totalSum = totalSum + pot;

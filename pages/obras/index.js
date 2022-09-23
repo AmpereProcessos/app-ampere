@@ -78,9 +78,11 @@ function Suprimentos({ credentials, setCredentials }) {
           <p className="font-raleway font-bold text-[#fead61]">
             ({filteredProjects.length})
           </p>
-          <p className="font-raleway font-bold text-[#fead61]">
-            ({getListCumulativePeakPot()}kWp)
-          </p>
+          {filteredProjects && (
+            <p className="font-raleway font-bold text-[#fead61]">
+              ({getListCumulativePeakPot()}kWp)
+            </p>
+          )}
         </div>
         <div className="flex gap-x-2">
           <Select

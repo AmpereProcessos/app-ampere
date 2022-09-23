@@ -9,6 +9,7 @@ function MyApp({ Component, pageProps }) {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   return (
     <DndProvider backend={HTML5Backend}>
+      <title>Sistema - Ampère Energias</title>
       {credentials.nome ? (
         <div className="flex flex-col bg-[#fff] w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">
           <Header

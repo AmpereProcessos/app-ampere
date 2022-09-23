@@ -59,12 +59,6 @@ export default async function handler(req, res) {
       ])
       .toArray();
     //obras - FILTRAR POR CONTRATO ASSINADO E STATUS DE PAGAMENTO PAGO
-    console.log(
-      comercial.length,
-      suprimentos.length,
-      projetos.length,
-      obras.length
-    );
     res.json({
       comercial,
       suprimentos,

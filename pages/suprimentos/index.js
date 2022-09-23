@@ -1,12 +1,20 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Select from "react-select";
+import { AiOutlineSearch } from "react-icons/ai";
 function Suprimentos({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [filters, setFilters] = useState({
+    paymentStatus: [],
+    deliveryStatus: [],
+  });
   function getProjects() {
     axios.get("/api/projects/filteredByStage").then((res) => {
       setProjects(res.data.suprimentos);
+      setFilteredProjects(res.data.suprimentos);
     });
   }
   useEffect(() => {
@@ -22,26 +30,91 @@ function Suprimentos({ credentials, setCredentials }) {
       }
     }
   }, []);
-  console.log(projects);
+  console.log(projects[0].potpico);
+  function filterProjects() {
+    var newArr;
+    if (filters.deliveryStatus.length > 0 && filters.paymentStatus.length > 0) {
+      newArr = projects.filter(
+        (project) =>
+          filters.paymentStatus.includes(project.statuspagamento) &&
+          filters.deliveryStatus.includes(project.statusentrega)
+      );
+    } else if (filters.paymentStatus.length > 0) {
+      newArr = projects.filter((project) =>
+        filters.paymentStatus.includes(project.statuspagamento)
+      );
+    } else if (filters.deliveryStatus.length > 0) {
+      newArr = projects.filter((project) =>
+        filters.deliveryStatus.includes(project.statusentrega)
+      );
+    }
+    if (!newArr) setFilteredProjects(projects);
+    else {
+      setFilteredProjects(newArr);
+    }
+  }
+  function getListCumulativePeakPot() {
+    var totalSum = 0;
+    for (var i = 0; i < filteredProjects.length; i++) {
+      let pot = filteredProjects[i].potpico;
+      if (isNaN(filteredProjects[i].potpico)) {
+        totalSum = totalSum;
+      } else {
+        totalSum = totalSum + pot;
+      }
+    }
+    return totalSum.toFixed(2);
+  }
+  console.log(getListCumulativePeakPot());
   return (
     <div className="p-6 grow">
       <div className="flex justify-between border-b border-gray-200 p-1">
-        <div className="flex items-center">
+        <div className="flex items-center gap-x-2">
           <p className="font-bold uppercase text-2xl text-[#15599a] font-ralewayBlack">
             Projetos no estágio de suprimentos
           </p>
           <p className="font-raleway font-bold text-[#fead61]">
-            ({projects.length})
+            ({filteredProjects.length})
+          </p>
+          <p className="font-raleway font-bold text-[#fead61]">
+            ({getListCumulativePeakPot()} kWp)
           </p>
         </div>
-        <div className="flex">
-          <div>
-            <button>STATUS PAGAMENTO</button>
-          </div>
+        <div className="flex gap-x-2">
+          <Select
+            isMulti
+            placeholder="STATUS DE PAGAMENTO"
+            onChange={(e) =>
+              setFilters({ ...filters, paymentStatus: e.map((x) => x.value) })
+            }
+            options={[
+              { value: "PAGO", label: "PAGO" },
+              { value: "AGUARDANDO PAGAMENTO", label: "AGUARDANDO PAGAMENTO" },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="STATUS ENTREGA"
+            onChange={(e) =>
+              setFilters({ ...filters, deliveryStatus: e.map((x) => x.value) })
+            }
+            options={[
+              { value: "EM ROTA", label: "EM ROTA" },
+              { value: "AGUARDANDO COMPRA", label: "AGUARDANDO COMPRA" },
+              { value: undefined, label: "NÃO DEFINIDO" },
+            ]}
+          />
+          <button
+            onClick={filterProjects}
+            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 items-center gap-x-2"
+          >
+            <p>Filtrar</p>
+            <AiOutlineSearch />
+          </button>
         </div>
       </div>
       <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-        {projects.map((project) => (
+        {filteredProjects.map((project) => (
           <div
             key={project._id}
             className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"

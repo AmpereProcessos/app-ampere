@@ -1,13 +1,58 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Select from "react-select";
+import { AiOutlineSearch } from "react-icons/ai";
 function Suprimentos({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [filters, setFilters] = useState({
+    obraStatusFilter: [],
+    entregaStatusFilter: [],
+  });
   function getProjects() {
     axios.get("/api/projects/filteredByStage").then((res) => {
       setProjects(res.data.obras);
+      setFilteredProjects(res.data.obras);
     });
+  }
+  function filterProjects() {
+    var newArr;
+    if (
+      filters.obraStatusFilter.length > 0 &&
+      filters.entregaStatusFilter.length > 0
+    ) {
+      newArr = projects.filter(
+        (project) =>
+          filters.entregaStatusFilter.includes(project.statusentrega) &&
+          filters.obraStatusFilter.includes(project.statusobra)
+      );
+    } else if (filters.entregaStatusFilter.length > 0) {
+      newArr = projects.filter((project) =>
+        filters.entregaStatusFilter.includes(project.statusentrega)
+      );
+    } else if (filters.obraStatusFilter.length > 0) {
+      newArr = projects.filter((project) =>
+        filters.obraStatusFilter.includes(project.statusobra)
+      );
+    }
+    if (!newArr) setFilteredProjects(projects);
+    else {
+      setFilteredProjects(newArr);
+    }
+  }
+  function getListCumulativePeakPot() {
+    var totalSum = 0;
+    for (var i = 0; i < filteredProjects.length; i++) {
+      let pot = filteredProjects[i].potpico;
+      if (isNaN(filteredProjects[i].potpico)) {
+        totalSum = totalSum;
+      } else {
+        totalSum = totalSum + pot;
+      }
+    }
+    return totalSum.toFixed(2);
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -22,19 +67,77 @@ function Suprimentos({ credentials, setCredentials }) {
       }
     }
   }, []);
-  console.log(projects);
+  console.log(filters);
   return (
     <div className="p-6 grow">
-      <div className="flex items-center gap-x-2 border-b border-gray-200 p-1">
-        <p className="font-bold uppercase text-2xl text-[#15599a] font-ralewayBlack">
-          Projetos no estágio de obras
-        </p>
-        <p className="font-raleway font-bold text-[#fead61]">
-          ({projects.length})
-        </p>
+      <div className="flex items-center justify-between gap-x-2 border-b border-gray-200 p-1">
+        <div className="flex items-center gap-x-2">
+          <p className="font-bold uppercase text-2xl text-[#15599a] font-ralewayBlack">
+            Projetos no estágio de obras
+          </p>
+          <p className="font-raleway font-bold text-[#fead61]">
+            ({filteredProjects.length})
+          </p>
+          <p className="font-raleway font-bold text-[#fead61]">
+            ({getListCumulativePeakPot()}kWp)
+          </p>
+        </div>
+        <div className="flex gap-x-2">
+          <Select
+            isMulti
+            placeholder="STATUS DA OBRA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                obraStatusFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                value: "EM ANDAMENTO",
+                label: "EM ANDAMENTO",
+              },
+              {
+                value: "PAUSADA",
+                label: "PAUSADA",
+              },
+              {
+                value: "AGENDADA",
+                label: "AGENDADA",
+              },
+              {
+                value: "AGUARDANDO AGENDAMENTO",
+                label: "AGUARDANDO AGENDAMENTO",
+              },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="STATUS DA ENTREGA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                entregaStatusFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              { value: "EM ROTA", label: "EM ROTA" },
+              { value: "AGUARDANDO COMPRA", label: "AGUARDANDO COMPRA" },
+              { value: "ENTREGUE", label: "ENTREGUE" },
+              { value: undefined, label: "NÃO DEFINIDO" },
+            ]}
+          />
+          <button
+            onClick={filterProjects}
+            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 items-center gap-x-2"
+          >
+            <p>Filtrar</p>
+            <AiOutlineSearch />
+          </button>
+        </div>
       </div>
       <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-        {projects.map((project) => (
+        {filteredProjects.map((project) => (
           <div
             key={project._id}
             className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"

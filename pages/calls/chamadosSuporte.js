@@ -3,10 +3,11 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import ModalCallSuporte from "../../components/ModalCallSuporte";
 import CreateModal from "../../components/SuportCallCreation";
-import AccessDenied from "../../components/Accessdenied";
 import { AiOutlineReload } from "react-icons/ai";
 import { MdDateRange } from "react-icons/md";
 import Link from "next/link";
+import Select from "react-select";
+import { AiOutlineSearch } from "react-icons/ai";
 const statusStyles = {
   ABERTO: {
     textColor: "text-yellow-500",
@@ -30,6 +31,7 @@ dateFilterParam.setDate(dateFilterParam.getDate() - 2);
 function ChamadosSuporte({ credentials, setCredentials }) {
   const router = useRouter();
   const [inProgress, setInProgress] = useState([]);
+  const [filteredInProgress, setFilteredInProgress] = useState([]);
   const [acessPermitted, setAcessPermitted] = useState(true);
   const [closedCalls, setClosedCalls] = useState([]);
   const [stats, setStats] = useState(0);
@@ -42,10 +44,16 @@ function ChamadosSuporte({ credentials, setCredentials }) {
   });
   const [respFilter, setRespFilter] = useState([]);
   const [statusFilter, setStatusFilter] = useState([]);
+  const [filters, setFilters] = useState({
+    respFilter: [],
+    statusFilter: [],
+  });
+  const [searchFilter, setSearchFilter] = useState("");
   function getCalls() {
     axios.get("/api/calls/suporte/mainData").then((res) => {
       setStats(res.data.stats);
       setInProgress(res.data.openCalls);
+      setFilteredInProgress(res.data.openCalls);
       setClosedCalls(res.data.closedCalls);
       setRespFilter([]);
       setStatusFilter([]);
@@ -87,6 +95,41 @@ function ChamadosSuporte({ credentials, setCredentials }) {
         date: closedFilterDate,
       })
       .then((res) => setClosedCalls(res.data));
+  }
+  function filterOpenCalls() {
+    var newArr;
+    if (filters.statusFilter.length > 0 && filters.respFilter.length > 0) {
+      newArr = inProgress.filter(
+        (call) =>
+          filters.respFilter.includes(call.responsavel) &&
+          filters.statusFilter.includes(call.statusChamado)
+      );
+    } else if (filters.respFilter.length > 0) {
+      newArr = inProgress.filter((call) =>
+        filters.respFilter.includes(call.responsavel)
+      );
+    } else if (filters.statusFilter.length > 0) {
+      newArr = inProgress.filter((call) =>
+        filters.statusFilter.includes(call.statusChamado)
+      );
+    }
+    if (!newArr) setFilteredInProgress(inProgress);
+    else {
+      setFilteredInProgress(newArr);
+    }
+  }
+  function handleSearchFilter(value) {
+    setSearchFilter(value);
+    if (value != "" || " ") {
+      let newArr = inProgress.filter((call) =>
+        call.nomeCliente
+          ? call.nomeCliente.toUpperCase().includes(value.toUpperCase())
+          : call.nomeUsina.toUpperCase().includes(value.toUpperCase())
+      );
+      setFilteredInProgress(newArr);
+    } else {
+      setFilteredInProgress(inProgress);
+    }
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -132,85 +175,66 @@ function ChamadosSuporte({ credentials, setCredentials }) {
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             Chamados abertos
           </h1>
+          <input
+            type="text"
+            value={searchFilter}
+            onChange={(e) => handleSearchFilter(e.target.value)}
+            className="outline-none border border-gray-200 px-2 py-1"
+          />
           <div className="flex items-center gap-x-2">
-            <p
-              onClick={() =>
-                filterOpenCallsByRespAndStatus(undefined, "ABERTO")
+            <Select
+              isMulti
+              placeholder="STATUS DO CHAMADOS"
+              onChange={(e) =>
+                setFilters({ ...filters, statusFilter: e.map((x) => x.value) })
               }
-              className={`border cursor-pointer border-gray-200 ${
-                statusFilter.includes("ABERTO")
-                  ? "bg-blue-200 hover:bg-transparent"
-                  : "hover:bg-blue-200 bg-transparent"
-              } p-2 text-xs text-gray-600`}
-            >
-              ABERTO
-            </p>
-            <p
-              onClick={() =>
-                filterOpenCallsByRespAndStatus(undefined, "EM ANDAMENTO")
+              options={[
+                {
+                  value: "ABERTO",
+                  label: "ABERTO",
+                },
+                {
+                  value: "EM ANDAMENTO",
+                  label: "EM ANDAMENTO",
+                },
+              ]}
+            />
+            <Select
+              isMulti
+              placeholder="RESPONSÁVEL"
+              onChange={(e) =>
+                setFilters({ ...filters, respFilter: e.map((x) => x.value) })
               }
-              className={`border cursor-pointer border-gray-200 ${
-                statusFilter.includes("EM ANDAMENTO")
-                  ? "bg-blue-200 hover:bg-transparent"
-                  : "hover:bg-blue-200 bg-transparent"
-              } p-2 text-xs text-gray-600`}
+              options={[
+                {
+                  value: "GABRIEL MARTINS",
+                  label: "GABRIEL MARTINS",
+                },
+                {
+                  value: "LUCAS FERNANDES",
+                  label: "LUCAS FERNANDES",
+                },
+                {
+                  value: "LUIS EDUARDO",
+                  label: "LUIS EDUARDO",
+                },
+                {
+                  value: "A DEFINIR",
+                  label: "A DEFINIR",
+                },
+              ]}
+            />
+            <button
+              onClick={filterOpenCalls}
+              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 py-1 items-center gap-x-2"
             >
-              EM ANDAMENTO
-            </p>
-          </div>
-          <div className="flex items-center gap-x-2">
-            <p
-              onClick={() =>
-                filterOpenCallsByRespAndStatus("GABRIEL MARTINS", undefined)
-              }
-              className={`border cursor-pointer border-gray-200 ${
-                respFilter.includes("GABRIEL MARTINS")
-                  ? "bg-blue-200 hover:bg-transparent"
-                  : "hover:bg-blue-200 bg-transparent"
-              } p-2 text-xs text-gray-600`}
-            >
-              GABRIEL
-            </p>
-            <p
-              onClick={() =>
-                filterOpenCallsByRespAndStatus("LUCAS FERNANDES", undefined)
-              }
-              className={`border cursor-pointer border-gray-200 ${
-                respFilter.includes("LUCAS FERNANDES")
-                  ? "bg-blue-200 hover:bg-transparent"
-                  : "hover:bg-blue-200 bg-transparent"
-              } p-2 text-xs text-gray-600`}
-            >
-              LUCAS
-            </p>
-            <p
-              onClick={() =>
-                filterOpenCallsByRespAndStatus("LUIS EDUARDO", undefined)
-              }
-              className={`border cursor-pointer border-gray-200 ${
-                respFilter.includes("LUIS EDUARDO")
-                  ? "bg-blue-200 hover:bg-transparent"
-                  : "hover:bg-blue-200 bg-transparent"
-              } p-2 text-xs text-gray-600`}
-            >
-              LUIS
-            </p>
-            <p
-              onClick={() =>
-                filterOpenCallsByRespAndStatus("DEFINIR", undefined)
-              }
-              className={`border cursor-pointer border-gray-200 ${
-                respFilter.includes("DEFINIR")
-                  ? "bg-blue-200 hover:bg-transparent"
-                  : "hover:bg-blue-200 bg-transparent"
-              } p-2 text-xs text-gray-600`}
-            >
-              A DEFINIR
-            </p>
+              <p>Filtrar</p>
+              <AiOutlineSearch />
+            </button>
           </div>
         </div>
         <div className="flex max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
-          {inProgress.map((call) => (
+          {filteredInProgress.map((call) => (
             <div
               onClick={() => handleOpenModal(call)}
               key={call._id}

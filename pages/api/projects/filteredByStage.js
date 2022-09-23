@@ -7,14 +7,11 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            statuscontrato: {
-              $in: ["SOLICITADO", "AGUARDANDO SOLICITAÇÃO", "NÃO ASSINADO"],
-            },
+            statuspagamento: { $in: ["AGUARDANDO PAGAMENTO", null] },
           },
         },
       ])
       .toArray();
-
     let suprimentos = await collection
       .aggregate([
         {

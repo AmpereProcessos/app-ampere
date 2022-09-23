@@ -73,11 +73,13 @@ export default async function handler(req, res) {
     let created = await collection.insertOne({
       abertura: date,
       nomeCliente: req.body.clientName,
+      nomeUsina: req.body.nomeUsina ? req.body.nomeUsina : "",
       cidade: req.body.clientCity,
       tipoChamado: req.body.problemType,
       descricaoProblema: req.body.problemDesc,
       statusChamado: "ABERTO",
-      responsavel: "DEFINIR",
+      responsavel: req.body.responsavel ? req.body.responsavel : "DEFINIR",
+      demanda: req.body.demanda,
     });
     console.log(created);
     return res.json("CHAMADO CRIADO");

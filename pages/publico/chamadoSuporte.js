@@ -62,6 +62,7 @@ function ChamadoSuporte() {
           cpfCnpj: cpfCnpj,
           problemType: problemType,
           problemDesc: problemDesc,
+          demanda: "EXTERNA",
         })
         .then((res) => console.log(res.data));
       setErrorsMessage({

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import ModalCallSuporte from "../../components/ModalCallSuporte";
 import CreateModal from "../../components/SuportCallCreation";
+import AccessDenied from "../../components/Accessdenied";
 import { AiOutlineReload } from "react-icons/ai";
 import { MdDateRange } from "react-icons/md";
 import Link from "next/link";
@@ -29,6 +30,7 @@ dateFilterParam.setDate(dateFilterParam.getDate() - 2);
 function ChamadosSuporte({ credentials, setCredentials }) {
   const router = useRouter();
   const [inProgress, setInProgress] = useState([]);
+  const [acessPermitted, setAcessPermitted] = useState(true);
   const [closedCalls, setClosedCalls] = useState([]);
   const [stats, setStats] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -90,7 +92,11 @@ function ChamadosSuporte({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      getCalls();
+      if (storedCredentials.accessibleRoutes.includes("O&M")) {
+        getCalls();
+      } else {
+        setAcessPermitted(false);
+      }
     } else {
       router.push("/auth/authHome");
     }
@@ -105,6 +111,7 @@ function ChamadosSuporte({ credentials, setCredentials }) {
     setModalCall(call);
     setModalIsOpen(true);
   }
+  if (!acessPermitted) return <div className="p-6">ACESSO NÃO PERMITIDO</div>;
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
       <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
@@ -214,7 +221,9 @@ function ChamadosSuporte({ credentials, setCredentials }) {
                   {call.nomeUsina ? call.nomeUsina : call.nomeCliente}
                 </h1>
                 {call.cidade && (
-                  <p className="text-xs text-gray-700">{call.cidade}</p>
+                  <p className="text-xs uppercase text-gray-700">
+                    {call.cidade}
+                  </p>
                 )}
                 <p
                   className={`text-xs font-bold border p-1 rounded-lg ${
@@ -227,6 +236,16 @@ function ChamadosSuporte({ credentials, setCredentials }) {
               <div className="flex justify-between mt-2 items-center w-full">
                 <p className="text-xs text-gray-500 uppercase">Responsável:</p>
                 <p className="text-xs text-gray-500">{call.responsavel}</p>
+              </div>
+              <div className="hidden lg:flex justify-between mt-2 items-center w-full">
+                <p className="text-xs text-gray-500 uppercase">DEMANDA</p>
+                <p
+                  className={`text-xs ${
+                    call.demanda == "EXTERNA" ? "text-red-500" : "text-gray-500"
+                  }`}
+                >
+                  {call.demanda ? call.demanda : "-"}
+                </p>
               </div>
               <div className="flex justify-between mt-2 items-center w-full">
                 <p className="text-xs text-gray-500 uppercase">
@@ -289,7 +308,9 @@ function ChamadosSuporte({ credentials, setCredentials }) {
                   {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
                 </h1>
                 {call.cidade && (
-                  <p className="text-xs text-gray-700">{call.cidade}</p>
+                  <p className="text-xs uppercase text-gray-700">
+                    {call.cidade}
+                  </p>
                 )}
                 <p
                   className={`text-xs font-bold border p-1 rounded-lg ${
@@ -303,6 +324,12 @@ function ChamadosSuporte({ credentials, setCredentials }) {
                 <p className="text-xs text-gray-500 uppercase">Responsável:</p>
                 <p className="text-xs text-gray-500">{call.responsavel}</p>
               </div>
+              {call.demanda && (
+                <div className="hidden lg:flex justify-between mt-2 items-center w-full">
+                  <p className="text-xs text-gray-500 uppercase">DEMANDA</p>
+                  <p className="text-xs text-gray-500">{call.demanda}</p>
+                </div>
+              )}
               <div className="flex justify-between mt-2 items-center w-full">
                 <p className="text-xs text-gray-500 uppercase">
                   Tipo de chamado:

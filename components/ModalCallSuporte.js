@@ -151,16 +151,20 @@ function ModalCallSuporte({
   useEffect(() => {
     setMessage("");
   }, [notes, responsavel]);
-  console.log(info);
   return (
     <>
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full">
-            <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
+            <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
               <h1 className="text-[#15599a] pl-6 uppercase font-bold">
                 {info.tipoChamado}
               </h1>
+              {info.demanda && (
+                <span className="text-xs border border-gray-200 p-2 font-bold text-gray-600">
+                  DEMANDA {info.demanda}
+                </span>
+              )}
               <button>
                 <VscChromeClose
                   onClick={() => {
@@ -216,7 +220,15 @@ function ModalCallSuporte({
                   NOME DO CLIENTE
                 </span>
                 <p className="grow text-center font-raleway">
-                  {info.nomeCliente ? info.nomeCliente : info.nomeUsina}
+                  {info.nomeCliente ? info.nomeCliente : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center font-bold font-raleway">
+                  NOME DA USINA
+                </span>
+                <p className="grow text-center font-raleway">
+                  {info.nomeUsina ? info.nomeUsina : "-"}
                 </p>
               </div>
               <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
@@ -290,7 +302,7 @@ function ModalCallSuporte({
                   className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
                 />
               </div>
-              {info.statusChamado != "ABERTO" ? (
+              {info.statusChamado == "RESOLVIDO" ? (
                 <div className="text-center">
                   <button
                     onClick={reopenCall}

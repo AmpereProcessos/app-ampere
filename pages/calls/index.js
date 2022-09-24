@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 function Calls({ credentials, setCredentials }) {
   const router = useRouter();
-  console.log(credentials);
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {

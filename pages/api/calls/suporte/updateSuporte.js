@@ -18,7 +18,6 @@ export default async function handler(req, res) {
       },
       { returnNewDocument: true }
     );
-    console.log(req.body);
     return res.json(newDocument);
   } else if (req.method === "PUT") {
     const db = await connectToDatabase(process.env.DB_KEY);

@@ -19,7 +19,6 @@ export default async function handler(req, res) {
       generalInfos: { ...generalInfos, date: new Date(generalInfos.date) },
       osInfos: { ...osInfos },
     });
-    console.log("UEPA");
     return res.status(201).json("Dados salvos");
   } else if (req.method === "GET") {
     const db = await connectToDatabase2(process.env.DB_KEY);

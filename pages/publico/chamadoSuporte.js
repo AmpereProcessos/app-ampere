@@ -23,7 +23,6 @@ function ChamadoSuporte() {
     setProblemDesc("");
   }
   function checkObligatoryFields() {
-    console.log(clientName.trim().length);
     if (clientName.trim().length == 0) {
       setErrorsMessage({
         ...errorsMessage,
@@ -47,13 +46,6 @@ function ChamadoSuporte() {
     }
   }
   async function handleOpenCall() {
-    console.log({
-      clientName: clientName,
-      clientCity: clientCity,
-      cpfCnpj: cpfCnpj,
-      problemType: problemType,
-      problemDesc: problemDesc,
-    });
     if (checkObligatoryFields()) {
       axios
         .post("/api/calls/suporte/mainData", {

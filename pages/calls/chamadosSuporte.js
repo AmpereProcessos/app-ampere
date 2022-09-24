@@ -55,39 +55,7 @@ function ChamadosSuporte({ credentials, setCredentials }) {
       setInProgress(res.data.openCalls);
       setFilteredInProgress(res.data.openCalls);
       setClosedCalls(res.data.closedCalls);
-      setRespFilter([]);
-      setStatusFilter([]);
     });
-  }
-  function filterOpenCallsByRespAndStatus(responsavel, status) {
-    if (responsavel) {
-      if (respFilter.includes(responsavel)) {
-        let index = respFilter.indexOf(responsavel);
-        respFilter.splice(index, 1);
-      } else {
-        respFilter.push(responsavel);
-      }
-    }
-    if (status) {
-      if (statusFilter.includes(status)) {
-        let index = statusFilter.indexOf(status);
-        statusFilter.splice(index, 1);
-      } else {
-        statusFilter.push(status);
-      }
-    }
-    setRespFilter(respFilter);
-    setStatusFilter(statusFilter);
-    axios
-      .post("/api/calls/suporte/filtered", {
-        responsavel:
-          respFilter.length > 0
-            ? respFilter
-            : ["GABRIEL MARTINS", "LUCAS FERNANDES", "LUIS EDUARDO", "DEFINIR"],
-        status:
-          statusFilter.length > 0 ? statusFilter : ["ABERTO", "EM ANDAMENTO"],
-      })
-      .then((res) => setInProgress(res.data));
   }
   function filterClosedCallsByDate() {
     axios

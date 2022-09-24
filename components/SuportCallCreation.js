@@ -46,7 +46,6 @@ function CreateModal({ setModalIsOpen }) {
         problemType: "OUTROS",
         problemDesc: "",
       });
-      console.log(res.data);
     });
   }
   return (

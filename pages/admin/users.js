@@ -5,8 +5,10 @@ import RoutesCard from "../../components/RoutesCard";
 import { acessAuth, routes } from "../../utils/constants";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/router";
 let positions = Object.keys(acessAuth);
 export default function UsersControl({ credentials, setCredentials }) {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -98,9 +100,14 @@ export default function UsersControl({ credentials, setCredentials }) {
   });*/
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
+    if (credentials == {}) {
+      var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
       setCredentials(storedCredentials);
+      if (!storedCredentials.manager) {
+        router.push("/");
+      }
+    } else if (!credentials.manager) {
+      router.push("/");
     }
   }, []);
   console.log(credentials);

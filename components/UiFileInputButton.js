@@ -16,7 +16,6 @@ export const UiFileInputButton = (props) => {
     const formData = new FormData();
 
     Array.from(event.target.files).forEach((file) => {
-      console.log(file);
       if (props.formData) {
         props.formData.append(event.target.name, file);
         props.onChange(props.formData);

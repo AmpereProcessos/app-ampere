@@ -38,9 +38,10 @@ function ChamadosPPS() {
       codigoDoProjeto: svbCode,
       observacoes: solicitationDesc,
       tipoDeSolicitacao: solicitationType,
+      responsavel: "A DEFINIR",
     };
     if (checkObligatoryFields()) {
-      axios.post("/api/calls/pps", obj).then((res) => {
+      axios.post("/api/calls/pps/mainData", obj).then((res) => {
         setCreatedMessage(res.data);
         resetFields();
       });

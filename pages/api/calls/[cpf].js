@@ -9,7 +9,6 @@ export default async function handler(req, res) {
         cpfcnpj: filter,
       })
       .toArray();
-    console.log(project);
     return res.json(filter);
   }
 }

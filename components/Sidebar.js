@@ -18,7 +18,7 @@ function Sidebar({ sidebarVisible }) {
   if (router.pathname.includes("pdf") || router.pathname.includes("publico"))
     return null;
   return (
-    <div className="flex flex-col w-[250px] min-h-screen border-r border-gray-300">
+    <div className="flex sticky top-[70px] flex-col w-[250px] max-h-[900px] border-r border-gray-300">
       <div className="mt-4 flex flex-col h-full pb-2 justify-between">
         <div className="flex flex-col py-4 px-2">
           <div>

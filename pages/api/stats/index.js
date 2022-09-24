@@ -143,7 +143,6 @@ export default async function handler(req, res) {
     var currentMonth = date.getMonth() + 1;
     var currentYear = date.getFullYear();
     var regional = req.body.regional;
-    console.log(regional);
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("data");
     let installedInfo = await collection

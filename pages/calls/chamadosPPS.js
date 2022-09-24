@@ -5,6 +5,8 @@ import ModalCallPPS from "../../components/ModalCallPPS";
 import { AiOutlineReload } from "react-icons/ai";
 import { MdDateRange } from "react-icons/md";
 import Link from "next/link";
+import Select from "react-select";
+import { AiOutlineSearch } from "react-icons/ai";
 var dateFilterParam = new Date();
 dateFilterParam.setDate(dateFilterParam.getDate() - 2);
 const statusStyles = {
@@ -28,6 +30,7 @@ const statusStyles = {
 
 function ChamadosPPS({ setCredentials, credentials }) {
   const [inProgress, setInProgress] = useState([]);
+  const [filteredInProgress, setFilteredInProgress] = useState([]);
   const [closedCalls, setClosedCalls] = useState([]);
   const [stats, setStats] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -36,6 +39,11 @@ function ChamadosPPS({ setCredentials, credentials }) {
     after: dateFilterParam,
     before: new Date(),
   });
+  const [filters, setFilters] = useState({
+    respFilter: [],
+    statusFilter: [],
+  });
+  const [searchFilter, setSearchFilter] = useState("");
   const [respFilter, setRespFilter] = useState([]);
   const [statusFilter, setStatusFilter] = useState([]);
   const router = useRouter();
@@ -43,10 +51,44 @@ function ChamadosPPS({ setCredentials, credentials }) {
     axios.get("/api/calls/pps/mainData").then((res) => {
       setStats(res.data.stats);
       setInProgress(res.data.inProgress);
+      setFilteredInProgress(res.data.inProgress);
       setClosedCalls(res.data.closedCalls);
       setRespFilter([]);
       setStatusFilter([]);
     });
+  }
+  function filterOpenCalls() {
+    var newArr;
+    if (filters.statusFilter.length > 0 && filters.respFilter.length > 0) {
+      newArr = inProgress.filter(
+        (call) =>
+          filters.respFilter.includes(call.responsavel) &&
+          filters.statusFilter.includes(call.status)
+      );
+    } else if (filters.respFilter.length > 0) {
+      newArr = inProgress.filter((call) =>
+        filters.respFilter.includes(call.responsavel)
+      );
+    } else if (filters.statusFilter.length > 0) {
+      newArr = inProgress.filter((call) =>
+        filters.statusFilter.includes(call.status)
+      );
+    }
+    if (!newArr) setFilteredInProgress(inProgress);
+    else {
+      setFilteredInProgress(newArr);
+    }
+  }
+  function handleSearchFilter(value) {
+    setSearchFilter(value);
+    if (value != "" || " ") {
+      let newArr = inProgress.filter((call) =>
+        call.vendedor.toUpperCase().includes(value.toUpperCase())
+      );
+      setFilteredInProgress(newArr);
+    } else {
+      setFilteredInProgress(inProgress);
+    }
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -104,6 +146,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
     setModalCall(call);
     setModalIsOpen(true);
   }
+  console.log(inProgress);
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
       <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
@@ -118,6 +161,11 @@ function ChamadosPPS({ setCredentials, credentials }) {
           <p className="mr-2 text-sm">Atualizar</p>
           <AiOutlineReload />
         </div>
+        <Link href="/calls/ppsReport">
+          <button className="bg-[#15599a] font-bold text-white hover:text-black hover:bg-[#fead61] p-2 rounded-lg">
+            Relátorio
+          </button>
+        </Link>
       </div>
       <div className="w-full border max-h-[450px]  border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
@@ -125,72 +173,65 @@ function ChamadosPPS({ setCredentials, credentials }) {
             Chamados abertos
           </h1>
           <div className="flex items-center gap-x-2">
-            <p
-              onClick={() => filterOpenCallsByResp(undefined, "PENDENTE")}
-              className={`border cursor-pointer border-gray-200 ${
-                statusFilter.includes("PENDENTE")
-                  ? "bg-blue-200 hover:bg-transparent"
-                  : "hover:bg-blue-200 bg-transparent"
-              } p-2 text-xs text-gray-600`}
+            <input
+              type="text"
+              value={searchFilter}
+              onChange={(e) => handleSearchFilter(e.target.value)}
+              className="outline-none border border-gray-200 px-2 py-1"
+            />
+            <Select
+              isMulti
+              placeholder="STATUS DO CHAMADOS"
+              onChange={(e) =>
+                setFilters({ ...filters, statusFilter: e.map((x) => x.value) })
+              }
+              options={[
+                {
+                  value: "PENDENTE",
+                  label: "PENDENTE",
+                },
+                {
+                  value: "EM ANDAMENTO",
+                  label: "EM ANDAMENTO",
+                },
+              ]}
+            />
+            <Select
+              isMulti
+              placeholder="RESPONSÁVEL"
+              onChange={(e) =>
+                setFilters({ ...filters, respFilter: e.map((x) => x.value) })
+              }
+              options={[
+                {
+                  value: "ADRIANO",
+                  label: "ADRIANO",
+                },
+                {
+                  value: "ARTHUR",
+                  label: "ARTHUR",
+                },
+                {
+                  value: "MATHEUS",
+                  label: "MATHEUS",
+                },
+                {
+                  value: "A DEFINIR",
+                  label: "A DEFINIR",
+                },
+              ]}
+            />
+            <button
+              onClick={filterOpenCalls}
+              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 py-1 items-center gap-x-2"
             >
-              PENDENTE
-            </p>
-            <p
-              onClick={() => filterOpenCallsByResp(undefined, "EM ANDAMENTO")}
-              className={`border cursor-pointer border-gray-200 ${
-                statusFilter.includes("EM ANDAMENTO")
-                  ? "bg-blue-200 hover:bg-transparent"
-                  : "hover:bg-blue-200 bg-transparent"
-              } p-2 text-xs text-gray-600`}
-            >
-              EM ANDAMENTO
-            </p>
-          </div>
-          <div className="flex items-center gap-x-2">
-            <p
-              onClick={() => filterOpenCallsByResp("ADRIANO", undefined)}
-              className={`border cursor-pointer border-gray-200 ${
-                respFilter.includes("ADRIANO")
-                  ? "bg-blue-200 hover:bg-transparent"
-                  : "hover:bg-blue-200 bg-transparent"
-              } p-2 text-xs text-gray-600`}
-            >
-              ADRIANO
-            </p>
-            <p
-              onClick={() => filterOpenCallsByResp("ARTHUR", undefined)}
-              className={`border cursor-pointer border-gray-200 ${
-                respFilter.includes("ARTHUR")
-                  ? "bg-blue-200 hover:bg-transparent"
-                  : "hover:bg-blue-200 bg-transparent"
-              } p-2 text-xs text-gray-600`}
-            >
-              ARTHUR
-            </p>
-            <p
-              onClick={() => filterOpenCallsByResp("MATHEUS", undefined)}
-              className={`border cursor-pointer border-gray-200 ${
-                respFilter.includes("MATHEUS")
-                  ? "bg-blue-200 hover:bg-transparent"
-                  : "hover:bg-blue-200 bg-transparent"
-              } p-2 text-xs text-gray-600`}
-            >
-              MATHEUS
-            </p>
-            <p
-              onClick={() => filterOpenCallsByResp("A DEFINIR", undefined)}
-              className={`border cursor-pointer border-gray-200 ${
-                respFilter.includes("A DEFINIR")
-                  ? "bg-blue-200 hover:bg-transparent"
-                  : "hover:bg-blue-200 bg-transparent"
-              } p-2 text-xs text-gray-600`}
-            >
-              A DEFINIR
-            </p>
+              <p>Filtrar</p>
+              <AiOutlineSearch />
+            </button>
           </div>
         </div>
         <div className="flex justify-around max-h-[350px] pb-2 overflow-y-auto overscroll-y-auto gap-3 mt-4 flex-wrap">
-          {inProgress.map((call) => (
+          {filteredInProgress.map((call) => (
             <div
               key={call._id}
               onClick={() => handleOpenModal(call)}

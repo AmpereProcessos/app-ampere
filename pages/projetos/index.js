@@ -52,12 +52,11 @@ function Projetos({ credentials, setCredentials }) {
       }
     }
   }, []);
-  console.log(parecerFilter);
   return (
     <div className="p-6 grow">
       <div className="flex justify-between gap-x-2 border-b border-gray-200 p-1">
         <div className="flex items-center gap-x-2">
-          <p className="font-bold uppercase text-2xl text-[#15599a] font-ralewayBlack">
+          <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
             Projetos no estágio de engenharia
           </p>
           <p className="font-raleway font-bold text-[#fead61]">

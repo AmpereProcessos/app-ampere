@@ -1,7 +1,6 @@
 import connectToDatabase from "../../../../utils/projectsDb";
 export default async function handler(req, res) {
   const { year } = req.query;
-  console.log(year);
   const db = await connectToDatabase(process.env.DB_KEY);
   const collection = db.collection("data");
   let graphData = await collection
@@ -50,6 +49,5 @@ export default async function handler(req, res) {
       Total: info.total.toFixed(2),
     };
   });
-  console.log(graph);
   return res.json(graph);
 }

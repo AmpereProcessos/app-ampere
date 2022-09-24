@@ -66,11 +66,6 @@ export default async function handler(req, res) {
     let svbCode = Number(req.body.codigoDoProjeto);
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("pps");
-    console.log({
-      ...req.body,
-      carimboDataHora: new Date().toJSON(),
-      codigoDoProjeto: svbCode,
-    });
     await collection.insertOne({
       ...req.body,
       carimboDataHora: new Date().toJSON(),

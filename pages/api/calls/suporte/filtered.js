@@ -3,7 +3,6 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("suporte");
-    console.log(req.bod);
     let calls = await collection
       .aggregate([
         {

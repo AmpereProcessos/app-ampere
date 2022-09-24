@@ -125,7 +125,6 @@ function Home({ credentials, setCredentials }) {
   useEffect(() => {
     var parcialPotLastMonth =
       (new Date().getDate() / 30) * installedData[2]?.total;
-    console.log(parcialPotLastMonth);
     var parcialHomoPotLastMonth =
       (new Date().getDate() / 30) * averageHomoData[0]?.homoPeakPot;
     var parcialJobsLastMonth =

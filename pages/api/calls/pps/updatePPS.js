@@ -21,7 +21,6 @@ export default async function handler(req, res) {
     return res.json(newDocument);
   } else if (req.method === "PUT") {
     const db = await connectToDatabase(process.env.DB_KEY);
-    console.log(req.body.ultAlteracoes);
     const collection = db.collection("pps");
     let newDocument = await collection.findOneAndUpdate(
       {

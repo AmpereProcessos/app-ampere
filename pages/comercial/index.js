@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
+import ModalComercial from "../../components/ModalComercial";
 // casa em construção (Tais)
 import { useRouter } from "next/router";
 function Comercial({ credentials, setCredentials }) {
@@ -148,6 +149,10 @@ function Comercial({ credentials, setCredentials }) {
       <div className="flex  justify-around gap-3 mt-4 flex-wrap">
         {filteredProjects.map((project) => (
           <div
+            onClick={() => {
+              setModalIsOpen(true);
+              setModalProject(project);
+            }}
             key={project._id}
             className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
           >
@@ -186,6 +191,13 @@ function Comercial({ credentials, setCredentials }) {
           </div>
         ))}
       </div>
+      {modalIsOpen && (
+        <ModalComercial
+          project={modalProject}
+          editor={credentials.accessibleRoutes.includes("PPS") ? true : false}
+          setModalIsOpen={setModalIsOpen}
+        />
+      )}
     </div>
   );
 }

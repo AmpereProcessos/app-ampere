@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-function TextInput({ value, label, handleChange, editable }) {
+import React from "react";
+
+function NumberInput({ label, value, handleChange, editable }) {
   return (
     <div className="flex flex-col w-[350px] items-center">
       <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -7,13 +8,13 @@ function TextInput({ value, label, handleChange, editable }) {
       </span>
       <input
         className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-        value={value}
+        type="number"
         readOnly={!editable}
+        value={value}
         onChange={(e) => handleChange(e.target.value)}
-        type="text"
       />
     </div>
   );
 }
 
-export default TextInput;
+export default NumberInput;

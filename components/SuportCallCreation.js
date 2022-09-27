@@ -48,6 +48,7 @@ function CreateModal({ setModalIsOpen }) {
       });
     });
   }
+  console.log(callInfo.clientCity);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -99,7 +100,7 @@ function CreateModal({ setModalIsOpen }) {
                 <select
                   value={callInfo.clientCity}
                   onChange={(e) =>
-                    setCallInfo({ ...callInfo, cidade: e.target.value })
+                    setCallInfo({ ...callInfo, clientCity: e.target.value })
                   }
                   className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
                 >

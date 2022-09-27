@@ -8,6 +8,8 @@ import { MdDateRange } from "react-icons/md";
 import Link from "next/link";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
+import { cities } from "../../utils/constants";
+
 const statusStyles = {
   ABERTO: {
     textColor: "text-yellow-500",
@@ -42,13 +44,13 @@ function ChamadosSuporte({ credentials, setCredentials }) {
     after: dateFilterParam,
     before: new Date(),
   });
-  const [respFilter, setRespFilter] = useState([]);
-  const [statusFilter, setStatusFilter] = useState([]);
   const [filters, setFilters] = useState({
     respFilter: [],
     statusFilter: [],
+    cityFilter: [],
   });
   const [searchFilter, setSearchFilter] = useState("");
+  const [searchByType, setSearchByType] = useState("");
   function getCalls() {
     axios.get("/api/calls/suporte/mainData").then((res) => {
       setStats(res.data.stats);
@@ -81,6 +83,11 @@ function ChamadosSuporte({ credentials, setCredentials }) {
         filters.statusFilter.includes(call.statusChamado)
       );
     }
+    if (filters.cityFilter.length > 0) {
+      newArr = newArr.filter((call) =>
+        filters.cityFilter.includes(call.cidade)
+      );
+    }
     if (!newArr) setFilteredInProgress(inProgress);
     else {
       setFilteredInProgress(newArr);
@@ -93,6 +100,17 @@ function ChamadosSuporte({ credentials, setCredentials }) {
         call.nomeCliente
           ? call.nomeCliente.toUpperCase().includes(value.toUpperCase())
           : call.nomeUsina.toUpperCase().includes(value.toUpperCase())
+      );
+      setFilteredInProgress(newArr);
+    } else {
+      setFilteredInProgress(inProgress);
+    }
+  }
+  function handleSearchByType(value) {
+    setSearchByType(value);
+    if (value != "" || " ") {
+      let newArr = inProgress.filter((call) =>
+        call.tipoChamado.toUpperCase().includes(value.toUpperCase())
       );
       setFilteredInProgress(newArr);
     } else {
@@ -143,13 +161,30 @@ function ChamadosSuporte({ credentials, setCredentials }) {
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             Chamados abertos
           </h1>
-          <input
-            type="text"
-            value={searchFilter}
-            onChange={(e) => handleSearchFilter(e.target.value)}
-            className="outline-none border border-gray-200 px-2 py-1"
-          />
-          <div className="flex items-center gap-x-2">
+          <div className="flex flex-wrap justify-center gap-y-2 items-center gap-x-2">
+            <input
+              type="text"
+              value={searchFilter}
+              placeholder={"Digite o nome do cliente..."}
+              onChange={(e) => handleSearchFilter(e.target.value)}
+              className="outline-none text-gray-700 border border-gray-200 px-2 py-1.5 rounded-md"
+            />
+            <input
+              value={searchByType}
+              onChange={(e) => handleSearchByType(e.target.value)}
+              placeholder="Digite o tipo do chamado..."
+              className="outline-none text-gray-700 border border-gray-200 px-2 py-1.5 rounded-md"
+            />
+            <Select
+              isMulti
+              placeholder="CIDADE"
+              onChange={(e) =>
+                setFilters({ ...filters, cityFilter: e.map((x) => x.value) })
+              }
+              options={cities.map((city) => {
+                return { value: city.name, label: city.name };
+              })}
+            />
             <Select
               isMulti
               placeholder="STATUS DO CHAMADOS"
@@ -194,7 +229,7 @@ function ChamadosSuporte({ credentials, setCredentials }) {
             />
             <button
               onClick={filterOpenCalls}
-              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 py-1 items-center gap-x-2"
+              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 py-1.5 items-center gap-x-2"
             >
               <p>Filtrar</p>
               <AiOutlineSearch />

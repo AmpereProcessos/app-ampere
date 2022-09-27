@@ -59,8 +59,8 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                 />
               </button>
             </div>
-            <div className="h-full overflow-y-auto overscroll-y-auto">
-              <div className="flex flex-col border-b border-gray-200 pb-2">
+            <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
+              <div className="flex flex-col border border-gray-200 pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   Informações do cliente
                 </span>
@@ -163,7 +163,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                 </div>
               </div>
-              <div className="flex flex-col border-b border-gray-200 pb-2">
+              <div className="flex flex-col border border-gray-200 pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   VISITA TÉCNICA
                 </span>
@@ -240,7 +240,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                 </div>
               </div>
-              <div className="flex flex-col border-b border-gray-200 pb-2">
+              <div className="flex flex-col border border-gray-200 pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   PADRÃO
                 </span>
@@ -307,7 +307,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                 </div>
               </div>
-              <div className="flex flex-col border-b border-gray-200 pb-2">
+              <div className="flex flex-col border border-gray-200 pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   ESTRUTURA PERSONALIZADA
                 </span>
@@ -409,7 +409,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                 </div>
               </div>
-              <div className="flex flex-col border-b border-gray-200 pb-2">
+              <div className="flex flex-col border border-gray-200 pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   CONTRATO
                 </span>
@@ -499,7 +499,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                 </div>
               </div>
-              <div className="flex flex-col border-b border-gray-200 pb-2">
+              <div className="flex flex-col border border-gray-200 pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   PAGAMENTO
                 </span>
@@ -647,7 +647,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                 </div>
               </div>
-              <div className="flex flex-col border-b border-gray-200 pb-2">
+              <div className="flex flex-col border border-gray-200 pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   Informações da compra
                 </span>
@@ -690,7 +690,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                 </div>
               </div>
-              <div className="flex flex-col border-b border-gray-200 pb-2">
+              <div className="flex flex-col border border-gray-200 pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   Informações do serviço
                 </span>

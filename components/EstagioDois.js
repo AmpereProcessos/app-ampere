@@ -32,7 +32,7 @@ function EstagioDois({
         <span className="flex flex-col items-center font-bold p-1 border border-gray-200">
           <p className="uppercase text-gray-500">Potência do sistema</p>
           <ImPower style={{ fontSize: "30px", color: "blue" }} />
-          <p>{necessaryPeakPot.replace(".", ",")} kWp</p>
+          <p>{necessaryPeakPot.toFixed(2).replace(".", ",")} kWp</p>
         </span>
         <span className="flex flex-col items-center font-bold p-1 border border-gray-200">
           <p className="uppercase text-gray-500">Número de módulos</p>

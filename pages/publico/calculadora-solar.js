@@ -9,7 +9,12 @@ function CalculadoraSolar() {
   const [clientCurrentEnergyBill, setBillPrice] = useState(0);
   let necessaryEconomy = clientCurrentEnergyBill;
   let necessaryMonthlyEnergy = necessaryEconomy / 1.15;
-  let necessaryPeakPot = (necessaryEconomy / 127.92).toFixed(2);
+  let necessaryPeakPot = necessaryMonthlyEnergy / 127.92;
+  console.log(
+    clientCurrentEnergyBill,
+    necessaryMonthlyEnergy,
+    necessaryEconomy / 127.92
+  );
   let necessaryModules = Math.ceil(necessaryPeakPot / 0.45);
   let necessaryArea = (necessaryModules * 2.2).toFixed(2);
   let necessaryInvestiment = (necessaryPeakPot * 4800).toFixed(2);

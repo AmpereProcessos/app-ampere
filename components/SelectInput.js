@@ -18,7 +18,6 @@ function SelectInput({ label, value, options, handleChange, editable }) {
               {opt.label}
             </option>
           ))}
-        <option value={undefined}>NÃO DEFINIDO</option>
       </select>
     </div>
   );

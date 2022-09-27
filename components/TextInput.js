@@ -9,6 +9,7 @@ function TextInput({ value, label, handleChange, editable }) {
         className="text-xs w-full text-center uppercase text-gray-600 outline-none"
         value={value}
         readOnly={!editable}
+        placeholder={"Informação a preencher..."}
         onChange={(e) => handleChange(e.target.value)}
         type="text"
       />

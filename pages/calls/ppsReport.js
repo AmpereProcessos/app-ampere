@@ -84,7 +84,7 @@ function PPSReport() {
       {Object.keys(info).length > 0 && (
         <div
           id="divToPrint"
-          className="flex flex-col mt-4 items-center"
+          className="flex flex-col mt-4 items-center justify-center"
           style={{
             backgroundColor: "#FFF",
             width: "210mm",

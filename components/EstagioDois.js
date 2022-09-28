@@ -73,7 +73,7 @@ function EstagioDois({ setCurrentEstagio, name, email, phone, city }) {
             className="outline-none text-center p-2 border border-gray-200 grow"
           >
             {cities.map((city) => (
-              <option id={city.name} value={city.name}>
+              <option key={city.name} value={city.name}>
                 {city.name.toUpperCase()}
               </option>
             ))}

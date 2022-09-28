@@ -17,36 +17,46 @@ function EstagioTres({
       <h1 className="text-center uppercase text-[#fead61] font-bold text-xl">
         Calculadora Solar
       </h1>
-      <div className="flex flex-col gap-y-2">
+      <div className="grid grid-cols-2 grid-rows-3 gap-x-3 mt-5 gap-y-2">
         <span className="flex flex-col items-center font-bold p-1 border border-gray-200">
-          <p className="uppercase text-gray-500">Economia mensal esperada</p>
+          <p className="uppercase text-center text-gray-500">
+            Economia mensal esperada
+          </p>
           <FaMoneyBillWaveAlt style={{ fontSize: "30px", color: "green" }} />
           <p className="bg-green-400 p-1 rounded-lg">R$ {necessaryEconomy}</p>
         </span>
         <span className="flex flex-col items-center font-bold p-1 border border-gray-200">
-          <p className="uppercase text-gray-500">Geração mensal necessária</p>
+          <p className="uppercase text-center text-gray-500">
+            Geração mensal necessária
+          </p>
           <WiSolarEclipse style={{ fontSize: "45px", color: "yellow" }} />
           <p className="bg-yellow-300 p-1 rounded-lg">
             {necessaryMonthlyEnergy.toFixed(2).replace(".", ",")}kWh
           </p>
         </span>
         <span className="flex flex-col items-center font-bold p-1 border border-gray-200">
-          <p className="uppercase text-gray-500">Potência do sistema</p>
+          <p className="uppercase text-center text-gray-500">
+            Potência do sistema
+          </p>
           <ImPower style={{ fontSize: "30px", color: "blue" }} />
           <p>{necessaryPeakPot.toFixed(2).replace(".", ",")} kWp</p>
         </span>
         <span className="flex flex-col items-center font-bold p-1 border border-gray-200">
-          <p className="uppercase text-gray-500">Número de módulos</p>
+          <p className="uppercase text-center text-gray-500">
+            Número de módulos
+          </p>
           <FaSolarPanel style={{ fontSize: "30px", color: "orange" }} />
           <p>{necessaryModules} módulos</p>
         </span>
         <span className="flex flex-col items-center font-bold p-1 border border-gray-200">
-          <p className="uppercase text-gray-500">Área mínima</p>
+          <p className="uppercase text-center text-gray-500">Área mínima</p>
           <IoIosResize style={{ fontSize: "30px", color: "red" }} />
           <p>{necessaryArea} m²</p>
         </span>
         <span className="flex flex-col items-center font-bold p-1 border border-gray-200">
-          <p className="uppercase text-gray-500">Investimento esperado</p>
+          <p className="uppercase text-center text-gray-500">
+            Investimento esperado
+          </p>
           <FaPiggyBank style={{ fontSize: "30px", color: "green" }} />
           <p>R${necessaryInvestiment.replace(".", ",")}</p>
         </span>

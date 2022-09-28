@@ -12,7 +12,136 @@ export const routes = [
   "ADM",
   "RH",
 ];
-
+export const vendedores = [
+  {
+    nome: "ARTHUR CARVALHO",
+    cod: 4,
+  },
+  {
+    nome: "ARTUR MILANE",
+    cod: 7,
+  },
+  {
+    nome: "CARLOS MARQUES",
+    cod: 3,
+  },
+  {
+    nome: "DEVISSON LIMA",
+    cod: 9,
+  },
+  {
+    nome: "DIOMAR HONORIO",
+    cod: 10,
+  },
+  {
+    nome: "GETULIO EDUARDO",
+    cod: 13,
+  },
+  {
+    nome: "GLAIDSTONE JOSÉ",
+    cod: 34,
+  },
+  {
+    nome: "JESSICA PARANAIBA",
+    cod: 15,
+  },
+  {
+    nome: "JORGINHO HABIB",
+    cod: 16,
+  },
+  {
+    nome: "JULIANO SILVA",
+    cod: 19,
+  },
+  {
+    nome: "MATHEUS OLIVEIRA",
+    cod: 6,
+  },
+  {
+    nome: "NEIDSON FILHO",
+    cod: 22,
+  },
+  {
+    nome: "RAFAEL FEO",
+    cod: 23,
+  },
+  {
+    nome: "ROMES ALVES",
+    cod: 24,
+  },
+  {
+    nome: "RODRIGO MORAIS",
+    cod: 27,
+  },
+  {
+    nome: "LUCIANO MUNIZ",
+    cod: 28,
+  },
+  {
+    nome: "DIONISIO JUNIOR",
+    cod: 36,
+  },
+  {
+    nome: "LEANDRO VIALI",
+    cod: 37,
+  },
+  {
+    nome: "GUILHERME LIMA",
+    cod: 38,
+  },
+  {
+    nome: "LUCIANO JORGE",
+    cod: 39,
+  },
+  {
+    nome: "STENIO DE ASSIS",
+    cod: 43,
+  },
+  {
+    nome: "RONIVALDO MARTINS",
+    cod: 47,
+  },
+  {
+    nome: "DIOGO PAULINO",
+    cod: 5,
+  },
+  {
+    nome: "ARIÁDNNY APARECIDA",
+    cod: 49,
+  },
+  {
+    nome: "DÁFINY VILLANO",
+    cod: 50,
+  },
+  {
+    nome: "ARTHUR ALEXANDER",
+    cod: 54,
+  },
+  {
+    nome: "FELIPE RIBEIRO",
+    cod: 8,
+  },
+  {
+    nome: "ADAILSON COSTA",
+    cod: 57,
+  },
+  {
+    nome: "LUCIANO LOPES",
+    cod: 58,
+  },
+  {
+    nome: "RODRIGO DE MORAIS",
+    cod: 59,
+  },
+  {
+    nome: "EURIPEDES JUNIOR",
+    cod: 61,
+  },
+  {
+    nome: "NÃO DEFINIDO",
+    cod: 999,
+  },
+];
 export const acessAuth = {
   diretorExecutivo: {
     label: "Diretor(a) Executivo",

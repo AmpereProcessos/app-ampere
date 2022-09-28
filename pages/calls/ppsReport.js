@@ -93,6 +93,7 @@ function PPSReport() {
             marginRight: "auto",
           }}
         >
+          <h1 className="font-ralewat font-bold mt-2">RELATÓRIO PPS</h1>
           <div className="grid grid-cols-2">
             <div className="flex flex-col item-center">
               <h1 className="text-center font-bold mt-4 text-[#15599a]">
@@ -101,7 +102,7 @@ function PPSReport() {
               <BarChart
                 layout="vertical"
                 barCategoryGap={10}
-                width={400}
+                width={350}
                 height={650}
                 data={info.byType}
               >
@@ -129,7 +130,7 @@ function PPSReport() {
               <BarChart
                 layout="vertical"
                 barCategoryGap={10}
-                width={400}
+                width={350}
                 height={650}
                 data={info.bySeller}
               >
@@ -158,7 +159,7 @@ function PPSReport() {
             layout="vertical"
             barCategoryGap={10}
             width={400}
-            height={650}
+            height={300}
             data={info.byAttendant}
           >
             <CartesianGrid strokeDasharray="3 3" />

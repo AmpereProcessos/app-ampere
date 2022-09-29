@@ -238,6 +238,69 @@ function ModalProjetos({ open, setModalIsOpen, project, editor }) {
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  DADOS INSTALAÇÃO CEMIG
+                </span>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  <TextInput
+                    label={"Titular do projeto"}
+                    editable={editor}
+                    value={
+                      infoHolder.titulardoprojeto
+                        ? infoHolder.titulardoprojeto
+                        : ""
+                    }
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, titulardoprojeto: value })
+                    }
+                  />
+                  <TextInput
+                    label={"Número da instalação"}
+                    value={
+                      infoHolder.numeroinstalacao
+                        ? infoHolder.numeroinstalacao
+                        : ""
+                    }
+                    editable={editor}
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, numeroinstalacao: value })
+                    }
+                  />
+                  <SelectInput
+                    label={"DISTRIBUIÇÃO DE CRÉDITOS"}
+                    value={
+                      infoHolder.distribuicaodecreditos
+                        ? infoHolder.distribuicaodecreditos
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    options={[
+                      { label: "SIM", value: "SIM" },
+                      { label: "NÃO", value: "NÃO" },
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                    ]}
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, distribuicaodecreditos: value })
+                    }
+                  />
+                  {infoHolder.distribuicaodecreditos == "SIM" && (
+                    <NumberInput
+                      label={"QTDE DE DISTRIBUIÇÕES"}
+                      editable={editor}
+                      value={
+                        infoHolder.quantdistribuicoes != undefined &&
+                        infoHolder.quantdistribuicoes != "-"
+                          ? infoHolder.quantdistribuicoes
+                          : 0
+                      }
+                      handleChange={(value) =>
+                        setInfo({ ...infoHolder, quantdistribuicoes: value })
+                      }
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   VISITA TÉCNICA
                 </span>
                 <div className="flex gap-2 justify-around flex-wrap">
@@ -323,49 +386,6 @@ function ModalProjetos({ open, setModalIsOpen, project, editor }) {
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
                   <SelectInput
-                    label={"PAGAMENTO DO PADRÃO"}
-                    editable={editor}
-                    value={
-                      infoHolder.pagamentodopadrao ==
-                        "NÃO HAVERA TROCA DE PADRÃO" ||
-                      infoHolder.pagamentodopadrao == undefined
-                        ? "NÃO HAVERA TROCA PADRÃO"
-                        : infoHolder.pagamentodopadrao
-                    }
-                    options={[
-                      {
-                        label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                        value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                      },
-                      {
-                        label: "CLIENTE PAGAR POR FORA",
-                        value: "CLIENTE PAGAR POR FORA",
-                      },
-                      {
-                        label: "INCLUSO NO CONTRATO",
-                        value: "INCLUSO NO CONTRATO",
-                      },
-                      {
-                        label: "NÃO HAVERA TROCA PADRÃO",
-                        value: "NÃO HAVERA TROCA PADRÃO",
-                      },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        pagamentodopadrao: value,
-                      })
-                    }
-                  />
-                  <NumberInput
-                    label={"Valor do padrão"}
-                    editable={editor}
-                    value={infoHolder.valorpadrao}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, valorpadrao: value })
-                    }
-                  />
-                  <SelectInput
                     label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
                     editable={editor}
                     value={
@@ -385,176 +405,64 @@ function ModalProjetos({ open, setModalIsOpen, project, editor }) {
                       })
                     }
                   />
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  ESTRUTURA PERSONALIZADA
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <div>
-                    <input
-                      disabled={!editor}
-                      checked={
-                        infoHolder.possuiestruturapersonalisada === "SIM"
-                          ? true
-                          : false
-                      }
-                      onChange={(e) =>
-                        setInfo({
-                          ...infoHolder,
-                          possuiestruturapersonalisada: e.target.checked
-                            ? "SIM"
-                            : "NÃO",
-                        })
-                      }
-                      type="checkbox"
-                      name="visitaTecnica"
-                      id="visitaTecnica"
-                    />
-                    <label className="ml-2" htmlFor="visitaTecnica">
-                      APLICÁVEL
-                    </label>
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      AUMENTO DE CARGA
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={
+                          infoHolder.aumentodecarga === "SIM" ? true : false
+                        }
+                        onChange={(e) =>
+                          setInfo({
+                            ...infoHolder,
+                            aumentodecarga: e.target.checked ? "SIM" : "NÃO",
+                            acstatus:
+                              e.target.checked &&
+                              infoHolder.acstatus != "REALIZADO"
+                                ? "PÊNDENCIA"
+                                : undefined,
+                          })
+                        }
+                        type="checkbox"
+                        name="aumentodecarga"
+                        id="aumentodecarga"
+                      />
+                      <label className="ml-2" htmlFor="aumentodecarga">
+                        SIM
+                      </label>
+                    </div>
                   </div>
-                  <SelectInput
-                    label={"Tipo da estrutura"}
-                    editable={editor}
-                    value={
-                      infoHolder.tipoestrutura
-                        ? infoHolder.tipoestrutura
-                        : "N/A"
-                    }
-                    options={[
-                      { label: "INCLINAÇÃO", value: "INCLINAÇÃO" },
-                      { label: "SOLO", value: "SOLO" },
-                      { label: "TELHADO", value: "TELHADO" },
-                      { label: "BARRACÃO", value: "BARRACÃO" },
-                      { label: "CARPORT", value: "CARPORT" },
-                      { label: "N/A", value: "N/A" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, tipoestrutura: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"PAGAMENTO DA ESTRUTURA"}
-                    editable={editor}
-                    value={
-                      infoHolder.pagestruturapersonalizada
-                        ? infoHolder.pagestruturapersonalizada
-                        : "NÃ SE APLICA"
-                    }
-                    options={[
-                      { label: "AMPERE", value: "AMPERE" },
-                      { label: "CLIENTE", value: "CLIENTE" },
-                      { label: "NÃO SE APLICA", value: "NÃ SE APLICA" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        pagestruturapersonalizada: value,
-                      })
-                    }
-                  />
-                  <NumberInput
-                    label={"Valor da estrutura"}
-                    editable={editor}
-                    value={
-                      infoHolder.valorestrutura == "-" ||
-                      infoHolder.valorestrutura == undefined
-                        ? 0
-                        : infoHolder.valorestrutura
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, valorestrutura: value })
-                    }
-                  />
-                  {infoHolder.possuiestruturapersonalisada == "SIM" && (
-                    <SelectInput
-                      label={"STATUS da estrutura personalizada"}
-                      editable={editor}
-                      value={
-                        infoHolder.possuiestruturapersonalisada
-                          ? infoHolder.estruturapersonalisada
-                            ? infoHolder.estruturapersonalisada
-                            : "N/A"
-                          : "N/A"
-                      }
-                      options={[
-                        { label: "PRONTA", value: "PRONTA" },
-                        { label: "PENDÊNCIA", value: "PENDÊNCIA" },
-                        { label: "N/A", value: "N/A" },
-                      ]}
-                      handleChange={(value) =>
-                        setInfo({
-                          ...infoHolder,
-                          estruturapersonalisada: value,
-                        })
-                      }
-                    />
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  DADOS INSTALAÇÃO CEMIG
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <TextInput
-                    label={"Titular do projeto"}
-                    editable={editor}
-                    value={
-                      infoHolder.titulardoprojeto
-                        ? infoHolder.titulardoprojeto
-                        : ""
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, titulardoprojeto: value })
-                    }
-                  />
-                  <TextInput
-                    label={"Número da instalação"}
-                    value={
-                      infoHolder.numeroinstalacao
-                        ? infoHolder.numeroinstalacao
-                        : ""
-                    }
-                    editable={editor}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, numeroinstalacao: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"DISTRIBUIÇÃO DE CRÉDITOS"}
-                    value={
-                      infoHolder.distribuicaodecreditos
-                        ? infoHolder.distribuicaodecreditos
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      { label: "SIM", value: "SIM" },
-                      { label: "NÃO", value: "NÃO" },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, distribuicaodecreditos: value })
-                    }
-                  />
-                  {infoHolder.distribuicaodecreditos == "SIM" && (
-                    <NumberInput
-                      label={"QTDE DE DISTRIBUIÇÕES"}
-                      editable={editor}
-                      value={
-                        infoHolder.quantdistribuicoes != undefined &&
-                        infoHolder.quantdistribuicoes != "-"
-                          ? infoHolder.quantdistribuicoes
-                          : 0
-                      }
-                      handleChange={(value) =>
-                        setInfo({ ...infoHolder, quantdistribuicoes: value })
-                      }
-                    />
+                  {infoHolder.aumentodecarga == "SIM" && (
+                    <div className="flex flex-col w-[350px] items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        STATUS AUMENTO DE CARGA
+                      </span>
+                      <div className="flex">
+                        <input
+                          disabled={!editor}
+                          checked={
+                            infoHolder.acstatus === "REALIZADO" ? true : false
+                          }
+                          onChange={(e) =>
+                            setInfo({
+                              ...infoHolder,
+                              acstatus: e.target.checked
+                                ? "REALIZADO"
+                                : "PENDÊNCIA",
+                            })
+                          }
+                          type="checkbox"
+                          name="acstatus"
+                          id="acstatus"
+                        />
+                        <label className="ml-2" htmlFor="acstatus">
+                          REALIZADO
+                        </label>
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
@@ -782,52 +690,6 @@ function ModalProjetos({ open, setModalIsOpen, project, editor }) {
                       setInfo({ ...infoHolder, statusparecerdeacesso: value })
                     }
                   />
-                  <SelectInput
-                    label={"Status do parecer de acesso"}
-                    value={
-                      infoHolder.statusparecerdeacesso
-                        ? infoHolder.statusparecerdeacesso
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      {
-                        label: "AGUARDANDO FATURAMENTO ART",
-                        value: "AGUARDANDO FATURAMENTO ART",
-                      },
-                      {
-                        label: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
-                        value: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
-                      },
-                      {
-                        label: "CANCELADO",
-                        value: "CANCELADO",
-                      },
-                      {
-                        label: "INICIAR PROJETO",
-                        value: "INICIAR PROJETO",
-                      },
-                      {
-                        label: "PARECER DE ACESSO APROVADO",
-                        value: "PARECER DE ACESSO APROVADO",
-                      },
-                      {
-                        label: "PENDENCIAS",
-                        value: "PENDENCIAS",
-                      },
-                      {
-                        label: "SOLICITAR ACESSO",
-                        value: "SOLICITAR ACESSO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, statusparecerdeacesso: value })
-                    }
-                  />
                   <div className="flex flex-col w-[350px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
                       DIAGRAMA UNIFILAR
@@ -895,65 +757,6 @@ function ModalProjetos({ open, setModalIsOpen, project, editor }) {
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                   />
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      AUMENTO DE CARGA
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={!editor}
-                        checked={
-                          infoHolder.aumentodecarga === "SIM" ? true : false
-                        }
-                        onChange={(e) =>
-                          setInfo({
-                            ...infoHolder,
-                            aumentodecarga: e.target.checked ? "SIM" : "NÃO",
-                            acstatus:
-                              e.target.checked &&
-                              infoHolder.acstatus != "REALIZADO"
-                                ? "PÊNDENCIA"
-                                : undefined,
-                          })
-                        }
-                        type="checkbox"
-                        name="aumentodecarga"
-                        id="aumentodecarga"
-                      />
-                      <label className="ml-2" htmlFor="aumentodecarga">
-                        SIM
-                      </label>
-                    </div>
-                  </div>
-                  {infoHolder.aumentodecarga == "SIM" && (
-                    <div className="flex flex-col w-[350px] items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        STATUS AUMENTO DE CARGA
-                      </span>
-                      <div className="flex">
-                        <input
-                          disabled={!editor}
-                          checked={
-                            infoHolder.acstatus === "REALIZADO" ? true : false
-                          }
-                          onChange={(e) =>
-                            setInfo({
-                              ...infoHolder,
-                              acstatus: e.target.checked
-                                ? "REALIZADO"
-                                : "PENDÊNCIA",
-                            })
-                          }
-                          type="checkbox"
-                          name="acstatus"
-                          id="acstatus"
-                        />
-                        <label className="ml-2" htmlFor="acstatus">
-                          REALIZADO
-                        </label>
-                      </div>
-                    </div>
-                  )}
                   <DateInput
                     label={"DATA DO PEDIDO DE VISTORIA"}
                     editable={editor}

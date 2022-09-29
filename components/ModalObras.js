@@ -238,6 +238,438 @@ function ModalObras({ open, setModalIsOpen, project, editor }) {
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  Informações sobre a obra
+                </span>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  <SelectInput
+                    label={"Laudo"}
+                    value={infoHolder.laudo ? infoHolder.laudo : "NÃO DEFINIDO"}
+                    editable={editor}
+                    options={[
+                      { label: "EM ESTUDO", value: "EM ESTUDO" },
+                      { label: "EMITIDO", value: "EMITIDO" },
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                    ]}
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, laudo: value })
+                    }
+                  />
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      AUMENTO DE CARGA
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={
+                          infoHolder.aumentodecarga === "SIM" ? true : false
+                        }
+                        onChange={(e) =>
+                          setInfo({
+                            ...infoHolder,
+                            aumentodecarga: e.target.checked ? "SIM" : "NÃO",
+                            acstatus:
+                              e.target.checked &&
+                              infoHolder.acstatus != "REALIZADO"
+                                ? "PÊNDENCIA"
+                                : undefined,
+                          })
+                        }
+                        type="checkbox"
+                        name="aumentodecarga"
+                        id="aumentodecarga"
+                      />
+                      <label className="ml-2" htmlFor="aumentodecarga">
+                        SIM
+                      </label>
+                    </div>
+                  </div>
+                  {infoHolder.aumentodecarga == "SIM" && (
+                    <div className="flex flex-col w-[350px] items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        STATUS AUMENTO DE CARGA
+                      </span>
+                      <div className="flex">
+                        <input
+                          disabled={!editor}
+                          checked={
+                            infoHolder.acstatus === "REALIZADO" ? true : false
+                          }
+                          onChange={(e) =>
+                            setInfo({
+                              ...infoHolder,
+                              acstatus: e.target.checked
+                                ? "REALIZADO"
+                                : "PENDÊNCIA",
+                            })
+                          }
+                          type="checkbox"
+                          name="acstatus"
+                          id="acstatus"
+                        />
+                        <label className="ml-2" htmlFor="acstatus">
+                          REALIZADO
+                        </label>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      SOLICITAÇÃO DA OBRA
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={
+                          infoHolder.solicitacaoobra === "SOLICITADA"
+                            ? true
+                            : false
+                        }
+                        onChange={(e) =>
+                          setInfo({
+                            ...infoHolder,
+                            solicitacaoobra: e.target.checked
+                              ? "SOLICITADA"
+                              : undefined,
+                          })
+                        }
+                        type="checkbox"
+                        name="solicitacaoobra"
+                        id="solicitacaoobra"
+                      />
+                      <label className="ml-2" htmlFor="solicitacaoobra">
+                        SOLICITADA
+                      </label>
+                    </div>
+                  </div>
+                  <TextInput
+                    label={"Status entrega dos equipamentos"}
+                    editable={false}
+                    value={
+                      infoHolder.statusentrega ? infoHolder.statusentrega : "-"
+                    }
+                  />
+                  <DateInput
+                    label={"PREVISÃO/ENTREGA DOS EQUIPAMENTOS"}
+                    editable={editor}
+                    value={
+                      infoHolder.previsaoentrega != undefined &&
+                      infoHolder.previsaoentrega != "-"
+                        ? new Date(infoHolder.previsaoentrega)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, previsaoentrega: value })
+                    }
+                  />
+                  <DateInput
+                    label={"ENTRADA NA OBRA"}
+                    editable={editor}
+                    value={
+                      infoHolder.entradanaobra != undefined &&
+                      infoHolder.entradanaobra != "-"
+                        ? new Date(infoHolder.entradanaobra)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, entradanaobra: value })
+                    }
+                  />
+                  <DateInput
+                    label={"SAIDA DE OBRA"}
+                    editable={editor}
+                    value={
+                      infoHolder.saidadeobra != undefined &&
+                      infoHolder.saidadeobra != "-"
+                        ? new Date(infoHolder.saidadeobra)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, saidadeobra: value })
+                    }
+                  />
+                  <SelectInput
+                    label={"EQUIPE RESPONSÁVEL"}
+                    editable={editor}
+                    value={
+                      infoHolder.equipeexec != undefined &&
+                      infoHolder.equipeexec != "-"
+                        ? infoHolder.equipeexec == "TERCEIROS" ||
+                          infoHolder.equipeexec == "TERCERIZADOS" ||
+                          infoHolder.equipeexec == "OUTROS"
+                          ? "OUTROS"
+                          : infoHolder.equipeexec
+                        : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      {
+                        label: "EQUIPE 1 - JOSÉ ROBERTO",
+                        value: "EQUIPE 1 - JOSÉ ROBERTO",
+                      },
+                      {
+                        label: "EQUIPE 2 - EDUARDO",
+                        value: "EQUIPE 2-EDUARDO",
+                      },
+                      {
+                        label: "EQUIPE 3 - EDMAR",
+                        value: "EQUIPE 3-EDIMAR",
+                      },
+                      {
+                        label: "EQUIPE 4 - ERICK",
+                        value: "EQUIPE 4-ERICK",
+                      },
+                      {
+                        label: "EQUIPE 5 - JUNIN",
+                        value: "EQUIPE 5-JUNIN",
+                      },
+                      {
+                        label: "EQUIPE 6 - FELIPE",
+                        value: "EQUIPE 6-FELIPE",
+                      },
+                      {
+                        label: "EQUIPE 7 - ADENILSON",
+                        value: "EQUIPE 7- ADENILSON",
+                      },
+                      {
+                        label: "EQUIPE 8 - GERSON",
+                        value: "EQUIPE 8-GERSON",
+                      },
+                      {
+                        label: "EQUIPE 9 - REGINALDO",
+                        value: "EQUIPE 9 - REGINALDO",
+                      },
+                      {
+                        label: "EQUIPE 10 - LUIZ",
+                        value: "EQUIPE 10 - LUIZ",
+                      },
+                      {
+                        label: "EQUIPE 11 - GILMAR",
+                        value: "EQUIPE 11 - GILMAR",
+                      },
+                      {
+                        label: "EQUIPE 12 - MARCUS V.",
+                        value: "EQUIPE 12 - MARCUS V.",
+                      },
+                      {
+                        label: "EQUIPE 13 - EDUARDO FRANCO",
+                        value: "EQUIPE 13 - EDUARDO FRANCO",
+                      },
+                      {
+                        label: "EQUIPE 15 - MARCOS B.",
+                        value: "EQUIPE 15 - MARCOS B.",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, equipeexec: value })
+                    }
+                  />
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      CHECKLIST OBRA
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={
+                          infoHolder.checklistobra === "SIM" ? true : false
+                        }
+                        onChange={(e) =>
+                          setInfo({
+                            ...infoHolder,
+                            checklistobra: e.target.checked ? "SIM" : undefined,
+                          })
+                        }
+                        type="checkbox"
+                        name="checklistobra"
+                        id="checklistobra"
+                      />
+                      <label className="ml-2" htmlFor="checklistobra">
+                        SIM
+                      </label>
+                    </div>
+                  </div>
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      TRAFO
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={infoHolder.trafo === "SIM" ? true : false}
+                        onChange={(e) =>
+                          setInfo({
+                            ...infoHolder,
+                            trafo: e.target.checked ? "SIM" : undefined,
+                          })
+                        }
+                        type="checkbox"
+                        name="trafo"
+                        id="trafo"
+                      />
+                      <label className="ml-2" htmlFor="trafo">
+                        SIM
+                      </label>
+                    </div>
+                  </div>
+                  <SelectInput
+                    label={"STATUS DA OBRA"}
+                    value={
+                      infoHolder.statusobra
+                        ? infoHolder.statusobra
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    options={[
+                      {
+                        label: "AGENDADA",
+                        value: "AGENDADA",
+                      },
+                      {
+                        label: "AGUARDANDO AGENDAMENTO",
+                        value: "AGUARDANDO AGENDAMENTO",
+                      },
+                      {
+                        label: "CONCLUIDA",
+                        value: "CONCLUIDA",
+                      },
+                      {
+                        label: "EM ANDAMENTO",
+                        value: "EM ANDAMENTO",
+                      },
+                      {
+                        label: "OBRA CANCELADA",
+                        value: "OBRA CANCELADA",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                  />
+                </div>
+                <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                  <span className="uppercase font-bold font-raleway text-center text-sm">
+                    OBSERVAÇÕES
+                  </span>
+                  <textarea
+                    readOnly={!editor}
+                    value={infoHolder.obsobra ? infoHolder.obsobra : ""}
+                    placeholder={"Observações da obra aqui..."}
+                    onChange={(e) =>
+                      setInfo({ ...infoHolder, obsobra: e.target.value })
+                    }
+                    className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  SISTEMA
+                </span>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  <NumberInput
+                    label={"NÚMERO DE MÓDULOS"}
+                    editable={false}
+                    value={
+                      infoHolder.nmodulos != undefined &&
+                      infoHolder.nmodulos != "-"
+                        ? infoHolder.nmodulos
+                        : 0
+                    }
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, nmodulos: value })
+                    }
+                  />
+                  <NumberInput
+                    label={"POTÊNCIA DOS MÓDULOS"}
+                    editable={false}
+                    value={
+                      infoHolder.potmodulos != undefined &&
+                      infoHolder.potmodulos != "-"
+                        ? infoHolder.potmodulos
+                        : 0
+                    }
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, potmodulos: value })
+                    }
+                  />
+                  <NumberInput
+                    label={"POTÊNCIA PICO"}
+                    editable={false}
+                    value={
+                      infoHolder.potpico != undefined &&
+                      infoHolder.potpico != "-"
+                        ? infoHolder.potpico
+                        : 0
+                    }
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, potpico: value })
+                    }
+                  />
+                  <SelectInput
+                    label={"TOPOLOGIA"}
+                    value={
+                      infoHolder.topologia
+                        ? infoHolder.topologia
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={false}
+                    options={[
+                      { label: "INVERSOR", value: "INVERSOR" },
+                      { label: "MICRO", value: "MICRO" },
+                      { label: "OUTROS SERV.", value: "OUTROS SERV." },
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                    ]}
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, topologia: value })
+                    }
+                  />
+                  <TextInput
+                    label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
+                    editable={false}
+                    value={
+                      infoHolder.qtdepotinversor
+                        ? infoHolder.qtdepotinversor
+                        : ""
+                    }
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, qtdepotinversor: value })
+                    }
+                  />
+                  <SelectInput
+                    label={"INICIAR PROJETO"}
+                    value={
+                      infoHolder.iniciarprojeto
+                        ? infoHolder.iniciarprojeto
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={false}
+                    options={[
+                      { label: "SIM", value: "SIM" },
+                      {
+                        label: "CONTRATO CANCELADO",
+                        value: "CONTRATO CANCELADO",
+                      },
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                    ]}
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, iniciarprojeto: value })
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   VISITA TÉCNICA
                 </span>
                 <div className="flex gap-2 justify-around flex-wrap">
@@ -493,377 +925,6 @@ function ModalObras({ open, setModalIsOpen, project, editor }) {
                       }
                     />
                   )}
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  SISTEMA
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <NumberInput
-                    label={"NÚMERO DE MÓDULOS"}
-                    editable={false}
-                    value={
-                      infoHolder.nmodulos != undefined &&
-                      infoHolder.nmodulos != "-"
-                        ? infoHolder.nmodulos
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, nmodulos: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"POTÊNCIA DOS MÓDULOS"}
-                    editable={false}
-                    value={
-                      infoHolder.potmodulos != undefined &&
-                      infoHolder.potmodulos != "-"
-                        ? infoHolder.potmodulos
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, potmodulos: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"POTÊNCIA PICO"}
-                    editable={false}
-                    value={
-                      infoHolder.potpico != undefined &&
-                      infoHolder.potpico != "-"
-                        ? infoHolder.potpico
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, potpico: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"TOPOLOGIA"}
-                    value={
-                      infoHolder.topologia
-                        ? infoHolder.topologia
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={false}
-                    options={[
-                      { label: "INVERSOR", value: "INVERSOR" },
-                      { label: "MICRO", value: "MICRO" },
-                      { label: "OUTROS SERV.", value: "OUTROS SERV." },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, topologia: value })
-                    }
-                  />
-                  <TextInput
-                    label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
-                    editable={false}
-                    value={
-                      infoHolder.qtdepotinversor
-                        ? infoHolder.qtdepotinversor
-                        : ""
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, qtdepotinversor: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"VALOR DO PROJETO"}
-                    editable={false}
-                    value={
-                      infoHolder.valorprojeto != undefined &&
-                      infoHolder.valorprojeto != "-"
-                        ? infoHolder.valorprojeto
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, valorprojeto: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"INICIAR PROJETO"}
-                    value={
-                      infoHolder.iniciarprojeto
-                        ? infoHolder.iniciarprojeto
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={false}
-                    options={[
-                      { label: "SIM", value: "SIM" },
-                      {
-                        label: "CONTRATO CANCELADO",
-                        value: "CONTRATO CANCELADO",
-                      },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, iniciarprojeto: value })
-                    }
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  Informações sobre a obra
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <SelectInput
-                    label={"Laudo"}
-                    value={infoHolder.laudo ? infoHolder.laudo : "NÃO DEFINIDO"}
-                    editable={editor}
-                    options={[
-                      { label: "EM ESTUDO", value: "EM ESTUDO" },
-                      { label: "EMITIDO", value: "EMITIDO" },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, laudo: value })
-                    }
-                  />
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      SOLICITAÇÃO DA OBRA
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={!editor}
-                        checked={
-                          infoHolder.solicitacaoobra === "SOLICITADA"
-                            ? true
-                            : false
-                        }
-                        onChange={(e) =>
-                          setInfo({
-                            ...infoHolder,
-                            solicitacaoobra: e.target.checked
-                              ? "SOLICITADA"
-                              : undefined,
-                          })
-                        }
-                        type="checkbox"
-                        name="solicitacaoobra"
-                        id="solicitacaoobra"
-                      />
-                      <label className="ml-2" htmlFor="solicitacaoobra">
-                        SOLICITADA
-                      </label>
-                    </div>
-                  </div>
-                  <TextInput
-                    label={"Status entrega dos equipamentos"}
-                    editable={false}
-                    value={
-                      infoHolder.statusentrega ? infoHolder.statusentrega : "-"
-                    }
-                  />
-                  <DateInput
-                    label={"ENTRADA NA OBRA"}
-                    editable={editor}
-                    value={
-                      infoHolder.entradanaobra != undefined &&
-                      infoHolder.entradanaobra != "-"
-                        ? new Date(infoHolder.entradanaobra)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, entradanaobra: value })
-                    }
-                  />
-                  <DateInput
-                    label={"SAIDA DE OBRA"}
-                    editable={editor}
-                    value={
-                      infoHolder.saidadeobra != undefined &&
-                      infoHolder.saidadeobra != "-"
-                        ? new Date(infoHolder.saidadeobra)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, saidadeobra: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"EQUIPE RESPONSÁVEL"}
-                    editable={editor}
-                    value={
-                      infoHolder.equipeexec != undefined &&
-                      infoHolder.equipeexec != "-"
-                        ? infoHolder.equipeexec == "TERCEIROS" ||
-                          infoHolder.equipeexec == "TERCERIZADOS" ||
-                          infoHolder.equipeexec == "OUTROS"
-                          ? "OUTROS"
-                          : infoHolder.equipeexec
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      {
-                        label: "EQUIPE 1 - JOSÉ ROBERTO",
-                        value: "EQUIPE 1 - JOSÉ ROBERTO",
-                      },
-                      {
-                        label: "EQUIPE 2 - EDUARDO",
-                        value: "EQUIPE 2-EDUARDO",
-                      },
-                      {
-                        label: "EQUIPE 3 - EDMAR",
-                        value: "EQUIPE 3-EDIMAR",
-                      },
-                      {
-                        label: "EQUIPE 4 - ERICK",
-                        value: "EQUIPE 4-ERICK",
-                      },
-                      {
-                        label: "EQUIPE 5 - JUNIN",
-                        value: "EQUIPE 5-JUNIN",
-                      },
-                      {
-                        label: "EQUIPE 6 - FELIPE",
-                        value: "EQUIPE 6-FELIPE",
-                      },
-                      {
-                        label: "EQUIPE 7 - ADENILSON",
-                        value: "EQUIPE 7- ADENILSON",
-                      },
-                      {
-                        label: "EQUIPE 8 - GERSON",
-                        value: "EQUIPE 8-GERSON",
-                      },
-                      {
-                        label: "EQUIPE 9 - REGINALDO",
-                        value: "EQUIPE 9 - REGINALDO",
-                      },
-                      {
-                        label: "EQUIPE 10 - LUIZ",
-                        value: "EQUIPE 10 - LUIZ",
-                      },
-                      {
-                        label: "EQUIPE 11 - GILMAR",
-                        value: "EQUIPE 11 - GILMAR",
-                      },
-                      {
-                        label: "EQUIPE 12 - MARCUS V.",
-                        value: "EQUIPE 12 - MARCUS V.",
-                      },
-                      {
-                        label: "EQUIPE 13 - EDUARDO FRANCO",
-                        value: "EQUIPE 13 - EDUARDO FRANCO",
-                      },
-                      {
-                        label: "EQUIPE 15 - MARCOS B.",
-                        value: "EQUIPE 15 - MARCOS B.",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, equipeexec: value })
-                    }
-                  />
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      CHECKLIST OBRA
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={!editor}
-                        checked={
-                          infoHolder.checklistobra === "SIM" ? true : false
-                        }
-                        onChange={(e) =>
-                          setInfo({
-                            ...infoHolder,
-                            checklistobra: e.target.checked ? "SIM" : undefined,
-                          })
-                        }
-                        type="checkbox"
-                        name="checklistobra"
-                        id="checklistobra"
-                      />
-                      <label className="ml-2" htmlFor="checklistobra">
-                        SIM
-                      </label>
-                    </div>
-                  </div>
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      TRAFO
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={!editor}
-                        checked={infoHolder.trafo === "SIM" ? true : false}
-                        onChange={(e) =>
-                          setInfo({
-                            ...infoHolder,
-                            trafo: e.target.checked ? "SIM" : undefined,
-                          })
-                        }
-                        type="checkbox"
-                        name="trafo"
-                        id="trafo"
-                      />
-                      <label className="ml-2" htmlFor="trafo">
-                        SIM
-                      </label>
-                    </div>
-                  </div>
-                  <SelectInput
-                    label={"STATUS DA OBRA"}
-                    value={
-                      infoHolder.statusobra
-                        ? infoHolder.statusobra
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      {
-                        label: "AGENDADA",
-                        value: "AGENDADA",
-                      },
-                      {
-                        label: "AGUARDANDO AGENDAMENTO",
-                        value: "AGUARDANDO AGENDAMENTO",
-                      },
-                      {
-                        label: "CONCLUIDA",
-                        value: "CONCLUIDA",
-                      },
-                      {
-                        label: "EM ANDAMENTO",
-                        value: "EM ANDAMENTO",
-                      },
-                      {
-                        label: "OBRA CANCELADA",
-                        value: "OBRA CANCELADA",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                  />
-                </div>
-                <div className="flex flex-col w-[450px] self-center mt-2 items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">
-                    OBSERVAÇÕES
-                  </span>
-                  <textarea
-                    readOnly={!editor}
-                    value={infoHolder.obsobra ? infoHolder.obsobra : ""}
-                    placeholder={"Observações da obra aqui..."}
-                    onChange={(e) =>
-                      setInfo({ ...infoHolder, obsobra: e.target.value })
-                    }
-                    className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                  />
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

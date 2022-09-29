@@ -240,28 +240,6 @@ function ModalSuprimentos({ setModalIsOpen, project, editor, ppsEditor }) {
                   VISITA TÉCNICA
                 </span>
                 <div className="flex gap-2 justify-around flex-wrap">
-                  <div>
-                    <input
-                      disabled={!ppsEditor}
-                      checked={
-                        infoHolder.visitatecnica === "REALIZADA" ? true : false
-                      }
-                      onChange={(e) =>
-                        setInfo({
-                          ...infoHolder,
-                          visitatecnica: e.target.checked
-                            ? "REALIZADA"
-                            : undefined,
-                        })
-                      }
-                      type="checkbox"
-                      name="visitaTecnica"
-                      id="visitaTecnica"
-                    />
-                    <label className="ml-2" htmlFor="visitaTecnica">
-                      REALIZADA
-                    </label>
-                  </div>
                   <TextInput
                     label={"TÉCNICO RESPONSÁVEL"}
                     editable={ppsEditor}
@@ -277,35 +255,7 @@ function ModalSuprimentos({ setModalIsOpen, project, editor, ppsEditor }) {
                       })
                     }
                   />
-                  <SelectInput
-                    label={"Saída do cliente"}
-                    editable={ppsEditor}
-                    value={
-                      infoHolder.saidacliente ? infoHolder.saidacliente : "N/A"
-                    }
-                    options={[
-                      { label: "SUBTERRANEO", value: "SUBTERRANEO" },
-                      { label: "AEREO", value: "AEREO" },
-                      { label: "N/A", value: "N/A" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        saidacliente: value,
-                      })
-                    }
-                  />
-                  <TextInput
-                    label={"Amperagem"}
-                    editable={ppsEditor}
-                    value={infoHolder.amperagem ? infoHolder.amperagem : ""}
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        amperagem: value,
-                      })
-                    }
-                  />
+
                   <TextInput
                     label={"Tipo da telha"}
                     editable={ppsEditor}
@@ -318,452 +268,109 @@ function ModalSuprimentos({ setModalIsOpen, project, editor, ppsEditor }) {
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  PADRÃO
+                  SISTEMA
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
-                  <SelectInput
-                    label={"PAGAMENTO DO PADRÃO"}
-                    editable={ppsEditor}
-                    value={
-                      infoHolder.pagamentodopadrao ==
-                        "NÃO HAVERA TROCA DE PADRÃO" ||
-                      infoHolder.pagamentodopadrao == undefined
-                        ? "NÃO HAVERA TROCA PADRÃO"
-                        : infoHolder.pagamentodopadrao
-                    }
-                    options={[
-                      {
-                        label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                        value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                      },
-                      {
-                        label: "CLIENTE PAGAR POR FORA",
-                        value: "CLIENTE PAGAR POR FORA",
-                      },
-                      {
-                        label: "INCLUSO NO CONTRATO",
-                        value: "INCLUSO NO CONTRATO",
-                      },
-                      {
-                        label: "NÃO HAVERA TROCA PADRÃO",
-                        value: "NÃO HAVERA TROCA PADRÃO",
-                      },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        pagamentodopadrao: value,
-                      })
-                    }
-                  />
                   <NumberInput
-                    label={"Valor do padrão"}
-                    editable={ppsEditor}
-                    value={infoHolder.valorpadrao}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, valorpadrao: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
-                    editable={ppsEditor}
+                    label={"NÚMERO DE MÓDULOS"}
+                    editable={editor}
                     value={
-                      infoHolder.respinstalacaopadrao
-                        ? infoHolder.respinstalacaopadrao
-                        : "NÃO SE APLICA"
-                    }
-                    options={[
-                      { label: "AMPERE", value: "AMPERE" },
-                      { label: "CLIENTE", value: "CLIENTE" },
-                      { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        respinstalacaopadrao: value,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  ESTRUTURA PERSONALIZADA
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <div>
-                    <input
-                      disabled={!ppsEditor}
-                      checked={
-                        infoHolder.possuiestruturapersonalisada === "SIM"
-                          ? true
-                          : false
-                      }
-                      onChange={(e) =>
-                        setInfo({
-                          ...infoHolder,
-                          possuiestruturapersonalisada: e.target.checked
-                            ? "SIM"
-                            : "NÃO",
-                        })
-                      }
-                      type="checkbox"
-                      name="visitaTecnica"
-                      id="visitaTecnica"
-                    />
-                    <label className="ml-2" htmlFor="visitaTecnica">
-                      APLICÁVEL
-                    </label>
-                  </div>
-                  <SelectInput
-                    label={"Tipo da estrutura"}
-                    editable={ppsEditor}
-                    value={
-                      infoHolder.tipoestrutura
-                        ? infoHolder.tipoestrutura
-                        : "N/A"
-                    }
-                    options={[
-                      { label: "INCLINAÇÃO", value: "INCLINAÇÃO" },
-                      { label: "SOLO", value: "SOLO" },
-                      { label: "TELHADO", value: "TELHADO" },
-                      { label: "BARRACÃO", value: "BARRACÃO" },
-                      { label: "CARPORT", value: "CARPORT" },
-                      { label: "N/A", value: "N/A" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, tipoestrutura: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"PAGAMENTO DA ESTRUTURA"}
-                    editable={ppsEditor}
-                    value={
-                      infoHolder.pagestruturapersonalizada
-                        ? infoHolder.pagestruturapersonalizada
-                        : "NÃ SE APLICA"
-                    }
-                    options={[
-                      { label: "AMPERE", value: "AMPERE" },
-                      { label: "CLIENTE", value: "CLIENTE" },
-                      { label: "NÃO SE APLICA", value: "NÃ SE APLICA" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        pagestruturapersonalizada: value,
-                      })
-                    }
-                  />
-                  <NumberInput
-                    label={"Valor da estrutura"}
-                    editable={ppsEditor}
-                    value={
-                      infoHolder.valorestrutura == "-" ||
-                      infoHolder.valorestrutura == undefined
-                        ? 0
-                        : infoHolder.valorestrutura
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, valorestrutura: value })
-                    }
-                  />
-                  {infoHolder.possuiestruturapersonalisada == "SIM" && (
-                    <SelectInput
-                      label={"STATUS da estrutura personalizada"}
-                      editable={ppsEditor}
-                      value={
-                        infoHolder.possuiestruturapersonalisada
-                          ? infoHolder.estruturapersonalisada
-                            ? infoHolder.estruturapersonalisada
-                            : "N/A"
-                          : "N/A"
-                      }
-                      options={[
-                        { label: "PRONTA", value: "PRONTA" },
-                        { label: "PENDÊNCIA", value: "PENDÊNCIA" },
-                        { label: "N/A", value: "N/A" },
-                      ]}
-                      handleChange={(value) =>
-                        setInfo({
-                          ...infoHolder,
-                          estruturapersonalisada: value,
-                        })
-                      }
-                    />
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  CONTRATO
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <SelectInput
-                    label={"STATUS"}
-                    editable={ppsEditor}
-                    value={
-                      infoHolder.statuscontrato
-                        ? infoHolder.statuscontrato
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      {
-                        label: "AGUARDANDO SOLICITAÇÃO",
-                        value: "AGUARDANDO SOLICITAÇÃO",
-                      },
-                      { label: "ASSINADO", value: "ASSINADO" },
-                      { label: "NÃO ASSINADO", value: "NÃO ASSINADO" },
-                      {
-                        label: "RECISÃO DE CONTRATO",
-                        value: "RECISÃO DE CONTRATO",
-                      },
-                      { label: "SOLICITADO", value: "SOLICITADO" },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, statuscontrato: value })
-                    }
-                  />
-                  {(infoHolder.statuscontrato != "AGUARDANDO SOLICITAÇÃO" ||
-                    infoHolder.statuscontrato != "NÃO DEFINIDO") && (
-                    <DateInput
-                      label={"Data de solicitação"}
-                      editable={ppsEditor}
-                      value={
-                        infoHolder.datasolicitacaocontrato != undefined &&
-                        infoHolder.datasolicitacaocontrato != "-"
-                          ? new Date(infoHolder.datasolicitacaocontrato)
-                              .toISOString()
-                              .slice(0, 10)
-                          : 0
-                      }
-                      handleChange={(value) =>
-                        setInfo({
-                          ...infoHolder,
-                          datasolicitacaocontrato: new Date(value),
-                        })
-                      }
-                    />
-                  )}
-                  <DateInput
-                    label={"Data de liberação p/ assinatura"}
-                    editable={ppsEditor}
-                    value={
-                      infoHolder.dataliberacaoassinatura != undefined &&
-                      infoHolder.dataliberacaoassinatura != "-"
-                        ? new Date(infoHolder.dataliberacaoassinatura)
-                            .toISOString()
-                            .slice(0, 10)
+                      infoHolder.nmodulos != undefined &&
+                      infoHolder.nmodulos != "-"
+                        ? infoHolder.nmodulos
                         : 0
                     }
                     handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        dataliberacaoassinatura: new Date(value),
-                      })
+                      setInfo({ ...infoHolder, nmodulos: value })
                     }
                   />
-                  <DateInput
-                    label={"Data de assinatura"}
-                    editable={ppsEditor}
+                  <NumberInput
+                    label={"POTÊNCIA DOS MÓDULOS"}
+                    editable={editor}
                     value={
-                      infoHolder.dataassinatura != undefined &&
-                      infoHolder.dataassinatura != "-"
-                        ? new Date(infoHolder.dataassinatura)
-                            .toISOString()
-                            .slice(0, 10)
+                      infoHolder.potmodulos != undefined &&
+                      infoHolder.potmodulos != "-"
+                        ? infoHolder.potmodulos
                         : 0
                     }
                     handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        dataassinatura: new Date(value),
-                      })
+                      setInfo({ ...infoHolder, potmodulos: value })
                     }
                   />
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  PAGAMENTO
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <SelectInput
-                    label={"STATUS PAGAMENTO"}
+                  <NumberInput
+                    label={"POTÊNCIA PICO"}
+                    editable={editor}
                     value={
-                      infoHolder.statuspagamento
-                        ? infoHolder.statuspagamento
-                        : "NÃO DEFINIDO"
+                      infoHolder.potpico != undefined &&
+                      infoHolder.potpico != "-"
+                        ? infoHolder.potpico
+                        : 0
                     }
-                    editable={ppsEditor}
-                    options={[
-                      {
-                        label: "AGUARDANDO PAGAMENTO",
-                        value: "AGUARDANDO PAGAMENTO",
-                      },
-                      {
-                        label: "PAGO",
-                        value: "PAGO",
-                      },
-                      {
-                        label: "RESCISÃO",
-                        value: "RESCISÃO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
                     handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        statuspagamento: value,
-                      })
+                      setInfo({ ...infoHolder, potpico: value })
                     }
                   />
                   <SelectInput
-                    label={"FORMA DE PAGAMENTO"}
+                    label={"TOPOLOGIA"}
                     value={
-                      infoHolder.formapagamento
-                        ? infoHolder.formapagamento
+                      infoHolder.topologia
+                        ? infoHolder.topologia
                         : "NÃO DEFINIDO"
                     }
-                    editable={ppsEditor}
+                    editable={editor}
                     options={[
-                      {
-                        label: "CAPITAL PROPRIO",
-                        value: "CAPITAL PROPRIO",
-                      },
-                      {
-                        label: "FINANCIAMENTO",
-                        value: "FINANCIAMENTO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        formapagamento: value,
-                      })
-                    }
-                  />
-                  <SelectInput
-                    label={"EMPRESA A FATURAR"}
-                    value={
-                      infoHolder.empresafaturar != undefined &&
-                      infoHolder.empresafaturar != "-"
-                        ? infoHolder.empresafaturar
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={ppsEditor}
-                    options={[
-                      { label: "AMPERE ENERGIAS", value: "AMPERE ENERGIAS" },
-                      {
-                        label: "ANALISE DO FINANCEIRO",
-                        value: "ANALISE DO FINANCEIRO",
-                      },
-                      { label: "IZAIRA SERVIÇOS", value: "IZAIRA SERVIÇOS" },
+                      { label: "INVERSOR", value: "INVERSOR" },
+                      { label: "MICRO", value: "MICRO" },
+                      { label: "OUTROS SERV.", value: "OUTROS SERV." },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) =>
-                      setInfo({ ...infoHolder, empresafaturar: value })
+                      setInfo({ ...infoHolder, topologia: value })
                     }
                   />
                   <TextInput
-                    label={"Informações faturamento"}
-                    editable={ppsEditor}
+                    label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
+                    editable={editor}
                     value={
-                      infoHolder.previsaofaturamento
-                        ? infoHolder.previsaofaturamento
+                      infoHolder.qtdepotinversor
+                        ? infoHolder.qtdepotinversor
                         : ""
                     }
                     handleChange={(value) =>
-                      setInfo({ ...infoHolder, previsaofaturamento: value })
+                      setInfo({ ...infoHolder, qtdepotinversor: value })
                     }
                   />
-                  {infoHolder.formapagamento == "FINANCIAMENTO" && (
-                    <SelectInput
-                      label={"FORMA DE PAGAMENTO"}
-                      value={
-                        infoHolder.credor != undefined &&
-                        infoHolder != "-----" &&
-                        infoHolder != "QUAL CREDOR?"
-                          ? infoHolder.credor
-                          : "NÃO DEFINIDO"
-                      }
-                      editable={ppsEditor}
-                      options={[
-                        {
-                          label: "BANCO DO BRASIL",
-                          value: "BANCO DO BRASIL",
-                        },
-                        {
-                          label: "BRADESCO",
-                          value: "BRADESCO",
-                        },
-                        {
-                          label: "BV FINANCEIRA",
-                          value: "BV FINANCEIRA",
-                        },
-                        {
-                          label: "CAIXA",
-                          value: "CAIXA",
-                        },
-                        {
-                          label: "COOPACREDI",
-                          value: "COOPACREDI",
-                        },
-                        {
-                          label: "CREDICAMPINA",
-                          value: "CREDICAMPINA",
-                        },
-                        {
-                          label: "CREDIPONTAL",
-                          value: "CREDIPONTAL",
-                        },
-                        {
-                          label: "SANTANDER",
-                          value: "SANTANDER",
-                        },
-                        {
-                          label: "SOL FACIL",
-                          value: "SOL FACIL",
-                        },
-                        {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
-                        },
-                      ]}
-                      handleChange={(value) =>
-                        setInfo({
-                          ...infoHolder,
-                          credor: value,
-                        })
-                      }
-                    />
-                  )}
-                  <TextInput
-                    label={"Pagador"}
-                    editable={ppsEditor}
-                    value={infoHolder.pagador ? infoHolder.pagador : ""}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, pagador: value })
-                    }
-                  />
-                  <TextInput
-                    label={"Contato pagador"}
-                    editable={ppsEditor}
+                  <NumberInput
+                    label={"VALOR DO PROJETO"}
+                    editable={editor}
                     value={
-                      infoHolder.contatopagamento
-                        ? infoHolder.contatopagamento
-                        : ""
+                      infoHolder.valorprojeto != undefined &&
+                      infoHolder.valorprojeto != "-"
+                        ? infoHolder.valorprojeto
+                        : 0
                     }
                     handleChange={(value) =>
-                      setInfo({ ...infoHolder, contatopagamento: value })
+                      setInfo({ ...infoHolder, valorprojeto: value })
+                    }
+                  />
+                  <SelectInput
+                    label={"INICIAR PROJETO"}
+                    value={
+                      infoHolder.iniciarprojeto
+                        ? infoHolder.iniciarprojeto
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    options={[
+                      { label: "SIM", value: "SIM" },
+                      {
+                        label: "CONTRATO CANCELADO",
+                        value: "CONTRATO CANCELADO",
+                      },
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                    ]}
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, iniciarprojeto: value })
                     }
                   />
                 </div>
@@ -952,172 +559,184 @@ function ModalSuprimentos({ setModalIsOpen, project, editor, ppsEditor }) {
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  DADOS INSTALAÇÃO CEMIG
+                  PAGAMENTO
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
-                  <TextInput
-                    label={"Titular do projeto"}
-                    editable={false}
+                  <SelectInput
+                    label={"STATUS PAGAMENTO"}
                     value={
-                      infoHolder.titulardoprojeto
-                        ? infoHolder.titulardoprojeto
-                        : ""
+                      infoHolder.statuspagamento
+                        ? infoHolder.statuspagamento
+                        : "NÃO DEFINIDO"
                     }
+                    editable={ppsEditor}
+                    options={[
+                      {
+                        label: "AGUARDANDO PAGAMENTO",
+                        value: "AGUARDANDO PAGAMENTO",
+                      },
+                      {
+                        label: "PAGO",
+                        value: "PAGO",
+                      },
+                      {
+                        label: "RESCISÃO",
+                        value: "RESCISÃO",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
                     handleChange={(value) =>
-                      setInfo({ ...infoHolder, titulardoprojeto: value })
-                    }
-                  />
-                  <TextInput
-                    label={"Número da instalação"}
-                    value={
-                      infoHolder.numeroinstalacao
-                        ? infoHolder.numeroinstalacao
-                        : ""
-                    }
-                    editable={false}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, numeroinstalacao: value })
+                      setInfo({
+                        ...infoHolder,
+                        statuspagamento: value,
+                      })
                     }
                   />
                   <SelectInput
-                    label={"DISTRIBUIÇÃO DE CRÉDITOS"}
+                    label={"FORMA DE PAGAMENTO"}
                     value={
-                      infoHolder.distribuicaodecreditos
-                        ? infoHolder.distribuicaodecreditos
+                      infoHolder.formapagamento
+                        ? infoHolder.formapagamento
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={ppsEditor}
                     options={[
-                      { label: "SIM", value: "SIM" },
-                      { label: "NÃO", value: "NÃO" },
+                      {
+                        label: "CAPITAL PROPRIO",
+                        value: "CAPITAL PROPRIO",
+                      },
+                      {
+                        label: "FINANCIAMENTO",
+                        value: "FINANCIAMENTO",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) =>
+                      setInfo({
+                        ...infoHolder,
+                        formapagamento: value,
+                      })
+                    }
+                  />
+                  <SelectInput
+                    label={"EMPRESA A FATURAR"}
+                    value={
+                      infoHolder.empresafaturar != undefined &&
+                      infoHolder.empresafaturar != "-"
+                        ? infoHolder.empresafaturar
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={ppsEditor}
+                    options={[
+                      { label: "AMPERE ENERGIAS", value: "AMPERE ENERGIAS" },
+                      {
+                        label: "ANALISE DO FINANCEIRO",
+                        value: "ANALISE DO FINANCEIRO",
+                      },
+                      { label: "IZAIRA SERVIÇOS", value: "IZAIRA SERVIÇOS" },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) =>
-                      setInfo({ ...infoHolder, distribuicaodecreditos: value })
+                      setInfo({ ...infoHolder, empresafaturar: value })
                     }
                   />
-                  {infoHolder.distribuicaodecreditos == "SIM" && (
-                    <NumberInput
-                      label={"QTDE DE DISTRIBUIÇÕES"}
-                      editable={false}
+                  <TextInput
+                    label={"Informações faturamento"}
+                    editable={ppsEditor}
+                    value={
+                      infoHolder.previsaofaturamento
+                        ? infoHolder.previsaofaturamento
+                        : ""
+                    }
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, previsaofaturamento: value })
+                    }
+                  />
+                  {infoHolder.formapagamento == "FINANCIAMENTO" && (
+                    <SelectInput
+                      label={"FORMA DE PAGAMENTO"}
                       value={
-                        infoHolder.quantdistribuicoes != undefined &&
-                        infoHolder.quantdistribuicoes != "-"
-                          ? infoHolder.quantdistribuicoes
-                          : 0
+                        infoHolder.credor != undefined &&
+                        infoHolder != "-----" &&
+                        infoHolder != "QUAL CREDOR?"
+                          ? infoHolder.credor
+                          : "NÃO DEFINIDO"
                       }
+                      editable={ppsEditor}
+                      options={[
+                        {
+                          label: "BANCO DO BRASIL",
+                          value: "BANCO DO BRASIL",
+                        },
+                        {
+                          label: "BRADESCO",
+                          value: "BRADESCO",
+                        },
+                        {
+                          label: "BV FINANCEIRA",
+                          value: "BV FINANCEIRA",
+                        },
+                        {
+                          label: "CAIXA",
+                          value: "CAIXA",
+                        },
+                        {
+                          label: "COOPACREDI",
+                          value: "COOPACREDI",
+                        },
+                        {
+                          label: "CREDICAMPINA",
+                          value: "CREDICAMPINA",
+                        },
+                        {
+                          label: "CREDIPONTAL",
+                          value: "CREDIPONTAL",
+                        },
+                        {
+                          label: "SANTANDER",
+                          value: "SANTANDER",
+                        },
+                        {
+                          label: "SOL FACIL",
+                          value: "SOL FACIL",
+                        },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
+                        },
+                      ]}
                       handleChange={(value) =>
-                        setInfo({ ...infoHolder, quantdistribuicoes: value })
+                        setInfo({
+                          ...infoHolder,
+                          credor: value,
+                        })
                       }
                     />
                   )}
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  SISTEMA
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <NumberInput
-                    label={"NÚMERO DE MÓDULOS"}
-                    editable={editor}
-                    value={
-                      infoHolder.nmodulos != undefined &&
-                      infoHolder.nmodulos != "-"
-                        ? infoHolder.nmodulos
-                        : 0
-                    }
+                  <TextInput
+                    label={"Pagador"}
+                    editable={ppsEditor}
+                    value={infoHolder.pagador ? infoHolder.pagador : ""}
                     handleChange={(value) =>
-                      setInfo({ ...infoHolder, nmodulos: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"POTÊNCIA DOS MÓDULOS"}
-                    editable={editor}
-                    value={
-                      infoHolder.potmodulos != undefined &&
-                      infoHolder.potmodulos != "-"
-                        ? infoHolder.potmodulos
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, potmodulos: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"POTÊNCIA PICO"}
-                    editable={editor}
-                    value={
-                      infoHolder.potpico != undefined &&
-                      infoHolder.potpico != "-"
-                        ? infoHolder.potpico
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, potpico: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"TOPOLOGIA"}
-                    value={
-                      infoHolder.topologia
-                        ? infoHolder.topologia
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      { label: "INVERSOR", value: "INVERSOR" },
-                      { label: "MICRO", value: "MICRO" },
-                      { label: "OUTROS SERV.", value: "OUTROS SERV." },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, topologia: value })
+                      setInfo({ ...infoHolder, pagador: value })
                     }
                   />
                   <TextInput
-                    label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
-                    editable={editor}
+                    label={"Contato pagador"}
+                    editable={ppsEditor}
                     value={
-                      infoHolder.qtdepotinversor
-                        ? infoHolder.qtdepotinversor
+                      infoHolder.contatopagamento
+                        ? infoHolder.contatopagamento
                         : ""
                     }
                     handleChange={(value) =>
-                      setInfo({ ...infoHolder, qtdepotinversor: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"VALOR DO PROJETO"}
-                    editable={editor}
-                    value={
-                      infoHolder.valorprojeto != undefined &&
-                      infoHolder.valorprojeto != "-"
-                        ? infoHolder.valorprojeto
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, valorprojeto: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"INICIAR PROJETO"}
-                    value={
-                      infoHolder.iniciarprojeto
-                        ? infoHolder.iniciarprojeto
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      { label: "SIM", value: "SIM" },
-                      {
-                        label: "CONTRATO CANCELADO",
-                        value: "CONTRATO CANCELADO",
-                      },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, iniciarprojeto: value })
+                      setInfo({ ...infoHolder, contatopagamento: value })
                     }
                   />
                 </div>

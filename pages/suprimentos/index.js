@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
+import ModalSuprimentos from "../../components/ModalSuprimentos";
 function Suprimentos({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
@@ -11,6 +12,8 @@ function Suprimentos({ credentials, setCredentials }) {
     paymentStatus: [],
     deliveryStatus: [],
   });
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalProject, setModalProject] = useState({});
   function getProjects() {
     axios.get("/api/projects/filteredByStage").then((res) => {
       setProjects(res.data.suprimentos);
@@ -66,6 +69,7 @@ function Suprimentos({ credentials, setCredentials }) {
     }
     return totalSum.toFixed(2);
   }
+  console.log(credentials, setCredentials);
   return (
     <div className="p-6 grow">
       <div className="flex justify-between border-b border-gray-200 p-1">
@@ -118,6 +122,10 @@ function Suprimentos({ credentials, setCredentials }) {
       <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
         {filteredProjects.map((project) => (
           <div
+            onClick={() => {
+              setModalIsOpen(true);
+              setModalProject(project);
+            }}
             key={project._id}
             className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
           >
@@ -158,6 +166,18 @@ function Suprimentos({ credentials, setCredentials }) {
           </div>
         ))}
       </div>
+      {modalIsOpen && (
+        <ModalSuprimentos
+          project={modalProject}
+          editor={
+            credentials.accessibleRoutes.includes("Suprimentos") ? true : false
+          }
+          ppsEditor={
+            credentials.accessibleRoutes.includes("PPS") ? true : false
+          }
+          setModalIsOpen={setModalIsOpen}
+        />
+      )}
     </div>
   );
 }

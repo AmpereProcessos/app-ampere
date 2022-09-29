@@ -41,7 +41,7 @@ function formataCEP(cep) {
 
   return cep;
 }
-function ModalComercial({ open, setModalIsOpen, project, editor }) {
+function ModalProjetos({ open, setModalIsOpen, project, editor }) {
   const [infoHolder, setInfo] = useState(project);
   console.log(infoHolder.dataliberacaoparacompra);
   return (
@@ -74,7 +74,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   <TextInput
                     label={"Nome do contrato"}
                     value={infoHolder.nomedocontrato}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, nomedocontrato: value })
                     }
@@ -82,14 +82,14 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   <TextInput
                     label={"Nome do Projeto"}
                     value={infoHolder.nomedoprojeto}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, nomedoprojeto: value })
                     }
                   />
                   <TextInput
                     label={"CPF/CNPJ"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.cpfcnpj
                         ? formataCPF(infoHolder.cpfcnpj.toString())
@@ -101,7 +101,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                   <TextInput
                     label={"Telefone"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.telefone ? infoHolder.telefone : "-"}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, telefone: value })
@@ -109,7 +109,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                   <TextInput
                     label={"Cidade"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.cidade ? infoHolder.cidade : "-"}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, cidade: value })
@@ -117,7 +117,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                   <TextInput
                     label={"CEP"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.cep
                         ? formataCEP(infoHolder.cep.toString())
@@ -129,7 +129,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                   <TextInput
                     label={"Bairro"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.bairro ? infoHolder.bairro : ""}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, bairro: value })
@@ -137,7 +137,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                   <NumberInput
                     label={"Número da residência"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.numerores ? infoHolder.numerores : 0}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, numerores: value })
@@ -145,7 +145,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                   <SelectInput
                     label={"Regional"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.regional}
                     options={[
                       {
@@ -163,7 +163,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   />
                   <TextInput
                     label={"EMAIL"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.email ? infoHolder.email : ""}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, email: value })
@@ -177,7 +177,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                         ? infoHolder.canalvenda
                         : "NÃO DEFINIDO"
                     }
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "EVENTO", value: "EVENTO" },
                       {
@@ -208,7 +208,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                       options={vendedores.map((vendedor) => {
                         return { label: vendedor.nome, value: vendedor.nome };
                       })}
-                      editable={editor}
+                      editable={false}
                       handleChange={(value) =>
                         setInfo({ ...infoHolder, vendedor: value })
                       }
@@ -223,7 +223,7 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   <SelectInput
                     label={"SEGMENTO"}
                     value={infoHolder.segmento}
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "COMERCIAL", value: "COMERCIAL" },
                       { label: "INDUSTRIAL", value: "INDUSTRIAL" },
@@ -493,462 +493,6 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                       }
                     />
                   )}
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  CONTRATO
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <SelectInput
-                    label={"STATUS"}
-                    editable={editor}
-                    value={
-                      infoHolder.statuscontrato
-                        ? infoHolder.statuscontrato
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      {
-                        label: "AGUARDANDO SOLICITAÇÃO",
-                        value: "AGUARDANDO SOLICITAÇÃO",
-                      },
-                      { label: "ASSINADO", value: "ASSINADO" },
-                      { label: "NÃO ASSINADO", value: "NÃO ASSINADO" },
-                      {
-                        label: "RECISÃO DE CONTRATO",
-                        value: "RECISÃO DE CONTRATO",
-                      },
-                      { label: "SOLICITADO", value: "SOLICITADO" },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, statuscontrato: value })
-                    }
-                  />
-                  {(infoHolder.statuscontrato != "AGUARDANDO SOLICITAÇÃO" ||
-                    infoHolder.statuscontrato != "NÃO DEFINIDO") && (
-                    <DateInput
-                      label={"Data de solicitação"}
-                      editable={editor}
-                      value={
-                        infoHolder.datasolicitacaocontrato != undefined &&
-                        infoHolder.datasolicitacaocontrato != "-"
-                          ? new Date(infoHolder.datasolicitacaocontrato)
-                              .toISOString()
-                              .slice(0, 10)
-                          : 0
-                      }
-                      handleChange={(value) =>
-                        setInfo({
-                          ...infoHolder,
-                          datasolicitacaocontrato: new Date(value),
-                        })
-                      }
-                    />
-                  )}
-                  <DateInput
-                    label={"Data de liberação p/ assinatura"}
-                    editable={editor}
-                    value={
-                      infoHolder.dataliberacaoassinatura != undefined &&
-                      infoHolder.dataliberacaoassinatura != "-"
-                        ? new Date(infoHolder.dataliberacaoassinatura)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        dataliberacaoassinatura: new Date(value),
-                      })
-                    }
-                  />
-                  <DateInput
-                    label={"Data de assinatura"}
-                    editable={editor}
-                    value={
-                      infoHolder.dataassinatura != undefined &&
-                      infoHolder.dataassinatura != "-"
-                        ? new Date(infoHolder.dataassinatura)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        dataassinatura: new Date(value),
-                      })
-                    }
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  PAGAMENTO
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <SelectInput
-                    label={"STATUS PAGAMENTO"}
-                    value={
-                      infoHolder.statuspagamento
-                        ? infoHolder.statuspagamento
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      {
-                        label: "AGUARDANDO PAGAMENTO",
-                        value: "AGUARDANDO PAGAMENTO",
-                      },
-                      {
-                        label: "PAGO",
-                        value: "PAGO",
-                      },
-                      {
-                        label: "RESCISÃO",
-                        value: "RESCISÃO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        statuspagamento: value,
-                      })
-                    }
-                  />
-                  <SelectInput
-                    label={"FORMA DE PAGAMENTO"}
-                    value={
-                      infoHolder.formapagamento
-                        ? infoHolder.formapagamento
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      {
-                        label: "CAPITAL PROPRIO",
-                        value: "CAPITAL PROPRIO",
-                      },
-                      {
-                        label: "FINANCIAMENTO",
-                        value: "FINANCIAMENTO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        formapagamento: value,
-                      })
-                    }
-                  />
-                  <SelectInput
-                    label={"EMPRESA A FATURAR"}
-                    value={
-                      infoHolder.empresafaturar != undefined &&
-                      infoHolder.empresafaturar != "-"
-                        ? infoHolder.empresafaturar
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      { label: "AMPERE ENERGIAS", value: "AMPERE ENERGIAS" },
-                      {
-                        label: "ANALISE DO FINANCEIRO",
-                        value: "ANALISE DO FINANCEIRO",
-                      },
-                      { label: "IZAIRA SERVIÇOS", value: "IZAIRA SERVIÇOS" },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, empresafaturar: value })
-                    }
-                  />
-                  <TextInput
-                    label={"Informações faturamento"}
-                    editable={editor}
-                    value={
-                      infoHolder.previsaofaturamento
-                        ? infoHolder.previsaofaturamento
-                        : ""
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, previsaofaturamento: value })
-                    }
-                  />
-                  {infoHolder.formapagamento == "FINANCIAMENTO" && (
-                    <SelectInput
-                      label={"FORMA DE PAGAMENTO"}
-                      value={
-                        infoHolder.credor != undefined &&
-                        infoHolder != "-----" &&
-                        infoHolder != "QUAL CREDOR?"
-                          ? infoHolder.credor
-                          : "NÃO DEFINIDO"
-                      }
-                      editable={editor}
-                      options={[
-                        {
-                          label: "BANCO DO BRASIL",
-                          value: "BANCO DO BRASIL",
-                        },
-                        {
-                          label: "BRADESCO",
-                          value: "BRADESCO",
-                        },
-                        {
-                          label: "BV FINANCEIRA",
-                          value: "BV FINANCEIRA",
-                        },
-                        {
-                          label: "CAIXA",
-                          value: "CAIXA",
-                        },
-                        {
-                          label: "COOPACREDI",
-                          value: "COOPACREDI",
-                        },
-                        {
-                          label: "CREDICAMPINA",
-                          value: "CREDICAMPINA",
-                        },
-                        {
-                          label: "CREDIPONTAL",
-                          value: "CREDIPONTAL",
-                        },
-                        {
-                          label: "SANTANDER",
-                          value: "SANTANDER",
-                        },
-                        {
-                          label: "SOL FACIL",
-                          value: "SOL FACIL",
-                        },
-                        {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
-                        },
-                      ]}
-                      handleChange={(value) =>
-                        setInfo({
-                          ...infoHolder,
-                          credor: value,
-                        })
-                      }
-                    />
-                  )}
-                  <TextInput
-                    label={"Pagador"}
-                    editable={editor}
-                    value={infoHolder.pagador ? infoHolder.pagador : ""}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, pagador: value })
-                    }
-                  />
-                  <TextInput
-                    label={"Contato pagador"}
-                    editable={editor}
-                    value={
-                      infoHolder.contatopagamento
-                        ? infoHolder.contatopagamento
-                        : ""
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, contatopagamento: value })
-                    }
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  Informações da compra
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <DateInput
-                    label={"Data de liberação p/ compra"}
-                    editable={editor}
-                    value={
-                      infoHolder.dataliberacaoparacompra != undefined &&
-                      infoHolder.dataliberacaoparacompra != "-"
-                        ? new Date(infoHolder.dataliberacaoparacompra)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        dataliberacaoparacompra: new Date(value),
-                      })
-                    }
-                  />
-                  <DateInput
-                    label={"Data do pagamento"}
-                    editable={editor}
-                    value={
-                      infoHolder.datapagamento != undefined &&
-                      infoHolder.datapagamento != "-"
-                        ? new Date(infoHolder.datapagamento)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({
-                        ...infoHolder,
-                        datapagamento: new Date(value),
-                      })
-                    }
-                  />
-                  <SelectInput
-                    label={"Fornecedor"}
-                    editable={editor}
-                    value={
-                      infoHolder.fornecedor != undefined &&
-                      infoHolder.fornecedor != "-"
-                        ? infoHolder.fornecedor
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      {
-                        label: "ALDO",
-                        value: "ALDO",
-                      },
-                      {
-                        label: "AMPÈRE",
-                        value: "AMPÈRE",
-                      },
-                      {
-                        label: "BEL ENERGY",
-                        value: "BEL ENERGY",
-                      },
-                      {
-                        label: "SKY SOLAR",
-                        value: "SKY SOLAR",
-                      },
-                      {
-                        label: "SOU ENERGY",
-                        value: "SOU ENERGY",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, fornecedor: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"TIPO DO KIT"}
-                    value={
-                      infoHolder.tipokit != undefined &&
-                      infoHolder.tipokit != "-"
-                        ? infoHolder.tipokit
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      {
-                        label: "NORMAL",
-                        value: "NORMAL",
-                      },
-                      {
-                        label: "PROMO",
-                        value: "PROMO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, tipokit: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"VALOR DO KIT"}
-                    editable={editor}
-                    value={
-                      infoHolder.valordokit != undefined &&
-                      infoHolder.valordokit != "-"
-                        ? infoHolder.valordokit
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, valordokit: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"LOCAL DE ENTREGA"}
-                    value={
-                      infoHolder.localdeentrega != undefined &&
-                      infoHolder.localdeentrega != "-"
-                        ? infoHolder.localdeentrega
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      { label: "MESMO DO PROJETO", value: "MESMO DO PROJETO" },
-                      { label: "SEM RESTRIÇÕES", value: "SEM RESTRIÇÕES" },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, localdeentrega: value })
-                    }
-                  />
-                  <TextInput
-                    label={"INFORMAÇÕES"}
-                    value={
-                      infoHolder.informacoescompra
-                        ? infoHolder.informacoescompra
-                        : ""
-                    }
-                    editable={editor}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, informacoescompra: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"STATUS DA ENTREGA"}
-                    editable={editor}
-                    value={
-                      infoHolder.statusentrega
-                        ? infoHolder.statusentrega
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      {
-                        label: "AGUARDANDO COMPRA",
-                        value: "AGUARDANDO COMPRA",
-                      },
-                      {
-                        label: "ENTREGUE",
-                        value: "ENTREGUE",
-                      },
-                      {
-                        label: "CANCELADO",
-                        value: "CANCELADO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, statusentrega: value })
-                    }
-                  />
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
@@ -1762,65 +1306,6 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  MATERIAL
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <SelectInput
-                    label={"Separação do material"}
-                    value={
-                      infoHolder.materialalmoxarifado
-                        ? infoHolder.materialalmoxarifado
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      {
-                        label: "INICIAR SEPARAÇÃO",
-                        value: "INICIAR SEPARAÇÃO",
-                      },
-                      {
-                        label: "SEPARADO",
-                        value: "SEPARADO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, materialalmoxarifado: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"Previsão de custos em insumos"}
-                    editable={editor}
-                    value={
-                      infoHolder.prevcustosinsumos != undefined &&
-                      infoHolder.prevcustosinsumos != "#VALUE!"
-                        ? infoHolder.prevcustosinsumos
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, prevcustosinsumos: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"Custos em insumos"}
-                    editable={editor}
-                    value={
-                      infoHolder.custosinsumos != undefined &&
-                      infoHolder.custosinsumos != "#VALUE!"
-                        ? infoHolder.custosinsumos
-                        : 0
-                    }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, custosinsumos: value })
-                    }
-                  />
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -1829,4 +1314,4 @@ function ModalComercial({ open, setModalIsOpen, project, editor }) {
   );
 }
 
-export default ModalComercial;
+export default ModalProjetos;

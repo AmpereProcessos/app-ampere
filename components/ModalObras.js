@@ -591,6 +591,7 @@ function ModalObras({ open, setModalIsOpen, project, editor }) {
                     }
                   />
                   <NumberInput
+                    unit={"W"}
                     label={"POTÊNCIA DOS MÓDULOS"}
                     editable={false}
                     value={
@@ -604,6 +605,7 @@ function ModalObras({ open, setModalIsOpen, project, editor }) {
                     }
                   />
                   <NumberInput
+                    unit={"kWp"}
                     label={"POTÊNCIA PICO"}
                     editable={false}
                     value={
@@ -790,6 +792,7 @@ function ModalObras({ open, setModalIsOpen, project, editor }) {
                     }
                   />
                   <NumberInput
+                    tag={"R$"}
                     label={"Valor do padrão"}
                     editable={editor}
                     value={infoHolder.valorpadrao}
@@ -889,6 +892,7 @@ function ModalObras({ open, setModalIsOpen, project, editor }) {
                     }
                   />
                   <NumberInput
+                    tag={"R$"}
                     label={"Valor da estrutura"}
                     editable={editor}
                     value={
@@ -959,6 +963,7 @@ function ModalObras({ open, setModalIsOpen, project, editor }) {
                     }
                   />
                   <NumberInput
+                    tag={"R$"}
                     label={"Previsão de custos em insumos"}
                     editable={editor}
                     value={
@@ -972,6 +977,7 @@ function ModalObras({ open, setModalIsOpen, project, editor }) {
                     }
                   />
                   <NumberInput
+                    tag={"R$"}
                     label={"Custos em insumos"}
                     editable={editor}
                     value={

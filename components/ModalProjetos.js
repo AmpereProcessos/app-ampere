@@ -485,6 +485,7 @@ function ModalProjetos({ open, setModalIsOpen, project, editor }) {
                     }
                   />
                   <NumberInput
+                    unit={"W"}
                     label={"POTÊNCIA DOS MÓDULOS"}
                     editable={editor}
                     value={
@@ -498,6 +499,7 @@ function ModalProjetos({ open, setModalIsOpen, project, editor }) {
                     }
                   />
                   <NumberInput
+                    unit="kWp"
                     label={"POTÊNCIA PICO"}
                     editable={editor}
                     value={
@@ -541,6 +543,7 @@ function ModalProjetos({ open, setModalIsOpen, project, editor }) {
                     }
                   />
                   <NumberInput
+                    tag={"R$"}
                     label={"VALOR DO PROJETO"}
                     editable={editor}
                     value={

@@ -285,6 +285,7 @@ function ModalSuprimentos({ setModalIsOpen, project, editor, ppsEditor }) {
                     }
                   />
                   <NumberInput
+                    unit={"W"}
                     label={"POTÊNCIA DOS MÓDULOS"}
                     editable={editor}
                     value={
@@ -298,6 +299,7 @@ function ModalSuprimentos({ setModalIsOpen, project, editor, ppsEditor }) {
                     }
                   />
                   <NumberInput
+                    unit={"kWp"}
                     label={"POTÊNCIA PICO"}
                     editable={editor}
                     value={
@@ -341,6 +343,7 @@ function ModalSuprimentos({ setModalIsOpen, project, editor, ppsEditor }) {
                     }
                   />
                   <NumberInput
+                    tag={"R$"}
                     label={"VALOR DO PROJETO"}
                     editable={editor}
                     value={
@@ -483,6 +486,7 @@ function ModalSuprimentos({ setModalIsOpen, project, editor, ppsEditor }) {
                     }
                   />
                   <NumberInput
+                    tag={"R$"}
                     label={"VALOR DO KIT"}
                     editable={editor}
                     value={

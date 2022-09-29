@@ -3,7 +3,15 @@ import InputMask from "react-input-mask";
 import Image from "next/image";
 import Logo from "../utils/whitelogo.png";
 import { cities } from "../utils/constants";
-function EstagioDois({ setCurrentEstagio, name, email, phone, city }) {
+import axios from "axios";
+function EstagioDois({
+  setCurrentEstagio,
+  name,
+  email,
+  phone,
+  city,
+  valorFatura,
+}) {
   const [errMessage, setErrMessage] = useState({
     message: "",
     incorrectFields: [],
@@ -18,7 +26,7 @@ function EstagioDois({ setCurrentEstagio, name, email, phone, city }) {
         incorrectFields: [...errMessage.incorrectFields, "Nome"],
       });
     } else if (
-      email.clientEmail.trim().length == 0 &&
+      email.clientEmail.trim().length == 0 ||
       phone.clientPhone.trim().length < 14
     ) {
       setErrMessage({ ...errMessage, incorrectFields: [] });
@@ -38,6 +46,24 @@ function EstagioDois({ setCurrentEstagio, name, email, phone, city }) {
       });
     } else {
       console.log(phone.clientPhone.length);
+      /* axios
+        .post(
+          "https://api.rd.services/platform/conversions?api_key=HFekNkuFPSSvfcCZLYNmoJYzFHxsCTiKtHiA",
+          {
+            event_type: "CONVERSION",
+            event_family: "CDP",
+            payload: {
+              conversion_identifier: `${valorFatura}`,
+              name: `${name.clientName} - R$${valorFatura}`,
+              state: "Minas Gerais",
+              city: city.clientCity,
+              email: email.clientEmail,
+              traffic_source: "Site da Ampère",
+              cf_fatura: `${valorFatura}`,
+            },
+          }
+        )
+        .then((res) => console.log("DEU CERTO")); */
       setCurrentEstagio(3);
     }
   }

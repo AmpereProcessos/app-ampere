@@ -37,6 +37,7 @@ function CalculadoraSolar() {
       )}
       {currentEstagio == 2 && (
         <EstagioDois
+          valorFatura={clientCurrentEnergyBill}
           name={{ clientName, setClientName }}
           email={{ clientEmail, setClientEmail }}
           phone={{ clientPhone, setClientPhone }}

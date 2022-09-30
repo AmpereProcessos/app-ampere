@@ -59,6 +59,11 @@ function Comercial({ credentials, setCredentials }) {
       }
     }
   }, []);
+  function handleUpdates(id) {
+    getProjects();
+    let changedObj = projects.filter((project) => project._id == id);
+    setModalProject(changedObj[0]);
+  }
   function filterByContractCondition(condition) {
     setCurrentFilter(condition);
     var newArr = projects.filter((p) => p.statuscontrato == condition);
@@ -193,6 +198,7 @@ function Comercial({ credentials, setCredentials }) {
       </div>
       {modalIsOpen && (
         <ModalComercial
+          handleUpdates={handleUpdates}
           project={modalProject}
           editor={credentials.accessibleRoutes.includes("PPS") ? true : false}
           setModalIsOpen={setModalIsOpen}

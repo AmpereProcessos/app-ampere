@@ -17,6 +17,11 @@ function Projetos({ credentials, setCredentials }) {
       setFilteredProjects(res.data.projetos);
     });
   }
+  function handleUpdates(id) {
+    getProjects();
+    let changedObj = projects.filter((project) => project._id == id);
+    setModalProject(changedObj[0]);
+  }
   function filterProjects() {
     var newArr;
     if (parecerFilter.length > 0) {
@@ -193,6 +198,7 @@ function Projetos({ credentials, setCredentials }) {
       </div>
       {modalIsOpen && (
         <ModalProjetos
+          handleUpdates={handleUpdates}
           project={modalProject}
           editor={
             credentials.accessibleRoutes.includes("Projetos") ? true : false

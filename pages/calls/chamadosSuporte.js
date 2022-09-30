@@ -84,6 +84,7 @@ function ChamadosSuporte({ credentials, setCredentials }) {
       );
     }
     if (filters.cityFilter.length > 0) {
+      if (!newArr) newArr = inProgress;
       newArr = newArr.filter((call) =>
         filters.cityFilter.includes(call.cidade)
       );

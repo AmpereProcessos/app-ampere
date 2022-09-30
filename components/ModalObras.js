@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { vendedores } from "../utils/constants";
-import { AiFillEdit } from "react-icons/ai";
+import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
@@ -41,9 +42,13 @@ function formataCEP(cep) {
 
   return cep;
 }
-function ModalObras({ open, setModalIsOpen, project, editor }) {
+function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
   const [infoHolder, setInfo] = useState(project);
-  console.log(infoHolder.dataliberacaoparacompra);
+  function handleChanges() {
+    axios
+      .post(`/api/projects/update/${project._id}`, infoHolder)
+      .then((res) => handleUpdates(project._id));
+  }
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -58,12 +63,21 @@ function ModalObras({ open, setModalIsOpen, project, editor }) {
                   #{infoHolder.codprojetosvb}
                 </p>
               )}
-              <button>
-                <VscChromeClose
-                  onClick={() => setModalIsOpen(false)}
-                  style={{ color: "red" }}
-                />
-              </button>
+              <div className="flex gap-x-2">
+                <button
+                  onClick={handleChanges}
+                  className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
+                >
+                  <p>Salvar alterações</p>
+                  <FaSave />
+                </button>
+                <button>
+                  <VscChromeClose
+                    onClick={() => setModalIsOpen(false)}
+                    style={{ color: "red" }}
+                  />
+                </button>
+              </div>
             </div>
             <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
@@ -351,7 +365,7 @@ function ModalObras({ open, setModalIsOpen, project, editor }) {
                   />
                   <DateInput
                     label={"PREVISÃO/ENTREGA DOS EQUIPAMENTOS"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.previsaoentrega != undefined &&
                       infoHolder.previsaoentrega != "-"
@@ -798,6 +812,28 @@ function ModalObras({ open, setModalIsOpen, project, editor }) {
                     value={infoHolder.valorpadrao}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, valorpadrao: value })
+                    }
+                  />
+                  <NumberInput
+                    tag={"R$"}
+                    label={"Previsão de custo do padrão"}
+                    editable={editor}
+                    value={
+                      infoHolder.prevcustopadrao
+                        ? infoHolder.prevcustopadrao
+                        : 0
+                    }
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, prevcustopadrao: value })
+                    }
+                  />
+                  <NumberInput
+                    tag={"R$"}
+                    label={"Custo do padrão"}
+                    editable={editor}
+                    value={infoHolder.custopadrao ? infoHolder.custopadrao : 0}
+                    handleChange={(value) =>
+                      setInfo({ ...infoHolder, custopadrao: value })
                     }
                   />
                   <SelectInput

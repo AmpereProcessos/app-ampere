@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
+
 import ModalSuprimentos from "../../components/ModalSuprimentos";
 function Suprimentos({ credentials, setCredentials }) {
   const router = useRouter();
@@ -19,6 +20,11 @@ function Suprimentos({ credentials, setCredentials }) {
       setProjects(res.data.suprimentos);
       setFilteredProjects(res.data.suprimentos);
     });
+  }
+  function handleUpdates(id) {
+    getProjects();
+    let changedObj = projects.filter((project) => project._id == id);
+    setModalProject(changedObj[0]);
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -168,6 +174,7 @@ function Suprimentos({ credentials, setCredentials }) {
       </div>
       {modalIsOpen && (
         <ModalSuprimentos
+          handleUpdates={handleUpdates}
           project={modalProject}
           editor={
             credentials.accessibleRoutes.includes("Suprimentos") ? true : false

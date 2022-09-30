@@ -11,6 +11,10 @@ function Suprimentos({ credentials, setCredentials }) {
   const [filters, setFilters] = useState({
     obraStatusFilter: [],
     entregaStatusFilter: [],
+    acFilter: [],
+    acStatusFilter: [],
+    epFilter: [],
+    epStatusFilter: [],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -19,6 +23,11 @@ function Suprimentos({ credentials, setCredentials }) {
       setProjects(res.data.obras);
       setFilteredProjects(res.data.obras);
     });
+  }
+  function handleUpdates(id) {
+    getProjects();
+    let changedObj = projects.filter((project) => project._id == id);
+    setModalProject(changedObj[0]);
   }
   function filterProjects() {
     var newArr;
@@ -38,6 +47,30 @@ function Suprimentos({ credentials, setCredentials }) {
     } else if (filters.obraStatusFilter.length > 0) {
       newArr = projects.filter((project) =>
         filters.obraStatusFilter.includes(project.statusobra)
+      );
+    }
+    if (filters.acFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.acFilter.includes(call.aumentodecarga)
+      );
+    }
+    if (filters.acStatusFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.acStatusFilter.includes(call.acstatus)
+      );
+    }
+    if (filters.epFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.epFilter.includes(call.possuiestruturapersonalisada)
+      );
+    }
+    if (filters.epStatusFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.epStatusFilter.includes(call.estruturapersonalisada)
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -88,7 +121,115 @@ function Suprimentos({ credentials, setCredentials }) {
             </p>
           )}
         </div>
-        <div className="flex gap-x-2">
+        <div className="flex flex-wrap justify-center gap-y-2 gap-x-2">
+          <Select
+            isMulti
+            placeholder="ESTRUTURA PERSONALIZADA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                epFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                value: "SIM",
+                label: "SIM",
+              },
+              {
+                value: "NÃO",
+                label: "NÃO",
+              },
+              {
+                value: undefined,
+                label: "NÃO DEFINIDO",
+              },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="STATUS ESTRUTURA PERSONALIZADA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                epStatusFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                value: "PRONTA",
+                label: "PRONTA",
+              },
+              {
+                value: "PENDÊNCIA",
+                label: "PENDÊNCIA",
+              },
+              {
+                value: "N/A",
+                label: "N/A",
+              },
+              {
+                value: undefined,
+                label: "NÃO DEFINIDO",
+              },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="AUMENTO DE CARGA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                acFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                value: "SIM",
+                label: "SIM",
+              },
+              {
+                value: "NÃO",
+                label: "NÃO",
+              },
+              {
+                value: undefined,
+                label: "NÃO DEFINIDO",
+              },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="A.C STATUS"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                acStatusFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                value: "PENDÊNCIA",
+                label: "PENDÊNCIA",
+              },
+              {
+                value: "REALIZADO",
+                label: "REALIZADO",
+              },
+              {
+                value: "N/A",
+                label: "N/A",
+              },
+              {
+                value: "SOLICITADO COM G.D",
+                label: "SOLICITADO COM G.D",
+              },
+              {
+                value: undefined,
+                label: "NÃO DEFINIDO",
+              },
+            ]}
+          />
           <Select
             isMulti
             placeholder="STATUS DA OBRA"
@@ -133,14 +274,14 @@ function Suprimentos({ credentials, setCredentials }) {
               { value: undefined, label: "NÃO DEFINIDO" },
             ]}
           />
-          <button
-            onClick={filterProjects}
-            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 items-center gap-x-2"
-          >
-            <p>Filtrar</p>
-            <AiOutlineSearch />
-          </button>
         </div>
+        <button
+          onClick={filterProjects}
+          className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+        >
+          <p>Filtrar</p>
+          <AiOutlineSearch />
+        </button>
       </div>
       <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
         {filteredProjects.map((project) => (
@@ -199,6 +340,7 @@ function Suprimentos({ credentials, setCredentials }) {
       </div>
       {modalIsOpen && (
         <ModalObras
+          handleUpdates={handleUpdates}
           project={modalProject}
           editor={credentials.accessibleRoutes.includes("Obras") ? true : false}
           setModalIsOpen={setModalIsOpen}

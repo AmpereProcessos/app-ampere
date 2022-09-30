@@ -44,10 +44,14 @@ function formataCEP(cep) {
 }
 function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
   const [infoHolder, setInfo] = useState(project);
+  const [msg, setMsg] = useState("");
   function handleChanges() {
     axios
       .post(`/api/projects/update/${project._id}`, infoHolder)
-      .then((res) => handleUpdates(project._id));
+      .then((res) => {
+        setMsg("Alterações feitas");
+        handleUpdates(project._id);
+      });
   }
   return (
     <>
@@ -64,6 +68,7 @@ function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
                 </p>
               )}
               <div className="flex gap-x-2">
+                {msg && <p className="text-sm italic text-green-400">{msg}</p>}
                 <button
                   onClick={handleChanges}
                   className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"

@@ -6,6 +6,7 @@ import ModalComercial from "../../components/ModalComercial";
 // casa em construção (Tais)
 import { useRouter } from "next/router";
 function Comercial({ credentials, setCredentials }) {
+  var editor;
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -55,6 +56,8 @@ function Comercial({ credentials, setCredentials }) {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
+        if (credentials.accessibleRoutes.includes("PPS")) editor = true;
+        else editor = false;
         getProjects();
       }
     }

@@ -29,10 +29,11 @@ function NovoProjeto({ credentials, setCredentials }) {
       setCredentials(storedCredentials);
     } else {
       if (
-        credentials.accessibleRoutes.includes("PPS") ||
-        storedCredentials.accessibleRoutes.includes("PPS")
-      )
+        !credentials.accessibleRoutes.includes("PPS") &&
+        !storedCredentials.accessibleRoutes.includes("PPS")
+      ) {
         router.push("/");
+      }
     }
   }, []);
   return (

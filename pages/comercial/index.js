@@ -56,7 +56,11 @@ function Comercial({ credentials, setCredentials }) {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (credentials.accessibleRoutes.includes("PPS")) editor = true;
+        if (
+          credentials.accessibleRoutes.includes("PPS") ||
+          storedCredentials.accessibleRoutes.includes("PPS")
+        )
+          editor = true;
         else editor = false;
         getProjects();
       }

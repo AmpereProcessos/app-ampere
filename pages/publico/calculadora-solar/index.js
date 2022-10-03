@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import EstagioUm from "../../components/EstagioUm";
-import EstagioDois from "../../components/EstagioDois";
-import EstagioTres from "../../components/EstagioTres";
+import EstagioUm from "../../../components/EstagioUm";
+import EstagioDois from "../../../components/EstagioDois";
+import EstagioTres from "../../../components/EstagioTres";
 import { FaMoneyBillWaveAlt, FaSolarPanel, FaPiggyBank } from "react-icons/fa";
 import { WiSolarEclipse } from "react-icons/wi";
 import { ImPower } from "react-icons/im";
 import { IoIosResize } from "react-icons/io";
-import { cities } from "../../utils/constants";
+import Pixel from "../../../components/Pixel";
+import { cities } from "../../../utils/constants";
 function CalculadoraSolar() {
   const [clientCurrentEnergyBill, setBillPrice] = useState(0);
   const [clientName, setClientName] = useState("");
@@ -28,6 +29,7 @@ function CalculadoraSolar() {
   const [currentEstagio, setCurrentEstagio] = useState(1);
   return (
     <section className="min-h-[100vh] flex items-center justify-center bg-[#15599a]">
+      <Pixel />
       {currentEstagio == 1 && (
         <EstagioUm
           clientCurrentEnergyBill={clientCurrentEnergyBill}
@@ -43,17 +45,6 @@ function CalculadoraSolar() {
           phone={{ clientPhone, setClientPhone }}
           city={{ clientCity, setClientCity }}
           setCurrentEstagio={setCurrentEstagio}
-        />
-      )}
-      {currentEstagio == 3 && (
-        <EstagioTres
-          setCurrentEstagio={setCurrentEstagio}
-          necessaryEconomy={necessaryEconomy}
-          necessaryMonthlyEnergy={necessaryMonthlyEnergy}
-          necessaryPeakPot={necessaryPeakPot}
-          necessaryModules={necessaryModules}
-          necessaryArea={necessaryArea}
-          necessaryInvestiment={necessaryInvestiment}
         />
       )}
     </section>

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Logo from "../utils/whitelogo.png";
 import { cities } from "../utils/constants";
 import axios from "axios";
+import { useRouter } from "next/router";
 function EstagioDois({
   setCurrentEstagio,
   name,
@@ -12,10 +13,14 @@ function EstagioDois({
   city,
   valorFatura,
 }) {
+  const router = useRouter();
   const [errMessage, setErrMessage] = useState({
     message: "",
     incorrectFields: [],
   });
+  function getResult() {
+    router.push(`/publico/calculadora-solar/resultado/${valorFatura}`);
+  }
   const [cellPhoneMask, setCellPhoneMask] = useState("(99) 99999-9999");
   function checkFields() {
     if (name.clientName.trim().length == 0) {
@@ -64,7 +69,7 @@ function EstagioDois({
           }
         )
         .then((res) => console.log("DEU CERTO")); */
-      setCurrentEstagio(3);
+      getResult();
     }
   }
   return (

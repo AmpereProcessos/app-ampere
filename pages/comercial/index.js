@@ -196,7 +196,7 @@ function Comercial({ credentials, setCredentials }) {
           </div>
         ))}
       </div>
-      {credentials.accessibleRoutes.includes("PPS") && (
+      {credentials && credentials.accessibleRoutes.includes("PPS") && (
         <div
           onClick={() => router.push("/comercial/addProjeto")}
           className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
@@ -208,7 +208,11 @@ function Comercial({ credentials, setCredentials }) {
         <ModalComercial
           handleUpdates={handleUpdates}
           project={modalProject}
-          editor={credentials.accessibleRoutes.includes("PPS") ? true : false}
+          editor={
+            credentials && credentials.accessibleRoutes.includes("PPS")
+              ? true
+              : false
+          }
           setModalIsOpen={setModalIsOpen}
         />
       )}

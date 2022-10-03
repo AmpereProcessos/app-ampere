@@ -715,7 +715,7 @@ function ModalComercial({
                   />
                   {infoHolder.formapagamento == "FINANCIAMENTO" && (
                     <SelectInput
-                      label={"FORMA DE PAGAMENTO"}
+                      label={"CREDOR"}
                       value={
                         infoHolder.credor != undefined &&
                         infoHolder != "-----" &&

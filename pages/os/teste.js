@@ -6,7 +6,6 @@ import Logo from "../../utils/whitelogo.png";
 import connectToDatabase from "../../utils/projectsDb";
 import { ObjectId } from "mongodb";
 function osPDF({ info }) {
-  console.log(info);
   return (
     <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
       <h1 className="text-center font-bold text-xl mb-6">ORDEM DE SERVIÇO</h1>
@@ -107,7 +106,7 @@ function osPDF({ info }) {
             </div>
             <div className="row-span-3 grid grid-cols-5 min-h-[80px]">
               <p className="flex items-center justify-center text-xs col-span-2 font-semibold uppercase">
-                Obs. Estrutura
+                KIT SOLAR
               </p>
               <p className="flex items-center justify-center text-xs col-span-3 border border-black border-t-0">
                 {info.obsestrutura}
@@ -131,13 +130,23 @@ function osPDF({ info }) {
                 JINKO 450W
               </p>
             </div>
-            <div className="row-span-3 grid grid-cols-5 ">
-              <p className="flex items-center justify-center text-xs col-span-2 font-semibold uppercase">
-                Cabos
-              </p>
-              <p className="flex items-center justify-center text-xs col-span-3 text-center border border-black border-t-0">
-                {info.cabo ? `${info.qtdecabo} metros` : "-"}
-              </p>
+            <div className="grid grid-rows-2 row-span-3">
+              <div className="row-auto grid grid-cols-5 ">
+                <p className="flex items-center justify-center text-xs col-span-2 font-semibold uppercase">
+                  Cabos
+                </p>
+                <p className="flex items-center justify-center text-xs col-span-3 text-center border border-black border-t-0">
+                  {info.cabo ? `${info.qtdecabo} metros` : "-"}
+                </p>
+              </div>
+              <div className="row-auto grid grid-cols-5 ">
+                <p className="flex items-center justify-center text-xs col-span-2 font-semibold uppercase">
+                  Conectores
+                </p>
+                <p className="flex items-center justify-center text-xs col-span-3 text-center border border-black border-t-0">
+                  -
+                </p>
+              </div>
             </div>
           </div>
         </div>

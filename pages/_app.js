@@ -1,12 +1,18 @@
 import "../styles/globals.css";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 function MyApp({ Component, pageProps }) {
   const [credentials, setCredentials] = useState({});
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  useEffect(() => {
+    if (Object.keys(credentials).length == 0) {
+      var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
+      setCredentials(storedCredentials);
+    }
+  }, [Component]);
   return (
     <DndProvider backend={HTML5Backend}>
       <title>Sistema - Ampère Energias</title>

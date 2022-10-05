@@ -227,7 +227,7 @@ function Home({ credentials, setCredentials }) {
             </div>
           </div>
           <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
-            {installedData[3]?.count} obras
+            {installedData.length > 0 ? installedData[3]?.count : "-"} obras
           </p>
           <p className="text-center text-xs text-gray-600">
             Último mês: <strong>{installedData[2]?.count} obras</strong>
@@ -259,7 +259,7 @@ function Home({ credentials, setCredentials }) {
             </div>
           </div>
           <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-            {installedData[3]?.total} kWp
+            {installedData.length > 0 ? installedData[3]?.total : "-"} kWp
           </p>
           <p className="text-center text-xs text-gray-600">
             Último mês:{" "}
@@ -292,7 +292,10 @@ function Home({ credentials, setCredentials }) {
             </div>
           </div>
           <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-            {averageHomoData[1]?.homoPeakPot.toFixed(2)} kWp
+            {averageHomoData.length > 0
+              ? averageHomoData[1]?.homoPeakPot.toFixed(2)
+              : "-"}{" "}
+            kWp
           </p>
           <p className="text-center text-xs text-gray-600">
             Último mês:{" "}
@@ -325,7 +328,10 @@ function Home({ credentials, setCredentials }) {
             </div>
           </div>
           <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-            {averageHomoData[1]?.averageTime.toFixed(0)} dias
+            {averageHomoData.length > 0
+              ? averageHomoData[1]?.averageTime.toFixed(0)
+              : "-"}{" "}
+            dias
           </p>
           <p className="text-center text-xs text-gray-600">
             Último mês:{" "}

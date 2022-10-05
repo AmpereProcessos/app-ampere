@@ -75,7 +75,6 @@ function Suprimentos({ credentials, setCredentials }) {
     }
     return totalSum.toFixed(2);
   }
-  console.log(credentials, setCredentials);
   return (
     <div className="p-6 grow">
       <div className="flex justify-between border-b border-gray-200 p-1">

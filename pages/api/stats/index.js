@@ -37,7 +37,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "_id.ano": { $gte: currentYear },
-            "_id.mes": { $gte: currentMonth - 3 },
+            "_id.mes": { $gte: currentMonth - 4 },
           },
         },
       ])
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "_id.ano": { $gte: currentYear },
-            "_id.mes": { $gte: currentMonth - 1 },
+            "_id.mes": { $gte: currentMonth - 2 },
           },
         },
       ])

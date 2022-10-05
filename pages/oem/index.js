@@ -1,40 +1,44 @@
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-function Posvenda({ credentials, setCredentials }) {
+import ModalOeM from "../../components/ModalOeM";
+function OeM({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalProject, setModalProject] = useState({});
   function getProjects() {
-    axios.get("/api/projects/filteredByStage").then((res) => {
-      setProjects(res.data.posvenda);
-    });
+    axios
+      .get("/api/projects/filteredByStage")
+      .then((res) => setProjects(res.data.oem));
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      getProjects();
-    } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      } else {
+    if (Object.keys(credentials).length != 0) {
+      if (credentials.accessibleRoutes.includes("O&M")) {
         getProjects();
+      } else {
+        router.push("/");
       }
     }
   }, []);
+  console.log(projects);
   return (
     <div className="p-6 grow">
       <div className="flex items-center gap-x-2 border-b border-gray-200 p-1">
         <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
-          Projetos em jornada
+          Projetos no estágio de operação e manutenção
         </p>
         <p className="font-raleway font-bold text-[#fead61]">
           ({projects.length})
         </p>
       </div>
       <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-        {projects?.map((project) => (
+        {projects.map((project) => (
           <div
+            onClick={() => {
+              setModalIsOpen(true);
+              setModalProject(project);
+            }}
             key={project._id}
             className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
           >
@@ -44,38 +48,31 @@ function Posvenda({ credentials, setCredentials }) {
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-xxs">STATUS</span>
-                <p className="text-xs text-gray-600">
-                  {project.statusobra ? project.statusobra : "-"}
+                <span className="text-xxs">CIDADE</span>
+                <p className="text-xs text-gray-600 uppercase">
+                  {project.cidade ? project.cidade : "-"}
                 </p>
               </div>
               <div>
-                <span className="text-xxs">LAUDO</span>
+                <span className="text-xxs">TOPOLOGIA</span>
                 <p className="text-xs text-center text-gray-600">
-                  {project.laudo ? project.laudo : "-"}
+                  {project.topologia ? project.topologia : "-"}
                 </p>
               </div>
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-xxs">DOCUMENTAÇÃO</span>
-                <p className="text-xs text-gray-600 text-center">
-                  {project.documentacaoassinada
-                    ? project.documentacaoassinada
-                    : "-"}
-                </p>
-              </div>
-              <div>
-                <span className="text-xxs">STATUS KIT</span>
+                <span className="text-xxs">EQUIPE OBRAS</span>
                 <p className="text-xs text-yellow-500">
-                  {project.statusentrega ? project.statusentrega : "-"}
+                  {project.equipeexec ? project.equipeexec : "-"}
                 </p>
               </div>
               <div>
-                <span className="text-xxs">PREVISÃO DE ENTREGA</span>
-                <p className="text-xs text-gray-600 text-center">
-                  {project.previsaoentrega
-                    ? new Date(project.previsaoentrega).toLocaleDateString()
+                <span className="text-xxs">USINA LIGADA</span>
+                <p className="text-xs text-gray-600">
+                  {project.usinaligada != undefined &&
+                  project.usinaligada != "-"
+                    ? project.usinaligada
                     : "-"}
                 </p>
               </div>
@@ -83,8 +80,15 @@ function Posvenda({ credentials, setCredentials }) {
           </div>
         ))}
       </div>
+      {modalIsOpen && (
+        <ModalOeM
+          setModalIsOpen={setModalIsOpen}
+          project={modalProject}
+          editor={credentials.accessibleRoutes.includes("O&M") ? true : false}
+        />
+      )}
     </div>
   );
 }
 
-export default Posvenda;
+export default OeM;

@@ -56,6 +56,20 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
+    let oem = await collection
+      .aggregate([
+        {
+          $match: {
+            statusobra: "CONCLUIDA",
+          },
+        },
+        {
+          $sort: {
+            saidadeobra: -1,
+          },
+        },
+      ])
+      .toArray();
     //obras - FILTRAR POR CONTRATO ASSINADO E STATUS DE PAGAMENTO PAGO
     res.json({
       comercial,
@@ -63,6 +77,7 @@ export default async function handler(req, res) {
       projetos,
       obras,
       posvenda,
+      oem,
     });
   }
 }

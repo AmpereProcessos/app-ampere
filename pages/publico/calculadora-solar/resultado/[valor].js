@@ -16,6 +16,7 @@ function EstagioTres({
 }) {
   return (
     <section className="min-h-[100vh] flex items-center justify-center bg-[#15599a]">
+      <Pixel name="FACEBOOK_PIXEL_1" />
       <div className="flex flex-col bg-[#fff] p-4 rounded">
         <div className="flex justify-center">
           <div className="w-[80px] h-[80px]">

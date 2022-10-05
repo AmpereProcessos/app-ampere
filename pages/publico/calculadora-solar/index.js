@@ -29,7 +29,7 @@ function CalculadoraSolar() {
   const [currentEstagio, setCurrentEstagio] = useState(1);
   return (
     <section className="min-h-[100vh] flex items-center justify-center bg-[#15599a]">
-      <Pixel />
+      <Pixel name="FACEBOOK_PIXEL_1" />
       {currentEstagio == 1 && (
         <EstagioUm
           clientCurrentEnergyBill={clientCurrentEnergyBill}

@@ -18,7 +18,7 @@ function Sidebar({ sidebarVisible }) {
   if (
     router.pathname.includes("pdf") ||
     router.pathname.includes("publico") ||
-    router.pathname.includes("os")
+    router.pathname.includes("ordemDeServico")
   )
     return null;
   return (

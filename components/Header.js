@@ -8,7 +8,11 @@ import { BiLogIn } from "react-icons/bi";
 import { MdAdminPanelSettings } from "react-icons/md";
 function Header({ toggleSidebar, credentials, logout }) {
   const router = useRouter();
-  if (router.pathname.includes("pdf") || router.pathname.includes("publico"))
+  if (
+    router.pathname.includes("pdf") ||
+    router.pathname.includes("publico") ||
+    router.pathname.includes("os")
+  )
     return null;
   return (
     <div className="w-full sticky top-0 bg-[#fff] grid grid-cols-3 items-center px-12 h-[70px] border-b border-gray-200">

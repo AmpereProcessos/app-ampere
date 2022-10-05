@@ -15,7 +15,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 function Sidebar({ sidebarVisible }) {
   const router = useRouter();
-  if (router.pathname.includes("pdf") || router.pathname.includes("publico"))
+  if (
+    router.pathname.includes("pdf") ||
+    router.pathname.includes("publico") ||
+    router.pathname.includes("os")
+  )
     return null;
   return (
     <div className="flex sticky top-[70px] flex-col w-[250px] max-h-[900px] border-r border-gray-300">

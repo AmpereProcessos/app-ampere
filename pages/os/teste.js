@@ -11,7 +11,7 @@ function osPDF({ info }) {
       <h1 className="text-center font-bold text-xl mb-6">ORDEM DE SERVIÇO</h1>
       <div className="grid grid-cols-2">
         <div className="flex justify-between">
-          <Link href="/serviceOrder">
+          <Link href="/">
             <div className="flex justify-center items-center">
               <Image height="100px" width="100px" src={Logo} />
             </div>

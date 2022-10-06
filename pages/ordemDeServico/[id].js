@@ -248,7 +248,7 @@ export async function getServerSideProps({ query }) {
   const db = await connectToDatabase(process.env.DB_KEY);
   const collection = db.collection("data");
   let os = await collection.findOne({
-    _id: ObjectId("632b17dd617f2a57396451cc"),
+    _id: ObjectId(id),
   });
   let info = JSON.parse(JSON.stringify(os));
   // Pass data to the page via props

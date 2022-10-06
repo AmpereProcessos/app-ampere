@@ -7,6 +7,7 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
+import Link from "next/link";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -236,7 +237,15 @@ function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       <span className="uppercase font-bold font-raleway text-center text-sm">
                         CÓD.VENDEDOR
                       </span>
-                      <p>{infoHolder.codigodovendedor}</p>
+                      <p>
+                        {vendedores.filter(
+                          (vendedor) => vendedor.nome == infoHolder.vendedor
+                        ).length > 0
+                          ? vendedores.filter(
+                              (vendedor) => vendedor.nome == infoHolder.vendedor
+                            )[0].cod
+                          : "-"}
+                      </p>
                     </div>
                   </div>
                   <SelectInput
@@ -589,6 +598,13 @@ function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     }
                     className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                   />
+                </div>
+                <div className="flex justify-center mt-2">
+                  <Link href={`/ordemDeServico/${project._id}`}>
+                    <button className="p-2 bg-[#fead61] font-bold rounded">
+                      GERAR OS DE OBRA
+                    </button>
+                  </Link>
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

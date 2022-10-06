@@ -242,7 +242,15 @@ function ModalProjetos({
                       <span className="uppercase font-bold font-raleway text-center text-sm">
                         CÓD.VENDEDOR
                       </span>
-                      <p>{infoHolder.codigodovendedor}</p>
+                      <p>
+                        {vendedores.filter(
+                          (vendedor) => vendedor.nome == infoHolder.vendedor
+                        ).length > 0
+                          ? vendedores.filter(
+                              (vendedor) => vendedor.nome == infoHolder.vendedor
+                            )[0].cod
+                          : "-"}
+                      </p>
                     </div>
                   </div>
                   <SelectInput

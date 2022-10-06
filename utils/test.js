@@ -4308,9 +4308,9 @@ const newArr = projects.map((project) => {
     },
     contrato: {
       status: project.statuscontrato,
-      dataSolicitacao: project.datasolicitacaocontrato,
-      dataLiberacao: project.dataliberacaoassinatura,
-      dataAssinatura: project.dataassinatura,
+      dataSolicitacao: project.datasolicitacaocontrato, // formatar como data
+      dataLiberacao: project.dataliberacaoassinatura, // formatar como data
+      dataAssinatura: project.dataassinatura, // formatar como data
       formaAssinatura: project.formaassinatura,
     },
     pagamento: {
@@ -4323,12 +4323,12 @@ const newArr = projects.map((project) => {
     },
     compra: {
       statusLiberacao: project.statusliberacaocredito,
-      dataLiberacao: project.dataliberacaoparacompra,
+      dataLiberacao: project.dataliberacaoparacompra, // formatar como data
       tipoDoKit: project.tipokit,
       valorDoKit: project.valordokit,
       fornecedor: project.fornecedor,
-      dataPedido: project.datadopedido,
-      previsaoEntrega: project.previsaoentrega,
+      dataPedido: project.datadopedido, // formatar como data
+      previsaoEntrega: project.previsaoentrega, // formatar como data
       localEntrega: project.localdeentrega,
       informacoes: project.informacoescompra,
       previsaoFaturamento: project.previsaofaturamento,
@@ -4353,9 +4353,9 @@ const newArr = projects.map((project) => {
     projeto: {
       iniciar: project.iniciarprojeto,
       projetista: project.projetista,
-      dataLiberacaoDocumentacao: project.dataliberacaodocumentacao,
-      dataAssDocumentacao: project.documentacaoassinada,
-      dataParecerDeAcesso: project.pareceracesso,
+      dataLiberacaoDocumentacao: project.dataliberacaodocumentacao, // formatar como data
+      dataAssDocumentacao: project.documentacaoassinada, // formatar como data
+      dataParecerDeAcesso: project.pareceracesso, // formatar como data
       diagramaUnifilar: project.diagramaunifilar,
       desenhoTelhado: project.desenhotelhado,
       mapaDeMicro: project.mapademicro,
@@ -4365,19 +4365,19 @@ const newArr = projects.map((project) => {
       relatorioComissionamento: project.relatoriocomissionamento,
     },
     vistoria: {
-      dataPedido: project.pedidovistoria,
+      dataPedido: project.pedidovistoria, // formatar como data
       status: project.statusvistoria,
     },
     medidor: {
-      data: project.trocamedidor,
+      data: project.trocamedidor, // formatar como data
       status: project.statustrocamedidor,
     },
     obra: {
       laudo: project.laudo,
       observacoes: project.obsobra,
       statusSolicitacao: project.solicitacaoobra,
-      entrada: project.entradanaobra,
-      saida: project.saidadeobra,
+      entrada: project.entradanaobra, // formatar como data
+      saida: project.saidadeobra, // formatar como data
       equipeResp: project.equipeexec,
       checklist: project.checklist,
       trafo: project.trafo,
@@ -4385,13 +4385,13 @@ const newArr = projects.map((project) => {
     },
     material: {
       statusSeparacao: project.materialalmoxarifado,
-      previsaoCustos: project.prevcustosinsumos,
+      previsaoCustos: project.prevcustosinsumos, // toFixed(2)
       efetivoCustos: project.custosinsumos,
       notaFiscal: project.notafiscal,
     },
     manutencaoPreventiva: {
       status: project.manutencaoprev,
-      dataRealizacao: project.datamanutencaoprev,
+      dataRealizacao: project.datamanutencaoprev, // formatar como data
     },
     relatorios: {
       status:
@@ -4410,8 +4410,30 @@ const newArr = projects.map((project) => {
         project.relatorioquatro.length == 24 &&
         new Date(project.relatorioquatro),
     },
-    conferencias: {},
-    app: {},
+    conferencias: {
+      usinaLigada:
+        project.usinaligada != "CONFERIR INJEÇÃO" &&
+        project.usinaligada != "-" &&
+        project.usinaligada != undefined
+          ? new Date(project.usinaligada)
+          : project.usinaligada,
+      monitoramentoFeito:
+        project.monitoramentofeito != "CONFERIR USINA" &&
+        project.monitoramentofeito != "-" &&
+        project.monitoramentofeito != undefined
+          ? new Date(project.monitoramentofeito)
+          : project.monitoramentofeito,
+      energiaInjetada:
+        project.energiainjetada != "CONFERIR" &&
+        project.energiainjetada != "-" &&
+        project.energiainjetada != undefined
+          ? new Date(project.energiainjetada)
+          : project.energiainjetada,
+    },
+    app: {
+      login: project.loginapp,
+      senha: project.senhaapp,
+    },
     dataNascimento: project.datanascimento,
     email: project.email,
     logradouro: project.logradouro,
@@ -4427,3 +4449,4 @@ const newArr = projects.map((project) => {
     nps: project.nps,
   };
 });
+console.log(newArr);

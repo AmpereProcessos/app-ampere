@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Logo from "../../utils/whitelogo.png";
 import { cities, sellers, ppsSolicitations } from "../../utils/constants";
 import axios from "axios";
+import Link from "next/link";
 function ChamadosPPS() {
   const [vendedorName, setVendedorName] = useState(sellers[0]);
   const [svbCode, setSvbCode] = useState(0);
@@ -50,9 +51,11 @@ function ChamadosPPS() {
   return (
     <section className="min-h-[100vh] flex items-center justify-center bg-[#15599a]">
       <div className="flex flex-col bg-[#fff] p-4 rounded">
-        <div className="flex self-center items-center h-[80px] w-[80px]">
-          <Image src={Logo} />
-        </div>
+        <Link href="/calls/chamadosPPS">
+          <div className="flex self-center items-center h-[80px] w-[80px]">
+            <Image src={Logo} />
+          </div>
+        </Link>
         <h1 className="font-bold text-center font-raleway text-lg uppercase text-[#fead61]">
           ABERTURA DE CHAMADO
         </h1>

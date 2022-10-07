@@ -104,7 +104,7 @@ function osPDF({ info }) {
                     {info.estruturafaltando
                       ? info.estruturafaltando
                           .split("/")
-                          .map((string) => <li>{string}</li>)
+                          .map((string, index) => <li key={index}>{string}</li>)
                       : false}
                   </div>
                 )}

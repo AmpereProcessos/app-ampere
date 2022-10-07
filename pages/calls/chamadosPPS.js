@@ -257,6 +257,10 @@ function ChamadosPPS({ setCredentials, credentials }) {
                 <p>Observações:</p>
                 <p>{call.observacoes && call.observacoes}</p>
               </div>
+              <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
+                <p>Responsável:</p>
+                <p>{call.responsavel && call.responsavel}</p>
+              </div>
             </div>
           ))}
         </div>

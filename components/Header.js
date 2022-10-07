@@ -11,7 +11,8 @@ function Header({ toggleSidebar, credentials, logout }) {
   if (
     router.pathname.includes("pdf") ||
     router.pathname.includes("publico") ||
-    router.pathname.includes("ordemDeServico")
+    router.pathname.includes("ordemDeServico") ||
+    router.pathname.includes("auth")
   )
     return null;
   return (
@@ -39,6 +40,14 @@ function Header({ toggleSidebar, credentials, logout }) {
             color: "#fead61",
           }}
         />
+      </div>
+    </div>
+  );
+}
+
+export default Header;
+{
+  /*
         {credentials.manager && (
           <Link href="/admin/users">
             <MdAdminPanelSettings
@@ -50,10 +59,5 @@ function Header({ toggleSidebar, credentials, logout }) {
               }}
             />
           </Link>
-        )}
-      </div>
-    </div>
-  );
+        )} */
 }
-
-export default Header;

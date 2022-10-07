@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <DndProvider backend={HTML5Backend}>
       <title>Sistema - Ampère Energias</title>
-      {credentials.nome ? (
+      {credentials != {} ? (
         <div className="flex flex-col bg-[#fff] w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">
           <Header
             logout={() => {

@@ -99,7 +99,7 @@ function Home({ credentials, setCredentials }) {
       setCredentials(storedCredentials);
       getStats();
     } else {
-      if (!credentials.nome) {
+      if (credentials != {} && !credentials.nome) {
         router.push("/auth/authHome");
       } else {
         axios.get("/api/stats").then((res) => {

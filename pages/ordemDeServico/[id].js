@@ -117,12 +117,12 @@ function osPDF({ info }) {
                 Micro/Inversor
               </p>
               <p className="text-xs col-span-3 w-48 text-center border border-black">
-                -
+                {info.qtdepotinversor}
               </p>
             </div>
             <div className="row-span-1 grid grid-cols-5">
               <p className="text-xs text-center col-span-2 font-semibold uppercase">
-                Módulo
+                MODELO MÓDULO
               </p>
               <p className="text-xs col-span-3 w-48 text-center border border-black border-t-0">
                 -
@@ -133,8 +133,8 @@ function osPDF({ info }) {
                 <p className="flex items-center justify-center text-xs col-span-2 font-semibold uppercase">
                   Cabos
                 </p>
-                <p className="flex items-center justify-center text-xs col-span-3 text-center border border-black border-t-0">
-                  {info.qtdecabo ? `${info.qtdecabo} metros` : "-"}
+                <p className="flex items-center justify-center px-1 text-xs col-span-3 text-center border border-black border-t-0">
+                  {info.qtdecabo ? `${info.qtdecabo}` : "-"}
                 </p>
               </div>
               <div className="row-auto grid grid-cols-5 ">

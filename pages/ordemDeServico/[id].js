@@ -13,16 +13,12 @@ function osPDF({ info }) {
         <div className="flex justify-between">
           <Link href="/">
             <div className="flex justify-center items-center">
-              <Image height="100px" width="100px" src={Logo} />
+              <Image height="60px" width="60px" src={Logo} />
             </div>
           </Link>
           <div className="pl-2">
             <p className="text-center font-bold">
               AMPÈRE ENERGENHARIA E CONSULTORIA ELÉTRICA - ME
-            </p>
-            <p className="text-center font-bold">
-              CNPJ <br />
-              27.901.968/0001-45
             </p>
           </div>
         </div>
@@ -30,12 +26,6 @@ function osPDF({ info }) {
           <div className="flex justify-between border-black border-b">
             <p className="text-end pr-2">ID do Projeto</p>
             <p className="text-center pr-2">{info._id}</p>
-          </div>
-          <div className="flex justify-between border-black border-b">
-            <p className="text-end pr-2">DATA DE ABERTURA</p>
-            <p className="text-center pr-2">
-              {new Date().toLocaleDateString()}
-            </p>
           </div>
         </div>
       </div>
@@ -108,9 +98,17 @@ function osPDF({ info }) {
               <p className="flex items-center justify-center text-xs col-span-2 font-semibold uppercase">
                 KIT SOLAR
               </p>
-              <p className="flex items-center justify-center text-xs col-span-3 border border-black border-t-0">
-                {info.estruturafaltando ? info.estruturafaltando : "-"}
-              </p>
+              <div className="flex items-center justify-center text-xs col-span-3 border border-black border-t-0">
+                {info.estruturafaltando && (
+                  <div className="text-xxs font-bold text-center">
+                    {info.estruturafaltando
+                      ? info.estruturafaltando
+                          .split("/")
+                          .map((string) => <li>{string}</li>)
+                      : false}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <div className="grid grid-rows-5">
@@ -185,9 +183,13 @@ function osPDF({ info }) {
         </div>
       </div>
       <div className="border border-black mt-6">
-        <h1 className="text-center  font-bold py-2">OBSERVAÇÕES DA OBRA</h1>
-        <div className="flex justify-center h-[120px] items-center">
-          <p className="text-xs text-center">{info.obsobra && info.obsobra}</p>
+        <h1 className="text-center  font-bold pt-1">OBSERVAÇÕES DA OBRA</h1>
+        <div className="flex justify-center items-center">
+          {info.obsobra && (
+            <div className="text-xxs font-bold text-center">
+              {info.obsobra ? info.obsobra : false}
+            </div>
+          )}
         </div>
       </div>
       <div className="border border-black mt-3 px-4 pb-4">
@@ -215,7 +217,7 @@ function osPDF({ info }) {
             <div className="mt-2 uppercase">Data execução: ____/____/_____</div>
           </div>
         </div>
-        <div className="mt-6 grid gap-x-4 grid-cols-2">
+        <div className="mt-2 grid gap-x-4 grid-cols-2">
           <div className="flex flex-col">
             <p className="text-start">Autorizado por:</p>
             <div className="w-[150px] flex justify-center  items-centertext-center">

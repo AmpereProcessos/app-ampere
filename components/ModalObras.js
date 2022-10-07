@@ -599,6 +599,27 @@ function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                   />
                 </div>
+                <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                  <span className="uppercase font-bold font-raleway text-center text-sm">
+                    OBSERVAÇÕES kit
+                  </span>
+                  <textarea
+                    readOnly={!editor}
+                    value={
+                      infoHolder.estruturafaltando
+                        ? infoHolder.estruturafaltando
+                        : ""
+                    }
+                    placeholder={"Observações do kit aqui..."}
+                    onChange={(e) =>
+                      setInfo({
+                        ...infoHolder,
+                        estruturafaltando: e.target.value,
+                      })
+                    }
+                    className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                  />
+                </div>
                 <div className="flex justify-center mt-2">
                   <Link href={`/ordemDeServico/${project._id}`}>
                     <button className="p-2 bg-[#fead61] font-bold rounded">

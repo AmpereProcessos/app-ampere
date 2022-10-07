@@ -7,6 +7,7 @@ import ModalObras from "../../components/ModalObras";
 function Suprimentos({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
+  const [searchFilter, setSearchFilter] = useState("");
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filters, setFilters] = useState({
     obraStatusFilter: [],
@@ -28,6 +29,17 @@ function Suprimentos({ credentials, setCredentials }) {
     getProjects();
     let changedObj = projects.filter((project) => project._id == id);
     setModalProject(changedObj[0]);
+  }
+  function handleSearchFilter(value) {
+    setSearchFilter(value);
+    if (value != "" || " ") {
+      let newArr = projects.filter((call) =>
+        call.nomedocontrato.toUpperCase().includes(value.toUpperCase())
+      );
+      setFilteredProjects(newArr);
+    } else {
+      setFilteredProjects(projects);
+    }
   }
   function filterProjects() {
     var newArr;
@@ -273,6 +285,14 @@ function Suprimentos({ credentials, setCredentials }) {
               { value: "ENTREGUE", label: "ENTREGUE" },
               { value: undefined, label: "NÃO DEFINIDO" },
             ]}
+          />
+          <input
+            type={"text"}
+            placeholder="Digite o nome do contrato"
+            className={
+              "outline-none p-1.5 rounded border border-gray-200 placeholder:italic"
+            }
+            onChange={(e) => handleSearchFilter(e.target.value)}
           />
         </div>
         <button

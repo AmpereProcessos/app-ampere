@@ -109,7 +109,7 @@ function osPDF({ info }) {
                 KIT SOLAR
               </p>
               <p className="flex items-center justify-center text-xs col-span-3 border border-black border-t-0">
-                {info.obsestrutura}
+                {info.estruturafaltando ? info.estruturafaltando : "-"}
               </p>
             </div>
           </div>
@@ -119,7 +119,7 @@ function osPDF({ info }) {
                 Micro/Inversor
               </p>
               <p className="text-xs col-span-3 w-48 text-center border border-black">
-                DEYE 1.5K
+                -
               </p>
             </div>
             <div className="row-span-1 grid grid-cols-5">
@@ -127,7 +127,7 @@ function osPDF({ info }) {
                 Módulo
               </p>
               <p className="text-xs col-span-3 w-48 text-center border border-black border-t-0">
-                JINKO 450W
+                -
               </p>
             </div>
             <div className="grid grid-rows-2 row-span-3">
@@ -136,7 +136,7 @@ function osPDF({ info }) {
                   Cabos
                 </p>
                 <p className="flex items-center justify-center text-xs col-span-3 text-center border border-black border-t-0">
-                  {info.cabo ? `${info.qtdecabo} metros` : "-"}
+                  {info.qtdecabo ? `${info.qtdecabo} metros` : "-"}
                 </p>
               </div>
               <div className="row-auto grid grid-cols-5 ">
@@ -155,21 +155,13 @@ function osPDF({ info }) {
         <h1 className="text-center my-2 font-bold">INFORMAÇÕES PARA OBRA</h1>
         <div className="grid grid-cols-2 gap-x-2 px-6 pb-2">
           <div className="grid grid-rows-2 min-h-[65px]">
-            <div className="grid grid-cols-5">
-              <p className="col-span-2 text-xs font-semibold text-center">
-                DESLIGAMENTO REMOTO
+            <div className="row-span-3 grid grid-cols-5 min-h-[80px]">
+              <p className="flex items-center justify-center text-xs col-span-2 font-semibold uppercase">
+                OBS.COMERCIAL
               </p>
-              <p className="col-span-3 text-xs text-center border border-black">
-                SIM
+              <p className="flex items-center justify-center text-center text-xs col-span-3 border border-black">
+                {info.obscomercial ? info.obscomercial : "-"}
               </p>
-            </div>
-            <div className="grid grid-cols-5">
-              <p className="text-xs text-center col-span-2 font-semibold">
-                TROCA DE KIT
-              </p>
-              <div className="flex text-xs justify-center items-center col-span-3 border border-black border-t-0">
-                NÃO HOUVE
-              </div>
             </div>
           </div>
           <div className="grid grid-rows-2 min-h-[65px]">
@@ -213,13 +205,14 @@ function osPDF({ info }) {
               <p className="text-xs">FOTOS DA INSTALAÇÃO NO GRUPO DE OBRA ?</p>
             </div>
           </div>
-          <div className="flex">
+          <div className="grid grid-rows-2">
             <div className="flex">
               <div className="w-6 h-6 border rounded-md border-black"></div>
               <p className="text-xs text-center pl-2">
                 TERMO DE RECEBIMENTO DE OBRA
               </p>
             </div>
+            <div className="mt-2 uppercase">Data execução: ____/____/_____</div>
           </div>
         </div>
         <div className="mt-6 grid gap-x-4 grid-cols-2">

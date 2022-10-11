@@ -1925,6 +1925,10 @@ function ModalComercial({
                         value: "NÃO DEFINIDO",
                       },
                     ]}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, statusobra: value });
+                      setInfo({ ...infoHolder, statusobra: value });
+                    }}
                   />
                   <div className="flex flex-col w-[450px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">

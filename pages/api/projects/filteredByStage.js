@@ -41,7 +41,6 @@ export default async function handler(req, res) {
               $in: ["AGENDADA", "AGUARDANDO AGENDAMENTO", "EM ANDAMENTO"],
             },
             statuscontrato: "ASSINADO",
-            statuspagamento: "PAGO",
           },
         },
       ])

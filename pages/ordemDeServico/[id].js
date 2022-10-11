@@ -6,12 +6,13 @@ import Logo from "../../utils/whitelogo.png";
 import connectToDatabase from "../../utils/projectsDb";
 import { ObjectId } from "mongodb";
 function osPDF({ info }) {
+  console.log(info.obsobra.length);
   return (
     <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
       <h1 className="text-center font-bold text-xl mb-6">ORDEM DE SERVIÇO</h1>
       <div className="grid grid-cols-2">
         <div className="flex justify-between">
-          <Link href="/">
+          <Link href="/obras">
             <div className="flex justify-center items-center">
               <Image height="60px" width="60px" src={Logo} />
             </div>
@@ -185,10 +186,20 @@ function osPDF({ info }) {
       <div className="border border-black mt-6">
         <h1 className="text-center  font-bold pt-1">OBSERVAÇÕES DA OBRA</h1>
         <div className="flex justify-center items-center">
-          {info.obsobra && (
-            <div className="text-xxs font-bold text-center">
-              {info.obsobra ? info.obsobra : false}
+          {info.obsobra ? (
+            <div
+              className={`${
+                info.obsobra.length > 370 ? "text-xxs" : "text-xs"
+              } px-2 my-2 font-bold text-center`}
+            >
+              {info.obsobra
+                ? info.obsobra
+                    .split("/")
+                    .map((string, index) => <li key={index}>{string}</li>)
+                : false}
             </div>
+          ) : (
+            <p className="my-2">SEM OBSERVAÇÕES</p>
           )}
         </div>
       </div>

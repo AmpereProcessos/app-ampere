@@ -6,7 +6,6 @@ import Logo from "../../utils/whitelogo.png";
 import connectToDatabase from "../../utils/projectsDb";
 import { ObjectId } from "mongodb";
 function osPDF({ info }) {
-  console.log(info.obsobra.length);
   return (
     <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
       <h1 className="text-center font-bold text-xl mb-6">ORDEM DE SERVIÇO</h1>

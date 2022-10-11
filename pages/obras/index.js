@@ -20,9 +20,9 @@ function Suprimentos({ credentials, setCredentials }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
   function getProjects() {
-    axios.get("/api/projects/filteredByStage").then((res) => {
-      setProjects(res.data.obras);
-      setFilteredProjects(res.data.obras);
+    axios.get("/api/projects/obras").then((res) => {
+      setProjects(res.data);
+      setFilteredProjects(res.data);
     });
   }
   function handleUpdates(id) {

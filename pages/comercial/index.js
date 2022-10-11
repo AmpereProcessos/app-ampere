@@ -17,9 +17,10 @@ function Comercial({ credentials, setCredentials }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
   function getProjects() {
-    axios.get("/api/projects/filteredByStage").then((res) => {
-      setProjects(res.data.comercial);
-      setFilteredProjects(res.data.comercial);
+    axios.get("/api/projects/comercial").then((res) => {
+      console.log(res.data);
+      setProjects(res.data);
+      setFilteredProjects(res.data);
     });
   }
   function filterProjects() {

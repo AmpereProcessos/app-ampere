@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import connectToDatabase from "../../utils/projectsDb";
-import OSPdf from "../../components/OSPdf";
+import ServiceOrderPDF from "../../components/OrdemServicoPDF";
 import { ObjectId } from "mongodb";
 import TextInput from "../../components/TextInput";
 import DateInput from "../../components/DateInput";
 import SelectInput from "../../components/SelectInput";
 import NumberInput from "../../components/NumberInput";
-function osPDF({ info }) {
+function OSInfo({ info }) {
   const [pdfVisible, setPdfVisible] = useState(false);
   const [osInfo, setosInfo] = useState(info);
   const [openingDate, setOpeningDate] = useState(
@@ -17,7 +17,13 @@ function osPDF({ info }) {
   return (
     <>
       {pdfVisible ? (
-        <OSPdf info={osInfo} openingDate={openingDate} urgency={urgency} />
+        <>
+          <ServiceOrderPDF
+            info={osInfo}
+            openingDate={openingDate}
+            urgency={urgency}
+          />
+        </>
       ) : (
         <div className="flex flex-col p-6 grow bg-[#fff]">
           <div>
@@ -184,4 +190,4 @@ export async function getServerSideProps({ query }) {
   return { props: { info } };
 }
 
-export default osPDF;
+export default OSInfo;

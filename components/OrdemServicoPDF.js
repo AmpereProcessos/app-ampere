@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Assinatura from "../utils/assinatura.jpg";
 import Logo from "../utils/whitelogo.png";
-function OSPdf({ info, openingDate, urgency }) {
+function ServiceOrderPDF({ info, openingDate, urgency }) {
   return (
     <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
       <h1 className="text-center font-bold text-xl mb-6">ORDEM DE SERVIÇO</h1>
@@ -251,4 +251,4 @@ function OSPdf({ info, openingDate, urgency }) {
   );
 }
 
-export default OSPdf;
+export default ServiceOrderPDF;

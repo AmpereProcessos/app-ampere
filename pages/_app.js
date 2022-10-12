@@ -4,13 +4,19 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import { useRouter } from "next/router";
 function MyApp({ Component, pageProps }) {
   const [credentials, setCredentials] = useState({});
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  const router = useRouter();
   useEffect(() => {
     if (Object.keys(credentials).length == 0) {
       var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-      setCredentials(storedCredentials);
+      if (storedCredentials == null) {
+        router.push("/auth/authHome");
+      } else {
+        setCredentials(storedCredentials);
+      }
     }
   }, [Component]);
   return (
@@ -22,12 +28,13 @@ function MyApp({ Component, pageProps }) {
             logout={() => {
               localStorage.removeItem("credentials");
               setCredentials({});
+              router.push("/auth/authHome");
             }}
             credentials={credentials}
             toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
           />
           <div className="flex min-h-[100%] grow">
-            {sidebarVisible && <Sidebar />}
+            {sidebarVisible && <Sidebar credentials={credentials} />}
             <div className="flex flex-col grow w-full">
               <Component
                 sidebarVisible={sidebarVisible}

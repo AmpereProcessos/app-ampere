@@ -42,22 +42,15 @@ function formataCEP(cep) {
 
   return cep;
 }
-function ModalProjetos({
-  open,
-  setModalIsOpen,
-  project,
-  editor,
-  handleUpdates,
-}) {
+function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
   const [infoHolder, setInfo] = useState(project);
+  const [changes, setChanges] = useState({});
   const [msg, setMsg] = useState("");
   function handleChanges() {
-    axios
-      .post(`/api/projects/update/${project._id}`, infoHolder)
-      .then((res) => {
-        setMsg("Alterações feitas");
-        handleUpdates(project._id);
-      });
+    axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
+      setMsg("Alterações feitas");
+      handleUpdates(project._id);
+    });
   }
   return (
     <>
@@ -100,17 +93,19 @@ function ModalProjetos({
                     label={"Nome do contrato"}
                     value={infoHolder.nomedocontrato}
                     editable={false}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, nomedocontrato: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, nomedocontrato: value });
+                      setInfo({ ...infoHolder, nomedocontrato: value });
+                    }}
                   />
                   <TextInput
                     label={"Nome do Projeto"}
                     value={infoHolder.nomedoprojeto}
                     editable={false}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, nomedoprojeto: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, nomedoprojeto: value });
+                      setInfo({ ...infoHolder, nomedoprojeto: value });
+                    }}
                   />
                   <TextInput
                     label={"CPF/CNPJ"}
@@ -120,25 +115,28 @@ function ModalProjetos({
                         ? formataCPF(infoHolder.cpfcnpj.toString())
                         : "-"
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, cpfcnpj: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, cpfcnpj: value });
+                      setInfo({ ...infoHolder, cpfcnpj: value });
+                    }}
                   />
                   <TextInput
                     label={"Telefone"}
                     editable={false}
                     value={infoHolder.telefone ? infoHolder.telefone : "-"}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, telefone: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, telefone: value });
+                      setInfo({ ...infoHolder, telefone: value });
+                    }}
                   />
                   <TextInput
                     label={"Cidade"}
                     editable={false}
                     value={infoHolder.cidade ? infoHolder.cidade : "-"}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, cidade: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, cidade: value });
+                      setInfo({ ...infoHolder, cidade: value });
+                    }}
                   />
                   <TextInput
                     label={"CEP"}
@@ -148,25 +146,28 @@ function ModalProjetos({
                         ? formataCEP(infoHolder.cep.toString())
                         : "-"
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, cep: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, cep: value });
+                      setInfo({ ...infoHolder, cep: value });
+                    }}
                   />
                   <TextInput
                     label={"Bairro"}
                     editable={false}
                     value={infoHolder.bairro ? infoHolder.bairro : ""}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, bairro: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, bairro: value });
+                      setInfo({ ...infoHolder, bairro: value });
+                    }}
                   />
                   <NumberInput
                     label={"Número da residência"}
                     editable={false}
                     value={infoHolder.numerores ? infoHolder.numerores : 0}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, numerores: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, numerores: value });
+                      setInfo({ ...infoHolder, numerores: value });
+                    }}
                   />
                   <SelectInput
                     label={"Regional"}
@@ -182,17 +183,19 @@ function ModalProjetos({
                         value: "REGIONAL UBERLANDIA",
                       },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, regional: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, regional: value });
+                      setInfo({ ...infoHolder, regional: value });
+                    }}
                   />
                   <TextInput
                     label={"EMAIL"}
                     editable={false}
                     value={infoHolder.email ? infoHolder.email : ""}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, email: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, email: value });
+                      setInfo({ ...infoHolder, email: value });
+                    }}
                   />
                   <SelectInput
                     label={"Canal de venda"}
@@ -217,9 +220,10 @@ function ModalProjetos({
                       { label: "OUTRO", value: "OUTRO" },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, canalvenda: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, canalvenda: value });
+                      setInfo({ ...infoHolder, canalvenda: value });
+                    }}
                   />
                   <div className="flex">
                     <SelectInput
@@ -234,9 +238,10 @@ function ModalProjetos({
                         return { label: vendedor.nome, value: vendedor.nome };
                       })}
                       editable={false}
-                      handleChange={(value) =>
-                        setInfo({ ...infoHolder, vendedor: value })
-                      }
+                      handleChange={(value) => {
+                        setChanges({ ...changes, vendedor: value });
+                        setInfo({ ...infoHolder, vendedor: value });
+                      }}
                     />
                     <div className="flex flex-col items-center">
                       <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -263,9 +268,10 @@ function ModalProjetos({
                       { label: "RESIDENCIAL", value: "RESIDENCIAL" },
                       { label: "RURAL", value: "RURAL" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, segmento: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, segmento: value });
+                      setInfo({ ...infoHolder, segmento: value });
+                    }}
                   />
                 </div>
               </div>
@@ -282,9 +288,10 @@ function ModalProjetos({
                         ? infoHolder.titulardoprojeto
                         : ""
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, titulardoprojeto: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, titulardoprojeto: value });
+                      setInfo({ ...infoHolder, titulardoprojeto: value });
+                    }}
                   />
                   <TextInput
                     label={"Número da instalação"}
@@ -294,9 +301,10 @@ function ModalProjetos({
                         : ""
                     }
                     editable={editor}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, numeroinstalacao: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, numeroinstalacao: value });
+                      setInfo({ ...infoHolder, numeroinstalacao: value });
+                    }}
                   />
                   <SelectInput
                     label={"DISTRIBUIÇÃO DE CRÉDITOS"}
@@ -311,9 +319,10 @@ function ModalProjetos({
                       { label: "NÃO", value: "NÃO" },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, distribuicaodecreditos: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, distribuicaodecreditos: value });
+                      setInfo({ ...infoHolder, distribuicaodecreditos: value });
+                    }}
                   />
                   {infoHolder.distribuicaodecreditos == "SIM" && (
                     <NumberInput
@@ -325,9 +334,10 @@ function ModalProjetos({
                           ? infoHolder.quantdistribuicoes
                           : 0
                       }
-                      handleChange={(value) =>
-                        setInfo({ ...infoHolder, quantdistribuicoes: value })
-                      }
+                      handleChange={(value) => {
+                        setChanges({ ...changes, quantdistribuicoes: value });
+                        setInfo({ ...infoHolder, quantdistribuicoes: value });
+                      }}
                     />
                   )}
                 </div>
@@ -343,14 +353,20 @@ function ModalProjetos({
                       checked={
                         infoHolder.visitatecnica === "REALIZADA" ? true : false
                       }
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        setChanges({
+                          ...changes,
+                          visitatecnica: e.target.checked
+                            ? "REALIZADA"
+                            : undefined,
+                        });
                         setInfo({
                           ...infoHolder,
                           visitatecnica: e.target.checked
                             ? "REALIZADA"
                             : undefined,
-                        })
-                      }
+                        });
+                      }}
                       type="checkbox"
                       name="visitaTecnica"
                       id="visitaTecnica"
@@ -367,12 +383,13 @@ function ModalProjetos({
                         ? infoHolder.tecnicoresponsavel
                         : ""
                     }
-                    handleChange={(value) =>
+                    handleChange={(value) => {
+                      setChanges({ ...changes, tecnicoresponsavel: value });
                       setInfo({
                         ...infoHolder,
                         tecnicoresponsavel: value,
-                      })
-                    }
+                      });
+                    }}
                   />
                   <SelectInput
                     label={"Saída do cliente"}
@@ -385,31 +402,34 @@ function ModalProjetos({
                       { label: "AEREO", value: "AEREO" },
                       { label: "N/A", value: "N/A" },
                     ]}
-                    handleChange={(value) =>
+                    handleChange={(value) => {
+                      setChanges({ ...changes, saidacliente: value });
                       setInfo({
                         ...infoHolder,
                         saidacliente: value,
-                      })
-                    }
+                      });
+                    }}
                   />
                   <TextInput
                     label={"Amperagem"}
                     editable={editor}
                     value={infoHolder.amperagem ? infoHolder.amperagem : ""}
-                    handleChange={(value) =>
+                    handleChange={(value) => {
+                      setChanges({ ...changes, amperagem: value });
                       setInfo({
                         ...infoHolder,
                         amperagem: value,
-                      })
-                    }
+                      });
+                    }}
                   />
                   <TextInput
                     label={"Tipo da telha"}
                     editable={editor}
                     value={infoHolder.tipotelha ? infoHolder.tipotelha : ""}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, tipotelha: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, tipotelha: value });
+                      setInfo({ ...infoHolder, tipotelha: value });
+                    }}
                   />
                 </div>
               </div>
@@ -431,12 +451,13 @@ function ModalProjetos({
                       { label: "CLIENTE", value: "CLIENTE" },
                       { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
                     ]}
-                    handleChange={(value) =>
+                    handleChange={(value) => {
+                      setChanges({ ...changes, respinstalacaopadrao: value });
                       setInfo({
                         ...infoHolder,
                         respinstalacaopadrao: value,
-                      })
-                    }
+                      });
+                    }}
                   />
                   <div className="flex flex-col w-[350px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -448,7 +469,16 @@ function ModalProjetos({
                         checked={
                           infoHolder.aumentodecarga === "SIM" ? true : false
                         }
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            aumentodecarga: e.target.checked ? "SIM" : "NÃO",
+                            acstatus:
+                              e.target.checked &&
+                              infoHolder.acstatus != "REALIZADO"
+                                ? "PÊNDENCIA"
+                                : undefined,
+                          });
                           setInfo({
                             ...infoHolder,
                             aumentodecarga: e.target.checked ? "SIM" : "NÃO",
@@ -457,8 +487,8 @@ function ModalProjetos({
                               infoHolder.acstatus != "REALIZADO"
                                 ? "PÊNDENCIA"
                                 : undefined,
-                          })
-                        }
+                          });
+                        }}
                         type="checkbox"
                         name="aumentodecarga"
                         id="aumentodecarga"
@@ -479,14 +509,20 @@ function ModalProjetos({
                           checked={
                             infoHolder.acstatus === "REALIZADO" ? true : false
                           }
-                          onChange={(e) =>
+                          onChange={(e) => {
+                            setChanges({
+                              ...changes,
+                              acstatus: e.target.checked
+                                ? "REALIZADO"
+                                : "PENDÊNCIA",
+                            });
                             setInfo({
                               ...infoHolder,
                               acstatus: e.target.checked
                                 ? "REALIZADO"
                                 : "PENDÊNCIA",
-                            })
-                          }
+                            });
+                          }}
                           type="checkbox"
                           name="acstatus"
                           id="acstatus"
@@ -513,9 +549,10 @@ function ModalProjetos({
                         ? infoHolder.nmodulos
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, nmodulos: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, nmodulos: value });
+                      setInfo({ ...infoHolder, nmodulos: value });
+                    }}
                   />
                   <NumberInput
                     unit={"W"}
@@ -527,9 +564,10 @@ function ModalProjetos({
                         ? infoHolder.potmodulos
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, potmodulos: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, potmodulos: value });
+                      setInfo({ ...infoHolder, potmodulos: value });
+                    }}
                   />
                   <NumberInput
                     unit="kWp"
@@ -541,9 +579,10 @@ function ModalProjetos({
                         ? infoHolder.potpico
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, potpico: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, potpico: value });
+                      setInfo({ ...infoHolder, potpico: value });
+                    }}
                   />
                   <SelectInput
                     label={"TOPOLOGIA"}
@@ -559,9 +598,10 @@ function ModalProjetos({
                       { label: "OUTROS SERV.", value: "OUTROS SERV." },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, topologia: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, topologia: value });
+                      setInfo({ ...infoHolder, topologia: value });
+                    }}
                   />
                   <TextInput
                     label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
@@ -571,9 +611,10 @@ function ModalProjetos({
                         ? infoHolder.qtdepotinversor
                         : ""
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, qtdepotinversor: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, qtdepotinversor: value });
+                      setInfo({ ...infoHolder, qtdepotinversor: value });
+                    }}
                   />
                   <NumberInput
                     tag={"R$"}
@@ -585,9 +626,10 @@ function ModalProjetos({
                         ? infoHolder.valorprojeto
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, valorprojeto: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, valorprojeto: value });
+                      setInfo({ ...infoHolder, valorprojeto: value });
+                    }}
                   />
                   <SelectInput
                     label={"INICIAR PROJETO"}
@@ -605,9 +647,10 @@ function ModalProjetos({
                       },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, iniciarprojeto: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, iniciarprojeto: value });
+                      setInfo({ ...infoHolder, iniciarprojeto: value });
+                    }}
                   />
                 </div>
               </div>
@@ -646,9 +689,10 @@ function ModalProjetos({
                         value: "NÃO DEFINIDO",
                       },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, projetista: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, projetista: value });
+                      setInfo({ ...infoHolder, projetista: value });
+                    }}
                   />
                   <DateInput
                     label={"Data de assinatura da documentação"}
@@ -661,9 +705,10 @@ function ModalProjetos({
                             .slice(0, 10)
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, documentacaoassinada: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, documentacaoassinada: value });
+                      setInfo({ ...infoHolder, documentacaoassinada: value });
+                    }}
                   />
                   <DateInput
                     label={"Parecer de acesso"}
@@ -676,9 +721,10 @@ function ModalProjetos({
                             .slice(0, 10)
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, pareceracesso: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, pareceracesso: value });
+                      setInfo({ ...infoHolder, pareceracesso: value });
+                    }}
                   />
                   <SelectInput
                     label={"Status do parecer de acesso"}
@@ -722,9 +768,10 @@ function ModalProjetos({
                         value: "NÃO DEFINIDO",
                       },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, statusparecerdeacesso: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, statusparecerdeacesso: value });
+                      setInfo({ ...infoHolder, statusparecerdeacesso: value });
+                    }}
                   />
                   <div className="flex flex-col w-[350px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -736,14 +783,20 @@ function ModalProjetos({
                         checked={
                           infoHolder.diagramaunifilar === "Ok" ? true : false
                         }
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            diagramaunifilar: e.target.checked
+                              ? "Ok"
+                              : undefined,
+                          });
                           setInfo({
                             ...infoHolder,
                             diagramaunifilar: e.target.checked
                               ? "Ok"
                               : undefined,
-                          })
-                        }
+                          });
+                        }}
                         type="checkbox"
                         name="diagramaunifilar"
                         id="diagramaunifilar"
@@ -763,12 +816,16 @@ function ModalProjetos({
                         checked={
                           infoHolder.desenhotelhado === "OK" ? true : false
                         }
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            desenhotelhado: e.target.checked ? "OK" : undefined,
+                          });
                           setInfo({
                             ...infoHolder,
                             desenhotelhado: e.target.checked ? "OK" : undefined,
-                          })
-                        }
+                          });
+                        }}
                         type="checkbox"
                         name="desenhotelhado"
                         id="desenhotelhado"
@@ -804,9 +861,10 @@ function ModalProjetos({
                             .slice(0, 10)
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, pedidovistoria: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, pedidovistoria: value });
+                      setInfo({ ...infoHolder, pedidovistoria: value });
+                    }}
                   />
                   <SelectInput
                     label={"STATUS DA VISTORIA"}
@@ -824,9 +882,10 @@ function ModalProjetos({
                       },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, statusvistoria: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, statusvistoria: value });
+                      setInfo({ ...infoHolder, statusvistoria: value });
+                    }}
                   />
                   <DateInput
                     label={"DATA TROCA DO MEDIDOR"}
@@ -839,9 +898,10 @@ function ModalProjetos({
                             .slice(0, 10)
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, trocamedidor: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, trocamedidor: value });
+                      setInfo({ ...infoHolder, trocamedidor: value });
+                    }}
                   />
                   <SelectInput
                     label={"STATUS DA TROCA DO MEDIDOR"}
@@ -859,9 +919,10 @@ function ModalProjetos({
                       },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, statustrocamedidor: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, statustrocamedidor: value });
+                      setInfo({ ...infoHolder, statustrocamedidor: value });
+                    }}
                   />
                   <div className="flex flex-col w-[350px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -873,12 +934,16 @@ function ModalProjetos({
                         checked={
                           infoHolder.projetoconcluido === "SIM" ? true : false
                         }
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            projetoconcluido: e.target.checked ? "SIM" : "NÃO",
+                          });
                           setInfo({
                             ...infoHolder,
                             projetoconcluido: e.target.checked ? "SIM" : "NÃO",
-                          })
-                        }
+                          });
+                        }}
                         type="checkbox"
                         name="projetoconcluido"
                         id="projetoconcluido"
@@ -904,9 +969,10 @@ function ModalProjetos({
                       { label: "EMITIDO", value: "EMITIDO" },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, laudo: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, laudo: value });
+                      setInfo({ ...infoHolder, laudo: value });
+                    }}
                   />
                   <div className="flex flex-col w-[350px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -920,14 +986,20 @@ function ModalProjetos({
                             ? true
                             : false
                         }
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            solicitacaoobra: e.target.checked
+                              ? "SOLICITADA"
+                              : undefined,
+                          });
                           setInfo({
                             ...infoHolder,
                             solicitacaoobra: e.target.checked
                               ? "SOLICITADA"
                               : undefined,
-                          })
-                        }
+                          });
+                        }}
                         type="checkbox"
                         name="solicitacaoobra"
                         id="solicitacaoobra"
@@ -948,9 +1020,10 @@ function ModalProjetos({
                             .slice(0, 10)
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, entradanaobra: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, entradanaobra: value });
+                      setInfo({ ...infoHolder, entradanaobra: value });
+                    }}
                   />
                   <DateInput
                     label={"SAIDA DE OBRA"}
@@ -963,9 +1036,10 @@ function ModalProjetos({
                             .slice(0, 10)
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, saidadeobra: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, saidadeobra: value });
+                      setInfo({ ...infoHolder, saidadeobra: value });
+                    }}
                   />
                   <SelectInput
                     label={"EQUIPE RESPONSÁVEL"}
@@ -1042,9 +1116,10 @@ function ModalProjetos({
                         value: "NÃO DEFINIDO",
                       },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, equipeexec: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, equipeexec: value });
+                      setInfo({ ...infoHolder, equipeexec: value });
+                    }}
                   />
                   <div className="flex flex-col w-[350px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -1056,12 +1131,16 @@ function ModalProjetos({
                         checked={
                           infoHolder.checklistobra === "SIM" ? true : false
                         }
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            checklistobra: e.target.checked ? "SIM" : undefined,
+                          });
                           setInfo({
                             ...infoHolder,
                             checklistobra: e.target.checked ? "SIM" : undefined,
-                          })
-                        }
+                          });
+                        }}
                         type="checkbox"
                         name="checklistobra"
                         id="checklistobra"
@@ -1079,12 +1158,16 @@ function ModalProjetos({
                       <input
                         disabled={!editor}
                         checked={infoHolder.trafo === "SIM" ? true : false}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            trafo: e.target.checked ? "SIM" : undefined,
+                          });
                           setInfo({
                             ...infoHolder,
                             trafo: e.target.checked ? "SIM" : undefined,
-                          })
-                        }
+                          });
+                        }}
                         type="checkbox"
                         name="trafo"
                         id="trafo"
@@ -1128,6 +1211,10 @@ function ModalProjetos({
                         value: "NÃO DEFINIDO",
                       },
                     ]}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, statusobra: value });
+                      setInfo({ ...infoHolder, statusobra: value });
+                    }}
                   />
                   <div className="flex flex-col w-[450px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -1137,9 +1224,10 @@ function ModalProjetos({
                       readOnly={!editor}
                       value={infoHolder.obsobra ? infoHolder.obsobra : ""}
                       placeholder={"Observações da obra aqui..."}
-                      onChange={(e) =>
-                        setInfo({ ...infoHolder, obsobra: e.target.value })
-                      }
+                      onChange={(e) => {
+                        setChanges({ ...changes, obsobra: e.target.value });
+                        setInfo({ ...infoHolder, obsobra: e.target.value });
+                      }}
                       className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                     />
                   </div>

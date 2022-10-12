@@ -5,8 +5,8 @@ function Posvenda({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   function getProjects() {
-    axios.get("/api/projects/filteredByStage").then((res) => {
-      setProjects(res.data.posvenda);
+    axios.get("/api/projects/posvenda").then((res) => {
+      setProjects(res.data);
     });
   }
   useEffect(() => {

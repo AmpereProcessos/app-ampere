@@ -50,14 +50,13 @@ function ModalSuprimentos({
   handleUpdates,
 }) {
   const [infoHolder, setInfo] = useState(project);
+  const [changes, setChanges] = useState({});
   const [msg, setMsg] = useState("");
   function handleChanges() {
-    axios
-      .post(`/api/projects/update/${project._id}`, infoHolder)
-      .then((res) => {
-        setMsg("Alterações feitas");
-        handleUpdates(project._id);
-      });
+    axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
+      setMsg("Alterações feitas");
+      handleUpdates(project._id);
+    });
   }
   return (
     <>
@@ -100,17 +99,19 @@ function ModalSuprimentos({
                     label={"Nome do contrato"}
                     value={infoHolder.nomedocontrato}
                     editable={ppsEditor}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, nomedocontrato: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, nomedocontrato: value });
+                      setInfo({ ...infoHolder, nomedocontrato: value });
+                    }}
                   />
                   <TextInput
                     label={"Nome do Projeto"}
                     value={infoHolder.nomedoprojeto}
                     editable={ppsEditor}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, nomedoprojeto: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, nomedoprojeto: value });
+                      setInfo({ ...infoHolder, nomedoprojeto: value });
+                    }}
                   />
                   <TextInput
                     label={"CPF/CNPJ"}
@@ -120,25 +121,28 @@ function ModalSuprimentos({
                         ? formataCPF(infoHolder.cpfcnpj.toString())
                         : "-"
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, cpfcnpj: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, cpfcnpj: value });
+                      setInfo({ ...infoHolder, cpfcnpj: value });
+                    }}
                   />
                   <TextInput
                     label={"Telefone"}
                     editable={ppsEditor}
                     value={infoHolder.telefone ? infoHolder.telefone : "-"}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, telefone: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, telefone: value });
+                      setInfo({ ...infoHolder, telefone: value });
+                    }}
                   />
                   <TextInput
                     label={"Cidade"}
                     editable={ppsEditor}
                     value={infoHolder.cidade ? infoHolder.cidade : "-"}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, cidade: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, cidade: value });
+                      setInfo({ ...infoHolder, cidade: value });
+                    }}
                   />
                   <TextInput
                     label={"CEP"}
@@ -148,25 +152,28 @@ function ModalSuprimentos({
                         ? formataCEP(infoHolder.cep.toString())
                         : "-"
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, cep: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, cep: value });
+                      setInfo({ ...infoHolder, cep: value });
+                    }}
                   />
                   <TextInput
                     label={"Bairro"}
                     editable={ppsEditor}
                     value={infoHolder.bairro ? infoHolder.bairro : ""}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, bairro: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, bairro: value });
+                      setInfo({ ...infoHolder, bairro: value });
+                    }}
                   />
                   <NumberInput
                     label={"Número da residência"}
                     editable={ppsEditor}
                     value={infoHolder.numerores ? infoHolder.numerores : 0}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, numerores: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, numerores: value });
+                      setInfo({ ...infoHolder, numerores: value });
+                    }}
                   />
                   <SelectInput
                     label={"Regional"}
@@ -182,17 +189,19 @@ function ModalSuprimentos({
                         value: "REGIONAL UBERLANDIA",
                       },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, regional: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, regional: value });
+                      setInfo({ ...infoHolder, regional: value });
+                    }}
                   />
                   <TextInput
                     label={"EMAIL"}
                     editable={ppsEditor}
                     value={infoHolder.email ? infoHolder.email : ""}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, email: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, email: value });
+                      setInfo({ ...infoHolder, email: value });
+                    }}
                   />
                   <SelectInput
                     label={"Canal de venda"}
@@ -217,9 +226,10 @@ function ModalSuprimentos({
                       { label: "OUTRO", value: "OUTRO" },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, canalvenda: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, canalvenda: value });
+                      setInfo({ ...infoHolder, canalvenda: value });
+                    }}
                   />
                   <div className="flex">
                     <SelectInput
@@ -234,9 +244,10 @@ function ModalSuprimentos({
                         return { label: vendedor.nome, value: vendedor.nome };
                       })}
                       editable={ppsEditor}
-                      handleChange={(value) =>
-                        setInfo({ ...infoHolder, vendedor: value })
-                      }
+                      handleChange={(value) => {
+                        setChanges({ ...changes, vendedor: value });
+                        setInfo({ ...infoHolder, vendedor: value });
+                      }}
                     />
                     <div className="flex flex-col items-center">
                       <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -263,9 +274,10 @@ function ModalSuprimentos({
                       { label: "RESIDENCIAL", value: "RESIDENCIAL" },
                       { label: "RURAL", value: "RURAL" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, segmento: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, segmento: value });
+                      setInfo({ ...infoHolder, segmento: value });
+                    }}
                   />
                 </div>
               </div>
@@ -282,21 +294,23 @@ function ModalSuprimentos({
                         ? infoHolder.tecnicoresponsavel
                         : ""
                     }
-                    handleChange={(value) =>
+                    handleChange={(value) => {
+                      setChanges({ ...changes, tecnicoresponsavel: value });
                       setInfo({
                         ...infoHolder,
                         tecnicoresponsavel: value,
-                      })
-                    }
+                      });
+                    }}
                   />
 
                   <TextInput
                     label={"Tipo da telha"}
                     editable={ppsEditor}
                     value={infoHolder.tipotelha ? infoHolder.tipotelha : ""}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, tipotelha: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, tipotelha: value });
+                      setInfo({ ...infoHolder, tipotelha: value });
+                    }}
                   />
                 </div>
               </div>
@@ -314,9 +328,10 @@ function ModalSuprimentos({
                         ? infoHolder.nmodulos
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, nmodulos: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, nmodulos: value });
+                      setInfo({ ...infoHolder, nmodulos: value });
+                    }}
                   />
                   <NumberInput
                     unit={"W"}
@@ -328,9 +343,10 @@ function ModalSuprimentos({
                         ? infoHolder.potmodulos
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, potmodulos: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, potmodulos: value });
+                      setInfo({ ...infoHolder, potmodulos: value });
+                    }}
                   />
                   <NumberInput
                     unit={"kWp"}
@@ -342,9 +358,10 @@ function ModalSuprimentos({
                         ? infoHolder.potpico
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, potpico: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, potpico: value });
+                      setInfo({ ...infoHolder, potpico: value });
+                    }}
                   />
                   <SelectInput
                     label={"TOPOLOGIA"}
@@ -360,9 +377,10 @@ function ModalSuprimentos({
                       { label: "OUTROS SERV.", value: "OUTROS SERV." },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, topologia: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, topologia: value });
+                      setInfo({ ...infoHolder, topologia: value });
+                    }}
                   />
                   <TextInput
                     label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
@@ -372,9 +390,10 @@ function ModalSuprimentos({
                         ? infoHolder.qtdepotinversor
                         : ""
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, qtdepotinversor: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, qtdepotinversor: value });
+                      setInfo({ ...infoHolder, qtdepotinversor: value });
+                    }}
                   />
                   <NumberInput
                     tag={"R$"}
@@ -386,9 +405,10 @@ function ModalSuprimentos({
                         ? infoHolder.valorprojeto
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, valorprojeto: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, valorprojeto: value });
+                      setInfo({ ...infoHolder, valorprojeto: value });
+                    }}
                   />
                   <SelectInput
                     label={"INICIAR PROJETO"}
@@ -406,9 +426,10 @@ function ModalSuprimentos({
                       },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, iniciarprojeto: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, iniciarprojeto: value });
+                      setInfo({ ...infoHolder, iniciarprojeto: value });
+                    }}
                   />
                 </div>
               </div>
@@ -428,12 +449,16 @@ function ModalSuprimentos({
                             .slice(0, 10)
                         : 0
                     }
-                    handleChange={(value) =>
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        dataliberacaoparacompra: new Date(value),
+                      });
                       setInfo({
                         ...infoHolder,
                         dataliberacaoparacompra: new Date(value),
-                      })
-                    }
+                      });
+                    }}
                   />
                   <DateInput
                     label={"Data do pagamento"}
@@ -446,12 +471,16 @@ function ModalSuprimentos({
                             .slice(0, 10)
                         : 0
                     }
-                    handleChange={(value) =>
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        datapagamento: new Date(value),
+                      });
                       setInfo({
                         ...infoHolder,
                         datapagamento: new Date(value),
-                      })
-                    }
+                      });
+                    }}
                   />
                   <SelectInput
                     label={"Fornecedor"}
@@ -488,9 +517,10 @@ function ModalSuprimentos({
                         value: "NÃO DEFINIDO",
                       },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, fornecedor: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, fornecedor: value });
+                      setInfo({ ...infoHolder, fornecedor: value });
+                    }}
                   />
                   <SelectInput
                     label={"TIPO DO KIT"}
@@ -515,9 +545,10 @@ function ModalSuprimentos({
                         value: "NÃO DEFINIDO",
                       },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, tipokit: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, tipokit: value });
+                      setInfo({ ...infoHolder, tipokit: value });
+                    }}
                   />
                   <NumberInput
                     tag={"R$"}
@@ -529,9 +560,10 @@ function ModalSuprimentos({
                         ? infoHolder.valordokit
                         : 0
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, valordokit: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, valordokit: value });
+                      setInfo({ ...infoHolder, valordokit: value });
+                    }}
                   />
                   <SelectInput
                     label={"LOCAL DE ENTREGA"}
@@ -547,9 +579,10 @@ function ModalSuprimentos({
                       { label: "SEM RESTRIÇÕES", value: "SEM RESTRIÇÕES" },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, localdeentrega: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, localdeentrega: value });
+                      setInfo({ ...infoHolder, localdeentrega: value });
+                    }}
                   />
                   <TextInput
                     label={"INFORMAÇÕES"}
@@ -559,9 +592,10 @@ function ModalSuprimentos({
                         : ""
                     }
                     editable={editor}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, informacoescompra: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, informacoescompra: value });
+                      setInfo({ ...infoHolder, informacoescompra: value });
+                    }}
                   />
                   <SelectInput
                     label={"STATUS DA ENTREGA"}
@@ -589,9 +623,10 @@ function ModalSuprimentos({
                         value: "NÃO DEFINIDO",
                       },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, statusentrega: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, statusentrega: value });
+                      setInfo({ ...infoHolder, statusentrega: value });
+                    }}
                   />
                 </div>
               </div>
@@ -626,12 +661,13 @@ function ModalSuprimentos({
                         value: "NÃO DEFINIDO",
                       },
                     ]}
-                    handleChange={(value) =>
+                    handleChange={(value) => {
+                      setChanges({ ...changes, statuspagamento: value });
                       setInfo({
                         ...infoHolder,
                         statuspagamento: value,
-                      })
-                    }
+                      });
+                    }}
                   />
                   <SelectInput
                     label={"FORMA DE PAGAMENTO"}
@@ -655,12 +691,13 @@ function ModalSuprimentos({
                         value: "NÃO DEFINIDO",
                       },
                     ]}
-                    handleChange={(value) =>
+                    handleChange={(value) => {
+                      setChanges({ ...changes, formapagamento: value });
                       setInfo({
                         ...infoHolder,
                         formapagamento: value,
-                      })
-                    }
+                      });
+                    }}
                   />
                   <SelectInput
                     label={"EMPRESA A FATURAR"}
@@ -680,9 +717,10 @@ function ModalSuprimentos({
                       { label: "IZAIRA SERVIÇOS", value: "IZAIRA SERVIÇOS" },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, empresafaturar: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, empresafaturar: value });
+                      setInfo({ ...infoHolder, empresafaturar: value });
+                    }}
                   />
                   <TextInput
                     label={"Informações faturamento"}
@@ -692,9 +730,10 @@ function ModalSuprimentos({
                         ? infoHolder.previsaofaturamento
                         : ""
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, previsaofaturamento: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, previsaofaturamento: value });
+                      setInfo({ ...infoHolder, previsaofaturamento: value });
+                    }}
                   />
                   {infoHolder.formapagamento == "FINANCIAMENTO" && (
                     <SelectInput
@@ -749,21 +788,23 @@ function ModalSuprimentos({
                           value: "NÃO DEFINIDO",
                         },
                       ]}
-                      handleChange={(value) =>
+                      handleChange={(value) => {
+                        setChanges({ ...changes, credor: value });
                         setInfo({
                           ...infoHolder,
                           credor: value,
-                        })
-                      }
+                        });
+                      }}
                     />
                   )}
                   <TextInput
                     label={"Pagador"}
                     editable={ppsEditor}
                     value={infoHolder.pagador ? infoHolder.pagador : ""}
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, pagador: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, pagador: value });
+                      setInfo({ ...infoHolder, pagador: value });
+                    }}
                   />
                   <TextInput
                     label={"Contato pagador"}
@@ -773,9 +814,10 @@ function ModalSuprimentos({
                         ? infoHolder.contatopagamento
                         : ""
                     }
-                    handleChange={(value) =>
-                      setInfo({ ...infoHolder, contatopagamento: value })
-                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, contatopagamento: value });
+                      setInfo({ ...infoHolder, contatopagamento: value });
+                    }}
                   />
                 </div>
               </div>

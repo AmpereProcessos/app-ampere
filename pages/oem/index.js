@@ -8,9 +8,7 @@ function OeM({ credentials, setCredentials }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
   function getProjects() {
-    axios
-      .get("/api/projects/filteredByStage")
-      .then((res) => setProjects(res.data.oem));
+    axios.get("/api/projects/oem").then((res) => setProjects(res.data));
   }
   useEffect(() => {
     if (Object.keys(credentials).length != 0) {

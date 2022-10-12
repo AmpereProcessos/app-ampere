@@ -13,7 +13,7 @@ import { BiSupport } from "react-icons/bi";
 import { SiCashapp } from "react-icons/si";
 import Link from "next/link";
 import { useRouter } from "next/router";
-function Sidebar({ sidebarVisible }) {
+function Sidebar({ credentials }) {
   const router = useRouter();
   if (
     router.pathname.includes("pdf") ||
@@ -62,44 +62,76 @@ function Sidebar({ sidebarVisible }) {
           </div>
           <div className="mt-6">
             <h2 className="text-sm text-gray-500">SETORES</h2>
-            <Link href="/comercial">
-              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                <SiCashapp style={{ color: "#15599a", fontSize: "20px" }} />
-                <p className="pl-3 text-gray-600">Comercial</p>
-              </div>
-            </Link>
-            <Link href="/suprimentos">
-              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                <FaShoppingCart
-                  style={{ color: "#15599a", fontSize: "20px" }}
-                />
-                <p className="pl-3 text-gray-600">Suprimentos</p>
-              </div>
-            </Link>
-            <Link href="/projetos">
-              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                <MdEngineering style={{ color: "#15599a", fontSize: "20px" }} />
-                <p className="pl-3 text-gray-600">Projetos</p>
-              </div>
-            </Link>
-            <Link href="/obras">
-              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                <FaTools style={{ color: "#15599a", fontSize: "20px" }} />
-                <p className="pl-3 text-gray-600">Obras</p>
-              </div>
-            </Link>
-            <Link href="/oem">
-              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                <FaSolarPanel style={{ color: "#15599a", fontSize: "20px" }} />
-                <p className="pl-3 text-gray-600">O&M</p>
-              </div>
-            </Link>
-            <Link href="/posvenda">
-              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                <BiSupport style={{ color: "#15599a", fontSize: "20px" }} />
-                <p className="pl-3 text-gray-600">Pós-Venda</p>
-              </div>
-            </Link>
+            {credentials.accessibleRoutes != undefined
+              ? credentials?.accessibleRoutes.includes("PPS") && (
+                  <Link href="/comercial">
+                    <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <SiCashapp
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-gray-600">Comercial</p>
+                    </div>
+                  </Link>
+                )
+              : false}
+            {credentials.accessibleRoutes != undefined
+              ? credentials?.accessibleRoutes.includes("Suprimentos") && (
+                  <Link href="/suprimentos">
+                    <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <FaShoppingCart
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-gray-600">Suprimentos</p>
+                    </div>
+                  </Link>
+                )
+              : false}
+            {credentials.accessibleRoutes != undefined
+              ? credentials?.accessibleRoutes.includes("Projetos") && (
+                  <Link href="/projetos">
+                    <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <MdEngineering
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-gray-600">Projetos</p>
+                    </div>
+                  </Link>
+                )
+              : false}
+            {credentials.accessibleRoutes != undefined
+              ? credentials?.accessibleRoutes.includes("Obras") && (
+                  <Link href="/obras">
+                    <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <FaTools style={{ color: "#15599a", fontSize: "20px" }} />
+                      <p className="pl-3 text-gray-600">Obras</p>
+                    </div>
+                  </Link>
+                )
+              : false}
+            {credentials.accessibleRoutes != undefined
+              ? credentials?.accessibleRoutes.includes("O&M") && (
+                  <Link href="/oem">
+                    <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <FaSolarPanel
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-gray-600">O&M</p>
+                    </div>
+                  </Link>
+                )
+              : false}
+            {credentials.accessibleRoutes != undefined
+              ? credentials?.accessibleRoutes.includes("Pós-Venda") && (
+                  <Link href="/posvenda">
+                    <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <BiSupport
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-gray-600">Pós-Venda</p>
+                    </div>
+                  </Link>
+                )
+              : false}
           </div>
           <div className="mt-6">
             <h2 className="text-sm text-gray-500">OUTROS</h2>

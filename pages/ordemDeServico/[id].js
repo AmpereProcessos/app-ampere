@@ -159,8 +159,10 @@ function OSInfo({ info }) {
                 readOnly={false}
                 className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                 placeholder={"Informações de material a levar..."}
-                value={kitInfo}
-                onChange={(e) => setKitInfo(e.target.value)}
+                value={osInfo.estruturafaltando ? osInfo.estruturafaltando : ""}
+                onChange={(e) =>
+                  setosInfo({ ...osInfo, estruturafaltando: e.target.value })
+                }
               />
             </div>
             <div className="flex flex-col w-[450px] self-center mt-2 items-center">
@@ -169,12 +171,10 @@ function OSInfo({ info }) {
               </span>
               <textarea
                 readOnly={false}
-                value={osInfo.estruturafaltando ? osInfo.estruturafaltando : ""}
+                value={kitInfo}
                 placeholder={"Informações do kit solar"}
                 className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                onChange={(e) =>
-                  setosInfo({ ...osInfo, estruturafaltando: e.target.value })
-                }
+                onChange={(e) => setKitInfo(e.target.value)}
               />
             </div>
           </div>

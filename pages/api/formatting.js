@@ -4518,6 +4518,11 @@ export default async function handler(req, res) {
         contatoPagador: project.contatopagamento,
         retorno: project.retorno,
       },
+      faturamento: {
+        previsaoFaturamento: project.previsaofaturamento, // adicionar empresa e cnpj de faturamento
+        cnpjFaturamento: project.cnpjfaturar,
+        empresaFaturamento: project.empresafaturar,
+      },
       compra: {
         statusLiberacao: project.statusliberacaocredito,
         dataLiberacao: project.dataliberacaoparacompra, // formatar como data
@@ -4529,7 +4534,6 @@ export default async function handler(req, res) {
         previsaoEntrega: project.previsaoentrega, // formatar como data
         localEntrega: project.localdeentrega,
         informacoes: project.informacoescompra,
-        previsaoFaturamento: project.previsaofaturamento, // adicionar empresa e cnpj de faturamento
         previsaoNotaFiscal: project.previsaonotafiscal,
         rastreio: project.rastreiooutransportadora,
         statusEntrega: project.statusentrega,
@@ -4557,7 +4561,7 @@ export default async function handler(req, res) {
         dataLiberacaoDocumentacao: project.dataliberacaodocumentacao, // formatar como data
         dataAssDocumentacao: project.documentacaoassinada, // formatar como data
         dataParecerDeAcesso: project.pareceracesso, // formatar como data
-        statusDoParecerDeAcesso: statusparecerdeacesso,
+        statusDoParecerDeAcesso: project.statusparecerdeacesso,
         diagramaUnifilar: project.diagramaunifilar,
         desenhoTelhado: project.desenhotelhado,
         mapaDeMicro: project.mapademicro,
@@ -4576,11 +4580,11 @@ export default async function handler(req, res) {
       },
       obra: {
         laudo: project.laudo,
-        observacoes: project.obsobra,
+        observacoes: project.obsobra, // possibilidade de substituir \n por /, e quebrar textp em pontos
         statusSolicitacao: project.solicitacaoobra,
         entrada: project.entradanaobra, // formatar como data
         saida: project.saidadeobra, // formatar como data.
-        statusDaObra: statusobra,
+        statusDaObra: project.statusobra,
         equipeResp: project.equipeexec,
         checklist: project.checklist,
         trafo: project.trafo,
@@ -4605,7 +4609,7 @@ export default async function handler(req, res) {
         energiaInjetada: fixUsinaLigada(project.energiainjetada),
       },
       app: {
-        data: appcelular,
+        data: project.appcelular,
         login: project.loginapp,
         senha: project.senhaapp,
       },

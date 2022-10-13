@@ -13,7 +13,7 @@ function OSInfo({ info }) {
   const [openingDate, setOpeningDate] = useState(
     new Date().toISOString().slice(0, 10)
   );
-  const [modeloModulo, setModeloModulo] = useState("");
+  const [kitInfo, setKitInfo] = useState("");
   const [urgency, setUrgency] = useState("NÃO DEFINIDO");
   return (
     <>
@@ -23,7 +23,7 @@ function OSInfo({ info }) {
             info={osInfo}
             openingDate={openingDate}
             urgency={urgency}
-            modeloModulo={modeloModulo}
+            kitInfo={kitInfo}
           />
         </>
       ) : (
@@ -103,11 +103,12 @@ function OSInfo({ info }) {
                   setosInfo({ ...osInfo, nmodulos: value })
                 }
               />
-              <TextInput
-                label={"MODELO DOS MÓDULOS"}
-                value={modeloModulo}
-                editable={true}
-                handleChange={(value) => setModeloModulo(value)}
+              <NumberInput
+                label={"POTÊNCIA DOS MÓDULOS"}
+                value={osInfo.potmodulos}
+                handleChange={(value) =>
+                  setosInfo({ ...osInfo, potmodulos: value })
+                }
               />
               <TextInput
                 label={"QTDE CABO"}
@@ -138,7 +139,7 @@ function OSInfo({ info }) {
           <div className="flex flex-wrap justify-center gap-x-2 p-3 border border-gray-200 mt-2 shadow-lg">
             <div className="flex flex-col w-[450px] self-center mt-2 items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
-                OBSERVAÇÕES
+                OBSERVAÇÕES DA OBRA
               </span>
               <textarea
                 readOnly={false}
@@ -152,12 +153,24 @@ function OSInfo({ info }) {
             </div>
             <div className="flex flex-col w-[450px] self-center mt-2 items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
+                MATERIAL A LEVAR
+              </span>
+              <textarea
+                readOnly={false}
+                className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                placeholder={"Informações de material a levar..."}
+                value={kitInfo}
+                onChange={(e) => setKitInfo(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
                 KIT SOLAR
               </span>
               <textarea
                 readOnly={false}
                 value={osInfo.estruturafaltando ? osInfo.estruturafaltando : ""}
-                placeholder={"Observações do kit solar aqui..."}
+                placeholder={"Informações do kit solar"}
                 className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                 onChange={(e) =>
                   setosInfo({ ...osInfo, estruturafaltando: e.target.value })

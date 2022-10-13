@@ -13,6 +13,7 @@ function OSInfo({ info }) {
   const [openingDate, setOpeningDate] = useState(
     new Date().toISOString().slice(0, 10)
   );
+  const [modeloModulo, setModeloModulo] = useState("");
   const [urgency, setUrgency] = useState("NÃO DEFINIDO");
   return (
     <>
@@ -22,6 +23,7 @@ function OSInfo({ info }) {
             info={osInfo}
             openingDate={openingDate}
             urgency={urgency}
+            modeloModulo={modeloModulo}
           />
         </>
       ) : (
@@ -36,84 +38,102 @@ function OSInfo({ info }) {
               GERAÇÃO DE OS
             </h1>
           </div>
-          <div className="flex justify-center flex-wrap p-3 border border-gray-200 shadow-lg">
-            <TextInput
-              label={"NOME"}
-              value={osInfo.nomedocontrato}
-              editable={false}
-            />
-            <TextInput
-              label={"LOGRADOURO"}
-              value={osInfo.logradouro}
-              editable={true}
-              handleChange={(value) =>
-                setosInfo({ ...osInfo, logradouro: value })
-              }
-            />
-            <TextInput
-              label={"BAIRRO"}
-              editable={true}
-              value={osInfo.bairro}
-              handleChange={(value) => setosInfo({ ...osInfo, bairro: value })}
-            />
-            <TextInput
-              label={"NÚMERO"}
-              editable={true}
-              value={osInfo.numerores}
-              handleChange={(value) =>
-                setosInfo({ ...osInfo, numerores: value })
-              }
-            />
+          <div className="flex flex-col justify-center flex-wrap p-3 border border-gray-200 shadow-lg">
+            <h1 className="text-center font-bold font-raleway text-[#15599a]">
+              INFORMAÇÕES DO CLIENTE
+            </h1>
+            <div className="flex flex-wrap justify-center">
+              <TextInput
+                label={"NOME"}
+                value={osInfo.nomedocontrato}
+                editable={false}
+              />
+              <TextInput
+                label={"LOGRADOURO"}
+                value={osInfo.logradouro}
+                editable={true}
+                handleChange={(value) =>
+                  setosInfo({ ...osInfo, logradouro: value })
+                }
+              />
+              <TextInput
+                label={"BAIRRO"}
+                editable={true}
+                value={osInfo.bairro}
+                handleChange={(value) =>
+                  setosInfo({ ...osInfo, bairro: value })
+                }
+              />
+              <TextInput
+                label={"NÚMERO"}
+                editable={true}
+                value={osInfo.numerores}
+                handleChange={(value) =>
+                  setosInfo({ ...osInfo, numerores: value })
+                }
+              />
+            </div>
           </div>
-          <div className="flex justify-center flex-wrap p-3 border border-gray-200 mt-2 shadow-lg">
-            <TextInput
-              label={"TOPOLOGIA"}
-              value={osInfo.topologia ? osInfo.topologia : ""}
-              editable={true}
-              handleChange={(value) =>
-                setosInfo({ ...osInfo, topologia: value })
-              }
-            />
-            <TextInput
-              label={"QTDE E POT INVERSOR"}
-              value={osInfo.qtdepotinversor ? osInfo.qtdepotinversor : ""}
-              editable={true}
-              handleChange={(value) =>
-                setosInfo({ ...osInfo, qtdepotinversor: value })
-              }
-            />
-            <NumberInput
-              label={"Nº DE MÓDULOS"}
-              value={osInfo.nmodulos ? osInfo.nmodulos : 0}
-              editable={true}
-              handleChange={(value) =>
-                setosInfo({ ...osInfo, nmodulos: value })
-              }
-            />
-            <TextInput
-              label={"QTDE CABO"}
-              value={osInfo.qtdecabo}
-              editable={true}
-              handleChange={(value) =>
-                setosInfo({ ...osInfo, qtdecabo: value })
-              }
-            />
-            <TextInput
-              label={"TIPO TELHA"}
-              editable={true}
-              value={osInfo.tipotelha}
-              handleChange={(value) =>
-                setosInfo({ ...osInfo, tipotelha: value })
-              }
-            />
-            <TextInput
-              label={"TIPO ESTRUTURA"}
-              editable={true}
-              value={osInfo.tipoestrutura}
-              handleChange={(value) =>
-                setosInfo({ ...osInfo, tipoestrutura: value })
-              }
-            />
+          <div className="flex flex-col p-3 border border-gray-200 mt-2 shadow-lg">
+            <h1 className="text-center font-bold font-raleway text-[#15599a]">
+              INFORMAÇÕES Da INSTALAÇÃO
+            </h1>
+            <div className="flex flex-wrap justify-center">
+              <TextInput
+                label={"TOPOLOGIA"}
+                value={osInfo.topologia ? osInfo.topologia : ""}
+                editable={true}
+                handleChange={(value) =>
+                  setosInfo({ ...osInfo, topologia: value })
+                }
+              />
+              <TextInput
+                label={"QTDE E POT INVERSOR"}
+                value={osInfo.qtdepotinversor ? osInfo.qtdepotinversor : ""}
+                editable={true}
+                handleChange={(value) =>
+                  setosInfo({ ...osInfo, qtdepotinversor: value })
+                }
+              />
+              <NumberInput
+                label={"Nº DE MÓDULOS"}
+                value={osInfo.nmodulos ? osInfo.nmodulos : 0}
+                editable={true}
+                handleChange={(value) =>
+                  setosInfo({ ...osInfo, nmodulos: value })
+                }
+              />
+              <TextInput
+                label={"MODELO DOS MÓDULOS"}
+                value={modeloModulo}
+                editable={true}
+                handleChange={(value) => setModeloModulo(value)}
+              />
+              <TextInput
+                label={"QTDE CABO"}
+                value={osInfo.qtdecabo}
+                editable={true}
+                handleChange={(value) =>
+                  setosInfo({ ...osInfo, qtdecabo: value })
+                }
+              />
+              <TextInput
+                label={"TIPO TELHA"}
+                editable={true}
+                value={osInfo.tipotelha}
+                handleChange={(value) =>
+                  setosInfo({ ...osInfo, tipotelha: value })
+                }
+              />
+              <TextInput
+                label={"TIPO ESTRUTURA"}
+                editable={true}
+                value={osInfo.tipoestrutura}
+                handleChange={(value) =>
+                  setosInfo({ ...osInfo, tipoestrutura: value })
+                }
+              />
+            </div>
           </div>
           <div className="flex flex-wrap justify-center gap-x-2 p-3 border border-gray-200 mt-2 shadow-lg">
             <div className="flex flex-col w-[450px] self-center mt-2 items-center">

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Assinatura from "../utils/assinatura.jpg";
 import Logo from "../utils/whitelogo.png";
-function ServiceOrderPDF({ info, openingDate, urgency }) {
+function ServiceOrderPDF({ info, openingDate, urgency, modeloModulo }) {
   return (
     <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
       <h1 className="text-center font-bold text-xl mb-6">ORDEM DE SERVIÇO</h1>
@@ -129,7 +129,7 @@ function ServiceOrderPDF({ info, openingDate, urgency }) {
                 MODELO MÓDULO
               </p>
               <p className="text-xs col-span-3 w-48 text-center border border-black border-t-0">
-                -
+                {modeloModulo}
               </p>
             </div>
             <div className="grid grid-rows-2 row-span-3">

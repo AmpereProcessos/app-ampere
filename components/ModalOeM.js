@@ -93,7 +93,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <TextInput
                     label={"Nome do contrato"}
                     value={infoHolder.nomedocontrato}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, nomedocontrato: value })
                     }
@@ -101,14 +101,14 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <TextInput
                     label={"Nome do Projeto"}
                     value={infoHolder.nomedoprojeto}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, nomedoprojeto: value })
                     }
                   />
                   <TextInput
                     label={"CPF/CNPJ"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.cpfcnpj
                         ? formataCPF(infoHolder.cpfcnpj.toString())
@@ -120,7 +120,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"Telefone"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.telefone ? infoHolder.telefone : "-"}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, telefone: value })
@@ -128,7 +128,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"Cidade"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.cidade ? infoHolder.cidade : "-"}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, cidade: value })
@@ -136,7 +136,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"CEP"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.cep
                         ? formataCEP(infoHolder.cep.toString())
@@ -148,7 +148,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"Bairro"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.bairro ? infoHolder.bairro : ""}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, bairro: value })
@@ -156,7 +156,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <NumberInput
                     label={"Número da residência"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.numerores ? infoHolder.numerores : 0}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, numerores: value })
@@ -164,7 +164,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <SelectInput
                     label={"Regional"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.regional}
                     options={[
                       {
@@ -182,7 +182,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"EMAIL"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.email ? infoHolder.email : ""}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, email: value })
@@ -196,7 +196,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.canalvenda
                         : "NÃO DEFINIDO"
                     }
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "EVENTO", value: "EVENTO" },
                       {
@@ -227,7 +227,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       options={vendedores.map((vendedor) => {
                         return { label: vendedor.nome, value: vendedor.nome };
                       })}
-                      editable={editor}
+                      editable={false}
                       handleChange={(value) =>
                         setInfo({ ...infoHolder, vendedor: value })
                       }
@@ -250,7 +250,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <SelectInput
                     label={"SEGMENTO"}
                     value={infoHolder.segmento}
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "COMERCIAL", value: "COMERCIAL" },
                       { label: "INDUSTRIAL", value: "INDUSTRIAL" },
@@ -303,6 +303,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <TextInput
                     label={"LOGIN NO APP"}
                     value={infoHolder.loginapp}
+                    normalCase={true}
                     editable={editor}
                     handleChange={(value) =>
                       setInfo({ ...infoHolder, loginapp: value })

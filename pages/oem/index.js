@@ -11,11 +11,13 @@ function OeM({ credentials, setCredentials }) {
     axios.get("/api/projects/oem").then((res) => setProjects(res.data));
   }
   useEffect(() => {
-    if (Object.keys(credentials).length != 0) {
-      if (credentials.accessibleRoutes.includes("O&M")) {
-        getProjects();
+    if (Object.keys(credentials).length == 0) {
+      var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
+      if (storedCredentials == null) {
+        router.push("/auth/authHome");
       } else {
-        router.push("/");
+        setCredentials(storedCredentials);
+        getProjects();
       }
     }
   }, []);

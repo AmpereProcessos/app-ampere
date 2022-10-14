@@ -53,8 +53,28 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
       handleUpdates(project._id);
     });
   }
-  console.log(infoHolder.qtdeDiasObraDeRede);
-  console.log("changes", changes);
+  function getParecerWarning(date1, date2) {
+    var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    if (diffDays > 110) {
+      return {
+        text: "PARECER COM >110 DIAS",
+        style: "text-red-600 border-2 border-red-600",
+      };
+    } else if (diffDays > 105) {
+      return {
+        text: "PARECER COM >105 DIAS",
+        style: "text-orange-300 border-2 border-orange-300",
+      };
+    } else if (diffDays > 90) {
+      return {
+        text: "PARECER COM >90 DIAS",
+        style: "text-blue-300 border-2 border-blue-300",
+      };
+    } else {
+      return "border border-gray-200";
+    }
+  }
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -69,6 +89,24 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   #{infoHolder.codprojetosvb}
                 </p>
               )}
+              {infoHolder.pareceracesso != undefined &&
+                infoHolder.statusvistoria != "REALIZADA" && (
+                  <div
+                    className={`p-1 text-xs font-bold italic ${
+                      getParecerWarning(
+                        new Date(infoHolder.pareceracesso),
+                        new Date()
+                      ).style
+                    }`}
+                  >
+                    {
+                      getParecerWarning(
+                        new Date(infoHolder.pareceracesso),
+                        new Date()
+                      ).text
+                    }
+                  </div>
+                )}
               <div className="flex gap-x-2">
                 {msg && <p className="text-sm italic text-green-400">{msg}</p>}
                 <button

@@ -7,6 +7,7 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
+import Link from "next/link";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -52,6 +53,8 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
       handleUpdates(project._id);
     });
   }
+  console.log(infoHolder.qtdeDiasObraDeRede);
+  console.log("changes", changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -165,8 +168,8 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                     editable={false}
                     value={infoHolder.numerores ? infoHolder.numerores : 0}
                     handleChange={(value) => {
-                      setChanges({ ...changes, numerores: value });
-                      setInfo({ ...infoHolder, numerores: value });
+                      setChanges({ ...changes, numerores: Number(value) });
+                      setInfo({ ...infoHolder, numerores: Number(value) });
                     }}
                   />
                   <SelectInput
@@ -335,8 +338,14 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                           : 0
                       }
                       handleChange={(value) => {
-                        setChanges({ ...changes, quantdistribuicoes: value });
-                        setInfo({ ...infoHolder, quantdistribuicoes: value });
+                        setChanges({
+                          ...changes,
+                          quantdistribuicoes: Number(value),
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          quantdistribuicoes: Number(value),
+                        });
                       }}
                     />
                   )}
@@ -550,8 +559,8 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, nmodulos: value });
-                      setInfo({ ...infoHolder, nmodulos: value });
+                      setChanges({ ...changes, nmodulos: Number(value) });
+                      setInfo({ ...infoHolder, nmodulos: Number(value) });
                     }}
                   />
                   <NumberInput
@@ -565,8 +574,8 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, potmodulos: value });
-                      setInfo({ ...infoHolder, potmodulos: value });
+                      setChanges({ ...changes, potmodulos: Number(value) });
+                      setInfo({ ...infoHolder, potmodulos: Number(value) });
                     }}
                   />
                   <NumberInput
@@ -580,8 +589,8 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, potpico: value });
-                      setInfo({ ...infoHolder, potpico: value });
+                      setChanges({ ...changes, potpico: Number(value) });
+                      setInfo({ ...infoHolder, potpico: Number(value) });
                     }}
                   />
                   <SelectInput
@@ -627,8 +636,8 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, valorprojeto: value });
-                      setInfo({ ...infoHolder, valorprojeto: value });
+                      setChanges({ ...changes, valorprojeto: Number(value) });
+                      setInfo({ ...infoHolder, valorprojeto: Number(value) });
                     }}
                   />
                   <SelectInput
@@ -744,6 +753,10 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         value: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
                       },
                       {
+                        label: "PARECER DE ACESSO COM OBRAS",
+                        value: "PARECER DE ACESSO COM OBRAS",
+                      },
+                      {
                         label: "CANCELADO",
                         value: "CANCELADO",
                       },
@@ -773,6 +786,28 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       setInfo({ ...infoHolder, statusparecerdeacesso: value });
                     }}
                   />
+                  {infoHolder.statusparecerdeacesso ==
+                    "PARECER DE ACESSO COM OBRAS" && (
+                    <NumberInput
+                      label={"QUANTOS DIAS DE OBRA?"}
+                      value={
+                        infoHolder.qtdeDiasObraDeRede != undefined
+                          ? infoHolder.qtdeDiasObraDeRede
+                          : 0
+                      }
+                      editable={editor}
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          qtdeDiasObraDeRede: Number(value),
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          qtdeDiasObraDeRede: Number(value),
+                        });
+                      }}
+                    />
+                  )}
                   <div className="flex flex-col w-[350px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
                       DIAGRAMA UNIFILAR
@@ -924,6 +959,216 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       setInfo({ ...infoHolder, statustrocamedidor: value });
                     }}
                   />
+                  <div className="flex w-full justify-around items-center">
+                    <div className="flex flex-col w-[350px] items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        HOUVE REPROVA (PARECER) ?
+                      </span>
+                      <div className="flex">
+                        <input
+                          disabled={!editor}
+                          checked={
+                            infoHolder.parecerReprovado === "SIM" ? true : false
+                          }
+                          onChange={(e) => {
+                            setChanges({
+                              ...changes,
+                              parecerReprovado: e.target.checked
+                                ? "SIM"
+                                : undefined,
+                            });
+                            setInfo({
+                              ...infoHolder,
+                              parecerReprovado: e.target.checked
+                                ? "SIM"
+                                : undefined,
+                            });
+                          }}
+                          type="checkbox"
+                          name="parecerReprovado"
+                          id="parecerReprovado"
+                        />
+                        <label className="ml-2" htmlFor="parecerReprovado">
+                          SIM
+                        </label>
+                      </div>
+                    </div>
+                    {infoHolder.parecerReprovado == "SIM" && (
+                      <NumberInput
+                        label={"QTDE DE REPROVAS"}
+                        value={
+                          infoHolder.qtdeReprovasParecer
+                            ? infoHolder.qtdeReprovasParecer
+                            : 0
+                        }
+                        editable={editor}
+                        handleChange={(value) => {
+                          setChanges({
+                            ...changes,
+                            qtdeReprovasParecer: Number(value),
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            qtdeReprovasParecer: Number(value),
+                          });
+                        }}
+                      />
+                    )}
+                    {infoHolder.parecerReprovado == "SIM" && (
+                      <div className="flex flex-col grow items-center">
+                        <span className="uppercase font-bold font-raleway text-center text-sm">
+                          MOTIVO DA REPROVA
+                        </span>
+                        <input
+                          className={`text-xs w-full text-center uppercase text-gray-600 outline-none`}
+                          value={
+                            infoHolder.motivoReprovaParecer
+                              ? infoHolder.motivoReprovaParecer
+                              : ""
+                          }
+                          readOnly={!editor}
+                          placeholder={"Informação a preencher..."}
+                          onChange={(e) => {
+                            setChanges({
+                              ...changes,
+                              motivoReprovaParecer: e.target.value,
+                            });
+                            setInfo({
+                              ...infoHolder,
+                              motivoReprovaParecer: e.target.value,
+                            });
+                          }}
+                          type="text"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex w-full justify-around items-center">
+                    <div className="flex flex-col w-[350px] items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        HOUVE REPROVA (VISTORIA) ?
+                      </span>
+                      <div className="flex">
+                        <input
+                          disabled={!editor}
+                          checked={
+                            infoHolder.vistoriaReprovada === "SIM"
+                              ? true
+                              : false
+                          }
+                          onChange={(e) => {
+                            setChanges({
+                              ...changes,
+                              vistoriaReprovada: e.target.checked
+                                ? "SIM"
+                                : undefined,
+                            });
+                            setInfo({
+                              ...infoHolder,
+                              vistoriaReprovada: e.target.checked
+                                ? "SIM"
+                                : undefined,
+                            });
+                          }}
+                          type="checkbox"
+                          name="vistoriaReprovada"
+                          id="vistoriaReprovada"
+                        />
+                        <label className="ml-2" htmlFor="vistoriaReprovada">
+                          SIM
+                        </label>
+                      </div>
+                    </div>
+                    {infoHolder.vistoriaReprovada == "SIM" && (
+                      <NumberInput
+                        label={"QTDE DE REPROVAS"}
+                        value={
+                          infoHolder.qtdeReprovasVistoria
+                            ? infoHolder.qtdeReprovasVistoria
+                            : 0
+                        }
+                        editable={editor}
+                        handleChange={(value) => {
+                          setChanges({
+                            ...changes,
+                            qtdeReprovasVistoria: Number(value),
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            qtdeReprovasVistoria: Number(value),
+                          });
+                        }}
+                      />
+                    )}
+                    {infoHolder.vistoriaReprovada == "SIM" && (
+                      <div className="flex flex-col grow items-center">
+                        <span className="uppercase font-bold font-raleway text-center text-sm">
+                          MOTIVO DA REPROVA
+                        </span>
+                        <input
+                          className={`text-xs w-full text-center uppercase text-gray-600 outline-none`}
+                          value={
+                            infoHolder.motivoReprovaVistoria
+                              ? infoHolder.motivoReprovaVistoria
+                              : ""
+                          }
+                          readOnly={!editor}
+                          placeholder={"Informação a preencher..."}
+                          onChange={(e) => {
+                            setChanges({
+                              ...changes,
+                              motivoReprovaVistoria: e.target.value,
+                            });
+                            setInfo({
+                              ...infoHolder,
+                              motivoReprovaVistoria: e.target.value,
+                            });
+                          }}
+                          type="text"
+                        />
+                      </div>
+                    )}
+                    {infoHolder.vistoriaReprovada == "SIM" && (
+                      <div className="flex flex-col w-[350px] items-center">
+                        <span className="uppercase font-bold font-raleway text-center text-sm">
+                          EQUIPE DE CAMPO NECESSÁRIA
+                        </span>
+                        <div className="flex">
+                          <input
+                            disabled={!editor}
+                            checked={
+                              infoHolder.equipeDeCampoNecessaria === "SIM"
+                                ? true
+                                : false
+                            }
+                            onChange={(e) => {
+                              setChanges({
+                                ...changes,
+                                equipeDeCampoNecessaria: e.target.checked
+                                  ? "SIM"
+                                  : "NÃO",
+                              });
+                              setInfo({
+                                ...infoHolder,
+                                equipeDeCampoNecessaria: e.target.checked
+                                  ? "SIM"
+                                  : "NÃO",
+                              });
+                            }}
+                            type="checkbox"
+                            name="equipeDeCampoNecessaria"
+                            id="equipeDeCampoNecessaria"
+                          />
+                          <label
+                            className="ml-2"
+                            htmlFor="equipeDeCampoNecessaria"
+                          >
+                            SIM
+                          </label>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <div className="flex flex-col w-[350px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
                       PROJETO CONCLUÍDO
@@ -953,6 +1198,15 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       </label>
                     </div>
                   </div>
+                  {infoHolder.equipeDeCampoNecessaria == "SIM" && (
+                    <div className="flex justify-center">
+                      <Link href={`/ordemDeServico/${project._id}`}>
+                        <button className="p-2 bg-[#fead61] font-bold rounded">
+                          GERAR OS
+                        </button>
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

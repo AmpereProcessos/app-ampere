@@ -60,6 +60,19 @@ function Projetos({ credentials, setCredentials }) {
       }
     }
   }, []);
+  function getBorderColorByParecer(date1, date2) {
+    var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    if (diffDays > 110) {
+      return "border-2 border-red-600";
+    } else if (diffDays > 105) {
+      return "border-2 border-orange-300";
+    } else if (diffDays > 90) {
+      return "border-2 border-blue-300";
+    } else {
+      return "border border-gray-200";
+    }
+  }
   return (
     <div className="p-6 grow">
       <div className="flex justify-between gap-x-2 border-b border-gray-200 p-1">
@@ -149,7 +162,15 @@ function Projetos({ credentials, setCredentials }) {
               setModalProject(project);
             }}
             key={project._id}
-            className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+            className={`w-[250px] lg:w-[450px] cursor-pointer ${
+              project.pareceracesso != undefined &&
+              project.statusvistoria != "REALIZADA"
+                ? getBorderColorByParecer(
+                    new Date(project.pareceracesso),
+                    new Date()
+                  )
+                : "border border-gray-200"
+            }  p-3 hover:bg-blue-100`}
           >
             <div className="flex items-center justify-between">
               <p className="text-xs text-gray-700">{project.nomedocontrato}</p>
@@ -187,9 +208,9 @@ function Projetos({ credentials, setCredentials }) {
                 </p>
               </div>
               <div>
-                <span className="text-xxs">MAPA DE MICRO</span>
+                <span className="text-xxs">DESENHO DO TELHADO</span>
                 <p className="text-xs text-gray-600 text-center">
-                  {project.mapademicro ? project.mapademicro : "-"}
+                  {project.desenhotelhado ? project.desenhotelhado : "-"}
                 </p>
               </div>
             </div>

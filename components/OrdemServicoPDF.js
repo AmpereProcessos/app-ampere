@@ -105,7 +105,7 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
                 KIT SOLAR
               </p>
               <div className="flex items-center justify-center text-xs col-span-3 border border-black border-t-0">
-                {kitInfo && (
+                {kitInfo ? (
                   <div className="text-xs font-bold text-center">
                     {kitInfo
                       ? kitInfo
@@ -113,6 +113,8 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
                           .map((string, index) => <li key={index}>{string}</li>)
                       : false}
                   </div>
+                ) : (
+                  "-"
                 )}
               </div>
             </div>
@@ -133,7 +135,7 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
                 MATERIAL DO ESCRITÓRIO
               </p>
               <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black">
-                {info.estruturafaltando && (
+                {info.estruturafaltando ? (
                   <div className="text-xs font-bold text-center">
                     {info.estruturafaltando
                       ? info.estruturafaltando
@@ -141,6 +143,8 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
                           .map((string, index) => <li key={index}>{string}</li>)
                       : false}
                   </div>
+                ) : (
+                  "-"
                 )}
               </div>
             </div>
@@ -164,7 +168,7 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
         </div>
       </div>
       <div className="border border-black mt-3">
-        <h1 className="text-center  font-bold pt-1">OBSERVAÇÕES DA OBRA</h1>
+        <h1 className="text-center  font-bold pt-1">OBSERVAÇÕES DA OBRA/OS</h1>
         <div className="flex justify-center min-h-[100px] items-center">
           {info.obsobra ? (
             <div

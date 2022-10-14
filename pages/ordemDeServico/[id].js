@@ -29,7 +29,7 @@ function OSInfo({ info }) {
       ) : (
         <div className="flex flex-col p-6 grow bg-[#fff]">
           <div>
-            <Link href={"/obras"}>
+            <Link href={"/"}>
               <button className="self-start p-2 rounded font-bold bg-[#fead61] hover:bg-[#15599a] hover:text-white">
                 VOLTAR
               </button>
@@ -76,7 +76,7 @@ function OSInfo({ info }) {
           </div>
           <div className="flex flex-col p-3 border border-gray-200 mt-2 shadow-lg">
             <h1 className="text-center font-bold font-raleway text-[#15599a]">
-              INFORMAÇÕES Da INSTALAÇÃO
+              INFORMAÇÕES DA INSTALAÇÃO
             </h1>
             <div className="flex flex-wrap justify-center">
               <TextInput
@@ -139,7 +139,7 @@ function OSInfo({ info }) {
           <div className="flex flex-wrap justify-center gap-x-2 p-3 border border-gray-200 mt-2 shadow-lg">
             <div className="flex flex-col w-[450px] self-center mt-2 items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
-                OBSERVAÇÕES DA OBRA
+                OBSERVAÇÕES DA OS
               </span>
               <textarea
                 readOnly={false}

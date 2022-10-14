@@ -13,7 +13,7 @@ function OSInfo({ info }) {
   const [openingDate, setOpeningDate] = useState(
     new Date().toISOString().slice(0, 10)
   );
-  const [kitInfo, setKitInfo] = useState("");
+  const [kitInfo, setKitInfo] = useState(info.kitInfo ? info.kitInfo : "");
   const [urgency, setUrgency] = useState("NÃO DEFINIDO");
   return (
     <>

@@ -628,6 +628,48 @@ function ModalSuprimentos({
                       setInfo({ ...infoHolder, statusentrega: value });
                     }}
                   />
+                  <div className="w-full flex items-center justify-center gap-x-4">
+                    <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        INFORMAÇÕES DO KIT
+                      </span>
+                      <textarea
+                        readOnly={!editor}
+                        value={infoHolder.kitInfo ? infoHolder.kitInfo : ""}
+                        placeholder={"Informações do kit solar..."}
+                        onChange={(e) => {
+                          setChanges({ ...changes, kitInfo: e.target.value });
+                          setInfo({ ...infoHolder, kitInfo: e.target.value });
+                        }}
+                        className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      />
+                    </div>
+                    <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        MATERIAL FALTANTE
+                      </span>
+                      <textarea
+                        readOnly={!editor}
+                        value={
+                          infoHolder.estruturafaltando
+                            ? infoHolder.estruturafaltando
+                            : ""
+                        }
+                        placeholder={"Observações do material faltante..."}
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            estruturafaltando: e.target.value,
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            estruturafaltando: e.target.value,
+                          });
+                        }}
+                        className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

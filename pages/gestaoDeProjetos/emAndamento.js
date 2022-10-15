@@ -3,41 +3,26 @@ import axios from "axios";
 import ProjectList from "../../components/ProjectList";
 import ProjectModal from "../../components/ProjectModal";
 import connectToDatabase from "../../utils/projectsDb";
-function InProgress({ setCredentials, credentials }) {
+function InProgress({ setCredentials, credentials, data }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalProject, setModalProject] = useState({
+    estagio: "",
+    projeto: {},
+  });
   const [InProgressProjects, setProjects] = useState({
-    comercialPhase: [],
-    supplyPhase: [],
-    projectPhase: [],
-    installPhase: [],
+    comercialPhase: data.comercial,
+    supplyPhase: data.suprimentos,
+    projectPhase: data.projetos,
+    installPhase: data.obras,
     suportPhase: [],
   });
-  const [modalProject, setModalProject] = useState({});
-  function handleOpenModal() {
-    setModalIsOpen(true);
-  }
-  function getData() {
-    axios.get("/api/projects/filteredByStage").then((res) =>
-      setProjects({
-        ...InProgressProjects,
-        comercialPhase: res.data.comercial,
-        supplyPhase: res.data.suprimentos,
-        projectPhase: res.data.projetos,
-        installPhase: res.data.obras,
-      })
-    );
-  }
-
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      getData();
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
-      } else {
-        getData();
       }
     }
   }, []);
@@ -46,36 +31,38 @@ function InProgress({ setCredentials, credentials }) {
       <div className="flex flex-col bg-gray-100 grow p-6 w-full">
         <div className="grid lg:grid-cols-4 lg:grid-rows-1 grid-rows-4 grid-cols-1  w-full px-6 py-2 gap-4 mt-5">
           <ProjectList
+            handleOpenModal={() => setModalIsOpen(true)}
             setModalProject={setModalProject}
             title={"Comercial"}
             projects={InProgressProjects.comercialPhase}
-            openModal={handleOpenModal}
           />
           <ProjectList
+            handleOpenModal={() => setModalIsOpen(true)}
             setModalProject={setModalProject}
             projects={InProgressProjects.supplyPhase}
             title={"Suprimentos"}
-            openModal={handleOpenModal}
           />
           <ProjectList
+            handleOpenModal={() => setModalIsOpen(true)}
             setModalProject={setModalProject}
             projects={InProgressProjects.projectPhase}
             title={"Projetos"}
-            openModal={handleOpenModal}
           />
           <ProjectList
+            handleOpenModal={() => setModalIsOpen(true)}
             setModalProject={setModalProject}
             projects={InProgressProjects.installPhase}
             title={"Obras"}
-            openModal={handleOpenModal}
           />
         </div>
+        {modalIsOpen && (
+          <ProjectModal
+            closeModal={() => setModalIsOpen(false)}
+            estagio={modalProject.estagio}
+            project={modalProject.projeto}
+          />
+        )}
       </div>
-      <ProjectModal
-        project={modalProject}
-        open={modalIsOpen}
-        setModalIsOpen={setModalIsOpen}
-      />
     </>
   );
 }
@@ -128,12 +115,11 @@ export async function getServerSideProps(context) {
       },
     ])
     .toArray();
+  comercial = JSON.parse(JSON.stringify(comercial));
+  suprimentos = JSON.parse(JSON.stringify(suprimentos));
+  projetos = JSON.parse(JSON.stringify(projetos));
+  obras = JSON.parse(JSON.stringify(obras));
   return {
-    props: {
-      comercial,
-      suprimentos,
-      projetos,
-      obras,
-    }, // will be passed to the page component as props
+    props: { data: { comercial, suprimentos, projetos, obras } }, // will be passed to the page component as props
   };
 }

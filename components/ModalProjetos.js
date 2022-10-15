@@ -75,6 +75,8 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
       return "border border-gray-200";
     }
   }
+  console.log(infoHolder.parecerReprovado);
+  console.log(changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -405,13 +407,13 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                           ...changes,
                           visitatecnica: e.target.checked
                             ? "REALIZADA"
-                            : undefined,
+                            : "PENDÊNCIA",
                         });
                         setInfo({
                           ...infoHolder,
                           visitatecnica: e.target.checked
                             ? "REALIZADA"
-                            : undefined,
+                            : "PENDÊNCIA",
                         });
                       }}
                       type="checkbox"
@@ -861,13 +863,13 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                             ...changes,
                             diagramaunifilar: e.target.checked
                               ? "Ok"
-                              : undefined,
+                              : "PENDÊNCIA",
                           });
                           setInfo({
                             ...infoHolder,
                             diagramaunifilar: e.target.checked
                               ? "Ok"
-                              : undefined,
+                              : "PENDÊNCIA",
                           });
                         }}
                         type="checkbox"
@@ -892,11 +894,15 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            desenhotelhado: e.target.checked ? "OK" : undefined,
+                            desenhotelhado: e.target.checked
+                              ? "OK"
+                              : "PENDÊNCIA",
                           });
                           setInfo({
                             ...infoHolder,
-                            desenhotelhado: e.target.checked ? "OK" : undefined,
+                            desenhotelhado: e.target.checked
+                              ? "OK"
+                              : "PENDÊNCIA",
                           });
                         }}
                         type="checkbox"
@@ -1013,13 +1019,13 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                               ...changes,
                               parecerReprovado: e.target.checked
                                 ? "SIM"
-                                : undefined,
+                                : "NÃO",
                             });
                             setInfo({
                               ...infoHolder,
                               parecerReprovado: e.target.checked
                                 ? "SIM"
-                                : undefined,
+                                : "NÃO",
                             });
                           }}
                           type="checkbox"
@@ -1099,13 +1105,13 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                               ...changes,
                               vistoriaReprovada: e.target.checked
                                 ? "SIM"
-                                : undefined,
+                                : "NÃO",
                             });
                             setInfo({
                               ...infoHolder,
                               vistoriaReprovada: e.target.checked
                                 ? "SIM"
-                                : undefined,
+                                : "NÃO",
                             });
                           }}
                           type="checkbox"
@@ -1426,11 +1432,11 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            checklistobra: e.target.checked ? "SIM" : undefined,
+                            checklistobra: e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
-                            checklistobra: e.target.checked ? "SIM" : undefined,
+                            checklistobra: e.target.checked ? "SIM" : "NÃO",
                           });
                         }}
                         type="checkbox"
@@ -1453,11 +1459,11 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            trafo: e.target.checked ? "SIM" : undefined,
+                            trafo: e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
-                            trafo: e.target.checked ? "SIM" : undefined,
+                            trafo: e.target.checked ? "SIM" : "NÃO",
                           });
                         }}
                         type="checkbox"

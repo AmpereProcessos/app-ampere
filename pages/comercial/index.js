@@ -18,7 +18,6 @@ function Comercial({ credentials, setCredentials }) {
   const [modalProject, setModalProject] = useState({});
   function getProjects() {
     axios.get("/api/projects/comercial").then((res) => {
-      console.log(res.data);
       setProjects(res.data);
       setFilteredProjects(res.data);
     });

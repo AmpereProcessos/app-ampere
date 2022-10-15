@@ -303,13 +303,13 @@ function ModalComercial({
                           ...changes,
                           visitatecnica: e.target.checked
                             ? "REALIZADA"
-                            : undefined,
+                            : "PENDÊNCIA",
                         });
                         setInfo({
                           ...infoHolder,
                           visitatecnica: e.target.checked
                             ? "REALIZADA"
-                            : undefined,
+                            : "PENDÊNCIA",
                         });
                       }}
                       type="checkbox"
@@ -1406,13 +1406,13 @@ function ModalComercial({
                             ...changes,
                             diagramaunifilar: e.target.checked
                               ? "Ok"
-                              : undefined,
+                              : "PENDÊNCIA",
                           });
                           setInfo({
                             ...infoHolder,
                             diagramaunifilar: e.target.checked
                               ? "Ok"
-                              : undefined,
+                              : "PENDÊNCIA",
                           });
                         }}
                         type="checkbox"
@@ -1437,11 +1437,15 @@ function ModalComercial({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            desenhotelhado: e.target.checked ? "OK" : undefined,
+                            desenhotelhado: e.target.checked
+                              ? "OK"
+                              : "PENDÊNCIA",
                           });
                           setInfo({
                             ...infoHolder,
-                            desenhotelhado: e.target.checked ? "OK" : undefined,
+                            desenhotelhado: e.target.checked
+                              ? "OK"
+                              : "PENDÊNCIA",
                           });
                         }}
                         type="checkbox"
@@ -1699,13 +1703,13 @@ function ModalComercial({
                             ...changes,
                             solicitacaoobra: e.target.checked
                               ? "SOLICITADA"
-                              : undefined,
+                              : "NÃO SOLICITADA",
                           });
                           setInfo({
                             ...infoHolder,
                             solicitacaoobra: e.target.checked
                               ? "SOLICITADA"
-                              : undefined,
+                              : "NÃO SOLICITADA",
                           });
                         }}
                         type="checkbox"
@@ -1848,11 +1852,11 @@ function ModalComercial({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            checklistobra: e.target.checked ? "SIM" : undefined,
+                            checklistobra: e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
-                            checklistobra: e.target.checked ? "SIM" : undefined,
+                            checklistobra: e.target.checked ? "SIM" : "NÃO",
                           });
                         }}
                         type="checkbox"
@@ -1875,11 +1879,11 @@ function ModalComercial({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            trafo: e.target.checked ? "SIM" : undefined,
+                            trafo: e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
-                            trafo: e.target.checked ? "SIM" : undefined,
+                            trafo: e.target.checked ? "SIM" : "NÃO",
                           });
                         }}
                         type="checkbox"

@@ -374,13 +374,13 @@ function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
                             ...changes,
                             solicitacaoobra: e.target.checked
                               ? "SOLICITADA"
-                              : undefined,
+                              : "NÃO SOLICITADA",
                           });
                           setInfo({
                             ...infoHolder,
                             solicitacaoobra: e.target.checked
                               ? "SOLICITADA"
-                              : undefined,
+                              : "NÃO SOLICITADA",
                           });
                         }}
                         type="checkbox"
@@ -539,11 +539,11 @@ function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            checklistobra: e.target.checked ? "SIM" : undefined,
+                            checklistobra: e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
-                            checklistobra: e.target.checked ? "SIM" : undefined,
+                            checklistobra: e.target.checked ? "SIM" : "NÃO",
                           });
                         }}
                         type="checkbox"
@@ -566,11 +566,11 @@ function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            trafo: e.target.checked ? "SIM" : undefined,
+                            trafo: e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
-                            trafo: e.target.checked ? "SIM" : undefined,
+                            trafo: e.target.checked ? "SIM" : "NÃO",
                           });
                         }}
                         type="checkbox"
@@ -813,13 +813,13 @@ function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
                           ...changes,
                           visitatecnica: e.target.checked
                             ? "REALIZADA"
-                            : undefined,
+                            : "PENDÊNCIA",
                         });
                         setInfo({
                           ...infoHolder,
                           visitatecnica: e.target.checked
                             ? "REALIZADA"
-                            : undefined,
+                            : "PENDÊNCIA",
                         });
                       }}
                       type="checkbox"

@@ -1,6 +1,10 @@
 import React from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { VscChromeClose } from "react-icons/vsc";
+import ProjectCardComercial from "./ProjectCardComercial";
+import ProjectCardProjetos from "./ProjectCardProjetos";
+import ProjectCardSuprimentos from "./ProjectCardSuprimentos";
+import ProjectCardObras from "./ProjectCardObras";
 import TextInput from "./TextInput";
 const MODAL_STYLES = {
   position: "fixed",
@@ -8,8 +12,8 @@ const MODAL_STYLES = {
   left: "50%",
   transform: "translate(-50%,-50%)",
   backgroundColor: "#fff",
-  width: "85%",
-  height: "98%",
+  width: "30%",
+  height: "40%",
   borderRadius: "10px",
   padding: "10px",
   zIndex: 1000,
@@ -23,8 +27,7 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function ProjectModal({ open, setModalIsOpen, project }) {
-  if (!open) return null;
+function ProjectModal({ closeModal, project, estagio }) {
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -35,124 +38,15 @@ function ProjectModal({ open, setModalIsOpen, project }) {
                 {project.qtde} - {project.nomedoprojeto}
               </h1>
               <button>
-                <VscChromeClose
-                  onClick={() => setModalIsOpen(false)}
-                  style={{ color: "red" }}
-                />
+                <VscChromeClose onClick={closeModal} style={{ color: "red" }} />
               </button>
             </div>
-            <div className="grid grid-cols-2 grow h-[100%]">
-              <div className="flex flex-col mt-4">
-                <h1 className="font-bold uppercase">
-                  Informações pessoais do cliente
-                </h1>
-                <div className="grid grid-cols-3">
-                  <div className="mt-3">
-                    <div className="flex gap-x-4">
-                      <h2 className="font-bold text-[#15599a] uppercase">
-                        Nome do Contrato
-                      </h2>
-                    </div>
-                    <TextInput value={project.nomedocontrato} />
-                  </div>
-                  <div className="mt-3">
-                    <div className="flex gap-x-4">
-                      <h2 className="font-bold text-[#15599a] uppercase">
-                        Nome do Projeto
-                      </h2>
-                    </div>
-                    <TextInput value={project.nomedoprojeto} />
-                  </div>
-                  <div className="mt-3">
-                    <div className="flex gap-x-4">
-                      <h2 className="font-bold text-[#15599a] uppercase">
-                        Vendedor
-                      </h2>
-                    </div>
-                    <TextInput value={project.vendedor} />
-                  </div>
-                </div>
-                <div className="grid grid-cols-3">
-                  <div className="mt-3">
-                    <div className="flex gap-x-4">
-                      <h2 className="font-bold text-[#15599a] uppercase">
-                        Cidade
-                      </h2>
-                    </div>
-                    <TextInput value={project.cidade} />
-                  </div>
-                  <div className="mt-3">
-                    <div className="flex gap-x-4">
-                      <h2 className="font-bold text-[#15599a] uppercase">
-                        Regional
-                      </h2>
-                    </div>
-                    <TextInput value={project.regional} />
-                  </div>
-                  <div className="mt-3">
-                    <div className="flex gap-x-4">
-                      <h2 className="font-bold text-[#15599a]">CPF/CNPJ</h2>
-                    </div>
-                    <TextInput value={project.cpfcnpj} />
-                  </div>
-                </div>
-                <div className="grid grid-cols-3">
-                  <div className="mt-3">
-                    <div className="flex gap-x-4">
-                      <h2 className="font-bold text-[#15599a] uppercase">
-                        Tipo de serviço
-                      </h2>
-                    </div>
-                    <TextInput value={project.tipodeservico} />
-                  </div>
-                  <div className="mt-3">
-                    <div className="flex gap-x-4">
-                      <h2 className="font-bold text-[#15599a] uppercase">
-                        Telefone
-                      </h2>
-                    </div>
-                    <TextInput value={project.telefone} />
-                  </div>
-                  <div className="mt-3">
-                    <div className="flex gap-x-4">
-                      <h2 className="font-bold text-[#15599a] uppercase">
-                        Data solicitação de contrato
-                      </h2>
-                    </div>
-                    <TextInput value={project.datasolicitacaocontrato} />
-                  </div>
-                </div>
-                <div className="grid grid-cols-3">
-                  <div className="mt-3">
-                    <div className="flex gap-x-4">
-                      <h2 className="font-bold text-[#15599a] uppercase">
-                        Visita Técnica
-                      </h2>
-                    </div>
-                    <TextInput value={project.visitatecnica} />
-                  </div>
-                  <div className="mt-3">
-                    <div className="flex gap-x-4">
-                      <h2 className="font-bold text-[#15599a] uppercase">
-                        Telefone
-                      </h2>
-                    </div>
-                    <TextInput value={project.telefone} />
-                  </div>
-                  <div className="mt-3">
-                    <div className="flex gap-x-4">
-                      <h2 className="font-bold text-[#15599a] uppercase">
-                        Data solicitação de contrato
-                      </h2>
-                    </div>
-                    <TextInput value={project.datasolicitacaocontrato} />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col mt-4">
-                <h1>Olá</h1>
-              </div>
-            </div>
+            {estagio == "Comercial" && <ProjectCardComercial info={project} />}
+            {estagio == "Suprimentos" && (
+              <ProjectCardSuprimentos info={project} />
+            )}
+            {estagio == "Projetos" && <ProjectCardProjetos info={project} />}
+            {estagio == "Obras" && <ProjectCardObras info={project} />}
           </div>
         </div>
       </div>

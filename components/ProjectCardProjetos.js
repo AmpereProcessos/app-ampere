@@ -2,8 +2,8 @@ import React from "react";
 
 function ProjectCardProjetos({ info }) {
   return (
-    <div className=" flex flex-col px-2 h-full w-full gap-y-2 py-2 mt-2">
-      <div className="grid grid-cols-2">
+    <div className=" flex flex-col overflow-y-auto overscroll-y-auto justify-around px-2 h-full w-full gap-y-2">
+      <div className="mt-4 grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1">
         <p className="text-md text-center text-[#15599a] font-bold">
           NOME DO CONTRATO
         </p>
@@ -11,7 +11,7 @@ function ProjectCardProjetos({ info }) {
           {info.nomedocontrato}
         </p>
       </div>
-      <div className="grid items-center grid-cols-2 px-2">
+      <div className="grid items-center grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1 px-2">
         <p className="text-md text-center text-[#15599a] font-bold">
           STATUS DO PARECER
         </p>
@@ -19,7 +19,7 @@ function ProjectCardProjetos({ info }) {
           {info.statusparecerdeacesso}
         </p>
       </div>
-      <div className="grid grid-cols-2 px-2">
+      <div className="grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1 px-2">
         <p className="text-md text-center text-[#15599a] font-bold">
           DIAGRAMA UNIFILAR
         </p>
@@ -27,7 +27,7 @@ function ProjectCardProjetos({ info }) {
           {info.diagramaunifilar}
         </p>
       </div>
-      <div className="grid grid-cols-2 px-2">
+      <div className="grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1 px-2">
         <p className="text-md text-center text-[#15599a] font-bold">
           DESENHO DO TELHADO
         </p>
@@ -35,7 +35,7 @@ function ProjectCardProjetos({ info }) {
           {info.desenhotelhado ? info.desenhotelhado : "-"}
         </p>
       </div>
-      <div className="grid grid-cols-2 px-2">
+      <div className="grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1 px-2">
         <p className="text-md text-center text-[#15599a] font-bold">
           DATA ASS.DOCUMENTAÇÃO
         </p>
@@ -46,7 +46,7 @@ function ProjectCardProjetos({ info }) {
             : "-"}
         </p>
       </div>
-      <div className="grid grid-cols-2 px-2">
+      <div className="grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1 px-2">
         <p className="text-md text-center text-[#15599a] font-bold">
           REPROVA PARECER
         </p>
@@ -62,7 +62,7 @@ function ProjectCardProjetos({ info }) {
           </p>
         </div>
       )}
-      <div className="grid grid-cols-2 px-2">
+      <div className="grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1 px-2">
         <p className="text-md text-center text-[#15599a] font-bold">
           REPROVA VISTORIA
         </p>

@@ -2,7 +2,7 @@ import React from "react";
 
 function ProjectCardObras({ info }) {
   return (
-    <div className=" flex flex-col px-2 h-full w-full gap-y-2 py-2 mt-2">
+    <div className=" flex flex-col overflow-y-auto overscroll-y-auto justify-around px-2 h-full w-full gap-y-2 py-2 mt-2">
       <div className="grid grid-cols-2">
         <p className="text-md text-center text-[#15599a] font-bold">
           NOME DO CONTRATO

@@ -2,7 +2,7 @@ import React from "react";
 
 function ProjectCardSuprimentos({ info }) {
   return (
-    <div className=" flex flex-col justify-around px-2 h-full w-full gap-y-1 py-2 mt-2">
+    <div className=" flex flex-col overflow-y-auto overscroll-y-auto justify-around px-2 h-full w-full gap-y-1 py-2 mt-2">
       <div className="grid grid-cols-2">
         <p className="text-md text-center text-[#15599a] font-bold">
           NOME DO CONTRATO
@@ -37,11 +37,11 @@ function ProjectCardSuprimentos({ info }) {
           {info.statusentrega ? info.statusentrega : "-"}
         </p>
       </div>
-      <div className="flex flex-col px-2">
+      <div className="flex flex-col h-fit px-2">
         <p className="text-md text-center  text-[#15599a] font-bold">
           TRANSPORTADORA
         </p>
-        <p className="text-md text-center text-[#fead61] font-bold">
+        <p className="text-md text-center break-words text-[#fead61] font-bold">
           {info.rastreiooutransportadora ? info.rastreiooutransportadora : "-"}
         </p>
       </div>

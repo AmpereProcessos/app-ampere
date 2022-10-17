@@ -8,7 +8,7 @@ function ProjectCardObras({ info }) {
           NOME DO CONTRATO
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.nomedocontrato}
+          {info.nomeDoContrato}
         </p>
       </div>
       <div className="grid grid-cols-2">
@@ -22,15 +22,15 @@ function ProjectCardObras({ info }) {
           ENTRADA NA OBRA
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.entradanaobra != undefined && info.entradanaobra != "-"
-            ? new Date(info.entradanaobra).toLocaleDateString()
+          {info.obra.entrada != undefined && info.obra.entrada != "-"
+            ? new Date(info.obra.entrada).toLocaleDateString()
             : "-"}
         </p>
       </div>
       <div className="grid grid-cols-2">
         <p className="text-md text-center text-[#15599a] font-bold">LAUDO</p>
         <p className="text-md text-center text-gray-600">
-          {info.laudo ? info.laudo : "-"}
+          {info.obra.laudo ? info.obra.laudo : "-"}
         </p>
       </div>
       <div className="grid grid-cols-2">
@@ -38,17 +38,17 @@ function ProjectCardObras({ info }) {
           AUMENTO DE CARGA
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.aumentodecarga ? info.aumentodecarga : "-"}
+          {info.projeto.aumentoDeCarga ? info.projeto.aumentoDeCarga : "-"}
         </p>
       </div>
-      {info.aumentodecarga == "SIM" && (
+      {info.projeto.aumentoDeCarga == "SIM" && (
         <>
           <div className="grid grid-cols-2">
             <p className="text-md text-center text-[#15599a] font-bold">
               PAGAMENTO DO PADRÃO
             </p>
             <p className="text-md text-center text-[#fead61] font-bold">
-              {info.pagamentodopadrao ? info.pagamentodopadrao : "-"}
+              {info.padrao.respPagamento ? info.padrao.respPagamento : "-"}
             </p>
           </div>
           <div className="grid grid-cols-2">
@@ -56,7 +56,7 @@ function ProjectCardObras({ info }) {
               RESP.INSTALAÇÃO DO PADRÃO
             </p>
             <p className="text-md text-center text-[#fead61] font-bold">
-              {info.respinstalacaopadrao ? info.respinstalacaopadrao : "-"}
+              {info.padrao.respInstalacao ? info.padrao.respInstalacao : "-"}
             </p>
           </div>
         </>

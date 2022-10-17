@@ -26,7 +26,7 @@ function Projetos({ credentials, setCredentials }) {
     var newArr;
     if (parecerFilter.length > 0) {
       newArr = projects.filter((project) =>
-        parecerFilter.includes(project.statusparecerdeacesso)
+        parecerFilter.includes(project.parecer.statusDoParecerDeAcesso)
       );
       setFilteredProjects(newArr);
     } else {
@@ -36,8 +36,8 @@ function Projetos({ credentials, setCredentials }) {
   function getListCumulativePeakPot() {
     var totalSum = 0;
     for (var i = 0; i < filteredProjects.length; i++) {
-      let pot = filteredProjects[i].potpico
-        ? filteredProjects[i].potpico
+      let pot = filteredProjects[i].sistema.potPico
+        ? filteredProjects[i].sistema.potPico
         : null;
       if (isNaN(pot)) {
         totalSum = totalSum;
@@ -173,22 +173,22 @@ function Projetos({ credentials, setCredentials }) {
             }  p-3 hover:bg-blue-100`}
           >
             <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-700">{project.nomedocontrato}</p>
+              <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
               <p className="text-xs text-[#15599a]">#{project.qtde}</p>
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xxs">PARECER DE ACESSO</span>
                 <p className="text-xs text-gray-600">
-                  {project.statusparecerdeacesso
-                    ? project.statusparecerdeacesso
+                  {project.parecer.statusDoParecerDeAcesso
+                    ? project.parecer.statusDoParecerDeAcesso
                     : "-"}
                 </p>
               </div>
               <div className="text-end">
                 <span className="text-xxs text-end">VISTORIA</span>
                 <p className="text-xs text-center text-gray-600">
-                  {project.statusvistoria ? project.statusvistoria : "-"}
+                  {project.vistoria.status ? project.vistoria.status : "-"}
                 </p>
               </div>
             </div>
@@ -197,20 +197,22 @@ function Projetos({ credentials, setCredentials }) {
                 <span className="text-xxs">DIAGRAMA UNIFILAR</span>
                 <p
                   className={`${
-                    project.diagramaunifilar
+                    project.projeto.diagramaUnifilar
                       ? "text-yellow-500"
                       : "text-red-400"
                   } text-xs uppercase`}
                 >
-                  {project.diagramaunifilar
-                    ? project.diagramaunifilar
+                  {project.projeto.diagramaUnifilar
+                    ? project.projeto.diagramaUnifilar
                     : "PENDENTE"}
                 </p>
               </div>
               <div>
                 <span className="text-xxs">DESENHO DO TELHADO</span>
                 <p className="text-xs text-gray-600 text-center">
-                  {project.desenhotelhado ? project.desenhotelhado : "-"}
+                  {project.projeto.desenhoTelhado
+                    ? project.projeto.desenhoTelhado
+                    : "-"}
                 </p>
               </div>
             </div>

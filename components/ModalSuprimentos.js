@@ -65,11 +65,11 @@ function ModalSuprimentos({
           <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
             <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
               <h1 className="text-[#15599a] pl-6  font-bold">
-                {infoHolder.qtde} - {infoHolder.nomedocontrato}
+                {infoHolder.qtde} - {infoHolder.nomeDoContrato}
               </h1>
-              {infoHolder.codprojetosvb && (
+              {infoHolder.codigoSVB && (
                 <p className="text-gray-600 text-sm font-bold">
-                  #{infoHolder.codprojetosvb}
+                  #{infoHolder.codigoSVB}
                 </p>
               )}
               <div className="flex gap-x-2">
@@ -97,38 +97,44 @@ function ModalSuprimentos({
                 <div className="flex gap-2 justify-around flex-wrap">
                   <TextInput
                     label={"Nome do contrato"}
-                    value={infoHolder.nomedocontrato}
-                    editable={ppsEditor}
+                    value={infoHolder.nomeDoContrato}
+                    editable={editor}
                     handleChange={(value) => {
-                      setChanges({ ...changes, nomedocontrato: value });
-                      setInfo({ ...infoHolder, nomedocontrato: value });
+                      setChanges({ ...changes, nomeDoContrato: value });
+                      setInfo({ ...infoHolder, nomeDoContrato: value });
                     }}
                   />
                   <TextInput
                     label={"Nome do Projeto"}
-                    value={infoHolder.nomedoprojeto}
-                    editable={ppsEditor}
+                    value={infoHolder.nomeDoProjeto}
+                    editable={editor}
                     handleChange={(value) => {
-                      setChanges({ ...changes, nomedoprojeto: value });
-                      setInfo({ ...infoHolder, nomedoprojeto: value });
+                      setChanges({ ...changes, nomeDoProjeto: value });
+                      setInfo({
+                        ...infoHolder,
+                        nomeDoProjeto: value,
+                      });
                     }}
                   />
                   <TextInput
                     label={"CPF/CNPJ"}
-                    editable={ppsEditor}
+                    editable={editor}
                     value={
-                      infoHolder.cpfcnpj
-                        ? formataCPF(infoHolder.cpfcnpj.toString())
+                      infoHolder.cpf_cnpj
+                        ? formataCPF(infoHolder.cpf_cnpj.toString())
                         : "-"
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, cpfcnpj: value });
-                      setInfo({ ...infoHolder, cpfcnpj: value });
+                      setChanges({ ...changes, cpf_cnpj: value });
+                      setInfo({
+                        ...infoHolder,
+                        cpf_cnpj: value,
+                      });
                     }}
                   />
                   <TextInput
                     label={"Telefone"}
-                    editable={ppsEditor}
+                    editable={editor}
                     value={infoHolder.telefone ? infoHolder.telefone : "-"}
                     handleChange={(value) => {
                       setChanges({ ...changes, telefone: value });
@@ -137,7 +143,7 @@ function ModalSuprimentos({
                   />
                   <TextInput
                     label={"Cidade"}
-                    editable={ppsEditor}
+                    editable={editor}
                     value={infoHolder.cidade ? infoHolder.cidade : "-"}
                     handleChange={(value) => {
                       setChanges({ ...changes, cidade: value });
@@ -146,7 +152,7 @@ function ModalSuprimentos({
                   />
                   <TextInput
                     label={"CEP"}
-                    editable={ppsEditor}
+                    editable={editor}
                     value={
                       infoHolder.cep
                         ? formataCEP(infoHolder.cep.toString())
@@ -159,7 +165,7 @@ function ModalSuprimentos({
                   />
                   <TextInput
                     label={"Bairro"}
-                    editable={ppsEditor}
+                    editable={editor}
                     value={infoHolder.bairro ? infoHolder.bairro : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, bairro: value });
@@ -168,16 +174,26 @@ function ModalSuprimentos({
                   />
                   <NumberInput
                     label={"Número da residência"}
-                    editable={ppsEditor}
-                    value={infoHolder.numerores ? infoHolder.numerores : 0}
+                    editable={editor}
+                    value={
+                      infoHolder.numeroResidencia
+                        ? infoHolder.numeroResidencia
+                        : 0
+                    }
                     handleChange={(value) => {
-                      setChanges({ ...changes, numerores: value });
-                      setInfo({ ...infoHolder, numerores: value });
+                      setChanges({
+                        ...changes,
+                        numeroResidencia: Number(value),
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        numeroResidencia: Number(value),
+                      });
                     }}
                   />
                   <SelectInput
                     label={"Regional"}
-                    editable={ppsEditor}
+                    editable={editor}
                     value={infoHolder.regional}
                     options={[
                       {
@@ -196,7 +212,7 @@ function ModalSuprimentos({
                   />
                   <TextInput
                     label={"EMAIL"}
-                    editable={ppsEditor}
+                    editable={editor}
                     value={infoHolder.email ? infoHolder.email : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, email: value });
@@ -206,12 +222,12 @@ function ModalSuprimentos({
                   <SelectInput
                     label={"Canal de venda"}
                     value={
-                      infoHolder.canalvenda != undefined &&
-                      infoHolder.canalvenda != "-"
-                        ? infoHolder.canalvenda
+                      infoHolder.canalVenda != undefined &&
+                      infoHolder.canalVenda != "-"
+                        ? infoHolder.canalVenda
                         : "NÃO DEFINIDO"
                     }
-                    editable={ppsEditor}
+                    editable={editor}
                     options={[
                       { label: "EVENTO", value: "EVENTO" },
                       {
@@ -227,8 +243,8 @@ function ModalSuprimentos({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, canalvenda: value });
-                      setInfo({ ...infoHolder, canalvenda: value });
+                      setChanges({ ...changes, canalVenda: value });
+                      setInfo({ ...infoHolder, canalVenda: value });
                     }}
                   />
                   <div className="flex">
@@ -236,38 +252,45 @@ function ModalSuprimentos({
                       label={"VENDEDOR"}
                       value={
                         infoHolder.vendedor != undefined &&
-                        infoHolder.vendedor != "-"
-                          ? infoHolder.vendedor
+                        infoHolder.vendedor.nome != "-"
+                          ? infoHolder.vendedor.nome
                           : "NÃO DEFINIDO"
                       }
                       options={vendedores.map((vendedor) => {
                         return { label: vendedor.nome, value: vendedor.nome };
                       })}
-                      editable={ppsEditor}
+                      editable={editor}
                       handleChange={(value) => {
-                        setChanges({ ...changes, vendedor: value });
-                        setInfo({ ...infoHolder, vendedor: value });
+                        console.log(value);
+                        setChanges({
+                          ...changes,
+                          vendedor: {
+                            ...infoHolder.vendedor,
+                            nome: value,
+                            codigo:
+                              vendedores.filter(
+                                (vendedor) => vendedor.nome == value
+                              )[0].cod || "-",
+                          },
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          vendedor: {
+                            ...infoHolder.vendedor,
+                            nome: value,
+                            codigo:
+                              vendedores.filter(
+                                (vendedor) => vendedor.nome == value
+                              )[0].cod || "-",
+                          },
+                        });
                       }}
                     />
-                    <div className="flex flex-col items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        CÓD.VENDEDOR
-                      </span>
-                      <p>
-                        {vendedores.filter(
-                          (vendedor) => vendedor.nome == infoHolder.vendedor
-                        ).length > 0
-                          ? vendedores.filter(
-                              (vendedor) => vendedor.nome == infoHolder.vendedor
-                            )[0].cod
-                          : "-"}
-                      </p>
-                    </div>
                   </div>
                   <SelectInput
                     label={"SEGMENTO"}
                     value={infoHolder.segmento}
-                    editable={ppsEditor}
+                    editable={editor}
                     options={[
                       { label: "COMERCIAL", value: "COMERCIAL" },
                       { label: "INDUSTRIAL", value: "INDUSTRIAL" },
@@ -288,28 +311,52 @@ function ModalSuprimentos({
                 <div className="flex gap-2 justify-around flex-wrap">
                   <TextInput
                     label={"TÉCNICO RESPONSÁVEL"}
-                    editable={ppsEditor}
+                    editable={editor}
                     value={
-                      infoHolder.tecnicoresponsavel
-                        ? infoHolder.tecnicoresponsavel
+                      infoHolder.visitaTecnica.tecnico
+                        ? infoHolder.visitaTecnica.tecnico
                         : ""
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, tecnicoresponsavel: value });
+                      setChanges({
+                        ...changes,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          tecnico: value,
+                        },
+                      });
                       setInfo({
                         ...infoHolder,
-                        tecnicoresponsavel: value,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          tecnico: value,
+                        },
                       });
                     }}
                   />
-
                   <TextInput
                     label={"Tipo da telha"}
-                    editable={ppsEditor}
-                    value={infoHolder.tipotelha ? infoHolder.tipotelha : ""}
+                    editable={editor}
+                    value={
+                      infoHolder.visitaTecnica?.tipoDaTelha
+                        ? infoHolder.visitaTecnica?.tipoDaTelha
+                        : ""
+                    }
                     handleChange={(value) => {
-                      setChanges({ ...changes, tipotelha: value });
-                      setInfo({ ...infoHolder, tipotelha: value });
+                      setChanges({
+                        ...changes,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          tipoDaTelha: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          tipoDaTelha: value,
+                        },
+                      });
                     }}
                   />
                 </div>
@@ -323,14 +370,26 @@ function ModalSuprimentos({
                     label={"NÚMERO DE MÓDULOS"}
                     editable={editor}
                     value={
-                      infoHolder.nmodulos != undefined &&
-                      infoHolder.nmodulos != "-"
-                        ? infoHolder.nmodulos
+                      infoHolder.sistema?.qtdeModulos != undefined &&
+                      infoHolder.sistema?.qtdeModulos != "-"
+                        ? infoHolder.sistema?.qtdeModulos
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, nmodulos: value });
-                      setInfo({ ...infoHolder, nmodulos: value });
+                      setChanges({
+                        ...changes,
+                        sistema: {
+                          ...changes.sistema,
+                          qtdeModulos: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        sistema: {
+                          ...infoHolder.sistema,
+                          qtdeModulos: Number(value),
+                        },
+                      });
                     }}
                   />
                   <NumberInput
@@ -338,14 +397,26 @@ function ModalSuprimentos({
                     label={"POTÊNCIA DOS MÓDULOS"}
                     editable={editor}
                     value={
-                      infoHolder.potmodulos != undefined &&
-                      infoHolder.potmodulos != "-"
-                        ? infoHolder.potmodulos
+                      infoHolder.sistema?.potModulos != undefined &&
+                      infoHolder.sistema?.potModulos != "-"
+                        ? infoHolder.sistema?.potModulos
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, potmodulos: value });
-                      setInfo({ ...infoHolder, potmodulos: value });
+                      setChanges({
+                        ...changes,
+                        sistema: {
+                          ...changes.sistema,
+                          potModulos: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        sistema: {
+                          ...infoHolder.sistema,
+                          potModulos: Number(value),
+                        },
+                      });
                     }}
                   />
                   <NumberInput
@@ -353,21 +424,33 @@ function ModalSuprimentos({
                     label={"POTÊNCIA PICO"}
                     editable={editor}
                     value={
-                      infoHolder.potpico != undefined &&
-                      infoHolder.potpico != "-"
-                        ? infoHolder.potpico
+                      infoHolder.sistema?.potPico != undefined &&
+                      infoHolder.sistema?.potPico != "-"
+                        ? infoHolder.sistema?.potPico
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, potpico: value });
-                      setInfo({ ...infoHolder, potpico: value });
+                      setChanges({
+                        ...changes,
+                        sistema: {
+                          ...changes.sistema,
+                          potPico: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        sistema: {
+                          ...infoHolder.sistema,
+                          potPico: Number(value),
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"TOPOLOGIA"}
                     value={
-                      infoHolder.topologia
-                        ? infoHolder.topologia
+                      infoHolder.sistema?.topologia
+                        ? infoHolder.sistema?.topologia
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -378,21 +461,45 @@ function ModalSuprimentos({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, topologia: value });
-                      setInfo({ ...infoHolder, topologia: value });
+                      setChanges({
+                        ...changes,
+                        sistema: {
+                          ...changes.sistema,
+                          topologia: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        sistema: {
+                          ...infoHolder.sistema,
+                          topologia: value,
+                        },
+                      });
                     }}
                   />
                   <TextInput
                     label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
                     editable={editor}
                     value={
-                      infoHolder.qtdepotinversor
-                        ? infoHolder.qtdepotinversor
+                      infoHolder.sistema?.inversor
+                        ? infoHolder.sistema?.inversor
                         : ""
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, qtdepotinversor: value });
-                      setInfo({ ...infoHolder, qtdepotinversor: value });
+                      setChanges({
+                        ...changes,
+                        sistema: {
+                          ...changes.sistema,
+                          inversor: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        sistema: {
+                          ...infoHolder.sistema,
+                          inversor: value,
+                        },
+                      });
                     }}
                   />
                   <NumberInput
@@ -400,21 +507,33 @@ function ModalSuprimentos({
                     label={"VALOR DO PROJETO"}
                     editable={editor}
                     value={
-                      infoHolder.valorprojeto != undefined &&
-                      infoHolder.valorprojeto != "-"
-                        ? infoHolder.valorprojeto
+                      infoHolder.sistema?.valorProjeto != undefined &&
+                      infoHolder.sistema?.valorProjeto != "-"
+                        ? infoHolder.sistema?.valorProjeto
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, valorprojeto: value });
-                      setInfo({ ...infoHolder, valorprojeto: value });
+                      setChanges({
+                        ...changes,
+                        sistema: {
+                          ...changes.sistema,
+                          valorProjeto: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        sistema: {
+                          ...changes.sistema,
+                          valorProjeto: Number(value),
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"INICIAR PROJETO"}
                     value={
-                      infoHolder.iniciarprojeto
-                        ? infoHolder.iniciarprojeto
+                      infoHolder.projeto?.iniciar
+                        ? infoHolder.projeto?.iniciar
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -427,8 +546,20 @@ function ModalSuprimentos({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, iniciarprojeto: value });
-                      setInfo({ ...infoHolder, iniciarprojeto: value });
+                      setChanges({
+                        ...changes,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          iniciar: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          iniciar: value,
+                        },
+                      });
                     }}
                   />
                 </div>
@@ -442,9 +573,9 @@ function ModalSuprimentos({
                     label={"Data de liberação p/ compra"}
                     editable={editor}
                     value={
-                      infoHolder.dataliberacaoparacompra != undefined &&
-                      infoHolder.dataliberacaoparacompra != "-"
-                        ? new Date(infoHolder.dataliberacaoparacompra)
+                      infoHolder.compra.dataLiberacao != undefined &&
+                      infoHolder.compra.dataLiberacao != "-"
+                        ? new Date(infoHolder.compra.dataLiberacao)
                             .toISOString()
                             .slice(0, 10)
                         : 0
@@ -452,11 +583,17 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dataliberacaoparacompra: new Date(value),
+                        compra: {
+                          ...infoHolder.compra,
+                          dataLiberacao: new Date(value).toISOString(),
+                        },
                       });
                       setInfo({
                         ...infoHolder,
-                        dataliberacaoparacompra: new Date(value),
+                        compra: {
+                          ...infoHolder.compra,
+                          dataLiberacao: new Date(value).toISOString(),
+                        },
                       });
                     }}
                   />
@@ -464,9 +601,9 @@ function ModalSuprimentos({
                     label={"Data do pagamento"}
                     editable={editor}
                     value={
-                      infoHolder.datapagamento != undefined &&
-                      infoHolder.datapagamento != "-"
-                        ? new Date(infoHolder.datapagamento)
+                      infoHolder.compra?.dataPagamento != undefined &&
+                      infoHolder.compra?.dataPagamento != "-"
+                        ? new Date(infoHolder.compra?.dataPagamento)
                             .toISOString()
                             .slice(0, 10)
                         : 0
@@ -474,11 +611,17 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        datapagamento: new Date(value),
+                        compra: {
+                          ...infoHolder.compra,
+                          dataPagamento: new Date(value).toISOString(),
+                        },
                       });
                       setInfo({
                         ...infoHolder,
-                        datapagamento: new Date(value),
+                        compra: {
+                          ...infoHolder.compra,
+                          dataPagamento: new Date(value).toISOString(),
+                        },
                       });
                     }}
                   />
@@ -486,9 +629,9 @@ function ModalSuprimentos({
                     label={"Fornecedor"}
                     editable={editor}
                     value={
-                      infoHolder.fornecedor != undefined &&
-                      infoHolder.fornecedor != "-"
-                        ? infoHolder.fornecedor
+                      infoHolder.compra?.fornecedor != undefined &&
+                      infoHolder.compra.fornecedor != "-"
+                        ? infoHolder.compra.fornecedor
                         : "NÃO DEFINIDO"
                     }
                     options={[
@@ -518,16 +661,28 @@ function ModalSuprimentos({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, fornecedor: value });
-                      setInfo({ ...infoHolder, fornecedor: value });
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          fornecedor: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          fornecedor: value,
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"TIPO DO KIT"}
                     value={
-                      infoHolder.tipokit != undefined &&
-                      infoHolder.tipokit != "-"
-                        ? infoHolder.tipokit
+                      infoHolder.compra?.tipoDoKit != undefined &&
+                      infoHolder.compra.tipoDoKit != "-"
+                        ? infoHolder.compra.tipoDoKit
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -546,8 +701,20 @@ function ModalSuprimentos({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, tipokit: value });
-                      setInfo({ ...infoHolder, tipokit: value });
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          tipoDoKit: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          tipoDoKit: value,
+                        },
+                      });
                     }}
                   />
                   <NumberInput
@@ -555,22 +722,34 @@ function ModalSuprimentos({
                     label={"VALOR DO KIT"}
                     editable={editor}
                     value={
-                      infoHolder.valordokit != undefined &&
-                      infoHolder.valordokit != "-"
-                        ? infoHolder.valordokit
+                      infoHolder.compra?.valorDoKit != undefined &&
+                      infoHolder.compra?.valorDoKit != "-"
+                        ? infoHolder.compra?.valorDoKit
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, valordokit: value });
-                      setInfo({ ...infoHolder, valordokit: value });
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          valorDoKit: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          valorDoKit: Number(value),
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"LOCAL DE ENTREGA"}
                     value={
-                      infoHolder.localdeentrega != undefined &&
-                      infoHolder.localdeentrega != "-"
-                        ? infoHolder.localdeentrega
+                      infoHolder.compra?.localEntrega != undefined &&
+                      infoHolder.compra?.localEntrega != "-"
+                        ? infoHolder.compra?.localEntrega
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -580,29 +759,109 @@ function ModalSuprimentos({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, localdeentrega: value });
-                      setInfo({ ...infoHolder, localdeentrega: value });
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          localEntrega: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          localEntrega: value,
+                        },
+                      });
                     }}
                   />
                   <TextInput
                     label={"INFORMAÇÕES"}
                     value={
-                      infoHolder.informacoescompra
-                        ? infoHolder.informacoescompra
+                      infoHolder.compra?.informacoes
+                        ? infoHolder.compra?.informacoes
                         : ""
                     }
                     editable={editor}
                     handleChange={(value) => {
-                      setChanges({ ...changes, informacoescompra: value });
-                      setInfo({ ...infoHolder, informacoescompra: value });
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          informacoes: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          informacoes: value,
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
+                    label={"Data do pedido"}
+                    editable={editor}
+                    value={
+                      infoHolder.compra.dataPedido != undefined &&
+                      infoHolder.compra.dataPedido != "-"
+                        ? new Date(infoHolder.compra.dataPedido)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          dataPedido: new Date(value).toISOString(),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          dataPedido: new Date(value).toISOString(),
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
+                    label={"Previsão de entrega"}
+                    editable={editor}
+                    value={
+                      infoHolder.compra.previsaoEntrega != undefined &&
+                      infoHolder.compra.previsaoEntrega != "-"
+                        ? new Date(infoHolder.compra.previsaoEntrega)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          previsaoEntrega: new Date(value).toISOString(),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          previsaoEntrega: new Date(value).toISOString(),
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"STATUS DA ENTREGA"}
                     editable={editor}
                     value={
-                      infoHolder.statusentrega
-                        ? infoHolder.statusentrega
+                      infoHolder.compra?.statusEntrega
+                        ? infoHolder.compra?.statusEntrega
                         : "NÃO DEFINIDO"
                     }
                     options={[
@@ -624,52 +883,22 @@ function ModalSuprimentos({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, statusentrega: value });
-                      setInfo({ ...infoHolder, statusentrega: value });
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          statusEntrega: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          statusEntrega: value,
+                        },
+                      });
                     }}
                   />
-                  <div className="w-full flex items-center justify-center gap-x-4">
-                    <div className="flex flex-col w-[450px] self-center mt-2 items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        INFORMAÇÕES DO KIT
-                      </span>
-                      <textarea
-                        readOnly={!editor}
-                        value={infoHolder.kitInfo ? infoHolder.kitInfo : ""}
-                        placeholder={"Informações do kit solar..."}
-                        onChange={(e) => {
-                          setChanges({ ...changes, kitInfo: e.target.value });
-                          setInfo({ ...infoHolder, kitInfo: e.target.value });
-                        }}
-                        className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                      />
-                    </div>
-                    <div className="flex flex-col w-[450px] self-center mt-2 items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        MATERIAL FALTANTE
-                      </span>
-                      <textarea
-                        readOnly={!editor}
-                        value={
-                          infoHolder.estruturafaltando
-                            ? infoHolder.estruturafaltando
-                            : ""
-                        }
-                        placeholder={"Observações do material faltante..."}
-                        onChange={(e) => {
-                          setChanges({
-                            ...changes,
-                            estruturafaltando: e.target.value,
-                          });
-                          setInfo({
-                            ...infoHolder,
-                            estruturafaltando: e.target.value,
-                          });
-                        }}
-                        className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                      />
-                    </div>
-                  </div>
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
@@ -680,11 +909,11 @@ function ModalSuprimentos({
                   <SelectInput
                     label={"STATUS PAGAMENTO"}
                     value={
-                      infoHolder.statuspagamento
-                        ? infoHolder.statuspagamento
+                      infoHolder.pagamento.status
+                        ? infoHolder.pagamento.status
                         : "NÃO DEFINIDO"
                     }
-                    editable={ppsEditor}
+                    editable={editor}
                     options={[
                       {
                         label: "AGUARDANDO PAGAMENTO",
@@ -704,21 +933,30 @@ function ModalSuprimentos({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, statuspagamento: value });
+                      setChanges({
+                        ...changes,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          status: value,
+                        },
+                      });
                       setInfo({
                         ...infoHolder,
-                        statuspagamento: value,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          status: value,
+                        },
                       });
                     }}
                   />
                   <SelectInput
                     label={"FORMA DE PAGAMENTO"}
                     value={
-                      infoHolder.formapagamento
-                        ? infoHolder.formapagamento
+                      infoHolder.pagamento?.forma
+                        ? infoHolder.pagamento?.forma
                         : "NÃO DEFINIDO"
                     }
-                    editable={ppsEditor}
+                    editable={editor}
                     options={[
                       {
                         label: "CAPITAL PROPRIO",
@@ -734,22 +972,31 @@ function ModalSuprimentos({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, formapagamento: value });
+                      setChanges({
+                        ...changes,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          forma: value,
+                        },
+                      });
                       setInfo({
                         ...infoHolder,
-                        formapagamento: value,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          forma: value,
+                        },
                       });
                     }}
                   />
                   <SelectInput
                     label={"EMPRESA A FATURAR"}
                     value={
-                      infoHolder.empresafaturar != undefined &&
-                      infoHolder.empresafaturar != "-"
-                        ? infoHolder.empresafaturar
+                      infoHolder.faturamento?.empresaFaturamento != undefined &&
+                      infoHolder.faturamento?.empresaFaturamento != "-"
+                        ? infoHolder.faturamento?.empresaFaturamento
                         : "NÃO DEFINIDO"
                     }
-                    editable={ppsEditor}
+                    editable={editor}
                     options={[
                       { label: "AMPERE ENERGIAS", value: "AMPERE ENERGIAS" },
                       {
@@ -760,34 +1007,58 @@ function ModalSuprimentos({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, empresafaturar: value });
-                      setInfo({ ...infoHolder, empresafaturar: value });
+                      setChanges({
+                        ...changes,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          empresaFaturamento: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          empresaFaturamento: value,
+                        },
+                      });
                     }}
                   />
                   <TextInput
                     label={"Informações faturamento"}
-                    editable={ppsEditor}
+                    editable={editor}
                     value={
-                      infoHolder.previsaofaturamento
-                        ? infoHolder.previsaofaturamento
+                      infoHolder.faturamento?.previsaoFaturamento
+                        ? infoHolder.faturamento?.previsaoFaturamento
                         : ""
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, previsaofaturamento: value });
-                      setInfo({ ...infoHolder, previsaofaturamento: value });
+                      setChanges({
+                        ...changes,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          previsaoFaturamento: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          previsaoFaturamento: value,
+                        },
+                      });
                     }}
                   />
-                  {infoHolder.formapagamento == "FINANCIAMENTO" && (
+                  {infoHolder.pagamento?.forma == "FINANCIAMENTO" && (
                     <SelectInput
-                      label={"FORMA DE PAGAMENTO"}
+                      label={"CREDOR"}
                       value={
-                        infoHolder.credor != undefined &&
-                        infoHolder != "-----" &&
-                        infoHolder != "QUAL CREDOR?"
-                          ? infoHolder.credor
+                        infoHolder.pagamento.credor != undefined &&
+                        infoHolder.pagamento.credor != "-----" &&
+                        infoHolder.pagamento.credor != "QUAL CREDOR?"
+                          ? infoHolder.pagamento.credor
                           : "NÃO DEFINIDO"
                       }
-                      editable={ppsEditor}
+                      editable={editor}
                       options={[
                         {
                           label: "BANCO DO BRASIL",
@@ -831,34 +1102,71 @@ function ModalSuprimentos({
                         },
                       ]}
                       handleChange={(value) => {
-                        setChanges({ ...changes, credor: value });
+                        setChanges({
+                          ...changes,
+                          pagamento: {
+                            ...infoHolder.pagamento,
+                            credor: value,
+                          },
+                        });
                         setInfo({
                           ...infoHolder,
-                          credor: value,
+                          pagamento: {
+                            ...infoHolder.pagamento,
+                            credor: value,
+                          },
                         });
                       }}
                     />
                   )}
                   <TextInput
                     label={"Pagador"}
-                    editable={ppsEditor}
-                    value={infoHolder.pagador ? infoHolder.pagador : ""}
+                    editable={editor}
+                    value={
+                      infoHolder.pagamento?.pagador
+                        ? infoHolder.pagamento.pagador
+                        : ""
+                    }
                     handleChange={(value) => {
-                      setChanges({ ...changes, pagador: value });
-                      setInfo({ ...infoHolder, pagador: value });
+                      setChanges({
+                        ...changes,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          pagador: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          pagador: value,
+                        },
+                      });
                     }}
                   />
                   <TextInput
                     label={"Contato pagador"}
-                    editable={ppsEditor}
+                    editable={editor}
                     value={
-                      infoHolder.contatopagamento
-                        ? infoHolder.contatopagamento
+                      infoHolder.pagamento?.contatoPagador
+                        ? infoHolder.pagamento?.contatoPagador
                         : ""
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, contatopagamento: value });
-                      setInfo({ ...infoHolder, contatopagamento: value });
+                      setChanges({
+                        ...changes,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          contatoPagador: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          contatoPagador: value,
+                        },
+                      });
                     }}
                   />
                 </div>

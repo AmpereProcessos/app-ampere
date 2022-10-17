@@ -8,7 +8,7 @@ function ProjectCardComercial({ info }) {
           NOME DO CONTRATO
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.nomedocontrato}
+          {info.nomeDoContrato}
         </p>
       </div>
       <div className="grid grid-cols-2">
@@ -16,7 +16,7 @@ function ProjectCardComercial({ info }) {
           STATUS DO CONTRATO
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.statuscontrato ? info.statuscontrato : "-"}
+          {info.contrato?.status ? info.contrato?.status : "-"}
         </p>
       </div>
       <div className="grid grid-cols-2">
@@ -24,7 +24,7 @@ function ProjectCardComercial({ info }) {
           STATUS DE LIBERAÇÃO DA COMPRA
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.statusliberacaocredito ? info.statusliberacaocredito : "-"}
+          {info.compra.statusLiberacao ? info.compra.statusLiberacao : "-"}
         </p>
       </div>
     </div>

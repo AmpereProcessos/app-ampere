@@ -8,7 +8,9 @@ function OeM({ credentials, setCredentials }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
   function getProjects() {
-    axios.get("/api/projects/oem").then((res) => setProjects(res.data));
+    axios.get("/api/projects/oem").then((res) => {
+      setProjects(res.data);
+    });
   }
   useEffect(() => {
     if (Object.keys(credentials).length == 0) {
@@ -43,7 +45,7 @@ function OeM({ credentials, setCredentials }) {
             className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
           >
             <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-700">{project.nomedocontrato}</p>
+              <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
               <p className="text-xs text-[#15599a]">#{project.qtde}</p>
             </div>
             <div className="flex items-center justify-between">
@@ -56,7 +58,7 @@ function OeM({ credentials, setCredentials }) {
               <div>
                 <span className="text-xxs">TOPOLOGIA</span>
                 <p className="text-xs text-center text-gray-600">
-                  {project.topologia ? project.topologia : "-"}
+                  {project.projeto.topologia ? project.projeto.topologia : "-"}
                 </p>
               </div>
             </div>
@@ -64,15 +66,15 @@ function OeM({ credentials, setCredentials }) {
               <div>
                 <span className="text-xxs">EQUIPE OBRAS</span>
                 <p className="text-xs text-yellow-500">
-                  {project.equipeexec ? project.equipeexec : "-"}
+                  {project.obra.equipeResp ? project.obra.equipeResp : "-"}
                 </p>
               </div>
               <div>
                 <span className="text-xxs">USINA LIGADA</span>
                 <p className="text-xs text-gray-600">
-                  {project.usinaligada != undefined &&
-                  project.usinaligada != "-"
-                    ? project.usinaligada
+                  {project.conferencias.usinaLigada != undefined &&
+                  project.conferencias.usinaLigada.status != "-"
+                    ? project.conferencias.usinaLigada.status
                     : "-"}
                 </p>
               </div>

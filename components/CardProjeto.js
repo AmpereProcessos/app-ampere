@@ -12,7 +12,7 @@ function CardProjeto({ info, handleOpenModal, setModalProject, estagio }) {
       <div>
         <h1 className="font-bold text-sm text-zinc-700">
           <strong className="text-[#15599a]">{info.qtde}</strong> -{" "}
-          {info.nomedoprojeto}
+          {info.nomeDoProjeto}
         </h1>
       </div>
     </div>

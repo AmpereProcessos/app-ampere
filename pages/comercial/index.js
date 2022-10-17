@@ -30,16 +30,16 @@ function Comercial({ credentials, setCredentials }) {
     ) {
       newArr = projects.filter(
         (project) =>
-          filters.pagamentoFilter.includes(project.statuspagamento) &&
-          filters.contratoFilter.includes(project.statuscontrato)
+          filters.pagamentoFilter.includes(project.pagamento.status) &&
+          filters.contratoFilter.includes(project.contrato.status)
       );
     } else if (filters.pagamentoFilter.length > 0) {
       newArr = projects.filter((project) =>
-        filters.pagamentoFilter.includes(project.statuspagamento)
+        filters.pagamentoFilter.includes(project.pagamento.status)
       );
     } else if (filters.contratoFilter.length > 0) {
       newArr = projects.filter((project) =>
-        filters.contratoFilter.includes(project.statuscontrato)
+        filters.contratoFilter.includes(project.contrato.status)
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -79,8 +79,8 @@ function Comercial({ credentials, setCredentials }) {
   function getListCumulativePeakPot() {
     var totalSum = 0;
     for (var i = 0; i < filteredProjects.length; i++) {
-      let pot = filteredProjects[i].potpico
-        ? filteredProjects[i].potpico
+      let pot = filteredProjects[i].sistema.potPico
+        ? filteredProjects[i].sistema.potPico
         : null;
       if (isNaN(pot)) {
         totalSum = totalSum;
@@ -169,20 +169,20 @@ function Comercial({ credentials, setCredentials }) {
             className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
           >
             <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-700">{project.nomedocontrato}</p>
+              <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
               <p className="text-xs text-[#15599a]">#{project.qtde}</p>
             </div>
             <div className="flex items-center justify-between">
               <div className="hidden lg:flex lg:flex-col">
                 <span className="text-xxs">CONTRATO</span>
                 <p className="text-xs text-yellow-500">
-                  {project.statuscontrato && project.statuscontrato}
+                  {project.contrato?.status && project.contrato?.status}
                 </p>
               </div>
               <div>
                 <span className="text-xxs">VENDEDOR</span>
                 <p className="text-xs text-[#15599a]">
-                  {project.vendedor && project.vendedor}
+                  {project.vendedor && project.vendedor.nome}
                 </p>
               </div>
             </div>
@@ -190,13 +190,13 @@ function Comercial({ credentials, setCredentials }) {
               <div>
                 <span className="text-xxs">TIPO DE PAGAMENTO</span>
                 <p className="text-xs text-gray-600">
-                  {project.formapagamento && project.formapagamento}
+                  {project.pagamento?.forma && project.pagamento.forma}
                 </p>
               </div>
               <div>
                 <span className="text-xxs">PAGAMENTO</span>
                 <p className="text-xs text-gray-600">
-                  {project.statuspagamento ? project.statuspagamento : "-"}
+                  {project.pagamento?.status ? project.pagamento.status : "-"}
                 </p>
               </div>
             </div>

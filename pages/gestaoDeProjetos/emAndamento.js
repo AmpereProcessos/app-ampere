@@ -70,13 +70,13 @@ function InProgress({ setCredentials, credentials, data }) {
 export default InProgress;
 export async function getServerSideProps(context) {
   const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("data");
+  const collection = db.collection("dados");
   let comercial = await collection
     .aggregate([
       {
         $match: {
-          statuscontrato: { $ne: "RECISÃO DE CONTRATO" },
-          statuspagamento: { $in: ["AGUARDANDO PAGAMENTO", null] },
+          "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
+          "pagamento.status": { $in: ["AGUARDANDO PAGAMENTO", null] },
         },
       },
     ])
@@ -85,10 +85,10 @@ export async function getServerSideProps(context) {
     .aggregate([
       {
         $match: {
-          statusentrega: {
+          "compra.statusEntrega": {
             $in: ["EM ROTA", "AGUARDANDO COMPRA", "", null],
           },
-          statuscontrato: "ASSINADO",
+          "contrato.status": "ASSINADO",
         },
       },
     ])
@@ -97,8 +97,8 @@ export async function getServerSideProps(context) {
     .aggregate([
       {
         $match: {
-          projetoconcluido: { $ne: "SIM" },
-          iniciarprojeto: "SIM",
+          "projeto.projetoConcluido": { $ne: "SIM" },
+          "projeto.iniciar": "SIM",
         },
       },
     ])
@@ -107,10 +107,10 @@ export async function getServerSideProps(context) {
     .aggregate([
       {
         $match: {
-          statusobra: {
+          "obra.statusDaObra": {
             $in: ["AGENDADA", "AGUARDANDO AGENDAMENTO", "EM ANDAMENTO"],
           },
-          statuscontrato: "ASSINADO",
+          "contrato.status": "ASSINADO",
         },
       },
     ])

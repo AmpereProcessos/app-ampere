@@ -35,7 +35,7 @@ function ProjectModal({ closeModal, project, estagio }) {
           <div className="flex flex-col h-full">
             <div className="flex justify-between px-2 text-lg border-b border-gray-200">
               <h1 className="text-[#15599a] pl-6  font-bold">
-                {project.qtde} - {project.nomedoprojeto}
+                {project.qtde} - {project.nomeDoProjeto}
               </h1>
               <button>
                 <VscChromeClose onClick={closeModal} style={{ color: "red" }} />

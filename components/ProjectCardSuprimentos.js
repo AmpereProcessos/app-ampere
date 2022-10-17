@@ -8,7 +8,7 @@ function ProjectCardSuprimentos({ info }) {
           NOME DO CONTRATO
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.nomedocontrato}
+          {info.nomeDoContrato}
         </p>
       </div>
       <div className="grid grid-cols-2 px-2">
@@ -16,8 +16,8 @@ function ProjectCardSuprimentos({ info }) {
           DATA DO PEDIDO
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.datadopedido != undefined && info.datadopedido != "-"
-            ? new Date(info.datadopedido).toLocaleDateString()
+          {info.compra.dataPedido != undefined && info.compra.dataPedido != "-"
+            ? new Date(info.compra.dataPedido).toLocaleDateString()
             : "-"}
         </p>
       </div>
@@ -26,7 +26,7 @@ function ProjectCardSuprimentos({ info }) {
           STATUS DO PAGAMENTO
         </p>
         <p className="text-md text-center  text-gray-600">
-          {info.statuspagamento ? info.statuspagamento : "-"}
+          {info.pagamento.status ? info.pagamento.status : "-"}
         </p>
       </div>
       <div className="grid grid-cols-2 px-2">
@@ -34,7 +34,7 @@ function ProjectCardSuprimentos({ info }) {
           STATUS DA ENTREGA
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.statusentrega ? info.statusentrega : "-"}
+          {info.compra.statusEntrega ? info.compra.statusEntrega : "-"}
         </p>
       </div>
       <div className="flex flex-col h-fit px-2">
@@ -42,7 +42,7 @@ function ProjectCardSuprimentos({ info }) {
           TRANSPORTADORA
         </p>
         <p className="text-md text-center break-words text-[#fead61] font-bold">
-          {info.rastreiooutransportadora ? info.rastreiooutransportadora : "-"}
+          {info.compra.rastreio ? info.compra.rastreio : "-"}
         </p>
       </div>
     </div>

@@ -44,16 +44,16 @@ function Suprimentos({ credentials, setCredentials }) {
     if (filters.deliveryStatus.length > 0 && filters.paymentStatus.length > 0) {
       newArr = projects.filter(
         (project) =>
-          filters.paymentStatus.includes(project.statuspagamento) &&
-          filters.deliveryStatus.includes(project.statusentrega)
+          filters.paymentStatus.includes(project.pagamento.status) &&
+          filters.deliveryStatus.includes(project.compra.statusEntrega)
       );
     } else if (filters.paymentStatus.length > 0) {
       newArr = projects.filter((project) =>
-        filters.paymentStatus.includes(project.statuspagamento)
+        filters.paymentStatus.includes(project.pagamento.status)
       );
     } else if (filters.deliveryStatus.length > 0) {
       newArr = projects.filter((project) =>
-        filters.deliveryStatus.includes(project.statusentrega)
+        filters.deliveryStatus.includes(project.compra.statusEntrega)
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -64,8 +64,8 @@ function Suprimentos({ credentials, setCredentials }) {
   function getListCumulativePeakPot() {
     var totalSum = 0;
     for (var i = 0; i < filteredProjects.length; i++) {
-      let pot = filteredProjects[i].potpico
-        ? filteredProjects[i].potpico
+      let pot = filteredProjects[i].sistema.potPico
+        ? filteredProjects[i].sistema.potPico
         : null;
       if (isNaN(pot)) {
         totalSum = totalSum;
@@ -135,21 +135,21 @@ function Suprimentos({ credentials, setCredentials }) {
             className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
           >
             <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-700">{project.nomedocontrato}</p>
+              <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
               <p className="text-xs text-[#15599a]">#{project.qtde}</p>
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xxs">CONTRATO</span>
                 <p className="text-xs text-gray-600">
-                  {project.statuscontrato ? project.statuscontrato : "-"}
+                  {project.contrato.status ? project.contrato.status : "-"}
                 </p>
               </div>
               <div>
                 <span className="text-xxs">LIBERACÃO DE CRÉDITO</span>
                 <p className="text-xs text-center text-gray-600">
-                  {project.statusliberacaocredito
-                    ? project.statusliberacaocredito
+                  {project.compra.statusLiberacao
+                    ? project.compra.statusLiberacao
                     : "-"}
                 </p>
               </div>
@@ -158,13 +158,15 @@ function Suprimentos({ credentials, setCredentials }) {
               <div>
                 <span className="text-xxs">FORNECEDOR</span>
                 <p className="text-xs text-yellow-500">
-                  {project.fornecedor ? project.fornecedor : "-"}
+                  {project.compra.fornecedor ? project.compra.fornecedor : "-"}
                 </p>
               </div>
               <div>
                 <span className="text-xxs">STATUS ENTREGA</span>
                 <p className="text-xs text-gray-600">
-                  {project.statusentrega ? project.statusentrega : "-"}
+                  {project.compra.statusEntrega
+                    ? project.compra.statusEntrega
+                    : "-"}
                 </p>
               </div>
             </div>

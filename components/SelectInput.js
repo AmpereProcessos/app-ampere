@@ -14,7 +14,7 @@ function SelectInput({ label, value, options, handleChange, editable }) {
       >
         {options &&
           options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
+            <option key={opt.label} value={opt.value}>
               {opt.label}
             </option>
           ))}

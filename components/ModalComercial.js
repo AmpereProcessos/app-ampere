@@ -58,6 +58,7 @@ function ModalComercial({
       handleUpdates(project._id);
     });
   }
+  console.log(changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -65,11 +66,11 @@ function ModalComercial({
           <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
             <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
               <h1 className="text-[#15599a] pl-6  font-bold">
-                {infoHolder.qtde} - {infoHolder.nomedocontrato}
+                {infoHolder.qtde} - {infoHolder.nomeDoContrato}
               </h1>
-              {infoHolder.codprojetosvb && (
+              {infoHolder.codigoSVB && (
                 <p className="text-gray-600 text-sm font-bold">
-                  #{infoHolder.codprojetosvb}
+                  #{infoHolder.codigoSVB}
                 </p>
               )}
               <div className="flex gap-x-2">
@@ -97,22 +98,22 @@ function ModalComercial({
                 <div className="flex gap-2 justify-around flex-wrap">
                   <TextInput
                     label={"Nome do contrato"}
-                    value={infoHolder.nomedocontrato}
+                    value={infoHolder.nomeDoContrato}
                     editable={editor}
                     handleChange={(value) => {
-                      setChanges({ ...changes, nomedocontrato: value });
-                      setInfo({ ...infoHolder, nomedocontrato: value });
+                      setChanges({ ...changes, nomeDoContrato: value });
+                      setInfo({ ...infoHolder, nomeDoContrato: value });
                     }}
                   />
                   <TextInput
                     label={"Nome do Projeto"}
-                    value={infoHolder.nomedoprojeto}
+                    value={infoHolder.nomeDoProjeto}
                     editable={editor}
                     handleChange={(value) => {
-                      setChanges({ ...changes, nomedoprojeto: value });
+                      setChanges({ ...changes, nomeDoProjeto: value });
                       setInfo({
                         ...infoHolder,
-                        nomedoprojeto: value,
+                        nomeDoProjeto: value,
                       });
                     }}
                   />
@@ -120,15 +121,15 @@ function ModalComercial({
                     label={"CPF/CNPJ"}
                     editable={editor}
                     value={
-                      infoHolder.cpfcnpj
-                        ? formataCPF(infoHolder.cpfcnpj.toString())
+                      infoHolder.cpf_cnpj
+                        ? formataCPF(infoHolder.cpf_cnpj.toString())
                         : "-"
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, cpfcnpj: value });
+                      setChanges({ ...changes, cpf_cnpj: value });
                       setInfo({
                         ...infoHolder,
-                        cpfcnpj: value,
+                        cpf_cnpj: value,
                       });
                     }}
                   />
@@ -175,10 +176,20 @@ function ModalComercial({
                   <NumberInput
                     label={"Número da residência"}
                     editable={editor}
-                    value={infoHolder.numerores ? infoHolder.numerores : 0}
+                    value={
+                      infoHolder.numeroResidencia
+                        ? infoHolder.numeroResidencia
+                        : 0
+                    }
                     handleChange={(value) => {
-                      setChanges({ ...changes, numerores: value });
-                      setInfo({ ...infoHolder, numerores: value });
+                      setChanges({
+                        ...changes,
+                        numeroResidencia: Number(value),
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        numeroResidencia: Number(value),
+                      });
                     }}
                   />
                   <SelectInput
@@ -212,9 +223,9 @@ function ModalComercial({
                   <SelectInput
                     label={"Canal de venda"}
                     value={
-                      infoHolder.canalvenda != undefined &&
-                      infoHolder.canalvenda != "-"
-                        ? infoHolder.canalvenda
+                      infoHolder.canalVenda != undefined &&
+                      infoHolder.canalVenda != "-"
+                        ? infoHolder.canalVenda
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -233,8 +244,8 @@ function ModalComercial({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, canalvenda: value });
-                      setInfo({ ...infoHolder, canalvenda: value });
+                      setChanges({ ...changes, canalVenda: value });
+                      setInfo({ ...infoHolder, canalVenda: value });
                     }}
                   />
                   <div className="flex">
@@ -242,8 +253,8 @@ function ModalComercial({
                       label={"VENDEDOR"}
                       value={
                         infoHolder.vendedor != undefined &&
-                        infoHolder.vendedor != "-"
-                          ? infoHolder.vendedor
+                        infoHolder.vendedor.nome != "-"
+                          ? infoHolder.vendedor.nome
                           : "NÃO DEFINIDO"
                       }
                       options={vendedores.map((vendedor) => {
@@ -251,24 +262,31 @@ function ModalComercial({
                       })}
                       editable={editor}
                       handleChange={(value) => {
-                        setChanges({ ...changes, vendedor: value });
-                        setInfo({ ...infoHolder, vendedor: value });
+                        console.log(value);
+                        setChanges({
+                          ...changes,
+                          vendedor: {
+                            ...infoHolder.vendedor,
+                            nome: value,
+                            codigo:
+                              vendedores.filter(
+                                (vendedor) => vendedor.nome == value
+                              )[0].cod || "-",
+                          },
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          vendedor: {
+                            ...infoHolder.vendedor,
+                            nome: value,
+                            codigo:
+                              vendedores.filter(
+                                (vendedor) => vendedor.nome == value
+                              )[0].cod || "-",
+                          },
+                        });
                       }}
                     />
-                    <div className="flex flex-col items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        CÓD.VENDEDOR
-                      </span>
-                      <p>
-                        {vendedores.filter(
-                          (vendedor) => vendedor.nome == infoHolder.vendedor
-                        ).length > 0
-                          ? vendedores.filter(
-                              (vendedor) => vendedor.nome == infoHolder.vendedor
-                            )[0].cod
-                          : "-"}
-                      </p>
-                    </div>
                   </div>
                   <SelectInput
                     label={"SEGMENTO"}
@@ -296,20 +314,28 @@ function ModalComercial({
                     <input
                       disabled={!editor}
                       checked={
-                        infoHolder.visitatecnica === "REALIZADA" ? true : false
+                        infoHolder.visitaTecnica?.status === "REALIZADA"
+                          ? true
+                          : false
                       }
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          visitatecnica: e.target.checked
-                            ? "REALIZADA"
-                            : "PENDÊNCIA",
+                          visitaTecnica: {
+                            ...infoHolder.visitaTecnica,
+                            status: e.target.checked
+                              ? "REALIZADA"
+                              : "PENDÊNCIA",
+                          },
                         });
                         setInfo({
                           ...infoHolder,
-                          visitatecnica: e.target.checked
-                            ? "REALIZADA"
-                            : "PENDÊNCIA",
+                          visitaTecnica: {
+                            ...infoHolder.visitaTecnica,
+                            status: e.target.checked
+                              ? "REALIZADA"
+                              : "PENDÊNCIA",
+                          },
                         });
                       }}
                       type="checkbox"
@@ -324,15 +350,24 @@ function ModalComercial({
                     label={"TÉCNICO RESPONSÁVEL"}
                     editable={editor}
                     value={
-                      infoHolder.tecnicoresponsavel
-                        ? infoHolder.tecnicoresponsavel
+                      infoHolder.visitaTecnica.tecnico
+                        ? infoHolder.visitaTecnica.tecnico
                         : ""
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, tecnicoresponsavel: value });
+                      setChanges({
+                        ...changes,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          tecnico: value,
+                        },
+                      });
                       setInfo({
                         ...infoHolder,
-                        tecnicoresponsavel: value,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          tecnico: value,
+                        },
                       });
                     }}
                   />
@@ -340,7 +375,9 @@ function ModalComercial({
                     label={"Saída do cliente"}
                     editable={editor}
                     value={
-                      infoHolder.saidacliente ? infoHolder.saidacliente : "N/A"
+                      infoHolder.visitaTecnica.saidaDoCliente
+                        ? infoHolder.visitaTecnica.saidaDoCliente
+                        : "N/A"
                     }
                     options={[
                       { label: "SUBTERRANEO", value: "SUBTERRANEO" },
@@ -348,32 +385,70 @@ function ModalComercial({
                       { label: "N/A", value: "N/A" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, saidacliente: value });
+                      setChanges({
+                        ...changes,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          saidaDoCliente: value,
+                        },
+                      });
                       setInfo({
                         ...infoHolder,
-                        saidacliente: value,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          saidaDoCliente: value,
+                        },
                       });
                     }}
                   />
                   <TextInput
                     label={"Amperagem"}
                     editable={editor}
-                    value={infoHolder.amperagem ? infoHolder.amperagem : ""}
+                    value={
+                      infoHolder.visitaTecnica?.amperagem
+                        ? infoHolder.visitaTecnica.amperagem
+                        : ""
+                    }
                     handleChange={(value) => {
-                      setChanges({ ...changes, amperagem: value });
+                      setChanges({
+                        ...changes,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          amperagem: value,
+                        },
+                      });
                       setInfo({
                         ...infoHolder,
-                        amperagem: value,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          amperagem: value,
+                        },
                       });
                     }}
                   />
                   <TextInput
                     label={"Tipo da telha"}
                     editable={editor}
-                    value={infoHolder.tipotelha ? infoHolder.tipotelha : ""}
+                    value={
+                      infoHolder.visitaTecnica?.tipoDaTelha
+                        ? infoHolder.visitaTecnica?.tipoDaTelha
+                        : ""
+                    }
                     handleChange={(value) => {
-                      setChanges({ ...changes, tipotelha: value });
-                      setInfo({ ...infoHolder, tipotelha: value });
+                      setChanges({
+                        ...changes,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          tipoDaTelha: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          tipoDaTelha: value,
+                        },
+                      });
                     }}
                   />
                 </div>
@@ -387,11 +462,11 @@ function ModalComercial({
                     label={"PAGAMENTO DO PADRÃO"}
                     editable={editor}
                     value={
-                      infoHolder.pagamentodopadrao ==
+                      infoHolder.padrao?.respPagamento ==
                         "NÃO HAVERA TROCA DE PADRÃO" ||
-                      infoHolder.pagamentodopadrao == undefined
+                      infoHolder.padrao?.respPagamento == undefined
                         ? "NÃO HAVERA TROCA PADRÃO"
-                        : infoHolder.pagamentodopadrao
+                        : infoHolder.padrao?.respPagamento
                     }
                     options={[
                       {
@@ -412,10 +487,13 @@ function ModalComercial({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, pagamentodopadrao: value });
+                      setChanges({
+                        ...changes,
+                        padrao: { ...infoHolder.padrao, respPagamento: value },
+                      });
                       setInfo({
                         ...infoHolder,
-                        pagamentodopadrao: value,
+                        padrao: { ...infoHolder.padrao, respPagamento: value },
                       });
                     }}
                   />
@@ -423,18 +501,26 @@ function ModalComercial({
                     tag={"R$"}
                     label={"Valor do padrão"}
                     editable={editor}
-                    value={infoHolder.valorpadrao}
+                    value={
+                      infoHolder.padrao.valor ? infoHolder.padrao.valor : 0
+                    }
                     handleChange={(value) => {
-                      setChanges({ ...changes, valorpadrao: value });
-                      setInfo({ ...infoHolder, valorpadrao: value });
+                      setChanges({
+                        ...changes,
+                        padrao: { ...infoHolder.padrao, valor: Number(value) },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: { ...infoHolder.padrao, valor: Number(value) },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
                     editable={editor}
                     value={
-                      infoHolder.respinstalacaopadrao
-                        ? infoHolder.respinstalacaopadrao
+                      infoHolder.padrao?.respInstalacao
+                        ? infoHolder.padrao?.respInstalacao
                         : "NÃO SE APLICA"
                     }
                     options={[
@@ -443,10 +529,13 @@ function ModalComercial({
                       { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, respinstalacaopadrao: value });
+                      setChanges({
+                        ...changes,
+                        padrao: { ...infoHolder.padrao, respInstalacao: value },
+                      });
                       setInfo({
                         ...infoHolder,
-                        respinstalacaopadrao: value,
+                        padrao: { ...infoHolder.padrao, respInstalacao: value },
                       });
                     }}
                   />
@@ -461,22 +550,24 @@ function ModalComercial({
                     <input
                       disabled={!editor}
                       checked={
-                        infoHolder.possuiestruturapersonalisada === "SIM"
+                        infoHolder.estruturaPersonalizada?.aplicavel === "SIM"
                           ? true
                           : false
                       }
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          possuiestruturapersonalisada: e.target.checked
-                            ? "SIM"
-                            : "NÃO",
+                          estruturaPersonalizada: {
+                            ...infoHolder.estruturaPersonalizada,
+                            aplicavel: e.target.checked ? "SIM" : "NÃO",
+                          },
                         });
                         setInfo({
                           ...infoHolder,
-                          possuiestruturapersonalisada: e.target.checked
-                            ? "SIM"
-                            : "NÃO",
+                          estruturaPersonalizada: {
+                            ...infoHolder.estruturaPersonalizada,
+                            aplicavel: e.target.checked ? "SIM" : "NÃO",
+                          },
                         });
                       }}
                       type="checkbox"
@@ -491,8 +582,8 @@ function ModalComercial({
                     label={"Tipo da estrutura"}
                     editable={editor}
                     value={
-                      infoHolder.tipoestrutura
-                        ? infoHolder.tipoestrutura
+                      infoHolder.estruturaPersonalizada?.tipo
+                        ? infoHolder.estruturaPersonalizada?.tipo
                         : "N/A"
                     }
                     options={[
@@ -504,16 +595,28 @@ function ModalComercial({
                       { label: "N/A", value: "N/A" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, tipoestrutura: value });
-                      setInfo({ ...infoHolder, tipoestrutura: value });
+                      setChanges({
+                        ...changes,
+                        estruturaPersonalizada: {
+                          ...infoHolder.estruturaPersonalizada,
+                          tipo: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        estruturaPersonalizada: {
+                          ...infoHolder.estruturaPersonalizada,
+                          tipo: value,
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"PAGAMENTO DA ESTRUTURA"}
                     editable={editor}
                     value={
-                      infoHolder.pagestruturapersonalizada
-                        ? infoHolder.pagestruturapersonalizada
+                      infoHolder.estruturaPersonalizada?.respPagamento
+                        ? infoHolder.estruturaPersonalizada?.respPagamento
                         : "NÃ SE APLICA"
                     }
                     options={[
@@ -524,11 +627,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagestruturapersonalizada: value,
+                        estruturaPersonalizada: {
+                          ...infoHolder.estruturaPersonalizada,
+                          respPagamento: value,
+                        },
                       });
                       setInfo({
                         ...infoHolder,
-                        pagestruturapersonalizada: value,
+                        estruturaPersonalizada: {
+                          ...infoHolder.estruturaPersonalizada,
+                          respPagamento: value,
+                        },
                       });
                     }}
                   />
@@ -537,24 +646,36 @@ function ModalComercial({
                     label={"Valor da estrutura"}
                     editable={editor}
                     value={
-                      infoHolder.valorestrutura == "-" ||
-                      infoHolder.valorestrutura == undefined
+                      infoHolder.estruturaPersonalizada?.valor == "-" ||
+                      infoHolder.estruturaPersonalizada?.valor == undefined
                         ? 0
-                        : infoHolder.valorestrutura
+                        : infoHolder.estruturaPersonalizada?.valor
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, valorestrutura: value });
-                      setInfo({ ...infoHolder, valorestrutura: value });
+                      setChanges({
+                        ...changes,
+                        estruturaPersonalizada: {
+                          ...infoHolder.estruturaPersonalizada,
+                          valor: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        estruturaPersonalizada: {
+                          ...infoHolder.estruturaPersonalizada,
+                          valor: Number(value),
+                        },
+                      });
                     }}
                   />
-                  {infoHolder.possuiestruturapersonalisada == "SIM" && (
+                  {infoHolder.estruturaPersonalizada.aplicavel == "SIM" && (
                     <SelectInput
                       label={"STATUS da estrutura personalizada"}
                       editable={editor}
                       value={
-                        infoHolder.possuiestruturapersonalisada
-                          ? infoHolder.estruturapersonalisada
-                            ? infoHolder.estruturapersonalisada
+                        infoHolder.estruturaPersonalizada.aplicavel
+                          ? infoHolder.estruturaPersonalizada.status
+                            ? infoHolder.estruturaPersonalizada.status
                             : "N/A"
                           : "N/A"
                       }
@@ -566,11 +687,17 @@ function ModalComercial({
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          estruturapersonalisada: value,
+                          estruturaPersonalizada: {
+                            ...infoHolder.estruturaPersonalizada,
+                            status: value,
+                          },
                         });
                         setInfo({
                           ...infoHolder,
-                          estruturapersonalisada: value,
+                          estruturaPersonalizada: {
+                            ...infoHolder.estruturaPersonalizada,
+                            status: value,
+                          },
                         });
                       }}
                     />
@@ -586,8 +713,8 @@ function ModalComercial({
                     label={"STATUS"}
                     editable={editor}
                     value={
-                      infoHolder.statuscontrato
-                        ? infoHolder.statuscontrato
+                      infoHolder.contrato.status
+                        ? infoHolder.contrato.status
                         : "NÃO DEFINIDO"
                     }
                     options={[
@@ -605,19 +732,31 @@ function ModalComercial({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, statuscontrato: value });
-                      setInfo({ ...infoHolder, statuscontrato: value });
+                      setChanges({
+                        ...changes,
+                        contrato: {
+                          ...infoHolder.contrato,
+                          status: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        contrato: {
+                          ...infoHolder.contrato,
+                          status: value,
+                        },
+                      });
                     }}
                   />
-                  {(infoHolder.statuscontrato != "AGUARDANDO SOLICITAÇÃO" ||
-                    infoHolder.statuscontrato != "NÃO DEFINIDO") && (
+                  {(infoHolder.contrato.status != "AGUARDANDO SOLICITAÇÃO" ||
+                    infoHolder.contrato.status != "NÃO DEFINIDO") && (
                     <DateInput
                       label={"Data de solicitação"}
                       editable={editor}
                       value={
-                        infoHolder.datasolicitacaocontrato != undefined &&
-                        infoHolder.datasolicitacaocontrato != "-"
-                          ? new Date(infoHolder.datasolicitacaocontrato)
+                        infoHolder.contrato.dataSolicitacao != undefined &&
+                        infoHolder.contrato.dataSolicitacao != "-"
+                          ? new Date(infoHolder.contrato.dataSolicitacao)
                               .toISOString()
                               .slice(0, 10)
                           : 0
@@ -625,11 +764,17 @@ function ModalComercial({
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          datasolicitacaocontrato: new Date(value),
+                          contrato: {
+                            ...infoHolder.contrato,
+                            dataSolicitacao: new Date(value).toISOString(),
+                          },
                         });
                         setInfo({
                           ...infoHolder,
-                          datasolicitacaocontrato: new Date(value),
+                          contrato: {
+                            ...infoHolder.contrato,
+                            dataSolicitacao: new Date(value).toISOString(),
+                          },
                         });
                       }}
                     />
@@ -638,9 +783,9 @@ function ModalComercial({
                     label={"Data de liberação p/ assinatura"}
                     editable={editor}
                     value={
-                      infoHolder.dataliberacaoassinatura != undefined &&
-                      infoHolder.dataliberacaoassinatura != "-"
-                        ? new Date(infoHolder.dataliberacaoassinatura)
+                      infoHolder.contrato.dataLiberacao != undefined &&
+                      infoHolder.contrato.dataLiberacao != "-"
+                        ? new Date(infoHolder.contrato.dataLiberacao)
                             .toISOString()
                             .slice(0, 10)
                         : 0
@@ -648,11 +793,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dataliberacaoassinatura: new Date(value),
+                        contrato: {
+                          ...infoHolder.contrato,
+                          dataLiberacao: new Date(value).toISOString(),
+                        },
                       });
                       setInfo({
                         ...infoHolder,
-                        dataliberacaoassinatura: new Date(value),
+                        contrato: {
+                          ...infoHolder.contrato,
+                          dataLiberacao: new Date(value).toISOString(),
+                        },
                       });
                     }}
                   />
@@ -660,9 +811,9 @@ function ModalComercial({
                     label={"Data de assinatura"}
                     editable={editor}
                     value={
-                      infoHolder.dataassinatura != undefined &&
-                      infoHolder.dataassinatura != "-"
-                        ? new Date(infoHolder.dataassinatura)
+                      infoHolder.contrato.dataAssinatura != undefined &&
+                      infoHolder.contrato.dataAssinatura != "-"
+                        ? new Date(infoHolder.contrato.dataAssinatura)
                             .toISOString()
                             .slice(0, 10)
                         : 0
@@ -670,11 +821,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dataassinatura: new Date(value),
+                        contrato: {
+                          ...infoHolder.contrato,
+                          dataAssinatura: new Date(value).toISOString(),
+                        },
                       });
                       setInfo({
                         ...infoHolder,
-                        dataassinatura: new Date(value),
+                        contrato: {
+                          ...infoHolder.contrato,
+                          dataAssinatura: new Date(value).toISOString(),
+                        },
                       });
                     }}
                   />
@@ -688,8 +845,8 @@ function ModalComercial({
                   <SelectInput
                     label={"STATUS PAGAMENTO"}
                     value={
-                      infoHolder.statuspagamento
-                        ? infoHolder.statuspagamento
+                      infoHolder.pagamento.status
+                        ? infoHolder.pagamento.status
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -712,18 +869,27 @@ function ModalComercial({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, statuspagamento: value });
+                      setChanges({
+                        ...changes,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          status: value,
+                        },
+                      });
                       setInfo({
                         ...infoHolder,
-                        statuspagamento: value,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          status: value,
+                        },
                       });
                     }}
                   />
                   <SelectInput
                     label={"FORMA DE PAGAMENTO"}
                     value={
-                      infoHolder.formapagamento
-                        ? infoHolder.formapagamento
+                      infoHolder.pagamento?.forma
+                        ? infoHolder.pagamento?.forma
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -742,19 +908,28 @@ function ModalComercial({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, formapagamento: value });
+                      setChanges({
+                        ...changes,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          forma: value,
+                        },
+                      });
                       setInfo({
                         ...infoHolder,
-                        formapagamento: value,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          forma: value,
+                        },
                       });
                     }}
                   />
                   <SelectInput
                     label={"EMPRESA A FATURAR"}
                     value={
-                      infoHolder.empresafaturar != undefined &&
-                      infoHolder.empresafaturar != "-"
-                        ? infoHolder.empresafaturar
+                      infoHolder.faturamento?.empresaFaturamento != undefined &&
+                      infoHolder.faturamento?.empresaFaturamento != "-"
+                        ? infoHolder.faturamento?.empresaFaturamento
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -768,31 +943,55 @@ function ModalComercial({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, empresafaturar: value });
-                      setInfo({ ...infoHolder, empresafaturar: value });
+                      setChanges({
+                        ...changes,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          empresaFaturamento: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          empresaFaturamento: value,
+                        },
+                      });
                     }}
                   />
                   <TextInput
                     label={"Informações faturamento"}
                     editable={editor}
                     value={
-                      infoHolder.previsaofaturamento
-                        ? infoHolder.previsaofaturamento
+                      infoHolder.faturamento?.previsaoFaturamento
+                        ? infoHolder.faturamento?.previsaoFaturamento
                         : ""
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, previsaofaturamento: value });
-                      setInfo({ ...infoHolder, previsaofaturamento: value });
+                      setChanges({
+                        ...changes,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          previsaoFaturamento: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          previsaoFaturamento: value,
+                        },
+                      });
                     }}
                   />
-                  {infoHolder.formapagamento == "FINANCIAMENTO" && (
+                  {infoHolder.pagamento?.forma == "FINANCIAMENTO" && (
                     <SelectInput
                       label={"CREDOR"}
                       value={
-                        infoHolder.credor != undefined &&
-                        infoHolder != "-----" &&
-                        infoHolder != "QUAL CREDOR?"
-                          ? infoHolder.credor
+                        infoHolder.pagamento.credor != undefined &&
+                        infoHolder.pagamento.credor != "-----" &&
+                        infoHolder.pagamento.credor != "QUAL CREDOR?"
+                          ? infoHolder.pagamento.credor
                           : "NÃO DEFINIDO"
                       }
                       editable={editor}
@@ -841,11 +1040,17 @@ function ModalComercial({
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          credor: value,
+                          pagamento: {
+                            ...infoHolder.pagamento,
+                            credor: value,
+                          },
                         });
                         setInfo({
                           ...infoHolder,
-                          credor: value,
+                          pagamento: {
+                            ...infoHolder.pagamento,
+                            credor: value,
+                          },
                         });
                       }}
                     />
@@ -853,23 +1058,51 @@ function ModalComercial({
                   <TextInput
                     label={"Pagador"}
                     editable={editor}
-                    value={infoHolder.pagador ? infoHolder.pagador : ""}
+                    value={
+                      infoHolder.pagamento?.pagador
+                        ? infoHolder.pagamento.pagador
+                        : ""
+                    }
                     handleChange={(value) => {
-                      setChanges({ ...changes, pagador: value });
-                      setInfo({ ...infoHolder, pagador: value });
+                      setChanges({
+                        ...changes,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          pagador: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          pagador: value,
+                        },
+                      });
                     }}
                   />
                   <TextInput
                     label={"Contato pagador"}
                     editable={editor}
                     value={
-                      infoHolder.contatopagamento
-                        ? infoHolder.contatopagamento
+                      infoHolder.pagamento?.contatoPagador
+                        ? infoHolder.pagamento?.contatoPagador
                         : ""
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, contatopagamento: value });
-                      setInfo({ ...infoHolder, contatopagamento: value });
+                      setChanges({
+                        ...changes,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          contatoPagador: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          contatoPagador: value,
+                        },
+                      });
                     }}
                   />
                 </div>
@@ -883,9 +1116,9 @@ function ModalComercial({
                     label={"Data de liberação p/ compra"}
                     editable={editor}
                     value={
-                      infoHolder.dataliberacaoparacompra != undefined &&
-                      infoHolder.dataliberacaoparacompra != "-"
-                        ? new Date(infoHolder.dataliberacaoparacompra)
+                      infoHolder.compra.dataLiberacao != undefined &&
+                      infoHolder.compra.dataLiberacao != "-"
+                        ? new Date(infoHolder.compra.dataLiberacao)
                             .toISOString()
                             .slice(0, 10)
                         : 0
@@ -893,11 +1126,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dataliberacaoparacompra: new Date(value),
+                        compra: {
+                          ...infoHolder.compra,
+                          dataLiberacao: new Date(value).toISOString(),
+                        },
                       });
                       setInfo({
                         ...infoHolder,
-                        dataliberacaoparacompra: new Date(value),
+                        compra: {
+                          ...infoHolder.compra,
+                          dataLiberacao: new Date(value).toISOString(),
+                        },
                       });
                     }}
                   />
@@ -905,9 +1144,9 @@ function ModalComercial({
                     label={"Data do pagamento"}
                     editable={editor}
                     value={
-                      infoHolder.datapagamento != undefined &&
-                      infoHolder.datapagamento != "-"
-                        ? new Date(infoHolder.datapagamento)
+                      infoHolder.compra?.dataPagamento != undefined &&
+                      infoHolder.compra?.dataPagamento != "-"
+                        ? new Date(infoHolder.compra?.dataPagamento)
                             .toISOString()
                             .slice(0, 10)
                         : 0
@@ -915,11 +1154,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        datapagamento: new Date(value),
+                        compra: {
+                          ...infoHolder.compra,
+                          dataPagamento: new Date(value).toISOString(),
+                        },
                       });
                       setInfo({
                         ...infoHolder,
-                        datapagamento: new Date(value),
+                        compra: {
+                          ...infoHolder.compra,
+                          dataPagamento: new Date(value).toISOString(),
+                        },
                       });
                     }}
                   />
@@ -927,9 +1172,9 @@ function ModalComercial({
                     label={"Fornecedor"}
                     editable={editor}
                     value={
-                      infoHolder.fornecedor != undefined &&
-                      infoHolder.fornecedor != "-"
-                        ? infoHolder.fornecedor
+                      infoHolder.compra?.fornecedor != undefined &&
+                      infoHolder.compra.fornecedor != "-"
+                        ? infoHolder.compra.fornecedor
                         : "NÃO DEFINIDO"
                     }
                     options={[
@@ -959,16 +1204,28 @@ function ModalComercial({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, fornecedor: value });
-                      setInfo({ ...infoHolder, fornecedor: value });
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          fornecedor: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          fornecedor: value,
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"TIPO DO KIT"}
                     value={
-                      infoHolder.tipokit != undefined &&
-                      infoHolder.tipokit != "-"
-                        ? infoHolder.tipokit
+                      infoHolder.compra?.tipoDoKit != undefined &&
+                      infoHolder.compra.tipoDoKit != "-"
+                        ? infoHolder.compra.tipoDoKit
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -987,8 +1244,20 @@ function ModalComercial({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, tipokit: value });
-                      setInfo({ ...infoHolder, tipokit: value });
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          tipoDoKit: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          tipoDoKit: value,
+                        },
+                      });
                     }}
                   />
                   <NumberInput
@@ -996,22 +1265,34 @@ function ModalComercial({
                     label={"VALOR DO KIT"}
                     editable={editor}
                     value={
-                      infoHolder.valordokit != undefined &&
-                      infoHolder.valordokit != "-"
-                        ? infoHolder.valordokit
+                      infoHolder.compra?.valorDoKit != undefined &&
+                      infoHolder.compra?.valorDoKit != "-"
+                        ? infoHolder.compra?.valorDoKit
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, valordokit: value });
-                      setInfo({ ...infoHolder, valordokit: value });
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          valorDoKit: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          valorDoKit: Number(value),
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"LOCAL DE ENTREGA"}
                     value={
-                      infoHolder.localdeentrega != undefined &&
-                      infoHolder.localdeentrega != "-"
-                        ? infoHolder.localdeentrega
+                      infoHolder.compra?.localEntrega != undefined &&
+                      infoHolder.compra?.localEntrega != "-"
+                        ? infoHolder.compra?.localEntrega
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -1021,29 +1302,53 @@ function ModalComercial({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, localdeentrega: value });
-                      setInfo({ ...infoHolder, localdeentrega: value });
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          localEntrega: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          localEntrega: value,
+                        },
+                      });
                     }}
                   />
                   <TextInput
                     label={"INFORMAÇÕES"}
                     value={
-                      infoHolder.informacoescompra
-                        ? infoHolder.informacoescompra
+                      infoHolder.compra?.informacoes
+                        ? infoHolder.compra?.informacoes
                         : ""
                     }
                     editable={editor}
                     handleChange={(value) => {
-                      setChanges({ ...changes, informacoescompra: value });
-                      setInfo({ ...infoHolder, informacoescompra: value });
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          informacoes: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          informacoes: value,
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"STATUS DA ENTREGA"}
                     editable={editor}
                     value={
-                      infoHolder.statusentrega
-                        ? infoHolder.statusentrega
+                      infoHolder.compra?.statusEntrega
+                        ? infoHolder.compra?.statusEntrega
                         : "NÃO DEFINIDO"
                     }
                     options={[
@@ -1065,8 +1370,20 @@ function ModalComercial({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, statusentrega: value });
-                      setInfo({ ...infoHolder, statusentrega: value });
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          statusEntrega: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          statusEntrega: value,
+                        },
+                      });
                     }}
                   />
                 </div>
@@ -1080,33 +1397,57 @@ function ModalComercial({
                     label={"Titular do projeto"}
                     editable={editor}
                     value={
-                      infoHolder.titulardoprojeto
-                        ? infoHolder.titulardoprojeto
+                      infoHolder.dadosCemig?.titularProjeto
+                        ? infoHolder.dadosCemig?.titularProjeto
                         : ""
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, titulardoprojeto: value });
-                      setInfo({ ...infoHolder, titulardoprojeto: value });
+                      setChanges({
+                        ...changes,
+                        dadosCemig: {
+                          ...infoHolder.dadosCemig,
+                          titularProjeto: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        dadosCemig: {
+                          ...infoHolder.dadosCemig,
+                          titularProjeto: value,
+                        },
+                      });
                     }}
                   />
                   <TextInput
                     label={"Número da instalação"}
                     value={
-                      infoHolder.numeroinstalacao
-                        ? infoHolder.numeroinstalacao
+                      infoHolder.dadosCemig.numeroInstalacao
+                        ? infoHolder.dadosCemig.numeroInstalacao
                         : ""
                     }
                     editable={editor}
                     handleChange={(value) => {
-                      setChanges({ ...changes, numeroinstalacao: value });
-                      setInfo({ ...infoHolder, numeroinstalacao: value });
+                      setChanges({
+                        ...changes,
+                        dadosCemig: {
+                          ...infoHolder.dadosCemig,
+                          numeroInstalacao: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        dadosCemig: {
+                          ...infoHolder.dadosCemig,
+                          numeroInstalacao: value,
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"DISTRIBUIÇÃO DE CRÉDITOS"}
                     value={
-                      infoHolder.distribuicaodecreditos
-                        ? infoHolder.distribuicaodecreditos
+                      infoHolder.dadosCemig.distCreditos
+                        ? infoHolder.dadosCemig.distCreditos
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -1116,26 +1457,47 @@ function ModalComercial({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, distribuicaodecreditos: value });
-                      setInfo({ ...infoHolder, distribuicaodecreditos: value });
+                      setChanges({
+                        ...changes,
+                        dadosCemig: {
+                          ...infoHolder.dadosCemig,
+                          distCreditos: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        dadosCemig: {
+                          ...infoHolder.dadosCemig,
+                          distCreditos: value,
+                        },
+                      });
                     }}
                   />
-                  {infoHolder.distribuicaodecreditos == "SIM" && (
+                  {infoHolder.dadosCemig.distCreditos == "SIM" && (
                     <NumberInput
                       label={"QTDE DE DISTRIBUIÇÕES"}
                       editable={editor}
                       value={
-                        infoHolder.quantdistribuicoes != undefined &&
-                        infoHolder.quantdistribuicoes != "-"
-                          ? infoHolder.quantdistribuicoes
+                        infoHolder.dadosCemig?.qtdeDistCreditos != undefined &&
+                        infoHolder.dadosCemig?.qtdeDistCreditos != "-"
+                          ? infoHolder.dadosCemig?.qtdeDistCreditos
                           : 0
                       }
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          quantdistribuicoes: value,
+                          dadosCemig: {
+                            ...infoHolder.dadosCemig,
+                            qtdeDistCreditos: Number(value),
+                          },
                         });
-                        setInfo({ ...infoHolder, quantdistribuicoes: value });
+                        setInfo({
+                          ...infoHolder,
+                          dadosCemig: {
+                            ...infoHolder.dadosCemig,
+                            qtdeDistCreditos: Number(value),
+                          },
+                        });
                       }}
                     />
                   )}
@@ -1150,14 +1512,26 @@ function ModalComercial({
                     label={"NÚMERO DE MÓDULOS"}
                     editable={editor}
                     value={
-                      infoHolder.nmodulos != undefined &&
-                      infoHolder.nmodulos != "-"
-                        ? infoHolder.nmodulos
+                      infoHolder.sistema?.qtdeModulos != undefined &&
+                      infoHolder.sistema?.qtdeModulos != "-"
+                        ? infoHolder.sistema?.qtdeModulos
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, nmodulos: value });
-                      setInfo({ ...infoHolder, nmodulos: value });
+                      setChanges({
+                        ...changes,
+                        sistema: {
+                          ...changes.sistema,
+                          qtdeModulos: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        sistema: {
+                          ...infoHolder.sistema,
+                          qtdeModulos: Number(value),
+                        },
+                      });
                     }}
                   />
                   <NumberInput
@@ -1165,14 +1539,26 @@ function ModalComercial({
                     label={"POTÊNCIA DOS MÓDULOS"}
                     editable={editor}
                     value={
-                      infoHolder.potmodulos != undefined &&
-                      infoHolder.potmodulos != "-"
-                        ? infoHolder.potmodulos
+                      infoHolder.sistema?.potModulos != undefined &&
+                      infoHolder.sistema?.potModulos != "-"
+                        ? infoHolder.sistema?.potModulos
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, potmodulos: value });
-                      setInfo({ ...infoHolder, potmodulos: value });
+                      setChanges({
+                        ...changes,
+                        sistema: {
+                          ...changes.sistema,
+                          potModulos: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        sistema: {
+                          ...infoHolder.sistema,
+                          potModulos: Number(value),
+                        },
+                      });
                     }}
                   />
                   <NumberInput
@@ -1180,21 +1566,33 @@ function ModalComercial({
                     label={"POTÊNCIA PICO"}
                     editable={editor}
                     value={
-                      infoHolder.potpico != undefined &&
-                      infoHolder.potpico != "-"
-                        ? infoHolder.potpico
+                      infoHolder.sistema?.potPico != undefined &&
+                      infoHolder.sistema?.potPico != "-"
+                        ? infoHolder.sistema?.potPico
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, potpico: value });
-                      setInfo({ ...infoHolder, potpico: value });
+                      setChanges({
+                        ...changes,
+                        sistema: {
+                          ...changes.sistema,
+                          potPico: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        sistema: {
+                          ...infoHolder.sistema,
+                          potPico: Number(value),
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"TOPOLOGIA"}
                     value={
-                      infoHolder.topologia
-                        ? infoHolder.topologia
+                      infoHolder.sistema?.topologia
+                        ? infoHolder.sistema?.topologia
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -1205,21 +1603,45 @@ function ModalComercial({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, topologia: value });
-                      setInfo({ ...infoHolder, topologia: value });
+                      setChanges({
+                        ...changes,
+                        sistema: {
+                          ...changes.sistema,
+                          topologia: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        sistema: {
+                          ...infoHolder.sistema,
+                          topologia: value,
+                        },
+                      });
                     }}
                   />
                   <TextInput
                     label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
                     editable={editor}
                     value={
-                      infoHolder.qtdepotinversor
-                        ? infoHolder.qtdepotinversor
+                      infoHolder.sistema?.inversor
+                        ? infoHolder.sistema?.inversor
                         : ""
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, qtdepotinversor: value });
-                      setInfo({ ...infoHolder, qtdepotinversor: value });
+                      setChanges({
+                        ...changes,
+                        sistema: {
+                          ...changes.sistema,
+                          inversor: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        sistema: {
+                          ...infoHolder.sistema,
+                          inversor: value,
+                        },
+                      });
                     }}
                   />
                   <NumberInput
@@ -1227,21 +1649,33 @@ function ModalComercial({
                     label={"VALOR DO PROJETO"}
                     editable={editor}
                     value={
-                      infoHolder.valorprojeto != undefined &&
-                      infoHolder.valorprojeto != "-"
-                        ? infoHolder.valorprojeto
+                      infoHolder.sistema?.valorProjeto != undefined &&
+                      infoHolder.sistema?.valorProjeto != "-"
+                        ? infoHolder.sistema?.valorProjeto
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, valor: value });
-                      setInfo({ ...infoHolder, valorprojeto: value });
+                      setChanges({
+                        ...changes,
+                        sistema: {
+                          ...changes.sistema,
+                          valorProjeto: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        sistema: {
+                          ...changes.sistema,
+                          valorProjeto: Number(value),
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"INICIAR PROJETO"}
                     value={
-                      infoHolder.iniciarprojeto
-                        ? infoHolder.iniciarprojeto
+                      infoHolder.projeto?.iniciar
+                        ? infoHolder.projeto?.iniciar
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -1254,8 +1688,20 @@ function ModalComercial({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, iniciarprojeto: value });
-                      setInfo({ ...infoHolder, iniciarprojeto: value });
+                      setChanges({
+                        ...changes,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          iniciar: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          iniciar: value,
+                        },
+                      });
                     }}
                   />
                 </div>
@@ -1268,8 +1714,8 @@ function ModalComercial({
                   <SelectInput
                     label={"Projetista"}
                     value={
-                      infoHolder.projetista
-                        ? infoHolder.projetista
+                      infoHolder.projeto?.projetista?.nome
+                        ? infoHolder.projeto?.projetista?.nome
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -1296,17 +1742,32 @@ function ModalComercial({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, projetista: value });
-                      setInfo({ ...infoHolder, projetista: value });
+                      setChanges({
+                        ...changes,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          projetista: {
+                            ...infoHolder.projeto.projetista,
+                            nome: value,
+                          },
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        projetista: {
+                          ...infoHolder.projeto.projetista,
+                          nome: value,
+                        },
+                      });
                     }}
                   />
                   <DateInput
                     label={"Data de assinatura da documentação"}
                     editable={editor}
                     value={
-                      infoHolder.documentacaoassinada != undefined &&
-                      infoHolder.documentacaoassinada != "-"
-                        ? new Date(infoHolder.documentacaoassinada)
+                      infoHolder.projeto.dataAssDocumentacao != undefined &&
+                      infoHolder.projeto.dataAssDocumentacao != "-"
+                        ? new Date(infoHolder.projeto.dataAssDocumentacao)
                             .toISOString()
                             .slice(0, 10)
                         : 0
@@ -1314,11 +1775,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        documentacaoassinada: new Date(value),
+                        projeto: {
+                          ...infoHolder.projeto,
+                          dataAssDocumentacao: new Date(value).toISOString(),
+                        },
                       });
                       setInfo({
                         ...infoHolder,
-                        documentacaoassinada: new Date(value),
+                        projeto: {
+                          ...infoHolder.projeto,
+                          dataAssDocumentacao: new Date(value).toISOString(),
+                        },
                       });
                     }}
                   />
@@ -1326,9 +1793,9 @@ function ModalComercial({
                     label={"Parecer de acesso"}
                     editable={editor}
                     value={
-                      infoHolder.pareceracesso != undefined &&
-                      infoHolder.pareceracesso != "-"
-                        ? new Date(infoHolder.pareceracesso)
+                      infoHolder.parecer?.dataParecerDeAcesso != undefined &&
+                      infoHolder.parecer?.dataParecerDeAcesso != "-"
+                        ? new Date(infoHolder.parecer?.dataParecerDeAcesso)
                             .toISOString()
                             .slice(0, 10)
                         : 0
@@ -1336,19 +1803,25 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pareceracesso: new Date(value),
+                        parecer: {
+                          ...infoHolder.parecer,
+                          dataParecerDeAcesso: new Date(value).toISOString(),
+                        },
                       });
                       setInfo({
                         ...infoHolder,
-                        pareceracesso: new Date(value),
+                        parecer: {
+                          ...infoHolder.parecer,
+                          dataParecerDeAcesso: new Date(value).toISOString(),
+                        },
                       });
                     }}
                   />
                   <SelectInput
                     label={"Status do parecer de acesso"}
                     value={
-                      infoHolder.statusparecerdeacesso
-                        ? infoHolder.statusparecerdeacesso
+                      infoHolder.parecer.statusDoParecerDeAcesso
+                        ? infoHolder.parecer.statusDoParecerDeAcesso
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -1387,8 +1860,20 @@ function ModalComercial({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, statusparecerdeacesso: value });
-                      setInfo({ ...infoHolder, statusparecerdeacesso: value });
+                      setChanges({
+                        ...changes,
+                        parecer: {
+                          ...infoHolder.parecer,
+                          statusDoParecerDeAcesso: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        parecer: {
+                          ...infoHolder.parecer,
+                          statusDoParecerDeAcesso: value,
+                        },
+                      });
                     }}
                   />
                   <div className="flex flex-col w-[350px] items-center">
@@ -1399,20 +1884,28 @@ function ModalComercial({
                       <input
                         disabled={!editor}
                         checked={
-                          infoHolder.diagramaunifilar === "Ok" ? true : false
+                          infoHolder.projeto?.diagramaUnifilar === "Ok"
+                            ? true
+                            : false
                         }
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            diagramaunifilar: e.target.checked
-                              ? "Ok"
-                              : "PENDÊNCIA",
+                            projeto: {
+                              ...infoHolder.projeto,
+                              diagramaUnifilar: e.target.checked
+                                ? "Ok"
+                                : "PENDÊNCIA",
+                            },
                           });
                           setInfo({
                             ...infoHolder,
-                            diagramaunifilar: e.target.checked
-                              ? "Ok"
-                              : "PENDÊNCIA",
+                            projeto: {
+                              ...infoHolder.projeto,
+                              diagramaUnifilar: e.target.checked
+                                ? "Ok"
+                                : "PENDÊNCIA",
+                            },
                           });
                         }}
                         type="checkbox"
@@ -1432,20 +1925,28 @@ function ModalComercial({
                       <input
                         disabled={!editor}
                         checked={
-                          infoHolder.desenhotelhado === "OK" ? true : false
+                          infoHolder.projeto?.desenhoTelhado === "OK"
+                            ? true
+                            : false
                         }
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            desenhotelhado: e.target.checked
-                              ? "OK"
-                              : "PENDÊNCIA",
+                            projeto: {
+                              ...infoHolder.projeto,
+                              desenhoTelhado: e.target.checked
+                                ? "OK"
+                                : "PENDÊNCIA",
+                            },
                           });
                           setInfo({
                             ...infoHolder,
-                            desenhotelhado: e.target.checked
-                              ? "OK"
-                              : "PENDÊNCIA",
+                            projeto: {
+                              ...infoHolder.projeto,
+                              desenhoTelhado: e.target.checked
+                                ? "OK"
+                                : "PENDÊNCIA",
+                            },
                           });
                         }}
                         type="checkbox"
@@ -1461,9 +1962,9 @@ function ModalComercial({
                     label={"MAPA DE MICRO"}
                     editable={editor}
                     value={
-                      infoHolder.mapademicro != undefined &&
-                      infoHolder.mapademicro != "-"
-                        ? infoHolder.mapademicro
+                      infoHolder.projeto?.mapaDeMicro != undefined &&
+                      infoHolder.projeto?.mapaDeMicro != "-"
+                        ? infoHolder.projeto?.mapaDeMicro
                         : "NÃO DEFINIDO"
                     }
                     options={[
@@ -1472,8 +1973,20 @@ function ModalComercial({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, mapademicro: value });
-                      setInfo({ ...infoHolder, mapademicro: value });
+                      setChanges({
+                        ...changes,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          mapaDeMicro: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          mapaDeMicro: value,
+                        },
+                      });
                     }}
                   />
                   <div className="flex flex-col w-[350px] items-center">
@@ -1484,26 +1997,34 @@ function ModalComercial({
                       <input
                         disabled={!editor}
                         checked={
-                          infoHolder.aumentodecarga === "SIM" ? true : false
+                          infoHolder.projeto.aumentoDeCarga === "SIM"
+                            ? true
+                            : false
                         }
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            aumentodecarga: e.target.checked ? "SIM" : "NÃO",
-                            acstatus:
-                              e.target.checked &&
-                              infoHolder.acstatus != "REALIZADO"
-                                ? "PÊNDENCIA"
-                                : undefined,
+                            projeto: {
+                              ...infoHolder.projeto,
+                              aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
+                              acStatus:
+                                e.target.checked &&
+                                infoHolder.acstatus != "REALIZADO"
+                                  ? "PÊNDENCIA"
+                                  : undefined,
+                            },
                           });
                           setInfo({
                             ...infoHolder,
-                            aumentodecarga: e.target.checked ? "SIM" : "NÃO",
-                            acstatus:
-                              e.target.checked &&
-                              infoHolder.acstatus != "REALIZADO"
-                                ? "PÊNDENCIA"
-                                : undefined,
+                            projeto: {
+                              ...infoHolder.projeto,
+                              aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
+                              acStatus:
+                                e.target.checked &&
+                                infoHolder.acstatus != "REALIZADO"
+                                  ? "PÊNDENCIA"
+                                  : undefined,
+                            },
                           });
                         }}
                         type="checkbox"
@@ -1515,7 +2036,7 @@ function ModalComercial({
                       </label>
                     </div>
                   </div>
-                  {infoHolder.aumentodecarga == "SIM" && (
+                  {infoHolder.projeto.aumentoDeCarga == "SIM" && (
                     <div className="flex flex-col w-[350px] items-center">
                       <span className="uppercase font-bold font-raleway text-center text-sm">
                         STATUS AUMENTO DE CARGA
@@ -1524,20 +2045,28 @@ function ModalComercial({
                         <input
                           disabled={!editor}
                           checked={
-                            infoHolder.acstatus === "REALIZADO" ? true : false
+                            infoHolder.projeto?.acStatus === "REALIZADO"
+                              ? true
+                              : false
                           }
                           onChange={(e) => {
                             setChanges({
                               ...changes,
-                              acstatus: e.target.checked
-                                ? "REALIZADO"
-                                : "PENDÊNCIA",
+                              projeto: {
+                                ...infoHolder.projeto,
+                                acStatus: e.target.checked
+                                  ? "REALIZADO"
+                                  : "PENDÊNCIA",
+                              },
                             });
                             setInfo({
                               ...infoHolder,
-                              acstatus: e.target.checked
-                                ? "REALIZADO"
-                                : "PENDÊNCIA",
+                              projeto: {
+                                ...infoHolder.projeto,
+                                acStatus: e.target.checked
+                                  ? "REALIZADO"
+                                  : "PENDÊNCIA",
+                              },
                             });
                           }}
                           type="checkbox"
@@ -1554,9 +2083,9 @@ function ModalComercial({
                     label={"DATA DO PEDIDO DE VISTORIA"}
                     editable={editor}
                     value={
-                      infoHolder.pedidovistoria != undefined &&
-                      infoHolder.pedidovistoria != "-"
-                        ? new Date(infoHolder.pedidovistoria)
+                      infoHolder.vistoria?.dataPedido != undefined &&
+                      infoHolder.vistoria?.dataPedido != "-"
+                        ? new Date(infoHolder.vistoria.dataPedido)
                             .toISOString()
                             .slice(0, 10)
                         : 0
@@ -1564,19 +2093,25 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pedidovistoria: new Date(value),
+                        vistoria: {
+                          ...infoHolder.vistoria,
+                          dataPedido: new Date(value).toISOString(),
+                        },
                       });
                       setInfo({
                         ...infoHolder,
-                        pedidovistoria: new Date(value),
+                        vistoria: {
+                          ...infoHolder.vistoria,
+                          dataPedido: new Date(value).toISOString(),
+                        },
                       });
                     }}
                   />
                   <SelectInput
                     label={"STATUS DA VISTORIA"}
                     value={
-                      infoHolder.statusvistoria
-                        ? infoHolder.statusvistoria
+                      infoHolder.vistoria?.status
+                        ? infoHolder.vistoria.status
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -1591,18 +2126,27 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        statusvistoria: value,
+                        vistoria: {
+                          ...infoHolder.vistoria,
+                          status: value,
+                        },
                       });
-                      setInfo({ ...infoHolder, statusvistoria: value });
+                      setInfo({
+                        ...infoHolder,
+                        vistoria: {
+                          ...infoHolder.vistoria,
+                          status: value,
+                        },
+                      });
                     }}
                   />
                   <DateInput
                     label={"DATA TROCA DO MEDIDOR"}
                     editable={editor}
                     value={
-                      infoHolder.trocamedidor != undefined &&
-                      infoHolder.trocamedidor != "-"
-                        ? new Date(infoHolder.trocamedidor)
+                      infoHolder.medidor?.data != undefined &&
+                      infoHolder.medidor?.data != "-"
+                        ? new Date(infoHolder.medidor.data)
                             .toISOString()
                             .slice(0, 10)
                         : 0
@@ -1610,16 +2154,25 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        trocamedidor: new Date(value),
+                        medidor: {
+                          ...infoHolder.medidor,
+                          data: new Date(value).toISOString(),
+                        },
                       });
-                      setInfo({ ...infoHolder, trocamedidor: new Date(value) });
+                      setInfo({
+                        ...infoHolder,
+                        medidor: {
+                          ...infoHolder.medidor,
+                          data: new Date(value).toISOString(),
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"STATUS DA TROCA DO MEDIDOR"}
                     value={
-                      infoHolder.statustrocamedidor
-                        ? infoHolder.statustrocamedidor
+                      infoHolder.medidor?.status
+                        ? infoHolder.medidor?.status
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -1632,8 +2185,20 @@ function ModalComercial({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, statustrocamedidor: value });
-                      setInfo({ ...infoHolder, statustrocamedidor: value });
+                      setChanges({
+                        ...changes,
+                        medidor: {
+                          ...infoHolder.medidor,
+                          status: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        medidor: {
+                          ...infoHolder.medidor,
+                          status: value,
+                        },
+                      });
                     }}
                   />
                   <div className="flex flex-col w-[350px] items-center">
@@ -1644,16 +2209,28 @@ function ModalComercial({
                       <input
                         disabled={!editor}
                         checked={
-                          infoHolder.projetoconcluido === "SIM" ? true : false
+                          infoHolder.projeto?.projetoConcluido === "SIM"
+                            ? true
+                            : false
                         }
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projetoconcluido: e.target.checked ? "SIM" : "NÃO",
+                            projeto: {
+                              ...infoHolder.projeto,
+                              projetoConcluido: e.target.checked
+                                ? "SIM"
+                                : "NÃO",
+                            },
                           });
                           setInfo({
                             ...infoHolder,
-                            projetoconcluido: e.target.checked ? "SIM" : "NÃO",
+                            projeto: {
+                              ...infoHolder.projeto,
+                              projetoConcluido: e.target.checked
+                                ? "SIM"
+                                : "NÃO",
+                            },
                           });
                         }}
                         type="checkbox"
@@ -1674,7 +2251,11 @@ function ModalComercial({
                 <div className="flex gap-2 justify-center flex-wrap">
                   <SelectInput
                     label={"Laudo"}
-                    value={infoHolder.laudo ? infoHolder.laudo : "NÃO DEFINIDO"}
+                    value={
+                      infoHolder.obra?.laudo
+                        ? infoHolder.obra?.laudo
+                        : "NÃO DEFINIDO"
+                    }
                     editable={editor}
                     options={[
                       { label: "EM ESTUDO", value: "EM ESTUDO" },
@@ -1682,8 +2263,20 @@ function ModalComercial({
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, laudo: value });
-                      setInfo({ ...infoHolder, laudo: value });
+                      setChanges({
+                        ...changes,
+                        obra: {
+                          ...infoHolder.obra,
+                          laudo: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        obra: {
+                          ...infoHolder.obra,
+                          laudo: value,
+                        },
+                      });
                     }}
                   />
                   <div className="flex flex-col w-[350px] items-center">
@@ -1694,22 +2287,28 @@ function ModalComercial({
                       <input
                         disabled={!editor}
                         checked={
-                          infoHolder.solicitacaoobra === "SOLICITADA"
+                          infoHolder.obra?.statusSolicitacao === "SOLICITADA"
                             ? true
                             : false
                         }
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            solicitacaoobra: e.target.checked
-                              ? "SOLICITADA"
-                              : "NÃO SOLICITADA",
+                            obra: {
+                              ...infoHolder.obra,
+                              statusSolicitacao: e.target.checked
+                                ? "SOLICITADA"
+                                : "NÃO SOLICITADA",
+                            },
                           });
                           setInfo({
                             ...infoHolder,
-                            solicitacaoobra: e.target.checked
-                              ? "SOLICITADA"
-                              : "NÃO SOLICITADA",
+                            obra: {
+                              ...infoHolder.obra,
+                              statusSolicitacao: e.target.checked
+                                ? "SOLICITADA"
+                                : "NÃO SOLICITADA",
+                            },
                           });
                         }}
                         type="checkbox"
@@ -1725,9 +2324,9 @@ function ModalComercial({
                     label={"ENTRADA NA OBRA"}
                     editable={editor}
                     value={
-                      infoHolder.entradanaobra != undefined &&
-                      infoHolder.entradanaobra != "-"
-                        ? new Date(infoHolder.entradanaobra)
+                      infoHolder.obra?.entrada != undefined &&
+                      infoHolder.obra?.entrada != "-"
+                        ? new Date(infoHolder.obra?.entrada)
                             .toISOString()
                             .slice(0, 10)
                         : 0
@@ -1735,11 +2334,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        entradanaobra: new Date(value),
+                        obra: {
+                          ...infoHolder.obra,
+                          entrada: new Date(value).toISOString(),
+                        },
                       });
                       setInfo({
                         ...infoHolder,
-                        entradanaobra: new Date(value),
+                        obra: {
+                          ...infoHolder.obra,
+                          entrada: new Date(value).toISOString(),
+                        },
                       });
                     }}
                   />
@@ -1747,29 +2352,41 @@ function ModalComercial({
                     label={"SAIDA DE OBRA"}
                     editable={editor}
                     value={
-                      infoHolder.saidadeobra != undefined &&
-                      infoHolder.saidadeobra != "-"
-                        ? new Date(infoHolder.saidadeobra)
+                      infoHolder.obra?.saida != undefined &&
+                      infoHolder.obra?.saida != "-"
+                        ? new Date(infoHolder.obra?.saida)
                             .toISOString()
                             .slice(0, 10)
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, saidadeobra: new Date(value) });
-                      setInfo({ ...infoHolder, saidadeobra: new Date(value) });
+                      setChanges({
+                        ...changes,
+                        obra: {
+                          ...infoHolder.obra,
+                          saida: new Date(value).toISOString(),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        obra: {
+                          ...infoHolder.obra,
+                          saida: new Date(value).toISOString(),
+                        },
+                      });
                     }}
                   />
                   <SelectInput
                     label={"EQUIPE RESPONSÁVEL"}
                     editable={editor}
                     value={
-                      infoHolder.equipeexec != undefined &&
-                      infoHolder.equipeexec != "-"
-                        ? infoHolder.equipeexec == "TERCEIROS" ||
-                          infoHolder.equipeexec == "TERCERIZADOS" ||
-                          infoHolder.equipeexec == "OUTROS"
+                      infoHolder.obra?.equipeResp != undefined &&
+                      infoHolder.obra?.equipeResp != "-"
+                        ? infoHolder.obra?.equipeResp == "TERCEIROS" ||
+                          infoHolder.obra?.equipeResp == "TERCERIZADOS" ||
+                          infoHolder.obra?.equipeResp == "OUTROS"
                           ? "OUTROS"
-                          : infoHolder.equipeexec
+                          : infoHolder.obra?.equipeResp
                         : "NÃO DEFINIDO"
                     }
                     options={[
@@ -1835,8 +2452,20 @@ function ModalComercial({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, equipeexec: value });
-                      setInfo({ ...infoHolder, equipeexec: value });
+                      setChanges({
+                        ...changes,
+                        obra: {
+                          ...infoHolder.obra,
+                          equipeResp: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        obra: {
+                          ...infoHolder.obra,
+                          equipeResp: value,
+                        },
+                      });
                     }}
                   />
                   <div className="flex flex-col w-[350px] items-center">
@@ -1847,16 +2476,22 @@ function ModalComercial({
                       <input
                         disabled={!editor}
                         checked={
-                          infoHolder.checklistobra === "SIM" ? true : false
+                          infoHolder.obra?.checklist === "SIM" ? true : false
                         }
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            checklistobra: e.target.checked ? "SIM" : "NÃO",
+                            obra: {
+                              ...infoHolder.obra,
+                              checklist: e.target.checked ? "SIM" : "NÃO",
+                            },
                           });
                           setInfo({
                             ...infoHolder,
-                            checklistobra: e.target.checked ? "SIM" : "NÃO",
+                            obra: {
+                              ...infoHolder.obra,
+                              checklist: e.target.checked ? "SIM" : "NÃO",
+                            },
                           });
                         }}
                         type="checkbox"
@@ -1875,15 +2510,23 @@ function ModalComercial({
                     <div className="flex">
                       <input
                         disabled={!editor}
-                        checked={infoHolder.trafo === "SIM" ? true : false}
+                        checked={
+                          infoHolder.obra?.trafo === "SIM" ? true : false
+                        }
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            trafo: e.target.checked ? "SIM" : "NÃO",
+                            obra: {
+                              ...infoHolder.obra,
+                              trafo: e.target.checked ? "SIM" : "NÃO",
+                            },
                           });
                           setInfo({
                             ...infoHolder,
-                            trafo: e.target.checked ? "SIM" : "NÃO",
+                            obra: {
+                              ...infoHolder.obra,
+                              trafo: e.target.checked ? "SIM" : "NÃO",
+                            },
                           });
                         }}
                         type="checkbox"
@@ -1898,8 +2541,8 @@ function ModalComercial({
                   <SelectInput
                     label={"STATUS DA OBRA"}
                     value={
-                      infoHolder.statusobra
-                        ? infoHolder.statusobra
+                      infoHolder.obra?.statusDaObra
+                        ? infoHolder.obra?.statusDaObra
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -1930,8 +2573,20 @@ function ModalComercial({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, statusobra: value });
-                      setInfo({ ...infoHolder, statusobra: value });
+                      setChanges({
+                        ...changes,
+                        obra: {
+                          ...infoHolder.obra,
+                          statusDaObra: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        obra: {
+                          ...infoHolder.obra,
+                          statusDaObra: value,
+                        },
+                      });
                     }}
                   />
                   <div className="flex flex-col w-[450px] items-center">
@@ -1940,11 +2595,27 @@ function ModalComercial({
                     </span>
                     <textarea
                       readOnly={!editor}
-                      value={infoHolder.obsobra ? infoHolder.obsobra : ""}
+                      value={
+                        infoHolder.obra.observacoes
+                          ? infoHolder.obra.observacoes
+                          : ""
+                      }
                       placeholder={"Observações da obra aqui..."}
                       onChange={(e) => {
-                        setChanges({ ...changes, obsobra: e.target.value });
-                        setInfo({ ...infoHolder, obsobra: e.target.value });
+                        setChanges({
+                          ...changes,
+                          obra: {
+                            ...infoHolder.obra,
+                            observacoes: e.target.value,
+                          },
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          obra: {
+                            ...infoHolder.obra,
+                            observacoes: e.target.value,
+                          },
+                        });
                       }}
                       className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                     />
@@ -1959,8 +2630,8 @@ function ModalComercial({
                   <SelectInput
                     label={"Separação do material"}
                     value={
-                      infoHolder.materialalmoxarifado
-                        ? infoHolder.materialalmoxarifado
+                      infoHolder.material?.statusSeparacao
+                        ? infoHolder.material?.statusSeparacao
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -1979,8 +2650,20 @@ function ModalComercial({
                       },
                     ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, materialalmoxarifado: value });
-                      setInfo({ ...infoHolder, materialalmoxarifado: value });
+                      setChanges({
+                        ...changes,
+                        material: {
+                          ...infoHolder.material,
+                          statusSeparacao: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        material: {
+                          ...infoHolder.material,
+                          statusSeparacao: value,
+                        },
+                      });
                     }}
                   />
                   <NumberInput
@@ -1988,14 +2671,26 @@ function ModalComercial({
                     label={"Previsão de custos em insumos"}
                     editable={editor}
                     value={
-                      infoHolder.prevcustosinsumos != undefined &&
-                      infoHolder.prevcustosinsumos != "#VALUE!"
-                        ? infoHolder.prevcustosinsumos
+                      infoHolder.material?.previsaoCustos != undefined &&
+                      infoHolder.material?.previsaoCustos != "#VALUE!"
+                        ? infoHolder.material?.previsaoCustos
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, prevcustosinsumos: value });
-                      setInfo({ ...infoHolder, prevcustosinsumos: value });
+                      setChanges({
+                        ...changes,
+                        material: {
+                          ...infoHolder.material,
+                          previsaoCustos: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        material: {
+                          ...infoHolder.material,
+                          previsaoCustos: Number(value),
+                        },
+                      });
                     }}
                   />
                   <NumberInput
@@ -2003,14 +2698,26 @@ function ModalComercial({
                     label={"Custos em insumos"}
                     editable={editor}
                     value={
-                      infoHolder.custosinsumos != undefined &&
-                      infoHolder.custosinsumos != "#VALUE!"
-                        ? infoHolder.custosinsumos
+                      infoHolder.material?.efetivoCustos != undefined &&
+                      infoHolder.material?.efetivoCustos != "#VALUE!"
+                        ? infoHolder.material?.efetivoCustos
                         : 0
                     }
                     handleChange={(value) => {
-                      setChanges({ ...changes, custosinsumos: value });
-                      setInfo({ ...infoHolder, custosinsumos: value });
+                      setChanges({
+                        ...changes,
+                        material: {
+                          ...infoHolder.material,
+                          efetivoCustos: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        material: {
+                          ...infoHolder.material,
+                          efetivoCustos: Number(value),
+                        },
+                      });
                     }}
                   />
                 </div>

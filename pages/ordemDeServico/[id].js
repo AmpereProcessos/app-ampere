@@ -13,8 +13,8 @@ function OSInfo({ info }) {
   const [openingDate, setOpeningDate] = useState(
     new Date().toISOString().slice(0, 10)
   );
-  const [kitInfo, setKitInfo] = useState(info.kitInfo ? info.kitInfo : "");
   const [urgency, setUrgency] = useState("NÃO DEFINIDO");
+  console.log(osInfo);
   return (
     <>
       {pdfVisible ? (
@@ -23,7 +23,6 @@ function OSInfo({ info }) {
             info={osInfo}
             openingDate={openingDate}
             urgency={urgency}
-            kitInfo={kitInfo}
           />
         </>
       ) : (
@@ -45,7 +44,7 @@ function OSInfo({ info }) {
             <div className="flex flex-wrap justify-center">
               <TextInput
                 label={"NOME"}
-                value={osInfo.nomedocontrato}
+                value={osInfo.nomeDoContrato}
                 editable={false}
               />
               <TextInput
@@ -67,9 +66,9 @@ function OSInfo({ info }) {
               <TextInput
                 label={"NÚMERO"}
                 editable={true}
-                value={osInfo.numerores}
+                value={osInfo.numeroResidencia}
                 handleChange={(value) =>
-                  setosInfo({ ...osInfo, numerores: value })
+                  setosInfo({ ...osInfo, numeroResidencia: value })
                 }
               />
             </div>
@@ -81,57 +80,97 @@ function OSInfo({ info }) {
             <div className="flex flex-wrap justify-center">
               <TextInput
                 label={"TOPOLOGIA"}
-                value={osInfo.topologia ? osInfo.topologia : ""}
+                value={osInfo.sistema.topologia ? osInfo.sistema.topologia : ""}
                 editable={true}
                 handleChange={(value) =>
-                  setosInfo({ ...osInfo, topologia: value })
+                  setosInfo({
+                    ...osInfo,
+                    sistema: {
+                      ...osInfo.sistema,
+                      topologia: value,
+                    },
+                  })
                 }
               />
               <TextInput
                 label={"QTDE E POT INVERSOR"}
-                value={osInfo.qtdepotinversor ? osInfo.qtdepotinversor : ""}
+                value={osInfo.sistema.inversor ? osInfo.sistema.inversor : ""}
                 editable={true}
                 handleChange={(value) =>
-                  setosInfo({ ...osInfo, qtdepotinversor: value })
+                  setosInfo({
+                    ...osInfo,
+                    sistema: {
+                      ...osInfo.sistema,
+                      inversor: value,
+                    },
+                  })
                 }
               />
               <NumberInput
                 label={"Nº DE MÓDULOS"}
-                value={osInfo.nmodulos ? osInfo.nmodulos : 0}
+                value={
+                  osInfo.sistema.qtdeModulos ? osInfo.sistema.qtdeModulos : 0
+                }
                 editable={true}
                 handleChange={(value) =>
-                  setosInfo({ ...osInfo, nmodulos: value })
+                  setosInfo({
+                    ...osInfo,
+                    sistema: {
+                      ...osInfo.sistema,
+                      qtdeModulos: value,
+                    },
+                  })
                 }
               />
               <NumberInput
                 label={"POTÊNCIA DOS MÓDULOS"}
-                value={osInfo.potmodulos}
-                handleChange={(value) =>
-                  setosInfo({ ...osInfo, potmodulos: value })
+                value={
+                  osInfo.sistema.potModulos ? osInfo.sistema.potModulos : "-"
                 }
-              />
-              <TextInput
-                label={"QTDE CABO"}
-                value={osInfo.qtdecabo}
-                editable={true}
                 handleChange={(value) =>
-                  setosInfo({ ...osInfo, qtdecabo: value })
+                  setosInfo({
+                    ...osInfo,
+                    sistema: {
+                      ...osInfo.sistema,
+                      potModulos: value,
+                    },
+                  })
                 }
               />
               <TextInput
                 label={"TIPO TELHA"}
                 editable={true}
-                value={osInfo.tipotelha}
+                value={
+                  osInfo.visitaTecnica.tipoDaTelha
+                    ? osInfo.visitaTecnica.tipoDaTelha
+                    : "-"
+                }
                 handleChange={(value) =>
-                  setosInfo({ ...osInfo, tipotelha: value })
+                  setosInfo({
+                    ...osInfo,
+                    visitaTecnica: {
+                      ...osInfo.visitaTecnica,
+                      tipoDaTelha: value,
+                    },
+                  })
                 }
               />
               <TextInput
                 label={"TIPO ESTRUTURA"}
                 editable={true}
-                value={osInfo.tipoestrutura}
+                value={
+                  osInfo.estruturaPersonalizada.tipo
+                    ? osInfo.estruturaPersonalizada.tipo
+                    : "-"
+                }
                 handleChange={(value) =>
-                  setosInfo({ ...osInfo, tipoestrutura: value })
+                  setosInfo({
+                    ...osInfo,
+                    estruturaPersonalizada: {
+                      ...osInfo.estruturaPersonalizada,
+                      tipo: value,
+                    },
+                  })
                 }
               />
             </div>
@@ -143,11 +182,17 @@ function OSInfo({ info }) {
               </span>
               <textarea
                 readOnly={false}
-                value={osInfo.obsobra ? osInfo.obsobra : ""}
+                value={osInfo.obra.observacoes ? osInfo.obra.observacoes : ""}
                 placeholder={"Observações da obra aqui..."}
                 className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                 onChange={(e) =>
-                  setosInfo({ ...osInfo, obsobra: e.target.value })
+                  setosInfo({
+                    ...osInfo,
+                    obra: {
+                      ...osInfo.obra,
+                      observacoes: e.target.value,
+                    },
+                  })
                 }
               />
             </div>
@@ -159,9 +204,19 @@ function OSInfo({ info }) {
                 readOnly={false}
                 className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                 placeholder={"Informações de material a levar..."}
-                value={osInfo.estruturafaltando ? osInfo.estruturafaltando : ""}
+                value={
+                  osInfo.material.materialFaltante
+                    ? osInfo.material.materialFaltante
+                    : ""
+                }
                 onChange={(e) =>
-                  setosInfo({ ...osInfo, estruturafaltando: e.target.value })
+                  setosInfo({
+                    ...osInfo,
+                    material: {
+                      ...osInfo.material,
+                      materialFaltante: e.target.value,
+                    },
+                  })
                 }
               />
             </div>
@@ -171,10 +226,18 @@ function OSInfo({ info }) {
               </span>
               <textarea
                 readOnly={false}
-                value={kitInfo}
+                value={osInfo.compra?.kitInfo}
                 placeholder={"Informações do kit solar"}
                 className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                onChange={(e) => setKitInfo(e.target.value)}
+                onChange={(e) =>
+                  setosInfo({
+                    ...osInfo,
+                    compra: {
+                      ...osInfo.compra,
+                      kitInfo: e.target.value,
+                    },
+                  })
+                }
               />
             </div>
           </div>
@@ -214,10 +277,11 @@ export async function getServerSideProps({ query }) {
   const id = query.id;
 
   const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("data");
+  const collection = db.collection("dados");
   let os = await collection.findOne({
     _id: ObjectId(id),
   });
+  console.log(os);
   let info = JSON.parse(JSON.stringify(os));
   // Pass data to the page via props
   return { props: { info } };

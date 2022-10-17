@@ -34,7 +34,7 @@ function Suprimentos({ credentials, setCredentials }) {
     setSearchFilter(value);
     if (value != "" || " ") {
       let newArr = projects.filter((call) =>
-        call.nomedocontrato.toUpperCase().includes(value.toUpperCase())
+        call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
       );
       setFilteredProjects(newArr);
     } else {
@@ -49,40 +49,40 @@ function Suprimentos({ credentials, setCredentials }) {
     ) {
       newArr = projects.filter(
         (project) =>
-          filters.entregaStatusFilter.includes(project.statusentrega) &&
-          filters.obraStatusFilter.includes(project.statusobra)
+          filters.entregaStatusFilter.includes(project.compra.statusEntrega) &&
+          filters.obraStatusFilter.includes(project.obra.statusDaObra)
       );
     } else if (filters.entregaStatusFilter.length > 0) {
       newArr = projects.filter((project) =>
-        filters.entregaStatusFilter.includes(project.statusentrega)
+        filters.entregaStatusFilter.includes(project.compra.statusEntrega)
       );
     } else if (filters.obraStatusFilter.length > 0) {
       newArr = projects.filter((project) =>
-        filters.obraStatusFilter.includes(project.statusobra)
+        filters.obraStatusFilter.includes(project.obra.statusDaObra)
       );
     }
     if (filters.acFilter.length > 0) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
-        filters.acFilter.includes(call.aumentodecarga)
+        filters.acFilter.includes(call.projeto.aumentoDeCarga)
       );
     }
     if (filters.acStatusFilter.length > 0) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
-        filters.acStatusFilter.includes(call.acstatus)
+        filters.acStatusFilter.includes(call.projeto.acStatus)
       );
     }
     if (filters.epFilter.length > 0) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
-        filters.epFilter.includes(call.possuiestruturapersonalisada)
+        filters.epFilter.includes(call.estruturaPersonalizada.aplicavel)
       );
     }
     if (filters.epStatusFilter.length > 0) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
-        filters.epStatusFilter.includes(call.estruturapersonalisada)
+        filters.epStatusFilter.includes(call.estruturaPersonalizada.status)
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -93,8 +93,8 @@ function Suprimentos({ credentials, setCredentials }) {
   function getListCumulativePeakPot() {
     var totalSum = 0;
     for (var i = 0; i < filteredProjects.length; i++) {
-      let pot = filteredProjects[i].potpico
-        ? filteredProjects[i].potpico
+      let pot = filteredProjects[i].sistema.potPico
+        ? filteredProjects[i].sistema.potPico
         : null;
       if (isNaN(pot)) {
         totalSum = totalSum;
@@ -314,20 +314,20 @@ function Suprimentos({ credentials, setCredentials }) {
             className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
           >
             <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-700">{project.nomedocontrato}</p>
+              <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
               <p className="text-xs text-[#15599a]">#{project.qtde}</p>
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xxs">STATUS</span>
                 <p className="text-xs text-gray-600">
-                  {project.statusobra ? project.statusobra : "-"}
+                  {project.obra.statusDaObra ? project.obra.statusDaObra : "-"}
                 </p>
               </div>
               <div>
                 <span className="text-xxs">LAUDO</span>
                 <p className="text-xs text-center text-gray-600">
-                  {project.laudo ? project.laudo : "-"}
+                  {project.obra.laudo ? project.obra.laudo : "-"}
                 </p>
               </div>
             </div>
@@ -335,22 +335,26 @@ function Suprimentos({ credentials, setCredentials }) {
               <div>
                 <span className="text-xxs">STATUS KIT</span>
                 <p className="text-xs text-yellow-500">
-                  {project.statusentrega ? project.statusentrega : "-"}
+                  {project.compra.statusEntrega
+                    ? project.compra.statusEntrega
+                    : "-"}
                 </p>
               </div>
               <div>
                 <span className="text-xxs">PREVISÃO DE ENTREGA</span>
                 <p className="text-xs text-gray-600 text-center">
-                  {project.previsaoentrega
-                    ? new Date(project.previsaoentrega).toLocaleDateString()
+                  {project.compra.previsaoEntrega
+                    ? new Date(
+                        project.compra.previsaoEntrega
+                      ).toLocaleDateString()
                     : "-"}
                 </p>
               </div>
               <div>
                 <span className="text-xxs">TÉCNICO RESPONSÁVEL</span>
                 <p className="text-xs text-gray-600 text-center">
-                  {project.tecnicoresponsavel
-                    ? project.tecnicoresponsavel
+                  {project.visitaTecnica.tecnico
+                    ? project.visitaTecnica.tecnico
                     : "-"}
                 </p>
               </div>

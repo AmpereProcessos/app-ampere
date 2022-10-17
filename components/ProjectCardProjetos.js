@@ -8,7 +8,7 @@ function ProjectCardProjetos({ info }) {
           NOME DO CONTRATO
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.nomedocontrato}
+          {info.nomeDoContrato}
         </p>
       </div>
       <div className="grid items-center grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1 px-2">
@@ -16,7 +16,7 @@ function ProjectCardProjetos({ info }) {
           STATUS DO PARECER
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.statusparecerdeacesso}
+          {info.parecer.statusDoParecerDeAcesso}
         </p>
       </div>
       <div className="grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1 px-2">
@@ -24,7 +24,7 @@ function ProjectCardProjetos({ info }) {
           DIAGRAMA UNIFILAR
         </p>
         <p className="text-md text-center uppercase text-gray-600">
-          {info.diagramaunifilar}
+          {info.projeto.diagramaUnifilar}
         </p>
       </div>
       <div className="grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1 px-2">
@@ -32,7 +32,7 @@ function ProjectCardProjetos({ info }) {
           DESENHO DO TELHADO
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.desenhotelhado ? info.desenhotelhado : "-"}
+          {info.projeto.desenhoTelhado ? info.projeto.desenhoTelhado : "-"}
         </p>
       </div>
       <div className="grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1 px-2">
@@ -40,9 +40,9 @@ function ProjectCardProjetos({ info }) {
           DATA ASS.DOCUMENTAÇÃO
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.documentacaoassinada != undefined &&
-          info.documentacaoassinada != "-"
-            ? new Date(info.documentacaoassinada).toLocaleDateString()
+          {info.projeto.dataAssDocumentacao != undefined &&
+          info.projeto.dataAssDocumentacao != "-"
+            ? new Date(info.projeto.dataAssDocumentacao).toLocaleDateString()
             : "-"}
         </p>
       </div>
@@ -51,14 +51,14 @@ function ProjectCardProjetos({ info }) {
           REPROVA PARECER
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.parecerReprovado ? info.parecerReprovado : "-"}{" "}
-          {info.qtdeReprovasParecer ? `(${info.qtdeReprovasParecer})` : false}
+          {info.parecer.parecerReprovado ? info.parecer.parecerReprovado : "-"}{" "}
+          {info.parecer.qtdeReprovas ? `(${info.parecer.qtdeReprovas})` : false}
         </p>
       </div>
-      {info.parecerReprovado == "SIM" && (
+      {info.parecer.parecerReprovado == "SIM" && (
         <div className="flex flex-col px-2">
           <p className="text-md text-center text-[#fead61] font-bold">
-            {info.motivoReprovaParecer ? info.motivoReprovaParecer : "-"}
+            {info.parecer.motivoReprova ? info.parecer.motivoReprova : "-"}
           </p>
         </div>
       )}
@@ -67,14 +67,18 @@ function ProjectCardProjetos({ info }) {
           REPROVA VISTORIA
         </p>
         <p className="text-md text-center text-gray-600">
-          {info.vistoriaReprovada ? info.vistoriaReprovada : "-"}{" "}
-          {info.qtdeReprovasVistoria ? `(${info.qtdeReprovasVistoria})` : false}
+          {info.vistoria.vistoriaReprovada
+            ? info.vistoria.vistoriaReprovada
+            : "-"}{" "}
+          {info.vistoria.qtdeReprovas
+            ? `(${info.vistoria.qtdeReprovas})`
+            : false}
         </p>
       </div>
-      {info.vistoriaReprovada == "SIM" && (
+      {info.vistoria.vistoriaReprovada == "SIM" && (
         <div className="flex flex-col px-2">
           <p className="text-md text-center text-[#fead61] font-bold">
-            {info.motivoReprovaVistoria ? info.motivoReprovaVistoria : "-"}
+            {info.vistoria.motivoReprova ? info.vistoria.motivoReprova : "-"}
           </p>
         </div>
       )}

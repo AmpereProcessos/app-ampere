@@ -41,7 +41,7 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
             <div className="grid grid-cols-4">
               <p className="text-xs font-semibold uppercase">Nome:</p>
               <p className="text-xs col-span-3 text-center border border-black">
-                {info.nomedocontrato}
+                {info.nomeDoContrato}
               </p>
             </div>
             <div className="grid grid-cols-4">
@@ -67,7 +67,7 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
             <div className="grid grid-cols-4">
               <p className="text-xs font-semibold uppercase">Número:</p>
               <p className="text-xs col-span-3 text-center border border-black border-t-0">
-                {info.numerores}
+                {info.numeroResidencia}
               </p>
             </div>
             <div className="grid grid-cols-4">
@@ -88,7 +88,7 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
                 Topologia:
               </p>
               <p className="text-xs col-span-3 text-center border border-black">
-                {info.topologia} ({info.qtdepotinversor})
+                {info.sistema?.topologia} ({info.sistema?.inversor})
               </p>
             </div>
             <div className="row-span-1 grid grid-cols-5">
@@ -96,8 +96,8 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
                 Módulos:
               </p>
               <p className="text-xs text-center col-span-3 text-center border border-black border-t-0">
-                {info.nmodulos ? info.nmodulos : "-"} -{" "}
-                {info.potmodulos ? info.potmodulos : "-"}W
+                {info.sistema?.qtdeModulos ? info.sistema?.qtdeModulos : "-"} -{" "}
+                {info.sistema.potModulos ? info.sistema.potModulos : "-"}W
               </p>
             </div>
             <div className="row-span-3 grid grid-cols-5 min-h-[80px]">
@@ -105,10 +105,10 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
                 KIT SOLAR
               </p>
               <div className="flex items-center justify-center text-xs col-span-3 border border-black border-t-0">
-                {kitInfo ? (
+                {info.compra?.kitInfo ? (
                   <div className="text-xs font-bold text-center">
-                    {kitInfo
-                      ? kitInfo
+                    {info.compra?.kitInfo
+                      ? info.compra?.kitInfo
                           .split("/")
                           .map((string, index) => <li key={index}>{string}</li>)
                       : false}
@@ -124,7 +124,7 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
                   OBS.COMERCIAL
                 </p>
                 <p className="flex items-center justify-center text-center text-xs col-span-3 border border-black border-t-0">
-                  {info.obscomercial ? info.obscomercial : "-"}
+                  {info.obsComercial ? info.obscomercial : "-"}
                 </p>
               </div>
             </div>
@@ -135,10 +135,10 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
                 MATERIAL DO ESCRITÓRIO
               </p>
               <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black">
-                {info.estruturafaltando ? (
+                {info.material.materialFaltante ? (
                   <div className="text-xs font-bold text-center">
-                    {info.estruturafaltando
-                      ? info.estruturafaltando
+                    {info.material.materialFaltante
+                      ? info.material.materialFaltante
                           .split("/")
                           .map((string, index) => <li key={index}>{string}</li>)
                       : false}
@@ -153,7 +153,11 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
                 TIPO DE TELHA
               </p>
               <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black border-y-0">
-                <div>{info.tipotelha ? info.tipotelha : "-"}</div>
+                <div>
+                  {info.visitaTecnica.tipoDaTelha
+                    ? info.visitaTecnica.tipoDaTelha
+                    : "-"}
+                </div>
               </div>
             </div>
             <div className="row-span-1 grid grid-cols-3 h-full items-center">
@@ -161,7 +165,11 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
                 TIPO DE ESTRUTURA
               </p>
               <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black">
-                <div>{info.tipoestrutura ? info.tipoestrutura : "-"}</div>
+                <div>
+                  {info.estruturaPersonalizada?.tipo
+                    ? info.estruturaPersonalizada?.tipo
+                    : "-"}
+                </div>
               </div>
             </div>
           </div>
@@ -170,14 +178,14 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
       <div className="border border-black mt-3">
         <h1 className="text-center  font-bold pt-1">OBSERVAÇÕES DA OBRA/OS</h1>
         <div className="flex justify-center min-h-[100px] items-center">
-          {info.obsobra ? (
+          {info.obra.observacoes ? (
             <div
               className={`${
-                info.obsobra.length > 370 ? "text-xxs" : "text-xs"
+                info.obra.observacoes.length > 370 ? "text-xxs" : "text-xs"
               } px-2 my-2 font-bold text-center`}
             >
-              {info.obsobra
-                ? info.obsobra
+              {info.obra.observacoes
+                ? info.obra.observacoes
                     .split("/")
                     .map((string, index) => <li key={index}>{string}</li>)
                 : false}

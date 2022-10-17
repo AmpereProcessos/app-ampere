@@ -163,10 +163,10 @@ function Projetos({ credentials, setCredentials }) {
             }}
             key={project._id}
             className={`w-[250px] lg:w-[450px] cursor-pointer ${
-              project.pareceracesso != undefined &&
-              project.statusvistoria != "REALIZADA"
+              project.parecer.dataParecerDeAcesso != undefined &&
+              project.vistoria.status != "REALIZADA"
                 ? getBorderColorByParecer(
-                    new Date(project.pareceracesso),
+                    new Date(project.parecer.dataParecerDeAcesso),
                     new Date()
                   )
                 : "border border-gray-200"

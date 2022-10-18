@@ -151,7 +151,7 @@ function Sidebar({ credentials }) {
                       <BsFolderPlus
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
-                      <p className="pl-3 text-gray-600">ADM</p>
+                      <p className="pl-3 text-xs text-gray-600">ADM</p>
                     </div>
                   </Link>
                 )

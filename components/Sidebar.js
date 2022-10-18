@@ -11,6 +11,7 @@ import {
 import { MdEngineering } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import { SiCashapp } from "react-icons/si";
+import { BsFillCalendarEventFill } from "react-icons/bs";
 import { BsFolderPlus } from "react-icons/bs";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -28,18 +29,18 @@ function Sidebar({ credentials }) {
       <div className="mt-4 flex flex-col h-full pb-2 justify-between">
         <div className="flex flex-col py-4 px-2">
           <div>
-            <h2 className="text-sm text-gray-500">PRINCIPAL</h2>
+            <h2 className="text-xs text-gray-500">PRINCIPAL</h2>
             <Link href="/">
               <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                 <RiDashboardFill
                   style={{ color: "#15599a", fontSize: "20px" }}
                 />
-                <p className="pl-3 text-gray-600">Dashboard</p>
+                <p className="pl-3 text-xs text-gray-600">Dashboard</p>
               </div>
             </Link>
           </div>
           <div className="mt-6">
-            <h2 className="text-sm text-gray-500">GESTÃO DE PROJETOS</h2>
+            <h2 className="text-xs text-gray-500">GESTÃO DE PROJETOS</h2>
             <Link href="/gestaoDeProjetos/emAndamento">
               <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                 <TbRecharging
@@ -48,7 +49,7 @@ function Sidebar({ credentials }) {
                     fontSize: "20px",
                   }}
                 />
-                <p className="pl-3 text-gray-600">Em andamento</p>
+                <p className="pl-3 text-xs text-gray-600">Em andamento</p>
               </div>
             </Link>
             <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -58,11 +59,21 @@ function Sidebar({ credentials }) {
                   fontSize: "20px",
                 }}
               />
-              <p className="pl-3 text-gray-600">Banco de dados</p>
+              <p className="pl-3 text-xs text-gray-600">Banco de dados</p>
             </div>
+            <Link href="/calendario">
+              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <BsFillCalendarEventFill
+                  style={{ color: "#15599a", fontSize: "20px" }}
+                />
+                <p className="pl-3 text-xs text-gray-600">
+                  Cronograma de Obras (em breve)
+                </p>
+              </div>
+            </Link>
           </div>
           <div className="mt-6">
-            <h2 className="text-sm text-gray-500">SETORES</h2>
+            <h2 className="text-xs text-gray-500">SETORES</h2>
             {credentials.accessibleRoutes != undefined
               ? credentials?.accessibleRoutes.includes("PPS") && (
                   <Link href="/comercial">
@@ -70,7 +81,7 @@ function Sidebar({ credentials }) {
                       <SiCashapp
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
-                      <p className="pl-3 text-gray-600">Comercial</p>
+                      <p className="pl-3 text-xs text-gray-600">Comercial</p>
                     </div>
                   </Link>
                 )
@@ -82,7 +93,7 @@ function Sidebar({ credentials }) {
                       <FaShoppingCart
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
-                      <p className="pl-3 text-gray-600">Suprimentos</p>
+                      <p className="pl-3 text-xs text-gray-600">Suprimentos</p>
                     </div>
                   </Link>
                 )
@@ -94,7 +105,7 @@ function Sidebar({ credentials }) {
                       <MdEngineering
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
-                      <p className="pl-3 text-gray-600">Projetos</p>
+                      <p className="pl-3 text-xs text-gray-600">Projetos</p>
                     </div>
                   </Link>
                 )
@@ -104,7 +115,7 @@ function Sidebar({ credentials }) {
                   <Link href="/obras">
                     <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <FaTools style={{ color: "#15599a", fontSize: "20px" }} />
-                      <p className="pl-3 text-gray-600">Obras</p>
+                      <p className="pl-3 text-xs text-gray-600">Obras</p>
                     </div>
                   </Link>
                 )
@@ -116,7 +127,7 @@ function Sidebar({ credentials }) {
                       <FaSolarPanel
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
-                      <p className="pl-3 text-gray-600">O&M</p>
+                      <p className="pl-3 text-xs text-gray-600">O&M</p>
                     </div>
                   </Link>
                 )
@@ -128,7 +139,7 @@ function Sidebar({ credentials }) {
                       <BiSupport
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
-                      <p className="pl-3 text-gray-600">Pós-Venda</p>
+                      <p className="pl-3 text-xs text-gray-600">Pós-Venda</p>
                     </div>
                   </Link>
                 )
@@ -147,11 +158,11 @@ function Sidebar({ credentials }) {
               : false}
           </div>
           <div className="mt-6">
-            <h2 className="text-sm text-gray-500">OUTROS</h2>
+            <h2 className="text-xs text-gray-500">OUTROS</h2>
             <Link href="/calls">
               <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                 <FaTasks style={{ color: "#15599a", fontSize: "20px" }} />
-                <p className="pl-3 text-gray-600">Chamados</p>
+                <p className="pl-3 text-xs text-gray-600">Chamados</p>
               </div>
             </Link>
           </div>

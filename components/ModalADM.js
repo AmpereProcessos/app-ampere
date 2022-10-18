@@ -42,15 +42,25 @@ function formataCEP(cep) {
 
   return cep;
 }
-function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
+function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
   const [infoHolder, setInfo] = useState(project);
-  const [msg, setMsg] = useState("");
   const [changes, setChanges] = useState({});
+  const [msg, setMsg] = useState({
+    text: "",
+    color: "",
+  });
   function handleChanges() {
-    axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
-      setMsg("Alterações feitas");
-      handleUpdates(project._id);
-    });
+    if (
+      infoHolder.contrato.status != "ASSINADO" &&
+      infoHolder.pagamento.status == "PAGO"
+    ) {
+      setMsg({ text: "Verifique as informações!", color: "text-red-400" });
+    } else {
+      axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
+        setMsg({ text: "Alterações feitas !", color: "text-green-400" });
+        handleUpdates(project._id);
+      });
+    }
   }
   console.log(changes);
   return (
@@ -68,7 +78,9 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                 </p>
               )}
               <div className="flex gap-x-2">
-                {msg && <p className="text-sm italic text-green-400">{msg}</p>}
+                {msg.text && (
+                  <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
+                )}
                 <button
                   onClick={handleChanges}
                   className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
@@ -93,7 +105,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <TextInput
                     label={"Nome do contrato"}
                     value={infoHolder.nomeDoContrato}
-                    editable={false}
+                    editable={editor}
                     handleChange={(value) => {
                       setChanges({ ...changes, nomeDoContrato: value });
                       setInfo({ ...infoHolder, nomeDoContrato: value });
@@ -102,7 +114,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <TextInput
                     label={"Nome do Projeto"}
                     value={infoHolder.nomeDoProjeto}
-                    editable={false}
+                    editable={editor}
                     handleChange={(value) => {
                       setChanges({ ...changes, nomeDoProjeto: value });
                       setInfo({
@@ -113,7 +125,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"CPF/CNPJ"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.cpf_cnpj
                         ? formataCPF(infoHolder.cpf_cnpj.toString())
@@ -129,7 +141,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"Telefone"}
-                    editable={false}
+                    editable={editor}
                     value={infoHolder.telefone ? infoHolder.telefone : "-"}
                     handleChange={(value) => {
                       setChanges({ ...changes, telefone: value });
@@ -138,7 +150,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"Cidade"}
-                    editable={false}
+                    editable={editor}
                     value={infoHolder.cidade ? infoHolder.cidade : "-"}
                     handleChange={(value) => {
                       setChanges({ ...changes, cidade: value });
@@ -147,7 +159,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"CEP"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.cep
                         ? formataCEP(infoHolder.cep.toString())
@@ -160,7 +172,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"Bairro"}
-                    editable={false}
+                    editable={editor}
                     value={infoHolder.bairro ? infoHolder.bairro : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, bairro: value });
@@ -169,7 +181,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <NumberInput
                     label={"Número da residência"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.numeroResidencia
                         ? infoHolder.numeroResidencia
@@ -188,7 +200,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <SelectInput
                     label={"Regional"}
-                    editable={false}
+                    editable={editor}
                     value={infoHolder.regional}
                     options={[
                       {
@@ -207,7 +219,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"EMAIL"}
-                    editable={false}
+                    editable={editor}
                     value={infoHolder.email ? infoHolder.email : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, email: value });
@@ -222,7 +234,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.canalVenda
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       { label: "EVENTO", value: "EVENTO" },
                       {
@@ -254,7 +266,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       options={vendedores.map((vendedor) => {
                         return { label: vendedor.nome, value: vendedor.nome };
                       })}
-                      editable={false}
+                      editable={editor}
                       handleChange={(value) => {
                         console.log(value);
                         setChanges({
@@ -285,7 +297,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <SelectInput
                     label={"SEGMENTO"}
                     value={infoHolder.segmento}
-                    editable={false}
+                    editable={editor}
                     options={[
                       { label: "COMERCIAL", value: "COMERCIAL" },
                       { label: "INDUSTRIAL", value: "INDUSTRIAL" },
@@ -300,365 +312,10 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <TextInput
                     label="TIPO DE SERVIÇO"
                     value={infoHolder.tipoDeServico}
-                    editable={false}
+                    editable={editor}
                     handleChange={(value) => {
                       setChanges({ ...changes, tipoDeServico: value });
                       setInfo({ ...infoHolder, tipoDeServico: value });
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  PÓS-OBRA
-                </span>
-                <div className="flex gap-2 justify-around flex-wrap">
-                  <DateInput
-                    label={"Usina Ligada"}
-                    editable={editor}
-                    value={
-                      infoHolder.conferencias.usinaLigada.data != undefined &&
-                      infoHolder.conferencias.usinaLigada.data != "-"
-                        ? new Date(infoHolder.conferencias.usinaLigada.data)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        conferencias: {
-                          ...infoHolder.conferencias,
-                          usinaLigada: {
-                            ...infoHolder.usinaLigada,
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        conferencias: {
-                          ...infoHolder.conferencias,
-                          usinaLigada: {
-                            ...infoHolder.usinaLigada,
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label={"Monitoramento feito"}
-                    editable={editor}
-                    value={
-                      infoHolder.conferencias.monitoramentoFeito.data !=
-                        undefined &&
-                      infoHolder.conferencias.monitoramentoFeito.data != "-"
-                        ? new Date(
-                            infoHolder.conferencias.monitoramentoFeito.data
-                          )
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        conferencias: {
-                          ...infoHolder.conferencias,
-                          monitoramentoFeito: {
-                            ...infoHolder.monitoramentoFeito,
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        conferencias: {
-                          ...infoHolder.conferencias,
-                          monitoramentoFeito: {
-                            ...infoHolder.monitoramentoFeito,
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label={"Data APP no celular"}
-                    editable={editor}
-                    value={
-                      infoHolder.app.data != undefined &&
-                      infoHolder.app.data != "-"
-                        ? new Date(infoHolder.app.data)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        app: {
-                          ...infoHolder.app,
-                          data: new Date(value).toISOString(),
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        app: {
-                          ...infoHolder.app,
-                          data: new Date(value).toISOString(),
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label={"Energia Injetada"}
-                    editable={editor}
-                    value={
-                      infoHolder.conferencias.energiaInjetada.data !=
-                        undefined &&
-                      infoHolder.conferencias.energiaInjetada.data != "-"
-                        ? new Date(infoHolder.conferencias.energiaInjetada.data)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        conferencias: {
-                          ...infoHolder.conferencias,
-                          energiaInjetada: {
-                            ...infoHolder.energiaInjetada,
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        conferencias: {
-                          ...infoHolder.conferencias,
-                          energiaInjetada: {
-                            ...infoHolder.energiaInjetada,
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                    }}
-                  />
-                  <TextInput
-                    label={"LOGIN NO APP"}
-                    value={infoHolder.app.login ? infoHolder.app.login : ""}
-                    normalCase={true}
-                    editable={editor}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        app: {
-                          ...infoHolder.app,
-                          login: value,
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        app: {
-                          ...infoHolder.app,
-                          login: value,
-                        },
-                      });
-                    }}
-                  />
-                  <TextInput
-                    label={"SENHA NO APP"}
-                    value={infoHolder.app.senha}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        app: {
-                          ...infoHolder.app,
-                          senha: value,
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        app: {
-                          ...infoHolder.app,
-                          senha: value,
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label={"RELATÓRIO 1"}
-                    editable={editor}
-                    value={
-                      infoHolder.relatorios.envioUm.data != undefined &&
-                      infoHolder.relatorios.envioUm.data != "-"
-                        ? new Date(infoHolder.relatorios.envioUm.data)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioUm: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioUm: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label={"RELATÓRIO 2"}
-                    editable={editor}
-                    value={
-                      infoHolder.relatorios.envioDois.data != undefined &&
-                      infoHolder.relatorios.envioDois.data != "-"
-                        ? new Date(infoHolder.relatorios.envioDois.data)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioDois: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioDois: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label={"RELATÓRIO 3"}
-                    editable={editor}
-                    value={
-                      infoHolder.relatorios.envioTres.data != undefined &&
-                      infoHolder.relatorios.envioTres.data != "-"
-                        ? new Date(infoHolder.relatorios.envioTres.data)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioTres: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioTres: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label={"RELATÓRIO 4"}
-                    editable={editor}
-                    value={
-                      infoHolder.relatorios.envioQuatro.data != undefined &&
-                      infoHolder.relatorios.envioQuatro.data != "-"
-                        ? new Date(infoHolder.relatorios.envioQuatro.data)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioQuatro: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioQuatro: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label={"MANUTENÇÃO PREVENTIVA"}
-                    editable={editor}
-                    value={
-                      infoHolder.manutencaoPreventiva.data != undefined &&
-                      infoHolder.manutencaoPreventiva.data != "-"
-                        ? new Date(infoHolder.manutencaoPreventiva.data)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        manutencaoPreventiva: {
-                          ...infoHolder.manutencaoPreventiva,
-                          data: new Date(value).toISOString(),
-                          status: "REALIZADO",
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        manutencaoPreventiva: {
-                          ...infoHolder.manutencaoPreventiva,
-                          data: new Date(value).toISOString(),
-                          status: "REALIZADO",
-                        },
-                      });
                     }}
                   />
                 </div>
@@ -670,7 +327,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                 <div className="flex gap-2 justify-around flex-wrap">
                   <div>
                     <input
-                      disabled={true}
+                      disabled={!editor}
                       checked={
                         infoHolder.visitaTecnica?.status === "REALIZADA"
                           ? true
@@ -706,7 +363,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <TextInput
                     label={"TÉCNICO RESPONSÁVEL"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.visitaTecnica.tecnico
                         ? infoHolder.visitaTecnica.tecnico
@@ -731,7 +388,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <SelectInput
                     label={"Saída do cliente"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.visitaTecnica.saidaDoCliente
                         ? infoHolder.visitaTecnica.saidaDoCliente
@@ -761,7 +418,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"Amperagem"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.visitaTecnica?.amperagem
                         ? infoHolder.visitaTecnica.amperagem
@@ -786,7 +443,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"Tipo da telha"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.visitaTecnica?.tipoDaTelha
                         ? infoHolder.visitaTecnica?.tipoDaTelha
@@ -813,12 +470,100 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  PADRÃO
+                </span>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  <SelectInput
+                    label={"PAGAMENTO DO PADRÃO"}
+                    editable={editor}
+                    value={
+                      infoHolder.padrao?.respPagamento ==
+                        "NÃO HAVERA TROCA DE PADRÃO" ||
+                      infoHolder.padrao?.respPagamento == undefined
+                        ? "NÃO HAVERA TROCA PADRÃO"
+                        : infoHolder.padrao?.respPagamento
+                    }
+                    options={[
+                      {
+                        label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                        value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                      },
+                      {
+                        label: "CLIENTE PAGAR POR FORA",
+                        value: "CLIENTE PAGAR POR FORA",
+                      },
+                      {
+                        label: "INCLUSO NO CONTRATO",
+                        value: "INCLUSO NO CONTRATO",
+                      },
+                      {
+                        label: "NÃO HAVERA TROCA PADRÃO",
+                        value: "NÃO HAVERA TROCA PADRÃO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        padrao: { ...infoHolder.padrao, respPagamento: value },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: { ...infoHolder.padrao, respPagamento: value },
+                      });
+                    }}
+                  />
+                  <NumberInput
+                    tag={"R$"}
+                    label={"Valor do padrão"}
+                    editable={editor}
+                    value={
+                      infoHolder.padrao.valor ? infoHolder.padrao.valor : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        padrao: { ...infoHolder.padrao, valor: Number(value) },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: { ...infoHolder.padrao, valor: Number(value) },
+                      });
+                    }}
+                  />
+                  <SelectInput
+                    label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
+                    editable={editor}
+                    value={
+                      infoHolder.padrao?.respInstalacao
+                        ? infoHolder.padrao?.respInstalacao
+                        : "NÃO SE APLICA"
+                    }
+                    options={[
+                      { label: "AMPERE", value: "AMPERE" },
+                      { label: "CLIENTE", value: "CLIENTE" },
+                      { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        padrao: { ...infoHolder.padrao, respInstalacao: value },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: { ...infoHolder.padrao, respInstalacao: value },
+                      });
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   ESTRUTURA PERSONALIZADA
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
                   <div>
                     <input
-                      disabled={true}
+                      disabled={!editor}
                       checked={
                         infoHolder.estruturaPersonalizada?.aplicavel === "SIM"
                           ? true
@@ -850,7 +595,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <SelectInput
                     label={"Tipo da estrutura"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.estruturaPersonalizada?.tipo
                         ? infoHolder.estruturaPersonalizada?.tipo
@@ -883,7 +628,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <SelectInput
                     label={"PAGAMENTO DA ESTRUTURA"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.estruturaPersonalizada?.respPagamento
                         ? infoHolder.estruturaPersonalizada?.respPagamento
@@ -914,7 +659,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <NumberInput
                     tag={"R$"}
                     label={"Valor da estrutura"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.estruturaPersonalizada?.valor == "-" ||
                       infoHolder.estruturaPersonalizada?.valor == undefined
@@ -941,7 +686,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   {infoHolder.estruturaPersonalizada.aplicavel == "SIM" && (
                     <SelectInput
                       label={"STATUS da estrutura personalizada"}
-                      editable={false}
+                      editable={editor}
                       value={
                         infoHolder.estruturaPersonalizada.aplicavel
                           ? infoHolder.estruturaPersonalizada.status
@@ -976,12 +721,415 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  CONTRATO
+                </span>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  <SelectInput
+                    label={"STATUS"}
+                    editable={editor}
+                    value={
+                      infoHolder.contrato.status
+                        ? infoHolder.contrato.status
+                        : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      {
+                        label: "AGUARDANDO SOLICITAÇÃO",
+                        value: "AGUARDANDO SOLICITAÇÃO",
+                      },
+                      { label: "ASSINADO", value: "ASSINADO" },
+                      { label: "NÃO ASSINADO", value: "NÃO ASSINADO" },
+                      {
+                        label: "RECISÃO DE CONTRATO",
+                        value: "RECISÃO DE CONTRATO",
+                      },
+                      { label: "SOLICITADO", value: "SOLICITADO" },
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        contrato: {
+                          ...infoHolder.contrato,
+                          status: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        contrato: {
+                          ...infoHolder.contrato,
+                          status: value,
+                        },
+                      });
+                    }}
+                  />
+                  {(infoHolder.contrato.status != "AGUARDANDO SOLICITAÇÃO" ||
+                    infoHolder.contrato.status != "NÃO DEFINIDO") && (
+                    <DateInput
+                      label={"Data de solicitação"}
+                      editable={editor}
+                      value={
+                        infoHolder.contrato.dataSolicitacao != undefined &&
+                        infoHolder.contrato.dataSolicitacao != "-"
+                          ? new Date(infoHolder.contrato.dataSolicitacao)
+                              .toISOString()
+                              .slice(0, 10)
+                          : 0
+                      }
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          contrato: {
+                            ...infoHolder.contrato,
+                            dataSolicitacao: new Date(value).toISOString(),
+                          },
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          contrato: {
+                            ...infoHolder.contrato,
+                            dataSolicitacao: new Date(value).toISOString(),
+                          },
+                        });
+                      }}
+                    />
+                  )}
+                  <DateInput
+                    label={"Data de liberação p/ assinatura"}
+                    editable={editor}
+                    value={
+                      infoHolder.contrato.dataLiberacao != undefined &&
+                      infoHolder.contrato.dataLiberacao != "-"
+                        ? new Date(infoHolder.contrato.dataLiberacao)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        contrato: {
+                          ...infoHolder.contrato,
+                          dataLiberacao: new Date(value).toISOString(),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        contrato: {
+                          ...infoHolder.contrato,
+                          dataLiberacao: new Date(value).toISOString(),
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
+                    label={"Data de assinatura"}
+                    editable={editor}
+                    value={
+                      infoHolder.contrato.dataAssinatura != undefined &&
+                      infoHolder.contrato.dataAssinatura != "-"
+                        ? new Date(infoHolder.contrato.dataAssinatura)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        contrato: {
+                          ...infoHolder.contrato,
+                          dataAssinatura: new Date(value).toISOString(),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        contrato: {
+                          ...infoHolder.contrato,
+                          dataAssinatura: new Date(value).toISOString(),
+                        },
+                      });
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  PAGAMENTO
+                </span>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  <SelectInput
+                    label={"STATUS PAGAMENTO"}
+                    value={
+                      infoHolder.pagamento.status
+                        ? infoHolder.pagamento.status
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    options={[
+                      {
+                        label: "AGUARDANDO PAGAMENTO",
+                        value: "AGUARDANDO PAGAMENTO",
+                      },
+                      {
+                        label: "PAGO",
+                        value: "PAGO",
+                      },
+                      {
+                        label: "RESCISÃO",
+                        value: "RESCISÃO",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          status: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          status: value,
+                        },
+                      });
+                    }}
+                  />
+                  <SelectInput
+                    label={"FORMA DE PAGAMENTO"}
+                    value={
+                      infoHolder.pagamento?.forma
+                        ? infoHolder.pagamento?.forma
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    options={[
+                      {
+                        label: "CAPITAL PROPRIO",
+                        value: "CAPITAL PROPRIO",
+                      },
+                      {
+                        label: "FINANCIAMENTO",
+                        value: "FINANCIAMENTO",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          forma: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          forma: value,
+                        },
+                      });
+                    }}
+                  />
+                  <SelectInput
+                    label={"EMPRESA A FATURAR"}
+                    value={
+                      infoHolder.faturamento?.empresaFaturamento != undefined &&
+                      infoHolder.faturamento?.empresaFaturamento != "-"
+                        ? infoHolder.faturamento?.empresaFaturamento
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    options={[
+                      { label: "AMPERE ENERGIAS", value: "AMPERE ENERGIAS" },
+                      {
+                        label: "ANALISE DO FINANCEIRO",
+                        value: "ANALISE DO FINANCEIRO",
+                      },
+                      { label: "IZAIRA SERVIÇOS", value: "IZAIRA SERVIÇOS" },
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          empresaFaturamento: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          empresaFaturamento: value,
+                        },
+                      });
+                    }}
+                  />
+                  <TextInput
+                    label={"Informações faturamento"}
+                    editable={editor}
+                    value={
+                      infoHolder.faturamento?.previsaoFaturamento
+                        ? infoHolder.faturamento?.previsaoFaturamento
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          previsaoFaturamento: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          previsaoFaturamento: value,
+                        },
+                      });
+                    }}
+                  />
+                  {infoHolder.pagamento?.forma == "FINANCIAMENTO" && (
+                    <SelectInput
+                      label={"CREDOR"}
+                      value={
+                        infoHolder.pagamento.credor != undefined &&
+                        infoHolder.pagamento.credor != "-----" &&
+                        infoHolder.pagamento.credor != "QUAL CREDOR?"
+                          ? infoHolder.pagamento.credor
+                          : "NÃO DEFINIDO"
+                      }
+                      editable={editor}
+                      options={[
+                        {
+                          label: "BANCO DO BRASIL",
+                          value: "BANCO DO BRASIL",
+                        },
+                        {
+                          label: "BRADESCO",
+                          value: "BRADESCO",
+                        },
+                        {
+                          label: "BV FINANCEIRA",
+                          value: "BV FINANCEIRA",
+                        },
+                        {
+                          label: "CAIXA",
+                          value: "CAIXA",
+                        },
+                        {
+                          label: "COOPACREDI",
+                          value: "COOPACREDI",
+                        },
+                        {
+                          label: "CREDICAMPINA",
+                          value: "CREDICAMPINA",
+                        },
+                        {
+                          label: "CREDIPONTAL",
+                          value: "CREDIPONTAL",
+                        },
+                        {
+                          label: "SANTANDER",
+                          value: "SANTANDER",
+                        },
+                        {
+                          label: "SOL FACIL",
+                          value: "SOL FACIL",
+                        },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
+                        },
+                      ]}
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          pagamento: {
+                            ...infoHolder.pagamento,
+                            credor: value,
+                          },
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          pagamento: {
+                            ...infoHolder.pagamento,
+                            credor: value,
+                          },
+                        });
+                      }}
+                    />
+                  )}
+                  <TextInput
+                    label={"Pagador"}
+                    editable={editor}
+                    value={
+                      infoHolder.pagamento?.pagador
+                        ? infoHolder.pagamento.pagador
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          pagador: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          pagador: value,
+                        },
+                      });
+                    }}
+                  />
+                  <TextInput
+                    label={"Contato pagador"}
+                    editable={editor}
+                    value={
+                      infoHolder.pagamento?.contatoPagador
+                        ? infoHolder.pagamento?.contatoPagador
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          contatoPagador: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        pagamento: {
+                          ...infoHolder.pagamento,
+                          contatoPagador: value,
+                        },
+                      });
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   Informações da compra
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
                   <DateInput
                     label={"Data de liberação p/ compra"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.compra.dataLiberacao != undefined &&
                       infoHolder.compra.dataLiberacao != "-"
@@ -1009,7 +1157,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"Data do pagamento"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.compra?.dataPagamento != undefined &&
                       infoHolder.compra?.dataPagamento != "-"
@@ -1037,7 +1185,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <SelectInput
                     label={"Fornecedor"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.compra?.fornecedor != undefined &&
                       infoHolder.compra.fornecedor != "-"
@@ -1095,7 +1243,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.compra.tipoDoKit
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       {
                         label: "NORMAL",
@@ -1130,7 +1278,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <NumberInput
                     tag={"R$"}
                     label={"VALOR DO KIT"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.compra?.valorDoKit != undefined &&
                       infoHolder.compra?.valorDoKit != "-"
@@ -1162,7 +1310,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.compra?.localEntrega
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       { label: "MESMO DO PROJETO", value: "MESMO DO PROJETO" },
                       { label: "SEM RESTRIÇÕES", value: "SEM RESTRIÇÕES" },
@@ -1192,7 +1340,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.compra?.informacoes
                         : ""
                     }
-                    editable={false}
+                    editable={editor}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
@@ -1212,7 +1360,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <SelectInput
                     label={"STATUS DA ENTREGA"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.compra?.statusEntrega
                         ? infoHolder.compra?.statusEntrega
@@ -1262,7 +1410,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                 <div className="flex gap-2 justify-center flex-wrap">
                   <TextInput
                     label={"Titular do projeto"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.dadosCemig?.titularProjeto
                         ? infoHolder.dadosCemig?.titularProjeto
@@ -1292,7 +1440,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.dadosCemig.numeroInstalacao
                         : ""
                     }
-                    editable={false}
+                    editable={editor}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
@@ -1317,7 +1465,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.dadosCemig.distCreditos
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       { label: "SIM", value: "SIM" },
                       { label: "NÃO", value: "NÃO" },
@@ -1343,7 +1491,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   {infoHolder.dadosCemig.distCreditos == "SIM" && (
                     <NumberInput
                       label={"QTDE DE DISTRIBUIÇÕES"}
-                      editable={false}
+                      editable={editor}
                       value={
                         infoHolder.dadosCemig?.qtdeDistCreditos != undefined &&
                         infoHolder.dadosCemig?.qtdeDistCreditos != "-"
@@ -1377,7 +1525,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                 <div className="flex gap-2 justify-center flex-wrap">
                   <NumberInput
                     label={"NÚMERO DE MÓDULOS"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.sistema?.qtdeModulos != undefined &&
                       infoHolder.sistema?.qtdeModulos != "-"
@@ -1404,7 +1552,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <NumberInput
                     unit={"W"}
                     label={"POTÊNCIA DOS MÓDULOS"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.sistema?.potModulos != undefined &&
                       infoHolder.sistema?.potModulos != "-"
@@ -1431,7 +1579,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <NumberInput
                     unit={"kWp"}
                     label={"POTÊNCIA PICO"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.sistema?.potPico != undefined &&
                       infoHolder.sistema?.potPico != "-"
@@ -1462,7 +1610,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.sistema?.topologia
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       { label: "INVERSOR", value: "INVERSOR" },
                       { label: "MICRO", value: "MICRO" },
@@ -1488,7 +1636,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.sistema?.inversor
                         ? infoHolder.sistema?.inversor
@@ -1514,7 +1662,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <NumberInput
                     tag={"R$"}
                     label={"VALOR DO PROJETO"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.sistema?.valorProjeto != undefined &&
                       infoHolder.sistema?.valorProjeto != "-"
@@ -1545,7 +1693,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.projeto?.iniciar
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       { label: "SIM", value: "SIM" },
                       {
@@ -1585,7 +1733,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.projeto?.projetista?.nome
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       {
                         label: "ALINE",
@@ -1630,7 +1778,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"Data de assinatura da documentação"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.projeto.dataAssDocumentacao != undefined &&
                       infoHolder.projeto.dataAssDocumentacao != "-"
@@ -1658,7 +1806,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"Parecer de acesso"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.parecer?.dataParecerDeAcesso != undefined &&
                       infoHolder.parecer?.dataParecerDeAcesso != "-"
@@ -1691,7 +1839,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.parecer.statusDoParecerDeAcesso
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       {
                         label: "AGUARDANDO FATURAMENTO ART",
@@ -1749,7 +1897,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
-                        disabled={true}
+                        disabled={!editor}
                         checked={
                           infoHolder.projeto?.diagramaUnifilar === "Ok"
                             ? true
@@ -1790,7 +1938,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
-                        disabled={true}
+                        disabled={!editor}
                         checked={
                           infoHolder.projeto?.desenhoTelhado === "OK"
                             ? true
@@ -1827,7 +1975,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <SelectInput
                     label={"MAPA DE MICRO"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.projeto?.mapaDeMicro != undefined &&
                       infoHolder.projeto?.mapaDeMicro != "-"
@@ -1862,7 +2010,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
-                        disabled={true}
+                        disabled={!editor}
                         checked={
                           infoHolder.projeto.aumentoDeCarga === "SIM"
                             ? true
@@ -1910,7 +2058,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       </span>
                       <div className="flex">
                         <input
-                          disabled={true}
+                          disabled={!editor}
                           checked={
                             infoHolder.projeto?.acStatus === "REALIZADO"
                               ? true
@@ -1948,7 +2096,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   )}
                   <DateInput
                     label={"DATA DO PEDIDO DE VISTORIA"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.vistoria?.dataPedido != undefined &&
                       infoHolder.vistoria?.dataPedido != "-"
@@ -1981,7 +2129,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.vistoria.status
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       { label: "REALIZADA", value: "REALIZADA" },
                       {
@@ -2009,7 +2157,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"DATA TROCA DO MEDIDOR"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.medidor?.data != undefined &&
                       infoHolder.medidor?.data != "-"
@@ -2042,7 +2190,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.medidor?.status
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       { label: "REALIZADA", value: "REALIZADA" },
                       {
@@ -2074,7 +2222,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
-                        disabled={true}
+                        disabled={!editor}
                         checked={
                           infoHolder.projeto?.projetoConcluido === "SIM"
                             ? true
@@ -2123,7 +2271,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.obra?.laudo
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       { label: "EM ESTUDO", value: "EM ESTUDO" },
                       { label: "EMITIDO", value: "EMITIDO" },
@@ -2152,7 +2300,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
-                        disabled={true}
+                        disabled={!editor}
                         checked={
                           infoHolder.obra?.statusSolicitacao === "SOLICITADA"
                             ? true
@@ -2189,7 +2337,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <DateInput
                     label={"ENTRADA NA OBRA"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.obra?.entrada != undefined &&
                       infoHolder.obra?.entrada != "-"
@@ -2217,7 +2365,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"SAIDA DE OBRA"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.obra?.saida != undefined &&
                       infoHolder.obra?.saida != "-"
@@ -2245,7 +2393,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <SelectInput
                     label={"EQUIPE RESPONSÁVEL"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.obra?.equipeResp != undefined &&
                       infoHolder.obra?.equipeResp != "-"
@@ -2341,7 +2489,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
-                        disabled={true}
+                        disabled={!editor}
                         checked={
                           infoHolder.obra?.checklist === "SIM" ? true : false
                         }
@@ -2412,7 +2560,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.obra?.statusDaObra
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       {
                         label: "AGENDADA",
@@ -2461,7 +2609,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       OBSERVAÇÕES
                     </span>
                     <textarea
-                      readOnly={true}
+                      readOnly={!editor}
                       value={
                         infoHolder.obra.observacoes
                           ? infoHolder.obra.observacoes
@@ -2489,6 +2637,106 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                 </div>
               </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  MATERIAL
+                </span>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  <SelectInput
+                    label={"Separação do material"}
+                    value={
+                      infoHolder.material?.statusSeparacao
+                        ? infoHolder.material?.statusSeparacao
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    options={[
+                      {
+                        label: "INICIAR SEPARAÇÃO",
+                        value: "INICIAR SEPARAÇÃO",
+                      },
+                      {
+                        label: "SEPARADO",
+                        value: "SEPARADO",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        material: {
+                          ...infoHolder.material,
+                          statusSeparacao: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        material: {
+                          ...infoHolder.material,
+                          statusSeparacao: value,
+                        },
+                      });
+                    }}
+                  />
+                  <NumberInput
+                    tag={"R$"}
+                    label={"Previsão de custos em insumos"}
+                    editable={editor}
+                    value={
+                      infoHolder.material?.previsaoCustos != undefined &&
+                      infoHolder.material?.previsaoCustos != "#VALUE!"
+                        ? infoHolder.material?.previsaoCustos
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        material: {
+                          ...infoHolder.material,
+                          previsaoCustos: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        material: {
+                          ...infoHolder.material,
+                          previsaoCustos: Number(value),
+                        },
+                      });
+                    }}
+                  />
+                  <NumberInput
+                    tag={"R$"}
+                    label={"Custos em insumos"}
+                    editable={editor}
+                    value={
+                      infoHolder.material?.efetivoCustos != undefined &&
+                      infoHolder.material?.efetivoCustos != "#VALUE!"
+                        ? infoHolder.material?.efetivoCustos
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        material: {
+                          ...infoHolder.material,
+                          efetivoCustos: Number(value),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        material: {
+                          ...infoHolder.material,
+                          efetivoCustos: Number(value),
+                        },
+                      });
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -2497,4 +2745,4 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
   );
 }
 
-export default ModalOeM;
+export default ModalADM;

@@ -98,7 +98,7 @@ function ModalSuprimentos({
                   <TextInput
                     label={"Nome do contrato"}
                     value={infoHolder.nomeDoContrato}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) => {
                       setChanges({ ...changes, nomeDoContrato: value });
                       setInfo({ ...infoHolder, nomeDoContrato: value });
@@ -107,7 +107,7 @@ function ModalSuprimentos({
                   <TextInput
                     label={"Nome do Projeto"}
                     value={infoHolder.nomeDoProjeto}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) => {
                       setChanges({ ...changes, nomeDoProjeto: value });
                       setInfo({
@@ -118,7 +118,7 @@ function ModalSuprimentos({
                   />
                   <TextInput
                     label={"CPF/CNPJ"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.cpf_cnpj
                         ? formataCPF(infoHolder.cpf_cnpj.toString())
@@ -134,7 +134,7 @@ function ModalSuprimentos({
                   />
                   <TextInput
                     label={"Telefone"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.telefone ? infoHolder.telefone : "-"}
                     handleChange={(value) => {
                       setChanges({ ...changes, telefone: value });
@@ -143,7 +143,7 @@ function ModalSuprimentos({
                   />
                   <TextInput
                     label={"Cidade"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.cidade ? infoHolder.cidade : "-"}
                     handleChange={(value) => {
                       setChanges({ ...changes, cidade: value });
@@ -152,7 +152,7 @@ function ModalSuprimentos({
                   />
                   <TextInput
                     label={"CEP"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.cep
                         ? formataCEP(infoHolder.cep.toString())
@@ -165,7 +165,7 @@ function ModalSuprimentos({
                   />
                   <TextInput
                     label={"Bairro"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.bairro ? infoHolder.bairro : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, bairro: value });
@@ -174,7 +174,7 @@ function ModalSuprimentos({
                   />
                   <NumberInput
                     label={"Número da residência"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.numeroResidencia
                         ? infoHolder.numeroResidencia
@@ -193,7 +193,7 @@ function ModalSuprimentos({
                   />
                   <SelectInput
                     label={"Regional"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.regional}
                     options={[
                       {
@@ -212,7 +212,7 @@ function ModalSuprimentos({
                   />
                   <TextInput
                     label={"EMAIL"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.email ? infoHolder.email : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, email: value });
@@ -227,7 +227,7 @@ function ModalSuprimentos({
                         ? infoHolder.canalVenda
                         : "NÃO DEFINIDO"
                     }
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "EVENTO", value: "EVENTO" },
                       {
@@ -259,7 +259,7 @@ function ModalSuprimentos({
                       options={vendedores.map((vendedor) => {
                         return { label: vendedor.nome, value: vendedor.nome };
                       })}
-                      editable={editor}
+                      editable={false}
                       handleChange={(value) => {
                         console.log(value);
                         setChanges({
@@ -290,7 +290,7 @@ function ModalSuprimentos({
                   <SelectInput
                     label={"SEGMENTO"}
                     value={infoHolder.segmento}
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "COMERCIAL", value: "COMERCIAL" },
                       { label: "INDUSTRIAL", value: "INDUSTRIAL" },
@@ -302,6 +302,15 @@ function ModalSuprimentos({
                       setInfo({ ...infoHolder, segmento: value });
                     }}
                   />
+                  <TextInput
+                    label="TIPO DE SERVIÇO"
+                    value={infoHolder.tipoDeServico}
+                    editable={false}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, tipoDeServico: value });
+                      setInfo({ ...infoHolder, tipoDeServico: value });
+                    }}
+                  />
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
@@ -311,7 +320,7 @@ function ModalSuprimentos({
                 <div className="flex gap-2 justify-around flex-wrap">
                   <TextInput
                     label={"TÉCNICO RESPONSÁVEL"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.visitaTecnica.tecnico
                         ? infoHolder.visitaTecnica.tecnico
@@ -336,7 +345,7 @@ function ModalSuprimentos({
                   />
                   <TextInput
                     label={"Tipo da telha"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.visitaTecnica?.tipoDaTelha
                         ? infoHolder.visitaTecnica?.tipoDaTelha

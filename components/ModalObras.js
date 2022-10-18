@@ -1001,33 +1001,6 @@ function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
-                  <NumberInput
-                    tag={"R$"}
-                    label={"VALOR DO PROJETO"}
-                    editable={editor}
-                    value={
-                      infoHolder.sistema?.valorProjeto != undefined &&
-                      infoHolder.sistema?.valorProjeto != "-"
-                        ? infoHolder.sistema?.valorProjeto
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          valorProjeto: Number(value),
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        sistema: {
-                          ...changes.sistema,
-                          valorProjeto: Number(value),
-                        },
-                      });
-                    }}
-                  />
                   <SelectInput
                     label={"INICIAR PROJETO"}
                     value={

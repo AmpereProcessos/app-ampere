@@ -13,17 +13,24 @@ function OeM({ credentials, setCredentials }) {
     });
   }
   useEffect(() => {
-    if (Object.keys(credentials).length == 0) {
-      var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-      if (storedCredentials == null) {
+    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
+    if (storedCredentials) {
+      setCredentials(storedCredentials);
+      getProjects();
+    } else {
+      if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        setCredentials(storedCredentials);
+        if (
+          credentials.accessibleRoutes.includes("O&M") ||
+          storedCredentials.accessibleRoutes.includes("O&M")
+        )
+          editor = true;
+        else editor = false;
         getProjects();
       }
     }
   }, []);
-  console.log(projects);
   return (
     <div className="p-6 grow">
       <div className="flex items-center gap-x-2 border-b border-gray-200 p-1">

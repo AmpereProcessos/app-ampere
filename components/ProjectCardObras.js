@@ -41,6 +41,16 @@ function ProjectCardObras({ info }) {
           {info.projeto.aumentoDeCarga ? info.projeto.aumentoDeCarga : "-"}
         </p>
       </div>
+      <div className="grid grid-cols-2">
+        <p className="text-md text-center text-[#15599a] font-bold">
+          POSSUI ESTRUTURA PERSONALIZADA
+        </p>
+        <p className="text-md text-center text-gray-600">
+          {info.estruturaPersonalizada.aplicavel
+            ? info.estruturaPersonalizada.aplicavel
+            : "-"}
+        </p>
+      </div>
       {info.projeto.aumentoDeCarga == "SIM" && (
         <>
           <div className="grid grid-cols-2">

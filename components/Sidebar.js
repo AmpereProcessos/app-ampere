@@ -11,6 +11,7 @@ import {
 import { MdEngineering } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import { SiCashapp } from "react-icons/si";
+import { BsFolderPlus } from "react-icons/bs";
 import Link from "next/link";
 import { useRouter } from "next/router";
 function Sidebar({ credentials }) {
@@ -128,6 +129,18 @@ function Sidebar({ credentials }) {
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
                       <p className="pl-3 text-gray-600">Pós-Venda</p>
+                    </div>
+                  </Link>
+                )
+              : false}
+            {credentials.accessibleRoutes != undefined
+              ? credentials?.accessibleRoutes.includes("ADM") && (
+                  <Link href="/adm">
+                    <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <BsFolderPlus
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-gray-600">ADM</p>
                     </div>
                   </Link>
                 )

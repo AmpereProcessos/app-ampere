@@ -51,12 +51,22 @@ function ModalComercial({
 }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState({
+    text: "",
+    color: "",
+  });
   function handleChanges() {
-    axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
-      setMsg("Alterações feitas");
-      handleUpdates(project._id);
-    });
+    if (
+      infoHolder.contrato.status != "ASSINADO" &&
+      infoHolder.pagamento.status == "PAGO"
+    ) {
+      setMsg({ text: "Verifique as informações!", color: "text-red-400" });
+    } else {
+      axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
+        setMsg({ text: "Alterações feitas !", color: "text-green-400" });
+        handleUpdates(project._id);
+      });
+    }
   }
   console.log(changes);
   return (
@@ -74,7 +84,9 @@ function ModalComercial({
                 </p>
               )}
               <div className="flex gap-x-2">
-                {msg && <p className="text-sm italic text-green-400">{msg}</p>}
+                {msg.text && (
+                  <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
+                )}
                 <button
                   onClick={handleChanges}
                   className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
@@ -303,6 +315,15 @@ function ModalComercial({
                       setInfo({ ...infoHolder, segmento: value });
                     }}
                   />
+                  <TextInput
+                    label="TIPO DE SERVIÇO"
+                    value={infoHolder.tipoDeServico}
+                    editable={editor}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, tipoDeServico: value });
+                      setInfo({ ...infoHolder, tipoDeServico: value });
+                    }}
+                  />
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
@@ -367,61 +388,6 @@ function ModalComercial({
                         visitaTecnica: {
                           ...infoHolder.visitaTecnica,
                           tecnico: value,
-                        },
-                      });
-                    }}
-                  />
-                  <SelectInput
-                    label={"Saída do cliente"}
-                    editable={editor}
-                    value={
-                      infoHolder.visitaTecnica.saidaDoCliente
-                        ? infoHolder.visitaTecnica.saidaDoCliente
-                        : "N/A"
-                    }
-                    options={[
-                      { label: "SUBTERRANEO", value: "SUBTERRANEO" },
-                      { label: "AEREO", value: "AEREO" },
-                      { label: "N/A", value: "N/A" },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          saidaDoCliente: value,
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          saidaDoCliente: value,
-                        },
-                      });
-                    }}
-                  />
-                  <TextInput
-                    label={"Amperagem"}
-                    editable={editor}
-                    value={
-                      infoHolder.visitaTecnica?.amperagem
-                        ? infoHolder.visitaTecnica.amperagem
-                        : ""
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          amperagem: value,
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          amperagem: value,
                         },
                       });
                     }}
@@ -536,6 +502,61 @@ function ModalComercial({
                       setInfo({
                         ...infoHolder,
                         padrao: { ...infoHolder.padrao, respInstalacao: value },
+                      });
+                    }}
+                  />
+                  <SelectInput
+                    label={"Saída do cliente"}
+                    editable={editor}
+                    value={
+                      infoHolder.visitaTecnica.saidaDoCliente
+                        ? infoHolder.visitaTecnica.saidaDoCliente
+                        : "N/A"
+                    }
+                    options={[
+                      { label: "SUBTERRANEO", value: "SUBTERRANEO" },
+                      { label: "AEREO", value: "AEREO" },
+                      { label: "N/A", value: "N/A" },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          saidaDoCliente: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          saidaDoCliente: value,
+                        },
+                      });
+                    }}
+                  />
+                  <TextInput
+                    label={"Amperagem"}
+                    editable={editor}
+                    value={
+                      infoHolder.visitaTecnica?.amperagem
+                        ? infoHolder.visitaTecnica.amperagem
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          amperagem: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          amperagem: value,
+                        },
                       });
                     }}
                   />

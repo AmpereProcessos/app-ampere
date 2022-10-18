@@ -4,11 +4,18 @@ import { useRouter } from "next/router";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalProjetos from "../../components/ModalProjetos";
+import { projetistas } from "../../utils/constants";
 function Projetos({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
-  const [parecerFilter, setParecerFilter] = useState([]);
+  const [filters, setFilters] = useState({
+    parecerFilter: [],
+    vistoriaFilter: [],
+    projetistaFilter: [],
+    distribuicaoFilter: [],
+    assinFaltando: false,
+  });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
   function getProjects() {
@@ -23,14 +30,44 @@ function Projetos({ credentials, setCredentials }) {
     setModalProject(changedObj[0]);
   }
   function filterProjects() {
+    console.log(filters);
     var newArr;
-    if (parecerFilter.length > 0) {
+    if (filters.parecerFilter.length > 0) {
+      if (!newArr) newArr = projects;
       newArr = projects.filter((project) =>
-        parecerFilter.includes(project.parecer.statusDoParecerDeAcesso)
+        filters.parecerFilter.includes(project.parecer.statusDoParecerDeAcesso)
       );
+    }
+    if (filters.vistoriaFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.vistoriaFilter.includes(call.vistoria.status)
+      );
+    }
+    if (filters.projetistaFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.projetistaFilter.includes(call.projeto.projetista.nome)
+      );
+    }
+    if (filters.distribuicaoFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.distribuicaoFilter.includes(call.dadosCemig.distCreditos)
+      );
+    }
+    if (filters.assinFaltando) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (project) =>
+          project.projeto.dataAssDocumentacao == undefined ||
+          project.projeto.dataAssDocumentacao == null ||
+          project.projeto.dataAssDocumentacao == "-"
+      );
+    }
+    if (!newArr) setFilteredProjects(projects);
+    else {
       setFilteredProjects(newArr);
-    } else {
-      setFilteredProjects(projects);
     }
   }
   function getListCumulativePeakPot() {
@@ -89,65 +126,136 @@ function Projetos({ credentials, setCredentials }) {
             </p>
           )}
         </div>
-        <div className="flex gap-x-2">
+        <div className="flex gap-2 flex-wrap justify-center">
           <Select
             isMulti
             placeholder="STATUS DO PARECER"
-            onChange={(e) => setParecerFilter(e.map((x) => x.value))}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                parecerFilter: e.map((x) => x.value),
+              })
+            }
             options={[
               {
-                value: "AGUARDANDO ASSINATURA",
                 label: "AGUARDANDO ASSINATURA",
+                value: "AGUARDANDO ASSINATURA",
               },
               {
-                value: "AGUARDANDO AUMENTO DE CARGA",
                 label: "AGUARDANDO AUMENTO DE CARGA",
+                value: "AGUARDANDO AUMENTO DE CARGA",
               },
               {
-                value: "AGUARDANDO FATURAMENTO ART",
                 label: "AGUARDANDO FATURAMENTO ART",
+                value: "AGUARDANDO FATURAMENTO ART",
               },
               {
-                value: "AGUARDANDO FORMULÁRIOS",
                 label: "AGUARDANDO FORMULÁRIOS",
+                value: "AGUARDANDO FORMULÁRIOS",
               },
               {
-                value: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
                 label: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
+                value: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
               },
               {
-                value: "AGUARDANDO TROCA DE TITULARIDADE",
                 label: "AGUARDANDO TROCA DE TITULARIDADE",
+                value: "AGUARDANDO TROCA DE TITULARIDADE",
               },
               {
-                value: "AUMENTO DE CARGA",
                 label: "AUMENTO DE CARGA",
+                value: "AUMENTO DE CARGA",
               },
               {
-                value: "INICIAR PROJETO",
-                label: "INICIAR PROJETO",
+                label: "CANCELADO",
+                value: "CANCELADO",
               },
               {
-                value: "PARECER DE ACESSO APROVADO",
                 label: "PARECER DE ACESSO APROVADO",
+                value: "PARECER DE ACESSO APROVADO",
               },
               {
-                value: "PENDENCIAS",
                 label: "PENDENCIAS",
+                value: "PENDENCIAS",
               },
               {
-                value: "SOLICITAR ACESSO",
                 label: "SOLICITAR ACESSO",
+                value: "SOLICITAR ACESSO",
               },
               {
-                value: "SOLICITAR AUMENTO DE CARGA",
                 label: "SOLICITAR AUMENTO DE CARGA",
+                value: "SOLICITAR AUMENTO DE CARGA",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
               },
             ]}
           />
+          <Select
+            isMulti
+            placeholder="STATUS DA VISTORIA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                vistoriaFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              { label: "REALIZADA", value: "REALIZADA" },
+              {
+                label: "AGUARDANDO OBRA DE REDE",
+                value: "AGUARDANDO OBRA DE REDE",
+              },
+              {
+                label: "AGUARDANDO CONCESSIONARIA",
+                value: "AGUARDANDO CONCESSIONARIA",
+              },
+              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="PROJETISTA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                projetistaFilter: e.map((x) => x.value),
+              })
+            }
+            options={projetistas.map((projetista) => {
+              return {
+                label: projetista.label,
+                value: projetista.nome,
+              };
+            })}
+          />
+          <Select
+            isMulti
+            placeholder="DIST. CRÉDITOS"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                distribuicaoFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              { label: "SIM", value: "SIM" },
+              { label: "NÃO", value: "NÃO" },
+            ]}
+          />
+          <div
+            onClick={() =>
+              setFilters({ ...filters, assinFaltando: !filters.assinFaltando })
+            }
+            className={`${
+              filters.assinFaltando ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            FALTANDO ASSINATURA
+          </div>
           <button
             onClick={filterProjects}
-            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 items-center gap-x-2"
+            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 py-2  items-center gap-x-2"
           >
             <p>Filtrar</p>
             <AiOutlineSearch />

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { vendedores } from "../utils/constants";
+import { projetistas, vendedores } from "../utils/constants";
 import axios from "axios";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
@@ -75,8 +75,8 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
       return "border border-gray-200";
     }
   }
-  console.log(infoHolder.parecerReprovado);
   console.log(changes);
+  console.log(infoHolder.projeto);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -941,44 +941,38 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
-                    options={[
-                      {
-                        label: "ALINE",
-                        value: "ALINE APARECIDA RODRIGUES CARVALHO",
-                      },
-                      {
-                        label: "ANDREW",
-                        value: "ANDRE BORGES ALEXANDER",
-                      },
-                      {
-                        label: "GLENDA",
-                        value: "GLENDA ELIAS NASCIMENTO SANTOS",
-                      },
-                      {
-                        label: "POLLIANA",
-                        value: "POLLIANA CRISTINA DE REZENDE",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
+                    options={projetistas.map((projetista) => {
+                      return {
+                        label: projetista.label,
+                        value: projetista.nome,
+                      };
+                    })}
                     handleChange={(value) => {
+                      console.log(value);
                       setChanges({
                         ...changes,
                         projeto: {
                           ...infoHolder.projeto,
                           projetista: {
-                            ...infoHolder.projeto.projetista,
                             nome: value,
+                            codigo:
+                              projetistas.filter(
+                                (projetista) => projetista.nome == value
+                              )[0].cod || "-",
                           },
                         },
                       });
                       setInfo({
                         ...infoHolder,
-                        projetista: {
-                          ...infoHolder.projeto.projetista,
-                          nome: value,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          projetista: {
+                            nome: value,
+                            codigo:
+                              projetistas.filter(
+                                (projetista) => projetista.nome == value
+                              )[0].cod || "-",
+                          },
                         },
                       });
                     }}
@@ -1049,24 +1043,36 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                     editable={editor}
                     options={[
                       {
+                        label: "AGUARDANDO ASSINATURA",
+                        value: "AGUARDANDO ASSINATURA",
+                      },
+                      {
+                        label: "AGUARDANDO AUMENTO DE CARGA",
+                        value: "AGUARDANDO AUMENTO DE CARGA",
+                      },
+                      {
                         label: "AGUARDANDO FATURAMENTO ART",
                         value: "AGUARDANDO FATURAMENTO ART",
+                      },
+                      {
+                        label: "AGUARDANDO FORMULÁRIOS",
+                        value: "AGUARDANDO FORMULÁRIOS",
                       },
                       {
                         label: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
                         value: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
                       },
                       {
-                        label: "PARECER DE ACESSO COM OBRAS",
-                        value: "PARECER DE ACESSO COM OBRAS",
+                        label: "AGUARDANDO TROCA DE TITULARIDADE",
+                        value: "AGUARDANDO TROCA DE TITULARIDADE",
+                      },
+                      {
+                        label: "AUMENTO DE CARGA",
+                        value: "AUMENTO DE CARGA",
                       },
                       {
                         label: "CANCELADO",
                         value: "CANCELADO",
-                      },
-                      {
-                        label: "INICIAR PROJETO",
-                        value: "INICIAR PROJETO",
                       },
                       {
                         label: "PARECER DE ACESSO APROVADO",
@@ -1079,6 +1085,10 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       {
                         label: "SOLICITAR ACESSO",
                         value: "SOLICITAR ACESSO",
+                      },
+                      {
+                        label: "SOLICITAR AUMENTO DE CARGA",
+                        value: "SOLICITAR AUMENTO DE CARGA",
                       },
                       {
                         label: "NÃO DEFINIDO",
@@ -1284,6 +1294,10 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       {
                         label: "AGUARDANDO OBRA DE REDE",
                         value: "AGUARDANDO OBRA DE REDE",
+                      },
+                      {
+                        label: "AGUARDANDO CONCESSIONARIA",
+                        value: "AGUARDANDO CONCESSIONARIA",
                       },
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}

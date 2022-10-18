@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalObras from "../../components/ModalObras";
+import { cities } from "../../utils/constants";
 function Suprimentos({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
@@ -16,6 +17,7 @@ function Suprimentos({ credentials, setCredentials }) {
     acStatusFilter: [],
     epFilter: [],
     epStatusFilter: [],
+    cidadeFilter: [],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -83,6 +85,12 @@ function Suprimentos({ credentials, setCredentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.epStatusFilter.includes(call.estruturaPersonalizada.status)
+      );
+    }
+    if (filters.cidadeFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.cidadeFilter.includes(call.cidade)
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -285,6 +293,22 @@ function Suprimentos({ credentials, setCredentials }) {
               { value: "ENTREGUE", label: "ENTREGUE" },
               { value: undefined, label: "NÃO DEFINIDO" },
             ]}
+          />
+          <Select
+            isMulti
+            placeholder="CIDADE"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                cidadeFilter: e.map((x) => x.value),
+              })
+            }
+            options={cities.map((cidade) => {
+              return {
+                label: cidade.name,
+                value: cidade.name.toUpperCase(),
+              };
+            })}
           />
           <input
             type={"text"}

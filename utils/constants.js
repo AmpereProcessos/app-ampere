@@ -142,6 +142,38 @@ export const vendedores = [
     cod: 999,
   },
 ];
+export const projetistas = [
+  {
+    nome: "POLLIANA CRISTINA DE REZENDE",
+    label: "POLLIANA",
+    cod: 1,
+  },
+  {
+    nome: "ALINE APARECIDA RODRIGUES CARVALHO",
+    label: "ALINE",
+    cod: 21,
+  },
+  {
+    nome: "ANDREW BORGES ALEXANDER",
+    label: "ANDREW",
+    cod: 44,
+  },
+  {
+    nome: "JORDANA ALVES DE FREITAS",
+    label: "JORDANA",
+    cod: 29,
+  },
+  {
+    nome: "ANDRIELLY GARCIA DOS SANTOS MARQUES",
+    label: "ANDRIELLY",
+    cod: 51,
+  },
+  {
+    nome: "GLENDA ELIAS NASCIMENTO SANTOS",
+    label: "GLENDA",
+    cod: 52,
+  },
+];
 export const acessAuth = {
   diretorExecutivo: {
     label: "Diretor(a) Executivo",

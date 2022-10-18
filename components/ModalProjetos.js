@@ -76,7 +76,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
     }
   }
   console.log(changes);
-  console.log(infoHolder.projeto);
+
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -522,61 +522,6 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
-                  <SelectInput
-                    label={"Saída do cliente"}
-                    editable={editor}
-                    value={
-                      infoHolder.visitaTecnica.saidaDoCliente
-                        ? infoHolder.visitaTecnica.saidaDoCliente
-                        : "N/A"
-                    }
-                    options={[
-                      { label: "SUBTERRANEO", value: "SUBTERRANEO" },
-                      { label: "AEREO", value: "AEREO" },
-                      { label: "N/A", value: "N/A" },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          saidaDoCliente: value,
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          saidaDoCliente: value,
-                        },
-                      });
-                    }}
-                  />
-                  <TextInput
-                    label={"Amperagem"}
-                    editable={editor}
-                    value={
-                      infoHolder.visitaTecnica?.amperagem
-                        ? infoHolder.visitaTecnica.amperagem
-                        : ""
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          amperagem: value,
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          amperagem: value,
-                        },
-                      });
-                    }}
-                  />
                   <TextInput
                     label={"Tipo da telha"}
                     editable={editor}
@@ -609,6 +554,51 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   PADRÃO
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
+                  <SelectInput
+                    label={"TIPO DO PADRÃO"}
+                    editable={editor}
+                    value={
+                      infoHolder.padrao.tipo != undefined
+                        ? infoHolder.padrao.tipo
+                        : "N/A"
+                    }
+                    options={[
+                      {
+                        label: "CONTRA A REDE",
+                        value: "CONTRA A REDE",
+                      },
+                      {
+                        label: "A FAVOR DA REDE",
+                        value: "A FAVOR DA REDE",
+                      },
+                      {
+                        label: "CONSTRUIR",
+                        value: "CONSTRUIR",
+                      },
+                      {
+                        label: "SUBESTAÇÃO",
+                        value: "SUBESTAÇÃO",
+                      },
+                      {
+                        label: "REFORMA DE PADRÃO",
+                        value: "REFORMA DE PADRÃO",
+                      },
+                      {
+                        label: "N/A",
+                        value: "N/A",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        padrao: { ...infoHolder.padrao, tipo: value },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: { ...infoHolder.padrao, tipo: value },
+                      });
+                    }}
+                  />
                   <SelectInput
                     label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
                     editable={editor}
@@ -723,6 +713,61 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       </div>
                     </div>
                   )}
+                  <SelectInput
+                    label={"Saída do cliente"}
+                    editable={editor}
+                    value={
+                      infoHolder.visitaTecnica.saidaDoCliente
+                        ? infoHolder.visitaTecnica.saidaDoCliente
+                        : "N/A"
+                    }
+                    options={[
+                      { label: "SUBTERRANEO", value: "SUBTERRANEO" },
+                      { label: "AEREO", value: "AEREO" },
+                      { label: "N/A", value: "N/A" },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          saidaDoCliente: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          saidaDoCliente: value,
+                        },
+                      });
+                    }}
+                  />
+                  <TextInput
+                    label={"Amperagem"}
+                    editable={editor}
+                    value={
+                      infoHolder.visitaTecnica?.amperagem
+                        ? infoHolder.visitaTecnica.amperagem
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          amperagem: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          amperagem: value,
+                        },
+                      });
+                    }}
+                  />
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

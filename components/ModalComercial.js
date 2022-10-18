@@ -425,6 +425,55 @@ function ModalComercial({
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
                   <SelectInput
+                    label={"TIPO DO PADRÃO"}
+                    editable={editor}
+                    value={
+                      infoHolder.padrao.tipo != undefined
+                        ? infoHolder.padrao.tipo
+                        : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      {
+                        label: "CONTRA A REDE",
+                        value: "CONTRA A REDE",
+                      },
+                      {
+                        label: "A FAVOR DA REDE",
+                        value: "A FAVOR DA REDE",
+                      },
+                      {
+                        label: "CONSTRUIR",
+                        value: "CONSTRUIR",
+                      },
+                      {
+                        label: "SUBESTAÇÃO",
+                        value: "SUBESTAÇÃO",
+                      },
+                      {
+                        label: "REFORMA DE PADRÃO",
+                        value: "REFORMA DE PADRÃO",
+                      },
+                      {
+                        label: "N/A",
+                        value: "N/A",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        padrao: { ...infoHolder.padrao, tipo: value },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: { ...infoHolder.padrao, tipo: value },
+                      });
+                    }}
+                  />
+                  <SelectInput
                     label={"PAGAMENTO DO PADRÃO"}
                     editable={editor}
                     value={

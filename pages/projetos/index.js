@@ -103,9 +103,9 @@ function Projetos({ credentials, setCredentials }) {
     if (diffDays > 110) {
       return "border-2 border-red-600";
     } else if (diffDays > 105) {
-      return "border-2 border-orange-300";
+      return "border-2 border-yellow-500";
     } else if (diffDays > 90) {
-      return "border-2 border-blue-300";
+      return "border-2 border-blue-700";
     } else {
       return "border border-gray-200";
     }

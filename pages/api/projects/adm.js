@@ -8,6 +8,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "obra.statusDaObra": "CONCLUIDA",
+            "pagamento.cobrancaFeita": { $ne: true },
           },
         },
         {

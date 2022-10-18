@@ -123684,6 +123684,20 @@ export default async function handler(req, res) {
         contato: project.contatoindicacao,
       },
       ondeTrabalha: project.ondetrabalha,
+      jornada: {
+        boasVindas: false,
+        assDocumentacoes: false,
+        compraDoKit: false,
+        nfFaturada: false,
+        prevChegada: false,
+        respConcessionaria: false,
+        entregaDoKit: false,
+        instalacaoAgendada: false,
+        vistoriaConcessionaria: false,
+        sistemaLigado: false,
+        jornadaConcluida: false,
+        dataNps: new Date()
+      },
       nps: project.nps,
     };
   });

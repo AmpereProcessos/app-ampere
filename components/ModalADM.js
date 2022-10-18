@@ -63,6 +63,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
     }
   }
   console.log(changes);
+  console.log(infoHolder.pagamento);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -650,6 +651,36 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   PAGAMENTO
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
+                  <div className="w-[350px]">
+                    <input
+                      disabled={!editor}
+                      checked={
+                        infoHolder.pagamento.cobrancaFeita ? true : false
+                      }
+                      onChange={(e) => {
+                        setChanges({
+                          ...changes,
+                          pagamento: {
+                            ...infoHolder.pagamento,
+                            cobrancaFeita: e.target.checked,
+                          },
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          pagamento: {
+                            ...infoHolder.pagamento,
+                            cobrancaFeita: e.target.checked,
+                          },
+                        });
+                      }}
+                      type="checkbox"
+                      name="cobrancaFeita"
+                      id="cobrancaFeita"
+                    />
+                    <label className="ml-2" htmlFor="cobrancaFeita">
+                      COBRANÇA REALIZADA
+                    </label>
+                  </div>
                   <SelectInput
                     label={"STATUS PAGAMENTO"}
                     value={
@@ -657,7 +688,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.pagamento.status
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       {
                         label: "AGUARDANDO PAGAMENTO",
@@ -700,7 +731,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.pagamento?.forma
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       {
                         label: "CAPITAL PROPRIO",
@@ -740,7 +771,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.faturamento?.empresaFaturamento
                         : "NÃO DEFINIDO"
                     }
-                    editable={false}
+                    editable={editor}
                     options={[
                       { label: "AMPERE ENERGIAS", value: "AMPERE ENERGIAS" },
                       {
@@ -769,7 +800,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <NumberInput
                     label={"CNPJ PARA FATURAMENTO"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.faturamento.cnpjFaturamento != undefined &&
                       infoHolder.faturamento.cnpjFaturamento != "#VALUE!"
@@ -795,7 +826,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"Informações faturamento"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.faturamento?.previsaoFaturamento
                         ? infoHolder.faturamento?.previsaoFaturamento
@@ -828,7 +859,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                           ? infoHolder.pagamento.credor
                           : "NÃO DEFINIDO"
                       }
-                      editable={false}
+                      editable={editor}
                       options={[
                         {
                           label: "BANCO DO BRASIL",
@@ -1390,39 +1421,6 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
-                  <SelectInput
-                    label={"INICIAR PROJETO"}
-                    value={
-                      infoHolder.projeto?.iniciar
-                        ? infoHolder.projeto?.iniciar
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={false}
-                    options={[
-                      { label: "SIM", value: "SIM" },
-                      {
-                        label: "CONTRATO CANCELADO",
-                        value: "CONTRATO CANCELADO",
-                      },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          iniciar: value,
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          iniciar: value,
-                        },
-                      });
-                    }}
-                  />
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
@@ -1430,77 +1428,6 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   Informações sobre a obra
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
-                  <SelectInput
-                    label={"Laudo"}
-                    value={
-                      infoHolder.obra?.laudo
-                        ? infoHolder.obra?.laudo
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={false}
-                    options={[
-                      { label: "EM ESTUDO", value: "EM ESTUDO" },
-                      { label: "EMITIDO", value: "EMITIDO" },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          laudo: value,
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        obra: {
-                          ...infoHolder.obra,
-                          laudo: value,
-                        },
-                      });
-                    }}
-                  />
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      SOLICITAÇÃO DA OBRA
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={true}
-                        checked={
-                          infoHolder.obra?.statusSolicitacao === "SOLICITADA"
-                            ? true
-                            : false
-                        }
-                        onChange={(e) => {
-                          setChanges({
-                            ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              statusSolicitacao: e.target.checked
-                                ? "SOLICITADA"
-                                : "NÃO SOLICITADA",
-                            },
-                          });
-                          setInfo({
-                            ...infoHolder,
-                            obra: {
-                              ...infoHolder.obra,
-                              statusSolicitacao: e.target.checked
-                                ? "SOLICITADA"
-                                : "NÃO SOLICITADA",
-                            },
-                          });
-                        }}
-                        type="checkbox"
-                        name="solicitacaoobra"
-                        id="solicitacaoobra"
-                      />
-                      <label className="ml-2" htmlFor="solicitacaoobra">
-                        SOLICITADA
-                      </label>
-                    </div>
-                  </div>
                   <DateInput
                     label={"ENTRADA NA OBRA"}
                     editable={false}
@@ -1558,168 +1485,6 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     }}
                   />
                   <SelectInput
-                    label={"EQUIPE RESPONSÁVEL"}
-                    editable={false}
-                    value={
-                      infoHolder.obra?.equipeResp != undefined &&
-                      infoHolder.obra?.equipeResp != "-"
-                        ? infoHolder.obra?.equipeResp == "TERCEIROS" ||
-                          infoHolder.obra?.equipeResp == "TERCERIZADOS" ||
-                          infoHolder.obra?.equipeResp == "OUTROS"
-                          ? "OUTROS"
-                          : infoHolder.obra?.equipeResp
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      {
-                        label: "EQUIPE 1 - JOSÉ ROBERTO",
-                        value: "EQUIPE 1 - JOSÉ ROBERTO",
-                      },
-                      {
-                        label: "EQUIPE 2 - EDUARDO",
-                        value: "EQUIPE 2-EDUARDO",
-                      },
-                      {
-                        label: "EQUIPE 3 - EDMAR",
-                        value: "EQUIPE 3-EDIMAR",
-                      },
-                      {
-                        label: "EQUIPE 4 - ERICK",
-                        value: "EQUIPE 4-ERICK",
-                      },
-                      {
-                        label: "EQUIPE 5 - JUNIN",
-                        value: "EQUIPE 5-JUNIN",
-                      },
-                      {
-                        label: "EQUIPE 6 - FELIPE",
-                        value: "EQUIPE 6-FELIPE",
-                      },
-                      {
-                        label: "EQUIPE 7 - ADENILSON",
-                        value: "EQUIPE 7- ADENILSON",
-                      },
-                      {
-                        label: "EQUIPE 8 - GERSON",
-                        value: "EQUIPE 8-GERSON",
-                      },
-                      {
-                        label: "EQUIPE 9 - REGINALDO",
-                        value: "EQUIPE 9 - REGINALDO",
-                      },
-                      {
-                        label: "EQUIPE 10 - LUIZ",
-                        value: "EQUIPE 10 - LUIZ",
-                      },
-                      {
-                        label: "EQUIPE 11 - GILMAR",
-                        value: "EQUIPE 11 - GILMAR",
-                      },
-                      {
-                        label: "EQUIPE 12 - MARCUS V.",
-                        value: "EQUIPE 12 - MARCUS V.",
-                      },
-                      {
-                        label: "EQUIPE 13 - EDUARDO FRANCO",
-                        value: "EQUIPE 13 - EDUARDO FRANCO",
-                      },
-                      {
-                        label: "EQUIPE 15 - MARCOS B.",
-                        value: "EQUIPE 15 - MARCOS B.",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          equipeResp: value,
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        obra: {
-                          ...infoHolder.obra,
-                          equipeResp: value,
-                        },
-                      });
-                    }}
-                  />
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      CHECKLIST OBRA
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={true}
-                        checked={
-                          infoHolder.obra?.checklist === "SIM" ? true : false
-                        }
-                        onChange={(e) => {
-                          setChanges({
-                            ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              checklist: e.target.checked ? "SIM" : "NÃO",
-                            },
-                          });
-                          setInfo({
-                            ...infoHolder,
-                            obra: {
-                              ...infoHolder.obra,
-                              checklist: e.target.checked ? "SIM" : "NÃO",
-                            },
-                          });
-                        }}
-                        type="checkbox"
-                        name="checklistobra"
-                        id="checklistobra"
-                      />
-                      <label className="ml-2" htmlFor="checklistobra">
-                        SIM
-                      </label>
-                    </div>
-                  </div>
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      TRAFO
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={true}
-                        checked={
-                          infoHolder.obra?.trafo === "SIM" ? true : false
-                        }
-                        onChange={(e) => {
-                          setChanges({
-                            ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              trafo: e.target.checked ? "SIM" : "NÃO",
-                            },
-                          });
-                          setInfo({
-                            ...infoHolder,
-                            obra: {
-                              ...infoHolder.obra,
-                              trafo: e.target.checked ? "SIM" : "NÃO",
-                            },
-                          });
-                        }}
-                        type="checkbox"
-                        name="trafo"
-                        id="trafo"
-                      />
-                      <label className="ml-2" htmlFor="trafo">
-                        SIM
-                      </label>
-                    </div>
-                  </div>
-                  <SelectInput
                     label={"STATUS DA OBRA"}
                     value={
                       infoHolder.obra?.statusDaObra
@@ -1770,37 +1535,6 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
-                  <div className="flex flex-col w-[450px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      OBSERVAÇÕES
-                    </span>
-                    <textarea
-                      readOnly={true}
-                      value={
-                        infoHolder.obra.observacoes
-                          ? infoHolder.obra.observacoes
-                          : ""
-                      }
-                      placeholder={"Observações da obra aqui..."}
-                      onChange={(e) => {
-                        setChanges({
-                          ...changes,
-                          obra: {
-                            ...infoHolder.obra,
-                            observacoes: e.target.value,
-                          },
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          obra: {
-                            ...infoHolder.obra,
-                            observacoes: e.target.value,
-                          },
-                        });
-                      }}
-                      className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                    />
-                  </div>
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

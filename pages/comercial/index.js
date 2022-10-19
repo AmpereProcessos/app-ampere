@@ -5,6 +5,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import ModalComercial from "../../components/ModalComercial";
 // casa em construção (Tais)
 import { useRouter } from "next/router";
+import Link from "next/link";
 function Comercial({ credentials, setCredentials }) {
   var editor;
   const router = useRouter();
@@ -240,6 +241,11 @@ function Comercial({ credentials, setCredentials }) {
           </div>
         ))}
       </div>
+      <Link href={"/comercial/addProjeto"}>
+        <div className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">Novo chamado</p>
+        </div>
+      </Link>
       {modalIsOpen && (
         <ModalComercial
           handleUpdates={handleUpdates}

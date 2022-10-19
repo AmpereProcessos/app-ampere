@@ -6,6 +6,7 @@ import TextInput from "../../components/TextInput";
 import DateInput from "../../components/DateInput";
 import { vendedores } from "../../utils/constants";
 import { useRouter } from "next/router";
+import axios from "axios";
 function formataCPF(cpf) {
   //retira os caracteres indesejados...
   cpf = cpf.replace(/[^\d]/g, "");
@@ -25,7 +26,6 @@ function NovoProjeto({ credentials, setCredentials }) {
   const [editor, setEditor] = useState(false);
   const router = useRouter();
   const [infoHolder, setInfo] = useState({
-    qtde: 0,
     nomeDoContrato: "",
     nomeDoProjeto: "",
     cpf_cnpj: 0,
@@ -230,6 +230,11 @@ function NovoProjeto({ credentials, setCredentials }) {
       }
     }
   }, []);
+  function addProject() {
+    axios
+      .post("/api/projects/add", infoHolder)
+      .then((res) => console.log(res.data));
+  }
   console.log(infoHolder);
   return (
     <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
@@ -1617,46 +1622,6 @@ function NovoProjeto({ credentials, setCredentials }) {
             PROJETO
           </span>
           <div className="flex gap-2 justify-center flex-wrap">
-            <SelectInput
-              label={"Projetista"}
-              value={
-                infoHolder.projeto?.projetista?.nome
-                  ? infoHolder.projeto?.projetista?.nome
-                  : "NÃO DEFINIDO"
-              }
-              editable={true}
-              options={[
-                {
-                  label: "ALINE",
-                  value: "ALINE APARECIDA RODRIGUES CARVALHO",
-                },
-                {
-                  label: "ANDREW",
-                  value: "ANDRE BORGES ALEXANDER",
-                },
-                {
-                  label: "GLENDA",
-                  value: "GLENDA ELIAS NASCIMENTO SANTOS",
-                },
-                {
-                  label: "POLLIANA",
-                  value: "POLLIANA CRISTINA DE REZENDE",
-                },
-                {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
-                },
-              ]}
-              handleChange={(value) => {
-                setInfo({
-                  ...infoHolder,
-                  projetista: {
-                    ...infoHolder.projeto.projetista,
-                    nome: value,
-                  },
-                });
-              }}
-            />
             <DateInput
               label={"Data de assinatura da documentação"}
               editable={true}
@@ -2450,6 +2415,11 @@ function NovoProjeto({ credentials, setCredentials }) {
               }}
             />
           </div>
+        </div>
+        <div className="w-full flex items-center justify-center">
+          <button className="p-2 my-2  bg-[#fead61]" onClick={addProject}>
+            ADICIONAR PROJETO
+          </button>
         </div>
       </div>
     </div>

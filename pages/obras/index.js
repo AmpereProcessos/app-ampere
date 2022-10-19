@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalObras from "../../components/ModalObras";
-import { cities } from "../../utils/constants";
-function Suprimentos({ credentials, setCredentials }) {
+import { cidadesAtendidas } from "../../utils/constants";
+function Obras({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
@@ -303,16 +303,17 @@ function Suprimentos({ credentials, setCredentials }) {
                 cidadeFilter: e.map((x) => x.value),
               })
             }
-            options={cities.map((cidade) => {
+            options={cidadesAtendidas.map((cidade) => {
               return {
-                label: cidade.name,
-                value: cidade.name.toUpperCase(),
+                label: cidade,
+                value: cidade,
               };
             })}
           />
           <input
             type={"text"}
             placeholder="Digite o nome do contrato"
+            value={searchFilter}
             className={
               "outline-none p-1.5 rounded border border-gray-200 placeholder:italic"
             }
@@ -398,4 +399,4 @@ function Suprimentos({ credentials, setCredentials }) {
   );
 }
 
-export default Suprimentos;
+export default Obras;

@@ -25,7 +25,7 @@ function Sidebar({ credentials }) {
   )
     return null;
   return (
-    <div className="flex sticky top-[70px] flex-col w-[250px] max-h-[900px] border-r border-gray-300">
+    <div className="flex overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-[#155a9a99] scrollbar-track-gray-200 sticky top-[70px] z-[0] flex-col w-[250px] max-h-[900px] border-r border-gray-300">
       <div className="mt-4 flex flex-col h-full pb-2 justify-between">
         <div className="flex flex-col py-4 px-2">
           <div>
@@ -167,10 +167,6 @@ function Sidebar({ credentials }) {
             </Link>
           </div>
         </div>
-        <p className="justify-self-end mt-10 text-center text-sm">
-          A ENERGIA QUE MOVE O MUNDO{" "}
-          <strong className="text-[#fead61]">VEM DE VOCÊ!</strong>
-        </p>
       </div>
     </div>
   );

@@ -1,16 +1,49 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import Select from "react-select";
+import { cidadesAtendidas } from "../../utils/constants";
+import { AiOutlineSearch } from "react-icons/ai";
 import ModalOeM from "../../components/ModalOeM";
 function OeM({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    cidadeFilter: [],
+  });
+  const [searchFilter, setSearchFilter] = useState("");
   const [modalProject, setModalProject] = useState({});
   function getProjects() {
     axios.get("/api/projects/oem").then((res) => {
       setProjects(res.data);
+      setFilteredProjects(res.data);
     });
+  }
+  function handleSearchFilter(value) {
+    setSearchFilter(value);
+    if (value != "" || " ") {
+      let newArr = projects.filter((call) =>
+        call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
+      );
+      setFilteredProjects(newArr);
+    } else {
+      setFilteredProjects(projects);
+    }
+  }
+  function filterProjects() {
+    var newArr;
+    if (filters.cidadeFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.cidadeFilter.includes(call.cidade)
+      );
+    }
+    if (!newArr) setFilteredProjects(projects);
+    else {
+      setFilteredProjects(newArr);
+    }
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -33,16 +66,49 @@ function OeM({ credentials, setCredentials }) {
   }, []);
   return (
     <div className="p-6 grow">
-      <div className="flex items-center gap-x-2 border-b border-gray-200 p-1">
-        <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
-          Projetos no estágio de operação e manutenção
-        </p>
-        <p className="font-raleway font-bold text-[#fead61]">
-          ({projects.length})
-        </p>
+      <div className="flex items-center justify-between border-b border-gray-200 p-1">
+        <div className="flex items-center gap-x-2">
+          <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
+            Projetos no estágio de operação e manutenção
+          </p>
+          <p className="font-raleway font-bold text-[#fead61]">
+            ({filteredProjects.length})
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2 items-center">
+          <input
+            className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
+            placeholder="Digite o nome do contrato"
+            value={searchFilter}
+            onChange={(e) => handleSearchFilter(e.target.value)}
+          />
+          <Select
+            isMulti
+            placeholder="CIDADE"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                cidadeFilter: e.map((x) => x.value),
+              })
+            }
+            options={cidadesAtendidas.map((cidade) => {
+              return {
+                label: cidade,
+                value: cidade,
+              };
+            })}
+          />
+          <button
+            onClick={filterProjects}
+            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+          >
+            <p>Filtrar</p>
+            <AiOutlineSearch />
+          </button>
+        </div>
       </div>
       <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-        {projects.map((project) => (
+        {filteredProjects.map((project) => (
           <div
             onClick={() => {
               setModalIsOpen(true);

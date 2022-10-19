@@ -10,6 +10,8 @@ function Comercial({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
+  const [searchFilter, setSearchFilter] = useState("");
+  const [codFilter, setCodFilter] = useState(0);
   const [filters, setFilters] = useState({
     contratoFilter: [],
     pagamentoFilter: [],
@@ -45,6 +47,28 @@ function Comercial({ credentials, setCredentials }) {
     if (!newArr) setFilteredProjects(projects);
     else {
       setFilteredProjects(newArr);
+    }
+  }
+  function handleSearchFilter(value) {
+    setSearchFilter(value);
+    if (value != "" || " ") {
+      let newArr = projects.filter((call) =>
+        call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
+      );
+      setFilteredProjects(newArr);
+    } else {
+      setFilteredProjects(projects);
+    }
+  }
+  function handleCodFilter(value) {
+    setCodFilter(value);
+    if (value != 0) {
+      let newArr = projects.filter(
+        (call) => Number(call.qtde) == Number(value)
+      );
+      setFilteredProjects(newArr);
+    } else {
+      setFilteredProjects(projects);
     }
   }
   useEffect(() => {
@@ -107,6 +131,19 @@ function Comercial({ credentials, setCredentials }) {
           )}
         </div>
         <div className="flex gap-x-2">
+          <input
+            value={codFilter}
+            onChange={(e) => handleCodFilter(e.target.value)}
+            className="outline-none p-1.5 w-[100px] rounded border border-gray-200 placeholder:italic"
+            type="number"
+          />
+          <input
+            type={"text"}
+            className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
+            placeholder="Digite o nome do contrato"
+            value={searchFilter}
+            onChange={(e) => handleSearchFilter(e.target.value)}
+          />
           <Select
             isMulti
             placeholder="STATUS CONTRATO"

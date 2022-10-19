@@ -20,31 +20,216 @@ function formataCEP(cep) {
 
   return cep;
 }
+
 function NovoProjeto({ credentials, setCredentials }) {
+  const [editor, setEditor] = useState(false);
   const router = useRouter();
-  const [info, setInfo] = useState({});
+  const [infoHolder, setInfo] = useState({
+    qtde: 0,
+    nomeDoContrato: "",
+    nomeDoProjeto: "",
+    cpf_cnpj: 0,
+    telefone: "",
+    cidade: "ITUIUTABA",
+    uf: "MG",
+    vendedor: {
+      nome: "",
+      codigo: 0,
+    },
+    regional: "REGIONAL ITUIUTABA",
+    tipoDeServico: "SISTEMA FOTOVOLTAICO",
+    codigoSVB: 0,
+    segmento: "RESIDENCIAL",
+    obsComercial: "",
+    visitaTecnica: {
+      status: "PENDÊNCIA",
+      tecnico: "",
+      saidaDoCliente: "",
+      amperagem: "",
+      tipoDaTelha: "",
+    },
+    padrao: {
+      tipo: "NÃO DEFINIDO",
+      respPagamento: "NÃO HAVERA TROCA PADRÃO",
+      respInstalacao: "NÃO SE APLICA",
+      valor: 0,
+    },
+    estruturaPersonalizada: {
+      aplicavel: "NÃO",
+      tipo: "N/A",
+      respPagamento: "NÃO SE APLICA",
+      valor: 0,
+      status: "N/A",
+    },
+    contrato: {
+      status: "NÃO DEFINIDO",
+      dataSolicitacao: new Date(), // formatar como data
+      dataLiberacao: 0, // formatar como data
+      dataAssinatura: 0, // formatar como data
+      formaAssinatura: "NÃO DEFINIDO",
+    },
+    pagamento: {
+      status: "NÃO DEFINIDO",
+      forma: "NÃO DEFINIDO",
+      credor: "NÃO DEFINIDO",
+      pagador: "",
+      contatoPagador: "",
+      retorno: 0,
+      cobrancaFeita: false,
+    },
+    faturamento: {
+      previsaoFaturamento: 0, // adicionar empresa e cnpj de faturamento
+      cnpjFaturamento: "",
+      empresaFaturamento: "",
+    },
+    /*    compra: {
+      statusLiberacao: project.statusliberacaocredito,
+      dataLiberacao: fixDate(project.dataliberacaoparacompra), // formatar como data
+      tipoDoKit: project.tipokit,
+      valorDoKit: project.valordokit,
+      kitInfo: project.kitsolar,
+      fornecedor: project.fornecedor,
+      dataPedido: fixDate(project.datadopedido), // formatar como data
+      dataPagamento: fixDate(project.datapagamento),
+      previsaoEntrega: fixDate(project.previsaoentrega), // formatar como data
+      localEntrega: project.localdeentrega,
+      informacoes: project.informacoescompra,
+      previsaoNotaFiscal: project.previsaonotafiscal,
+      rastreio: project.rastreiooutransportadora,
+      statusEntrega: project.statusentrega,
+    },
+    dadosCemig: {
+      titularProjeto: project.titulardoprojeto,
+      numeroInstalacao: project.numeroinstalacao,
+      distCreditos: project.distribuicaodecreditos,
+      qtdeDistCreditos: project.quantdistribuicoes,
+    },
+    sistema: {
+      qtdeModulos: project.nmodulos,
+      potModulos: project.potmodulos,
+      potPico: project.potpico,
+      topologia: project.topologia,
+      inversor: project.qtdepotinversor,
+      valorProjeto: project.valorprojeto,
+    },
+    projeto: {
+      iniciar: project.iniciarprojeto,
+      projetista: {
+        nome: project.projetista,
+        codigo: project.codigoprojetista,
+      },
+      dataLiberacaoDocumentacao: fixDate(project.dataliberacaodocumentacao), // formatar como data
+      dataAssDocumentacao: fixDate(project.documentacaoassinada), // formatar como data
+      diagramaUnifilar: project.diagramaunifilar,
+      desenhoTelhado: project.desenhotelhado,
+      mapaDeMicro: project.mapademicro,
+      aumentoDeCarga: project.aumentodecarga,
+      acStatus: project.acstatus,
+      projetoConcluido: project.projetoconcluido,
+      relatorioComissionamento: project.relatoriocomissionamento,
+    },
+    parecer: {
+      statusDoParecerDeAcesso: project.statusparecerdeacesso,
+      dataParecerDeAcesso: fixDate(project.pareceracesso), // formatar como data
+      parecerReprovado: project.parecerReprovado,
+      qtdeReprovas: project.qtdeReprovasParecer,
+      motivoReprova: project.motivoReprovaParecer,
+    },
+    vistoria: {
+      dataPedido: fixDate(project.pedidovistoria), // formatar como data
+      status: project.statusvistoria,
+      vistoriaReprovada: project.vistoriaReprovada,
+      qtdeReprovas: project.qtdeReprovasVistoria,
+      motivoReprova: project.motivoReprovaVistoria,
+    },
+    medidor: {
+      data: fixDate(project.trocamedidor), // formatar como data
+      status: project.statustrocamedidor,
+    },
+    obra: {
+      laudo: project.laudo,
+      observacoes: project.obsobra, // possibilidade de substituir \n por /, e quebrar textp em pontos
+      statusSolicitacao: project.solicitacaoobra,
+      entrada: fixDate(project.entradanaobra), // formatar como data
+      saida: fixDate(project.saidadeobra), // formatar como data.
+      statusDaObra: project.statusobra,
+      equipeResp: project.equipeexec,
+      checklist: project.checklist,
+      trafo: project.trafo,
+      fotosInstalacao: project.fotosinstalacao,
+    },
+    material: {
+      statusSeparacao: project.materialalmoxarifado,
+      previsaoCustos: project.prevcustosinsumos, // toFixed(2)
+      efetivoCustos: project.custosinsumos,
+      notaFiscal: project.notafiscal,
+      materialFaltante: project.materialfaltando,
+    },
+    manutencaoPreventiva: fixUsinaLigada(project.datamanutencaoprev),
+    relatorios: {
+      envioUm: fixUsinaLigada(project.relatorioum),
+      envioDois: fixUsinaLigada(project.relatoriodois),
+      envioTres: fixUsinaLigada(project.relatoriotres),
+      envioQuatro: fixUsinaLigada(project.relatorioquatro),
+    },
+    conferencias: {
+      usinaLigada: fixUsinaLigada(project.usinaligada),
+      monitoramentoFeito: fixUsinaLigada(project.monitoramentoFeito),
+      energiaInjetada: fixUsinaLigada(project.energiainjetada),
+    },
+    app: {
+      data: project.appcelular,
+      login: project.loginapp,
+      senha: project.senhaapp,
+    },
+    dataNascimento: fixDate(project.datanascimento),
+    email: project.email,
+    logradouro: project.logradouro,
+    numeroResidencia: project.numerores,
+    bairro: project.bairro,
+    cep: project.cep,
+    canalVenda: project.canalvenda,
+    indicacao: {
+      quemIndicou: project.quemindicou,
+      contato: project.contatoindicacao,
+    },
+    ondeTrabalha: project.ondetrabalha,
+    jornada: {
+      dataUltimoContato: project.dataultimocontato,
+      boasVindas: project.boasvindas,
+      assDocumentacoes: project.assdocumentacoes,
+      compraDoKit: project.compradokit,
+      nfFaturada: project.nffaturada,
+      prevChegada: project.prevchegada,
+      respConcessionaria: project.respconcessionaria,
+      entregaDoKit: project.entregadokit,
+      instalacaoAgendada: project.instalacaoagendada,
+      vistoriaConcessionaria: project.vistoriaconcessionaria,
+      sistemaLigado: project.sistemaligado,
+      jornadaConcluida: project.jornadaconcluida,
+      dataNps: project.datanps,
+    },
+  nps: project.nps, */
+  });
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
     } else {
-      if (
-        !credentials.accessibleRoutes.includes("PPS") &&
-        !storedCredentials.accessibleRoutes.includes("PPS")
-      ) {
-        router.push("/");
+      if (!credentials.nome) {
+        router.push("/auth/authHome");
+      } else {
+        if (
+          credentials.accessibleRoutes.includes("PPS") ||
+          storedCredentials.accessibleRoutes.includes("PPS")
+        )
+          setEditor(true);
+        else setEditor(false);
       }
     }
   }, []);
   return (
-    <div className="p-6 grow">
-      <div className="flex items-center justify-between border-b border-gray-200 p-1">
-        <div>
-          <h1 className="text-[#15599a] font-bold font-raleway text-xl uppercase">
-            Adicionar novo projeto
-          </h1>
-        </div>
-      </div>
+    <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
       <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
         <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
           <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -53,71 +238,100 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-around flex-wrap">
             <TextInput
               label={"Nome do contrato"}
-              value={info.nomedocontrato}
-              editable={true}
-              handleChange={(value) =>
-                setInfo({ ...info, nomedocontrato: value })
-              }
+              value={infoHolder.nomeDoContrato ? infoHolder.nomeDoContrato : ""}
+              editable={editor}
+              handleChange={(value) => {
+                setChanges({ ...changes, nomeDoContrato: value });
+                setInfo({ ...infoHolder, nomeDoContrato: value });
+              }}
             />
             <TextInput
               label={"Nome do Projeto"}
-              value={info.nomedoprojeto}
-              editable={true}
-              handleChange={(value) =>
-                setInfo({ ...info, nomedoprojeto: value })
-              }
-            />
-            <NumberInput
-              label={"Nº DO PROJETO SVB"}
-              value={info.codprojetosvb}
-              editable={true}
-              handleChange={(value) =>
-                setInfo({ ...info, codprojetosvb: value })
-              }
+              value={infoHolder.nomeDoProjeto}
+              editable={editor}
+              handleChange={(value) => {
+                setChanges({ ...changes, nomeDoProjeto: value });
+                setInfo({
+                  ...infoHolder,
+                  nomeDoProjeto: value,
+                });
+              }}
             />
             <TextInput
               label={"CPF/CNPJ"}
-              editable={true}
-              value={info.cpfcnpj ? formataCPF(info.cpfcnpj.toString()) : "-"}
-              handleChange={(value) => setInfo({ ...info, cpfcnpj: value })}
+              editable={editor}
+              value={
+                infoHolder.cpf_cnpj
+                  ? formataCPF(infoHolder.cpf_cnpj.toString())
+                  : "-"
+              }
+              handleChange={(value) => {
+                setChanges({ ...changes, cpf_cnpj: value });
+                setInfo({
+                  ...infoHolder,
+                  cpf_cnpj: value,
+                });
+              }}
             />
             <TextInput
               label={"Telefone"}
-              editable={true}
-              value={info.telefone ? info.telefone : "-"}
-              handleChange={(value) => setInfo({ ...info, telefone: value })}
+              editable={editor}
+              value={infoHolder.telefone ? infoHolder.telefone : "-"}
+              handleChange={(value) => {
+                setChanges({ ...changes, telefone: value });
+                setInfo({ ...infoHolder, telefone: value });
+              }}
             />
-            <SelectInput
+            <TextInput
               label={"Cidade"}
-              editable={true}
-              value={info.cidade}
-              options={cities.map((city) => {
-                return { label: city.name, value: city.name };
-              })}
-              handleChange={(value) => setInfo({ ...info, cidade: value })}
+              editable={editor}
+              value={infoHolder.cidade ? infoHolder.cidade : "-"}
+              handleChange={(value) => {
+                setChanges({ ...changes, cidade: value });
+                setInfo({ ...infoHolder, cidade: value });
+              }}
             />
             <TextInput
               label={"CEP"}
-              editable={true}
-              value={info.cep ? formataCEP(info.cep.toString()) : "-"}
-              handleChange={(value) => setInfo({ ...info, cep: value })}
+              editable={editor}
+              value={
+                infoHolder.cep ? formataCEP(infoHolder.cep.toString()) : "-"
+              }
+              handleChange={(value) => {
+                setChanges({ ...changes, cep: value });
+                setInfo({ ...infoHolder, cep: value });
+              }}
             />
             <TextInput
               label={"Bairro"}
-              editable={true}
-              value={info.bairro ? info.bairro : ""}
-              handleChange={(value) => setInfo({ ...info, bairro: value })}
+              editable={editor}
+              value={infoHolder.bairro ? infoHolder.bairro : ""}
+              handleChange={(value) => {
+                setChanges({ ...changes, bairro: value });
+                setInfo({ ...infoHolder, bairro: value });
+              }}
             />
             <NumberInput
               label={"Número da residência"}
-              editable={true}
-              value={info.numerores ? info.numerores : 0}
-              handleChange={(value) => setInfo({ ...info, numerores: value })}
+              editable={editor}
+              value={
+                infoHolder.numeroResidencia ? infoHolder.numeroResidencia : 0
+              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  numeroResidencia: Number(value),
+                });
+                setInfo({
+                  ...infoHolder,
+                  numeroResidencia: Number(value),
+                });
+              }}
             />
             <SelectInput
               label={"Regional"}
-              editable={true}
-              value={info.regional && "REGIONAL ITUIUTABA"}
+              editable={editor}
+              value={infoHolder.regional}
               options={[
                 {
                   label: "REGIONAL ITUIUTABA",
@@ -128,22 +342,29 @@ function NovoProjeto({ credentials, setCredentials }) {
                   value: "REGIONAL UBERLANDIA",
                 },
               ]}
-              handleChange={(value) => setInfo({ ...info, regional: value })}
+              handleChange={(value) => {
+                setChanges({ ...changes, regional: value });
+                setInfo({ ...infoHolder, regional: value });
+              }}
             />
             <TextInput
               label={"EMAIL"}
-              editable={true}
-              value={info.email ? info.email : ""}
-              handleChange={(value) => setInfo({ ...info, email: value })}
+              editable={editor}
+              value={infoHolder.email ? infoHolder.email : ""}
+              handleChange={(value) => {
+                setChanges({ ...changes, email: value });
+                setInfo({ ...infoHolder, email: value });
+              }}
             />
             <SelectInput
               label={"Canal de venda"}
               value={
-                info.canalvenda != undefined && info.canalvenda != "-"
-                  ? info.canalvenda
+                infoHolder.canalVenda != undefined &&
+                infoHolder.canalVenda != "-"
+                  ? infoHolder.canalVenda
                   : "NÃO DEFINIDO"
               }
-              editable={true}
+              editable={editor}
               options={[
                 { label: "EVENTO", value: "EVENTO" },
                 {
@@ -158,110 +379,74 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "OUTRO", value: "OUTRO" },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
-              handleChange={(value) => setInfo({ ...info, canalvenda: value })}
+              handleChange={(value) => {
+                setChanges({ ...changes, canalVenda: value });
+                setInfo({ ...infoHolder, canalVenda: value });
+              }}
             />
-            {info.canalvenda && info.canalvenda == "INDICAÇÃO DE AMIGO" && (
-              <>
-                <TextInput
-                  label={"NOME DO INDICADOR"}
-                  value={info.quemindicou}
-                  editable={true}
-                  handleChange={(value) =>
-                    setInfo({ ...info, quemindicou: value })
-                  }
-                />
-                <TextInput
-                  label={"Contato do indicador"}
-                  value={info.contatoindicador}
-                  editable={true}
-                  handleChange={(value) =>
-                    setInfo({ ...info, contatoindicador: value })
-                  }
-                />
-              </>
-            )}
             <div className="flex">
               <SelectInput
                 label={"VENDEDOR"}
                 value={
-                  info.vendedor != undefined && info.vendedor != "-"
-                    ? info.vendedor
+                  infoHolder.vendedor != undefined &&
+                  infoHolder.vendedor.nome != "-"
+                    ? infoHolder.vendedor.nome
                     : "NÃO DEFINIDO"
                 }
                 options={vendedores.map((vendedor) => {
                   return { label: vendedor.nome, value: vendedor.nome };
                 })}
-                editable={true}
-                handleChange={(value) => setInfo({ ...info, vendedor: value })}
+                editable={editor}
+                handleChange={(value) => {
+                  console.log(value);
+                  setChanges({
+                    ...changes,
+                    vendedor: {
+                      ...infoHolder.vendedor,
+                      nome: value,
+                      codigo:
+                        vendedores.filter(
+                          (vendedor) => vendedor.nome == value
+                        )[0].cod || "-",
+                    },
+                  });
+                  setInfo({
+                    ...infoHolder,
+                    vendedor: {
+                      ...infoHolder.vendedor,
+                      nome: value,
+                      codigo:
+                        vendedores.filter(
+                          (vendedor) => vendedor.nome == value
+                        )[0].cod || "-",
+                    },
+                  });
+                }}
               />
-              {info.vendedor && (
-                <div className="flex flex-col items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">
-                    CÓD.VENDEDOR
-                  </span>
-                  <p>
-                    {
-                      vendedores.filter(
-                        (vendedor) => vendedor.nome == info.vendedor
-                      )[0].cod
-                    }
-                  </p>
-                </div>
-              )}
             </div>
             <SelectInput
               label={"SEGMENTO"}
-              value={info.segmento && "COMERCIAL"}
-              editable={true}
+              value={infoHolder.segmento}
+              editable={editor}
               options={[
                 { label: "COMERCIAL", value: "COMERCIAL" },
                 { label: "INDUSTRIAL", value: "INDUSTRIAL" },
                 { label: "RESIDENCIAL", value: "RESIDENCIAL" },
                 { label: "RURAL", value: "RURAL" },
               ]}
-              handleChange={(value) => setInfo({ ...info, segmento: value })}
+              handleChange={(value) => {
+                setChanges({ ...changes, segmento: value });
+                setInfo({ ...infoHolder, segmento: value });
+              }}
             />
-            <SelectInput
-              label={"Tipo do serviço"}
-              value={info.tipodeservico && "SISTEMA FOTOVOLTAICO"}
-              editable={true}
-              options={[
-                {
-                  label: "SISTEMA FOTOVOLTAICO",
-                  value: "SISTEMA FOTOVOLTAICO",
-                },
-                {
-                  label: "TROCA DE PADRÃO",
-                  value: "TROCA DE PADRÃO",
-                },
-                {
-                  label: "REFORMA DE PADRÃO",
-                  value: "REFORMA DE PADRÃO",
-                },
-                {
-                  label: "MANUTENÇÃO CORRETIVA",
-                  value: "MANUTENÇÃO CORRETIVA",
-                },
-                {
-                  label: "MANUTENÇÃO PREVENTIVA",
-                  value: "MANUTENÇÃO PREVENTIVA",
-                },
-                {
-                  label: "MONTAGEM E DESMONTAGEM",
-                  value: "MONTAGEM E DESMONTAGEM",
-                },
-                {
-                  label: "TROCA DE STRING BOX",
-                  value: "TROCA DE STRING BOX",
-                },
-                {
-                  label: "SUBESTAÇÃO DE ENERGIA",
-                  value: "SUBESTAÇÃO DE ENERGIA",
-                },
-              ]}
-              handleChange={(value) =>
-                setInfo({ ...info, tipodeservico: value })
-              }
+            <TextInput
+              label="TIPO DE SERVIÇO"
+              value={infoHolder.tipoDeServico}
+              editable={editor}
+              handleChange={(value) => {
+                setChanges({ ...changes, tipoDeServico: value });
+                setInfo({ ...infoHolder, tipoDeServico: value });
+              }}
             />
           </div>
         </div>
@@ -272,14 +457,28 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-around flex-wrap">
             <div>
               <input
-                disabled={false}
-                checked={info.visitatecnica === "REALIZADA" ? true : false}
-                onChange={(e) =>
-                  setInfo({
-                    ...info,
-                    visitatecnica: e.target.checked ? "REALIZADA" : undefined,
-                  })
+                disabled={!editor}
+                checked={
+                  infoHolder.visitaTecnica?.status === "REALIZADA"
+                    ? true
+                    : false
                 }
+                onChange={(e) => {
+                  setChanges({
+                    ...changes,
+                    visitaTecnica: {
+                      ...infoHolder.visitaTecnica,
+                      status: e.target.checked ? "REALIZADA" : "PENDÊNCIA",
+                    },
+                  });
+                  setInfo({
+                    ...infoHolder,
+                    visitaTecnica: {
+                      ...infoHolder.visitaTecnica,
+                      status: e.target.checked ? "REALIZADA" : "PENDÊNCIA",
+                    },
+                  });
+                }}
                 type="checkbox"
                 name="visitaTecnica"
                 id="visitaTecnica"
@@ -290,47 +489,53 @@ function NovoProjeto({ credentials, setCredentials }) {
             </div>
             <TextInput
               label={"TÉCNICO RESPONSÁVEL"}
-              editable={true}
-              value={info.tecnicoresponsavel ? info.tecnicoresponsavel : ""}
-              handleChange={(value) =>
-                setInfo({
-                  ...info,
-                  tecnicoresponsavel: value,
-                })
+              editable={editor}
+              value={
+                infoHolder.visitaTecnica.tecnico
+                  ? infoHolder.visitaTecnica.tecnico
+                  : ""
               }
-            />
-            <SelectInput
-              label={"Saída do cliente"}
-              editable={true}
-              value={info.saidacliente ? info.saidacliente : "N/A"}
-              options={[
-                { label: "SUBTERRANEO", value: "SUBTERRANEO" },
-                { label: "AEREO", value: "AEREO" },
-                { label: "N/A", value: "N/A" },
-              ]}
-              handleChange={(value) =>
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  visitaTecnica: {
+                    ...infoHolder.visitaTecnica,
+                    tecnico: value,
+                  },
+                });
                 setInfo({
-                  ...info,
-                  saidacliente: value,
-                })
-              }
-            />
-            <TextInput
-              label={"Amperagem"}
-              editable={true}
-              value={info.amperagem ? info.amperagem : ""}
-              handleChange={(value) =>
-                setInfo({
-                  ...info,
-                  amperagem: value,
-                })
-              }
+                  ...infoHolder,
+                  visitaTecnica: {
+                    ...infoHolder.visitaTecnica,
+                    tecnico: value,
+                  },
+                });
+              }}
             />
             <TextInput
               label={"Tipo da telha"}
-              editable={true}
-              value={info.tipotelha ? info.tipotelha : ""}
-              handleChange={(value) => setInfo({ ...info, tipotelha: value })}
+              editable={editor}
+              value={
+                infoHolder.visitaTecnica?.tipoDaTelha
+                  ? infoHolder.visitaTecnica?.tipoDaTelha
+                  : ""
+              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  visitaTecnica: {
+                    ...infoHolder.visitaTecnica,
+                    tipoDaTelha: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  visitaTecnica: {
+                    ...infoHolder.visitaTecnica,
+                    tipoDaTelha: value,
+                  },
+                });
+              }}
             />
           </div>
         </div>
@@ -340,13 +545,63 @@ function NovoProjeto({ credentials, setCredentials }) {
           </span>
           <div className="flex gap-2 justify-center flex-wrap">
             <SelectInput
-              label={"PAGAMENTO DO PADRÃO"}
-              editable={true}
+              label={"TIPO DO PADRÃO"}
+              editable={editor}
               value={
-                info.pagamentodopadrao == "NÃO HAVERA TROCA DE PADRÃO" ||
-                info.pagamentodopadrao == undefined
+                infoHolder.padrao.tipo != undefined
+                  ? infoHolder.padrao.tipo
+                  : "NÃO DEFINIDO"
+              }
+              options={[
+                {
+                  label: "CONTRA A REDE",
+                  value: "CONTRA A REDE",
+                },
+                {
+                  label: "A FAVOR DA REDE",
+                  value: "A FAVOR DA REDE",
+                },
+                {
+                  label: "CONSTRUIR",
+                  value: "CONSTRUIR",
+                },
+                {
+                  label: "SUBESTAÇÃO",
+                  value: "SUBESTAÇÃO",
+                },
+                {
+                  label: "REFORMA DE PADRÃO",
+                  value: "REFORMA DE PADRÃO",
+                },
+                {
+                  label: "N/A",
+                  value: "N/A",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  padrao: { ...infoHolder.padrao, tipo: value },
+                });
+                setInfo({
+                  ...infoHolder,
+                  padrao: { ...infoHolder.padrao, tipo: value },
+                });
+              }}
+            />
+            <SelectInput
+              label={"PAGAMENTO DO PADRÃO"}
+              editable={editor}
+              value={
+                infoHolder.padrao?.respPagamento ==
+                  "NÃO HAVERA TROCA DE PADRÃO" ||
+                infoHolder.padrao?.respPagamento == undefined
                   ? "NÃO HAVERA TROCA PADRÃO"
-                  : info.pagamentodopadrao
+                  : infoHolder.padrao?.respPagamento
               }
               options={[
                 {
@@ -366,26 +621,39 @@ function NovoProjeto({ credentials, setCredentials }) {
                   value: "NÃO HAVERA TROCA PADRÃO",
                 },
               ]}
-              handleChange={(value) =>
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  padrao: { ...infoHolder.padrao, respPagamento: value },
+                });
                 setInfo({
-                  ...info,
-                  pagamentodopadrao: value,
-                })
-              }
+                  ...infoHolder,
+                  padrao: { ...infoHolder.padrao, respPagamento: value },
+                });
+              }}
             />
             <NumberInput
               tag={"R$"}
               label={"Valor do padrão"}
-              editable={true}
-              value={info.valorpadrao}
-              handleChange={(value) => setInfo({ ...info, valorpadrao: value })}
+              editable={editor}
+              value={infoHolder.padrao.valor ? infoHolder.padrao.valor : 0}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  padrao: { ...infoHolder.padrao, valor: Number(value) },
+                });
+                setInfo({
+                  ...infoHolder,
+                  padrao: { ...infoHolder.padrao, valor: Number(value) },
+                });
+              }}
             />
             <SelectInput
               label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
-              editable={true}
+              editable={editor}
               value={
-                info.respinstalacaopadrao
-                  ? info.respinstalacaopadrao
+                infoHolder.padrao?.respInstalacao
+                  ? infoHolder.padrao?.respInstalacao
                   : "NÃO SE APLICA"
               }
               options={[
@@ -393,12 +661,71 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "CLIENTE", value: "CLIENTE" },
                 { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
               ]}
-              handleChange={(value) =>
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  padrao: { ...infoHolder.padrao, respInstalacao: value },
+                });
                 setInfo({
-                  ...info,
-                  respinstalacaopadrao: value,
-                })
+                  ...infoHolder,
+                  padrao: { ...infoHolder.padrao, respInstalacao: value },
+                });
+              }}
+            />
+            <SelectInput
+              label={"Saída do cliente"}
+              editable={editor}
+              value={
+                infoHolder.visitaTecnica.saidaDoCliente
+                  ? infoHolder.visitaTecnica.saidaDoCliente
+                  : "N/A"
               }
+              options={[
+                { label: "SUBTERRANEO", value: "SUBTERRANEO" },
+                { label: "AEREO", value: "AEREO" },
+                { label: "N/A", value: "N/A" },
+              ]}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  visitaTecnica: {
+                    ...infoHolder.visitaTecnica,
+                    saidaDoCliente: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  visitaTecnica: {
+                    ...infoHolder.visitaTecnica,
+                    saidaDoCliente: value,
+                  },
+                });
+              }}
+            />
+            <TextInput
+              label={"Amperagem"}
+              editable={editor}
+              value={
+                infoHolder.visitaTecnica?.amperagem
+                  ? infoHolder.visitaTecnica.amperagem
+                  : ""
+              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  visitaTecnica: {
+                    ...infoHolder.visitaTecnica,
+                    amperagem: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  visitaTecnica: {
+                    ...infoHolder.visitaTecnica,
+                    amperagem: value,
+                  },
+                });
+              }}
             />
           </div>
         </div>
@@ -409,18 +736,28 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-center flex-wrap">
             <div>
               <input
-                disabled={false}
+                disabled={!editor}
                 checked={
-                  info.possuiestruturapersonalisada === "SIM" ? true : false
+                  infoHolder.estruturaPersonalizada?.aplicavel === "SIM"
+                    ? true
+                    : false
                 }
-                onChange={(e) =>
+                onChange={(e) => {
+                  setChanges({
+                    ...changes,
+                    estruturaPersonalizada: {
+                      ...infoHolder.estruturaPersonalizada,
+                      aplicavel: e.target.checked ? "SIM" : "NÃO",
+                    },
+                  });
                   setInfo({
-                    ...info,
-                    possuiestruturapersonalisada: e.target.checked
-                      ? "SIM"
-                      : "NÃO",
-                  })
-                }
+                    ...infoHolder,
+                    estruturaPersonalizada: {
+                      ...infoHolder.estruturaPersonalizada,
+                      aplicavel: e.target.checked ? "SIM" : "NÃO",
+                    },
+                  });
+                }}
                 type="checkbox"
                 name="visitaTecnica"
                 id="visitaTecnica"
@@ -431,8 +768,12 @@ function NovoProjeto({ credentials, setCredentials }) {
             </div>
             <SelectInput
               label={"Tipo da estrutura"}
-              editable={true}
-              value={info.tipoestrutura ? info.tipoestrutura : "N/A"}
+              editable={editor}
+              value={
+                infoHolder.estruturaPersonalizada?.tipo
+                  ? infoHolder.estruturaPersonalizada?.tipo
+                  : "N/A"
+              }
               options={[
                 { label: "INCLINAÇÃO", value: "INCLINAÇÃO" },
                 { label: "SOLO", value: "SOLO" },
@@ -441,16 +782,29 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "CARPORT", value: "CARPORT" },
                 { label: "N/A", value: "N/A" },
               ]}
-              handleChange={(value) =>
-                setInfo({ ...info, tipoestrutura: value })
-              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  estruturaPersonalizada: {
+                    ...infoHolder.estruturaPersonalizada,
+                    tipo: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  estruturaPersonalizada: {
+                    ...infoHolder.estruturaPersonalizada,
+                    tipo: value,
+                  },
+                });
+              }}
             />
             <SelectInput
               label={"PAGAMENTO DA ESTRUTURA"}
-              editable={true}
+              editable={editor}
               value={
-                info.pagestruturapersonalizada
-                  ? info.pagestruturapersonalizada
+                infoHolder.estruturaPersonalizada?.respPagamento
+                  ? infoHolder.estruturaPersonalizada?.respPagamento
                   : "NÃ SE APLICA"
               }
               options={[
@@ -458,34 +812,58 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "CLIENTE", value: "CLIENTE" },
                 { label: "NÃO SE APLICA", value: "NÃ SE APLICA" },
               ]}
-              handleChange={(value) =>
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  estruturaPersonalizada: {
+                    ...infoHolder.estruturaPersonalizada,
+                    respPagamento: value,
+                  },
+                });
                 setInfo({
-                  ...info,
-                  pagestruturapersonalizada: value,
-                })
-              }
+                  ...infoHolder,
+                  estruturaPersonalizada: {
+                    ...infoHolder.estruturaPersonalizada,
+                    respPagamento: value,
+                  },
+                });
+              }}
             />
             <NumberInput
               tag={"R$"}
               label={"Valor da estrutura"}
-              editable={true}
+              editable={editor}
               value={
-                info.valorestrutura == "-" || info.valorestrutura == undefined
+                infoHolder.estruturaPersonalizada?.valor == "-" ||
+                infoHolder.estruturaPersonalizada?.valor == undefined
                   ? 0
-                  : info.valorestrutura
+                  : infoHolder.estruturaPersonalizada?.valor
               }
-              handleChange={(value) =>
-                setInfo({ ...info, valorestrutura: value })
-              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  estruturaPersonalizada: {
+                    ...infoHolder.estruturaPersonalizada,
+                    valor: Number(value),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  estruturaPersonalizada: {
+                    ...infoHolder.estruturaPersonalizada,
+                    valor: Number(value),
+                  },
+                });
+              }}
             />
-            {info.possuiestruturapersonalisada == "SIM" && (
+            {infoHolder.estruturaPersonalizada.aplicavel == "SIM" && (
               <SelectInput
                 label={"STATUS da estrutura personalizada"}
-                editable={true}
+                editable={editor}
                 value={
-                  info.possuiestruturapersonalisada
-                    ? info.estruturapersonalisada
-                      ? info.estruturapersonalisada
+                  infoHolder.estruturaPersonalizada.aplicavel
+                    ? infoHolder.estruturaPersonalizada.status
+                      ? infoHolder.estruturaPersonalizada.status
                       : "N/A"
                     : "N/A"
                 }
@@ -494,12 +872,22 @@ function NovoProjeto({ credentials, setCredentials }) {
                   { label: "PENDÊNCIA", value: "PENDÊNCIA" },
                   { label: "N/A", value: "N/A" },
                 ]}
-                handleChange={(value) =>
+                handleChange={(value) => {
+                  setChanges({
+                    ...changes,
+                    estruturaPersonalizada: {
+                      ...infoHolder.estruturaPersonalizada,
+                      status: value,
+                    },
+                  });
                   setInfo({
-                    ...info,
-                    estruturapersonalisada: value,
-                  })
-                }
+                    ...infoHolder,
+                    estruturaPersonalizada: {
+                      ...infoHolder.estruturaPersonalizada,
+                      status: value,
+                    },
+                  });
+                }}
               />
             )}
           </div>
@@ -511,8 +899,12 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-center flex-wrap">
             <SelectInput
               label={"STATUS"}
-              editable={true}
-              value={info.statuscontrato ? info.statuscontrato : "NÃO DEFINIDO"}
+              editable={editor}
+              value={
+                infoHolder.contrato.status
+                  ? infoHolder.contrato.status
+                  : "NÃO DEFINIDO"
+              }
               options={[
                 {
                   label: "AGUARDANDO SOLICITAÇÃO",
@@ -527,75 +919,109 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "SOLICITADO", value: "SOLICITADO" },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
-              handleChange={(value) =>
-                setInfo({ ...info, statuscontrato: value })
-              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  contrato: {
+                    ...infoHolder.contrato,
+                    status: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  contrato: {
+                    ...infoHolder.contrato,
+                    status: value,
+                  },
+                });
+              }}
             />
-            <SelectInput
-              label={"Forma de assinatura"}
-              value={info.formadeassinatura && "DIGITAL"}
-              editable={true}
-              options={[
-                { label: "DIGITAL", value: "DIGITAL" },
-                { label: "FISICO", value: "FISICO" },
-              ]}
-              handleChange={(value) =>
-                setInfo({ ...info, formadeassinatura: value })
-              }
-            />
-            {(info.statuscontrato != "AGUARDANDO SOLICITAÇÃO" ||
-              info.statuscontrato != "NÃO DEFINIDO") && (
+            {(infoHolder.contrato.status != "AGUARDANDO SOLICITAÇÃO" ||
+              infoHolder.contrato.status != "NÃO DEFINIDO") && (
               <DateInput
                 label={"Data de solicitação"}
-                editable={true}
+                editable={editor}
                 value={
-                  info.datasolicitacaocontrato != undefined &&
-                  info.datasolicitacaocontrato != "-"
-                    ? new Date(info.datasolicitacaocontrato)
+                  infoHolder.contrato.dataSolicitacao != undefined &&
+                  infoHolder.contrato.dataSolicitacao != "-"
+                    ? new Date(infoHolder.contrato.dataSolicitacao)
                         .toISOString()
                         .slice(0, 10)
                     : 0
                 }
-                handleChange={(value) =>
+                handleChange={(value) => {
+                  setChanges({
+                    ...changes,
+                    contrato: {
+                      ...infoHolder.contrato,
+                      dataSolicitacao: new Date(value).toISOString(),
+                    },
+                  });
                   setInfo({
-                    ...info,
-                    datasolicitacaocontrato: new Date(value),
-                  })
-                }
+                    ...infoHolder,
+                    contrato: {
+                      ...infoHolder.contrato,
+                      dataSolicitacao: new Date(value).toISOString(),
+                    },
+                  });
+                }}
               />
             )}
             <DateInput
               label={"Data de liberação p/ assinatura"}
-              editable={true}
+              editable={editor}
               value={
-                info.dataliberacaoassinatura != undefined &&
-                info.dataliberacaoassinatura != "-"
-                  ? new Date(info.dataliberacaoassinatura)
+                infoHolder.contrato.dataLiberacao != undefined &&
+                infoHolder.contrato.dataLiberacao != "-"
+                  ? new Date(infoHolder.contrato.dataLiberacao)
                       .toISOString()
                       .slice(0, 10)
                   : 0
               }
-              handleChange={(value) =>
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  contrato: {
+                    ...infoHolder.contrato,
+                    dataLiberacao: new Date(value).toISOString(),
+                  },
+                });
                 setInfo({
-                  ...info,
-                  dataliberacaoassinatura: new Date(value),
-                })
-              }
+                  ...infoHolder,
+                  contrato: {
+                    ...infoHolder.contrato,
+                    dataLiberacao: new Date(value).toISOString(),
+                  },
+                });
+              }}
             />
             <DateInput
               label={"Data de assinatura"}
-              editable={true}
+              editable={editor}
               value={
-                info.dataassinatura != undefined && info.dataassinatura != "-"
-                  ? new Date(info.dataassinatura).toISOString().slice(0, 10)
+                infoHolder.contrato.dataAssinatura != undefined &&
+                infoHolder.contrato.dataAssinatura != "-"
+                  ? new Date(infoHolder.contrato.dataAssinatura)
+                      .toISOString()
+                      .slice(0, 10)
                   : 0
               }
-              handleChange={(value) =>
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  contrato: {
+                    ...infoHolder.contrato,
+                    dataAssinatura: new Date(value).toISOString(),
+                  },
+                });
                 setInfo({
-                  ...info,
-                  dataassinatura: new Date(value),
-                })
-              }
+                  ...infoHolder,
+                  contrato: {
+                    ...infoHolder.contrato,
+                    dataAssinatura: new Date(value).toISOString(),
+                  },
+                });
+              }}
             />
           </div>
         </div>
@@ -607,9 +1033,11 @@ function NovoProjeto({ credentials, setCredentials }) {
             <SelectInput
               label={"STATUS PAGAMENTO"}
               value={
-                info.statuspagamento ? info.statuspagamento : "NÃO DEFINIDO"
+                infoHolder.pagamento.status
+                  ? infoHolder.pagamento.status
+                  : "NÃO DEFINIDO"
               }
-              editable={true}
+              editable={editor}
               options={[
                 {
                   label: "AGUARDANDO PAGAMENTO",
@@ -628,17 +1056,31 @@ function NovoProjeto({ credentials, setCredentials }) {
                   value: "NÃO DEFINIDO",
                 },
               ]}
-              handleChange={(value) =>
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  pagamento: {
+                    ...infoHolder.pagamento,
+                    status: value,
+                  },
+                });
                 setInfo({
-                  ...info,
-                  statuspagamento: value,
-                })
-              }
+                  ...infoHolder,
+                  pagamento: {
+                    ...infoHolder.pagamento,
+                    status: value,
+                  },
+                });
+              }}
             />
             <SelectInput
               label={"FORMA DE PAGAMENTO"}
-              value={info.formapagamento ? info.formapagamento : "NÃO DEFINIDO"}
-              editable={true}
+              value={
+                infoHolder.pagamento?.forma
+                  ? infoHolder.pagamento?.forma
+                  : "NÃO DEFINIDO"
+              }
+              editable={editor}
               options={[
                 {
                   label: "CAPITAL PROPRIO",
@@ -653,21 +1095,32 @@ function NovoProjeto({ credentials, setCredentials }) {
                   value: "NÃO DEFINIDO",
                 },
               ]}
-              handleChange={(value) =>
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  pagamento: {
+                    ...infoHolder.pagamento,
+                    forma: value,
+                  },
+                });
                 setInfo({
-                  ...info,
-                  formapagamento: value,
-                })
-              }
+                  ...infoHolder,
+                  pagamento: {
+                    ...infoHolder.pagamento,
+                    forma: value,
+                  },
+                });
+              }}
             />
             <SelectInput
               label={"EMPRESA A FATURAR"}
               value={
-                info.empresafaturar != undefined && info.empresafaturar != "-"
-                  ? info.empresafaturar
+                infoHolder.faturamento?.empresaFaturamento != undefined &&
+                infoHolder.faturamento?.empresaFaturamento != "-"
+                  ? infoHolder.faturamento?.empresaFaturamento
                   : "NÃO DEFINIDO"
               }
-              editable={true}
+              editable={editor}
               options={[
                 { label: "AMPERE ENERGIAS", value: "AMPERE ENERGIAS" },
                 {
@@ -677,29 +1130,59 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "IZAIRA SERVIÇOS", value: "IZAIRA SERVIÇOS" },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
-              handleChange={(value) =>
-                setInfo({ ...info, empresafaturar: value })
-              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  faturamento: {
+                    ...infoHolder.faturamento,
+                    empresaFaturamento: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  faturamento: {
+                    ...infoHolder.faturamento,
+                    empresaFaturamento: value,
+                  },
+                });
+              }}
             />
             <TextInput
               label={"Informações faturamento"}
-              editable={true}
-              value={info.previsaofaturamento ? info.previsaofaturamento : ""}
-              handleChange={(value) =>
-                setInfo({ ...info, previsaofaturamento: value })
+              editable={editor}
+              value={
+                infoHolder.faturamento?.previsaoFaturamento
+                  ? infoHolder.faturamento?.previsaoFaturamento
+                  : ""
               }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  faturamento: {
+                    ...infoHolder.faturamento,
+                    previsaoFaturamento: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  faturamento: {
+                    ...infoHolder.faturamento,
+                    previsaoFaturamento: value,
+                  },
+                });
+              }}
             />
-            {info.formapagamento == "FINANCIAMENTO" && (
+            {infoHolder.pagamento?.forma == "FINANCIAMENTO" && (
               <SelectInput
                 label={"CREDOR"}
                 value={
-                  info.credor != undefined &&
-                  info != "-----" &&
-                  info != "QUAL CREDOR?"
-                    ? info.credor
+                  infoHolder.pagamento.credor != undefined &&
+                  infoHolder.pagamento.credor != "-----" &&
+                  infoHolder.pagamento.credor != "QUAL CREDOR?"
+                    ? infoHolder.pagamento.credor
                     : "NÃO DEFINIDO"
                 }
-                editable={true}
+                editable={editor}
                 options={[
                   {
                     label: "BANCO DO BRASIL",
@@ -742,27 +1225,73 @@ function NovoProjeto({ credentials, setCredentials }) {
                     value: "NÃO DEFINIDO",
                   },
                 ]}
-                handleChange={(value) =>
+                handleChange={(value) => {
+                  setChanges({
+                    ...changes,
+                    pagamento: {
+                      ...infoHolder.pagamento,
+                      credor: value,
+                    },
+                  });
                   setInfo({
-                    ...info,
-                    credor: value,
-                  })
-                }
+                    ...infoHolder,
+                    pagamento: {
+                      ...infoHolder.pagamento,
+                      credor: value,
+                    },
+                  });
+                }}
               />
             )}
             <TextInput
               label={"Pagador"}
-              editable={true}
-              value={info.pagador ? info.pagador : ""}
-              handleChange={(value) => setInfo({ ...info, pagador: value })}
+              editable={editor}
+              value={
+                infoHolder.pagamento?.pagador
+                  ? infoHolder.pagamento.pagador
+                  : ""
+              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  pagamento: {
+                    ...infoHolder.pagamento,
+                    pagador: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  pagamento: {
+                    ...infoHolder.pagamento,
+                    pagador: value,
+                  },
+                });
+              }}
             />
             <TextInput
               label={"Contato pagador"}
-              editable={true}
-              value={info.contatopagamento ? info.contatopagamento : ""}
-              handleChange={(value) =>
-                setInfo({ ...info, contatopagamento: value })
+              editable={editor}
+              value={
+                infoHolder.pagamento?.contatoPagador
+                  ? infoHolder.pagamento?.contatoPagador
+                  : ""
               }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  pagamento: {
+                    ...infoHolder.pagamento,
+                    contatoPagador: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  pagamento: {
+                    ...infoHolder.pagamento,
+                    contatoPagador: value,
+                  },
+                });
+              }}
             />
           </div>
         </div>
@@ -771,68 +1300,123 @@ function NovoProjeto({ credentials, setCredentials }) {
             Informações da compra
           </span>
           <div className="flex gap-2 justify-center flex-wrap">
-            <div>
-              <input
-                disabled={false}
-                checked={info.liberacaocompra === "LIBERADA" ? true : false}
-                onChange={(e) =>
-                  setInfo({
-                    ...info,
-                    liberacaocompra: e.target.checked ? "LIBERADA" : undefined,
-                    dataliberacaoparacompra: e.target.checked
-                      ? new Date()
-                      : undefined,
-                  })
-                }
-                type="checkbox"
-                name="liberacaocompra"
-                id="liberacaocompra"
-              />
-              <label className="ml-2" htmlFor="liberacaocompra">
-                LIBERADA
-              </label>
-            </div>
             <DateInput
               label={"Data de liberação p/ compra"}
-              editable={true}
+              editable={editor}
               value={
-                info.dataliberacaoparacompra != undefined &&
-                info.dataliberacaoparacompra != "-"
-                  ? new Date(info.dataliberacaoparacompra)
+                infoHolder.compra?.dataLiberacao != undefined &&
+                infoHolder.compra?.dataLiberacao != "-"
+                  ? new Date(infoHolder.compra.dataLiberacao)
                       .toISOString()
                       .slice(0, 10)
                   : 0
               }
-              handleChange={(value) =>
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  compra: {
+                    ...infoHolder.compra,
+                    dataLiberacao: new Date(value).toISOString(),
+                  },
+                });
                 setInfo({
-                  ...info,
-                  dataliberacaoparacompra: new Date(value),
-                })
-              }
+                  ...infoHolder,
+                  compra: {
+                    ...infoHolder.compra,
+                    dataLiberacao: new Date(value).toISOString(),
+                  },
+                });
+              }}
             />
             <DateInput
               label={"Data do pagamento"}
-              editable={true}
+              editable={editor}
               value={
-                info.datapagamento != undefined && info.datapagamento != "-"
-                  ? new Date(info.datapagamento).toISOString().slice(0, 10)
+                infoHolder.compra?.dataPagamento != undefined &&
+                infoHolder.compra?.dataPagamento != "-"
+                  ? new Date(infoHolder.compra?.dataPagamento)
+                      .toISOString()
+                      .slice(0, 10)
                   : 0
               }
-              handleChange={(value) =>
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  compra: {
+                    ...infoHolder.compra,
+                    dataPagamento: new Date(value).toISOString(),
+                  },
+                });
                 setInfo({
-                  ...info,
-                  datapagamento: new Date(value),
-                })
+                  ...infoHolder,
+                  compra: {
+                    ...infoHolder.compra,
+                    dataPagamento: new Date(value).toISOString(),
+                  },
+                });
+              }}
+            />
+            <SelectInput
+              label={"Fornecedor"}
+              editable={editor}
+              value={
+                infoHolder.compra?.fornecedor != undefined &&
+                infoHolder.compra.fornecedor != "-"
+                  ? infoHolder.compra.fornecedor
+                  : "NÃO DEFINIDO"
               }
+              options={[
+                {
+                  label: "ALDO",
+                  value: "ALDO",
+                },
+                {
+                  label: "AMPÈRE",
+                  value: "AMPÈRE",
+                },
+                {
+                  label: "BEL ENERGY",
+                  value: "BEL ENERGY",
+                },
+                {
+                  label: "SKY SOLAR",
+                  value: "SKY SOLAR",
+                },
+                {
+                  label: "SOU ENERGY",
+                  value: "SOU ENERGY",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  compra: {
+                    ...infoHolder.compra,
+                    fornecedor: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  compra: {
+                    ...infoHolder.compra,
+                    fornecedor: value,
+                  },
+                });
+              }}
             />
             <SelectInput
               label={"TIPO DO KIT"}
               value={
-                info.tipokit != undefined && info.tipokit != "-"
-                  ? info.tipokit
+                infoHolder.compra?.tipoDoKit != undefined &&
+                infoHolder.compra.tipoDoKit != "-"
+                  ? infoHolder.compra.tipoDoKit
                   : "NÃO DEFINIDO"
               }
-              editable={true}
+              editable={editor}
               options={[
                 {
                   label: "NORMAL",
@@ -847,7 +1431,148 @@ function NovoProjeto({ credentials, setCredentials }) {
                   value: "NÃO DEFINIDO",
                 },
               ]}
-              handleChange={(value) => setInfo({ ...info, tipokit: value })}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  compra: {
+                    ...infoHolder.compra,
+                    tipoDoKit: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  compra: {
+                    ...infoHolder.compra,
+                    tipoDoKit: value,
+                  },
+                });
+              }}
+            />
+            <NumberInput
+              tag={"R$"}
+              label={"VALOR DO KIT"}
+              editable={editor}
+              value={
+                infoHolder.compra?.valorDoKit != undefined &&
+                infoHolder.compra?.valorDoKit != "-"
+                  ? infoHolder.compra?.valorDoKit
+                  : 0
+              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  compra: {
+                    ...infoHolder.compra,
+                    valorDoKit: Number(value),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  compra: {
+                    ...infoHolder.compra,
+                    valorDoKit: Number(value),
+                  },
+                });
+              }}
+            />
+            <SelectInput
+              label={"LOCAL DE ENTREGA"}
+              value={
+                infoHolder.compra?.localEntrega != undefined &&
+                infoHolder.compra?.localEntrega != "-"
+                  ? infoHolder.compra?.localEntrega
+                  : "NÃO DEFINIDO"
+              }
+              editable={editor}
+              options={[
+                { label: "MESMO DO PROJETO", value: "MESMO DO PROJETO" },
+                { label: "SEM RESTRIÇÕES", value: "SEM RESTRIÇÕES" },
+                { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              ]}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  compra: {
+                    ...infoHolder.compra,
+                    localEntrega: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  compra: {
+                    ...infoHolder.compra,
+                    localEntrega: value,
+                  },
+                });
+              }}
+            />
+            <TextInput
+              label={"INFORMAÇÕES"}
+              value={
+                infoHolder.compra?.informacoes
+                  ? infoHolder.compra?.informacoes
+                  : ""
+              }
+              editable={editor}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  compra: {
+                    ...infoHolder.compra,
+                    informacoes: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  compra: {
+                    ...infoHolder.compra,
+                    informacoes: value,
+                  },
+                });
+              }}
+            />
+            <SelectInput
+              label={"STATUS DA ENTREGA"}
+              editable={editor}
+              value={
+                infoHolder.compra?.statusEntrega
+                  ? infoHolder.compra?.statusEntrega
+                  : "NÃO DEFINIDO"
+              }
+              options={[
+                {
+                  label: "AGUARDANDO COMPRA",
+                  value: "AGUARDANDO COMPRA",
+                },
+                {
+                  label: "ENTREGUE",
+                  value: "ENTREGUE",
+                },
+                {
+                  label: "CANCELADO",
+                  value: "CANCELADO",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  compra: {
+                    ...infoHolder.compra,
+                    statusEntrega: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  compra: {
+                    ...infoHolder.compra,
+                    statusEntrega: value,
+                  },
+                });
+              }}
             />
           </div>
         </div>
@@ -858,50 +1583,110 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-center flex-wrap">
             <TextInput
               label={"Titular do projeto"}
-              editable={true}
-              value={info.titulardoprojeto ? info.titulardoprojeto : ""}
-              handleChange={(value) =>
-                setInfo({ ...info, titulardoprojeto: value })
+              editable={editor}
+              value={
+                infoHolder.dadosCemig?.titularProjeto
+                  ? infoHolder.dadosCemig?.titularProjeto
+                  : ""
               }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  dadosCemig: {
+                    ...infoHolder.dadosCemig,
+                    titularProjeto: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  dadosCemig: {
+                    ...infoHolder.dadosCemig,
+                    titularProjeto: value,
+                  },
+                });
+              }}
             />
             <TextInput
               label={"Número da instalação"}
-              value={info.numeroinstalacao ? info.numeroinstalacao : ""}
-              editable={true}
-              handleChange={(value) =>
-                setInfo({ ...info, numeroinstalacao: value })
+              value={
+                infoHolder.dadosCemig?.numeroInstalacao
+                  ? infoHolder.dadosCemig?.numeroInstalacao
+                  : ""
               }
+              editable={editor}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  dadosCemig: {
+                    ...infoHolder.dadosCemig,
+                    numeroInstalacao: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  dadosCemig: {
+                    ...infoHolder.dadosCemig,
+                    numeroInstalacao: value,
+                  },
+                });
+              }}
             />
             <SelectInput
               label={"DISTRIBUIÇÃO DE CRÉDITOS"}
               value={
-                info.distribuicaodecreditos
-                  ? info.distribuicaodecreditos
+                infoHolder.dadosCemig?.distCreditos
+                  ? infoHolder.dadosCemig?.distCreditos
                   : "NÃO DEFINIDO"
               }
-              editable={true}
+              editable={editor}
               options={[
                 { label: "SIM", value: "SIM" },
                 { label: "NÃO", value: "NÃO" },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
-              handleChange={(value) =>
-                setInfo({ ...info, distribuicaodecreditos: value })
-              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  dadosCemig: {
+                    ...infoHolder.dadosCemig,
+                    distCreditos: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  dadosCemig: {
+                    ...infoHolder.dadosCemig,
+                    distCreditos: value,
+                  },
+                });
+              }}
             />
-            {info.distribuicaodecreditos == "SIM" && (
+            {infoHolder.dadosCemig?.distCreditos == "SIM" && (
               <NumberInput
                 label={"QTDE DE DISTRIBUIÇÕES"}
-                editable={true}
+                editable={editor}
                 value={
-                  info.quantdistribuicoes != undefined &&
-                  info.quantdistribuicoes != "-"
-                    ? info.quantdistribuicoes
+                  infoHolder.dadosCemig?.qtdeDistCreditos != undefined &&
+                  infoHolder.dadosCemig?.qtdeDistCreditos != "-"
+                    ? infoHolder.dadosCemig?.qtdeDistCreditos
                     : 0
                 }
-                handleChange={(value) =>
-                  setInfo({ ...info, quantdistribuicoes: value })
-                }
+                handleChange={(value) => {
+                  setChanges({
+                    ...changes,
+                    dadosCemig: {
+                      ...infoHolder.dadosCemig,
+                      qtdeDistCreditos: Number(value),
+                    },
+                  });
+                  setInfo({
+                    ...infoHolder,
+                    dadosCemig: {
+                      ...infoHolder.dadosCemig,
+                      qtdeDistCreditos: Number(value),
+                    },
+                  });
+                }}
               />
             )}
           </div>
@@ -913,73 +1698,173 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-center flex-wrap">
             <NumberInput
               label={"NÚMERO DE MÓDULOS"}
-              editable={true}
+              editable={editor}
               value={
-                info.nmodulos != undefined && info.nmodulos != "-"
-                  ? info.nmodulos
+                infoHolder.sistema?.qtdeModulos != undefined &&
+                infoHolder.sistema?.qtdeModulos != "-"
+                  ? infoHolder.sistema?.qtdeModulos
                   : 0
               }
-              handleChange={(value) => setInfo({ ...info, nmodulos: value })}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  sistema: {
+                    ...changes.sistema,
+                    qtdeModulos: Number(value),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  sistema: {
+                    ...infoHolder.sistema,
+                    qtdeModulos: Number(value),
+                  },
+                });
+              }}
             />
             <NumberInput
               unit={"W"}
               label={"POTÊNCIA DOS MÓDULOS"}
-              editable={true}
+              editable={editor}
               value={
-                info.potmodulos != undefined && info.potmodulos != "-"
-                  ? info.potmodulos
+                infoHolder.sistema?.potModulos != undefined &&
+                infoHolder.sistema?.potModulos != "-"
+                  ? infoHolder.sistema?.potModulos
                   : 0
               }
-              handleChange={(value) => setInfo({ ...info, potmodulos: value })}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  sistema: {
+                    ...changes.sistema,
+                    potModulos: Number(value),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  sistema: {
+                    ...infoHolder.sistema,
+                    potModulos: Number(value),
+                  },
+                });
+              }}
             />
             <NumberInput
               unit={"kWp"}
               label={"POTÊNCIA PICO"}
-              editable={true}
+              editable={editor}
               value={
-                info.potpico != undefined && info.potpico != "-"
-                  ? info.potpico
+                infoHolder.sistema?.potPico != undefined &&
+                infoHolder.sistema?.potPico != "-"
+                  ? infoHolder.sistema?.potPico
                   : 0
               }
-              handleChange={(value) => setInfo({ ...info, potpico: value })}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  sistema: {
+                    ...changes.sistema,
+                    potPico: Number(value),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  sistema: {
+                    ...infoHolder.sistema,
+                    potPico: Number(value),
+                  },
+                });
+              }}
             />
             <SelectInput
               label={"TOPOLOGIA"}
-              value={info.topologia ? info.topologia : "NÃO DEFINIDO"}
-              editable={true}
+              value={
+                infoHolder.sistema?.topologia
+                  ? infoHolder.sistema?.topologia
+                  : "NÃO DEFINIDO"
+              }
+              editable={editor}
               options={[
                 { label: "INVERSOR", value: "INVERSOR" },
                 { label: "MICRO", value: "MICRO" },
                 { label: "OUTROS SERV.", value: "OUTROS SERV." },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
-              handleChange={(value) => setInfo({ ...info, topologia: value })}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  sistema: {
+                    ...changes.sistema,
+                    topologia: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  sistema: {
+                    ...infoHolder.sistema,
+                    topologia: value,
+                  },
+                });
+              }}
             />
             <TextInput
               label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
-              editable={true}
-              value={info.qtdepotinversor ? info.qtdepotinversor : ""}
-              handleChange={(value) =>
-                setInfo({ ...info, qtdepotinversor: value })
+              editable={editor}
+              value={
+                infoHolder.sistema?.inversor ? infoHolder.sistema?.inversor : ""
               }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  sistema: {
+                    ...changes.sistema,
+                    inversor: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  sistema: {
+                    ...infoHolder.sistema,
+                    inversor: value,
+                  },
+                });
+              }}
             />
             <NumberInput
               tag={"R$"}
               label={"VALOR DO PROJETO"}
-              editable={true}
+              editable={editor}
               value={
-                info.valorprojeto != undefined && info.valorprojeto != "-"
-                  ? info.valorprojeto
+                infoHolder.sistema?.valorProjeto != undefined &&
+                infoHolder.sistema?.valorProjeto != "-"
+                  ? infoHolder.sistema?.valorProjeto
                   : 0
               }
-              handleChange={(value) =>
-                setInfo({ ...info, valorprojeto: value })
-              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  sistema: {
+                    ...changes.sistema,
+                    valorProjeto: Number(value),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  sistema: {
+                    ...changes.sistema,
+                    valorProjeto: Number(value),
+                  },
+                });
+              }}
             />
             <SelectInput
               label={"INICIAR PROJETO"}
-              value={info.iniciarprojeto ? info.iniciarprojeto : "NÃO DEFINIDO"}
-              editable={true}
+              value={
+                infoHolder.projeto?.iniciar
+                  ? infoHolder.projeto?.iniciar
+                  : "NÃO DEFINIDO"
+              }
+              editable={editor}
               options={[
                 { label: "SIM", value: "SIM" },
                 {
@@ -988,9 +1873,22 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
-              handleChange={(value) =>
-                setInfo({ ...info, iniciarprojeto: value })
-              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  projeto: {
+                    ...infoHolder.projeto,
+                    iniciar: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  projeto: {
+                    ...infoHolder.projeto,
+                    iniciar: value,
+                  },
+                });
+              }}
             />
           </div>
         </div>
@@ -999,24 +1897,306 @@ function NovoProjeto({ credentials, setCredentials }) {
             PROJETO
           </span>
           <div className="flex gap-2 justify-center flex-wrap">
+            <SelectInput
+              label={"Projetista"}
+              value={
+                infoHolder.projeto?.projetista?.nome
+                  ? infoHolder.projeto?.projetista?.nome
+                  : "NÃO DEFINIDO"
+              }
+              editable={editor}
+              options={[
+                {
+                  label: "ALINE",
+                  value: "ALINE APARECIDA RODRIGUES CARVALHO",
+                },
+                {
+                  label: "ANDREW",
+                  value: "ANDRE BORGES ALEXANDER",
+                },
+                {
+                  label: "GLENDA",
+                  value: "GLENDA ELIAS NASCIMENTO SANTOS",
+                },
+                {
+                  label: "POLLIANA",
+                  value: "POLLIANA CRISTINA DE REZENDE",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  projeto: {
+                    ...infoHolder.projeto,
+                    projetista: {
+                      ...infoHolder.projeto.projetista,
+                      nome: value,
+                    },
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  projetista: {
+                    ...infoHolder.projeto.projetista,
+                    nome: value,
+                  },
+                });
+              }}
+            />
+            <DateInput
+              label={"Data de assinatura da documentação"}
+              editable={editor}
+              value={
+                infoHolder.projeto?.dataAssDocumentacao != undefined &&
+                infoHolder.projeto?.dataAssDocumentacao != "-"
+                  ? new Date(infoHolder.projeto.dataAssDocumentacao)
+                      .toISOString()
+                      .slice(0, 10)
+                  : 0
+              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  projeto: {
+                    ...infoHolder.projeto,
+                    dataAssDocumentacao: new Date(value).toISOString(),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  projeto: {
+                    ...infoHolder.projeto,
+                    dataAssDocumentacao: new Date(value).toISOString(),
+                  },
+                });
+              }}
+            />
+            <DateInput
+              label={"Parecer de acesso"}
+              editable={editor}
+              value={
+                infoHolder.parecer?.dataParecerDeAcesso != undefined &&
+                infoHolder.parecer?.dataParecerDeAcesso != "-"
+                  ? new Date(infoHolder.parecer?.dataParecerDeAcesso)
+                      .toISOString()
+                      .slice(0, 10)
+                  : 0
+              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  parecer: {
+                    ...infoHolder.parecer,
+                    dataParecerDeAcesso: new Date(value).toISOString(),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  parecer: {
+                    ...infoHolder.parecer,
+                    dataParecerDeAcesso: new Date(value).toISOString(),
+                  },
+                });
+              }}
+            />
+            <SelectInput
+              label={"Status do parecer de acesso"}
+              value={
+                infoHolder.parecer?.statusDoParecerDeAcesso
+                  ? infoHolder.parecer?.statusDoParecerDeAcesso
+                  : "NÃO DEFINIDO"
+              }
+              editable={editor}
+              options={[
+                {
+                  label: "AGUARDANDO FATURAMENTO ART",
+                  value: "AGUARDANDO FATURAMENTO ART",
+                },
+                {
+                  label: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
+                  value: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
+                },
+                {
+                  label: "CANCELADO",
+                  value: "CANCELADO",
+                },
+                {
+                  label: "INICIAR PROJETO",
+                  value: "INICIAR PROJETO",
+                },
+                {
+                  label: "PARECER DE ACESSO APROVADO",
+                  value: "PARECER DE ACESSO APROVADO",
+                },
+                {
+                  label: "PENDENCIAS",
+                  value: "PENDENCIAS",
+                },
+                {
+                  label: "SOLICITAR ACESSO",
+                  value: "SOLICITAR ACESSO",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  parecer: {
+                    ...infoHolder.parecer,
+                    statusDoParecerDeAcesso: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  parecer: {
+                    ...infoHolder.parecer,
+                    statusDoParecerDeAcesso: value,
+                  },
+                });
+              }}
+            />
+            <div className="flex flex-col w-[350px] items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                DIAGRAMA UNIFILAR
+              </span>
+              <div className="flex">
+                <input
+                  disabled={!editor}
+                  checked={
+                    infoHolder.projeto?.diagramaUnifilar === "Ok" ? true : false
+                  }
+                  onChange={(e) => {
+                    setChanges({
+                      ...changes,
+                      projeto: {
+                        ...infoHolder.projeto,
+                        diagramaUnifilar: e.target.checked ? "Ok" : "PENDÊNCIA",
+                      },
+                    });
+                    setInfo({
+                      ...infoHolder,
+                      projeto: {
+                        ...infoHolder.projeto,
+                        diagramaUnifilar: e.target.checked ? "Ok" : "PENDÊNCIA",
+                      },
+                    });
+                  }}
+                  type="checkbox"
+                  name="diagramaunifilar"
+                  id="diagramaunifilar"
+                />
+                <label className="ml-2" htmlFor="diagramaunifilar">
+                  OK
+                </label>
+              </div>
+            </div>
+            <div className="flex flex-col w-[350px] items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                DESENHO DO TELHADO
+              </span>
+              <div className="flex">
+                <input
+                  disabled={!editor}
+                  checked={
+                    infoHolder.projeto?.desenhoTelhado === "OK" ? true : false
+                  }
+                  onChange={(e) => {
+                    setChanges({
+                      ...changes,
+                      projeto: {
+                        ...infoHolder.projeto,
+                        desenhoTelhado: e.target.checked ? "OK" : "PENDÊNCIA",
+                      },
+                    });
+                    setInfo({
+                      ...infoHolder,
+                      projeto: {
+                        ...infoHolder.projeto,
+                        desenhoTelhado: e.target.checked ? "OK" : "PENDÊNCIA",
+                      },
+                    });
+                  }}
+                  type="checkbox"
+                  name="desenhotelhado"
+                  id="desenhotelhado"
+                />
+                <label className="ml-2" htmlFor="desenhotelhado">
+                  OK
+                </label>
+              </div>
+            </div>
+            <SelectInput
+              label={"MAPA DE MICRO"}
+              editable={editor}
+              value={
+                infoHolder.projeto?.mapaDeMicro != undefined &&
+                infoHolder.projeto?.mapaDeMicro != "-"
+                  ? infoHolder.projeto?.mapaDeMicro
+                  : "NÃO DEFINIDO"
+              }
+              options={[
+                { label: "OK", value: "OK" },
+                { label: `N\A`, value: `N\A` },
+                { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              ]}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  projeto: {
+                    ...infoHolder.projeto,
+                    mapaDeMicro: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  projeto: {
+                    ...infoHolder.projeto,
+                    mapaDeMicro: value,
+                  },
+                });
+              }}
+            />
             <div className="flex flex-col w-[350px] items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
                 AUMENTO DE CARGA
               </span>
               <div className="flex">
                 <input
-                  disabled={false}
-                  checked={info.aumentodecarga === "SIM" ? true : false}
-                  onChange={(e) =>
-                    setInfo({
-                      ...info,
-                      aumentodecarga: e.target.checked ? "SIM" : "NÃO",
-                      acstatus:
-                        e.target.checked && info.acstatus != "REALIZADO"
-                          ? "PÊNDENCIA"
-                          : undefined,
-                    })
+                  disabled={!editor}
+                  checked={
+                    infoHolder.projeto?.aumentoDeCarga === "SIM" ? true : false
                   }
+                  onChange={(e) => {
+                    setChanges({
+                      ...changes,
+                      projeto: {
+                        ...infoHolder.projeto,
+                        aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
+                        acStatus:
+                          e.target.checked && infoHolder.acstatus != "REALIZADO"
+                            ? "PÊNDENCIA"
+                            : undefined,
+                      },
+                    });
+                    setInfo({
+                      ...infoHolder,
+                      projeto: {
+                        ...infoHolder.projeto,
+                        aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
+                        acStatus:
+                          e.target.checked && infoHolder.acstatus != "REALIZADO"
+                            ? "PÊNDENCIA"
+                            : undefined,
+                      },
+                    });
+                  }}
                   type="checkbox"
                   name="aumentodecarga"
                   id="aumentodecarga"
@@ -1026,21 +2206,39 @@ function NovoProjeto({ credentials, setCredentials }) {
                 </label>
               </div>
             </div>
-            {info.aumentodecarga == "SIM" && (
+            {infoHolder.projeto?.aumentoDeCarga == "SIM" && (
               <div className="flex flex-col w-[350px] items-center">
                 <span className="uppercase font-bold font-raleway text-center text-sm">
                   STATUS AUMENTO DE CARGA
                 </span>
                 <div className="flex">
                   <input
-                    disabled={false}
-                    checked={info.acstatus === "REALIZADO" ? true : false}
-                    onChange={(e) =>
-                      setInfo({
-                        ...info,
-                        acstatus: e.target.checked ? "REALIZADO" : "PENDÊNCIA",
-                      })
+                    disabled={!editor}
+                    checked={
+                      infoHolder.projeto?.acStatus === "REALIZADO"
+                        ? true
+                        : false
                     }
+                    onChange={(e) => {
+                      setChanges({
+                        ...changes,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          acStatus: e.target.checked
+                            ? "REALIZADO"
+                            : "PENDÊNCIA",
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          acStatus: e.target.checked
+                            ? "REALIZADO"
+                            : "PENDÊNCIA",
+                        },
+                      });
+                    }}
                     type="checkbox"
                     name="acstatus"
                     id="acstatus"
@@ -1051,6 +2249,163 @@ function NovoProjeto({ credentials, setCredentials }) {
                 </div>
               </div>
             )}
+            <DateInput
+              label={"DATA DO PEDIDO DE VISTORIA"}
+              editable={editor}
+              value={
+                infoHolder.vistoria?.dataPedido != undefined &&
+                infoHolder.vistoria?.dataPedido != "-"
+                  ? new Date(infoHolder.vistoria.dataPedido)
+                      .toISOString()
+                      .slice(0, 10)
+                  : 0
+              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  vistoria: {
+                    ...infoHolder.vistoria,
+                    dataPedido: new Date(value).toISOString(),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  vistoria: {
+                    ...infoHolder.vistoria,
+                    dataPedido: new Date(value).toISOString(),
+                  },
+                });
+              }}
+            />
+            <SelectInput
+              label={"STATUS DA VISTORIA"}
+              value={
+                infoHolder.vistoria?.status
+                  ? infoHolder.vistoria?.status
+                  : "NÃO DEFINIDO"
+              }
+              editable={editor}
+              options={[
+                { label: "REALIZADA", value: "REALIZADA" },
+                {
+                  label: "AGUARDANDO OBRA DE REDE",
+                  value: "AGUARDANDO OBRA DE REDE",
+                },
+                { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              ]}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  vistoria: {
+                    ...infoHolder.vistoria,
+                    status: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  vistoria: {
+                    ...infoHolder.vistoria,
+                    status: value,
+                  },
+                });
+              }}
+            />
+            <DateInput
+              label={"DATA TROCA DO MEDIDOR"}
+              editable={editor}
+              value={
+                infoHolder.medidor?.data != undefined &&
+                infoHolder.medidor?.data != "-"
+                  ? new Date(infoHolder.medidor.data).toISOString().slice(0, 10)
+                  : 0
+              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  medidor: {
+                    ...infoHolder.medidor,
+                    data: new Date(value).toISOString(),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  medidor: {
+                    ...infoHolder.medidor,
+                    data: new Date(value).toISOString(),
+                  },
+                });
+              }}
+            />
+            <SelectInput
+              label={"STATUS DA TROCA DO MEDIDOR"}
+              value={
+                infoHolder.medidor?.status
+                  ? infoHolder.medidor?.status
+                  : "NÃO DEFINIDO"
+              }
+              editable={editor}
+              options={[
+                { label: "REALIZADA", value: "REALIZADA" },
+                {
+                  label: "AGUARDANDO OBRA DE REDE",
+                  value: "AGUARDANDO OBRA DE REDE",
+                },
+                { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              ]}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  medidor: {
+                    ...infoHolder.medidor,
+                    status: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  medidor: {
+                    ...infoHolder.medidor,
+                    status: value,
+                  },
+                });
+              }}
+            />
+            <div className="flex flex-col w-[350px] items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                PROJETO CONCLUÍDO
+              </span>
+              <div className="flex">
+                <input
+                  disabled={!editor}
+                  checked={
+                    infoHolder.projeto?.projetoConcluido === "SIM"
+                      ? true
+                      : false
+                  }
+                  onChange={(e) => {
+                    setChanges({
+                      ...changes,
+                      projeto: {
+                        ...infoHolder.projeto,
+                        projetoConcluido: e.target.checked ? "SIM" : "NÃO",
+                      },
+                    });
+                    setInfo({
+                      ...infoHolder,
+                      projeto: {
+                        ...infoHolder.projeto,
+                        projetoConcluido: e.target.checked ? "SIM" : "NÃO",
+                      },
+                    });
+                  }}
+                  type="checkbox"
+                  name="projetoconcluido"
+                  id="projetoconcluido"
+                />
+                <label className="ml-2" htmlFor="projetoconcluido">
+                  SIM
+                </label>
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
@@ -1060,14 +2415,31 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-center flex-wrap">
             <SelectInput
               label={"Laudo"}
-              value={info.laudo ? info.laudo : "NÃO DEFINIDO"}
-              editable={true}
+              value={
+                infoHolder.obra?.laudo ? infoHolder.obra?.laudo : "NÃO DEFINIDO"
+              }
+              editable={editor}
               options={[
                 { label: "EM ESTUDO", value: "EM ESTUDO" },
                 { label: "EMITIDO", value: "EMITIDO" },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
-              handleChange={(value) => setInfo({ ...info, laudo: value })}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  obra: {
+                    ...infoHolder.obra,
+                    laudo: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  obra: {
+                    ...infoHolder.obra,
+                    laudo: value,
+                  },
+                });
+              }}
             />
             <div className="flex flex-col w-[350px] items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -1075,16 +2447,32 @@ function NovoProjeto({ credentials, setCredentials }) {
               </span>
               <div className="flex">
                 <input
-                  disabled={false}
-                  checked={info.solicitacaoobra === "SOLICITADA" ? true : false}
-                  onChange={(e) =>
-                    setInfo({
-                      ...info,
-                      solicitacaoobra: e.target.checked
-                        ? "SOLICITADA"
-                        : undefined,
-                    })
+                  disabled={!editor}
+                  checked={
+                    infoHolder.obra?.statusSolicitacao === "SOLICITADA"
+                      ? true
+                      : false
                   }
+                  onChange={(e) => {
+                    setChanges({
+                      ...changes,
+                      obra: {
+                        ...infoHolder.obra,
+                        statusSolicitacao: e.target.checked
+                          ? "SOLICITADA"
+                          : "NÃO SOLICITADA",
+                      },
+                    });
+                    setInfo({
+                      ...infoHolder,
+                      obra: {
+                        ...infoHolder.obra,
+                        statusSolicitacao: e.target.checked
+                          ? "SOLICITADA"
+                          : "NÃO SOLICITADA",
+                      },
+                    });
+                  }}
                   type="checkbox"
                   name="solicitacaoobra"
                   id="solicitacaoobra"
@@ -1096,36 +2484,69 @@ function NovoProjeto({ credentials, setCredentials }) {
             </div>
             <DateInput
               label={"ENTRADA NA OBRA"}
-              editable={true}
+              editable={editor}
               value={
-                info.entradanaobra != undefined && info.entradanaobra != "-"
-                  ? new Date(info.entradanaobra).toISOString().slice(0, 10)
+                infoHolder.obra?.entrada != undefined &&
+                infoHolder.obra?.entrada != "-"
+                  ? new Date(infoHolder.obra?.entrada)
+                      .toISOString()
+                      .slice(0, 10)
                   : 0
               }
-              handleChange={(value) =>
-                setInfo({ ...info, entradanaobra: value })
-              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  obra: {
+                    ...infoHolder.obra,
+                    entrada: new Date(value).toISOString(),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  obra: {
+                    ...infoHolder.obra,
+                    entrada: new Date(value).toISOString(),
+                  },
+                });
+              }}
             />
             <DateInput
               label={"SAIDA DE OBRA"}
-              editable={true}
+              editable={editor}
               value={
-                info.saidadeobra != undefined && info.saidadeobra != "-"
-                  ? new Date(info.saidadeobra).toISOString().slice(0, 10)
+                infoHolder.obra?.saida != undefined &&
+                infoHolder.obra?.saida != "-"
+                  ? new Date(infoHolder.obra?.saida).toISOString().slice(0, 10)
                   : 0
               }
-              handleChange={(value) => setInfo({ ...info, saidadeobra: value })}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  obra: {
+                    ...infoHolder.obra,
+                    saida: new Date(value).toISOString(),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  obra: {
+                    ...infoHolder.obra,
+                    saida: new Date(value).toISOString(),
+                  },
+                });
+              }}
             />
             <SelectInput
               label={"EQUIPE RESPONSÁVEL"}
-              editable={true}
+              editable={editor}
               value={
-                info.equipeexec != undefined && info.equipeexec != "-"
-                  ? info.equipeexec == "TERCEIROS" ||
-                    info.equipeexec == "TERCERIZADOS" ||
-                    info.equipeexec == "OUTROS"
+                infoHolder.obra?.equipeResp != undefined &&
+                infoHolder.obra?.equipeResp != "-"
+                  ? infoHolder.obra?.equipeResp == "TERCEIROS" ||
+                    infoHolder.obra?.equipeResp == "TERCERIZADOS" ||
+                    infoHolder.obra?.equipeResp == "OUTROS"
                     ? "OUTROS"
-                    : info.equipeexec
+                    : infoHolder.obra?.equipeResp
                   : "NÃO DEFINIDO"
               }
               options={[
@@ -1190,7 +2611,22 @@ function NovoProjeto({ credentials, setCredentials }) {
                   value: "NÃO DEFINIDO",
                 },
               ]}
-              handleChange={(value) => setInfo({ ...info, equipeexec: value })}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  obra: {
+                    ...infoHolder.obra,
+                    equipeResp: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  obra: {
+                    ...infoHolder.obra,
+                    equipeResp: value,
+                  },
+                });
+              }}
             />
             <div className="flex flex-col w-[350px] items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -1198,14 +2634,24 @@ function NovoProjeto({ credentials, setCredentials }) {
               </span>
               <div className="flex">
                 <input
-                  disabled={false}
-                  checked={info.checklistobra === "SIM" ? true : false}
-                  onChange={(e) =>
+                  disabled={!editor}
+                  checked={infoHolder.obra?.checklist === "SIM" ? true : false}
+                  onChange={(e) => {
+                    setChanges({
+                      ...changes,
+                      obra: {
+                        ...infoHolder.obra,
+                        checklist: e.target.checked ? "SIM" : "NÃO",
+                      },
+                    });
                     setInfo({
-                      ...info,
-                      checklistobra: e.target.checked ? "SIM" : undefined,
-                    })
-                  }
+                      ...infoHolder,
+                      obra: {
+                        ...infoHolder.obra,
+                        checklist: e.target.checked ? "SIM" : "NÃO",
+                      },
+                    });
+                  }}
                   type="checkbox"
                   name="checklistobra"
                   id="checklistobra"
@@ -1221,14 +2667,24 @@ function NovoProjeto({ credentials, setCredentials }) {
               </span>
               <div className="flex">
                 <input
-                  disabled={false}
-                  checked={info.trafo === "SIM" ? true : false}
-                  onChange={(e) =>
+                  disabled={!editor}
+                  checked={infoHolder.obra?.trafo === "SIM" ? true : false}
+                  onChange={(e) => {
+                    setChanges({
+                      ...changes,
+                      obra: {
+                        ...infoHolder.obra,
+                        trafo: e.target.checked ? "SIM" : "NÃO",
+                      },
+                    });
                     setInfo({
-                      ...info,
-                      trafo: e.target.checked ? "SIM" : undefined,
-                    })
-                  }
+                      ...infoHolder,
+                      obra: {
+                        ...infoHolder.obra,
+                        trafo: e.target.checked ? "SIM" : "NÃO",
+                      },
+                    });
+                  }}
                   type="checkbox"
                   name="trafo"
                   id="trafo"
@@ -1240,8 +2696,12 @@ function NovoProjeto({ credentials, setCredentials }) {
             </div>
             <SelectInput
               label={"STATUS DA OBRA"}
-              value={info.statusobra ? info.statusobra : "NÃO DEFINIDO"}
-              editable={true}
+              value={
+                infoHolder.obra?.statusDaObra
+                  ? infoHolder.obra?.statusDaObra
+                  : "NÃO DEFINIDO"
+              }
+              editable={editor}
               options={[
                 {
                   label: "AGENDADA",
@@ -1268,16 +2728,51 @@ function NovoProjeto({ credentials, setCredentials }) {
                   value: "NÃO DEFINIDO",
                 },
               ]}
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  obra: {
+                    ...infoHolder.obra,
+                    statusDaObra: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  obra: {
+                    ...infoHolder.obra,
+                    statusDaObra: value,
+                  },
+                });
+              }}
             />
             <div className="flex flex-col w-[450px] items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
                 OBSERVAÇÕES
               </span>
               <textarea
-                readOnly={false}
-                value={info.obsobra ? info.obsobra : ""}
+                readOnly={!editor}
+                value={
+                  infoHolder.obra?.observacoes
+                    ? infoHolder.obra.observacoes
+                    : ""
+                }
                 placeholder={"Observações da obra aqui..."}
-                onChange={(e) => setInfo({ ...info, obsobra: e.target.value })}
+                onChange={(e) => {
+                  setChanges({
+                    ...changes,
+                    obra: {
+                      ...infoHolder.obra,
+                      observacoes: e.target.value,
+                    },
+                  });
+                  setInfo({
+                    ...infoHolder,
+                    obra: {
+                      ...infoHolder.obra,
+                      observacoes: e.target.value,
+                    },
+                  });
+                }}
                 className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
               />
             </div>
@@ -1291,11 +2786,11 @@ function NovoProjeto({ credentials, setCredentials }) {
             <SelectInput
               label={"Separação do material"}
               value={
-                info.materialalmoxarifado
-                  ? info.materialalmoxarifado
+                infoHolder.material?.statusSeparacao
+                  ? infoHolder.material?.statusSeparacao
                   : "NÃO DEFINIDO"
               }
-              editable={true}
+              editable={editor}
               options={[
                 {
                   label: "INICIAR SEPARAÇÃO",
@@ -1310,37 +2805,76 @@ function NovoProjeto({ credentials, setCredentials }) {
                   value: "NÃO DEFINIDO",
                 },
               ]}
-              handleChange={(value) =>
-                setInfo({ ...info, materialalmoxarifado: value })
-              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  material: {
+                    ...infoHolder.material,
+                    statusSeparacao: value,
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  material: {
+                    ...infoHolder.material,
+                    statusSeparacao: value,
+                  },
+                });
+              }}
             />
             <NumberInput
               tag={"R$"}
               label={"Previsão de custos em insumos"}
-              editable={true}
+              editable={editor}
               value={
-                info.prevcustosinsumos != undefined &&
-                info.prevcustosinsumos != "#VALUE!"
-                  ? info.prevcustosinsumos
+                infoHolder.material?.previsaoCustos != undefined &&
+                infoHolder.material?.previsaoCustos != "#VALUE!"
+                  ? infoHolder.material?.previsaoCustos
                   : 0
               }
-              handleChange={(value) =>
-                setInfo({ ...info, prevcustosinsumos: value })
-              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  material: {
+                    ...infoHolder.material,
+                    previsaoCustos: Number(value),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  material: {
+                    ...infoHolder.material,
+                    previsaoCustos: Number(value),
+                  },
+                });
+              }}
             />
             <NumberInput
               tag={"R$"}
               label={"Custos em insumos"}
-              editable={true}
+              editable={editor}
               value={
-                info.custosinsumos != undefined &&
-                info.custosinsumos != "#VALUE!"
-                  ? info.custosinsumos
+                infoHolder.material?.efetivoCustos != undefined &&
+                infoHolder.material?.efetivoCustos != "#VALUE!"
+                  ? infoHolder.material?.efetivoCustos
                   : 0
               }
-              handleChange={(value) =>
-                setInfo({ ...info, custosinsumos: value })
-              }
+              handleChange={(value) => {
+                setChanges({
+                  ...changes,
+                  material: {
+                    ...infoHolder.material,
+                    efetivoCustos: Number(value),
+                  },
+                });
+                setInfo({
+                  ...infoHolder,
+                  material: {
+                    ...infoHolder.material,
+                    efetivoCustos: Number(value),
+                  },
+                });
+              }}
             />
           </div>
         </div>

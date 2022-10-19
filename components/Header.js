@@ -16,7 +16,7 @@ function Header({ toggleSidebar, credentials, logout }) {
   )
     return null;
   return (
-    <div className="w-full sticky top-0 bg-[#fff] grid grid-cols-3 items-center px-12 h-[70px] border-b border-gray-200">
+    <div className="w-full sticky z-[1] top-0 bg-[#fff] grid grid-cols-3 items-center px-12 h-[70px] border-b border-gray-200">
       <FaBars
         onClick={toggleSidebar}
         style={{ fontSize: "23px", color: "#15599a", cursor: "pointer" }}

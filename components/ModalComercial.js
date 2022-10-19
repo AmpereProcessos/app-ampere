@@ -905,6 +905,45 @@ function ModalComercial({
                       });
                     }}
                   />
+                  <SelectInput
+                    label={"FORMA DE ASSINATURA"}
+                    value={
+                      infoHolder.contrato.formaAssinatura
+                        ? infoHolder.contrato.formaAssinatura
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    options={[
+                      {
+                        label: "FISICO",
+                        value: "FISICO",
+                      },
+                      {
+                        label: "DIGITAL",
+                        value: "DIGITAL",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        contrato: {
+                          ...infoHolder.contrato,
+                          formaAssinatura: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        contrato: {
+                          ...infoHolder.contrato,
+                          formaAssinatura: value,
+                        },
+                      });
+                    }}
+                  />
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

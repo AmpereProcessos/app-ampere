@@ -9,6 +9,7 @@ function Projetos({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
+  const [searchFilter, setSearchFilter] = useState("");
   const [filters, setFilters] = useState({
     parecerFilter: [],
     vistoriaFilter: [],
@@ -28,6 +29,17 @@ function Projetos({ credentials, setCredentials }) {
     getProjects();
     let changedObj = projects.filter((project) => project._id == id);
     setModalProject(changedObj[0]);
+  }
+  function handleSearchFilter(value) {
+    setSearchFilter(value);
+    if (value != "" || " ") {
+      let newArr = projects.filter((call) =>
+        call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
+      );
+      setFilteredProjects(newArr);
+    } else {
+      setFilteredProjects(projects);
+    }
   }
   function filterProjects() {
     console.log(filters);
@@ -127,6 +139,12 @@ function Projetos({ credentials, setCredentials }) {
           )}
         </div>
         <div className="flex gap-2 flex-wrap justify-center">
+          <input
+            className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
+            placeholder="Digite o nome do contrato"
+            value={searchFilter}
+            onChange={(e) => handleSearchFilter(e.target.value)}
+          />
           <Select
             isMulti
             placeholder="STATUS DO PARECER"

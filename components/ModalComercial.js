@@ -110,7 +110,11 @@ function ModalComercial({
                 <div className="flex gap-2 justify-around flex-wrap">
                   <TextInput
                     label={"Nome do contrato"}
-                    value={infoHolder.nomeDoContrato}
+                    value={
+                      infoHolder.nomeDoContrato
+                        ? infoHolder.nomeDoContrato
+                        : "-"
+                    }
                     editable={editor}
                     handleChange={(value) => {
                       setChanges({ ...changes, nomeDoContrato: value });
@@ -119,7 +123,9 @@ function ModalComercial({
                   />
                   <TextInput
                     label={"Nome do Projeto"}
-                    value={infoHolder.nomeDoProjeto}
+                    value={
+                      infoHolder.nomeDoProjeto ? infoHolder.nomeDoProjeto : "-"
+                    }
                     editable={editor}
                     handleChange={(value) => {
                       setChanges({ ...changes, nomeDoProjeto: value });
@@ -207,7 +213,9 @@ function ModalComercial({
                   <SelectInput
                     label={"Regional"}
                     editable={editor}
-                    value={infoHolder.regional}
+                    value={
+                      infoHolder.regional ? infoHolder.regional : "NÃO DEFINIDO"
+                    }
                     options={[
                       {
                         label: "REGIONAL ITUIUTABA",
@@ -216,6 +224,10 @@ function ModalComercial({
                       {
                         label: "REGIONAL UBERLANDIA",
                         value: "REGIONAL UBERLANDIA",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
                       },
                     ]}
                     handleChange={(value) => {
@@ -302,13 +314,16 @@ function ModalComercial({
                   </div>
                   <SelectInput
                     label={"SEGMENTO"}
-                    value={infoHolder.segmento}
+                    value={
+                      infoHolder.segmento ? infoHolder.segmento : "NÃO DEFINIDO"
+                    }
                     editable={editor}
                     options={[
                       { label: "COMERCIAL", value: "COMERCIAL" },
                       { label: "INDUSTRIAL", value: "INDUSTRIAL" },
                       { label: "RESIDENCIAL", value: "RESIDENCIAL" },
                       { label: "RURAL", value: "RURAL" },
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     ]}
                     handleChange={(value) => {
                       setChanges({ ...changes, segmento: value });
@@ -371,8 +386,8 @@ function ModalComercial({
                     label={"TÉCNICO RESPONSÁVEL"}
                     editable={editor}
                     value={
-                      infoHolder.visitaTecnica.tecnico
-                        ? infoHolder.visitaTecnica.tecnico
+                      infoHolder.visitaTecnica?.tecnico
+                        ? infoHolder.visitaTecnica?.tecnico
                         : ""
                     }
                     handleChange={(value) => {
@@ -428,8 +443,8 @@ function ModalComercial({
                     label={"TIPO DO PADRÃO"}
                     editable={editor}
                     value={
-                      infoHolder.padrao.tipo != undefined
-                        ? infoHolder.padrao.tipo
+                      infoHolder.padrao?.tipo != undefined
+                        ? infoHolder.padrao?.tipo
                         : "NÃO DEFINIDO"
                     }
                     options={[
@@ -517,7 +532,7 @@ function ModalComercial({
                     label={"Valor do padrão"}
                     editable={editor}
                     value={
-                      infoHolder.padrao.valor ? infoHolder.padrao.valor : 0
+                      infoHolder.padrao?.valor ? infoHolder.padrao?.valor : 0
                     }
                     handleChange={(value) => {
                       setChanges({
@@ -558,8 +573,8 @@ function ModalComercial({
                     label={"Saída do cliente"}
                     editable={editor}
                     value={
-                      infoHolder.visitaTecnica.saidaDoCliente
-                        ? infoHolder.visitaTecnica.saidaDoCliente
+                      infoHolder.visitaTecnica?.saidaDoCliente
+                        ? infoHolder.visitaTecnica?.saidaDoCliente
                         : "N/A"
                     }
                     options={[
@@ -738,7 +753,7 @@ function ModalComercial({
                       });
                     }}
                   />
-                  {infoHolder.estruturaPersonalizada.aplicavel == "SIM" && (
+                  {infoHolder.estruturaPersonalizada?.aplicavel == "SIM" && (
                     <SelectInput
                       label={"STATUS da estrutura personalizada"}
                       editable={editor}
@@ -783,8 +798,8 @@ function ModalComercial({
                     label={"STATUS"}
                     editable={editor}
                     value={
-                      infoHolder.contrato.status
-                        ? infoHolder.contrato.status
+                      infoHolder.contrato?.status
+                        ? infoHolder.contrato?.status
                         : "NÃO DEFINIDO"
                     }
                     options={[
@@ -818,8 +833,8 @@ function ModalComercial({
                       });
                     }}
                   />
-                  {(infoHolder.contrato.status != "AGUARDANDO SOLICITAÇÃO" ||
-                    infoHolder.contrato.status != "NÃO DEFINIDO") && (
+                  {(infoHolder.contrato?.status != "AGUARDANDO SOLICITAÇÃO" ||
+                    infoHolder.contrato?.status != "NÃO DEFINIDO") && (
                     <DateInput
                       label={"Data de solicitação"}
                       editable={editor}
@@ -853,8 +868,8 @@ function ModalComercial({
                     label={"Data de liberação p/ assinatura"}
                     editable={editor}
                     value={
-                      infoHolder.contrato.dataLiberacao != undefined &&
-                      infoHolder.contrato.dataLiberacao != "-"
+                      infoHolder.contrato?.dataLiberacao != undefined &&
+                      infoHolder.contrato?.dataLiberacao != "-"
                         ? new Date(infoHolder.contrato.dataLiberacao)
                             .toISOString()
                             .slice(0, 10)
@@ -881,8 +896,8 @@ function ModalComercial({
                     label={"Data de assinatura"}
                     editable={editor}
                     value={
-                      infoHolder.contrato.dataAssinatura != undefined &&
-                      infoHolder.contrato.dataAssinatura != "-"
+                      infoHolder.contrato?.dataAssinatura != undefined &&
+                      infoHolder.contrato?.dataAssinatura != "-"
                         ? new Date(infoHolder.contrato.dataAssinatura)
                             .toISOString()
                             .slice(0, 10)
@@ -908,8 +923,8 @@ function ModalComercial({
                   <SelectInput
                     label={"FORMA DE ASSINATURA"}
                     value={
-                      infoHolder.contrato.formaAssinatura
-                        ? infoHolder.contrato.formaAssinatura
+                      infoHolder.contrato?.formaAssinatura
+                        ? infoHolder.contrato?.formaAssinatura
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -954,8 +969,8 @@ function ModalComercial({
                   <SelectInput
                     label={"STATUS PAGAMENTO"}
                     value={
-                      infoHolder.pagamento.status
-                        ? infoHolder.pagamento.status
+                      infoHolder.pagamento?.status
+                        ? infoHolder.pagamento?.status
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -1097,9 +1112,9 @@ function ModalComercial({
                     <SelectInput
                       label={"CREDOR"}
                       value={
-                        infoHolder.pagamento.credor != undefined &&
-                        infoHolder.pagamento.credor != "-----" &&
-                        infoHolder.pagamento.credor != "QUAL CREDOR?"
+                        infoHolder.pagamento?.credor != undefined &&
+                        infoHolder.pagamento?.credor != "-----" &&
+                        infoHolder.pagamento?.credor != "QUAL CREDOR?"
                           ? infoHolder.pagamento.credor
                           : "NÃO DEFINIDO"
                       }
@@ -1169,7 +1184,7 @@ function ModalComercial({
                     editable={editor}
                     value={
                       infoHolder.pagamento?.pagador
-                        ? infoHolder.pagamento.pagador
+                        ? infoHolder.pagamento?.pagador
                         : ""
                     }
                     handleChange={(value) => {
@@ -1225,8 +1240,8 @@ function ModalComercial({
                     label={"Data de liberação p/ compra"}
                     editable={editor}
                     value={
-                      infoHolder.compra.dataLiberacao != undefined &&
-                      infoHolder.compra.dataLiberacao != "-"
+                      infoHolder.compra?.dataLiberacao != undefined &&
+                      infoHolder.compra?.dataLiberacao != "-"
                         ? new Date(infoHolder.compra.dataLiberacao)
                             .toISOString()
                             .slice(0, 10)

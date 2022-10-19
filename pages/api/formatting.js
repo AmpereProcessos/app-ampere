@@ -123557,7 +123557,7 @@ export default async function handler(req, res) {
         dataSolicitacao: fixDate(project.datasolicitacaocontrato), // formatar como data
         dataLiberacao: fixDate(project.dataliberacaoassinatura), // formatar como data
         dataAssinatura: fixDate(project.dataassinatura), // formatar como data
-        formaAssinatura: project.formaassinatura,
+        formaAssinatura: project.formadeassinatura,
       },
       pagamento: {
         status: project.statuspagamento,

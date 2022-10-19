@@ -36,6 +36,7 @@ function NovoProjeto({ credentials, setCredentials }) {
       nome: "",
       codigo: 0,
     },
+    linkDrive: "",
     regional: "REGIONAL ITUIUTABA",
     tipoDeServico: "SISTEMA FOTOVOLTAICO",
     codigoSVB: 0,
@@ -215,19 +216,21 @@ function NovoProjeto({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
+      if (!storedCredentials.accessibleRoutes.includes("PPS")) {
+        router.push("/");
+      }
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (
-          credentials.accessibleRoutes.includes("PPS") ||
-          storedCredentials.accessibleRoutes.includes("PPS")
-        )
-          setEditor(true);
-        else setEditor(false);
+        console.log("AAAAAAAA");
+        if (!credentials.accessibleRoutes.includes("PPS")) {
+          router.push("/");
+        }
       }
     }
   }, []);
+  console.log(infoHolder);
   return (
     <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
       <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
@@ -239,18 +242,16 @@ function NovoProjeto({ credentials, setCredentials }) {
             <TextInput
               label={"Nome do contrato"}
               value={infoHolder.nomeDoContrato ? infoHolder.nomeDoContrato : ""}
-              editable={editor}
+              editable={true}
               handleChange={(value) => {
-                setChanges({ ...changes, nomeDoContrato: value });
                 setInfo({ ...infoHolder, nomeDoContrato: value });
               }}
             />
             <TextInput
               label={"Nome do Projeto"}
               value={infoHolder.nomeDoProjeto}
-              editable={editor}
+              editable={true}
               handleChange={(value) => {
-                setChanges({ ...changes, nomeDoProjeto: value });
                 setInfo({
                   ...infoHolder,
                   nomeDoProjeto: value,
@@ -259,14 +260,13 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <TextInput
               label={"CPF/CNPJ"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.cpf_cnpj
                   ? formataCPF(infoHolder.cpf_cnpj.toString())
                   : "-"
               }
               handleChange={(value) => {
-                setChanges({ ...changes, cpf_cnpj: value });
                 setInfo({
                   ...infoHolder,
                   cpf_cnpj: value,
@@ -275,53 +275,45 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <TextInput
               label={"Telefone"}
-              editable={editor}
+              editable={true}
               value={infoHolder.telefone ? infoHolder.telefone : "-"}
               handleChange={(value) => {
-                setChanges({ ...changes, telefone: value });
                 setInfo({ ...infoHolder, telefone: value });
               }}
             />
             <TextInput
               label={"Cidade"}
-              editable={editor}
+              editable={true}
               value={infoHolder.cidade ? infoHolder.cidade : "-"}
               handleChange={(value) => {
-                setChanges({ ...changes, cidade: value });
                 setInfo({ ...infoHolder, cidade: value });
               }}
             />
             <TextInput
               label={"CEP"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.cep ? formataCEP(infoHolder.cep.toString()) : "-"
               }
               handleChange={(value) => {
-                setChanges({ ...changes, cep: value });
                 setInfo({ ...infoHolder, cep: value });
               }}
             />
             <TextInput
               label={"Bairro"}
-              editable={editor}
+              editable={true}
               value={infoHolder.bairro ? infoHolder.bairro : ""}
               handleChange={(value) => {
-                setChanges({ ...changes, bairro: value });
                 setInfo({ ...infoHolder, bairro: value });
               }}
             />
             <NumberInput
               label={"Número da residência"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.numeroResidencia ? infoHolder.numeroResidencia : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  numeroResidencia: Number(value),
-                });
                 setInfo({
                   ...infoHolder,
                   numeroResidencia: Number(value),
@@ -330,7 +322,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <SelectInput
               label={"Regional"}
-              editable={editor}
+              editable={true}
               value={infoHolder.regional}
               options={[
                 {
@@ -343,16 +335,22 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({ ...changes, regional: value });
                 setInfo({ ...infoHolder, regional: value });
               }}
             />
             <TextInput
+              label={"LINK PASTA DO DRIVE"}
+              editable={true}
+              value={infoHolder.linkDrive ? infoHolder.linkDrive : ""}
+              handleChange={(value) => {
+                setInfo({ ...infoHolder, bairro: value });
+              }}
+            />
+            <TextInput
               label={"EMAIL"}
-              editable={editor}
+              editable={true}
               value={infoHolder.email ? infoHolder.email : ""}
               handleChange={(value) => {
-                setChanges({ ...changes, email: value });
                 setInfo({ ...infoHolder, email: value });
               }}
             />
@@ -364,7 +362,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.canalVenda
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 { label: "EVENTO", value: "EVENTO" },
                 {
@@ -380,7 +378,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
               handleChange={(value) => {
-                setChanges({ ...changes, canalVenda: value });
                 setInfo({ ...infoHolder, canalVenda: value });
               }}
             />
@@ -396,20 +393,9 @@ function NovoProjeto({ credentials, setCredentials }) {
                 options={vendedores.map((vendedor) => {
                   return { label: vendedor.nome, value: vendedor.nome };
                 })}
-                editable={editor}
+                editable={true}
                 handleChange={(value) => {
                   console.log(value);
-                  setChanges({
-                    ...changes,
-                    vendedor: {
-                      ...infoHolder.vendedor,
-                      nome: value,
-                      codigo:
-                        vendedores.filter(
-                          (vendedor) => vendedor.nome == value
-                        )[0].cod || "-",
-                    },
-                  });
                   setInfo({
                     ...infoHolder,
                     vendedor: {
@@ -427,7 +413,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             <SelectInput
               label={"SEGMENTO"}
               value={infoHolder.segmento}
-              editable={editor}
+              editable={true}
               options={[
                 { label: "COMERCIAL", value: "COMERCIAL" },
                 { label: "INDUSTRIAL", value: "INDUSTRIAL" },
@@ -435,16 +421,14 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "RURAL", value: "RURAL" },
               ]}
               handleChange={(value) => {
-                setChanges({ ...changes, segmento: value });
                 setInfo({ ...infoHolder, segmento: value });
               }}
             />
             <TextInput
               label="TIPO DE SERVIÇO"
               value={infoHolder.tipoDeServico}
-              editable={editor}
+              editable={true}
               handleChange={(value) => {
-                setChanges({ ...changes, tipoDeServico: value });
                 setInfo({ ...infoHolder, tipoDeServico: value });
               }}
             />
@@ -457,20 +441,13 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-around flex-wrap">
             <div>
               <input
-                disabled={!editor}
+                disabled={false}
                 checked={
                   infoHolder.visitaTecnica?.status === "REALIZADA"
                     ? true
                     : false
                 }
                 onChange={(e) => {
-                  setChanges({
-                    ...changes,
-                    visitaTecnica: {
-                      ...infoHolder.visitaTecnica,
-                      status: e.target.checked ? "REALIZADA" : "PENDÊNCIA",
-                    },
-                  });
                   setInfo({
                     ...infoHolder,
                     visitaTecnica: {
@@ -489,20 +466,13 @@ function NovoProjeto({ credentials, setCredentials }) {
             </div>
             <TextInput
               label={"TÉCNICO RESPONSÁVEL"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.visitaTecnica.tecnico
                   ? infoHolder.visitaTecnica.tecnico
                   : ""
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  visitaTecnica: {
-                    ...infoHolder.visitaTecnica,
-                    tecnico: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   visitaTecnica: {
@@ -514,20 +484,13 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <TextInput
               label={"Tipo da telha"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.visitaTecnica?.tipoDaTelha
                   ? infoHolder.visitaTecnica?.tipoDaTelha
                   : ""
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  visitaTecnica: {
-                    ...infoHolder.visitaTecnica,
-                    tipoDaTelha: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   visitaTecnica: {
@@ -546,7 +509,7 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-center flex-wrap">
             <SelectInput
               label={"TIPO DO PADRÃO"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.padrao.tipo != undefined
                   ? infoHolder.padrao.tipo
@@ -583,10 +546,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  padrao: { ...infoHolder.padrao, tipo: value },
-                });
                 setInfo({
                   ...infoHolder,
                   padrao: { ...infoHolder.padrao, tipo: value },
@@ -595,7 +554,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <SelectInput
               label={"PAGAMENTO DO PADRÃO"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.padrao?.respPagamento ==
                   "NÃO HAVERA TROCA DE PADRÃO" ||
@@ -622,10 +581,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  padrao: { ...infoHolder.padrao, respPagamento: value },
-                });
                 setInfo({
                   ...infoHolder,
                   padrao: { ...infoHolder.padrao, respPagamento: value },
@@ -635,13 +590,9 @@ function NovoProjeto({ credentials, setCredentials }) {
             <NumberInput
               tag={"R$"}
               label={"Valor do padrão"}
-              editable={editor}
+              editable={true}
               value={infoHolder.padrao.valor ? infoHolder.padrao.valor : 0}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  padrao: { ...infoHolder.padrao, valor: Number(value) },
-                });
                 setInfo({
                   ...infoHolder,
                   padrao: { ...infoHolder.padrao, valor: Number(value) },
@@ -650,7 +601,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <SelectInput
               label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.padrao?.respInstalacao
                   ? infoHolder.padrao?.respInstalacao
@@ -662,10 +613,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  padrao: { ...infoHolder.padrao, respInstalacao: value },
-                });
                 setInfo({
                   ...infoHolder,
                   padrao: { ...infoHolder.padrao, respInstalacao: value },
@@ -674,7 +621,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <SelectInput
               label={"Saída do cliente"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.visitaTecnica.saidaDoCliente
                   ? infoHolder.visitaTecnica.saidaDoCliente
@@ -686,13 +633,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "N/A", value: "N/A" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  visitaTecnica: {
-                    ...infoHolder.visitaTecnica,
-                    saidaDoCliente: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   visitaTecnica: {
@@ -704,20 +644,13 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <TextInput
               label={"Amperagem"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.visitaTecnica?.amperagem
                   ? infoHolder.visitaTecnica.amperagem
                   : ""
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  visitaTecnica: {
-                    ...infoHolder.visitaTecnica,
-                    amperagem: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   visitaTecnica: {
@@ -736,20 +669,13 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-center flex-wrap">
             <div>
               <input
-                disabled={!editor}
+                disabled={false}
                 checked={
                   infoHolder.estruturaPersonalizada?.aplicavel === "SIM"
                     ? true
                     : false
                 }
                 onChange={(e) => {
-                  setChanges({
-                    ...changes,
-                    estruturaPersonalizada: {
-                      ...infoHolder.estruturaPersonalizada,
-                      aplicavel: e.target.checked ? "SIM" : "NÃO",
-                    },
-                  });
                   setInfo({
                     ...infoHolder,
                     estruturaPersonalizada: {
@@ -768,7 +694,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             </div>
             <SelectInput
               label={"Tipo da estrutura"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.estruturaPersonalizada?.tipo
                   ? infoHolder.estruturaPersonalizada?.tipo
@@ -783,13 +709,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "N/A", value: "N/A" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  estruturaPersonalizada: {
-                    ...infoHolder.estruturaPersonalizada,
-                    tipo: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   estruturaPersonalizada: {
@@ -801,7 +720,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <SelectInput
               label={"PAGAMENTO DA ESTRUTURA"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.estruturaPersonalizada?.respPagamento
                   ? infoHolder.estruturaPersonalizada?.respPagamento
@@ -813,13 +732,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "NÃO SE APLICA", value: "NÃ SE APLICA" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  estruturaPersonalizada: {
-                    ...infoHolder.estruturaPersonalizada,
-                    respPagamento: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   estruturaPersonalizada: {
@@ -832,7 +744,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             <NumberInput
               tag={"R$"}
               label={"Valor da estrutura"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.estruturaPersonalizada?.valor == "-" ||
                 infoHolder.estruturaPersonalizada?.valor == undefined
@@ -840,13 +752,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : infoHolder.estruturaPersonalizada?.valor
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  estruturaPersonalizada: {
-                    ...infoHolder.estruturaPersonalizada,
-                    valor: Number(value),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   estruturaPersonalizada: {
@@ -859,7 +764,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             {infoHolder.estruturaPersonalizada.aplicavel == "SIM" && (
               <SelectInput
                 label={"STATUS da estrutura personalizada"}
-                editable={editor}
+                editable={true}
                 value={
                   infoHolder.estruturaPersonalizada.aplicavel
                     ? infoHolder.estruturaPersonalizada.status
@@ -873,13 +778,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   { label: "N/A", value: "N/A" },
                 ]}
                 handleChange={(value) => {
-                  setChanges({
-                    ...changes,
-                    estruturaPersonalizada: {
-                      ...infoHolder.estruturaPersonalizada,
-                      status: value,
-                    },
-                  });
                   setInfo({
                     ...infoHolder,
                     estruturaPersonalizada: {
@@ -899,7 +797,7 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-center flex-wrap">
             <SelectInput
               label={"STATUS"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.contrato.status
                   ? infoHolder.contrato.status
@@ -920,13 +818,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  contrato: {
-                    ...infoHolder.contrato,
-                    status: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   contrato: {
@@ -940,7 +831,7 @@ function NovoProjeto({ credentials, setCredentials }) {
               infoHolder.contrato.status != "NÃO DEFINIDO") && (
               <DateInput
                 label={"Data de solicitação"}
-                editable={editor}
+                editable={true}
                 value={
                   infoHolder.contrato.dataSolicitacao != undefined &&
                   infoHolder.contrato.dataSolicitacao != "-"
@@ -950,13 +841,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                     : 0
                 }
                 handleChange={(value) => {
-                  setChanges({
-                    ...changes,
-                    contrato: {
-                      ...infoHolder.contrato,
-                      dataSolicitacao: new Date(value).toISOString(),
-                    },
-                  });
                   setInfo({
                     ...infoHolder,
                     contrato: {
@@ -969,7 +853,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             )}
             <DateInput
               label={"Data de liberação p/ assinatura"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.contrato.dataLiberacao != undefined &&
                 infoHolder.contrato.dataLiberacao != "-"
@@ -979,13 +863,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  contrato: {
-                    ...infoHolder.contrato,
-                    dataLiberacao: new Date(value).toISOString(),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   contrato: {
@@ -997,7 +874,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <DateInput
               label={"Data de assinatura"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.contrato.dataAssinatura != undefined &&
                 infoHolder.contrato.dataAssinatura != "-"
@@ -1007,18 +884,43 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  contrato: {
-                    ...infoHolder.contrato,
-                    dataAssinatura: new Date(value).toISOString(),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   contrato: {
                     ...infoHolder.contrato,
                     dataAssinatura: new Date(value).toISOString(),
+                  },
+                });
+              }}
+            />
+            <SelectInput
+              label={"FORMA DE ASSINATURA"}
+              value={
+                infoHolder.contrato.formaAssinatura
+                  ? infoHolder.contrato.formaAssinatura
+                  : "NÃO DEFINIDO"
+              }
+              editable={true}
+              options={[
+                {
+                  label: "FISICO",
+                  value: "FISICO",
+                },
+                {
+                  label: "DIGITAL",
+                  value: "DIGITAL",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+              handleChange={(value) => {
+                setInfo({
+                  ...infoHolder,
+                  contrato: {
+                    ...infoHolder.contrato,
+                    formaAssinatura: value,
                   },
                 });
               }}
@@ -1037,7 +939,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.pagamento.status
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 {
                   label: "AGUARDANDO PAGAMENTO",
@@ -1057,13 +959,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  pagamento: {
-                    ...infoHolder.pagamento,
-                    status: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   pagamento: {
@@ -1080,7 +975,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.pagamento?.forma
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 {
                   label: "CAPITAL PROPRIO",
@@ -1096,13 +991,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  pagamento: {
-                    ...infoHolder.pagamento,
-                    forma: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   pagamento: {
@@ -1120,7 +1008,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.faturamento?.empresaFaturamento
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 { label: "AMPERE ENERGIAS", value: "AMPERE ENERGIAS" },
                 {
@@ -1131,13 +1019,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  faturamento: {
-                    ...infoHolder.faturamento,
-                    empresaFaturamento: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   faturamento: {
@@ -1149,20 +1030,13 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <TextInput
               label={"Informações faturamento"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.faturamento?.previsaoFaturamento
                   ? infoHolder.faturamento?.previsaoFaturamento
                   : ""
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  faturamento: {
-                    ...infoHolder.faturamento,
-                    previsaoFaturamento: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   faturamento: {
@@ -1182,7 +1056,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                     ? infoHolder.pagamento.credor
                     : "NÃO DEFINIDO"
                 }
-                editable={editor}
+                editable={true}
                 options={[
                   {
                     label: "BANCO DO BRASIL",
@@ -1226,13 +1100,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   },
                 ]}
                 handleChange={(value) => {
-                  setChanges({
-                    ...changes,
-                    pagamento: {
-                      ...infoHolder.pagamento,
-                      credor: value,
-                    },
-                  });
                   setInfo({
                     ...infoHolder,
                     pagamento: {
@@ -1245,20 +1112,13 @@ function NovoProjeto({ credentials, setCredentials }) {
             )}
             <TextInput
               label={"Pagador"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.pagamento?.pagador
                   ? infoHolder.pagamento.pagador
                   : ""
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  pagamento: {
-                    ...infoHolder.pagamento,
-                    pagador: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   pagamento: {
@@ -1270,20 +1130,13 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <TextInput
               label={"Contato pagador"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.pagamento?.contatoPagador
                   ? infoHolder.pagamento?.contatoPagador
                   : ""
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  pagamento: {
-                    ...infoHolder.pagamento,
-                    contatoPagador: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   pagamento: {
@@ -1302,7 +1155,7 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-center flex-wrap">
             <DateInput
               label={"Data de liberação p/ compra"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.compra?.dataLiberacao != undefined &&
                 infoHolder.compra?.dataLiberacao != "-"
@@ -1312,13 +1165,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  compra: {
-                    ...infoHolder.compra,
-                    dataLiberacao: new Date(value).toISOString(),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   compra: {
@@ -1330,7 +1176,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <DateInput
               label={"Data do pagamento"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.compra?.dataPagamento != undefined &&
                 infoHolder.compra?.dataPagamento != "-"
@@ -1340,13 +1186,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  compra: {
-                    ...infoHolder.compra,
-                    dataPagamento: new Date(value).toISOString(),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   compra: {
@@ -1358,7 +1197,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <SelectInput
               label={"Fornecedor"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.compra?.fornecedor != undefined &&
                 infoHolder.compra.fornecedor != "-"
@@ -1392,13 +1231,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  compra: {
-                    ...infoHolder.compra,
-                    fornecedor: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   compra: {
@@ -1416,7 +1248,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.compra.tipoDoKit
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 {
                   label: "NORMAL",
@@ -1432,13 +1264,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  compra: {
-                    ...infoHolder.compra,
-                    tipoDoKit: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   compra: {
@@ -1451,7 +1276,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             <NumberInput
               tag={"R$"}
               label={"VALOR DO KIT"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.compra?.valorDoKit != undefined &&
                 infoHolder.compra?.valorDoKit != "-"
@@ -1459,13 +1284,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  compra: {
-                    ...infoHolder.compra,
-                    valorDoKit: Number(value),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   compra: {
@@ -1483,20 +1301,13 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.compra?.localEntrega
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 { label: "MESMO DO PROJETO", value: "MESMO DO PROJETO" },
                 { label: "SEM RESTRIÇÕES", value: "SEM RESTRIÇÕES" },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  compra: {
-                    ...infoHolder.compra,
-                    localEntrega: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   compra: {
@@ -1513,15 +1324,8 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.compra?.informacoes
                   : ""
               }
-              editable={editor}
+              editable={true}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  compra: {
-                    ...infoHolder.compra,
-                    informacoes: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   compra: {
@@ -1533,7 +1337,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <SelectInput
               label={"STATUS DA ENTREGA"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.compra?.statusEntrega
                   ? infoHolder.compra?.statusEntrega
@@ -1558,13 +1362,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  compra: {
-                    ...infoHolder.compra,
-                    statusEntrega: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   compra: {
@@ -1583,20 +1380,13 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-center flex-wrap">
             <TextInput
               label={"Titular do projeto"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.dadosCemig?.titularProjeto
                   ? infoHolder.dadosCemig?.titularProjeto
                   : ""
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  dadosCemig: {
-                    ...infoHolder.dadosCemig,
-                    titularProjeto: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   dadosCemig: {
@@ -1613,15 +1403,8 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.dadosCemig?.numeroInstalacao
                   : ""
               }
-              editable={editor}
+              editable={true}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  dadosCemig: {
-                    ...infoHolder.dadosCemig,
-                    numeroInstalacao: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   dadosCemig: {
@@ -1638,20 +1421,13 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.dadosCemig?.distCreditos
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 { label: "SIM", value: "SIM" },
                 { label: "NÃO", value: "NÃO" },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  dadosCemig: {
-                    ...infoHolder.dadosCemig,
-                    distCreditos: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   dadosCemig: {
@@ -1664,7 +1440,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             {infoHolder.dadosCemig?.distCreditos == "SIM" && (
               <NumberInput
                 label={"QTDE DE DISTRIBUIÇÕES"}
-                editable={editor}
+                editable={true}
                 value={
                   infoHolder.dadosCemig?.qtdeDistCreditos != undefined &&
                   infoHolder.dadosCemig?.qtdeDistCreditos != "-"
@@ -1672,13 +1448,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                     : 0
                 }
                 handleChange={(value) => {
-                  setChanges({
-                    ...changes,
-                    dadosCemig: {
-                      ...infoHolder.dadosCemig,
-                      qtdeDistCreditos: Number(value),
-                    },
-                  });
                   setInfo({
                     ...infoHolder,
                     dadosCemig: {
@@ -1698,7 +1467,7 @@ function NovoProjeto({ credentials, setCredentials }) {
           <div className="flex gap-2 justify-center flex-wrap">
             <NumberInput
               label={"NÚMERO DE MÓDULOS"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.sistema?.qtdeModulos != undefined &&
                 infoHolder.sistema?.qtdeModulos != "-"
@@ -1706,13 +1475,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  sistema: {
-                    ...changes.sistema,
-                    qtdeModulos: Number(value),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   sistema: {
@@ -1725,7 +1487,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             <NumberInput
               unit={"W"}
               label={"POTÊNCIA DOS MÓDULOS"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.sistema?.potModulos != undefined &&
                 infoHolder.sistema?.potModulos != "-"
@@ -1733,13 +1495,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  sistema: {
-                    ...changes.sistema,
-                    potModulos: Number(value),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   sistema: {
@@ -1752,7 +1507,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             <NumberInput
               unit={"kWp"}
               label={"POTÊNCIA PICO"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.sistema?.potPico != undefined &&
                 infoHolder.sistema?.potPico != "-"
@@ -1760,13 +1515,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  sistema: {
-                    ...changes.sistema,
-                    potPico: Number(value),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   sistema: {
@@ -1783,7 +1531,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.sistema?.topologia
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 { label: "INVERSOR", value: "INVERSOR" },
                 { label: "MICRO", value: "MICRO" },
@@ -1791,13 +1539,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  sistema: {
-                    ...changes.sistema,
-                    topologia: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   sistema: {
@@ -1809,18 +1550,11 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <TextInput
               label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.sistema?.inversor ? infoHolder.sistema?.inversor : ""
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  sistema: {
-                    ...changes.sistema,
-                    inversor: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   sistema: {
@@ -1833,7 +1567,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             <NumberInput
               tag={"R$"}
               label={"VALOR DO PROJETO"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.sistema?.valorProjeto != undefined &&
                 infoHolder.sistema?.valorProjeto != "-"
@@ -1841,13 +1575,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  sistema: {
-                    ...changes.sistema,
-                    valorProjeto: Number(value),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   sistema: {
@@ -1864,7 +1591,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.projeto?.iniciar
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 { label: "SIM", value: "SIM" },
                 {
@@ -1874,13 +1601,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  projeto: {
-                    ...infoHolder.projeto,
-                    iniciar: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   projeto: {
@@ -1904,7 +1624,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.projeto?.projetista?.nome
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 {
                   label: "ALINE",
@@ -1928,16 +1648,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  projeto: {
-                    ...infoHolder.projeto,
-                    projetista: {
-                      ...infoHolder.projeto.projetista,
-                      nome: value,
-                    },
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   projetista: {
@@ -1949,7 +1659,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <DateInput
               label={"Data de assinatura da documentação"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.projeto?.dataAssDocumentacao != undefined &&
                 infoHolder.projeto?.dataAssDocumentacao != "-"
@@ -1959,13 +1669,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  projeto: {
-                    ...infoHolder.projeto,
-                    dataAssDocumentacao: new Date(value).toISOString(),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   projeto: {
@@ -1977,7 +1680,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <DateInput
               label={"Parecer de acesso"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.parecer?.dataParecerDeAcesso != undefined &&
                 infoHolder.parecer?.dataParecerDeAcesso != "-"
@@ -1987,13 +1690,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  parecer: {
-                    ...infoHolder.parecer,
-                    dataParecerDeAcesso: new Date(value).toISOString(),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   parecer: {
@@ -2010,7 +1706,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.parecer?.statusDoParecerDeAcesso
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 {
                   label: "AGUARDANDO FATURAMENTO ART",
@@ -2046,13 +1742,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  parecer: {
-                    ...infoHolder.parecer,
-                    statusDoParecerDeAcesso: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   parecer: {
@@ -2068,18 +1757,11 @@ function NovoProjeto({ credentials, setCredentials }) {
               </span>
               <div className="flex">
                 <input
-                  disabled={!editor}
+                  disabled={false}
                   checked={
                     infoHolder.projeto?.diagramaUnifilar === "Ok" ? true : false
                   }
                   onChange={(e) => {
-                    setChanges({
-                      ...changes,
-                      projeto: {
-                        ...infoHolder.projeto,
-                        diagramaUnifilar: e.target.checked ? "Ok" : "PENDÊNCIA",
-                      },
-                    });
                     setInfo({
                       ...infoHolder,
                       projeto: {
@@ -2103,18 +1785,11 @@ function NovoProjeto({ credentials, setCredentials }) {
               </span>
               <div className="flex">
                 <input
-                  disabled={!editor}
+                  disabled={false}
                   checked={
                     infoHolder.projeto?.desenhoTelhado === "OK" ? true : false
                   }
                   onChange={(e) => {
-                    setChanges({
-                      ...changes,
-                      projeto: {
-                        ...infoHolder.projeto,
-                        desenhoTelhado: e.target.checked ? "OK" : "PENDÊNCIA",
-                      },
-                    });
                     setInfo({
                       ...infoHolder,
                       projeto: {
@@ -2134,7 +1809,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             </div>
             <SelectInput
               label={"MAPA DE MICRO"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.projeto?.mapaDeMicro != undefined &&
                 infoHolder.projeto?.mapaDeMicro != "-"
@@ -2147,13 +1822,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  projeto: {
-                    ...infoHolder.projeto,
-                    mapaDeMicro: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   projeto: {
@@ -2169,22 +1837,11 @@ function NovoProjeto({ credentials, setCredentials }) {
               </span>
               <div className="flex">
                 <input
-                  disabled={!editor}
+                  disabled={false}
                   checked={
                     infoHolder.projeto?.aumentoDeCarga === "SIM" ? true : false
                   }
                   onChange={(e) => {
-                    setChanges({
-                      ...changes,
-                      projeto: {
-                        ...infoHolder.projeto,
-                        aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
-                        acStatus:
-                          e.target.checked && infoHolder.acstatus != "REALIZADO"
-                            ? "PÊNDENCIA"
-                            : undefined,
-                      },
-                    });
                     setInfo({
                       ...infoHolder,
                       projeto: {
@@ -2213,22 +1870,13 @@ function NovoProjeto({ credentials, setCredentials }) {
                 </span>
                 <div className="flex">
                   <input
-                    disabled={!editor}
+                    disabled={false}
                     checked={
                       infoHolder.projeto?.acStatus === "REALIZADO"
                         ? true
                         : false
                     }
                     onChange={(e) => {
-                      setChanges({
-                        ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          acStatus: e.target.checked
-                            ? "REALIZADO"
-                            : "PENDÊNCIA",
-                        },
-                      });
                       setInfo({
                         ...infoHolder,
                         projeto: {
@@ -2251,7 +1899,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             )}
             <DateInput
               label={"DATA DO PEDIDO DE VISTORIA"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.vistoria?.dataPedido != undefined &&
                 infoHolder.vistoria?.dataPedido != "-"
@@ -2261,13 +1909,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  vistoria: {
-                    ...infoHolder.vistoria,
-                    dataPedido: new Date(value).toISOString(),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   vistoria: {
@@ -2284,7 +1925,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.vistoria?.status
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 { label: "REALIZADA", value: "REALIZADA" },
                 {
@@ -2294,13 +1935,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  vistoria: {
-                    ...infoHolder.vistoria,
-                    status: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   vistoria: {
@@ -2312,7 +1946,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <DateInput
               label={"DATA TROCA DO MEDIDOR"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.medidor?.data != undefined &&
                 infoHolder.medidor?.data != "-"
@@ -2320,13 +1954,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  medidor: {
-                    ...infoHolder.medidor,
-                    data: new Date(value).toISOString(),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   medidor: {
@@ -2343,7 +1970,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.medidor?.status
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 { label: "REALIZADA", value: "REALIZADA" },
                 {
@@ -2353,13 +1980,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  medidor: {
-                    ...infoHolder.medidor,
-                    status: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   medidor: {
@@ -2375,20 +1995,13 @@ function NovoProjeto({ credentials, setCredentials }) {
               </span>
               <div className="flex">
                 <input
-                  disabled={!editor}
+                  disabled={false}
                   checked={
                     infoHolder.projeto?.projetoConcluido === "SIM"
                       ? true
                       : false
                   }
                   onChange={(e) => {
-                    setChanges({
-                      ...changes,
-                      projeto: {
-                        ...infoHolder.projeto,
-                        projetoConcluido: e.target.checked ? "SIM" : "NÃO",
-                      },
-                    });
                     setInfo({
                       ...infoHolder,
                       projeto: {
@@ -2418,20 +2031,13 @@ function NovoProjeto({ credentials, setCredentials }) {
               value={
                 infoHolder.obra?.laudo ? infoHolder.obra?.laudo : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 { label: "EM ESTUDO", value: "EM ESTUDO" },
                 { label: "EMITIDO", value: "EMITIDO" },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  obra: {
-                    ...infoHolder.obra,
-                    laudo: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   obra: {
@@ -2447,22 +2053,13 @@ function NovoProjeto({ credentials, setCredentials }) {
               </span>
               <div className="flex">
                 <input
-                  disabled={!editor}
+                  disabled={false}
                   checked={
                     infoHolder.obra?.statusSolicitacao === "SOLICITADA"
                       ? true
                       : false
                   }
                   onChange={(e) => {
-                    setChanges({
-                      ...changes,
-                      obra: {
-                        ...infoHolder.obra,
-                        statusSolicitacao: e.target.checked
-                          ? "SOLICITADA"
-                          : "NÃO SOLICITADA",
-                      },
-                    });
                     setInfo({
                       ...infoHolder,
                       obra: {
@@ -2484,7 +2081,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             </div>
             <DateInput
               label={"ENTRADA NA OBRA"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.obra?.entrada != undefined &&
                 infoHolder.obra?.entrada != "-"
@@ -2494,13 +2091,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  obra: {
-                    ...infoHolder.obra,
-                    entrada: new Date(value).toISOString(),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   obra: {
@@ -2512,7 +2102,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <DateInput
               label={"SAIDA DE OBRA"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.obra?.saida != undefined &&
                 infoHolder.obra?.saida != "-"
@@ -2520,13 +2110,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  obra: {
-                    ...infoHolder.obra,
-                    saida: new Date(value).toISOString(),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   obra: {
@@ -2538,7 +2121,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
             <SelectInput
               label={"EQUIPE RESPONSÁVEL"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.obra?.equipeResp != undefined &&
                 infoHolder.obra?.equipeResp != "-"
@@ -2612,13 +2195,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  obra: {
-                    ...infoHolder.obra,
-                    equipeResp: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   obra: {
@@ -2634,16 +2210,9 @@ function NovoProjeto({ credentials, setCredentials }) {
               </span>
               <div className="flex">
                 <input
-                  disabled={!editor}
+                  disabled={false}
                   checked={infoHolder.obra?.checklist === "SIM" ? true : false}
                   onChange={(e) => {
-                    setChanges({
-                      ...changes,
-                      obra: {
-                        ...infoHolder.obra,
-                        checklist: e.target.checked ? "SIM" : "NÃO",
-                      },
-                    });
                     setInfo({
                       ...infoHolder,
                       obra: {
@@ -2667,16 +2236,9 @@ function NovoProjeto({ credentials, setCredentials }) {
               </span>
               <div className="flex">
                 <input
-                  disabled={!editor}
+                  disabled={false}
                   checked={infoHolder.obra?.trafo === "SIM" ? true : false}
                   onChange={(e) => {
-                    setChanges({
-                      ...changes,
-                      obra: {
-                        ...infoHolder.obra,
-                        trafo: e.target.checked ? "SIM" : "NÃO",
-                      },
-                    });
                     setInfo({
                       ...infoHolder,
                       obra: {
@@ -2701,7 +2263,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.obra?.statusDaObra
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 {
                   label: "AGENDADA",
@@ -2729,13 +2291,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  obra: {
-                    ...infoHolder.obra,
-                    statusDaObra: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   obra: {
@@ -2745,35 +2300,74 @@ function NovoProjeto({ credentials, setCredentials }) {
                 });
               }}
             />
-            <div className="flex flex-col w-[450px] items-center">
+          </div>
+          <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+            <span className="uppercase font-bold font-raleway text-center text-sm">
+              OBSERVAÇÕES
+            </span>
+            <textarea
+              readOnly={false}
+              value={
+                infoHolder.obra?.observacoes ? infoHolder.obra.observacoes : ""
+              }
+              placeholder={"Observações da obra aqui..."}
+              onChange={(e) => {
+                setInfo({
+                  ...infoHolder,
+                  obra: {
+                    ...infoHolder.obra,
+                    observacoes: e.target.value,
+                  },
+                });
+              }}
+              className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+            />
+          </div>
+          <div className="w-full flex items-center justify-center gap-x-4">
+            <div className="flex flex-col w-[450px] self-center mt-2 items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
-                OBSERVAÇÕES
+                INFORMAÇÕES DO KIT
               </span>
               <textarea
-                readOnly={!editor}
+                readOnly={false}
                 value={
-                  infoHolder.obra?.observacoes
-                    ? infoHolder.obra.observacoes
-                    : ""
+                  infoHolder.compra?.kitInfo ? infoHolder.compra?.kitInfo : ""
                 }
-                placeholder={"Observações da obra aqui..."}
+                placeholder={"Observações do material aqui..."}
                 onChange={(e) => {
-                  setChanges({
-                    ...changes,
-                    obra: {
-                      ...infoHolder.obra,
-                      observacoes: e.target.value,
-                    },
-                  });
                   setInfo({
                     ...infoHolder,
-                    obra: {
-                      ...infoHolder.obra,
-                      observacoes: e.target.value,
+                    compra: {
+                      ...infoHolder.compra,
+                      kitInfo: e.target.value,
                     },
                   });
                 }}
-                className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+              />
+            </div>
+            <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                MATERIAL FALTANTE
+              </span>
+              <textarea
+                readOnly={false}
+                value={
+                  infoHolder.material?.materialFaltante
+                    ? infoHolder.material?.materialFaltante
+                    : ""
+                }
+                placeholder={"Observações do material aqui..."}
+                onChange={(e) => {
+                  setInfo({
+                    ...infoHolder,
+                    material: {
+                      ...infoHolder.material,
+                      materialFaltante: e.target.value,
+                    },
+                  });
+                }}
+                className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
               />
             </div>
           </div>
@@ -2790,7 +2384,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ? infoHolder.material?.statusSeparacao
                   : "NÃO DEFINIDO"
               }
-              editable={editor}
+              editable={true}
               options={[
                 {
                   label: "INICIAR SEPARAÇÃO",
@@ -2806,13 +2400,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 },
               ]}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  material: {
-                    ...infoHolder.material,
-                    statusSeparacao: value,
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   material: {
@@ -2825,7 +2412,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             <NumberInput
               tag={"R$"}
               label={"Previsão de custos em insumos"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.material?.previsaoCustos != undefined &&
                 infoHolder.material?.previsaoCustos != "#VALUE!"
@@ -2833,13 +2420,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  material: {
-                    ...infoHolder.material,
-                    previsaoCustos: Number(value),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   material: {
@@ -2852,7 +2432,7 @@ function NovoProjeto({ credentials, setCredentials }) {
             <NumberInput
               tag={"R$"}
               label={"Custos em insumos"}
-              editable={editor}
+              editable={true}
               value={
                 infoHolder.material?.efetivoCustos != undefined &&
                 infoHolder.material?.efetivoCustos != "#VALUE!"
@@ -2860,13 +2440,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                   : 0
               }
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  material: {
-                    ...infoHolder.material,
-                    efetivoCustos: Number(value),
-                  },
-                });
                 setInfo({
                   ...infoHolder,
                   material: {

@@ -18,26 +18,32 @@ function PosVendaCard({ project, getUpdates }) {
     <div className="w-full border border-gray-200 p-3 hover:bg-blue-100">
       <div className="flex items-center justify-between border-b border-gray-200 pb-2">
         <p className="text-gray-700">{infoHolder.nomeDoContrato}</p>
-        <div className="flex items-center grow justify-between px-12">
+        <div className="flex items-center flex-wrap grow justify-between px-6">
           <div>
-            <span className="text-xxs">STATUS DO PARECER</span>
-            <p className="text-xs text-gray-600">
+            <span className="text-xs">VENDEDOR</span>
+            <p className="text-gray-600">
+              {infoHolder.vendedor?.nome ? infoHolder.vendedor?.nome : "-"}
+            </p>
+          </div>
+          <div>
+            <span className="text-xs">STATUS DO PARECER</span>
+            <p className="text-gray-600">
               {infoHolder.parecer?.statusDoParecerDeAcesso
                 ? infoHolder.parecer?.statusDoParecerDeAcesso
                 : "-"}
             </p>
           </div>
           <div>
-            <span className="text-xxs">STATUS DA COMPRA</span>
-            <p className="text-xs text-center text-gray-600">
+            <span className="text-xs">STATUS DA COMPRA</span>
+            <p className="text-center text-gray-600">
               {infoHolder.compra?.statusLiberacao
                 ? infoHolder.compra?.statusLiberacao
                 : "-"}
             </p>
           </div>
           <div>
-            <span className="text-xxs">PREV. ENTREGA</span>
-            <p className="text-xs text-gray-600 text-center">
+            <span className="text-xs">PREV. ENTREGA</span>
+            <p className="text-gray-600 text-center">
               {infoHolder.compra?.previsaoEntrega
                 ? new Date(
                     infoHolder.compra.previsaoEntrega
@@ -46,8 +52,8 @@ function PosVendaCard({ project, getUpdates }) {
             </p>
           </div>
           <div>
-            <span className="text-xxs">PREV. OBRA</span>
-            <p className="text-xs text-gray-600 text-center">
+            <span className="text-xs">PREV. OBRA</span>
+            <p className="text-gray-600 text-center">
               {infoHolder.obra?.entrada
                 ? new Date(infoHolder.obra.entrada).toLocaleDateString()
                 : "-"}
@@ -64,7 +70,7 @@ function PosVendaCard({ project, getUpdates }) {
               getDateDiff(
                 new Date(),
                 new Date(infoHolder.jornada?.dataUltimoContato)
-              ) > 7 && (
+              ) > 7 ? (
                 <button
                   onClick={() => {
                     handleChanges({
@@ -81,10 +87,18 @@ function PosVendaCard({ project, getUpdates }) {
                       },
                     });
                   }}
-                  className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded "
+                  className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
                 >
                   CONTATO REALIZADO?
                 </button>
+              ) : (
+                <p className="text-gray-600 text-center">
+                  {infoHolder.jornada?.dataUltimoContato != undefined
+                    ? new Date(
+                        infoHolder.jornada.dataUltimoContato
+                      ).toLocaleDateString()
+                    : "-"}
+                </p>
               )
             ) : (
               <button

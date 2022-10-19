@@ -104,7 +104,7 @@ function Comercial({ credentials, setCredentials }) {
   function getListCumulativePeakPot() {
     var totalSum = 0;
     for (var i = 0; i < filteredProjects.length; i++) {
-      let pot = filteredProjects[i].sistema.potPico
+      let pot = filteredProjects[i].sistema?.potPico
         ? filteredProjects[i].sistema.potPico
         : null;
       if (isNaN(pot)) {

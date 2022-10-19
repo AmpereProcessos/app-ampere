@@ -1530,8 +1530,8 @@ function ModalComercial({
                   <TextInput
                     label={"Número da instalação"}
                     value={
-                      infoHolder.dadosCemig.numeroInstalacao
-                        ? infoHolder.dadosCemig.numeroInstalacao
+                      infoHolder.dadosCemig?.numeroInstalacao
+                        ? infoHolder.dadosCemig?.numeroInstalacao
                         : ""
                     }
                     editable={editor}
@@ -1555,8 +1555,8 @@ function ModalComercial({
                   <SelectInput
                     label={"DISTRIBUIÇÃO DE CRÉDITOS"}
                     value={
-                      infoHolder.dadosCemig.distCreditos
-                        ? infoHolder.dadosCemig.distCreditos
+                      infoHolder.dadosCemig?.distCreditos
+                        ? infoHolder.dadosCemig?.distCreditos
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -1582,7 +1582,7 @@ function ModalComercial({
                       });
                     }}
                   />
-                  {infoHolder.dadosCemig.distCreditos == "SIM" && (
+                  {infoHolder.dadosCemig?.distCreditos == "SIM" && (
                     <NumberInput
                       label={"QTDE DE DISTRIBUIÇÕES"}
                       editable={editor}
@@ -1874,8 +1874,8 @@ function ModalComercial({
                     label={"Data de assinatura da documentação"}
                     editable={editor}
                     value={
-                      infoHolder.projeto.dataAssDocumentacao != undefined &&
-                      infoHolder.projeto.dataAssDocumentacao != "-"
+                      infoHolder.projeto?.dataAssDocumentacao != undefined &&
+                      infoHolder.projeto?.dataAssDocumentacao != "-"
                         ? new Date(infoHolder.projeto.dataAssDocumentacao)
                             .toISOString()
                             .slice(0, 10)
@@ -1929,8 +1929,8 @@ function ModalComercial({
                   <SelectInput
                     label={"Status do parecer de acesso"}
                     value={
-                      infoHolder.parecer.statusDoParecerDeAcesso
-                        ? infoHolder.parecer.statusDoParecerDeAcesso
+                      infoHolder.parecer?.statusDoParecerDeAcesso
+                        ? infoHolder.parecer?.statusDoParecerDeAcesso
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -2106,7 +2106,7 @@ function ModalComercial({
                       <input
                         disabled={!editor}
                         checked={
-                          infoHolder.projeto.aumentoDeCarga === "SIM"
+                          infoHolder.projeto?.aumentoDeCarga === "SIM"
                             ? true
                             : false
                         }
@@ -2145,7 +2145,7 @@ function ModalComercial({
                       </label>
                     </div>
                   </div>
-                  {infoHolder.projeto.aumentoDeCarga == "SIM" && (
+                  {infoHolder.projeto?.aumentoDeCarga == "SIM" && (
                     <div className="flex flex-col w-[350px] items-center">
                       <span className="uppercase font-bold font-raleway text-center text-sm">
                         STATUS AUMENTO DE CARGA
@@ -2220,7 +2220,7 @@ function ModalComercial({
                     label={"STATUS DA VISTORIA"}
                     value={
                       infoHolder.vistoria?.status
-                        ? infoHolder.vistoria.status
+                        ? infoHolder.vistoria?.status
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
@@ -2705,8 +2705,8 @@ function ModalComercial({
                     <textarea
                       readOnly={!editor}
                       value={
-                        infoHolder.obra.observacoes
-                          ? infoHolder.obra.observacoes
+                        infoHolder.obra?.observacoes
+                          ? infoHolder.obra?.observacoes
                           : ""
                       }
                       placeholder={"Observações da obra aqui..."}

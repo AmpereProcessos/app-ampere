@@ -65,8 +65,8 @@ function NovoProjeto({ credentials, setCredentials }) {
     contrato: {
       status: "NÃO DEFINIDO",
       dataSolicitacao: new Date(), // formatar como data
-      dataLiberacao: 0, // formatar como data
-      dataAssinatura: 0, // formatar como data
+      dataLiberacao: new Date(), // formatar como data
+      dataAssinatura: new Date(), // formatar como data
       formaAssinatura: "NÃO DEFINIDO",
     },
     pagamento: {
@@ -80,137 +80,137 @@ function NovoProjeto({ credentials, setCredentials }) {
     },
     faturamento: {
       previsaoFaturamento: 0, // adicionar empresa e cnpj de faturamento
-      cnpjFaturamento: "",
-      empresaFaturamento: "",
+      cnpjFaturamento: 0,
+      empresaFaturamento: "NÃO DEFINIDO",
     },
-    /*    compra: {
-      statusLiberacao: project.statusliberacaocredito,
-      dataLiberacao: fixDate(project.dataliberacaoparacompra), // formatar como data
-      tipoDoKit: project.tipokit,
-      valorDoKit: project.valordokit,
-      kitInfo: project.kitsolar,
-      fornecedor: project.fornecedor,
-      dataPedido: fixDate(project.datadopedido), // formatar como data
-      dataPagamento: fixDate(project.datapagamento),
-      previsaoEntrega: fixDate(project.previsaoentrega), // formatar como data
-      localEntrega: project.localdeentrega,
-      informacoes: project.informacoescompra,
-      previsaoNotaFiscal: project.previsaonotafiscal,
-      rastreio: project.rastreiooutransportadora,
-      statusEntrega: project.statusentrega,
+    compra: {
+      statusLiberacao: "NÃO DEFINIDO",
+      dataLiberacao: undefined, // formatar como data
+      tipoDoKit: "NÃO DEFINIDO",
+      valorDoKit: 0,
+      kitInfo: "",
+      fornecedor: "NÃO DEFINIDO",
+      dataPedido: undefined, // formatar como data
+      dataPagamento: undefined,
+      previsaoEntrega: undefined, // formatar como data
+      localEntrega: "",
+      informacoes: "",
+      previsaoNotaFiscal: undefined,
+      rastreio: "",
+      statusEntrega: "NÃO DEFINIDO",
     },
     dadosCemig: {
-      titularProjeto: project.titulardoprojeto,
-      numeroInstalacao: project.numeroinstalacao,
-      distCreditos: project.distribuicaodecreditos,
-      qtdeDistCreditos: project.quantdistribuicoes,
+      titularProjeto: "",
+      numeroInstalacao: "",
+      distCreditos: "NÃO DEFINIDO",
+      qtdeDistCreditos: 0,
     },
     sistema: {
-      qtdeModulos: project.nmodulos,
-      potModulos: project.potmodulos,
-      potPico: project.potpico,
-      topologia: project.topologia,
-      inversor: project.qtdepotinversor,
-      valorProjeto: project.valorprojeto,
+      qtdeModulos: 0,
+      potModulos: 0,
+      potPico: 0,
+      topologia: "NÃO DEFINIDO",
+      inversor: "",
+      valorProjeto: 0,
     },
     projeto: {
-      iniciar: project.iniciarprojeto,
+      iniciar: "NÃO DEFINIDO",
       projetista: {
-        nome: project.projetista,
-        codigo: project.codigoprojetista,
+        nome: "NÃO DEFINIDO",
+        codigo: undefined,
       },
-      dataLiberacaoDocumentacao: fixDate(project.dataliberacaodocumentacao), // formatar como data
-      dataAssDocumentacao: fixDate(project.documentacaoassinada), // formatar como data
-      diagramaUnifilar: project.diagramaunifilar,
-      desenhoTelhado: project.desenhotelhado,
-      mapaDeMicro: project.mapademicro,
-      aumentoDeCarga: project.aumentodecarga,
-      acStatus: project.acstatus,
-      projetoConcluido: project.projetoconcluido,
-      relatorioComissionamento: project.relatoriocomissionamento,
+      dataLiberacaoDocumentacao: undefined, // formatar como data
+      dataAssDocumentacao: undefined, // formatar como data
+      diagramaUnifilar: undefined,
+      desenhoTelhado: undefined,
+      mapaDeMicro: undefined,
+      aumentoDeCarga: "NÃO",
+      acStatus: undefined,
+      projetoConcluido: "NÃO",
+      relatorioComissionamento: undefined,
     },
     parecer: {
-      statusDoParecerDeAcesso: project.statusparecerdeacesso,
-      dataParecerDeAcesso: fixDate(project.pareceracesso), // formatar como data
-      parecerReprovado: project.parecerReprovado,
-      qtdeReprovas: project.qtdeReprovasParecer,
-      motivoReprova: project.motivoReprovaParecer,
+      statusDoParecerDeAcesso: "NÃO DEFINIDO",
+      dataParecerDeAcesso: undefined, // formatar como data
+      parecerReprovado: "NÃO",
+      qtdeReprovas: 0,
+      motivoReprova: undefined,
     },
     vistoria: {
-      dataPedido: fixDate(project.pedidovistoria), // formatar como data
-      status: project.statusvistoria,
-      vistoriaReprovada: project.vistoriaReprovada,
-      qtdeReprovas: project.qtdeReprovasVistoria,
-      motivoReprova: project.motivoReprovaVistoria,
+      dataPedido: undefined, // formatar como data
+      status: "NÃO DEFINIDO",
+      vistoriaReprovada: "NÃO",
+      qtdeReprovas: 0,
+      motivoReprova: undefined,
     },
     medidor: {
-      data: fixDate(project.trocamedidor), // formatar como data
-      status: project.statustrocamedidor,
+      data: undefined, // formatar como data
+      status: "NÃO DEFINIDO",
     },
     obra: {
-      laudo: project.laudo,
-      observacoes: project.obsobra, // possibilidade de substituir \n por /, e quebrar textp em pontos
-      statusSolicitacao: project.solicitacaoobra,
-      entrada: fixDate(project.entradanaobra), // formatar como data
-      saida: fixDate(project.saidadeobra), // formatar como data.
-      statusDaObra: project.statusobra,
-      equipeResp: project.equipeexec,
-      checklist: project.checklist,
-      trafo: project.trafo,
-      fotosInstalacao: project.fotosinstalacao,
+      laudo: "NÃO DEFINIDO",
+      observacoes: "", // possibilidade de substituir \n por /, e quebrar textp em pontos
+      statusSolicitacao: "NÃO SOLICITADA",
+      entrada: undefined, // formatar como data
+      saida: undefined, // formatar como data.
+      statusDaObra: "NÃO DEFINIDO",
+      equipeResp: "NÃO DEFINIDO",
+      checklist: undefined,
+      trafo: "NÃO",
+      fotosInstalacao: undefined,
     },
     material: {
-      statusSeparacao: project.materialalmoxarifado,
-      previsaoCustos: project.prevcustosinsumos, // toFixed(2)
-      efetivoCustos: project.custosinsumos,
-      notaFiscal: project.notafiscal,
-      materialFaltante: project.materialfaltando,
+      statusSeparacao: "NÃO DEFINIDO",
+      previsaoCustos: 0, // toFixed(2)
+      efetivoCustos: 0,
+      notaFiscal: undefined,
+      materialFaltante: "",
     },
-    manutencaoPreventiva: fixUsinaLigada(project.datamanutencaoprev),
+    manutencaoPreventiva: { status: "NÃO REALIZADO", data: null },
     relatorios: {
-      envioUm: fixUsinaLigada(project.relatorioum),
-      envioDois: fixUsinaLigada(project.relatoriodois),
-      envioTres: fixUsinaLigada(project.relatoriotres),
-      envioQuatro: fixUsinaLigada(project.relatorioquatro),
+      envioUm: { status: "NÃO REALIZADO", data: null },
+      envioDois: { status: "NÃO REALIZADO", data: null },
+      envioTres: { status: "NÃO REALIZADO", data: null },
+      envioQuatro: { status: "NÃO REALIZADO", data: null },
     },
     conferencias: {
-      usinaLigada: fixUsinaLigada(project.usinaligada),
-      monitoramentoFeito: fixUsinaLigada(project.monitoramentoFeito),
-      energiaInjetada: fixUsinaLigada(project.energiainjetada),
+      usinaLigada: { status: "NÃO REALIZADO", data: null },
+      monitoramentoFeito: { status: "NÃO REALIZADO", data: null },
+      energiaInjetada: { status: "NÃO REALIZADO", data: null },
     },
     app: {
-      data: project.appcelular,
-      login: project.loginapp,
-      senha: project.senhaapp,
+      data: undefined,
+      login: "",
+      senha: "",
     },
-    dataNascimento: fixDate(project.datanascimento),
-    email: project.email,
-    logradouro: project.logradouro,
-    numeroResidencia: project.numerores,
-    bairro: project.bairro,
-    cep: project.cep,
-    canalVenda: project.canalvenda,
+    dataNascimento: undefined,
+    email: "",
+    logradouro: "",
+    numeroResidencia: 0,
+    bairro: "",
+    cep: "",
+    canalVenda: "NÃO DEFINIDO",
     indicacao: {
-      quemIndicou: project.quemindicou,
-      contato: project.contatoindicacao,
+      quemIndicou: "", //add
+      contato: "", //add
     },
-    ondeTrabalha: project.ondetrabalha,
+    ondeTrabalha: "",
     jornada: {
-      dataUltimoContato: project.dataultimocontato,
-      boasVindas: project.boasvindas,
-      assDocumentacoes: project.assdocumentacoes,
-      compraDoKit: project.compradokit,
-      nfFaturada: project.nffaturada,
-      prevChegada: project.prevchegada,
-      respConcessionaria: project.respconcessionaria,
-      entregaDoKit: project.entregadokit,
-      instalacaoAgendada: project.instalacaoagendada,
-      vistoriaConcessionaria: project.vistoriaconcessionaria,
-      sistemaLigado: project.sistemaligado,
-      jornadaConcluida: project.jornadaconcluida,
-      dataNps: project.datanps,
+      dataUltimoContato: undefined,
+      boasVindas: false,
+      assDocumentacoes: false,
+      compraDoKit: false,
+      nfFaturada: false,
+      prevChegada: false,
+      respConcessionaria: false,
+      entregaDoKit: false,
+      instalacaoAgendada: false,
+      vistoriaConcessionaria: false,
+      sistemaLigado: false,
+      jornadaConcluida: false,
+      dataNps: undefined,
     },
-  nps: project.nps, */
+    nps: 0,
   });
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -236,6 +236,7 @@ function NovoProjeto({ credentials, setCredentials }) {
       .then((res) => console.log(res.data));
   }
   console.log(infoHolder);
+  // adicionar quem indicou e contato de quem indicou
   return (
     <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
       <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">

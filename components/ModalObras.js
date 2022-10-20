@@ -1020,7 +1020,7 @@ function ModalObras({
                   infoHolder.ordensDeServico?.length > 0 && (
                     <div className="w-full flex flex-col px-10 border-t border-gray-200 mt-2">
                       <h1 className="text-[#fead61] font-bold">
-                        OS's GERADAS DO PROJETO
+                        OSs GERADAS DO PROJETO
                       </h1>
                       {infoHolder.ordensDeServico.map((ordem, index) => (
                         <div

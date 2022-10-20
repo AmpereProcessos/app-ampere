@@ -3,13 +3,20 @@ import Image from "next/image";
 import Link from "next/link";
 import Assinatura from "../utils/assinatura.jpg";
 import Logo from "../utils/whitelogo.png";
-function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
-  console.log(info.tipotelha);
+function ServiceOrderPDF({
+  info,
+  openingDate,
+  urgency,
+  realizarCobranca,
+  valorCobranca,
+  servicoExecutado,
+}) {
+  console.log(realizarCobranca, valorCobranca);
   return (
     <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
       <h1 className="text-center font-bold text-xl mb-6">ORDEM DE SERVIÇO</h1>
       <div className="grid grid-cols-2">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <Link href="/obras">
             <div className="flex justify-center items-center">
               <Image height="60px" width="60px" src={Logo} />
@@ -23,14 +30,20 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
         </div>
         <div className="flex flex-col justify-center gap-y-2 border border-black pl-2">
           <div className="flex justify-between border-black border-b">
-            <p className="text-end pr-2">DATA DE ABERTURA</p>
-            <p className="text-center pr-2">
-              {openingDate ? openingDate : "-"}
+            <p className="text-xs text-end pr-2">DATA DE ABERTURA</p>
+            <p className="text-xs text-center pr-2">
+              {openingDate ? new Date(openingDate).toLocaleDateString() : "-"}
             </p>
           </div>
+          <div className="flex justify-between border-black border-b">
+            <p className="text-xs text-end pr-2">GRAU DE URGÊNCIA</p>
+            <p className="text-xs text-center pr-2">{urgency}</p>
+          </div>
           <div className="flex justify-between">
-            <p className="text-end pr-2">GRAU DE URGÊNCIA</p>
-            <p className="text-center pr-2">{urgency}</p>
+            <p className="text-xs text-end pr-2">REALIZAR COBRANÇA</p>
+            <p className="text-xs text-center pr-2">
+              {realizarCobranca ? "SIM" : "NÃO"}
+            </p>
           </div>
         </div>
       </div>
@@ -177,7 +190,8 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
       </div>
       <div className="border border-black mt-3">
         <h1 className="text-center  font-bold pt-1">OBSERVAÇÕES DA OBRA/OS</h1>
-        <div className="flex justify-center min-h-[100px] items-center">
+        <div className="flex flex-col justify-center min-h-[50px] items-center">
+          <p>Serviço: {servicoExecutado.toUpperCase()}</p>
           {info.obra.observacoes ? (
             <div
               className={`${
@@ -191,7 +205,7 @@ function ServiceOrderPDF({ info, openingDate, urgency, kitInfo }) {
                 : false}
             </div>
           ) : (
-            <p className="my-2">SEM OBSERVAÇÕES</p>
+            <p className="my-2">SEM OBSERVAÇÕES DE OS</p>
           )}
         </div>
       </div>

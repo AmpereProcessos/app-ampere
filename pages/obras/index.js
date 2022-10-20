@@ -116,12 +116,20 @@ function Obras({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      getProjects();
+      if (!storedCredentials.accessibleRoutes.includes("Obras")) {
+        router.push("/");
+      } else {
+        getProjects();
+      }
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        getProjects();
+        if (!credentials.accessibleRoutes.includes("PPS")) {
+          router.push("/");
+        } else {
+          getProjects();
+        }
       }
     }
   }, []);
@@ -389,6 +397,7 @@ function Obras({ credentials, setCredentials }) {
       </div>
       {modalIsOpen && (
         <ModalObras
+          credentials={credentials}
           handleUpdates={handleUpdates}
           project={modalProject}
           editor={credentials.accessibleRoutes.includes("Obras") ? true : false}

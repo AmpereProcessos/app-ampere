@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { vendedores } from "../utils/constants";
+import { cidadesAtendidas, vendedores } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import TextInput from "./TextInput";
@@ -68,7 +68,8 @@ function ModalComercial({
       });
     }
   }
-  console.log(changes);
+  console.log("holder", infoHolder);
+  console.log("changes", changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -160,13 +161,26 @@ function ModalComercial({
                       setInfo({ ...infoHolder, telefone: value });
                     }}
                   />
-                  <TextInput
+                  <SelectInput
                     label={"Cidade"}
                     editable={editor}
-                    value={infoHolder.cidade ? infoHolder.cidade : "-"}
+                    value={
+                      infoHolder.cidade
+                        ? infoHolder.cidade
+                        : cidadesAtendidas[0]
+                    }
+                    options={cidadesAtendidas.map((cidade) => {
+                      return { label: cidade, value: cidade };
+                    })}
                     handleChange={(value) => {
-                      setChanges({ ...changes, cidade: value });
-                      setInfo({ ...infoHolder, cidade: value });
+                      setChanges({
+                        ...changes,
+                        cidade: value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        cidade: value,
+                      });
                     }}
                   />
                   <TextInput
@@ -339,6 +353,80 @@ function ModalComercial({
                       setInfo({ ...infoHolder, tipoDeServico: value });
                     }}
                   />
+                  <div>
+                    <input
+                      disabled={false}
+                      checked={infoHolder.oem?.aplicavel ? true : false}
+                      onChange={(e) => {
+                        setChanges({
+                          ...changes,
+                          oem: {
+                            ...infoHolder.oem,
+                            aplicavel: e.target.checked,
+                          },
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          oem: {
+                            ...infoHolder.oem,
+                            aplicavel: e.target.checked,
+                          },
+                        });
+                      }}
+                      type="checkbox"
+                      name="visitaTecnica"
+                      id="visitaTecnica"
+                    />
+                    <label className="ml-2" htmlFor="visitaTecnica">
+                      POSSUI O&M?
+                    </label>
+                  </div>
+                  {infoHolder.oem?.aplicavel && (
+                    <NumberInput
+                      label={"Duração O&M (anos)"}
+                      value={
+                        infoHolder.oem?.duracao ? infoHolder.oem?.duracao : 0
+                      }
+                      editable={editor}
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          oem: { ...infoHolder.oem, duracao: Number(value) },
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          oem: { ...infoHolder.oem, duracao: Number(value) },
+                        });
+                      }}
+                    />
+                  )}
+                  {infoHolder.oem?.aplicavel && (
+                    <NumberInput
+                      label={"QTDE de manutenções"}
+                      value={
+                        infoHolder.oem?.qtdeManutencoes
+                          ? infoHolder.oem?.qtdeManutencoes
+                          : 0
+                      }
+                      editable={editor}
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          oem: {
+                            ...infoHolder.oem,
+                            qtdeManutencoes: Number(value),
+                          },
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          oem: {
+                            ...infoHolder.oem,
+                            qtdeManutencoes: Number(value),
+                          },
+                        });
+                      }}
+                    />
+                  )}
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
@@ -1236,6 +1324,57 @@ function ModalComercial({
                   Informações da compra
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
+                  <SelectInput
+                    label={"STATUS DA LIBERAÇÃO"}
+                    editable={editor}
+                    value={
+                      infoHolder.compra?.statusLiberacao
+                        ? infoHolder.compra?.statusLiberacao
+                        : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      {
+                        label: "AGUARDAR CONTRATO",
+                        value: "AGUARDAR CONTRATO",
+                      },
+                      {
+                        label: "AGUARDAR PARECER DE ACESSO",
+                        value: "AGUARDAR PARECER DE ACESSO",
+                      },
+                      {
+                        label: "PAGO",
+                        value: "PAGO",
+                      },
+                      {
+                        label: "REALIZAR COMPRA",
+                        value: "REALIZAR COMPRA",
+                      },
+                      {
+                        label: "RECISÃO DE CONTRATO",
+                        value: "RECISÃO DE CONTRATO",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          statusLiberacao: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          statusLiberacao: value,
+                        },
+                      });
+                    }}
+                  />
                   <DateInput
                     label={"Data de liberação p/ compra"}
                     editable={editor}
@@ -1510,6 +1649,70 @@ function ModalComercial({
                       });
                     }}
                   />
+                  <div className="w-full flex items-center justify-center gap-x-4">
+                    <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        INFORMAÇÕES DO KIT
+                      </span>
+                      <textarea
+                        readOnly={!editor}
+                        value={
+                          infoHolder.compra?.kitInfo
+                            ? infoHolder.compra?.kitInfo
+                            : ""
+                        }
+                        placeholder={"Observações do material aqui..."}
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            compra: {
+                              ...infoHolder.compra,
+                              kitInfo: e.target.value,
+                            },
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            compra: {
+                              ...infoHolder.compra,
+                              kitInfo: e.target.value,
+                            },
+                          });
+                        }}
+                        className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      />
+                    </div>
+                    <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        MATERIAL FALTANTE
+                      </span>
+                      <textarea
+                        readOnly={!editor}
+                        value={
+                          infoHolder.material?.materialFaltante
+                            ? infoHolder.material?.materialFaltante
+                            : ""
+                        }
+                        placeholder={"Observações do material aqui..."}
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            material: {
+                              ...infoHolder.material,
+                              materialFaltante: e.target.value,
+                            },
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            material: {
+                              ...infoHolder.material,
+                              materialFaltante: e.target.value,
+                            },
+                          });
+                        }}
+                        className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
@@ -1871,16 +2074,19 @@ function ModalComercial({
                         projeto: {
                           ...infoHolder.projeto,
                           projetista: {
-                            ...infoHolder.projeto.projetista,
+                            ...infoHolder.projeto?.projetista,
                             nome: value,
                           },
                         },
                       });
                       setInfo({
                         ...infoHolder,
-                        projetista: {
-                          ...infoHolder.projeto.projetista,
-                          nome: value,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          projetista: {
+                            ...infoHolder.projeto?.projetista,
+                            nome: value,
+                          },
                         },
                       });
                     }}

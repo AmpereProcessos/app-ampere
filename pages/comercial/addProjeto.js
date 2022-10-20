@@ -348,8 +348,16 @@ function NovoProjeto({ credentials, setCredentials }) {
               editable={true}
               value={infoHolder.linkDrive ? infoHolder.linkDrive : ""}
               handleChange={(value) => {
-                setInfo({ ...infoHolder, bairro: value });
+                setInfo({ ...infoHolder, linkDrive: value });
               }}
+            />
+            <NumberInput
+              label={"CÓDIGO SBV"}
+              editable={true}
+              value={infoHolder.codigoSVB ? infoHolder.codigoSVB : 0}
+              handleChange={(value) =>
+                setInfo({ ...infoHolder, codigoSVB: value })
+              }
             />
             <TextInput
               label={"EMAIL"}
@@ -437,6 +445,57 @@ function NovoProjeto({ credentials, setCredentials }) {
                 setInfo({ ...infoHolder, tipoDeServico: value });
               }}
             />
+            <div>
+              <input
+                disabled={false}
+                checked={infoHolder.oem?.aplicavel ? true : false}
+                onChange={(e) => {
+                  setInfo({
+                    ...infoHolder,
+                    oem: {
+                      ...infoHolder.oem,
+                      aplicavel: e.target.checked,
+                    },
+                  });
+                }}
+                type="checkbox"
+                name="visitaTecnica"
+                id="visitaTecnica"
+              />
+              <label className="ml-2" htmlFor="visitaTecnica">
+                POSSUI O&M?
+              </label>
+            </div>
+            {infoHolder.oem?.aplicavel && (
+              <NumberInput
+                label={"Duração O&M (anos)"}
+                value={infoHolder.oem?.duracao ? infoHolder.oem?.duracao : 0}
+                editable={true}
+                handleChange={(value) =>
+                  setInfo({
+                    ...infoHolder,
+                    oem: { ...infoHolder.oem, duracao: Number(value) },
+                  })
+                }
+              />
+            )}
+            {infoHolder.oem?.aplicavel && (
+              <NumberInput
+                label={"QTDE de manutenções"}
+                value={
+                  infoHolder.oem?.qtdeManutencoes
+                    ? infoHolder.oem?.qtdeManutencoes
+                    : 0
+                }
+                editable={true}
+                handleChange={(value) =>
+                  setInfo({
+                    ...infoHolder,
+                    oem: { ...infoHolder.oem, qtdeManutencoes: Number(value) },
+                  })
+                }
+              />
+            )}
           </div>
         </div>
         <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

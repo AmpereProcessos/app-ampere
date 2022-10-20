@@ -123621,6 +123621,7 @@ export default async function handler(req, res) {
       },
       parecer: {
         statusDoParecerDeAcesso: project.statusparecerdeacesso,
+        qtdeDiasObraDeRede: project.qtdediasobraderede,
         dataParecerDeAcesso: fixDate(project.pareceracesso), // formatar como data
         parecerReprovado: project.parecerReprovado,
         qtdeReprovas: project.qtdeReprovasParecer,
@@ -123636,6 +123637,11 @@ export default async function handler(req, res) {
       medidor: {
         data: fixDate(project.trocamedidor), // formatar como data
         status: project.statustrocamedidor,
+      },
+      oem: {
+        aplicavel: project.possuioem, // checar se existe campo existente na gestao
+        duracao: project.duracaooem,
+        qtdeManutencoes: project.qtdemanutencoes
       },
       obra: {
         laudo: project.laudo,

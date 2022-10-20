@@ -1136,6 +1136,10 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         value: "SOLICITAR AUMENTO DE CARGA",
                       },
                       {
+                        label: "PARECER DE ACESSO COM OBRAS",
+                        value: "PARECER DE ACESSO COM OBRAS",
+                      },
+                      {
                         label: "NÃO DEFINIDO",
                         value: "NÃO DEFINIDO",
                       },

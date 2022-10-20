@@ -43,18 +43,50 @@ function formataCEP(cep) {
 
   return cep;
 }
-function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
+function ModalObras({
+  open,
+  setModalIsOpen,
+  project,
+  editor,
+  handleUpdates,
+  credentials,
+}) {
   const [infoHolder, setInfo] = useState(project);
   const [msg, setMsg] = useState("");
   const [changes, setChanges] = useState({});
+  const [osInfo, setOsInfo] = useState({
+    servicoExecutado: "",
+    realizarCobranca: false,
+    valorCobranca: 0,
+    usuarioEmissor: "",
+    grauDeUrgencia: "NÃO DEFINIDO",
+    dataDeAbertura: new Date(),
+  });
   function handleChanges() {
     axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
       setMsg("Alterações feitas");
       handleUpdates(project._id);
     });
   }
-  console.log(changes);
-  console.log(infoHolder.padrao);
+  function handleOSCreation() {
+    var arr;
+    if (
+      infoHolder.ordensDeServico != undefined &&
+      infoHolder.ordensDeServico?.length > 0
+    ) {
+      infoHolder.ordensDeServico.push({
+        ...osInfo,
+        usuarioEmissor: credentials.nome,
+      });
+      arr = infoHolder.ordensDeServico;
+    } else {
+      arr = [{ ...osInfo, usuarioEmissor: credentials.nome }];
+    }
+    console.log(arr);
+    axios
+      .post("/api/ordensDeServico", { id: project._id, arr: arr })
+      .then((res) => handleUpdates(project._id));
+  }
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -908,13 +940,154 @@ function ModalObras({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     />
                   </div>
                 </div>
-                <div className="flex justify-center mt-4">
-                  <Link href={`/ordemDeServico/${project._id}`}>
-                    <button className="p-2 bg-[#fead61] font-bold rounded">
-                      GERAR OS DE OBRA
-                    </button>
-                  </Link>
+              </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  ORDENS DE SERVIÇO
+                </span>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  <TextInput
+                    label={"Serviço a ser executado"}
+                    value={osInfo.servicoExecutado}
+                    editable={editor}
+                    handleChange={(value) =>
+                      setOsInfo({ ...osInfo, servicoExecutado: value })
+                    }
+                  />
+                  <div>
+                    <input
+                      disabled={!editor}
+                      checked={osInfo.realizarCobranca}
+                      onChange={(e) =>
+                        setOsInfo({
+                          ...osInfo,
+                          realizarCobranca: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="realizarCobranca"
+                      id="realizarCobranca"
+                    />
+                    <label className="ml-2" htmlFor="realizarCobranca">
+                      REALIZAR COBRANÇA
+                    </label>
+                  </div>
+                  <NumberInput
+                    label={"VALOR DO SERVIÇO A COBRAR"}
+                    value={osInfo.valorCobranca}
+                    editable={editor}
+                    handleChange={(value) =>
+                      setOsInfo({ ...osInfo, valorCobranca: Number(value) })
+                    }
+                  />
+                  <SelectInput
+                    label={"GRAU DE URGÊNCIA"}
+                    value={osInfo.grauDeUrgencia}
+                    editable={editor}
+                    options={[
+                      { label: "EMERGÊNCIA", value: "EMERGÊNCIA" },
+                      { label: "URGENTE", value: "URGENTE" },
+                      { label: "POUCO URGENTE", value: "POUCO URGENTE" },
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                    ]}
+                    handleChange={(value) =>
+                      setOsInfo({ ...osInfo, grauDeUrgencia: value })
+                    }
+                  />
+                  <DateInput
+                    label={"DATA DE ABERTURA"}
+                    editable={editor}
+                    value={new Date(osInfo.dataDeAbertura)
+                      .toISOString()
+                      .slice(0, 10)}
+                    handleChange={(value) =>
+                      setOsInfo({
+                        ...osInfo,
+                        dataDeAbertura: new Date(value).toISOString(),
+                      })
+                    }
+                  />
                 </div>
+                <div className="flex justify-center mt-4">
+                  <button
+                    onClick={handleOSCreation}
+                    className="p-2 bg-[#fead61] font-bold rounded"
+                  >
+                    GERAR OS DE OBRA
+                  </button>
+                </div>
+                {infoHolder.ordensDeServico != undefined &&
+                  infoHolder.ordensDeServico?.length > 0 && (
+                    <div className="w-full flex flex-col px-10 border-t border-gray-200 mt-2">
+                      <h1 className="text-[#fead61] font-bold">
+                        OS's GERADAS DO PROJETO
+                      </h1>
+                      {infoHolder.ordensDeServico.map((ordem, index) => (
+                        <div
+                          key={index}
+                          className="flex mt-1 items-center justify-around"
+                        >
+                          <div className="flex flex-col items-center">
+                            <p className="uppercase text-gray-500">
+                              SERVIÇO PARA EXECUÇÃO
+                            </p>
+                            <p className="text-xs uppercase">
+                              {ordem.servicoExecutado}
+                            </p>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <p className="uppercase text-gray-500">
+                              REALIZAR COBRANÇA?
+                            </p>
+                            <p className="text-xs uppercase">
+                              {ordem.realizarCobranca ? "SIM" : "NÃO"}
+                            </p>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <p className="uppercase text-gray-500">
+                              REALIZAR COBRANÇA?
+                            </p>
+                            <p className="text-xs uppercase">
+                              R$ {ordem.valorCobranca}
+                            </p>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <p className="uppercase text-gray-500">
+                              EMISSOR DA OS
+                            </p>
+                            <p className="text-xs uppercase">
+                              {ordem.usuarioEmissor}
+                            </p>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <p className="uppercase text-gray-500">
+                              DATA DE ABERTURA
+                            </p>
+                            <p className="text-xs uppercase">
+                              {new Date(
+                                ordem.dataDeAbertura
+                              ).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <p className="uppercase text-gray-500">
+                              GRAU DE URGÊNCIA
+                            </p>
+                            <p className="text-xs uppercase">
+                              {ordem.grauDeUrgencia}
+                            </p>
+                          </div>
+                          <Link
+                            href={`/ordemDeServico/${project._id}?index=${index}`}
+                          >
+                            <button className="p-2 bg-[#fead61] font-bold rounded">
+                              VER OS
+                            </button>
+                          </Link>
+                        </div>
+                      ))}
+                    </div>
+                  )}
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">

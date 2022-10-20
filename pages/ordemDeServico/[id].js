@@ -7,25 +7,41 @@ import TextInput from "../../components/TextInput";
 import DateInput from "../../components/DateInput";
 import SelectInput from "../../components/SelectInput";
 import NumberInput from "../../components/NumberInput";
-function OSInfo({ info }) {
+function OSInfo({ info, index }) {
   const [pdfVisible, setPdfVisible] = useState(false);
   const [osInfo, setosInfo] = useState(info);
-  const [openingDate, setOpeningDate] = useState(
-    new Date().toISOString().slice(0, 10)
-  );
   const [urgency, setUrgency] = useState("NÃO DEFINIDO");
   console.log(osInfo);
   return (
     <>
-      {pdfVisible ? (
-        <>
-          <ServiceOrderPDF
-            info={osInfo}
-            openingDate={openingDate}
-            urgency={urgency}
-          />
-        </>
-      ) : (
+      <ServiceOrderPDF
+        info={osInfo}
+        openingDate={osInfo.ordensDeServico[index].dataDeAbertura}
+        urgency={osInfo.ordensDeServico[index].grauDeUrgencia}
+        realizarCobranca={osInfo.ordensDeServico[index].realizarCobranca}
+        valorCobranca={osInfo.ordensDeServico[index].valorCobranca}
+        servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
+      />
+    </>
+  );
+}
+export async function getServerSideProps({ query }) {
+  // Fetch data from external API
+  const id = query.id;
+  const index = query.index;
+  const db = await connectToDatabase(process.env.DB_KEY);
+  const collection = db.collection("dados");
+  let os = await collection.findOne({
+    _id: ObjectId(id),
+  });
+  let info = JSON.parse(JSON.stringify(os));
+  // Pass data to the page via props
+  return { props: { info, index: index } };
+}
+
+export default OSInfo;
+{
+  /**
         <div className="flex flex-col p-6 grow bg-[#fff]">
           <div>
             <Link href={"/"}>
@@ -240,25 +256,29 @@ function OSInfo({ info }) {
                 }
               />
             </div>
+            <TextInput
+              label={"SERVIÇO A SER EXECUTADO"}
+              value={osInfo.ordensDeServico[index].servicoExecutado}
+            />
           </div>
           <div className="flex flex-wrap justify-center gap-x-2 p-3 border border-gray-200 mt-2 shadow-lg">
             <DateInput
               label={"Data de criação da OS"}
-              value={openingDate}
-              editable={true}
-              handleChange={(value) => setOpeningDate(value)}
+              value={new Date(osInfo.ordensDeServico[index].dataDeAbertura)
+                .toISOString()
+                .slice(0, 10)}
+              editable={false}
             />
             <SelectInput
               label={"GRAU DE URGÊNCIA"}
-              value={urgency}
-              editable={true}
+              value={osInfo.ordensDeServico[index].grauDeUrgencia}
+              editable={false}
               options={[
                 { label: "EMERGÊNCIA", value: "EMERGÊNCIA" },
                 { label: "URGENTE", value: "URGENTE" },
                 { label: "POUCO URGENTE", value: "POUCO URGENTE" },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
-              handleChange={(value) => setUrgency(value)}
             />
           </div>
           <div
@@ -268,23 +288,5 @@ function OSInfo({ info }) {
             VER OS
           </div>
         </div>
-      )}
-    </>
-  );
+*/
 }
-export async function getServerSideProps({ query }) {
-  // Fetch data from external API
-  const id = query.id;
-
-  const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("dados");
-  let os = await collection.findOne({
-    _id: ObjectId(id),
-  });
-  console.log(os);
-  let info = JSON.parse(JSON.stringify(os));
-  // Pass data to the page via props
-  return { props: { info } };
-}
-
-export default OSInfo;

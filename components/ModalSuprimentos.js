@@ -58,6 +58,7 @@ function ModalSuprimentos({
       handleUpdates(project._id);
     });
   }
+  console.log(changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -578,6 +579,57 @@ function ModalSuprimentos({
                   Informações da compra
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
+                  <SelectInput
+                    label={"STATUS DA LIBERAÇÃO"}
+                    editable={false}
+                    value={
+                      infoHolder.compra?.statusLiberacao
+                        ? infoHolder.compra?.statusLiberacao
+                        : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      {
+                        label: "AGUARDAR CONTRATO",
+                        value: "AGUARDAR CONTRATO",
+                      },
+                      {
+                        label: "AGUARDAR PARECER DE ACESSO",
+                        value: "AGUARDAR PARECER DE ACESSO",
+                      },
+                      {
+                        label: "PAGO",
+                        value: "PAGO",
+                      },
+                      {
+                        label: "REALIZAR COMPRA",
+                        value: "REALIZAR COMPRA",
+                      },
+                      {
+                        label: "RECISÃO DE CONTRATO",
+                        value: "RECISÃO DE CONTRATO",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          statusLiberacao: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          statusLiberacao: value,
+                        },
+                      });
+                    }}
+                  />
                   <DateInput
                     label={"Data de liberação p/ compra"}
                     editable={editor}
@@ -908,6 +960,70 @@ function ModalSuprimentos({
                       });
                     }}
                   />
+                  <div className="w-full flex items-center justify-center gap-x-4">
+                    <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        INFORMAÇÕES DO KIT
+                      </span>
+                      <textarea
+                        readOnly={!editor}
+                        value={
+                          infoHolder.compra.kitInfo
+                            ? infoHolder.compra.kitInfo
+                            : ""
+                        }
+                        placeholder={"Observações do material aqui..."}
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            compra: {
+                              ...infoHolder.compra,
+                              kitInfo: e.target.value,
+                            },
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            compra: {
+                              ...infoHolder.compra,
+                              kitInfo: e.target.value,
+                            },
+                          });
+                        }}
+                        className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      />
+                    </div>
+                    <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        MATERIAL FALTANTE
+                      </span>
+                      <textarea
+                        readOnly={!editor}
+                        value={
+                          infoHolder.material.materialFaltante
+                            ? infoHolder.material.materialFaltante
+                            : ""
+                        }
+                        placeholder={"Observações do material aqui..."}
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            material: {
+                              ...infoHolder.material,
+                              materialFaltante: e.target.value,
+                            },
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            material: {
+                              ...infoHolder.material,
+                              materialFaltante: e.target.value,
+                            },
+                          });
+                        }}
+                        className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import OSCard from "../../components/OSCard";
-
+import { useRouter } from "next/router";
 function Cobrancas({ credentials, setCredentials }) {
   const [oss, setOss] = useState([]);
-
+  const router = useRouter();
   function getOSsToReceive() {
     axios
       .get("/api/ordensDeServico/realizarCobranca")

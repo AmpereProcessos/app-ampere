@@ -43,9 +43,27 @@ function formataCEP(cep) {
 
   return cep;
 }
-function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
+function ModalProjetos({
+  setModalIsOpen,
+  project,
+  editor,
+  handleUpdates,
+  credentials,
+}) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
+  const [osInfo, setOsInfo] = useState({
+    servicoExecutado: "",
+    realizarCobranca: false,
+    valorCobranca: 0,
+    usuarioEmissor: "",
+    grauDeUrgencia: "NÃO DEFINIDO",
+    dataDeAbertura: new Date(),
+  });
+  const [osMsg, setOsMsg] = useState({
+    text: "",
+    color: "text-red-500",
+  });
   const [msg, setMsg] = useState("");
   function handleChanges() {
     axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
@@ -73,6 +91,39 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
       };
     } else {
       return "border border-gray-200";
+    }
+  }
+  function handleOSCreation() {
+    var arr;
+    if (osInfo.servicoExecutado.trim().length < 5) {
+      setOsMsg({
+        text: "Por favor, preencha o serviço a ser executado.",
+        color: "text-red-500",
+      });
+      return;
+    } else {
+      if (
+        infoHolder.ordensDeServico != undefined &&
+        infoHolder.ordensDeServico?.length > 0
+      ) {
+        infoHolder.ordensDeServico.push({
+          ...osInfo,
+          usuarioEmissor: credentials.nome,
+          index: infoHolder.ordensDeServico?.length,
+        });
+        arr = infoHolder.ordensDeServico;
+      } else {
+        arr = [{ ...osInfo, usuarioEmissor: credentials.nome, index: 0 }];
+      }
+      axios
+        .post("/api/ordensDeServico", { id: project._id, arr: arr })
+        .then((res) => {
+          setOsMsg({
+            text: "Ordem de serviço gerada",
+            color: "text-green-500",
+          });
+          handleUpdates(project._id);
+        });
     }
   }
   console.log(changes);
@@ -135,7 +186,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   <TextInput
                     label={"Nome do contrato"}
                     value={infoHolder.nomeDoContrato}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) => {
                       setChanges({ ...changes, nomeDoContrato: value });
                       setInfo({ ...infoHolder, nomeDoContrato: value });
@@ -144,7 +195,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   <TextInput
                     label={"Nome do Projeto"}
                     value={infoHolder.nomeDoProjeto}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) => {
                       setChanges({ ...changes, nomeDoProjeto: value });
                       setInfo({
@@ -155,7 +206,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"CPF/CNPJ"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.cpf_cnpj
                         ? formataCPF(infoHolder.cpf_cnpj.toString())
@@ -171,7 +222,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"Telefone"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.telefone ? infoHolder.telefone : "-"}
                     handleChange={(value) => {
                       setChanges({ ...changes, telefone: value });
@@ -180,7 +231,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"Cidade"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.cidade ? infoHolder.cidade : "-"}
                     handleChange={(value) => {
                       setChanges({ ...changes, cidade: value });
@@ -189,7 +240,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"CEP"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.cep
                         ? formataCEP(infoHolder.cep.toString())
@@ -202,7 +253,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"Bairro"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.bairro ? infoHolder.bairro : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, bairro: value });
@@ -211,7 +262,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <NumberInput
                     label={"Número da residência"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.numeroResidencia
                         ? infoHolder.numeroResidencia
@@ -230,7 +281,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <SelectInput
                     label={"Regional"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.regional}
                     options={[
                       {
@@ -249,7 +300,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"EMAIL"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.email ? infoHolder.email : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, email: value });
@@ -264,7 +315,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.canalVenda
                         : "NÃO DEFINIDO"
                     }
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "EVENTO", value: "EVENTO" },
                       {
@@ -296,9 +347,8 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       options={vendedores.map((vendedor) => {
                         return { label: vendedor.nome, value: vendedor.nome };
                       })}
-                      editable={editor}
+                      editable={false}
                       handleChange={(value) => {
-                        console.log(value);
                         setChanges({
                           ...changes,
                           vendedor: {
@@ -327,7 +377,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   <SelectInput
                     label={"SEGMENTO"}
                     value={infoHolder.segmento}
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "COMERCIAL", value: "COMERCIAL" },
                       { label: "INDUSTRIAL", value: "INDUSTRIAL" },
@@ -777,7 +827,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                 <div className="flex gap-2 justify-center flex-wrap">
                   <NumberInput
                     label={"NÚMERO DE MÓDULOS"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.sistema?.qtdeModulos != undefined &&
                       infoHolder.sistema?.qtdeModulos != "-"
@@ -788,7 +838,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           qtdeModulos: Number(value),
                         },
                       });
@@ -804,7 +854,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   <NumberInput
                     unit={"W"}
                     label={"POTÊNCIA DOS MÓDULOS"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.sistema?.potModulos != undefined &&
                       infoHolder.sistema?.potModulos != "-"
@@ -815,7 +865,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           potModulos: Number(value),
                         },
                       });
@@ -831,7 +881,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   <NumberInput
                     unit={"kWp"}
                     label={"POTÊNCIA PICO"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.sistema?.potPico != undefined &&
                       infoHolder.sistema?.potPico != "-"
@@ -842,7 +892,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           potPico: Number(value),
                         },
                       });
@@ -862,7 +912,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.sistema?.topologia
                         : "NÃO DEFINIDO"
                     }
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "INVERSOR", value: "INVERSOR" },
                       { label: "MICRO", value: "MICRO" },
@@ -873,7 +923,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           topologia: value,
                         },
                       });
@@ -888,7 +938,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.sistema?.inversor
                         ? infoHolder.sistema?.inversor
@@ -898,7 +948,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           inversor: value,
                         },
                       });
@@ -914,7 +964,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                   <NumberInput
                     tag={"R$"}
                     label={"VALOR DO PROJETO"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.sistema?.valorProjeto != undefined &&
                       infoHolder.sistema?.valorProjeto != "-"
@@ -925,7 +975,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           valorProjeto: Number(value),
                         },
                       });
@@ -1470,7 +1520,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         </label>
                       </div>
                     </div>
-                    {infoHolder.parecer.parecerReprovado == "SIM" && (
+                    {infoHolder.parecer?.parecerReprovado == "SIM" && (
                       <NumberInput
                         label={"QTDE DE REPROVAS"}
                         value={
@@ -1505,7 +1555,7 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                         <input
                           className={`text-xs w-full text-center uppercase text-gray-600 outline-none`}
                           value={
-                            infoHolder.parecer.motivoReprova
+                            infoHolder.parecer?.motivoReprova
                               ? infoHolder.parecer.motivoReprova
                               : ""
                           }
@@ -1724,16 +1774,166 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       </label>
                     </div>
                   </div>
-                  {infoHolder.vistoria.equipeDeCampoNecessaria == "SIM" && (
-                    <div className="flex justify-center">
-                      <Link href={`/ordemDeServico/${project._id}`}>
-                        <button className="p-2 bg-[#fead61] font-bold rounded">
-                          GERAR OS
+                </div>
+                {infoHolder.vistoria?.vistoriaReprovada == "SIM" &&
+                  infoHolder.vistoria.equipeDeCampoNecessaria == "SIM" && (
+                    <div className="flex flex-col  pb-2 shadow-lg">
+                      <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                        ORDENS DE SERVIÇO
+                      </span>
+                      <div className="flex gap-2 justify-center flex-wrap">
+                        <TextInput
+                          label={"Serviço a ser executado"}
+                          value={osInfo.servicoExecutado}
+                          editable={editor}
+                          handleChange={(value) =>
+                            setOsInfo({ ...osInfo, servicoExecutado: value })
+                          }
+                        />
+                        <div>
+                          <input
+                            disabled={!editor}
+                            checked={osInfo.realizarCobranca}
+                            onChange={(e) =>
+                              setOsInfo({
+                                ...osInfo,
+                                realizarCobranca: e.target.checked,
+                              })
+                            }
+                            type="checkbox"
+                            name="realizarCobranca"
+                            id="realizarCobranca"
+                          />
+                          <label className="ml-2" htmlFor="realizarCobranca">
+                            REALIZAR COBRANÇA
+                          </label>
+                        </div>
+                        <NumberInput
+                          label={"VALOR DO SERVIÇO A COBRAR"}
+                          value={osInfo.valorCobranca}
+                          editable={editor}
+                          handleChange={(value) =>
+                            setOsInfo({
+                              ...osInfo,
+                              valorCobranca: Number(value),
+                            })
+                          }
+                        />
+                        <SelectInput
+                          label={"GRAU DE URGÊNCIA"}
+                          value={osInfo.grauDeUrgencia}
+                          editable={editor}
+                          options={[
+                            { label: "EMERGÊNCIA", value: "EMERGÊNCIA" },
+                            { label: "URGENTE", value: "URGENTE" },
+                            { label: "POUCO URGENTE", value: "POUCO URGENTE" },
+                            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                          ]}
+                          handleChange={(value) =>
+                            setOsInfo({ ...osInfo, grauDeUrgencia: value })
+                          }
+                        />
+                        <DateInput
+                          label={"DATA DE ABERTURA"}
+                          editable={editor}
+                          value={new Date(osInfo.dataDeAbertura)
+                            .toISOString()
+                            .slice(0, 10)}
+                          handleChange={(value) =>
+                            setOsInfo({
+                              ...osInfo,
+                              dataDeAbertura: new Date(value).toISOString(),
+                            })
+                          }
+                        />
+                      </div>
+                      {osMsg.text.length > 0 && (
+                        <p className={`text-center ${osMsg.color} italic`}>
+                          {osMsg.text}
+                        </p>
+                      )}
+                      <div className="flex justify-center mt-4">
+                        <button
+                          onClick={handleOSCreation}
+                          className="p-2 bg-[#fead61] font-bold rounded"
+                        >
+                          GERAR OS DE OBRA
                         </button>
-                      </Link>
+                      </div>
+                      {infoHolder.ordensDeServico != undefined &&
+                        infoHolder.ordensDeServico?.length > 0 && (
+                          <div className="w-full flex flex-col px-10 border-t border-gray-200 mt-2">
+                            <h1 className="text-[#fead61] font-bold">
+                              OSs GERADAS DO PROJETO
+                            </h1>
+                            {infoHolder.ordensDeServico.map((ordem, index) => (
+                              <div
+                                key={index}
+                                className="flex mt-1 items-center justify-around"
+                              >
+                                <div className="flex flex-col items-center">
+                                  <p className="uppercase text-gray-500">
+                                    SERVIÇO PARA EXECUÇÃO
+                                  </p>
+                                  <p className="text-xs uppercase">
+                                    {ordem.servicoExecutado}
+                                  </p>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                  <p className="uppercase text-gray-500">
+                                    REALIZAR COBRANÇA?
+                                  </p>
+                                  <p className="text-xs uppercase">
+                                    {ordem.realizarCobranca ? "SIM" : "NÃO"}
+                                  </p>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                  <p className="uppercase text-gray-500">
+                                    VALOR DA COBRANÇA
+                                  </p>
+                                  <p className="text-xs uppercase">
+                                    R$ {ordem.valorCobranca}
+                                  </p>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                  <p className="uppercase text-gray-500">
+                                    EMISSOR DA OS
+                                  </p>
+                                  <p className="text-xs uppercase">
+                                    {ordem.usuarioEmissor}
+                                  </p>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                  <p className="uppercase text-gray-500">
+                                    DATA DE ABERTURA
+                                  </p>
+                                  <p className="text-xs uppercase">
+                                    {new Date(
+                                      ordem.dataDeAbertura
+                                    ).toLocaleDateString()}
+                                  </p>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                  <p className="uppercase text-gray-500">
+                                    GRAU DE URGÊNCIA
+                                  </p>
+                                  <p className="text-xs uppercase">
+                                    {ordem.grauDeUrgencia}
+                                  </p>
+                                </div>
+                                <Link
+                                  href={`/ordemDeServico/${project._id}?index=${index}`}
+                                >
+                                  <button className="p-2 bg-[#fead61] font-bold rounded">
+                                    VER OS
+                                  </button>
+                                </Link>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                     </div>
                   )}
-                </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -2080,6 +2280,8 @@ function ModalProjetos({ setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
+                </div>
+                <div className="w-full flex justify-center mt-2 items-center">
                   <div className="flex flex-col w-[450px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
                       OBSERVAÇÕES

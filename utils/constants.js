@@ -173,6 +173,11 @@ export const projetistas = [
     label: "GLENDA",
     cod: 52,
   },
+  {
+    nome: "NÃO DEFINIDO",
+    label: "NÃO DEFINIDO",
+    cod: 0,
+  },
 ];
 export const acessAuth = {
   diretorExecutivo: {

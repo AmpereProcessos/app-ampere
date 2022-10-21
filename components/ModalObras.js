@@ -53,6 +53,10 @@ function ModalObras({
 }) {
   const [infoHolder, setInfo] = useState(project);
   const [msg, setMsg] = useState("");
+  const [osMsg, setOsMsg] = useState({
+    text: "",
+    color: "text-red-500",
+  });
   const [changes, setChanges] = useState({});
   const [osInfo, setOsInfo] = useState({
     servicoExecutado: "",
@@ -70,23 +74,38 @@ function ModalObras({
   }
   function handleOSCreation() {
     var arr;
-    if (
-      infoHolder.ordensDeServico != undefined &&
-      infoHolder.ordensDeServico?.length > 0
-    ) {
-      infoHolder.ordensDeServico.push({
-        ...osInfo,
-        usuarioEmissor: credentials.nome,
+    if (osInfo.servicoExecutado.trim().length < 5) {
+      setOsMsg({
+        text: "Por favor, preencha o serviço a ser executado.",
+        color: "text-red-500",
       });
-      arr = infoHolder.ordensDeServico;
+      return;
     } else {
-      arr = [{ ...osInfo, usuarioEmissor: credentials.nome }];
+      if (
+        infoHolder.ordensDeServico != undefined &&
+        infoHolder.ordensDeServico?.length > 0
+      ) {
+        infoHolder.ordensDeServico.push({
+          ...osInfo,
+          usuarioEmissor: credentials.nome,
+          index: infoHolder.ordensDeServico?.length,
+        });
+        arr = infoHolder.ordensDeServico;
+      } else {
+        arr = [{ ...osInfo, usuarioEmissor: credentials.nome, index: 0 }];
+      }
+      axios
+        .post("/api/ordensDeServico", { id: project._id, arr: arr })
+        .then((res) => {
+          setOsMsg({
+            text: "Ordem de serviço gerada",
+            color: "text-green-500",
+          });
+          handleUpdates(project._id);
+        });
     }
-    console.log(arr);
-    axios
-      .post("/api/ordensDeServico", { id: project._id, arr: arr })
-      .then((res) => handleUpdates(project._id));
   }
+  console.log(osInfo.servicoExecutado.trim().length);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -127,7 +146,7 @@ function ModalObras({
                   <TextInput
                     label={"Nome do contrato"}
                     value={infoHolder.nomeDoContrato}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) => {
                       setChanges({ ...changes, nomeDoContrato: value });
                       setInfo({ ...infoHolder, nomeDoContrato: value });
@@ -136,7 +155,7 @@ function ModalObras({
                   <TextInput
                     label={"Nome do Projeto"}
                     value={infoHolder.nomeDoProjeto}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) => {
                       setChanges({ ...changes, nomeDoProjeto: value });
                       setInfo({
@@ -147,11 +166,11 @@ function ModalObras({
                   />
                   <TextInput
                     label={"CPF/CNPJ"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.cpf_cnpj
                         ? formataCPF(infoHolder.cpf_cnpj.toString())
-                        : "-"
+                        : ""
                     }
                     handleChange={(value) => {
                       setChanges({ ...changes, cpf_cnpj: value });
@@ -163,8 +182,8 @@ function ModalObras({
                   />
                   <TextInput
                     label={"Telefone"}
-                    editable={editor}
-                    value={infoHolder.telefone ? infoHolder.telefone : "-"}
+                    editable={false}
+                    value={infoHolder.telefone ? infoHolder.telefone : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, telefone: value });
                       setInfo({ ...infoHolder, telefone: value });
@@ -172,8 +191,8 @@ function ModalObras({
                   />
                   <TextInput
                     label={"Cidade"}
-                    editable={editor}
-                    value={infoHolder.cidade ? infoHolder.cidade : "-"}
+                    editable={false}
+                    value={infoHolder.cidade ? infoHolder.cidade : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, cidade: value });
                       setInfo({ ...infoHolder, cidade: value });
@@ -181,7 +200,7 @@ function ModalObras({
                   />
                   <TextInput
                     label={"CEP"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.cep
                         ? formataCEP(infoHolder.cep.toString())
@@ -194,7 +213,7 @@ function ModalObras({
                   />
                   <TextInput
                     label={"Bairro"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.bairro ? infoHolder.bairro : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, bairro: value });
@@ -203,7 +222,7 @@ function ModalObras({
                   />
                   <NumberInput
                     label={"Número da residência"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.numeroResidencia
                         ? infoHolder.numeroResidencia
@@ -222,7 +241,7 @@ function ModalObras({
                   />
                   <SelectInput
                     label={"Regional"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.regional}
                     options={[
                       {
@@ -241,7 +260,7 @@ function ModalObras({
                   />
                   <TextInput
                     label={"EMAIL"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.email ? infoHolder.email : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, email: value });
@@ -256,7 +275,7 @@ function ModalObras({
                         ? infoHolder.canalVenda
                         : "NÃO DEFINIDO"
                     }
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "EVENTO", value: "EVENTO" },
                       {
@@ -288,7 +307,7 @@ function ModalObras({
                       options={vendedores.map((vendedor) => {
                         return { label: vendedor.nome, value: vendedor.nome };
                       })}
-                      editable={editor}
+                      editable={false}
                       handleChange={(value) => {
                         console.log(value);
                         setChanges({
@@ -319,7 +338,7 @@ function ModalObras({
                   <SelectInput
                     label={"SEGMENTO"}
                     value={infoHolder.segmento}
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "COMERCIAL", value: "COMERCIAL" },
                       { label: "INDUSTRIAL", value: "INDUSTRIAL" },
@@ -1008,6 +1027,11 @@ function ModalObras({
                     }
                   />
                 </div>
+                {osMsg.text.length > 0 && (
+                  <p className={`text-center ${osMsg.color} italic`}>
+                    {osMsg.text}
+                  </p>
+                )}
                 <div className="flex justify-center mt-4">
                   <button
                     onClick={handleOSCreation}
@@ -1045,7 +1069,7 @@ function ModalObras({
                           </div>
                           <div className="flex flex-col items-center">
                             <p className="uppercase text-gray-500">
-                              REALIZAR COBRANÇA?
+                              VALOR DA COBRANÇA
                             </p>
                             <p className="text-xs uppercase">
                               R$ {ordem.valorCobranca}
@@ -1096,7 +1120,7 @@ function ModalObras({
                 <div className="flex gap-2 justify-center flex-wrap">
                   <NumberInput
                     label={"NÚMERO DE MÓDULOS"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.sistema?.qtdeModulos != undefined &&
                       infoHolder.sistema?.qtdeModulos != "-"
@@ -1107,7 +1131,7 @@ function ModalObras({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           qtdeModulos: Number(value),
                         },
                       });
@@ -1123,7 +1147,7 @@ function ModalObras({
                   <NumberInput
                     unit={"W"}
                     label={"POTÊNCIA DOS MÓDULOS"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.sistema?.potModulos != undefined &&
                       infoHolder.sistema?.potModulos != "-"
@@ -1134,7 +1158,7 @@ function ModalObras({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           potModulos: Number(value),
                         },
                       });
@@ -1150,7 +1174,7 @@ function ModalObras({
                   <NumberInput
                     unit={"kWp"}
                     label={"POTÊNCIA PICO"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.sistema?.potPico != undefined &&
                       infoHolder.sistema?.potPico != "-"
@@ -1161,7 +1185,7 @@ function ModalObras({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           potPico: Number(value),
                         },
                       });
@@ -1181,7 +1205,7 @@ function ModalObras({
                         ? infoHolder.sistema?.topologia
                         : "NÃO DEFINIDO"
                     }
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "INVERSOR", value: "INVERSOR" },
                       { label: "MICRO", value: "MICRO" },
@@ -1192,7 +1216,7 @@ function ModalObras({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           topologia: value,
                         },
                       });
@@ -1207,7 +1231,7 @@ function ModalObras({
                   />
                   <TextInput
                     label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.sistema?.inversor
                         ? infoHolder.sistema?.inversor
@@ -1217,7 +1241,7 @@ function ModalObras({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           inversor: value,
                         },
                       });
@@ -1237,7 +1261,7 @@ function ModalObras({
                         ? infoHolder.projeto?.iniciar
                         : "NÃO DEFINIDO"
                     }
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "SIM", value: "SIM" },
                       {

@@ -42,12 +42,20 @@ function Suprimentos({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      getProjects();
+      if (!storedCredentials.accessibleRoutes.includes("Suprimentos")) {
+        router.push("/");
+      } else {
+        getProjects();
+      }
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        getProjects();
+        if (!credentials.accessibleRoutes.includes("Suprimentos")) {
+          router.push("/");
+        } else {
+          getProjects();
+        }
       }
     }
   }, []);

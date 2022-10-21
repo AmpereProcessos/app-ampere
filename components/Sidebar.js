@@ -8,7 +8,7 @@ import {
   FaTasks,
   FaSolarPanel,
 } from "react-icons/fa";
-import { MdEngineering } from "react-icons/md";
+import { MdEngineering, MdOutlinePayments } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import { SiCashapp } from "react-icons/si";
 import { BsFillCalendarEventFill } from "react-icons/bs";
@@ -165,6 +165,18 @@ function Sidebar({ credentials }) {
                 <p className="pl-3 text-xs text-gray-600">Chamados</p>
               </div>
             </Link>
+            {credentials.accessibleRoutes != undefined
+              ? credentials?.accessibleRoutes.includes("ADM") && (
+                  <Link href={"/adm/cobrancas"}>
+                    <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <MdOutlinePayments
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-xs text-gray-600">Cobranças</p>
+                    </div>
+                  </Link>
+                )
+              : false}
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { cities } from "../../utils/constants";
+import { cities, cidadesAtendidas } from "../../utils/constants";
 import NumberInput from "../../components/NumberInput";
 import SelectInput from "../../components/SelectInput";
 import TextInput from "../../components/TextInput";
@@ -21,10 +21,138 @@ function formataCEP(cep) {
 
   return cep;
 }
-
+const validation = {
+  nomeDoContrato: {
+    test(value) {
+      return value.trim().length < 10;
+    },
+    msg: "Por favor, preencha um nome válido",
+  },
+  nomeDoProjeto: {
+    test(value) {
+      return value.trim().length < 10;
+    },
+    msg: "Por favor, preencha um nome válido",
+  },
+  vendedor: {
+    test(value) {
+      return value == "NÃO DEFINIDO";
+    },
+    msg: "Por favor, preencha o vendedor do projeto",
+  },
+  codigoSVB: {
+    test(value) {
+      return value == 0;
+    },
+    msg: "Por favor, preencha um código SVB válido",
+  },
+  cpf_cnpj: {
+    test(value) {
+      return value.toString().length < 10;
+    },
+    msg: "Por favor, preencha um CPF/CNPJ válido",
+  },
+  telefone: {
+    test(value) {
+      return value.toString().length < 9;
+    },
+    msg: "Por favor, preencha um Telefone válido",
+  },
+  "estruturaPersonaliza.tipo": {
+    test(value) {
+      return value == "N/A";
+    },
+    msg: "Por favor, preencha um tipo de estrutura válido",
+  },
+  "contrato.status": {
+    test(value) {
+      return value != "AGUARDANDO SOLICITAÇÃO" && value != "SOLICITADO";
+    },
+    msg: "Por favor, preencha um status válido de contrato",
+  },
+  "pagamento.forma": {
+    test(value) {
+      return value == "NÃO DEFINIDO";
+    },
+    msg: "Por favor, preencha uma forma de pagamento",
+  },
+  "pagamento.pagador": {
+    test(value) {
+      return value.trim().length < 3;
+    },
+    msg: "Por favor, preencha o nome do pagador.",
+  },
+  "pagamento.contatoPagador": {
+    test(value) {
+      return value.trim().length < 9;
+    },
+    msg: "Por favor, preencha o contato do pagador.",
+  },
+  "compra.localEntrega": {
+    test(value) {
+      return value == "NÃO DEFINIDO";
+    },
+    msg: "Por favor, preencha o local de entrega",
+  },
+  "compra.tipoDoKit": {
+    test(value) {
+      return value == "NÃO DEFINIDO";
+    },
+    msg: "Por favor, preencha o tipo do kit",
+  },
+  "dadosCemig.titularProjeto": {
+    test(value) {
+      return value.trim().length < 5;
+    },
+    msg: "Por favor, digite o titular do projeto",
+  },
+  "dadosCemig.distCreditos": {
+    test(value) {
+      return value == "NÃO DEFINIDO";
+    },
+    msg: "Por favor, preencha sobre a necessidade de dist. de créditos",
+  },
+  "sistema.qtdeModulos": {
+    test(value) {
+      return value == 0;
+    },
+    msg: "Por favor, preencha a quantidade de módulos",
+  },
+  "sistema.potModulos": {
+    test(value) {
+      return value == 0;
+    },
+    msg: "Por favor, preencha a potência dos módulos",
+  },
+  "sistema.topologia": {
+    test(value) {
+      return value == "NÃO DEFINIDO";
+    },
+    msg: "Por favor, preencha uma topologia válida",
+  },
+  "sistema.inversor": {
+    test(value) {
+      return value.trim().length < 5;
+    },
+    msg: "Por favor, preencha informacoes sobre os micro/inversor",
+  },
+  "material.previsaoCustos": {
+    test(value) {
+      return value == 0;
+    },
+    msg: "Por favor, preencha um valor válido de previsão de custos de insumo",
+  },
+  "obra.laudo": {
+    test(value) {
+      return value == "NÃO DEFINIDO";
+    },
+    msg: "Por favor, preencha o status do laudo",
+  },
+};
 function NovoProjeto({ credentials, setCredentials }) {
-  const [editor, setEditor] = useState(false);
   const router = useRouter();
+  const [msg, setMsg] = useState("");
+  const [error, setError] = useState(false);
   const [infoHolder, setInfo] = useState({
     nomeDoContrato: "",
     nomeDoProjeto: "",
@@ -33,7 +161,7 @@ function NovoProjeto({ credentials, setCredentials }) {
     cidade: "ITUIUTABA",
     uf: "MG",
     vendedor: {
-      nome: "",
+      nome: "NÃO DEFINIDO",
       codigo: 0,
     },
     linkDrive: "",
@@ -93,7 +221,7 @@ function NovoProjeto({ credentials, setCredentials }) {
       dataPedido: undefined, // formatar como data
       dataPagamento: undefined,
       previsaoEntrega: undefined, // formatar como data
-      localEntrega: "",
+      localEntrega: "NÃO DEFINIDO",
       informacoes: "",
       previsaoNotaFiscal: undefined,
       rastreio: "",
@@ -223,7 +351,6 @@ function NovoProjeto({ credentials, setCredentials }) {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        console.log("AAAAAAAA");
         if (!credentials.accessibleRoutes.includes("PPS")) {
           router.push("/");
         }
@@ -235,8 +362,36 @@ function NovoProjeto({ credentials, setCredentials }) {
       .post("/api/projects/add", infoHolder)
       .then((res) => console.log(res.data));
   }
-  console.log(infoHolder);
   // adicionar quem indicou e contato de quem indicou
+  function validateCreation() {
+    var holder;
+    Object.entries(infoHolder).forEach((entry) => {
+      if (typeof entry[1] == "object") {
+        let tag = entry[0];
+        Object.keys(entry[1]).forEach((x) => {
+          if (validation[`${tag}.${x}`] != undefined) {
+            if (validation[`${tag}.${x}`].test(infoHolder[tag][x]) == true) {
+              holder = true;
+              setMsg(validation[`${tag}.${x}`].msg);
+            }
+          } else return;
+        });
+      } else {
+        let tag = entry[0];
+        if (validation[tag] != undefined) {
+          if (validation[tag].test(infoHolder[tag]) == true) {
+            holder = true;
+            setMsg(validation[tag].msg);
+          }
+        }
+      }
+    });
+    if (holder == undefined) {
+      setMsg("");
+      addProject();
+    }
+  }
+  console.log(infoHolder);
   return (
     <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
       <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
@@ -250,7 +405,7 @@ function NovoProjeto({ credentials, setCredentials }) {
               value={infoHolder.nomeDoContrato ? infoHolder.nomeDoContrato : ""}
               editable={true}
               handleChange={(value) => {
-                setInfo({ ...infoHolder, nomeDoContrato: value });
+                setInfo({ ...infoHolder, nomeDoContrato: value.toUpperCase() });
               }}
             />
             <TextInput
@@ -260,7 +415,7 @@ function NovoProjeto({ credentials, setCredentials }) {
               handleChange={(value) => {
                 setInfo({
                   ...infoHolder,
-                  nomeDoProjeto: value,
+                  nomeDoProjeto: value.toUpperCase(),
                 });
               }}
             />
@@ -282,17 +437,29 @@ function NovoProjeto({ credentials, setCredentials }) {
             <TextInput
               label={"Telefone"}
               editable={true}
-              value={infoHolder.telefone ? infoHolder.telefone : "-"}
+              value={infoHolder.telefone ? infoHolder.telefone : ""}
               handleChange={(value) => {
                 setInfo({ ...infoHolder, telefone: value });
               }}
             />
-            <TextInput
+            <SelectInput
               label={"Cidade"}
               editable={true}
-              value={infoHolder.cidade ? infoHolder.cidade : "-"}
+              value={
+                infoHolder.cidade ? infoHolder.cidade : cidadesAtendidas[0]
+              }
+              options={cidadesAtendidas.map((cidade) => {
+                return { label: cidade, value: cidade };
+              })}
               handleChange={(value) => {
-                setInfo({ ...infoHolder, cidade: value });
+                setChanges({
+                  ...changes,
+                  cidade: value,
+                });
+                setInfo({
+                  ...infoHolder,
+                  cidade: value,
+                });
               }}
             />
             <TextInput
@@ -310,7 +477,7 @@ function NovoProjeto({ credentials, setCredentials }) {
               editable={true}
               value={infoHolder.bairro ? infoHolder.bairro : ""}
               handleChange={(value) => {
-                setInfo({ ...infoHolder, bairro: value });
+                setInfo({ ...infoHolder, bairro: value.toUpperCase() });
               }}
             />
             <NumberInput
@@ -409,7 +576,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 })}
                 editable={true}
                 handleChange={(value) => {
-                  console.log(value);
                   setInfo({
                     ...infoHolder,
                     vendedor: {
@@ -542,7 +708,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ...infoHolder,
                   visitaTecnica: {
                     ...infoHolder.visitaTecnica,
-                    tecnico: value,
+                    tecnico: value.toUpperCase(),
                   },
                 });
               }}
@@ -560,7 +726,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ...infoHolder,
                   visitaTecnica: {
                     ...infoHolder.visitaTecnica,
-                    tipoDaTelha: value,
+                    tipoDaTelha: value.toUpperCase(),
                   },
                 });
               }}
@@ -1188,7 +1354,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ...infoHolder,
                   pagamento: {
                     ...infoHolder.pagamento,
-                    pagador: value,
+                    pagador: value.toUpperCase(),
                   },
                 });
               }}
@@ -1206,7 +1372,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ...infoHolder,
                   pagamento: {
                     ...infoHolder.pagamento,
-                    contatoPagador: value,
+                    contatoPagador: value.toUpperCase(),
                   },
                 });
               }}
@@ -1395,7 +1561,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                   ...infoHolder,
                   compra: {
                     ...infoHolder.compra,
-                    informacoes: value,
+                    informacoes: value.toUpperCase(),
                   },
                 });
               }}
@@ -1545,6 +1711,8 @@ function NovoProjeto({ credentials, setCredentials }) {
                   sistema: {
                     ...infoHolder.sistema,
                     qtdeModulos: Number(value),
+                    potPico:
+                      Number(infoHolder.sistema?.potModulos * value) / 1000,
                   },
                 });
               }}
@@ -1565,6 +1733,8 @@ function NovoProjeto({ credentials, setCredentials }) {
                   sistema: {
                     ...infoHolder.sistema,
                     potModulos: Number(value),
+                    potPico:
+                      Number(value * infoHolder.sistema?.qtdeModulos) / 1000,
                   },
                 });
               }}
@@ -2476,8 +2646,12 @@ function NovoProjeto({ credentials, setCredentials }) {
             />
           </div>
         </div>
+        {msg && <p className="italic text-center text-red-500">{msg}</p>}
         <div className="w-full flex items-center justify-center">
-          <button className="p-2 my-2  bg-[#fead61]" onClick={addProject}>
+          <button
+            className="p-2 my-2 bg-[#fead61] rounded font-bold hover:bg-[#15599a] hover:text-white"
+            onClick={validateCreation}
+          >
             ADICIONAR PROJETO
           </button>
         </div>

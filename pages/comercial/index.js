@@ -76,18 +76,20 @@ function Comercial({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      getProjects();
+      if (!storedCredentials.accessibleRoutes.includes("PPS")) {
+        router.push("/");
+      } else {
+        getProjects();
+      }
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (
-          credentials.accessibleRoutes.includes("PPS") ||
-          storedCredentials.accessibleRoutes.includes("PPS")
-        )
-          editor = true;
-        else editor = false;
-        getProjects();
+        if (!credentials.accessibleRoutes.includes("PPS")) {
+          router.push("/");
+        } else {
+          getProjects();
+        }
       }
     }
   }, []);
@@ -115,6 +117,7 @@ function Comercial({ credentials, setCredentials }) {
     }
     return totalSum.toFixed(2);
   }
+  console.log(credentials);
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 p-1">

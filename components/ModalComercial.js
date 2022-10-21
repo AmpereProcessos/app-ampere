@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { cidadesAtendidas, vendedores } from "../utils/constants";
+import { cidadesAtendidas, vendedores, projetistas } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import TextInput from "./TextInput";
@@ -112,20 +112,24 @@ function ModalComercial({
                   <TextInput
                     label={"Nome do contrato"}
                     value={
-                      infoHolder.nomeDoContrato
-                        ? infoHolder.nomeDoContrato
-                        : "-"
+                      infoHolder.nomeDoContrato ? infoHolder.nomeDoContrato : ""
                     }
                     editable={editor}
                     handleChange={(value) => {
-                      setChanges({ ...changes, nomeDoContrato: value });
-                      setInfo({ ...infoHolder, nomeDoContrato: value });
+                      setChanges({
+                        ...changes,
+                        nomeDoContrato: value.toUpperCase(),
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        nomeDoContrato: value.toUpperCase(),
+                      });
                     }}
                   />
                   <TextInput
                     label={"Nome do Projeto"}
                     value={
-                      infoHolder.nomeDoProjeto ? infoHolder.nomeDoProjeto : "-"
+                      infoHolder.nomeDoProjeto ? infoHolder.nomeDoProjeto : ""
                     }
                     editable={editor}
                     handleChange={(value) => {
@@ -142,7 +146,7 @@ function ModalComercial({
                     value={
                       infoHolder.cpf_cnpj
                         ? formataCPF(infoHolder.cpf_cnpj.toString())
-                        : "-"
+                        : ""
                     }
                     handleChange={(value) => {
                       setChanges({ ...changes, cpf_cnpj: value });
@@ -155,7 +159,7 @@ function ModalComercial({
                   <TextInput
                     label={"Telefone"}
                     editable={editor}
-                    value={infoHolder.telefone ? infoHolder.telefone : "-"}
+                    value={infoHolder.telefone ? infoHolder.telefone : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, telefone: value });
                       setInfo({ ...infoHolder, telefone: value });
@@ -189,7 +193,7 @@ function ModalComercial({
                     value={
                       infoHolder.cep
                         ? formataCEP(infoHolder.cep.toString())
-                        : "-"
+                        : ""
                     }
                     handleChange={(value) => {
                       setChanges({ ...changes, cep: value });
@@ -921,8 +925,7 @@ function ModalComercial({
                       });
                     }}
                   />
-                  {(infoHolder.contrato?.status != "AGUARDANDO SOLICITAÇÃO" ||
-                    infoHolder.contrato?.status != "NÃO DEFINIDO") && (
+                  {infoHolder.contrato?.status != "NÃO DEFINIDO" && (
                     <DateInput
                       label={"Data de solicitação"}
                       editable={editor}
@@ -1184,14 +1187,14 @@ function ModalComercial({
                         ...changes,
                         faturamento: {
                           ...infoHolder.faturamento,
-                          previsaoFaturamento: value,
+                          previsaoFaturamento: value.toUpperCase(),
                         },
                       });
                       setInfo({
                         ...infoHolder,
                         faturamento: {
                           ...infoHolder.faturamento,
-                          previsaoFaturamento: value,
+                          previsaoFaturamento: value.toUpperCase(),
                         },
                       });
                     }}
@@ -1280,14 +1283,14 @@ function ModalComercial({
                         ...changes,
                         pagamento: {
                           ...infoHolder.pagamento,
-                          pagador: value,
+                          pagador: value.toUpperCase(),
                         },
                       });
                       setInfo({
                         ...infoHolder,
                         pagamento: {
                           ...infoHolder.pagamento,
-                          pagador: value,
+                          pagador: value.toUpperCase(),
                         },
                       });
                     }}
@@ -1305,14 +1308,14 @@ function ModalComercial({
                         ...changes,
                         pagamento: {
                           ...infoHolder.pagamento,
-                          contatoPagador: value,
+                          contatoPagador: value.toUpperCase(),
                         },
                       });
                       setInfo({
                         ...infoHolder,
                         pagamento: {
                           ...infoHolder.pagamento,
-                          contatoPagador: value,
+                          contatoPagador: value.toUpperCase(),
                         },
                       });
                     }}
@@ -1848,8 +1851,11 @@ function ModalComercial({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           qtdeModulos: Number(value),
+                          potPico:
+                            Number(infoHolder.sistema?.potModulos * value) /
+                            1000,
                         },
                       });
                       setInfo({
@@ -1857,6 +1863,9 @@ function ModalComercial({
                         sistema: {
                           ...infoHolder.sistema,
                           qtdeModulos: Number(value),
+                          potPico:
+                            Number(infoHolder.sistema?.potModulos * value) /
+                            1000,
                         },
                       });
                     }}
@@ -1875,8 +1884,11 @@ function ModalComercial({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           potModulos: Number(value),
+                          potPico:
+                            Number(value * infoHolder.sistema?.qtdeModulos) /
+                            1000,
                         },
                       });
                       setInfo({
@@ -1884,6 +1896,9 @@ function ModalComercial({
                         sistema: {
                           ...infoHolder.sistema,
                           potModulos: Number(value),
+                          potPico:
+                            Number(value * infoHolder.sistema?.qtdeModulos) /
+                            1000,
                         },
                       });
                     }}
@@ -1902,7 +1917,7 @@ function ModalComercial({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           potPico: Number(value),
                         },
                       });
@@ -1933,7 +1948,7 @@ function ModalComercial({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           topologia: value,
                         },
                       });
@@ -1958,7 +1973,7 @@ function ModalComercial({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           inversor: value,
                         },
                       });
@@ -1985,14 +2000,14 @@ function ModalComercial({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           valorProjeto: Number(value),
                         },
                       });
                       setInfo({
                         ...infoHolder,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           valorProjeto: Number(value),
                         },
                       });
@@ -2046,36 +2061,24 @@ function ModalComercial({
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
-                    options={[
-                      {
-                        label: "ALINE",
-                        value: "ALINE APARECIDA RODRIGUES CARVALHO",
-                      },
-                      {
-                        label: "ANDREW",
-                        value: "ANDRE BORGES ALEXANDER",
-                      },
-                      {
-                        label: "GLENDA",
-                        value: "GLENDA ELIAS NASCIMENTO SANTOS",
-                      },
-                      {
-                        label: "POLLIANA",
-                        value: "POLLIANA CRISTINA DE REZENDE",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
+                    options={projetistas.map((projetista) => {
+                      return {
+                        label: projetista.label,
+                        value: projetista.nome,
+                      };
+                    })}
                     handleChange={(value) => {
+                      console.log(value);
                       setChanges({
                         ...changes,
                         projeto: {
                           ...infoHolder.projeto,
                           projetista: {
-                            ...infoHolder.projeto?.projetista,
                             nome: value,
+                            codigo:
+                              projetistas.filter(
+                                (projetista) => projetista.nome == value
+                              )[0].cod || "-",
                           },
                         },
                       });
@@ -2084,8 +2087,11 @@ function ModalComercial({
                         projeto: {
                           ...infoHolder.projeto,
                           projetista: {
-                            ...infoHolder.projeto?.projetista,
                             nome: value,
+                            codigo:
+                              projetistas.filter(
+                                (projetista) => projetista.nome == value
+                              )[0].cod || "-",
                           },
                         },
                       });
@@ -2919,35 +2925,99 @@ function ModalComercial({
                       });
                     }}
                   />
-                  <div className="flex flex-col w-[450px] items-center">
+                </div>
+                <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                  <span className="uppercase font-bold font-raleway text-center text-sm">
+                    OBSERVAÇÕES
+                  </span>
+                  <textarea
+                    readOnly={!editor}
+                    value={
+                      infoHolder.obra?.observacoes
+                        ? infoHolder.obra.observacoes
+                        : ""
+                    }
+                    placeholder={"Observações da obra aqui..."}
+                    onChange={(e) => {
+                      setChanges({
+                        ...changes,
+                        obra: {
+                          ...infoHolder.obra,
+                          observacoes: e.target.value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        obra: {
+                          ...infoHolder.obra,
+                          observacoes: e.target.value,
+                        },
+                      });
+                    }}
+                    className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                  />
+                </div>
+                <div className="w-full flex items-center justify-center gap-x-4">
+                  <div className="flex flex-col w-[450px] self-center mt-2 items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
-                      OBSERVAÇÕES
+                      INFORMAÇÕES DO KIT
                     </span>
                     <textarea
                       readOnly={!editor}
                       value={
-                        infoHolder.obra?.observacoes
-                          ? infoHolder.obra?.observacoes
+                        infoHolder.compra?.kitInfo
+                          ? infoHolder.compra.kitInfo
                           : ""
                       }
-                      placeholder={"Observações da obra aqui..."}
+                      placeholder={"Observações do material aqui..."}
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          obra: {
-                            ...infoHolder.obra,
-                            observacoes: e.target.value,
+                          compra: {
+                            ...infoHolder.compra,
+                            kitInfo: e.target.value,
                           },
                         });
                         setInfo({
                           ...infoHolder,
-                          obra: {
-                            ...infoHolder.obra,
-                            observacoes: e.target.value,
+                          compra: {
+                            ...infoHolder.compra,
+                            kitInfo: e.target.value,
                           },
                         });
                       }}
-                      className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                    />
+                  </div>
+                  <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      MATERIAL FALTANTE
+                    </span>
+                    <textarea
+                      readOnly={!editor}
+                      value={
+                        infoHolder.material?.materialFaltante
+                          ? infoHolder.material.materialFaltante
+                          : ""
+                      }
+                      placeholder={"Observações do material aqui..."}
+                      onChange={(e) => {
+                        setChanges({
+                          ...changes,
+                          material: {
+                            ...infoHolder.material,
+                            materialFaltante: e.target.value,
+                          },
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          material: {
+                            ...infoHolder.material,
+                            materialFaltante: e.target.value,
+                          },
+                        });
+                      }}
+                      className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                     />
                   </div>
                 </div>

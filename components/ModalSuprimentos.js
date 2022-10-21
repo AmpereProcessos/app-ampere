@@ -389,8 +389,11 @@ function ModalSuprimentos({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           qtdeModulos: Number(value),
+                          potPico:
+                            Number(value * infoHolder.sistema?.potModulos) /
+                            1000,
                         },
                       });
                       setInfo({
@@ -398,6 +401,9 @@ function ModalSuprimentos({
                         sistema: {
                           ...infoHolder.sistema,
                           qtdeModulos: Number(value),
+                          potPico:
+                            Number(value * infoHolder.sistema?.potModulos) /
+                            1000,
                         },
                       });
                     }}
@@ -416,8 +422,11 @@ function ModalSuprimentos({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           potModulos: Number(value),
+                          potPico:
+                            Number(value * infoHolder.sistema?.qtdeModulos) /
+                            1000,
                         },
                       });
                       setInfo({
@@ -425,6 +434,9 @@ function ModalSuprimentos({
                         sistema: {
                           ...infoHolder.sistema,
                           potModulos: Number(value),
+                          potPico:
+                            Number(value * infoHolder.sistema?.qtdeModulos) /
+                            1000,
                         },
                       });
                     }}
@@ -443,7 +455,7 @@ function ModalSuprimentos({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           potPico: Number(value),
                         },
                       });
@@ -474,7 +486,7 @@ function ModalSuprimentos({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           topologia: value,
                         },
                       });
@@ -499,7 +511,7 @@ function ModalSuprimentos({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           inversor: value,
                         },
                       });
@@ -526,14 +538,14 @@ function ModalSuprimentos({
                       setChanges({
                         ...changes,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           valorProjeto: Number(value),
                         },
                       });
                       setInfo({
                         ...infoHolder,
                         sistema: {
-                          ...changes.sistema,
+                          ...infoHolder.sistema,
                           valorProjeto: Number(value),
                         },
                       });

@@ -13,6 +13,7 @@ function Suprimentos({ credentials, setCredentials }) {
   const [filters, setFilters] = useState({
     paymentStatus: [],
     deliveryStatus: [],
+    liberacaoStatus: [],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -76,6 +77,12 @@ function Suprimentos({ credentials, setCredentials }) {
         filters.deliveryStatus.includes(project.compra.statusEntrega)
       );
     }
+    if (filters.liberacaoStatus.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((project) =>
+        filters.liberacaoStatus.includes(project.compra.statusLiberacao)
+      );
+    }
     if (!newArr) setFilteredProjects(projects);
     else {
       setFilteredProjects(newArr);
@@ -99,14 +106,14 @@ function Suprimentos({ credentials, setCredentials }) {
     <div className="p-6 grow">
       <div className="flex justify-between border-b border-gray-200 p-1">
         <div className="flex items-center gap-x-2">
-          <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
+          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-raleway">
             Projetos no estágio de suprimentos
           </p>
           <p className="font-raleway font-bold text-[#fead61]">
             ({filteredProjects.length})
           </p>
           {filteredProjects && (
-            <p className="font-raleway font-bold text-[#fead61]">
+            <p className="font-raleway font-bold text-[#fead61] mr-2">
               ({getListCumulativePeakPot()}kWp)
             </p>
           )}
@@ -127,6 +134,40 @@ function Suprimentos({ credentials, setCredentials }) {
             options={[
               { value: "PAGO", label: "PAGO" },
               { value: "AGUARDANDO PAGAMENTO", label: "AGUARDANDO PAGAMENTO" },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="STATUS DE LIBERAÇÃO"
+            onChange={(e) =>
+              setFilters({ ...filters, liberacaoStatus: e.map((x) => x.value) })
+            }
+            options={[
+              { value: "PAGO", label: "PAGO" },
+              {
+                value: "REALIZAR COMPRA",
+                label: "REALIZAR COMPRA",
+              },
+              {
+                value: "AGUARDANDO PAGAMENTO DO BANCO",
+                label: "AGUARDANDO PAGAMENTO DO BANCO",
+              },
+              {
+                value: "AGUARDANDO CLIENTE PAGAR",
+                label: "AGUARDANDO CLIENTE PAGAR",
+              },
+              {
+                value: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
+                label: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
+              },
+              {
+                value: "AGUARDANDO PARECER DE ACESSO",
+                label: "AGUARDANDO PARECER DE ACESSO",
+              },
+              {
+                value: "AGUARDANDO N.F",
+                label: "AGUARDANDO N.F",
+              },
             ]}
           />
           <Select

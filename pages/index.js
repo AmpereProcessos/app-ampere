@@ -396,8 +396,11 @@ function Home({ credentials, setCredentials }) {
         <h1 className="text-gray-600 uppercase">ANIVERSARIANTES DO MÊS</h1>
         <div className="w-full grow flex flex-wrap justify-around gap-y-2 mt-2">
           {clientBirthday.length > 0 &&
-            clientBirthday?.map((client) => (
-              <div className="w-[350px] text-xs text-center bg-[#fff] border border-gray-200 p-2">
+            clientBirthday?.map((client, index) => (
+              <div
+                key={index}
+                className="w-[350px] text-xs text-center bg-[#fff] border border-gray-200 p-2"
+              >
                 <p>{client.nomeDoContrato}</p>
                 <p className="text-[#15599a] font-bold">
                   {client.dataNascimento != undefined &&

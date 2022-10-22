@@ -99,17 +99,6 @@ export default function UsersControl({ credentials, setCredentials }) {
     admin: userIsAdmin == "N" ? false : true,
   });*/
   }
-  useEffect(() => {
-    if (credentials == {}) {
-      var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-      setCredentials(storedCredentials);
-      if (!storedCredentials.manager) {
-        router.push("/");
-      }
-    } else if (!credentials.manager) {
-      router.push("/");
-    }
-  }, []);
   console.log(credentials);
   return (
     <div className="p-6 grow bg-[#15599a]">

@@ -76,6 +76,7 @@ function Home({ credentials, setCredentials }) {
   const [selectedYear, setSelectedYear] = useState();
   const [installedData, setInstalledData] = useState([]);
   const [averageHomoData, setHomoData] = useState([]);
+  const [clientBirthday, setClientsBirthday] = useState([]);
   const [maxGraphNumber, setMaxGraphNumber] = useState(0);
   const [nps, setNps] = useState(0);
   const [statsData, setStatsData] = useState({
@@ -88,10 +89,18 @@ function Home({ credentials, setCredentials }) {
   function getStats() {
     setRegionalFilter("GERAL");
     axios.get("/api/stats").then((res) => {
+      console.log(res.data);
       setNps(res.data.nps);
       setInstalledData(res.data.installedInfo);
       setHomoData(res.data.averageHomoData);
     });
+    getGraphDataByYear(2022);
+    getBirthDay();
+  }
+  function getBirthDay() {
+    axios
+      .get("/api/stats/clientsBirthday")
+      .then((res) => setClientsBirthday(res.data));
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -119,9 +128,12 @@ function Home({ credentials, setCredentials }) {
   function getGraphDataByYear(year) {
     setSelectedYear(year);
     axios.get(`/api/stats/getByYear/${year}`).then((res) => {
+      console.log(res.data);
       setStatsData({ ...statsData, graphData: res.data });
     });
   }
+  {
+    /** 
   useEffect(() => {
     var parcialPotLastMonth =
       (new Date().getDate() / 30) * installedData[2]?.total;
@@ -166,9 +178,32 @@ function Home({ credentials, setCredentials }) {
       ],
     });
   }, [installedData, averageHomoData]);
+              <div
+              className={
+                statsData.diffJobsDone < 0
+                  ? `flex items-center text-green-500`
+                  : "flex items-center text-red-500"
+              }
+            >
+              {statsData.diffJobsDone < 0 ? (
+                <MdOutlineKeyboardArrowUp fontSize={"25px"} />
+              ) : (
+                <MdOutlineKeyboardArrowDown fontSize={"25px"} />
+              )}
+              <p>
+                {statsData.diffJobsDone < 0
+                  ? (Math.abs(statsData.diffJobsDone) * 100).toFixed(2)
+                  : (statsData.diffJobsDone * 100).toFixed(2)}
+                %
+              </p>
+            </div>
+  
+  */
+  }
   return (
     <div className="p-6 grow">
-      <div className="flex justify-center gap-x-2 bg-[#fff] py-2 mb-2 border border-gray-200 shadow-lg">
+      {/** 
+       *       <div className="flex justify-center gap-x-2 bg-[#fff] py-2 mb-2 border border-gray-200 shadow-lg">
         <p
           onClick={() => filterByRegional("REGIONAL ITUIUTABA")}
           className={`border ${
@@ -200,37 +235,19 @@ function Home({ credentials, setCredentials }) {
           GERAL
         </p>
       </div>
+      */}
       <div className="grid grid-rows-4 grid-cols-1 gap-y-2 lg:grid-cols-4 lg:grid-rows-1  lg:gap-x-3 w-full">
         <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
             <h1 className="uppercase text-gray-600">
               Obras finalizadas no mês
             </h1>
-            <div
-              className={
-                statsData.diffJobsDone < 0
-                  ? `flex items-center text-green-500`
-                  : "flex items-center text-red-500"
-              }
-            >
-              {statsData.diffJobsDone < 0 ? (
-                <MdOutlineKeyboardArrowUp fontSize={"25px"} />
-              ) : (
-                <MdOutlineKeyboardArrowDown fontSize={"25px"} />
-              )}
-              <p>
-                {statsData.diffJobsDone < 0
-                  ? (Math.abs(statsData.diffJobsDone) * 100).toFixed(2)
-                  : (statsData.diffJobsDone * 100).toFixed(2)}
-                %
-              </p>
-            </div>
           </div>
           <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
-            {installedData.length > 0 ? installedData[3]?.count : "-"} obras
+            {installedData.length > 0 ? installedData[0]?.count : "-"} obras
           </p>
           <p className="text-center text-xs text-gray-600">
-            Último mês: <strong>{installedData[2]?.count} obras</strong>
+            Último mês: <strong>{installedData[1]?.count} obras</strong>
           </p>
         </div>
         <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
@@ -238,32 +255,16 @@ function Home({ credentials, setCredentials }) {
             <h1 className="uppercase text-gray-600">
               Potência Pico instalada no mês
             </h1>
-            <div
-              className={
-                statsData.diffPotInstalled < 0
-                  ? `flex items-center text-green-500`
-                  : "flex items-center text-red-500"
-              }
-            >
-              {statsData.diffPotInstalled < 0 ? (
-                <MdOutlineKeyboardArrowUp fontSize={"25px"} />
-              ) : (
-                <MdOutlineKeyboardArrowDown fontSize={"25px"} />
-              )}
-              <p>
-                {statsData.diffPotInstalled < 0
-                  ? (Math.abs(statsData.diffPotInstalled) * 100).toFixed(2)
-                  : (statsData.diffPotInstalled * 100).toFixed(2)}
-                %
-              </p>
-            </div>
           </div>
           <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-            {installedData.length > 0 ? installedData[3]?.total : "-"} kWp
+            {installedData.length > 0
+              ? installedData[0]?.total.toFixed(2)
+              : "-"}{" "}
+            kWp
           </p>
           <p className="text-center text-xs text-gray-600">
             Último mês:{" "}
-            <strong>{installedData[2]?.total.toFixed(2)} kWp</strong>
+            <strong>{installedData[1]?.total.toFixed(2)} kWp</strong>
           </p>
         </div>
         <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
@@ -271,35 +272,16 @@ function Home({ credentials, setCredentials }) {
             <h1 className="uppercase text-gray-600">
               Potência Pico homologada no mês
             </h1>
-            <div
-              className={
-                statsData.diffHomoPot > 1
-                  ? `flex items-center text-green-500`
-                  : "flex items-center text-red-500"
-              }
-            >
-              {statsData.diffHomoPot > 1 ? (
-                <MdOutlineKeyboardArrowUp fontSize={"25px"} />
-              ) : (
-                <MdOutlineKeyboardArrowDown fontSize={"25px"} />
-              )}
-              <p>
-                {statsData.diffHomoPot > 1
-                  ? (Math.abs(1 - statsData.diffHomoPot) * 100).toFixed(2)
-                  : (statsData.diffHomoPot * 100).toFixed(2)}
-                %
-              </p>
-            </div>
           </div>
           <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
             {averageHomoData.length > 0
-              ? averageHomoData[1]?.homoPeakPot.toFixed(2)
+              ? averageHomoData[0]?.homoPeakPot.toFixed(2)
               : "-"}{" "}
             kWp
           </p>
           <p className="text-center text-xs text-gray-600">
             Último mês:{" "}
-            <strong>{averageHomoData[0]?.homoPeakPot.toFixed(2)} kWp</strong>
+            <strong>{averageHomoData[1]?.homoPeakPot.toFixed(2)} kWp</strong>
           </p>
         </div>
         <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
@@ -307,29 +289,10 @@ function Home({ credentials, setCredentials }) {
             <h1 className="uppercase text-gray-600">
               TEMPO MÉDIO DE APROVAÇÃO
             </h1>
-            <div
-              className={
-                statsData.diffHomoTime > 0
-                  ? `flex items-center text-green-500`
-                  : "flex items-center text-red-500"
-              }
-            >
-              {statsData.diffHomoTime > 0 ? (
-                <MdOutlineKeyboardArrowUp fontSize={"25px"} />
-              ) : (
-                <MdOutlineKeyboardArrowDown fontSize={"25px"} />
-              )}
-              <p>
-                {statsData.diffHomoTime > 0
-                  ? (statsData.diffHomoTime * 100).toFixed(2)
-                  : (Math.abs(statsData.diffHomoTime) * 100).toFixed(2)}
-                %
-              </p>
-            </div>
           </div>
           <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
             {averageHomoData.length > 0
-              ? averageHomoData[1]?.averageTime.toFixed(0)
+              ? averageHomoData[0]?.averageTime.toFixed(0)
               : "-"}{" "}
             dias
           </p>
@@ -372,7 +335,7 @@ function Home({ credentials, setCredentials }) {
         <div className="flex flex-col p-4 h-[400px] border border-gray-200 bg-[#fff] shadow-xl col-span-3">
           <div className="grid grid-cols-2 py-2">
             <h1 className="text-gray-600 uppercase text-xl text-center">
-              Potência pico instalada
+              Potência pico vendida
             </h1>
             <div className="flex items-center gap-x-2 justify-center">
               <p
@@ -430,9 +393,22 @@ function Home({ credentials, setCredentials }) {
         </div>
       </div>
       <div className="flex mt-4 grow flex-col p-4  border border-gray-200 bg-[#fff] shadow-xl">
-        <h1 className="text-gray-600 uppercase">
-          CLIENTES ANIVERSARIANDO HOJE
-        </h1>
+        <h1 className="text-gray-600 uppercase">ANIVERSARIANTES DO MÊS</h1>
+        <div className="w-full grow flex flex-wrap justify-around gap-y-2 mt-2">
+          {clientBirthday.length > 0 &&
+            clientBirthday?.map((client, index) => (
+              <div
+                key={index}
+                className="w-[350px] text-xs text-center bg-[#fff] border border-gray-200 p-2"
+              >
+                <p>{client.nomeDoContrato}</p>
+                <p className="text-[#15599a] font-bold">
+                  {client.dataNascimento != undefined &&
+                    new Date(client.dataNascimento).toLocaleDateString()}
+                </p>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );

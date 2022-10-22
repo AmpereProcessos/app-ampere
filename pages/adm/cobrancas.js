@@ -31,15 +31,18 @@ function Cobrancas({ credentials, setCredentials }) {
       }
     }
   }, []);
+
   return (
     <div className="p-6 grow">
       <h1 className="font-bold text-lg text-[#fead61]">
         COBRANÇAS DE ORDENS DE SERVIÇO
       </h1>
       <div className="flex flex-col gap-y-4 mt-3 px-4">
-        {oss.map((os) => (
-          <OSCard reload={getOSsToReceive} key={os._id} info={os} />
-        ))}
+        {oss.map((os) => {
+          if (os.ordensDeServico.some((os) => os.cobrancaRealizada == false)) {
+            return <OSCard reload={getOSsToReceive} key={os._id} info={os} />;
+          }
+        })}
       </div>
     </div>
   );

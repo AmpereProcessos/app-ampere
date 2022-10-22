@@ -219,6 +219,7 @@ export default async function handler(req, res) {
           usuarioEmissor: '',
           grauDeUrgencia: '',
           dataDeAbertura: 0,
+          dataDeFechamento: 0,
           index: 0,
           dataDeCobranca: 0
         }

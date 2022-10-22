@@ -72,6 +72,15 @@ function ModalObras({
       handleUpdates(project._id);
     });
   }
+  function handleOSChanges(id, index, date) {
+    axios
+      .put("/api/ordensDeServico/realizarCobranca", {
+        id: id,
+        index: index,
+        date: date,
+      })
+      .then((res) => handleUpdates(project._id));
+  }
   function handleOSCreation() {
     var arr;
     if (osInfo.servicoExecutado.trim().length < 5) {
@@ -89,10 +98,19 @@ function ModalObras({
           ...osInfo,
           usuarioEmissor: credentials.nome,
           index: infoHolder.ordensDeServico?.length,
+          cobrancaRealizada: false,
         });
         arr = infoHolder.ordensDeServico;
       } else {
-        arr = [{ ...osInfo, usuarioEmissor: credentials.nome, index: 0 }];
+        arr = [
+          {
+            ...osInfo,
+            usuarioEmissor: credentials.nome,
+            index: 0,
+            cobrancaRealizada: false,
+          },
+        ];
+        infoHolder.ordensDeServico = arr;
       }
       axios
         .post("/api/ordensDeServico", { id: project._id, arr: arr })
@@ -105,7 +123,7 @@ function ModalObras({
         });
     }
   }
-  console.log(osInfo.servicoExecutado.trim().length);
+  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -1101,6 +1119,41 @@ function ModalObras({
                               {ordem.grauDeUrgencia}
                             </p>
                           </div>
+                          <div
+                            className={
+                              "flex flex-col items-center text-gray-500"
+                            }
+                          >
+                            <p className="uppercase">DATA DE FECHAMENTO</p>
+                            <input
+                              type="date"
+                              className="bg-transparent text-xs"
+                              value={
+                                ordem.dataDeFechamento
+                                  ? new Date(ordem.dataDeFechamento)
+                                      .toISOString()
+                                      .slice(0, 10)
+                                  : null
+                              }
+                              onChange={(e) => {
+                                let temp = {
+                                  ...infoHolder,
+                                  ordensDeServico: [
+                                    ...infoHolder.ordensDeServico,
+                                  ],
+                                };
+                                temp.ordensDeServico[index].dataDeFechamento =
+                                  new Date(e.target.value)
+                                    .toISOString()
+                                    .slice(0, 10);
+                                handleOSChanges(
+                                  infoHolder._id,
+                                  index,
+                                  new Date(e.target.value)
+                                );
+                              }}
+                            />
+                          </div>
                           <Link
                             href={`/ordemDeServico/${project._id}?index=${index}`}
                           >
@@ -1784,7 +1837,7 @@ function ModalObras({
                     value={
                       infoHolder.material?.previsaoCustos != undefined &&
                       infoHolder.material?.previsaoCustos != "#VALUE!"
-                        ? infoHolder.material?.previsaoCustos
+                        ? Number(infoHolder.material?.previsaoCustos).toFixed(2)
                         : 0
                     }
                     handleChange={(value) => {
@@ -1792,14 +1845,14 @@ function ModalObras({
                         ...changes,
                         material: {
                           ...infoHolder.material,
-                          previsaoCustos: Number(value),
+                          previsaoCustos: Number(value).toFixed(2),
                         },
                       });
                       setInfo({
                         ...infoHolder,
                         material: {
                           ...infoHolder.material,
-                          previsaoCustos: Number(value),
+                          previsaoCustos: Number(value).toFixed(2),
                         },
                       });
                     }}

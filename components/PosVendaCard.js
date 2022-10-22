@@ -20,6 +20,12 @@ function PosVendaCard({ project, getUpdates }) {
         <p className="text-gray-700">{infoHolder.nomeDoContrato}</p>
         <div className="flex items-center flex-wrap grow justify-between px-6">
           <div>
+            <span className="text-xs">TELEFONE</span>
+            <p className="text-gray-600">
+              {infoHolder.telefone ? infoHolder.telefone : "-"}
+            </p>
+          </div>
+          <div>
             <span className="text-xs">VENDEDOR</span>
             <p className="text-gray-600">
               {infoHolder.vendedor?.nome ? infoHolder.vendedor?.nome : "-"}

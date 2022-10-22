@@ -2,12 +2,12 @@ import connectToDatabase from "../../../../utils/projectsDb";
 export default async function handler(req, res) {
   const { year } = req.query;
   const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("data");
+  const collection = db.collection("dados");
   let graphData = await collection
     .aggregate([
       {
         $match: {
-          dataassinatura: { $ne: "-" },
+          "contrato.dataAssinatura": { $ne: "-" },
         },
       },
       {
@@ -15,17 +15,17 @@ export default async function handler(req, res) {
           _id: {
             ano: {
               $year: {
-                $dateFromString: { dateString: "$dataassinatura" },
+                $dateFromString: { dateString: "$contrato.dataAssinatura" },
               },
             },
             mes: {
               $month: {
-                $dateFromString: { dateString: "$dataassinatura" },
+                $dateFromString: { dateString: "$contrato.dataAssinatura" },
               },
             },
           },
           total: {
-            $sum: "$potpico",
+            $sum: "$sistema.potPico",
           },
           count: { $count: {} },
         },

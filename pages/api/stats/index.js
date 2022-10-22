@@ -6,38 +6,34 @@ export default async function handler(req, res) {
     var currentMonth = date.getMonth() + 1;
     var currentYear = date.getFullYear();
     const db = await connectToDatabase(process.env.DB_KEY);
-    const collection = db.collection("data");
+    const collection = db.collection("dados");
     let installedInfo = await collection
       .aggregate([
         {
-          $match: { saidadeobra: { $ne: "-" } },
+          $match: {
+            "obra.saida": { $ne: "-" },
+          },
         },
         {
           $group: {
             _id: {
               ano: {
-                $year: { $dateFromString: { dateString: "$saidadeobra" } },
+                $year: { $dateFromString: { dateString: "$obra.saida" } },
               },
               mes: {
-                $month: { $dateFromString: { dateString: "$saidadeobra" } },
+                $month: { $dateFromString: { dateString: "$obra.saida" } },
               },
             },
             total: {
-              $sum: "$potpico",
+              $sum: "$sistema.potPico",
             },
             count: { $count: {} },
           },
         },
         {
           $sort: {
-            "_id.ano": 1,
-            "_id.mes": 1,
-          },
-        },
-        {
-          $match: {
-            "_id.ano": { $gte: currentYear },
-            "_id.mes": { $gte: currentMonth - 4 },
+            "_id.ano": -1,
+            "_id.mes": -1,
           },
         },
       ])
@@ -46,47 +42,53 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            statusparecerdeacesso: { $ne: "CANCELADO" },
-            saidadeobra: { $ne: "-" },
-            statusdaobra: { $ne: "OBRA CANCELADA" },
+            "parecer.statusDoParecerDeAcesso": { $ne: "CANCELADO" },
+            "obra.saida": { $ne: "-" },
+            "obra.statusDaObra": { $ne: "OBRA CANCELADA" },
           },
         },
         {
           $group: {
             _id: {
               ano: {
-                $year: { $dateFromString: { dateString: "$pareceracesso" } },
+                $year: {
+                  $dateFromString: {
+                    dateString: "$parecer.dataParecerDeAcesso",
+                  },
+                },
               },
               mes: {
-                $month: { $dateFromString: { dateString: "$pareceracesso" } },
+                $month: {
+                  $dateFromString: {
+                    dateString: "$parecer.dataParecerDeAcesso",
+                  },
+                },
               },
             },
             averageTime: {
               $avg: {
                 $dateDiff: {
                   startDate: {
-                    $dateFromString: { dateString: "$documentacaoassinada" },
+                    $dateFromString: {
+                      dateString: "$projeto.dataAssDocumentacao",
+                    },
                   },
                   endDate: {
-                    $dateFromString: { dateString: "$pareceracesso" },
+                    $dateFromString: {
+                      dateString: "$parecer.dataParecerDeAcesso",
+                    },
                   },
                   unit: "day",
                 },
               },
             },
-            homoPeakPot: { $sum: "$potpico" },
+            homoPeakPot: { $sum: "$sistema.potPico" },
           },
         },
         {
           $sort: {
-            "_id.ano": 1,
-            "_id.mes": 1,
-          },
-        },
-        {
-          $match: {
-            "_id.ano": { $gte: currentYear },
-            "_id.mes": { $gte: currentMonth - 2 },
+            "_id.ano": -1,
+            "_id.mes": -1,
           },
         },
       ])
@@ -150,35 +152,29 @@ export default async function handler(req, res) {
         {
           $match: {
             regional: regional,
-            saidadeobra: { $ne: "-" },
+            "obra.saida": { $ne: "-" },
           },
         },
         {
           $group: {
             _id: {
               ano: {
-                $year: { $dateFromString: { dateString: "$saidadeobra" } },
+                $year: { $dateFromString: { dateString: "$obra.saida" } },
               },
               mes: {
-                $month: { $dateFromString: { dateString: "$saidadeobra" } },
+                $month: { $dateFromString: { dateString: "$obra.saida" } },
               },
             },
             total: {
-              $sum: "$potpico",
+              $sum: "$sistema.potPico",
             },
             count: { $count: {} },
           },
         },
         {
           $sort: {
-            "_id.ano": 1,
-            "_id.mes": 1,
-          },
-        },
-        {
-          $match: {
-            "_id.ano": { $gte: currentYear },
-            "_id.mes": { $gte: currentMonth - 3 },
+            "_id.ano": -1,
+            "_id.mes": -1,
           },
         },
       ])
@@ -187,9 +183,9 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            statusparecerdeacesso: { $ne: "CANCELADO" },
-            saidadeobra: { $ne: "-" },
-            statusdaobra: { $ne: "OBRA CANCELADA" },
+            "parecer.statusDoParecerDeAcesso": { $ne: "CANCELADO" },
+            "obra.saida": { $ne: "-" },
+            "obra.statusDaObra": { $ne: "OBRA CANCELADA" },
             regional: regional,
           },
         },
@@ -197,38 +193,44 @@ export default async function handler(req, res) {
           $group: {
             _id: {
               ano: {
-                $year: { $dateFromString: { dateString: "$pareceracesso" } },
+                $year: {
+                  $dateFromString: {
+                    dateString: "$parecer.dataParecerDeAcesso",
+                  },
+                },
               },
               mes: {
-                $month: { $dateFromString: { dateString: "$pareceracesso" } },
+                $month: {
+                  $dateFromString: {
+                    dateString: "$parecer.dataParecerDeAcesso",
+                  },
+                },
               },
             },
             averageTime: {
               $avg: {
                 $dateDiff: {
                   startDate: {
-                    $dateFromString: { dateString: "$documentacaoassinada" },
+                    $dateFromString: {
+                      dateString: "$projeto.dataAssDocumentacao",
+                    },
                   },
                   endDate: {
-                    $dateFromString: { dateString: "$pareceracesso" },
+                    $dateFromString: {
+                      dateString: "$parecer.dataParecerDeAcesso",
+                    },
                   },
                   unit: "day",
                 },
               },
             },
-            homoPeakPot: { $sum: "$potpico" },
+            homoPeakPot: { $sum: "$sistema.potPico" },
           },
         },
         {
           $sort: {
-            "_id.ano": 1,
-            "_id.mes": 1,
-          },
-        },
-        {
-          $match: {
-            "_id.ano": { $gte: currentYear },
-            "_id.mes": { $gte: currentMonth - 2 },
+            "_id.ano": -1,
+            "_id.mes": -1,
           },
         },
       ])

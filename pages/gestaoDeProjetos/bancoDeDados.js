@@ -18,11 +18,14 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     cidadeFilter: [],
   });
   function getProjects() {
-    axios.get("/api/projects/bancoDeDados").then((res) => {
-      console.log(res.data);
-      setProjects(res.data);
-      setFilteredProjects(res.data);
-    });
+    axios
+      .get("/api/projects/bancoDeDados")
+      .then((res) => {
+        console.log(res.data);
+        setProjects(res.data);
+        setFilteredProjects(res.data);
+      })
+      .catch((err) => console.log(err));
   }
   function handleSearchFilter(value) {
     setSearchFilter(value);

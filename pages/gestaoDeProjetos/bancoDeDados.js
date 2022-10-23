@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import connectToDatabase from "../../utils/projectsDb";
 import ModalDB from "../../components/ModalDB";
 import Select from "react-select";
 import { cidadesAtendidas } from "../../utils/constants";
+import axios from "axios";
 function BandoDeDados({ data, credentials, setCredentials }) {
-  const [filteredProjects, setFilteredProjects] = useState(data);
+  const [projects, setProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
   const [searchFilter, setSearchFilter] = useState("");
@@ -16,15 +17,22 @@ function BandoDeDados({ data, credentials, setCredentials }) {
   const [filters, setFilters] = useState({
     cidadeFilter: [],
   });
+  function getProjects() {
+    axios.get("/api/projects/bancoDeDados").then((res) => {
+      console.log(res.data);
+      setProjects(res.data);
+      setFilteredProjects(res.data);
+    });
+  }
   function handleSearchFilter(value) {
     setSearchFilter(value);
     if (value != "" || " ") {
-      let newArr = data.filter((call) =>
+      let newArr = projects.filter((call) =>
         call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
       );
       setFilteredProjects(newArr);
     } else {
-      setFilteredProjects(data);
+      setFilteredProjects(projects);
     }
   }
   function handleOrderChange(value) {
@@ -48,12 +56,12 @@ function BandoDeDados({ data, credentials, setCredentials }) {
       newArr = filteredProjects;
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!newArr) newArr = data;
+      if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.cidadeFilter.includes(call.cidade)
       );
     }
-    if (!newArr) setFilteredProjects(data);
+    if (!newArr) setFilteredProjects(projects);
     else {
       setFilteredProjects(newArr);
     }
@@ -62,9 +70,12 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
+      getProjects();
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
+      } else {
+        getProjects();
       }
     }
   }, []);
@@ -149,7 +160,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
         <ModalDB
           project={modalProject}
           editor={
-            credentials &&
+            credentials != {} &&
             [
               "Projetos",
               "Obras",
@@ -175,12 +186,3 @@ function BandoDeDados({ data, credentials, setCredentials }) {
 }
 
 export default BandoDeDados;
-export async function getServerSideProps(context) {
-  const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("dados");
-  let arr = await collection.find({}).toArray();
-  arr = JSON.parse(JSON.stringify(arr));
-  return {
-    props: { data: arr }, // will be passed to the page component as props
-  };
-}

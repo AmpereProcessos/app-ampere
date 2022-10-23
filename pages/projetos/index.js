@@ -42,7 +42,6 @@ function Projetos({ credentials, setCredentials }) {
     }
   }
   function filterProjects() {
-    console.log(filters);
     var newArr;
     if (filters.parecerFilter.length > 0) {
       if (!newArr) newArr = projects;

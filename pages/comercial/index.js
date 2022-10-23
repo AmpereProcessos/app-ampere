@@ -258,6 +258,7 @@ function Comercial({ credentials, setCredentials }) {
               : false
           }
           setModalIsOpen={setModalIsOpen}
+          credentials={credentials}
         />
       )}
     </div>

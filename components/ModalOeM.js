@@ -42,11 +42,23 @@ function formataCEP(cep) {
 
   return cep;
 }
-function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
+function ModalOeM({
+  open,
+  setModalIsOpen,
+  project,
+  editor,
+  handleUpdates,
+  credentials,
+}) {
   const [infoHolder, setInfo] = useState(project);
   const [msg, setMsg] = useState("");
   const [changes, setChanges] = useState({});
-  function handleChanges() {
+  async function handleChanges() {
+    let { data } = await axios.post("/api/changes", {
+      usuario: credentials.nome,
+      mudancas: changes,
+      projetoMudado: project._id,
+    });
     axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
       setMsg("Alterações feitas");
       handleUpdates(project._id);

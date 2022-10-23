@@ -250,6 +250,7 @@ function Suprimentos({ credentials, setCredentials }) {
           ppsEditor={
             credentials.accessibleRoutes.includes("PPS") ? true : false
           }
+          credentials={credentials}
           setModalIsOpen={setModalIsOpen}
         />
       )}

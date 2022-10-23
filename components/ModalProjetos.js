@@ -65,7 +65,12 @@ function ModalProjetos({
     color: "text-red-500",
   });
   const [msg, setMsg] = useState("");
-  function handleChanges() {
+  async function handleChanges() {
+    let { data } = await axios.post("/api/changes", {
+      usuario: credentials.nome,
+      mudancas: changes,
+      projetoMudado: project._id,
+    });
     axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
       setMsg("Alterações feitas");
       handleUpdates(project._id);
@@ -126,7 +131,6 @@ function ModalProjetos({
         });
     }
   }
-  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>

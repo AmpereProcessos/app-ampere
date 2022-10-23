@@ -52,7 +52,12 @@ function ModalSuprimentos({
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
   const [msg, setMsg] = useState("");
-  function handleChanges() {
+  async function handleChanges() {
+    let { data } = await axios.post("/api/changes", {
+      usuario: credentials.nome,
+      mudancas: changes,
+      projetoMudado: project._id,
+    });
     axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
       setMsg("Alterações feitas");
       handleUpdates(project._id);

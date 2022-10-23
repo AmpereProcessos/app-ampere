@@ -45,22 +45,29 @@ function OeM({ credentials, setCredentials }) {
       setFilteredProjects(newArr);
     }
   }
+  function handleUpdates(id) {
+    getProjects();
+    let changedObj = projects.filter((project) => project._id == id);
+    setModalProject(changedObj[0]);
+  }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      getProjects();
+      if (!storedCredentials.accessibleRoutes.includes("O&M")) {
+        router.push("/");
+      } else {
+        getProjects();
+      }
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (
-          credentials.accessibleRoutes.includes("O&M") ||
-          storedCredentials.accessibleRoutes.includes("O&M")
-        )
-          editor = true;
-        else editor = false;
-        getProjects();
+        if (!credentials.accessibleRoutes.includes("O&M")) {
+          router.push("/");
+        } else {
+          getProjects();
+        }
       }
     }
   }, []);
@@ -160,6 +167,8 @@ function OeM({ credentials, setCredentials }) {
           setModalIsOpen={setModalIsOpen}
           project={modalProject}
           editor={credentials.accessibleRoutes.includes("O&M") ? true : false}
+          credentials={credentials}
+          handleUpdates={handleUpdates}
         />
       )}
     </div>

@@ -54,15 +54,17 @@ function Sidebar({ credentials }) {
             <p className="pl-3 text-xs text-gray-600">Em andamento</p>
           </div>
         </Link>
-        <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-          <FaDatabase
-            style={{
-              color: "#15599a",
-              fontSize: "20px",
-            }}
-          />
-          <p className="pl-3 text-xs text-gray-600">Banco de dados</p>
-        </div>
+        <Link href="/gestaoDeProjetos/bancoDeDados">
+          <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+            <FaDatabase
+              style={{
+                color: "#15599a",
+                fontSize: "20px",
+              }}
+            />
+            <p className="pl-3 text-xs text-gray-600">Banco de dados</p>
+          </div>
+        </Link>
         <Link href="/calendario">
           <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
             <BsFillCalendarEventFill

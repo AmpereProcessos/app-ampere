@@ -30,8 +30,8 @@ function MyApp({ Component, pageProps }) {
           <Header
             logout={() => {
               localStorage.removeItem("credentials");
-              setCredentials({});
               router.push("/auth/authHome");
+              setCredentials({});
             }}
             credentials={credentials}
             toggleSidebar={() => setSidebarVisible(!sidebarVisible)}

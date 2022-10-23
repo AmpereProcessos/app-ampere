@@ -1,3 +1,8 @@
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+};
 import connectToDatabase from "../../../utils/projectsDb";
 export default async function handler(req, res) {
   if (req.method === "GET") {

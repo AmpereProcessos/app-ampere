@@ -52,6 +52,7 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
       handleUpdates(project._id);
     });
   }
+  console.log(infoHolder.conferencias);
   console.log(changes);
   return (
     <>
@@ -330,7 +331,6 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         conferencias: {
                           ...infoHolder.conferencias,
                           usinaLigada: {
-                            ...infoHolder.usinaLigada,
                             data: new Date(value).toISOString(),
                             status: "REALIZADO",
                           },
@@ -341,7 +341,6 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         conferencias: {
                           ...infoHolder.conferencias,
                           usinaLigada: {
-                            ...infoHolder.usinaLigada,
                             data: new Date(value).toISOString(),
                             status: "REALIZADO",
                           },
@@ -369,7 +368,6 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         conferencias: {
                           ...infoHolder.conferencias,
                           monitoramentoFeito: {
-                            ...infoHolder.monitoramentoFeito,
                             data: new Date(value).toISOString(),
                             status: "REALIZADO",
                           },
@@ -380,7 +378,6 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         conferencias: {
                           ...infoHolder.conferencias,
                           monitoramentoFeito: {
-                            ...infoHolder.monitoramentoFeito,
                             data: new Date(value).toISOString(),
                             status: "REALIZADO",
                           },
@@ -434,7 +431,6 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         conferencias: {
                           ...infoHolder.conferencias,
                           energiaInjetada: {
-                            ...infoHolder.energiaInjetada,
                             data: new Date(value).toISOString(),
                             status: "REALIZADO",
                           },
@@ -445,7 +441,6 @@ function ModalOeM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         conferencias: {
                           ...infoHolder.conferencias,
                           energiaInjetada: {
-                            ...infoHolder.energiaInjetada,
                             data: new Date(value).toISOString(),
                             status: "REALIZADO",
                           },

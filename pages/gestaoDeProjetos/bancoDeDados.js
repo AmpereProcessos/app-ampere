@@ -52,9 +52,6 @@ function BandoDeDados({ data, credentials, setCredentials }) {
   }
   function handleFilters() {
     var newArr;
-    if (searchFilter != "" || " ") {
-      newArr = filteredProjects;
-    }
     if (filters.cidadeFilter.length > 0) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>

@@ -112,8 +112,8 @@ function Projetos({ credentials, setCredentials }) {
     if (storedCredentials) {
       setCredentials(storedCredentials);
       if (
-        !credentials.accessibleRoutes.includes("Projetos") &&
-        !credentials.accessibleRoutes.includes("Pós-Venda")
+        !storedCredentials.accessibleRoutes.includes("Projetos") &&
+        !storedCredentials.accessibleRoutes.includes("Pós-Venda")
       ) {
         router.push("/");
       } else {

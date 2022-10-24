@@ -362,6 +362,7 @@ function NovoProjeto({ credentials, setCredentials }) {
       .post("/api/projects/add", infoHolder)
       .then((res) => console.log(res.data));
   }
+  console.log(infoHolder.logradouro);
   // adicionar quem indicou e contato de quem indicou
   function validateCreation() {
     var holder;
@@ -470,6 +471,14 @@ function NovoProjeto({ credentials, setCredentials }) {
               }
               handleChange={(value) => {
                 setInfo({ ...infoHolder, cep: value });
+              }}
+            />
+            <TextInput
+              label={"Logradouro"}
+              editable={true}
+              value={infoHolder.logradouro ? infoHolder.logradouro : ""}
+              handleChange={(value) => {
+                setInfo({ ...infoHolder, logradouro: value });
               }}
             />
             <TextInput

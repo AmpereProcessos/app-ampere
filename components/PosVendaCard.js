@@ -17,7 +17,7 @@ function PosVendaCard({ project, getUpdates }) {
   return (
     <div className="w-full border border-gray-200 p-3 hover:bg-blue-100">
       <div className="flex items-center justify-between border-b border-gray-200 pb-2">
-        <p className="text-gray-700">{infoHolder.nomeDoContrato}</p>
+        <p className="text-gray-700 font-bold">{infoHolder.nomeDoContrato}</p>
         <div className="flex items-center flex-wrap grow justify-between px-6">
           <div>
             <span className="text-xs">TELEFONE</span>

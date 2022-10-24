@@ -53,7 +53,7 @@ function Projetos({ credentials, setCredentials }) {
     if (filters.vistoriaFilter.length > 0) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
-        filters.vistoriaFilter.includes(call.vistoria.status)
+        filters.vistoriaFilter.includes(call.vistoria?.status)
       );
     }
     if (filters.projetistaFilter.length > 0) {
@@ -134,6 +134,7 @@ function Projetos({ credentials, setCredentials }) {
       return "border border-gray-200";
     }
   }
+  console.log(filters);
   return (
     <div className="p-6 grow">
       <div className="flex justify-between gap-x-2 border-b border-gray-200 p-1">
@@ -240,7 +241,7 @@ function Projetos({ credentials, setCredentials }) {
                 label: "AGUARDANDO CONCESSIONARIA",
                 value: "AGUARDANDO CONCESSIONARIA",
               },
-              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              { label: "NÃO DEFINIDO", value: undefined },
             ]}
           />
           <Select

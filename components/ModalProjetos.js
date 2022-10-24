@@ -131,6 +131,7 @@ function ModalProjetos({
         });
     }
   }
+  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>

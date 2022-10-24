@@ -340,6 +340,195 @@ function NovoProjeto({ credentials, setCredentials }) {
     },
     nps: 0,
   });
+  function resetState() {
+    setInfo({
+      nomeDoContrato: "",
+      nomeDoProjeto: "",
+      cpf_cnpj: 0,
+      telefone: "",
+      cidade: "ITUIUTABA",
+      uf: "MG",
+      vendedor: {
+        nome: "NÃO DEFINIDO",
+        codigo: 0,
+      },
+      linkDrive: "",
+      regional: "REGIONAL ITUIUTABA",
+      tipoDeServico: "SISTEMA FOTOVOLTAICO",
+      codigoSVB: 0,
+      segmento: "RESIDENCIAL",
+      obsComercial: "",
+      visitaTecnica: {
+        status: "PENDÊNCIA",
+        tecnico: "",
+        saidaDoCliente: "",
+        amperagem: "",
+        tipoDaTelha: "",
+      },
+      padrao: {
+        tipo: "NÃO DEFINIDO",
+        respPagamento: "NÃO HAVERA TROCA PADRÃO",
+        respInstalacao: "NÃO SE APLICA",
+        valor: 0,
+      },
+      estruturaPersonalizada: {
+        aplicavel: "NÃO",
+        tipo: "N/A",
+        respPagamento: "NÃO SE APLICA",
+        valor: 0,
+        status: "N/A",
+      },
+      contrato: {
+        status: "NÃO DEFINIDO",
+        dataSolicitacao: new Date(), // formatar como data
+        dataLiberacao: new Date(), // formatar como data
+        dataAssinatura: new Date(), // formatar como data
+        formaAssinatura: "NÃO DEFINIDO",
+      },
+      pagamento: {
+        status: "NÃO DEFINIDO",
+        forma: "NÃO DEFINIDO",
+        credor: "NÃO DEFINIDO",
+        pagador: "",
+        contatoPagador: "",
+        retorno: 0,
+        cobrancaFeita: false,
+      },
+      faturamento: {
+        previsaoFaturamento: 0, // adicionar empresa e cnpj de faturamento
+        cnpjFaturamento: 0,
+        empresaFaturamento: "NÃO DEFINIDO",
+      },
+      compra: {
+        statusLiberacao: "NÃO DEFINIDO",
+        dataLiberacao: undefined, // formatar como data
+        tipoDoKit: "NÃO DEFINIDO",
+        valorDoKit: 0,
+        kitInfo: "",
+        fornecedor: "NÃO DEFINIDO",
+        dataPedido: undefined, // formatar como data
+        dataPagamento: undefined,
+        previsaoEntrega: undefined, // formatar como data
+        localEntrega: "NÃO DEFINIDO",
+        informacoes: "",
+        previsaoNotaFiscal: undefined,
+        rastreio: "",
+        statusEntrega: "NÃO DEFINIDO",
+      },
+      dadosCemig: {
+        titularProjeto: "",
+        numeroInstalacao: "",
+        distCreditos: "NÃO DEFINIDO",
+        qtdeDistCreditos: 0,
+      },
+      sistema: {
+        qtdeModulos: 0,
+        potModulos: 0,
+        potPico: 0,
+        topologia: "NÃO DEFINIDO",
+        inversor: "",
+        valorProjeto: 0,
+      },
+      projeto: {
+        iniciar: "NÃO DEFINIDO",
+        projetista: {
+          nome: "NÃO DEFINIDO",
+          codigo: undefined,
+        },
+        dataLiberacaoDocumentacao: undefined, // formatar como data
+        dataAssDocumentacao: undefined, // formatar como data
+        diagramaUnifilar: undefined,
+        desenhoTelhado: undefined,
+        mapaDeMicro: undefined,
+        aumentoDeCarga: "NÃO",
+        acStatus: undefined,
+        projetoConcluido: "NÃO",
+        relatorioComissionamento: undefined,
+      },
+      parecer: {
+        statusDoParecerDeAcesso: "NÃO DEFINIDO",
+        dataParecerDeAcesso: undefined, // formatar como data
+        parecerReprovado: "NÃO",
+        qtdeReprovas: 0,
+        motivoReprova: undefined,
+      },
+      vistoria: {
+        dataPedido: undefined, // formatar como data
+        status: "NÃO DEFINIDO",
+        vistoriaReprovada: "NÃO",
+        qtdeReprovas: 0,
+        motivoReprova: undefined,
+      },
+      medidor: {
+        data: undefined, // formatar como data
+        status: "NÃO DEFINIDO",
+      },
+      obra: {
+        laudo: "NÃO DEFINIDO",
+        observacoes: "", // possibilidade de substituir \n por /, e quebrar textp em pontos
+        statusSolicitacao: "NÃO SOLICITADA",
+        entrada: undefined, // formatar como data
+        saida: undefined, // formatar como data.
+        statusDaObra: "NÃO DEFINIDO",
+        equipeResp: "NÃO DEFINIDO",
+        checklist: undefined,
+        trafo: "NÃO",
+        fotosInstalacao: undefined,
+      },
+      material: {
+        statusSeparacao: "NÃO DEFINIDO",
+        previsaoCustos: 0, // toFixed(2)
+        efetivoCustos: 0,
+        notaFiscal: undefined,
+        materialFaltante: "",
+      },
+      manutencaoPreventiva: { status: "NÃO REALIZADO", data: null },
+      relatorios: {
+        envioUm: { status: "NÃO REALIZADO", data: null },
+        envioDois: { status: "NÃO REALIZADO", data: null },
+        envioTres: { status: "NÃO REALIZADO", data: null },
+        envioQuatro: { status: "NÃO REALIZADO", data: null },
+      },
+      conferencias: {
+        usinaLigada: { status: "NÃO REALIZADO", data: null },
+        monitoramentoFeito: { status: "NÃO REALIZADO", data: null },
+        energiaInjetada: { status: "NÃO REALIZADO", data: null },
+      },
+      app: {
+        data: undefined,
+        login: "",
+        senha: "",
+      },
+      dataNascimento: undefined,
+      email: "",
+      logradouro: "",
+      numeroResidencia: 0,
+      bairro: "",
+      cep: "",
+      canalVenda: "NÃO DEFINIDO",
+      indicacao: {
+        quemIndicou: "", //add
+        contato: "", //add
+      },
+      ondeTrabalha: "",
+      jornada: {
+        dataUltimoContato: undefined,
+        boasVindas: false,
+        assDocumentacoes: false,
+        compraDoKit: false,
+        nfFaturada: false,
+        prevChegada: false,
+        respConcessionaria: false,
+        entregaDoKit: false,
+        instalacaoAgendada: false,
+        vistoriaConcessionaria: false,
+        sistemaLigado: false,
+        jornadaConcluida: false,
+        dataNps: undefined,
+      },
+      nps: 0,
+    });
+  }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
@@ -358,11 +547,11 @@ function NovoProjeto({ credentials, setCredentials }) {
     }
   }, []);
   function addProject() {
-    axios
-      .post("/api/projects/add", infoHolder)
-      .then((res) => console.log(res.data));
+    axios.post("/api/projects/add", infoHolder).then((res) => {
+      setMsg("Projeto adicionado!");
+      resetState();
+    });
   }
-  console.log(infoHolder.logradouro);
   // adicionar quem indicou e contato de quem indicou
   function validateCreation() {
     var holder;
@@ -453,10 +642,6 @@ function NovoProjeto({ credentials, setCredentials }) {
                 return { label: cidade, value: cidade };
               })}
               handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  cidade: value,
-                });
                 setInfo({
                   ...infoHolder,
                   cidade: value,
@@ -1822,7 +2007,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                 setInfo({
                   ...infoHolder,
                   sistema: {
-                    ...changes.sistema,
+                    ...infoHolder.sistema,
                     valorProjeto: Number(value),
                   },
                 });

@@ -15,6 +15,7 @@ function Posvenda({ credentials, setCredentials }) {
     vendedorFilter: [],
   });
   const [searchFilter, setSearchFilter] = useState("");
+  const [cardMode, setCardMode] = useState(true);
   function getDateDiff(date1, date2) {
     const diffInMs = new Date(date1) - new Date(date2);
     const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
@@ -70,6 +71,13 @@ function Posvenda({ credentials, setCredentials }) {
       setFilteredProjects(newArr);
     }
   }
+  function ordenate() {
+    let arr = filteredProjects.sort(
+      (a, b) =>
+        new Date(a.jornada.dataUltimoContato) -
+        new Date(b.jornada.dataUltimoContato)
+    );
+  }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
@@ -94,12 +102,24 @@ function Posvenda({ credentials, setCredentials }) {
             ({filteredProjects.length})
           </p>
         </div>
-        <div className="flex gap-x-2 items-center">
+        <div className="flex flex-wrap justify-center gap-2 items-center">
+          <button
+            onClick={() => setCardMode(!cardMode)}
+            className="font-bold bg-[#15599a] w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+          >
+            {cardMode ? "MODO CARD" : "MODO LISTA"}
+          </button>
           <button
             onClick={() => filterByNoRecentContact(!filters.noContactFilter)}
-            className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+            className="font-bold bg-[#15599a] w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
           >
             SEM CONTATO RECENTE
+          </button>
+          <button
+            onClick={ordenate}
+            className="font-bold bg-[#15599a] w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+          >
+            ORDENAR
           </button>
           <Select
             isMulti
@@ -148,13 +168,33 @@ function Posvenda({ credentials, setCredentials }) {
           </button>
         </div>
       </div>
-      <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-        {filteredProjects?.map((project) => (
-          <PosVendaCard
-            getUpdates={getProjects}
-            key={project._id}
-            project={project}
-          />
+      <div className="flex flex-wrap overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
+        {filteredProjects?.map((project, index) => (
+          <div className="w-full flex justify-center" key={index}>
+            {cardMode ? (
+              <PosVendaCard
+                getUpdates={getProjects}
+                key={project._id}
+                project={project}
+              />
+            ) : (
+              <div
+                className="flex justify-between w-1/2 border border-gray-200 p-3 hover:bg-blue-100"
+                key={index}
+              >
+                <p className="text-center font-bold">
+                  {project.nomeDoContrato}
+                </p>
+                <p className="text-center">
+                  {project.jornada.dataUltimoContato
+                    ? new Date(
+                        project.jornada?.dataUltimoContato
+                      ).toLocaleDateString()
+                    : "-"}
+                </p>
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </div>

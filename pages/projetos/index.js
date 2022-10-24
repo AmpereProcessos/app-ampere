@@ -17,6 +17,7 @@ function Projetos({ credentials, setCredentials }) {
     distribuicaoFilter: [],
     assinFaltando: false,
     desenhoFilter: false,
+    obraStatusFilter: [],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -66,6 +67,12 @@ function Projetos({ credentials, setCredentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.distribuicaoFilter.includes(call.dadosCemig.distCreditos)
+      );
+    }
+    if (filters.obraStatusFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.obraStatusFilter.includes(call.obra.statusDaObra)
       );
     }
     if (filters.desenhoFilter) {
@@ -134,7 +141,6 @@ function Projetos({ credentials, setCredentials }) {
       return "border border-gray-200";
     }
   }
-  console.log(filters);
   return (
     <div className="p-6 grow">
       <div className="flex justify-between gap-x-2 border-b border-gray-200 p-1">
@@ -177,6 +183,14 @@ function Projetos({ credentials, setCredentials }) {
                 value: "AGUARDANDO AUMENTO DE CARGA",
               },
               {
+                label: "INICIAR PROJETO",
+                value: "INICIAR PROJETO",
+              },
+              {
+                label: "SOLICITAR TROCA DE TITULARIDADE",
+                value: "SOLICITAR TROCA DE TITULARIDADE",
+              },
+              {
                 label: "AGUARDANDO FATURAMENTO ART",
                 value: "AGUARDANDO FATURAMENTO ART",
               },
@@ -215,6 +229,46 @@ function Projetos({ credentials, setCredentials }) {
               {
                 label: "SOLICITAR AUMENTO DE CARGA",
                 value: "SOLICITAR AUMENTO DE CARGA",
+              },
+              {
+                label: "PARECER DE ACESSO COM OBRAS",
+                value: "PARECER DE ACESSO COM OBRAS",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="STATUS DA OBRA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                obraStatusFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                label: "AGENDADA",
+                value: "AGENDADA",
+              },
+              {
+                label: "AGUARDANDO AGENDAMENTO",
+                value: "AGUARDANDO AGENDAMENTO",
+              },
+              {
+                label: "CONCLUIDA",
+                value: "CONCLUIDA",
+              },
+              {
+                label: "EM ANDAMENTO",
+                value: "EM ANDAMENTO",
+              },
+              {
+                label: "OBRA CANCELADA",
+                value: "OBRA CANCELADA",
               },
               {
                 label: "NÃO DEFINIDO",

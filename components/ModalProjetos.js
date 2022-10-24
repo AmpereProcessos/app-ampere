@@ -131,7 +131,6 @@ function ModalProjetos({
         });
     }
   }
-  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -1187,6 +1186,10 @@ function ModalProjetos({
                       {
                         label: "INICIAR PROJETO",
                         value: "INICIAR PROJETO",
+                      },
+                      {
+                        label: "SOLICITAR TROCA DE TITULARIDADE",
+                        value: "SOLICITAR TROCA DE TITULARIDADE",
                       },
                       {
                         label: "AGUARDANDO FATURAMENTO ART",

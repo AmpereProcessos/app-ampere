@@ -78,7 +78,7 @@ export default async function handler(req, res) {
         previsaoFaturamento: project.previsaofaturamento, // adicionar empresa e cnpj de faturamento
         cnpjFaturamento: project.cnpjfaturar,
         empresaFaturamento: project.empresafaturar,
-        dataFaturamento: project.dataFaturamento
+        dataFaturamento: project.dataFaturamento,
       },
       compra: {
         statusLiberacao: project.statusliberacaocredito,
@@ -118,6 +118,7 @@ export default async function handler(req, res) {
         },
         dataLiberacaoDocumentacao: fixDate(project.dataliberacaodocumentacao), // formatar como data
         dataAssDocumentacao: fixDate(project.documentacaoassinada), // formatar como data
+        formaAssDocumentacao: project.formaassdocumentacao,
         diagramaUnifilar: project.diagramaunifilar,
         desenhoTelhado: project.desenhotelhado,
         mapaDeMicro: project.mapademicro,

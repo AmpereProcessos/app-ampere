@@ -1297,6 +1297,31 @@ function ModalProjetos({
                       });
                     }}
                   />
+                  <TextInput
+                    label={"PENDÊNCIA DO PARECER"}
+                    value={
+                      infoHolder.parecer.pendencias
+                        ? infoHolder.parecer.pendencias
+                        : ""
+                    }
+                    editable={editor}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        parecer: {
+                          ...infoHolder.parecer,
+                          pendencias: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        parecer: {
+                          ...infoHolder.parecer,
+                          pendencias: value,
+                        },
+                      });
+                    }}
+                  />
                   {infoHolder.parecer.statusDoParecerDeAcesso ==
                     "PARECER DE ACESSO COM OBRAS" && (
                     <NumberInput

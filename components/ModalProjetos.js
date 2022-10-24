@@ -131,6 +131,7 @@ function ModalProjetos({
         });
     }
   }
+  console.log(changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -1137,6 +1138,45 @@ function ModalProjetos({
                         },
                       });
                     }}
+                  />
+                  <SelectInput
+                    label={"Forma de Assinatura"}
+                    value={
+                      infoHolder.projeto?.formaAssDocumentacao
+                        ? infoHolder.projeto?.formaAssDocumentacao
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          formaAssDocumentacao: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          formaAssDocumentacao: value,
+                        },
+                      });
+                    }}
+                    options={[
+                      {
+                        label: "FISICA",
+                        value: "FISICA",
+                      },
+                      {
+                        label: "DIGITAL",
+                        value: "DIGITAL",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
                   />
                   <DateInput
                     label={"Parecer de acesso"}

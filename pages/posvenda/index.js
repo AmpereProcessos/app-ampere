@@ -74,9 +74,11 @@ function Posvenda({ credentials, setCredentials }) {
   function ordenate() {
     let arr = filteredProjects.sort(
       (a, b) =>
-        new Date(a.jornada.dataUltimoContato) -
-        new Date(b.jornada.dataUltimoContato)
+        new Date(b.jornada.dataUltimoContato) -
+        new Date(a.jornada.dataUltimoContato)
     );
+    console.log(arr);
+    setFilteredProjects(arr);
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));

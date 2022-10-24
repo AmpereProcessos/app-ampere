@@ -364,6 +364,7 @@ export const sellers = [
   "WILLIAN MENEZES",
   "STENIO DE ASSIS",
   "SETOR O&M",
+  "SETOR PROJETOS",
 ];
 export const cities = [
   {
@@ -438,6 +439,7 @@ export const ppsSolicitations = [
   "PROPOSTA COMERCIAL SIMPLES(CADASTRO)",
   "SIMULAÇÃO FINANCEIRA(CADASTRO)",
   "SOLICITAÇÃO DE CONTRATO",
+  "PENDÊNCIA EM DOCUMENTAÇÃO DE PROJETOS",
 ];
 export const cidadesAtendidas = [
   "ITUIUTABA",

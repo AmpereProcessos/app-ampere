@@ -485,6 +485,8 @@ function ModalOeM({
                   <TextInput
                     label={"SENHA NO APP"}
                     value={infoHolder.app.senha}
+                    normalCase={true}
+                    editable={editor}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,

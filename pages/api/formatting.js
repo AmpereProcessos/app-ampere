@@ -131,6 +131,7 @@ export default async function handler(req, res) {
         statusDoParecerDeAcesso: project.statusparecerdeacesso,
         qtdeDiasObraDeRede: project.qtdediasobraderede,
         dataParecerDeAcesso: fixDate(project.pareceracesso), // formatar como data
+        pendencias: project.pendencias,
         parecerReprovado: project.parecerReprovado,
         qtdeReprovas: project.qtdeReprovasParecer,
         motivoReprova: project.motivoReprovaParecer,

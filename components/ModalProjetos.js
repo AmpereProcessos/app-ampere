@@ -1184,6 +1184,10 @@ function ModalProjetos({
                         value: "AGUARDANDO AUMENTO DE CARGA",
                       },
                       {
+                        label: "INICIAR PROJETO",
+                        value: "INICIAR PROJETO",
+                      },
+                      {
                         label: "AGUARDANDO FATURAMENTO ART",
                         value: "AGUARDANDO FATURAMENTO ART",
                       },

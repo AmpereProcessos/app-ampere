@@ -734,6 +734,62 @@ function ModalSuprimentos({
                         value: "SOU ENERGY",
                       },
                       {
+                        label: "FORTLEV",
+                        value: "FORTLEV",
+                      },
+                      {
+                        label: "GENYX",
+                        value: "GENYX",
+                      },
+                      {
+                        label: "MEGACOMM",
+                        value: "MEGACOMM",
+                      },
+                      {
+                        label: "FORTESOL",
+                        value: "FORTESOL",
+                      },
+                      {
+                        label: "EDMOND",
+                        value: "EDMOND",
+                      },
+                      {
+                        label: "AMARA",
+                        value: "AMARA",
+                      },
+                      {
+                        label: "ECORI",
+                        value: "ECORI",
+                      },
+                      {
+                        label: "RIBEIRO",
+                        value: "RIBEIRO",
+                      },
+                      {
+                        label: "TEN BRASIL",
+                        value: "TEN BRASIL",
+                      },
+                      {
+                        label: "ESFERA",
+                        value: "ESFERA",
+                      },
+                      {
+                        label: "ELSYS",
+                        value: "ELSYS",
+                      },
+                      {
+                        label: "GEL SOLAR",
+                        value: "GEL SOLAR",
+                      },
+                      {
+                        label: "HELTE",
+                        value: "HELTE",
+                      },
+                      {
+                        label: "LOJA ELÉTRICA",
+                        value: "LOJA ELÉTRICA",
+                      },
+                      {
                         label: "NÃO DEFINIDO",
                         value: "NÃO DEFINIDO",
                       },

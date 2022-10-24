@@ -48,6 +48,7 @@ function ModalSuprimentos({
   editor,
   ppsEditor,
   handleUpdates,
+  credentials
 }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});

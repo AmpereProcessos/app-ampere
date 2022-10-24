@@ -849,6 +849,23 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
+                  <DateInput label="Data de faturamento" editable={editor} value={infoHolder.faturamento?.dataFaturamento ? new Date(infoHolder.faturamento?.dataFaturamento).toISOString()
+                            .slice(0, 10) : '' } handleChange={(value)=> {
+                     setChanges({
+                      ...changes,
+                      faturamento: {
+                      ...infoHolder.faturamento,
+                       dataFaturamento: new Date(value).toISOString(),
+                       },
+                    });
+                    setInfo({
+                      ...infoHolder,
+                      faturamento: {
+                        ...infoHolder.faturamento,
+                        dataFaturamento: new Date(value).toISOString(),
+                      },
+                     });
+                  }}/>
                   {infoHolder.pagamento?.forma == "FINANCIAMENTO" && (
                     <SelectInput
                       label={"CREDOR"}
@@ -1136,6 +1153,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
+                  <TextInput label={"INFORMAÇÕES DA COMPRA"} value={infoHolder.compra?.informacoes} editable={false}/>
                   <SelectInput
                     label={"TIPO DO KIT"}
                     value={
@@ -1230,31 +1248,6 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         compra: {
                           ...infoHolder.compra,
                           localEntrega: value,
-                        },
-                      });
-                    }}
-                  />
-                  <TextInput
-                    label={"INFORMAÇÕES"}
-                    value={
-                      infoHolder.compra?.informacoes
-                        ? infoHolder.compra?.informacoes
-                        : ""
-                    }
-                    editable={false}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          informacoes: value,
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        compra: {
-                          ...infoHolder.compra,
-                          informacoes: value,
                         },
                       });
                     }}

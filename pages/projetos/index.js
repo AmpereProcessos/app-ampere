@@ -16,6 +16,7 @@ function Projetos({ credentials, setCredentials }) {
     projetistaFilter: [],
     distribuicaoFilter: [],
     assinFaltando: false,
+    desenhoFilter: false,
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -66,6 +67,10 @@ function Projetos({ credentials, setCredentials }) {
       newArr = newArr.filter((call) =>
         filters.distribuicaoFilter.includes(call.dadosCemig.distCreditos)
       );
+    }
+    if (filters.desenhoFilter) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) => call.projeto.desenhoTelhado != "OK");
     }
     if (filters.assinFaltando) {
       if (!newArr) newArr = projects;
@@ -254,6 +259,16 @@ function Projetos({ credentials, setCredentials }) {
               };
             })}
           />
+          <div
+            onClick={() =>
+              setFilters({ ...filters, desenhoFilter: !filters.desenhoFilter })
+            }
+            className={`${
+              filters.desenhoFilter ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            DESENHO PENDENTE
+          </div>
           <Select
             isMulti
             placeholder="DIST. CRÉDITOS"

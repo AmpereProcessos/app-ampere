@@ -95,6 +95,7 @@ function Administracao({ credentials, setCredentials }) {
     }
     return totalSum.toFixed(2);
   }
+  console.log(filters)
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 p-1">
@@ -110,7 +111,7 @@ function Administracao({ credentials, setCredentials }) {
         <DateInput
             label={"Saida de obra posterior a"}
             editable={true}
-            value={filters.dataSaidaDeObra ? new Date(filters.dataSaidaDeObra).toISOString().slice(0, 10) : ''}
+            value={filters.dataSaidaDeObra && filters.dataSaidaDeObra != "Invalid Date" ? new Date(filters.dataSaidaDeObra).toISOString().slice(0, 10) : ''}
             handleChange={(value) => {
               setFilters({...filters,dataSaidaDeObra: new Date(value)})
             }}

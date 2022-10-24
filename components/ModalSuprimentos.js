@@ -48,7 +48,7 @@ function ModalSuprimentos({
   editor,
   ppsEditor,
   handleUpdates,
-  credentials
+  credentials,
 }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
@@ -1247,6 +1247,33 @@ function ModalSuprimentos({
                         faturamento: {
                           ...infoHolder.faturamento,
                           previsaoFaturamento: value,
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
+                    label="Data de faturamento"
+                    editable={editor}
+                    value={
+                      infoHolder.faturamento?.dataFaturamento
+                        ? new Date(infoHolder.faturamento?.dataFaturamento)
+                            .toISOString()
+                            .slice(0, 10)
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          dataFaturamento: new Date(value).toISOString(),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          dataFaturamento: new Date(value).toISOString(),
                         },
                       });
                     }}

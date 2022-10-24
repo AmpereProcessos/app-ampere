@@ -15,7 +15,18 @@ function PosVendaCard({ project, getUpdates }) {
     });
   }
   return (
-    <div className="w-full border border-gray-200 p-3 hover:bg-blue-100">
+    <div
+      className={`w-full ${
+        infoHolder.jornada?.dataUltimoContato
+          ? getDateDiff(
+              new Date(),
+              new Date(infoHolder.jornada?.dataUltimoContato)
+            ) > 7
+            ? "border-2 border-red-400"
+            : "border border-gray-300"
+          : "border-2 border-red-400"
+      } p-3 hover:bg-blue-100`}
+    >
       <div className="flex items-center justify-between border-b border-gray-200 pb-2">
         <p className="text-gray-700 font-bold">{infoHolder.nomeDoContrato}</p>
         <div className="flex items-center flex-wrap grow justify-between px-6">
@@ -77,56 +88,52 @@ function PosVendaCard({ project, getUpdates }) {
                 new Date(),
                 new Date(infoHolder.jornada?.dataUltimoContato)
               ) > 7 ? (
-                <button
-                  onClick={() => {
+                <input
+                  type="datetime-local"
+                  onChange={(e) => {
                     handleChanges({
                       jornada: {
                         ...infoHolder.jornada,
-                        dataUltimoContato: new Date().toISOString(),
+                        dataUltimoContato: new Date(e.target.value),
                       },
                     });
                     setInfo({
                       ...infoHolder,
                       jornada: {
                         ...infoHolder.jornada,
-                        dataUltimoContato: new Date().toISOString(),
+                        dataUltimoContato: new Date(e.target.value),
                       },
                     });
                   }}
-                  className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
-                >
-                  CONTATO REALIZADO?
-                </button>
+                  className="font-bold bg-[#15599a] w-fit text-white  p-2 rounded"
+                />
               ) : (
-                <p className="text-gray-600 text-center">
-                  {infoHolder.jornada?.dataUltimoContato != undefined
-                    ? new Date(
-                        infoHolder.jornada.dataUltimoContato
-                      ).toLocaleDateString()
-                    : "-"}
+                <p>
+                  {new Date(
+                    infoHolder.jornada?.dataUltimoContato
+                  ).toLocaleDateString()}
                 </p>
               )
             ) : (
-              <button
-                onClick={() => {
+              <input
+                type="datetime-local"
+                onChange={(e) => {
                   handleChanges({
                     jornada: {
                       ...infoHolder.jornada,
-                      dataUltimoContato: new Date().toISOString(),
+                      dataUltimoContato: new Date(e.target.value).toISOString(),
                     },
                   });
                   setInfo({
                     ...infoHolder,
                     jornada: {
                       ...infoHolder.jornada,
-                      dataUltimoContato: new Date().toISOString(),
+                      dataUltimoContato: new Date(e.target.value).toISOString(),
                     },
                   });
                 }}
-                className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded "
-              >
-                CONTATO REALIZADO?
-              </button>
+                className="font-bold bg-[#15599a] w-fit text-white p-2 rounded"
+              />
             )}
             <div className="flex flex-col w-[350px] items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">

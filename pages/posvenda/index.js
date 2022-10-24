@@ -181,7 +181,16 @@ function Posvenda({ credentials, setCredentials }) {
               />
             ) : (
               <div
-                className="flex justify-between w-1/2 border border-gray-200 p-3 hover:bg-blue-100"
+                className={`flex justify-between w-1/2 ${
+                  project.jornada?.dataUltimoContato
+                    ? getDateDiff(
+                        new Date(),
+                        new Date(project.jornada?.dataUltimoContato)
+                      ) > 7
+                      ? "border-4 border-red-400"
+                      : "border border-gray-300"
+                    : "border-4 border-red-400"
+                } hover:bg-blue-100 px-2`}
                 key={index}
               >
                 <p className="text-center font-bold">

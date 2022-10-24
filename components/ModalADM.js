@@ -1301,6 +1301,10 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         value: "AGUARDANDO COMPRA",
                       },
                       {
+                        label: "EM ROTA",
+                        value: "EM ROTA",
+                      },
+                      {
                         label: "ENTREGUE",
                         value: "ENTREGUE",
                       },

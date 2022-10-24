@@ -1289,7 +1289,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <SelectInput
                     label={"STATUS DA ENTREGA"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.compra?.statusEntrega
                         ? infoHolder.compra?.statusEntrega

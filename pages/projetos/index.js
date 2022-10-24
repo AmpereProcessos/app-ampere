@@ -111,7 +111,10 @@ function Projetos({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      if (!storedCredentials.accessibleRoutes.includes("Projetos")) {
+      if (
+        !credentials.accessibleRoutes.includes("Projetos") &&
+        !credentials.accessibleRoutes.includes("Pós-Venda")
+      ) {
         router.push("/");
       } else {
         getProjects();
@@ -120,7 +123,10 @@ function Projetos({ credentials, setCredentials }) {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (!credentials.accessibleRoutes.includes("Projetos")) {
+        if (
+          !credentials.accessibleRoutes.includes("Projetos") &&
+          !credentials.accessibleRoutes.includes("Pós-Venda")
+        ) {
           router.push("/");
         } else {
           getProjects();

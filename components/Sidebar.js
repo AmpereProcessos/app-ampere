@@ -100,18 +100,21 @@ function Sidebar({ credentials }) {
               </Link>
             )
           : false}
-        {credentials.accessibleRoutes != undefined
-          ? credentials?.accessibleRoutes.includes("Projetos") && (
-              <Link href="/projetos">
-                <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <MdEngineering
-                    style={{ color: "#15599a", fontSize: "20px" }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">Projetos</p>
-                </div>
-              </Link>
-            )
-          : false}
+        {credentials.accessibleRoutes != undefined ? (
+          credentials?.accessibleRoutes.includes("Projetos") ||
+          credentials?.accessibleRoutes.includes("Pós-Venda") ? (
+            <Link href="/projetos">
+              <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <MdEngineering style={{ color: "#15599a", fontSize: "20px" }} />
+                <p className="pl-3 text-xs text-gray-600">Projetos</p>
+              </div>
+            </Link>
+          ) : (
+            false
+          )
+        ) : (
+          false
+        )}
         {credentials.accessibleRoutes != undefined
           ? credentials?.accessibleRoutes.includes("Obras") && (
               <Link href="/obras">

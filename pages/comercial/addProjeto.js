@@ -30,7 +30,7 @@ const validation = {
   },
   nomeDoProjeto: {
     test(value) {
-      return value.trim().length < 10;
+      return value.trim().length < 2;
     },
     msg: "Por favor, preencha um nome válido",
   },
@@ -192,9 +192,9 @@ function NovoProjeto({ credentials, setCredentials }) {
     },
     contrato: {
       status: "NÃO DEFINIDO",
-      dataSolicitacao: new Date(), // formatar como data
-      dataLiberacao: new Date(), // formatar como data
-      dataAssinatura: new Date(), // formatar como data
+      dataSolicitacao: null, // formatar como data
+      dataLiberacao: null, // formatar como data
+      dataAssinatura: null, // formatar como data
       formaAssinatura: "NÃO DEFINIDO",
     },
     pagamento: {

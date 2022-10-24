@@ -5,6 +5,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 // casa em construção (Tais)
 import { useRouter } from "next/router";
 import ModalADM from "../../components/ModalADM";
+import DateInput from "../../components/DateInput";
 function Administracao({ credentials, setCredentials }) {
   var editor;
   const router = useRouter();
@@ -13,6 +14,7 @@ function Administracao({ credentials, setCredentials }) {
   const [filters, setFilters] = useState({
     contratoFilter: [],
     pagamentoFilter: [],
+    dataSaidaDeObra:null,
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -40,6 +42,12 @@ function Administracao({ credentials, setCredentials }) {
     } else if (filters.contratoFilter.length > 0) {
       newArr = projects.filter((project) =>
         filters.contratoFilter.includes(project.contrato.status)
+      );
+    }
+    if (filters.dataSaidaDeObra) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        new Date(call.obra.saida) > new Date(filters.dataSaidaDeObra)
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -99,6 +107,14 @@ function Administracao({ credentials, setCredentials }) {
           </p>
         </div>
         <div className="flex gap-x-2">
+        <DateInput
+            label={"Saida de obra posterior a"}
+            editable={true}
+            value={filters.dataSaidaDeObra ? new Date(filters.dataSaidaDeObra).toISOString().slice(0, 10) : ''}
+            handleChange={(value) => {
+              setFilters({...filters,dataSaidaDeObra: new Date(value)})
+            }}
+          />
           <Select
             isMulti
             placeholder="STATUS CONTRATO"
@@ -200,7 +216,7 @@ function Administracao({ credentials, setCredentials }) {
           handleUpdates={handleUpdates}
           project={modalProject}
           editor={
-            credentials && credentials.accessibleRoutes.includes("PPS")
+            credentials && credentials.accessibleRoutes.includes("ADM")
               ? true
               : false
           }

@@ -63,7 +63,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
     }
   }
   console.log(changes);
-  console.log(infoHolder.pagamento);
+  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -1618,6 +1618,98 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
+                                    <SelectInput
+                    label={"EQUIPE RESPONSÁVEL"}
+                    editable={false}
+                    value={
+                      infoHolder.obra?.equipeResp != undefined &&
+                      infoHolder.obra?.equipeResp != "-"
+                        ? infoHolder.obra?.equipeResp == "TERCEIROS" ||
+                          infoHolder.obra?.equipeResp == "TERCERIZADOS" ||
+                          infoHolder.obra?.equipeResp == "OUTROS"
+                          ? "OUTROS"
+                          : infoHolder.obra?.equipeResp
+                        : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      {
+                        label: "EQUIPE 1 - JOSÉ ROBERTO",
+                        value: "EQUIPE 1 - JOSÉ ROBERTO",
+                      },
+                      {
+                        label: "EQUIPE 2 - EDUARDO",
+                        value: "EQUIPE 2-EDUARDO",
+                      },
+                      {
+                        label: "EQUIPE 3 - EDMAR",
+                        value: "EQUIPE 3-EDIMAR",
+                      },
+                      {
+                        label: "EQUIPE 4 - ERICK",
+                        value: "EQUIPE 4-ERICK",
+                      },
+                      {
+                        label: "EQUIPE 5 - JUNIN",
+                        value: "EQUIPE 5-JUNIN",
+                      },
+                      {
+                        label: "EQUIPE 6 - FELIPE",
+                        value: "EQUIPE 6-FELIPE",
+                      },
+                      {
+                        label: "EQUIPE 7 - ADENILSON",
+                        value: "EQUIPE 7- ADENILSON",
+                      },
+                      {
+                        label: "EQUIPE 8 - GERSON",
+                        value: "EQUIPE 8-GERSON",
+                      },
+                      {
+                        label: "EQUIPE 9 - REGINALDO",
+                        value: "EQUIPE 9 - REGINALDO",
+                      },
+                      {
+                        label: "EQUIPE 10 - LUIZ",
+                        value: "EQUIPE 10 - LUIZ",
+                      },
+                      {
+                        label: "EQUIPE 11 - GILMAR",
+                        value: "EQUIPE 11 - GILMAR",
+                      },
+                      {
+                        label: "EQUIPE 12 - MARCUS V.",
+                        value: "EQUIPE 12 - MARCUS V.",
+                      },
+                      {
+                        label: "EQUIPE 13 - EDUARDO FRANCO",
+                        value: "EQUIPE 13 - EDUARDO FRANCO",
+                      },
+                      {
+                        label: "EQUIPE 15 - MARCOS B.",
+                        value: "EQUIPE 15 - MARCOS B.",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        obra: {
+                          ...infoHolder.obra,
+                          equipeResp: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        obra: {
+                          ...infoHolder.obra,
+                          equipeResp: value,
+                        },
+                      });
+                    }}
+                  />
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
@@ -1694,7 +1786,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <NumberInput
                     tag={"R$"}
                     label={"Custos em insumos"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.material?.efetivoCustos != undefined &&
                       infoHolder.material?.efetivoCustos != "#VALUE!"

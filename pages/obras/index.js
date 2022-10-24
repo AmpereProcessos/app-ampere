@@ -117,8 +117,7 @@ function Obras({ credentials, setCredentials }) {
     if (storedCredentials) {
       setCredentials(storedCredentials);
       if (
-        !storedCredentials.accessibleRoutes.includes("Obras") ||
-        !storedCredentials.accessibleRoutes.includes("Projetos")
+        !storedCredentials.accessibleRoutes.includes("Obras")
       ) {
         router.push("/");
       } else {
@@ -129,8 +128,7 @@ function Obras({ credentials, setCredentials }) {
         router.push("/auth/authHome");
       } else {
         if (
-          !credentials.accessibleRoutes.includes("Obras") ||
-          !credentials.accessibleRoutes.includes("Projetos")
+          !credentials.accessibleRoutes.includes("Obras")
         ) {
           router.push("/");
         } else {

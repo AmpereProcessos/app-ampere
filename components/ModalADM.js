@@ -977,6 +977,57 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   Informações da compra
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
+                  <SelectInput
+                    label={"STATUS DA LIBERAÇÃO"}
+                    editable={editor}
+                    value={
+                      infoHolder.compra?.statusLiberacao
+                        ? infoHolder.compra?.statusLiberacao
+                        : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      {
+                        label: "AGUARDAR CONTRATO",
+                        value: "AGUARDAR CONTRATO",
+                      },
+                      {
+                        label: "AGUARDAR PARECER DE ACESSO",
+                        value: "AGUARDAR PARECER DE ACESSO",
+                      },
+                      {
+                        label: "PAGO",
+                        value: "PAGO",
+                      },
+                      {
+                        label: "REALIZAR COMPRA",
+                        value: "REALIZAR COMPRA",
+                      },
+                      {
+                        label: "RECISÃO DE CONTRATO",
+                        value: "RECISÃO DE CONTRATO",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          statusLiberacao: value,
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          statusLiberacao: value,
+                        },
+                      });
+                    }}
+                  />
                   <DateInput
                     label={"Data de liberação p/ compra"}
                     editable={false}
@@ -1007,7 +1058,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"Data do pagamento"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.compra?.dataPagamento != undefined &&
                       infoHolder.compra?.dataPagamento != "-"
@@ -1204,6 +1255,34 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         compra: {
                           ...infoHolder.compra,
                           informacoes: value,
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
+                    label={"Previsão de entrega"}
+                    editable={editor}
+                    value={
+                      infoHolder.compra.previsaoEntrega != undefined &&
+                      infoHolder.compra.previsaoEntrega != "-"
+                        ? new Date(infoHolder.compra.previsaoEntrega)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        compra: {
+                          ...infoHolder.compra,
+                          previsaoEntrega: new Date(value).toISOString(),
+                        },
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          previsaoEntrega: new Date(value).toISOString(),
                         },
                       });
                     }}

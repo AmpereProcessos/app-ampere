@@ -108,7 +108,6 @@ function OeM({ credentials, setCredentials }) {
       }
     }
   }, []);
-  console.log(dateFilter);
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 p-1">
@@ -223,7 +222,7 @@ function OeM({ credentials, setCredentials }) {
           <div className="hidden lg:flex gap-x-2">
             <div className="flex flex-col w-fit items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
-                Saida depois de:
+                Depois de:
               </span>
               <input
                 className="text-xs w-full text-center uppercase text-gray-600 outline-none"
@@ -244,7 +243,7 @@ function OeM({ credentials, setCredentials }) {
             </div>
             <div className="flex flex-col w-fit items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
-                Saida antes de:
+                Antes de:
               </span>
               <input
                 className="text-xs w-full text-center uppercase text-gray-600 outline-none"
@@ -267,15 +266,15 @@ function OeM({ credentials, setCredentials }) {
               isMulti={false}
               placeholder={"CAMPO DE FILTRO"}
               options={[
-                { label: "SAÍDA DE OBRA", value: "saida" },
-                { label: "TROCA DO MEDIDOR", value: "data" },
+                { label: "SAÍDA DE OBRA", value: "obra.saida" },
+                { label: "TROCA DO MEDIDOR", value: "medidor.data" },
                 { label: "NÃO DEFINIDO", value: null },
               ]}
               onChange={(e) =>
                 setDateFilter({
                   ...dateFilter,
-                  field1: e.value == "saida" ? "obra" : "medidor",
-                  field2: e.value,
+                  field1: e.value != null ? e.value.split(".")[0] : null,
+                  field2: e.value != null ? e.value.split(".")[1] : null,
                 })
               }
             />

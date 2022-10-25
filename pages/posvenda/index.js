@@ -74,11 +74,10 @@ function Posvenda({ credentials, setCredentials }) {
   function ordenate() {
     let arr = filteredProjects.sort(
       (a, b) =>
-        new Date(b.jornada.dataUltimoContato) -
-        new Date(a.jornada.dataUltimoContato)
+        new Date(a.jornada?.dataUltimoContato).getTime() -
+        new Date(b.jornada?.dataUltimoContato).getTime()
     );
-    console.log(arr);
-    setFilteredProjects(arr);
+    setFilteredProjects([...arr]);
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -171,41 +170,13 @@ function Posvenda({ credentials, setCredentials }) {
         </div>
       </div>
       <div className="flex flex-wrap overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-        {filteredProjects?.map((project, index) => (
-          <div className="w-full flex justify-center" key={index}>
-            {cardMode ? (
-              <PosVendaCard
-                getUpdates={getProjects}
-                key={project._id}
-                project={project}
-              />
-            ) : (
-              <div
-                className={`flex justify-between w-1/2 ${
-                  project.jornada?.dataUltimoContato
-                    ? getDateDiff(
-                        new Date(),
-                        new Date(project.jornada?.dataUltimoContato)
-                      ) > 7
-                      ? "border-4 border-red-400"
-                      : "border border-gray-300"
-                    : "border-4 border-red-400"
-                } hover:bg-blue-100 px-2`}
-                key={index}
-              >
-                <p className="text-center font-bold">
-                  {project.nomeDoContrato}
-                </p>
-                <p className="text-center">
-                  {project.jornada.dataUltimoContato
-                    ? new Date(
-                        project.jornada?.dataUltimoContato
-                      ).toLocaleDateString()
-                    : "-"}
-                </p>
-              </div>
-            )}
-          </div>
+        {filteredProjects.map((project, index) => (
+          <PosVendaCard
+            getUpdates={getProjects}
+            key={project._id}
+            project={project}
+            cardMode={cardMode}
+          />
         ))}
       </div>
     </div>

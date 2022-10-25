@@ -65,6 +65,7 @@ function ModalSuprimentos({
     });
   }
   console.log(changes);
+  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -983,6 +984,41 @@ function ModalSuprimentos({
                       });
                     }}
                   />
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      RELATÓRIO DE COMISS. SUPRIMENTOS
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={
+                          infoHolder.comissionamento?.suprimentos ? true : false
+                        }
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            "comissionamento.suprimentos": e.target.checked,
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            comissionamento: {
+                              ...infoHolder.comissionamento,
+                              suprimentos: e.target.checked,
+                            },
+                          });
+                        }}
+                        type="checkbox"
+                        name="comissionamentoSuprimentos"
+                        id="comissionamentoSuprimentos"
+                      />
+                      <label
+                        className="ml-2"
+                        htmlFor="comissionamentoSuprimentos"
+                      >
+                        OK
+                      </label>
+                    </div>
+                  </div>
                   <div className="w-full flex items-center justify-center gap-x-4">
                     <div className="flex flex-col w-[450px] self-center mt-2 items-center">
                       <span className="uppercase font-bold font-raleway text-center text-sm">

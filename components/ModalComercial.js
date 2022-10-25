@@ -887,6 +887,41 @@ function ModalComercial({
                   CONTRATO
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      RELATÓRIO DE COMISSIONAMENTO
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={
+                          infoHolder.comissionamento?.comercial ? true : false
+                        }
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            "comissionamento.comercial": e.target.checked,
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            comissionamento: {
+                              ...infoHolder.comissionamento,
+                              comercial: e.target.checked,
+                            },
+                          });
+                        }}
+                        type="checkbox"
+                        name="comissionamentoComercial"
+                        id="comissionamentoComercial"
+                      />
+                      <label
+                        className="ml-2"
+                        htmlFor="comissionamentoComercial"
+                      >
+                        OK
+                      </label>
+                    </div>
+                  </div>
                   <SelectInput
                     label={"STATUS"}
                     editable={editor}
@@ -2426,7 +2461,7 @@ function ModalComercial({
                     </span>
                     <div className="flex">
                       <input
-                        disabled={!editor}
+                        disabled={true}
                         checked={
                           infoHolder.projeto?.projetoConcluido === "SIM"
                             ? true

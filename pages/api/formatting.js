@@ -127,7 +127,6 @@ export default async function handler(req, res) {
         acStatus: project.acstatus,
         fechamentoAC: projeto.conclusaoAC,
         projetoConcluido: project.projetoconcluido,
-        relatorioComissionamento: project.relatoriocomissionamento,
       },
       parecer: {
         statusDoParecerDeAcesso: project.statusparecerdeacesso,
@@ -144,6 +143,11 @@ export default async function handler(req, res) {
         vistoriaReprovada: project.vistoriaReprovada,
         qtdeReprovas: project.qtdeReprovasVistoria,
         motivoReprova: project.motivoReprovaVistoria,
+      },
+      comissionamento: {
+        comercial: false,
+        suprimentos: false,
+        projetos: false,
       },
       medidor: {
         data: fixDate(project.trocamedidor), // formatar como data
@@ -224,6 +228,7 @@ export default async function handler(req, res) {
   });
   return res.json(newArr);
 }
+console.log(relatoriocomissionamento);
 /*       ordensDeServico: [
         {
           servicoExecutado: '',

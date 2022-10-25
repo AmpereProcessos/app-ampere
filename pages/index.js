@@ -132,6 +132,13 @@ function Home({ credentials, setCredentials }) {
       setStatsData({ ...statsData, graphData: res.data });
     });
   }
+  function filterBirthday() {
+    let arr = clientBirthday.filter(
+      (client) =>
+        new Date(client.dataNascimento).getDate() == new Date().getDate()
+    );
+    setClientsBirthday(arr);
+  }
   {
     /** 
   useEffect(() => {
@@ -200,6 +207,7 @@ function Home({ credentials, setCredentials }) {
   
   */
   }
+  console.log(clientBirthday);
   return (
     <div className="p-6 grow">
       {/** 
@@ -393,7 +401,15 @@ function Home({ credentials, setCredentials }) {
         </div>
       </div>
       <div className="flex mt-4 grow flex-col p-4  border border-gray-200 bg-[#fff] shadow-xl">
-        <h1 className="text-gray-600 uppercase">ANIVERSARIANTES DO MÊS</h1>
+        <div className="flex w-full items-center justify-between px-4">
+          <h1 className="text-gray-600 uppercase">ANIVERSARIANTES DO MÊS</h1>
+          <button
+            onClick={filterBirthday}
+            className="p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold"
+          >
+            Aniversariando hoje
+          </button>
+        </div>
         <div className="w-full grow flex flex-wrap justify-around gap-y-2 mt-2">
           {clientBirthday.length > 0 &&
             clientBirthday?.map((client, index) => (

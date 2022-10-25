@@ -13,6 +13,10 @@ function Comercial({ credentials, setCredentials }) {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
   const [codFilter, setCodFilter] = useState(0);
+  const [dateFilter, setDateFilter] = useState({
+    after: null,
+    before: null,
+  });
   const [filters, setFilters] = useState({
     contratoFilter: [],
     pagamentoFilter: [],
@@ -43,6 +47,14 @@ function Comercial({ credentials, setCredentials }) {
     } else if (filters.contratoFilter.length > 0) {
       newArr = projects.filter((project) =>
         filters.contratoFilter.includes(project.contrato.status)
+      );
+    }
+    if (dateFilter.after && dateFilter.before) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) =>
+          call.contrato?.dataAssinatura > dateFilter.after &&
+          call.contrato?.dataAssinatura < dateFilter.before
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -121,7 +133,7 @@ function Comercial({ credentials, setCredentials }) {
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 p-1">
         <div className="flex items-center gap-x-2">
-          <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
+          <p className="font-bold uppercase text-center w-[200px] text-2xl text-[#15599a] font-raleway">
             Projetos no estágio comercial
           </p>
           <p className="font-raleway font-bold text-[#fead61]">
@@ -133,69 +145,122 @@ function Comercial({ credentials, setCredentials }) {
             </p>
           )}
         </div>
-        <div className="flex gap-x-2">
-          <input
-            value={codFilter}
-            onChange={(e) => handleCodFilter(e.target.value)}
-            className="outline-none p-1.5 w-[100px] rounded border border-gray-200 placeholder:italic"
-            type="number"
-          />
-          <input
-            type={"text"}
-            className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
-            placeholder="Digite o nome do contrato"
-            value={searchFilter}
-            onChange={(e) => handleSearchFilter(e.target.value)}
-          />
-          <Select
-            isMulti
-            placeholder="STATUS CONTRATO"
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                contratoFilter: e.map((x) => x.value),
-              })
-            }
-            options={[
-              {
-                value: "AGUARDANDO SOLICITAÇÃO",
-                label: "AGUARDANDO SOLICITAÇÃO",
-              },
-              {
-                value: "SOLICITADO",
-                label: "SOLICITADO",
-              },
-              {
-                value: "NÃO ASSINADO",
-                label: "NÃO ASSINADO",
-              },
-              {
-                value: "ASSINADO",
-                label: "ASSINADO",
-              },
-            ]}
-          />
-          <Select
-            isMulti
-            placeholder="STATUS DA PAGAMENTO"
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                pagamentoFilter: e.map((x) => x.value),
-              })
-            }
-            options={[
-              { value: "AGUARDANDO PAGAMENTO", label: "AGUARDANDO PAGAMENTO" },
-              { value: undefined, label: "NÃO DEFINIDO" },
-            ]}
-          />
-          <button
-            onClick={filterProjects}
-            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 items-center gap-x-2"
-          >
-            <p>Filtrar</p>
-            <AiOutlineSearch />
-          </button>
+        <div className="flex flex-col w-full gap-y-2">
+          <div className="flex items-center justify-around gap-x-2">
+            <input
+              value={codFilter}
+              onChange={(e) => handleCodFilter(e.target.value)}
+              className="outline-none p-1.5 w-[100px] rounded border border-gray-200 placeholder:italic"
+              type="number"
+            />
+            <input
+              type={"text"}
+              className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
+              placeholder="Digite o nome do contrato"
+              value={searchFilter}
+              onChange={(e) => handleSearchFilter(e.target.value)}
+            />
+            <div className="hidden lg:flex gap-x-2">
+              <div className="flex flex-col w-fit items-center">
+                <span className="uppercase font-bold font-raleway text-center text-sm">
+                  Contrato depois de:
+                </span>
+                <input
+                  className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                  type="date"
+                  value={
+                    dateFilter.after &&
+                    new Date(dateFilter.after).toISOString().slice(0, 10)
+                  }
+                  onChange={(e) =>
+                    setDateFilter({
+                      ...dateFilter,
+                      after: isNaN(e.target.value)
+                        ? new Date(e.target.value).toISOString()
+                        : null,
+                    })
+                  }
+                />
+              </div>
+              <div className="flex flex-col w-fit items-center">
+                <span className="uppercase font-bold font-raleway text-center text-sm">
+                  Contrato antes de:
+                </span>
+                <input
+                  className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                  type="date"
+                  value={
+                    dateFilter.before &&
+                    new Date(dateFilter.before).toISOString().slice(0, 10)
+                  }
+                  onChange={(e) =>
+                    setDateFilter({
+                      ...dateFilter,
+                      before: isNaN(e.target.value)
+                        ? new Date(e.target.value).toISOString()
+                        : null,
+                    })
+                  }
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-around gap-x-2">
+            <Select
+              isMulti
+              className="hidden lg:block"
+              placeholder="STATUS CONTRATO"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  contratoFilter: e.map((x) => x.value),
+                })
+              }
+              options={[
+                {
+                  value: "AGUARDANDO SOLICITAÇÃO",
+                  label: "AGUARDANDO SOLICITAÇÃO",
+                },
+                {
+                  value: "SOLICITADO",
+                  label: "SOLICITADO",
+                },
+                {
+                  value: "NÃO ASSINADO",
+                  label: "NÃO ASSINADO",
+                },
+                {
+                  value: "ASSINADO",
+                  label: "ASSINADO",
+                },
+              ]}
+            />
+            <Select
+              isMulti
+              placeholder="STATUS DA PAGAMENTO"
+              className="hidden lg:block"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  pagamentoFilter: e.map((x) => x.value),
+                })
+              }
+              options={[
+                {
+                  value: "AGUARDANDO PAGAMENTO",
+                  label: "AGUARDANDO PAGAMENTO",
+                },
+                { value: undefined, label: "NÃO DEFINIDO" },
+              ]}
+            />
+            <button
+              onClick={filterProjects}
+              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
+            >
+              <p>Filtrar</p>
+              <AiOutlineSearch />
+            </button>
+          </div>
         </div>
       </div>
       <div className="flex  justify-around gap-3 mt-4 flex-wrap">

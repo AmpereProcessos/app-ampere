@@ -215,6 +215,7 @@ export default async function handler(req, res) {
         sistemaLigado: done(project.sistemaligado),
         jornadaConcluida: project.jornadaconcluida,
         dataNps: fixDate(project.datanps),
+        obsJornada: project.obsjornada,
       },
       nps: project.nps,
     };

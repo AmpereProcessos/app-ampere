@@ -9,11 +9,13 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
     const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
     return diffInDays;
   }
+  const [obsJornada, setObsJornada] = useState(project.jornada?.obsJornada);
   function handleChanges(mudancas) {
     axios.post(`/api/projects/update/${project._id}`, mudancas).then((res) => {
       getUpdates();
     });
   }
+  console.log(obsJornada);
   return (
     <>
       {cardMode ? (
@@ -431,8 +433,21 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
           </div>
           <div className="flex flex-col gap-y-2 mt-1 py-1 border-t border-gray-200">
             <h1 className="text-[#fead61] font-bold">OBSERVAÇÕES</h1>
-            <textarea className="text-center outline-none text-xs py-2 w-full border border-gray-200 resize-none h-[40px]" />
-            <button className="font-bold bg-[#15599a] self-end w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-1 rounded">
+            <textarea
+              value={obsJornada}
+              onChange={(e) => {
+                setObsJornada(e.target.value);
+              }}
+              className="text-center outline-none text-xs py-2 w-full border border-gray-200 resize-none h-[40px]"
+            />
+            <button
+              onClick={() =>
+                handleChanges({
+                  "jornada.obsJornada": obsJornada,
+                })
+              }
+              className="font-bold bg-[#15599a] self-end w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-1 rounded"
+            >
               SALVAR
             </button>
           </div>

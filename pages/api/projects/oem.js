@@ -7,7 +7,14 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            "obra.statusDaObra": "CONCLUIDA",
+            "obra.statusDaObra": {
+              $in: [
+                "AGENDADA",
+                "AGUARDANDO AGENDAMENTO",
+                "EM ANDAMENTO",
+                "CONCLUIDA",
+              ],
+            },
           },
         },
         {
@@ -20,3 +27,8 @@ export default async function handler(req, res) {
     res.json(oem);
   }
 }
+export const config = {
+  api: {
+    responseLimit: "8mb",
+  },
+};

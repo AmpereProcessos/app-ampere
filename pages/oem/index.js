@@ -12,11 +12,19 @@ function OeM({ credentials, setCredentials }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [filters, setFilters] = useState({
     cidadeFilter: [],
+    equipResp: [],
+  });
+  const [dateFilter, setDateFilter] = useState({
+    after: null,
+    before: null,
+    field1: null,
+    field2: null,
   });
   const [searchFilter, setSearchFilter] = useState("");
   const [modalProject, setModalProject] = useState({});
   function getProjects() {
     axios.get("/api/projects/oem").then((res) => {
+      console.log(res.data[0]["contrato"]["status"]);
       setProjects(res.data);
       setFilteredProjects(res.data);
     });
@@ -40,10 +48,39 @@ function OeM({ credentials, setCredentials }) {
         filters.cidadeFilter.includes(call.cidade)
       );
     }
+    if (filters.equipResp.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.equipResp.includes(call.obra?.equipeResp)
+      );
+    }
+    if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) =>
+          call[dateFilter.field1][dateFilter.field2] > dateFilter.after &&
+          call[dateFilter.field1][dateFilter.field2] < dateFilter.before
+      );
+      console.log(newArr);
+    }
     if (!newArr) setFilteredProjects(projects);
     else {
       setFilteredProjects(newArr);
     }
+  }
+  function getListCumulativeModules() {
+    var totalSum = 0;
+    for (var i = 0; i < filteredProjects.length; i++) {
+      let modules = filteredProjects[i].sistema.qtdeModulos
+        ? filteredProjects[i].sistema.qtdeModulos
+        : null;
+      if (isNaN(modules)) {
+        totalSum = totalSum;
+      } else {
+        totalSum = totalSum + modules;
+      }
+    }
+    return totalSum.toFixed(0);
   }
   function handleUpdates(id) {
     getProjects();
@@ -71,23 +108,101 @@ function OeM({ credentials, setCredentials }) {
       }
     }
   }, []);
+  console.log(dateFilter);
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 p-1">
         <div className="flex items-center gap-x-2">
           <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
-            Projetos no estágio de operação e manutenção
+            Projetos no estágio de O&M
           </p>
           <p className="font-raleway font-bold text-[#fead61]">
             ({filteredProjects.length})
           </p>
+          {filteredProjects && (
+            <p className="font-raleway font-bold text-[#fead61]">
+              ({getListCumulativeModules().replace(".", ",")} modulos)
+            </p>
+          )}
         </div>
-        <div className="flex flex-wrap gap-2 items-center">
+        <div className="flex flex-wrap gap-2 justify-center items-center">
           <input
             className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
             placeholder="Digite o nome do contrato"
             value={searchFilter}
             onChange={(e) => handleSearchFilter(e.target.value)}
+          />
+          <Select
+            isMulti
+            placeholder="EQUIP.RESP"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                equipResp: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                label: "EQUIPE 1 - JOSÉ ROBERTO",
+                value: "EQUIPE 1 - JOSÉ ROBERTO",
+              },
+              {
+                label: "EQUIPE 2 - EDUARDO",
+                value: "EQUIPE 2-EDUARDO",
+              },
+              {
+                label: "EQUIPE 3 - EDMAR",
+                value: "EQUIPE 3-EDIMAR",
+              },
+              {
+                label: "EQUIPE 4 - ERICK",
+                value: "EQUIPE 4-ERICK",
+              },
+              {
+                label: "EQUIPE 5 - JUNIN",
+                value: "EQUIPE 5-JUNIN",
+              },
+              {
+                label: "EQUIPE 6 - FELIPE",
+                value: "EQUIPE 6-FELIPE",
+              },
+              {
+                label: "EQUIPE 7 - ADENILSON",
+                value: "EQUIPE 7- ADENILSON",
+              },
+              {
+                label: "EQUIPE 8 - GERSON",
+                value: "EQUIPE 8-GERSON",
+              },
+              {
+                label: "EQUIPE 9 - REGINALDO",
+                value: "EQUIPE 9 - REGINALDO",
+              },
+              {
+                label: "EQUIPE 10 - LUIZ",
+                value: "EQUIPE 10 - LUIZ",
+              },
+              {
+                label: "EQUIPE 11 - GILMAR",
+                value: "EQUIPE 11 - GILMAR",
+              },
+              {
+                label: "EQUIPE 12 - MARCUS V.",
+                value: "EQUIPE 12 - MARCUS V.",
+              },
+              {
+                label: "EQUIPE 13 - EDUARDO FRANCO",
+                value: "EQUIPE 13 - EDUARDO FRANCO",
+              },
+              {
+                label: "EQUIPE 15 - MARCOS B.",
+                value: "EQUIPE 15 - MARCOS B.",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
           />
           <Select
             isMulti
@@ -104,7 +219,67 @@ function OeM({ credentials, setCredentials }) {
                 value: cidade,
               };
             })}
-          />
+          />{" "}
+          <div className="hidden lg:flex gap-x-2">
+            <div className="flex flex-col w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                Saida depois de:
+              </span>
+              <input
+                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                type="date"
+                value={
+                  dateFilter.after &&
+                  new Date(dateFilter.after).toISOString().slice(0, 10)
+                }
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    after: isNaN(e.target.value)
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <div className="flex flex-col w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                Saida antes de:
+              </span>
+              <input
+                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                type="date"
+                value={
+                  dateFilter.before &&
+                  new Date(dateFilter.before).toISOString().slice(0, 10)
+                }
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    before: isNaN(e.target.value)
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <Select
+              isMulti={false}
+              placeholder={"CAMPO DE FILTRO"}
+              options={[
+                { label: "SAÍDA DE OBRA", value: "saida" },
+                { label: "TROCA DO MEDIDOR", value: "data" },
+                { label: "NÃO DEFINIDO", value: null },
+              ]}
+              onChange={(e) =>
+                setDateFilter({
+                  ...dateFilter,
+                  field1: e.value == "saida" ? "obra" : "medidor",
+                  field2: e.value,
+                })
+              }
+            />
+          </div>
           <button
             onClick={filterProjects}
             className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"

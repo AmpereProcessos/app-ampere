@@ -411,10 +411,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dadosCemig: {
-                          ...infoHolder.dadosCemig,
-                          titularProjeto: value,
-                        },
+                        "dadosCemig.titularProjeto": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -436,10 +433,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dadosCemig: {
-                          ...infoHolder.dadosCemig,
-                          numeroInstalacao: value,
-                        },
+                        "dadosCemig.numeroInstalacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -466,10 +460,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dadosCemig: {
-                          ...infoHolder.dadosCemig,
-                          distCreditos: value,
-                        },
+                        "dadosCemig.distCreditos": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -493,10 +484,7 @@ function ModalProjetos({
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          dadosCemig: {
-                            ...infoHolder.dadosCemig,
-                            qtdeDistCreditos: Number(value),
-                          },
+                          "dadosCemig.qtdeDistCreditos": Number(value),
                         });
                         setInfo({
                           ...infoHolder,
@@ -526,12 +514,9 @@ function ModalProjetos({
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          visitaTecnica: {
-                            ...infoHolder.visitaTecnica,
-                            status: e.target.checked
-                              ? "REALIZADA"
-                              : "PENDÊNCIA",
-                          },
+                          "visitaTecnica.status": e.target.checked
+                            ? "REALIZADA"
+                            : "PENDÊNCIA",
                         });
                         setInfo({
                           ...infoHolder,
@@ -562,10 +547,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          tecnico: value,
-                        },
+                        "visitaTecnica.tecnico": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -587,10 +569,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          tipoDaTelha: value,
-                        },
+                        "visitaTecnica.tipoDaTelha": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -645,7 +624,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, tipo: value },
+                        "padrao.tipo": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -669,7 +648,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, respInstalacao: value },
+                        "padrao.respInstalacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -685,22 +664,21 @@ function ModalProjetos({
                       <input
                         disabled={!editor}
                         checked={
-                          infoHolder.projeto.aumentoDeCarga === "SIM"
+                          infoHolder.projeto?.aumentoDeCarga === "SIM"
                             ? true
                             : false
                         }
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
-                              acStatus:
-                                e.target.checked &&
-                                infoHolder.acstatus != "REALIZADO"
-                                  ? "PÊNDENCIA"
-                                  : undefined,
-                            },
+                            "projeto.aumentoDeCarga": e.target.checked
+                              ? "SIM"
+                              : "NÃO",
+                            "projeto.acStatus":
+                              e.target.checked &&
+                              infoHolder.acstatus != "REALIZADO"
+                                ? "PÊNDENCIA"
+                                : undefined,
                           });
                           setInfo({
                             ...infoHolder,
@@ -740,12 +718,9 @@ function ModalProjetos({
                           onChange={(e) => {
                             setChanges({
                               ...changes,
-                              projeto: {
-                                ...infoHolder.projeto,
-                                acStatus: e.target.checked
-                                  ? "REALIZADO"
-                                  : "PENDÊNCIA",
-                              },
+                              "projeto.acStatus": e.target.checked
+                                ? "REALIZADO"
+                                : "PENDÊNCIA",
                             });
                             setInfo({
                               ...infoHolder,
@@ -783,10 +758,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          saidaDoCliente: value,
-                        },
+                        "visitaTecnica.saidaDoCliente": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -808,10 +780,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          amperagem: value,
-                        },
+                        "visitaTecnica.amperagem": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -835,10 +804,7 @@ function ModalProjetos({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            padrao: {
-                              ...infoHolder.padrao,
-                              caixaConjugada: e.target.checked,
-                            },
+                            "padrao.caixaConjugada": e.target.checked,
                           });
                           setInfo({
                             ...infoHolder,
@@ -1046,10 +1012,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          iniciar: value,
-                        },
+                        "projeto.iniciar": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1082,19 +1045,13 @@ function ModalProjetos({
                       };
                     })}
                     handleChange={(value) => {
-                      console.log(value);
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          projetista: {
-                            nome: value,
-                            codigo:
-                              projetistas.filter(
-                                (projetista) => projetista.nome == value
-                              )[0].cod || "-",
-                          },
-                        },
+                        "projeto.projetista.nome": value,
+                        "projeto.projetista.codigo":
+                          projetistas.filter(
+                            (projetista) => projetista.nome == value
+                          )[0].cod || "-",
                       });
                       setInfo({
                         ...infoHolder,
@@ -1125,10 +1082,9 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          dataAssDocumentacao: new Date(value).toISOString(),
-                        },
+                        "projeto.dataAssDocumentacao": new Date(
+                          value
+                        ).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1150,10 +1106,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          formaAssDocumentacao: value,
-                        },
+                        "projeto.formaAssDocumentacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1192,10 +1145,9 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        parecer: {
-                          ...infoHolder.parecer,
-                          dataParecerDeAcesso: new Date(value).toISOString(),
-                        },
+                        "parecer.dataParecerDeAcesso": new Date(
+                          value
+                        ).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1283,10 +1235,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        parecer: {
-                          ...infoHolder.parecer,
-                          statusDoParecerDeAcesso: value,
-                        },
+                        "parecer.statusDoParecerDeAcesso": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1300,7 +1249,7 @@ function ModalProjetos({
                   <TextInput
                     label={"PENDÊNCIA DO PARECER"}
                     value={
-                      infoHolder.parecer.pendencias
+                      infoHolder.parecer?.pendencias
                         ? infoHolder.parecer.pendencias
                         : ""
                     }
@@ -1308,10 +1257,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        parecer: {
-                          ...infoHolder.parecer,
-                          pendencias: value,
-                        },
+                        "parecer.pendencias": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1335,10 +1281,7 @@ function ModalProjetos({
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          parecer: {
-                            ...infoHolder.parecer,
-                            qtdeDiasObraDeRede: Number(value),
-                          },
+                          "parecer.qtdeDiasObraDeRede": Number(value),
                         });
                         setInfo({
                           ...infoHolder,
@@ -1365,12 +1308,9 @@ function ModalProjetos({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              diagramaUnifilar: e.target.checked
-                                ? "Ok"
-                                : "PENDÊNCIA",
-                            },
+                            "projeto.diagramaUnifilar": e.target.checked
+                              ? "Ok"
+                              : "PENDÊNCIA",
                           });
                           setInfo({
                             ...infoHolder,
@@ -1406,12 +1346,9 @@ function ModalProjetos({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              desenhoTelhado: e.target.checked
-                                ? "OK"
-                                : "PENDÊNCIA",
-                            },
+                            "projeto.desenhoTelhado": e.target.checked
+                              ? "OK"
+                              : "PENDÊNCIA",
                           });
                           setInfo({
                             ...infoHolder,
@@ -1449,10 +1386,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          mapaDeMicro: value,
-                        },
+                        "projeto.mapaDeMicro": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1477,10 +1411,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        vistoria: {
-                          ...infoHolder.vistoria,
-                          dataPedido: new Date(value).toISOString(),
-                        },
+                        "vistoria.dataPedido": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1514,10 +1445,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        vistoria: {
-                          ...infoHolder.vistoria,
-                          status: value,
-                        },
+                        "vistoria.status": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1542,10 +1470,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        medidor: {
-                          ...infoHolder.medidor,
-                          data: new Date(value).toISOString(),
-                        },
+                        "medidor.data": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1575,10 +1500,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        medidor: {
-                          ...infoHolder.medidor,
-                          status: value,
-                        },
+                        "medidor.status": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1605,12 +1527,9 @@ function ModalProjetos({
                           onChange={(e) => {
                             setChanges({
                               ...changes,
-                              parecer: {
-                                ...infoHolder.parecer,
-                                parecerReprovado: e.target.checked
-                                  ? "SIM"
-                                  : "NÃO",
-                              },
+                              "parecer.parecerReprovado": e.target.checked
+                                ? "SIM"
+                                : "NÃO",
                             });
                             setInfo({
                               ...infoHolder,
@@ -1643,10 +1562,7 @@ function ModalProjetos({
                         handleChange={(value) => {
                           setChanges({
                             ...changes,
-                            parecer: {
-                              ...infoHolder.parecer,
-                              qtdeReprovas: Number(value),
-                            },
+                            "parecer.qtdeReprovas": Number(value),
                           });
                           setInfo({
                             ...infoHolder,
@@ -1675,10 +1591,7 @@ function ModalProjetos({
                           onChange={(e) => {
                             setChanges({
                               ...changes,
-                              parecer: {
-                                ...infoHolder.parecer,
-                                motivoReprova: e.target.value,
-                              },
+                              "parecer.motivoReprova": e.target.value,
                             });
                             setInfo({
                               ...infoHolder,
@@ -1702,19 +1615,16 @@ function ModalProjetos({
                         <input
                           disabled={!editor}
                           checked={
-                            infoHolder.vistoria.vistoriaReprovada === "SIM"
+                            infoHolder.vistoria?.vistoriaReprovada === "SIM"
                               ? true
                               : false
                           }
                           onChange={(e) => {
                             setChanges({
                               ...changes,
-                              vistoria: {
-                                ...infoHolder.vistoria,
-                                vistoriaReprovada: e.target.checked
-                                  ? "SIM"
-                                  : "NÃO",
-                              },
+                              "vistoria.vistoriaReprovada": e.target.checked
+                                ? "SIM"
+                                : "NÃO",
                             });
                             setInfo({
                               ...infoHolder,
@@ -1747,10 +1657,7 @@ function ModalProjetos({
                         handleChange={(value) => {
                           setChanges({
                             ...changes,
-                            vistoria: {
-                              ...infoHolder.vistoria,
-                              qtdeReprovas: Number(value),
-                            },
+                            "vistoria.qtdeReprovas": Number(value),
                           });
                           setInfo({
                             ...infoHolder,
@@ -1779,10 +1686,7 @@ function ModalProjetos({
                           onChange={(e) => {
                             setChanges({
                               ...changes,
-                              vistoria: {
-                                ...infoHolder.vistoria,
-                                motivoReprova: e.target.value,
-                              },
+                              "vistoria.motivoReprova": e.target.value,
                             });
                             setInfo({
                               ...infoHolder,
@@ -1813,12 +1717,10 @@ function ModalProjetos({
                             onChange={(e) => {
                               setChanges({
                                 ...changes,
-                                vistoria: {
-                                  ...infoHolder.vistoria,
-                                  equipeDeCampoNecessaria: e.target.checked
-                                    ? "SIM"
-                                    : "NÃO",
-                                },
+                                "vistoria.equipeDeCampoNecessaria": e.target
+                                  .checked
+                                  ? "SIM"
+                                  : "NÃO",
                               });
                               setInfo({
                                 ...infoHolder,
@@ -1859,12 +1761,9 @@ function ModalProjetos({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              projetoConcluido: e.target.checked
-                                ? "SIM"
-                                : "NÃO",
-                            },
+                            "projeto.projetoConcluido": e.target.checked
+                              ? "SIM"
+                              : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
@@ -2067,10 +1966,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          laudo: value,
-                        },
+                        "obra.laudo": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2096,12 +1992,9 @@ function ModalProjetos({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              statusSolicitacao: e.target.checked
-                                ? "SOLICITADA"
-                                : "NÃO SOLICITADA",
-                            },
+                            "obra.statusSolicitacao": e.target.checked
+                              ? "SOLICITADA"
+                              : "NÃO SOLICITADA",
                           });
                           setInfo({
                             ...infoHolder,
@@ -2136,10 +2029,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          entrada: new Date(value).toISOString(),
-                        },
+                        "obra.entrada": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -2164,10 +2054,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          saida: new Date(value).toISOString(),
-                        },
+                        "obra.saida": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -2256,10 +2143,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          equipeResp: value,
-                        },
+                        "obra.equipeResp": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2283,10 +2167,7 @@ function ModalProjetos({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              checklist: e.target.checked ? "SIM" : "NÃO",
-                            },
+                            "obra.checklist": e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
@@ -2318,10 +2199,7 @@ function ModalProjetos({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              trafo: e.target.checked ? "SIM" : "NÃO",
-                            },
+                            "obra.trafo": e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
@@ -2377,10 +2255,7 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          statusDaObra: value,
-                        },
+                        "obra.statusDaObra": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2408,10 +2283,7 @@ function ModalProjetos({
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          obra: {
-                            ...infoHolder.obra,
-                            observacoes: e.target.value,
-                          },
+                          "obra.observacoes": e.target.value,
                         });
                         setInfo({
                           ...infoHolder,

@@ -340,13 +340,10 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        conferencias: {
-                          ...infoHolder.conferencias,
-                          usinaLigada: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "conferencias.usinaLigada.data": new Date(
+                          value
+                        ).toISOString(),
+                        "conferencias.usinaLigada.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -377,13 +374,10 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        conferencias: {
-                          ...infoHolder.conferencias,
-                          monitoramentoFeito: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "conferencias.monitoramentoFeito.data": new Date(
+                          value
+                        ).toISOString(),
+                        "conferencias.monitoramentoFeito.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -411,10 +405,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        app: {
-                          ...infoHolder.app,
-                          data: new Date(value).toISOString(),
-                        },
+                        "app.data": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -440,13 +431,10 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        conferencias: {
-                          ...infoHolder.conferencias,
-                          energiaInjetada: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "conferencias.energiaInjetada.data": new Date(
+                          value
+                        ).toISOString(),
+                        "conferencias.energiaInjetada.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -468,10 +456,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        app: {
-                          ...infoHolder.app,
-                          login: value,
-                        },
+                        "app.login": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -490,10 +475,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        app: {
-                          ...infoHolder.app,
-                          senha: value,
-                        },
+                        "app.senha": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -508,7 +490,7 @@ function ModalOeM({
                     label={"RELATÓRIO 1"}
                     editable={editor}
                     value={
-                      infoHolder.relatorios.envioUm.data != undefined &&
+                      infoHolder.relatorios.envioUm?.data != undefined &&
                       infoHolder.relatorios.envioUm.data != "-"
                         ? new Date(infoHolder.relatorios.envioUm.data)
                             .toISOString()
@@ -518,13 +500,10 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioUm: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "relatorios.envioUm.data": new Date(
+                          value
+                        ).toISOString(),
+                        "relatorios.envioUm.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -542,7 +521,7 @@ function ModalOeM({
                     label={"RELATÓRIO 2"}
                     editable={editor}
                     value={
-                      infoHolder.relatorios.envioDois.data != undefined &&
+                      infoHolder.relatorios.envioDois?.data != undefined &&
                       infoHolder.relatorios.envioDois.data != "-"
                         ? new Date(infoHolder.relatorios.envioDois.data)
                             .toISOString()
@@ -552,13 +531,10 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioDois: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "relatorios.envioDois.data": new Date(
+                          value
+                        ).toISOString(),
+                        "relatorios.envioDois.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -586,13 +562,10 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioTres: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "relatorios.envioTres.data": new Date(
+                          value
+                        ).toISOString(),
+                        "relatorios.envioTres.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -620,13 +593,10 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioQuatro: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "relatorios.envioQuatro.data": new Date(
+                          value
+                        ).toISOString(),
+                        "relatorios.envioQuatro.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -644,7 +614,7 @@ function ModalOeM({
                     label={"MANUTENÇÃO PREVENTIVA"}
                     editable={editor}
                     value={
-                      infoHolder.manutencaoPreventiva.data != undefined &&
+                      infoHolder.manutencaoPreventiva?.data != undefined &&
                       infoHolder.manutencaoPreventiva.data != "-"
                         ? new Date(infoHolder.manutencaoPreventiva.data)
                             .toISOString()
@@ -654,11 +624,10 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        manutencaoPreventiva: {
-                          ...infoHolder.manutencaoPreventiva,
-                          data: new Date(value).toISOString(),
-                          status: "REALIZADO",
-                        },
+                        "manutencaoPreventiva.data": new Date(
+                          value
+                        ).toISOString(),
+                        "manutencaoPreventiva.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,

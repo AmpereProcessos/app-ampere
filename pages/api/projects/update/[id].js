@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     let obj = await collection.findOne({ _id: ObjectId(req.query.id) });
     var newObj = await collection.updateOne(
       { _id: ObjectId(req.query.id) },
-      { $set: { ...obj, ...req.body } }
+      { $set: { ...req.body } }
     );
     // var newObj = { ...obj, ...req.body };
     return res.json(newObj);

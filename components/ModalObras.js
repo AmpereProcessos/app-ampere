@@ -405,10 +405,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          laudo: value,
-                        },
+                        "obra.laudo": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -427,22 +424,21 @@ function ModalObras({
                       <input
                         disabled={!editor}
                         checked={
-                          infoHolder.projeto.aumentoDeCarga === "SIM"
+                          infoHolder.projeto?.aumentoDeCarga === "SIM"
                             ? true
                             : false
                         }
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
-                              acStatus:
-                                e.target.checked &&
-                                infoHolder.acstatus != "REALIZADO"
-                                  ? "PÊNDENCIA"
-                                  : undefined,
-                            },
+                            "projeto.aumentoDeCarga": e.target.checked
+                              ? "SIM"
+                              : "NÃO",
+                            "projeto.acStatus":
+                              e.target.checked &&
+                              infoHolder.acstatus != "REALIZADO"
+                                ? "PÊNDENCIA"
+                                : undefined,
                           });
                           setInfo({
                             ...infoHolder,
@@ -482,12 +478,9 @@ function ModalObras({
                           onChange={(e) => {
                             setChanges({
                               ...changes,
-                              projeto: {
-                                ...infoHolder.projeto,
-                                acStatus: e.target.checked
-                                  ? "REALIZADO"
-                                  : "PENDÊNCIA",
-                              },
+                              "projeto.acStatus": e.target.checked
+                                ? "REALIZADO"
+                                : "PENDÊNCIA",
                             });
                             setInfo({
                               ...infoHolder,
@@ -524,12 +517,9 @@ function ModalObras({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              statusSolicitacao: e.target.checked
-                                ? "SOLICITADA"
-                                : "NÃO SOLICITADA",
-                            },
+                            "obra.statusSolicitacao": e.target.checked
+                              ? "SOLICITADA"
+                              : "NÃO SOLICITADA",
                           });
                           setInfo({
                             ...infoHolder,
@@ -585,10 +575,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          entrada: new Date(value).toISOString(),
-                        },
+                        "obra.entrada": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -613,10 +600,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          saida: new Date(value).toISOString(),
-                        },
+                        "obra.saida": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -705,10 +689,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          equipeResp: value,
-                        },
+                        "obra.equipeResp": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -732,10 +713,7 @@ function ModalObras({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              checklist: e.target.checked ? "SIM" : "NÃO",
-                            },
+                            "obra.checklist": e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
@@ -767,10 +745,7 @@ function ModalObras({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              trafo: e.target.checked ? "SIM" : "NÃO",
-                            },
+                            "obra.trafo": e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
@@ -826,10 +801,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          statusDaObra: value,
-                        },
+                        "obra.statusDaObra": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -856,10 +828,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          saidaDoCliente: value,
-                        },
+                        "visitaTecnica.saidaDoCliente": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -881,10 +850,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          amperagem: value,
-                        },
+                        "visitaTecnica.amperagem": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -911,10 +877,7 @@ function ModalObras({
                     onChange={(e) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          observacoes: e.target.value,
-                        },
+                        "obra.observacoes": e.target.value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -943,10 +906,7 @@ function ModalObras({
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          compra: {
-                            ...infoHolder.compra,
-                            kitInfo: e.target.value,
-                          },
+                          "compra.kitInfo": e.target.value,
                         });
                         setInfo({
                           ...infoHolder,
@@ -974,10 +934,7 @@ function ModalObras({
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          material: {
-                            ...infoHolder.material,
-                            materialFaltante: e.target.value,
-                          },
+                          "material.materialFaltante": e.target.value,
                         });
                         setInfo({
                           ...infoHolder,
@@ -1197,10 +1154,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          qtdeModulos: Number(value),
-                        },
+                        "sistema.qtdeModulos": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1224,10 +1178,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          potModulos: Number(value),
-                        },
+                        "sistema.potModulos": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1251,10 +1202,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          potPico: Number(value),
-                        },
+                        "sistema.potPico": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1282,10 +1230,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          topologia: value,
-                        },
+                        "sistema.topologia": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1372,12 +1317,9 @@ function ModalObras({
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          visitaTecnica: {
-                            ...infoHolder.visitaTecnica,
-                            status: e.target.checked
-                              ? "REALIZADA"
-                              : "PENDÊNCIA",
-                          },
+                          "visitaTecnica.status": e.target.checked
+                            ? "REALIZADA"
+                            : "PENDÊNCIA",
                         });
                         setInfo({
                           ...infoHolder,
@@ -1408,10 +1350,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          tecnico: value,
-                        },
+                        "visitaTecnica.tecnico": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1433,10 +1372,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          tipoDaTelha: value,
-                        },
+                        "visitaTecnica.tipoDaTelha": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1491,7 +1427,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, tipo: value },
+                        "padrao.tipo": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1530,7 +1466,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, respPagamento: value },
+                        "padrao.respPagamento": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1548,7 +1484,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, valor: Number(value) },
+                        "padrao.valor": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1572,7 +1508,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, respInstalacao: value },
+                        "padrao.respInstalacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1596,10 +1532,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          saidaDoCliente: value,
-                        },
+                        "visitaTecnica.saidaDoCliente": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1621,10 +1554,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          amperagem: value,
-                        },
+                        "visitaTecnica.amperagem": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1653,10 +1583,9 @@ function ModalObras({
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          estruturaPersonalizada: {
-                            ...infoHolder.estruturaPersonalizada,
-                            aplicavel: e.target.checked ? "SIM" : "NÃO",
-                          },
+                          "estruturaPersonalizada.aplicavel": e.target.checked
+                            ? "SIM"
+                            : "NÃO",
                         });
                         setInfo({
                           ...infoHolder,
@@ -1693,10 +1622,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          tipo: value,
-                        },
+                        "estruturaPersonalizada.tipo": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1723,10 +1649,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          respPagamento: value,
-                        },
+                        "estruturaPersonalizada.respPagamento": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1750,10 +1673,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          valor: Number(value),
-                        },
+                        "estruturaPersonalizada.valor": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1783,10 +1703,7 @@ function ModalObras({
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          estruturaPersonalizada: {
-                            ...infoHolder.estruturaPersonalizada,
-                            status: value,
-                          },
+                          "estruturaPersonalizada.status": value,
                         });
                         setInfo({
                           ...infoHolder,
@@ -1830,10 +1747,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        material: {
-                          ...infoHolder.material,
-                          statusSeparacao: value,
-                        },
+                        "material.statusSeparacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1857,10 +1771,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        material: {
-                          ...infoHolder.material,
-                          previsaoCustos: Number(value).toFixed(2),
-                        },
+                        "material.previsaoCustos": Number(value).toFixed(2),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1884,10 +1795,7 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        material: {
-                          ...infoHolder.material,
-                          efetivoCustos: Number(value),
-                        },
+                        "material.efetivoCustos": Number(value),
                       });
                       setInfo({
                         ...infoHolder,

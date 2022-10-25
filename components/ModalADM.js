@@ -655,15 +655,12 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     <input
                       disabled={!editor}
                       checked={
-                        infoHolder.pagamento.cobrancaFeita ? true : false
+                        infoHolder.pagamento?.cobrancaFeita ? true : false
                       }
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          pagamento: {
-                            ...infoHolder.pagamento,
-                            cobrancaFeita: e.target.checked,
-                          },
+                          "pagamento.cobrancaFeita": e.target.checked,
                         });
                         setInfo({
                           ...infoHolder,
@@ -710,10 +707,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          status: value,
-                        },
+                        "pagamento.status": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -749,10 +743,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          forma: value,
-                        },
+                        "pagamento.forma": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -784,10 +775,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        faturamento: {
-                          ...infoHolder.faturamento,
-                          empresaFaturamento: value,
-                        },
+                        "faturamento.empresaFaturamento": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -802,7 +790,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     label={"CNPJ PARA FATURAMENTO"}
                     editable={editor}
                     value={
-                      infoHolder.faturamento.cnpjFaturamento != undefined &&
+                      infoHolder.faturamento?.cnpjFaturamento != undefined &&
                       infoHolder.faturamento.cnpjFaturamento != "#VALUE!"
                         ? infoHolder.faturamento.cnpjFaturamento
                         : ""
@@ -810,10 +798,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        faturamento: {
-                          ...infoHolder.faturamento,
-                          cnpjFaturamento: Number(value),
-                        },
+                        "faturamento.cnpjFaturamento": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -835,10 +820,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        faturamento: {
-                          ...infoHolder.faturamento,
-                          previsaoFaturamento: value,
-                        },
+                        "faturamento.previsaoFaturamento": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -849,23 +831,32 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
-                  <DateInput label="Data de faturamento" editable={editor} value={infoHolder.faturamento?.dataFaturamento ? new Date(infoHolder.faturamento?.dataFaturamento).toISOString()
-                            .slice(0, 10) : '' } handleChange={(value)=> {
-                     setChanges({
-                      ...changes,
-                      faturamento: {
-                      ...infoHolder.faturamento,
-                       dataFaturamento: new Date(value).toISOString(),
-                       },
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      faturamento: {
-                        ...infoHolder.faturamento,
-                        dataFaturamento: new Date(value).toISOString(),
-                      },
-                     });
-                  }}/>
+                  <DateInput
+                    label="Data de faturamento"
+                    editable={editor}
+                    value={
+                      infoHolder.faturamento?.dataFaturamento
+                        ? new Date(infoHolder.faturamento?.dataFaturamento)
+                            .toISOString()
+                            .slice(0, 10)
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "faturamento.dataFaturamento": new Date(
+                          value
+                        ).toISOString(),
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          dataFaturamento: new Date(value).toISOString(),
+                        },
+                      });
+                    }}
+                  />
                   {infoHolder.pagamento?.forma == "FINANCIAMENTO" && (
                     <SelectInput
                       label={"CREDOR"}
@@ -922,10 +913,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          pagamento: {
-                            ...infoHolder.pagamento,
-                            credor: value,
-                          },
+                          "pagamento.credor": value,
                         });
                         setInfo({
                           ...infoHolder,
@@ -948,10 +936,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          pagador: value,
-                        },
+                        "pagamento.pagador": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -973,10 +958,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          contatoPagador: value,
-                        },
+                        "pagamento.contatoPagador": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1031,10 +1013,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          statusLiberacao: value,
-                        },
+                        "compra.statusLiberacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1087,10 +1066,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          dataPagamento: new Date(value).toISOString(),
-                        },
+                        "compra.dataPagamento": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1153,7 +1129,11 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
-                  <TextInput label={"INFORMAÇÕES DA COMPRA"} value={infoHolder.compra?.informacoes} editable={false}/>
+                  <TextInput
+                    label={"INFORMAÇÕES DA COMPRA"}
+                    value={infoHolder.compra?.informacoes}
+                    editable={false}
+                  />
                   <SelectInput
                     label={"TIPO DO KIT"}
                     value={
@@ -1256,7 +1236,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     label={"Previsão de entrega"}
                     editable={editor}
                     value={
-                      infoHolder.compra.previsaoEntrega != undefined &&
+                      infoHolder.compra?.previsaoEntrega != undefined &&
                       infoHolder.compra.previsaoEntrega != "-"
                         ? new Date(infoHolder.compra.previsaoEntrega)
                             .toISOString()
@@ -1266,10 +1246,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          previsaoEntrega: new Date(value).toISOString(),
-                        },
+                        "compra.previsaoEntrega": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1313,10 +1290,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          statusEntrega: value,
-                        },
+                        "compra.statusEntrega": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1611,7 +1585,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
-                                    <SelectInput
+                  <SelectInput
                     label={"EQUIPE RESPONSÁVEL"}
                     editable={false}
                     value={
@@ -1789,10 +1763,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        material: {
-                          ...infoHolder.material,
-                          efetivoCustos: Number(value),
-                        },
+                        "material.efetivoCustos": Number(value),
                       });
                       setInfo({
                         ...infoHolder,

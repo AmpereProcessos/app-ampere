@@ -394,13 +394,9 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          qtdeModulos: Number(value),
-                          potPico:
-                            Number(value * infoHolder.sistema?.potModulos) /
-                            1000,
-                        },
+                        "sistema.qtdeModulos": Number(value),
+                        "sistema.potPico":
+                          Number(infoHolder.sistema?.potModulos * value) / 1000,
                       });
                       setInfo({
                         ...infoHolder,
@@ -408,7 +404,7 @@ function ModalSuprimentos({
                           ...infoHolder.sistema,
                           qtdeModulos: Number(value),
                           potPico:
-                            Number(value * infoHolder.sistema?.potModulos) /
+                            Number(infoHolder.sistema?.potModulos * value) /
                             1000,
                         },
                       });
@@ -427,13 +423,10 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          potModulos: Number(value),
-                          potPico:
-                            Number(value * infoHolder.sistema?.qtdeModulos) /
-                            1000,
-                        },
+                        "sistema.potModulos": Number(value),
+                        "sistema.potPico":
+                          Number(value * infoHolder.sistema?.qtdeModulos) /
+                          1000,
                       });
                       setInfo({
                         ...infoHolder,
@@ -460,10 +453,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          potPico: Number(value),
-                        },
+                        "sistema.potPico": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -491,10 +481,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          topologia: value,
-                        },
+                        "sistema.topologia": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -516,10 +503,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          inversor: value,
-                        },
+                        "sistema.inversor": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -543,10 +527,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          valorProjeto: Number(value),
-                        },
+                        "sistema.valorProjeto": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -576,10 +557,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          iniciar: value,
-                        },
+                        "projeto.iniciar": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -634,10 +612,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          statusLiberacao: value,
-                        },
+                        "compra.statusLiberacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -652,7 +627,7 @@ function ModalSuprimentos({
                     label={"Data de liberação p/ compra"}
                     editable={editor}
                     value={
-                      infoHolder.compra.dataLiberacao != undefined &&
+                      infoHolder.compra?.dataLiberacao != undefined &&
                       infoHolder.compra.dataLiberacao != "-"
                         ? new Date(infoHolder.compra.dataLiberacao)
                             .toISOString()
@@ -662,10 +637,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          dataLiberacao: new Date(value).toISOString(),
-                        },
+                        "compra.dataLiberacao": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -690,10 +662,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          dataPagamento: new Date(value).toISOString(),
-                        },
+                        "compra.dataPagamento": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -798,10 +767,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          fornecedor: value,
-                        },
+                        "compra.fornecedor": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -838,10 +804,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          tipoDoKit: value,
-                        },
+                        "compra.tipoDoKit": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -865,10 +828,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          valorDoKit: Number(value),
-                        },
+                        "compra.valorDoKit": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -896,10 +856,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          localEntrega: value,
-                        },
+                        "compra.localEntrega": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -921,10 +878,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          informacoes: value,
-                        },
+                        "compra.informacoes": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -949,10 +903,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          dataPedido: new Date(value).toISOString(),
-                        },
+                        "compra.dataPedido": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -977,10 +928,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          previsaoEntrega: new Date(value).toISOString(),
-                        },
+                        "compra.previsaoEntrega": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1024,10 +972,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          statusEntrega: value,
-                        },
+                        "compra.statusEntrega": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1054,10 +999,7 @@ function ModalSuprimentos({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            compra: {
-                              ...infoHolder.compra,
-                              kitInfo: e.target.value,
-                            },
+                            "compra.kitInfo": e.target.value,
                           });
                           setInfo({
                             ...infoHolder,
@@ -1085,10 +1027,7 @@ function ModalSuprimentos({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            material: {
-                              ...infoHolder.material,
-                              materialFaltante: e.target.value,
-                            },
+                            "material.materialFaltante": e.target.value,
                           });
                           setInfo({
                             ...infoHolder,
@@ -1138,10 +1077,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          status: value,
-                        },
+                        "pagamento.status": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1177,10 +1113,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          forma: value,
-                        },
+                        "pagamento.forma": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1212,10 +1145,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        faturamento: {
-                          ...infoHolder.faturamento,
-                          empresaFaturamento: value,
-                        },
+                        "faturamento.empresaFaturamento": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1237,10 +1167,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        faturamento: {
-                          ...infoHolder.faturamento,
-                          previsaoFaturamento: value,
-                        },
+                        "faturamento.previsaoFaturamento": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1264,10 +1191,9 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        faturamento: {
-                          ...infoHolder.faturamento,
-                          dataFaturamento: new Date(value).toISOString(),
-                        },
+                        "faturamento.dataFaturamento": new Date(
+                          value
+                        ).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1334,10 +1260,7 @@ function ModalSuprimentos({
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          pagamento: {
-                            ...infoHolder.pagamento,
-                            credor: value,
-                          },
+                          "pagamento.credor": value,
                         });
                         setInfo({
                           ...infoHolder,
@@ -1360,10 +1283,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          pagador: value,
-                        },
+                        "pagamento.pagador": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1385,10 +1305,7 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          contatoPagador: value,
-                        },
+                        "pagamento.contatoPagador": value,
                       });
                       setInfo({
                         ...infoHolder,

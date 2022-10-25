@@ -129,6 +129,7 @@ function ModalObras({
     }
   }
   console.log(infoHolder);
+  console.log(changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -481,6 +482,7 @@ function ModalObras({
                               "projeto.acStatus": e.target.checked
                                 ? "REALIZADO"
                                 : "PENDÊNCIA",
+                              "projeto.fechamentoAC": new Date().toISOString(),
                             });
                             setInfo({
                               ...infoHolder,
@@ -489,6 +491,7 @@ function ModalObras({
                                 acStatus: e.target.checked
                                   ? "REALIZADO"
                                   : "PENDÊNCIA",
+                                fechamentoAC: new Date().toISOString(),
                               },
                             });
                           }}

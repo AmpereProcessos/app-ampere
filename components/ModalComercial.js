@@ -372,6 +372,28 @@ function ModalComercial({
                   <div>
                     <input
                       disabled={false}
+                      checked={infoHolder.possuiaGD ? true : false}
+                      onChange={(e) => {
+                        setChanges({
+                          ...changes,
+                          possuiaGD: e.target.checked,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          possuiaGD: e.target.checked,
+                        });
+                      }}
+                      type="checkbox"
+                      name="possuiaGD"
+                      id="possuiaGD"
+                    />
+                    <label className="ml-2" htmlFor="possuiaGD">
+                      JÁ POSSUIA GD?
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      disabled={false}
                       checked={infoHolder.oem?.aplicavel ? true : false}
                       onChange={(e) => {
                         setChanges({

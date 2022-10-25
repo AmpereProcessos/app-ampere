@@ -159,6 +159,7 @@ function NovoProjeto({ credentials, setCredentials }) {
     cpf_cnpj: 0,
     telefone: "",
     cidade: "ITUIUTABA",
+    possuiaGD: false,
     uf: "MG",
     vendedor: {
       nome: "NÃO DEFINIDO",
@@ -581,7 +582,6 @@ function NovoProjeto({ credentials, setCredentials }) {
       addProject();
     }
   }
-  console.log(infoHolder);
   return (
     <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
       <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
@@ -809,6 +809,24 @@ function NovoProjeto({ credentials, setCredentials }) {
             <div>
               <input
                 disabled={false}
+                checked={infoHolder.possuiaGD ? true : false}
+                onChange={(e) => {
+                  setInfo({
+                    ...infoHolder,
+                    possuiaGD: e.target.checked,
+                  });
+                }}
+                type="checkbox"
+                name="possuiaGD"
+                id="possuiaGD"
+              />
+              <label className="ml-2" htmlFor="possuiaGD">
+                JÁ POSSUIA GD?
+              </label>
+            </div>
+            <div>
+              <input
+                disabled={false}
                 checked={infoHolder.oem?.aplicavel ? true : false}
                 onChange={(e) => {
                   setInfo({
@@ -820,10 +838,10 @@ function NovoProjeto({ credentials, setCredentials }) {
                   });
                 }}
                 type="checkbox"
-                name="visitaTecnica"
-                id="visitaTecnica"
+                name="oemAplicavel"
+                id="oemAplicavel"
               />
-              <label className="ml-2" htmlFor="visitaTecnica">
+              <label className="ml-2" htmlFor="oemAplicavel">
                 POSSUI O&M?
               </label>
             </div>

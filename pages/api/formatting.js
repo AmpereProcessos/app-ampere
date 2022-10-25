@@ -28,6 +28,7 @@ export default async function handler(req, res) {
       cpf_cnpj: project.cpfcnpj,
       telefone: project.telefone,
       cidade: project.cidade,
+      possuiaGD: project.possuigd,
       uf: project.uf,
       vendedor: {
         nome: project.vendedor,
@@ -124,6 +125,7 @@ export default async function handler(req, res) {
         mapaDeMicro: project.mapademicro,
         aumentoDeCarga: project.aumentodecarga,
         acStatus: project.acstatus,
+        fechamentoAC: projeto.conclusaoAC,
         projetoConcluido: project.projetoconcluido,
         relatorioComissionamento: project.relatoriocomissionamento,
       },

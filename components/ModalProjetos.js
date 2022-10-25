@@ -400,6 +400,28 @@ function ModalProjetos({
                   DADOS INSTALAÇÃO CEMIG
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
+                  <div>
+                    <input
+                      disabled={false}
+                      checked={infoHolder.possuiaGD ? true : false}
+                      onChange={(e) => {
+                        setChanges({
+                          ...changes,
+                          possuiaGD: e.target.checked,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          possuiaGD: e.target.checked,
+                        });
+                      }}
+                      type="checkbox"
+                      name="possuiaGD"
+                      id="possuiaGD"
+                    />
+                    <label className="ml-2" htmlFor="possuiaGD">
+                      JÁ POSSUIA GD?
+                    </label>
+                  </div>
                   <TextInput
                     label={"Titular do projeto"}
                     editable={editor}
@@ -1246,28 +1268,6 @@ function ModalProjetos({
                       });
                     }}
                   />
-                  <TextInput
-                    label={"PENDÊNCIA DO PARECER"}
-                    value={
-                      infoHolder.parecer?.pendencias
-                        ? infoHolder.parecer.pendencias
-                        : ""
-                    }
-                    editable={editor}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "parecer.pendencias": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        parecer: {
-                          ...infoHolder.parecer,
-                          pendencias: value,
-                        },
-                      });
-                    }}
-                  />
                   {infoHolder.parecer.statusDoParecerDeAcesso ==
                     "PARECER DE ACESSO COM OBRAS" && (
                     <NumberInput
@@ -1746,6 +1746,39 @@ function ModalProjetos({
                       </div>
                     )}
                   </div>
+                  {infoHolder.parecer.statusDoParecerDeAcesso ==
+                    "PENDENCIAS" && (
+                    <div className="w-full flex justify-center mt-2 items-center">
+                      <div className="flex flex-col w-[450px] items-center">
+                        <span className="uppercase font-bold font-raleway text-center text-sm">
+                          PENDÊNCIAS DO PARECER
+                        </span>
+                        <textarea
+                          readOnly={!editor}
+                          value={
+                            infoHolder.parecer?.pendencias
+                              ? infoHolder.parecer?.pendencias
+                              : ""
+                          }
+                          placeholder={"Pendências do parecer aqui..."}
+                          onChange={(e) => {
+                            setChanges({
+                              ...changes,
+                              "parecer.pendencias": e.target.value,
+                            });
+                            setInfo({
+                              ...infoHolder,
+                              parecer: {
+                                ...infoHolder.parecer,
+                                pendencias: e.target.value,
+                              },
+                            });
+                          }}
+                          className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                        />
+                      </div>
+                    </div>
+                  )}
                   <div className="flex flex-col w-[350px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
                       PROJETO CONCLUÍDO

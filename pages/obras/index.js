@@ -18,6 +18,9 @@ function Obras({ credentials, setCredentials }) {
     epFilter: [],
     epStatusFilter: [],
     cidadeFilter: [],
+    obsPendente: false,
+    numModulos: null,
+    equipResp: [],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -93,6 +96,25 @@ function Obras({ credentials, setCredentials }) {
         filters.cidadeFilter.includes(call.cidade)
       );
     }
+    if (filters.equipResp.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.equipResp.includes(call.obra?.equipeResp)
+      );
+    }
+    if (filters.numModulos > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) => Number(call.sistema.qtdeModulos) == Number(filters.numModulos)
+      );
+    }
+    if (filters.obsPendente) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (obj) =>
+          obj.obra.observacoes == undefined || obj.obra.observacoes?.trim() < 10
+      );
+    }
     if (!newArr) setFilteredProjects(projects);
     else {
       setFilteredProjects(newArr);
@@ -116,9 +138,7 @@ function Obras({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      if (
-        !storedCredentials.accessibleRoutes.includes("Obras")
-      ) {
+      if (!storedCredentials.accessibleRoutes.includes("Obras")) {
         router.push("/");
       } else {
         getProjects();
@@ -127,9 +147,7 @@ function Obras({ credentials, setCredentials }) {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (
-          !credentials.accessibleRoutes.includes("Obras")
-        ) {
+        if (!credentials.accessibleRoutes.includes("Obras")) {
           router.push("/");
         } else {
           getProjects();
@@ -180,7 +198,7 @@ function Obras({ credentials, setCredentials }) {
           />
           <Select
             isMulti
-            placeholder="STATUS ESTRUTURA PERSONALIZADA"
+            placeholder="STATUS EST. PERSONALIZADA"
             onChange={(e) =>
               setFilters({
                 ...filters,
@@ -322,6 +340,88 @@ function Obras({ credentials, setCredentials }) {
               };
             })}
           />
+          <Select
+            isMulti
+            placeholder="EQUIP.RESP"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                equipResp: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                label: "EQUIPE 1 - JOSÉ ROBERTO",
+                value: "EQUIPE 1 - JOSÉ ROBERTO",
+              },
+              {
+                label: "EQUIPE 2 - EDUARDO",
+                value: "EQUIPE 2-EDUARDO",
+              },
+              {
+                label: "EQUIPE 3 - EDMAR",
+                value: "EQUIPE 3-EDIMAR",
+              },
+              {
+                label: "EQUIPE 4 - ERICK",
+                value: "EQUIPE 4-ERICK",
+              },
+              {
+                label: "EQUIPE 5 - JUNIN",
+                value: "EQUIPE 5-JUNIN",
+              },
+              {
+                label: "EQUIPE 6 - FELIPE",
+                value: "EQUIPE 6-FELIPE",
+              },
+              {
+                label: "EQUIPE 7 - ADENILSON",
+                value: "EQUIPE 7- ADENILSON",
+              },
+              {
+                label: "EQUIPE 8 - GERSON",
+                value: "EQUIPE 8-GERSON",
+              },
+              {
+                label: "EQUIPE 9 - REGINALDO",
+                value: "EQUIPE 9 - REGINALDO",
+              },
+              {
+                label: "EQUIPE 10 - LUIZ",
+                value: "EQUIPE 10 - LUIZ",
+              },
+              {
+                label: "EQUIPE 11 - GILMAR",
+                value: "EQUIPE 11 - GILMAR",
+              },
+              {
+                label: "EQUIPE 12 - MARCUS V.",
+                value: "EQUIPE 12 - MARCUS V.",
+              },
+              {
+                label: "EQUIPE 13 - EDUARDO FRANCO",
+                value: "EQUIPE 13 - EDUARDO FRANCO",
+              },
+              {
+                label: "EQUIPE 15 - MARCOS B.",
+                value: "EQUIPE 15 - MARCOS B.",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
+          />
+          <div
+            onClick={() =>
+              setFilters({ ...filters, obsPendente: !filters.obsPendente })
+            }
+            className={`${
+              filters.obsPendente ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            OBS DE OBRA PENDENTE
+          </div>
           <input
             type={"text"}
             placeholder="Digite o nome do contrato"
@@ -330,6 +430,17 @@ function Obras({ credentials, setCredentials }) {
               "outline-none p-1.5 rounded border border-gray-200 placeholder:italic"
             }
             onChange={(e) => handleSearchFilter(e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="NºModulos"
+            className={
+              "outline-none p-1.5 text-center rounded border border-gray-200 placeholder:italic"
+            }
+            value={filters.numModulos}
+            onChange={(e) =>
+              setFilters({ ...filters, numModulos: Number(e.target.value) })
+            }
           />
         </div>
         <button

@@ -356,7 +356,7 @@ function Projetos({ credentials, setCredentials }) {
           </div>
           <button
             onClick={filterProjects}
-            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 py-2  items-center gap-x-2"
+            className="flex bg-[#fead61] h-[36px] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 py-2  items-center gap-x-2"
           >
             <p>Filtrar</p>
             <AiOutlineSearch />

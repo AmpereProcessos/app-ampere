@@ -27,7 +27,6 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     axios
       .get("/api/projects/bancoDeDados")
       .then((res) => {
-        console.log(res.data);
         setProjects(res.data);
         setFilteredProjects(res.data);
       })
@@ -43,6 +42,13 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     } else {
       setFilteredProjects(projects);
     }
+  }
+  function fetchMoreProjects() {
+    axios.post("/api/projects/bancoDeDados").then((res) => {
+      let arr = [...projects, ...res.data];
+      setProjects([...arr]);
+      setFilteredProjects([...arr]);
+    });
   }
   function handleOrderChange(value) {
     if (value == false) {
@@ -101,7 +107,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
   }, []);
   return (
     <div className="p-6 grow">
-      <div className="flex justify-between gap-x-2 border-b border-gray-200 p-1">
+      <div className="flex flex-col items-center justify-between gap-x-2 border-b border-gray-200 p-1">
         <div className="flex items-center gap-x-2">
           <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
             BANCO DE DADOS
@@ -111,8 +117,16 @@ function BandoDeDados({ data, credentials, setCredentials }) {
               ({filteredProjects.length})
             </p>
           )}
+          {projects.length < 701 && (
+            <button
+              onClick={fetchMoreProjects}
+              className="bg-[#fead61] h-[36px] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2"
+            >
+              CARREGAR MAIS
+            </button>
+          )}
         </div>
-        <div className="flex gap-2 flex-wrap justify-center">
+        <div className="flex gap-2 flex-wrap justify-center mt-2">
           <div
             onClick={() => handleOrderChange(!orderFilter.value)}
             className="bg-[#fead61] cursor-pointer p-2 hover:text-white hover:bg-[#15599a] font-bold rounded"

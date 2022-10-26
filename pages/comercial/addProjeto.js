@@ -381,9 +381,9 @@ function NovoProjeto({ credentials, setCredentials }) {
       },
       contrato: {
         status: "NÃO DEFINIDO",
-        dataSolicitacao: new Date(), // formatar como data
-        dataLiberacao: new Date(), // formatar como data
-        dataAssinatura: new Date(), // formatar como data
+        dataSolicitacao: null, // formatar como data
+        dataLiberacao: null, // formatar como data
+        dataAssinatura: null, // formatar como data
         formaAssinatura: "NÃO DEFINIDO",
       },
       pagamento: {

@@ -66,6 +66,11 @@ function BandoDeDados({ data, credentials, setCredentials }) {
       setFilteredProjects(newArr);
     }
   }
+  function handleUpdates(id) {
+    getProjects();
+    let changedObj = projects.filter((project) => project._id == id);
+    setModalProject(changedObj[0]);
+  }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
@@ -159,6 +164,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
       {modalIsOpen && (
         <ModalDB
           project={modalProject}
+          handleUpdates={handleUpdates}
           editor={
             credentials != {} &&
             [

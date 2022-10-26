@@ -8,7 +8,14 @@ export default async function handler(req, res) {
         {
           $match: {
             "compra.statusEntrega": {
-              $in: ["EM ROTA", "AGUARDANDO COMPRA", "", null, undefined],
+              $in: [
+                "EM ROTA",
+                "AGUARDANDO COMPRA",
+                "",
+                null,
+                undefined,
+                "NÃO DEFINIDO",
+              ],
             },
             "contrato.status": "ASSINADO",
           },

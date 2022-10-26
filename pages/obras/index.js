@@ -19,6 +19,7 @@ function Obras({ credentials, setCredentials }) {
     epStatusFilter: [],
     cidadeFilter: [],
     obsPendente: false,
+    osPendente: false,
     numModulos: null,
     equipResp: [],
     liberacaoStatus: [],
@@ -120,6 +121,13 @@ function Obras({ credentials, setCredentials }) {
       newArr = newArr.filter(
         (obj) =>
           obj.obra.observacoes == undefined || obj.obra.observacoes?.trim() < 10
+      );
+    }
+    if (filters.osPendente) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (obj) =>
+          obj.ordensDeServico == undefined || obj.ordensDeServico?.length == 0
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -465,6 +473,16 @@ function Obras({ credentials, setCredentials }) {
             } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
           >
             OBS DE OBRA PENDENTE
+          </div>
+          <div
+            onClick={() =>
+              setFilters({ ...filters, osPendente: !filters.osPendente })
+            }
+            className={`${
+              filters.osPendente ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            SEM OSs GERADAS
           </div>
           <input
             type={"text"}

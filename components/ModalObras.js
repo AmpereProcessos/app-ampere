@@ -464,46 +464,50 @@ function ModalObras({
                     </div>
                   </div>
                   {infoHolder.projeto.aumentoDeCarga == "SIM" && (
-                    <div className="flex flex-col w-[350px] items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        STATUS AUMENTO DE CARGA
-                      </span>
-                      <div className="flex">
-                        <input
-                          disabled={!editor}
-                          checked={
-                            infoHolder.projeto?.acStatus === "REALIZADO"
-                              ? true
-                              : false
-                          }
-                          onChange={(e) => {
-                            setChanges({
-                              ...changes,
-                              "projeto.acStatus": e.target.checked
-                                ? "REALIZADO"
-                                : "PENDÊNCIA",
-                              "projeto.fechamentoAC": new Date().toISOString(),
-                            });
-                            setInfo({
-                              ...infoHolder,
-                              projeto: {
-                                ...infoHolder.projeto,
-                                acStatus: e.target.checked
-                                  ? "REALIZADO"
-                                  : "PENDÊNCIA",
-                                fechamentoAC: new Date().toISOString(),
-                              },
-                            });
-                          }}
-                          type="checkbox"
-                          name="acstatus"
-                          id="acstatus"
-                        />
-                        <label className="ml-2" htmlFor="acstatus">
-                          REALIZADO
-                        </label>
-                      </div>
-                    </div>
+                    <SelectInput
+                      label={"STATUS AUMENTO DE CARGA"}
+                      editable={editor}
+                      value={
+                        infoHolder.projeto.acStatus
+                          ? infoHolder.projeto.acStatus
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        {
+                          label: "PENDÊNCIA",
+                          value: "PENDÊNCIA",
+                        },
+                        {
+                          label: "REALIZADO",
+                          value: "REALIZADO",
+                        },
+                        {
+                          label: "SOLICITADO COM G.D",
+                          value: "SOLICITADO COM G.D",
+                        },
+                      ]}
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          "projeto.acStatus": value,
+                          "projeto.fechamentoAC":
+                            value == "REALIZADO"
+                              ? new Date().toISOString()
+                              : null,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          projeto: {
+                            ...infoHolder.projeto,
+                            acStatus: value,
+                            fechamentoAC:
+                              value == "REALIZADO"
+                                ? new Date().toISOString()
+                                : null,
+                          },
+                        });
+                      }}
+                    />
                   )}
                   <div className="flex flex-col w-[350px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">

@@ -52,17 +52,43 @@ function ModalSuprimentos({
 }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState({ text: "", color: "" });
   async function handleChanges() {
-    let { data } = await axios.post("/api/changes", {
-      usuario: credentials.nome,
-      mudancas: changes,
-      projetoMudado: project._id,
-    });
-    axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
-      setMsg("Alterações feitas");
-      handleUpdates(project._id);
-    });
+    if (validateChanges().liberar) {
+      let { data } = await axios.post("/api/changes", {
+        usuario: credentials.nome,
+        mudancas: changes,
+        projetoMudado: project._id,
+      });
+      axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
+        setMsg({ text: "Alterações feitas", color: "text-green-400" });
+        handleUpdates(project._id);
+      });
+    } else {
+      setMsg({ text: validateChanges().message, color: "text-red-400" });
+    }
+  }
+  function validateChanges() {
+    if (infoHolder.projeto.iniciar == "SIM") {
+      if (infoHolder.compra.previsaoEntrega == undefined) {
+        return {
+          liberar: false,
+          message: "Preencha previsão de entrega",
+        };
+      } else if (
+        infoHolder.compra.statusEntrega != "EM ROTA" &&
+        infoHolder.compra.statusEntrega != "ENTREGUE"
+      ) {
+        return {
+          liberar: false,
+          message: "Preencha status de entrega válido",
+        };
+      } else {
+        return { liberar: true, message: "OK" };
+      }
+    } else {
+      return { liberar: true, message: "OK" };
+    }
   }
   console.log(changes);
   console.log(infoHolder);
@@ -81,7 +107,9 @@ function ModalSuprimentos({
                 </p>
               )}
               <div className="flex gap-x-2">
-                {msg && <p className="text-sm italic text-green-400">{msg}</p>}
+                {msg.text && (
+                  <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
+                )}
                 <button
                   onClick={handleChanges}
                   className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
@@ -663,13 +691,17 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "compra.dataPagamento": new Date(value).toISOString(),
+                        "compra.dataPagamento": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         compra: {
                           ...infoHolder.compra,
-                          dataPagamento: new Date(value).toISOString(),
+                          dataPagamento: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -904,13 +936,17 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "compra.dataPedido": new Date(value).toISOString(),
+                        "compra.dataPedido": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         compra: {
                           ...infoHolder.compra,
-                          dataPedido: new Date(value).toISOString(),
+                          dataPedido: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -929,13 +965,17 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "compra.previsaoEntrega": new Date(value).toISOString(),
+                        "compra.previsaoEntrega": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         compra: {
                           ...infoHolder.compra,
-                          previsaoEntrega: new Date(value).toISOString(),
+                          previsaoEntrega: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -954,13 +994,17 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "compra.dataEntrega": new Date(value).toISOString(),
+                        "compra.dataEntrega": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         compra: {
                           ...infoHolder.compra,
-                          dataEntrega: new Date(value).toISOString(),
+                          dataEntrega: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -1252,15 +1296,17 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "faturamento.dataFaturamento": new Date(
-                          value
-                        ).toISOString(),
+                        "faturamento.dataFaturamento": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         faturamento: {
                           ...infoHolder.faturamento,
-                          dataFaturamento: new Date(value).toISOString(),
+                          dataFaturamento: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}

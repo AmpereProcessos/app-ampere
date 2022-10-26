@@ -8,14 +8,41 @@ export default async function handler(req, res) {
         {
           $match: {
             "obra.statusDaObra": {
-              $in: ["EM ANDAMENTO", "CONCLUIDA"],
+              $in: [
+                "AGENDADA",
+                "AGUARDANDO AGENDAMENTO",
+                "EM ANDAMENTO",
+                "CONCLUIDA",
+              ],
             },
           },
         },
         {
-          $sort: {
-            "obra.saida": -1,
+          $limit: 700,
+        },
+      ])
+      .toArray();
+    res.json(oem);
+  } else if (req.method === "POST") {
+    const db = await connectToDatabase(process.env.DB_KEY);
+    const collection = db.collection("dados");
+    let oem = await collection
+      .aggregate([
+        {
+          $match: {
+            qtde: { $gt: 713 },
+            "obra.statusDaObra": {
+              $in: [
+                "AGENDADA",
+                "AGUARDANDO AGENDAMENTO",
+                "EM ANDAMENTO",
+                "CONCLUIDA",
+              ],
+            },
           },
+        },
+        {
+          $limit: 700,
         },
       ])
       .toArray();

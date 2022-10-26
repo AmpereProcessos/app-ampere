@@ -129,6 +129,14 @@ function OeM({ credentials, setCredentials }) {
     let changedObj = projects.filter((project) => project._id == id);
     setModalProject(changedObj[0]);
   }
+  function fetchMoreProjects() {
+    axios.post("/api/projects/oem").then((res) => {
+      let arr = [...projects, ...res.data];
+      console.log(arr);
+      setProjects([...arr]);
+      setFilteredProjects([...arr]);
+    });
+  }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
@@ -150,10 +158,9 @@ function OeM({ credentials, setCredentials }) {
       }
     }
   }, []);
-
   return (
     <div className="p-6 grow">
-      <div className="flex items-center justify-between border-b border-gray-200 p-1">
+      <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
         <div className="flex items-center gap-x-2">
           <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
             Projetos no estágio de O&M
@@ -166,8 +173,16 @@ function OeM({ credentials, setCredentials }) {
               ({getListCumulativeModules().replace(".", ",")} modulos)
             </p>
           )}
+          {projects.length < 701 && (
+            <button
+              onClick={fetchMoreProjects}
+              className="bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2"
+            >
+              CARREGAR MAIS
+            </button>
+          )}
         </div>
-        <div className="flex flex-wrap gap-2 justify-center items-center">
+        <div className="flex flex-wrap gap-2 justify-around mt-2 items-center">
           <input
             className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
             placeholder="Digite o nome do contrato"

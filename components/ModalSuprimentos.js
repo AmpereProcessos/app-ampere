@@ -1075,6 +1075,28 @@ function ModalSuprimentos({
                       });
                     }}
                   />
+                  <TextInput
+                    label={"RASTREIO"}
+                    editable={editor}
+                    value={
+                      infoHolder.compra.rastreio
+                        ? infoHolder.compra.rastreio
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "compra.rastreio": value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          rastreio: value,
+                        },
+                      });
+                    }}
+                  />
                   <DateInput
                     label="Data de faturamento"
                     editable={editor}

@@ -42,6 +42,21 @@ function Comissionamento({ credentials, setCredentials }) {
             Comissionamento
           </p>
         </div>
+        <div className="flex items-center">
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                manutencaoAtrasada: !filters.manutencaoAtrasada,
+              })
+            }
+            className={`${
+              filters.manutencaoAtrasada ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            PENDENCIA COMERCIAL
+          </div>
+        </div>
       </div>
       <div className="grid grid-cols-2 w-full gap-3 mt-4 ">
         {filteredProjects.map((project) => (

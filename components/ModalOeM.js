@@ -64,7 +64,7 @@ function ModalOeM({
       handleUpdates(project._id);
     });
   }
-  console.log(infoHolder.conferencias);
+  console.log(infoHolder);
   console.log(changes);
   return (
     <>

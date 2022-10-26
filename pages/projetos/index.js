@@ -78,9 +78,10 @@ function Projetos({ credentials, setCredentials }) {
     }
     if (filters.entregaStatusFilter.length > 0) {
       if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) =>
-        filters.entregaStatusFilter.includes(call.compra.statusEntrega)
-      );
+      if (filters)
+        newArr = newArr.filter((call) =>
+          filters.entregaStatusFilter.includes(call.compra.statusEntrega)
+        );
     }
     if (filters.desenhoFilter) {
       if (!newArr) newArr = projects;
@@ -190,6 +191,9 @@ function Projetos({ credentials, setCredentials }) {
               { value: "EM ROTA", label: "EM ROTA" },
               { value: "AGUARDANDO COMPRA", label: "AGUARDANDO COMPRA" },
               { value: "ENTREGUE", label: "ENTREGUE" },
+              { value: "NÃO DEFINIDO", label: "NÃO DEFINIDO" },
+              { value: "CANCELADO", label: "CANCELADO" },
+              { value: undefined, label: "VAZIO" },
             ]}
           />
           <Select

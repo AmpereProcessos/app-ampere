@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("dados");
     delete req.body._id;
-    let obj = await collection.findOne({ _id: ObjectId(req.query.id) });
+    // let obj = await collection.findOne({ _id: ObjectId(req.query.id) });
     var newObj = await collection.updateOne(
       { _id: ObjectId(req.query.id) },
       { $set: { ...req.body } }

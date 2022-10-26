@@ -606,7 +606,7 @@ function ModalSuprimentos({
                 <div className="flex gap-2 justify-center flex-wrap">
                   <SelectInput
                     label={"STATUS DA LIBERAÇÃO"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.compra?.statusLiberacao
                         ? infoHolder.compra?.statusLiberacao
@@ -1053,6 +1053,56 @@ function ModalSuprimentos({
                       });
                     }}
                   />
+                  <TextInput
+                    label={"Informações faturamento"}
+                    editable={editor}
+                    value={
+                      infoHolder.faturamento?.previsaoFaturamento
+                        ? infoHolder.faturamento?.previsaoFaturamento
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "faturamento.previsaoFaturamento": value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          previsaoFaturamento: value,
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
+                    label="Data de faturamento"
+                    editable={editor}
+                    value={
+                      infoHolder.faturamento?.dataFaturamento
+                        ? new Date(infoHolder.faturamento?.dataFaturamento)
+                            .toISOString()
+                            .slice(0, 10)
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "faturamento.dataFaturamento": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          dataFaturamento: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
+                        },
+                      });
+                    }}
+                  />
                   <div className="flex flex-col w-[350px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
                       RELATÓRIO DE COMISS. SUPRIMENTOS
@@ -1257,56 +1307,6 @@ function ModalSuprimentos({
                         faturamento: {
                           ...infoHolder.faturamento,
                           empresaFaturamento: value,
-                        },
-                      });
-                    }}
-                  />
-                  <TextInput
-                    label={"Informações faturamento"}
-                    editable={editor}
-                    value={
-                      infoHolder.faturamento?.previsaoFaturamento
-                        ? infoHolder.faturamento?.previsaoFaturamento
-                        : ""
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "faturamento.previsaoFaturamento": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        faturamento: {
-                          ...infoHolder.faturamento,
-                          previsaoFaturamento: value,
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label="Data de faturamento"
-                    editable={editor}
-                    value={
-                      infoHolder.faturamento?.dataFaturamento
-                        ? new Date(infoHolder.faturamento?.dataFaturamento)
-                            .toISOString()
-                            .slice(0, 10)
-                        : ""
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "faturamento.dataFaturamento": isNaN(value)
-                          ? new Date(value).toISOString()
-                          : null,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        faturamento: {
-                          ...infoHolder.faturamento,
-                          dataFaturamento: isNaN(value)
-                            ? new Date(value).toISOString()
-                            : null,
                         },
                       });
                     }}

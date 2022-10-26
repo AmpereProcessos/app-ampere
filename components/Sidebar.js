@@ -13,6 +13,7 @@ import { BiSupport } from "react-icons/bi";
 import { SiCashapp } from "react-icons/si";
 import { BsFillCalendarEventFill } from "react-icons/bs";
 import { BsFolderPlus } from "react-icons/bs";
+import { VscWorkspaceTrusted } from "react-icons/vsc";
 import Link from "next/link";
 const style = {
   heigth: "calc(100% - 350px)",
@@ -176,6 +177,18 @@ function Sidebar({ credentials }) {
                     style={{ color: "#15599a", fontSize: "20px" }}
                   />
                   <p className="pl-3 text-xs text-gray-600">Cobranças</p>
+                </div>
+              </Link>
+            )
+          : false}
+        {credentials.accessibleRoutes != undefined
+          ? credentials?.accessibleRoutes.includes("Projetos") && (
+              <Link href={"/projetos/comissionamento"}>
+                <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                  <VscWorkspaceTrusted
+                    style={{ color: "#15599a", fontSize: "20px" }}
+                  />
+                  <p className="pl-3 text-xs text-gray-600">Comissionamento</p>
                 </div>
               </Link>
             )

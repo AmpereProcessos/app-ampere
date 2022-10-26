@@ -39,6 +39,19 @@ function Suprimentos({ credentials, setCredentials }) {
       setFilteredProjects(projects);
     }
   }
+  function getBorderColor(date1, date2) {
+    var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    if (diffDays > 7) {
+      return "border-2 border-red-600";
+    } else if (diffDays > 5) {
+      return "border-2 border-yellow-500";
+    } else if (diffDays > 3) {
+      return "border-2 border-blue-700";
+    } else {
+      return "border border-gray-200";
+    }
+  }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
@@ -118,9 +131,9 @@ function Suprimentos({ credentials, setCredentials }) {
             </p>
           )}
         </div>
-        <div className="flex gap-x-2">
+        <div className="flex flex-wrap gap-2 justify-center items-center">
           <input
-            className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
+            className="outline-none p-1.5 w-[250px] h-[36px] rounded border border-gray-200 placeholder:italic"
             placeholder="Digite o nome do contrato"
             value={searchFilter}
             onChange={(e) => handleSearchFilter(e.target.value)}
@@ -184,7 +197,7 @@ function Suprimentos({ credentials, setCredentials }) {
           />
           <button
             onClick={filterProjects}
-            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 items-center gap-x-2"
+            className="flex bg-[#fead61] hover:text-white h-[36px] hover:bg-[#15599a] font-bold rounded px-2 items-center gap-x-2"
           >
             <p>Filtrar</p>
             <AiOutlineSearch />
@@ -199,7 +212,15 @@ function Suprimentos({ credentials, setCredentials }) {
               setModalProject(project);
             }}
             key={project._id}
-            className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+            className={`w-[250px] lg:w-[450px] cursor-pointer ${
+              project.compra.dataPedido == undefined &&
+              project.compra.statusEntrega != "EM ROTA"
+                ? getBorderColor(
+                    new Date(project.compra.dataLiberacao),
+                    new Date()
+                  )
+                : "border border-gray-200"
+            } p-3 hover:bg-blue-100`}
           >
             <div className="flex items-center justify-between">
               <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
@@ -207,9 +228,11 @@ function Suprimentos({ credentials, setCredentials }) {
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-xxs">CONTRATO</span>
-                <p className="text-xs text-gray-600">
-                  {project.contrato.status ? project.contrato.status : "-"}
+                <span className="text-xxs">INFORMAÇÕES</span>
+                <p className="text-xxs font-bold text-gray-600">
+                  {project.compra.informacoes
+                    ? project.compra.informacoes
+                    : "-"}
                 </p>
               </div>
               <div>

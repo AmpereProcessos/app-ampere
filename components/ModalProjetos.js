@@ -1016,6 +1016,50 @@ function ModalProjetos({
                     }}
                   />
                   <SelectInput
+                    label={"STATUS DA ENTREGA"}
+                    editable={false}
+                    value={
+                      infoHolder.compra?.statusEntrega
+                        ? infoHolder.compra?.statusEntrega
+                        : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      {
+                        label: "AGUARDANDO COMPRA",
+                        value: "AGUARDANDO COMPRA",
+                      },
+                      {
+                        label: "EM ROTA",
+                        value: "EM ROTA",
+                      },
+                      {
+                        label: "ENTREGUE",
+                        value: "ENTREGUE",
+                      },
+                      {
+                        label: "CANCELADO",
+                        value: "CANCELADO",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "compra.statusEntrega": value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          statusEntrega: value,
+                        },
+                      });
+                    }}
+                  />
+                  <SelectInput
                     label={"INICIAR PROJETO"}
                     value={
                       infoHolder.projeto?.iniciar

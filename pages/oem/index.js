@@ -13,6 +13,9 @@ function OeM({ credentials, setCredentials }) {
   const [filters, setFilters] = useState({
     cidadeFilter: [],
     equipResp: [],
+    manutencaoPendente: false,
+    manutencaoAtrasada: false,
+    limparAteDezembro: false,
   });
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -53,6 +56,45 @@ function OeM({ credentials, setCredentials }) {
       newArr = newArr.filter((call) =>
         filters.equipResp.includes(call.obra?.equipeResp)
       );
+    }
+    if (filters.manutencaoPendente) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (project) => project.manutencaoPreventiva.status == "NÃO REALIZADO"
+      );
+    }
+    if (filters.manutencaoAtrasada) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((project) => {
+        if (project.medidor.data) {
+          var timeDiff = Math.abs(
+            new Date().getTime() - new Date(project.medidor?.data).getTime()
+          );
+          var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+          console.log(diffDays);
+          return (
+            project.manutencaoPreventiva.status == "NÃO REALIZADO" &&
+            diffDays > 304
+          );
+        } else return false;
+      });
+    }
+    if (filters.limparAteDezembro) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((project) => {
+        if (project.medidor.data) {
+          var timeDiff = Math.abs(
+            new Date("2022-12-31T20:35:47.757Z").getTime() -
+              new Date(project.medidor?.data).getTime()
+          );
+          var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+          console.log(diffDays);
+          return (
+            project.manutencaoPreventiva.status == "NÃO REALIZADO" &&
+            diffDays > 365
+          );
+        } else return false;
+      });
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!newArr) newArr = projects;
@@ -203,6 +245,45 @@ function OeM({ credentials, setCredentials }) {
               },
             ]}
           />
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                manutencaoPendente: !filters.manutencaoPendente,
+              })
+            }
+            className={`${
+              filters.manutencaoPendente ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            MANUTENÇÃO PENDENTE
+          </div>
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                manutencaoAtrasada: !filters.manutencaoAtrasada,
+              })
+            }
+            className={`${
+              filters.manutencaoAtrasada ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            MANUTENÇÃO ATRASADA
+          </div>
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                limparAteDezembro: !filters.limparAteDezembro,
+              })
+            }
+            className={`${
+              filters.limparAteDezembro ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            LIMPAR ATÉ DEZEMBRO
+          </div>
           <Select
             isMulti
             placeholder="CIDADE"
@@ -218,7 +299,7 @@ function OeM({ credentials, setCredentials }) {
                 value: cidade,
               };
             })}
-          />{" "}
+          />
           <div className="hidden lg:flex gap-x-2">
             <div className="flex flex-col w-fit items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -268,6 +349,10 @@ function OeM({ credentials, setCredentials }) {
               options={[
                 { label: "SAÍDA DE OBRA", value: "obra.saida" },
                 { label: "TROCA DO MEDIDOR", value: "medidor.data" },
+                {
+                  label: "DATA MANUTENÇÃO",
+                  value: "manutencaoPreventiva.data",
+                },
                 { label: "NÃO DEFINIDO", value: null },
               ]}
               onChange={(e) =>

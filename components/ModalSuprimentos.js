@@ -626,7 +626,7 @@ function ModalSuprimentos({
                   />
                   <DateInput
                     label={"Data de liberação p/ compra"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.compra?.dataLiberacao != undefined &&
                       infoHolder.compra.dataLiberacao != "-"
@@ -936,6 +936,31 @@ function ModalSuprimentos({
                         compra: {
                           ...infoHolder.compra,
                           previsaoEntrega: new Date(value).toISOString(),
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
+                    label={"Data de entrega"}
+                    editable={editor}
+                    value={
+                      infoHolder.compra.dataEntrega != undefined &&
+                      infoHolder.compra.dataEntrega != "-"
+                        ? new Date(infoHolder.compra.dataEntrega)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "compra.dataEntrega": new Date(value).toISOString(),
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          dataEntrega: new Date(value).toISOString(),
                         },
                       });
                     }}

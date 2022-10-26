@@ -21,6 +21,7 @@ function Obras({ credentials, setCredentials }) {
     obsPendente: false,
     numModulos: null,
     equipResp: [],
+    liberacaoStatus: [],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -88,6 +89,12 @@ function Obras({ credentials, setCredentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.epStatusFilter.includes(call.estruturaPersonalizada.status)
+      );
+    }
+    if (filters.liberacaoStatus.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.liberacaoStatus.includes(call.compra.statusLiberacao)
       );
     }
     if (filters.cidadeFilter.length > 0) {
@@ -322,6 +329,43 @@ function Obras({ credentials, setCredentials }) {
               { value: "AGUARDANDO COMPRA", label: "AGUARDANDO COMPRA" },
               { value: "ENTREGUE", label: "ENTREGUE" },
               { value: undefined, label: "NÃO DEFINIDO" },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="STATUS PAG. KIT"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                liberacaoStatus: e.map((x) => x.value),
+              })
+            }
+            options={[
+              { value: "PAGO", label: "PAGO" },
+              {
+                value: "REALIZAR COMPRA",
+                label: "REALIZAR COMPRA",
+              },
+              {
+                value: "AGUARDANDO PAGAMENTO DO BANCO",
+                label: "AGUARDANDO PAGAMENTO DO BANCO",
+              },
+              {
+                value: "AGUARDANDO CLIENTE PAGAR",
+                label: "AGUARDANDO CLIENTE PAGAR",
+              },
+              {
+                value: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
+                label: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
+              },
+              {
+                value: "AGUARDANDO PARECER DE ACESSO",
+                label: "AGUARDANDO PARECER DE ACESSO",
+              },
+              {
+                value: "AGUARDANDO N.F",
+                label: "AGUARDANDO N.F",
+              },
             ]}
           />
           <Select

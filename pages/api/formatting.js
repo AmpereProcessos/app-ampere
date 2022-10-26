@@ -91,6 +91,7 @@ export default async function handler(req, res) {
         dataPedido: fixDate(project.datadopedido), // formatar como data
         dataPagamento: fixDate(project.datapagamento),
         previsaoEntrega: fixDate(project.previsaoentrega), // formatar como data
+        dataEntrega: projeto.dataentrega,
         localEntrega: project.localdeentrega,
         informacoes: project.informacoescompra,
         previsaoNotaFiscal: project.previsaonotafiscal,

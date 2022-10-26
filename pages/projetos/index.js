@@ -18,6 +18,7 @@ function Projetos({ credentials, setCredentials }) {
     assinFaltando: false,
     desenhoFilter: false,
     obraStatusFilter: [],
+    entregaStatusFilter: [],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -73,6 +74,12 @@ function Projetos({ credentials, setCredentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.obraStatusFilter.includes(call.obra.statusDaObra)
+      );
+    }
+    if (filters.entregaStatusFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.entregaStatusFilter.includes(call.compra.statusEntrega)
       );
     }
     if (filters.desenhoFilter) {
@@ -169,6 +176,21 @@ function Projetos({ credentials, setCredentials }) {
             placeholder="Digite o nome do contrato"
             value={searchFilter}
             onChange={(e) => handleSearchFilter(e.target.value)}
+          />
+          <Select
+            isMulti
+            placeholder="STATUS DA ENTREGA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                entregaStatusFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              { value: "EM ROTA", label: "EM ROTA" },
+              { value: "AGUARDANDO COMPRA", label: "AGUARDANDO COMPRA" },
+              { value: "ENTREGUE", label: "ENTREGUE" },
+            ]}
           />
           <Select
             isMulti

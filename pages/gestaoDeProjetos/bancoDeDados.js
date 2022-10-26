@@ -14,6 +14,12 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     text: "ORDEM CRESC",
     value: true,
   });
+  const [dateFilter, setDateFilter] = useState({
+    after: null,
+    before: null,
+    field1: null,
+    field2: null,
+  });
   const [filters, setFilters] = useState({
     cidadeFilter: [],
   });
@@ -61,6 +67,15 @@ function BandoDeDados({ data, credentials, setCredentials }) {
         filters.cidadeFilter.includes(call.cidade)
       );
     }
+    if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) =>
+          call[dateFilter.field1][dateFilter.field2] > dateFilter.after &&
+          call[dateFilter.field1][dateFilter.field2] < dateFilter.before
+      );
+      console.log(newArr);
+    }
     if (!newArr) setFilteredProjects(projects);
     else {
       setFilteredProjects(newArr);
@@ -91,6 +106,11 @@ function BandoDeDados({ data, credentials, setCredentials }) {
           <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
             BANCO DE DADOS
           </p>
+          {filteredProjects && (
+            <p className="text-[#fead61] font-raleway">
+              ({filteredProjects.length})
+            </p>
+          )}
         </div>
         <div className="flex gap-2 flex-wrap justify-center">
           <div
@@ -115,6 +135,78 @@ function BandoDeDados({ data, credentials, setCredentials }) {
               };
             })}
           />
+          <div className="hidden lg:flex gap-x-2">
+            <div className="flex flex-col w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                Depois de:
+              </span>
+              <input
+                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                type="date"
+                value={
+                  dateFilter.after &&
+                  new Date(dateFilter.after).toISOString().slice(0, 10)
+                }
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    after: isNaN(e.target.value)
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <div className="flex flex-col w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                Antes de:
+              </span>
+              <input
+                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                type="date"
+                value={
+                  dateFilter.before &&
+                  new Date(dateFilter.before).toISOString().slice(0, 10)
+                }
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    before: isNaN(e.target.value)
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <Select
+              isMulti={false}
+              placeholder={"CAMPO DE FILTRO"}
+              options={[
+                { label: "SAÍDA DE OBRA", value: "obra.saida" },
+                {
+                  label: "DATA DO PARECER",
+                  value: "parecer.dataParecerDeAcesso",
+                },
+                {
+                  label: "DATA ASS.CONTRATO",
+                  value: "contrato.dataAssinatura",
+                },
+                {
+                  label: "DATA PAG.KIT",
+                  value: "compra.dataPagamento",
+                },
+                { label: "TROCA DO MEDIDOR", value: "medidor.data" },
+                { label: "NÃO DEFINIDO", value: null },
+              ]}
+              onChange={(e) =>
+                setDateFilter({
+                  ...dateFilter,
+                  field1: e.value != null ? e.value.split(".")[0] : null,
+                  field2: e.value != null ? e.value.split(".")[1] : null,
+                })
+              }
+            />
+          </div>
           <input
             className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
             placeholder="Digite o nome do contrato"

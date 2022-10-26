@@ -522,6 +522,115 @@ function ModalProjetos({
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  COMISSIONAMENTO
+                </span>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      COMISSIONAMENTO COMERCIAL
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={
+                          infoHolder.comissionamento?.comercial ? true : false
+                        }
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            "comissionamento.comercial": e.target.checked,
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            comissionamento: {
+                              ...infoHolder.comissionamento,
+                              comercial: e.target.checked,
+                            },
+                          });
+                        }}
+                        type="checkbox"
+                        name="comissionamentoComercial"
+                        id="comissionamentoComercial"
+                      />
+                      <label
+                        className="ml-2"
+                        htmlFor="comissionamentoComercial"
+                      >
+                        OK
+                      </label>
+                    </div>
+                  </div>
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      COMISSIONAMENTO DE SUPRIMENTOS
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={
+                          infoHolder.comissionamento?.suprimentos ? true : false
+                        }
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            "comissionamento.suprimentos": e.target.checked,
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            comissionamento: {
+                              ...infoHolder.comissionamento,
+                              suprimentos: e.target.checked,
+                            },
+                          });
+                        }}
+                        type="checkbox"
+                        name="comissionamentoSuprimentos"
+                        id="comissionamentoSuprimentos"
+                      />
+                      <label
+                        className="ml-2"
+                        htmlFor="comissionamentoSuprimentos"
+                      >
+                        OK
+                      </label>
+                    </div>
+                  </div>
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      COMISSIONAMENTO PROJETOS
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={
+                          infoHolder.comissionamento?.projetos ? true : false
+                        }
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            "comissionamento.projetos": e.target.checked,
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            comissionamento: {
+                              ...infoHolder.comissionamento,
+                              projetos: e.target.checked,
+                            },
+                          });
+                        }}
+                        type="checkbox"
+                        name="comissionamentoProjetos"
+                        id="comissionamentoProjetos"
+                      />
+                      <label className="ml-2" htmlFor="comissionamentoProjetos">
+                        OK
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   VISITA TÉCNICA
                 </span>
                 <div className="flex gap-2 justify-around flex-wrap">

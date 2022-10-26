@@ -172,7 +172,7 @@ function Projetos({ credentials, setCredentials }) {
         </div>
         <div className="flex gap-2 flex-wrap justify-center">
           <input
-            className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
+            className="outline-none p-1.5 w-[250px] h-[36px] rounded border border-gray-200 placeholder:italic"
             placeholder="Digite o nome do contrato"
             value={searchFilter}
             onChange={(e) => handleSearchFilter(e.target.value)}

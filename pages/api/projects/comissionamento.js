@@ -8,6 +8,8 @@ export default async function handler(req, res) {
         {
           $match: {
             "comissionamento.projetos": { $ne: true },
+            "contrato.status": "ASSINADO",
+            "compra.statusLiberacao": { $in: ["PAGO", "REALIZAR COMPRA"] },
           },
         },
         {

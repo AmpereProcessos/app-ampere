@@ -13,6 +13,8 @@ function Posvenda({ credentials, setCredentials }) {
     noContactFilter: false,
     cidadeFilter: [],
     vendedorFilter: [],
+    contratoFilter: [],
+    jornadaEmAberto: false,
   });
   const [searchFilter, setSearchFilter] = useState("");
   const [cardMode, setCardMode] = useState(true);
@@ -66,6 +68,21 @@ function Posvenda({ credentials, setCredentials }) {
         filters.vendedorFilter.includes(call.vendedor.nome)
       );
     }
+    if (filters.contratoFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.contratoFilter.includes(call.contrato.status)
+      );
+    }
+    if (filters.jornadaEmAberto) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) =>
+          call.jornada.jornadaConcluida == false ||
+          call.jornada.jornadaConcluida == undefined ||
+          call.jornada.jornadaConcluida == null
+      );
+    }
     if (!newArr) setFilteredProjects(projects);
     else {
       setFilteredProjects(newArr);
@@ -94,7 +111,7 @@ function Posvenda({ credentials, setCredentials }) {
   }, []);
   return (
     <div className="p-6 grow">
-      <div className="flex items-center justify-between border-b border-gray-200 p-1">
+      <div className="flex flex-col items-center justify-center border-b border-gray-200 p-1">
         <div className="flex items-center gap-x-2">
           <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
             Projetos em jornada
@@ -154,6 +171,44 @@ function Posvenda({ credentials, setCredentials }) {
               };
             })}
           />
+          <Select
+            isMulti
+            className="hidden lg:block"
+            placeholder="STATUS CONTRATO"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                contratoFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                value: "AGUARDANDO SOLICITAÇÃO",
+                label: "AGUARDANDO SOLICITAÇÃO",
+              },
+              {
+                value: "NÃO ASSINADO",
+                label: "NÃO ASSINADO",
+              },
+              {
+                value: "ASSINADO",
+                label: "ASSINADO",
+              },
+            ]}
+          />
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                jornadaEmAberto: !filters.jornadaEmAberto,
+              })
+            }
+            className={`${
+              filters.jornadaEmAberto ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            JORNADA NÃO CONCLUIDA
+          </div>
           <input
             className="outline-none p-1.5 w-[300px] rounded border border-gray-200 placeholder:italic"
             placeholder="Digite o nome do contrato"

@@ -74,29 +74,31 @@ function OSControlCard({ info, reload, emAberto }) {
           </div>
           <div className="flex flex-col items-center">
             <p className="uppercase text-gray-500">DATA DE FECHAMENTO</p>
-            {console.log(new Date(ordem.dataDeFechamento))}
-            <input
-              type="datetime-local"
-              value={
-                ordem.dataDeFechamento
-                  ? new Date(ordem.dataDeFechamento).toISOString().slice(0, 10)
-                  : null
-              }
-              onChange={(e) => {
-                setOs((prevState) => {
-                  let temp = {
-                    ...prevState,
-                    ordensDeServico: [...prevState.ordensDeServico],
-                  };
-                  temp.ordensDeServico[index].dataDeFechamento = new Date(
-                    e.target.value
-                  ).toISOString();
-                  return temp;
-                });
-                handleChange(os._id, index, new Date(e.target.value));
-              }}
-              className="font-bold bg-[#15599a] w-fit text-white p-1 rounded"
-            />
+            {ordem.dataDeFechamento == undefined ? (
+              <input
+                type="datetime-local"
+                onChange={(e) => {
+                  setOs((prevState) => {
+                    let temp = {
+                      ...prevState,
+                      ordensDeServico: [...prevState.ordensDeServico],
+                    };
+                    temp.ordensDeServico[index].dataDeFechamento = new Date(
+                      e.target.value
+                    ).toISOString();
+                    return temp;
+                  });
+                  handleChange(
+                    os._id,
+                    index,
+                    new Date(e.target.value).toISOString().slice(0, 10)
+                  );
+                }}
+                className="font-bold bg-[#15599a] w-fit text-white p-1 rounded"
+              />
+            ) : (
+              <p>{new Date(ordem.dataDeFechamento).toLocaleDateString()}</p>
+            )}
           </div>
         </div>
       ))}

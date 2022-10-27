@@ -3,21 +3,15 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("dados");
-    let posvenda = await collection
+    let arr = await collection
       .aggregate([
         {
           $match: {
-            "contrato.status": {
-              $in: ["ASSINADO", "AGUARDANDO SOLICITAÇÃO", "NÃO ASSINADO"],
-            },
-            $or: [
-              { "medidor.status": { $ne: "REALIZADA" } },
-              { "jornada.jornadaConcluida": { $ne: true } },
-            ],
+            "projeto.aumentoDeCarga": "SIM",
           },
         },
       ])
       .toArray();
-    res.json(posvenda);
+    res.json(arr);
   }
 }

@@ -15,7 +15,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
   }
   function handleChanges(mudancas) {
     axios.post(`/api/projects/update/${project._id}`, mudancas).then((res) => {
-      getUpdates();
+      console.log("OK");
     });
   }
   return (

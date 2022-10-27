@@ -62,6 +62,15 @@ function ModalComercial({
       infoHolder.pagamento.status == "PAGO"
     ) {
       setMsg({ text: "Verifique as informações!", color: "text-red-400" });
+    } else if (
+      !infoHolder.comissionamento?.comercial &&
+      (infoHolder.compra?.statusLiberacao == "REALIZAR COMPRA" ||
+        infoHolder.compra?.statusLiberacao == "PAGO")
+    ) {
+      setMsg({
+        text: "Preencha o relatório de comissionamento.",
+        color: "text-red-400",
+      });
     } else {
       let { data } = await axios.post("/api/changes", {
         usuario: credentials.nome,
@@ -74,8 +83,6 @@ function ModalComercial({
       });
     }
   }
-  console.log("holder", infoHolder);
-  console.log("changes", changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -358,6 +365,15 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({ ...changes, segmento: value });
                       setInfo({ ...infoHolder, segmento: value });
+                    }}
+                  />
+                  <TextInput
+                    label={"LINK PASTA DO DRIVE"}
+                    editable={true}
+                    value={infoHolder.linkDrive ? infoHolder.linkDrive : ""}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, linkDrive: value });
+                      setInfo({ ...infoHolder, linkDrive: value });
                     }}
                   />
                   <TextInput

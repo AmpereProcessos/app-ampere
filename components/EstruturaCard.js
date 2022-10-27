@@ -1,18 +1,15 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-function PadraoCard({ project }) {
+function EstruturaCard({ project }) {
   const [changes, setChanges] = useState({
-    "projeto.fechamentoAC": project.projeto.fechamentoAC,
-    "padrao.pagTerceiro": null,
+    "estruturaPersonalizada.dataMontagem":
+      project.estruturaPersonalizada.dataMontagem,
+    "estruturaPersonalizada.pagTerceiro":
+      project.estruturaPersonalizada.pagTerceiro,
   });
   function handleChanges(mudancas) {
-    axios
-      .post("/api/gestaoDeObras/padroes", {
-        id: project._id,
-        mudancas: mudancas,
-      })
-      .then((res) => console.log(res.data));
+    console.log(mudancas);
   }
   return (
     <div className="w-full p-2 border border-[#15599a] rounded">
@@ -66,58 +63,40 @@ function PadraoCard({ project }) {
           </div>
           <div className="flex flex-col items-center">
             <p className="text-sm uppercase text-[#15599a] font-bold">
-              TIPO DO PADRÃO
+              TIPO DA ESTRUTURA
             </p>
             <p className="text-xs uppercase text-gray-500">
-              {project.padrao?.tipo ? project.padrao.tipo : "-"}
-            </p>
-          </div>
-          <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">
-              RESP.PAGAMENTO DO PADRÃO
-            </p>
-            <p className="text-xs uppercase text-gray-500">
-              {project.padrao?.respPagamento
-                ? project.padrao.respPagamento
+              {project.estruturaPersonalizada?.tipo
+                ? project.estruturaPersonalizada?.tipo
                 : "-"}
             </p>
           </div>
           <div className="flex flex-col items-center">
             <p className="text-sm uppercase text-[#15599a] font-bold">
-              RESP.INSTALAÇÃO DO PADRÃO
+              RESP.PAGAMENTO DA ESTRUTURA
             </p>
             <p className="text-xs uppercase text-gray-500">
-              {project.padrao?.respInstalacao
-                ? project.padrao.respInstalacao
+              {project.estruturaPersonalizada?.respPagamento
+                ? project.estruturaPersonalizada?.respPagamento
                 : "-"}
             </p>
           </div>
           <div className="flex flex-col items-center">
             <p className="text-sm uppercase text-[#15599a] font-bold">
-              VALOR DO PADRÃO
+              VALOR DA ESTRUTURA
             </p>
             <p className="text-xs uppercase text-gray-500">
-              {project.padrao?.valor ? project.padrao.valor : "-"}
-            </p>
-          </div>
-          <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">
-              SAIDA DO CLIENTE
-            </p>
-            <p className="text-xs uppercase text-gray-500">
-              {project.visitaTecnica.saidaDoCliente
-                ? project.visitaTecnica.saidaDoCliente
+              {project.estruturaPersonalizada?.valor
+                ? project.estruturaPersonalizada?.valor
                 : "-"}
             </p>
           </div>
           <div className="flex flex-col items-center">
             <p className="text-sm uppercase text-[#15599a] font-bold">
-              AMPERAGEM
+              NºModulos
             </p>
             <p className="text-xs uppercase text-gray-500">
-              {project.visitaTecnica?.amperagem
-                ? project.visitaTecnica.amperagem
-                : "-"}
+              {project.sistema.qtdeModulos ? project.sistema.qtdeModulos : "-"}
             </p>
           </div>
         </div>
@@ -136,11 +115,11 @@ function PadraoCard({ project }) {
             }
             onChange={(e) => {
               handleChanges({
-                "projeto.fechamentoAC": new Date(e.target.value),
+                "estruturaPersonalizada.dataMontagem": new Date(e.target.value),
               });
               setChanges({
                 ...changes,
-                "projeto.fechamentoAC": new Date(e.target.value),
+                "estruturaPersonalizada.dataMontagem": new Date(e.target.value),
               });
             }}
           />
@@ -155,10 +134,12 @@ function PadraoCard({ project }) {
               name="projetoconcluido"
               id="projetoconcluido"
               onChange={(e) => {
-                handleChanges({ "padrao.pagTerceiro": e.target.checked });
+                handleChanges({
+                  "estruturaPersonalizada.pagTerceiro": e.target.checked,
+                });
                 setChanges({
                   ...changes,
-                  "padrao.pagTerceiro": e.target.checked,
+                  "estruturaPersonalizada.pagTerceiro": true,
                 });
               }}
             />
@@ -172,4 +153,4 @@ function PadraoCard({ project }) {
   );
 }
 
-export default PadraoCard;
+export default EstruturaCard;

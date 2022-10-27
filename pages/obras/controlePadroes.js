@@ -7,6 +7,7 @@ function ControlePadroes({ setCredentials, credentials }) {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filters, setFilters] = useState({
+    searchFilter: "",
     acStatusFilter: [],
     liberacaoStatus: [],
     segmentoFilter: [],
@@ -35,6 +36,14 @@ function ControlePadroes({ setCredentials, credentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.segmentoFilter.includes(call.segmento)
+      );
+    }
+    if (filters.searchFilter.trim().length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = projects.filter((call) =>
+        call.nomeDoContrato
+          .toUpperCase()
+          .includes(filters.searchFilter.toUpperCase())
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -79,6 +88,17 @@ function ControlePadroes({ setCredentials, credentials }) {
           CONTROLE DE PADRÕES ({filteredProjects.length})
         </h1>
         <div className="flex w-full items-center gap-x-2 justify-center">
+          <input
+            type={"text"}
+            placeholder="Digite o nome do contrato"
+            value={filters.searchFilter}
+            className={
+              "outline-none p-1.5 rounded border border-gray-200 placeholder:italic"
+            }
+            onChange={(e) =>
+              setFilters({ ...filters, searchFilter: e.target.value })
+            }
+          />
           <Select
             isMulti
             placeholder="SEGMENTO"

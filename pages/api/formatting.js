@@ -52,6 +52,7 @@ export default async function handler(req, res) {
         respInstalacao: project.respinstalacaopadrao,
         valor: project.valorpadrao,
         dataMontagem: project.montagemPadrao,
+        pagTerceiro: project.estruturapagterceiro,
       },
       estruturaPersonalizada: {
         aplicavel: project.possuiestruturapersonalisada,

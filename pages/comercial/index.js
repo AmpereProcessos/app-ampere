@@ -140,6 +140,23 @@ function Comercial({ credentials, setCredentials }) {
     }
     return totalSum.toFixed(2);
   }
+  function getListCumulativeValue() {
+    var totalSum = 0;
+    for (var i = 0; i < filteredProjects.length; i++) {
+      let projeto = !isNaN(filteredProjects[i].sistema?.valorProjeto)
+        ? filteredProjects[i].sistema.valorProjeto
+        : 0;
+      let padrao = !isNaN(filteredProjects[i].padrao?.valor)
+        ? filteredProjects[i].padrao?.valor
+        : 0;
+      let estrutura = !isNaN(filteredProjects[i].estruturaPersonalizada?.valor)
+        ? filteredProjects[i].estruturaPersonalizada.valor
+        : 0;
+      totalSum =
+        Number(totalSum) + Number(projeto) + Number(padrao) + Number(estrutura);
+    }
+    return totalSum;
+  }
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 p-1">
@@ -153,6 +170,11 @@ function Comercial({ credentials, setCredentials }) {
           {filteredProjects && (
             <p className="font-raleway font-bold text-[#fead61]">
               ({getListCumulativePeakPot()}kWp)
+            </p>
+          )}
+          {filteredProjects && (
+            <p className="font-raleway font-bold text-[#fead61]">
+              (R${getListCumulativeValue().toLocaleString()})
             </p>
           )}
         </div>

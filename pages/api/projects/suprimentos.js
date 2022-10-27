@@ -14,6 +14,7 @@ export default async function handler(req, res) {
                 "",
                 null,
                 undefined,
+                " ",
                 "NÃO DEFINIDO",
               ],
             },

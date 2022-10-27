@@ -16,5 +16,23 @@ export default async function handler(req, res) {
       .find({ ordensDeServico: { $ne: null } })
       .toArray();
     return res.json(arr);
+  } else if (req.method === "PUT") {
+    const db = await connectToDatabase(process.env.DB_KEY);
+    const collection = db.collection("dados");
+    var newObj = await collection.findOneAndUpdate(
+      {
+        _id: ObjectId(req.body.id),
+        "ordensDeServico.index": req.body.index,
+      },
+      {
+        $set: {
+          "ordensDeServico.$.dataDeFechamento": req.body.fechamento,
+        },
+      },
+      {
+        returnDocument: "after",
+      }
+    );
+    res.json(newObj);
   }
 }

@@ -3,19 +3,22 @@ import NumberInput from "../components/NumberInput";
 import axios from "axios";
 function PosVendaCard({ project, getUpdates, cardMode }) {
   const [infoHolder, setInfo] = useState(project);
-  const [changes, setChanges] = useState({});
+  const [changes, setChanges] = useState({
+    nps: project.nps ? project.nps : null,
+    obsJornada: project.jornada.obsJornada ? project.jornada.obsJornada : null,
+    dataNPS: project.jornada.dataNps ? project.jornada.dataNps : null,
+  });
   function getDateDiff(date1, date2) {
     const diffInMs = new Date(date1) - new Date(date2);
     const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
     return diffInDays;
   }
-  const [obsJornada, setObsJornada] = useState(project.jornada?.obsJornada);
   function handleChanges(mudancas) {
     axios.post(`/api/projects/update/${project._id}`, mudancas).then((res) => {
       getUpdates();
     });
   }
-  console.log(obsJornada);
+  console.log(changes);
   return (
     <>
       {cardMode ? (
@@ -94,22 +97,23 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                     new Date(),
                     new Date(infoHolder.jornada?.dataUltimoContato)
                   ) > 7 ? (
-                    <input
-                      type="datetime-local"
-                      onChange={(e) => {
+                    <button
+                      onClick={(e) => {
                         handleChanges({
-                          "jornada.dataUltimoContato": new Date(e.target.value),
+                          "jornada.dataUltimoContato": new Date(),
                         });
                         setInfo({
                           ...infoHolder,
                           jornada: {
                             ...infoHolder.jornada,
-                            dataUltimoContato: new Date(e.target.value),
+                            dataUltimoContato: new Date(),
                           },
                         });
                       }}
-                      className="font-bold bg-[#15599a] w-fit text-white  p-2 rounded"
-                    />
+                      className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+                    >
+                      CONTATO RECENTE?
+                    </button>
                   ) : (
                     <p>
                       {new Date(
@@ -118,50 +122,25 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                     </p>
                   )
                 ) : (
-                  <input
-                    type="datetime-local"
-                    onChange={(e) => {
+                  <button
+                    onClick={(e) => {
                       handleChanges({
-                        "jornada.dataUltimoContato": new Date(
-                          e.target.value
-                        ).toISOString(),
+                        "jornada.dataUltimoContato": new Date(),
                       });
                       setInfo({
                         ...infoHolder,
                         jornada: {
                           ...infoHolder.jornada,
-                          dataUltimoContato: new Date(
-                            e.target.value
-                          ).toISOString(),
+                          dataUltimoContato: new Date(),
                         },
                       });
                     }}
-                    className="font-bold bg-[#15599a] w-fit text-white p-2 rounded"
-                  />
+                    className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+                  >
+                    CONTATO RECENTE?
+                  </button>
                 )}
                 <div className="flex flex-col w-[350px] items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">
-                    NOTA NPS
-                  </span>
-                  <div className="flex items-center justify-center">
-                    <input
-                      className="text-xs w-fit text-center uppercase text-gray-600 outline-none"
-                      type="number"
-                      min={0}
-                      step={1}
-                      value={infoHolder.nps ? infoHolder.nps : 0}
-                      onChange={(e) => {
-                        handleChanges({
-                          "jornada.dataNps": new Date().toISOString(),
-                          nps: Math.ceil(e.target.value),
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          nps: Math.ceil(e.target.value),
-                        });
-                      }}
-                    />
-                  </div>
                   <div className="w-fit mt-1">
                     <input
                       checked={
@@ -434,18 +413,43 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
           <div className="flex flex-col gap-y-2 mt-1 py-1 border-t border-gray-200">
             <h1 className="text-[#fead61] font-bold">OBSERVAÇÕES</h1>
             <textarea
-              value={obsJornada}
+              value={changes.obsJornada ? changes.obsJornada : ""}
               onChange={(e) => {
-                setObsJornada(e.target.value);
+                setChanges({ ...changes, obsJornada: e.target.value });
               }}
               className="text-center outline-none text-xs py-2 w-full border border-gray-200 resize-none h-[40px]"
             />
+            <span className="uppercase font-bold font-raleway text-center text-sm">
+              NOTA NPS
+            </span>
+            <div className="flex items-center justify-center">
+              <input
+                className="text-xs w-fit text-center uppercase rounded text-gray-600 outline-none"
+                type="number"
+                min={0}
+                step={1}
+                value={infoHolder.nps ? infoHolder.nps : 0}
+                onChange={(e) => {
+                  setChanges({
+                    ...changes,
+                    nps: Math.ceil(Number(e.target.value)),
+                    dataNPS: new Date().toISOString(),
+                  });
+                  setInfo({
+                    ...infoHolder,
+                    nps: Math.ceil(e.target.value),
+                  });
+                }}
+              />
+            </div>
             <button
-              onClick={() =>
+              onClick={() => {
                 handleChanges({
-                  "jornada.obsJornada": obsJornada,
-                })
-              }
+                  nps: changes.nps,
+                  "jornada.dataNps": changes.dataNPS ? new Date() : null,
+                  "jornada.obsJornada": changes.obsJornada,
+                });
+              }}
               className="font-bold bg-[#15599a] self-end w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-1 rounded"
             >
               SALVAR

@@ -1,7 +1,18 @@
 import React, { useState } from "react";
-
+import axios from "axios";
 function OSControlCard({ info, reload }) {
   const [os, setOs] = useState(info);
+  const [changes, setChanges] = useState({});
+  function handleChange(id, index, fechamento) {
+    axios
+      .put("/api/ordensDeServico", {
+        id: id,
+        index: index,
+        fechamento: fechamento,
+      })
+      .then((res) => console.log(res));
+  }
+  console.log(os);
   return (
     <div className="flex flex-col p-2 border border-blue-300 rounded shadow-lg">
       <div className="flex justify-around border-b border-gray-200 pb-2">
@@ -9,17 +20,22 @@ function OSControlCard({ info, reload }) {
           {os.qtde} - {os.nomeDoContrato}
         </h1>
         <p className="font-raleway text-sm text-gray-500">
-          TELEFONE: {os.telefone ? os.telefone : "-"}
+          CIDADE: {os.cidade ? os.cidade : "-"}
         </p>
         <p className="font-raleway text-sm text-gray-500">
-          CONTATO (PAGADOR):{" "}
-          {os.pagamento?.contatoPagador ? os.pagamento?.contatoPagador : "-"}
+          LOGRADOURO: {os.logradouro ? os.logradouro : "-"}
+        </p>
+        <p className="font-raleway text-sm text-gray-500">
+          BAIRRO: {os.bairro ? os.bairro : "-"}
+        </p>
+        <p className="font-raleway text-sm text-gray-500">
+          Nº: {os.numeroResidencia ? os.numeroResidencia : "-"}
         </p>
       </div>
       {os.ordensDeServico?.map((ordem, index) => (
         <div
           key={index}
-          className={`grid grid-cols-7 border-b border-gray-200 pb-2`}
+          className={`grid items-center grid-cols-7 border-b border-gray-200 pb-2`}
         >
           <div className="flex flex-col items-center">
             <p className="uppercase text-gray-500">CATEGORIA DA OS</p>
@@ -53,7 +69,24 @@ function OSControlCard({ info, reload }) {
           </div>
           <div className="flex flex-col items-center">
             <p className="uppercase text-gray-500">DATA DE FECHAMENTO</p>
-            <p className="text-xs uppercase">-</p>
+            <input
+              type="datetime-local"
+              value={os.dataDeFechamento ? new Date(os.dataDeFechamento) : null}
+              onChange={(e) => {
+                setOs((prevState) => {
+                  let temp = {
+                    ...prevState,
+                    ordensDeServico: [...prevState.ordensDeServico],
+                  };
+                  temp.ordensDeServico[index].dataDeFechamento = new Date(
+                    e.target.value
+                  ).toISOString();
+                  return temp;
+                });
+                handleChange(os._id, index, new Date(e.target.value));
+              }}
+              className="font-bold bg-[#15599a] w-fit text-white p-1 rounded"
+            />
           </div>
         </div>
       ))}

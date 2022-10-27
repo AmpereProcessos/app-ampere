@@ -339,7 +339,7 @@ function NovoProjeto({ credentials, setCredentials }) {
       jornadaConcluida: false,
       dataNps: undefined,
     },
-    nps: 0,
+    nps: undefined,
   });
   function resetState() {
     setInfo({
@@ -527,7 +527,7 @@ function NovoProjeto({ credentials, setCredentials }) {
         jornadaConcluida: false,
         dataNps: undefined,
       },
-      nps: 0,
+      nps: undefined,
     });
   }
   useEffect(() => {

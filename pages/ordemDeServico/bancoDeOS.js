@@ -1,7 +1,16 @@
-import React, { useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import OSControlCard from "../../components/OSControlCard";
 
 function BancoDeOS({ credentials, setCredentials }) {
-  function getOSS() {}
+  const [oss, setOSs] = useState([]);
+  const [filteredOss, setFilteredOss] = useState([]);
+  function getOSS() {
+    axios.get("/api/ordensDeServico").then((res) => {
+      setOSs(res.data);
+      setFilteredOss(res.data);
+    });
+  }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
@@ -28,6 +37,11 @@ function BancoDeOS({ credentials, setCredentials }) {
       <h1 className="font-bold text-lg text-[#fead61]">
         BANCO DE ORDENS DE SERVIÇO
       </h1>
+      <div className="flex flex-col gap-y-4 mt-3 px-4">
+        {oss.map((os) => (
+          <OSControlCard key={os._id} info={os} />
+        ))}
+      </div>
     </div>
   );
 }

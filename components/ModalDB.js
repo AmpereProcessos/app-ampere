@@ -1195,6 +1195,34 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
+                  <DateInput
+                    label="Data de faturamento"
+                    editable={editor}
+                    value={
+                      infoHolder.faturamento?.dataFaturamento
+                        ? new Date(infoHolder.faturamento?.dataFaturamento)
+                            .toISOString()
+                            .slice(0, 10)
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "faturamento.dataFaturamento": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          dataFaturamento: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
+                        },
+                      });
+                    }}
+                  />
                   {infoHolder.pagamento?.forma == "FINANCIAMENTO" && (
                     <SelectInput
                       label={"CREDOR"}

@@ -58,6 +58,12 @@ const validation = {
     },
     msg: "Por favor, preencha um Telefone válido",
   },
+  linkDrive: {
+    test(value) {
+      return value.trim().length < 5;
+    },
+    msg: "Por favor, preencha o link da pasta no Drive do cliente",
+  },
   "estruturaPersonaliza.tipo": {
     test(value) {
       return value == "N/A";

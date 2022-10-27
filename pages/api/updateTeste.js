@@ -1,19 +1,19 @@
 import connectToDatabase from "../../utils/projectsDb";
 export default async function handler(req, res) {
-  /*const db = await connectToDatabase(process.env.DB_KEY);
+  const db = await connectToDatabase(process.env.DB_KEY);
   const collection = db.collection("dados");
   let arr = await collection.updateMany(
     {
-      qtde: { $gte: 1300 },
-      nps: 0,
+      "jornada.vistoriaConcessionaria": false,
+      "jornada.sistemaLigado": true,
     },
     {
       $set: {
-        nps: undefined,
+        "jornada.sistemaLigado": false,
       },
     }
   );
-  res.json(arr);*/
+  res.json(arr);
 }
 const info = [
   649, 836, 848, 849, 881, 919, 976, 992, 994, 1004, 1050, 1066, 1081, 1090,

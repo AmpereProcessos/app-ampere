@@ -6,6 +6,17 @@ import ModalComercial from "../../components/ModalComercial";
 // casa em construção (Tais)
 import { useRouter } from "next/router";
 import Link from "next/link";
+const statusStyles = {
+  ASSINADO: {
+    textColor: "text-green-500",
+  },
+  "NÃO ASSINADO": {
+    textColor: "text-red-500",
+  },
+  SOLICITADO: {
+    textColor: "text-yellow-500",
+  },
+};
 function Comercial({ credentials, setCredentials }) {
   var editor;
   const router = useRouter();
@@ -280,7 +291,13 @@ function Comercial({ credentials, setCredentials }) {
             <div className="flex items-center justify-between">
               <div className="hidden lg:flex lg:flex-col">
                 <span className="text-xxs">CONTRATO</span>
-                <p className="text-xs text-yellow-500">
+                <p
+                  className={`text-xs ${
+                    statusStyles[project.contrato?.status]
+                      ? statusStyles[project.contrato.status].textColor
+                      : ""
+                  }`}
+                >
                   {project.contrato?.status && project.contrato?.status}
                 </p>
               </div>

@@ -51,6 +51,7 @@ export default async function handler(req, res) {
         respPagamento: project.pagamentodopadrao,
         respInstalacao: project.respinstalacaopadrao,
         valor: project.valorpadrao,
+        dataMontagem: project.montagemPadrao,
       },
       estruturaPersonalizada: {
         aplicavel: project.possuiestruturapersonalisada,

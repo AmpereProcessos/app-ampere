@@ -501,20 +501,12 @@ function ModalObras({
                         setChanges({
                           ...changes,
                           "projeto.acStatus": value,
-                          "projeto.fechamentoAC":
-                            value == "REALIZADO"
-                              ? new Date().toISOString()
-                              : null,
                         });
                         setInfo({
                           ...infoHolder,
                           projeto: {
                             ...infoHolder.projeto,
                             acStatus: value,
-                            fechamentoAC:
-                              value == "REALIZADO"
-                                ? new Date().toISOString()
-                                : null,
                           },
                         });
                       }}

@@ -1,14 +1,54 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import { AiOutlineSearch } from "react-icons/ai";
+import Select from "react-select";
+import PadraoCard from "../../components/PadraoCard";
 function ControlePadroes({ setCredentials, credentials }) {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
+  const [filters, setFilters] = useState({
+    acStatusFilter: [],
+    liberacaoStatus: [],
+    segmentoFilter: [],
+  });
   function getProjects() {
     axios.get("/api/gestaoDeObras/padroes").then((res) => {
       setFilteredProjects(res.data);
       setProjects(res.data);
     });
+  }
+  function filterProjects() {
+    var newArr;
+    if (filters.acStatusFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.acStatusFilter.includes(call.projeto.acStatus)
+      );
+    }
+    if (filters.liberacaoStatus.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.liberacaoStatus.includes(call.compra.statusLiberacao)
+      );
+    }
+    if (filters.segmentoFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.segmentoFilter.includes(call.segmento)
+      );
+    }
+    if (!newArr) setFilteredProjects(projects);
+    else {
+      setFilteredProjects(newArr);
+    }
+  }
+  function ordenate() {
+    let arr = filteredProjects.sort(
+      (a, b) =>
+        new Date(a.projeto.dataAssDocumentacao).getTime() -
+        new Date(b.projeto.dataAssDocumentacao).getTime()
+    );
+    setFilteredProjects([...arr]);
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -34,128 +74,130 @@ function ControlePadroes({ setCredentials, credentials }) {
   console.log(projects);
   return (
     <div className="p-6 grow bg-[#fff]">
-      <div className="flex w-full items-center border-b border-gray-200">
+      <div className="flex w-full items-center border-b border-gray-200 mb-2">
         <h1 className="text-[#fead61] font-bold text-xl pb-2">
           CONTROLE DE PADRÕES ({filteredProjects.length})
         </h1>
+        <div className="flex w-full items-center gap-x-2 justify-center">
+          <Select
+            isMulti
+            placeholder="SEGMENTO"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                segmentoFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                value: "COMERCIAL",
+                label: "COMERCIAL",
+              },
+              {
+                value: "INDUSTRIAL",
+                label: "INDUSTRIAL",
+              },
+              {
+                value: "RESIDENCIAL",
+                label: "RESIDENCIAL",
+              },
+              {
+                value: "RURAL",
+                label: "RURAL",
+              },
+              {
+                value: undefined,
+                label: "NÃO DEFINIDO",
+              },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="A.C STATUS"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                acStatusFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                value: "PENDÊNCIA",
+                label: "PENDÊNCIA",
+              },
+              {
+                value: "REALIZADO",
+                label: "REALIZADO",
+              },
+              {
+                value: "N/A",
+                label: "N/A",
+              },
+              {
+                value: "SOLICITADO COM G.D",
+                label: "SOLICITADO COM G.D",
+              },
+              {
+                value: undefined,
+                label: "NÃO DEFINIDO",
+              },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="STATUS PAG. KIT"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                liberacaoStatus: e.map((x) => x.value),
+              })
+            }
+            options={[
+              { value: "PAGO", label: "PAGO" },
+              {
+                value: "REALIZAR COMPRA",
+                label: "REALIZAR COMPRA",
+              },
+              {
+                value: "AGUARDANDO PAGAMENTO DO BANCO",
+                label: "AGUARDANDO PAGAMENTO DO BANCO",
+              },
+              {
+                value: "AGUARDANDO CLIENTE PAGAR",
+                label: "AGUARDANDO CLIENTE PAGAR",
+              },
+              {
+                value: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
+                label: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
+              },
+              {
+                value: "AGUARDANDO PARECER DE ACESSO",
+                label: "AGUARDANDO PARECER DE ACESSO",
+              },
+              {
+                value: "AGUARDANDO N.F",
+                label: "AGUARDANDO N.F",
+              },
+            ]}
+          />
+          <button
+            onClick={ordenate}
+            className="flex bg-[#fead61] h-[36px] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+          >
+            <p>ORDENAR</p>
+          </button>
+          <button
+            onClick={filterProjects}
+            className="flex bg-[#fead61] h-[36px] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+          >
+            <p>Filtrar</p>
+            <AiOutlineSearch />
+          </button>
+        </div>
       </div>
       <div className="flex flex-col gap-y-2">
         {filteredProjects.map((project) => (
-          <div className="w-full p-2 border border-[#15599a] rounded">
-            <div className="flex items-center gap-x-2 justify-between border-b border-gray-200 pb-2">
-              <h1 className="font-bold">
-                <strong className="text-[#15599a]">{project.qtde} </strong>
-                {project.nomeDoContrato}
-              </h1>
-              <div className="flex flex-wrap gap-y-2 items-center grow justify-around">
-                <div className="flex flex-col items-center">
-                  <p className="text-sm uppercase text-[#15599a] font-bold">
-                    PAGAMENTO DO KIT
-                  </p>
-                  <p className="text-xs uppercase text-gray-500">
-                    {project.compra.statusLiberacao}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <p className="text-sm uppercase text-[#15599a] font-bold">
-                    CIDADE
-                  </p>
-                  <p className="text-xs uppercase text-gray-500">
-                    {project.cidade}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <p className="text-sm uppercase text-[#15599a] font-bold">
-                    BAIRRO
-                  </p>
-                  <p className="text-xs uppercase text-gray-500">
-                    {project.bairro}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <p className="text-sm uppercase text-[#15599a] font-bold">
-                    LOGRADOURO
-                  </p>
-                  <p className="text-xs uppercase text-gray-500">
-                    {project.logradouro}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <p className="text-sm uppercase text-[#15599a] font-bold">
-                    NÚMERO
-                  </p>
-                  <p className="text-xs uppercase text-gray-500">
-                    {project.numeroResidencia}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <p className="text-sm uppercase text-[#15599a] font-bold">
-                    TIPO DO PADRÃO
-                  </p>
-                  <p className="text-xs uppercase text-gray-500">
-                    {project.padrao?.tipo ? project.padrao.tipo : "-"}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <p className="text-sm uppercase text-[#15599a] font-bold">
-                    RESP.PAGAMENTO DO PADRÃO
-                  </p>
-                  <p className="text-xs uppercase text-gray-500">
-                    {project.padrao?.respPagamento
-                      ? project.padrao.respPagamento
-                      : "-"}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <p className="text-sm uppercase text-[#15599a] font-bold">
-                    RESP.INSTALAÇÃO DO PADRÃO
-                  </p>
-                  <p className="text-xs uppercase text-gray-500">
-                    {project.padrao?.respInstalacao
-                      ? project.padrao.respInstalacao
-                      : "-"}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <p className="text-sm uppercase text-[#15599a] font-bold">
-                    VALOR DO PADRÃO
-                  </p>
-                  <p className="text-xs uppercase text-gray-500">
-                    {project.padrao?.valor ? project.padrao.valor : "-"}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <p className="text-sm uppercase text-[#15599a] font-bold">
-                    SAIDA DO CLIENTE
-                  </p>
-                  <p className="text-xs uppercase text-gray-500">
-                    {project.visitaTecnica.saidaDoCliente
-                      ? project.visitaTecnica.saidaDoCliente
-                      : "-"}
-                  </p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <p className="text-sm uppercase text-[#15599a] font-bold">
-                    AMPERAGEM
-                  </p>
-                  <p className="text-xs uppercase text-gray-500">
-                    {project.visitaTecnica?.amperagem
-                      ? project.visitaTecnica.amperagem
-                      : "-"}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center justify-around mt-2">
-              <div className="flex flex-col gap-y-1">
-                <h1 className="font-bold">DIA DA MONTAGEM</h1>
-                <input
-                  className="border border-gray-200 outline-none p-1 rounded"
-                  type="date"
-                />
-              </div>
-            </div>
-          </div>
+          <PadraoCard project={project} key={project._id} />
         ))}
       </div>
     </div>

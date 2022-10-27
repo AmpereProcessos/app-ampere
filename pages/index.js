@@ -89,7 +89,6 @@ function Home({ credentials, setCredentials }) {
   function getStats() {
     setRegionalFilter("GERAL");
     axios.get("/api/stats").then((res) => {
-      console.log(res.data);
       setNps(res.data.nps);
       setInstalledData(res.data.installedInfo);
       setHomoData(res.data.averageHomoData);
@@ -128,7 +127,6 @@ function Home({ credentials, setCredentials }) {
   function getGraphDataByYear(year) {
     setSelectedYear(year);
     axios.get(`/api/stats/getByYear/${year}`).then((res) => {
-      console.log(res.data);
       setStatsData({ ...statsData, graphData: res.data });
     });
   }
@@ -207,7 +205,6 @@ function Home({ credentials, setCredentials }) {
   
   */
   }
-  console.log(clientBirthday);
   return (
     <div className="p-6 grow">
       {/** 

@@ -8,7 +8,11 @@ export default async function handler(req, res) {
       { _id: ObjectId(req.body.id) },
       { $set: { ordensDeServico: req.body.arr } }
     );
-    console.log(req.body);
     return res.json("OK");
+  } else if (req.method === "GET") {
+    const db = await connectToDatabase(process.env.DB_KEY);
+    const collection = db.collection("dados");
+    let arr = await collection.find({ ordensDeServico: null }).toArray();
+    return res.json(arr);
   }
 }

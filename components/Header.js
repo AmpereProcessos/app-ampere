@@ -21,7 +21,6 @@ function Header({ toggleSidebar, credentials, logout }) {
   if (
     router.pathname.includes("pdf") ||
     router.pathname.includes("publico") ||
-    router.pathname.includes("ordemDeServico") ||
     router.pathname.includes("auth")
   )
     return null;

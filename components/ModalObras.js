@@ -59,11 +59,13 @@ function ModalObras({
   });
   const [changes, setChanges] = useState({});
   const [osInfo, setOsInfo] = useState({
+    categoria: "NÃO DEFINIDO",
     servicoExecutado: "",
     realizarCobranca: false,
     valorCobranca: 0,
     usuarioEmissor: "",
     grauDeUrgencia: "NÃO DEFINIDO",
+    observacoes: "",
     dataDeAbertura: new Date(),
   });
   async function handleChanges() {
@@ -124,12 +126,21 @@ function ModalObras({
             text: "Ordem de serviço gerada",
             color: "text-green-500",
           });
+          setOsInfo({
+            categoria: "NÃO DEFINIDO",
+            servicoExecutado: "",
+            realizarCobranca: false,
+            valorCobranca: 0,
+            usuarioEmissor: "",
+            grauDeUrgencia: "NÃO DEFINIDO",
+            observacoes: "",
+            dataDeAbertura: new Date(),
+          });
           handleUpdates(project._id);
         });
     }
   }
-  console.log(infoHolder);
-  console.log(changes);
+  console.log(osInfo);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -961,6 +972,40 @@ function ModalObras({
                   ORDENS DE SERVIÇO
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
+                  <SelectInput
+                    label={"CATEGORIA DA OS"}
+                    value={osInfo.categoria}
+                    editable={editor}
+                    options={[
+                      { label: "PADRÃO", value: "PADRÃO" },
+                      { label: "ESTRUTURA", value: "ESTRUTURA" },
+                      { label: "MONTAGEM", value: "MONTAGEM" },
+                      {
+                        label: "MANUTENÇÃO PREVENTIVA",
+                        value: "MANUTENÇÃO PREVENTIVA",
+                      },
+                      {
+                        label: "MANUTENÇÃO CORRETIVA",
+                        value: "MANUTENÇÃO CORRETIVA",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) =>
+                      setOsInfo({
+                        ...osInfo,
+                        categoria: value,
+                        servicoExecutado: "",
+                        realizarCobranca: false,
+                        valorCobranca: 0,
+                        usuarioEmissor: "",
+                        grauDeUrgencia: "NÃO DEFINIDO",
+                        observacoes: "",
+                      })
+                    }
+                  />
                   <TextInput
                     label={"Serviço a ser executado"}
                     value={osInfo.servicoExecutado}
@@ -1022,7 +1067,96 @@ function ModalObras({
                       })
                     }
                   />
+                  {osInfo.categoria == "MANUTENÇÃO PREVENTIVA" && (
+                    <>
+                      <div className="flex pl-2 items-center">
+                        <input
+                          disabled={!editor}
+                          checked={osInfo.configurar ? true : false}
+                          onChange={(e) =>
+                            setOsInfo({
+                              ...osInfo,
+                              configurar: e.target.checked,
+                            })
+                          }
+                          type="checkbox"
+                          name="configurar"
+                          id="configurar"
+                        />
+                        <label className="ml-2" htmlFor="configurar">
+                          CONFIGURAR
+                        </label>
+                      </div>
+                      <TextInput
+                        label={"Modelo Micro/inversor"}
+                        editable={editor}
+                        value={osInfo.inversor ? osInfo.inversor : ""}
+                        handleChange={(value) =>
+                          setOsInfo({
+                            ...osInfo,
+                            inversor: value.toUpperCase(),
+                          })
+                        }
+                      />
+                      <TextInput
+                        label={"SENHA DO WIFI"}
+                        editable={editor}
+                        normalCase={true}
+                        value={osInfo.senhaDoWifi ? osInfo.senhaDoWifi : ""}
+                        handleChange={(value) =>
+                          setOsInfo({
+                            ...osInfo,
+                            senhaDoWifi: value,
+                          })
+                        }
+                      />
+                      <TextInput
+                        label={"PONTO DE AGUA"}
+                        editable={editor}
+                        normalCase={true}
+                        value={osInfo.pontoDeAgua ? osInfo.pontoDeAgua : ""}
+                        handleChange={(value) =>
+                          setOsInfo({ ...osInfo, pontoDeAgua: value })
+                        }
+                      />
+                      <div className="flex pl-2 items-center">
+                        <input
+                          disabled={!editor}
+                          checked={osInfo.trafo ? true : false}
+                          onChange={(e) =>
+                            setOsInfo({
+                              ...osInfo,
+                              trafo: e.target.checked,
+                            })
+                          }
+                          type="checkbox"
+                          name="trafo"
+                          id="trafo"
+                        />
+                        <label className="ml-2" htmlFor="trafo">
+                          TRAFO
+                        </label>
+                      </div>
+                    </>
+                  )}
                 </div>
+                {osInfo.categoria != "MONTAGEM" &&
+                  osInfo.categoria != "NÃO DEFINIDO" && (
+                    <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        OBSERVAÇÕES DA OS
+                      </span>
+                      <textarea
+                        readOnly={!editor}
+                        value={osInfo.observacoes}
+                        onChange={(e) =>
+                          setOsInfo({ ...osInfo, observacoes: e.target.value })
+                        }
+                        placeholder="Observações da OS..."
+                        className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      />
+                    </div>
+                  )}
                 {osMsg.text.length > 0 && (
                   <p className={`text-center ${osMsg.color} italic`}>
                     {osMsg.text}
@@ -1047,6 +1181,12 @@ function ModalObras({
                           key={index}
                           className="flex mt-1 items-center justify-around"
                         >
+                          <div className="flex flex-col items-center">
+                            <p className="uppercase text-gray-500">CATEGORIA</p>
+                            <p className="text-xs uppercase">
+                              {ordem.categoria}
+                            </p>
+                          </div>
                           <div className="flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               SERVIÇO PARA EXECUÇÃO
@@ -1097,43 +1237,8 @@ function ModalObras({
                               {ordem.grauDeUrgencia}
                             </p>
                           </div>
-                          <div
-                            className={
-                              "flex flex-col items-center text-gray-500"
-                            }
-                          >
-                            <p className="uppercase">DATA DE FECHAMENTO</p>
-                            <input
-                              type="date"
-                              className="bg-transparent text-xs"
-                              value={
-                                ordem.dataDeFechamento
-                                  ? new Date(ordem.dataDeFechamento)
-                                      .toISOString()
-                                      .slice(0, 10)
-                                  : null
-                              }
-                              onChange={(e) => {
-                                let temp = {
-                                  ...infoHolder,
-                                  ordensDeServico: [
-                                    ...infoHolder.ordensDeServico,
-                                  ],
-                                };
-                                temp.ordensDeServico[index].dataDeFechamento =
-                                  new Date(e.target.value)
-                                    .toISOString()
-                                    .slice(0, 10);
-                                handleOSChanges(
-                                  infoHolder._id,
-                                  index,
-                                  new Date(e.target.value)
-                                );
-                              }}
-                            />
-                          </div>
                           <Link
-                            href={`/ordemDeServico/${project._id}?index=${index}`}
+                            href={`/ordemDeServico//pdf/${project._id}?index=${index}`}
                           >
                             <button className="p-2 bg-[#fead61] font-bold rounded">
                               VER OS

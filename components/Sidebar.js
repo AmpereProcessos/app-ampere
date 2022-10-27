@@ -8,7 +8,11 @@ import {
   FaTasks,
   FaSolarPanel,
 } from "react-icons/fa";
-import { MdEngineering, MdOutlinePayments } from "react-icons/md";
+import {
+  MdEngineering,
+  MdOutlinePayments,
+  MdDesignServices,
+} from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import { SiCashapp } from "react-icons/si";
 import { BsFillCalendarEventFill } from "react-icons/bs";
@@ -24,7 +28,6 @@ function Sidebar({ credentials }) {
   if (
     router.pathname.includes("pdf") ||
     router.pathname.includes("publico") ||
-    router.pathname.includes("ordemDeServico") ||
     router.pathname.includes("auth")
   )
     return null;
@@ -169,6 +172,19 @@ function Sidebar({ credentials }) {
             <p className="pl-3 text-xs text-gray-600">Chamados</p>
           </div>
         </Link>
+        {credentials.controller != undefined &&
+        credentials.controller == true ? (
+          <Link href={"/ordemDeServico/bancoDeOS"}>
+            <div className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+              <MdDesignServices
+                style={{ color: "#15599a", fontSize: "20px" }}
+              />
+              <p className="pl-3 text-xs text-gray-600">Banco de OS</p>
+            </div>
+          </Link>
+        ) : (
+          false
+        )}
         {credentials.accessibleRoutes != undefined
           ? credentials?.accessibleRoutes.includes("ADM") && (
               <Link href={"/adm/cobrancas"}>

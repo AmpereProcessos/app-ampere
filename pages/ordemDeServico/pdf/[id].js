@@ -1,27 +1,55 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import connectToDatabase from "../../utils/projectsDb";
-import ServiceOrderPDF from "../../components/OrdemServicoPDF";
+import connectToDatabase from "../../../utils/projectsDb";
+import ServiceOrderPDF from "../../../components/OrdemServicoPDF";
+import PadraoOS from "../../../components/PadraoOS";
+import PreventivaOSPDF from "../../../components/PreventivaOS";
+import Logo from "../../../utils/whitelogo.png";
+import Image from "next/image";
 import { ObjectId } from "mongodb";
-import TextInput from "../../components/TextInput";
-import DateInput from "../../components/DateInput";
-import SelectInput from "../../components/SelectInput";
-import NumberInput from "../../components/NumberInput";
 function OSInfo({ info, index }) {
   const [pdfVisible, setPdfVisible] = useState(false);
   const [osInfo, setosInfo] = useState(info);
   const [urgency, setUrgency] = useState("NÃO DEFINIDO");
-  console.log(osInfo);
   return (
     <>
-      <ServiceOrderPDF
+      {osInfo.ordensDeServico[index].categoria == "PADRÃO" && (
+        <PadraoOS
+          info={osInfo}
+          observacoesOS={osInfo.ordensDeServico[index].observacoes}
+        />
+      )}
+      {osInfo.ordensDeServico[index].categoria == "MONTAGEM" && (
+        <ServiceOrderPDF
+          info={osInfo}
+          openingDate={osInfo.ordensDeServico[index].dataDeAbertura}
+          urgency={osInfo.ordensDeServico[index].grauDeUrgencia}
+          realizarCobranca={osInfo.ordensDeServico[index].realizarCobranca}
+          valorCobranca={osInfo.ordensDeServico[index].valorCobranca}
+          servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
+        />
+      )}
+      {osInfo.ordensDeServico[index].categoria == "MANUTENÇÃO PREVENTIVA" && (
+        <PreventivaOSPDF
+          info={osInfo}
+          openingDate={osInfo.ordensDeServico[index].dataDeAbertura}
+          urgencia={osInfo.ordensDeServico[index].grauDeUrgencia}
+          servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
+          senhaDoWifi={osInfo.ordensDeServico[index].senhaDoWifi}
+          pontoDeAgua={osInfo.ordensDeServico[index].pontoDeAgua}
+          trafo={osInfo.ordensDeServico[index].trafo}
+          configurar={osInfo.ordensDeServico[index].configurar}
+          modeloInversor={osInfo.ordensDeServico[index].inversor}
+        />
+      )}
+      {/*<ServiceOrderPDF
         info={osInfo}
         openingDate={osInfo.ordensDeServico[index].dataDeAbertura}
         urgency={osInfo.ordensDeServico[index].grauDeUrgencia}
         realizarCobranca={osInfo.ordensDeServico[index].realizarCobranca}
         valorCobranca={osInfo.ordensDeServico[index].valorCobranca}
         servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
-      />
+  />*/}
     </>
   );
 }

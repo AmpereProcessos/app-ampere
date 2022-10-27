@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-function OSControlCard({ info, reload }) {
+function OSControlCard({ info, reload, emAberto }) {
   const [os, setOs] = useState(info);
   const [changes, setChanges] = useState({});
   function handleChange(id, index, fechamento) {
@@ -12,7 +12,6 @@ function OSControlCard({ info, reload }) {
       })
       .then((res) => console.log(res));
   }
-  console.log(os);
   return (
     <div className="flex flex-col p-2 border border-blue-300 rounded shadow-lg">
       <div className="flex justify-around border-b border-gray-200 pb-2">
@@ -35,7 +34,13 @@ function OSControlCard({ info, reload }) {
       {os.ordensDeServico?.map((ordem, index) => (
         <div
           key={index}
-          className={`grid items-center grid-cols-7 border-b border-gray-200 pb-2`}
+          className={`grid ${
+            emAberto
+              ? ordem.dataDeFechamento != undefined
+                ? "hidden"
+                : ""
+              : ""
+          } items-center grid-cols-7 border-b border-gray-200 pb-2`}
         >
           <div className="flex flex-col items-center">
             <p className="uppercase text-gray-500">CATEGORIA DA OS</p>
@@ -69,9 +74,14 @@ function OSControlCard({ info, reload }) {
           </div>
           <div className="flex flex-col items-center">
             <p className="uppercase text-gray-500">DATA DE FECHAMENTO</p>
+            {console.log(new Date(ordem.dataDeFechamento))}
             <input
               type="datetime-local"
-              value={os.dataDeFechamento ? new Date(os.dataDeFechamento) : null}
+              value={
+                ordem.dataDeFechamento
+                  ? new Date(ordem.dataDeFechamento).toISOString().slice(0, 10)
+                  : null
+              }
               onChange={(e) => {
                 setOs((prevState) => {
                   let temp = {

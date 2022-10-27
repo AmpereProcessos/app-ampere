@@ -27,7 +27,6 @@ function OeM({ credentials, setCredentials }) {
   const [modalProject, setModalProject] = useState({});
   function getProjects() {
     axios.get("/api/projects/oem").then((res) => {
-      console.log(res.data[0]["contrato"]["status"]);
       setProjects(res.data);
       setFilteredProjects(res.data);
     });
@@ -98,6 +97,7 @@ function OeM({ credentials, setCredentials }) {
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!newArr) newArr = projects;
+      console.log(newArr);
       newArr = newArr.filter(
         (call) =>
           call[dateFilter.field1][dateFilter.field2] > dateFilter.after &&

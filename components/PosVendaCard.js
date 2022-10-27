@@ -18,7 +18,6 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
       getUpdates();
     });
   }
-  console.log(changes);
   return (
     <>
       {cardMode ? (

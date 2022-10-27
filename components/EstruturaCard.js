@@ -9,7 +9,12 @@ function EstruturaCard({ project }) {
       project.estruturaPersonalizada.pagTerceiro,
   });
   function handleChanges(mudancas) {
-    console.log(mudancas);
+    axios
+      .post("/api/gestaoDeObras/estruturas", {
+        id: project._id,
+        mudancas: mudancas,
+      })
+      .then((res) => console.log(res.data));
   }
   return (
     <div className="w-full p-2 border border-[#15599a] rounded">

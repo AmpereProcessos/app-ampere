@@ -71,6 +71,11 @@ function ModalComercial({
         text: "Preencha o relatório de comissionamento.",
         color: "text-red-400",
       });
+    } else if (
+      infoHolder.linkDrive?.trim().length < 15 &&
+      (infoHolder.compra?.statusLiberacao == "REALIZAR COMPRA" ||
+        infoHolder.compra?.statusLiberacao == "PAGO")
+    ) {
     } else {
       let { data } = await axios.post("/api/changes", {
         usuario: credentials.nome,

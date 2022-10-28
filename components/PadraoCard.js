@@ -4,6 +4,7 @@ import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
+import Link from "next/link";
 import { AiFillEye } from "react-icons/ai";
 function PadraoCard({ project, credentials }) {
   const [changes, setChanges] = useState({
@@ -356,6 +357,70 @@ function PadraoCard({ project, credentials }) {
           false
         )}
       </div>
+      {project.ordensDeServico != undefined &&
+        project.ordensDeServico?.length > 0 && (
+          <div className="w-full flex flex-col px-10 border-t border-gray-200 mt-2">
+            <h1 className="text-[#fead61] font-bold">OSs GERADAS DO PROJETO</h1>
+            {project.ordensDeServico.map((ordem, index) => (
+              <div
+                key={index}
+                className="flex mt-1 items-center justify-around"
+              >
+                <div className="flex flex-col items-center">
+                  <p className="text-xs uppercase text-gray-500">CATEGORIA</p>
+                  <p className="text-xxs uppercase">{ordem.categoria}</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="uppercase text-gray-500">
+                    SERVIÇO PARA EXECUÇÃO
+                  </p>
+                  <p className="text-xs uppercase">{ordem.servicoExecutado}</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="text-xs uppercase text-gray-500">
+                    REALIZAR COBRANÇA?
+                  </p>
+                  <p className="text-xxs uppercase">
+                    {ordem.realizarCobranca ? "SIM" : "NÃO"}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="text-xsuppercase text-gray-500">
+                    VALOR DA COBRANÇA
+                  </p>
+                  <p className="text-xxs uppercase">R$ {ordem.valorCobranca}</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="text-xs uppercase text-gray-500">
+                    EMISSOR DA OS
+                  </p>
+                  <p className="text-xxs uppercase">{ordem.usuarioEmissor}</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="text-xs uppercase text-gray-500">
+                    DATA DE ABERTURA
+                  </p>
+                  <p className="text-xxs uppercase">
+                    {new Date(ordem.dataDeAbertura).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="text-xs uppercase text-gray-500">
+                    GRAU DE URGÊNCIA
+                  </p>
+                  <p className="text-xxs uppercase">{ordem.grauDeUrgencia}</p>
+                </div>
+                <Link
+                  href={`/ordemDeServico//pdf/${project._id}?index=${index}`}
+                >
+                  <button className="p-2 bg-[#fead61] font-bold rounded">
+                    VER OS
+                  </button>
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
     </div>
   );
 }

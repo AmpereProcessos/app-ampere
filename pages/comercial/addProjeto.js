@@ -5,6 +5,7 @@ import SelectInput from "../../components/SelectInput";
 import TextInput from "../../components/TextInput";
 import DateInput from "../../components/DateInput";
 import { vendedores } from "../../utils/constants";
+import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
 import axios from "axios";
 function formataCPF(cpf) {
@@ -559,6 +560,16 @@ function NovoProjeto({ credentials, setCredentials }) {
       resetState();
     });
   }
+  async function findCPF() {
+    let { data } = await axios.get(
+      `https://viacep.com.br/ws/${infoHolder.cep}/json/`
+    );
+    setInfo({
+      ...infoHolder,
+      bairro: data.bairro,
+      logradouro: data.logradouro,
+    });
+  }
   // adicionar quem indicou e contato de quem indicou
   function validateCreation() {
     var holder;
@@ -595,7 +606,7 @@ function NovoProjeto({ credentials, setCredentials }) {
           <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
             Informações do cliente
           </span>
-          <div className="flex gap-2 justify-around flex-wrap">
+          <div className="flex items-center gap-2 justify-around flex-wrap">
             <TextInput
               label={"Nome do contrato"}
               value={infoHolder.nomeDoContrato ? infoHolder.nomeDoContrato : ""}
@@ -654,16 +665,20 @@ function NovoProjeto({ credentials, setCredentials }) {
                 });
               }}
             />
-            <TextInput
+            <NumberInput
               label={"CEP"}
               editable={true}
-              value={
-                infoHolder.cep ? formataCEP(infoHolder.cep.toString()) : "-"
-              }
+              value={infoHolder.cep ? infoHolder.cep : null}
               handleChange={(value) => {
                 setInfo({ ...infoHolder, cep: value });
               }}
             />
+            <button
+              onClick={findCPF}
+              className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
+            >
+              <AiOutlineSearch />
+            </button>
             <TextInput
               label={"Logradouro"}
               editable={true}

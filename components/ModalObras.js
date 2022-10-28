@@ -379,6 +379,16 @@ function ModalObras({
                       }}
                     />
                   </div>
+                  <TextInput
+                    label={"LINK PASTA DO DRIVE"}
+                    editable={editor}
+                    normalCase={true}
+                    value={infoHolder.linkDrive ? infoHolder.linkDrive : ""}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, linkDrive: value });
+                      setInfo({ ...infoHolder, linkDrive: value });
+                    }}
+                  />
                   <SelectInput
                     label={"SEGMENTO"}
                     value={infoHolder.segmento}

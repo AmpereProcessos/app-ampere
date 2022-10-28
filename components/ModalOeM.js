@@ -64,8 +64,6 @@ function ModalOeM({
       handleUpdates(project._id);
     });
   }
-  console.log(infoHolder);
-  console.log(changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -295,6 +293,16 @@ function ModalOeM({
                       }}
                     />
                   </div>
+                  <TextInput
+                    label={"LINK PASTA DO DRIVE"}
+                    editable={editor}
+                    normalCase={true}
+                    value={infoHolder.linkDrive ? infoHolder.linkDrive : ""}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, linkDrive: value });
+                      setInfo({ ...infoHolder, linkDrive: value });
+                    }}
+                  />
                   <SelectInput
                     label={"SEGMENTO"}
                     value={infoHolder.segmento}

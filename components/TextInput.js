@@ -11,7 +11,7 @@ function TextInput({ value, label, handleChange, editable, normalCase }) {
         }  text-gray-600 outline-none`}
         value={value}
         readOnly={!editable}
-        placeholder={"Informação a preencher..."}
+        placeholder={"INFORMAÇÃO A PREENCHER..."}
         onChange={(e) => handleChange(e.target.value)}
         type="text"
       />

@@ -339,6 +339,16 @@ function ModalSuprimentos({
                     }}
                   />
                   <TextInput
+                    label={"LINK PASTA DO DRIVE"}
+                    editable={false}
+                    normalCase={true}
+                    value={infoHolder.linkDrive ? infoHolder.linkDrive : ""}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, linkDrive: value });
+                      setInfo({ ...infoHolder, linkDrive: value });
+                    }}
+                  />
+                  <TextInput
                     label="TIPO DE SERVIÇO"
                     value={infoHolder.tipoDeServico}
                     editable={false}

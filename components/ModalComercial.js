@@ -369,7 +369,8 @@ function ModalComercial({
                   />
                   <TextInput
                     label={"LINK PASTA DO DRIVE"}
-                    editable={true}
+                    editable={editor}
+                    normalCase={true}
                     value={infoHolder.linkDrive ? infoHolder.linkDrive : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, linkDrive: value });

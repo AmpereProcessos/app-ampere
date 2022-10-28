@@ -10,10 +10,8 @@ export default async function handler(req, res) {
             "contrato.status": {
               $in: ["ASSINADO", "AGUARDANDO SOLICITAÇÃO", "NÃO ASSINADO"],
             },
-            $or: [
-              { "medidor.status": { $ne: "REALIZADA" } },
-              { "jornada.jornadaConcluida": { $ne: true } },
-            ],
+
+            "jornada.jornadaConcluida": { $ne: true },
           },
         },
       ])

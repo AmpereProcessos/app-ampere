@@ -10,18 +10,33 @@ function MaterialCard({ project }) {
       ? project.material.descricaoProblema
       : "",
   });
+  const [msg, setMsg] = useState({
+    text: "",
+    color: "",
+  });
   function handleChanges() {
     axios
       .post("/api/gestaoDeObras/material", {
         id: project._id,
         mudancas: changes,
       })
-      .then((res) => console.log(res.data));
+      .then((res) =>
+        setMsg({ text: "Alterações feitas", color: "text-green-500" })
+      )
+      .catch((err) =>
+        setMsg({
+          text: "Ocorreu um problema com o salvamento, tente novamente.",
+          color: "text-red-500",
+        })
+      );
   }
+  console.log(project.nomeDoContrato, changes["material.conferenciaFeita"]);
   return (
     <div className="flex flex-col p-2 shadow-lg w-full border border-[#15599a]">
       <div className="flex items-center justify-between">
-        <h1 className="text-[#15599a] font-bold">{project.nomeDoContrato}</h1>
+        <h1 className="text-[#15599a] font-bold">
+          (#{project.qtde}) {project.nomeDoContrato}
+        </h1>
         <div className="flex items-center gap-x-2 flex-wrap justify-center pb-2">
           <div className="flex flex-col w-fit items-center">
             <span className="font-bold font-raleway text-center text-sm">
@@ -30,11 +45,7 @@ function MaterialCard({ project }) {
             <div className="flex">
               <input
                 disabled={false}
-                value={
-                  changes["material.conferenciaFeita"]
-                    ? changes["material.conferenciaFeita"]
-                    : false
-                }
+                checked={changes["material.conferenciaFeita"] ? true : false}
                 onChange={(e) =>
                   setChanges({
                     ...changes,
@@ -57,7 +68,7 @@ function MaterialCard({ project }) {
             <div className="flex">
               <input
                 disabled={false}
-                value={
+                checked={
                   changes["material.avarias"]
                     ? changes["material.avarias"]
                     : false
@@ -84,7 +95,7 @@ function MaterialCard({ project }) {
             <div className="flex">
               <input
                 disabled={false}
-                value={
+                checked={
                   changes["material.entregaFaltando"]
                     ? changes["material.entregaFaltando"]
                     : false
@@ -113,6 +124,9 @@ function MaterialCard({ project }) {
           </button>
         </div>
       </div>
+      {msg.text && (
+        <p className={`text-center italic ${msg.color}`}>{msg.text}</p>
+      )}
       {changes["material.avarias"] || changes["material.entregaFaltando"] ? (
         <div className="flex justify-center border-t border-gray-200">
           <div className="flex flex-col w-[450px] self-center mt-2 items-center">

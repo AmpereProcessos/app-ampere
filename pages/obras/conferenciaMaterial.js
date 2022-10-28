@@ -41,7 +41,7 @@ function ConferenciaMaterial({ credentials, setCredentials }) {
       </div>
       <div className="flex gap-y-2 flex-col w-full flex-wrap">
         {filteredProjects.map((project) => (
-          <MaterialCard project={project} />
+          <MaterialCard key={project._id} project={project} />
         ))}
       </div>
     </div>

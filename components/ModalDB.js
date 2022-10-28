@@ -3177,6 +3177,253 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  JORNADA
+                </span>
+                <div className="flex items-center flex-wrap gap-2 justify-around w-full p-2">
+                  <div className="w-fit">
+                    <input
+                      checked={infoHolder.jornada?.boasVindas ? true : false}
+                      onChange={(e) => {
+                        handleChanges({
+                          "jornada.boasVindas": e.target.checked,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          jornada: {
+                            ...infoHolder.jornada,
+                            boasVindas: e.target.checked,
+                          },
+                        });
+                      }}
+                      type="checkbox"
+                      name="boasVindas"
+                      id="boasVindas"
+                    />
+                    <label className="ml-2" htmlFor="boasVindas">
+                      BOAS VINDAS
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      checked={
+                        infoHolder.jornada?.assDocumentacoes ? true : false
+                      }
+                      onChange={(e) => {
+                        handleChanges({
+                          "jornada.assDocumentacoes": e.target.checked,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          jornada: {
+                            ...infoHolder.jornada,
+                            assDocumentacoes: e.target.checked,
+                          },
+                        });
+                      }}
+                      type="checkbox"
+                      name="assDocumentacoes"
+                      id="assDocumentacoes"
+                    />
+                    <label className="ml-2" htmlFor="assDocumentacoes">
+                      ASSINATURA DAS DOCUMENTAÇÕES
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      checked={infoHolder.jornada?.compraDoKit ? true : false}
+                      onChange={(e) => {
+                        handleChanges({
+                          "jornada.compraDoKit": e.target.checked,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          jornada: {
+                            ...infoHolder.jornada,
+                            compraDoKit: e.target.checked,
+                          },
+                        });
+                      }}
+                      type="checkbox"
+                      name="compraDoKit"
+                      id="compraDoKit"
+                    />
+                    <label className="ml-2" htmlFor="compraDoKit">
+                      COMPRA DO KIT
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      checked={infoHolder.jornada?.nfFaturada ? true : false}
+                      onChange={(e) => {
+                        handleChanges({
+                          "jornada.nfFaturada": e.target.checked,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          jornada: {
+                            ...infoHolder.jornada,
+                            nfFaturada: e.target.checked,
+                          },
+                        });
+                      }}
+                      type="checkbox"
+                      name="nfFaturada"
+                      id="nfFaturada"
+                    />
+                    <label className="ml-2" htmlFor="nfFaturada">
+                      NF FATURADA
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      checked={infoHolder.jornada?.prevChegada ? true : false}
+                      onChange={(e) => {
+                        handleChanges({
+                          "jornada.prevChegada": e.target.checked,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          jornada: {
+                            ...infoHolder.jornada,
+                            prevChegada: e.target.checked,
+                          },
+                        });
+                      }}
+                      type="checkbox"
+                      name="prevChegada"
+                      id="prevChegada"
+                    />
+                    <label className="ml-2" htmlFor="prevChegada">
+                      PREVISÃO DE CHEGADA
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      checked={
+                        infoHolder.jornada?.respConcessionaria ? true : false
+                      }
+                      onChange={(e) => {
+                        handleChanges({
+                          "jornada.respConcessionaria": e.target.checked,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          jornada: {
+                            ...infoHolder.jornada,
+                            respConcessionaria: e.target.checked,
+                          },
+                        });
+                      }}
+                      type="checkbox"
+                      name="respConcessionaria"
+                      id="respConcessionaria"
+                    />
+                    <label className="ml-2" htmlFor="respConcessionaria">
+                      RESP.CONCESSIONÁRIA
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      checked={infoHolder.jornada?.entregaDoKit ? true : false}
+                      onChange={(e) => {
+                        handleChanges({
+                          "jornada.entregaDoKit": e.target.checked,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          jornada: {
+                            ...infoHolder.jornada,
+                            entregaDoKit: e.target.checked,
+                          },
+                        });
+                      }}
+                      type="checkbox"
+                      name="entregaDoKit"
+                      id="entregaDoKit"
+                    />
+                    <label className="ml-2" htmlFor="entregaDoKit">
+                      ENTREGA DO KIT
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      checked={
+                        infoHolder.jornada?.instalacaoAgendada ? true : false
+                      }
+                      onChange={(e) => {
+                        handleChanges({
+                          "jornada.instalacaoAgendada": e.target.checked,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          jornada: {
+                            ...infoHolder.jornada,
+                            instalacaoAgendada: e.target.checked,
+                          },
+                        });
+                      }}
+                      type="checkbox"
+                      name="instalacaoAgendada"
+                      id="instalacaoAgendada"
+                    />
+                    <label className="ml-2" htmlFor="instalacaoAgendada">
+                      INST.AGENDADA
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      checked={
+                        infoHolder.jornada?.vistoriaConcessionaria
+                          ? true
+                          : false
+                      }
+                      onChange={(e) => {
+                        handleChanges({
+                          "jornada.vistoriaConcessionaria": e.target.checked,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          jornada: {
+                            ...infoHolder.jornada,
+                            vistoriaConcessionaria: e.target.checked,
+                          },
+                        });
+                      }}
+                      type="checkbox"
+                      name="vistoriaConcessionaria"
+                      id="vistoriaConcessionaria"
+                    />
+                    <label className="ml-2" htmlFor="vistoriaConcessionaria">
+                      VISTORIA DA CONCESSIONÁRIA
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      checked={infoHolder.jornada?.sistemaLigado ? true : false}
+                      onChange={(e) => {
+                        handleChanges({
+                          "jornada.sistemaLigado": e.target.checked,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          jornada: {
+                            ...infoHolder.jornada,
+                            sistemaLigado: e.target.checked,
+                          },
+                        });
+                      }}
+                      type="checkbox"
+                      name="sistemaLigado"
+                      id="sistemaLigado"
+                    />
+                    <label className="ml-2" htmlFor="sistemaLigado">
+                      SISTEMA LIGADO
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   PÓS-OBRA
                 </span>
                 <div className="flex gap-2 justify-around flex-wrap">

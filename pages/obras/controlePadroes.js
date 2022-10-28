@@ -217,7 +217,11 @@ function ControlePadroes({ setCredentials, credentials }) {
       </div>
       <div className="flex flex-col gap-y-2">
         {filteredProjects.map((project) => (
-          <PadraoCard project={project} key={project._id} />
+          <PadraoCard
+            credentials={credentials}
+            project={project}
+            key={project._id}
+          />
         ))}
       </div>
     </div>

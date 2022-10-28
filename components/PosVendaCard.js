@@ -427,7 +427,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                 type="number"
                 min={0}
                 step={1}
-                value={infoHolder.nps ? infoHolder.nps : 0}
+                value={changes.nps ? changes.nps : 0}
                 onChange={(e) => {
                   setChanges({
                     ...changes,

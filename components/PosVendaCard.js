@@ -91,54 +91,31 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
             <h1 className="text-[#fead61] font-bold">JORNADA</h1>
             <div className="flex">
               <div className="flex items-center flex-col gap-y-2 px-2 border-r border-gray-200">
-                {infoHolder.jornada?.dataUltimoContato ? (
-                  getDateDiff(
-                    new Date(),
-                    new Date(infoHolder.jornada?.dataUltimoContato)
-                  ) > 7 ? (
-                    <button
-                      onClick={(e) => {
-                        handleChanges({
-                          "jornada.dataUltimoContato": new Date(),
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          jornada: {
-                            ...infoHolder.jornada,
-                            dataUltimoContato: new Date(),
-                          },
-                        });
-                      }}
-                      className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
-                    >
-                      CONTATO RECENTE?
-                    </button>
-                  ) : (
-                    <p>
-                      {new Date(
-                        infoHolder.jornada?.dataUltimoContato
-                      ).toLocaleDateString()}
-                    </p>
-                  )
-                ) : (
-                  <button
-                    onClick={(e) => {
-                      handleChanges({
-                        "jornada.dataUltimoContato": new Date(),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        jornada: {
-                          ...infoHolder.jornada,
-                          dataUltimoContato: new Date(),
-                        },
-                      });
-                    }}
-                    className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
-                  >
-                    CONTATO RECENTE?
-                  </button>
-                )}
+                <p className="text-gray-700 text-sm">
+                  {infoHolder.jornada.dataUltimoContato
+                    ? new Date(
+                        infoHolder.jornada.dataUltimoContato
+                      ).toLocaleDateString()
+                    : false}
+                </p>
+                <button
+                  onClick={(e) => {
+                    handleChanges({
+                      "jornada.dataUltimoContato": new Date(),
+                    });
+                    setInfo({
+                      ...infoHolder,
+                      jornada: {
+                        ...infoHolder.jornada,
+                        dataUltimoContato: new Date(),
+                      },
+                    });
+                  }}
+                  className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+                >
+                  CONTATO RECENTE?
+                </button>
+
                 <div className="flex flex-col w-[350px] items-center">
                   <div className="w-fit mt-1">
                     <input

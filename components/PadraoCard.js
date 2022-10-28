@@ -4,11 +4,13 @@ import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
+import { AiFillEye } from "react-icons/ai";
 function PadraoCard({ project, credentials }) {
   const [changes, setChanges] = useState({
     "projeto.fechamentoAC": project.projeto.fechamentoAC,
     "padrao.pagTerceiro": null,
   });
+  const [osVisible, setOSVisible] = useState(false);
   const [osInfo, setOsInfo] = useState({
     categoria: "PADRÃO",
     servicoExecutado: "",
@@ -236,104 +238,123 @@ function PadraoCard({ project, credentials }) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          ORDEM DE SERVIÇO
-        </span>
-        <div className="flex gap-2 justify-center flex-wrap">
-          <SelectInput
-            label={"CATEGORIA DA OS"}
-            value={osInfo.categoria}
-            editable={false}
-            options={[{ label: "PADRÃO", value: "PADRÃO" }]}
-          />
-          <TextInput
-            label={"Serviço a ser executado"}
-            value={osInfo.servicoExecutado}
-            editable={true}
-            handleChange={(value) =>
-              setOsInfo({ ...osInfo, servicoExecutado: value })
-            }
-          />
-          <div>
-            <input
-              disabled={!true}
-              checked={osInfo.realizarCobranca}
-              onChange={(e) =>
-                setOsInfo({
-                  ...osInfo,
-                  realizarCobranca: e.target.checked,
-                })
-              }
-              type="checkbox"
-              name="realizarCobranca"
-              id="realizarCobranca"
-            />
-            <label className="ml-2" htmlFor="realizarCobranca">
-              REALIZAR COBRANÇA
-            </label>
-          </div>
-          <NumberInput
-            label={"VALOR DO SERVIÇO A COBRAR"}
-            value={osInfo.valorCobranca}
-            editable={true}
-            handleChange={(value) =>
-              setOsInfo({ ...osInfo, valorCobranca: Number(value) })
-            }
-          />
-          <SelectInput
-            label={"GRAU DE URGÊNCIA"}
-            value={osInfo.grauDeUrgencia}
-            editable={true}
-            options={[
-              { label: "EMERGÊNCIA", value: "EMERGÊNCIA" },
-              { label: "URGENTE", value: "URGENTE" },
-              { label: "POUCO URGENTE", value: "POUCO URGENTE" },
-              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            ]}
-            handleChange={(value) =>
-              setOsInfo({ ...osInfo, grauDeUrgencia: value })
-            }
-          />
-          <DateInput
-            label={"DATA DE ABERTURA"}
-            editable={true}
-            value={new Date(osInfo.dataDeAbertura).toISOString().slice(0, 10)}
-            handleChange={(value) =>
-              setOsInfo({
-                ...osInfo,
-                dataDeAbertura: new Date(value).toISOString(),
-              })
-            }
-          />
-        </div>
-        {osInfo.categoria != "MONTAGEM" && osInfo.categoria != "NÃO DEFINIDO" && (
-          <div className="flex flex-col w-[450px] self-center mt-2 items-center">
-            <span className="uppercase font-bold font-raleway text-center text-sm">
-              OBSERVAÇÕES DA OS
-            </span>
-            <textarea
-              readOnly={!true}
-              value={osInfo.observacoes}
-              onChange={(e) =>
-                setOsInfo({ ...osInfo, observacoes: e.target.value })
-              }
-              placeholder="Observações da OS..."
-              className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-            />
-          </div>
-        )}
-        {osMsg.text.length > 0 && (
-          <p className={`text-center ${osMsg.color} italic`}>{osMsg.text}</p>
-        )}
-        <div className="flex justify-center mt-4">
+      <div className="flex flex-col items-center">
+        <div className="flex items-center gap-x-2">
+          <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+            ORDEM DE SERVIÇO
+          </span>
           <button
-            onClick={handleOSCreation}
-            className="p-2 bg-[#fead61] font-bold rounded"
+            onClick={() => setOSVisible(!osVisible)}
+            className="px-1 h-[20px] rounded bg-[#fead41] mb-2 hover:bg-[#15599a] hover:text-white"
           >
-            GERAR OS
+            <AiFillEye />
           </button>
         </div>
+        {osVisible ? (
+          <>
+            <div className="flex gap-2 justify-center flex-wrap">
+              <SelectInput
+                label={"CATEGORIA DA OS"}
+                value={osInfo.categoria}
+                editable={false}
+                options={[{ label: "PADRÃO", value: "PADRÃO" }]}
+              />
+              <TextInput
+                label={"Serviço a ser executado"}
+                value={osInfo.servicoExecutado}
+                editable={true}
+                handleChange={(value) =>
+                  setOsInfo({ ...osInfo, servicoExecutado: value })
+                }
+              />
+              <div>
+                <input
+                  disabled={!true}
+                  checked={osInfo.realizarCobranca}
+                  onChange={(e) =>
+                    setOsInfo({
+                      ...osInfo,
+                      realizarCobranca: e.target.checked,
+                    })
+                  }
+                  type="checkbox"
+                  name="realizarCobranca"
+                  id="realizarCobranca"
+                />
+                <label className="ml-2" htmlFor="realizarCobranca">
+                  REALIZAR COBRANÇA
+                </label>
+              </div>
+              <NumberInput
+                label={"VALOR DO SERVIÇO A COBRAR"}
+                value={osInfo.valorCobranca}
+                editable={true}
+                handleChange={(value) =>
+                  setOsInfo({ ...osInfo, valorCobranca: Number(value) })
+                }
+              />
+              <SelectInput
+                label={"GRAU DE URGÊNCIA"}
+                value={osInfo.grauDeUrgencia}
+                editable={true}
+                options={[
+                  { label: "EMERGÊNCIA", value: "EMERGÊNCIA" },
+                  { label: "URGENTE", value: "URGENTE" },
+                  { label: "POUCO URGENTE", value: "POUCO URGENTE" },
+                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                ]}
+                handleChange={(value) =>
+                  setOsInfo({ ...osInfo, grauDeUrgencia: value })
+                }
+              />
+              <DateInput
+                label={"DATA DE ABERTURA"}
+                editable={true}
+                value={new Date(osInfo.dataDeAbertura)
+                  .toISOString()
+                  .slice(0, 10)}
+                handleChange={(value) =>
+                  setOsInfo({
+                    ...osInfo,
+                    dataDeAbertura: new Date(value).toISOString(),
+                  })
+                }
+              />
+            </div>
+            {osInfo.categoria != "MONTAGEM" &&
+              osInfo.categoria != "NÃO DEFINIDO" && (
+                <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                  <span className="uppercase font-bold font-raleway text-center text-sm">
+                    OBSERVAÇÕES DA OS
+                  </span>
+                  <textarea
+                    readOnly={!true}
+                    value={osInfo.observacoes}
+                    onChange={(e) =>
+                      setOsInfo({ ...osInfo, observacoes: e.target.value })
+                    }
+                    placeholder="Observações da OS..."
+                    className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                  />
+                </div>
+              )}
+            {osMsg.text.length > 0 && (
+              <p className={`text-center ${osMsg.color} italic`}>
+                {osMsg.text}
+              </p>
+            )}
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={handleOSCreation}
+                className="p-2 bg-[#fead61] font-bold rounded"
+              >
+                GERAR OS
+              </button>
+            </div>
+          </>
+        ) : (
+          false
+        )}
       </div>
     </div>
   );

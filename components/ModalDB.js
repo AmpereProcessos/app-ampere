@@ -62,8 +62,6 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
       });
     }
   }
-  console.log(changes);
-  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -3182,6 +3180,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                 <div className="flex items-center flex-wrap gap-2 justify-around w-full p-2">
                   <div className="w-fit">
                     <input
+                      disabled={true}
                       checked={infoHolder.jornada?.boasVindas ? true : false}
                       onChange={(e) => {
                         handleChanges({
@@ -3205,6 +3204,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <div className="w-fit">
                     <input
+                      disabled={true}
                       checked={
                         infoHolder.jornada?.assDocumentacoes ? true : false
                       }
@@ -3230,6 +3230,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <div className="w-fit">
                     <input
+                      disabled={true}
                       checked={infoHolder.jornada?.compraDoKit ? true : false}
                       onChange={(e) => {
                         handleChanges({
@@ -3253,6 +3254,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <div className="w-fit">
                     <input
+                      disabled={true}
                       checked={infoHolder.jornada?.nfFaturada ? true : false}
                       onChange={(e) => {
                         handleChanges({
@@ -3276,6 +3278,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <div className="w-fit">
                     <input
+                      disabled={true}
                       checked={infoHolder.jornada?.prevChegada ? true : false}
                       onChange={(e) => {
                         handleChanges({
@@ -3299,6 +3302,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <div className="w-fit">
                     <input
+                      disabled={true}
                       checked={
                         infoHolder.jornada?.respConcessionaria ? true : false
                       }
@@ -3324,6 +3328,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <div className="w-fit">
                     <input
+                      disabled={true}
                       checked={infoHolder.jornada?.entregaDoKit ? true : false}
                       onChange={(e) => {
                         handleChanges({
@@ -3347,6 +3352,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <div className="w-fit">
                     <input
+                      disabled={true}
                       checked={
                         infoHolder.jornada?.instalacaoAgendada ? true : false
                       }
@@ -3372,6 +3378,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <div className="w-fit">
                     <input
+                      disabled={true}
                       checked={
                         infoHolder.jornada?.vistoriaConcessionaria
                           ? true
@@ -3399,6 +3406,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                   <div className="w-fit">
                     <input
+                      disabled={true}
                       checked={infoHolder.jornada?.sistemaLigado ? true : false}
                       onChange={(e) => {
                         handleChanges({
@@ -3420,6 +3428,17 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       SISTEMA LIGADO
                     </label>
                   </div>
+                </div>
+                <div className="flex justify-center">
+                  <NumberInput
+                    editable={false}
+                    label={"NPS"}
+                    value={
+                      infoHolder.nps != undefined && infoHolder.nps != " "
+                        ? infoHolder.nps
+                        : 0
+                    }
+                  />
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

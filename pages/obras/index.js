@@ -550,7 +550,7 @@ function Obras({ credentials, setCredentials }) {
                     : "-"}
                 </p>
               </div>
-              <div>
+              <div className="hidden lg:block">
                 <span className="text-xxs">PREVISÃO DE ENTREGA</span>
                 <p className="text-xs text-gray-600 text-center">
                   {project.compra.previsaoEntrega
@@ -565,6 +565,22 @@ function Obras({ credentials, setCredentials }) {
                 <p className="text-xs text-gray-600 text-center">
                   {project.visitaTecnica.tecnico
                     ? project.visitaTecnica.tecnico
+                    : "-"}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xxs">CIDADE</span>
+                <p className="text-xs text-[#15599a]">
+                  {project.cidade ? project.cidade : "-"}
+                </p>
+              </div>
+              <div>
+                <span className="text-xxs">NºMÓDULOS</span>
+                <p className="text-xs text-center text-[#15599a]">
+                  {project.sistema?.qtdeModulos
+                    ? project.sistema?.qtdeModulos
                     : "-"}
                 </p>
               </div>

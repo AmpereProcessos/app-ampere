@@ -33,18 +33,20 @@ export default async function handler(req, res) {
         VALOR_ESTRUTURA: project.estruturaPersonalizada.valor,
         CONTRATO_STATUS: project.contrato.status,
         CONTRATO_DATASSN: project.contrato.dataAssinatura
-          ? new Date(project.contrato.dataAssinatura).toLocaleDateString()
+          ? new Date(project.contrato.dataAssinatura).toLocaleDateString(
+              "pt-br"
+            )
           : "-",
         CONTRATO_FORMAASSN: project.contrato.formaAssinatura,
         PAG_STATUS: project.pagamento.status,
         PAG_DATA: project.compra.dataPagamento
-          ? new Date(project.compra.dataPagamento).toLocaleDateString()
+          ? new Date(project.compra.dataPagamento).toLocaleDateString("pt-br")
           : "-",
         PAG_FORMA: project.pagamento.forma,
         PAG_CREDOR: project.pagamento.credor,
         FATURAMENTO_PREV: project.faturamento.previsaoFaturamento,
         COMPRA_DATLIB: project.compra.dataLiberacao
-          ? new Date(project.compra.dataLiberacao).toLocaleDateString()
+          ? new Date(project.compra.dataLiberacao).toLocaleDateString("pt-br")
           : "-",
         VALOR_KIT: project.compra.valorDoKit,
         QTDEMODULOS: project.sistema.qtdeModulos,

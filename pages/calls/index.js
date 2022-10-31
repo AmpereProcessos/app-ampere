@@ -33,6 +33,13 @@ function Calls({ credentials, setCredentials }) {
             </h1>
           </div>
         </Link>
+        <Link href="/calls/chamadosProjetos">
+          <div className="flex flex-col justify-center cursor-pointer grow min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <h1 className="text-center uppercase font-raleway">
+              Chamados Projetos
+            </h1>
+          </div>
+        </Link>
       </div>
     </div>
   );

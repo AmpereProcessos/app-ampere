@@ -34,26 +34,7 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    let stats = await collection
-      .aggregate([
-        {
-          $match: {
-            statusChamado: {
-              $in: ["ABERTO", "PENDENTE"],
-            },
-          },
-        },
-        {
-          $group: {
-            _id: null,
-            total: {
-              $count: {},
-            },
-          },
-        },
-      ])
-      .toArray();
-    return res.json({ openCalls, closedCalls, stats: stats[0].total });
+    return res.json({ openCalls, closedCalls });
   }
   if (req.method === "POST") {
     let date = new Date().toJSON();

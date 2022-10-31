@@ -84,6 +84,24 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                     : "-"}
                 </p>
               </div>
+              <div>
+                <span className="text-xs">INFO FATURAMENTO</span>
+                <p className="text-gray-600 text-center">
+                  {infoHolder.faturamento?.previsaoFaturamento
+                    ? infoHolder.faturamento.previsaoFaturamento
+                    : "-"}
+                </p>
+              </div>
+              <div>
+                <span className="text-xs">PREV. FATURAMENTO</span>
+                <p className="text-gray-600 text-center">
+                  {infoHolder.faturamento?.dataFaturamento
+                    ? new Date(
+                        infoHolder.faturamento?.dataFaturamento
+                      ).toLocaleDateString()
+                    : "-"}
+                </p>
+              </div>
             </div>
             <p className="text-[#15599a]">#{infoHolder.qtde}</p>
           </div>

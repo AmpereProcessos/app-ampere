@@ -15,6 +15,7 @@ function Posvenda({ credentials, setCredentials }) {
     vendedorFilter: [],
     contratoFilter: [],
     jornadaEmAberto: false,
+    numModulos: null,
   });
   const [searchFilter, setSearchFilter] = useState("");
   const [cardMode, setCardMode] = useState(true);
@@ -74,6 +75,12 @@ function Posvenda({ credentials, setCredentials }) {
         filters.contratoFilter.includes(call.contrato.status)
       );
     }
+    if (filters.numModulos > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) => Number(call.sistema.qtdeModulos) == Number(filters.numModulos)
+      );
+    }
     if (filters.jornadaEmAberto) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
@@ -89,12 +96,22 @@ function Posvenda({ credentials, setCredentials }) {
     }
   }
   function ordenate() {
-    let arr = filteredProjects.sort(
+    let arr = filteredProjects.filter(
+      (project) =>
+        project.jornada?.dataUltimoContato != null ||
+        project.jornada?.dataUltimoContato != undefined
+    );
+    let nulls = filteredProjects.filter(
+      (project) =>
+        project.jornada?.dataUltimoContato == null ||
+        project.jornada?.dataUltimoContato == undefined
+    );
+    arr = arr.sort(
       (a, b) =>
         new Date(a.jornada?.dataUltimoContato).getTime() -
         new Date(b.jornada?.dataUltimoContato).getTime()
     );
-    setFilteredProjects([...arr]);
+    setFilteredProjects([...arr, ...nulls]);
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -111,7 +128,7 @@ function Posvenda({ credentials, setCredentials }) {
   }, []);
   return (
     <div className="p-6 grow">
-      <div className="flex flex-col items-center justify-center border-b border-gray-200 p-1">
+      <div className="flex flex-col gap-y-2 items-center justify-center border-b border-gray-200 p-1">
         <div className="flex items-center gap-x-2">
           <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
             Projetos em jornada
@@ -139,6 +156,8 @@ function Posvenda({ credentials, setCredentials }) {
           >
             ORDENAR
           </button>
+        </div>
+        <div className="flex flex-wrap justify-center gap-2 items-center">
           <Select
             isMulti
             placeholder="CIDADE"
@@ -195,6 +214,17 @@ function Posvenda({ credentials, setCredentials }) {
                 label: "ASSINADO",
               },
             ]}
+          />
+          <input
+            type="number"
+            placeholder="NºModulos"
+            className={
+              "outline-none p-1.5 text-center rounded border border-gray-200 placeholder:italic"
+            }
+            value={filters.numModulos}
+            onChange={(e) =>
+              setFilters({ ...filters, numModulos: Number(e.target.value) })
+            }
           />
           <div
             onClick={() =>

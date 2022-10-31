@@ -1168,59 +1168,6 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
-                  <TextInput
-                    label={"Informações faturamento"}
-                    editable={editor}
-                    value={
-                      infoHolder.faturamento?.previsaoFaturamento
-                        ? infoHolder.faturamento?.previsaoFaturamento
-                        : ""
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        faturamento: {
-                          ...infoHolder.faturamento,
-                          previsaoFaturamento: value.toUpperCase(),
-                        },
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        faturamento: {
-                          ...infoHolder.faturamento,
-                          previsaoFaturamento: value.toUpperCase(),
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label="Data de faturamento"
-                    editable={editor}
-                    value={
-                      infoHolder.faturamento?.dataFaturamento
-                        ? new Date(infoHolder.faturamento?.dataFaturamento)
-                            .toISOString()
-                            .slice(0, 10)
-                        : ""
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "faturamento.dataFaturamento": isNaN(value)
-                          ? new Date(value).toISOString()
-                          : null,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        faturamento: {
-                          ...infoHolder.faturamento,
-                          dataFaturamento: isNaN(value)
-                            ? new Date(value).toISOString()
-                            : null,
-                        },
-                      });
-                    }}
-                  />
                   {infoHolder.pagamento?.forma == "FINANCIAMENTO" && (
                     <SelectInput
                       label={"CREDOR"}
@@ -1717,6 +1664,78 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         compra: {
                           ...infoHolder.compra,
                           statusEntrega: value,
+                        },
+                      });
+                    }}
+                  />
+                  <TextInput
+                    label={"Informações faturamento"}
+                    editable={editor}
+                    value={
+                      infoHolder.faturamento?.previsaoFaturamento
+                        ? infoHolder.faturamento?.previsaoFaturamento
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "faturamento.previsaoFaturamento": value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          previsaoFaturamento: value,
+                        },
+                      });
+                    }}
+                  />
+                  <TextInput
+                    label={"RASTREIO"}
+                    editable={editor}
+                    value={
+                      infoHolder.compra.rastreio
+                        ? infoHolder.compra.rastreio
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "compra.rastreio": value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          rastreio: value,
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
+                    label="Data de faturamento"
+                    editable={editor}
+                    value={
+                      infoHolder.faturamento?.dataFaturamento
+                        ? new Date(infoHolder.faturamento?.dataFaturamento)
+                            .toISOString()
+                            .slice(0, 10)
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "faturamento.dataFaturamento": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        faturamento: {
+                          ...infoHolder.faturamento,
+                          dataFaturamento: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}

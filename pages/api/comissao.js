@@ -17,6 +17,44 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    res.json(arr);
+    var formattedArr = arr.map((project) => {
+      return {
+        QTDE: project.qtde,
+        NOMEDOCONTRATO: project.nomeDoContrato,
+        CPF_CNPJ: project.cpf_cnpj,
+        TELEFONE: project.telefone,
+        CIDADE: project.cidade,
+        UF: project.uf,
+        VENDEDOR: project.vendedor?.nome,
+        REGIONAL: project.regional,
+        CODIGOSVB: project.codigosvb,
+        SEGMENTO: project.segmento,
+        VALOR_PADRAO: project.padrao?.valor,
+        VALOR_ESTRUTURA: project.estruturaPersonalizada.valor,
+        CONTRATO_STATUS: project.contrato.status,
+        CONTRATO_DATASSN: project.contrato.dataAssinatura
+          ? new Date(project.contrato.dataAssinatura).toLocaleDateString()
+          : "-",
+        CONTRATO_FORMAASSN: project.contrato.formaAssinatura,
+        PAG_STATUS: project.pagamento.status,
+        PAG_DATA: project.compra.dataPagamento
+          ? new Date(project.compra.dataPagamento).toLocaleDateString()
+          : "-",
+        PAG_FORMA: project.pagamento.forma,
+        PAG_CREDOR: project.pagamento.credor,
+        FATURAMENTO_PREV: project.faturamento.previsaoFaturamento,
+        COMPRA_DATLIB: project.compra.dataLiberacao
+          ? new Date(project.compra.dataLiberacao).toLocaleDateString()
+          : "-",
+        VALOR_KIT: project.compra.valorDoKit,
+        QTDEMODULOS: project.sistema.qtdeModulos,
+        POTMODULOS: project.sistema.potModulos,
+        POTPICO: project.sistema.potPico,
+        TOPOLOGIA: project.sistema.topologia,
+        INVERSOR: project.sistema.inversor,
+        VALOR_PROJETO: project.sistema.valorProjeto,
+      };
+    });
+    res.json(formattedArr);
   }
 }

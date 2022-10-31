@@ -2,7 +2,7 @@ import connectToDatabase from "../../utils/projectsDb";
 export default async function handler(req, res) {
   const db = await connectToDatabase(process.env.DB_KEY);
   const collection = db.collection("dados");
-  let arr = await collection.updateMany(
+  /*let arr = await collection.updateMany(
     {
       "jornada.vistoriaConcessionaria": false,
       "jornada.sistemaLigado": true,
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       },
     }
   );
-  res.json(arr);
+  res.json(arr);*/
 }
 const info = [
   649, 836, 848, 849, 881, 919, 976, 992, 994, 1004, 1050, 1066, 1081, 1090,

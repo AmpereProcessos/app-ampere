@@ -76,6 +76,10 @@ function ModalComercial({
       (infoHolder.compra?.statusLiberacao == "REALIZAR COMPRA" ||
         infoHolder.compra?.statusLiberacao == "PAGO")
     ) {
+      setMsg({
+        text: "Preencha o link do cliente no drive",
+        color: "text-red-400",
+      });
     } else {
       let { data } = await axios.post("/api/changes", {
         usuario: credentials.nome,

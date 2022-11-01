@@ -14,7 +14,8 @@ function Administracao({ credentials, setCredentials }) {
   const [filters, setFilters] = useState({
     contratoFilter: [],
     pagamentoFilter: [],
-    dataSaidaDeObra:null,
+    vistoriaFilter: [],
+    dataSaidaDeObra: null,
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -44,10 +45,16 @@ function Administracao({ credentials, setCredentials }) {
         filters.contratoFilter.includes(project.contrato.status)
       );
     }
-    if (filters.dataSaidaDeObra) {
+    if (filters.vistoriaFilter.length > 0) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
-        new Date(call.obra.saida) > new Date(filters.dataSaidaDeObra)
+        filters.vistoriaFilter.includes(call.vistoria?.status)
+      );
+    }
+    if (filters.dataSaidaDeObra) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) => new Date(call.obra.saida) > new Date(filters.dataSaidaDeObra)
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -95,7 +102,7 @@ function Administracao({ credentials, setCredentials }) {
     }
     return totalSum.toFixed(2);
   }
-  console.log(filters)
+  console.log(filters);
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 p-1">
@@ -108,12 +115,17 @@ function Administracao({ credentials, setCredentials }) {
           </p>
         </div>
         <div className="flex gap-x-2">
-        <DateInput
+          <DateInput
             label={"Saida de obra posterior a"}
             editable={true}
-            value={filters.dataSaidaDeObra && filters.dataSaidaDeObra != "Invalid Date" ? new Date(filters.dataSaidaDeObra).toISOString().slice(0, 10) : ''}
+            value={
+              filters.dataSaidaDeObra &&
+              filters.dataSaidaDeObra != "Invalid Date"
+                ? new Date(filters.dataSaidaDeObra).toISOString().slice(0, 10)
+                : ""
+            }
             handleChange={(value) => {
-              setFilters({...filters,dataSaidaDeObra: new Date(value)})
+              setFilters({ ...filters, dataSaidaDeObra: new Date(value) });
             }}
           />
           <Select
@@ -156,6 +168,28 @@ function Administracao({ credentials, setCredentials }) {
             options={[
               { value: "AGUARDANDO PAGAMENTO", label: "AGUARDANDO PAGAMENTO" },
               { value: undefined, label: "NÃO DEFINIDO" },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="STATUS DA VISTORIA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                vistoriaFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              { label: "REALIZADA", value: "REALIZADA" },
+              {
+                label: "AGUARDANDO OBRA DE REDE",
+                value: "AGUARDANDO OBRA DE REDE",
+              },
+              {
+                label: "AGUARDANDO CONCESSIONARIA",
+                value: "AGUARDANDO CONCESSIONARIA",
+              },
+              { label: "NÃO DEFINIDO", value: undefined },
             ]}
           />
           <button

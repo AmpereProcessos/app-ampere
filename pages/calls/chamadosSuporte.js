@@ -111,7 +111,9 @@ function ChamadosSuporte({ credentials, setCredentials }) {
     if (closedCallsFilter.searchFilter.length > 0) {
       if (!newArr) newArr = closedCalls;
       newArr = closedCalls.filter((call) =>
-        call.tipoChamado.toUpperCase().includes(closedCallsFilter.toUpperCase())
+        call.tipoChamado
+          .toUpperCase()
+          .includes(closedCallsFilter.searchFilter.toUpperCase())
       );
     }
     if (!newArr) setFilteredClosedCalls(closedCalls);

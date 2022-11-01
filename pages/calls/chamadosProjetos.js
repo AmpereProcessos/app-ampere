@@ -23,9 +23,10 @@ function ChamadosProjetos({ credentials, setCredentials }) {
   const [chamadosFechados, setChamadosFechados] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalCall, setModalCall] = useState({});
-  const [filters, setFilters] = useState({
+  const [abertosFilters, setAbertosFilters] = useState({
     responsavelFilter: [],
     statusChamadoFilter: [],
+    procurarFilter: "",
   });
   function getCalls() {
     axios.get("/api/calls/projetos/mainData").then((res) => {
@@ -40,10 +41,24 @@ function ChamadosProjetos({ credentials, setCredentials }) {
   }
   function filterCalls() {
     var newArr;
-    if (filters.responsavelFilter.length > 0) {
+    if (abertosFilters.responsavelFilter.length > 0) {
       if (!newArr) newArr = chamadosAbertos;
       newArr = newArr.filter((call) =>
-        filters.responsavelFilter.includes(call.responsavel)
+        abertosFilters.responsavelFilter.includes(call.responsavel)
+      );
+    }
+    if (abertosFilters.statusChamadoFilter.length > 0) {
+      if (!newArr) newArr = chamadosAbertos;
+      newArr = newArr.filter((call) =>
+        abertosFilters.statusChamadoFilter.includes(call.status)
+      );
+    }
+    if (abertosFilters.procurarFilter.length > 0) {
+      if (!newArr) newArr = chamadosAbertos;
+      newArr = newArr.filter((call) =>
+        call.projeto
+          .toUpperCase()
+          .includes(abertosFilters.procurarFilter.toUpperCase())
       );
     }
     if (!newArr) setAbertosFiltrados(chamadosAbertos);
@@ -72,7 +87,7 @@ function ChamadosProjetos({ credentials, setCredentials }) {
       }
     }
   }, []);
-  console.log(filters);
+  console.log(abertosFilters);
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
       <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
@@ -88,11 +103,18 @@ function ChamadosProjetos({ credentials, setCredentials }) {
         <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
           <div className="flex w-full items-center justify-around">
             <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
-              Chamados abertos
+              Chamados abertos ({abertosFiltrados.length})
             </h1>
             <div className="flex items-center gap-x-2">
               <input
                 type="text"
+                value={abertosFilters.procurarFilter}
+                onChange={(e) =>
+                  setAbertosFilters({
+                    ...abertosFilters,
+                    procurarFilter: e.target.value,
+                  })
+                }
                 placeholder={"Digite o nome do projeto..."}
                 className="outline-none h-[37px] text-gray-700 border border-gray-200 px-2 py-1.5 rounded-md"
               />
@@ -100,8 +122,8 @@ function ChamadosProjetos({ credentials, setCredentials }) {
                 isMulti
                 placeholder="RESPONSÁVEL"
                 onChange={(e) =>
-                  setFilters({
-                    ...filters,
+                  setAbertosFilters({
+                    ...abertosFilters,
                     responsavelFilter: e.map((x) => x.value),
                   })
                 }
@@ -132,8 +154,8 @@ function ChamadosProjetos({ credentials, setCredentials }) {
                 isMulti
                 placeholder="STATUS DO CHAMADO"
                 onChange={(e) =>
-                  setFilters({
-                    ...filters,
+                  setAbertosFilters({
+                    ...abertosFilters,
                     statusChamadoFilter: e.map((x) => x.value),
                   })
                 }

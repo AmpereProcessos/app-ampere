@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/*.js": {
+    "api/export.js": {
       "memory": 3008,
       "maxDuration": 30
     }

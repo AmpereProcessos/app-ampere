@@ -13,3 +13,4 @@ export const config = {
     maxDuration: "60s",
   },
 };
+// Case #00106481 na vercel

@@ -7,7 +7,9 @@ function PadraoOSPDF({ info, observacoesOS }) {
   console.log(observacoesOS);
   return (
     <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
-      <h1 className="text-center font-bold text-xl mb-6">ORDEM DE SERVIÇO</h1>
+      <h1 className="text-center font-bold text-xl mb-6">
+        ORDEM DE SERVIÇO DE PADRÃO
+      </h1>
       <div className="grid grid-cols-2">
         <div className="flex justify-between items-center">
           <Link href="/obras">

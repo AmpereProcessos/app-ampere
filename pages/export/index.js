@@ -13,7 +13,7 @@ function Export() {
   return (
     <div className="p-6 grow flex flex-col">
       {projects?.map((project) => (
-        <div>{project.nomeDoContrato}</div>
+        <div key={project._id}>{project.nomeDoContrato}</div>
       ))}
     </div>
   );

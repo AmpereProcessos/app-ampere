@@ -62,8 +62,6 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
       });
     }
   }
-  console.log(changes);
-  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>

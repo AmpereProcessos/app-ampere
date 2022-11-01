@@ -47,7 +47,7 @@ function PadraoOSPDF({ info, observacoesOS }) {
             <div className="grid grid-cols-4">
               <p className="text-xs font-semibold uppercase">Nome:</p>
               <p className="text-xs col-span-3 text-center border border-black">
-                {info.nomeDoContrato}
+                ({info.qtde}) {info.nomeDoContrato}
               </p>
             </div>
             <div className="grid grid-cols-4">

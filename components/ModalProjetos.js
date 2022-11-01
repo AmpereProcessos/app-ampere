@@ -1251,6 +1251,36 @@ function ModalProjetos({
                     }}
                   />
                   <DateInput
+                    label={"Data de liberação da documentação"}
+                    editable={editor}
+                    value={
+                      infoHolder.projeto.dataLiberacaoDocumentacao !=
+                        undefined &&
+                      infoHolder.projeto.dataLiberacaoDocumentacao != "-"
+                        ? new Date(infoHolder.projeto.dataLiberacaoDocumentacao)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "projeto.dataLiberacaoDocumentacao": new Date(
+                          value
+                        ).toISOString(),
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          dataLiberacaoDocumentacao: new Date(
+                            value
+                          ).toISOString(),
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
                     label={"Data de assinatura da documentação"}
                     editable={editor}
                     value={

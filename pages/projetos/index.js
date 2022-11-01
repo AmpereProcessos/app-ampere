@@ -155,6 +155,11 @@ function Projetos({ credentials, setCredentials }) {
       return "border border-gray-200";
     }
   }
+  function getDateDiff(date1, date2) {
+    const diffInMs = new Date(date1) - new Date(date2);
+    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+    return Number(diffInDays).toFixed(0);
+  }
   return (
     <div className="p-6 grow">
       <div className="flex justify-between gap-x-2 border-b border-gray-200 p-1">
@@ -448,6 +453,18 @@ function Projetos({ credentials, setCredentials }) {
                   {project.projeto.desenhoTelhado
                     ? project.projeto.desenhoTelhado
                     : "-"}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center">
+              <div>
+                <span className="text-xxs">DESDE ASS.CONTRATO</span>
+                <p className={`text-xs uppercase text-red-500 text-center`}>
+                  {getDateDiff(
+                    new Date(),
+                    new Date(project.contrato.dataAssinatura)
+                  )}{" "}
+                  DIAS
                 </p>
               </div>
             </div>

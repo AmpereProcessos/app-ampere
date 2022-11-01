@@ -64,8 +64,8 @@ function Comercial({ credentials, setCredentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
         (call) =>
-          call.contrato?.dataAssinatura > dateFilter.after &&
-          call.contrato?.dataAssinatura < dateFilter.before
+          call.contrato?.dataAssinatura >= dateFilter.after &&
+          call.contrato?.dataAssinatura <= dateFilter.before
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -157,6 +157,12 @@ function Comercial({ credentials, setCredentials }) {
     }
     return totalSum;
   }
+  function getDateDiff(date1, date2) {
+    const diffInMs = new Date(date1) - new Date(date2);
+    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+    return Number(diffInDays).toFixed(0);
+  }
+  console.log(dateFilter);
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 p-1">
@@ -341,6 +347,19 @@ function Comercial({ credentials, setCredentials }) {
                 <span className="text-xxs">PAGAMENTO</span>
                 <p className="text-xs text-gray-600">
                   {project.pagamento?.status ? project.pagamento.status : "-"}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center">
+              <div>
+                <span className="text-xxs">DESDE ASS.CONTRATO</span>
+                <p className={`text-xs uppercase text-red-500 text-center`}>
+                  {project.contrato.dataAssinatura
+                    ? `${getDateDiff(
+                        new Date(),
+                        new Date(project.contrato.dataAssinatura)
+                      )} DIAS`
+                    : "-"}
                 </p>
               </div>
             </div>

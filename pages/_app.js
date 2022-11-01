@@ -22,6 +22,7 @@ function MyApp({ Component, pageProps }) {
       }
     }
   }, [Component]);
+  console.log(credentials);
   return (
     <DndProvider backend={HTML5Backend}>
       <title>Sistema - Ampère Energias</title>

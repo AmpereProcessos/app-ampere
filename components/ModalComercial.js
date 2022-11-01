@@ -92,6 +92,7 @@ function ModalComercial({
       });
     }
   }
+  console.log(infoHolder.contrato.dataAssinatura);
   return (
     <>
       <div style={OVERLAY_STYLES}>

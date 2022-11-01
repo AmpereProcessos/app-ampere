@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineReload, AiOutlineSearch } from "react-icons/ai";
 import ModalCallProjetos from "../../components/ModalCallProjetos";
 import Select from "react-select";
+import { projetosSolicitations } from "../../utils/constants";
+import Link from "next/link";
 const statusStyles = {
   "AGUARDANDO CONCESSIONÁRIA": {
     textColor: "text-yellow-500",
@@ -21,25 +23,33 @@ function ChamadosProjetos({ credentials, setCredentials }) {
   const [chamadosAbertos, setChamadosAbertos] = useState([]);
   const [abertosFiltrados, setAbertosFiltrados] = useState([]);
   const [chamadosFechados, setChamadosFechados] = useState([]);
+  const [fechadosFiltrados, setFechadosFiltrados] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalCall, setModalCall] = useState({});
   const [abertosFilters, setAbertosFilters] = useState({
     responsavelFilter: [],
     statusChamadoFilter: [],
+    tipoSolicitacaoFilter: [],
     procurarFilter: "",
+  });
+  const [fechadosFilter, setFechadosFilter] = useState({
+    procurarFilter: "",
+    tipoSolicitacaoFilter: [],
+    responsavelFilter: [],
   });
   function getCalls() {
     axios.get("/api/calls/projetos/mainData").then((res) => {
       setChamadosAbertos(res.data.chamadosAbertos);
       setAbertosFiltrados(res.data.chamadosAbertos);
       setChamadosFechados(res.data.chamadosFechados);
+      setFechadosFiltrados(res.data.chamadosFechados);
     });
   }
   function handleOpenModal(call) {
     setModalIsOpen(true);
     setModalCall(call);
   }
-  function filterCalls() {
+  function filterChamadosAbertos() {
     var newArr;
     if (abertosFilters.responsavelFilter.length > 0) {
       if (!newArr) newArr = chamadosAbertos;
@@ -53,6 +63,12 @@ function ChamadosProjetos({ credentials, setCredentials }) {
         abertosFilters.statusChamadoFilter.includes(call.status)
       );
     }
+    if (abertosFilters.tipoSolicitacaoFilter.length > 0) {
+      if (!newArr) newArr = chamadosAbertos;
+      newArr = newArr.filter((call) =>
+        abertosFilters.tipoSolicitacaoFilter.includes(call.tipoDoChamado)
+      );
+    }
     if (abertosFilters.procurarFilter.length > 0) {
       if (!newArr) newArr = chamadosAbertos;
       newArr = newArr.filter((call) =>
@@ -64,6 +80,33 @@ function ChamadosProjetos({ credentials, setCredentials }) {
     if (!newArr) setAbertosFiltrados(chamadosAbertos);
     else {
       setAbertosFiltrados(newArr);
+    }
+  }
+  function filterChamadosFechados() {
+    var newArr;
+    if (fechadosFilter.responsavelFilter.length > 0) {
+      if (!newArr) newArr = chamadosFechados;
+      newArr = newArr.filter((call) =>
+        fechadosFilter.responsavelFilter.includes(call.responsavel)
+      );
+    }
+    if (fechadosFilter.tipoSolicitacaoFilter.length > 0) {
+      if (!newArr) newArr = chamadosFechados;
+      newArr = newArr.filter((call) =>
+        fechadosFilter.tipoSolicitacaoFilter.includes(call.tipoDoChamado)
+      );
+    }
+    if (fechadosFilter.procurarFilter.length > 0) {
+      if (!newArr) newArr = chamadosFechados;
+      newArr = newArr.filter((call) =>
+        call.projeto
+          .toUpperCase()
+          .includes(fechadosFilter.procurarFilter.toUpperCase())
+      );
+    }
+    if (!newArr) setFechadosFiltrados(chamadosFechados);
+    else {
+      setFechadosFiltrados(newArr);
     }
   }
   useEffect(() => {
@@ -174,8 +217,24 @@ function ChamadosProjetos({ credentials, setCredentials }) {
                   },
                 ]}
               />
+              <Select
+                isMulti
+                placeholder="TIPO DO CHAMADO"
+                onChange={(e) =>
+                  setAbertosFilters({
+                    ...abertosFilters,
+                    tipoSolicitacaoFilter: e.map((x) => x.value),
+                  })
+                }
+                options={projetosSolicitations.map((solicitacao) => {
+                  return {
+                    label: solicitacao,
+                    value: solicitacao,
+                  };
+                })}
+              />
               <button
-                onClick={filterCalls}
+                onClick={filterChamadosAbertos}
                 className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 py-1.5 items-center gap-x-2"
               >
                 <p>Filtrar</p>
@@ -222,13 +281,82 @@ function ChamadosProjetos({ credentials, setCredentials }) {
         </div>
       </div>
       <div className="w-full border max-h-[450px]  border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-3 gap-y-2 lg:gap-y-0">
-          <h1 className="col-span-1 text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
-            CHAMADOS FINALIZADOS
+        <div className="flex w-full items-center justify-around">
+          <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
+            CHAMADOS FECHADOS ({fechadosFiltrados.length})
           </h1>
+          <div className="flex items-center gap-x-2">
+            <input
+              type="text"
+              value={fechadosFilter.procurarFilter}
+              onChange={(e) =>
+                setFechadosFilter({
+                  ...fechadosFilter,
+                  procurarFilter: e.target.value,
+                })
+              }
+              placeholder={"Digite o nome do projeto..."}
+              className="outline-none h-[37px] text-gray-700 border border-gray-200 px-2 py-1.5 rounded-md"
+            />
+            <Select
+              isMulti
+              placeholder="RESPONSÁVEL"
+              onChange={(e) =>
+                setFechadosFilter({
+                  ...fechadosFilter,
+                  responsavelFilter: e.map((x) => x.value),
+                })
+              }
+              options={[
+                {
+                  value: "ALINE APARECIDA RODRIGUES CARVALHO",
+                  label: "ALINE APARECIDA",
+                },
+                {
+                  value: "ANDRIELLY GARCIA DOS SANTOS MARQUES",
+                  label: "ANDRIELLY GARCIA",
+                },
+                {
+                  value: "GLENDA ELIAS NASCIMENTO SANTOS",
+                  label: "GLENDA ELIAS",
+                },
+                {
+                  value: "POLLIANA CRISTINA DE REZENDE",
+                  label: "POLLIANA CRISTINA",
+                },
+                {
+                  value: "TULIO HENRIQUE SILVA MEDEIROS",
+                  label: "TULIO HENRIQUE",
+                },
+              ]}
+            />
+            <Select
+              isMulti
+              placeholder="TIPO DO CHAMADO"
+              onChange={(e) =>
+                setFechadosFilter({
+                  ...fechadosFilter,
+                  tipoSolicitacaoFilter: e.map((x) => x.value),
+                })
+              }
+              options={projetosSolicitations.map((solicitacao) => {
+                return {
+                  label: solicitacao,
+                  value: solicitacao,
+                };
+              })}
+            />
+            <button
+              onClick={filterChamadosFechados}
+              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 py-1.5 items-center gap-x-2"
+            >
+              <p>Filtrar</p>
+              <AiOutlineSearch />
+            </button>
+          </div>
         </div>
         <div className="flex max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
-          {chamadosFechados.map((call) => (
+          {fechadosFiltrados.map((call) => (
             <div
               onClick={() => handleOpenModal(call)}
               key={call._id}
@@ -264,6 +392,11 @@ function ChamadosProjetos({ credentials, setCredentials }) {
           ))}
         </div>
       </div>
+      <Link href="/publico/chamadosProjetos">
+        <div className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">Novo chamado</p>
+        </div>
+      </Link>
       {modalIsOpen && (
         <ModalCallProjetos
           credentials={credentials}

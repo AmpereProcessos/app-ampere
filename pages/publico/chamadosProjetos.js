@@ -48,7 +48,7 @@ function ChamadosPPS() {
   return (
     <section className="min-h-[100vh] flex items-center justify-center bg-[#15599a]">
       <div className="flex flex-col bg-[#fff] p-4 rounded">
-        <Link href="/calls/chamadosPPS">
+        <Link href="/calls/chamadosProjetos">
           <div className="flex self-center items-center h-[80px] w-[80px]">
             <Image src={Logo} />
           </div>

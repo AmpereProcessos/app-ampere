@@ -15,6 +15,7 @@ function BancoDeOS({ credentials, setCredentials }) {
       setFilteredOss(res.data);
     });
   }
+  function filterOS() {}
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {

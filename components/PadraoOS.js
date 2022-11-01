@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Assinatura from "../utils/assinatura.jpg";
 import Logo from "../utils/whitelogo.png";
-function PadraoOSPDF({ info, observacoesOS }) {
+function PadraoOSPDF({ info, observacoesOS, servicoExecutado }) {
   console.log(observacoesOS);
   return (
     <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
@@ -126,12 +126,12 @@ function PadraoOSPDF({ info, observacoesOS }) {
               </div>
               <div className="row-span-2 grid grid-cols-3 h-full items-center">
                 <p className="text-xs col-span-1 text-center font-semibold uppercase">
-                  TIPO DE ESTRUTURA
+                  RESPONSABILIDADE
                 </p>
                 <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black">
                   <div>
-                    {info.estruturaPersonalizada?.tipo
-                      ? info.estruturaPersonalizada?.tipo
+                    {info.padrao?.respInstalacao
+                      ? info.padrao?.respInstalacao
                       : "-"}
                   </div>
                 </div>
@@ -143,6 +143,7 @@ function PadraoOSPDF({ info, observacoesOS }) {
       <div className="border border-black mt-3">
         <h1 className="text-center  font-bold pt-1">OBSERVAÇÕES DA OBRA/OS</h1>
         <div className="flex flex-col justify-center min-h-[50px] items-center">
+          {servicoExecutado}
           {observacoesOS ? (
             <div
               className={`${

@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import OSControlCard from "../../components/OSControlCard";
-
+import { useRouter } from "next/router";
 function BancoDeOS({ credentials, setCredentials }) {
+  const router = useRouter();
   const [oss, setOSs] = useState([]);
   const [filteredOss, setFilteredOss] = useState([]);
   const [filters, setFilters] = useState({

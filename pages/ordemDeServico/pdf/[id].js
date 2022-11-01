@@ -17,6 +17,7 @@ function OSInfo({ info, index }) {
         <PadraoOS
           info={osInfo}
           observacoesOS={osInfo.ordensDeServico[index].observacoes}
+          servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
         />
       )}
       {osInfo.ordensDeServico[index].categoria == "MONTAGEM" && (

@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 function Export() {
   const [projects, setProjects] = useState([]);
   function getData() {
-    axios.get("/api/export").then((res) => setProjects(res.data));
+    axios
+      .get("/api/export", { timeout: 15000, keepAlive: true })
+      .then((res) => setProjects(res.data));
   }
   useEffect(() => {
     getData();

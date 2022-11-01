@@ -91,6 +91,11 @@ function ChamadosProjetos({ credentials, setCredentials }) {
               Chamados abertos
             </h1>
             <div className="flex items-center gap-x-2">
+              <input
+                type="text"
+                placeholder={"Digite o nome do projeto..."}
+                className="outline-none h-[37px] text-gray-700 border border-gray-200 px-2 py-1.5 rounded-md"
+              />
               <Select
                 isMulti
                 placeholder="RESPONSÁVEL"

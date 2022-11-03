@@ -91,7 +91,7 @@ export default async function handler(req, res) {
           ? obj.faturamento.previsaoFaturamento
           : "-",
         previsaoEntrega: obj.compra.previsaoEntrega
-          ? obj.compra.previsaoEntrega
+          ? fixDate(obj.compra.previsaoEntrega)
           : "-",
         rastreio: obj.compra.rastreio ? obj.compra.rastreio : "-",
         statusEntrega: obj.compra.statusEntrega

@@ -11,6 +11,7 @@ function ControleEstruturas({ setCredentials, credentials }) {
     estruturaPersFilter: [],
     liberacaoStatus: [],
     segmentoFilter: [],
+    pendencia: false,
   });
   function getProjects() {
     axios.get("/api/gestaoDeObras/estruturas").then((res) => {
@@ -44,6 +45,14 @@ function ControleEstruturas({ setCredentials, credentials }) {
         call.nomeDoContrato
           .toUpperCase()
           .includes(filters.searchFilter.toUpperCase())
+      );
+    }
+    if (filters.pendencia) {
+      if (!newArr) newArr = projects;
+      newArr = projects.filter(
+        (call) =>
+          call.estruturaPersonalizada.status == "PENDÊNCIA" &&
+          call.compra.statusLiberacao == "PAGO"
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -99,6 +108,16 @@ function ControleEstruturas({ setCredentials, credentials }) {
               setFilters({ ...filters, searchFilter: e.target.value })
             }
           />
+          <div
+            onClick={() =>
+              setFilters({ ...filters, pendencia: !filters.pendencia })
+            }
+            className={`${
+              filters.pendencia ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            PENDÊNCIAS
+          </div>
           <Select
             isMulti
             placeholder="SEGMENTO"

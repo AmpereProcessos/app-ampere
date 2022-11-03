@@ -171,6 +171,11 @@ export default async function handler(req, res) {
         retrabalho: "-",
         regional: obj.regional ? obj.regional : "-",
         tipoKit: obj.compra.tipoDoKit ? obj.compra.tipoDoKit : "-",
+        segmento: obj.segmento ? obj.segmento : "-",
+        nps: obj.nps ? obj.nps : "-",
+        dataNps: obj.jornada?.dataNps ? obj.jornada.dataNps : "-",
+        codSVB: obj.codigoSVB ? obj.codigoSVB : "-",
+        potenciaPico: obj.sistema.potPico ? obj.sistema.potPico : "-",
       };
     });
     res.json(newArr);

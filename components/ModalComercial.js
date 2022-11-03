@@ -2823,6 +2823,10 @@ function ModalComercial({
                         value: "OBRA CANCELADA",
                       },
                       {
+                        label: "CASA EM CONSTRUÇÃO",
+                        value: "CASA EM CONSTRUÇÃO",
+                      },
+                      {
                         label: "NÃO DEFINIDO",
                         value: "NÃO DEFINIDO",
                       },

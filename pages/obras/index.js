@@ -170,15 +170,17 @@ function Obras({ credentials, setCredentials }) {
       }
     }
   }, []);
-  function getBorderColorByParecer(date1, date2) {
+  function getBorderColorByParecer(date1, date2, statusObra) {
     var timeDiff = Math.abs(date2.getTime() - date1.getTime());
     var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    if (diffDays > 110) {
-      return "border-2 border-red-600";
-    } else if (diffDays > 105) {
+    if (statusObra == "CASA EM CONSTRUÇÃO") {
       return "border-2 border-yellow-500";
+    } else if (diffDays > 110) {
+      return "border-2 border-red-600";
+    } else if (diffDays > 100) {
+      return "border-2 border-blue-500";
     } else if (diffDays > 90) {
-      return "border-2 border-blue-700";
+      return "border-2 border-green-500";
     } else {
       return "border border-gray-200";
     }
@@ -539,7 +541,8 @@ function Obras({ credentials, setCredentials }) {
               project.vistoria.status != "REALIZADA"
                 ? getBorderColorByParecer(
                     new Date(project.parecer.dataParecerDeAcesso),
-                    new Date()
+                    new Date(),
+                    project.obra.statusDaObra
                   )
                 : "border border-gray-200"
             }  p-3 hover:bg-blue-100`}

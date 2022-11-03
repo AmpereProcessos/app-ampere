@@ -12,6 +12,7 @@ export default async function handler(req, res) {
                 "AGENDADA",
                 "AGUARDANDO AGENDAMENTO",
                 "EM ANDAMENTO",
+                "CASA EM CONSTRUÇÃO",
                 null,
                 undefined,
                 "",

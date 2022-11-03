@@ -14,6 +14,7 @@ export default async function handler(req, res) {
                 "AGUARDANDO AGENDAMENTO",
                 "EM ANDAMENTO",
                 "NÃO DEFINIDO",
+                "CASA EM CONSTRUÇÃO",
                 "",
                 null,
                 undefined,

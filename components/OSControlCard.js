@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 function OSControlCard({ info, reload, emAberto }) {
   const [os, setOs] = useState(info);
-  const [changes, setChanges] = useState({});
   function handleChange(id, index, fechamento) {
     axios
       .put("/api/ordensDeServico", {

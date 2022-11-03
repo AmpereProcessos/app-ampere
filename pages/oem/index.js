@@ -100,8 +100,8 @@ function OeM({ credentials, setCredentials }) {
       console.log(newArr);
       newArr = newArr.filter(
         (call) =>
-          call[dateFilter.field1][dateFilter.field2] > dateFilter.after &&
-          call[dateFilter.field1][dateFilter.field2] < dateFilter.before
+          call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
+          call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
       console.log(newArr);
     }

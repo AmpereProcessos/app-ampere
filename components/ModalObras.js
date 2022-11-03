@@ -79,6 +79,7 @@ function ModalObras({
       handleUpdates(project._id);
     });
   }
+  console.log(infoHolder);
   function handleOSChanges(id, index, date) {
     axios
       .put("/api/ordensDeServico/realizarCobranca", {
@@ -812,6 +813,10 @@ function ModalObras({
                       {
                         label: "OBRA CANCELADA",
                         value: "OBRA CANCELADA",
+                      },
+                      {
+                        label: "CASA EM CONSTRUÇÃO",
+                        value: "CASA EM CONSTRUÇÃO",
                       },
                       {
                         label: "NÃO DEFINIDO",

@@ -170,6 +170,19 @@ function Obras({ credentials, setCredentials }) {
       }
     }
   }, []);
+  function getBorderColorByParecer(date1, date2) {
+    var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    if (diffDays > 110) {
+      return "border-2 border-red-600";
+    } else if (diffDays > 105) {
+      return "border-2 border-yellow-500";
+    } else if (diffDays > 90) {
+      return "border-2 border-blue-700";
+    } else {
+      return "border border-gray-200";
+    }
+  }
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between gap-x-2 border-b border-gray-200 p-1">
@@ -521,7 +534,15 @@ function Obras({ credentials, setCredentials }) {
               setModalProject(project);
             }}
             key={project._id}
-            className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+            className={`w-[250px] lg:w-[450px] cursor-pointer ${
+              project.parecer.dataParecerDeAcesso != undefined &&
+              project.vistoria.status != "REALIZADA"
+                ? getBorderColorByParecer(
+                    new Date(project.parecer.dataParecerDeAcesso),
+                    new Date()
+                  )
+                : "border border-gray-200"
+            }  p-3 hover:bg-blue-100`}
           >
             <div className="flex items-center justify-between">
               <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
@@ -574,6 +595,14 @@ function Obras({ credentials, setCredentials }) {
                 <span className="text-xxs">CIDADE</span>
                 <p className="text-xs text-[#15599a]">
                   {project.cidade ? project.cidade : "-"}
+                </p>
+              </div>
+              <div>
+                <span className="text-xxs">TELHA</span>
+                <p className="text-xs text-[#15599a] uppercase">
+                  {project.visitaTecnica.tipoDaTelha
+                    ? project.visitaTecnica.tipoDaTelha
+                    : "-"}
                 </p>
               </div>
               <div>

@@ -1,10 +1,177 @@
 import connectToDatabase from "../../utils/projectsDb";
+function fixDate(value) {
+  if (isNaN(Date.parse(value)) == true) {
+    return "-";
+  } else {
+    return new Date(value).toLocaleDateString("pt-br");
+  }
+}
 export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("dados");
     let arr = await collection.find({}).limit(1000).toArray();
-    res.json(arr);
+    let newArr = arr.map((obj) => {
+      return {
+        qtde: obj.qtde ? obj.qtde : "-",
+        nomeDoContrato: obj.nomeDoContrato ? obj.nomeDoContrato : "-",
+        nomeDoProjeto: obj.nomeDoProjeto ? obj.nomeDoProjeto : "-",
+        vendedor: obj.vendedor.nome ? obj.vendedor.nome : "-",
+        codVendedor: obj.vendedor.codigo ? obj.vendedor.codigo : "-",
+        uf: obj.uf ? obj.uf : "-",
+        cidade: obj.cidade ? obj.cidade : "-",
+        cpf_cnpj: obj.cpf_cnpj ? obj.cpf_cnpj : "-",
+        tipoDeServico: obj.tipoDeServico ? obj.tipoDeServico : "-",
+        telefone: obj.telefone ? obj.telefone : "-",
+        pagamentoPadrao: obj.padrao.respPagamento
+          ? obj.padrao.respPagamento
+          : "-",
+        respInstPadrao: obj.padrao.respInstalacao
+          ? obj.padrao.respInstalacao
+          : "-",
+        estruturaPagamento: obj.estruturaPersonalizada.respPagamento
+          ? obj.estruturaPersonalizada.respPagamento
+          : "-",
+        contratoStatus: obj.contrato.status ? obj.contrato.status : "-",
+        solicitacaoContrato: obj.contrato.dataSolicitacao
+          ? fixDate(obj.contrato.dataSolicitacao)
+          : "-",
+        libAssContrato: obj.contrato.dataLiberacao
+          ? fixDate(obj.contrato.dataLiberacao)
+          : "-",
+        assContrato: obj.contrato.dataAssinatura
+          ? fixDate(obj.contrato.dataAssinatura)
+          : "-",
+        formaPagamento: obj.pagamento.forma ? obj.pagamento.forma : "-",
+        credor: obj.pagamento.credor ? obj.pagamento.credor : "-",
+        pagador: obj.pagamento.pagador ? obj.pagamento.pagador : "-",
+        contatoPagador: obj.pagamento.contatoPagador
+          ? obj.pagamento.contatoPagador
+          : "-",
+        libCompra: obj.compra.statusLiberacao
+          ? obj.compra.statusLiberacao
+          : "-",
+        dataLibCompra: obj.compra.dataLiberacao
+          ? fixDate(obj.compra.dataLiberacao)
+          : "-",
+        localDeEntrega: obj.compra.localEntrega ? obj.compra.localEntrega : "-",
+        titularProjeto: obj.dadosCemig.titularProjeto
+          ? obj.dadosCemig.titularProjeto
+          : "-",
+        numInstalacao: obj.dadosCemig.numeroInstalacao
+          ? obj.dadosCemig.numeroInstalacao
+          : "-",
+        distCreditos: obj.dadosCemig.distCreditos
+          ? obj.dadosCemig.distCreditos
+          : "-",
+        qtdeDist: obj.dadosCemig.qtdeDistCreditos
+          ? obj.dadosCemig.qtdeDistCreditos
+          : "-",
+        qtdeModulos: obj.sistema.qtdeModulos ? obj.sistema.qtdeModulos : "-",
+        potModulos: obj.sistema.potModulos ? obj.sistema.potModulos : "-",
+        topologia: obj.sistema.topologia ? obj.sistema.topologia : "-",
+        inversor: obj.sistema.inversor ? obj.sistema.inversor : "-",
+        valorEstrutura: obj.estruturaPersonalizada.valor
+          ? obj.estruturaPersonalizada.valor
+          : "-",
+        valorPadrao: obj.padrao.valor ? obj.padrao.valor : "-",
+        valorProjeto: obj.sistema.valorProjeto ? obj.sistema.valorProjeto : "-",
+        iniciarProjeto: obj.projeto.iniciar ? obj.projeto.iniciar : "-",
+        fornecedor: obj.compra.fornecedor ? obj.compra.fornecedor : "-",
+        infoCompra: obj.compra.informacoes ? obj.compra.informacoes : "-",
+        valorKit: obj.compra.valorDoKit ? obj.compra.valorDoKit : "-",
+        dataPedido: obj.compra.dataPedido
+          ? fixDate(obj.compra.dataPedido)
+          : "-",
+        dataPagamento: obj.compra.dataPagamento
+          ? fixDate(obj.compra.dataPagamento)
+          : "-",
+        statusPagamento: obj.pagamento.status ? obj.pagamento.status : "-",
+        prevFaturamento: obj.faturamento.previsaoFaturamento
+          ? obj.faturamento.previsaoFaturamento
+          : "-",
+        previsaoEntrega: obj.compra.previsaoEntrega
+          ? obj.compra.previsaoEntrega
+          : "-",
+        rastreio: obj.compra.rastreio ? obj.compra.rastreio : "-",
+        statusEntrega: obj.compra.statusEntrega
+          ? obj.compra.statusEntrega
+          : "-",
+        projetista: obj.projeto.projetista.nome
+          ? obj.projeto.projetista.nome
+          : "-",
+        codigoProjetista: obj.projeto.projetista.codigo
+          ? obj.projeto.projetista.codigo
+          : "-",
+        statusParecer: obj.parecer.statusDoParecerDeAcesso
+          ? obj.parecer.statusDoParecerDeAcesso
+          : "-",
+        documentacaoAssinada: obj.projeto.dataAssDocumentacao
+          ? fixDate(obj.projeto.dataAssDocumentacao)
+          : "-",
+        dataParecer: obj.parecer.dataParecerDeAcesso
+          ? fixDate(obj.parecer.dataParecerDeAcesso)
+          : "-",
+        diagramaUnifilar: obj.projeto.diagramaUnifilar
+          ? obj.projeto.diagramaUnifilar
+          : "-",
+        desenhoTelhado: obj.projeto.desenhoTelhado
+          ? obj.projeto.desenhoTelhado
+          : "-",
+        mapaDeMicro: obj.projeto.mapaDeMicro ? obj.projeto.mapaDeMicro : "-",
+        pedidoVistoria: obj.vistoria.dataPedido ? obj.vistoria.dataPedido : "-",
+        statusVistoria: obj.vistoria.status ? obj.vistoria.status : "-",
+        trocaMedidor: obj.medidor.data ? fixDate(obj.medidor.data) : "-",
+        statusMedidor: obj.medidor.status ? obj.medidor.status : "-",
+        projetoConcluido: obj.projeto.projetoConcluido
+          ? obj.projeto.projetoConcluido
+          : "-",
+        obsObra: obj.obra.observacoes ? obj.obra.observacoes : "-",
+        solicitacaoObra: obj.obra.statusSolicitacao
+          ? obj.obra.statusSolicitacao
+          : "-",
+        statusVisita: obj.visitaTecnica.status ? obj.visitaTecnica.status : "-",
+        tecnicoResp: obj.visitaTecnica.tecnico
+          ? obj.visitaTecnica.tecnico
+          : "-",
+        aumentoDeCarga: obj.projeto.aumentoDeCarga
+          ? obj.projeto.aumentoDeCarga
+          : "-",
+        acStatus: obj.projeto.acStatus ? obj.projeto.acStatus : "-",
+        possuiEstrutura: obj.estruturaPersonalizada.aplicavel
+          ? obj.estruturaPersonalizada.aplicavel
+          : "-",
+        statusEstrutura: obj.estruturaPersonalizada.status
+          ? obj.estruturaPersonalizada.status
+          : "-",
+        laudo: obj.obra.laudo ? obj.obra.laudo : "-",
+        separacaoMaterial: obj.material.statusSeparacao
+          ? obj.material.statusSeparacao
+          : "-",
+        entradaObra: obj.obra.entrada ? obj.obra.entrada : "-",
+        saidaObra: obj.obra.saida ? obj.obra.saida : "-",
+        statusObra: obj.obra.statusDaObra ? obj.obra.statusDaObra : "-",
+        equipeExec: obj.obra.equipeResp ? obj.obra.equipeResp : "-",
+        codEquipeExec: "-",
+        checklistObra: obj.obra.checklist ? obj.obra.checklist : "-",
+        prevNotaFiscal: obj.material.notaFiscal ? obj.material.notaFiscal : "-",
+        prevCustos: obj.material.previsaoCustos
+          ? obj.material.previsaoCustos
+          : "-",
+        efetivoCustos: obj.efetivoCustos ? obj.efetivoCustos : "-",
+        manutencaoStatus: obj.manutencaoPreventiva.status
+          ? obj.manutencaoPreventiva.status
+          : "-",
+        manutencaoData: obj.manutencaoPreventiva.data
+          ? obj.manutencaoPreventiva
+          : "-",
+        manutencaoCorretiva: "-",
+        retrabalho: "-",
+        regional: obj.regional ? obj.regional : "-",
+        tipoKit: obj.compra.tipoDoKit ? obj.compra.tipoDoKit : "-",
+      };
+    });
+    res.json(newArr);
   }
 }
 export const config = {

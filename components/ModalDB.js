@@ -62,6 +62,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
       });
     }
   }
+  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -1387,6 +1388,35 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         compra: {
                           ...infoHolder.compra,
                           dataLiberacao: new Date(value).toISOString(),
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
+                    label={"Data do pedido"}
+                    editable={editor}
+                    value={
+                      infoHolder.compra.dataPedido != undefined &&
+                      infoHolder.compra.dataPedido != "-"
+                        ? new Date(infoHolder.compra.dataPedido)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "compra.dataPedido": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          dataPedido: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}

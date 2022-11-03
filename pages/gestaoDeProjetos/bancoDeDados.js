@@ -77,8 +77,8 @@ function BandoDeDados({ data, credentials, setCredentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
         (call) =>
-          call[dateFilter.field1][dateFilter.field2] > dateFilter.after &&
-          call[dateFilter.field1][dateFilter.field2] < dateFilter.before
+          call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
+          call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
       console.log(newArr);
     }
@@ -105,6 +105,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
       }
     }
   }, []);
+  console.log(dateFilter);
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between gap-x-2 border-b border-gray-200 p-1">
@@ -210,6 +211,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
                   value: "compra.dataPagamento",
                 },
                 { label: "TROCA DO MEDIDOR", value: "medidor.data" },
+                { label: "DATA PEDIDO", value: "compra.dataPedido" },
                 { label: "NÃO DEFINIDO", value: null },
               ]}
               onChange={(e) =>

@@ -64,16 +64,36 @@ function ModalSuprimentos({
         setMsg({ text: "Alterações feitas", color: "text-green-400" });
         handleUpdates(project._id);
       });
+      setMsg({ text: "Teste", color: "text-green-400" });
     } else {
       setMsg({ text: validateChanges().message, color: "text-red-400" });
     }
   }
   function validateChanges() {
+    if (
+      infoHolder.compra.statusLiberacao == "PAGO" &&
+      infoHolder.projeto.iniciar != "SIM"
+    ) {
+      return {
+        liberar: false,
+        message: "Por favor, preencha iniciar projeto.",
+      };
+    }
     if (infoHolder.projeto.iniciar == "SIM") {
       if (infoHolder.compra.previsaoEntrega == undefined) {
         return {
           liberar: false,
           message: "Preencha previsão de entrega",
+        };
+      } else if (infoHolder.compra.dataPagamento == undefined) {
+        return {
+          liberar: false,
+          message: "Por favor, preencha a data de pagamento.",
+        };
+      } else if (infoHolder.compra.dataPedido == undefined) {
+        return {
+          liberar: false,
+          message: "Por favor, preencha a data do pedido.",
         };
       } else if (
         infoHolder.compra.statusEntrega != "EM ROTA" &&

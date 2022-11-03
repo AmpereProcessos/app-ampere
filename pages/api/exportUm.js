@@ -119,7 +119,9 @@ export default async function handler(req, res) {
           ? obj.projeto.desenhoTelhado
           : "-",
         mapaDeMicro: obj.projeto.mapaDeMicro ? obj.projeto.mapaDeMicro : "-",
-        pedidoVistoria: obj.vistoria.dataPedido ? obj.vistoria.dataPedido : "-",
+        pedidoVistoria: obj.vistoria.dataPedido
+          ? fixDate(obj.vistoria.dataPedido)
+          : "-",
         statusVistoria: obj.vistoria.status ? obj.vistoria.status : "-",
         trocaMedidor: obj.medidor.data ? fixDate(obj.medidor.data) : "-",
         statusMedidor: obj.medidor.status ? obj.medidor.status : "-",
@@ -148,8 +150,8 @@ export default async function handler(req, res) {
         separacaoMaterial: obj.material.statusSeparacao
           ? obj.material.statusSeparacao
           : "-",
-        entradaObra: obj.obra.entrada ? obj.obra.entrada : "-",
-        saidaObra: obj.obra.saida ? obj.obra.saida : "-",
+        entradaObra: obj.obra.entrada ? fixDate(obj.obra.entrada) : "-",
+        saidaObra: obj.obra.saida ? fixDate(obj.obra.saida) : "-",
         statusObra: obj.obra.statusDaObra ? obj.obra.statusDaObra : "-",
         equipeExec: obj.obra.equipeResp ? obj.obra.equipeResp : "-",
         codEquipeExec: "-",
@@ -163,7 +165,7 @@ export default async function handler(req, res) {
           ? obj.manutencaoPreventiva.status
           : "-",
         manutencaoData: obj.manutencaoPreventiva.data
-          ? obj.manutencaoPreventiva
+          ? fixDate(obj.manutencaoPreventiva.data)
           : "-",
         manutencaoCorretiva: "-",
         retrabalho: "-",

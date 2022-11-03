@@ -294,8 +294,8 @@ function ModalObras({
                         value: "REGIONAL ITUIUTABA",
                       },
                       {
-                        label: "REGIONAL UBERLANDIA",
-                        value: "REGIONAL UBERLANDIA",
+                        label: "REGIONAL UBERLÂNDIA",
+                        value: "REGIONAL UBERLÂNDIA",
                       },
                     ]}
                     handleChange={(value) => {

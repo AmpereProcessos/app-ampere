@@ -1,12 +1,32 @@
 import axios from "axios";
 import React, { useState } from "react";
-
-function EstruturaCard({ project }) {
+import SelectInput from "./SelectInput";
+import TextInput from "./TextInput";
+import DateInput from "./DateInput";
+import NumberInput from "./NumberInput";
+import Link from "next/link";
+import { AiFillEye } from "react-icons/ai";
+function EstruturaCard({ project, credentials }) {
   const [changes, setChanges] = useState({
     "estruturaPersonalizada.dataMontagem":
       project.estruturaPersonalizada.dataMontagem,
     "estruturaPersonalizada.pagTerceiro":
       project.estruturaPersonalizada.pagTerceiro,
+  });
+  const [osVisible, setOSVisible] = useState(false);
+  const [osInfo, setOsInfo] = useState({
+    categoria: "ESTRUTURA",
+    servicoExecutado: "",
+    realizarCobranca: false,
+    valorCobranca: 0,
+    usuarioEmissor: "",
+    grauDeUrgencia: "NÃO DEFINIDO",
+    observacoes: "",
+    dataDeAbertura: new Date(),
+  });
+  const [osMsg, setOsMsg] = useState({
+    text: "",
+    color: "text-red-500",
   });
   function handleChanges(mudancas) {
     axios
@@ -16,6 +36,58 @@ function EstruturaCard({ project }) {
       })
       .then((res) => console.log(res.data));
   }
+  function handleOSCreation() {
+    var arr;
+    if (osInfo.servicoExecutado.trim().length < 5) {
+      setOsMsg({
+        text: "Por favor, preencha o serviço a ser executado.",
+        color: "text-red-500",
+      });
+      return;
+    } else {
+      if (
+        project.ordensDeServico != undefined &&
+        project.ordensDeServico?.length > 0
+      ) {
+        project.ordensDeServico.push({
+          ...osInfo,
+          usuarioEmissor: credentials.nome,
+          index: project.ordensDeServico?.length,
+          cobrancaRealizada: false,
+        });
+        arr = project.ordensDeServico;
+      } else {
+        arr = [
+          {
+            ...osInfo,
+            usuarioEmissor: credentials.nome,
+            index: 0,
+            cobrancaRealizada: false,
+          },
+        ];
+        project.ordensDeServico = arr;
+      }
+      axios
+        .post("/api/ordensDeServico", { id: project._id, arr: arr })
+        .then((res) => {
+          setOsMsg({
+            text: "Ordem de serviço gerada",
+            color: "text-green-500",
+          });
+          setOsInfo({
+            categoria: "NÃO DEFINIDO",
+            servicoExecutado: "",
+            realizarCobranca: false,
+            valorCobranca: 0,
+            usuarioEmissor: "",
+            grauDeUrgencia: "NÃO DEFINIDO",
+            observacoes: "",
+            dataDeAbertura: new Date(),
+          });
+        });
+    }
+  }
+  console.log(osInfo);
   return (
     <div className="w-full p-2 border border-[#15599a] rounded">
       <div className="flex items-center gap-x-2 justify-between border-b border-gray-200 pb-2">
@@ -154,6 +226,190 @@ function EstruturaCard({ project }) {
           </div>
         </div>
       </div>
+      <div className="flex flex-col items-center">
+        <div className="flex items-center gap-x-2">
+          <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+            ORDEM DE SERVIÇO
+          </span>
+          <button
+            onClick={() => setOSVisible(!osVisible)}
+            className="px-1 h-[20px] rounded bg-[#fead41] mb-2 hover:bg-[#15599a] hover:text-white"
+          >
+            <AiFillEye />
+          </button>
+        </div>
+        {osVisible ? (
+          <>
+            <div className="flex gap-2 justify-center flex-wrap">
+              <SelectInput
+                label={"CATEGORIA DA OS"}
+                value={osInfo.categoria}
+                editable={false}
+                options={[{ label: "ESTRUTURA", value: "ESTRUTURA" }]}
+              />
+              <TextInput
+                label={"Serviço a ser executado"}
+                value={osInfo.servicoExecutado}
+                editable={true}
+                handleChange={(value) =>
+                  setOsInfo({ ...osInfo, servicoExecutado: value })
+                }
+              />
+              <div>
+                <input
+                  disabled={!true}
+                  checked={osInfo.realizarCobranca}
+                  onChange={(e) =>
+                    setOsInfo({
+                      ...osInfo,
+                      realizarCobranca: e.target.checked,
+                    })
+                  }
+                  type="checkbox"
+                  name="realizarCobranca"
+                  id="realizarCobranca"
+                />
+                <label className="ml-2" htmlFor="realizarCobranca">
+                  REALIZAR COBRANÇA
+                </label>
+              </div>
+              <NumberInput
+                label={"VALOR DO SERVIÇO A COBRAR"}
+                value={osInfo.valorCobranca}
+                editable={true}
+                handleChange={(value) =>
+                  setOsInfo({ ...osInfo, valorCobranca: Number(value) })
+                }
+              />
+              <SelectInput
+                label={"GRAU DE URGÊNCIA"}
+                value={osInfo.grauDeUrgencia}
+                editable={true}
+                options={[
+                  { label: "EMERGÊNCIA", value: "EMERGÊNCIA" },
+                  { label: "URGENTE", value: "URGENTE" },
+                  { label: "POUCO URGENTE", value: "POUCO URGENTE" },
+                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                ]}
+                handleChange={(value) =>
+                  setOsInfo({ ...osInfo, grauDeUrgencia: value })
+                }
+              />
+              <DateInput
+                label={"DATA DE ABERTURA"}
+                editable={true}
+                value={new Date(osInfo.dataDeAbertura)
+                  .toISOString()
+                  .slice(0, 10)}
+                handleChange={(value) =>
+                  setOsInfo({
+                    ...osInfo,
+                    dataDeAbertura: new Date(value).toISOString(),
+                  })
+                }
+              />
+            </div>
+            {osInfo.categoria != "MONTAGEM" &&
+              osInfo.categoria != "NÃO DEFINIDO" && (
+                <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                  <span className="uppercase font-bold font-raleway text-center text-sm">
+                    OBSERVAÇÕES DA OS
+                  </span>
+                  <textarea
+                    readOnly={!true}
+                    value={osInfo.observacoes}
+                    onChange={(e) =>
+                      setOsInfo({ ...osInfo, observacoes: e.target.value })
+                    }
+                    placeholder="Observações da OS..."
+                    className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                  />
+                </div>
+              )}
+            {osMsg.text.length > 0 && (
+              <p className={`text-center ${osMsg.color} italic`}>
+                {osMsg.text}
+              </p>
+            )}
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={handleOSCreation}
+                className="p-2 bg-[#fead61] font-bold rounded"
+              >
+                GERAR OS
+              </button>
+            </div>
+          </>
+        ) : (
+          false
+        )}
+      </div>
+      {project.ordensDeServico != undefined &&
+        project.ordensDeServico?.length > 0 && (
+          <div className="w-full flex flex-col px-10 border-t border-gray-200 mt-2">
+            <h1 className="text-[#fead61] font-bold">OSs GERADAS DO PROJETO</h1>
+            {project.ordensDeServico.map((ordem, index) => (
+              <div
+                key={index}
+                className={`${
+                  ordem.categoria != "ESTRUTURA" ? "hidden" : "flex"
+                } mt-1 items-center justify-around`}
+              >
+                <div className="flex flex-col items-center">
+                  <p className="text-sm uppercase text-gray-500">CATEGORIA</p>
+                  <p className="text-xs uppercase">{ordem.categoria}</p>
+                </div>
+                <div className="text-xs flex flex-col items-center">
+                  <p className="text-xxs uppercase text-gray-500">
+                    SERVIÇO PARA EXECUÇÃO
+                  </p>
+                  <p className="text-xs uppercase">{ordem.servicoExecutado}</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="text-xs uppercase text-gray-500">
+                    REALIZAR COBRANÇA?
+                  </p>
+                  <p className="text-xxs uppercase">
+                    {ordem.realizarCobranca ? "SIM" : "NÃO"}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="text-xsuppercase text-gray-500">
+                    VALOR DA COBRANÇA
+                  </p>
+                  <p className="text-xxs uppercase">R$ {ordem.valorCobranca}</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="text-xs uppercase text-gray-500">
+                    EMISSOR DA OS
+                  </p>
+                  <p className="text-xxs uppercase">{ordem.usuarioEmissor}</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="text-xs uppercase text-gray-500">
+                    DATA DE ABERTURA
+                  </p>
+                  <p className="text-xxs uppercase">
+                    {new Date(ordem.dataDeAbertura).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="text-xs uppercase text-gray-500">
+                    GRAU DE URGÊNCIA
+                  </p>
+                  <p className="text-xxs uppercase">{ordem.grauDeUrgencia}</p>
+                </div>
+                <Link
+                  href={`/ordemDeServico/pdf/${project._id}?index=${index}`}
+                >
+                  <button className="p-2 bg-[#fead61] font-bold rounded">
+                    VER OS
+                  </button>
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
     </div>
   );
 }

@@ -32,7 +32,7 @@ function formatCEP(cep) {
     .replace(/(-\d{3})\d+?$/, "$1");
   return cep;
 }
-function FormSolicitacaoUm({ dados, setDados }) {
+function FormSolicitacaoUm({ dados, setDados, avancar }) {
   const [message, setMessage] = useState("");
   async function findCPF(field) {
     axios
@@ -77,7 +77,7 @@ function FormSolicitacaoUm({ dados, setDados }) {
       return false;
     }
     if (dados.codigoSVB == undefined || dados.codigoSVB == 0) {
-      setMessage("Por favor, preencha um numéro de residência válido.");
+      setMessage("Por favor, preencha um código SVB válido.");
       return false;
     }
     if (dados.email.trim().length < 5) {
@@ -85,7 +85,7 @@ function FormSolicitacaoUm({ dados, setDados }) {
       return false;
     }
     if (dados.profissao.trim().length < 3) {
-      setMessage("Por favor, preencha um email válido.");
+      setMessage("Por favor, preencha uma profissão válida.");
       return false;
     }
     if (
@@ -104,6 +104,11 @@ function FormSolicitacaoUm({ dados, setDados }) {
     }
     return true;
   }
+  function proximaEtapa() {
+    if (validarCamposObrigatorios()) {
+      avancar();
+    }
+  }
   return (
     <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -115,7 +120,7 @@ function FormSolicitacaoUm({ dados, setDados }) {
           value={dados.nomeDoContrato}
           editable={true}
           handleChange={(value) =>
-            setDados({ ...dados, nomeDoContrato: value })
+            setDados({ ...dados, nomeDoContrato: value.toUpperCase() })
           }
         />
         <TextInput
@@ -188,7 +193,7 @@ function FormSolicitacaoUm({ dados, setDados }) {
           editable={true}
           value={dados.enderecoCobranca}
           handleChange={(value) =>
-            setDados({ ...dados, enderecoCobranca: value })
+            setDados({ ...dados, enderecoCobranca: value.toUpperCase() })
           }
         />
         <NumberInput
@@ -196,14 +201,16 @@ function FormSolicitacaoUm({ dados, setDados }) {
           value={dados.numeroResCobranca}
           editable={true}
           handleChange={(value) =>
-            setDados({ ...dados, numeroResCobranca: value })
+            setDados({ ...dados, numeroResCobranca: Number(value) })
           }
         />
         <TextInput
           label={"BAIRRO"}
           editable={true}
           value={dados.bairro}
-          handleChange={(value) => setDados({ ...dados, bairro: value })}
+          handleChange={(value) =>
+            setDados({ ...dados, bairro: value.toUpperCase() })
+          }
         />
         <TextInput
           label={"PONTO DE REFERÊNCIA"}
@@ -414,8 +421,12 @@ function FormSolicitacaoUm({ dados, setDados }) {
           className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
         />
       </div>
+      {message && <p className="text-red-400 italic text-center">{message}</p>}
       <div className="flex w-full justify-center mt-2">
-        <button className="w-fit text-center p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold ">
+        <button
+          onClick={proximaEtapa}
+          className="w-fit text-center p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold "
+        >
           PRÓXIMA ETAPA
         </button>
       </div>

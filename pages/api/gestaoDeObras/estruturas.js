@@ -21,6 +21,6 @@ export default async function handler(req, res) {
       { _id: ObjectId(req.body.id) },
       { $set: { ...req.body.mudancas } }
     );
-    return res.json("OK");
+    return res.json(newObj);
   }
 }

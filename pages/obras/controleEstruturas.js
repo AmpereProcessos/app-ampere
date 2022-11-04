@@ -89,7 +89,6 @@ function ControleEstruturas({ setCredentials, credentials }) {
       }
     }
   }, []);
-  console.log(projects);
   return (
     <div className="p-6 grow bg-[#fff]">
       <div className="flex w-full items-center border-b border-gray-200 mb-2">
@@ -232,7 +231,11 @@ function ControleEstruturas({ setCredentials, credentials }) {
       </div>
       <div className="flex flex-col gap-y-2">
         {filteredProjects.map((project) => (
-          <EstruturaCard project={project} key={project._id} />
+          <EstruturaCard
+            credentials={credentials}
+            project={project}
+            key={project._id}
+          />
         ))}
       </div>
     </div>

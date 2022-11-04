@@ -413,7 +413,7 @@ function PadraoCard({ project, credentials }) {
                   <p className="text-xxs uppercase">{ordem.grauDeUrgencia}</p>
                 </div>
                 <Link
-                  href={`/ordemDeServico//pdf/${project._id}?index=${index}`}
+                  href={`/ordemDeServico/pdf/${project._id}?index=${index}`}
                 >
                   <button className="p-2 bg-[#fead61] font-bold rounded">
                     VER OS

@@ -9,6 +9,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { cidadesAtendidas, vendedores } from "../../utils/constants";
 import axios from "axios";
 import FormSolicitacaoUm from "../../components/FormSolicitacaoUm";
+import FormSolicitacaoDois from "../../components/FormSolicitacaoDois";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -36,7 +37,7 @@ function formatCEP(cep) {
   return cep;
 }
 function FormularioSolicitacao() {
-  const [estagio, setEstagio] = useState(0);
+  const [estagio, setEstagio] = useState(2);
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",
     telefoneVendedor: "",
@@ -65,6 +66,29 @@ function FormularioSolicitacao() {
     nomeIndicador: "",
     telefoneIndicador: "",
     comoChegouAoCliente: "",
+    nomeContatoJornadaUm: "",
+    telefoneContatoUm: "",
+    nomeContatoJornadaDois: "",
+    telefoneContatoDois: "",
+    cuidadosContatoJornada: "",
+    nomeTitularProjeto: "",
+    tipoDoTitular: "PESSOA FISICA",
+    tipoDaLigacao: "EXISTENTE",
+    tipoDaInstalacao: "URBANO",
+    cepInstalacao: "",
+    enderecoInstalacao: "",
+    numeroResInstalacao: null,
+    numeroInstalacao: null,
+    bairroInstalacao: null,
+    cidadeInstalacaO: cidadesAtendidas[0],
+    ufInstalacao: "",
+    pontoDeReferenciaInstalacao: "",
+    loginCemigAtende: "",
+    senhaCemigAtende: "",
+    latitude: "",
+    longitude: "",
+    potPico: null,
+    geracaoPrevista: null,
   });
   async function findCPF(field) {
     axios
@@ -79,7 +103,6 @@ function FormularioSolicitacao() {
         });
       });
   }
-  function validarDadosContrato() {}
   return (
     <div className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
       <div className="flex self-center items-center h-[100px] w-[100px]">
@@ -111,14 +134,119 @@ function FormularioSolicitacao() {
           />
         </div>
         {estagio == 0 && (
-          <FormSolicitacaoUm dados={dados} setDados={setDados} />
+          <FormSolicitacaoUm
+            avancar={() => setEstagio(estagio + 1)}
+            dados={dados}
+            setDados={setDados}
+          />
         )}
         {estagio == 1 && (
+          <FormSolicitacaoDois
+            avancar={() => setEstagio(estagio + 1)}
+            dados={dados}
+            setDados={setDados}
+          />
+        )}
+        {estagio == 2 && (
           <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
             <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              DADOS PARA CONTATO DA JORNADA DO CLIENTE
+              DADOS PARA ENTRADA NA CEMIG
             </span>
-            <div className="flex gap-2 justify-around flex-wrap"></div>
+            <div className="flex gap-2 justify-around flex-wrap">
+              <TextInput
+                label={"NOME DO TITULAR DO PROJETO"}
+                value={dados.nomeTitularProjeto}
+                editable={true}
+                handleChange={(value) =>
+                  setDados({
+                    ...dados,
+                    nomeTitularProjeto: value.toUpperCase(),
+                  })
+                }
+              />
+              <SelectInput
+                label={"TIPO DO TITULAR"}
+                editable={true}
+                value={dados.tipoDoTitular}
+                handleChange={(value) =>
+                  setDados({ ...dados, tipoDoTitular: value })
+                }
+                options={[
+                  {
+                    label: "PESSOA FISICA",
+                    value: "PESSOA FISICA",
+                  },
+                  {
+                    label: "PESSOA JURIDICA",
+                    value: "PESSOA JURIDICA",
+                  },
+                ]}
+              />
+              <SelectInput
+                label={"TIPO DA LIGAÇÃO"}
+                editable={true}
+                value={dados.tipoDaLigacao}
+                handleChange={(value) =>
+                  setDados({ ...dados, tipoDaLigacao: value })
+                }
+                options={[
+                  {
+                    label: "NOVA",
+                    value: "NOVA",
+                  },
+                  {
+                    label: "EXISTENTE",
+                    value: "EXISTENTE",
+                  },
+                ]}
+              />
+              <SelectInput
+                label={"TIPO DA INSTALAÇÃO"}
+                editable={true}
+                value={dados.tipoDaInstalacao}
+                handleChange={(value) =>
+                  setDados({ ...dados, tipoDaInstalacao: value })
+                }
+                options={[
+                  {
+                    label: "RURAL",
+                    value: "RURAL",
+                  },
+                  {
+                    label: "URBANO",
+                    value: "URBANO",
+                  },
+                ]}
+              />
+              <TextInput
+                editable={true}
+                label={"CEP INSTALAÇÃO"}
+                value={dados.cepInstalacao}
+                handleChange={(value) =>
+                  setDados({ ...dados, cepInstalacao: formatCEP(value) })
+                }
+              />
+              <TextInput label={"ENDEREÇO DE INSTALAÇÃO"} />
+              <NumberInput label={"Nº"} />
+              <NumberInput label={"Nº DA INSTALAÇÃO"} />
+              <TextInput label={"BAIRRO"} />
+              <SelectInput
+                label={"CIDADE"}
+                editable={true}
+                options={cidadesAtendidas.map((cidade) => {
+                  return { label: cidade, value: cidade };
+                })}
+                handleChange={(value) => setDados({ ...dados, cidade: value })}
+              />
+              <TextInput label={"UF"} />
+              <TextInput label={"PONTO DE REFERÊNCIA"} />
+              <TextInput label={"LOGIN(CEMIG ATENDE)"} />
+              <TextInput label={"SENHA(CEMIG ATENDE)"} />
+              <TextInput label={"LATITUDE"} />
+              <TextInput label={"LONGITUDE"} />
+              <NumberInput label={"POTÊNIA PICO"} />
+              <NumberInput label={"GERAÇÃO PREVISTA"} />
+            </div>
           </div>
         )}
       </div>

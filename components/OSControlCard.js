@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-function OSControlCard({ info, reload, emAberto }) {
+function OSControlCard({ info, reload, emAberto, categoria }) {
   const [os, setOs] = useState(info);
   function handleChange(id, index, fechamento) {
     axios
@@ -39,6 +39,8 @@ function OSControlCard({ info, reload, emAberto }) {
                 ? "hidden"
                 : ""
               : ""
+          } ${
+            !categoria.includes(ordem.categoria) ? "hidden" : ""
           } items-center grid-cols-7 border-b border-gray-200 pb-2`}
         >
           <div className="flex flex-col items-center">
@@ -81,7 +83,7 @@ function OSControlCard({ info, reload, emAberto }) {
             </p>
             {ordem.dataDeFechamento == undefined ? (
               <input
-                type="datetime-local"
+                type="date"
                 onChange={(e) => {
                   setOs((prevState) => {
                     let temp = {
@@ -96,13 +98,17 @@ function OSControlCard({ info, reload, emAberto }) {
                   handleChange(
                     os._id,
                     index,
-                    new Date(e.target.value).toISOString().slice(0, 10)
+                    new Date(e.target.value).toISOString()
                   );
                 }}
                 className="text-xxs font-bold bg-[#15599a] w-fit text-white p-1 rounded"
               />
             ) : (
-              <p>{new Date(ordem.dataDeFechamento).toLocaleDateString()}</p>
+              <p className="text-xs uppercase">
+                {new Date(
+                  new Date(ordem.dataDeFechamento).setHours(27)
+                ).toLocaleDateString()}
+              </p>
             )}
           </div>
         </div>

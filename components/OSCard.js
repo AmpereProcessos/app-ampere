@@ -61,6 +61,16 @@ function OSCard({ info, reload }) {
                   {new Date(ordem.dataDeAbertura).toLocaleDateString()}
                 </p>
               </div>
+              <div className="flex flex-col items-center">
+                <p className="uppercase text-gray-500">DATA DE FECHAMENTO</p>
+                <p className="text-xs uppercase">
+                  {ordem.dataDeFechamento != undefined
+                    ? new Date(
+                        new Date(ordem.dataDeFechamento).setHours(27)
+                      ).toLocaleDateString()
+                    : "-"}
+                </p>
+              </div>
               <div
                 className={`flex flex-col items-center ${
                   ordem.cobrancaRealizada != true

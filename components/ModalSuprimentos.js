@@ -64,7 +64,6 @@ function ModalSuprimentos({
         setMsg({ text: "Alterações feitas", color: "text-green-400" });
         handleUpdates(project._id);
       });
-      setMsg({ text: "Teste", color: "text-green-400" });
     } else {
       setMsg({ text: validateChanges().message, color: "text-red-400" });
     }

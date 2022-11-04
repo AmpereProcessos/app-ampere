@@ -364,7 +364,9 @@ function PadraoCard({ project, credentials }) {
             {project.ordensDeServico.map((ordem, index) => (
               <div
                 key={index}
-                className="flex mt-1 items-center justify-around"
+                className={`${
+                  ordem.categoria != "PADRÃO" ? "hidden" : "flex"
+                } mt-1 items-center justify-around`}
               >
                 <div className="flex flex-col items-center">
                   <p className="text-xs uppercase text-gray-500">CATEGORIA</p>

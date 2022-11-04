@@ -137,7 +137,10 @@ function ChamadosProjetos({ credentials, setCredentials }) {
         <div className="flex items-center justify-around gap-x-2">
           <p>CHAMADOS ABERTOS: ({chamadosAbertos.length})</p>
         </div>
-        <div className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg">
+        <div
+          onClick={getCalls}
+          className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg"
+        >
           <p className="mr-2 text-sm">Atualizar</p>
           <AiOutlineReload />
         </div>

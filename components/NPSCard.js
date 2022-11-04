@@ -14,7 +14,10 @@ function NPSCard({ project, credentials }) {
       projetoMudado: project._id,
     });
     axios
-      .post(`/api/projects/update/${project._id}`, { nps: nps })
+      .post(`/api/projects/update/${project._id}`, {
+        nps: nps,
+        "jornada.dataNps": new Date().toJSON(),
+      })
       .then((res) => {
         setMsg({ text: "Alterações feitas", color: "text-green-500" });
       });
@@ -32,6 +35,12 @@ function NPSCard({ project, credentials }) {
             {project.cidade ? project.cidade : "-"}
           </p>
         </div>
+        <div className="hidden lg:block">
+          <span className="text-xxs">VENDEDOR</span>
+          <p className="text-xs text-gray-600">
+            {project.vendedor.nome ? project.vendedor.nome : "-"}
+          </p>
+        </div>
         <div>
           <span className="text-xxs">TELEFONE</span>
           <p className="text-xs text-center text-gray-600">
@@ -39,7 +48,7 @@ function NPSCard({ project, credentials }) {
           </p>
         </div>
       </div>
-      <div className="flex items-center justify-between px-2">
+      <div className="flex items-center justify-between mt-2 px-2">
         <div>
           <div className="flex flex-col items-center">
             <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -59,6 +68,14 @@ function NPSCard({ project, credentials }) {
               />
             </div>
           </div>
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-xs text-gray-700 font-bold">DATA DE COLETA</p>
+          <p className="text-xs text-gray-500">
+            {project.jornada.dataNps
+              ? new Date(project.jornada.dataNps).toLocaleDateString()
+              : "-"}
+          </p>
         </div>
         <div>
           <button

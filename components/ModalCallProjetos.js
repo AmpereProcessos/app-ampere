@@ -57,42 +57,6 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
         getCalls();
       });
   }
-  /*function closeCall() {
-    if (info.statusChamado != "RESOLVIDO") {
-      ultAlteracoes.statusAlteracoes.usuario = credentials._id;
-      ultAlteracoes.statusAlteracoes.antes = info.statusChamado;
-      ultAlteracoes.statusAlteracoes.depois = "RESOLVIDO";
-      ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
-    }
-    axios
-      .post("/api/calls/suporte/updateSuporte", {
-        ...info,
-        fechamento: new Date(),
-        statusChamado: "RESOLVIDO",
-        ultAlteracoes: ultAlteracoes,
-      })
-      .then((res) => {
-        updateModalInfo(info._id);
-      });
-  }
-  function reopenCall() {
-    if (info.status != "ABERTO") {
-      ultAlteracoes.statusAlteracoes.usuario = credentials._id;
-      ultAlteracoes.statusAlteracoes.antes = info.statusChamado;
-      ultAlteracoes.statusAlteracoes.depois = "ABERTO";
-      ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
-    }
-    axios
-      .post("/api/calls/suporte/updateSuporte", {
-        ...info,
-        fechamento: "",
-        statusChamado: "ABERTO",
-        ultAlteracoes: ultAlteracoes,
-      })
-      .then((res) => {
-        updateModalInfo(info._id);
-      });
-  }*/
   useEffect(() => {
     setMessage("");
   }, [notes, responsavel]);
@@ -228,6 +192,11 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                   className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
                 />
               </div>
+              {message && (
+                <p className="text-center text-green-300 mt-2 italic">
+                  {message}
+                </p>
+              )}
               {selectedStatus == "FINALIZADO" ? (
                 <div className="text-center">
                   <button
@@ -262,11 +231,6 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                     </button>
                   </div>
                 </>
-              )}
-              {message && (
-                <p className="text-center text-green-300 mt-2 italic">
-                  {message}
-                </p>
               )}
             </div>
           </div>

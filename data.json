@@ -2589,7 +2589,7 @@
     "projeto": "ROGERIO DIVINO SILVA"
   },
   {
-    "status": "AGUARDANDO CONCESSIONÁRIA",
+    "status": "FINALIZADO",
     "fechamento": "2022-09-06T20:32:00.000Z",
     "abertura": "2022-08-29T18:17:41.193Z",
     "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
@@ -3459,7 +3459,7 @@
     "projeto": "EDMAR RICARDO DE OLIVEIRA"
   },
   {
-    "status": "AGUARDANDO CONCESSIONÁRIA",
+    "status": "FINALIZADO",
     "fechamento": "2022-09-14T03:00:00.000Z",
     "abertura": "2022-09-09T14:29:27.817Z",
     "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
@@ -3477,8 +3477,8 @@
     "projeto": "SEBASTIÃO FERREIRA DE PAULA "
   },
   {
-    "status": "AGUARDANDO CONCESSIONÁRIA",
-    "fechamento": "2022-10-26T17:06:00.000Z",
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-28T15:20:00.000Z",
     "abertura": "2022-09-12T12:19:32.772Z",
     "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
     "observacoes": "Troca de titularidade da instalação 3013123074 e posteriormente distribuição de 100% para a mesma, mais informações no email",
@@ -5581,8 +5581,8 @@
     "projeto": "MARCELO DA SILVA RODRIGUES BORGES"
   },
   {
-    "status": "AGUARDANDO CONCESSIONÁRIA",
-    "fechamento": "2022-10-26T03:00:00.000Z",
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-28T16:42:22.000Z",
     "abertura": "2022-10-04T13:42:53.656Z",
     "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
     "observacoes": "FAZER A PLANILHA DE DISTRIBUIÇÃO E SOLICITAR DISTRIBUIÇÃO DE CRÉDITO",
@@ -5590,7 +5590,8 @@
     "projeto": "JOSE LUCIANO COELHO"
   },
   {
-    "status": "AGUARDANDO CONCESSIONÁRIA",
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-18T23:58:00.000Z",
     "abertura": "2022-10-04T13:43:48.926Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "FAZER A DISTRIBUIÇÃO DE CRÉDITO",
@@ -6413,6 +6414,8 @@
     "projeto": "ARCHIBALDO DE OLIVEIRA DINIZ JUNIOR"
   },
   {
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-03T03:00:00.000Z",
     "abertura": "2022-10-14T11:28:58.310Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "FAZER MEMORIAL E O DUB DOS DOIS PROJETOS (CASA E ESCOLA)",
@@ -6420,6 +6423,8 @@
     "projeto": "GENEBALDO NAHASS FRANCO"
   },
   {
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-03T03:00:00.000Z",
     "abertura": "2022-10-14T11:29:29.752Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "SOLICITAR ACESSO DOS DOIS PROJETOS (ESCOLA E CASA)",
@@ -6852,7 +6857,8 @@
     "projeto": "MARIA ELIZA PERES"
   },
   {
-    "status": "EM ANDAMENTO",
+    "status": "AGUARDANDO CONCESSIONÁRIA",
+    "fechamento": "2022-11-03T12:27:00.000Z",
     "abertura": "2022-10-18T15:37:26.160Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "SOLICITAR DISTRIBUIÇÃO DE CRÉDITO",
@@ -6919,7 +6925,8 @@
     "projeto": "ELIANA COSCRATO"
   },
   {
-    "status": "EM ANDAMENTO",
+    "status": "AGUARDANDO CONCESSIONÁRIA",
+    "fechamento": "2022-11-03T03:00:00.000Z",
     "abertura": "2022-10-19T18:10:23.712Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "O cliente quer redistribuir os créditos acrescentando recebedora. Considerar o aumento do sistema do cliente para redistribuir. Contas no email.",
@@ -7202,7 +7209,7 @@
     "projeto": "POSTO ALMEIDA"
   },
   {
-    "status": "AGUARDANDO CONCESSIONÁRIA",
+    "status": "FINALIZADO",
     "fechamento": "2022-10-27T21:25:00.000Z",
     "abertura": "2022-10-20T18:25:49.624Z",
     "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
@@ -7211,8 +7218,8 @@
     "projeto": "EDILSON FLORIANO DA SILVA"
   },
   {
-    "status": "AGUARDANDO CONCESSIONÁRIA",
-    "fechamento": "2022-10-20T19:48:59.000Z",
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-24T14:30:29.000Z",
     "abertura": "2022-10-20T19:48:59.000Z",
     "responsavel": "ALINE APARECIDA RODRIGUES CARVALHO",
     "observacoes": "SOLICITAR DISTRIBUIÇÃO DE CRÉDITO (100% PARA A RECEBEDORA 3010076890)",
@@ -7290,7 +7297,8 @@
     "projeto": "DIOGO JESUS SILVEIRA BERNARDES"
   },
   {
-    "status": "EM ANDAMENTO",
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-01T03:00:00.000Z",
     "abertura": "2022-10-21T13:58:51.902Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "SOLICITAR ACESSO",
@@ -7583,7 +7591,8 @@
     "projeto": "RONEI RUI DA SILVA"
   },
   {
-    "status": "AGUARDANDO CONCESSIONÁRIA",
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-31T23:07:00.000Z",
     "abertura": "2022-10-25T11:38:24.286Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "Distribuição de créditos (Mais informações por e-mail)",
@@ -7591,6 +7600,8 @@
     "projeto": "Renato Camargos"
   },
   {
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-31T13:32:00.000Z",
     "abertura": "2022-10-25T17:23:39.790Z",
     "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
     "observacoes": "SOLICITAR ACESSO (LIGAR NO 116 E CONFIRMAR SE ESTÁ 2X63A)",
@@ -7706,7 +7717,7 @@
   },
   {
     "status": "FINALIZADO",
-    "fechamento": "2022-10-26T03:00:00.000Z",
+    "fechamento": "2022-10-28T01:05:57.000Z",
     "abertura": "2022-10-26T13:51:17.252Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "SOLICITAR DISTRIBUIÇÃO DE CRÉDITO",
@@ -7732,7 +7743,7 @@
     "projeto": "GEORGE ALVES JUNIOR"
   },
   {
-    "status": "EM ANDAMENTO",
+    "status": "FINALIZADO",
     "fechamento": "2022-10-26T03:00:00.000Z",
     "abertura": "2022-10-26T14:15:01.369Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
@@ -7938,6 +7949,8 @@
     "projeto": "Andre Luis Matano"
   },
   {
+    "status": "AGUARDANDO CONCESSIONÁRIA",
+    "fechamento": "2022-11-01T03:00:00.000Z",
     "abertura": "2022-10-28T13:03:30.819Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "SOLICITAR NOVAMENTO O AUMENTO DE CARGA BT",
@@ -7954,6 +7967,8 @@
     "projeto": "REGIA MARIA CAPANEMA RIBEIRO"
   },
   {
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-02T07:10:00.000Z",
     "abertura": "2022-10-28T13:28:51.014Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "REALIZAR A DISTRIBUIÇÃO DE CRÉDITO",
@@ -7968,6 +7983,8 @@
     "projeto": "NEILTON BENEDITO LUZ "
   },
   {
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-03T03:00:00.000Z",
     "abertura": "2022-10-28T13:31:08.984Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "SOLICITAR VISTORIA",
@@ -8023,6 +8040,8 @@
     "projeto": "PAULO ROBERTO GOMES"
   },
   {
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-31T19:15:00.000Z",
     "abertura": "2022-10-28T14:34:08.950Z",
     "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
     "observacoes": "SOLICITAR VISTORIA",
@@ -8030,8 +8049,8 @@
     "projeto": "PAULO ROBERTO GOMES"
   },
   {
-    "status": "AGUARDANDO CONCESSIONÁRIA",
-    "fechamento": "2022-10-28T15:07:42.328Z",
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-31T18:36:00.000Z",
     "abertura": "2022-10-28T15:07:42.328Z",
     "responsavel": "ALINE APARECIDA RODRIGUES CARVALHO",
     "observacoes": "SOLICITAR DISTRIBUIÇÃO DE CRÉDITO",
@@ -8047,6 +8066,7 @@
     "projeto": "AFONSO ABADIA DE OLIVEIRA"
   },
   {
+    "status": "AGUARDANDO CONCESSIONÁRIA",
     "abertura": "2022-10-28T19:00:33.074Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "SOLICITAR AUMENTO DE CARGA BT",
@@ -8063,7 +8083,9 @@
     "projeto": "RICARDO DE ANDRADE GOUVEIA"
   },
   {
-    "abertura": "2022-10-28T19:04:41.970Z",
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-01T19:43:00.000Z",
+    "abertura": "2022-10-31T11:34:25.806Z",
     "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
     "observacoes": "SOLICITAR ACESSO (SE ATENTAR NA DOCUMENTAÇÃO A SER ENVIADO COM O DISJUNTOR 2X100A).",
     "tipoDoChamado": "SOLICITAR ACESSO",
@@ -8153,6 +8175,8 @@
     "projeto": "ILTOMAR FERREIRA"
   },
   {
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-03T03:00:00.000Z",
     "abertura": "2022-10-31T12:35:12.713Z",
     "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "SOLICITAR VISTORIA",
@@ -8160,8 +8184,10 @@
     "projeto": "ILTOMAR FERREIRA"
   },
   {
+    "status": "AGUARDANDO CONCESSIONÁRIA",
+    "fechamento": "2022-11-03T03:00:00.000Z",
     "abertura": "2022-10-31T12:51:10.405Z",
-    "responsavel": "ALINE APARECIDA RODRIGUES CARVALHO",
+    "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
     "observacoes": "Enviar 100% da sobra para a instalação 3000651790",
     "tipoDoChamado": "DISTRIBUIÇÃO DE CRÉDITO",
     "projeto": "Viva Comunicação "
@@ -8192,6 +8218,8 @@
     "projeto": "FABIO SILVA SOUZA"
   },
   {
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-31T19:19:00.000Z",
     "abertura": "2022-10-31T13:17:51.101Z",
     "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
     "observacoes": "SOLICITAR VISTORIA",
@@ -8206,6 +8234,8 @@
     "projeto": "VALDEVINO CHAVES TIAGO"
   },
   {
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-31T19:25:00.000Z",
     "abertura": "2022-10-31T13:21:01.051Z",
     "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
     "observacoes": "SOLICITAR VISTORIA (3001555392)",
@@ -8213,6 +8243,8 @@
     "projeto": "VALDEVINO CHAVES TIAGO"
   },
   {
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-31T17:58:00.000Z",
     "abertura": "2022-10-31T16:43:43.731Z",
     "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
     "observacoes": "FAZER O DUB",
@@ -8220,10 +8252,191 @@
     "projeto": "AFONSO ABADIA DE OLIVEIRA"
   },
   {
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-31T18:49:00.000Z",
     "abertura": "2022-10-31T16:46:11.614Z",
     "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
     "observacoes": "FAZER O DUB",
     "tipoDoChamado": "DIAGRAMA UNIFILAR",
     "projeto": "ELETROWAN REFRIGERAÇÃO E CLIMATIZAÇÃO LTDA"
+  },
+  {
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-29T07:35:00.000Z",
+    "abertura": "2022-10-28T20:52:35.000Z",
+    "responsavel": "POLLIANA CRISTINA DE REZENDE",
+    "observacoes": "Enviar 100% do excedente para a instalação: 3012801937. Conta no email.",
+    "tipoDoChamado": "DISTRIBUIÇÃO DE CRÉDITO",
+    "projeto": "JOAO BATISTA DE ASSIS"
+  },
+  {
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-31T03:00:00.000Z",
+    "abertura": "2022-11-01T12:01:53.927Z",
+    "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
+    "observacoes": "SOLICITAR NOVAMENTE A VISTORIA",
+    "tipoDoChamado": "VISTORIA",
+    "projeto": "IDENIR MARIA DE CASTRO"
+  },
+  {
+    "status": "EM ANDAMENTO",
+    "abertura": "2022-11-01T12:07:06.057Z",
+    "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
+    "observacoes": "FAZER OS DOCUMENTOS PARA SOLICITAR ACESSO (O CLIENTE JÁ POSSUI ASSINATURA NO DRIVE) AUMENTO DE CARGA COM GD",
+    "tipoDoChamado": "FORMULARIO PARA SOLICITAÇÃO DE ACESSO",
+    "projeto": "EDSON BALBINO ALVES"
+  },
+  {
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-03T03:00:00.000Z",
+    "abertura": "2022-11-01T12:20:07.844Z",
+    "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
+    "observacoes": "FAZER TODOS OS DOCUMENTOS PARA ASSINATURA ",
+    "tipoDoChamado": "FORMULARIO PARA SOLICITAÇÃO DE ACESSO",
+    "projeto": "ANA PAULA DA SILVA"
+  },
+  {
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-01T17:27:00.000Z",
+    "abertura": "2022-11-01T12:31:54.772Z",
+    "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
+    "observacoes": "FAZER MEMORIAL E O DUB",
+    "tipoDoChamado": "MEMORIAL DESCRITIVO/DIAGRAMA UNIFILAR",
+    "projeto": "LUZIA APARECIDA FRANCO DE QUEIROZ"
+  },
+  {
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-01T20:32:00.000Z",
+    "abertura": "2022-11-01T12:32:47.305Z",
+    "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
+    "observacoes": "SOLICITAR ACESSO",
+    "tipoDoChamado": "SOLICITAR ACESSO",
+    "projeto": "LUZIA APARECIDA FRANCO DE QUEIROZ"
+  },
+  {
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-01T20:52:00.000Z",
+    "abertura": "2022-11-01T12:45:23.243Z",
+    "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
+    "observacoes": "FAZER TODOS OS DOCUMENTOS PARA ASSINATURA (POSSUI AUMENTO DE CARGA BT).",
+    "tipoDoChamado": "FORMULARIO PARA SOLICITAÇÃO DE ACESSO",
+    "projeto": "ORCIANO RODRIGUES NASCIMENTO"
+  },
+  {
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-01T03:00:00.000Z",
+    "abertura": "2022-11-01T13:46:46.381Z",
+    "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
+    "observacoes": "RE-SOLICITAR",
+    "tipoDoChamado": "SOLICITAR ACESSO",
+    "projeto": "ROMERO CESAR ABATE FILHO"
+  },
+  {
+    "status": "FINALIZADO",
+    "fechamento": "2022-10-29T07:35:00.000Z",
+    "abertura": "2022-10-28T16:10:00.000Z",
+    "responsavel": "POLLIANA CRISTINA DE REZENDE",
+    "observacoes": "DISTRIBUIÇÃO DA CASA PARA O MERCADO 100%",
+    "tipoDoChamado": "DISTRIBUIÇÃO DE CRÉDITO",
+    "projeto": "FA SUPERMERCADOS"
+  },
+  {
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-03T17:29:00.000Z",
+    "abertura": "2022-11-01T19:01:41.423Z",
+    "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
+    "observacoes": "SOLICITAR VISTORIA DOS 3 PROJETOS",
+    "tipoDoChamado": "VISTORIA",
+    "projeto": "CHIQUINHO BOUTIQUE DAS CARNES EIRELI"
+  },
+  {
+    "abertura": "2022-11-01T20:30:47.154Z",
+    "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
+    "observacoes": "Realizar calculo de distribuição das recebedoras, contas no email",
+    "tipoDoChamado": "DISTRIBUIÇÃO DE CRÉDITO",
+    "projeto": "Paiol Agro "
+  },
+  {
+    "status": "AGUARDANDO CONCESSIONÁRIA",
+    "abertura": "2022-11-03T12:23:29.757Z",
+    "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
+    "observacoes": "Redistribuição de créditos - Geradora : 3000128456 / Recebedora : 3002271485 (10%) / Acumular o restante na geradora",
+    "tipoDoChamado": "REDISTRIBUIÇÃO DE CRÉDITO",
+    "projeto": "ELISABETH MARIA DIAS E CIA LTDA"
+  },
+  {
+    "abertura": "2022-11-03T17:47:37.109Z",
+    "responsavel": "POLLIANA CRISTINA DE REZENDE",
+    "observacoes": "O cliente deseja alterar a porcentagem de cada recebedora, contas no e-mail",
+    "tipoDoChamado": "DISTRIBUIÇÃO DE CRÉDITO",
+    "projeto": "José da Costa Rodrigues "
+  },
+  {
+    "status": "AGUARDANDO CONCESSIONÁRIA",
+    "fechamento": "2022-11-03T18:33:00.000Z",
+    "abertura": "2022-11-03T17:47:53.639Z",
+    "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
+    "observacoes": "FAZER TROCA DE TITULARIDADE (ROBERTO - CAMINHONEIRO - FILHO DA ESPOSA DO DIRLEI)",
+    "tipoDoChamado": "TROCA DE TITULARIDADE",
+    "projeto": "DIRLEI JOSE DA SILVA"
+  },
+  {
+    "abertura": "2022-11-03T18:07:27.766Z",
+    "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
+    "observacoes": "SOLICITAR AUMENTO DE CARGA (ROBERTO - CAMINHONEIRO - FILHO DA ESPOSA DO DIRLEI)",
+    "tipoDoChamado": "AUMENTO DE CARGA BT",
+    "projeto": "DIRLEI JOSE DA SILVA"
+  },
+  {
+    "status": "FINALIZADO",
+    "fechamento": "2022-11-03T19:35:00.000Z",
+    "abertura": "2022-11-03T18:38:08.346Z",
+    "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
+    "observacoes": "FAZER TODOS OS DOCUMENTOS PARA ASSINATURA",
+    "tipoDoChamado": "FORMULARIO PARA SOLICITAÇÃO DE ACESSO",
+    "projeto": "FERNANDO GARCIA LOPES"
+  },
+  {
+    "abertura": "2022-11-03T19:40:47.653Z",
+    "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
+    "observacoes": "FAZER TODOS OS DOCUMENTOS PARA ASSINATURA (USAR O PEDIDO QUE ESTÁ NO FORMULÁRIO DE SOLICITAÇÃO DE CONTRATO)",
+    "tipoDoChamado": "FORMULARIO PARA SOLICITAÇÃO DE ACESSO",
+    "projeto": "TAIS FREITAS SILVA VIEIRA"
+  },
+  {
+    "abertura": "2022-11-03T19:45:16.209Z",
+    "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
+    "observacoes": "SOLICITAR A CORREÇÃO DE EQUIPAMENTO E CORRIGIR OS DOCUMENTOS",
+    "tipoDoChamado": "SOLICITAR CORREÇÃO SIMPLES DE GD",
+    "projeto": "OSMAR JOSE PEREIRA DA SILVEIRA"
+  },
+  {
+    "status": "EM ANDAMENTO",
+    "abertura": "2022-11-03T19:49:41.824Z",
+    "responsavel": "ANDRIELLY GARCIA DOS SANTOS MARQUES",
+    "observacoes": "FAZER A CORREÇÃO DOS EQUIPAMENTOS E O FORMULÁRIO DE CORREÇÃO SIMPLES E SOLICITAR A CORREÇÃO SIMPLES GD",
+    "tipoDoChamado": "SOLICITAR CORREÇÃO SIMPLES DE GD",
+    "projeto": "RETIFICA ITUIUTABA EIRELI"
+  },
+  {
+    "abertura": "2022-11-03T19:52:44.747Z",
+    "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
+    "observacoes": "FAZER A CORREÇÃO DOS EQUIPAMENTOS E O FORMULÁRIO DE CORREÇÃO SIMPLES E SOLICITAR A CORREÇÃO SIMPLES GD (É O PROJETO COM AUMENTO DE CARGA GD)",
+    "tipoDoChamado": "SOLICITAR CORREÇÃO SIMPLES DE GD",
+    "projeto": "COMERCIAL DE MATERIAIS RECICLAVEIS REIS LTDA"
+  },
+  {
+    "abertura": "2022-11-03T19:53:40.645Z",
+    "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
+    "observacoes": "FAZER A CORREÇÃO DOS EQUIPAMENTOS E O FORMULÁRIO DE CORREÇÃO SIMPLES E SOLICITAR A CORREÇÃO SIMPLES GD (É O PROJETO CASA)",
+    "tipoDoChamado": "SOLICITAR CORREÇÃO SIMPLES DE GD",
+    "projeto": "GENEBALDO NAHASS FRANCO"
+  },
+  {
+    "abertura": "2022-11-04T11:40:22.692Z",
+    "responsavel": "GLENDA ELIAS NASCIMENTO SANTOS",
+    "observacoes": "LIGAR PARA CEMIG - DESCOBRIR AMPERAGEM DISJUNTOR",
+    "tipoDoChamado": "LIGAR PARA CEMIG - DESCOBRIR AMPERAGEM DISJUNTOR",
+    "projeto": "FABIANO - NºINSTALAÇÃO: 3005375969 / NºCLIENTE 7200915746"
   }
 ]

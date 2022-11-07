@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalObras from "../../components/ModalObras";
-import { cidadesAtendidas } from "../../utils/constants";
+import { cidadesAtendidas, statusLiberacao } from "../../utils/constants";
 function Obras({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
@@ -363,33 +363,9 @@ function Obras({ credentials, setCredentials }) {
                 liberacaoStatus: e.map((x) => x.value),
               })
             }
-            options={[
-              { value: "PAGO", label: "PAGO" },
-              {
-                value: "REALIZAR COMPRA",
-                label: "REALIZAR COMPRA",
-              },
-              {
-                value: "AGUARDANDO PAGAMENTO DO BANCO",
-                label: "AGUARDANDO PAGAMENTO DO BANCO",
-              },
-              {
-                value: "AGUARDANDO CLIENTE PAGAR",
-                label: "AGUARDANDO CLIENTE PAGAR",
-              },
-              {
-                value: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
-                label: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
-              },
-              {
-                value: "AGUARDANDO PARECER DE ACESSO",
-                label: "AGUARDANDO PARECER DE ACESSO",
-              },
-              {
-                value: "AGUARDANDO N.F",
-                label: "AGUARDANDO N.F",
-              },
-            ]}
+            options={statusLiberacao.map((status) => {
+              return { label: status.label, value: status.value };
+            })}
           />
           <Select
             isMulti

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { vendedores } from "../utils/constants";
+import { vendedores, statusLiberacao } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import TextInput from "./TextInput";
@@ -641,48 +641,9 @@ function ModalSuprimentos({
                         ? infoHolder.compra?.statusLiberacao
                         : "NÃO DEFINIDO"
                     }
-                    options={[
-                      {
-                        label: "AGUARDAR CONTRATO",
-                        value: "AGUARDAR CONTRATO",
-                      },
-                      {
-                        label: "AGUARDAR PARECER DE ACESSO",
-                        value: "AGUARDAR PARECER DE ACESSO",
-                      },
-                      {
-                        label: "PAGO",
-                        value: "PAGO",
-                      },
-                      {
-                        label: "REALIZAR COMPRA",
-                        value: "REALIZAR COMPRA",
-                      },
-                      {
-                        value: "AGUARDANDO PAGAMENTO",
-                        label: "AGUARDANDO PAGAMENTO",
-                      },
-                      {
-                        value: "AGUARDANDO N.F",
-                        label: "AGUARDANDO N.F",
-                      },
-                      {
-                        value: "AGUARDANDO CLIENTE PAGAR",
-                        label: "AGUARDANDO CLIENTE PAGAR",
-                      },
-                      {
-                        value: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
-                        label: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
-                      },
-                      {
-                        label: "RECISÃO DE CONTRATO",
-                        value: "RECISÃO DE CONTRATO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
+                    options={statusLiberacao.map((status) => {
+                      return { label: status.label, value: status.value };
+                    })}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,

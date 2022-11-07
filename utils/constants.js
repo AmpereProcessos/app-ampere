@@ -495,3 +495,41 @@ export const cidadesAtendidas = [
   "QUIRINÓPOLIS",
   "TUPACIGUARA",
 ];
+export const statusLiberacao = [
+  {
+    label: "AGUARDAR CONTRATO",
+    value: "AGUARDAR CONTRATO",
+  },
+  {
+    label: "AGUARDAR PARECER DE ACESSO",
+    value: "AGUARDAR PARECER DE ACESSO",
+  },
+  {
+    label: "PAGO",
+    value: "PAGO",
+  },
+  {
+    label: "REALIZAR COMPRA",
+    value: "REALIZAR COMPRA",
+  },
+  {
+    value: "AGUARDANDO PAGAMENTO",
+    label: "AGUARDANDO PAGAMENTO",
+  },
+  {
+    value: "AGUARDANDO N.F",
+    label: "AGUARDANDO N.F",
+  },
+  {
+    value: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
+    label: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
+  },
+  {
+    label: "RECISÃO DE CONTRATO",
+    value: "RECISÃO DE CONTRATO",
+  },
+  {
+    label: "NÃO DEFINIDO",
+    value: "NÃO DEFINIDO",
+  },
+];

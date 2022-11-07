@@ -276,7 +276,7 @@ function Comercial({ credentials, setCredentials }) {
             />
             <Select
               isMulti
-              placeholder="STATUS DA PAGAMENTO"
+              placeholder="STATUS DO PAGAMENTO"
               className="hidden lg:block"
               onChange={(e) =>
                 setFilters({

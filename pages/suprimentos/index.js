@@ -213,7 +213,6 @@ function Suprimentos({ credentials, setCredentials }) {
             }}
             key={project._id}
             className={`w-[250px] lg:w-[450px] cursor-pointer ${
-              project.compra.dataPedido == undefined &&
               project.compra.statusEntrega != "EM ROTA"
                 ? getBorderColor(
                     new Date(project.compra.dataLiberacao),

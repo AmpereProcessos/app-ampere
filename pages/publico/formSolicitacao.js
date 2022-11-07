@@ -2,15 +2,17 @@ import Image from "next/image";
 import React, { useState } from "react";
 import Logo from "../../utils/whitelogo.png";
 import TextInput from "../../components/TextInput";
-import DateInput from "../../components/DateInput";
 import SelectInput from "../../components/SelectInput";
-import NumberInput from "../../components/NumberInput";
-import { AiOutlineSearch } from "react-icons/ai";
 import { cidadesAtendidas, vendedores } from "../../utils/constants";
 import axios from "axios";
 import FormSolicitacaoUm from "../../components/FormSolicitacaoUm";
 import FormSolicitacaoDois from "../../components/FormSolicitacaoDois";
 import FormSolicitacaoTres from "../../components/FormSolicitacaoTres";
+import FormSolicitacaoQuatro from "../../components/FormSolicitacaoQuatro";
+import FormSolicitacaoCinco from "../../components/FormSolicitacaoCinco";
+import NumberInput from "../../components/NumberInput";
+import FormSolicitacaoSeis from "../../components/FormSolicitacaoSeis";
+import FormSolicitacaoSete from "../../components/FormSolicitacaoSete";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -38,7 +40,7 @@ function formatCEP(cep) {
   return cep;
 }
 function FormularioSolicitacao() {
-  const [estagio, setEstagio] = useState(3);
+  const [estagio, setEstagio] = useState(7);
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",
     telefoneVendedor: "",
@@ -97,7 +99,37 @@ function FormularioSolicitacao() {
     marcaModulos: "",
     qtdeModulos: null,
     potModulos: null,
+    tipoEstrutura: "NÃO DEFINIDO",
+    estruturaAmpere: "NÃO DEFINIDO",
+    responsavelEstrutura: "NÃO SE APLICA",
+    formaPagamentoEstrutura: "NÃO DEFINIDO",
+    valorEstrutura: null,
+    possuiOeM: "NÃO DEFINIDO",
+    planoOeM: "NÃO SE APLICA",
+    clienteSegurado: "NÃO DEFINIDO",
+    tempoSegurado: "NÃO SE APLICA",
+    formaPagamentoOeMOuSeguro: "NÃO SE APLICA",
+    valorOeMOuSeguro: null,
+    aumentoDeCarga: "NÃO DEFINIDO",
+    tipoDePadrao: "NÃO DEFINIDO",
+    aumentoDisjuntor: "NÃO",
+    respTrocaPadrao: "NÃO SE APLICA",
+    formaPagamentoPadrao: "NÃO SE APLICA",
+    valorPadrao: null,
+    nomePagador: "",
+    contatoPagador: "",
+    necessidaInscricaoRural: "NÃO",
+    inscriçãoRural: "",
+    cpf_cnpjNF: "",
+    localEntrega: "NÃO DEFINIDO",
+    entregaIgualCobranca: "NÃO",
+    restricoesEntrega: "NÃO DEFINIDO",
+    valorContrato: null,
+    origemRecurso: "NÃO DEFINIDO",
+    numParcelas: 0,
+    valorParcela: 0,
   });
+  const [idemContrato, setIdemContrato] = useState("NÂO");
   async function findCPF(field) {
     axios
       .get(
@@ -165,30 +197,180 @@ function FormularioSolicitacao() {
           />
         )}
         {estagio == 3 && (
+          <FormSolicitacaoQuatro
+            avancar={() => setEstagio(estagio + 1)}
+            dados={dados}
+            setDados={setDados}
+          />
+        )}
+        {estagio == 4 && (
+          <FormSolicitacaoCinco
+            avancar={() => setEstagio(estagio + 1)}
+            dados={dados}
+            setDados={setDados}
+          />
+        )}
+        {estagio == 5 && (
+          <FormSolicitacaoSeis
+            avancar={() => setEstagio(estagio + 1)}
+            dados={dados}
+            setDados={setDados}
+          />
+        )}
+        {estagio == 6 && (
+          <FormSolicitacaoSete
+            avancar={() => setEstagio(estagio + 1)}
+            dados={dados}
+            setDados={setDados}
+          />
+        )}
+        {estagio == 7 && (
           <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
             <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              DADOS DO SISTEMA
+              DADOS FINANCEIROS E NEGOCIAÇÃO
             </span>
             <div className="flex justify-center">
               <SelectInput
-                label={"TOPOLOGIA"}
+                label={"IDEM CONTRATO?"}
                 editable={true}
-                value={dados.topologia}
+                options={[
+                  {
+                    label: "NÃO",
+                    value: "NÃO",
+                  },
+                  {
+                    label: "SIM",
+                    value: "SIM",
+                  },
+                ]}
+                valor={idemContrato}
+                handleChange={(value) => {}}
+              />
+            </div>
+            <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <TextInput
+                label={"NOME DO PAGADOR"}
+                editable={true}
+                value={dados.nomePagador}
                 handleChange={(value) =>
-                  setDados({ ...dados, topologia: value })
+                  setDados({ ...dados, nomePagador: value })
+                }
+              />
+              <TextInput
+                label={"CONTATO DO PAGADOR"}
+                editable={true}
+                value={dados.contatoPagador}
+                handleChange={(value) =>
+                  setDados({ ...dados, contatoPagador: value })
+                }
+              />
+              <TextInput
+                label={"CPF/CNPJ PARA NF"}
+                editable={true}
+                value={dados.cpf_cnpjNF}
+                handleChange={(value) =>
+                  setDados({ ...dados, cpf_cnpjNF: value })
+                }
+              />
+            </div>
+            <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <SelectInput
+                label={"NECESSIDADE DE INSCRIÇÃO RURAL NA N.F?"}
+                editable={true}
+                value={dados.necessidaInscricaoRural}
+                handleChange={(value) =>
+                  setDados({ ...dados, necessidaInscricaoRural: value })
                 }
                 options={[
                   {
-                    label: "MICRO-INVERSOR",
-                    value: "MICRO",
+                    label: "NÃO",
+                    value: "NÃO",
                   },
                   {
-                    label: "INVERSOR",
-                    value: "INVERSOR",
+                    label: "SIM",
+                    value: "SIM",
+                  },
+                ]}
+              />
+              {dados.necessidaInscricaoRural == "SIM" && (
+                <TextInput
+                  label={"INSCRIÇÃO RURAL"}
+                  editable={true}
+                  value={dados.inscriçãoRural}
+                  handleChange={(value) =>
+                    setDados({ ...dados, inscriçãoRural: value })
+                  }
+                />
+              )}
+            </div>
+            <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <SelectInput
+                label={"LOCAL DE ENTREGA"}
+                options={[
+                  {
+                    label: "MESMO DO PROJETO",
+                    value: "MESMO DO PROJETO",
                   },
                   {
-                    label: "OTIMIZADOR",
-                    value: "OTIMIZADOR",
+                    label:
+                      "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
+                    value:
+                      "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
+                  },
+                  {
+                    label:
+                      "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
+                    value:
+                      "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
+                  },
+                ]}
+                editable={true}
+                value={dados.localEntrega}
+                handleChange={(value) =>
+                  setDados({ ...dados, localEntrega: value })
+                }
+              />
+              <SelectInput
+                label={"END. ENTREGA IGUAL COBRANÇA?"}
+                editable={true}
+                value={dados.entregaIgualCobranca}
+                handleChange={(value) =>
+                  setDados({ ...dados, entregaIgualCobranca: value })
+                }
+                options={[
+                  {
+                    label: "SIM",
+                    value: "SIM",
+                  },
+                  {
+                    label: "NÃO",
+                    value: "NÃO",
+                  },
+                ]}
+              />
+              <SelectInput
+                label={"HÁ RESTRIÇÕES PARA ENTREGA?"}
+                editable={true}
+                value={dados.restricoesEntrega}
+                handleChange={(value) =>
+                  setDados({ ...dados, restricoesEntrega: value })
+                }
+                options={[
+                  {
+                    label: "SOMENTE HORARIO COMERCIAL",
+                    value: "SOMENTE HORARIO COMERCIAL",
+                  },
+                  {
+                    label: "NÃO HÁ RESTRIÇÕES",
+                    value: "NÃO HÁ RESTRIÇÕES",
+                  },
+                  {
+                    label: "CASA EM CONSTRUÇÃO",
+                    value: "CASA EM CONSTRUÇÃO",
+                  },
+                  {
+                    label: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
+                    value: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
                   },
                   {
                     label: "NÃO DEFINIDO",
@@ -197,62 +379,59 @@ function FormularioSolicitacao() {
                 ]}
               />
             </div>
-            <div className="flex gap-2 justify-around flex-wrap">
-              {dados.topologia != "NÃO DEFINIDO" && (
-                <>
-                  <TextInput
-                    label={"MARCA DO INVERSOR/MICRO"}
-                    editable={true}
-                    value={dados.marcaInversor}
-                    handleChange={(value) =>
-                      setDados({ ...dados, marcaInversor: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"QTDE INVERSOR/MICRO"}
-                    editable={true}
-                    value={dados.qtdeInversor}
-                    handleChange={(value) =>
-                      setDados({ ...dados, qtdeInversor: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"POTÊNCIA INVERSOR/MICRO"}
-                    unit={"W"}
-                    editable={true}
-                    value={dados.potInversor}
-                    handleChange={(value) =>
-                      setDados({ ...dados, potInversor: value })
-                    }
-                  />
-                </>
-              )}
-            </div>
-            {dados.topologia == "OTIMIZADOR" && (
-              <div className="flex gap-2 justify-around flex-wrap mt-2">
-                <TextInput
-                  label={"MARCA DO OTIMIZADOR"}
-                  editable={true}
-                  value={dados.marcaOtimizador ? dados.marcaOtimizador : ""}
-                  handleChange={(value) =>
-                    setDados({ ...dados, marcaOtimizador: value })
-                  }
-                />
-                <NumberInput label={"QTDE DO OTIMIZADOR"} editable={true} />
-                <NumberInput
-                  label={"POTÊNCIA DO OTIMIZADOR"}
-                  unit={"W"}
-                  editable={true}
-                />
-              </div>
-            )}
-            <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
-              <TextInput label={"MARCA DOS MÓDULOS"} editable={true} />
-              <NumberInput label={"Nº DE MÓDULOS"} editable={true} />
+            <div className="flex gap-2 justify-around flex-wrap mt-2">
               <NumberInput
-                label={"POTÊNCIA DOS MÓDULOS"}
-                unit={"W"}
+                label={"VALOR DO CONTRATO FOTOVOLTAICO(SEM CUSTOS ADICIONAIS)"}
                 editable={true}
+                tag={"R$"}
+                value={dados.valorContrato}
+                handleChange={(value) =>
+                  setDados({ ...dados, valorContrato: Number(value) })
+                }
+              />
+              <SelectInput
+                label={"ORIGEM DO RECURSO"}
+                editable={true}
+                value={dados.origemRecurso}
+                handleChange={(value) =>
+                  setDados({ ...dados, origemRecurso: value })
+                }
+                options={[
+                  {
+                    label: "FINANCIAMENTO",
+                    value: "FINANCIAMENTO",
+                  },
+                  {
+                    label: "MISTO",
+                    value: "MISTO",
+                  },
+                  {
+                    label: "CAPITAL PRÓPRIO",
+                    value: "CAPITAL PRÓPRIO",
+                  },
+                ]}
+              />
+              {}
+              <NumberInput
+                label={"SE CARTÃO OU CHEQUE, QUANTAS PARCELAS?"}
+                editable={true}
+                value={dados.numParcelas}
+                handleChange={(value) =>
+                  setDados({
+                    ...dados,
+                    numParcelas: Number(value),
+                    valorParcela: dados.valorContrato / Number(value),
+                  })
+                }
+              />
+              <NumberInput
+                label={"VALOR DA PARCELA"}
+                editable={true}
+                value={dados.valorParcela}
+                tag={"R$"}
+                handleChange={(value) =>
+                  setDados({ ...dados, valorParcela: Number(value) })
+                }
               />
             </div>
           </div>

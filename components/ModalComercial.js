@@ -1388,8 +1388,8 @@ function ModalComercial({
                         value: "REALIZAR COMPRA",
                       },
                       {
-                        value: "AGUARDANDO PAGAMENTO DO BANCO",
-                        label: "AGUARDANDO PAGAMENTO DO BANCO",
+                        value: "AGUARDANDO PAGAMENTO",
+                        label: "AGUARDANDO PAGAMENTO",
                       },
                       {
                         value: "AGUARDANDO N.F",

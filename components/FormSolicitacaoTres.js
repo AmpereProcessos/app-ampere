@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import TextInput from "./TextInput";
-import DateInput from "./DateInput";
 import SelectInput from "./SelectInput";
 import NumberInput from "./NumberInput";
 import { AiOutlineSearch } from "react-icons/ai";

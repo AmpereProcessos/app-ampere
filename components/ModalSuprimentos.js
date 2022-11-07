@@ -659,6 +659,22 @@ function ModalSuprimentos({
                         value: "REALIZAR COMPRA",
                       },
                       {
+                        value: "AGUARDANDO PAGAMENTO",
+                        label: "AGUARDANDO PAGAMENTO",
+                      },
+                      {
+                        value: "AGUARDANDO N.F",
+                        label: "AGUARDANDO N.F",
+                      },
+                      {
+                        value: "AGUARDANDO CLIENTE PAGAR",
+                        label: "AGUARDANDO CLIENTE PAGAR",
+                      },
+                      {
+                        value: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
+                        label: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
+                      },
+                      {
                         label: "RECISÃO DE CONTRATO",
                         value: "RECISÃO DE CONTRATO",
                       },

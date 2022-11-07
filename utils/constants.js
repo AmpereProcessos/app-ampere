@@ -492,5 +492,6 @@ export const cidadesAtendidas = [
   "SAO GONÇALO DO ABAETE",
   "PATROCINIO",
   "NOVA PONTE",
+  "QUIRINÓPOLIS",
   "TUPACIGUARA",
 ];

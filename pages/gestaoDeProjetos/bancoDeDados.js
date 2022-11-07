@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalDB from "../../components/ModalDB";
 import Select from "react-select";
-import { cidadesAtendidas } from "../../utils/constants";
+import { cidadesAtendidas, vendedores } from "../../utils/constants";
 import axios from "axios";
 function BandoDeDados({ data, credentials, setCredentials }) {
   const [projects, setProjects] = useState([]);
@@ -22,6 +22,8 @@ function BandoDeDados({ data, credentials, setCredentials }) {
   });
   const [filters, setFilters] = useState({
     cidadeFilter: [],
+    vendedorFilter: [],
+    sorteioFilter: false,
   });
   function getProjects() {
     axios
@@ -80,7 +82,12 @@ function BandoDeDados({ data, credentials, setCredentials }) {
           call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
           call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
-      console.log(newArr);
+    }
+    if (filters.sorteioFilter) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (project) => project.vendedor.nome != "ARTUR MILANE" && project.nps > 5
+      );
     }
     if (!newArr) setFilteredProjects(projects);
     else {
@@ -105,7 +112,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
       }
     }
   }, []);
-  console.log(dateFilter);
+  console.log(filters.vendedorFilter);
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between gap-x-2 border-b border-gray-200 p-1">
@@ -149,6 +156,27 @@ function BandoDeDados({ data, credentials, setCredentials }) {
                 value: cidade,
               };
             })}
+          />
+          <div
+            onClick={() =>
+              setFilters({ ...filters, sorteioFilter: !filters.desenhoFilter })
+            }
+            className={`${
+              filters.sorteioFilter ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            FILTRO SORTEIO
+          </div>
+          <Select
+            isMulti
+            placeholder="VENDEDOR"
+            options={vendedores.map((vendedor) => {
+              return {
+                label: vendedor.nome,
+                value: vendedor.nome,
+              };
+            })}
+            closeMenuOnSelect={false}
           />
           <div className="hidden lg:flex gap-x-2">
             <div className="flex flex-col w-fit items-center">

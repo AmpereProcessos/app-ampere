@@ -904,6 +904,10 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                           value: "SOL FACIL",
                         },
                         {
+                          label: "SICOOB ARACOOP",
+                          value: "SICOOB ARACOOP",
+                        },
+                        {
                           label: "NÃO DEFINIDO",
                           value: "NÃO DEFINIDO",
                         },

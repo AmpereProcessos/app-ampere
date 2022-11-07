@@ -1288,6 +1288,10 @@ function ModalComercial({
                           value: "SOL FACIL",
                         },
                         {
+                          label: "SICOOB ARACOOP",
+                          value: "SICOOB ARACOOP",
+                        },
+                        {
                           label: "NÃO DEFINIDO",
                           value: "NÃO DEFINIDO",
                         },

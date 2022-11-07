@@ -10,6 +10,7 @@ import { cidadesAtendidas, vendedores } from "../../utils/constants";
 import axios from "axios";
 import FormSolicitacaoUm from "../../components/FormSolicitacaoUm";
 import FormSolicitacaoDois from "../../components/FormSolicitacaoDois";
+import FormSolicitacaoTres from "../../components/FormSolicitacaoTres";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -37,7 +38,7 @@ function formatCEP(cep) {
   return cep;
 }
 function FormularioSolicitacao() {
-  const [estagio, setEstagio] = useState(0);
+  const [estagio, setEstagio] = useState(3);
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",
     telefoneVendedor: "",
@@ -79,8 +80,8 @@ function FormularioSolicitacao() {
     enderecoInstalacao: "",
     numeroResInstalacao: null,
     numeroInstalacao: null,
-    bairroInstalacao: null,
-    cidadeInstalacaO: cidadesAtendidas[0],
+    bairroInstalacao: "",
+    cidadeInstalacao: cidadesAtendidas[0],
     ufInstalacao: "",
     pontoDeReferenciaInstalacao: "",
     loginCemigAtende: "",
@@ -89,10 +90,19 @@ function FormularioSolicitacao() {
     longitude: "",
     potPico: null,
     geracaoPrevista: null,
+    topologia: "NÃO DEFINIDO",
+    marcaInversor: "",
+    qtdeInversor: null,
+    potInversor: null,
+    marcaModulos: "",
+    qtdeModulos: null,
+    potModulos: null,
   });
   async function findCPF(field) {
     axios
-      .get(`https://viacep.com.br/ws/${dados.cep.replace("-", "")}/json/`)
+      .get(
+        `https://viacep.com.br/ws/${dados.cepInstalacao.replace("-", "")}/json/`
+      )
       .then((res) => {
         console.log(res.data);
         setDados({
@@ -148,104 +158,102 @@ function FormularioSolicitacao() {
           />
         )}
         {estagio == 2 && (
+          <FormSolicitacaoTres
+            avancar={() => setEstagio(estagio + 1)}
+            dados={dados}
+            setDados={setDados}
+          />
+        )}
+        {estagio == 3 && (
           <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
             <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              DADOS PARA ENTRADA NA CEMIG
+              DADOS DO SISTEMA
             </span>
+            <div className="flex justify-center">
+              <SelectInput
+                label={"TOPOLOGIA"}
+                editable={true}
+                value={dados.topologia}
+                handleChange={(value) =>
+                  setDados({ ...dados, topologia: value })
+                }
+                options={[
+                  {
+                    label: "MICRO-INVERSOR",
+                    value: "MICRO",
+                  },
+                  {
+                    label: "INVERSOR",
+                    value: "INVERSOR",
+                  },
+                  {
+                    label: "OTIMIZADOR",
+                    value: "OTIMIZADOR",
+                  },
+                  {
+                    label: "NÃO DEFINIDO",
+                    value: "NÃO DEFINIDO",
+                  },
+                ]}
+              />
+            </div>
             <div className="flex gap-2 justify-around flex-wrap">
-              <TextInput
-                label={"NOME DO TITULAR DO PROJETO"}
-                value={dados.nomeTitularProjeto}
+              {dados.topologia != "NÃO DEFINIDO" && (
+                <>
+                  <TextInput
+                    label={"MARCA DO INVERSOR/MICRO"}
+                    editable={true}
+                    value={dados.marcaInversor}
+                    handleChange={(value) =>
+                      setDados({ ...dados, marcaInversor: value })
+                    }
+                  />
+                  <NumberInput
+                    label={"QTDE INVERSOR/MICRO"}
+                    editable={true}
+                    value={dados.qtdeInversor}
+                    handleChange={(value) =>
+                      setDados({ ...dados, qtdeInversor: value })
+                    }
+                  />
+                  <NumberInput
+                    label={"POTÊNCIA INVERSOR/MICRO"}
+                    unit={"W"}
+                    editable={true}
+                    value={dados.potInversor}
+                    handleChange={(value) =>
+                      setDados({ ...dados, potInversor: value })
+                    }
+                  />
+                </>
+              )}
+            </div>
+            {dados.topologia == "OTIMIZADOR" && (
+              <div className="flex gap-2 justify-around flex-wrap mt-2">
+                <TextInput
+                  label={"MARCA DO OTIMIZADOR"}
+                  editable={true}
+                  value={dados.marcaOtimizador ? dados.marcaOtimizador : ""}
+                  handleChange={(value) =>
+                    setDados({ ...dados, marcaOtimizador: value })
+                  }
+                />
+                <NumberInput label={"QTDE DO OTIMIZADOR"} editable={true} />
+                <NumberInput
+                  label={"POTÊNCIA DO OTIMIZADOR"}
+                  unit={"W"}
+                  editable={true}
+                />
+              </div>
+            )}
+            <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
+              <TextInput label={"MARCA DOS MÓDULOS"} editable={true} />
+              <NumberInput label={"Nº DE MÓDULOS"} editable={true} />
+              <NumberInput
+                label={"POTÊNCIA DOS MÓDULOS"}
+                unit={"W"}
                 editable={true}
-                handleChange={(value) =>
-                  setDados({
-                    ...dados,
-                    nomeTitularProjeto: value.toUpperCase(),
-                  })
-                }
               />
-              <SelectInput
-                label={"TIPO DO TITULAR"}
-                editable={true}
-                value={dados.tipoDoTitular}
-                handleChange={(value) =>
-                  setDados({ ...dados, tipoDoTitular: value })
-                }
-                options={[
-                  {
-                    label: "PESSOA FISICA",
-                    value: "PESSOA FISICA",
-                  },
-                  {
-                    label: "PESSOA JURIDICA",
-                    value: "PESSOA JURIDICA",
-                  },
-                ]}
-              />
-              <SelectInput
-                label={"TIPO DA LIGAÇÃO"}
-                editable={true}
-                value={dados.tipoDaLigacao}
-                handleChange={(value) =>
-                  setDados({ ...dados, tipoDaLigacao: value })
-                }
-                options={[
-                  {
-                    label: "NOVA",
-                    value: "NOVA",
-                  },
-                  {
-                    label: "EXISTENTE",
-                    value: "EXISTENTE",
-                  },
-                ]}
-              />
-              <SelectInput
-                label={"TIPO DA INSTALAÇÃO"}
-                editable={true}
-                value={dados.tipoDaInstalacao}
-                handleChange={(value) =>
-                  setDados({ ...dados, tipoDaInstalacao: value })
-                }
-                options={[
-                  {
-                    label: "RURAL",
-                    value: "RURAL",
-                  },
-                  {
-                    label: "URBANO",
-                    value: "URBANO",
-                  },
-                ]}
-              />
-              <TextInput
-                editable={true}
-                label={"CEP INSTALAÇÃO"}
-                value={dados.cepInstalacao}
-                handleChange={(value) =>
-                  setDados({ ...dados, cepInstalacao: formatCEP(value) })
-                }
-              />
-              <TextInput label={"ENDEREÇO DE INSTALAÇÃO"} />
-              <NumberInput label={"Nº"} />
-              <NumberInput label={"Nº DA INSTALAÇÃO"} />
-              <TextInput label={"BAIRRO"} />
-              <SelectInput
-                label={"CIDADE"}
-                editable={true}
-                options={cidadesAtendidas.map((cidade) => {
-                  return { label: cidade, value: cidade };
-                })}
-                handleChange={(value) => setDados({ ...dados, cidade: value })}
-              />
-              <TextInput label={"UF"} />
-              <TextInput label={"PONTO DE REFERÊNCIA"} />
-              <TextInput label={"LOGIN(CEMIG ATENDE)"} />
-              <TextInput label={"SENHA(CEMIG ATENDE)"} />
-              <TextInput label={"LATITUDE"} />
-              <TextInput label={"LONGITUDE"} />
-              <NumberInput label={"POTÊNIA PICO"} />
-              <NumberInput label={"GERAÇÃO PREVISTA"} />
             </div>
           </div>
         )}

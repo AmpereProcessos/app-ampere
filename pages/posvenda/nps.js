@@ -11,6 +11,7 @@ function NPS({ credentials, setCredentials }) {
     naoColetados: false,
     cidadeFilter: [],
     pesquisaFilter: "",
+    vendedorFilter: [],
   });
   function getProjects() {
     axios.get("/api/projects/nps").then((res) => {

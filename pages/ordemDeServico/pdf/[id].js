@@ -7,6 +7,7 @@ import PreventivaOSPDF from "../../../components/PreventivaOS";
 import Logo from "../../../utils/whitelogo.png";
 import Image from "next/image";
 import { ObjectId } from "mongodb";
+import EstruturaOSPDF from "../../../components/EstruturaOS";
 function OSInfo({ info, index }) {
   const [pdfVisible, setPdfVisible] = useState(false);
   const [osInfo, setosInfo] = useState(info);
@@ -41,6 +42,13 @@ function OSInfo({ info, index }) {
           trafo={osInfo.ordensDeServico[index].trafo}
           configurar={osInfo.ordensDeServico[index].configurar}
           modeloInversor={osInfo.ordensDeServico[index].inversor}
+        />
+      )}
+      {osInfo.ordensDeServico[index].categoria == "ESTRUTURA" && (
+        <EstruturaOSPDF
+          info={osInfo}
+          observacoesOS={osInfo.ordensDeServico[index].observacoes}
+          servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
         />
       )}
       {/*<ServiceOrderPDF

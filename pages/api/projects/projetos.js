@@ -8,7 +8,10 @@ export default async function handler(req, res) {
         {
           $match: {
             "projeto.projetoConcluido": { $ne: "SIM" },
-            "projeto.iniciar": "SIM",
+            $or: [
+              { "compra.statusLiberacao": "PAGO" },
+              { "projeto.iniciar": "SIM" },
+            ],
           },
         },
       ])

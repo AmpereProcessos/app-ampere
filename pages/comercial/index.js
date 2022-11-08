@@ -371,6 +371,11 @@ function Comercial({ credentials, setCredentials }) {
           <p className="uppercase font-bold text-sm">Novo projeto</p>
         </div>
       </Link>
+      <Link href={"/comercial/formulariosSolicitacao"}>
+        <a className="fixed bg-[#15599a] cursor-pointer ml-36 hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">Formulários</p>
+        </a>
+      </Link>
       {modalIsOpen && (
         <ModalComercial
           handleUpdates={handleUpdates}

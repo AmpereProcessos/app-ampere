@@ -579,3 +579,43 @@ export const credores = [
     value: "NÃO DEFINIDO",
   },
 ];
+export const tiposDeServico = [
+  {
+    label: "SISTEMA FOTOVOLTAICO",
+    value: "SISTEMA FOTOVOLTAICO",
+  },
+  {
+    label: "TROCA DE PADRÃO",
+    value: "TROCA DE PADRÃO",
+  },
+  {
+    label: "REFORMA DE PADRÃO",
+    value: "REFORMA DE PADRÃO",
+  },
+  {
+    label: "MANUTENÇÃO CORRETIVA",
+    value: "MANUTENÇÃO CORRETIVA",
+  },
+  {
+    label: "MANUTENÇÃO PREVENTIVA",
+    value: "MANUTENÇÃO PREVENTIVA",
+  },
+  {
+    label: "MONTAGEM E DESMONTAGEM",
+    value: "MONTAGEM E DESMONTAGEM",
+  },
+  {
+    label: "TROCA DE STRING BOX",
+    value: "TROCA DE STRING BOX",
+  },
+  {
+    label: "SUBESTAÇÃO DE ENERGIA",
+    value: "SUBESTAÇÃO DE ENERGIA",
+  },
+];
+export const localEntregaOptions = [
+  { label: "MESMO DO PROJETO", value: "MESMO DO PROJETO" },
+  { label: "SEM RESTRIÇÕES", value: "SEM RESTRIÇÕES" },
+  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+  { label: "DIFERENTE DO PROJETO", value: "DIFERENTE DO PROJETO" },
+];

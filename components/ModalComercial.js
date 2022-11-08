@@ -5,6 +5,7 @@ import {
   projetistas,
   statusLiberacao,
   credores,
+  localEntregaOptions,
 } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
@@ -162,10 +163,13 @@ function ModalComercial({
                     }
                     editable={editor}
                     handleChange={(value) => {
-                      setChanges({ ...changes, nomeDoProjeto: value });
+                      setChanges({
+                        ...changes,
+                        nomeDoProjeto: value.toUpperCase(),
+                      });
                       setInfo({
                         ...infoHolder,
-                        nomeDoProjeto: value,
+                        nomeDoProjeto: value.toUpperCase(),
                       });
                     }}
                   />
@@ -1519,11 +1523,9 @@ function ModalComercial({
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
-                    options={[
-                      { label: "MESMO DO PROJETO", value: "MESMO DO PROJETO" },
-                      { label: "SEM RESTRIÇÕES", value: "SEM RESTRIÇÕES" },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
+                    options={localEntregaOptions.map((local) => {
+                      return { label: local.label, value: local.value };
+                    })}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
@@ -2281,6 +2283,10 @@ function ModalComercial({
                         {
                           label: "SOLICITADO COM G.D",
                           value: "SOLICITADO COM G.D",
+                        },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
                         },
                       ]}
                       handleChange={(value) => {

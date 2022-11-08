@@ -335,7 +335,7 @@ function VisualizacaoForm({ dados, voltar }) {
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
         <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          DADOS PARA CONTRATO
+          DADOS PARA CONTATO
         </span>
         <div className="flex gap-2 justify-around flex-wrap">
           <TextInput

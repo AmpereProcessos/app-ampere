@@ -15,9 +15,7 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     if (Object.keys(credentials).length == 0) {
       var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-      if (storedCredentials == null) {
-        router.push("/auth/authHome");
-      } else {
+      if (storedCredentials != null) {
         setCredentials(storedCredentials);
       }
     }

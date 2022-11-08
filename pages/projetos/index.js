@@ -460,11 +460,12 @@ function Projetos({ credentials, setCredentials }) {
               <div>
                 <span className="text-xxs">DESDE ASS.CONTRATO</span>
                 <p className={`text-xs uppercase text-red-500 text-center`}>
-                  {getDateDiff(
-                    new Date(),
-                    new Date(project.contrato.dataAssinatura)
-                  )}{" "}
-                  DIAS
+                  {project.contrato.dataAssinatura
+                    ? `${getDateDiff(
+                        new Date(),
+                        new Date(project.contrato.dataAssinatura)
+                      )} DIAS`
+                    : "-"}
                 </p>
               </div>
             </div>

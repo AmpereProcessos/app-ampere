@@ -156,6 +156,11 @@ function ModalObras({
                   #{infoHolder.codigoSVB}
                 </p>
               )}
+              {infoHolder.pagamento.credor == "SOL FÁCIL" && (
+                <div className="p-1 border border-red-500 text-sm text-red-500 font-bold">
+                  POSSUI DESLIGAMENTO REMOTO
+                </div>
+              )}
               <div className="flex gap-x-2">
                 {msg && <p className="text-sm italic text-green-400">{msg}</p>}
                 <button

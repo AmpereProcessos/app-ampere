@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { cities, cidadesAtendidas, credores } from "../../utils/constants";
+import {
+  cities,
+  cidadesAtendidas,
+  credores,
+  tiposDeServico,
+} from "../../utils/constants";
 import NumberInput from "../../components/NumberInput";
 import SelectInput from "../../components/SelectInput";
 import TextInput from "../../components/TextInput";
@@ -35,7 +40,7 @@ const validation = {
     },
     msg: "Por favor, preencha um nome válido",
   },
-  vendedor: {
+  "vendedor.nome": {
     test(value) {
       return value == "NÃO DEFINIDO";
     },
@@ -819,13 +824,15 @@ function NovoProjeto({ credentials, setCredentials }) {
                 setInfo({ ...infoHolder, segmento: value });
               }}
             />
-            <TextInput
-              label="TIPO DE SERVIÇO"
-              value={infoHolder.tipoDeServico}
+            <SelectInput
+              label={"TIPO DE SERVIÇO"}
               editable={true}
-              handleChange={(value) => {
-                setInfo({ ...infoHolder, tipoDeServico: value });
-              }}
+              options={tiposDeServico.map((tipo) => {
+                return { label: tipo.label, value: tipo.value };
+              })}
+              handleChange={(value) =>
+                setInfo({ ...infoHolder, tipoDeServico: value })
+              }
             />
             <div>
               <input

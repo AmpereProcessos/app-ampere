@@ -593,6 +593,13 @@ function Obras({ credentials, setCredentials }) {
                 </p>
               </div>
             </div>
+            {project.pagamento.credor == "SOL FÁCIL" && (
+              <div className="flex justify-center items-center">
+                <h1 className="font-bold text-red-500 text-center">
+                  POSSUI DESLIGAMENTO REMOTO
+                </h1>
+              </div>
+            )}
           </div>
         ))}
       </div>

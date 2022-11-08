@@ -533,3 +533,49 @@ export const statusLiberacao = [
     value: "NÃO DEFINIDO",
   },
 ];
+export const credores = [
+  {
+    label: "BANCO DO BRASIL",
+    value: "BANCO DO BRASIL",
+  },
+  {
+    label: "BRADESCO",
+    value: "BRADESCO",
+  },
+  {
+    label: "BV FINANCEIRA",
+    value: "BV FINANCEIRA",
+  },
+  {
+    label: "CAIXA",
+    value: "CAIXA",
+  },
+  {
+    label: "COOPACREDI",
+    value: "COOPACREDI",
+  },
+  {
+    label: "CREDICAMPINA",
+    value: "CREDICAMPINA",
+  },
+  {
+    label: "CREDIPONTAL",
+    value: "CREDIPONTAL",
+  },
+  {
+    label: "SANTANDER",
+    value: "SANTANDER",
+  },
+  {
+    label: "SOL FÁCIL",
+    value: "SOL FÁCIL",
+  },
+  {
+    label: "SICOOB ARACOOP",
+    value: "SICOOB ARACOOP",
+  },
+  {
+    label: "NÃO DEFINIDO",
+    value: "NÃO DEFINIDO",
+  },
+];

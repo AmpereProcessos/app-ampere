@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { cities, cidadesAtendidas } from "../../utils/constants";
+import { cities, cidadesAtendidas, credores } from "../../utils/constants";
 import NumberInput from "../../components/NumberInput";
 import SelectInput from "../../components/SelectInput";
 import TextInput from "../../components/TextInput";
@@ -1521,48 +1521,9 @@ function NovoProjeto({ credentials, setCredentials }) {
                     : "NÃO DEFINIDO"
                 }
                 editable={true}
-                options={[
-                  {
-                    label: "BANCO DO BRASIL",
-                    value: "BANCO DO BRASIL",
-                  },
-                  {
-                    label: "BRADESCO",
-                    value: "BRADESCO",
-                  },
-                  {
-                    label: "BV FINANCEIRA",
-                    value: "BV FINANCEIRA",
-                  },
-                  {
-                    label: "CAIXA",
-                    value: "CAIXA",
-                  },
-                  {
-                    label: "COOPACREDI",
-                    value: "COOPACREDI",
-                  },
-                  {
-                    label: "CREDICAMPINA",
-                    value: "CREDICAMPINA",
-                  },
-                  {
-                    label: "CREDIPONTAL",
-                    value: "CREDIPONTAL",
-                  },
-                  {
-                    label: "SANTANDER",
-                    value: "SANTANDER",
-                  },
-                  {
-                    label: "SOL FACIL",
-                    value: "SOL FACIL",
-                  },
-                  {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
-                  },
-                ]}
+                options={credores.map((credor) => {
+                  return { label: credor.label, value: credor.value };
+                })}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { vendedores, statusLiberacao } from "../utils/constants";
+import { vendedores, statusLiberacao, credores } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import TextInput from "./TextInput";
@@ -1350,52 +1350,9 @@ function ModalSuprimentos({
                           : "NÃO DEFINIDO"
                       }
                       editable={editor}
-                      options={[
-                        {
-                          label: "BANCO DO BRASIL",
-                          value: "BANCO DO BRASIL",
-                        },
-                        {
-                          label: "BRADESCO",
-                          value: "BRADESCO",
-                        },
-                        {
-                          label: "BV FINANCEIRA",
-                          value: "BV FINANCEIRA",
-                        },
-                        {
-                          label: "CAIXA",
-                          value: "CAIXA",
-                        },
-                        {
-                          label: "COOPACREDI",
-                          value: "COOPACREDI",
-                        },
-                        {
-                          label: "CREDICAMPINA",
-                          value: "CREDICAMPINA",
-                        },
-                        {
-                          label: "CREDIPONTAL",
-                          value: "CREDIPONTAL",
-                        },
-                        {
-                          label: "SANTANDER",
-                          value: "SANTANDER",
-                        },
-                        {
-                          label: "SOL FACIL",
-                          value: "SOL FACIL",
-                        },
-                        {
-                          label: "SICOOB ARACOOP",
-                          value: "SICOOB ARACOOP",
-                        },
-                        {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
-                        },
-                      ]}
+                      options={credores.map((credor) => {
+                        return { label: credor.label, value: credor.value };
+                      })}
                       handleChange={(value) => {
                         setChanges({
                           ...changes,

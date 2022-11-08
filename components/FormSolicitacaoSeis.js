@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import NumberInput from "./NumberInput";
-function FormSolicitacaoSeis({ avancar, setDados, dados }) {
+function FormSolicitacaoSeis({ avancar, setDados, dados, voltar }) {
   const [message, setMessage] = useState("");
   function validarCamposObrigatorios() {
     if (dados.possuiOeM == "SIM" && dados.planoOeM == "NÃO SE APLICA") {
@@ -194,7 +194,13 @@ function FormSolicitacaoSeis({ avancar, setDados, dados }) {
         </div>
       )}
       {message && <p className="text-red-400 italic text-center">{message}</p>}
-      <div className="flex w-full justify-center mt-2">
+      <div className="flex w-full justify-center gap-2 flex-wrap mt-2">
+        <button
+          onClick={voltar}
+          className="bg-[#15599a] rounded p-2 font-bold text-white"
+        >
+          VOLTAR
+        </button>
         <button
           onClick={proximaEtapa}
           className="w-fit text-center p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold "

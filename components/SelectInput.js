@@ -7,7 +7,7 @@ function SelectInput({ label, value, options, handleChange, editable }) {
         {label}
       </span>
       <select
-        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+        className="text-xs w-full text-center bg-transparent uppercase text-gray-600 outline-none"
         onChange={(e) => handleChange(e.target.value)}
         disabled={!editable}
         value={value}

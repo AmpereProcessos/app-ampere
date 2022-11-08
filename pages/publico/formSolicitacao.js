@@ -16,6 +16,7 @@ import FormSolicitacaoSeis from "../../components/FormSolicitacaoSeis";
 import FormSolicitacaoSete from "../../components/FormSolicitacaoSete";
 import FormSolicitacaoOito from "../../components/FormSolicitacaoOito";
 import FormSolicitacaoNove from "../../components/FormSolicitacaoNove";
+import VisualizacaoForm from "../../components/VisualizacaoForm";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -161,7 +162,6 @@ function FormularioSolicitacao() {
       .post("/api/solicitacoes/contrato", dados)
       .then((res) => console.log(res.data));
   }
-  console.log(dados.distribuicoes);
   return (
     <div className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
       <div className="flex self-center items-center h-[100px] w-[100px]">
@@ -201,6 +201,7 @@ function FormularioSolicitacao() {
         )}
         {estagio == 1 && (
           <FormSolicitacaoDois
+            voltar={() => setEstagio(estagio - 1)}
             avancar={() => setEstagio(estagio + 1)}
             dados={dados}
             setDados={setDados}
@@ -208,6 +209,7 @@ function FormularioSolicitacao() {
         )}
         {estagio == 2 && (
           <FormSolicitacaoTres
+            voltar={() => setEstagio(estagio - 1)}
             avancar={() => setEstagio(estagio + 1)}
             dados={dados}
             setDados={setDados}
@@ -215,6 +217,7 @@ function FormularioSolicitacao() {
         )}
         {estagio == 3 && (
           <FormSolicitacaoQuatro
+            voltar={() => setEstagio(estagio - 1)}
             avancar={() => setEstagio(estagio + 1)}
             dados={dados}
             setDados={setDados}
@@ -222,6 +225,7 @@ function FormularioSolicitacao() {
         )}
         {estagio == 4 && (
           <FormSolicitacaoCinco
+            voltar={() => setEstagio(estagio - 1)}
             avancar={() => setEstagio(estagio + 1)}
             dados={dados}
             setDados={setDados}
@@ -229,6 +233,7 @@ function FormularioSolicitacao() {
         )}
         {estagio == 5 && (
           <FormSolicitacaoSeis
+            voltar={() => setEstagio(estagio - 1)}
             avancar={() => setEstagio(estagio + 1)}
             dados={dados}
             setDados={setDados}
@@ -236,6 +241,7 @@ function FormularioSolicitacao() {
         )}
         {estagio == 6 && (
           <FormSolicitacaoSete
+            voltar={() => setEstagio(estagio - 1)}
             avancar={() => setEstagio(estagio + 1)}
             dados={dados}
             setDados={setDados}
@@ -243,6 +249,7 @@ function FormularioSolicitacao() {
         )}
         {estagio == 7 && (
           <FormSolicitacaoOito
+            voltar={() => setEstagio(estagio - 1)}
             avancar={() => setEstagio(estagio + 1)}
             dados={dados}
             setDados={setDados}
@@ -250,18 +257,18 @@ function FormularioSolicitacao() {
         )}
         {estagio == 8 && (
           <FormSolicitacaoNove
+            voltar={() => setEstagio(estagio - 1)}
             avancar={() => setEstagio(estagio + 1)}
             dados={dados}
             setDados={setDados}
           />
         )}
         {estagio == 9 && (
-          <button
-            onClick={criarSolicitacao}
-            className="bg-[#fead61] rounded p-2"
-          >
-            CRIAR SOLICITAÇÃO
-          </button>
+          <VisualizacaoForm
+            dados={dados}
+            setDados={setDados}
+            voltar={() => setEstagio(estagio - 1)}
+          />
         )}
       </div>
     </div>

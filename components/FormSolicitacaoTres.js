@@ -31,7 +31,7 @@ function formatCEP(cep) {
     .replace(/(-\d{3})\d+?$/, "$1");
   return cep;
 }
-function FormSolicitacaoTres({ avancar, setDados, dados }) {
+function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
   const [message, setMessage] = useState("");
   async function findCPF(field) {
     axios
@@ -284,7 +284,13 @@ function FormSolicitacaoTres({ avancar, setDados, dados }) {
         />
       </div>
       {message && <p className="text-red-400 italic text-center">{message}</p>}
-      <div className="flex w-full justify-center mt-2">
+      <div className="flex w-full justify-center gap-2 flex-wrap mt-2">
+        <button
+          onClick={voltar}
+          className="bg-[#15599a] rounded p-2 font-bold text-white"
+        >
+          VOLTAR
+        </button>
         <button
           onClick={proximaEtapa}
           className="w-fit text-center p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold "

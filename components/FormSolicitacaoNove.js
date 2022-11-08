@@ -3,7 +3,7 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import NumberInput from "./NumberInput";
 import { FiDelete } from "react-icons/fi";
-function FormSolicitacaoNove({ dados, setDados, avancar }) {
+function FormSolicitacaoNove({ dados, setDados, avancar, voltar }) {
   const [message, setMessage] = useState("");
   const [dadosDistribuicao, setDadosDistribuicao] = useState({
     numInstalacao: "",
@@ -69,18 +69,24 @@ function FormSolicitacaoNove({ dados, setDados, avancar }) {
             <h1 className="text-center font-bold font-raleway">
               ADICIONAR DISTRIBUIÇÃO:
             </h1>
-            <div className="flex justify-around">
-              <TextInput
-                label={"Nº DA INSTALAÇÃO"}
-                editable={true}
-                value={dadosDistribuicao.numInstalacao}
-                handleChange={(value) =>
-                  setDadosDistribuicao({
-                    ...dadosDistribuicao,
-                    numInstalacao: value,
-                  })
-                }
-              />
+            <div className="flex flex-col lg:flex-row items-center justify-around">
+              <div className="flex flex-col w-full items-center">
+                <span className="uppercase font-bold font-raleway text-center text-sm">
+                  Nº DA INSTALAÇÃO
+                </span>
+                <input
+                  className={`text-xs w-full text-center text-gray-600 outline-none`}
+                  value={dadosDistribuicao.numInstalacao}
+                  placeholder={"INFORMAÇÃO A PREENCHER..."}
+                  onChange={(e) =>
+                    setDadosDistribuicao({
+                      ...dadosDistribuicao,
+                      numInstalacao: e.target.value,
+                    })
+                  }
+                  type="text"
+                />
+              </div>
               <NumberInput
                 label={"% EXCEDENTE"}
                 editable={true}
@@ -104,11 +110,11 @@ function FormSolicitacaoNove({ dados, setDados, avancar }) {
           {dados.distribuicoes.length > 0 && (
             <div className="flex flex-col gap-2 mt-4">
               {dados.distribuicoes.map((distribuicao, index) => (
-                <div key={index} className="flex justify-around">
-                  <p className="text-sm text-gray-600">
-                    Instalação Nº{distribuicao.numInstalacao}
+                <div key={index} className="flex justify-around flex-wrap">
+                  <p className="text-sm font-bold text-gray-600">
+                    INSTALAÇÃO Nº{distribuicao.numInstalacao}
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm font-bold text-gray-600">
                     {distribuicao.excedente}%
                   </p>
                   <button
@@ -128,7 +134,13 @@ function FormSolicitacaoNove({ dados, setDados, avancar }) {
         </>
       )}
       {message && <p className="text-red-400 italic text-center">{message}</p>}
-      <div className="flex w-full justify-center mt-2">
+      <div className="flex w-full justify-center gap-2 flex-wrap mt-2">
+        <button
+          onClick={voltar}
+          className="bg-[#15599a] rounded p-2 font-bold text-white"
+        >
+          VOLTAR
+        </button>
         <button
           onClick={proximaEtapa}
           className="w-fit text-center p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold "

@@ -76,8 +76,8 @@ function Home({ credentials, setCredentials }) {
   const [selectedYear, setSelectedYear] = useState();
   const [installedData, setInstalledData] = useState([]);
   const [averageHomoData, setHomoData] = useState([]);
+  const [averageBuyTime, setAverageBuyTime] = useState([]);
   const [clientBirthday, setClientsBirthday] = useState([]);
-  const [maxGraphNumber, setMaxGraphNumber] = useState(0);
   const [nps, setNps] = useState(0);
   const [statsData, setStatsData] = useState({
     diffPotInstalled: 0,
@@ -90,6 +90,7 @@ function Home({ credentials, setCredentials }) {
     setRegionalFilter("GERAL");
     axios.get("/api/stats").then((res) => {
       setNps(res.data.nps);
+      setAverageBuyTime(res.data.suprimentosData);
       setInstalledData(res.data.installedInfo);
       setHomoData(res.data.averageHomoData);
     });
@@ -205,6 +206,7 @@ function Home({ credentials, setCredentials }) {
   
   */
   }
+  console.log(averageBuyTime);
   return (
     <div className="p-6 grow">
       {/** 
@@ -241,8 +243,8 @@ function Home({ credentials, setCredentials }) {
         </p>
       </div>
       */}
-      <div className="grid grid-rows-4 grid-cols-1 gap-y-2 lg:grid-cols-4 lg:grid-rows-1  lg:gap-x-3 w-full">
-        <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+      <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">
+        <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
             <h1 className="uppercase text-gray-600">
               Obras finalizadas no mês
@@ -255,7 +257,7 @@ function Home({ credentials, setCredentials }) {
             Último mês: <strong>{installedData[1]?.count} obras</strong>
           </p>
         </div>
-        <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+        <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
             <h1 className="uppercase text-gray-600">
               Potência Pico instalada no mês
@@ -272,7 +274,7 @@ function Home({ credentials, setCredentials }) {
             <strong>{installedData[1]?.total.toFixed(2)} kWp</strong>
           </p>
         </div>
-        <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+        <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
             <h1 className="uppercase text-gray-600">
               Potência Pico homologada no mês
@@ -289,7 +291,27 @@ function Home({ credentials, setCredentials }) {
             <strong>{averageHomoData[1]?.homoPeakPot.toFixed(2)} kWp</strong>
           </p>
         </div>
-        <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+        <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">TEMPO MÉDIO PARA COMPRA</h1>
+          </div>
+          <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
+            {averageBuyTime.length > 0
+              ? averageBuyTime[0].tempoMedio.toFixed(2)
+              : "-"}{" "}
+            dias
+          </p>
+          <p className="text-center text-xs text-gray-600">
+            Último mês:{" "}
+            <strong>
+              {averageBuyTime.length > 0
+                ? averageBuyTime[1]?.tempoMedio.toFixed(2)
+                : "-"}{" "}
+              dias
+            </strong>
+          </p>
+        </div>
+        <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
             <h1 className="uppercase text-gray-600">
               TEMPO MÉDIO DE APROVAÇÃO
@@ -307,8 +329,8 @@ function Home({ credentials, setCredentials }) {
           </p>
         </div>
       </div>
-      <div className="grid grid-rows-2 grid-cols-1 gap-y-2 mt-4 lg:grid-cols-4 lg:grid-rows-1 lg:gap-x-3">
-        <div className="flex flex-col p-4 h-[400px] border border-gray-200 bg-[#fff] shadow-xl col-span-1">
+      <div className="grid grid-rows-2 grid-cols-1 gap-y-2 mt-4 lg:grid-cols-10 lg:grid-rows-1 lg:gap-x-3">
+        <div className="flex flex-col p-4 h-[400px] border border-gray-200 bg-[#fff] shadow-xl col-span-2">
           <h1 className="text-gray-600 text-xl text-center">NPS</h1>
           <div className="flex grow items-center justify-center">
             <div className="w-[150px] h-[150px]">
@@ -337,7 +359,7 @@ function Home({ credentials, setCredentials }) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col p-4 h-[400px] border border-gray-200 bg-[#fff] shadow-xl col-span-3">
+        <div className="flex flex-col p-4 h-[400px] border border-gray-200 bg-[#fff] shadow-xl col-span-8">
           <div className="grid grid-cols-2 py-2">
             <h1 className="text-gray-600 uppercase text-xl text-center">
               Potência pico vendida

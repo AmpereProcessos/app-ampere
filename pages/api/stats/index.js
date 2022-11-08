@@ -93,7 +93,64 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-
+    let suprimentosData = await collection
+      .aggregate([
+        {
+          $match: {
+            "contrato.status": "ASSINADO",
+            "obra.statusDaObra": { $ne: "OBRA CANCELADA" },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              ano: {
+                $year: {
+                  $dateFromString: {
+                    dateString: "$compra.dataLiberacao",
+                  },
+                },
+              },
+              mes: {
+                $month: {
+                  $dateFromString: {
+                    dateString: "$compra.dataLiberacao",
+                  },
+                },
+              },
+            },
+            tempoMedio: {
+              $avg: {
+                $dateDiff: {
+                  startDate: {
+                    $dateFromString: {
+                      dateString: "$compra.dataLiberacao",
+                    },
+                  },
+                  endDate: {
+                    $dateFromString: {
+                      dateString: "$compra.dataPedido",
+                    },
+                  },
+                  unit: "day",
+                },
+              },
+            },
+          },
+        },
+        {
+          $sort: {
+            "_id.ano": -1,
+            "_id.mes": -1,
+          },
+        },
+        {
+          $match: {
+            "_id.ano": { $gte: 2021 },
+          },
+        },
+      ])
+      .toArray();
     let promotores = await collection
       .aggregate([
         {
@@ -137,6 +194,7 @@ export default async function handler(req, res) {
     return res.status(201).json({
       installedInfo,
       averageHomoData,
+      suprimentosData,
       nps,
     });
   }

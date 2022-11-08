@@ -44,7 +44,7 @@ function Suprimentos({ credentials, setCredentials }) {
     var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
     if (diffDays > 7) {
       return "border-2 border-red-600";
-    } else if (diffDays > 5) {
+    } else if (diffDays >= 5) {
       return "border-2 border-yellow-500";
     } else if (diffDays > 3) {
       return "border-2 border-blue-700";
@@ -114,6 +114,11 @@ function Suprimentos({ credentials, setCredentials }) {
       }
     }
     return totalSum.toFixed(2);
+  }
+  function getDateDiff(date1, date2) {
+    const diffInMs = new Date(date1) - new Date(date2);
+    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+    return Number(diffInDays).toFixed(0);
   }
   return (
     <div className="p-6 grow">
@@ -189,7 +194,7 @@ function Suprimentos({ credentials, setCredentials }) {
             }}
             key={project._id}
             className={`w-[250px] lg:w-[450px] cursor-pointer ${
-              project.compra.statusEntrega != "EM ROTA"
+              project.compra.dataPedido == undefined
                 ? getBorderColor(
                     new Date(project.compra.dataLiberacao),
                     new Date()
@@ -232,6 +237,26 @@ function Suprimentos({ credentials, setCredentials }) {
                   {project.compra.statusEntrega
                     ? project.compra.statusEntrega
                     : "-"}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center">
+              <div>
+                <span className="text-xxs">DESDE LIBERAÇÃO ATÉ PEDIDO</span>
+                <p
+                  className={`text-xs uppercase ${
+                    project.compra.dataPedido ? "text-gray-600" : "text-red-500"
+                  } text-center`}
+                >
+                  {project.compra.dataPedido
+                    ? `${getDateDiff(
+                        new Date(project.compra.dataPedido),
+                        new Date(project.compra.dataLiberacao)
+                      )} DIAS`
+                    : `${getDateDiff(
+                        new Date(),
+                        new Date(project.compra.dataLiberacao)
+                      )} DIAS`}
                 </p>
               </div>
             </div>

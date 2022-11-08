@@ -86,7 +86,9 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     if (filters.sorteioFilter) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
-        (project) => project.vendedor.nome != "ARTUR MILANE" && project.nps > 5
+        (project) =>
+          project.vendedor.nome != "ARTUR MILANE" &&
+          (project.nps > 5 || project.jornada.dataNps == undefined)
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -159,7 +161,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
           />
           <div
             onClick={() =>
-              setFilters({ ...filters, sorteioFilter: !filters.desenhoFilter })
+              setFilters({ ...filters, sorteioFilter: !filters.sorteioFilter })
             }
             className={`${
               filters.sorteioFilter ? "bg-[#15599a]" : "bg-blue-300"

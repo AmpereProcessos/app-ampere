@@ -4,36 +4,10 @@ export default async function handler(req, res) {
   const collection = db.collection("dados");
   /*let arr = await collection.updateMany(
     {
-      "obra.statusDaObra": {
-        $in: [
-          "AGENDADA",
-          "AGUARDANDO AGENDAMENTO",
-          "EM ANDAMENTO",
-          "CASA EM CONSTRUÇÃO",
-          null,
-          undefined,
-          "",
-          " ",
-          "NÃO DEFINIDO",
-        ],
-      },
-      "contrato.status": "ASSINADO",
-      "ordensDeServico.categoria": "PADRÃO",
+      cidade: "Uberlândia",
     },
     {
-      $set: {
-        "ordensDeServico.1": {
-          categoria: "MONTAGEM",
-          servicoExecutado: "MONTAGEM DO SISTEMA",
-          realizarCobranca: false,
-          valorCobranca: 0,
-          usuarioEmissor: "Diogo Carvalho Paulino",
-          grauDeUrgencia: "NÃO DEFINIDO",
-          dataDeAbertura: "2022-11-03T18:51:11.277Z",
-          index: 1,
-          cobrancaRealizada: false,
-        },
-      },
+      $set: { cidade: "UBERLÂNDIA" },
     }
   );
   res.json(arr);*/

@@ -7,7 +7,7 @@ function DateInput({ label, value, handleChange, editable }) {
         {label}
       </span>
       <input
-        className="text-xs w-full text-center bg-transparent uppercase text-gray-600 outline-none"
+        className="text-xs w-full text-center  uppercase text-gray-600 outline-none"
         type="date"
         readOnly={!editable}
         value={value}

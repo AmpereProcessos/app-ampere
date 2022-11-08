@@ -638,6 +638,39 @@ function ModalComercial({
                     }}
                   />
                   <SelectInput
+                    label={"TIPO DE ENTRADA"}
+                    value={
+                      infoHolder.padrao.tipoEntrada
+                        ? infoHolder.padrao.tipoEntrada
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    options={[
+                      {
+                        label: "AÉREA",
+                        value: "AÉREA",
+                      },
+                      {
+                        label: "SUBTERRÂNEO",
+                        value: "SUBTERRÂNEO",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, "padrao.tipoEntrada": value });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: {
+                          ...infoHolder.padrao,
+                          tipoEntrada: value,
+                        },
+                      });
+                    }}
+                  />
+                  <SelectInput
                     label={"PAGAMENTO DO PADRÃO"}
                     editable={editor}
                     value={

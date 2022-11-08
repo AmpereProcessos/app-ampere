@@ -773,6 +773,39 @@ function ModalProjetos({
                     }}
                   />
                   <SelectInput
+                    label={"TIPO DE ENTRADA"}
+                    value={
+                      infoHolder.padrao.tipoEntrada
+                        ? infoHolder.padrao.tipoEntrada
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    options={[
+                      {
+                        label: "AÉREA",
+                        value: "AÉREA",
+                      },
+                      {
+                        label: "SUBTERRÂNEO",
+                        value: "SUBTERRÂNEO",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, "padrao.tipoEntrada": value });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: {
+                          ...infoHolder.padrao,
+                          tipoEntrada: value,
+                        },
+                      });
+                    }}
+                  />
+                  <SelectInput
                     label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
                     editable={editor}
                     value={

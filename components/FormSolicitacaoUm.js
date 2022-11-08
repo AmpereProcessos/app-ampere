@@ -48,7 +48,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
       });
   }
   function validarCamposObrigatorios() {
-    if (dados.nomeDoContrato.trim().length < 10) {
+    if (dados.nomeDoContrato.trim().length < 5) {
       setMessage("Por favor, preencha um nome ou razão social válido.");
       return false;
     }
@@ -56,7 +56,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
       setMessage("Por favor, preencha um telefone válido.");
       return false;
     }
-    if (dados.cpf_cnpj.trim().length < 12) {
+    if (dados.cpf_cnpj.trim().length < 11) {
       setMessage("Por favor, preencha um CPF/CNPJ válido.");
       return false;
     }
@@ -248,12 +248,12 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
           editable={true}
           options={[
             {
-              value: "DIGITAL",
-              label: "DIGITAL",
-            },
-            {
               value: "FISICO",
               label: "FISICO",
+            },
+            {
+              value: "DIGITAL",
+              label: "DIGITAL",
             },
           ]}
           handleChange={(value) =>

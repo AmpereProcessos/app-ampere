@@ -528,44 +528,6 @@ function ModalObras({
                       }}
                     />
                   )}
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      SOLICITAÇÃO DA OBRA
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={!editor}
-                        checked={
-                          infoHolder.obra?.statusSolicitacao === "SOLICITADA"
-                            ? true
-                            : false
-                        }
-                        onChange={(e) => {
-                          setChanges({
-                            ...changes,
-                            "obra.statusSolicitacao": e.target.checked
-                              ? "SOLICITADA"
-                              : "NÃO SOLICITADA",
-                          });
-                          setInfo({
-                            ...infoHolder,
-                            obra: {
-                              ...infoHolder.obra,
-                              statusSolicitacao: e.target.checked
-                                ? "SOLICITADA"
-                                : "NÃO SOLICITADA",
-                            },
-                          });
-                        }}
-                        type="checkbox"
-                        name="solicitacaoobra"
-                        id="solicitacaoobra"
-                      />
-                      <label className="ml-2" htmlFor="solicitacaoobra">
-                        SOLICITADA
-                      </label>
-                    </div>
-                  </div>
                   <TextInput
                     label={"Status entrega dos equipamentos"}
                     editable={false}
@@ -838,55 +800,6 @@ function ModalObras({
                         obra: {
                           ...infoHolder.obra,
                           statusDaObra: value,
-                        },
-                      });
-                    }}
-                  />
-                  <SelectInput
-                    label={"Saída do cliente"}
-                    editable={editor}
-                    value={
-                      infoHolder.visitaTecnica.saidaDoCliente
-                        ? infoHolder.visitaTecnica.saidaDoCliente
-                        : "N/A"
-                    }
-                    options={[
-                      { label: "SUBTERRANEO", value: "SUBTERRANEO" },
-                      { label: "AEREO", value: "AEREO" },
-                      { label: "N/A", value: "N/A" },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "visitaTecnica.saidaDoCliente": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          saidaDoCliente: value,
-                        },
-                      });
-                    }}
-                  />
-                  <TextInput
-                    label={"Amperagem"}
-                    editable={editor}
-                    value={
-                      infoHolder.visitaTecnica?.amperagem
-                        ? infoHolder.visitaTecnica.amperagem
-                        : ""
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "visitaTecnica.amperagem": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          amperagem: value,
                         },
                       });
                     }}
@@ -1561,7 +1474,7 @@ function ModalObras({
                   />
                   <SelectInput
                     label={"PAGAMENTO DO PADRÃO"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.padrao?.respPagamento ==
                         "NÃO HAVERA TROCA DE PADRÃO" ||
@@ -1601,7 +1514,7 @@ function ModalObras({
                   <NumberInput
                     tag={"R$"}
                     label={"Valor do padrão"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.padrao.valor ? infoHolder.padrao.valor : 0
                     }
@@ -1618,7 +1531,7 @@ function ModalObras({
                   />
                   <SelectInput
                     label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.padrao?.respInstalacao
                         ? infoHolder.padrao?.respInstalacao
@@ -1729,7 +1642,7 @@ function ModalObras({
                   </div>
                   <SelectInput
                     label={"Tipo da estrutura"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.estruturaPersonalizada?.tipo
                         ? infoHolder.estruturaPersonalizada?.tipo
@@ -1759,7 +1672,7 @@ function ModalObras({
                   />
                   <SelectInput
                     label={"PAGAMENTO DA ESTRUTURA"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.estruturaPersonalizada?.respPagamento
                         ? infoHolder.estruturaPersonalizada?.respPagamento
@@ -1787,7 +1700,7 @@ function ModalObras({
                   <NumberInput
                     tag={"R$"}
                     label={"Valor da estrutura"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.estruturaPersonalizada?.valor == "-" ||
                       infoHolder.estruturaPersonalizada?.valor == undefined

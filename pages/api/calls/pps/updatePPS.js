@@ -1,8 +1,8 @@
-import connectToDatabase from "../../../../utils/callsDb";
+import connectToDatabase from "../../../../utils/connectDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
     const collection = db.collection("pps");
     var exists = req.body.dataDeConclusao;
     let newDocument = await collection.findOneAndUpdate(
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     );
     return res.json(newDocument);
   } else if (req.method === "PUT") {
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
     const collection = db.collection("pps");
     let newDocument = await collection.findOneAndUpdate(
       {

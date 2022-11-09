@@ -91,6 +91,12 @@ function BandoDeDados({ data, credentials, setCredentials }) {
           (project.nps > 5 || project.jornada.dataNps == undefined)
       );
     }
+    if (filters.vendedorFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.vendedorFilter.includes(call.vendedor.nome)
+      );
+    }
     if (!newArr) setFilteredProjects(projects);
     else {
       setFilteredProjects(newArr);
@@ -178,6 +184,12 @@ function BandoDeDados({ data, credentials, setCredentials }) {
                 value: vendedor.nome,
               };
             })}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                vendedorFilter: e.map((x) => x.value),
+              })
+            }
             closeMenuOnSelect={false}
           />
           <div className="hidden lg:flex gap-x-2">

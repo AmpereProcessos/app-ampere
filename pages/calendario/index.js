@@ -111,7 +111,13 @@ const Calendar = ({ arr }) => {
             center: "",
             end: "today prev,next",
           }}
-          events={eventos}
+          events={[
+            {
+              title: "TESTE",
+              start: "2022-11-06T06:00:00.000Z",
+              end: "2022-11-09T22:00:00.000Z",
+            },
+          ]}
           editable
           selectable
           handleWindowResize={true}

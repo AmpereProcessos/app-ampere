@@ -1,11 +1,12 @@
-import connectToDatabase from "../../../utils/connectDb";
+import connectToDatabase from "../../../utils/usersDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
   if (req.method === "POST") {
     const { email, password } = req.body;
-    const db = await connectToDatabase(process.env.DB_KEY, "authentication");
+    const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("users");
     let credential = await collection.findOne({ email: email });
+    console.log(credential);
     try {
       if (!credential) {
         throw "Usuário inexistente";

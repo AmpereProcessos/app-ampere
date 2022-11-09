@@ -248,7 +248,7 @@ function ModalCallPPS({
                 <select
                   value={responsavel ? responsavel : info.responsavel}
                   onChange={(e) => setResponsavel(e.target.value)}
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
+                  className="text-xs grow text-center outline-none mt-2 lg:mt-0"
                 >
                   <option value={"A DEFINIR"}>A DEFINIR</option>
                   <option value={"ARTHUR"}>ARTHUR</option>
@@ -264,7 +264,7 @@ function ModalCallPPS({
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Digite aqui as anotações do chamado"
-                  className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
+                  className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit grow"
                 />
               </div>
               {info.dataDeConclusao ? (

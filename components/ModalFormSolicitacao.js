@@ -207,7 +207,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
       );
   }
   async function addProject() {
-    await axios.put("/api/solicitacoes/contrato", { aprovacao: true });
+    await axios.put("/api/solicitacoes/contrato", {
+      _id: solicitacao._id,
+      aprovacao: true,
+    });
     axios.post("/api/projects/add", insertObj).then((res) => {
       setCreationMsg({ text: "Projeto adicionado!", color: "text-green-500" });
     });

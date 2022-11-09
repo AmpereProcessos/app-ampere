@@ -60,11 +60,11 @@ function ModalSuprimentos({
   const [msg, setMsg] = useState({ text: "", color: "" });
   async function handleChanges() {
     if (validateChanges().liberar) {
-      let { data } = await axios.post("/api/changes", {
+      /*let { data } = await axios.post("/api/changes", {
         usuario: credentials.nome,
         mudancas: changes,
         projetoMudado: project._id,
-      });
+      });*/
       axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
         setMsg({ text: "Alterações feitas", color: "text-green-400" });
         handleUpdates(project._id);

@@ -1,7 +1,7 @@
-import connectToDatabase from "../../../../utils/callsDb";
+import connectToDatabase from "../../../../utils/connectDb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
     const collection = db.collection("pps");
     var dateFilterParam = new Date();
     dateFilterParam.setDate(dateFilterParam.getDate() - 2);
@@ -64,7 +64,7 @@ export default async function handler(req, res) {
   }
   if (req.method === "POST") {
     let svbCode = Number(req.body.codigoDoProjeto);
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
     const collection = db.collection("pps");
     await collection.insertOne({
       ...req.body,

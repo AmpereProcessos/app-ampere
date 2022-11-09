@@ -1,7 +1,7 @@
-import connectToDatabase from "../../../../utils/projectsDb";
+import connectToDatabase from "../../../../utils/connectDb";
 export default async function handler(req, res) {
   const { year } = req.query;
-  const db = await connectToDatabase(process.env.DB_KEY);
+  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
   const collection = db.collection("dados");
   let graphData = await collection
     .aggregate([

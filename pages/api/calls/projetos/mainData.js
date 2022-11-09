@@ -1,7 +1,7 @@
-import connectToDatabase from "../../../../utils/callsDb";
+import connectToDatabase from "../../../../utils/connectDb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
     const collection = db.collection("projetos");
     let chamadosAbertos = await collection
       .find({ status: { $ne: "FINALIZADO" } })
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
   } else if (req.method === "POST") {
     let date = new Date().toJSON();
     var obj = { ...req.body, abertura: date };
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
     const collection = db.collection("projetos");
     console.log(req.body);
     try {

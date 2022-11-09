@@ -1,11 +1,11 @@
-import connectToDatabase from "../../../utils/projectsDb";
+import connectToDatabase from "../../../utils/connectDb";
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
     var date = new Date();
     var currentMonth = date.getMonth() + 1;
     var currentYear = date.getFullYear();
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
     let installedInfo = await collection
       .aggregate([
@@ -203,7 +203,7 @@ export default async function handler(req, res) {
     var currentMonth = date.getMonth() + 1;
     var currentYear = date.getFullYear();
     var regional = req.body.regional;
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("data");
     let installedInfo = await collection
       .aggregate([

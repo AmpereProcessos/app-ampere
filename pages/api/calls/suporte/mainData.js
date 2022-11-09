@@ -1,10 +1,10 @@
-import connectToDatabase from "../../../../utils/callsDb";
+import connectToDatabase from "../../../../utils/connectDb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
     var dateFilterParam = new Date();
     dateFilterParam.setDate(dateFilterParam.getDate() - 2);
     let filter = dateFilterParam.toJSON();
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
     const collection = db.collection("suporte");
     let openCalls = await collection
       .aggregate([
@@ -48,7 +48,7 @@ export default async function handler(req, res) {
       statusChamado: "ABERTO",
       responsavel: req.body.responsavel ? req.body.responsavel : "DEFINIR",
     };
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
     const collection = db.collection("suporte");
     let created = await collection.insertOne({
       abertura: date,

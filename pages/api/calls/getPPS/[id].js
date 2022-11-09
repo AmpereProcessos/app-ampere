@@ -1,7 +1,7 @@
-import connectToDatabase from "../../../../utils/callsDb";
+import connectToDatabase from "../../../../utils/connectDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
-  const db = await connectToDatabase(process.env.DB_KEY);
+  const db = await connectToDatabase(process.env.DB_KEY, "chamados");
   const collection = db.collection("pps");
   let call = await collection
     .find({

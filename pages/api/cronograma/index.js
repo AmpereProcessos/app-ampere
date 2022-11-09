@@ -1,8 +1,8 @@
-import connectToDatabase from "../../../utils/projectsDb";
+import connectToDatabase from "../../../utils/connectDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
     var arr = await collection
       .aggregate([

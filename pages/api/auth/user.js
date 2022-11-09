@@ -1,8 +1,8 @@
-import connectToDatabase from "../../../utils/usersDb";
+import connectToDatabase from "../../../utils/connectDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB_KEY, "authentication");
     const collection = db.collection("users");
     /*let credential = await collection.findOne({ user: user });
     try {

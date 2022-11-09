@@ -142,7 +142,7 @@ function NPS({ credentials, setCredentials }) {
           </button>
         </div>
       </div>
-      <div className="flex flex-wrap mt-4 gap-3 flex-wrap justify-around">
+      <div className="flex flex-wrap mt-4 gap-3 justify-around">
         {filteredProjects.map((project) => (
           <NPSCard
             credentials={credentials}

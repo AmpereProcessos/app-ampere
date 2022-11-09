@@ -6,12 +6,17 @@ import { useEffect, useRef, useState } from "react";
 import connectToDatabase from "../../utils/projectsDb";
 import axios from "axios";
 import ModalCronograma from "../../components/ModalCronograma";
+import Select from "react-select";
+import { cidadesAtendidas } from "../../utils/constants";
 
 const Calendar = ({ arr }) => {
   const [eventos, setEventos] = useState(arr);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalEvento, setModalEvento] = useState({});
+  const [filters, setFilters] = useState({
+    cidadeFilter: [],
+  });
   /*function getEventos() {
     axios.get("/api/cronograma").then((res) => setEventos(res.data));
   }*/
@@ -44,15 +49,45 @@ const Calendar = ({ arr }) => {
     });
     setModalIsOpen(true);
   }
-  console.log(modalEvento);
+  function handleFilter() {
+    var newArr;
+    if (filters.cidadeFilter.length > 0) {
+      if (!newArr) newArr = arr;
+      newArr = newArr.filter((evento) =>
+        filters.cidadeFilter.includes(evento.cidade)
+      );
+    }
+    if (!newArr) {
+      setEventos(arr);
+      setCalendarVisible(true);
+    } else {
+      setEventos(newArr);
+      setCalendarVisible(true);
+    }
+  }
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-2">
         <h1 className="text-xl text-[#15599a] font-bold">
           CRONOGRAMA DE OBRAS
         </h1>
+        <div className="flex items-center gap-x-2 z-10">
+          <Select
+            isMulti={true}
+            placeholder="CIDADE"
+            options={cidadesAtendidas.map((cidade) => {
+              return { label: cidade, value: cidade };
+            })}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                cidadeFilter: e.map((x) => x.value),
+              })
+            }
+          />
+        </div>
         <button
-          onClick={() => setCalendarVisible(true)}
+          onClick={() => handleFilter()}
           className="bg-[#fead61] p-2 rounded font-bold hover:bg-[#15599a] hover:text-white"
         >
           VER CALENDÁRIO
@@ -69,14 +104,14 @@ const Calendar = ({ arr }) => {
           locale={"BR"}
           plugins={[timeGridPlugin, interactionPlugin, dayGridPlugin]}
           dayHeaderFormat={{ weekday: "narrow" }}
-          titleFormat={{ year: "numeric", month: "narrow" }}
+          titleFormat={{ year: "numeric", month: "long" }}
           initialView="dayGridMonth"
           headerToolbar={{
             start: "title",
             center: "",
             end: "today prev,next",
           }}
-          events={arr}
+          events={eventos}
           editable
           selectable
           handleWindowResize={true}
@@ -116,6 +151,8 @@ export async function getStaticProps() {
           numeroResidencia: 1,
           "obra.equipeResp": 1,
           "obra.entrada": 1,
+          "sistema.qtdeModulos": 1,
+          "sistema.topologia": 1,
         },
       },
     ])
@@ -123,7 +160,8 @@ export async function getStaticProps() {
   arr = arr?.map((evento) => {
     return {
       title: evento.nomeDoContrato,
-      date: new Date(new Date(evento.obra.entrada).setHours(28)).toISOString(),
+      start: new Date(new Date(evento.obra.entrada).setHours(32)).toISOString(),
+      allDay: true,
       id: evento._id.toString(),
       qtde: evento.qtde,
       equipe: evento.obra.equipeResp,
@@ -131,6 +169,8 @@ export async function getStaticProps() {
       logradouro: evento.logradouro,
       bairro: evento.bairro,
       numeroResidencia: evento.numeroResidencia,
+      qtdeModulos: evento.sistema.qtdeModulos,
+      topologia: evento.sistema.topologia,
     };
   });
   // By returning { props: { posts } }, the Blog component

@@ -58,45 +58,61 @@ function ModalCronograma({ setModalIsOpen, info }) {
                 />
               </button>
             </div>
-            <div className="flex flex-col h-full justify-around">
+            <div className="flex flex-col h-full justify-around overflow-y-auto overscroll-y-auto">
               <div className="mt-4 grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1">
-                <p className="text-md text-center text-[#15599a] font-bold">
+                <p className="text-xs text-center text-[#15599a] font-bold">
                   CIDADE
                 </p>
-                <p className="text-md text-center text-gray-600">
+                <p className="text-xs text-center text-gray-600">
                   {info.cidade}
                 </p>
               </div>
               <div className="mt-4 grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1">
-                <p className="text-md text-center text-[#15599a] font-bold">
+                <p className="text-xs text-center text-[#15599a] font-bold">
                   BAIRRO
                 </p>
-                <p className="text-md text-center text-gray-600">
+                <p className="text-xs text-center text-gray-600">
                   {info.bairro}
                 </p>
               </div>
               <div className="mt-4 grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1">
-                <p className="text-md text-center text-[#15599a] font-bold">
+                <p className="text-xs text-center text-[#15599a] font-bold">
                   LOGRAOURO
                 </p>
-                <p className="text-md text-center text-gray-600">
+                <p className="text-xs text-center text-gray-600">
                   {info.logradouro}
                 </p>
               </div>
               <div className="mt-4 grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1">
-                <p className="text-md text-center text-[#15599a] font-bold">
+                <p className="text-xs text-center text-[#15599a] font-bold">
                   Nº
                 </p>
-                <p className="text-md text-center text-gray-600">
+                <p className="text-xs text-center text-gray-600">
                   {info.numeroResidencia}
                 </p>
               </div>
               <div className="mt-4 grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1">
-                <p className="text-md text-center text-[#15599a] font-bold">
+                <p className="text-xs text-center text-[#15599a] font-bold">
                   EQUIPE RESPONSÁVEL
                 </p>
-                <p className="text-md text-center text-gray-600">
+                <p className="text-xs text-center text-gray-600">
                   {info.equipe}
+                </p>
+              </div>
+              <div className="mt-4 grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1">
+                <p className="text-xs text-center text-[#15599a] font-bold">
+                  NºMÓDULOS
+                </p>
+                <p className="text-xs text-center text-gray-600">
+                  {info.qtdeModulos}
+                </p>
+              </div>
+              <div className="mt-4 grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1">
+                <p className="text-xs text-center text-[#15599a] font-bold">
+                  TOPOLOGIA
+                </p>
+                <p className="text-xs text-center text-gray-600">
+                  {info.topologia}
                 </p>
               </div>
             </div>

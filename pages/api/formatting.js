@@ -53,6 +53,7 @@ export default async function handler(req, res) {
         valor: project.valorpadrao,
         dataMontagem: project.montagemPadrao,
         pagTerceiro: project.estruturapagterceiro,
+        tipoEntrada: project.tipoentrada,
       },
       estruturaPersonalizada: {
         aplicavel: project.possuiestruturapersonalisada,
@@ -225,6 +226,7 @@ export default async function handler(req, res) {
         jornadaConcluida: project.jornadaconcluida,
         dataNps: fixDate(project.datanps),
         obsJornada: project.obsjornada,
+        obsNps: project.obsnps,
       },
       nps: project.nps,
     };

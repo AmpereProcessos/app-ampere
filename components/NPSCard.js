@@ -3,6 +3,7 @@ import NumberInput from "./NumberInput";
 import axios from "axios";
 function NPSCard({ project, credentials }) {
   const [nps, setNps] = useState(project.nps);
+  const [obsNps, setObsNps] = useState(project.obsNps);
   const [msg, setMsg] = useState({
     text: "",
     color: "",
@@ -17,6 +18,7 @@ function NPSCard({ project, credentials }) {
       .post(`/api/projects/update/${project._id}`, {
         nps: nps,
         "jornada.dataNps": new Date().toJSON(),
+        "jornada.obsNps": obsNps,
       })
       .then((res) => {
         setMsg({ text: "Alterações feitas", color: "text-green-500" });
@@ -47,6 +49,14 @@ function NPSCard({ project, credentials }) {
             {project.telefone ? project.telefone : "-"}
           </p>
         </div>
+      </div>
+      <div className="flex flex-col items-center mt-2">
+        <h1 className="text-sm text-gray-500 font-bold">OBSERVAÇÕES</h1>
+        <textarea
+          value={obsNps}
+          onChange={(e) => setObsNps(e.target.value)}
+          className="bg-gray-100 resize-none w-full outline-none p-2 text-center"
+        />
       </div>
       <div className="flex items-center justify-between mt-2 px-2">
         <div>

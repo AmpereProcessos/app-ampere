@@ -18,6 +18,7 @@ export default async function handler(req, res) {
             cidade: 1,
             nps: 1,
             "jornada.dataNps": 1,
+            "jornada.obsNps": 1,
           },
         },
       ])

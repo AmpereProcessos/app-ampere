@@ -3,7 +3,7 @@ import NumberInput from "./NumberInput";
 import axios from "axios";
 function NPSCard({ project, credentials }) {
   const [nps, setNps] = useState(project.nps);
-  const [obsNps, setObsNps] = useState(project.obsNps);
+  const [obsNps, setObsNps] = useState(project.jornada.obsNps);
   const [msg, setMsg] = useState({
     text: "",
     color: "",

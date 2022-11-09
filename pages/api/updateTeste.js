@@ -4,10 +4,12 @@ export default async function handler(req, res) {
   const collection = db.collection("dados");
   /*let arr = await collection.updateMany(
     {
-      cidade: "Uberlândia",
+      "obra.saida": { $lt: "2022-06-01T08:00:00.000Z" },
     },
     {
-      $set: { cidade: "UBERLÂNDIA" },
+      $set: {
+        "pagamento.cobrancaFeita": true,
+      },
     }
   );
   res.json(arr);*/

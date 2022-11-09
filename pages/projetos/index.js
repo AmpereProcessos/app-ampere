@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalProjetos from "../../components/ModalProjetos";
-import { projetistas } from "../../utils/constants";
+import { projetistas, cidadesAtendidas } from "../../utils/constants";
 function Projetos({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
@@ -19,6 +19,7 @@ function Projetos({ credentials, setCredentials }) {
     desenhoFilter: false,
     obraStatusFilter: [],
     entregaStatusFilter: [],
+    cidadeFilter: [],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -81,6 +82,13 @@ function Projetos({ credentials, setCredentials }) {
       if (filters)
         newArr = newArr.filter((call) =>
           filters.entregaStatusFilter.includes(call.compra.statusEntrega)
+        );
+    }
+    if (filters.cidadeFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      if (filters)
+        newArr = newArr.filter((call) =>
+          filters.cidadeFilter.includes(call.cidade)
         );
     }
     if (filters.desenhoFilter) {
@@ -348,6 +356,22 @@ function Projetos({ credentials, setCredentials }) {
               return {
                 label: projetista.label,
                 value: projetista.nome,
+              };
+            })}
+          />
+          <Select
+            isMulti
+            placeholder="CIDADE"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                cidadeFilter: e.map((x) => x.value),
+              })
+            }
+            options={cidadesAtendidas.map((cidade) => {
+              return {
+                label: cidade,
+                value: cidade,
               };
             })}
           />

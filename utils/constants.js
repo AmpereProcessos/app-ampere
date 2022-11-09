@@ -619,3 +619,85 @@ export const localEntregaOptions = [
   { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
   { label: "DIFERENTE DO PROJETO", value: "DIFERENTE DO PROJETO" },
 ];
+export const fornecedores = [
+  {
+    label: "ALDO",
+    value: "ALDO",
+  },
+  {
+    label: "AMPÈRE",
+    value: "AMPÈRE",
+  },
+  {
+    label: "BEL ENERGY",
+    value: "BEL ENERGY",
+  },
+  {
+    label: "SKY SOLAR",
+    value: "SKY SOLAR",
+  },
+  {
+    label: "SOU ENERGY",
+    value: "SOU ENERGY",
+  },
+  {
+    label: "FORTLEV",
+    value: "FORTLEV",
+  },
+  {
+    label: "GENYX",
+    value: "GENYX",
+  },
+  {
+    label: "MEGACOMM",
+    value: "MEGACOMM",
+  },
+  {
+    label: "FORTESOL",
+    value: "FORTESOL",
+  },
+  {
+    label: "EDMOND",
+    value: "EDMOND",
+  },
+  {
+    label: "AMARA",
+    value: "AMARA",
+  },
+  {
+    label: "ECORI",
+    value: "ECORI",
+  },
+  {
+    label: "RIBEIRO",
+    value: "RIBEIRO",
+  },
+  {
+    label: "TEN BRASIL",
+    value: "TEN BRASIL",
+  },
+  {
+    label: "ESFERA",
+    value: "ESFERA",
+  },
+  {
+    label: "ELSYS",
+    value: "ELSYS",
+  },
+  {
+    label: "GEL SOLAR",
+    value: "GEL SOLAR",
+  },
+  {
+    label: "HELTE",
+    value: "HELTE",
+  },
+  {
+    label: "LOJA ELÉTRICA",
+    value: "LOJA ELÉTRICA",
+  },
+  {
+    label: "NÃO DEFINIDO",
+    value: "NÃO DEFINIDO",
+  },
+];

@@ -155,7 +155,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            nps: { $in: [9, 10] },
+            nps: { $gte: 9 },
           },
         },
         {
@@ -167,7 +167,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            nps: { $in: [0, 1, 2, 3, 4, 5, 6] },
+            nps: { $lte: 6 },
           },
         },
         {
@@ -179,7 +179,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            nps: { $in: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
+            $and: [{ nps: { $gte: 0 } }, { nps: { $lte: 10 } }],
           },
         },
         {

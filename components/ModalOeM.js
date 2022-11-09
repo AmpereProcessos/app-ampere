@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { vendedores } from "../utils/constants";
+import { fornecedores, vendedores } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import TextInput from "./TextInput";
@@ -1030,32 +1030,7 @@ function ModalOeM({
                         ? infoHolder.compra.fornecedor
                         : "NÃO DEFINIDO"
                     }
-                    options={[
-                      {
-                        label: "ALDO",
-                        value: "ALDO",
-                      },
-                      {
-                        label: "AMPÈRE",
-                        value: "AMPÈRE",
-                      },
-                      {
-                        label: "BEL ENERGY",
-                        value: "BEL ENERGY",
-                      },
-                      {
-                        label: "SKY SOLAR",
-                        value: "SKY SOLAR",
-                      },
-                      {
-                        label: "SOU ENERGY",
-                        value: "SOU ENERGY",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
+                    options={fornecedores.map((fornecedor) => fornecedor)}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
@@ -1862,7 +1837,7 @@ function ModalOeM({
                               aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
                               acStatus:
                                 e.target.checked &&
-                                infoHolder.acstatus != "REALIZADO"
+                                infoHolder.acStatus != "REALIZADO"
                                   ? "PÊNDENCIA"
                                   : undefined,
                             },
@@ -1874,7 +1849,7 @@ function ModalOeM({
                               aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
                               acStatus:
                                 e.target.checked &&
-                                infoHolder.acstatus != "REALIZADO"
+                                infoHolder.acStatus != "REALIZADO"
                                   ? "PÊNDENCIA"
                                   : undefined,
                             },

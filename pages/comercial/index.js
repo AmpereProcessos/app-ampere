@@ -367,9 +367,9 @@ function Comercial({ credentials, setCredentials }) {
         ))}
       </div>
       <Link href={"/comercial/addProjeto"}>
-        <div className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+        <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
           <p className="uppercase font-bold text-sm">Novo projeto</p>
-        </div>
+        </a>
       </Link>
       <Link href={"/comercial/formulariosSolicitacao"}>
         <a className="fixed bg-[#15599a] cursor-pointer ml-36 hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">

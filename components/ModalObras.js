@@ -464,7 +464,7 @@ function ModalObras({
                               : "NÃO",
                             "projeto.acStatus":
                               e.target.checked &&
-                              infoHolder.acstatus != "REALIZADO"
+                              infoHolder.acStatus != "REALIZADO"
                                 ? "PÊNDENCIA"
                                 : undefined,
                           });
@@ -475,7 +475,7 @@ function ModalObras({
                               aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
                               acStatus:
                                 e.target.checked &&
-                                infoHolder.acstatus != "REALIZADO"
+                                infoHolder.acStatus != "REALIZADO"
                                   ? "PÊNDENCIA"
                                   : undefined,
                             },

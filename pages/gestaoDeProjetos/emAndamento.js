@@ -76,7 +76,18 @@ export async function getServerSideProps(context) {
       {
         $match: {
           "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
-          "pagamento.status": { $in: ["AGUARDANDO PAGAMENTO", null] },
+          "obra.statusDaObra": {
+            $in: [
+              "AGENDADA",
+              "AGUARDANDO AGENDAMENTO",
+              "EM ANDAMENTO",
+              "NÃO DEFINIDO",
+              "CASA EM CONSTRUÇÃO",
+              "",
+              null,
+              undefined,
+            ],
+          },
         },
       },
     ])
@@ -86,7 +97,15 @@ export async function getServerSideProps(context) {
       {
         $match: {
           "compra.statusEntrega": {
-            $in: ["EM ROTA", "AGUARDANDO COMPRA", "", null],
+            $in: [
+              "EM ROTA",
+              "AGUARDANDO COMPRA",
+              "",
+              null,
+              undefined,
+              " ",
+              "NÃO DEFINIDO",
+            ],
           },
           "contrato.status": "ASSINADO",
         },
@@ -98,7 +117,10 @@ export async function getServerSideProps(context) {
       {
         $match: {
           "projeto.projetoConcluido": { $ne: "SIM" },
-          "projeto.iniciar": "SIM",
+          $or: [
+            { "compra.statusLiberacao": "PAGO" },
+            { "projeto.iniciar": "SIM" },
+          ],
         },
       },
     ])
@@ -108,7 +130,17 @@ export async function getServerSideProps(context) {
       {
         $match: {
           "obra.statusDaObra": {
-            $in: ["AGENDADA", "AGUARDANDO AGENDAMENTO", "EM ANDAMENTO"],
+            $in: [
+              "AGENDADA",
+              "AGUARDANDO AGENDAMENTO",
+              "EM ANDAMENTO",
+              "CASA EM CONSTRUÇÃO",
+              null,
+              undefined,
+              "",
+              " ",
+              "NÃO DEFINIDO",
+            ],
           },
           "contrato.status": "ASSINADO",
         },

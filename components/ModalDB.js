@@ -4,6 +4,8 @@ import {
   vendedores,
   projetistas,
   credores,
+  fornecedores,
+  localEntregaOptions,
 } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
@@ -307,14 +309,11 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         console.log(value);
                         setChanges({
                           ...changes,
-                          vendedor: {
-                            ...infoHolder.vendedor,
-                            nome: value,
-                            codigo:
-                              vendedores.filter(
-                                (vendedor) => vendedor.nome == value
-                              )[0].cod || "-",
-                          },
+                          "vendedor.nome": value,
+                          "vendedor.codigo":
+                            vendedores.filter(
+                              (vendedor) => vendedor.nome == value
+                            )[0].cod || "-",
                         });
                         setInfo({
                           ...infoHolder,
@@ -364,10 +363,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          oem: {
-                            ...infoHolder.oem,
-                            aplicavel: e.target.checked,
-                          },
+                          "oem.aplicavel": e.target.checked,
                         });
                         setInfo({
                           ...infoHolder,
@@ -395,7 +391,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          oem: { ...infoHolder.oem, duracao: Number(value) },
+                          "oem.duracao": Number(value),
                         });
                         setInfo({
                           ...infoHolder,
@@ -416,10 +412,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          oem: {
-                            ...infoHolder.oem,
-                            qtdeManutencoes: Number(value),
-                          },
+                          "oem.qtdeManutencoes": Number(value),
                         });
                         setInfo({
                           ...infoHolder,
@@ -449,12 +442,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          visitaTecnica: {
-                            ...infoHolder.visitaTecnica,
-                            status: e.target.checked
-                              ? "REALIZADA"
-                              : "PENDÊNCIA",
-                          },
+                          " visitaTecnica.status": e.target.checked
+                            ? "REALIZADA"
+                            : "PENDÊNCIA",
                         });
                         setInfo({
                           ...infoHolder,
@@ -485,10 +475,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          tecnico: value,
-                        },
+                        "visitaTecnica.tecnico": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -510,10 +497,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          tipoDaTelha: value,
-                        },
+                        "visitaTecnica.tipoDaTelha": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -572,7 +556,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, tipo: value },
+                        "padrao.tipo": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -611,7 +595,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, respPagamento: value },
+                        "padrao.respPagamento": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -629,7 +613,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, valor: Number(value) },
+                        "padrao.valor": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -653,7 +637,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, respInstalacao: value },
+                        "padrao.respInstalacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -677,10 +661,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          saidaDoCliente: value,
-                        },
+                        "visitaTecnica.saidaDoCliente": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -702,10 +683,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          amperagem: value,
-                        },
+                        "visitaTecnica.amperagem": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -734,10 +712,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          estruturaPersonalizada: {
-                            ...infoHolder.estruturaPersonalizada,
-                            aplicavel: e.target.checked ? "SIM" : "NÃO",
-                          },
+                          "estruturaPersonalizada.aplicavel": e.target.checked
+                            ? "SIM"
+                            : "NÃO",
                         });
                         setInfo({
                           ...infoHolder,
@@ -774,10 +751,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          tipo: value,
-                        },
+                        "estruturaPersonalizada.tipo": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -804,10 +778,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          respPagamento: value,
-                        },
+                        "estruturaPersonalizada.respPagamento": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -831,10 +802,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          valor: Number(value),
-                        },
+                        "estruturaPersonalizada.valor": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -864,10 +832,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          estruturaPersonalizada: {
-                            ...infoHolder.estruturaPersonalizada,
-                            status: value,
-                          },
+                          "estruturaPersonalizada.status": value,
                         });
                         setInfo({
                           ...infoHolder,
@@ -911,10 +876,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        contrato: {
-                          ...infoHolder.contrato,
-                          status: value,
-                        },
+                        "contrato.status": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -940,10 +902,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          contrato: {
-                            ...infoHolder.contrato,
-                            dataSolicitacao: new Date(value).toISOString(),
-                          },
+                          "contrato.dataSolicitacao": new Date(
+                            value
+                          ).toISOString(),
                         });
                         setInfo({
                           ...infoHolder,
@@ -969,10 +930,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        contrato: {
-                          ...infoHolder.contrato,
-                          dataLiberacao: new Date(value).toISOString(),
-                        },
+                        "contrato.dataLiberacao": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -997,10 +955,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        contrato: {
-                          ...infoHolder.contrato,
-                          dataAssinatura: new Date(value).toISOString(),
-                        },
+                        "contrato.dataAssinatura": new Date(
+                          value
+                        ).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1036,10 +993,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        contrato: {
-                          ...infoHolder.contrato,
-                          formaAssinatura: value,
-                        },
+                        "contrato.formaAssinatura": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1086,10 +1040,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          status: value,
-                        },
+                        "pagamento.status": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1125,10 +1076,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          forma: value,
-                        },
+                        "pagamento.forma": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1160,10 +1108,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        faturamento: {
-                          ...infoHolder.faturamento,
-                          empresaFaturamento: value,
-                        },
+                        "faturamento.empresaFaturamento": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1191,10 +1136,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          pagamento: {
-                            ...infoHolder.pagamento,
-                            credor: value,
-                          },
+                          "pagamento.credor": value,
                         });
                         setInfo({
                           ...infoHolder,
@@ -1217,10 +1159,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          pagador: value.toUpperCase(),
-                        },
+                        "pagamento.pagador": value.toUpperCase(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1242,10 +1181,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          contatoPagador: value.toUpperCase(),
-                        },
+                        "pagamento.contatoPagador": value.toUpperCase(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1316,10 +1252,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          statusLiberacao: value,
-                        },
+                        "compra.statusLiberacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1344,10 +1277,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          dataLiberacao: new Date(value).toISOString(),
-                        },
+                        "compra.dataLiberacao": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1401,10 +1331,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          dataPagamento: new Date(value).toISOString(),
-                        },
+                        "compra.dataPagamento": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1482,39 +1411,11 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.compra.fornecedor
                         : "NÃO DEFINIDO"
                     }
-                    options={[
-                      {
-                        label: "ALDO",
-                        value: "ALDO",
-                      },
-                      {
-                        label: "AMPÈRE",
-                        value: "AMPÈRE",
-                      },
-                      {
-                        label: "BEL ENERGY",
-                        value: "BEL ENERGY",
-                      },
-                      {
-                        label: "SKY SOLAR",
-                        value: "SKY SOLAR",
-                      },
-                      {
-                        label: "SOU ENERGY",
-                        value: "SOU ENERGY",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
+                    options={fornecedores.map((fornecedor) => fornecedor)}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          fornecedor: value,
-                        },
+                        "compra.fornecedor": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1551,10 +1452,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          tipoDoKit: value,
-                        },
+                        "compra.tipoDoKit": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1574,18 +1472,11 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
-                    options={[
-                      { label: "MESMO DO PROJETO", value: "MESMO DO PROJETO" },
-                      { label: "SEM RESTRIÇÕES", value: "SEM RESTRIÇÕES" },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
+                    options={localEntregaOptions.map((option) => option)}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          localEntrega: value,
-                        },
+                        "compra.localEntrega": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1607,10 +1498,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          informacoes: value,
-                        },
+                        "compra.informacoes": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1650,10 +1538,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          statusEntrega: value,
-                        },
+                        "compra.statusEntrega": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1752,10 +1637,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            compra: {
-                              ...infoHolder.compra,
-                              kitInfo: e.target.value,
-                            },
+                            "compra.kitInfo": e.target.value,
                           });
                           setInfo({
                             ...infoHolder,
@@ -1783,10 +1665,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            material: {
-                              ...infoHolder.material,
-                              materialFaltante: e.target.value,
-                            },
+                            "material.materialFaltante": e.target.value,
                           });
                           setInfo({
                             ...infoHolder,
@@ -1927,10 +1806,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dadosCemig: {
-                          ...infoHolder.dadosCemig,
-                          titularProjeto: value,
-                        },
+                        "dadosCemig.titularProjeto": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1952,10 +1828,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dadosCemig: {
-                          ...infoHolder.dadosCemig,
-                          numeroInstalacao: value,
-                        },
+                        "dadosCemig.numeroInstalacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1982,10 +1855,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dadosCemig: {
-                          ...infoHolder.dadosCemig,
-                          distCreditos: value,
-                        },
+                        "dadosCemig.distCreditos": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2009,10 +1879,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          dadosCemig: {
-                            ...infoHolder.dadosCemig,
-                            qtdeDistCreditos: Number(value),
-                          },
+                          "dadosCemig.qtdeDistCreditos": Number(value),
                         });
                         setInfo({
                           ...infoHolder,
@@ -2043,13 +1910,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          qtdeModulos: Number(value),
-                          potPico:
-                            Number(infoHolder.sistema?.potModulos * value) /
-                            1000,
-                        },
+                        "sistema.qtdeModulos": Number(value),
+                        "sistema.potPico":
+                          Number(infoHolder.sistema?.potModulos * value) / 1000,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2076,13 +1939,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          potModulos: Number(value),
-                          potPico:
-                            Number(value * infoHolder.sistema?.qtdeModulos) /
-                            1000,
-                        },
+                        "sistema.potModulos": Number(value),
+                        "sistema.potPico":
+                          Number(value * infoHolder.sistema?.qtdeModulos) /
+                          1000,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2109,10 +1969,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          potPico: Number(value),
-                        },
+                        "sistema.potPico": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -2140,10 +1997,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          topologia: value,
-                        },
+                        "sistema.topologia": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2165,10 +2019,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          inversor: value,
-                        },
+                        "sistema.inversor": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2198,10 +2049,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          iniciar: value,
-                        },
+                        "projeto.iniciar": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2237,16 +2085,11 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       console.log(value);
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          projetista: {
-                            nome: value,
-                            codigo:
-                              projetistas.filter(
-                                (projetista) => projetista.nome == value
-                              )[0].cod || "-",
-                          },
-                        },
+                        "projeto.projetista.nome": value,
+                        "projeto.projetista.codigo":
+                          projetistas.filter(
+                            (projetista) => projetista.nome == value
+                          )[0].cod || "-",
                       });
                       setInfo({
                         ...infoHolder,
@@ -2277,10 +2120,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          dataAssDocumentacao: new Date(value).toISOString(),
-                        },
+                        "projeto.dataAssDocumentacao": new Date(
+                          value
+                        ).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -2305,10 +2147,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        parecer: {
-                          ...infoHolder.parecer,
-                          dataParecerDeAcesso: new Date(value).toISOString(),
-                        },
+                        "parecer.dataParecerDeAcesso": new Date(
+                          value
+                        ).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -2364,10 +2205,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        parecer: {
-                          ...infoHolder.parecer,
-                          statusDoParecerDeAcesso: value,
-                        },
+                        "parecer.statusDoParecerDeAcesso": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2393,12 +2231,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              diagramaUnifilar: e.target.checked
-                                ? "Ok"
-                                : "PENDÊNCIA",
-                            },
+                            "projeto.diagramaUnifilar": e.target.checked
+                              ? "Ok"
+                              : "PENDÊNCIA",
                           });
                           setInfo({
                             ...infoHolder,
@@ -2434,12 +2269,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              desenhoTelhado: e.target.checked
-                                ? "OK"
-                                : "PENDÊNCIA",
-                            },
+                            "projeto.desenhoTelhado": e.target.checked
+                              ? "OK"
+                              : "PENDÊNCIA",
                           });
                           setInfo({
                             ...infoHolder,
@@ -2477,10 +2309,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          mapaDeMicro: value,
-                        },
+                        "projeto.mapaDeMicro": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2506,15 +2335,14 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
-                              acStatus:
-                                e.target.checked &&
-                                infoHolder.acstatus != "REALIZADO"
-                                  ? "PÊNDENCIA"
-                                  : undefined,
-                            },
+                            "projeto.aumentoDeCarga": e.target.checked
+                              ? "SIM"
+                              : "NÃO",
+                            "projeto.acStatus":
+                              e.target.checked &&
+                              infoHolder.acStatus != "REALIZADO"
+                                ? "PÊNDENCIA"
+                                : undefined,
                           });
                           setInfo({
                             ...infoHolder,
@@ -2554,12 +2382,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                           onChange={(e) => {
                             setChanges({
                               ...changes,
-                              projeto: {
-                                ...infoHolder.projeto,
-                                acStatus: e.target.checked
-                                  ? "REALIZADO"
-                                  : "PENDÊNCIA",
-                              },
+                              "projeto.acStatus": e.target.checked
+                                ? "REALIZADO"
+                                : "PENDÊNCIA",
                             });
                             setInfo({
                               ...infoHolder,
@@ -2595,10 +2420,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        vistoria: {
-                          ...infoHolder.vistoria,
-                          dataPedido: new Date(value).toISOString(),
-                        },
+                        "vistoria.dataPedido": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -2628,10 +2450,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        vistoria: {
-                          ...infoHolder.vistoria,
-                          status: value,
-                        },
+                        "vistoria.status": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2656,10 +2475,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        medidor: {
-                          ...infoHolder.medidor,
-                          data: new Date(value).toISOString(),
-                        },
+                        "medidor.data": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -2689,10 +2505,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        medidor: {
-                          ...infoHolder.medidor,
-                          status: value,
-                        },
+                        "medidor.status": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2718,12 +2531,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              projetoConcluido: e.target.checked
-                                ? "SIM"
-                                : "NÃO",
-                            },
+                            "projeto.projetoConcluido": e.target.checked
+                              ? "SIM"
+                              : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
@@ -2767,10 +2577,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          laudo: value,
-                        },
+                        "obra.laudo": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2796,12 +2603,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              statusSolicitacao: e.target.checked
-                                ? "SOLICITADA"
-                                : "NÃO SOLICITADA",
-                            },
+                            "obra.statusSolicitacao": e.target.checked
+                              ? "SOLICITADA"
+                              : "NÃO SOLICITADA",
                           });
                           setInfo({
                             ...infoHolder,
@@ -2836,10 +2640,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          entrada: new Date(value).toISOString(),
-                        },
+                        "obra.entrada": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -2864,10 +2665,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          saida: new Date(value).toISOString(),
-                        },
+                        "obra.saida": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -2956,10 +2754,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          equipeResp: value,
-                        },
+                        "obra.equipeResp": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2983,10 +2778,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              checklist: e.target.checked ? "SIM" : "NÃO",
-                            },
+                            "obra.checklist": e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
@@ -3018,10 +2810,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              trafo: e.target.checked ? "SIM" : "NÃO",
-                            },
+                            "obra.trafo": e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
@@ -3081,10 +2870,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          statusDaObra: value,
-                        },
+                        "obra.statusDaObra": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -3111,10 +2897,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     onChange={(e) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          observacoes: e.target.value,
-                        },
+                        "obra.observacoes": e.target.value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -3143,10 +2926,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          compra: {
-                            ...infoHolder.compra,
-                            kitInfo: e.target.value,
-                          },
+                          "compra.kitInfo": e.target.value,
                         });
                         setInfo({
                           ...infoHolder,
@@ -3174,10 +2954,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          material: {
-                            ...infoHolder.material,
-                            materialFaltante: e.target.value,
-                          },
+                          "material.materialFaltante": e.target.value,
                         });
                         setInfo({
                           ...infoHolder,
@@ -3479,14 +3256,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        conferencias: {
-                          ...infoHolder.conferencias,
-                          usinaLigada: {
-                            ...infoHolder.usinaLigada,
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "conferencias.usinaLigada.data": new Date(
+                          value
+                        ).toISOString(),
+                        "conferencias.usinaLigada.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -3518,14 +3291,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        conferencias: {
-                          ...infoHolder.conferencias,
-                          monitoramentoFeito: {
-                            ...infoHolder.monitoramentoFeito,
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "conferencias.monitoramentoFeito.data": new Date(
+                          value
+                        ).toISOString(),
+                        "conferencias.monitoramentoFeito.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -3555,10 +3324,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        app: {
-                          ...infoHolder.app,
-                          data: new Date(value).toISOString(),
-                        },
+                        "app.data": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -3584,14 +3350,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        conferencias: {
-                          ...infoHolder.conferencias,
-                          energiaInjetada: {
-                            ...infoHolder.energiaInjetada,
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "conferencias.energiaInjetada.data": new Date(
+                          value
+                        ).toISOString(),
+                        "conferencias.energiaInjetada.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -3614,10 +3376,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        app: {
-                          ...infoHolder.app,
-                          login: value,
-                        },
+                        "app.login": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -3635,10 +3394,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        app: {
-                          ...infoHolder.app,
-                          senha: value,
-                        },
+                        "app.senha": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -3663,13 +3419,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioUm: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "relatorios.envioUm.data": new Date(
+                          value
+                        ).toISOString(),
+                        "relatorios.envioUm.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -3697,13 +3450,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioDois: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "relatorios.envioDois.data": new Date(
+                          value
+                        ).toISOString(),
+                        "relatorios.envioDois.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -3731,13 +3481,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioTres: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "relatorios.envioTres.data": new Date(
+                          value
+                        ).toISOString(),
+                        "relatorios.envioTres.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -3765,13 +3512,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioQuatro: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
+                        "relatorios.envioQuatro.data": new Date(
+                          value
+                        ).toISOString(),
+                        "relatorios.envioQuatro.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -3799,11 +3543,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        manutencaoPreventiva: {
-                          ...infoHolder.manutencaoPreventiva,
-                          data: new Date(value).toISOString(),
-                          status: "REALIZADO",
-                        },
+                        "manutencaoPreventiva.data": new Date(
+                          value
+                        ).toISOString(),
+                        "manutencaoPreventiva.status": "REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
@@ -3847,10 +3590,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        material: {
-                          ...infoHolder.material,
-                          statusSeparacao: value,
-                        },
+                        "material.statusSeparacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -3874,10 +3614,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        material: {
-                          ...infoHolder.material,
-                          previsaoCustos: Number(value),
-                        },
+                        "material.previsaoCustos": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -3901,10 +3638,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        material: {
-                          ...infoHolder.material,
-                          efetivoCustos: Number(value),
-                        },
+                        "material.efetivoCustos": Number(value),
                       });
                       setInfo({
                         ...infoHolder,

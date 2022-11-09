@@ -6,6 +6,7 @@ import {
   statusLiberacao,
   credores,
   localEntregaOptions,
+  fornecedores,
 } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
@@ -484,7 +485,6 @@ function ModalComercial({
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-
                           "oem.qtdeManutencoes": Number(value),
                         });
                         setInfo({
@@ -1446,32 +1446,7 @@ function ModalComercial({
                         ? infoHolder.compra.fornecedor
                         : "NÃO DEFINIDO"
                     }
-                    options={[
-                      {
-                        label: "ALDO",
-                        value: "ALDO",
-                      },
-                      {
-                        label: "AMPÈRE",
-                        value: "AMPÈRE",
-                      },
-                      {
-                        label: "BEL ENERGY",
-                        value: "BEL ENERGY",
-                      },
-                      {
-                        label: "SKY SOLAR",
-                        value: "SKY SOLAR",
-                      },
-                      {
-                        label: "SOU ENERGY",
-                        value: "SOU ENERGY",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
+                    options={fornecedores.map((fornecedor) => fornecedor)}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
@@ -2269,7 +2244,7 @@ function ModalComercial({
                               : "NÃO",
                             "projeto.acStatus":
                               e.target.checked &&
-                              infoHolder.acstatus != "REALIZADO"
+                              infoHolder.acStatus != "REALIZADO"
                                 ? "PÊNDENCIA"
                                 : undefined,
                           });
@@ -2280,7 +2255,7 @@ function ModalComercial({
                               aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
                               acStatus:
                                 e.target.checked &&
-                                infoHolder.acstatus != "REALIZADO"
+                                infoHolder.acStatus != "REALIZADO"
                                   ? "PÊNDENCIA"
                                   : undefined,
                             },

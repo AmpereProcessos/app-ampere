@@ -37,14 +37,6 @@ function FormSolicitacaoDois({ dados, setDados, avancar, voltar }) {
       setMessage("Por favor, preencha o telefone do contato primário");
       return false;
     }
-    if (dados.nomeContatoJornadaDois.trim().length < 6) {
-      setMessage("Por favor, preencha o nome do contato secundário");
-      return false;
-    }
-    if (dados.telefoneContatoDois.trim().length < 9) {
-      setMessage("Por favor, preencha o telefone do contato secundário");
-      return false;
-    }
     return true;
   }
   function proximaEtapa() {
@@ -63,7 +55,7 @@ function FormSolicitacaoDois({ dados, setDados, avancar, voltar }) {
           editable={true}
           value={dados.nomeContatoJornadaUm}
           handleChange={(value) =>
-            setDados({ ...dados, nomeContatoJornadaUm: value })
+            setDados({ ...dados, nomeContatoJornadaUm: value.toUpperCase() })
           }
         />
         <TextInput
@@ -79,7 +71,7 @@ function FormSolicitacaoDois({ dados, setDados, avancar, voltar }) {
           editable={true}
           value={dados.nomeContatoJornadaDois}
           handleChange={(value) =>
-            setDados({ ...dados, nomeContatoJornadaDois: value })
+            setDados({ ...dados, nomeContatoJornadaDois: value.toUpperCase() })
           }
         />
         <TextInput

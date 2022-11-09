@@ -31,7 +31,6 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
       }
     }
   }, []);
-  console.log(solicitacoes);
   return (
     <div className="p-6 grow flex flex-col">
       <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">

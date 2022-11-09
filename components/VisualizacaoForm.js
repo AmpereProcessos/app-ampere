@@ -1061,29 +1061,34 @@ function VisualizacaoForm({ dados, voltar }) {
               ]}
             />
             <SelectInput
-              label={"FORMA de PAGAMENTO"}
-              value={dados.formaPagamentoPadrao}
-              handleChange={(value) =>
-                setDados({ ...dados, formaPagamentoPadrao: value })
+              label={"PAGAMENTO DO PADRÃO"}
+              editable={true}
+              value={
+                dados.formaPagamentoPadrao
+                  ? dados.formaPagamentoPadrao
+                  : "NÃO HAVERA TROCA PADRÃO"
               }
               options={[
                 {
-                  label: "INCLUSO NO FINANCIAMENTO",
-                  value: "INCLUSO NO FINANCIAMENTO",
+                  label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                  value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
                 },
                 {
-                  label: "DIRETO PRO FORNECEDOR",
-                  value: "DIRETO PRO FORNECEDOR",
+                  label: "CLIENTE PAGAR POR FORA",
+                  value: "CLIENTE PAGAR POR FORA",
                 },
                 {
-                  label: "A VISTA PARA AMPÈRE",
-                  value: "A VISTA PARA AMPÈRE",
+                  label: "INCLUSO NO CONTRATO",
+                  value: "INCLUSO NO CONTRATO",
                 },
                 {
-                  label: "NÃO SE APLICA",
-                  value: "NÃO SE APLICA",
+                  label: "NÃO HAVERA TROCA PADRÃO",
+                  value: "NÃO HAVERA TROCA PADRÃO",
                 },
               ]}
+              handleChange={(value) => {
+                setDados({ ...dados, formaPagamentoPadrao: value });
+              }}
             />
             <NumberInput
               label={"VALOR DO PADRÃO"}

@@ -118,7 +118,7 @@ function FormularioSolicitacao() {
     tipoDePadrao: "NÃO DEFINIDO",
     aumentoDisjuntor: "NÃO",
     respTrocaPadrao: "NÃO SE APLICA",
-    formaPagamentoPadrao: "NÃO SE APLICA",
+    formaPagamentoPadrao: "NÃO HAVERA TROCA PADRÃO",
     valorPadrao: null,
     nomePagador: "",
     contatoPagador: "",

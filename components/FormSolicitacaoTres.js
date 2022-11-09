@@ -39,13 +39,16 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
         `https://viacep.com.br/ws/${dados.cepInstalacao.replace("-", "")}/json/`
       )
       .then((res) => {
-        console.log(res.data);
-        setDados({
-          ...dados,
-          bairroInstalacao: res.data.bairro,
-          enderecoInstalacao: res.data.logradouro,
-          ufInstalacao: res.data.uf,
-        });
+        if (res.data.erro) {
+          return;
+        } else {
+          setDados({
+            ...dados,
+            bairroInstalacao: res.data.bairro,
+            enderecoInstalacao: res.data.logradouro,
+            ufInstalacao: res.data.uf,
+          });
+        }
       });
   }
   function validarCamposObrigatorios() {

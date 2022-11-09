@@ -133,7 +133,7 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
             editable={true}
             value={dados.marcaOtimizador ? dados.marcaOtimizador : ""}
             handleChange={(value) =>
-              setDados({ ...dados, marcaOtimizador: value })
+              setDados({ ...dados, marcaOtimizador: value.toUpperCase() })
             }
           />
           <NumberInput

@@ -38,13 +38,17 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
     axios
       .get(`https://viacep.com.br/ws/${dados.cep.replace("-", "")}/json/`)
       .then((res) => {
-        console.log(res.data);
-        setDados({
-          ...dados,
-          bairro: res.data.bairro,
-          [field]: res.data.logradouro,
-          uf: res.data.uf,
-        });
+        if (res.data.erro) {
+          console.log(res.data.erro);
+          return;
+        } else {
+          setDados({
+            ...dados,
+            bairro: res.data.bairro,
+            [field]: res.data.logradouro,
+            uf: res.data.uf,
+          });
+        }
       });
   }
   function validarCamposObrigatorios() {
@@ -264,7 +268,9 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
           label={"NºPROJETO SVB"}
           editable={true}
           value={dados.codigoSVB}
-          handleChange={(value) => setDados({ ...dados, codigoSVB: value })}
+          handleChange={(value) =>
+            setDados({ ...dados, codigoSVB: Number(value) })
+          }
         />
         <SelectInput
           label={"ESTADO CIVIL"}
@@ -301,6 +307,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
         <TextInput
           label={"EMAIL"}
           editable={true}
+          normalCase={true}
           value={dados.email}
           handleChange={(value) => setDados({ ...dados, email: value })}
         />
@@ -308,7 +315,9 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
           label={"PROFISSÃO"}
           editable={true}
           value={dados.profissao}
-          handleChange={(value) => setDados({ ...dados, profissao: value })}
+          handleChange={(value) =>
+            setDados({ ...dados, profissao: value.toUpperCase() })
+          }
         />
         <TextInput
           label={"ONDE TRABALHA"}

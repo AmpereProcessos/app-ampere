@@ -206,13 +206,11 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
         setMessage({ text: "Alterações feitas", color: "text-green-500" })
       );
   }
-  function addProject() {
-    /*
-      axios.post("/api/projects/add", insertObj).then((res) => {
-        setCreationMsg({text:"Projeto adicionado!", color:'text-green-500'})
-        resetState();
-      });*/
-    setCreationMsg({ text: "Projeto adicionado!", color: "text-green-500" });
+  async function addProject() {
+    await axios.put("/api/solicitacoes/contrato", { aprovacao: true });
+    axios.post("/api/projects/add", insertObj).then((res) => {
+      setCreationMsg({ text: "Projeto adicionado!", color: "text-green-500" });
+    });
   }
   var insertObj = {
     nomeDoContrato: dados.nomeDoContrato,
@@ -244,7 +242,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
     },
     padrao: {
       tipo: "NÃO DEFINIDO",
-      respPagamento: "NÃO HAVERA TROCA PADRÃO",
+      respPagamento: dados.formaPagamentoPadrao,
       respInstalacao: dados.respTrocaPadrao,
       valor: dados.valorPadrao,
     },
@@ -447,6 +445,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
       addProject();
     }
   }
+  console.log(insertObj);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -672,7 +671,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       editable={true}
                       value={dados.codigoSVB}
                       handleChange={(value) =>
-                        setDados({ ...dados, codigoSVB: value })
+                        setDados({ ...dados, codigoSVB: Number(value) })
                       }
                     />
                     <SelectInput
@@ -1765,8 +1764,8 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         label={"PAGAMENTO DO PADRÃO"}
                         editable={true}
                         value={
-                          dados.respPagamentoPadrao
-                            ? dados.respPagamentoPadrao
+                          dados.formaPagamentoPadrao
+                            ? dados.formaPagamentoPadrao
                             : "NÃO HAVERA TROCA PADRÃO"
                         }
                         options={[
@@ -1788,35 +1787,8 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                           },
                         ]}
                         handleChange={(value) => {
-                          setDados({ ...dados, respPagamentoPadrao: value });
+                          setDados({ ...dados, formaPagamentoPadrao: value });
                         }}
-                      />
-
-                      <SelectInput
-                        label={"FORMA de PAGAMENTO"}
-                        editable={true}
-                        value={dados.formaPagamentoPadrao}
-                        handleChange={(value) =>
-                          setDados({ ...dados, formaPagamentoPadrao: value })
-                        }
-                        options={[
-                          {
-                            label: "INCLUSO NO FINANCIAMENTO",
-                            value: "INCLUSO NO FINANCIAMENTO",
-                          },
-                          {
-                            label: "DIRETO PRO FORNECEDOR",
-                            value: "DIRETO PRO FORNECEDOR",
-                          },
-                          {
-                            label: "A VISTA PARA AMPÈRE",
-                            value: "A VISTA PARA AMPÈRE",
-                          },
-                          {
-                            label: "NÃO SE APLICA",
-                            value: "NÃO SE APLICA",
-                          },
-                        ]}
                       />
                       <NumberInput
                         label={"VALOR DO PADRÃO"}
@@ -2230,14 +2202,16 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     {creationMsg.text}
                   </p>
                 )}
-                <div className="w-full flex justify-center">
-                  <button
-                    onClick={validateCreation}
-                    className="p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold"
-                  >
-                    ADICIONAR PROJETO
-                  </button>
-                </div>
+                {!dados.aprovacao && (
+                  <div className="w-full flex justify-center">
+                    <button
+                      onClick={validateCreation}
+                      className="p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold"
+                    >
+                      ADICIONAR PROJETO
+                    </button>
+                  </div>
+                )}
               </>
             </div>
           </div>

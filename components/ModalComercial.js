@@ -2741,7 +2741,7 @@ function ModalComercial({
                         id="trafo"
                       />
                       <label className="ml-2" htmlFor="trafo">
-                        SIM
+                        APLICÁVEL?
                       </label>
                     </div>
                   </div>

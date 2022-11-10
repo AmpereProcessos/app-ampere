@@ -879,7 +879,7 @@ function ModalProjetos({
                         id="aumentodecarga"
                       />
                       <label className="ml-2" htmlFor="aumentodecarga">
-                        SIM
+                        APLICÁVEL?
                       </label>
                     </div>
                   </div>
@@ -2478,7 +2478,7 @@ function ModalProjetos({
                         id="trafo"
                       />
                       <label className="ml-2" htmlFor="trafo">
-                        SIM
+                        APLICÁVEL?
                       </label>
                     </div>
                   </div>

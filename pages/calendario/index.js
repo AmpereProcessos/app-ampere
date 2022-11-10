@@ -9,6 +9,32 @@ import ModalCronograma from "../../components/ModalCronograma";
 import Select from "react-select";
 import { cidadesAtendidas } from "../../utils/constants";
 import * as dayJS from "dayjs";
+const cidadesCores = [
+  {
+    nome: "ITUIUTABA",
+    cor: "#15599a",
+  },
+  {
+    nome: "SANTA VITÓRIA",
+    cor: "green",
+  },
+  {
+    nome: "UBERLÂNDIA",
+    cor: "#fead61",
+  },
+  {
+    nome: "IPIAÇU",
+    cor: "#e6253e",
+  },
+];
+function getColor(cidade) {
+  let cid = cidadesCores.filter((x) => x.nome == cidade);
+  if (cid.length > 0) {
+    return cid[0].cor;
+  } else {
+    return "#1005ed";
+  }
+}
 const Calendar = ({ arr }) => {
   const [eventos, setEventos] = useState(arr);
   const [calendarVisible, setCalendarVisible] = useState(true);
@@ -134,6 +160,7 @@ const Calendar = ({ arr }) => {
             week: "SEMANA",
             day: "DIA",
           }}
+          eventBackgroundColor={true}
           locale={"pt-br"}
           plugins={[timeGridPlugin, interactionPlugin, dayGridPlugin]}
           dayHeaderFormat={{ weekday: "narrow" }}
@@ -210,6 +237,7 @@ export async function getServerSideProps() {
       numeroResidencia: evento.numeroResidencia,
       qtdeModulos: evento.sistema.qtdeModulos,
       topologia: evento.sistema.topologia,
+      backgroundColor: getColor(evento.cidade),
     };
   });
 

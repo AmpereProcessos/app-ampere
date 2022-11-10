@@ -50,7 +50,6 @@ function EstagioDois({
         ],
       });
     } else {
-      console.log(phone.clientPhone.length);
       /* axios
         .post(
           "https://api.rd.services/platform/conversions?api_key=HFekNkuFPSSvfcCZLYNmoJYzFHxsCTiKtHiA",

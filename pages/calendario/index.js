@@ -22,7 +22,20 @@ const Calendar = ({ arr }) => {
   }*/
   function handleResize(e) {
     console.log("RESIZE");
-    console.log(e);
+    console.log(
+      "INICIO",
+      new Date(e.event._instance.range.start).toISOString()
+    );
+    var id = e.event._def.publicId;
+    var inicio = new Date(e.event._instance.range.start).toISOString();
+
+    var fim = new Date(new Date(e.event._instance.range.end).setHours(0));
+    axios
+      .post(`/api/projects/update/${id}`, {
+        "agendamentoObra.inicio": inicio,
+        "agendamentoObra.fim": fim,
+      })
+      .then((res) => console.log(res));
     // pegar novos dados em e.event._instance.range.(start e end)
     /*axios
       .post("/api/cronograma/update", {
@@ -165,7 +178,7 @@ export async function getStaticProps() {
         new Date(evento.agendamentoObra.inicio).setHours(32)
       ).toISOString(),
       end: new Date(
-        new Date(evento.agendamentoObra.fim).setHours(58)
+        new Date(evento.agendamentoObra.fim).setHours(24)
       ).toISOString(),
       allDay: true,
       id: evento._id.toString(),

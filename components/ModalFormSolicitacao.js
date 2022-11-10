@@ -195,10 +195,28 @@ const validation = {
   },
 };
 function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
+  const router = useRouter();
   const [dados, setDados] = useState(solicitacao);
   const [msg, setMessage] = useState({ text: "", color: "" });
   const [creationMsg, setCreationMsg] = useState({ text: "", color: "" });
-  const router = useRouter();
+  const [dadosDistribuicao, setDadosDistribuicao] = useState({
+    numInstalacao: "",
+    excedente: null,
+  });
+
+  function adicionarDistribuicao() {
+    setDados({
+      ...dados,
+      distribuicoes: [
+        ...dados.distribuicoes,
+        {
+          numInstalacao: dadosDistribuicao.numInstalacao,
+          excedente: dadosDistribuicao.excedente,
+        },
+      ],
+    });
+    setDadosDistribuicao({ numInstalacao: "", excedente: 0 });
+  }
   function saveChanges() {
     axios
       .put("/api/solicitacoes/contrato", dados)
@@ -448,7 +466,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
       addProject();
     }
   }
-  console.log(insertObj);
+  console.log(dados);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -2180,6 +2198,48 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   </div>
                   {dados.possuiDistribuicao == "SIM" && (
                     <>
+                      <div className="flex flex-col gap-2 mt-2">
+                        <h1 className="text-center font-bold font-raleway">
+                          ADICIONAR DISTRIBUIÇÃO:
+                        </h1>
+                        <div className="flex flex-col lg:flex-row items-center justify-around">
+                          <div className="flex flex-col items-center">
+                            <span className="uppercase font-bold font-raleway text-center text-sm">
+                              Nº DA INSTALAÇÃO
+                            </span>
+                            <input
+                              className={`text-xs text-center text-gray-600 outline-none`}
+                              value={dadosDistribuicao.numInstalacao}
+                              placeholder={"INFORMAÇÃO A PREENCHER..."}
+                              onChange={(e) =>
+                                setDadosDistribuicao({
+                                  ...dadosDistribuicao,
+                                  numInstalacao: e.target.value,
+                                })
+                              }
+                              type="text"
+                            />
+                          </div>
+                          <NumberInput
+                            label={"% EXCEDENTE"}
+                            editable={true}
+                            value={dadosDistribuicao.excedente}
+                            handleChange={(value) =>
+                              setDadosDistribuicao({
+                                ...dadosDistribuicao,
+                                excedente: Number(value),
+                              })
+                            }
+                            unit={"%"}
+                          />
+                          <button
+                            onClick={adicionarDistribuicao}
+                            className="p-1 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold"
+                          >
+                            ADICIONAR
+                          </button>
+                        </div>
+                      </div>
                       {dados.distribuicoes.length > 0 && (
                         <div className="flex flex-col gap-2 mt-4">
                           {dados.distribuicoes.map((distribuicao, index) => (

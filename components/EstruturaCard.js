@@ -87,7 +87,6 @@ function EstruturaCard({ project, credentials }) {
         });
     }
   }
-  console.log(osInfo);
   return (
     <div className="w-full p-2 border border-[#15599a] rounded">
       <div className="flex items-center gap-x-2 justify-between border-b border-gray-200 pb-2">

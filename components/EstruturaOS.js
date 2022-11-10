@@ -4,7 +4,6 @@ import Link from "next/link";
 import Assinatura from "../utils/assinatura.jpg";
 import Logo from "../utils/whitelogo.png";
 function EstruturaOSPDF({ info, observacoesOS, servicoExecutado }) {
-  console.log(observacoesOS);
   return (
     <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
       <h1 className="text-center font-bold text-xl mb-6">
@@ -104,7 +103,7 @@ function EstruturaOSPDF({ info, observacoesOS, servicoExecutado }) {
                 <p className="text-xs text-center col-span-2 font-semibold uppercase">
                   TIPO DE TELHA:
                 </p>
-                <p className="text-xs text-center col-span-3 text-center border border-black border-t-0">
+                <p className="text-xs text-center col-span-3 border border-black border-t-0">
                   {info.visitaTecnica?.tipoDaTelha
                     ? info.visitaTecnica?.tipoDaTelha
                     : "-"}{" "}

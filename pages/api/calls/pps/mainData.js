@@ -1,7 +1,7 @@
-import connectToDatabase from "../../../../utils/connectDb";
+import connectToDatabase from "../../../../utils/callsDb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
+    const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("pps");
     var dateFilterParam = new Date();
     dateFilterParam.setDate(dateFilterParam.getDate() - 2);

@@ -1,10 +1,10 @@
-import connectToDatabase from "../../../../utils/connectDb";
+import connectToDatabase from "../../../../utils/callsDb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
     var dateFilterParam = new Date();
     dateFilterParam.setDate(dateFilterParam.getDate() - 2);
     let filter = dateFilterParam.toJSON();
-    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
+    const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("suporte");
     let openCalls = await collection
       .aggregate([

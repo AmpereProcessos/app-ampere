@@ -190,7 +190,7 @@ export async function getServerSideProps() {
         .add(3, "hours")
         .format("YYYY-MM-DD"),
       end: dayJS(evento.agendamentoObra.fim)
-        .add(2, "days")
+        .add(1, "days")
         .format("YYYY-MM-DD"),
       id: evento._id.toString(),
       qtde: evento.qtde,

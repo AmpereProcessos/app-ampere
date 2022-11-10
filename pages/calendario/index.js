@@ -2,16 +2,16 @@ import FullCalendar from "@fullcalendar/react";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import { useEffect, useRef, useState } from "react";
-import connectToDatabase from "../../utils/projectsDb";
+import { useState } from "react";
 import axios from "axios";
 import ModalCronograma from "../../components/ModalCronograma";
+import connectToDatabase from "../../utils/projectsDb";
 import Select from "react-select";
 import { cidadesAtendidas } from "../../utils/constants";
-
+import * as dayJS from "dayjs";
 const Calendar = ({ arr }) => {
   const [eventos, setEventos] = useState(arr);
-  const [calendarVisible, setCalendarVisible] = useState(false);
+  const [calendarVisible, setCalendarVisible] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalEvento, setModalEvento] = useState({});
   const [filters, setFilters] = useState({
@@ -22,14 +22,22 @@ const Calendar = ({ arr }) => {
   }*/
   function handleResize(e) {
     console.log("RESIZE");
-    console.log(
+    /*console.log(
       "INICIO",
       new Date(e.event._instance.range.start).toISOString()
     );
+    console.log(
+      "FIM",
+      new Date(
+        dayJS(e.event._instance.range.end).subtract(1, "day").$d
+      ).toISOString()
+    );*/
     var id = e.event._def.publicId;
     var inicio = new Date(e.event._instance.range.start).toISOString();
 
-    var fim = new Date(new Date(e.event._instance.range.end).setHours(0));
+    var fim = new Date(
+      dayJS(e.event._instance.range.end).subtract(1, "day").$d
+    ).toISOString();
     axios
       .post(`/api/projects/update/${id}`, {
         "agendamentoObra.inicio": inicio,
@@ -46,7 +54,6 @@ const Calendar = ({ arr }) => {
       })
       .then((res) => console.log(res.data));*/
   }
-  console.log(arr);
   function handleDragDrop(e) {
     console.log("DROP");
     // testar diferença entre e.oldEvent._instance.range.end com e.event._instance.range.end
@@ -79,6 +86,10 @@ const Calendar = ({ arr }) => {
       setCalendarVisible(true);
     }
   }
+  console.log(
+    dayJS("2022-11-08T00:00:00.000Z").add(3, "hours").format("YYYY-MM-DD")
+  );
+  console.log(arr);
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-2">
@@ -125,27 +136,12 @@ const Calendar = ({ arr }) => {
             center: "",
             end: "today prev,next",
           }}
-          events={[
-            {
-              title: "DIEGO BRAS OLIVEIRA CAIXETA",
-              start: "2022-11-10",
-              end: "2022-11-12T04:00:00.000Z",
-              id: "6353ea37e559693d01d5a10c",
-              qtde: 836,
-              equipe: "EQUIPE 6-FELIPE",
-              cidade: "SANTA VITÓRIA",
-              logradouro: "AVENIDA VICENTE BONITO",
-              bairro: "PARQUE DAS ACACIAS",
-              numeroResidencia: 441,
-              qtdeModulos: 14,
-              topologia: "INVERSOR",
-            },
-          ]}
+          events={arr}
           editable
           selectable
           defaultAllDay={true}
           handleWindowResize={true}
-          eventChange={(e) => console.log(e)}
+          eventResize={(e) => handleResize(e)}
           eventClick={(e) => handleClick(e)}
           height={650}
         />
@@ -190,12 +186,12 @@ export async function getServerSideProps() {
   arr = arr?.map((evento) => {
     return {
       title: evento.nomeDoContrato,
-      start: new Date(
-        new Date(evento.agendamentoObra.inicio).setHours(12)
-      ).toISOString(),
-      end: new Date(
-        new Date(evento.agendamentoObra.fim).setHours(12)
-      ).toISOString(),
+      start: dayJS(evento.agendamentoObra.inicio)
+        .add(3, "hours")
+        .format("YYYY-MM-DD"),
+      end: dayJS(evento.agendamentoObra.fim)
+        .add(2, "days")
+        .format("YYYY-MM-DD"),
       id: evento._id.toString(),
       qtde: evento.qtde,
       equipe: evento.obra.equipeResp,
@@ -207,7 +203,7 @@ export async function getServerSideProps() {
       topologia: evento.sistema.topologia,
     };
   });
-  console.log(arr);
+
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
   return {

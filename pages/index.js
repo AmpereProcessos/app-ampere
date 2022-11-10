@@ -406,7 +406,7 @@ function Home({ credentials, setCredentials }) {
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
-              <YAxis dataKey={"Total"} domain={[0, 500]} />
+              <YAxis dataKey={"Total"} domain={[0, 1000]} />
               <Tooltip />
               <Legend />
               <Line

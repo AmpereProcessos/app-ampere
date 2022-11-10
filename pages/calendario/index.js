@@ -125,9 +125,25 @@ const Calendar = ({ arr }) => {
             center: "",
             end: "today prev,next",
           }}
-          events={eventos}
+          events={[
+            {
+              title: "DIEGO BRAS OLIVEIRA CAIXETA",
+              start: "2022-11-10T00:00:00.000Z",
+              end: "2022-11-11T04:00:00.000Z",
+              id: "6353ea37e559693d01d5a10c",
+              qtde: 836,
+              equipe: "EQUIPE 6-FELIPE",
+              cidade: "SANTA VITÓRIA",
+              logradouro: "AVENIDA VICENTE BONITO",
+              bairro: "PARQUE DAS ACACIAS",
+              numeroResidencia: 441,
+              qtdeModulos: 14,
+              topologia: "INVERSOR",
+            },
+          ]}
           editable
           selectable
+          defaultAllDay={true}
           handleWindowResize={true}
           eventResize={(e) => handleResize(e)}
           eventDrop={(e) => handleDragDrop(e)}
@@ -179,9 +195,8 @@ export async function getServerSideProps() {
         new Date(evento.agendamentoObra.inicio).setHours(12)
       ).toISOString(),
       end: new Date(
-        new Date(evento.agendamentoObra.fim).setHours(24)
+        new Date(evento.agendamentoObra.fim).setHours(12)
       ).toISOString(),
-      allDay: true,
       id: evento._id.toString(),
       qtde: evento.qtde,
       equipe: evento.obra.equipeResp,

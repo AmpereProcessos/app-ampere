@@ -34,10 +34,15 @@ function formatCEP(cep) {
   return cep;
 }
 function VisualizacaoForm({ dados, voltar }) {
+  const [msg, setMsg] = useState("");
   function criarSolicitacao() {
     axios
       .post("/api/solicitacoes/contrato", dados)
-      .then((res) => console.log(res.data));
+      .then((res) => {
+        setMsg("Solicitação enviada!");
+        setTimeout(location.reload(), 4000);
+      })
+      .catch((err) => setMsg("Um erro ocorreu, tente novamente!"));
   }
   return (
     <>
@@ -1463,6 +1468,7 @@ function VisualizacaoForm({ dados, voltar }) {
           </>
         )}
       </div>
+      {msg && <p className="text-sm text-center">{msg}</p>}
       <div className="flex justify-center flex-wrap gap-2">
         <button
           onClick={voltar}

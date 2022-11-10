@@ -206,7 +206,7 @@ function Home({ credentials, setCredentials }) {
   
   */
   }
-  console.log(averageBuyTime);
+  console.log(averageHomoData);
   return (
     <div className="p-6 grow">
       {/** 
@@ -325,7 +325,7 @@ function Home({ credentials, setCredentials }) {
           </p>
           <p className="text-center text-xs text-gray-600">
             Último mês:{" "}
-            <strong>{averageHomoData[0]?.averageTime.toFixed(0)} dias</strong>
+            <strong>{averageHomoData[1]?.averageTime.toFixed(0)} dias</strong>
           </p>
         </div>
       </div>

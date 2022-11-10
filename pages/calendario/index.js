@@ -4,8 +4,8 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { useState } from "react";
 import axios from "axios";
+import connectToDataBase from "../../utils/projectsDb";
 import ModalCronograma from "../../components/ModalCronograma";
-import connectToDatabase from "../../utils/projectsDb";
 import Select from "react-select";
 import { cidadesAtendidas } from "../../utils/constants";
 import * as dayJS from "dayjs";
@@ -34,7 +34,6 @@ const Calendar = ({ arr }) => {
     );*/
     var id = e.event._def.publicId;
     var inicio = new Date(e.event._instance.range.start).toISOString();
-
     var fim = new Date(
       dayJS(e.event._instance.range.end).subtract(1, "day").$d
     ).toISOString();
@@ -56,8 +55,18 @@ const Calendar = ({ arr }) => {
   }
   function handleDragDrop(e) {
     console.log("DROP");
+    var id = e.event._def.publicId;
+    var inicio = new Date(e.event._instance.range.start).toISOString();
+    var fim = new Date(
+      dayJS(e.event._instance.range.end).subtract(1, "day").$d
+    ).toISOString();
     // testar diferença entre e.oldEvent._instance.range.end com e.event._instance.range.end
-    console.log(e);
+    axios
+      .post(`/api/projects/update/${id}`, {
+        "agendamentoObra.inicio": inicio,
+        "agendamentoObra.fim": fim,
+      })
+      .then((res) => console.log(res));
   }
   function handleClick(e) {
     console.log("CLICK");
@@ -89,7 +98,6 @@ const Calendar = ({ arr }) => {
   console.log(
     dayJS("2022-11-08T00:00:00.000Z").add(3, "hours").format("YYYY-MM-DD")
   );
-  console.log(arr);
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-2">
@@ -141,8 +149,9 @@ const Calendar = ({ arr }) => {
           selectable
           defaultAllDay={true}
           handleWindowResize={true}
-          eventResize={(e) => handleResize(e)}
+          eventDrop={(e) => handleDragDrop(e)}
           eventClick={(e) => handleClick(e)}
+          eventResize={(e) => handleResize(e)}
           height={650}
         />
       )}
@@ -158,7 +167,7 @@ export default Calendar;
 export async function getServerSideProps() {
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
-  const db = await connectToDatabase(process.env.DB_KEY);
+  const db = await connectToDataBase(process.env.DB_KEY);
   const collection = db.collection("dados");
   var arr = await collection
     .aggregate([

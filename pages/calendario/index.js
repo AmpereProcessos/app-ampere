@@ -176,7 +176,7 @@ export async function getServerSideProps() {
     return {
       title: evento.nomeDoContrato,
       start: new Date(
-        new Date(evento.agendamentoObra.inicio).setHours(32)
+        new Date(evento.agendamentoObra.inicio).setHours(12)
       ).toISOString(),
       end: new Date(
         new Date(evento.agendamentoObra.fim).setHours(24)
@@ -193,6 +193,7 @@ export async function getServerSideProps() {
       topologia: evento.sistema.topologia,
     };
   });
+  console.log(arr);
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
   return {

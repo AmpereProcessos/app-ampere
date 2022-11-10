@@ -1,5 +1,4 @@
 import { MongoClient } from "mongodb";
-
 let cachedDb = null;
 export default async function connectToDatabase(uri, database) {
   if (cachedDb) {
@@ -9,7 +8,6 @@ export default async function connectToDatabase(uri, database) {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-  console.log(database);
   const db = client.db(database);
   cachedDb = db;
   return db;

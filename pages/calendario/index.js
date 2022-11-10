@@ -33,6 +33,7 @@ const Calendar = ({ arr }) => {
       })
       .then((res) => console.log(res.data));*/
   }
+  console.log(arr);
   function handleDragDrop(e) {
     console.log("DROP");
     // testar diferença entre e.oldEvent._instance.range.end com e.event._instance.range.end
@@ -111,13 +112,7 @@ const Calendar = ({ arr }) => {
             center: "",
             end: "today prev,next",
           }}
-          events={[
-            {
-              title: "TESTE",
-              start: "2022-11-06T06:00:00.000Z",
-              end: "2022-11-09T22:00:00.000Z",
-            },
-          ]}
+          events={eventos}
           editable
           selectable
           handleWindowResize={true}
@@ -144,7 +139,7 @@ export async function getStaticProps() {
     .aggregate([
       {
         $match: {
-          "obra.entrada": { $gte: "2022-11-01T00:00:00.000Z" },
+          "agendamentoObra.inicio": { $gte: "2022-11-01T00:00:00.000Z" },
         },
       },
       {
@@ -156,7 +151,7 @@ export async function getStaticProps() {
           bairro: 1,
           numeroResidencia: 1,
           "obra.equipeResp": 1,
-          "obra.entrada": 1,
+          agendamentoObra: 1,
           "sistema.qtdeModulos": 1,
           "sistema.topologia": 1,
         },
@@ -166,7 +161,12 @@ export async function getStaticProps() {
   arr = arr?.map((evento) => {
     return {
       title: evento.nomeDoContrato,
-      start: new Date(new Date(evento.obra.entrada).setHours(32)).toISOString(),
+      start: new Date(
+        new Date(evento.agendamentoObra.inicio).setHours(32)
+      ).toISOString(),
+      end: new Date(
+        new Date(evento.agendamentoObra.fim).setHours(58)
+      ).toISOString(),
       allDay: true,
       id: evento._id.toString(),
       qtde: evento.qtde,

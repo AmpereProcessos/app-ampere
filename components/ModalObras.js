@@ -68,6 +68,11 @@ function ModalObras({
     observacoes: "",
     dataDeAbertura: new Date(),
   });
+  const [agendamentoInfo, setAgendamentoInfo] = useState({
+    inicio: null,
+    fim: null,
+    msg: "",
+  });
   async function handleChanges() {
     /*let { data } = await axios.post("/api/changes", {
       usuario: credentials.nome,
@@ -141,7 +146,26 @@ function ModalObras({
         });
     }
   }
-  console.log(osInfo);
+  function handleAgendamento() {
+    axios
+      .post(`/api/projects/update/${project._id}`, {
+        "agendamentoObra.inicio": agendamentoInfo.inicio,
+        "agendamentoObra.fim": agendamentoInfo.fim,
+      })
+      .then((res) =>
+        setAgendamentoInfo({
+          ...agendamentoInfo,
+          msg: "Agendamento concluído.",
+        })
+      )
+      .catch((err) =>
+        setAgendamentoInfo({
+          ...agendamentoInfo,
+          msg: "Houve um erro, por favor tente novamente.",
+        })
+      );
+  }
+  console.log(agendamentoInfo);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -891,6 +915,58 @@ function ModalObras({
                     />
                   </div>
                 </div>
+                <div>
+                  <h1 className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                    AGENDAMENTO
+                  </h1>
+                  <div className="flex justify-around">
+                    <DateInput
+                      label={"INÍCIO"}
+                      editable={true}
+                      value={
+                        agendamentoInfo.inicio
+                          ? new Date(agendamentoInfo.inicio)
+                              .toISOString()
+                              .slice(0, 10)
+                          : null
+                      }
+                      handleChange={(value) => {
+                        setAgendamentoInfo({
+                          ...agendamentoInfo,
+                          inicio: new Date(value).toISOString(),
+                        });
+                      }}
+                    />
+                    <DateInput
+                      label={"FIM"}
+                      editable={true}
+                      value={
+                        agendamentoInfo.fim
+                          ? new Date(agendamentoInfo.fim)
+                              .toISOString()
+                              .slice(0, 10)
+                          : null
+                      }
+                      handleChange={(value) => {
+                        setAgendamentoInfo({
+                          ...agendamentoInfo,
+                          fim: new Date(value).toISOString(),
+                        });
+                      }}
+                    />
+                    <button
+                      onClick={handleAgendamento}
+                      className="p-2 rounded font-bold bg-[#fead61] hover:bg-[#15599a] hover:text-white text-xs"
+                    >
+                      REALIZAR AGENDAMENTO
+                    </button>
+                  </div>
+                </div>
+                {agendamentoInfo.msg && (
+                  <p className="text-center text-[#15599a] italic text-sm">
+                    {agendamentoInfo.msg}
+                  </p>
+                )}
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -1163,7 +1239,7 @@ function ModalObras({
                             </p>
                           </div>
                           <Link
-                            href={`/ordemDeServico//pdf/${project._id}?index=${index}`}
+                            href={`/ordemDeServico/pdf/${project._id}?index=${index}`}
                           >
                             <button className="p-2 bg-[#fead61] font-bold rounded">
                               VER OS

@@ -1,14 +1,14 @@
 import connectToDatabase from "../../../utils/connectDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
+  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  const collection = db.collection("dados");
   if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
     var arr = await collection
       .aggregate([
         {
           $match: {
-            "obra.entrada": { $gte: "2022-11-01T00:00:00.000Z" },
+            "agendamentoObra.inicio": { $gte: "2022-11-01T00:00:00.000Z" },
           },
         },
         {
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
             bairro: 1,
             numeroResidencia: 1,
             "obra.equipeResp": 1,
-            "obra.entrada": 1,
+            agendamentoObra: 1,
           },
         },
       ])
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       return {
         title: evento.nomeDoContrato,
         date: new Date(
-          new Date(evento.obra.entrada).setHours(28)
+          new Date(evento.agendamentoObra.inicio).setHours(28)
         ).toISOString(),
         qtde: evento.qtde,
         equipe: evento.obra.equipeResp,
@@ -39,5 +39,8 @@ export default async function handler(req, res) {
       };
     });
     res.json(arr);
+  } else if (req.method === "POST") {
+    console.log(req.body);
+    return "OK";
   }
 }

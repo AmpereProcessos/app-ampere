@@ -25,7 +25,7 @@ function FormSolicitacaoSeis({ avancar, setDados, dados, voltar }) {
     }
     if (
       (dados.possuiOeM == "SIM" || dados.clienteSegurado == "SIM") &&
-      (dados.valorOeMOuSeguro == null || dados.valorOeMOuSeguro == 0)
+      dados.valorOeMOuSeguro == null
     ) {
       setMessage("Por favor, preencha o valor do O&M+Seguro");
       return false;

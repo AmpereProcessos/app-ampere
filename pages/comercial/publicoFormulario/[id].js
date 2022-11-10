@@ -18,6 +18,20 @@ function Formulario({ info }) {
               FORMULÁRIO DE SOLICITAÇÃO DE CONTRATO
             </h1>
           </div>
+          <div className="w-full flex justify-around border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+            <div className="text-center">
+              <p className="text-[#15599a] font-bold">VENDEDOR</p>
+              <p className="text-sm">
+                {dados.nomeVendedor ? dados.nomeVendedor : "-"}
+              </p>
+            </div>
+            <div className="text-center">
+              <p className="text-[#15599a] font-bold">CONTATO VENDEDOR</p>
+              <p className="text-sm">
+                {dados.telefoneVendedor ? dados.telefoneVendedor : "-"}
+              </p>
+            </div>
+          </div>
           <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
             <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
               DADOS PARA CONTRATO

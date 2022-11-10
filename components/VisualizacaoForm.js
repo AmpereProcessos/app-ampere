@@ -33,16 +33,26 @@ function formatCEP(cep) {
     .replace(/(-\d{3})\d+?$/, "$1");
   return cep;
 }
-function VisualizacaoForm({ dados, voltar }) {
-  const [msg, setMsg] = useState("");
+function VisualizacaoForm({ dados, voltar, setDados }) {
+  const [msg, setMsg] = useState({
+    text: "",
+    color: "",
+  });
   function criarSolicitacao() {
     axios
       .post("/api/solicitacoes/contrato", dados)
       .then((res) => {
-        setMsg("Solicitação enviada!");
-        setTimeout(location.reload(), 4000);
+        setMsg({ text: "Solicitação enviada!", color: "text-gree-500" });
+        setTimeout(() => {
+          location.reload();
+        }, 2800);
       })
-      .catch((err) => setMsg("Um erro ocorreu, tente novamente!"));
+      .catch((err) =>
+        setMsg({
+          text: "Um erro ocorreu, tente novamente!",
+          color: "text-green-500",
+        })
+      );
   }
   return (
     <>
@@ -58,6 +68,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex gap-2 justify-around flex-wrap">
           <TextInput
             label={"Nome/Razão Social"}
+            editable={true}
             value={dados.nomeDoContrato}
             handleChange={(value) =>
               setDados({ ...dados, nomeDoContrato: value.toUpperCase() })
@@ -65,6 +76,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"Telefone"}
+            editable={true}
             value={dados.telefone}
             handleChange={(value) =>
               setDados({ ...dados, telefone: phoneMask(value) })
@@ -72,6 +84,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"CPF/CNPJ"}
+            editable={true}
             value={dados.cpf_cnpj}
             handleChange={(value) =>
               setDados({ ...dados, cpf_cnpj: formatCnpjCpf(value) })
@@ -79,11 +92,13 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"RG"}
+            editable={true}
             value={dados.rg}
             handleChange={(value) => setDados({ ...dados, rg: value })}
           />
           <DateInput
             label={"DATA DE NASCIMENTO"}
+            editable={true}
             value={
               dados.dataDeNascimento
                 ? new Date(dados.dataDeNascimento).toISOString().slice(0, 10)
@@ -98,6 +113,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"CEP"}
+            editable={true}
             value={dados.cep}
             handleChange={(value) =>
               setDados({ ...dados, cep: formatCEP(value) })
@@ -111,6 +127,7 @@ function VisualizacaoForm({ dados, voltar }) {
           </button>
           <SelectInput
             label={"CIDADE"}
+            editable={true}
             options={cidadesAtendidas.map((cidade) => {
               return { label: cidade, value: cidade };
             })}
@@ -118,11 +135,13 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"UF"}
+            editable={true}
             value={dados.uf}
             handleChange={(value) => setDados({ ...dados, uf: value })}
           />
           <TextInput
             label={"ENDEREÇO DE COBRANÇA"}
+            editable={true}
             value={dados.enderecoCobranca}
             handleChange={(value) =>
               setDados({ ...dados, enderecoCobranca: value.toUpperCase() })
@@ -130,6 +149,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <NumberInput
             label={"Nº"}
+            editable={true}
             value={dados.numeroResCobranca}
             handleChange={(value) =>
               setDados({ ...dados, numeroResCobranca: Number(value) })
@@ -137,6 +157,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"BAIRRO"}
+            editable={true}
             value={dados.bairro}
             handleChange={(value) =>
               setDados({ ...dados, bairro: value.toUpperCase() })
@@ -144,6 +165,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"PONTO DE REFERÊNCIA"}
+            editable={true}
             value={dados.pontoDeReferencia}
             handleChange={(value) =>
               setDados({ ...dados, pontoDeReferencia: value })
@@ -151,6 +173,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"SEGMENTO"}
+            editable={true}
             options={[
               {
                 value: "RESIDENCIAL",
@@ -173,6 +196,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"FORMA DE ASSINATURA"}
+            editable={true}
             options={[
               {
                 value: "DIGITAL",
@@ -189,11 +213,13 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <NumberInput
             label={"NºPROJETO SVB"}
+            editable={true}
             value={dados.codigoSVB}
             handleChange={(value) => setDados({ ...dados, codigoSVB: value })}
           />
           <SelectInput
             label={"ESTADO CIVIL"}
+            editable={true}
             options={[
               {
                 label: "CASADO(A)",
@@ -225,16 +251,19 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"EMAIL"}
+            editable={true}
             value={dados.email}
             handleChange={(value) => setDados({ ...dados, email: value })}
           />
           <TextInput
             label={"PROFISSÃO"}
+            editable={true}
             value={dados.profissao}
             handleChange={(value) => setDados({ ...dados, profissao: value })}
           />
           <TextInput
             label={"ONDE TRABALHA"}
+            editable={true}
             value={dados.ondeTrabalha}
             handleChange={(value) =>
               setDados({ ...dados, ondeTrabalha: value })
@@ -242,6 +271,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"POSSUI ALGUMA DEFICIÊNCIA"}
+            editable={true}
             value={dados.possuiDeficiencia}
             handleChange={(value) =>
               setDados({ ...dados, possuiDeficiencia: value })
@@ -260,8 +290,10 @@ function VisualizacaoForm({ dados, voltar }) {
           {dados.possuiDeficiencia == "SIM" && (
             <>
               {" "}
+              editable={true}
               <TextInput
                 label={"SE SIM, QUAL ?"}
+                editable={true}
                 value={dados.qualDeficiencia}
                 handleChange={(value) =>
                   setDados({ ...dados, qualDeficiencia: value })
@@ -271,6 +303,7 @@ function VisualizacaoForm({ dados, voltar }) {
           )}
           <SelectInput
             label={"CANAL DE VENDA"}
+            editable={true}
             value={dados.canalVenda}
             handleChange={(value) => setDados({ ...dados, canalVenda: value })}
             options={[
@@ -312,6 +345,7 @@ function VisualizacaoForm({ dados, voltar }) {
             <>
               <TextInput
                 label={"NOME INDICADOR"}
+                editable={true}
                 value={dados.nomeIndicador}
                 handleChange={(value) =>
                   setDados({ ...dados, nomeIndicador: value })
@@ -319,6 +353,7 @@ function VisualizacaoForm({ dados, voltar }) {
               />
               <TextInput
                 label={"TELEFONE INDICADOR"}
+                editable={true}
                 value={dados.telefoneIndicador}
                 handleChange={(value) =>
                   setDados({ ...dados, telefoneIndicador: value })
@@ -333,8 +368,12 @@ function VisualizacaoForm({ dados, voltar }) {
           </span>
           <textarea
             placeholder={"Descrição aqui.."}
+            editable={true}
             value={dados.comoChegouAoCliente}
             className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+            onChange={(e) =>
+              setDados({ ...dados, comoChegouAoCliente: e.target.value })
+            }
           />
         </div>
       </div>
@@ -345,6 +384,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex gap-2 justify-around flex-wrap">
           <TextInput
             label={"NOME DO CONTATO 1"}
+            editable={true}
             value={dados.nomeContatoJornadaUm}
             handleChange={(value) =>
               setDados({ ...dados, nomeContatoJornadaUm: value })
@@ -352,6 +392,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"TELEFONE DO CONTATO 1"}
+            editable={true}
             value={dados.telefoneContatoUm}
             handleChange={(value) =>
               setDados({ ...dados, telefoneContatoUm: phoneMask(value) })
@@ -359,6 +400,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"NOME DO CONTATO 2"}
+            editable={true}
             value={dados.nomeContatoJornadaDois}
             handleChange={(value) =>
               setDados({ ...dados, nomeContatoJornadaDois: value })
@@ -366,6 +408,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"TELEFONE DO CONTATO 2"}
+            editable={true}
             value={dados.telefoneContatoDois}
             handleChange={(value) =>
               setDados({ ...dados, telefoneContatoDois: phoneMask(value) })
@@ -381,6 +424,9 @@ function VisualizacaoForm({ dados, voltar }) {
               }
               value={dados.cuidadosContatoJornada}
               className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+              onChange={(e) =>
+                setDados({ ...dados, cuidadosContatoJornada: e.target.value })
+              }
             />
           </div>
         </div>
@@ -392,6 +438,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex gap-2 justify-around flex-wrap">
           <TextInput
             label={"NOME DO TITULAR DO PROJETO"}
+            editable={true}
             value={dados.nomeTitularProjeto}
             handleChange={(value) =>
               setDados({
@@ -402,6 +449,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"TIPO DO TITULAR"}
+            editable={true}
             value={dados.tipoDoTitular}
             handleChange={(value) =>
               setDados({ ...dados, tipoDoTitular: value })
@@ -419,6 +467,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"TIPO DA LIGAÇÃO"}
+            editable={true}
             value={dados.tipoDaLigacao}
             handleChange={(value) =>
               setDados({ ...dados, tipoDaLigacao: value })
@@ -436,6 +485,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"TIPO DA INSTALAÇÃO"}
+            editable={true}
             value={dados.tipoDaInstalacao}
             handleChange={(value) =>
               setDados({ ...dados, tipoDaInstalacao: value })
@@ -453,6 +503,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"CEP INSTALAÇÃO"}
+            editable={true}
             value={dados.cepInstalacao}
             handleChange={(value) =>
               setDados({ ...dados, cepInstalacao: formatCEP(value) })
@@ -466,6 +517,7 @@ function VisualizacaoForm({ dados, voltar }) {
           </button>
           <TextInput
             label={"ENDEREÇO DE INSTALAÇÃO"}
+            editable={true}
             value={dados.enderecoInstalacao}
             handleChange={(value) =>
               setDados({ ...dados, enderecoInstalacao: value })
@@ -473,6 +525,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <NumberInput
             label={"Nº"}
+            editable={true}
             value={dados.numeroResInstalacao}
             handleChange={(value) =>
               setDados({ ...dados, numeroResInstalacao: value })
@@ -480,6 +533,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <NumberInput
             label={"Nº DA INSTALAÇÃO"}
+            editable={true}
             value={dados.numeroInstalacao}
             handleChange={(value) =>
               setDados({ ...dados, numeroInstalacao: value })
@@ -487,6 +541,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"BAIRRO"}
+            editable={true}
             value={dados.bairroInstalacao}
             handleChange={(value) =>
               setDados({ ...dados, bairroInstalacao: value })
@@ -494,6 +549,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"CIDADE"}
+            editable={true}
             value={dados.cidadeInstalacao}
             options={cidadesAtendidas.map((cidade) => {
               return { label: cidade, value: cidade };
@@ -504,6 +560,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"UF"}
+            editable={true}
             value={dados.ufInstalacao}
             handleChange={(value) =>
               setDados({ ...dados, ufInstalacao: value })
@@ -511,6 +568,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"PONTO DE REFERÊNCIA"}
+            editable={true}
             value={dados.pontoDeReferenciaInstalacao}
             handleChange={(value) =>
               setDados({ ...dados, pontoDeReferenciaInstalacao: value })
@@ -518,6 +576,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"LOGIN(CEMIG ATENDE)"}
+            editable={true}
             value={dados.loginCemigAtende}
             handleChange={(value) =>
               setDados({ ...dados, loginCemigAtende: value })
@@ -525,6 +584,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"SENHA(CEMIG ATENDE)"}
+            editable={true}
             value={dados.senhaCemigAtende}
             handleChange={(value) =>
               setDados({ ...dados, senhaCemigAtende: value })
@@ -532,16 +592,19 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"LATITUDE"}
+            editable={true}
             value={dados.latitude}
             handleChange={(value) => setDados({ ...dados, latitude: value })}
           />
           <TextInput
             label={"LONGITUDE"}
+            editable={true}
             value={dados.longitude}
             handleChange={(value) => setDados({ ...dados, longitude: value })}
           />
           <NumberInput
             label={"POTÊNIA PICO"}
+            editable={true}
             value={dados.potPico}
             handleChange={(value) =>
               setDados({
@@ -553,6 +616,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <NumberInput
             label={"GERAÇÃO PREVISTA"}
+            editable={true}
             value={dados.geracaoPrevista}
             handleChange={(value) =>
               setDados({ ...dados, geracaoPrevista: value })
@@ -567,6 +631,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex justify-center">
           <SelectInput
             label={"TOPOLOGIA"}
+            editable={true}
             value={dados.topologia}
             handleChange={(value) => setDados({ ...dados, topologia: value })}
             options={[
@@ -594,6 +659,7 @@ function VisualizacaoForm({ dados, voltar }) {
             <>
               <TextInput
                 label={"MARCA DO INVERSOR/MICRO"}
+                editable={true}
                 value={dados.marcaInversor}
                 handleChange={(value) =>
                   setDados({ ...dados, marcaInversor: value })
@@ -601,6 +667,7 @@ function VisualizacaoForm({ dados, voltar }) {
               />
               <NumberInput
                 label={"QTDE INVERSOR/MICRO"}
+                editable={true}
                 value={dados.qtdeInversor}
                 handleChange={(value) =>
                   setDados({ ...dados, qtdeInversor: Number(value) })
@@ -608,6 +675,7 @@ function VisualizacaoForm({ dados, voltar }) {
               />
               <NumberInput
                 label={"POTÊNCIA INVERSOR/MICRO"}
+                editable={true}
                 unit={"W"}
                 value={dados.potInversor}
                 handleChange={(value) =>
@@ -621,6 +689,7 @@ function VisualizacaoForm({ dados, voltar }) {
           <div className="flex gap-2 justify-around flex-wrap mt-2">
             <TextInput
               label={"MARCA DO OTIMIZADOR"}
+              editable={true}
               value={dados.marcaOtimizador ? dados.marcaOtimizador : ""}
               handleChange={(value) =>
                 setDados({ ...dados, marcaOtimizador: value })
@@ -628,6 +697,7 @@ function VisualizacaoForm({ dados, voltar }) {
             />
             <NumberInput
               label={"QTDE DO OTIMIZADOR"}
+              editable={true}
               value={dados.qtdeOtimizador ? dados.qtdeOtimizador : null}
               handleChange={(value) =>
                 setDados({ ...dados, qtdeOtimizador: Number(value) })
@@ -635,6 +705,7 @@ function VisualizacaoForm({ dados, voltar }) {
             />
             <NumberInput
               label={"POTÊNCIA DO OTIMIZADOR"}
+              editable={true}
               unit={"W"}
               value={dados.potOtimizador ? dados.potOtimizador : null}
               handleChange={(value) =>
@@ -646,6 +717,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
           <TextInput
             label={"MARCA DOS MÓDULOS"}
+            editable={true}
             value={dados.marcaModulos}
             handleChange={(value) =>
               setDados({ ...dados, marcaModulos: value })
@@ -653,6 +725,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <NumberInput
             label={"Nº DE MÓDULOS"}
+            editable={true}
             value={dados.qtdeModulos}
             handleChange={(value) =>
               setDados({ ...dados, qtdeModulos: Number(value) })
@@ -660,6 +733,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <NumberInput
             label={"POTÊNCIA DOS MÓDULOS"}
+            editable={true}
             unit={"W"}
             value={dados.potModulos}
             handleChange={(value) =>
@@ -675,6 +749,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex gap-2 justify-around flex-wrap">
           <SelectInput
             label={"TIPO DA ESTRUTURA"}
+            editable={true}
             options={[
               {
                 label: "TELHADO",
@@ -704,6 +779,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"ESTRUTURA AMPÈRE"}
+            editable={true}
             options={[
               {
                 label: "NÃO",
@@ -725,6 +801,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"RESPONSÁVEL PELA ESTRUTURA"}
+            editable={true}
             options={[
               {
                 label: "AMPERE",
@@ -748,6 +825,7 @@ function VisualizacaoForm({ dados, voltar }) {
             <>
               <SelectInput
                 label={"FORMA DE PAGAMENTO"}
+                editable={true}
                 options={[
                   {
                     label: "INCLUSO NO FINANCIAMENTO",
@@ -777,6 +855,7 @@ function VisualizacaoForm({ dados, voltar }) {
               />
               <NumberInput
                 label={"VALOR DA ESTRUTURA"}
+                editable={true}
                 value={dados.valorEstrutura}
                 handleChange={(value) =>
                   setDados({ ...dados, valorEstrutura: Number(value) })
@@ -793,6 +872,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex gap-2 justify-around flex-wrap">
           <SelectInput
             label={"KIT COM O&M ?"}
+            editable={true}
             options={[
               {
                 label: "NÃO",
@@ -814,6 +894,7 @@ function VisualizacaoForm({ dados, voltar }) {
             <>
               <SelectInput
                 label={"QUAL PLANO DE O&M?"}
+                editable={true}
                 options={[
                   {
                     label: "MANUTENÇÃO SIMLES",
@@ -843,6 +924,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex gap-2 justify-around flex-wrap mt-2">
           <SelectInput
             label={"CLIENTE SEGURADO?"}
+            editable={true}
             options={[
               {
                 label: "SIM",
@@ -866,6 +948,7 @@ function VisualizacaoForm({ dados, voltar }) {
             <>
               <SelectInput
                 label={"TEMPO SEGURADO"}
+                editable={true}
                 options={[
                   {
                     label: "1 ANO",
@@ -904,6 +987,7 @@ function VisualizacaoForm({ dados, voltar }) {
           <div className="flex gap-2 justify-around flex-wrap mt-2">
             <SelectInput
               label={"FORMA de PAGAMENTO"}
+              editable={true}
               options={[
                 {
                   label: "INCLUSO NO FINANCIAMENTO",
@@ -929,6 +1013,7 @@ function VisualizacaoForm({ dados, voltar }) {
             />
             <NumberInput
               label={"VALOR O&M+SEGURO"}
+              editable={true}
               value={dados.valorOeMOuSeguro}
               handleChange={(value) =>
                 setDados({ ...dados, valorOeMOuSeguro: Number(value) })
@@ -944,6 +1029,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex justify-center">
           <SelectInput
             label={"HAVERÁ TROCA DE PADRÃO?"}
+            editable={true}
             options={[
               {
                 label: "NÃO DEFINIDO",
@@ -968,6 +1054,7 @@ function VisualizacaoForm({ dados, voltar }) {
           <div className="flex gap-2 justify-around flex-wrap mt-2">
             <SelectInput
               label={"TIPO DO PADRÃO"}
+              editable={true}
               value={dados.tipoDePadrao}
               handleChange={(value) =>
                 setDados({ ...dados, tipoDePadrao: value })
@@ -1029,6 +1116,7 @@ function VisualizacaoForm({ dados, voltar }) {
             />
             <SelectInput
               label={"HAVERÁ AUMENTO DO DISJUNTOR?"}
+              editable={true}
               value={dados.aumentoDisjuntor}
               handleChange={(value) =>
                 setDados({ ...dados, aumentoDisjuntor: value })
@@ -1046,6 +1134,7 @@ function VisualizacaoForm({ dados, voltar }) {
             />
             <SelectInput
               label={"RESPONSÁVEL PELA TROCA"}
+              editable={true}
               value={dados.respTrocaPadrao}
               handleChange={(value) =>
                 setDados({ ...dados, respTrocaPadrao: value })
@@ -1097,6 +1186,7 @@ function VisualizacaoForm({ dados, voltar }) {
             />
             <NumberInput
               label={"VALOR DO PADRÃO"}
+              editable={true}
               value={dados.valorPadrao}
               handleChange={(value) =>
                 setDados({ ...dados, valorPadrao: Number(value) })
@@ -1112,11 +1202,13 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex gap-2 justify-around flex-wrap mt-2">
           <TextInput
             label={"NOME DO PAGADOR"}
+            editable={true}
             value={dados.nomePagador}
             handleChange={(value) => setDados({ ...dados, nomePagador: value })}
           />
           <TextInput
             label={"CONTATO DO PAGADOR"}
+            editable={true}
             value={dados.contatoPagador}
             handleChange={(value) =>
               setDados({ ...dados, contatoPagador: phoneMask(value) })
@@ -1124,6 +1216,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <TextInput
             label={"CPF/CNPJ PARA NF"}
+            editable={true}
             value={dados.cpf_cnpjNF}
             handleChange={(value) =>
               setDados({ ...dados, cpf_cnpjNF: formatCnpjCpf(value) })
@@ -1133,6 +1226,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex gap-2 justify-around flex-wrap mt-2">
           <SelectInput
             label={"NECESSIDADE DE INSCRIÇÃO RURAL NA N.F?"}
+            editable={true}
             value={dados.necessidaInscricaoRural}
             handleChange={(value) =>
               setDados({ ...dados, necessidaInscricaoRural: value })
@@ -1151,6 +1245,7 @@ function VisualizacaoForm({ dados, voltar }) {
           {dados.necessidaInscricaoRural == "SIM" && (
             <TextInput
               label={"INSCRIÇÃO RURAL"}
+              editable={true}
               value={dados.inscriçãoRural}
               handleChange={(value) =>
                 setDados({ ...dados, inscriçãoRural: value })
@@ -1161,6 +1256,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex gap-2 justify-around flex-wrap mt-2">
           <SelectInput
             label={"LOCAL DE ENTREGA"}
+            editable={true}
             options={[
               {
                 label: "MESMO DO PROJETO",
@@ -1186,6 +1282,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"END. ENTREGA IGUAL COBRANÇA?"}
+            editable={true}
             value={dados.entregaIgualCobranca}
             handleChange={(value) =>
               setDados({ ...dados, entregaIgualCobranca: value })
@@ -1203,6 +1300,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"HÁ RESTRIÇÕES PARA ENTREGA?"}
+            editable={true}
             value={dados.restricoesEntrega}
             handleChange={(value) =>
               setDados({ ...dados, restricoesEntrega: value })
@@ -1234,6 +1332,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex gap-2 justify-around flex-wrap mt-2">
           <NumberInput
             label={"VALOR DO CONTRATO FOTOVOLTAICO(SEM CUSTOS ADICIONAIS)"}
+            editable={true}
             tag={"R$"}
             value={dados.valorContrato}
             handleChange={(value) =>
@@ -1242,6 +1341,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"ORIGEM DO RECURSO"}
+            editable={true}
             value={dados.origemRecurso}
             handleChange={(value) =>
               setDados({ ...dados, origemRecurso: value })
@@ -1269,6 +1369,7 @@ function VisualizacaoForm({ dados, voltar }) {
             <>
               <SelectInput
                 label={"CREDOR"}
+                editable={true}
                 options={[
                   {
                     label: "NÃO DEFINIDO",
@@ -1320,6 +1421,7 @@ function VisualizacaoForm({ dados, voltar }) {
               />
               <TextInput
                 label={"NOME DO GERENTE"}
+                editable={true}
                 value={dados.nomeGerente}
                 handleChange={(value) =>
                   setDados({ ...dados, nomeGerente: value })
@@ -1327,6 +1429,7 @@ function VisualizacaoForm({ dados, voltar }) {
               />
               <TextInput
                 label={"CONTATO DO GERENTE"}
+                editable={true}
                 value={dados.contatoGerente}
                 handleChange={(value) =>
                   setDados({ ...dados, contatoGerente: phoneMask(value) })
@@ -1336,6 +1439,7 @@ function VisualizacaoForm({ dados, voltar }) {
           )}
           <NumberInput
             label={"SE CARTÃO OU CHEQUE, QUANTAS PARCELAS?"}
+            editable={true}
             value={dados.numParcelas}
             handleChange={(value) =>
               setDados({
@@ -1347,6 +1451,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <NumberInput
             label={"VALOR DA PARCELA"}
+            editable={true}
             value={dados.valorParcela}
             tag={"R$"}
             handleChange={(value) =>
@@ -1355,6 +1460,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"NECESSIDADE N.F ADIANTADA"}
+            editable={true}
             value={dados.necessidadeNFAdiantada}
             options={[
               {
@@ -1372,6 +1478,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"NECESSIDADE CÓDIGO FINAME?"}
+            editable={true}
             value={dados.necessidadeCodigoFiname}
             options={[
               {
@@ -1389,6 +1496,7 @@ function VisualizacaoForm({ dados, voltar }) {
           />
           <SelectInput
             label={"FORMA DE PAGAMENTO"}
+            editable={true}
             options={[
               {
                 label:
@@ -1421,8 +1529,12 @@ function VisualizacaoForm({ dados, voltar }) {
           </span>
           <textarea
             placeholder={"Descreva aqui a negociação"}
+            editable={true}
             value={dados.descricaoNegociacao}
             className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+            onChange={(e) =>
+              setDados({ ...dados, descricaoNegociacao: e.target.value })
+            }
           />
         </div>
       </div>
@@ -1433,6 +1545,7 @@ function VisualizacaoForm({ dados, voltar }) {
         <div className="flex justify-center mt-2">
           <SelectInput
             label={"POSSUI DISTRIBUIÇÕES DE CRÉDITOS?"}
+            editable={true}
             value={dados.possuiDistribuicao}
             options={[
               {
@@ -1468,7 +1581,11 @@ function VisualizacaoForm({ dados, voltar }) {
           </>
         )}
       </div>
-      {msg && <p className="text-sm text-center">{msg}</p>}
+      {msg.text && (
+        <p className={`text-sm text-center font-bold ${msg.color}`}>
+          {msg.text}
+        </p>
+      )}
       <div className="flex justify-center flex-wrap gap-2">
         <button
           onClick={voltar}

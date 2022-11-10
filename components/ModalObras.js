@@ -147,10 +147,13 @@ function ModalObras({
     }
   }
   function handleAgendamento() {
+    var fixedDate = new Date(
+      new Date(agendamentoInfo.fim).setHours(33)
+    ).toISOString();
     axios
       .post(`/api/projects/update/${project._id}`, {
         "agendamentoObra.inicio": agendamentoInfo.inicio,
-        "agendamentoObra.fim": agendamentoInfo.fim,
+        "agendamentoObra.fim": fixedDate,
       })
       .then((res) =>
         setAgendamentoInfo({

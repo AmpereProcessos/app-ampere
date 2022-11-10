@@ -143,7 +143,8 @@ const Calendar = ({ arr }) => {
 };
 
 export default Calendar;
-export async function getStaticProps() {
+
+export async function getServerSideProps() {
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
   const db = await connectToDatabase(process.env.DB_KEY);

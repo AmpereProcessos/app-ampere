@@ -368,7 +368,6 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
           </span>
           <textarea
             placeholder={"Descrição aqui.."}
-            editable={true}
             value={dados.comoChegouAoCliente}
             className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
             onChange={(e) =>
@@ -1529,7 +1528,6 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
           </span>
           <textarea
             placeholder={"Descreva aqui a negociação"}
-            editable={true}
             value={dados.descricaoNegociacao}
             className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
             onChange={(e) =>

@@ -229,6 +229,10 @@ export default async function handler(req, res) {
         obsNps: project.obsnps,
       },
       nps: project.nps,
+      agendamentoObra: {
+        inicio: "",
+        fim: "",
+      },
     };
   });
   return res.json(newArr);

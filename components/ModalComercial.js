@@ -447,10 +447,10 @@ function ModalComercial({
                         });
                       }}
                       type="checkbox"
-                      name="visitaTecnica"
-                      id="visitaTecnica"
+                      name="possuiOEM"
+                      id="possuiOEM"
                     />
-                    <label className="ml-2" htmlFor="visitaTecnica">
+                    <label className="ml-2" htmlFor="possuiOEM">
                       POSSUI O&M?
                     </label>
                   </div>
@@ -498,6 +498,14 @@ function ModalComercial({
                     />
                   )}
                 </div>
+                {infoHolder.linkDrive && (
+                  <p className="text-center my-2 italic font-bold">
+                    Vá para a pasta do drive{" "}
+                    <a className="text-blue-400" href={infoHolder.linkDrive}>
+                      {infoHolder.linkDrive}
+                    </a>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -534,7 +542,7 @@ function ModalComercial({
                       id="visitaTecnica"
                     />
                     <label className="ml-2" htmlFor="visitaTecnica">
-                      REALIZADA
+                      REALIZADA ?
                     </label>
                   </div>
                   <TextInput
@@ -588,6 +596,199 @@ function ModalComercial({
                   PADRÃO
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      AUMENTO DE CARGA
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={
+                          infoHolder.projeto?.aumentoDeCarga === "SIM"
+                            ? true
+                            : false
+                        }
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            "projeto.aumentoDeCarga": e.target.checked
+                              ? "SIM"
+                              : "NÃO",
+                            "projeto.acStatus":
+                              e.target.checked &&
+                              infoHolder.acStatus != "REALIZADO"
+                                ? "PÊNDENCIA"
+                                : undefined,
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            projeto: {
+                              ...infoHolder.projeto,
+                              aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
+                              acStatus:
+                                e.target.checked &&
+                                infoHolder.acStatus != "REALIZADO"
+                                  ? "PÊNDENCIA"
+                                  : undefined,
+                            },
+                          });
+                        }}
+                        type="checkbox"
+                        name="aumentodecarga"
+                        id="aumentodecarga"
+                      />
+                      <label className="ml-2" htmlFor="aumentodecarga">
+                        APLICÁVEL?
+                      </label>
+                    </div>
+                  </div>
+                  {infoHolder.projeto?.aumentoDeCarga == "SIM" && (
+                    <SelectInput
+                      label={"STATUS AUMENTO DE CARGA"}
+                      editable={editor}
+                      value={
+                        infoHolder.projeto.acStatus
+                          ? infoHolder.projeto.acStatus
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        {
+                          label: "PENDÊNCIA",
+                          value: "PENDÊNCIA",
+                        },
+                        {
+                          label: "REALIZADO",
+                          value: "REALIZADO",
+                        },
+                        {
+                          label: "SOLICITADO COM G.D",
+                          value: "SOLICITADO COM G.D",
+                        },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
+                        },
+                      ]}
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          "projeto.acStatus": value,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          projeto: {
+                            ...infoHolder.projeto,
+                            acStatus: value,
+                          },
+                        });
+                      }}
+                    />
+                  )}
+                  <SelectInput
+                    label={"PAGAMENTO DO PADRÃO"}
+                    editable={editor}
+                    value={
+                      infoHolder.padrao?.respPagamento ==
+                        "NÃO HAVERA TROCA DE PADRÃO" ||
+                      infoHolder.padrao?.respPagamento == undefined
+                        ? "NÃO HAVERA TROCA PADRÃO"
+                        : infoHolder.padrao?.respPagamento
+                    }
+                    options={[
+                      {
+                        label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                        value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                      },
+                      {
+                        label: "CLIENTE PAGAR POR FORA",
+                        value: "CLIENTE PAGAR POR FORA",
+                      },
+                      {
+                        label: "INCLUSO NO CONTRATO",
+                        value: "INCLUSO NO CONTRATO",
+                      },
+                      {
+                        label: "NÃO HAVERA TROCA PADRÃO",
+                        value: "NÃO HAVERA TROCA PADRÃO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "padrao.respPagamento": value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: { ...infoHolder.padrao, respPagamento: value },
+                      });
+                    }}
+                  />
+                  <NumberInput
+                    tag={"R$"}
+                    label={"Valor do padrão"}
+                    editable={editor}
+                    value={
+                      infoHolder.padrao?.valor ? infoHolder.padrao?.valor : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "padrao.valor": Number(value),
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: { ...infoHolder.padrao, valor: Number(value) },
+                      });
+                    }}
+                  />
+                  <SelectInput
+                    label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
+                    editable={editor}
+                    value={
+                      infoHolder.padrao?.respInstalacao
+                        ? infoHolder.padrao?.respInstalacao
+                        : "NÃO SE APLICA"
+                    }
+                    options={[
+                      { label: "AMPERE", value: "AMPERE" },
+                      { label: "CLIENTE", value: "CLIENTE" },
+                      { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "padrao.respInstalacao": value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: { ...infoHolder.padrao, respInstalacao: value },
+                      });
+                    }}
+                  />
+                  <TextInput
+                    label={"Amperagem"}
+                    editable={editor}
+                    value={
+                      infoHolder.visitaTecnica?.amperagem
+                        ? infoHolder.visitaTecnica.amperagem
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "visitaTecnica.amperagem": value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          amperagem: value,
+                        },
+                      });
+                    }}
+                  />
+                </div>
+                <div className="flex gap-2 justify-center flex-wrap mt-2">
                   <SelectInput
                     label={"TIPO DO PADRÃO"}
                     editable={editor}
@@ -671,87 +872,6 @@ function ModalComercial({
                     }}
                   />
                   <SelectInput
-                    label={"PAGAMENTO DO PADRÃO"}
-                    editable={editor}
-                    value={
-                      infoHolder.padrao?.respPagamento ==
-                        "NÃO HAVERA TROCA DE PADRÃO" ||
-                      infoHolder.padrao?.respPagamento == undefined
-                        ? "NÃO HAVERA TROCA PADRÃO"
-                        : infoHolder.padrao?.respPagamento
-                    }
-                    options={[
-                      {
-                        label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                        value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                      },
-                      {
-                        label: "CLIENTE PAGAR POR FORA",
-                        value: "CLIENTE PAGAR POR FORA",
-                      },
-                      {
-                        label: "INCLUSO NO CONTRATO",
-                        value: "INCLUSO NO CONTRATO",
-                      },
-                      {
-                        label: "NÃO HAVERA TROCA PADRÃO",
-                        value: "NÃO HAVERA TROCA PADRÃO",
-                      },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "padrao.respPagamento": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        padrao: { ...infoHolder.padrao, respPagamento: value },
-                      });
-                    }}
-                  />
-                  <NumberInput
-                    tag={"R$"}
-                    label={"Valor do padrão"}
-                    editable={editor}
-                    value={
-                      infoHolder.padrao?.valor ? infoHolder.padrao?.valor : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "padrao.valor": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        padrao: { ...infoHolder.padrao, valor: Number(value) },
-                      });
-                    }}
-                  />
-                  <SelectInput
-                    label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
-                    editable={editor}
-                    value={
-                      infoHolder.padrao?.respInstalacao
-                        ? infoHolder.padrao?.respInstalacao
-                        : "NÃO SE APLICA"
-                    }
-                    options={[
-                      { label: "AMPERE", value: "AMPERE" },
-                      { label: "CLIENTE", value: "CLIENTE" },
-                      { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "padrao.respInstalacao": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        padrao: { ...infoHolder.padrao, respInstalacao: value },
-                      });
-                    }}
-                  />
-                  <SelectInput
                     label={"Saída do cliente"}
                     editable={editor}
                     value={
@@ -774,28 +894,6 @@ function ModalComercial({
                         visitaTecnica: {
                           ...infoHolder.visitaTecnica,
                           saidaDoCliente: value,
-                        },
-                      });
-                    }}
-                  />
-                  <TextInput
-                    label={"Amperagem"}
-                    editable={editor}
-                    value={
-                      infoHolder.visitaTecnica?.amperagem
-                        ? infoHolder.visitaTecnica.amperagem
-                        : ""
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "visitaTecnica.amperagem": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          amperagem: value,
                         },
                       });
                     }}
@@ -2224,94 +2322,6 @@ function ModalComercial({
                       });
                     }}
                   />
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      AUMENTO DE CARGA
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={!editor}
-                        checked={
-                          infoHolder.projeto?.aumentoDeCarga === "SIM"
-                            ? true
-                            : false
-                        }
-                        onChange={(e) => {
-                          setChanges({
-                            ...changes,
-                            "projeto.aumentoDeCarga": e.target.checked
-                              ? "SIM"
-                              : "NÃO",
-                            "projeto.acStatus":
-                              e.target.checked &&
-                              infoHolder.acStatus != "REALIZADO"
-                                ? "PÊNDENCIA"
-                                : undefined,
-                          });
-                          setInfo({
-                            ...infoHolder,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
-                              acStatus:
-                                e.target.checked &&
-                                infoHolder.acStatus != "REALIZADO"
-                                  ? "PÊNDENCIA"
-                                  : undefined,
-                            },
-                          });
-                        }}
-                        type="checkbox"
-                        name="aumentodecarga"
-                        id="aumentodecarga"
-                      />
-                      <label className="ml-2" htmlFor="aumentodecarga">
-                        SIM
-                      </label>
-                    </div>
-                  </div>
-                  {infoHolder.projeto?.aumentoDeCarga == "SIM" && (
-                    <SelectInput
-                      label={"STATUS AUMENTO DE CARGA"}
-                      editable={editor}
-                      value={
-                        infoHolder.projeto.acStatus
-                          ? infoHolder.projeto.acStatus
-                          : "NÃO DEFINIDO"
-                      }
-                      options={[
-                        {
-                          label: "PENDÊNCIA",
-                          value: "PENDÊNCIA",
-                        },
-                        {
-                          label: "REALIZADO",
-                          value: "REALIZADO",
-                        },
-                        {
-                          label: "SOLICITADO COM G.D",
-                          value: "SOLICITADO COM G.D",
-                        },
-                        {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
-                        },
-                      ]}
-                      handleChange={(value) => {
-                        setChanges({
-                          ...changes,
-                          "projeto.acStatus": value,
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          projeto: {
-                            ...infoHolder.projeto,
-                            acStatus: value,
-                          },
-                        });
-                      }}
-                    />
-                  )}
                   <DateInput
                     label={"DATA DO PEDIDO DE VISTORIA"}
                     editable={editor}
@@ -2865,7 +2875,7 @@ function ModalComercial({
                     value={
                       infoHolder.material?.previsaoCustos != undefined &&
                       infoHolder.material?.previsaoCustos != "#VALUE!"
-                        ? infoHolder.material?.previsaoCustos
+                        ? infoHolder.material?.previsaoCustos.toFixed(2)
                         : 0
                     }
                     handleChange={(value) => {

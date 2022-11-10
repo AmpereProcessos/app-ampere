@@ -270,14 +270,11 @@ function ModalOeM({
                         console.log(value);
                         setChanges({
                           ...changes,
-                          vendedor: {
-                            ...infoHolder.vendedor,
-                            nome: value,
-                            codigo:
-                              vendedores.filter(
-                                (vendedor) => vendedor.nome == value
-                              )[0].cod || "-",
-                          },
+                          "vendedor.nome": value,
+                          "vendedor.codigo":
+                            vendedores.filter(
+                              (vendedor) => vendedor.nome == value
+                            )[0].cod || "-",
                         });
                         setInfo({
                           ...infoHolder,
@@ -328,6 +325,14 @@ function ModalOeM({
                     }}
                   />
                 </div>
+                {infoHolder.linkDrive && (
+                  <p className="text-center my-2 italic font-bold">
+                    Vá para a pasta do drive{" "}
+                    <a className="text-blue-400" href={infoHolder.linkDrive}>
+                      {infoHolder.linkDrive}
+                    </a>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -665,12 +670,9 @@ function ModalOeM({
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          visitaTecnica: {
-                            ...infoHolder.visitaTecnica,
-                            status: e.target.checked
-                              ? "REALIZADA"
-                              : "PENDÊNCIA",
-                          },
+                          "visitaTecnica.status": e.target.checked
+                            ? "REALIZADA"
+                            : "PENDÊNCIA",
                         });
                         setInfo({
                           ...infoHolder,
@@ -701,10 +703,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          tecnico: value,
-                        },
+                        "visitaTecnica.tecnico": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -731,10 +730,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          saidaDoCliente: value,
-                        },
+                        "visitaTecnica.saidaDoCliente": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -756,10 +752,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          amperagem: value,
-                        },
+                        "visitaTecnica.amperagem": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -781,10 +774,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          tipoDaTelha: value,
-                        },
+                        "visitaTecnica.tipoDaTelha": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -813,10 +803,9 @@ function ModalOeM({
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          estruturaPersonalizada: {
-                            ...infoHolder.estruturaPersonalizada,
-                            aplicavel: e.target.checked ? "SIM" : "NÃO",
-                          },
+                          "estruturaPersonalizada.aplicavel": e.target.checked
+                            ? "SIM"
+                            : "NÃO",
                         });
                         setInfo({
                           ...infoHolder,
@@ -853,10 +842,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          tipo: value,
-                        },
+                        "estruturaPersonalizada.tipo": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -883,10 +869,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          respPagamento: value,
-                        },
+                        "estruturaPersonalizada.respPagamento": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -910,10 +893,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          valor: Number(value),
-                        },
+                        "estruturaPersonalizada.valor": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -943,10 +923,7 @@ function ModalOeM({
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          estruturaPersonalizada: {
-                            ...infoHolder.estruturaPersonalizada,
-                            status: value,
-                          },
+                          "estruturaPersonalizada.status": value,
                         });
                         setInfo({
                           ...infoHolder,
@@ -979,10 +956,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          dataLiberacao: new Date(value).toISOString(),
-                        },
+                        "compra.dataLiberacao": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1007,10 +981,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          dataPagamento: new Date(value).toISOString(),
-                        },
+                        "compra.dataPagamento": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1034,10 +1005,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          fornecedor: value,
-                        },
+                        "compra.fornecedor": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1074,10 +1042,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          tipoDoKit: value,
-                        },
+                        "compra.tipoDoKit": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1101,10 +1066,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          valorDoKit: Number(value),
-                        },
+                        "compra.valorDoKit": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1132,10 +1094,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          localEntrega: value,
-                        },
+                        "compra.localEntrega": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1157,10 +1116,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          informacoes: value,
-                        },
+                        "compra.informacoes": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1200,10 +1156,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          statusEntrega: value,
-                        },
+                        "compra.statusEntrega": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1232,10 +1185,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dadosCemig: {
-                          ...infoHolder.dadosCemig,
-                          titularProjeto: value,
-                        },
+                        "dadosCemig.titularProjeto": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1257,10 +1207,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dadosCemig: {
-                          ...infoHolder.dadosCemig,
-                          numeroInstalacao: value,
-                        },
+                        "dadosCemig.numeroInstalacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1287,10 +1234,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        dadosCemig: {
-                          ...infoHolder.dadosCemig,
-                          distCreditos: value,
-                        },
+                        "dadosCemig.distCreditos": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1314,10 +1258,7 @@ function ModalOeM({
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          dadosCemig: {
-                            ...infoHolder.dadosCemig,
-                            qtdeDistCreditos: Number(value),
-                          },
+                          "dadosCemig.qtdeDistCreditos": Number(value),
                         });
                         setInfo({
                           ...infoHolder,
@@ -1348,10 +1289,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          qtdeModulos: Number(value),
-                        },
+                        "sistema.qtdeModulos": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1375,10 +1313,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          potModulos: Number(value),
-                        },
+                        "sistema.potModulos": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1402,10 +1337,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          potPico: Number(value),
-                        },
+                        "sistema.potPico": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1433,10 +1365,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          topologia: value,
-                        },
+                        "sistema.topologia": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1458,10 +1387,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          inversor: value,
-                        },
+                        "sistema.inversor": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1485,10 +1411,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          valorProjeto: Number(value),
-                        },
+                        "sistema.valorProjeto": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1518,10 +1441,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          iniciar: value,
-                        },
+                        "projeto.iniciar": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1572,13 +1492,11 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          projetista: {
-                            ...infoHolder.projeto.projetista,
-                            nome: value,
-                          },
-                        },
+                        "projeto.projetista.nome": value,
+                        "projeto.projetista.codigo":
+                          projetistas.filter(
+                            (projetista) => projetista.nome == value
+                          )[0].cod || "-",
                       });
                       setInfo({
                         ...infoHolder,
@@ -1603,10 +1521,9 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          dataAssDocumentacao: new Date(value).toISOString(),
-                        },
+                        "projeto.dataAssDocumentacao": new Date(
+                          value
+                        ).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1631,10 +1548,9 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        parecer: {
-                          ...infoHolder.parecer,
-                          dataParecerDeAcesso: new Date(value).toISOString(),
-                        },
+                        "parecer.dataParecerDeAcesso": new Date(
+                          value
+                        ).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1690,10 +1606,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        parecer: {
-                          ...infoHolder.parecer,
-                          statusDoParecerDeAcesso: value,
-                        },
+                        "parecer.statusDoParecerDeAcesso": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1719,12 +1632,9 @@ function ModalOeM({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              diagramaUnifilar: e.target.checked
-                                ? "Ok"
-                                : "PENDÊNCIA",
-                            },
+                            "projeto.diagramaUnifilar": e.target.checked
+                              ? "Ok"
+                              : "PENDÊNCIA",
                           });
                           setInfo({
                             ...infoHolder,
@@ -1760,12 +1670,9 @@ function ModalOeM({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              desenhoTelhado: e.target.checked
-                                ? "OK"
-                                : "PENDÊNCIA",
-                            },
+                            "projeto.desenhoTelhado": e.target.checked
+                              ? "OK"
+                              : "PENDÊNCIA",
                           });
                           setInfo({
                             ...infoHolder,
@@ -1803,10 +1710,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          mapaDeMicro: value,
-                        },
+                        "projeto.mapaDeMicro": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1832,15 +1736,14 @@ function ModalOeM({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
-                              acStatus:
-                                e.target.checked &&
-                                infoHolder.acStatus != "REALIZADO"
-                                  ? "PÊNDENCIA"
-                                  : undefined,
-                            },
+                            "projeto.aumentoDeCarga": e.target.checked
+                              ? "SIM"
+                              : "NÃO",
+                            "projeto.acStatus":
+                              e.target.checked &&
+                              infoHolder.acStatus != "REALIZADO"
+                                ? "PÊNDENCIA"
+                                : undefined,
                           });
                           setInfo({
                             ...infoHolder,
@@ -1880,12 +1783,9 @@ function ModalOeM({
                           onChange={(e) => {
                             setChanges({
                               ...changes,
-                              projeto: {
-                                ...infoHolder.projeto,
-                                acStatus: e.target.checked
-                                  ? "REALIZADO"
-                                  : "PENDÊNCIA",
-                              },
+                              "projeto.acStatus": e.target.checked
+                                ? "REALIZADO"
+                                : "PENDÊNCIA",
                             });
                             setInfo({
                               ...infoHolder,
@@ -1921,10 +1821,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        vistoria: {
-                          ...infoHolder.vistoria,
-                          dataPedido: new Date(value).toISOString(),
-                        },
+                        "vistoria.dataPedido": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1954,10 +1851,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        vistoria: {
-                          ...infoHolder.vistoria,
-                          status: value,
-                        },
+                        "vistoria.status": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1982,10 +1876,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        medidor: {
-                          ...infoHolder.medidor,
-                          data: new Date(value).toISOString(),
-                        },
+                        "medidor.data": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -2015,10 +1906,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        medidor: {
-                          ...infoHolder.medidor,
-                          status: value,
-                        },
+                        "medidor.status": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2044,12 +1932,9 @@ function ModalOeM({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              projetoConcluido: e.target.checked
-                                ? "SIM"
-                                : "NÃO",
-                            },
+                            "projeto.projetoConcluido": e.target.checked
+                              ? "SIM"
+                              : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
@@ -2093,10 +1978,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          laudo: value,
-                        },
+                        "obra.laudo": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2122,12 +2004,9 @@ function ModalOeM({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              statusSolicitacao: e.target.checked
-                                ? "SOLICITADA"
-                                : "NÃO SOLICITADA",
-                            },
+                            "obra.statusSolicitacao": e.target.checked
+                              ? "SOLICITADA"
+                              : "NÃO SOLICITADA",
                           });
                           setInfo({
                             ...infoHolder,
@@ -2162,10 +2041,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          entrada: new Date(value).toISOString(),
-                        },
+                        "obra.entrada": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -2190,10 +2066,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          saida: new Date(value).toISOString(),
-                        },
+                        "obra.saida": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -2282,10 +2155,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          equipeResp: value,
-                        },
+                        "obra.equipeResp": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2309,10 +2179,7 @@ function ModalOeM({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              checklist: e.target.checked ? "SIM" : "NÃO",
-                            },
+                            "obra.checklist": e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
@@ -2344,10 +2211,7 @@ function ModalOeM({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            obra: {
-                              ...infoHolder.obra,
-                              trafo: e.target.checked ? "SIM" : "NÃO",
-                            },
+                            "obra.trafo": e.target.checked ? "SIM" : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
@@ -2403,10 +2267,7 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          statusDaObra: value,
-                        },
+                        "obra.statusDaObra": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -2432,10 +2293,7 @@ function ModalOeM({
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          obra: {
-                            ...infoHolder.obra,
-                            observacoes: e.target.value,
-                          },
+                          "obra.observacoes": e.target.value,
                         });
                         setInfo({
                           ...infoHolder,

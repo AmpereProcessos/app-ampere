@@ -317,14 +317,11 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         console.log(value);
                         setChanges({
                           ...changes,
-                          vendedor: {
-                            ...infoHolder.vendedor,
-                            nome: value,
-                            codigo:
-                              vendedores.filter(
-                                (vendedor) => vendedor.nome == value
-                              )[0].cod || "-",
-                          },
+                          "vendedor.nome": value,
+                          "vendedor.codigo":
+                            vendedores.filter(
+                              (vendedor) => vendedor.nome == value
+                            )[0].cod || "-",
                         });
                         setInfo({
                           ...infoHolder,
@@ -356,6 +353,16 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     }}
                   />
                   <TextInput
+                    label={"LINK PASTA DO DRIVE"}
+                    editable={editor}
+                    normalCase={true}
+                    value={infoHolder.linkDrive ? infoHolder.linkDrive : ""}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, linkDrive: value });
+                      setInfo({ ...infoHolder, linkDrive: value });
+                    }}
+                  />
+                  <TextInput
                     label="TIPO DE SERVIÇO"
                     value={infoHolder.tipoDeServico}
                     editable={editor}
@@ -365,6 +372,14 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     }}
                   />
                 </div>
+                {infoHolder.linkDrive && (
+                  <p className="text-center my-2 italic font-bold">
+                    Vá para a pasta do drive{" "}
+                    <a className="text-blue-400" href={infoHolder.linkDrive}>
+                      {infoHolder.linkDrive}
+                    </a>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -402,7 +417,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, respPagamento: value },
+                        "padrao.respPagamento": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -420,7 +435,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, valor: Number(value) },
+                        "padrao.valor": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -444,7 +459,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        padrao: { ...infoHolder.padrao, respInstalacao: value },
+                        "padrao.respInstalacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -470,10 +485,9 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       onChange={(e) => {
                         setChanges({
                           ...changes,
-                          estruturaPersonalizada: {
-                            ...infoHolder.estruturaPersonalizada,
-                            aplicavel: e.target.checked ? "SIM" : "NÃO",
-                          },
+                          "estruturaPersonalizada.aplicavel": e.target.checked
+                            ? "SIM"
+                            : "NÃO",
                         });
                         setInfo({
                           ...infoHolder,
@@ -510,10 +524,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          tipo: value,
-                        },
+                        "estruturaPersonalizada.tipo": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -540,10 +551,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          respPagamento: value,
-                        },
+                        "estruturaPersonalizada.respPagamento": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -567,10 +575,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          valor: Number(value),
-                        },
+                        "estruturaPersonalizada.valor": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -600,10 +605,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          estruturaPersonalizada: {
-                            ...infoHolder.estruturaPersonalizada,
-                            status: value,
-                          },
+                          "estruturaPersonalizada.status": value,
                         });
                         setInfo({
                           ...infoHolder,
@@ -647,10 +649,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        contrato: {
-                          ...infoHolder.contrato,
-                          status: value,
-                        },
+                        "contrato.status": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -675,10 +674,9 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        contrato: {
-                          ...infoHolder.contrato,
-                          dataAssinatura: new Date(value).toISOString(),
-                        },
+                        "contrato.dataAssinatura": new Date(
+                          value
+                        ).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1087,10 +1085,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          dataLiberacao: new Date(value).toISOString(),
-                        },
+                        "compra.dataLiberacao": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1139,10 +1134,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          fornecedor: value,
-                        },
+                        "compra.fornecedor": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1184,10 +1176,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          tipoDoKit: value,
-                        },
+                        "compra:.tipoDoKit": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1211,10 +1200,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          valorDoKit: Number(value),
-                        },
+                        "compra.valorDoKit": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1242,10 +1228,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        compra: {
-                          ...infoHolder.compra,
-                          localEntrega: value,
-                        },
+                        "compra.localEntrega": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1374,10 +1357,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          qtdeModulos: Number(value),
-                        },
+                        "sistema.qtdeModulos": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1401,10 +1381,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          potModulos: Number(value),
-                        },
+                        "sistema.potModulos": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1428,10 +1405,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          potPico: Number(value),
-                        },
+                        "sistema.potPico": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1459,10 +1433,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          topologia: value,
-                        },
+                        "sistema.topologia": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1484,10 +1455,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          inversor: value,
-                        },
+                        "sistema.inversor": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1511,10 +1479,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...changes.sistema,
-                          valorProjeto: Number(value),
-                        },
+                        "sistema.valorProjeto": Number(value),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1546,10 +1511,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          entrada: new Date(value).toISOString(),
-                        },
+                        "obra.entrada": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1574,10 +1536,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          saida: new Date(value).toISOString(),
-                        },
+                        "obra.saida": new Date(value).toISOString(),
                       });
                       setInfo({
                         ...infoHolder,
@@ -1625,10 +1584,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          statusDaObra: value,
-                        },
+                        "obra.statusDaObra": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1717,10 +1673,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        obra: {
-                          ...infoHolder.obra,
-                          equipeResp: value,
-                        },
+                        "obra.equipeResp": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1763,10 +1716,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        material: {
-                          ...infoHolder.material,
-                          statusSeparacao: value,
-                        },
+                        "material.statusSeparacao": value,
                       });
                       setInfo({
                         ...infoHolder,
@@ -1790,10 +1740,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        material: {
-                          ...infoHolder.material,
-                          previsaoCustos: Number(value),
-                        },
+                        "material.previsaoCustos": Number(value),
                       });
                       setInfo({
                         ...infoHolder,

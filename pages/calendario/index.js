@@ -115,7 +115,7 @@ const Calendar = ({ arr }) => {
             week: "SEMANA",
             day: "DIA",
           }}
-          locale={"BR"}
+          locale={"pt-br"}
           plugins={[timeGridPlugin, interactionPlugin, dayGridPlugin]}
           dayHeaderFormat={{ weekday: "narrow" }}
           titleFormat={{ year: "numeric", month: "long" }}
@@ -128,8 +128,8 @@ const Calendar = ({ arr }) => {
           events={[
             {
               title: "DIEGO BRAS OLIVEIRA CAIXETA",
-              start: "2022-11-10T00:00:00.000Z",
-              end: "2022-11-11T04:00:00.000Z",
+              start: "2022-11-10",
+              end: "2022-11-12T04:00:00.000Z",
               id: "6353ea37e559693d01d5a10c",
               qtde: 836,
               equipe: "EQUIPE 6-FELIPE",
@@ -145,8 +145,7 @@ const Calendar = ({ arr }) => {
           selectable
           defaultAllDay={true}
           handleWindowResize={true}
-          eventResize={(e) => handleResize(e)}
-          eventDrop={(e) => handleDragDrop(e)}
+          eventChange={(e) => console.log(e)}
           eventClick={(e) => handleClick(e)}
           height={650}
         />

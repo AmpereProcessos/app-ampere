@@ -218,11 +218,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
     setDadosDistribuicao({ numInstalacao: "", excedente: 0 });
   }
   function saveChanges() {
-    axios
-      .put("/api/solicitacoes/contrato", dados)
-      .then((res) =>
-        setMessage({ text: "Alterações feitas", color: "text-green-500" })
-      );
+    axios.put("/api/solicitacoes/contrato", dados).then((res) => {
+      setMessage({ text: "Alterações feitas", color: "text-green-500" });
+      setDados({ ...dados, aprovacao: true });
+    });
   }
   async function addProject() {
     await axios.put("/api/solicitacoes/contrato", {
@@ -258,7 +257,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
       status: "PENDÊNCIA",
       tecnico: "",
       saidaDoCliente: "",
-      amperagem: "",
+      amperagem: dados.tipoDePadrao,
       tipoDaTelha: "",
     },
     padrao: {
@@ -330,7 +329,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
       potPico: dados.potPico,
       topologia: dados.topologia,
       inversor: `${dados.qtdeInversor} - ${dados.potInversor}`,
-      valorProjeto: 0,
+      valorProjeto: dados.valorContrato,
     },
     projeto: {
       iniciar: "NÃO DEFINIDO",

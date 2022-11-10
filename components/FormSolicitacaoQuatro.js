@@ -160,7 +160,9 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
           label={"MARCA DOS MÓDULOS"}
           editable={true}
           value={dados.marcaModulos}
-          handleChange={(value) => setDados({ ...dados, marcaModulos: value })}
+          handleChange={(value) =>
+            setDados({ ...dados, marcaModulos: value.toUpperCase() })
+          }
         />
         <NumberInput
           label={"Nº DE MÓDULOS"}

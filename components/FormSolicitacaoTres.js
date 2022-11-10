@@ -185,7 +185,7 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
           editable={true}
           value={dados.enderecoInstalacao}
           handleChange={(value) =>
-            setDados({ ...dados, enderecoInstalacao: value })
+            setDados({ ...dados, enderecoInstalacao: value.toUpperCase() })
           }
         />
         <NumberInput
@@ -209,7 +209,7 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
           editable={true}
           value={dados.bairroInstalacao}
           handleChange={(value) =>
-            setDados({ ...dados, bairroInstalacao: value })
+            setDados({ ...dados, bairroInstalacao: value.toUpperCase() })
           }
         />
         <SelectInput
@@ -240,6 +240,7 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
         <TextInput
           label={"LOGIN(CEMIG ATENDE)"}
           editable={true}
+          normalCase={true}
           value={dados.loginCemigAtende}
           handleChange={(value) =>
             setDados({ ...dados, loginCemigAtende: value })
@@ -247,6 +248,7 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
         />
         <TextInput
           label={"SENHA(CEMIG ATENDE)"}
+          normalCase={true}
           editable={true}
           value={dados.senhaCemigAtende}
           handleChange={(value) =>
@@ -282,7 +284,7 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
           editable={true}
           value={dados.geracaoPrevista}
           handleChange={(value) =>
-            setDados({ ...dados, geracaoPrevista: value })
+            setDados({ ...dados, geracaoPrevista: Number(value) })
           }
         />
       </div>

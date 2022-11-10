@@ -438,6 +438,14 @@ function ModalObras({
                     }}
                   />
                 </div>
+                {infoHolder.linkDrive && (
+                  <p className="text-center my-2 italic font-bold">
+                    Vá para a pasta do drive{" "}
+                    <a className="text-blue-400" href={infoHolder.linkDrive}>
+                      {infoHolder.linkDrive}
+                    </a>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -451,7 +459,7 @@ function ModalObras({
                         ? infoHolder.obra?.laudo
                         : "NÃO DEFINIDO"
                     }
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "EM ESTUDO", value: "EM ESTUDO" },
                       { label: "EMITIDO", value: "EMITIDO" },
@@ -471,90 +479,6 @@ function ModalObras({
                       });
                     }}
                   />
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      AUMENTO DE CARGA
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={!editor}
-                        checked={
-                          infoHolder.projeto?.aumentoDeCarga === "SIM"
-                            ? true
-                            : false
-                        }
-                        onChange={(e) => {
-                          setChanges({
-                            ...changes,
-                            "projeto.aumentoDeCarga": e.target.checked
-                              ? "SIM"
-                              : "NÃO",
-                            "projeto.acStatus":
-                              e.target.checked &&
-                              infoHolder.acStatus != "REALIZADO"
-                                ? "PÊNDENCIA"
-                                : undefined,
-                          });
-                          setInfo({
-                            ...infoHolder,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
-                              acStatus:
-                                e.target.checked &&
-                                infoHolder.acStatus != "REALIZADO"
-                                  ? "PÊNDENCIA"
-                                  : undefined,
-                            },
-                          });
-                        }}
-                        type="checkbox"
-                        name="aumentodecarga"
-                        id="aumentodecarga"
-                      />
-                      <label className="ml-2" htmlFor="aumentodecarga">
-                        SIM
-                      </label>
-                    </div>
-                  </div>
-                  {infoHolder.projeto.aumentoDeCarga == "SIM" && (
-                    <SelectInput
-                      label={"STATUS AUMENTO DE CARGA"}
-                      editable={editor}
-                      value={
-                        infoHolder.projeto.acStatus
-                          ? infoHolder.projeto.acStatus
-                          : "NÃO DEFINIDO"
-                      }
-                      options={[
-                        {
-                          label: "PENDÊNCIA",
-                          value: "PENDÊNCIA",
-                        },
-                        {
-                          label: "REALIZADO",
-                          value: "REALIZADO",
-                        },
-                        {
-                          label: "SOLICITADO COM G.D",
-                          value: "SOLICITADO COM G.D",
-                        },
-                      ]}
-                      handleChange={(value) => {
-                        setChanges({
-                          ...changes,
-                          "projeto.acStatus": value,
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          projeto: {
-                            ...infoHolder.projeto,
-                            acStatus: value,
-                          },
-                        });
-                      }}
-                    />
-                  )}
                   <TextInput
                     label={"Status entrega dos equipamentos"}
                     editable={false}
@@ -576,6 +500,40 @@ function ModalObras({
                         : 0
                     }
                   />
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      TRAFO
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={true}
+                        checked={
+                          infoHolder.obra?.trafo === "SIM" ? true : false
+                        }
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            "obra.trafo": e.target.checked ? "SIM" : "NÃO",
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            obra: {
+                              ...infoHolder.obra,
+                              trafo: e.target.checked ? "SIM" : "NÃO",
+                            },
+                          });
+                        }}
+                        type="checkbox"
+                        name="trafo"
+                        id="trafo"
+                      />
+                      <label className="ml-2" htmlFor="trafo">
+                        APLICÁVEL ?
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2 justify-center flex-wrap mt-2">
                   <DateInput
                     label={"ENTRADA NA OBRA"}
                     editable={editor}
@@ -743,38 +701,6 @@ function ModalObras({
                         id="checklistobra"
                       />
                       <label className="ml-2" htmlFor="checklistobra">
-                        SIM
-                      </label>
-                    </div>
-                  </div>
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      TRAFO
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={!editor}
-                        checked={
-                          infoHolder.obra?.trafo === "SIM" ? true : false
-                        }
-                        onChange={(e) => {
-                          setChanges({
-                            ...changes,
-                            "obra.trafo": e.target.checked ? "SIM" : "NÃO",
-                          });
-                          setInfo({
-                            ...infoHolder,
-                            obra: {
-                              ...infoHolder.obra,
-                              trafo: e.target.checked ? "SIM" : "NÃO",
-                            },
-                          });
-                        }}
-                        type="checkbox"
-                        name="trafo"
-                        id="trafo"
-                      />
-                      <label className="ml-2" htmlFor="trafo">
                         SIM
                       </label>
                     </div>
@@ -1505,85 +1431,91 @@ function ModalObras({
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   PADRÃO
                 </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <SelectInput
-                    label={"TIPO DO PADRÃO"}
-                    editable={editor}
-                    value={
-                      infoHolder.padrao.tipo != undefined
-                        ? infoHolder.padrao.tipo
-                        : "N/A"
-                    }
-                    options={[
-                      {
-                        label: "CONTRA A REDE",
-                        value: "CONTRA A REDE",
-                      },
-                      {
-                        label: "A FAVOR DA REDE",
-                        value: "A FAVOR DA REDE",
-                      },
-                      {
-                        label: "CONSTRUIR",
-                        value: "CONSTRUIR",
-                      },
-                      {
-                        label: "SUBESTAÇÃO",
-                        value: "SUBESTAÇÃO",
-                      },
-                      {
-                        label: "REFORMA DE PADRÃO",
-                        value: "REFORMA DE PADRÃO",
-                      },
-                      {
-                        label: "N/A",
-                        value: "N/A",
-                      },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "padrao.tipo": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        padrao: { ...infoHolder.padrao, tipo: value },
-                      });
-                    }}
-                  />
-                  <SelectInput
-                    label={"TIPO DE ENTRADA"}
-                    value={
-                      infoHolder.padrao.tipoEntrada
-                        ? infoHolder.padrao.tipoEntrada
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      {
-                        label: "AÉREA",
-                        value: "AÉREA",
-                      },
-                      {
-                        label: "SUBTERRÂNEO",
-                        value: "SUBTERRÂNEO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({ ...changes, "padrao.tipoEntrada": value });
-                      setInfo({
-                        ...infoHolder,
-                        padrao: {
-                          ...infoHolder.padrao,
-                          tipoEntrada: value,
+                <div className="flex gap-2 w-full justify-center flex-wrap pb-2">
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      AUMENTO DE CARGA
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={true}
+                        checked={
+                          infoHolder.projeto?.aumentoDeCarga === "SIM"
+                            ? true
+                            : false
+                        }
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            "projeto.aumentoDeCarga": e.target.checked
+                              ? "SIM"
+                              : "NÃO",
+                            "projeto.acStatus":
+                              e.target.checked &&
+                              infoHolder.acStatus != "REALIZADO"
+                                ? "PÊNDENCIA"
+                                : undefined,
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            projeto: {
+                              ...infoHolder.projeto,
+                              aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
+                              acStatus:
+                                e.target.checked &&
+                                infoHolder.acStatus != "REALIZADO"
+                                  ? "PÊNDENCIA"
+                                  : undefined,
+                            },
+                          });
+                        }}
+                        type="checkbox"
+                        name="aumentodecarga"
+                        id="aumentodecarga"
+                      />
+                      <label className="ml-2" htmlFor="aumentodecarga">
+                        APLICÁVEL?
+                      </label>
+                    </div>
+                  </div>
+                  {infoHolder.projeto.aumentoDeCarga == "SIM" && (
+                    <SelectInput
+                      label={"STATUS AUMENTO DE CARGA"}
+                      editable={editor}
+                      value={
+                        infoHolder.projeto.acStatus
+                          ? infoHolder.projeto.acStatus
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        {
+                          label: "PENDÊNCIA",
+                          value: "PENDÊNCIA",
                         },
-                      });
-                    }}
-                  />
+                        {
+                          label: "REALIZADO",
+                          value: "REALIZADO",
+                        },
+                        {
+                          label: "SOLICITADO COM G.D",
+                          value: "SOLICITADO COM G.D",
+                        },
+                      ]}
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          "projeto.acStatus": value,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          projeto: {
+                            ...infoHolder.projeto,
+                            acStatus: value,
+                          },
+                        });
+                      }}
+                    />
+                  )}
                   <SelectInput
                     label={"PAGAMENTO DO PADRÃO"}
                     editable={false}
@@ -1665,6 +1597,108 @@ function ModalObras({
                       });
                     }}
                   />
+                  <TextInput
+                    label={"Amperagem"}
+                    editable={false}
+                    value={
+                      infoHolder.visitaTecnica?.amperagem
+                        ? infoHolder.visitaTecnica.amperagem
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "visitaTecnica.amperagem": value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        visitaTecnica: {
+                          ...infoHolder.visitaTecnica,
+                          amperagem: value,
+                        },
+                      });
+                    }}
+                  />
+                </div>
+                <div className="flex gap-2 justify-center flex-wrap pt-2 border-t border-gray-200">
+                  <SelectInput
+                    label={"TIPO DO PADRÃO"}
+                    editable={editor}
+                    value={
+                      infoHolder.padrao.tipo != undefined
+                        ? infoHolder.padrao.tipo
+                        : "N/A"
+                    }
+                    options={[
+                      {
+                        label: "CONTRA A REDE",
+                        value: "CONTRA A REDE",
+                      },
+                      {
+                        label: "A FAVOR DA REDE",
+                        value: "A FAVOR DA REDE",
+                      },
+                      {
+                        label: "CONSTRUIR",
+                        value: "CONSTRUIR",
+                      },
+                      {
+                        label: "SUBESTAÇÃO",
+                        value: "SUBESTAÇÃO",
+                      },
+                      {
+                        label: "REFORMA DE PADRÃO",
+                        value: "REFORMA DE PADRÃO",
+                      },
+                      {
+                        label: "N/A",
+                        value: "N/A",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "padrao.tipo": value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: { ...infoHolder.padrao, tipo: value },
+                      });
+                    }}
+                  />
+                  <SelectInput
+                    label={"TIPO DE ENTRADA"}
+                    value={
+                      infoHolder.padrao.tipoEntrada
+                        ? infoHolder.padrao.tipoEntrada
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    options={[
+                      {
+                        label: "AÉREA",
+                        value: "AÉREA",
+                      },
+                      {
+                        label: "SUBTERRÂNEO",
+                        value: "SUBTERRÂNEO",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, "padrao.tipoEntrada": value });
+                      setInfo({
+                        ...infoHolder,
+                        padrao: {
+                          ...infoHolder.padrao,
+                          tipoEntrada: value,
+                        },
+                      });
+                    }}
+                  />
                   <SelectInput
                     label={"Saída do cliente"}
                     editable={editor}
@@ -1692,28 +1726,6 @@ function ModalObras({
                       });
                     }}
                   />
-                  <TextInput
-                    label={"Amperagem"}
-                    editable={editor}
-                    value={
-                      infoHolder.visitaTecnica?.amperagem
-                        ? infoHolder.visitaTecnica.amperagem
-                        : ""
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "visitaTecnica.amperagem": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          amperagem: value,
-                        },
-                      });
-                    }}
-                  />
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
@@ -1723,7 +1735,7 @@ function ModalObras({
                 <div className="flex gap-2 justify-center flex-wrap">
                   <div>
                     <input
-                      disabled={!editor}
+                      disabled={true}
                       checked={
                         infoHolder.estruturaPersonalizada?.aplicavel === "SIM"
                           ? true
@@ -1749,7 +1761,7 @@ function ModalObras({
                       id="visitaTecnica"
                     />
                     <label className="ml-2" htmlFor="visitaTecnica">
-                      APLICÁVEL
+                      APLICÁVEL ?
                     </label>
                   </div>
                   <SelectInput

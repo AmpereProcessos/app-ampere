@@ -215,7 +215,9 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
             label={"NºPROJETO SVB"}
             editable={true}
             value={dados.codigoSVB}
-            handleChange={(value) => setDados({ ...dados, codigoSVB: value })}
+            handleChange={(value) =>
+              setDados({ ...dados, codigoSVB: Number(value) })
+            }
           />
           <SelectInput
             label={"ESTADO CIVIL"}
@@ -575,6 +577,7 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
           />
           <TextInput
             label={"LOGIN(CEMIG ATENDE)"}
+            normalCase={true}
             editable={true}
             value={dados.loginCemigAtende}
             handleChange={(value) =>
@@ -583,6 +586,7 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
           />
           <TextInput
             label={"SENHA(CEMIG ATENDE)"}
+            normalCase={true}
             editable={true}
             value={dados.senhaCemigAtende}
             handleChange={(value) =>

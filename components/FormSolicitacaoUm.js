@@ -403,7 +403,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
               editable={true}
               value={dados.nomeIndicador}
               handleChange={(value) =>
-                setDados({ ...dados, nomeIndicador: value })
+                setDados({ ...dados, nomeIndicador: value.toUpperCase() })
               }
             />
             <TextInput
@@ -411,7 +411,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
               editable={true}
               value={dados.telefoneIndicador}
               handleChange={(value) =>
-                setDados({ ...dados, telefoneIndicador: value })
+                setDados({ ...dados, telefoneIndicador: phoneMask(value) })
               }
             />
           </>

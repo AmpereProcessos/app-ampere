@@ -403,6 +403,14 @@ function ModalProjetos({
                     }}
                   />
                 </div>
+                {infoHolder.linkDrive && (
+                  <p className="text-center my-2 italic font-bold">
+                    Vá para a pasta do drive{" "}
+                    <a className="text-blue-400" href={infoHolder.linkDrive}>
+                      {infoHolder.linkDrive}
+                    </a>
+                  </p>
+                )}
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">

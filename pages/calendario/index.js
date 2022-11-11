@@ -50,10 +50,12 @@ const Calendar = ({ arr }) => {
     var fim = new Date(
       dayJS(e.event._instance.range.end).subtract(1, "day").$d
     ).toISOString();
+    var index = e.event._def.extendedProps.index;
+    console.log(index);
     axios
       .post(`/api/projects/update/${id}`, {
-        "agendamentoObra.inicio": inicio,
-        "agendamentoObra.fim": fim,
+        [`ordensDeServico.${index}.inicioServico`]: inicio,
+        [`ordensDeServico.${index}.fimServico`]: fim,
       })
       .then((res) => console.log(res));
   }
@@ -64,10 +66,12 @@ const Calendar = ({ arr }) => {
     var fim = new Date(
       dayJS(e.event._instance.range.end).subtract(1, "day").$d
     ).toISOString();
+    var index = e.event._def.extendedProps.index;
+    console.log(index);
     axios
       .post(`/api/projects/update/${id}`, {
-        "agendamentoObra.inicio": inicio,
-        "agendamentoObra.fim": fim,
+        [`ordensDeServico.${index}.inicioServico`]: inicio,
+        [`ordensDeServico.${index}.fimServico`]: fim,
       })
       .then((res) => console.log(res));
   }
@@ -151,6 +155,8 @@ const Calendar = ({ arr }) => {
           selectable
           defaultAllDay={true}
           handleWindowResize={true}
+          eventResize={(e) => handleResize(e)}
+          eventDrop={(e) => handleDragDrop(e)}
           eventClick={(e) => handleClick(e)}
           height={650}
         />
@@ -194,10 +200,11 @@ export async function getServerSideProps() {
     .toArray();
   let eventos = [];
   arr.forEach((item) =>
-    item.ordensDeServico.forEach((x) => {
+    item.ordensDeServico.forEach((x, index) => {
       if (x.agendar) {
         eventos.push({
           id: item._id,
+          index: index,
           qtde: item.qtde,
           nomeDoContrato: item.nomeDoContrato,
           categoria: x.categoria,
@@ -219,6 +226,7 @@ export async function getServerSideProps() {
   eventos = eventos?.map((evento) => {
     return {
       title: evento.nomeDoContrato,
+      index: evento.index,
       categoria: evento.categoria,
       servicoExecutado: evento.servicoExecutado,
       start: dayJS(evento.inicioServico).add(3, "hours").format("YYYY-MM-DD"),

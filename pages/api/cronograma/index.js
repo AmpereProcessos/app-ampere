@@ -29,10 +29,11 @@ export default async function handler(req, res) {
       .toArray();
     let eventos = [];
     arr.forEach((item) =>
-      item.ordensDeServico.forEach((x) => {
+      item.ordensDeServico.forEach((x, index) => {
         if (x.agendar) {
           eventos.push({
             id: item._id,
+            index: index,
             qtde: item.qtde,
             nomeDoContrato: item.nomeDoContrato,
             cidade: item.cidade ? item.cidade : "-",

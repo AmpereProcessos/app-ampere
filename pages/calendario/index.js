@@ -151,9 +151,7 @@ const Calendar = ({ arr }) => {
           selectable
           defaultAllDay={true}
           handleWindowResize={true}
-          eventDrop={(e) => handleDragDrop(e)}
           eventClick={(e) => handleClick(e)}
-          eventResize={(e) => handleResize(e)}
           height={650}
         />
       )}

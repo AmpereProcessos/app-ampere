@@ -149,9 +149,9 @@ const Calendar = ({ arr }) => {
         </button>
       </div>
       <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-2">
-        {cidadesCores.map((cidade) => (
-          <div>
-            <div className={`bg-[${cidade.cor}] p-1 rounded`}></div>
+        {cidadesCores.map((cidade, index) => (
+          <div key={index}>
+            <div className={`bg-[${cidade.cor}] w-[1px] h-[1px] rounded`}></div>
             <li>{cidade.nome}</li>
           </div>
         ))}

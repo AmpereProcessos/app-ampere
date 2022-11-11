@@ -179,6 +179,7 @@ function Suprimentos({ credentials, setCredentials }) {
             options={[
               { value: "EM ROTA", label: "EM ROTA" },
               { value: "AGUARDANDO COMPRA", label: "AGUARDANDO COMPRA" },
+              { value: "CANCELADO", label: "CANCELADO" },
               { value: undefined, label: "NÃO DEFINIDO" },
             ]}
           />

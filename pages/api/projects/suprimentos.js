@@ -16,6 +16,7 @@ export default async function handler(req, res) {
                 undefined,
                 " ",
                 "NÃO DEFINIDO",
+                "CANCELADO",
               ],
             },
             "contrato.status": "ASSINADO",

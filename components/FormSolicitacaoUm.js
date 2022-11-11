@@ -76,7 +76,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
       setMessage("Por favor, preencha um numéro de residência válido.");
       return false;
     }
-    if (dados.bairro.trim().length < 5) {
+    if (dados.bairro.trim().length < 3) {
       setMessage("Por favor, preencha um bairro válido.");
       return false;
     }

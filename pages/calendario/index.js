@@ -43,21 +43,8 @@ const Calendar = ({ arr }) => {
   const [filters, setFilters] = useState({
     cidadeFilter: [],
   });
-  /*function getEventos() {
-    axios.get("/api/cronograma").then((res) => setEventos(res.data));
-  }*/
   function handleResize(e) {
     console.log("RESIZE");
-    /*console.log(
-      "INICIO",
-      new Date(e.event._instance.range.start).toISOString()
-    );
-    console.log(
-      "FIM",
-      new Date(
-        dayJS(e.event._instance.range.end).subtract(1, "day").$d
-      ).toISOString()
-    );*/
     var id = e.event._def.publicId;
     var inicio = new Date(e.event._instance.range.start).toISOString();
     var fim = new Date(
@@ -69,15 +56,6 @@ const Calendar = ({ arr }) => {
         "agendamentoObra.fim": fim,
       })
       .then((res) => console.log(res));
-    // pegar novos dados em e.event._instance.range.(start e end)
-    /*axios
-      .post("/api/cronograma/update", {
-        id: e.event._def.extendedProps._id,
-        title: e.event._def.title,
-        start: new Date(e.event._instance.range.start).toLocaleDateString(),
-        end: new Date(e.event._instance.range.end).toLocaleDateString(),
-      })
-      .then((res) => console.log(res.data));*/
   }
   function handleDragDrop(e) {
     console.log("DROP");
@@ -86,7 +64,6 @@ const Calendar = ({ arr }) => {
     var fim = new Date(
       dayJS(e.event._instance.range.end).subtract(1, "day").$d
     ).toISOString();
-    // testar diferença entre e.oldEvent._instance.range.end com e.event._instance.range.end
     axios
       .post(`/api/projects/update/${id}`, {
         "agendamentoObra.inicio": inicio,
@@ -200,7 +177,7 @@ export async function getServerSideProps() {
     .aggregate([
       {
         $match: {
-          "agendamentoObra.inicio": { $gte: "2022-11-01T00:00:00.000Z" },
+          "ordensDeServico.agendar": true,
         },
       },
       {
@@ -211,32 +188,50 @@ export async function getServerSideProps() {
           logradouro: 1,
           bairro: 1,
           numeroResidencia: 1,
-          "obra.equipeResp": 1,
-          agendamentoObra: 1,
+          ordensDeServico: 1,
           "sistema.qtdeModulos": 1,
+          "sistema.potModulos": 1,
           "sistema.topologia": 1,
         },
       },
     ])
     .toArray();
-  arr = arr?.map((evento) => {
+  let eventos = [];
+  arr.forEach((item) =>
+    item.ordensDeServico.forEach((x) => {
+      if (x.agendar) {
+        eventos.push({
+          id: item._id,
+          qtde: item.qtde,
+          nomeDoContrato: item.nomeDoContrato,
+          cidade: item.cidade ? item.cidade : "-",
+          bairro: item.bairro ? item.bairro : "-",
+          logradouro: item.logradouro ? item.logradouro : "-",
+          numeroResidencia: item.numeroResidencia ? item.numeroResidencia : "-",
+          qtdeModulos: item.sistema.qtdeModulos
+            ? item.sistema.qtdeModulos
+            : "-",
+          potModulos: item.sistema.potModulos ? item.sistema.potModulos : "-",
+          topologia: item.sistema.topologia ? item.sistema.topologia : "-",
+          ...x,
+        });
+      }
+    })
+  );
+  eventos = eventos?.map((evento) => {
     return {
       title: evento.nomeDoContrato,
-      start: dayJS(evento.agendamentoObra.inicio)
-        .add(3, "hours")
-        .format("YYYY-MM-DD"),
-      end: dayJS(evento.agendamentoObra.fim)
-        .add(1, "days")
-        .format("YYYY-MM-DD"),
-      id: evento._id.toString(),
+      start: dayJS(evento.inicioServico).add(3, "hours").format("YYYY-MM-DD"),
+      end: dayJS(evento.fimServico).add(1, "days").format("YYYY-MM-DD"),
+      id: evento.id.toString(),
       qtde: evento.qtde,
-      equipe: evento.obra.equipeResp,
-      cidade: evento.cidade,
-      logradouro: evento.logradouro,
-      bairro: evento.bairro,
-      numeroResidencia: evento.numeroResidencia,
-      qtdeModulos: evento.sistema.qtdeModulos,
-      topologia: evento.sistema.topologia,
+      equipe: evento.equipe ? evento.equipe : "-",
+      cidade: evento.cidade ? evento.cidade : "-",
+      logradouro: evento.logradouro ? evento.logradouro : "-",
+      bairro: evento.bairro ? evento.bairro : "-",
+      numeroResidencia: evento.numeroResidencia ? evento.numeroResidencia : "-",
+      qtdeModulos: evento.qtdeModulos ? evento.qtdeModulos : "-",
+      topologia: evento.topologia ? evento.topologia : "-",
       backgroundColor: getColor(evento.cidade),
     };
   });
@@ -245,7 +240,7 @@ export async function getServerSideProps() {
   // will receive `posts` as a prop at build time
   return {
     props: {
-      arr,
+      arr: eventos,
     },
   };
 }

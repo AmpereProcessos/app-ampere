@@ -60,7 +60,7 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
       setMessage("Por favor, preencha um endereço válido");
       return false;
     }
-    if (dados.bairroInstalacao.trim().length < 7) {
+    if (dados.bairroInstalacao.trim().length < 3) {
       setMessage("Por favor, preencha um bairro válido");
       return false;
     }

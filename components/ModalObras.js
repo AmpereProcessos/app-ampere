@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { vendedores } from "../utils/constants";
+import { equipesTecnicas, vendedores } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import TextInput from "./TextInput";
@@ -66,7 +66,8 @@ function ModalObras({
     usuarioEmissor: "",
     grauDeUrgencia: "NÃO DEFINIDO",
     observacoes: "",
-    dataDeAbertura: new Date(),
+    dataDeAbertura: new Date().toISOString(),
+    agendar: false,
   });
   const [agendamentoInfo, setAgendamentoInfo] = useState({
     inicio: null,
@@ -84,7 +85,6 @@ function ModalObras({
       handleUpdates(project._id);
     });
   }
-  console.log(infoHolder);
   function handleOSChanges(id, index, date) {
     axios
       .put("/api/ordensDeServico/realizarCobranca", {
@@ -96,79 +96,65 @@ function ModalObras({
   }
   function handleOSCreation() {
     var arr;
-    if (osInfo.servicoExecutado.trim().length < 5) {
+    if (!credentials.controller) {
       setOsMsg({
-        text: "Por favor, preencha o serviço a ser executado.",
+        text: "Usuário não autorizado para geração de OSs.",
         color: "text-red-500",
       });
-      return;
     } else {
-      if (
-        infoHolder.ordensDeServico != undefined &&
-        infoHolder.ordensDeServico?.length > 0
-      ) {
-        infoHolder.ordensDeServico.push({
-          ...osInfo,
-          usuarioEmissor: credentials.nome,
-          index: infoHolder.ordensDeServico?.length,
-          cobrancaRealizada: false,
+      if (osInfo.servicoExecutado.trim().length < 5) {
+        setOsMsg({
+          text: "Por favor, preencha o serviço a ser executado.",
+          color: "text-red-500",
         });
-        arr = infoHolder.ordensDeServico;
+        return;
       } else {
-        arr = [
-          {
+        if (
+          infoHolder.ordensDeServico != undefined &&
+          infoHolder.ordensDeServico?.length > 0
+        ) {
+          infoHolder.ordensDeServico.push({
             ...osInfo,
             usuarioEmissor: credentials.nome,
-            index: 0,
+            index: infoHolder.ordensDeServico?.length,
             cobrancaRealizada: false,
-          },
-        ];
-        infoHolder.ordensDeServico = arr;
+          });
+          arr = infoHolder.ordensDeServico;
+        } else {
+          arr = [
+            {
+              ...osInfo,
+              usuarioEmissor: credentials.nome,
+              index: 0,
+              cobrancaRealizada: false,
+            },
+          ];
+          infoHolder.ordensDeServico = arr;
+        }
+        axios
+          .post("/api/ordensDeServico", { id: project._id, arr: arr })
+          .then((res) => {
+            setOsMsg({
+              text: "Ordem de serviço gerada",
+              color: "text-green-500",
+            });
+            setOsInfo({
+              categoria: "NÃO DEFINIDO",
+              servicoExecutado: "",
+              realizarCobranca: false,
+              valorCobranca: 0,
+              usuarioEmissor: "",
+              grauDeUrgencia: "NÃO DEFINIDO",
+              observacoes: "",
+              dataDeAbertura: new Date().toISOString(),
+              agendar: false,
+            });
+            handleUpdates(project._id);
+          });
       }
-      axios
-        .post("/api/ordensDeServico", { id: project._id, arr: arr })
-        .then((res) => {
-          setOsMsg({
-            text: "Ordem de serviço gerada",
-            color: "text-green-500",
-          });
-          setOsInfo({
-            categoria: "NÃO DEFINIDO",
-            servicoExecutado: "",
-            realizarCobranca: false,
-            valorCobranca: 0,
-            usuarioEmissor: "",
-            grauDeUrgencia: "NÃO DEFINIDO",
-            observacoes: "",
-            dataDeAbertura: new Date(),
-          });
-          handleUpdates(project._id);
-        });
     }
   }
-  function handleAgendamento() {
-    var fixedDate = new Date(
-      new Date(agendamentoInfo.fim).setHours(33)
-    ).toISOString();
-    axios
-      .post(`/api/projects/update/${project._id}`, {
-        "agendamentoObra.inicio": agendamentoInfo.inicio,
-        "agendamentoObra.fim": fixedDate,
-      })
-      .then((res) =>
-        setAgendamentoInfo({
-          ...agendamentoInfo,
-          msg: "Agendamento concluído.",
-        })
-      )
-      .catch((err) =>
-        setAgendamentoInfo({
-          ...agendamentoInfo,
-          msg: "Houve um erro, por favor tente novamente.",
-        })
-      );
-  }
-  console.log(agendamentoInfo);
+  console.log(osInfo);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -597,68 +583,7 @@ function ModalObras({
                           : infoHolder.obra?.equipeResp
                         : "NÃO DEFINIDO"
                     }
-                    options={[
-                      {
-                        label: "EQUIPE 1 - JOSÉ ROBERTO",
-                        value: "EQUIPE 1 - JOSÉ ROBERTO",
-                      },
-                      {
-                        label: "EQUIPE 2 - EDUARDO",
-                        value: "EQUIPE 2-EDUARDO",
-                      },
-                      {
-                        label: "EQUIPE 3 - EDMAR",
-                        value: "EQUIPE 3-EDIMAR",
-                      },
-                      {
-                        label: "EQUIPE 4 - ERICK",
-                        value: "EQUIPE 4-ERICK",
-                      },
-                      {
-                        label: "EQUIPE 5 - JUNIN",
-                        value: "EQUIPE 5-JUNIN",
-                      },
-                      {
-                        label: "EQUIPE 6 - FELIPE",
-                        value: "EQUIPE 6-FELIPE",
-                      },
-                      {
-                        label: "EQUIPE 7 - ADENILSON",
-                        value: "EQUIPE 7- ADENILSON",
-                      },
-                      {
-                        label: "EQUIPE 8 - GERSON",
-                        value: "EQUIPE 8-GERSON",
-                      },
-                      {
-                        label: "EQUIPE 9 - REGINALDO",
-                        value: "EQUIPE 9 - REGINALDO",
-                      },
-                      {
-                        label: "EQUIPE 10 - LUIZ",
-                        value: "EQUIPE 10 - LUIZ",
-                      },
-                      {
-                        label: "EQUIPE 11 - GILMAR",
-                        value: "EQUIPE 11 - GILMAR",
-                      },
-                      {
-                        label: "EQUIPE 12 - MARCUS V.",
-                        value: "EQUIPE 12 - MARCUS V.",
-                      },
-                      {
-                        label: "EQUIPE 13 - EDUARDO FRANCO",
-                        value: "EQUIPE 13 - EDUARDO FRANCO",
-                      },
-                      {
-                        label: "EQUIPE 15 - MARCOS B.",
-                        value: "EQUIPE 15 - MARCOS B.",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
+                    options={equipesTecnicas.map((equipe) => equipe)}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
@@ -844,58 +769,6 @@ function ModalObras({
                     />
                   </div>
                 </div>
-                <div>
-                  <h1 className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    AGENDAMENTO
-                  </h1>
-                  <div className="flex justify-around">
-                    <DateInput
-                      label={"INÍCIO"}
-                      editable={true}
-                      value={
-                        agendamentoInfo.inicio
-                          ? new Date(agendamentoInfo.inicio)
-                              .toISOString()
-                              .slice(0, 10)
-                          : null
-                      }
-                      handleChange={(value) => {
-                        setAgendamentoInfo({
-                          ...agendamentoInfo,
-                          inicio: new Date(value).toISOString(),
-                        });
-                      }}
-                    />
-                    <DateInput
-                      label={"FIM"}
-                      editable={true}
-                      value={
-                        agendamentoInfo.fim
-                          ? new Date(agendamentoInfo.fim)
-                              .toISOString()
-                              .slice(0, 10)
-                          : null
-                      }
-                      handleChange={(value) => {
-                        setAgendamentoInfo({
-                          ...agendamentoInfo,
-                          fim: new Date(value).toISOString(),
-                        });
-                      }}
-                    />
-                    <button
-                      onClick={handleAgendamento}
-                      className="p-2 rounded font-bold bg-[#fead61] hover:bg-[#15599a] hover:text-white text-xs"
-                    >
-                      REALIZAR AGENDAMENTO
-                    </button>
-                  </div>
-                </div>
-                {agendamentoInfo.msg && (
-                  <p className="text-center text-[#15599a] italic text-sm">
-                    {agendamentoInfo.msg}
-                  </p>
-                )}
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -941,33 +814,10 @@ function ModalObras({
                     value={osInfo.servicoExecutado}
                     editable={editor}
                     handleChange={(value) =>
-                      setOsInfo({ ...osInfo, servicoExecutado: value })
-                    }
-                  />
-                  <div>
-                    <input
-                      disabled={!editor}
-                      checked={osInfo.realizarCobranca}
-                      onChange={(e) =>
-                        setOsInfo({
-                          ...osInfo,
-                          realizarCobranca: e.target.checked,
-                        })
-                      }
-                      type="checkbox"
-                      name="realizarCobranca"
-                      id="realizarCobranca"
-                    />
-                    <label className="ml-2" htmlFor="realizarCobranca">
-                      REALIZAR COBRANÇA
-                    </label>
-                  </div>
-                  <NumberInput
-                    label={"VALOR DO SERVIÇO A COBRAR"}
-                    value={osInfo.valorCobranca}
-                    editable={editor}
-                    handleChange={(value) =>
-                      setOsInfo({ ...osInfo, valorCobranca: Number(value) })
+                      setOsInfo({
+                        ...osInfo,
+                        servicoExecutado: value.toUpperCase(),
+                      })
                     }
                   />
                   <SelectInput
@@ -1070,6 +920,34 @@ function ModalObras({
                     </>
                   )}
                 </div>
+                <div className="flex gap-2 justify-center flex-wrap mt-4">
+                  <div>
+                    <input
+                      disabled={!editor}
+                      checked={osInfo.realizarCobranca}
+                      onChange={(e) =>
+                        setOsInfo({
+                          ...osInfo,
+                          realizarCobranca: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="realizarCobranca"
+                      id="realizarCobranca"
+                    />
+                    <label className="ml-2" htmlFor="realizarCobranca">
+                      REALIZAR COBRANÇA ?
+                    </label>
+                  </div>
+                  <NumberInput
+                    label={"VALOR DO SERVIÇO A COBRAR"}
+                    value={osInfo.valorCobranca}
+                    editable={editor}
+                    handleChange={(value) =>
+                      setOsInfo({ ...osInfo, valorCobranca: Number(value) })
+                    }
+                  />
+                </div>
                 {osInfo.categoria != "MONTAGEM" &&
                   osInfo.categoria != "NÃO DEFINIDO" && (
                     <div className="flex flex-col w-[450px] self-center mt-2 items-center">
@@ -1092,6 +970,73 @@ function ModalObras({
                     {osMsg.text}
                   </p>
                 )}
+                <div className="flex gap-2 justify-center flex-wrap mt-4">
+                  <div>
+                    <input
+                      disabled={!editor}
+                      checked={osInfo.agendar}
+                      onChange={(e) =>
+                        setOsInfo({
+                          ...osInfo,
+                          agendar: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="agendar"
+                      id="agendar"
+                    />
+                    <label className="ml-2" htmlFor="agendar">
+                      AGENDAR SERVIÇO?
+                    </label>
+                  </div>
+                  {osInfo.agendar && (
+                    <>
+                      <SelectInput
+                        label={"EQUIPE"}
+                        editable={true}
+                        value={osInfo.equipe ? osInfo.equipe : "NÃO DEFINIDO"}
+                        options={equipesTecnicas.map((equipe) => equipe)}
+                        handleChange={(value) =>
+                          setOsInfo({ ...osInfo, equipe: value })
+                        }
+                      />
+                      <DateInput
+                        label={"DATA DE INÍCIO"}
+                        editable={true}
+                        value={
+                          osInfo.inicioServico
+                            ? new Date(osInfo.inicioServico)
+                                .toISOString()
+                                .slice(0, 10)
+                            : null
+                        }
+                        handleChange={(value) =>
+                          setOsInfo({
+                            ...osInfo,
+                            inicioServico: new Date(value).toISOString(),
+                          })
+                        }
+                      />
+                      <DateInput
+                        label={"DATA DE FIM"}
+                        editable={true}
+                        value={
+                          osInfo.fimServico
+                            ? new Date(osInfo.fimServico)
+                                .toISOString()
+                                .slice(0, 10)
+                            : null
+                        }
+                        handleChange={(value) =>
+                          setOsInfo({
+                            ...osInfo,
+                            fimServico: new Date(value).toISOString(),
+                          })
+                        }
+                      />
+                    </>
+                  )}
+                </div>
                 <div className="flex justify-center mt-4">
                   <button
                     onClick={handleOSCreation}
@@ -1432,52 +1377,35 @@ function ModalObras({
                   PADRÃO
                 </span>
                 <div className="flex gap-2 w-full justify-center flex-wrap pb-2">
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      AUMENTO DE CARGA
-                    </span>
-                    <div className="flex">
-                      <input
-                        disabled={true}
-                        checked={
-                          infoHolder.projeto?.aumentoDeCarga === "SIM"
-                            ? true
-                            : false
-                        }
-                        onChange={(e) => {
-                          setChanges({
-                            ...changes,
-                            "projeto.aumentoDeCarga": e.target.checked
-                              ? "SIM"
-                              : "NÃO",
-                            "projeto.acStatus":
-                              e.target.checked &&
-                              infoHolder.acStatus != "REALIZADO"
-                                ? "PÊNDENCIA"
-                                : undefined,
-                          });
-                          setInfo({
-                            ...infoHolder,
-                            projeto: {
-                              ...infoHolder.projeto,
-                              aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
-                              acStatus:
-                                e.target.checked &&
-                                infoHolder.acStatus != "REALIZADO"
-                                  ? "PÊNDENCIA"
-                                  : undefined,
-                            },
-                          });
-                        }}
-                        type="checkbox"
-                        name="aumentodecarga"
-                        id="aumentodecarga"
-                      />
-                      <label className="ml-2" htmlFor="aumentodecarga">
-                        APLICÁVEL?
-                      </label>
-                    </div>
-                  </div>
+                  <SelectInput
+                    label={"AUMENTO DE CARGA"}
+                    options={[
+                      { label: "SIM", value: "SIM" },
+                      { label: "NÃO", value: "NÃO" },
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "projeto.aumentoDeCarga": value,
+                        "projeto.acStatus":
+                          value == "SIM" && infoHolder.acStatus != "REALIZADO"
+                            ? "PÊNDENCIA"
+                            : undefined,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        projeto: {
+                          ...infoHolder.projeto,
+                          aumentoDeCarga: value,
+                          acStatus:
+                            value == "SIM" && infoHolder.acStatus != "REALIZADO"
+                              ? "PÊNDENCIA"
+                              : undefined,
+                        },
+                      });
+                    }}
+                  />
                   {infoHolder.projeto.aumentoDeCarga == "SIM" && (
                     <SelectInput
                       label={"STATUS AUMENTO DE CARGA"}

@@ -34,6 +34,7 @@ function OSControlCard({ info, reload, emAberto, categoria }) {
       </div>
       {os.ordensDeServico?.map((ordem, index) => (
         <OSBlock
+          key={index}
           ordem={ordem}
           index={index}
           emAberto={emAberto}

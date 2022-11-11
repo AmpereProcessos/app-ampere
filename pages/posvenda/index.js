@@ -117,12 +117,26 @@ function Posvenda({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      getProjects();
+      if (
+        !storedCredentials.accessibleRoutes.includes("Marketing") &&
+        !storedCredentials.accessibleRoutes.includes("Pós-Venda")
+      ) {
+        router.push("/");
+      } else {
+        getProjects();
+      }
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        getProjects();
+        if (
+          !credentials.accessibleRoutes.includes("Marketing") &&
+          !credentials.accessibleRoutes.includes("Pós-Venda")
+        ) {
+          router.push("/");
+        } else {
+          getProjects();
+        }
       }
     }
   }, []);
@@ -254,7 +268,7 @@ function Posvenda({ credentials, setCredentials }) {
           </button>
         </div>
       </div>
-      <div className="flex flex-wrap overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
+      <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
         {filteredProjects.map((project, index) => (
           <PosVendaCard
             getUpdates={getProjects}

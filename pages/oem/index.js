@@ -141,7 +141,10 @@ function OeM({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      if (!storedCredentials.accessibleRoutes.includes("O&M")) {
+      if (
+        !storedCredentials.accessibleRoutes.includes("O&M") &&
+        !storedCredentials.accessibleRoutes.includes("Marketing")
+      ) {
         router.push("/");
       } else {
         getProjects();
@@ -150,7 +153,10 @@ function OeM({ credentials, setCredentials }) {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (!credentials.accessibleRoutes.includes("O&M")) {
+        if (
+          !credentials.accessibleRoutes.includes("O&M") &&
+          !credentials.accessibleRoutes.includes("Marketing")
+        ) {
           router.push("/");
         } else {
           getProjects();

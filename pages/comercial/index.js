@@ -99,7 +99,10 @@ function Comercial({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      if (!storedCredentials.accessibleRoutes.includes("PPS")) {
+      if (
+        !storedCredentials.accessibleRoutes.includes("PPS") &&
+        !storedCredentials.accessibleRoutes.includes("Marketing")
+      ) {
         router.push("/");
       } else {
         getProjects();
@@ -108,7 +111,10 @@ function Comercial({ credentials, setCredentials }) {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (!credentials.accessibleRoutes.includes("PPS")) {
+        if (
+          !credentials.accessibleRoutes.includes("PPS") &&
+          !credentials.accessibleRoutes.includes("Marketing")
+        ) {
           router.push("/");
         } else {
           getProjects();

@@ -81,19 +81,25 @@ function Administracao({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      if (storedCredentials.accessibleRoutes.includes("ADM")) {
-        getProjects();
-      } else {
+      if (
+        !storedCredentials.accessibleRoutes.includes("ADM") &&
+        !storedCredentials.accessibleRoutes.includes("Marketing")
+      ) {
         router.push("/");
+      } else {
+        getProjects();
       }
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (credentials.accessibleRoutes.includes("ADM")) {
-          getProjects();
-        } else {
+        if (
+          !credentials.accessibleRoutes.includes("ADM") &&
+          !credentials.accessibleRoutes.includes("Marketing")
+        ) {
           router.push("/");
+        } else {
+          getProjects();
         }
       }
     }

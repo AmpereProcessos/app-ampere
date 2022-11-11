@@ -153,7 +153,10 @@ function Obras({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      if (!storedCredentials.accessibleRoutes.includes("Obras")) {
+      if (
+        !storedCredentials.accessibleRoutes.includes("Obras") &&
+        !storedCredentials.accessibleRoutes.includes("Marketing")
+      ) {
         router.push("/");
       } else {
         getProjects();
@@ -162,7 +165,10 @@ function Obras({ credentials, setCredentials }) {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (!credentials.accessibleRoutes.includes("Obras")) {
+        if (
+          !credentials.accessibleRoutes.includes("Obras") &&
+          !credentials.accessibleRoutes.includes("Marketing")
+        ) {
           router.push("/");
         } else {
           getProjects();

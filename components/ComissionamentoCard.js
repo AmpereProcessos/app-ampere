@@ -6,11 +6,6 @@ function ComissionamentoCard({ info, credentials, getProjects }) {
   const [changes, setChanges] = useState({});
   const editor = true;
   async function handleChanges() {
-    let { data } = await axios.post("/api/changes", {
-      usuario: credentials.nome,
-      mudancas: changes,
-      projetoMudado: info._id,
-    });
     axios.post(`/api/projects/update/${info._id}`, changes).then((res) => {
       setMsg("Alterações concluidas");
       getProjects();

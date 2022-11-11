@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Link from "next/link";
 import axios from "axios";
 function OSControlCard({ info, reload, emAberto, categoria }) {
   const [os, setOs] = useState(info);
@@ -20,13 +21,13 @@ function OSControlCard({ info, reload, emAberto, categoria }) {
         <p className="font-raleway text-sm text-gray-500">
           CIDADE: {os.cidade ? os.cidade : "-"}
         </p>
-        <p className="font-raleway text-sm text-gray-500">
+        <p className="hidden lg:block font-raleway text-sm text-gray-500">
           LOGRADOURO: {os.logradouro ? os.logradouro : "-"}
         </p>
-        <p className="font-raleway text-sm text-gray-500">
+        <p className="hidden lg:block font-raleway text-sm text-gray-500">
           BAIRRO: {os.bairro ? os.bairro : "-"}
         </p>
-        <p className="font-raleway text-sm text-gray-500">
+        <p className="hidden lg:block font-raleway text-sm text-gray-500">
           Nº: {os.numeroResidencia ? os.numeroResidencia : "-"}
         </p>
       </div>
@@ -41,7 +42,7 @@ function OSControlCard({ info, reload, emAberto, categoria }) {
               : ""
           } ${
             !categoria.includes(ordem.categoria) ? "hidden" : ""
-          } items-center grid-cols-7 border-b border-gray-200 pb-2`}
+          } items-center grid-cols-4 lg:grid-cols-8 border-b border-gray-200 pb-2`}
         >
           <div className="flex flex-col items-center">
             <p className="text-xs uppercase text-gray-500">CATEGORIA DA OS</p>
@@ -55,7 +56,7 @@ function OSControlCard({ info, reload, emAberto, categoria }) {
             </p>
             <p className="text-xs uppercase">{ordem.servicoExecutado}</p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex-col items-center hidden lg:flex">
             <p className="text-xs uppercase text-gray-500">
               REALIZAR COBRANÇA?
             </p>
@@ -63,15 +64,15 @@ function OSControlCard({ info, reload, emAberto, categoria }) {
               {ordem.realizarCobranca ? "SIM" : "NÃO"}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex-col items-center hidden lg:flex">
             <p className="text-xs uppercase text-gray-500">VALOR DA COBRANÇA</p>
             <p className="text-xs uppercase">R$ {ordem.valorCobranca}</p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex-col items-center hidden lg:flex">
             <p className="text-xs uppercase text-gray-500">EMISSOR DA OS</p>
             <p className="text-xs uppercase">{ordem.usuarioEmissor}</p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex-col items-center hidden lg:flex">
             <p className="text-xs uppercase text-gray-500">DATA DE ABERTURA</p>
             <p className="text-xs uppercase">
               {new Date(ordem.dataDeAbertura).toLocaleDateString()}
@@ -110,6 +111,13 @@ function OSControlCard({ info, reload, emAberto, categoria }) {
                 ).toLocaleDateString()}
               </p>
             )}
+          </div>
+          <div className="flex items-center justify-center">
+            <Link href={`/ordemDeServico/pdf/${info._id}?index=${index}`}>
+              <button className="p-1 bg-[#fead61] font-bold rounded w-fit">
+                VER
+              </button>
+            </Link>
           </div>
         </div>
       ))}

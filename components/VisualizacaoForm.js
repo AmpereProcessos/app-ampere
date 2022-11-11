@@ -128,6 +128,7 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
           <SelectInput
             label={"CIDADE"}
             editable={true}
+            value={dados.cidade}
             options={cidadesAtendidas.map((cidade) => {
               return { label: cidade, value: cidade };
             })}
@@ -197,6 +198,7 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
           <SelectInput
             label={"FORMA DE ASSINATURA"}
             editable={true}
+            value={dados.formaAssinatura}
             options={[
               {
                 value: "DIGITAL",
@@ -292,7 +294,6 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
           {dados.possuiDeficiencia == "SIM" && (
             <>
               {" "}
-              editable={true}
               <TextInput
                 label={"SE SIM, QUAL ?"}
                 editable={true}

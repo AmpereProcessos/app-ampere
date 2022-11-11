@@ -10,11 +10,6 @@ function NPSCard({ project, credentials }) {
   });
   console.log(project.qtde, nps);
   async function handleChanges() {
-    let { data } = await axios.post("/api/changes", {
-      usuario: credentials.nome,
-      mudancas: { nps: nps },
-      projetoMudado: project._id,
-    });
     axios
       .post(`/api/projects/update/${project._id}`, {
         nps: nps,

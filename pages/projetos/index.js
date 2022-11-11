@@ -4,7 +4,11 @@ import { useRouter } from "next/router";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalProjetos from "../../components/ModalProjetos";
-import { projetistas, cidadesAtendidas } from "../../utils/constants";
+import {
+  projetistas,
+  cidadesAtendidas,
+  vendedores,
+} from "../../utils/constants";
 function Projetos({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
@@ -20,6 +24,7 @@ function Projetos({ credentials, setCredentials }) {
     obraStatusFilter: [],
     entregaStatusFilter: [],
     cidadeFilter: [],
+    vendedorFilter: [],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -89,6 +94,13 @@ function Projetos({ credentials, setCredentials }) {
       if (filters)
         newArr = newArr.filter((call) =>
           filters.cidadeFilter.includes(call.cidade)
+        );
+    }
+    if (filters.vendedorFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      if (filters)
+        newArr = newArr.filter((call) =>
+          filters.vendedorFilter.includes(call.vendedor.nome)
         );
     }
     if (filters.desenhoFilter) {
@@ -372,6 +384,22 @@ function Projetos({ credentials, setCredentials }) {
               return {
                 label: cidade,
                 value: cidade,
+              };
+            })}
+          />
+          <Select
+            isMulti
+            placeholder="VENDEDOR"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                vendedorFilter: e.map((x) => x.value),
+              })
+            }
+            options={vendedores.map((vendedor) => {
+              return {
+                label: vendedor.nome,
+                value: vendedor.nome,
               };
             })}
           />

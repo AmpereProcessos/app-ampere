@@ -16,7 +16,7 @@ const cidadesCores = [
   },
   {
     nome: "SANTA VITÓRIA",
-    cor: "green",
+    cor: "#20e83e",
   },
   {
     nome: "UBERLÂNDIA",
@@ -24,8 +24,11 @@ const cidadesCores = [
   },
   {
     nome: "IPIAÇU",
-    cor: "#e6253e",
+    cor: "#1cd9c9",
   },
+  { nome: "CAMPINA VERDE", cor: "#b515e6" },
+  { nome: "CAPINÓPOLIS", cor: "#ba0627" },
+  { nome: "GURINHATÃ", cor: "#8c7103" },
 ];
 function getColor(cidade) {
   let cid = cidadesCores.filter((x) => x.nome == cidade);
@@ -150,11 +153,17 @@ const Calendar = ({ arr }) => {
       </div>
       <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-2">
         {cidadesCores.map((cidade, index) => (
-          <div key={index}>
-            <div className={`bg-[${cidade.cor}] w-[1px] h-[1px] rounded`}></div>
-            <li>{cidade.nome}</li>
+          <div className={"flex items-center gap-x-2"} key={index}>
+            <div
+              className={`bg-[${cidade.cor}] w-[10px] h-[10px] rounded`}
+            ></div>
+            <li className="list-none">{cidade.nome}</li>
           </div>
         ))}
+        <div className={"flex items-center gap-x-2"}>
+          <div className={`bg-[#ab3580] w-[10px] h-[10px] rounded`}></div>
+          <li className="list-none">OUTROS</li>
+        </div>
       </div>
       {calendarVisible && (
         <FullCalendar

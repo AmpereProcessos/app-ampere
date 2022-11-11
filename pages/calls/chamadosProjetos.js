@@ -130,7 +130,6 @@ function ChamadosProjetos({ credentials, setCredentials }) {
       }
     }
   }, []);
-  console.log(abertosFilters);
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
       <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">

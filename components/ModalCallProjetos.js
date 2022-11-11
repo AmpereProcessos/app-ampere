@@ -38,6 +38,8 @@ const statusStyles = {
   },
 };
 function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
+  const [infoHolder, setInfo] = useState(info);
+  const [changes, setChanges] = useState({});
   const [responsavel, setResponsavel] = useState(info.responsavel);
   const [notes, setNotes] = useState(info.anotacoes);
   const [selectedStatus, setSelectedStatus] = useState(info.status);
@@ -47,10 +49,19 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
       .post("/api/calls/projetos/updateProjetos", {
         id: info._id,
         mudancas: {
-          status: status ? status : selectedStatus,
-          anotacoes: notes,
-          responsavel: responsavel,
+          ...changes,
+          status: status ? status : infoHolder.status,
         },
+      })
+      .then((res) => {
+        setMessage(res.data);
+        getCalls();
+      });
+  }
+  function deleteCall() {
+    axios
+      .put("/api/calls/projetos/updateProjetos", {
+        _id: info._id,
       })
       .then((res) => {
         setMessage(res.data);
@@ -83,7 +94,7 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
               <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="font-bold font-raleway">STATUS</span>
                 <div className="flex gap-x-2 justify-center grow">
-                  {selectedStatus == "FINALIZADO" ? (
+                  {infoHolder.status == "FINALIZADO" ? (
                     <p
                       className={`text-xs font-bold border p-3 w-fit hover:opacity-100 text-center rounded-lg ${statusStyles["FINALIZADO"].textColor} ${statusStyles["FINALIZADO"].borderColor}`}
                     >
@@ -92,9 +103,12 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                   ) : (
                     <>
                       <p
-                        onClick={() => setSelectedStatus("EM ANDAMENTO")}
+                        onClick={() => {
+                          setChanges({ ...changes, status: "EM ANDAMENTO" });
+                          setInfo({ ...infoHolder, status: "EM ANDAMENTO" });
+                        }}
                         className={`${
-                          selectedStatus != "EM ANDAMENTO" && "opacity-30"
+                          infoHolder.status != "EM ANDAMENTO" && "opacity-30"
                         } text-xs font-bold border p-3 w-fit hover:opacity-100 cursor-pointer text-center rounded-lg ${
                           statusStyles["EM ANDAMENTO"].textColor
                         } ${statusStyles["EM ANDAMENTO"].borderColor}`}
@@ -102,9 +116,16 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                         EM ANDAMENTO
                       </p>
                       <p
-                        onClick={() =>
-                          setSelectedStatus("AGUARDANDO CONCESSIONÁRIA")
-                        }
+                        onClick={() => {
+                          setChanges({
+                            ...changes,
+                            status: "AGUARDANDO CONCESSIONÁRIA",
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            status: "AGUARDANDO CONCESSIONÁRIA",
+                          });
+                        }}
                         className={`${
                           selectedStatus != "AGUARDANDO CONCESSIONÁRIA" &&
                           "opacity-30"
@@ -126,9 +147,18 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                 <span className="text-center font-bold font-raleway">
                   PROJETO
                 </span>
-                <p className="grow text-center font-raleway">
-                  {info.projeto ? info.projeto : "-"}
-                </p>
+                <input
+                  type={"text"}
+                  value={infoHolder.projeto}
+                  className={`text-sm w-full text-center uppercase text-gray-600 outline-none`}
+                  onChange={(e) => {
+                    setChanges({ ...changes, projeto: e.target.value });
+                    setInfo({
+                      ...infoHolder,
+                      projeto: e.target.value.toUpperCase(),
+                    });
+                  }}
+                />
               </div>
               <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center font-bold font-raleway">
@@ -153,7 +183,7 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                 <select
                   value={responsavel}
                   onChange={(e) => setResponsavel(e.target.value)}
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
+                  className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
                 >
                   <option value={"A DEFINIR"}>A DEFINIR</option>
                   <option value={"ALINE APARECIDA RODRIGUES CARVALHO"}>
@@ -177,19 +207,31 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                 <span className="font-bold text-center font-raleway">
                   DESCRIÇÃO DO PROBLEMA
                 </span>
-                <span className="grow text-center font-raleway text-sm bg-gray-100 p-4 italic">
-                  {info.observacoes ? info.observacoes : ""}
-                </span>
+                <input
+                  type={"text"}
+                  value={infoHolder.observacoes}
+                  className={`p-4 text-sm w-full text-center uppercase text-gray-600 font-bold outline-none bg-gray-100 min-h-[50px] italic]`}
+                  onChange={(e) => {
+                    setChanges({ ...changes, observacoes: e.target.value });
+                    setInfo({
+                      ...infoHolder,
+                      observacoes: e.target.value.toUpperCase(),
+                    });
+                  }}
+                />
               </div>
               <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="font-bold text-center font-raleway">
                   ANOTAÇÕES
                 </span>
                 <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
+                  value={infoHolder.anotacoes ? infoHolder.anotacoes : ""}
+                  onChange={(e) => {
+                    setChanges({ ...changes, anotacoes: e.target.value });
+                    setInfo({ ...infoHolder, anotacoes: e.target.value });
+                  }}
                   placeholder="Digite aqui as anotações do chamado"
-                  className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
+                  className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
                 />
               </div>
               {message && (
@@ -197,11 +239,11 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                   {message}
                 </p>
               )}
-              {selectedStatus == "FINALIZADO" ? (
+              {infoHolder.status == "FINALIZADO" ? (
                 <div className="text-center">
                   <button
                     onClick={() => {
-                      setSelectedStatus("EM ANDAMENTO");
+                      setInfo({ ...infoHolder, status: "EM ANDAMENTO" });
                       saveCallChanges("EM ANDAMENTO", "ABERTO");
                     }}
                     className="p-3 font-raleway mt-4 hover:bg-[#f18701] hover:text-white font-bold rounded-lg bg-yellow-400"
@@ -214,7 +256,7 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                   <div className="text-center">
                     <button
                       onClick={() => {
-                        setSelectedStatus("FINALIZADO");
+                        setInfo({ ...infoHolder, status: "FINALIZADO" });
                         saveCallChanges("FINALIZADO", "FECHADO");
                       }}
                       className="p-3 font-raleway mt-4 hover:bg-[#06d6a0] hover:text-white font-bold rounded-lg bg-green-400"
@@ -232,6 +274,14 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                   </div>
                 </>
               )}
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={deleteCall}
+                  className="bg-red-300 p-2 rounded hover:bg-red-600 text-white font-bold"
+                >
+                  EXCLUR CHAMADO
+                </button>
+              </div>
             </div>
           </div>
         </div>

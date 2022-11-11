@@ -37,26 +37,6 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    let stats = await collection
-      .aggregate([
-        {
-          $match: {
-            status: {
-              $in: ["EM ANDAMENTO", "AGUARDANDO VENDEDOR", "PENDENTE"],
-            },
-          },
-        },
-        {
-          $group: {
-            _id: null,
-            total: {
-              $count: {},
-            },
-          },
-        },
-      ])
-      .toArray();
-    console.log(stats);
     return res.json({
       closedCalls,
       inProgress,

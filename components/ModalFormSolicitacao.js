@@ -220,7 +220,6 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
   function saveChanges() {
     axios.put("/api/solicitacoes/contrato", dados).then((res) => {
       setMessage({ text: "Alterações feitas", color: "text-green-500" });
-      setDados({ ...dados, aprovacao: true });
     });
   }
   async function addProject() {

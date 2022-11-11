@@ -40,8 +40,8 @@ function Header({ toggleSidebar, credentials, logout }) {
           <Image width={"65px"} height={"65px"} src={WhiteLogo} />
         </div>
       </Link>
-      <div className="hidden lg:flex justify-end items-center">
-        <p>
+      <div className="flex justify-end items-center">
+        <p className="hidden lg:block">
           Seja bem vindo,{" "}
           <strong className="text-[#15599a]">{credentials?.nome}</strong> !
         </p>

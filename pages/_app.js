@@ -36,7 +36,11 @@ function MyApp({ Component, pageProps }) {
           />
           <div className="flex min-h-[100%] grow">
             {sidebarVisible && <Sidebar credentials={credentials} />}
-            <div className="flex flex-col grow w-full">
+            <div
+              className={`${
+                sidebarVisible ? "hidden md:flex md:flex-col" : "flex flex-col"
+              } grow w-full`}
+            >
               <Component
                 sidebarVisible={sidebarVisible}
                 toggleSidebar={() => setSidebarVisible(!sidebarVisible)}

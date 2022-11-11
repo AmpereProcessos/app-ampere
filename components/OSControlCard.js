@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import axios from "axios";
+import OSBlock from "./OSBlock";
 function OSControlCard({ info, reload, emAberto, categoria }) {
   const [os, setOs] = useState(info);
   function handleChange(id, index, fechamento) {
@@ -32,94 +33,15 @@ function OSControlCard({ info, reload, emAberto, categoria }) {
         </p>
       </div>
       {os.ordensDeServico?.map((ordem, index) => (
-        <div
-          key={index}
-          className={`grid ${
-            emAberto
-              ? ordem.dataDeFechamento != undefined
-                ? "hidden"
-                : ""
-              : ""
-          } ${
-            !categoria.includes(ordem.categoria) ? "hidden" : ""
-          } items-center grid-cols-4 lg:grid-cols-8 border-b border-gray-200 pb-2`}
-        >
-          <div className="flex flex-col items-center">
-            <p className="text-xs uppercase text-gray-500">CATEGORIA DA OS</p>
-            <p className="text-xs uppercase">
-              {ordem.categoria ? ordem.categoria : "-"}
-            </p>
-          </div>
-          <div className="flex flex-col items-center">
-            <p className="text-xs uppercase text-gray-500">
-              SERVIÇO PARA EXECUÇÃO
-            </p>
-            <p className="text-xs uppercase">{ordem.servicoExecutado}</p>
-          </div>
-          <div className="flex-col items-center hidden lg:flex">
-            <p className="text-xs uppercase text-gray-500">
-              REALIZAR COBRANÇA?
-            </p>
-            <p className="text-xs uppercase">
-              {ordem.realizarCobranca ? "SIM" : "NÃO"}
-            </p>
-          </div>
-          <div className="flex-col items-center hidden lg:flex">
-            <p className="text-xs uppercase text-gray-500">VALOR DA COBRANÇA</p>
-            <p className="text-xs uppercase">R$ {ordem.valorCobranca}</p>
-          </div>
-          <div className="flex-col items-center hidden lg:flex">
-            <p className="text-xs uppercase text-gray-500">EMISSOR DA OS</p>
-            <p className="text-xs uppercase">{ordem.usuarioEmissor}</p>
-          </div>
-          <div className="flex-col items-center hidden lg:flex">
-            <p className="text-xs uppercase text-gray-500">DATA DE ABERTURA</p>
-            <p className="text-xs uppercase">
-              {new Date(ordem.dataDeAbertura).toLocaleDateString()}
-            </p>
-          </div>
-          <div className="flex flex-col items-center">
-            <p className="text-xs uppercase text-gray-500">
-              DATA DE FECHAMENTO
-            </p>
-            {ordem.dataDeFechamento == undefined ? (
-              <input
-                type="date"
-                onChange={(e) => {
-                  setOs((prevState) => {
-                    let temp = {
-                      ...prevState,
-                      ordensDeServico: [...prevState.ordensDeServico],
-                    };
-                    temp.ordensDeServico[index].dataDeFechamento = new Date(
-                      e.target.value
-                    ).toISOString();
-                    return temp;
-                  });
-                  handleChange(
-                    os._id,
-                    index,
-                    new Date(e.target.value).toISOString()
-                  );
-                }}
-                className="text-xxs font-bold bg-[#15599a] w-fit text-white p-1 rounded"
-              />
-            ) : (
-              <p className="text-xs uppercase">
-                {new Date(
-                  new Date(ordem.dataDeFechamento).setHours(27)
-                ).toLocaleDateString()}
-              </p>
-            )}
-          </div>
-          <div className="flex items-center justify-center">
-            <Link href={`/ordemDeServico/pdf/${info._id}?index=${index}`}>
-              <button className="p-1 bg-[#fead61] font-bold rounded w-fit">
-                VER
-              </button>
-            </Link>
-          </div>
-        </div>
+        <OSBlock
+          ordem={ordem}
+          index={index}
+          emAberto={emAberto}
+          categoria={categoria}
+          info={info}
+          setOs={setOs}
+          os={os}
+        />
       ))}
     </div>
   );

@@ -114,7 +114,7 @@ const Calendar = ({ arr }) => {
   }
   return (
     <div className="p-6 grow">
-      <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-2">
+      <div className="flex items-center z-0 justify-between border-b border-gray-200 pb-2 mb-2">
         <h1 className="text-xl text-[#15599a] font-bold">
           CRONOGRAMA DE OBRAS
         </h1>
@@ -122,6 +122,7 @@ const Calendar = ({ arr }) => {
           <Select
             isMulti={true}
             placeholder="CIDADE"
+            className="z-0"
             options={cidadesAtendidas.map((cidade) => {
               return { label: cidade, value: cidade };
             })}
@@ -135,6 +136,7 @@ const Calendar = ({ arr }) => {
           <Select
             isMulti
             placeholder="EQUIP.RESP"
+            className="z-[-1]"
             onChange={(e) =>
               setFilters({
                 ...filters,
@@ -152,14 +154,34 @@ const Calendar = ({ arr }) => {
         </button>
       </div>
       <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-2">
-        {cidadesCores.map((cidade, index) => (
-          <div className={"flex items-center gap-x-2"} key={index}>
-            <div
-              className={`bg-[${cidade.cor}] w-[10px] h-[10px] rounded`}
-            ></div>
-            <li className="list-none">{cidade.nome}</li>
-          </div>
-        ))}
+        <div className={"flex items-center gap-x-2"}>
+          <div className={`bg-[#15599a] w-[10px] h-[10px] rounded`}></div>
+          <li className="list-none">ITUIUTABA</li>
+        </div>
+        <div className={"flex items-center gap-x-2"}>
+          <div className={`bg-[#20e83e] w-[10px] h-[10px] rounded`}></div>
+          <li className="list-none">SANTA VITÓRIA</li>
+        </div>
+        <div className={"flex items-center gap-x-2"}>
+          <div className={`bg-[#fead61] w-[10px] h-[10px] rounded`}></div>
+          <li className="list-none">UBERLÂNDIA</li>
+        </div>
+        <div className={"flex items-center gap-x-2"}>
+          <div className={`bg-[#1cd9c9] w-[10px] h-[10px] rounded`}></div>
+          <li className="list-none">IPIAÇU</li>
+        </div>
+        <div className={"flex items-center gap-x-2"}>
+          <div className={`bg-[#b515e6] w-[10px] h-[10px] rounded`}></div>
+          <li className="list-none">CAMPINA VERDE</li>
+        </div>
+        <div className={"flex items-center gap-x-2"}>
+          <div className={`bg-[#ba0627] w-[10px] h-[10px] rounded`}></div>
+          <li className="list-none">CAPINÓPOLIS</li>
+        </div>
+        <div className={"flex items-center gap-x-2"}>
+          <div className={`bg-[#8c7103] w-[10px] h-[10px] rounded`}></div>
+          <li className="list-none">GURINHATÃ</li>
+        </div>
         <div className={"flex items-center gap-x-2"}>
           <div className={`bg-[#ab3580] w-[10px] h-[10px] rounded`}></div>
           <li className="list-none">OUTROS</li>

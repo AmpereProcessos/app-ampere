@@ -36,7 +36,7 @@ function Sidebar({ credentials }) {
   return (
     <div
       style={{ maxHeight: "calc(100vh - 70px)" }}
-      className="flex py-4 px-2 flex-col bg-[#fff] sticky top-[70px] w-[250px] overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 border-r border-gray-300"
+      className="flex py-4 px-2 flex-col bg-[#fff] sticky top-[70px] w-full md:w-[250px] overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 border-r border-gray-300"
     >
       <div>
         <h2 className="text-xs text-gray-500">PRINCIPAL</h2>

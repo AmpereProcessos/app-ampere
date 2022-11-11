@@ -40,6 +40,7 @@ const statusStyles = {
   },
 };
 function ModalCronograma({ setModalIsOpen, info }) {
+  console.log(info);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -58,7 +59,23 @@ function ModalCronograma({ setModalIsOpen, info }) {
                 />
               </button>
             </div>
-            <div className="flex flex-col h-full justify-around overflow-y-auto overscroll-y-auto">
+            <div className="flex flex-col grow gap-y-2 py-2 overflow-y-auto overscroll-y-auto">
+              <div className="mt-4 grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1">
+                <p className="text-xs text-center text-[#15599a] font-bold">
+                  CATEGORIA
+                </p>
+                <p className="text-xs text-center text-gray-600">
+                  {info.categoria}
+                </p>
+              </div>
+              <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-2 md:grid-rows-1">
+                <p className="text-xs text-center text-[#15599a] font-bold">
+                  SERVIÇO EXECUTADO
+                </p>
+                <p className="text-xs text-center text-gray-600">
+                  {info.servicoExecutado}
+                </p>
+              </div>
               <div className="mt-4 grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1">
                 <p className="text-xs text-center text-[#15599a] font-bold">
                   CIDADE

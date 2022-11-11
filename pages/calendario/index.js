@@ -98,9 +98,7 @@ const Calendar = ({ arr }) => {
       setCalendarVisible(true);
     }
   }
-  console.log(
-    dayJS("2022-11-08T00:00:00.000Z").add(3, "hours").format("YYYY-MM-DD")
-  );
+  console.log(arr);
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-2">
@@ -204,6 +202,8 @@ export async function getServerSideProps() {
           id: item._id,
           qtde: item.qtde,
           nomeDoContrato: item.nomeDoContrato,
+          categoria: x.categoria,
+          servicoExecutado: x.servicoExecutado,
           cidade: item.cidade ? item.cidade : "-",
           bairro: item.bairro ? item.bairro : "-",
           logradouro: item.logradouro ? item.logradouro : "-",
@@ -221,6 +221,8 @@ export async function getServerSideProps() {
   eventos = eventos?.map((evento) => {
     return {
       title: evento.nomeDoContrato,
+      categoria: evento.categoria,
+      servicoExecutado: evento.servicoExecutado,
       start: dayJS(evento.inicioServico).add(3, "hours").format("YYYY-MM-DD"),
       end: dayJS(evento.fimServico).add(1, "days").format("YYYY-MM-DD"),
       id: evento.id.toString(),

@@ -56,15 +56,15 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
+    console.log(stats);
     return res.json({
       closedCalls,
       inProgress,
-      stats: { openCallsCount: stats[0].total },
     });
   }
   if (req.method === "POST") {
     let svbCode = Number(req.body.codigoDoProjeto);
-    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
+    const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("pps");
     await collection.insertOne({
       ...req.body,

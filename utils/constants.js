@@ -474,7 +474,7 @@ export const cidadesAtendidas = [
   "CAPINÓPOLIS",
   "GURINHATÃ",
   "PRATA",
-  "CANAPOLIS",
+  "CANÁPOLIS",
   "CACHOEIRA DOURADA",
   "MONTE ALEGRE",
   "UBERABA",
@@ -761,5 +761,9 @@ export const equipesTecnicas = [
   {
     label: "NÃO DEFINIDO",
     value: "NÃO DEFINIDO",
+  },
+  {
+    label: "VAZIO",
+    value: undefined,
   },
 ];

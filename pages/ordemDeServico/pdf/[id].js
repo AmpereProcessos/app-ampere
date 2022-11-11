@@ -8,6 +8,7 @@ import Logo from "../../../utils/whitelogo.png";
 import Image from "next/image";
 import { ObjectId } from "mongodb";
 import EstruturaOSPDF from "../../../components/EstruturaOS";
+import OSCorretivaPDF from "../../../components/OSCorretivaPDF";
 function OSInfo({ info, index }) {
   const [pdfVisible, setPdfVisible] = useState(false);
   const [osInfo, setosInfo] = useState(info);
@@ -46,6 +47,13 @@ function OSInfo({ info, index }) {
       )}
       {osInfo.ordensDeServico[index].categoria == "ESTRUTURA" && (
         <EstruturaOSPDF
+          info={osInfo}
+          observacoesOS={osInfo.ordensDeServico[index].observacoes}
+          servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
+        />
+      )}
+      {osInfo.ordensDeServico[index].categoria == "MANUTENÇÃO CORRETIVA" && (
+        <OSCorretivaPDF
           info={osInfo}
           observacoesOS={osInfo.ordensDeServico[index].observacoes}
           servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}

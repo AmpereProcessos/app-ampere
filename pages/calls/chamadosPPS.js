@@ -151,8 +151,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
       <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex gap-x-2">
-          <p>CHAMADOS ABERTOS:</p>
-          <p>{stats.openCallsCount}</p>
+          <p>CHAMADOS ABERTOS</p>
         </div>
         <div
           onClick={getCalls}

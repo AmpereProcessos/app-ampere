@@ -7,7 +7,7 @@ import axios from "axios";
 import connectToDataBase from "../../utils/projectsDb";
 import ModalCronograma from "../../components/ModalCronograma";
 import Select from "react-select";
-import { cidadesAtendidas } from "../../utils/constants";
+import { cidadesAtendidas, equipesTecnicas } from "../../utils/constants";
 import * as dayJS from "dayjs";
 const cidadesCores = [
   {
@@ -32,7 +32,7 @@ function getColor(cidade) {
   if (cid.length > 0) {
     return cid[0].cor;
   } else {
-    return "#1005ed";
+    return "#ab3580";
   }
 }
 const Calendar = ({ arr }) => {
@@ -42,6 +42,7 @@ const Calendar = ({ arr }) => {
   const [modalEvento, setModalEvento] = useState({});
   const [filters, setFilters] = useState({
     cidadeFilter: [],
+    equipeResp: [],
   });
   function handleResize(e) {
     console.log("RESIZE");
@@ -94,6 +95,12 @@ const Calendar = ({ arr }) => {
         filters.cidadeFilter.includes(evento.cidade)
       );
     }
+    if (filters.equipeResp.length > 0) {
+      if (!newArr) newArr = arr;
+      newArr = newArr.filter((evento) =>
+        filters.equipeResp.includes(evento.equipe)
+      );
+    }
     if (!newArr) {
       setEventos(arr);
       setCalendarVisible(true);
@@ -102,7 +109,6 @@ const Calendar = ({ arr }) => {
       setCalendarVisible(true);
     }
   }
-  console.log(arr);
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-2">
@@ -123,13 +129,32 @@ const Calendar = ({ arr }) => {
               })
             }
           />
+          <Select
+            isMulti
+            placeholder="EQUIP.RESP"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                equipeResp: e.map((x) => x.value),
+              })
+            }
+            options={equipesTecnicas.map((equipe) => equipe)}
+          />
         </div>
         <button
           onClick={() => handleFilter()}
           className="bg-[#fead61] p-2 rounded font-bold hover:bg-[#15599a] hover:text-white"
         >
-          VER CALENDÁRIO
+          FILTRAR CALENDÁRIO
         </button>
+      </div>
+      <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-2">
+        {cidadesCores.map((cidade) => (
+          <div>
+            <div className={`bg-[${cidade.cor}] p-1 rounded`}></div>
+            <li>{cidade.nome}</li>
+          </div>
+        ))}
       </div>
       {calendarVisible && (
         <FullCalendar
@@ -150,7 +175,7 @@ const Calendar = ({ arr }) => {
             center: "",
             end: "today prev,next",
           }}
-          events={arr}
+          events={eventos}
           editable
           selectable
           defaultAllDay={true}

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Assinatura from "../utils/assinatura.jpg";
 import Logo from "../utils/whitelogo.png";
-function EstruturaOSPDF({ info, observacoesOS, servicoExecutado }) {
+function OSCorretivaPDF({ info, observacoesOS, servicoExecutado }) {
   return (
     <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
       <h1 className="text-center font-bold text-xl mb-6">
@@ -113,13 +113,11 @@ function EstruturaOSPDF({ info, observacoesOS, servicoExecutado }) {
               </div>
               <div className="row-span-2 grid grid-cols-4 h-full items-center">
                 <p className="text-xs col-span-2 text-center font-semibold uppercase">
-                  RESPONSABILIDADE
+                  TOPOLOGIA
                 </p>
                 <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black">
                   <div>
-                    {info.estruturaPersonalizada?.respInstalacao
-                      ? info.estruturaPersonalizada?.respInstalacao
-                      : "-"}
+                    {info.sistema.topologia ? info.sistema.topologia : "-"}
                   </div>
                 </div>
               </div>
@@ -196,4 +194,4 @@ function EstruturaOSPDF({ info, observacoesOS, servicoExecutado }) {
   );
 }
 
-export default EstruturaOSPDF;
+export default OSCorretivaPDF;

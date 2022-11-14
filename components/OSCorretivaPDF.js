@@ -11,7 +11,7 @@ function OSCorretivaPDF({ info, observacoesOS, servicoExecutado }) {
       </h1>
       <div className="grid grid-cols-2">
         <div className="flex justify-between items-center">
-          <Link href="/obras">
+          <Link href="/">
             <div className="flex justify-center items-center">
               <Image height="60px" width="60px" src={Logo} />
             </div>

@@ -107,14 +107,14 @@ export default async function handler(req, res) {
               ano: {
                 $year: {
                   $dateFromString: {
-                    dateString: "$compra.dataLiberacao",
+                    dateString: "$compra.dataPedido",
                   },
                 },
               },
               mes: {
                 $month: {
                   $dateFromString: {
-                    dateString: "$compra.dataLiberacao",
+                    dateString: "$compra.dataPedido",
                   },
                 },
               },

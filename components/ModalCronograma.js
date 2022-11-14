@@ -140,7 +140,9 @@ function ModalCronograma({ setModalIsOpen, info }) {
                   className="outline-none text-xs text-gray-600"
                 >
                   {equipesTecnicas.map((equipe) => (
-                    <option value={equipe.value}>{equipe.label}</option>
+                    <option key={equipe.value} value={equipe.value}>
+                      {equipe.label}
+                    </option>
                   ))}
                 </select>
               </div>

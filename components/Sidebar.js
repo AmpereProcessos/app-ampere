@@ -190,12 +190,14 @@ function Sidebar({ credentials }) {
       </div>
       <div className="mt-6">
         <h2 className="text-xs text-gray-500">OUTROS</h2>
-        <Link href="/calls">
-          <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-            <FaTasks style={{ color: "#15599a", fontSize: "20px" }} />
-            <p className="pl-3 text-xs text-gray-600">Chamados</p>
-          </a>
-        </Link>
+        {credentials.regional != "UBERLÂNDIA" && (
+          <Link href="/calls">
+            <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+              <FaTasks style={{ color: "#15599a", fontSize: "20px" }} />
+              <p className="pl-3 text-xs text-gray-600">Chamados</p>
+            </a>
+          </Link>
+        )}
         {credentials.controller != undefined &&
         credentials.controller == true ? (
           <Link href={"/ordemDeServico/bancoDeOS"}>
@@ -209,7 +211,8 @@ function Sidebar({ credentials }) {
         ) : (
           false
         )}
-        {credentials.accessibleRoutes != undefined
+        {credentials.accessibleRoutes != undefined &&
+        credentials.regional != "UBERLÂNDIA"
           ? credentials?.accessibleRoutes.includes("ADM") && (
               <Link href={"/adm/cobrancas"}>
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -221,7 +224,8 @@ function Sidebar({ credentials }) {
               </Link>
             )
           : false}
-        {credentials.accessibleRoutes != undefined
+        {credentials.accessibleRoutes != undefined &&
+        credentials.regional != "UBERLÂNDIA"
           ? credentials?.accessibleRoutes.includes("Projetos") && (
               <Link href={"/projetos/comissionamento"}>
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -233,7 +237,8 @@ function Sidebar({ credentials }) {
               </Link>
             )
           : false}
-        {credentials.accessibleRoutes != undefined
+        {credentials.accessibleRoutes != undefined &&
+        credentials.regional != "UBERLÂNDIA"
           ? credentials?.accessibleRoutes.includes("Obras") && (
               <Link href="/obras/gestaoDeObras">
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -245,7 +250,8 @@ function Sidebar({ credentials }) {
               </Link>
             )
           : false}
-        {credentials.accessibleRoutes != undefined
+        {credentials.accessibleRoutes != undefined &&
+        credentials.regional != "UBERLÂNDIA"
           ? credentials?.accessibleRoutes.includes("Pós-Venda") && (
               <Link href="/posvenda/nps">
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">

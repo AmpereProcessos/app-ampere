@@ -7,6 +7,7 @@ import SelectInput from "./SelectInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
 import axios from "axios";
+import dayjs from "dayjs";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -339,7 +340,7 @@ function ModalOeM({
                     editable={editor}
                     value={
                       infoHolder.conferencias.usinaLigada.data != undefined &&
-                      infoHolder.conferencias.usinaLigada.data != "-"
+                      dayjs(infoHolder.conferencias.usinaLigada.data).isValid()
                         ? new Date(infoHolder.conferencias.usinaLigada.data)
                             .toISOString()
                             .slice(0, 10)
@@ -371,7 +372,9 @@ function ModalOeM({
                     value={
                       infoHolder.conferencias.monitoramentoFeito.data !=
                         undefined &&
-                      infoHolder.conferencias.monitoramentoFeito.data != "-"
+                      dayjs(
+                        infoHolder.conferencias.monitoramentoFeito.data
+                      ).isValid()
                         ? new Date(
                             infoHolder.conferencias.monitoramentoFeito.data
                           )
@@ -404,7 +407,7 @@ function ModalOeM({
                     editable={editor}
                     value={
                       infoHolder.app.data != undefined &&
-                      infoHolder.app.data != "-"
+                      dayjs(infoHolder.app.data).isValid()
                         ? new Date(infoHolder.app.data)
                             .toISOString()
                             .slice(0, 10)
@@ -430,7 +433,9 @@ function ModalOeM({
                     value={
                       infoHolder.conferencias.energiaInjetada.data !=
                         undefined &&
-                      infoHolder.conferencias.energiaInjetada.data != "-"
+                      dayjs(
+                        infoHolder.conferencias.energiaInjetada.data
+                      ).isValid()
                         ? new Date(infoHolder.conferencias.energiaInjetada.data)
                             .toISOString()
                             .slice(0, 10)

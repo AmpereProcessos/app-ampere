@@ -26,6 +26,7 @@ function OeM({ credentials, setCredentials }) {
     manutencaoAtrasada: false,
     limparAteDezembro: false,
     appPendente: false,
+    usinaLigadaFilter: [],
   });
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -36,10 +37,17 @@ function OeM({ credentials, setCredentials }) {
   const [searchFilter, setSearchFilter] = useState("");
   const [modalProject, setModalProject] = useState({});
   function getProjects() {
-    axios.get("/api/projects/oem").then((res) => {
-      setProjects(res.data);
-      setFilteredProjects(res.data);
-    });
+    if (credentials.regional == "UBERLÂNDIA") {
+      axios.get("/api/regional/uberlandia/oem").then((res) => {
+        setProjects(res.data);
+        setFilteredProjects(res.data);
+      });
+    } else {
+      axios.get("/api/projects/oem").then((res) => {
+        setProjects(res.data);
+        setFilteredProjects(res.data);
+      });
+    }
   }
   function handleSearchFilter(value) {
     setSearchFilter(value);
@@ -64,6 +72,12 @@ function OeM({ credentials, setCredentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.equipResp.includes(call.obra?.equipeResp)
+      );
+    }
+    if (filters.usinaLigadaFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.usinaLigadaFilter.includes(call.conferencias.usinaLigada.status)
       );
     }
     if (filters.obraStatusFilter.length > 0) {
@@ -241,6 +255,20 @@ function OeM({ credentials, setCredentials }) {
                 value: "AGUARDANDO AGENDAMENTO",
                 label: "AGUARDANDO AGENDAMENTO",
               },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="USINA LIGADA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                usinaLigadaFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              { label: "NÃO REALIZADO", value: "NÃO REALIZADO" },
+              { label: "REALIZADO", value: "REALIZADO" },
             ]}
           />
           <Select
@@ -493,7 +521,12 @@ function OeM({ credentials, setCredentials }) {
               </div>
               <div>
                 <span className="text-xxs">USINA LIGADA</span>
-                <p className={`text-xs text-gray-600`}>
+                <p
+                  className={`text-xs ${
+                    statusStyles[project.conferencias.usinaLigada.status]
+                      .textColor
+                  }`}
+                >
                   {project.conferencias.usinaLigada != undefined &&
                   project.conferencias.usinaLigada.status != "-"
                     ? project.conferencias.usinaLigada.status

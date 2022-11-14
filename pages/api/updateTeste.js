@@ -4,11 +4,12 @@ export default async function handler(req, res) {
   const collection = db.collection("dados");
   /*let arr = await collection.updateMany(
     {
-      "ordensDeServico.0.categoria": "PADRÃO",
+      "obra.saida": { $lte: "2022-01-01T08:00:00.000Z" },
+      "conferencias.usinaLigada.status": "NÃO REALIZADO",
     },
     {
       $set: {
-        "ordensDeServico.0.realizarCobranca": true,
+        "conferencias.usinaLigada.status": "REALIZADO",
       },
     }
   );

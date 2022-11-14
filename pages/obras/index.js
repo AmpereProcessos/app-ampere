@@ -9,6 +9,7 @@ import {
   equipesTecnicas,
   statusLiberacao,
 } from "../../utils/constants";
+import dayjs from "dayjs";
 function Obras({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
@@ -545,6 +546,52 @@ function Obras({ credentials, setCredentials }) {
                 <p className="text-xs text-center text-[#15599a]">
                   {project.sistema?.qtdeModulos
                     ? project.sistema?.qtdeModulos
+                    : "-"}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xxs">FIM DO PARECEM EM</span>
+                <p className="text-xs text-[#15599a] text-center uppercase">
+                  {project.parecer.dataParecerDeAcesso
+                    ? 120 -
+                        dayjs(new Date()).diff(
+                          project.parecer.dataParecerDeAcesso,
+                          "days"
+                        ) >
+                      0
+                      ? `${
+                          120 -
+                          dayjs(new Date()).diff(
+                            project.parecer.dataParecerDeAcesso,
+                            "days"
+                          )
+                        } dias`
+                      : "VENCIDO"
+                    : "-"}
+                </p>
+              </div>
+              <div>
+                <span className="text-xxs">DESDE DO CONTRATO</span>
+                <p className="text-xs text-[#15599a] uppercase text-center">
+                  {project.contrato.dataAssinatura
+                    ? `${dayjs(new Date()).diff(
+                        project.contrato.dataAssinatura,
+                        "days"
+                      )} dias`
+                    : "-"}
+                </p>
+              </div>
+              <div>
+                <span className="text-xxs">DESDE DE ENTREGA</span>
+                <p className="text-xs text-center text-[#15599a] uppercase">
+                  {project.compra.previsaoEntrega &&
+                  project.compra.statusEntrega == "ENTREGUE"
+                    ? `${dayjs(new Date()).diff(
+                        project.compra.previsaoEntrega,
+                        "days"
+                      )} dias`
                     : "-"}
                 </p>
               </div>

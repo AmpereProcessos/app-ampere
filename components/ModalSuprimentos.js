@@ -604,6 +604,45 @@ function ModalSuprimentos({
                       });
                     }}
                   />
+                </div>
+              </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  Informações da compra
+                </span>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  <SelectInput
+                    label={"STATUS DA LIBERAÇÃO"}
+                    editable={editor}
+                    value={
+                      infoHolder.compra?.statusLiberacao
+                        ? infoHolder.compra?.statusLiberacao
+                        : "NÃO DEFINIDO"
+                    }
+                    options={statusLiberacao.map((status) => {
+                      return { label: status.label, value: status.value };
+                    })}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "compra.statusLiberacao": value,
+                        "projeto.iniciar":
+                          value == "PAGO" ? "SIM" : project.projeto.iniciar,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          statusLiberacao: value,
+                        },
+                        projeto: {
+                          ...infoHolder.projeto,
+                          iniciar:
+                            value == "PAGO" ? "SIM" : project.projeto.iniciar,
+                        },
+                      });
+                    }}
+                  />
                   <SelectInput
                     label={"INICIAR PROJETO"}
                     value={
@@ -630,38 +669,6 @@ function ModalSuprimentos({
                         projeto: {
                           ...infoHolder.projeto,
                           iniciar: value,
-                        },
-                      });
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  Informações da compra
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <SelectInput
-                    label={"STATUS DA LIBERAÇÃO"}
-                    editable={editor}
-                    value={
-                      infoHolder.compra?.statusLiberacao
-                        ? infoHolder.compra?.statusLiberacao
-                        : "NÃO DEFINIDO"
-                    }
-                    options={statusLiberacao.map((status) => {
-                      return { label: status.label, value: status.value };
-                    })}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "compra.statusLiberacao": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        compra: {
-                          ...infoHolder.compra,
-                          statusLiberacao: value,
                         },
                       });
                     }}

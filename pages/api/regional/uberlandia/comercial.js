@@ -1,0 +1,30 @@
+import connectToDatabase from "../../../../utils/connectDb";
+export default async function handler(req, res) {
+  if (req.method == "GET") {
+    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+    const collection = db.collection("dados");
+    let comercial = await collection
+      .aggregate([
+        {
+          $match: {
+            "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
+            "obra.statusDaObra": {
+              $in: [
+                "AGENDADA",
+                "AGUARDANDO AGENDAMENTO",
+                "EM ANDAMENTO",
+                "NÃO DEFINIDO",
+                "CASA EM CONSTRUÇÃO",
+                "",
+                null,
+                undefined,
+              ],
+            },
+            regional: "REGIONAL UBERLÂNDIA",
+          },
+        },
+      ])
+      .toArray();
+    res.json(comercial);
+  }
+}

@@ -5,6 +5,14 @@ import Select from "react-select";
 import { cidadesAtendidas } from "../../utils/constants";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalOeM from "../../components/ModalOeM";
+const statusStyles = {
+  REALIZADO: {
+    textColor: "text-green-500",
+  },
+  "NÃO REALIZADO": {
+    textColor: "text-red-500",
+  },
+};
 function OeM({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
@@ -13,9 +21,11 @@ function OeM({ credentials, setCredentials }) {
   const [filters, setFilters] = useState({
     cidadeFilter: [],
     equipResp: [],
+    obraStatusFilter: [],
     manutencaoPendente: false,
     manutencaoAtrasada: false,
     limparAteDezembro: false,
+    appPendente: false,
   });
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -55,6 +65,16 @@ function OeM({ credentials, setCredentials }) {
       newArr = newArr.filter((call) =>
         filters.equipResp.includes(call.obra?.equipeResp)
       );
+    }
+    if (filters.obraStatusFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.obraStatusFilter.includes(call.obra?.statusDaObra)
+      );
+    }
+    if (filters.appPendente) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((project) => project.app.data == undefined);
     }
     if (filters.manutencaoPendente) {
       if (!newArr) newArr = projects;
@@ -197,6 +217,34 @@ function OeM({ credentials, setCredentials }) {
           />
           <Select
             isMulti
+            placeholder="STATUS DA OBRA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                obraStatusFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                value: "EM ANDAMENTO",
+                label: "EM ANDAMENTO",
+              },
+              {
+                value: "PAUSADA",
+                label: "PAUSADA",
+              },
+              {
+                value: "AGENDADA",
+                label: "AGENDADA",
+              },
+              {
+                value: "AGUARDANDO AGENDAMENTO",
+                label: "AGUARDANDO AGENDAMENTO",
+              },
+            ]}
+          />
+          <Select
+            isMulti
             placeholder="EQUIP.RESP"
             onChange={(e) =>
               setFilters({
@@ -267,6 +315,19 @@ function OeM({ credentials, setCredentials }) {
               },
             ]}
           />
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                appPendente: !filters.appPendente,
+              })
+            }
+            className={`${
+              filters.appPendente ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            APP PENDENTE
+          </div>
           <div
             onClick={() =>
               setFilters({
@@ -432,7 +493,7 @@ function OeM({ credentials, setCredentials }) {
               </div>
               <div>
                 <span className="text-xxs">USINA LIGADA</span>
-                <p className="text-xs text-gray-600">
+                <p className={`text-xs text-gray-600`}>
                   {project.conferencias.usinaLigada != undefined &&
                   project.conferencias.usinaLigada.status != "-"
                     ? project.conferencias.usinaLigada.status

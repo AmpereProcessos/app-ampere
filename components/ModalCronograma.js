@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
+import { equipesTecnicas } from "../utils/constants";
+import axios from "axios";
+import Link from "next/link";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -40,7 +43,25 @@ const statusStyles = {
   },
 };
 function ModalCronograma({ setModalIsOpen, info }) {
+  const [equipe, setEquipe] = useState(info.equipe);
+  const [msg, setMsg] = useState({
+    text: "",
+    color: "",
+  });
   console.log(info);
+  function handleEquipeChange(value) {
+    setEquipe(value);
+    axios
+      .post(`/api/projects/update/${info.id}`, {
+        [`ordensDeServico.${info.index}.equipe`]: value,
+      })
+      .then((res) =>
+        setMsg({ text: "Alterações feitas", color: "text-green-500" })
+      )
+      .catch((res) =>
+        setMsg({ text: "Ocorreu um erro.", color: "text-red-500" })
+      );
+  }
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -50,6 +71,7 @@ function ModalCronograma({ setModalIsOpen, info }) {
               <h1 className="text-[#15599a] font-bold">
                 {info.nomeDoContrato} ({info.qtde})
               </h1>
+              {msg.text && <p className={`text-xs ${msg.color}`}>{msg.text}</p>}
               <button>
                 <VscChromeClose
                   onClick={() => {
@@ -112,9 +134,15 @@ function ModalCronograma({ setModalIsOpen, info }) {
                 <p className="text-xs text-center text-[#15599a] font-bold">
                   EQUIPE RESPONSÁVEL
                 </p>
-                <p className="text-xs text-center text-gray-600">
-                  {info.equipe}
-                </p>
+                <select
+                  value={equipe}
+                  onChange={(e) => handleEquipeChange(e.target.value)}
+                  className="outline-none text-xs text-gray-600"
+                >
+                  {equipesTecnicas.map((equipe) => (
+                    <option value={equipe.value}>{equipe.label}</option>
+                  ))}
+                </select>
               </div>
               <div className="mt-4 grid grid-rows-2 grid-cols-1  lg:grid-cols-2 md:grid-rows-1">
                 <p className="text-xs text-center text-[#15599a] font-bold">
@@ -131,6 +159,18 @@ function ModalCronograma({ setModalIsOpen, info }) {
                 <p className="text-xs text-center text-gray-600">
                   {info.topologia}
                 </p>
+              </div>
+              <div className="mt-4 flex flex-col justify-center items-center gap-2">
+                <p className="text-xs text-center text-[#15599a] font-bold">
+                  ORDEM DE SERVIÇO
+                </p>
+                <Link
+                  href={`/ordemDeServico/pdf/${info.id}?index=${info.index}`}
+                >
+                  <div className="p-2 cursor-pointer w-fit bg-[#fead61] rounded font-bold">
+                    VER OS
+                  </div>
+                </Link>
               </div>
             </div>
           </div>

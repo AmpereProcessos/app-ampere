@@ -593,6 +593,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <SelectInput
                       label={"CIDADE"}
                       editable={true}
+                      value={dados.cidade}
                       options={cidadesAtendidas.map((cidade) => {
                         return { label: cidade, value: cidade };
                       })}

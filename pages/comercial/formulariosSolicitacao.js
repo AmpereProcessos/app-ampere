@@ -7,12 +7,30 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalSolicitacao, setModalSolicitacao] = useState({});
   const [filteredSolicitacoes, setFilteredSolicitacoes] = useState([]);
+  const [filters, setFilters] = useState({
+    pendenteFilter: false,
+  });
   const router = useRouter();
   function getFormularios() {
     axios.get("/api/solicitacoes/contrato").then((res) => {
       setSolicitacoes(res.data);
       setFilteredSolicitacoes(res.data);
     });
+  }
+  function handleFilter() {
+    var newArr;
+    if (filters.pendenteFilter) {
+      if (!newArr) newArr = solicitacoes;
+      newArr = newArr.filter(
+        (solicitacao) =>
+          solicitacao.aprovacao == false || solicitacao.aprovacao == undefined
+      );
+    }
+    console.log(newArr);
+    if (!newArr) setFilteredSolicitacoes(solicitacoes);
+    else {
+      setFilteredSolicitacoes(newArr);
+    }
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -31,20 +49,46 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
       }
     }
   }, []);
+  console.log(solicitacoes);
   return (
     <div className="p-6 grow flex flex-col">
-      <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
-        FORMULÁRIOS DE CONTRATO
-      </p>
+      <div className="flex items-center justify-between">
+        <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
+          FORMULÁRIOS DE CONTRATO
+        </p>
+        <div className="flex flex-wrap gap-x-2">
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                pendenteFilter: !filters.pendenteFilter,
+              })
+            }
+            className={`${
+              filters.pendenteFilter ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            PENDENTES
+          </div>
+          <button
+            onClick={handleFilter}
+            className="bg-[#fead61] h-[36px] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
+          >
+            FILTRAR
+          </button>
+        </div>
+      </div>
       <div className="flex  justify-around gap-3 mt-4 flex-wrap">
-        {solicitacoes.map((solicitacao) => (
+        {filteredSolicitacoes.map((solicitacao) => (
           <div
             key={solicitacao._id}
             onClick={() => {
               setModalIsOpen(true);
               setModalSolicitacao(solicitacao);
             }}
-            className="flex flex-col w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+            className={`flex flex-col ${
+              solicitacao.aprovacao && "bg-gray-300"
+            } w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
           >
             <div className="flex justify-center">
               <h1 className="text-xs text-[#15599a] font-bold">

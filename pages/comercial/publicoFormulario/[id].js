@@ -97,6 +97,7 @@ function Formulario({ info }) {
               </button>
               <SelectInput
                 label={"CIDADE"}
+                value={dados.cidade}
                 options={cidadesAtendidas.map((cidade) => {
                   return { label: cidade, value: cidade };
                 })}

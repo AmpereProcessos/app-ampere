@@ -18,7 +18,7 @@ const statusStyles = {
   },
 };
 function Comercial({ credentials, setCredentials }) {
-  var editor;
+  console.log(credentials);
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -35,10 +35,17 @@ function Comercial({ credentials, setCredentials }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
   function getProjects() {
-    axios.get("/api/projects/comercial").then((res) => {
-      setProjects(res.data);
-      setFilteredProjects(res.data);
-    });
+    if (credentials.regional == "UBERLÂNDIA") {
+      axios.get("/api/regional/uberlandia/comercial").then((res) => {
+        setProjects(res.data);
+        setFilteredProjects(res.data);
+      });
+    } else {
+      axios.get("/api/projects/comercial").then((res) => {
+        setProjects(res.data);
+        setFilteredProjects(res.data);
+      });
+    }
   }
   function filterProjects() {
     var newArr;
@@ -171,9 +178,9 @@ function Comercial({ credentials, setCredentials }) {
   console.log(dateFilter);
   return (
     <div className="p-6 grow">
-      <div className="flex items-center justify-between border-b border-gray-200 p-1">
+      <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
         <div className="flex items-center gap-x-2">
-          <p className="font-bold uppercase text-center w-[200px] text-2xl text-[#15599a] font-raleway">
+          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-raleway">
             Projetos no estágio comercial
           </p>
           <p className="font-raleway font-bold text-[#fead61]">
@@ -387,7 +394,8 @@ function Comercial({ credentials, setCredentials }) {
           handleUpdates={handleUpdates}
           project={modalProject}
           editor={
-            credentials && credentials.accessibleRoutes.includes("PPS")
+            credentials.accessibleRoutes.includes("PPS") &&
+            credentials.regional != "UBERLÂNDIA"
               ? true
               : false
           }

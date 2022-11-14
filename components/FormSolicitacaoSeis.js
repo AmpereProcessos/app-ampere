@@ -71,8 +71,8 @@ function FormSolicitacaoSeis({ avancar, setDados, dados, voltar }) {
               editable={true}
               options={[
                 {
-                  label: "MANUTENÇÃO SIMLES",
-                  value: "MANUTENÇÃO SIMLES",
+                  label: "MANUTENÇÃO SIMPLES",
+                  value: "MANUTENÇÃO SIMPLES",
                 },
                 {
                   label: "PLANO SOL",

@@ -95,7 +95,7 @@ function ModalComercial({
       });
     }
   }
-  console.log(infoHolder.contrato.dataAssinatura);
+
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -404,7 +404,7 @@ function ModalComercial({
                   />
                   <div>
                     <input
-                      disabled={false}
+                      disabled={!editor}
                       checked={infoHolder.possuiaGD ? true : false}
                       onChange={(e) => {
                         setChanges({
@@ -426,7 +426,7 @@ function ModalComercial({
                   </div>
                   <div>
                     <input
-                      disabled={false}
+                      disabled={!editor}
                       checked={infoHolder.oem?.aplicavel ? true : false}
                       onChange={(e) => {
                         setChanges({

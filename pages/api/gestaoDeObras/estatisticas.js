@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import connectToDatabase from "../../../utils/connectDb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
@@ -43,6 +44,22 @@ export default async function handler(req, res) {
         {
           $project: {
             "compra.statusEntrega": 1,
+            "obra.observacoes": 1,
+          },
+        },
+      ])
+      .toArray();
+    let oss = await collection
+      .aggregate([
+        {
+          $match: {
+            ordensDeServico: { $ne: null },
+            "ordensDeServico.dataDeFechamento": null,
+          },
+        },
+        {
+          $project: {
+            "ordensDeServico.dataDeAbertura": 1,
           },
         },
       ])
@@ -62,6 +79,13 @@ export default async function handler(req, res) {
         total: obras.length,
         parcial: obras.filter((x) => x.compra.statusEntrega == "ENTREGUE")
           .length,
+        obsPendente: obras.filter(
+          (x) =>
+            x.obra.observacoes == undefined || x.obra.observacoes.trim() == 0
+        ).length,
+      },
+      oss: {
+        total: oss.length,
       },
     };
     res.json(arr);

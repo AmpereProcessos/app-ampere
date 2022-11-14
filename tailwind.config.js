@@ -5,7 +5,11 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      gridTemplateColumns: {
+        14: "repeat(14, minmax(0, 1fr))",
+      },
+    },
     fontFamily: {
       raleway: ["Raleway", "sans-serif"],
       ralewayBlack: ["Raleway Black"],

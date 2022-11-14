@@ -19,6 +19,12 @@ function MyApp({ Component, pageProps }) {
         setCredentials(storedCredentials);
       }
     }
+    if (
+      router.pathname.includes("pdf") ||
+      router.pathname.includes("publico") ||
+      router.pathname.includes("auth")
+    )
+      setSidebarVisible(false);
   }, [Component]);
   return (
     <DndProvider backend={HTML5Backend}>

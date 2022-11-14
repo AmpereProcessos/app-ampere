@@ -1009,6 +1009,15 @@ function ModalOeM({
                               VER OS
                             </button>
                           </Link>
+                          {ordem.categoria == "MANUTENÇÃO PREVENTIVA" && (
+                            <Link
+                              href={`/oem/pdfTermo/${project._id}?index=${index}`}
+                            >
+                              <button className="p-2 bg-[#fead61] font-bold rounded">
+                                VER TERMO
+                              </button>
+                            </Link>
+                          )}
                         </div>
                       ))}
                     </div>

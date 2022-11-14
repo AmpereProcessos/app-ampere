@@ -31,13 +31,14 @@ function GestaoDeObras({ credentials, setCredentials }) {
       }
     }
   }, []);
+  console.log(stats);
   return (
     <div className="flex flex-col grow p-6 w-full">
       <div className="flex flex-col">
         <h1 className="text-center text-[#15599a] text-xl font-bold uppercase font-ralewayBlack">
           PENDÊNCIAS
         </h1>
-        <div className="grid grid-cols-3 gap-x-3">
+        <div className="grid grid-cols-5 gap-x-3">
           <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">PADRÕES</h1>
@@ -78,6 +79,26 @@ function GestaoDeObras({ credentials, setCredentials }) {
               <strong className="text-red-500">
                 {stats.obras && stats.obras.parcial}
               </strong>
+            </p>
+          </div>
+          <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex justify-between">
+              <h1 className="uppercase text-gray-600">
+                PROJETOS COM OS aberta
+              </h1>
+            </div>
+            <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
+              {stats.oss && stats.oss.total}
+            </p>
+          </div>
+          <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex justify-between">
+              <h1 className="uppercase text-gray-600">
+                OBSERVAÇÕES A PREENCHER
+              </h1>
+            </div>
+            <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
+              {stats.obras && stats.obras.obsPendente}
             </p>
           </div>
         </div>

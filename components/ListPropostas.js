@@ -108,7 +108,7 @@ function ListPropostas({ proposes, title, listId, fetchProposes }) {
           className={
             "outline-none border border-gray-200 p-1 w-full mt-2 text-sm text-gray-600 text-center font-semibold"
           }
-          placeHolder={"Digite aqui o nome da proposta..."}
+          placeholder={"Digite aqui o nome da proposta..."}
         />
       </div>
       {filteredPropostas &&

@@ -15,6 +15,7 @@ import SelectInput from "./SelectInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
 import axios from "axios";
+import dayjs from "dayjs";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -95,7 +96,7 @@ function ModalComercial({
       });
     }
   }
-
+  console.log(infoHolder.contrato);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -1136,15 +1137,17 @@ function ModalComercial({
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          "contrato.dataSolicitacao": new Date(
-                            value
-                          ).toISOString(),
+                          "contrato.dataSolicitacao": dayjs(value).isValid()
+                            ? new Date(value).toISOString()
+                            : null,
                         });
                         setInfo({
                           ...infoHolder,
                           contrato: {
                             ...infoHolder.contrato,
-                            dataSolicitacao: new Date(value).toISOString(),
+                            dataSolicitacao: dayjs(value).isValid()
+                              ? new Date(value).toISOString()
+                              : null,
                           },
                         });
                       }}
@@ -1164,13 +1167,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "contrato.dataLiberacao": new Date(value).toISOString(),
+                        "contrato.dataLiberacao": dayjs(value).isValid()
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         contrato: {
                           ...infoHolder.contrato,
-                          dataLiberacao: new Date(value).toISOString(),
+                          dataLiberacao: dayjs(value).isValid()
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -1189,15 +1196,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "contrato.dataAssinatura": new Date(
-                          value
-                        ).toISOString(),
+                        "contrato.dataAssinatura": dayjs(value).isValid()
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         contrato: {
                           ...infoHolder.contrato,
-                          dataAssinatura: new Date(value).toISOString(),
+                          dataAssinatura: dayjs(value).isValid()
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -1494,13 +1503,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "compra.dataLiberacao": new Date(value).toISOString(),
+                        "compra.dataLiberacao": dayjs(value).isValid()
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         compra: {
                           ...infoHolder.compra,
-                          dataLiberacao: new Date(value).toISOString(),
+                          dataLiberacao: dayjs(value).isValid()
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -1519,13 +1532,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "compra.dataPagamento": new Date(value).toISOString(),
+                        "compra.dataPagamento": dayjs(value).isValid()
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         compra: {
                           ...infoHolder.compra,
-                          dataPagamento: new Date(value).toISOString(),
+                          dataPagamento: dayjs(value).isValid()
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -2117,15 +2134,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "projeto.dataAssDocumentacao": new Date(
-                          value
-                        ).toISOString(),
+                        "projeto.dataAssDocumentacao": dayjs(value).isValid()
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         projeto: {
                           ...infoHolder.projeto,
-                          dataAssDocumentacao: new Date(value).toISOString(),
+                          dataAssDocumentacao: dayjs(value).isValid()
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -2144,15 +2163,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "parecer.dataParecerDeAcesso": new Date(
-                          value
-                        ).toISOString(),
+                        "parecer.dataParecerDeAcesso": dayjs(value).isValid()
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         parecer: {
                           ...infoHolder.parecer,
-                          dataParecerDeAcesso: new Date(value).toISOString(),
+                          dataParecerDeAcesso: dayjs(value).isValid()
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -2331,13 +2352,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "vistoria.dataPedido": new Date(value).toISOString(),
+                        "vistoria.dataPedido": dayjs(value).isValid()
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         vistoria: {
                           ...infoHolder.vistoria,
-                          dataPedido: new Date(value).toISOString(),
+                          dataPedido: dayjs(value).isValid()
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -2386,13 +2411,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "medidor.data": new Date(value).toISOString(),
+                        "medidor.data": dayjs(value).isValid()
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         medidor: {
                           ...infoHolder.medidor,
-                          data: new Date(value).toISOString(),
+                          data: dayjs(value).isValid()
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -2551,13 +2580,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "obra.entrada": new Date(value).toISOString(),
+                        "obra.entrada": dayjs(value).isValid()
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         obra: {
                           ...infoHolder.obra,
-                          entrada: new Date(value).toISOString(),
+                          entrada: dayjs(value).isValid()
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -2576,13 +2609,17 @@ function ModalComercial({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "obra.saida": new Date(value).toISOString(),
+                        "obra.saida": dayjs(value).isValid()
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         obra: {
                           ...infoHolder.obra,
-                          saida: new Date(value).toISOString(),
+                          saida: dayjs(value).isValid()
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}

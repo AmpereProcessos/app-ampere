@@ -34,12 +34,17 @@ function Comercial({ credentials, setCredentials }) {
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
-  function getProjects() {
-    if (credentials.regional == "UBERLÂNDIA") {
-      axios.get("/api/regional/uberlandia/comercial").then((res) => {
-        setProjects(res.data);
-        setFilteredProjects(res.data);
-      });
+  function getProjects(credenciais) {
+    if (credenciais.visualizacao == "REGIONAL") {
+      axios
+        .post("/api/projects/comercial", {
+          filtrarPor: credenciais.visualizacao,
+          parametro: credenciais.regional,
+        })
+        .then((res) => {
+          setProjects(res.data);
+          setFilteredProjects(res.data);
+        });
     } else {
       axios.get("/api/projects/comercial").then((res) => {
         setProjects(res.data);
@@ -112,7 +117,7 @@ function Comercial({ credentials, setCredentials }) {
       ) {
         router.push("/");
       } else {
-        getProjects();
+        getProjects(storedCredentials);
       }
     } else {
       if (!credentials.nome) {
@@ -124,7 +129,7 @@ function Comercial({ credentials, setCredentials }) {
         ) {
           router.push("/");
         } else {
-          getProjects();
+          getProjects(credentials);
         }
       }
     }
@@ -133,11 +138,6 @@ function Comercial({ credentials, setCredentials }) {
     getProjects();
     let changedObj = projects.filter((project) => project._id == id);
     setModalProject(changedObj[0]);
-  }
-  function filterByContractCondition(condition) {
-    setCurrentFilter(condition);
-    var newArr = projects.filter((p) => p.statuscontrato == condition);
-    setFilteredProjects(newArr);
   }
   function getListCumulativePeakPot() {
     var totalSum = 0;
@@ -379,14 +379,14 @@ function Comercial({ credentials, setCredentials }) {
           </div>
         ))}
       </div>
-      {credentials.regional != "UBERLÂNDIA" && (
+      {credentials.regional == undefined && (
         <Link href={"/comercial/addProjeto"}>
           <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
             <p className="uppercase font-bold text-sm">Novo projeto</p>
           </a>
         </Link>
       )}
-      {credentials.regional != "UBERLÂNDIA" && (
+      {credentials.regional == undefined && (
         <Link href={"/comercial/formulariosSolicitacao"}>
           <a className="fixed bg-[#15599a] cursor-pointer ml-36 hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
             <p className="uppercase font-bold text-sm">Formulários</p>
@@ -399,7 +399,7 @@ function Comercial({ credentials, setCredentials }) {
           project={modalProject}
           editor={
             credentials.accessibleRoutes.includes("PPS") &&
-            credentials.regional != "UBERLÂNDIA"
+            credentials.regional == undefined
               ? true
               : false
           }

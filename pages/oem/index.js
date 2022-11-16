@@ -37,12 +37,17 @@ function OeM({ credentials, setCredentials }) {
   });
   const [searchFilter, setSearchFilter] = useState("");
   const [modalProject, setModalProject] = useState({});
-  function getProjects() {
-    if (credentials.regional == "UBERLÂNDIA") {
-      axios.get("/api/regional/uberlandia/oem").then((res) => {
-        setProjects(res.data);
-        setFilteredProjects(res.data);
-      });
+  function getProjects(credenciais) {
+    if (credenciais.visualizacao == "REGIONAL") {
+      axios
+        .post("/api/projects/oem", {
+          filtrarPor: credenciais.visualizacao,
+          parametro: credenciais.regional,
+        })
+        .then((res) => {
+          setProjects(res.data);
+          setFilteredProjects(res.data);
+        });
     } else {
       axios.get("/api/projects/oem").then((res) => {
         setProjects(res.data);
@@ -182,7 +187,7 @@ function OeM({ credentials, setCredentials }) {
       ) {
         router.push("/");
       } else {
-        getProjects();
+        getProjects(storedCredentials);
       }
     } else {
       if (!credentials.nome) {
@@ -194,7 +199,7 @@ function OeM({ credentials, setCredentials }) {
         ) {
           router.push("/");
         } else {
-          getProjects();
+          getProjects(credentials);
         }
       }
     }

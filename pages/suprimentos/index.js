@@ -17,12 +17,17 @@ function Suprimentos({ credentials, setCredentials }) {
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
-  function getProjects() {
-    if (credentials.regional == "UBERLÂNDIA") {
-      axios.get("/api/regional/uberlandia/suprimentos").then((res) => {
-        setProjects(res.data);
-        setFilteredProjects(res.data);
-      });
+  function getProjects(credenciais) {
+    if (credenciais.visualizacao == "REGIONAL") {
+      axios
+        .post("/api/projects/suprimentos", {
+          filtrarPor: credenciais.visualizacao,
+          parametro: credenciais.regional,
+        })
+        .then((res) => {
+          setProjects(res.data);
+          setFilteredProjects(res.data);
+        });
     } else {
       axios.get("/api/projects/suprimentos").then((res) => {
         setProjects(res.data);
@@ -69,7 +74,7 @@ function Suprimentos({ credentials, setCredentials }) {
       ) {
         router.push("/");
       } else {
-        getProjects();
+        getProjects(storedCredentials);
       }
     } else {
       if (!credentials.nome) {
@@ -81,7 +86,7 @@ function Suprimentos({ credentials, setCredentials }) {
         ) {
           router.push("/");
         } else {
-          getProjects();
+          getProjects(credentials);
         }
       }
     }
@@ -282,7 +287,10 @@ function Suprimentos({ credentials, setCredentials }) {
           handleUpdates={handleUpdates}
           project={modalProject}
           editor={
-            credentials.accessibleRoutes.includes("Suprimentos") ? true : false
+            credentials.accessibleRoutes.includes("Suprimentos") &&
+            credentials.regional == undefined
+              ? true
+              : false
           }
           ppsEditor={
             credentials.accessibleRoutes.includes("PPS") ? true : false

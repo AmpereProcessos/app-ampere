@@ -71,16 +71,22 @@ function Sidebar({ credentials }) {
             <p className="pl-3 text-xs text-gray-600">Banco de dados</p>
           </a>
         </Link>
-        <Link href="/calendario">
-          <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-            <BsFillCalendarEventFill
-              style={{ color: "#15599a", fontSize: "20px" }}
-            />
-            <p className="pl-3 text-xs text-gray-600">
-              Cronograma de Obras (em breve)
-            </p>
-          </a>
-        </Link>
+        {credentials.accessibleRoutes != undefined &&
+        credentials.accessibleRoutes.includes("Obras") &&
+        credentials.regional == undefined ? (
+          <Link href="/calendario">
+            <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+              <BsFillCalendarEventFill
+                style={{ color: "#15599a", fontSize: "20px" }}
+              />
+              <p className="pl-3 text-xs text-gray-600">
+                Cronograma de Obras (em breve)
+              </p>
+            </a>
+          </Link>
+        ) : (
+          false
+        )}
       </div>
       <div className="mt-6">
         <h2 className="text-xs text-gray-500">SETORES</h2>
@@ -146,7 +152,8 @@ function Sidebar({ credentials }) {
         ) : (
           false
         )}
-        {credentials.accessibleRoutes != undefined
+        {credentials.accessibleRoutes != undefined &&
+        credentials.regional == undefined
           ? (credentials?.accessibleRoutes.includes("O&M") ||
               credentials?.accessibleRoutes.includes("Marketing")) && (
               <Link href="/oem">
@@ -174,7 +181,8 @@ function Sidebar({ credentials }) {
         ) : (
           false
         )}
-        {credentials.accessibleRoutes != undefined
+        {credentials.accessibleRoutes != undefined &&
+        credentials.regional == undefined
           ? (credentials?.accessibleRoutes.includes("ADM") ||
               credentials?.accessibleRoutes.includes("Marketing")) && (
               <Link href="/adm">
@@ -190,7 +198,7 @@ function Sidebar({ credentials }) {
       </div>
       <div className="mt-6">
         <h2 className="text-xs text-gray-500">OUTROS</h2>
-        {credentials.regional != "UBERLÂNDIA" && (
+        {credentials.regional == undefined && (
           <Link href="/calls">
             <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
               <FaTasks style={{ color: "#15599a", fontSize: "20px" }} />
@@ -212,7 +220,7 @@ function Sidebar({ credentials }) {
           false
         )}
         {credentials.accessibleRoutes != undefined &&
-        credentials.regional != "UBERLÂNDIA"
+        credentials.regional == undefined
           ? credentials?.accessibleRoutes.includes("ADM") && (
               <Link href={"/adm/cobrancas"}>
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -225,7 +233,7 @@ function Sidebar({ credentials }) {
             )
           : false}
         {credentials.accessibleRoutes != undefined &&
-        credentials.regional != "UBERLÂNDIA"
+        credentials.regional == undefined
           ? credentials?.accessibleRoutes.includes("Projetos") && (
               <Link href={"/projetos/comissionamento"}>
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -238,7 +246,7 @@ function Sidebar({ credentials }) {
             )
           : false}
         {credentials.accessibleRoutes != undefined &&
-        credentials.regional != "UBERLÂNDIA"
+        credentials.regional == undefined
           ? credentials?.accessibleRoutes.includes("Obras") && (
               <Link href="/obras/gestaoDeObras">
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -251,7 +259,7 @@ function Sidebar({ credentials }) {
             )
           : false}
         {credentials.accessibleRoutes != undefined &&
-        credentials.regional != "UBERLÂNDIA"
+        credentials.regional == undefined
           ? credentials?.accessibleRoutes.includes("Pós-Venda") && (
               <Link href="/posvenda/nps">
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">

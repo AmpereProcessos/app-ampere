@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
+import Select from "react-select";
 import { cities } from "../utils/constants";
 import axios from "axios";
 const MODAL_STYLES = {
@@ -24,6 +25,7 @@ const OVERLAY_STYLES = {
   zIndex: 1000,
 };
 function CreateModal({ setModalIsOpen }) {
+  const [clientes, setClientes] = useState([]);
   const [callInfo, setCallInfo] = useState({
     clientName: "",
     nomeUsina: "",
@@ -38,6 +40,7 @@ function CreateModal({ setModalIsOpen }) {
     axios.post("/api/calls/suporte/mainData", callInfo).then((res) => {
       setMessage("CHAMADO ABERTO");
       setCallInfo({
+        idPai: "",
         clientName: "",
         nomeUsina: "",
         clientCity: cities[0].name,
@@ -48,7 +51,13 @@ function CreateModal({ setModalIsOpen }) {
       });
     });
   }
-  console.log(callInfo.clientCity);
+  function getClients() {
+    axios.get("/api/projects/todos").then((res) => setClientes(res.data));
+  }
+  useEffect(() => {
+    getClients();
+  }, []);
+  console.log(callInfo);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -69,18 +78,32 @@ function CreateModal({ setModalIsOpen }) {
               </button>
             </div>
             <div className="flex flex-col overflow-y-auto">
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+              <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center uppercase font-bold">
                   Nome do cliente
                 </span>
-                <input
-                  value={callInfo.clientName}
-                  onChange={(e) =>
-                    setCallInfo({ ...callInfo, clientName: e.target.value })
-                  }
-                  className="outline-none text-sm text-center grow placeholder:italic"
-                  type="text"
-                />
+                <div className={"grow"}>
+                  <Select
+                    isMulti={false}
+                    placeholder="NOME DO CLIENTE"
+                    onChange={(e) =>
+                      setCallInfo({
+                        ...callInfo,
+                        clientName: e.value.nome,
+                        idPai: e.value.id,
+                      })
+                    }
+                    options={clientes.map((cliente) => {
+                      return {
+                        label: cliente.nomeDoContrato,
+                        value: {
+                          id: cliente._id,
+                          nome: cliente.nomeDoContrato,
+                        },
+                      };
+                    })}
+                  />
+                </div>
               </div>
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center uppercase font-bold">

@@ -580,30 +580,32 @@ function ModalSuprimentos({
                       });
                     }}
                   />
-                  <NumberInput
-                    tag={"R$"}
-                    label={"VALOR DO PROJETO"}
-                    editable={editor}
-                    value={
-                      infoHolder.sistema?.valorProjeto != undefined &&
-                      infoHolder.sistema?.valorProjeto != "-"
-                        ? infoHolder.sistema?.valorProjeto
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "sistema.valorProjeto": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          valorProjeto: Number(value),
-                        },
-                      });
-                    }}
-                  />
+                  {credentials.visualizacao == undefined && (
+                    <NumberInput
+                      tag={"R$"}
+                      label={"VALOR DO PROJETO"}
+                      editable={editor}
+                      value={
+                        infoHolder.sistema?.valorProjeto != undefined &&
+                        infoHolder.sistema?.valorProjeto != "-"
+                          ? infoHolder.sistema?.valorProjeto
+                          : 0
+                      }
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          "sistema.valorProjeto": Number(value),
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          sistema: {
+                            ...infoHolder.sistema,
+                            valorProjeto: Number(value),
+                          },
+                        });
+                      }}
+                    />
+                  )}
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
@@ -788,30 +790,32 @@ function ModalSuprimentos({
                       });
                     }}
                   />
-                  <NumberInput
-                    tag={"R$"}
-                    label={"VALOR DO KIT"}
-                    editable={editor}
-                    value={
-                      infoHolder.compra?.valorDoKit != undefined &&
-                      infoHolder.compra?.valorDoKit != "-"
-                        ? infoHolder.compra?.valorDoKit
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "compra.valorDoKit": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        compra: {
-                          ...infoHolder.compra,
-                          valorDoKit: Number(value),
-                        },
-                      });
-                    }}
-                  />
+                  {credentials.visualizacao == undefined && (
+                    <NumberInput
+                      tag={"R$"}
+                      label={"VALOR DO KIT"}
+                      editable={editor}
+                      value={
+                        infoHolder.compra?.valorDoKit != undefined &&
+                        infoHolder.compra?.valorDoKit != "-"
+                          ? infoHolder.compra?.valorDoKit
+                          : 0
+                      }
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          "compra.valorDoKit": Number(value),
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          compra: {
+                            ...infoHolder.compra,
+                            valorDoKit: Number(value),
+                          },
+                        });
+                      }}
+                    />
+                  )}
                   <SelectInput
                     label={"LOCAL DE ENTREGA"}
                     value={

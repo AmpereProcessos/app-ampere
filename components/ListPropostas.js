@@ -89,7 +89,7 @@ function ListPropostas({ proposes, title, listId, fetchProposes }) {
     <div
       ref={dropRef}
       id={listId}
-      className="flex flex-col lg:max-h-[550px] max-h-[150px] py-2 overflow-y-auto overscroll-y-auto items-center pt-2 px-1 grow bg-white h-full rounded border border-gray-200 shadow-lg"
+      className="flex flex-col lg:max-h-[550px] max-h-[150px] py-2 items-center pt-2 px-1 grow bg-white h-full rounded border border-gray-200 shadow-lg"
     >
       <div className="border-b pb-2 h-fit w-full text-center border-blue-300 text-xl font-bold">
         <h1>{title}</h1>
@@ -111,14 +111,16 @@ function ListPropostas({ proposes, title, listId, fetchProposes }) {
           placeholder={"Digite aqui o nome da proposta..."}
         />
       </div>
-      {filteredPropostas &&
-        filteredPropostas?.map((propose) => (
-          <CardProposta
-            fetchProposes={fetchProposes}
-            key={propose._id}
-            propose={propose}
-          />
-        ))}
+      <div className="flex flex-col overflow-y-auto overscroll-y-auto py-2 w-full">
+        {filteredPropostas &&
+          filteredPropostas?.map((propose) => (
+            <CardProposta
+              fetchProposes={fetchProposes}
+              key={propose._id}
+              propose={propose}
+            />
+          ))}
+      </div>
     </div>
   );
 }

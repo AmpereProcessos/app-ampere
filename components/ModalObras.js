@@ -1842,54 +1842,61 @@ function ModalObras({
                       });
                     }}
                   />
-                  <NumberInput
-                    tag={"R$"}
-                    label={"Previsão de custos em insumos"}
-                    editable={editor}
-                    value={
-                      infoHolder.material?.previsaoCustos != undefined &&
-                      infoHolder.material?.previsaoCustos != "#VALUE!"
-                        ? Number(infoHolder.material?.previsaoCustos).toFixed(2)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "material.previsaoCustos": Number(value).toFixed(2),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        material: {
-                          ...infoHolder.material,
-                          previsaoCustos: Number(value).toFixed(2),
-                        },
-                      });
-                    }}
-                  />
-                  <NumberInput
-                    tag={"R$"}
-                    label={"Custos em insumos"}
-                    editable={editor}
-                    value={
-                      infoHolder.material?.efetivoCustos != undefined &&
-                      infoHolder.material?.efetivoCustos != "#VALUE!"
-                        ? infoHolder.material?.efetivoCustos
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "material.efetivoCustos": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        material: {
-                          ...infoHolder.material,
-                          efetivoCustos: Number(value),
-                        },
-                      });
-                    }}
-                  />
+                  {credentials.visualizacao == undefined && (
+                    <>
+                      {" "}
+                      <NumberInput
+                        tag={"R$"}
+                        label={"Previsão de custos em insumos"}
+                        editable={editor}
+                        value={
+                          infoHolder.material?.previsaoCustos != undefined &&
+                          infoHolder.material?.previsaoCustos != "#VALUE!"
+                            ? Number(
+                                infoHolder.material?.previsaoCustos
+                              ).toFixed(2)
+                            : 0
+                        }
+                        handleChange={(value) => {
+                          setChanges({
+                            ...changes,
+                            "material.previsaoCustos": Number(value).toFixed(2),
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            material: {
+                              ...infoHolder.material,
+                              previsaoCustos: Number(value).toFixed(2),
+                            },
+                          });
+                        }}
+                      />
+                      <NumberInput
+                        tag={"R$"}
+                        label={"Custos em insumos"}
+                        editable={editor}
+                        value={
+                          infoHolder.material?.efetivoCustos != undefined &&
+                          infoHolder.material?.efetivoCustos != "#VALUE!"
+                            ? infoHolder.material?.efetivoCustos
+                            : 0
+                        }
+                        handleChange={(value) => {
+                          setChanges({
+                            ...changes,
+                            "material.efetivoCustos": Number(value),
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            material: {
+                              ...infoHolder.material,
+                              efetivoCustos: Number(value),
+                            },
+                          });
+                        }}
+                      />
+                    </>
+                  )}
                 </div>
               </div>
             </div>

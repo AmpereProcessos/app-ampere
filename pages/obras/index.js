@@ -31,12 +31,17 @@ function Obras({ credentials, setCredentials }) {
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
-  function getProjects() {
-    if (credentials.regional == "UBERLÂNDIA") {
-      axios.get("/api/regional/uberlandia/obras").then((res) => {
-        setProjects(res.data);
-        setFilteredProjects(res.data);
-      });
+  function getProjects(credenciais) {
+    if (credenciais.visualizacao == "REGIONAL") {
+      axios
+        .post("/api/projects/obras", {
+          filtrarPor: credenciais.visualizacao,
+          parametro: credenciais.regional,
+        })
+        .then((res) => {
+          setProjects(res.data);
+          setFilteredProjects(res.data);
+        });
     } else {
       axios.get("/api/projects/obras").then((res) => {
         setProjects(res.data);
@@ -171,7 +176,7 @@ function Obras({ credentials, setCredentials }) {
       ) {
         router.push("/");
       } else {
-        getProjects();
+        getProjects(storedCredentials);
       }
     } else {
       if (!credentials.nome) {
@@ -183,7 +188,7 @@ function Obras({ credentials, setCredentials }) {
         ) {
           router.push("/");
         } else {
-          getProjects();
+          getProjects(credentials);
         }
       }
     }
@@ -611,7 +616,12 @@ function Obras({ credentials, setCredentials }) {
           credentials={credentials}
           handleUpdates={handleUpdates}
           project={modalProject}
-          editor={credentials.accessibleRoutes.includes("Obras") ? true : false}
+          editor={
+            credentials.accessibleRoutes.includes("Obras") &&
+            credentials.regional == undefined
+              ? true
+              : false
+          }
           setModalIsOpen={setModalIsOpen}
         />
       )}

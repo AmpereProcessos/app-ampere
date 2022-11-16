@@ -24,7 +24,6 @@ export default async function handler(req, res) {
     var obj = { ...req.body, abertura: date };
     const db = await connectToDatabase(process.env.DB_KEY, "chamados");
     const collection = db.collection("projetos");
-    console.log(req.body);
     try {
       let created = await collection.insertOne(obj);
       res.json("CHAMADO ABERTO");

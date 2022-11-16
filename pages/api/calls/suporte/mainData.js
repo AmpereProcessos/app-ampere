@@ -39,6 +39,7 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     let date = new Date().toJSON();
     var obj = {
+      idPai: req.body.idPai,
       abertura: date,
       nomeCliente: req.body.clientName,
       nomeUsina: req.body.plantName ? req.body.plantName : "",
@@ -51,6 +52,7 @@ export default async function handler(req, res) {
     const db = await connectToDatabase(process.env.DB_KEY, "chamados");
     const collection = db.collection("suporte");
     let created = await collection.insertOne({
+      idPai: req.body.idPai,
       abertura: date,
       nomeCliente: req.body.clientName,
       nomeUsina: req.body.nomeUsina ? req.body.nomeUsina : "",

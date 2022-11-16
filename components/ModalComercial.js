@@ -719,24 +719,29 @@ function ModalComercial({
                       });
                     }}
                   />
-                  <NumberInput
-                    tag={"R$"}
-                    label={"Valor do padrão"}
-                    editable={editor}
-                    value={
-                      infoHolder.padrao?.valor ? infoHolder.padrao?.valor : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "padrao.valor": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        padrao: { ...infoHolder.padrao, valor: Number(value) },
-                      });
-                    }}
-                  />
+                  {credentials.visualizacao == undefined && (
+                    <NumberInput
+                      tag={"R$"}
+                      label={"Valor do padrão"}
+                      editable={editor}
+                      value={
+                        infoHolder.padrao?.valor ? infoHolder.padrao?.valor : 0
+                      }
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          "padrao.valor": Number(value),
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          padrao: {
+                            ...infoHolder.padrao,
+                            valor: Number(value),
+                          },
+                        });
+                      }}
+                    />
+                  )}
                   <SelectInput
                     label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
                     editable={editor}
@@ -989,30 +994,32 @@ function ModalComercial({
                       });
                     }}
                   />
-                  <NumberInput
-                    tag={"R$"}
-                    label={"Valor da estrutura"}
-                    editable={editor}
-                    value={
-                      infoHolder.estruturaPersonalizada?.valor == "-" ||
-                      infoHolder.estruturaPersonalizada?.valor == undefined
-                        ? 0
-                        : infoHolder.estruturaPersonalizada?.valor
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "estruturaPersonalizada.valor": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          valor: Number(value),
-                        },
-                      });
-                    }}
-                  />
+                  {credentials.visualizacao == undefined && (
+                    <NumberInput
+                      tag={"R$"}
+                      label={"Valor da estrutura"}
+                      editable={editor}
+                      value={
+                        infoHolder.estruturaPersonalizada?.valor == "-" ||
+                        infoHolder.estruturaPersonalizada?.valor == undefined
+                          ? 0
+                          : infoHolder.estruturaPersonalizada?.valor
+                      }
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          "estruturaPersonalizada.valor": Number(value),
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          estruturaPersonalizada: {
+                            ...infoHolder.estruturaPersonalizada,
+                            valor: Number(value),
+                          },
+                        });
+                      }}
+                    />
+                  )}
                   {infoHolder.estruturaPersonalizada?.aplicavel == "SIM" && (
                     <SelectInput
                       label={"STATUS da estrutura personalizada"}
@@ -1608,30 +1615,32 @@ function ModalComercial({
                       });
                     }}
                   />
-                  <NumberInput
-                    tag={"R$"}
-                    label={"VALOR DO KIT"}
-                    editable={editor}
-                    value={
-                      infoHolder.compra?.valorDoKit != undefined &&
-                      infoHolder.compra?.valorDoKit != "-"
-                        ? infoHolder.compra?.valorDoKit
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "compra.valorDoKit": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        compra: {
-                          ...infoHolder.compra,
-                          valorDoKit: Number(value),
-                        },
-                      });
-                    }}
-                  />
+                  {credentials.visualizacao == undefined && (
+                    <NumberInput
+                      tag={"R$"}
+                      label={"VALOR DO KIT"}
+                      editable={editor}
+                      value={
+                        infoHolder.compra?.valorDoKit != undefined &&
+                        infoHolder.compra?.valorDoKit != "-"
+                          ? infoHolder.compra?.valorDoKit
+                          : 0
+                      }
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          "compra.valorDoKit": Number(value),
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          compra: {
+                            ...infoHolder.compra,
+                            valorDoKit: Number(value),
+                          },
+                        });
+                      }}
+                    />
+                  )}
                   <SelectInput
                     label={"LOCAL DE ENTREGA"}
                     value={
@@ -2020,30 +2029,32 @@ function ModalComercial({
                       });
                     }}
                   />
-                  <NumberInput
-                    tag={"R$"}
-                    label={"VALOR DO PROJETO"}
-                    editable={editor}
-                    value={
-                      infoHolder.sistema?.valorProjeto != undefined &&
-                      infoHolder.sistema?.valorProjeto != "-"
-                        ? infoHolder.sistema?.valorProjeto
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "sistema.valorProjeto": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          valorProjeto: Number(value),
-                        },
-                      });
-                    }}
-                  />
+                  {credentials.visualizacao == undefined && (
+                    <NumberInput
+                      tag={"R$"}
+                      label={"VALOR DO PROJETO"}
+                      editable={editor}
+                      value={
+                        infoHolder.sistema?.valorProjeto != undefined &&
+                        infoHolder.sistema?.valorProjeto != "-"
+                          ? infoHolder.sistema?.valorProjeto
+                          : 0
+                      }
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          "sistema.valorProjeto": Number(value),
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          sistema: {
+                            ...infoHolder.sistema,
+                            valorProjeto: Number(value),
+                          },
+                        });
+                      }}
+                    />
+                  )}
                   <SelectInput
                     label={"INICIAR PROJETO"}
                     value={
@@ -2900,54 +2911,59 @@ function ModalComercial({
                       });
                     }}
                   />
-                  <NumberInput
-                    tag={"R$"}
-                    label={"Previsão de custos em insumos"}
-                    editable={editor}
-                    value={
-                      infoHolder.material?.previsaoCustos != undefined &&
-                      infoHolder.material?.previsaoCustos != "#VALUE!"
-                        ? infoHolder.material?.previsaoCustos.toFixed(2)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "material.previsaoCustos": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        material: {
-                          ...infoHolder.material,
-                          previsaoCustos: Number(value),
-                        },
-                      });
-                    }}
-                  />
-                  <NumberInput
-                    tag={"R$"}
-                    label={"Custos em insumos"}
-                    editable={editor}
-                    value={
-                      infoHolder.material?.efetivoCustos != undefined &&
-                      infoHolder.material?.efetivoCustos != "#VALUE!"
-                        ? infoHolder.material?.efetivoCustos
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "material.efetivoCustos": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        material: {
-                          ...infoHolder.material,
-                          efetivoCustos: Number(value),
-                        },
-                      });
-                    }}
-                  />
+                  {credentials.visualizacao == undefined && (
+                    <>
+                      {" "}
+                      <NumberInput
+                        tag={"R$"}
+                        label={"Previsão de custos em insumos"}
+                        editable={editor}
+                        value={
+                          infoHolder.material?.previsaoCustos != undefined &&
+                          infoHolder.material?.previsaoCustos != "#VALUE!"
+                            ? infoHolder.material?.previsaoCustos.toFixed(2)
+                            : 0
+                        }
+                        handleChange={(value) => {
+                          setChanges({
+                            ...changes,
+                            "material.previsaoCustos": Number(value),
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            material: {
+                              ...infoHolder.material,
+                              previsaoCustos: Number(value),
+                            },
+                          });
+                        }}
+                      />
+                      <NumberInput
+                        tag={"R$"}
+                        label={"Custos em insumos"}
+                        editable={editor}
+                        value={
+                          infoHolder.material?.efetivoCustos != undefined &&
+                          infoHolder.material?.efetivoCustos != "#VALUE!"
+                            ? infoHolder.material?.efetivoCustos
+                            : 0
+                        }
+                        handleChange={(value) => {
+                          setChanges({
+                            ...changes,
+                            "material.efetivoCustos": Number(value),
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            material: {
+                              ...infoHolder.material,
+                              efetivoCustos: Number(value),
+                            },
+                          });
+                        }}
+                      />
+                    </>
+                  )}
                 </div>
               </div>
             </div>

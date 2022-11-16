@@ -17,5 +17,57 @@ export default async function handler(req, res) {
       ])
       .toArray();
     res.json(projetos);
+  } else if (req.method === "POST") {
+    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+    const collection = db.collection("dados");
+    var arr;
+    switch (req.body.filtrarPor) {
+      case "REGIONAL":
+        arr = await collection
+          .aggregate([
+            {
+              $match: {
+                regional: req.body.parametro,
+                "projeto.projetoConcluido": { $ne: "SIM" },
+                $or: [
+                  { "compra.statusLiberacao": "PAGO" },
+                  { "projeto.iniciar": "SIM" },
+                ],
+              },
+            },
+          ])
+          .toArray();
+        break;
+      case "VENDEDOR":
+        arr = await collection
+          .aggregate([
+            {
+              $match: {
+                "vendedor.nome": req.body.parametro,
+                "projeto.projetoConcluido": { $ne: "SIM" },
+                $or: [
+                  { "compra.statusLiberacao": "PAGO" },
+                  { "projeto.iniciar": "SIM" },
+                ],
+              },
+            },
+          ])
+          .toArray();
+      default:
+        arr = await collection
+          .aggregate([
+            {
+              $match: {
+                "projeto.projetoConcluido": { $ne: "SIM" },
+                $or: [
+                  { "compra.statusLiberacao": "PAGO" },
+                  { "projeto.iniciar": "SIM" },
+                ],
+              },
+            },
+          ])
+          .toArray();
+    }
+    res.json(arr);
   }
 }

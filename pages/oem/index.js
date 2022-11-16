@@ -5,6 +5,7 @@ import Select from "react-select";
 import { cidadesAtendidas } from "../../utils/constants";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalOeM from "../../components/ModalOeM";
+import Link from "next/link";
 const statusStyles = {
   REALIZADO: {
     textColor: "text-green-500",
@@ -537,6 +538,11 @@ function OeM({ credentials, setCredentials }) {
           </div>
         ))}
       </div>
+      <Link href={"/oem/propostas"}>
+        <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">Propostas</p>
+        </a>
+      </Link>
       {modalIsOpen && (
         <ModalOeM
           setModalIsOpen={setModalIsOpen}

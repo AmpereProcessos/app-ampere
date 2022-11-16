@@ -42,7 +42,7 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
   const [changes, setChanges] = useState({});
   const [responsavel, setResponsavel] = useState(info.responsavel);
   const [notes, setNotes] = useState(info.anotacoes);
-  const [selectedStatus, setSelectedStatus] = useState(info.status);
+
   const [message, setMessage] = useState("");
   function saveCallChanges(status, mode) {
     axios
@@ -71,6 +71,7 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
   useEffect(() => {
     setMessage("");
   }, [notes, responsavel]);
+  console.log(changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -127,7 +128,7 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                           });
                         }}
                         className={`${
-                          selectedStatus != "AGUARDANDO CONCESSIONÁRIA" &&
+                          infoHolder.status != "AGUARDANDO CONCESSIONÁRIA" &&
                           "opacity-30"
                         } text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg ${
                           info &&
@@ -182,7 +183,10 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                 <span className="text-center font-bold">RESPONSÁVEL</span>
                 <select
                   value={responsavel}
-                  onChange={(e) => setResponsavel(e.target.value)}
+                  onChange={(e) => {
+                    setChanges({ ...changes, responsavel: e.target.value });
+                    setResponsavel(e.target.value);
+                  }}
                   className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
                 >
                   <option value={"A DEFINIR"}>A DEFINIR</option>

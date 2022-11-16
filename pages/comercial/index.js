@@ -45,6 +45,16 @@ function Comercial({ credentials, setCredentials }) {
           setProjects(res.data);
           setFilteredProjects(res.data);
         });
+    } else if (credenciais.visualizacao == "VENDEDOR") {
+      axios
+        .post("/api/projects/comercial", {
+          filtrarPor: credenciais.visualizacao,
+          parametro: credenciais.vendedor,
+        })
+        .then((res) => {
+          setProjects(res.data);
+          setFilteredProjects(res.data);
+        });
     } else {
       axios.get("/api/projects/comercial").then((res) => {
         setProjects(res.data);

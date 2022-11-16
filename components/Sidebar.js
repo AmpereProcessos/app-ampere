@@ -20,6 +20,7 @@ import { SiCashapp } from "react-icons/si";
 import { BsFillCalendarEventFill } from "react-icons/bs";
 import { BsFolderPlus } from "react-icons/bs";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
+import { ImFolderOpen } from "react-icons/im";
 import Link from "next/link";
 const style = {
   heigth: "calc(100% - 350px)",
@@ -60,17 +61,19 @@ function Sidebar({ credentials }) {
             <p className="pl-3 text-xs text-gray-600">Em andamento</p>
           </a>
         </Link>
-        <Link href="/gestaoDeProjetos/bancoDeDados">
-          <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-            <FaDatabase
-              style={{
-                color: "#15599a",
-                fontSize: "20px",
-              }}
-            />
-            <p className="pl-3 text-xs text-gray-600">Banco de dados</p>
-          </a>
-        </Link>
+        {credentials.vendedor == undefined && (
+          <Link href="/gestaoDeProjetos/bancoDeDados">
+            <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+              <FaDatabase
+                style={{
+                  color: "#15599a",
+                  fontSize: "20px",
+                }}
+              />
+              <p className="pl-3 text-xs text-gray-600">Banco de dados</p>
+            </a>
+          </Link>
+        )}
         {credentials.accessibleRoutes != undefined &&
         credentials.accessibleRoutes.includes("Obras") &&
         credentials.regional == undefined ? (
@@ -88,190 +91,218 @@ function Sidebar({ credentials }) {
           false
         )}
       </div>
-      <div className="mt-6">
-        <h2 className="text-xs text-gray-500">SETORES</h2>
-        {credentials.accessibleRoutes != undefined ? (
-          credentials?.accessibleRoutes.includes("PPS") ||
-          credentials?.accessibleRoutes.includes("Marketing") ? (
-            <Link href="/comercial">
+      {credentials.vendedor == undefined && (
+        <>
+          {" "}
+          <div className="mt-6">
+            <h2 className="text-xs text-gray-500">SETORES</h2>
+            {credentials.accessibleRoutes != undefined ? (
+              credentials?.accessibleRoutes.includes("PPS") ||
+              credentials?.accessibleRoutes.includes("Marketing") ? (
+                <Link href="/comercial">
+                  <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <SiCashapp style={{ color: "#15599a", fontSize: "20px" }} />
+                    <p className="pl-3 text-xs text-gray-600">Comercial</p>
+                  </a>
+                </Link>
+              ) : (
+                false
+              )
+            ) : (
+              false
+            )}
+            {credentials.accessibleRoutes != undefined ? (
+              credentials?.accessibleRoutes.includes("Suprimentos") ||
+              credentials.accessibleRoutes.includes("Marketing") ? (
+                <Link href="/suprimentos">
+                  <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <FaShoppingCart
+                      style={{ color: "#15599a", fontSize: "20px" }}
+                    />
+                    <p className="pl-3 text-xs text-gray-600">Suprimentos</p>
+                  </a>
+                </Link>
+              ) : (
+                false
+              )
+            ) : (
+              false
+            )}
+            {credentials.accessibleRoutes != undefined ? (
+              credentials?.accessibleRoutes.includes("Projetos") ||
+              credentials?.accessibleRoutes.includes("Pós-Venda") ? (
+                <Link href="/projetos">
+                  <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <MdEngineering
+                      style={{ color: "#15599a", fontSize: "20px" }}
+                    />
+                    <p className="pl-3 text-xs text-gray-600">Projetos</p>
+                  </a>
+                </Link>
+              ) : (
+                false
+              )
+            ) : (
+              false
+            )}
+            {credentials.accessibleRoutes != undefined ? (
+              credentials?.accessibleRoutes.includes("Obras") ||
+              credentials?.accessibleRoutes.includes("Marketing") ? (
+                <Link href="/obras">
+                  <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <FaTools style={{ color: "#15599a", fontSize: "20px" }} />
+                    <p className="pl-3 text-xs text-gray-600">Obras</p>
+                  </a>
+                </Link>
+              ) : (
+                false
+              )
+            ) : (
+              false
+            )}
+            {credentials.accessibleRoutes != undefined &&
+            credentials.regional == undefined
+              ? (credentials?.accessibleRoutes.includes("O&M") ||
+                  credentials?.accessibleRoutes.includes("Marketing")) && (
+                  <Link href="/oem">
+                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <FaSolarPanel
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-xs text-gray-600">O&M</p>
+                    </a>
+                  </Link>
+                )
+              : false}
+            {credentials.accessibleRoutes != undefined ? (
+              credentials?.accessibleRoutes.includes("Pós-Venda") ||
+              credentials?.accessibleRoutes.includes("Marketing") ? (
+                <Link href="/posvenda">
+                  <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <BiSupport style={{ color: "#15599a", fontSize: "20px" }} />
+                    <p className="pl-3 text-xs text-gray-600">Pós-Venda</p>
+                  </a>
+                </Link>
+              ) : (
+                false
+              )
+            ) : (
+              false
+            )}
+            {credentials.accessibleRoutes != undefined &&
+            credentials.regional == undefined
+              ? (credentials?.accessibleRoutes.includes("ADM") ||
+                  credentials?.accessibleRoutes.includes("Marketing")) && (
+                  <Link href="/adm">
+                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <BsFolderPlus
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-xs text-gray-600">ADM</p>
+                    </a>
+                  </Link>
+                )
+              : false}
+          </div>
+          <div className="mt-6">
+            <h2 className="text-xs text-gray-500">OUTROS</h2>
+            {credentials.visualizacao == undefined && (
+              <Link href="/calls">
+                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                  <FaTasks style={{ color: "#15599a", fontSize: "20px" }} />
+                  <p className="pl-3 text-xs text-gray-600">Chamados</p>
+                </a>
+              </Link>
+            )}
+            {credentials.controller != undefined &&
+            credentials.controller == true ? (
+              <Link href={"/ordemDeServico/bancoDeOS"}>
+                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                  <MdDesignServices
+                    style={{ color: "#15599a", fontSize: "20px" }}
+                  />
+                  <p className="pl-3 text-xs text-gray-600">Banco de OS</p>
+                </a>
+              </Link>
+            ) : (
+              false
+            )}
+            {credentials.accessibleRoutes != undefined &&
+            credentials.regional == undefined
+              ? credentials?.accessibleRoutes.includes("ADM") && (
+                  <Link href={"/adm/cobrancas"}>
+                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <MdOutlinePayments
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-xs text-gray-600">Cobranças</p>
+                    </a>
+                  </Link>
+                )
+              : false}
+            {credentials.accessibleRoutes != undefined &&
+            credentials.regional == undefined
+              ? credentials?.accessibleRoutes.includes("Projetos") && (
+                  <Link href={"/projetos/comissionamento"}>
+                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <VscWorkspaceTrusted
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-xs text-gray-600">
+                        Comissionamento
+                      </p>
+                    </a>
+                  </Link>
+                )
+              : false}
+            {credentials.accessibleRoutes != undefined &&
+            credentials.regional == undefined
+              ? credentials?.accessibleRoutes.includes("Obras") && (
+                  <Link href="/obras/gestaoDeObras">
+                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <MdOutlineBuildCircle
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-xs text-gray-600">
+                        Gestão de Obras
+                      </p>
+                    </a>
+                  </Link>
+                )
+              : false}
+            {credentials.accessibleRoutes != undefined &&
+            credentials.regional == undefined
+              ? credentials?.accessibleRoutes.includes("Pós-Venda") && (
+                  <Link href="/posvenda/nps">
+                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <MdSentimentSatisfiedAlt
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-xs text-gray-600">NPS</p>
+                    </a>
+                  </Link>
+                )
+              : false}
+          </div>
+        </>
+      )}
+      {credentials.accessibleRoutes != undefined &&
+        credentials?.accessibleRoutes.includes("Vendas") && (
+          <div className="mt-6">
+            <h2 className="text-xs text-gray-500">ÁREA DO VENDEDOR</h2>
+            <Link href="/vendas">
               <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                <SiCashapp style={{ color: "#15599a", fontSize: "20px" }} />
-                <p className="pl-3 text-xs text-gray-600">Comercial</p>
-              </a>
-            </Link>
-          ) : (
-            false
-          )
-        ) : (
-          false
-        )}
-        {credentials.accessibleRoutes != undefined ? (
-          credentials?.accessibleRoutes.includes("Suprimentos") ||
-          credentials.accessibleRoutes.includes("Marketing") ? (
-            <Link href="/suprimentos">
-              <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                <FaShoppingCart
-                  style={{ color: "#15599a", fontSize: "20px" }}
+                <ImFolderOpen
+                  style={{
+                    color: "#15599a",
+                    fontSize: "20px",
+                  }}
                 />
-                <p className="pl-3 text-xs text-gray-600">Suprimentos</p>
-              </a>
-            </Link>
-          ) : (
-            false
-          )
-        ) : (
-          false
-        )}
-        {credentials.accessibleRoutes != undefined ? (
-          credentials?.accessibleRoutes.includes("Projetos") ||
-          credentials?.accessibleRoutes.includes("Pós-Venda") ? (
-            <Link href="/projetos">
-              <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                <MdEngineering style={{ color: "#15599a", fontSize: "20px" }} />
                 <p className="pl-3 text-xs text-gray-600">Projetos</p>
               </a>
             </Link>
-          ) : (
-            false
-          )
-        ) : (
-          false
+          </div>
         )}
-        {credentials.accessibleRoutes != undefined ? (
-          credentials?.accessibleRoutes.includes("Obras") ||
-          credentials?.accessibleRoutes.includes("Marketing") ? (
-            <Link href="/obras">
-              <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                <FaTools style={{ color: "#15599a", fontSize: "20px" }} />
-                <p className="pl-3 text-xs text-gray-600">Obras</p>
-              </a>
-            </Link>
-          ) : (
-            false
-          )
-        ) : (
-          false
-        )}
-        {credentials.accessibleRoutes != undefined &&
-        credentials.regional == undefined
-          ? (credentials?.accessibleRoutes.includes("O&M") ||
-              credentials?.accessibleRoutes.includes("Marketing")) && (
-              <Link href="/oem">
-                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <FaSolarPanel
-                    style={{ color: "#15599a", fontSize: "20px" }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">O&M</p>
-                </a>
-              </Link>
-            )
-          : false}
-        {credentials.accessibleRoutes != undefined ? (
-          credentials?.accessibleRoutes.includes("Pós-Venda") ||
-          credentials?.accessibleRoutes.includes("Marketing") ? (
-            <Link href="/posvenda">
-              <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                <BiSupport style={{ color: "#15599a", fontSize: "20px" }} />
-                <p className="pl-3 text-xs text-gray-600">Pós-Venda</p>
-              </a>
-            </Link>
-          ) : (
-            false
-          )
-        ) : (
-          false
-        )}
-        {credentials.accessibleRoutes != undefined &&
-        credentials.regional == undefined
-          ? (credentials?.accessibleRoutes.includes("ADM") ||
-              credentials?.accessibleRoutes.includes("Marketing")) && (
-              <Link href="/adm">
-                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <BsFolderPlus
-                    style={{ color: "#15599a", fontSize: "20px" }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">ADM</p>
-                </a>
-              </Link>
-            )
-          : false}
-      </div>
-      <div className="mt-6">
-        <h2 className="text-xs text-gray-500">OUTROS</h2>
-        {credentials.regional == undefined && (
-          <Link href="/calls">
-            <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-              <FaTasks style={{ color: "#15599a", fontSize: "20px" }} />
-              <p className="pl-3 text-xs text-gray-600">Chamados</p>
-            </a>
-          </Link>
-        )}
-        {credentials.controller != undefined &&
-        credentials.controller == true ? (
-          <Link href={"/ordemDeServico/bancoDeOS"}>
-            <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-              <MdDesignServices
-                style={{ color: "#15599a", fontSize: "20px" }}
-              />
-              <p className="pl-3 text-xs text-gray-600">Banco de OS</p>
-            </a>
-          </Link>
-        ) : (
-          false
-        )}
-        {credentials.accessibleRoutes != undefined &&
-        credentials.regional == undefined
-          ? credentials?.accessibleRoutes.includes("ADM") && (
-              <Link href={"/adm/cobrancas"}>
-                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <MdOutlinePayments
-                    style={{ color: "#15599a", fontSize: "20px" }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">Cobranças</p>
-                </a>
-              </Link>
-            )
-          : false}
-        {credentials.accessibleRoutes != undefined &&
-        credentials.regional == undefined
-          ? credentials?.accessibleRoutes.includes("Projetos") && (
-              <Link href={"/projetos/comissionamento"}>
-                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <VscWorkspaceTrusted
-                    style={{ color: "#15599a", fontSize: "20px" }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">Comissionamento</p>
-                </a>
-              </Link>
-            )
-          : false}
-        {credentials.accessibleRoutes != undefined &&
-        credentials.regional == undefined
-          ? credentials?.accessibleRoutes.includes("Obras") && (
-              <Link href="/obras/gestaoDeObras">
-                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <MdOutlineBuildCircle
-                    style={{ color: "#15599a", fontSize: "20px" }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">Gestão de Obras</p>
-                </a>
-              </Link>
-            )
-          : false}
-        {credentials.accessibleRoutes != undefined &&
-        credentials.regional == undefined
-          ? credentials?.accessibleRoutes.includes("Pós-Venda") && (
-              <Link href="/posvenda/nps">
-                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <MdSentimentSatisfiedAlt
-                    style={{ color: "#15599a", fontSize: "20px" }}
-                  />
-                  <p className="pl-3 text-xs text-gray-600">NPS</p>
-                </a>
-              </Link>
-            )
-          : false}
-      </div>
     </div>
   );
 }

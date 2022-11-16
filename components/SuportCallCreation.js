@@ -102,7 +102,7 @@ function CreateModal({ setModalIsOpen }) {
                   onChange={(e) =>
                     setCallInfo({ ...callInfo, clientCity: e.target.value })
                   }
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
+                  className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
                 >
                   {cities.map((city) => (
                     <option key={city.name} value={city.name}>
@@ -120,7 +120,7 @@ function CreateModal({ setModalIsOpen }) {
                   onChange={(e) =>
                     setCallInfo({ ...callInfo, responsavel: e.target.value })
                   }
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
+                  className="text-xs grow text-center outline-none mt-2 lg:mt-0"
                 >
                   <option value={"A DEFINIR"}>A DEFINIR</option>
                   <option value={"GABRIEL MARTINS"}>GABRIEL MARTINS</option>
@@ -135,7 +135,7 @@ function CreateModal({ setModalIsOpen }) {
                   onChange={(e) =>
                     setCallInfo({ ...callInfo, demanda: e.target.value })
                   }
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
+                  className="text-xs grow text-center outline-none mt-2 lg:mt-0"
                 >
                   <option value={"INTERNA"}>INTERNA</option>
                   <option value={"EXTERNA"}>EXTERNA</option>
@@ -150,7 +150,7 @@ function CreateModal({ setModalIsOpen }) {
                   onChange={(e) =>
                     setCallInfo({ ...callInfo, problemType: e.target.value })
                   }
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
+                  className="text-xs grow text-center outline-none mt-2 lg:mt-0"
                 >
                   <option value={"CONTA DE LUZ ALTA"}>CONTA DE LUZ ALTA</option>
                   <option value={"APP OFFLINE"}>APP OFFLINE</option>
@@ -206,7 +206,7 @@ function CreateModal({ setModalIsOpen }) {
                     })
                   }
                   placeholder="Digite aqui as anotações do chamado"
-                  className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-200 min-h-[100px] h-fit text-center grow"
+                  className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-200 min-h-[100px] h-fit text-center grow"
                 />
               </div>
               <button

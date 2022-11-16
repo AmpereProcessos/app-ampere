@@ -1278,10 +1278,6 @@ function Formulario({ info }) {
                     value: "FINANCIAMENTO",
                   },
                   {
-                    label: "MISTO",
-                    value: "MISTO",
-                  },
-                  {
                     label: "CAPITAL PRÓPRIO",
                     value: "CAPITAL PRÓPRIO",
                   },

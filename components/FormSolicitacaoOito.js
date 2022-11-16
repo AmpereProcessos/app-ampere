@@ -275,20 +275,16 @@ function FormSolicitacaoOito({ dados, setDados, avancar, voltar }) {
           handleChange={(value) => setDados({ ...dados, origemRecurso: value })}
           options={[
             {
+              label: "NÃO DEFINIDO",
+              value: "NÃO DEFINIDO",
+            },
+            {
               label: "FINANCIAMENTO",
               value: "FINANCIAMENTO",
             },
             {
-              label: "MISTO",
-              value: "MISTO",
-            },
-            {
               label: "CAPITAL PRÓPRIO",
               value: "CAPITAL PRÓPRIO",
-            },
-            {
-              label: "NÃO DEFINIDO",
-              value: "NÃO DEFINIDO",
             },
           ]}
         />

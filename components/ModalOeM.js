@@ -411,6 +411,47 @@ function ModalOeM({
                   PÓS-OBRA
                 </span>
                 <div className="flex gap-2 justify-around flex-wrap">
+                  <SelectInput
+                    label={"DIAGNÓSTICO"}
+                    value={
+                      infoHolder.oem.diagnostico
+                        ? infoHolder.oem.diagnostico
+                        : "NÃO DEFINIDO"
+                    }
+                    editable={editor}
+                    options={[
+                      {
+                        label: "MICRO/INVERSOR DESCONFIGURADO",
+                        value: "MICRO/INVERSOR DESCONFIGURADO",
+                      },
+                      {
+                        label: "CLIENTE SEM INTERNET",
+                        value: "CLIENTE SEM INTERNET",
+                      },
+                      {
+                        label: "TEMPO DE O&M VENCIDO",
+                        value: "TEMPO DE O&M VENCIDO",
+                      },
+                      {
+                        label: "EQUIPAMENTOS PARA GARANTIA",
+                        value: "EQUIPAMENTOS PARA GARANTIA",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, "oem.diagnostico": value });
+                      setInfo({
+                        ...infoHolder,
+                        oem: {
+                          ...infoHolder.oem,
+                          diagnostico: value,
+                        },
+                      });
+                    }}
+                  />
                   <DateInput
                     label={"Usina Ligada"}
                     editable={editor}

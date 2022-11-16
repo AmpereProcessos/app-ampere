@@ -11,14 +11,14 @@ export default async function handler(req, res) {
     } else {
       responsible = "Luis Eduardo";
     }
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB2_KEY);
     const collection = db.collection("projects");
 
     const project = { projectInfo: projectInfo, responsible: responsible };
     await collection.insertOne(project);
     return res.status(201).json("Projeto de O&M criado");
   } else if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB2_KEY);
     const collection = db.collection("projects");
     let projects = await collection.find({}).toArray();
     return res.status(201).json(projects);

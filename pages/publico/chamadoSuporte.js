@@ -164,7 +164,7 @@ function ChamadoSuporte() {
                 ? errorsMessage.problemDescMessage
                 : "Descrição da situação problema"
             }
-            className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
+            className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
           />
         </div>
         {callCreatedMessage && (

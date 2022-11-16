@@ -281,10 +281,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
     },
     pagamento: {
       status: "NÃO DEFINIDO",
-      forma:
-        dados.origemRecurso == "MISTO" || "FINANCIAMENTO"
-          ? "FINANCIAMENTO"
-          : "CAPITAL PRÓPRIO",
+      forma: dados.origemRecurso,
       credor: dados.credor,
       pagador: dados.nomePagador,
       contatoPagador: dados.contatoPagador,
@@ -1980,10 +1977,6 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         {
                           label: "FINANCIAMENTO",
                           value: "FINANCIAMENTO",
-                        },
-                        {
-                          label: "MISTO",
-                          value: "MISTO",
                         },
                         {
                           label: "CAPITAL PRÓPRIO",

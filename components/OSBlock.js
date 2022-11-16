@@ -40,7 +40,7 @@ function OSBlock({ ordem, index, emAberto, categoria, info, setOs, os }) {
           emAberto ? (ordem.dataDeFechamento != undefined ? "hidden" : "") : ""
         } ${
           !categoria.includes(ordem.categoria) ? "hidden" : ""
-        } items-center grid-cols-8 xl:grid-cols-14 border-b border-gray-200 pb-2`}
+        } items-center grid-cols-4 xl:grid-cols-14 border-b border-gray-200 pb-2`}
       >
         <div className="flex col-span-2 flex-col items-center">
           <p className="text-xs uppercase text-gray-500">CATEGORIA DA OS</p>
@@ -58,7 +58,7 @@ function OSBlock({ ordem, index, emAberto, categoria, info, setOs, os }) {
             <option value={"MANUTENÇÃO CORRETVA"}>MANUTENÇÃO CORRETVA</option>
           </select>
         </div>
-        <div className="flex col-span-2 flex-col items-center">
+        <div className="hidden xl:flex col-span-2 flex-col items-center">
           <p className="text-center text-xs uppercase text-gray-500">
             SERVIÇO PARA EXECUÇÃO
           </p>
@@ -84,7 +84,7 @@ function OSBlock({ ordem, index, emAberto, categoria, info, setOs, os }) {
             {ordem.usuarioEmissor}
           </p>
         </div>
-        <div className="flex flex-col col-span-2 items-center">
+        <div className="hidden xl:flex flex-col col-span-2 items-center">
           <p className="text-xs uppercase text-gray-500">DATA DE FECHAMENTO</p>
 
           <input

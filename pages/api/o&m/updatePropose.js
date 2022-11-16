@@ -2,7 +2,7 @@ import connectToDatabase from "../../../utils/proposesDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
   if (req.method === "PUT") {
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB2_KEY);
     const collection = db.collection("infos");
     let newDocument = await collection.findOneAndUpdate(
       {
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     //  return res.status(201).json("Proposta gerada");*/
     return res.json(newDocument);
   } else if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB2_KEY);
     const collection = db.collection("infos");
 
     if (req.body.rejected == true) {
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     }
   } else if (req.method === "PATCH") {
     const { id } = req.body;
-    const db = await connectToDatabase(process.env.DB_KEY);
+    const db = await connectToDatabase(process.env.DB2_KEY);
     const collection = db.collection("infos");
     let newDocument = await collection.findOneAndUpdate(
       {

@@ -135,7 +135,7 @@ function Comercial({ credentials, setCredentials }) {
     }
   }, []);
   function handleUpdates(id) {
-    getProjects();
+    getProjects(credentials);
     let changedObj = projects.filter((project) => project._id == id);
     setModalProject(changedObj[0]);
   }

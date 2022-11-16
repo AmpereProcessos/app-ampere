@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import NumberInput from "../components/NumberInput";
 import axios from "axios";
-function PosVendaCard({ project, getUpdates, cardMode }) {
+function PosVendaCard({ project, getUpdates, cardMode, editor }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({
     nps: project.nps ? project.nps : null,
@@ -116,27 +116,29 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                       ).toLocaleDateString()
                     : false}
                 </p>
-                <button
-                  onClick={(e) => {
-                    handleChanges({
-                      "jornada.dataUltimoContato": new Date(),
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      jornada: {
-                        ...infoHolder.jornada,
-                        dataUltimoContato: new Date(),
-                      },
-                    });
-                  }}
-                  className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
-                >
-                  CONTATO RECENTE?
-                </button>
-
+                {editor && (
+                  <button
+                    onClick={(e) => {
+                      handleChanges({
+                        "jornada.dataUltimoContato": new Date(),
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        jornada: {
+                          ...infoHolder.jornada,
+                          dataUltimoContato: new Date(),
+                        },
+                      });
+                    }}
+                    className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+                  >
+                    CONTATO RECENTE?
+                  </button>
+                )}
                 <div className="flex flex-col w-[350px] items-center">
                   <div className="w-fit mt-1">
                     <input
+                      disabled={!editor}
                       checked={
                         infoHolder.jornada?.jornadaConcluida ? true : false
                       }
@@ -165,6 +167,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
               <div className="flex items-center flex-wrap gap-2 justify-around w-full">
                 <div className="w-fit">
                   <input
+                    disabled={!editor}
                     checked={infoHolder.jornada?.boasVindas ? true : false}
                     onChange={(e) => {
                       handleChanges({
@@ -188,6 +191,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                 </div>
                 <div className="w-fit">
                   <input
+                    disabled={!editor}
                     checked={
                       infoHolder.jornada?.assDocumentacoes ? true : false
                     }
@@ -213,6 +217,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                 </div>
                 <div className="w-fit">
                   <input
+                    disabled={!editor}
                     checked={infoHolder.jornada?.compraDoKit ? true : false}
                     onChange={(e) => {
                       handleChanges({
@@ -236,6 +241,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                 </div>
                 <div className="w-fit">
                   <input
+                    disabled={!editor}
                     checked={infoHolder.jornada?.nfFaturada ? true : false}
                     onChange={(e) => {
                       handleChanges({
@@ -259,6 +265,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                 </div>
                 <div className="w-fit">
                   <input
+                    disabled={!editor}
                     checked={infoHolder.jornada?.prevChegada ? true : false}
                     onChange={(e) => {
                       handleChanges({
@@ -282,6 +289,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                 </div>
                 <div className="w-fit">
                   <input
+                    disabled={!editor}
                     checked={
                       infoHolder.jornada?.respConcessionaria ? true : false
                     }
@@ -307,6 +315,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                 </div>
                 <div className="w-fit">
                   <input
+                    disabled={!editor}
                     checked={infoHolder.jornada?.entregaDoKit ? true : false}
                     onChange={(e) => {
                       handleChanges({
@@ -330,6 +339,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                 </div>
                 <div className="w-fit">
                   <input
+                    disabled={!editor}
                     checked={
                       infoHolder.jornada?.instalacaoAgendada ? true : false
                     }
@@ -355,6 +365,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                 </div>
                 <div className="w-fit">
                   <input
+                    disabled={!editor}
                     checked={
                       infoHolder.jornada?.vistoriaConcessionaria ? true : false
                     }
@@ -380,6 +391,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
                 </div>
                 <div className="w-fit">
                   <input
+                    disabled={!editor}
                     checked={infoHolder.jornada?.sistemaLigado ? true : false}
                     onChange={(e) => {
                       handleChanges({
@@ -407,6 +419,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
           <div className="flex flex-col gap-y-2 mt-1 py-1 border-t border-gray-200">
             <h1 className="text-[#fead61] font-bold">OBSERVAÇÕES</h1>
             <textarea
+              readOnly={!editor}
               value={changes.obsJornada ? changes.obsJornada : ""}
               onChange={(e) => {
                 setChanges({ ...changes, obsJornada: e.target.value });
@@ -418,6 +431,7 @@ function PosVendaCard({ project, getUpdates, cardMode }) {
             </span>
             <div className="flex items-center justify-center">
               <input
+                disabled={!editor}
                 className="text-xs w-fit text-center uppercase rounded text-gray-600 outline-none"
                 type="number"
                 min={0}

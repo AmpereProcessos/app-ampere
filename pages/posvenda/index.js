@@ -272,6 +272,12 @@ function Posvenda({ credentials, setCredentials }) {
         {filteredProjects.map((project, index) => (
           <PosVendaCard
             getUpdates={getProjects}
+            editor={
+              credentials?.accessibleRoutes.includes("Pós-Venda") &&
+              credentials.visualizacao == undefined
+                ? true
+                : false
+            }
             key={project._id}
             project={project}
             cardMode={cardMode}

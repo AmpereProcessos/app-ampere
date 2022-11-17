@@ -9,9 +9,14 @@ function NPS({ credentials, setCredentials }) {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filters, setFilters] = useState({
     naoColetados: false,
+    comObs: false,
     cidadeFilter: [],
     pesquisaFilter: "",
     vendedorFilter: [],
+  });
+  const [dateFilter, setDateFilter] = useState({
+    after: null,
+    before: null,
   });
   function getProjects() {
     axios.get("/api/projects/nps").then((res) => {
@@ -25,6 +30,15 @@ function NPS({ credentials, setCredentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
         (project) => project.nps == undefined || project.nps == null
+      );
+    }
+    if (filters.comObs) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (project) =>
+          project.jornada.obsNps != undefined &&
+          project.jornada.obsNps != null &&
+          project.jornada.obsNps?.trim().length > 2
       );
     }
     if (filters.cidadeFilter.length > 0) {
@@ -45,6 +59,14 @@ function NPS({ credentials, setCredentials }) {
         call.nomeDoContrato
           .toUpperCase()
           .includes(filters.pesquisaFilter.toUpperCase())
+      );
+    }
+    if (dateFilter.after && dateFilter.before) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) =>
+          call.jornada.dataNps >= dateFilter.after &&
+          call.jornada.dataNps <= dateFilter.before
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -75,11 +97,67 @@ function NPS({ credentials, setCredentials }) {
   }, []);
   return (
     <div className="p-6 grow bg-[#fff]">
-      <div className="grid w-full grid-cols-6 border-b border-gray-200 mb-6 pb-2 items-center">
-        <h1 className="col-span-2 text-[#fead61] font-bold text-xl pb-2">
+      <div className="flex flex-col border-b border-gray-200 mb-6 pb-2 items-center">
+        <h1 className="text-[#fead61] font-bold text-xl pb-2">
           COLETA DE NPS ({filteredProjects.length})
         </h1>
-        <div className="flex justify-end gap-x-2 col-span-4">
+        <div className="flex justify-around flex-wrap gap-2">
+          <div className="hidden lg:flex gap-x-2">
+            <div className="flex flex-col w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                Coleta depois de:
+              </span>
+              <input
+                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                type="date"
+                value={
+                  dateFilter.after &&
+                  new Date(dateFilter.after).toISOString().slice(0, 10)
+                }
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    after: isNaN(e.target.value)
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <div className="flex flex-col w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                Coleta antes de:
+              </span>
+              <input
+                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                type="date"
+                value={
+                  dateFilter.before &&
+                  new Date(dateFilter.before).toISOString().slice(0, 10)
+                }
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    before: isNaN(e.target.value)
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+          </div>
+          <input
+            className="outline-none p-1.5 w-[300px] rounded border border-gray-200 placeholder:italic"
+            placeholder="Digite o nome do contrato"
+            value={filters.pesquisaFilter}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                pesquisaFilter: e.target.value,
+              })
+            }
+          />
+
           <Select
             isMulti
             placeholder="CIDADE"
@@ -112,26 +190,23 @@ function NPS({ credentials, setCredentials }) {
               };
             })}
           />
-          <input
-            className="outline-none p-1.5 w-[300px] rounded border border-gray-200 placeholder:italic"
-            placeholder="Digite o nome do contrato"
-            value={filters.pesquisaFilter}
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                pesquisaFilter: e.target.value,
-              })
-            }
-          />
           <div
             onClick={() =>
               setFilters({ ...filters, naoColetados: !filters.naoColetados })
             }
             className={`cursor-pointer p-2 ${
-              filters.naoColetados ? "bg-[#15599a]" : "bg-[#15599a70]"
+              filters.naoColetados ? "bg-[#15599a]" : "bg-blue-300"
             } rounded font-bold w-fit text-white`}
           >
             NÃO COLETADOS
+          </div>
+          <div
+            onClick={() => setFilters({ ...filters, comObs: !filters.comObs })}
+            className={`cursor-pointer p-2 ${
+              filters.comObs ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded font-bold w-fit text-white`}
+          >
+            COM OBSERVAÇÕES
           </div>
           <button
             onClick={filterProjects}

@@ -81,7 +81,10 @@ function ModalCallPPS({
   const [responsavel, setResponsavel] = useState(info.responsavel);
   const [notes, setNotes] = useState(initialNote);
   const [selectedStatus, setSelectedStatus] = useState(info.status);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({
+    text: "",
+    color: "",
+  });
   function saveProject() {
     if (info.status != selectedStatus) {
       ultAlteracoes.statusAlteracoes.usuario = credentials._id;
@@ -104,7 +107,7 @@ function ModalCallPPS({
         ultAlteracoes: ultAlteracoes,
       })
       .then((res) => {
-        setMessage(res.data);
+        setMessage({ text: res.data, color: "text-green-500" });
         updateModalInfo(info._id);
       });
   }
@@ -115,14 +118,24 @@ function ModalCallPPS({
       ultAlteracoes.statusAlteracoes.depois = "REALIZADO";
       ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
     }
-    axios
-      .post("/api/calls/pps/updatePPS", {
-        ...info,
-        dataDeConclusao: new Date(),
-        status: "REALIZADO",
-        ultAlteracoes: ultAlteracoes,
-      })
-      .then((res) => updateModalInfo(info._id));
+    if (responsavel == undefined || responsavel == "A DEFINIR") {
+      setMessage({
+        text: "Por favor, adicione o responsável.",
+        color: "text-red-500",
+      });
+    } else {
+      axios
+        .post("/api/calls/pps/updatePPS", {
+          ...info,
+          dataDeConclusao: new Date(),
+          status: "REALIZADO",
+          ultAlteracoes: ultAlteracoes,
+        })
+        .then((res) => {
+          setMessage({ text: "", color: "" });
+          updateModalInfo(info._id);
+        });
+    }
   }
   function reopenCall() {
     if (info.status != "PENDENTE") {
@@ -155,7 +168,7 @@ function ModalCallPPS({
               <button>
                 <VscChromeClose
                   onClick={() => {
-                    setMessage("");
+                    setMessage({ text: "", color: "" });
                     setModalIsOpen(false);
                   }}
                   style={{ color: "red" }}
@@ -286,9 +299,9 @@ function ModalCallPPS({
                   </button>
                 </div>
               )}
-              {message && (
-                <p className="text-center text-green-300 mt-2 italic">
-                  {message}
+              {message.text && (
+                <p className={`text-center ${message.color} mt-2 italic`}>
+                  {message.text}
                 </p>
               )}
               <div className="text-center">

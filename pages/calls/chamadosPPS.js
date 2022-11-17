@@ -322,7 +322,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
                 </p>
               </div>
               <div className="text-xs mt-2 text-gray-500">
-                <p>TIPO DE SOLITAÇÃO : {call.tipoDeSolicitacao}</p>
+                <p>TIPO DE SOLICITAÇÃO : {call.tipoDeSolicitacao}</p>
               </div>
             </div>
           ))}

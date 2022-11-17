@@ -116,8 +116,6 @@ function Home({ credentials, setCredentials }) {
         setHomoData(res.data.averageHomoData);
       });
     }
-    getGraphDataByYear(2022, credenciais);
-    getBirthDay(credenciais);
   }
   function getBirthDay(credenciais) {
     if (credenciais.visualizacao == "REGIONAL") {
@@ -145,21 +143,18 @@ function Home({ credentials, setCredentials }) {
     if (storedCredentials) {
       setCredentials(storedCredentials);
       getStats(storedCredentials);
+      getGraphDataByYear(2022, storedCredentials);
+      getBirthDay(storedCredentials);
     } else {
       if (credentials != {} && !credentials.nome) {
         router.push("/auth/authHome");
       } else {
         getStats(credentials);
+        getGraphDataByYear(2022, credentials);
+        getBirthDay(credentials);
       }
     }
   }, []);
-  function filterByRegional(regional) {
-    setRegionalFilter(regional);
-    axios.post("/api/stats", { regional: regional }).then((res) => {
-      setInstalledData(res.data.installedInfo);
-      setHomoData(res.data.averageHomoData);
-    });
-  }
   function getGraphDataByYear(year, credenciais) {
     setSelectedYear(year);
     if (credenciais.visualizacao == "REGIONAL") {

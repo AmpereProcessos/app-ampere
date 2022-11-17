@@ -80,41 +80,76 @@ function Home({ credentials, setCredentials }) {
   const [clientBirthday, setClientsBirthday] = useState([]);
   const [nps, setNps] = useState(0);
   const [statsData, setStatsData] = useState({
-    diffPotInstalled: 0,
-    diffHomoPot: 0,
-    diffJobsDone: 0,
-    diffHomoTime: 0,
     graphData: {},
+    maxGraphValue: 1000,
   });
-  function getStats() {
-    setRegionalFilter("GERAL");
-    axios.get("/api/stats").then((res) => {
-      setNps(res.data.nps);
-      setAverageBuyTime(res.data.suprimentosData);
-      setInstalledData(res.data.installedInfo);
-      setHomoData(res.data.averageHomoData);
-    });
-    getGraphDataByYear(2022);
-    getBirthDay();
+  function getStats(credenciais) {
+    if (credenciais.visualizacao == "REGIONAL") {
+      axios
+        .post("/api/stats", {
+          filtrarPor: credenciais.visualizacao,
+          parametro: credenciais.regional,
+        })
+        .then((res) => {
+          setNps(res.data.nps);
+          setAverageBuyTime(res.data.suprimentosData);
+          setInstalledData(res.data.installedInfo);
+          setHomoData(res.data.averageHomoData);
+        });
+    } else if (credenciais.visualizacao == "VENDEDOR") {
+      axios
+        .post("/api/stats", {
+          filtrarPor: credenciais.visualizacao,
+          parametro: credenciais.vendedor,
+        })
+        .then((res) => {
+          setNps(res.data.nps);
+          setAverageBuyTime(res.data.suprimentosData);
+          setInstalledData(res.data.installedInfo);
+          setHomoData(res.data.averageHomoData);
+        });
+    } else {
+      axios.get("/api/stats").then((res) => {
+        setNps(res.data.nps);
+        setAverageBuyTime(res.data.suprimentosData);
+        setInstalledData(res.data.installedInfo);
+        setHomoData(res.data.averageHomoData);
+      });
+    }
+    getGraphDataByYear(2022, credenciais);
+    getBirthDay(credenciais);
   }
-  function getBirthDay() {
-    axios
-      .get("/api/stats/clientsBirthday")
-      .then((res) => setClientsBirthday(res.data));
+  function getBirthDay(credenciais) {
+    if (credenciais.visualizacao == "REGIONAL") {
+      axios
+        .post("/api/stats/clientsBirthday", {
+          filtrarPor: credenciais.visualizacao,
+          parametro: credenciais.regional,
+        })
+        .then((res) => setClientsBirthday(res.data));
+    } else if (credentials.visualizacao == "VENDEDOR") {
+      axios
+        .post("/api/stats/clientsBirthday", {
+          filtrarPor: credenciais.visualizacao,
+          parametro: credenciais.vendedor,
+        })
+        .then((res) => setClientsBirthday(res.data));
+    } else {
+      axios
+        .get("/api/stats/clientsBirthday")
+        .then((res) => setClientsBirthday(res.data));
+    }
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      getStats();
+      getStats(storedCredentials);
     } else {
       if (credentials != {} && !credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        axios.get("/api/stats").then((res) => {
-          setInstalledData(res.data.installedInfo);
-          setHomoData(res.data.averageHomoData);
-        });
+        getStats(credentials);
       }
     }
   }, []);
@@ -125,11 +160,39 @@ function Home({ credentials, setCredentials }) {
       setHomoData(res.data.averageHomoData);
     });
   }
-  function getGraphDataByYear(year) {
+  function getGraphDataByYear(year, credenciais) {
     setSelectedYear(year);
-    axios.get(`/api/stats/getByYear/${year}`).then((res) => {
-      setStatsData({ ...statsData, graphData: res.data });
-    });
+    if (credenciais.visualizacao == "REGIONAL") {
+      axios
+        .post(`/api/stats/getByYear/${year}`, {
+          filtrarPor: credenciais.visualizacao,
+          parametro: credenciais.regional,
+        })
+        .then((res) => {
+          setStatsData({
+            ...statsData,
+            graphData: res.data,
+            maxGraphValue: 500,
+          });
+        });
+    } else if (credenciais.visualizacao == "VENDEDOR") {
+      axios
+        .post(`/api/stats/getByYear/${year}`, {
+          filtrarPor: credenciais.visualizacao,
+          parametro: credenciais.vendedor,
+        })
+        .then((res) =>
+          setStatsData({
+            ...statsData,
+            graphData: res.data,
+            maxGraphValue: 500,
+          })
+        );
+    } else {
+      axios.get(`/api/stats/getByYear/${year}`).then((res) => {
+        setStatsData({ ...statsData, graphData: res.data });
+      });
+    }
   }
   function filterBirthday() {
     let arr = clientBirthday.filter(
@@ -138,111 +201,9 @@ function Home({ credentials, setCredentials }) {
     );
     setClientsBirthday(arr);
   }
-  {
-    /** 
-  useEffect(() => {
-    var parcialPotLastMonth =
-      (new Date().getDate() / 30) * installedData[2]?.total;
-    var parcialHomoPotLastMonth =
-      (new Date().getDate() / 30) * averageHomoData[0]?.homoPeakPot;
-    var parcialJobsLastMonth =
-      (new Date().getDate() / 30) * installedData[2]?.count;
-    setStatsData({
-      diffPotInstalled: (
-        1 -
-        installedData[3]?.total / parcialPotLastMonth
-      ).toFixed(2),
-      diffHomoPot: (
-        1 -
-        averageHomoData[1]?.homoPeakPot / parcialHomoPotLastMonth
-      ).toFixed(2),
-      diffJobsDone: (
-        1 -
-        installedData[3]?.count / parcialJobsLastMonth
-      ).toFixed(2),
-      diffHomoTime: (
-        1 -
-        installedData[3]?.count / parcialJobsLastMonth
-      ).toFixed(2),
-      graphData: [
-        {
-          name: `${installedData[0]?._id.mes}/22`,
-          Total: installedData[0]?.total,
-        },
-        {
-          name: `${installedData[1]?._id.mes}/22`,
-          Total: installedData[1]?.total,
-        },
-        {
-          name: `${installedData[2]?._id.mes}/22`,
-          Total: installedData[2]?.total,
-        },
-        {
-          name: `${installedData[3]?._id.mes}/22`,
-          Total: installedData[3]?.total,
-        },
-      ],
-    });
-  }, [installedData, averageHomoData]);
-              <div
-              className={
-                statsData.diffJobsDone < 0
-                  ? `flex items-center text-green-500`
-                  : "flex items-center text-red-500"
-              }
-            >
-              {statsData.diffJobsDone < 0 ? (
-                <MdOutlineKeyboardArrowUp fontSize={"25px"} />
-              ) : (
-                <MdOutlineKeyboardArrowDown fontSize={"25px"} />
-              )}
-              <p>
-                {statsData.diffJobsDone < 0
-                  ? (Math.abs(statsData.diffJobsDone) * 100).toFixed(2)
-                  : (statsData.diffJobsDone * 100).toFixed(2)}
-                %
-              </p>
-            </div>
-  
-  */
-  }
-  console.log(averageHomoData);
+
   return (
     <div className="p-6 grow">
-      {/** 
-       *       <div className="flex justify-center gap-x-2 bg-[#fff] py-2 mb-2 border border-gray-200 shadow-lg">
-        <p
-          onClick={() => filterByRegional("REGIONAL ITUIUTABA")}
-          className={`border ${
-            regionalFilter == "REGIONAL ITUIUTABA"
-              ? "bg-blue-200"
-              : "bg-[#fff] hover:bg-blue-200"
-          }  cursor-pointer p-1 px-2 font-semibold text-gray-600 text-sm text-center border-gray-200 font-raleway`}
-        >
-          REGIONAL ITUIUTABA
-        </p>
-        <p
-          onClick={() => filterByRegional("REGIONAL UBERLÂNDIA")}
-          className={`border ${
-            regionalFilter == "REGIONAL UBERLÂNDIA"
-              ? "bg-blue-200"
-              : "bg-[#fff] hover:bg-blue-200"
-          }  cursor-pointer p-1 px-2 font-semibold text-gray-600 text-sm text-center border-gray-200 font-raleway`}
-        >
-          REGIONAL UBERLÂNDIA
-        </p>
-        <p
-          onClick={getStats}
-          className={`border ${
-            regionalFilter == "GERAL"
-              ? "bg-blue-200"
-              : "bg-[#fff] hover:bg-blue-200"
-          }  cursor-pointer p-1 px-2 font-semibold text-gray-600 text-sm text-center border-gray-200 font-raleway`}
-        >
-          GERAL
-        </p>
-      </div>
-      */}
       <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">
         <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
@@ -366,7 +327,7 @@ function Home({ credentials, setCredentials }) {
             </h1>
             <div className="flex items-center gap-x-2 justify-center">
               <p
-                onClick={() => getGraphDataByYear(2020)}
+                onClick={() => getGraphDataByYear(2020, credentials)}
                 className={`border cursor-pointer border-gray-200 ${
                   selectedYear == 2020
                     ? "bg-blue-200 hover:bg-transparent"
@@ -376,7 +337,7 @@ function Home({ credentials, setCredentials }) {
                 2020
               </p>
               <p
-                onClick={() => getGraphDataByYear(2021)}
+                onClick={() => getGraphDataByYear(2021, credentials)}
                 className={`border cursor-pointer border-gray-200 ${
                   selectedYear == 2021
                     ? "bg-blue-200 hover:bg-transparent"
@@ -386,7 +347,7 @@ function Home({ credentials, setCredentials }) {
                 2021
               </p>
               <p
-                onClick={() => getGraphDataByYear(2022)}
+                onClick={() => getGraphDataByYear(2022, credentials)}
                 className={`border cursor-pointer border-gray-200 ${
                   selectedYear == 2022
                     ? "bg-blue-200 hover:bg-transparent"
@@ -406,7 +367,7 @@ function Home({ credentials, setCredentials }) {
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
-              <YAxis dataKey={"Total"} domain={[0, 1000]} />
+              <YAxis dataKey={"Total"} domain={[0, statsData.maxGraphValue]} />
               <Tooltip />
               <Legend />
               <Line

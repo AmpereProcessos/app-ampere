@@ -49,18 +49,22 @@ function Sidebar({ credentials }) {
         </Link>
       </div>
       <div className="mt-6">
-        <h2 className="text-xs text-gray-500">GESTÃO DE PROJETOS</h2>
-        <Link href="/gestaoDeProjetos/emAndamento">
-          <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-            <TbRecharging
-              style={{
-                color: "#15599a",
-                fontSize: "20px",
-              }}
-            />
-            <p className="pl-3 text-xs text-gray-600">Em andamento</p>
-          </a>
-        </Link>
+        {credentials.visualizacao == undefined && (
+          <>
+            <h2 className="text-xs text-gray-500">GESTÃO DE PROJETOS</h2>
+            <Link href="/gestaoDeProjetos/emAndamento">
+              <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <TbRecharging
+                  style={{
+                    color: "#15599a",
+                    fontSize: "20px",
+                  }}
+                />
+                <p className="pl-3 text-xs text-gray-600">Em andamento</p>
+              </a>
+            </Link>
+          </>
+        )}
         {credentials.vendedor == undefined && (
           <Link href="/gestaoDeProjetos/bancoDeDados">
             <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -287,7 +291,8 @@ function Sidebar({ credentials }) {
         </>
       )}
       {credentials.accessibleRoutes != undefined &&
-        credentials?.accessibleRoutes.includes("Vendas") && (
+        credentials?.accessibleRoutes.includes("Vendas") &&
+        credentials.vendedor && (
           <div className="mt-6">
             <h2 className="text-xs text-gray-500">ÁREA DO VENDEDOR</h2>
             <Link href="/vendas">
@@ -301,6 +306,21 @@ function Sidebar({ credentials }) {
                 <p className="pl-3 text-xs text-gray-600">Projetos</p>
               </a>
             </Link>
+            {credentials.vendedor && (
+              <Link
+                href={`/vendas/emProcesso/${credentials.visualizacao}?parametro=${credentials.vendedor}`}
+              >
+                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                  <TbRecharging
+                    style={{
+                      color: "#15599a",
+                      fontSize: "20px",
+                    }}
+                  />
+                  <p className="pl-3 text-xs text-gray-600">Em processo</p>
+                </a>
+              </Link>
+            )}
           </div>
         )}
     </div>

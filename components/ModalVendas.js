@@ -319,7 +319,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <div>
                     <input
-                      disabled={false}
+                      disabled={true}
                       checked={infoHolder.oem?.aplicavel ? true : false}
                       onChange={(e) => {
                         setChanges({
@@ -392,6 +392,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                 <div className="flex gap-2 justify-around flex-wrap">
                   <div>
                     <input
+                      disabled={true}
                       checked={
                         infoHolder.visitaTecnica?.status === "REALIZADA"
                           ? true
@@ -653,6 +654,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                 <div className="flex gap-2 justify-center flex-wrap">
                   <div>
                     <input
+                      disabled={true}
                       checked={
                         infoHolder.estruturaPersonalizada?.aplicavel === "SIM"
                           ? true
@@ -1547,6 +1549,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         INFORMAÇÕES DO KIT
                       </span>
                       <textarea
+                        readOnly={true}
                         value={
                           infoHolder.compra?.kitInfo
                             ? infoHolder.compra?.kitInfo
@@ -1574,6 +1577,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         MATERIAL FALTANTE
                       </span>
                       <textarea
+                        readOnly={true}
                         value={
                           infoHolder.material?.materialFaltante
                             ? infoHolder.material?.materialFaltante
@@ -1610,6 +1614,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
+                        disabled={true}
                         checked={
                           infoHolder.comissionamento?.comercial ? true : false
                         }
@@ -1644,6 +1649,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
+                        disabled={true}
                         checked={
                           infoHolder.comissionamento?.suprimentos ? true : false
                         }
@@ -1678,6 +1684,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
+                        disabled={true}
                         checked={
                           infoHolder.comissionamento?.projetos ? true : false
                         }
@@ -2123,6 +2130,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
+                        disabled={true}
                         checked={
                           infoHolder.projeto?.diagramaUnifilar === "Ok"
                             ? true
@@ -2160,6 +2168,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
+                        disabled={true}
                         checked={
                           infoHolder.projeto?.desenhoTelhado === "OK"
                             ? true
@@ -2270,6 +2279,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       </span>
                       <div className="flex">
                         <input
+                          disabled={true}
                           checked={
                             infoHolder.projeto?.acStatus === "REALIZADO"
                               ? true
@@ -2414,6 +2424,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
+                        disabled={true}
                         checked={
                           infoHolder.projeto?.projetoConcluido === "SIM"
                             ? true
@@ -2484,6 +2495,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
+                        disabled={true}
                         checked={
                           infoHolder.obra?.statusSolicitacao === "SOLICITADA"
                             ? true
@@ -2657,6 +2669,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
+                        disabled={true}
                         checked={
                           infoHolder.obra?.checklist === "SIM" ? true : false
                         }
@@ -2688,6 +2701,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     </span>
                     <div className="flex">
                       <input
+                        disabled={true}
                         checked={
                           infoHolder.obra?.trafo === "SIM" ? true : false
                         }

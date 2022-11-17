@@ -8,6 +8,7 @@ import {
   FaTasks,
   FaSolarPanel,
 } from "react-icons/fa";
+import { AiOutlineForm } from "react-icons/ai";
 import {
   MdEngineering,
   MdOutlinePayments,
@@ -318,6 +319,19 @@ function Sidebar({ credentials }) {
                     }}
                   />
                   <p className="pl-3 text-xs text-gray-600">Em processo</p>
+                </a>
+              </Link>
+            )}
+            {credentials.vendedor && (
+              <Link href={`/vendas/formularios`}>
+                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                  <AiOutlineForm
+                    style={{
+                      color: "#15599a",
+                      fontSize: "20px",
+                    }}
+                  />
+                  <p className="pl-3 text-xs text-gray-600">Formulários</p>
                 </a>
               </Link>
             )}

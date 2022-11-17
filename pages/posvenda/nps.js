@@ -4,7 +4,9 @@ import NPSCard from "../../components/NPSCard";
 import { cidadesAtendidas, vendedores } from "../../utils/constants";
 import { AiOutlineSearch } from "react-icons/ai";
 import Select from "react-select";
+import { useRouter } from "next/router";
 function NPS({ credentials, setCredentials }) {
+  const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filters, setFilters] = useState({

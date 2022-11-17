@@ -60,6 +60,7 @@ export default async function handler(req, res) {
         tipo: project.tipoestrutura,
         respPagamento: project.pagestruturapersonalizada,
         valor: project.valorestrutura,
+        dataMontagem: project.datamontagem,
         status: project.estruturapersonalisada,
       },
       contrato: {

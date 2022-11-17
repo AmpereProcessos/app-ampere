@@ -9,7 +9,8 @@ import { AiFillEye } from "react-icons/ai";
 function PadraoCard({ project, credentials }) {
   const [changes, setChanges] = useState({
     "projeto.fechamentoAC": project.projeto.fechamentoAC,
-    "padrao.pagTerceiro": null,
+    "padrao.pagTerceiro": project.padrao.pagTerceiro,
+    "projeto.acStatus": project.projeto.acStatus,
   });
   const [osVisible, setOSVisible] = useState(false);
   const [osInfo, setOsInfo] = useState({
@@ -238,6 +239,32 @@ function PadraoCard({ project, credentials }) {
             </label>
           </div>
         </div>
+        <SelectInput
+          label={"STATUS AUMENTO DE CARGA"}
+          editable={true}
+          value={changes["projeto.acStatus"]}
+          options={[
+            {
+              label: "PENDÊNCIA",
+              value: "PENDÊNCIA",
+            },
+            {
+              label: "REALIZADO",
+              value: "REALIZADO",
+            },
+            {
+              label: "SOLICITADO COM G.D",
+              value: "SOLICITADO COM G.D",
+            },
+          ]}
+          handleChange={(value) => {
+            handleChanges({ "projeto.acStatus": value });
+            setChanges({
+              ...changes,
+              "projeto.acStatus": value,
+            });
+          }}
+        />
       </div>
       <div className="flex flex-col items-center">
         <div className="flex items-center gap-x-2">

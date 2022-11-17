@@ -12,6 +12,7 @@ function EstruturaCard({ project, credentials }) {
       project.estruturaPersonalizada.dataMontagem,
     "estruturaPersonalizada.pagTerceiro":
       project.estruturaPersonalizada.pagTerceiro,
+    "estruturaPersonalizada.status": project.estruturaPersonalizada.status,
   });
   const [osVisible, setOSVisible] = useState(false);
   const [osInfo, setOsInfo] = useState({
@@ -183,8 +184,8 @@ function EstruturaCard({ project, credentials }) {
           <input
             type="date"
             value={
-              changes["projeto.fechamentoAC"]
-                ? new Date(changes["projeto.fechamentoAC"])
+              changes["estruturaPersonalizada.dataMontagem"]
+                ? new Date(changes["estruturaPersonalizada.dataMontagem"])
                     .toISOString()
                     .slice(0, 10)
                 : null
@@ -215,7 +216,7 @@ function EstruturaCard({ project, credentials }) {
                 });
                 setChanges({
                   ...changes,
-                  "estruturaPersonalizada.pagTerceiro": true,
+                  "estruturaPersonalizada.pagTerceiro": e.target.checked,
                 });
               }}
             />
@@ -224,6 +225,25 @@ function EstruturaCard({ project, credentials }) {
             </label>
           </div>
         </div>
+        <SelectInput
+          label={"STATUS da estrutura personalizada"}
+          editable={true}
+          value={changes["estruturaPersonalizada.status"]}
+          options={[
+            { label: "PRONTA", value: "PRONTA" },
+            { label: "PENDÊNCIA", value: "PENDÊNCIA" },
+            { label: "N/A", value: "N/A" },
+          ]}
+          handleChange={(value) => {
+            handleChanges({
+              "estruturaPersonalizada.status": value,
+            });
+            setChanges({
+              ...changes,
+              "estruturaPersonalizada.status": value,
+            });
+          }}
+        />
       </div>
       <div className="flex flex-col items-center">
         <div className="flex items-center gap-x-2">

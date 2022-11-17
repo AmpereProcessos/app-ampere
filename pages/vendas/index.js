@@ -19,7 +19,6 @@ function Vendas({ credentials, setCredentials }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
   function getProjects(credenciais) {
-    console.log("FUI CHAMADO");
     axios
       .post("/api/projects/vendas", {
         vendedor: credenciais.vendedor,

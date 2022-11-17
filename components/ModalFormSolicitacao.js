@@ -222,6 +222,19 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
       setMessage({ text: "Alterações feitas", color: "text-green-500" });
     });
   }
+  async function rejectSolicitacao() {
+    axios
+      .put("/api/solicitacoes/contrato", {
+        _id: solicitacao._id,
+        aprovacao: false,
+      })
+      .then((res) =>
+        setCreationMsg({
+          text: "Solicitação rejeitada!",
+          color: "text-red-500",
+        })
+      );
+  }
   async function addProject() {
     await axios.put("/api/solicitacoes/contrato", {
       _id: solicitacao._id,
@@ -2258,13 +2271,23 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   </p>
                 )}
                 {!dados.aprovacao && (
-                  <div className="w-full flex justify-center">
-                    <button
-                      onClick={validateCreation}
-                      className="p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold"
-                    >
-                      ADICIONAR PROJETO
-                    </button>
+                  <div className="flex items-center justify-around w-full">
+                    <div className="w-full flex justify-center">
+                      <button
+                        onClick={validateCreation}
+                        className="p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold"
+                      >
+                        ADICIONAR PROJETO
+                      </button>
+                    </div>
+                    <div className="w-full flex justify-center">
+                      <button
+                        onClick={rejectSolicitacao}
+                        className="p-2 rounded bg-red-300 hover:bg-red-500 text-white font-bold"
+                      >
+                        REJEITAR SOLICITAÇÃO
+                      </button>
+                    </div>
                   </div>
                 )}
               </>

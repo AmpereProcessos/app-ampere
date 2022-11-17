@@ -49,6 +49,15 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
       }
     }
   }, []);
+  function getCardColor(statusAprovacao) {
+    if (statusAprovacao == true) {
+      return "bg-green-100";
+    } else if (statusAprovacao == false) {
+      return "bg-red-100";
+    } else {
+      return "bg-[#fff]";
+    }
+  }
   console.log(solicitacoes);
   return (
     <div className="p-6 grow flex flex-col">
@@ -86,9 +95,9 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
               setModalIsOpen(true);
               setModalSolicitacao(solicitacao);
             }}
-            className={`flex flex-col ${
-              solicitacao.aprovacao && "bg-gray-300"
-            } w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
+            className={`flex flex-col ${getCardColor(
+              solicitacao.aprovacao
+            )} w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
           >
             <div className="flex justify-center">
               <h1 className="text-xs text-[#15599a] font-bold">

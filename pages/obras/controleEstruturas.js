@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import Select from "react-select";
 import EstruturaCard from "../../components/EstruturaCard";
+import { useRouter } from "next/router";
 function ControleEstruturas({ setCredentials, credentials }) {
+  const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filters, setFilters] = useState({

@@ -1,11 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import ModalSolicitacaoVendas from "../../components/ModalSolicitacaoVendas";
 
 function FormulariosVendedor({ setCredentials, credentials }) {
   const [forms, setForms] = useState([]);
   const [filteredForms, setFilteredForms] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalSolicitacao, setModalSolicitacao] = useState({});
   function getProjects(credenciais) {
-    console.log(credenciais);
     axios
       .post("/api/solicitacoes/byVendedor", {
         vendedor: credenciais.vendedor,
@@ -14,6 +16,11 @@ function FormulariosVendedor({ setCredentials, credentials }) {
         setForms(res.data);
         setFilteredForms(res.data);
       });
+  }
+  function handleUpdates(id) {
+    getProjects(credentials);
+    let changedObj = forms.filter((project) => project._id == id);
+    setModalSolicitacao(changedObj[0]);
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -45,6 +52,7 @@ function FormulariosVendedor({ setCredentials, credentials }) {
       return "bg-[#fff]";
     }
   }
+  console.log(modalSolicitacao);
   return (
     <div className="p-6 flex flex-col grow bg-[#fff]">
       <div className="flex border-b border-gray-200">
@@ -58,7 +66,9 @@ function FormulariosVendedor({ setCredentials, credentials }) {
               setModalIsOpen(true);
               setModalSolicitacao(solicitacao);
             }}
-            className={`flex flex-col ${getCardColor} w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
+            className={`flex flex-col ${getCardColor(
+              solicitacao.aprovacao
+            )} w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
           >
             <div className="flex justify-center">
               <h1 className="text-xs text-[#15599a] font-bold">
@@ -82,6 +92,14 @@ function FormulariosVendedor({ setCredentials, credentials }) {
           </div>
         ))}
       </div>
+      {modalIsOpen && (
+        <ModalSolicitacaoVendas
+          editable={modalSolicitacao.aprovacao == false}
+          info={modalSolicitacao}
+          setModalIsOpen={setModalIsOpen}
+          handleUpdates={handleUpdates}
+        />
+      )}
     </div>
   );
 }

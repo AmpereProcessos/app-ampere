@@ -1374,6 +1374,11 @@ function ModalObras({
                 <div className="flex gap-2 w-full justify-center flex-wrap pb-2">
                   <SelectInput
                     label={"AUMENTO DE CARGA"}
+                    value={
+                      infoHolder.projeto.aumentoDeCarga
+                        ? infoHolder.projeto.aumentoDeCarga
+                        : "NÃO DEFINIDO"
+                    }
                     options={[
                       { label: "SIM", value: "SIM" },
                       { label: "NÃO", value: "NÃO" },

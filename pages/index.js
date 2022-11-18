@@ -80,7 +80,7 @@ function Home({ credentials, setCredentials }) {
   const [clientBirthday, setClientsBirthday] = useState([]);
   const [nps, setNps] = useState(0);
   const [statsData, setStatsData] = useState({
-    graphData: {},
+    graphData: [],
     maxGraphValue: 1000,
   });
   function getStats(credenciais) {
@@ -180,12 +180,16 @@ function Home({ credentials, setCredentials }) {
           setStatsData({
             ...statsData,
             graphData: res.data,
-            maxGraphValue: 500,
+            maxGraphValue: Math.max(...res.data.map((o) => o.Total)),
           })
         );
     } else {
       axios.get(`/api/stats/getByYear/${year}`).then((res) => {
-        setStatsData({ ...statsData, graphData: res.data });
+        setStatsData({
+          ...statsData,
+          graphData: res.data,
+          maxGraphValue: Math.max(...res.data.map((o) => o.Total)),
+        });
       });
     }
   }
@@ -196,7 +200,9 @@ function Home({ credentials, setCredentials }) {
     );
     setClientsBirthday(arr);
   }
-
+  if (statsData.graphData.length > 0) {
+    console.log(Math.max(...statsData.graphData.map((o) => o.Total)));
+  }
   return (
     <div className="p-6 grow">
       <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">

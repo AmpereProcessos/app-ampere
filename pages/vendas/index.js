@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ModalVendas from "../../components/ModalVendas";
 import axios from "axios";
+import Link from "next/link";
 const statusStyles = {
   ASSINADO: {
     textColor: "text-green-500",

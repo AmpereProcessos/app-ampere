@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ModalSolicitacaoVendas from "../../components/ModalSolicitacaoVendas";
-
+import Link from "next/link";
 function FormulariosVendedor({ setCredentials, credentials }) {
   const [forms, setForms] = useState([]);
   const [filteredForms, setFilteredForms] = useState([]);
@@ -92,6 +92,11 @@ function FormulariosVendedor({ setCredentials, credentials }) {
           </div>
         ))}
       </div>
+      <Link href="/publico/formSolicitacao">
+        <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">CRIAR SOLICITAÇÃO</p>
+        </a>
+      </Link>
       {modalIsOpen && (
         <ModalSolicitacaoVendas
           editable={modalSolicitacao.aprovacao == false}

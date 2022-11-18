@@ -9,7 +9,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "projeto.aumentoDeCarga": "SIM",
-            "projeto.acStatus": "PENDÊNCIA",
+            "projeto.acStatus": { $in: ["PENDÊNCIA", "SOLICITADO COM G.D"] },
           },
         },
         {

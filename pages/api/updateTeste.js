@@ -1,15 +1,14 @@
-import connectToDatabase from "../../utils/projectsDb";
+import connectToDatabase from "../../utils/callsDb";
 export default async function handler(req, res) {
-  const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("dados");
-  /*let arr = await collection.updateMany(
+  /*const db = await connectToDatabase(process.env.DB_KEY);
+  const collection = db.collection("pps");
+  let arr = await collection.updateMany(
     {
-      "obra.saida": { $lte: "2022-01-01T08:00:00.000Z" },
-      "conferencias.usinaLigada.status": "NÃO REALIZADO",
+      vendedor: "FRANCO MUSTAFI",
     },
     {
       $set: {
-        "conferencias.usinaLigada.status": "REALIZADO",
+        vendedor: "FRANCO MUSTAFE",
       },
     }
   );

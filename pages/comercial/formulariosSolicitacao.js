@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ModalFormSolicitacao from "../../components/ModalFormSolicitacao";
 import { useRouter } from "next/router";
+import Select from "react-select";
+import { vendedores } from "../../utils/constants";
 function FormulariosSolicitacao({ credentials, setCredentials }) {
   const [solicitacoes, setSolicitacoes] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -9,6 +11,7 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
   const [filteredSolicitacoes, setFilteredSolicitacoes] = useState([]);
   const [filters, setFilters] = useState({
     pendenteFilter: false,
+    vendedorFilter: [],
   });
   const router = useRouter();
   function getFormularios() {
@@ -24,6 +27,12 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
       newArr = newArr.filter(
         (solicitacao) =>
           solicitacao.aprovacao == false || solicitacao.aprovacao == undefined
+      );
+    }
+    if (filters.vendedorFilter.length > 0) {
+      if (!newArr) newArr = solicitacoes;
+      newArr = newArr.filter((solicitacao) =>
+        filters.vendedorFilter.includes(solicitacao.nomeVendedor)
       );
     }
     console.log(newArr);
@@ -66,6 +75,19 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
           FORMULÁRIOS DE CONTRATO
         </p>
         <div className="flex flex-wrap gap-x-2">
+          <Select
+            placeholder="VENDEDOR"
+            isMulti={true}
+            options={vendedores.map((vendedor) => {
+              return { label: vendedor.nome, value: vendedor.nome };
+            })}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                vendedorFilter: e.map((x) => x.value),
+              })
+            }
+          />
           <div
             onClick={() =>
               setFilters({
@@ -109,6 +131,12 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
                 <span className="text-xxs">VENDEDOR</span>
                 <p className="text-xs text-gray-600">
                   {solicitacao.nomeVendedor && solicitacao.nomeVendedor}
+                </p>
+              </div>
+              <div>
+                <span className="text-xxs">SERVIÇO</span>
+                <p className="text-xs text-gray-600 text-center">
+                  {solicitacao.tipoDeServico ? solicitacao.tipoDeServico : "-"}
                 </p>
               </div>
               <div>

@@ -41,6 +41,12 @@ function BancoDeOS({ credentials, setCredentials }) {
         )
       );
     }
+    if (filters.emAberto) {
+      if (!newArr) newArr = oss;
+      newArr = newArr.filter(
+        (os) => os.ordensDeServico.dataDeFechamento == undefined
+      );
+    }
     if (dateFilter.after != null && dateFilter.before != null) {
       if (!newArr) newArr = oss;
       newArr = newArr.filter((project) =>
@@ -160,7 +166,9 @@ function BancoDeOS({ credentials, setCredentials }) {
               onClick={() =>
                 setFilters({ ...filters, emAberto: !filters.emAberto })
               }
-              className="font-bold h-[36px] cursor-pointer p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white"
+              className={`${
+                filters.emAberto ? "bg-[#15599a]" : "bg-blue-300"
+              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
             >
               EM ABERTO
             </div>

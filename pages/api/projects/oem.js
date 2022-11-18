@@ -7,14 +7,19 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            "obra.statusDaObra": {
-              $in: [
-                "AGENDADA",
-                "AGUARDANDO AGENDAMENTO",
-                "EM ANDAMENTO",
-                "CONCLUIDA",
-              ],
-            },
+            $or: [
+              {
+                "obra.statusDaObra": {
+                  $in: [
+                    "AGENDADA",
+                    "AGUARDANDO AGENDAMENTO",
+                    "EM ANDAMENTO",
+                    "CONCLUIDA",
+                  ],
+                },
+              },
+              { tipoDeServico: "OPERAÇÃO E MANUTENÇÃO" },
+            ],
           },
         },
         {
@@ -31,14 +36,19 @@ export default async function handler(req, res) {
         {
           $match: {
             qtde: { $gt: 713 },
-            "obra.statusDaObra": {
-              $in: [
-                "AGENDADA",
-                "AGUARDANDO AGENDAMENTO",
-                "EM ANDAMENTO",
-                "CONCLUIDA",
-              ],
-            },
+            $or: [
+              {
+                "obra.statusDaObra": {
+                  $in: [
+                    "AGENDADA",
+                    "AGUARDANDO AGENDAMENTO",
+                    "EM ANDAMENTO",
+                    "CONCLUIDA",
+                  ],
+                },
+              },
+              { tipoDeServico: "OPERAÇÃO E MANUTENÇÃO" },
+            ],
           },
         },
         {

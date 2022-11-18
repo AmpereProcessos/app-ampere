@@ -545,6 +545,19 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         setDados({ ...dados, nomeVendedor: value })
                       }
                     />
+                    <SelectInput
+                      label={"TIPO DE SERVIÇO"}
+                      editable={true}
+                      value={
+                        dados.tipoDeServico
+                          ? dados.tipoDeServico
+                          : "NÃO DEFINIDO"
+                      }
+                      options={tiposDeServico.map((tipo) => tipo)}
+                      handleChange={(value) =>
+                        setDados({ ...dados, tipoDeServico: value })
+                      }
+                    />
                     <TextInput
                       label={"Telefone"}
                       editable={true}

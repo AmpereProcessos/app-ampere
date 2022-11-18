@@ -1,11 +1,16 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import Logo from "../../utils/whitelogo.png";
-import { cities, sellers, ppsSolicitations } from "../../utils/constants";
+import {
+  cities,
+  sellers,
+  ppsSolicitations,
+  vendedores,
+} from "../../utils/constants";
 import axios from "axios";
 import Link from "next/link";
 function ChamadosPPS() {
-  const [vendedorName, setVendedorName] = useState(sellers[0]);
+  const [vendedorName, setVendedorName] = useState(vendedores[0].nome);
   const [svbCode, setSvbCode] = useState(0);
   const [solicitationType, setSolicitationType] = useState(ppsSolicitations[0]);
   const [solicitationDesc, setSolicitationDesc] = useState("");
@@ -62,15 +67,17 @@ function ChamadosPPS() {
         <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
           <span className="text-center font-bold">VENDEDOR:</span>
           <select
-            value={vendedorName}
+            value={vendedorName ? vendedorName : "NÃO DEFINIDO"}
             onChange={(e) => setVendedorName(e.target.value)}
             className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
           >
-            {sellers.map((name) => (
-              <option value={name} key={name}>
-                {name}
+            {vendedores.map((vendedor) => (
+              <option value={vendedor.nome} key={vendedor.nome}>
+                {vendedor.nome}
               </option>
             ))}
+            <option value={"SETOR O&M"}>SETOR O&M</option>
+            <option value={"SETOR PROJETOS"}>SETOR PROJETOS</option>
           </select>
         </div>
         <div

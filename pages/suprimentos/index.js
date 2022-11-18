@@ -163,17 +163,6 @@ function Suprimentos({ credentials, setCredentials }) {
           />
           <Select
             isMulti
-            placeholder="STATUS DE PAGAMENTO"
-            onChange={(e) =>
-              setFilters({ ...filters, paymentStatus: e.map((x) => x.value) })
-            }
-            options={[
-              { value: "PAGO", label: "PAGO" },
-              { value: "AGUARDANDO PAGAMENTO", label: "AGUARDANDO PAGAMENTO" },
-            ]}
-          />
-          <Select
-            isMulti
             placeholder="STATUS DE LIBERAÇÃO"
             onChange={(e) =>
               setFilters({ ...filters, liberacaoStatus: e.map((x) => x.value) })

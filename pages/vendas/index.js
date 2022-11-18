@@ -3,6 +3,9 @@ import { useRouter } from "next/router";
 import ModalVendas from "../../components/ModalVendas";
 import axios from "axios";
 import Link from "next/link";
+import { AiOutlineSearch } from "react-icons/ai";
+import Select from "react-select";
+import { cidadesAtendidas } from "../../utils/constants";
 const statusStyles = {
   ASSINADO: {
     textColor: "text-green-500",
@@ -17,8 +20,19 @@ const statusStyles = {
 function Vendas({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
+  const [filters, setFilters] = useState({
+    searchFilter: "",
+    cidadeFilter: [],
+  });
+  const [dateFilter, setDateFilter] = useState({
+    after: null,
+    before: null,
+    field1: null,
+    field2: null,
+  });
   function getProjects(credenciais) {
     axios
       .post("/api/projects/vendas", {
@@ -26,7 +40,37 @@ function Vendas({ credentials, setCredentials }) {
       })
       .then((res) => {
         setProjects(res.data);
+        setFilteredProjects(res.data);
       });
+  }
+  function filterProjects() {
+    var newArr;
+    if (filters.cidadeFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((project) =>
+        filters.cidadeFilter.includes(project.cidade)
+      );
+    }
+    if (filters.searchFilter.trim().length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((project) =>
+        project.nomeDoContrato
+          .toUpperCase()
+          .includes(filters.searchFilter.toUpperCase())
+      );
+    }
+    if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) =>
+          call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
+          call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      );
+    }
+    if (!newArr) setFilteredProjects(projects);
+    else {
+      setFilteredProjects(newArr);
+    }
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -49,16 +93,111 @@ function Vendas({ credentials, setCredentials }) {
       }
     }
   }, []);
-  console.log(projects);
   return (
     <div className="p-6 flex flex-col grow bg-[#fff]">
-      <div className="flex border-b border-gray-200">
+      <div className="flex flex-col items-center border-b border-gray-200 pb-3">
         <h1 className="text-[#15599a] font-bold text-xl">
-          SEUS CLIENTES ({projects.length})
+          SEUS CLIENTES ({filteredProjects.length})
         </h1>
+        <div className="flex flex-wrap items-center justify-around gap-3">
+          <input
+            value={filters.searchFilter}
+            onChange={(e) =>
+              setFilters({ ...filters, searchFilter: e.target.value })
+            }
+            className="outline-none p-2 h-[36px] text-sm border border-gray-200 grow lg:w-[350px]"
+            placeholder="Nome do cliente..."
+          />
+          <Select
+            isMulti={true}
+            placeholder="CIDADE"
+            options={cidadesAtendidas.map((cidade) => {
+              return { label: cidade, value: cidade };
+            })}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                cidadeFilter: e.map((x) => x.value),
+              })
+            }
+          />
+          <div className="hidden lg:flex gap-x-2">
+            <div className="flex flex-col w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                Depois de:
+              </span>
+              <input
+                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                type="date"
+                value={
+                  dateFilter.after &&
+                  new Date(dateFilter.after).toISOString().slice(0, 10)
+                }
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    after: isNaN(e.target.value)
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <div className="flex flex-col w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                Antes de:
+              </span>
+              <input
+                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                type="date"
+                value={
+                  dateFilter.before &&
+                  new Date(dateFilter.before).toISOString().slice(0, 10)
+                }
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    before: isNaN(e.target.value)
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <Select
+              isMulti={false}
+              placeholder={"CAMPO DE FILTRO"}
+              options={[
+                {
+                  label: "DATA ASS.CONTRATO",
+                  value: "contrato.dataAssinatura",
+                },
+                {
+                  label: "DATA PAGAMENTO",
+                  value: "compra.dataPagamento",
+                },
+                { label: "NÃO DEFINIDO", value: null },
+              ]}
+              onChange={(e) =>
+                setDateFilter({
+                  ...dateFilter,
+                  field1: e.value != null ? e.value.split(".")[0] : null,
+                  field2: e.value != null ? e.value.split(".")[1] : null,
+                })
+              }
+            />
+          </div>
+          <button
+            onClick={filterProjects}
+            className="flex h-[36px] bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+          >
+            <p>Filtrar</p>
+            <AiOutlineSearch />
+          </button>
+        </div>
       </div>
       <div className="flex flex-wrap justify-around mt-4 gap-3">
-        {projects.map((project) => (
+        {filteredProjects.map((project) => (
           <div
             onClick={() => {
               setModalIsOpen(true);

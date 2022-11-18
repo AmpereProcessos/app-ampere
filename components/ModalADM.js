@@ -721,7 +721,8 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       COBRANÇA REALIZADA
                     </label>
                   </div>
-                  <SelectInput
+                  {/**
+                   * <SelectInput
                     label={"STATUS PAGAMENTO"}
                     value={
                       infoHolder.pagamento.status
@@ -761,6 +762,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       });
                     }}
                   />
+                  */}
                   <SelectInput
                     label={"FORMA DE PAGAMENTO"}
                     value={

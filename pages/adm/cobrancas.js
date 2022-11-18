@@ -58,7 +58,7 @@ function Cobrancas({ credentials, setCredentials }) {
   console.log(oss);
   return (
     <div className="p-6 grow">
-      <div className="grid grid-cols-6 flex items-center">
+      <div className="grid grid-cols-6  items-center">
         <h1 className="col-span-2 font-bold text-lg text-[#fead61]">
           COBRANÇAS DE ORDENS DE SERVIÇO
         </h1>

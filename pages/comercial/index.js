@@ -5,6 +5,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import ModalComercial from "../../components/ModalComercial";
 // casa em construção (Tais)
 import { useRouter } from "next/router";
+import { statusLiberacao } from "../../utils/constants";
 import Link from "next/link";
 const statusStyles = {
   ASSINADO: {
@@ -74,7 +75,7 @@ function Comercial({ credentials, setCredentials }) {
       );
     } else if (filters.pagamentoFilter.length > 0) {
       newArr = projects.filter((project) =>
-        filters.pagamentoFilter.includes(project.pagamento.status)
+        filters.pagamentoFilter.includes(project.compra.statusLiberacao)
       );
     } else if (filters.contratoFilter.length > 0) {
       newArr = projects.filter((project) =>
@@ -297,21 +298,16 @@ function Comercial({ credentials, setCredentials }) {
             />
             <Select
               isMulti
-              placeholder="STATUS DO PAGAMENTO"
-              className="hidden lg:block"
+              placeholder="STATUS DE LIBERAÇÃO"
               onChange={(e) =>
                 setFilters({
                   ...filters,
                   pagamentoFilter: e.map((x) => x.value),
                 })
               }
-              options={[
-                {
-                  value: "AGUARDANDO PAGAMENTO",
-                  label: "AGUARDANDO PAGAMENTO",
-                },
-                { value: undefined, label: "NÃO DEFINIDO" },
-              ]}
+              options={statusLiberacao.map((status) => {
+                return { label: status.label, value: status.value };
+              })}
             />
             <button
               onClick={filterProjects}

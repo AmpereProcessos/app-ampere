@@ -1171,7 +1171,7 @@ function ModalSuprimentos({
                   PAGAMENTO
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
-                  <SelectInput
+                  {/** <SelectInput
                     label={"STATUS PAGAMENTO"}
                     value={
                       infoHolder.pagamento.status
@@ -1210,7 +1210,7 @@ function ModalSuprimentos({
                         },
                       });
                     }}
-                  />
+                  />*/}
                   <SelectInput
                     label={"FORMA DE PAGAMENTO"}
                     value={

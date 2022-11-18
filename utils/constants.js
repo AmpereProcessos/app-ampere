@@ -515,34 +515,34 @@ export const projetosSolicitations = [
   "OUTRO",
 ];
 export const cidadesAtendidas = [
-  "ITUIUTABA",
-  "IPIAÇU",
-  "SANTA VITÓRIA",
-  "CAMPINA VERDE",
-  "UBERLÂNDIA",
-  "CAPINÓPOLIS",
-  "GURINHATÃ",
-  "PRATA",
-  "CANÁPOLIS",
-  "CACHOEIRA DOURADA",
-  "MONTE ALEGRE",
-  "UBERABA",
-  "CALDAS NOVAS",
-  "SÃO SEBASTIÃO DO PARAISO",
-  "BOM JESUS",
-  "PORTEIRÃO",
-  "JOÃO PINHEIRO",
-  "SÃO SIMÃO",
-  "INACIOLANDIA",
-  "TRINDADE",
-  "PATOS DE MINAS",
-  "ITUMBIARA",
-  "CENTRALINA",
-  "SAO GONÇALO DO ABAETE",
-  "PATROCINIO",
-  "NOVA PONTE",
-  "QUIRINÓPOLIS",
-  "TUPACIGUARA",
+  "ITUIUTABA", //ok to uppercase
+  "IPIAÇU", // ok to uppercase
+  "SANTA VITÓRIA", //ok to uppercase
+  "CAMPINA VERDE", // ok to uppercase
+  "UBERLÂNDIA", // ok to uppercase
+  "CAPINÓPOLIS", // ok to uppercase
+  "GURINHATÃ", // ok to uppercase
+  "PRATA", // ok to uppercase
+  "CANÁPOLIS", // ok to uppercaseC
+  "CACHOEIRA DOURADA", // ok to uppercase
+  "MONTE ALEGRE", // ok to uppercase
+  "UBERABA", // ok to uppercase
+  "CALDAS NOVAS", // ok to uppercase
+  "SÃO SEBASTIÃO DO PARAÍSO", // ok to uppercase
+  "BOM JESUS", // ok to uppercase
+  "PORTEIRÃO", // ok to uppercase
+  "JOÃO PINHEIRO", // ok to uppercase
+  "SÃO SIMÃO", // ok to uppercase
+  "INACIOLÂNDIA", // ok to uppercase
+  "TRINDADE", // ok to uppercase
+  "PATOS DE MINAS", // ok to uppecase
+  "ITUMBIARA", // ok to uppercase
+  "CENTRALINA", // ok to uppercase
+  "SÃO GONÇALO DO ABAETÉ", // ok to uppercase
+  "PATROCÍNIO", // ok to uppercase
+  "NOVA PONTE", // ok to uppercase
+  "QUIRINÓPOLIS", // ok to uppercase
+  "TUPACIGUARA", // ok to uppercase
 ];
 export const statusLiberacao = [
   {

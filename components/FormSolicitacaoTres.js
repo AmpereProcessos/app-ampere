@@ -45,6 +45,11 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
           setDados({
             ...dados,
             bairroInstalacao: res.data.bairro,
+            cidadeInstalacao: cidadesAtendidas.includes(
+              res.data.localidade.toUpperCase()
+            )
+              ? res.data.localidade.toUpperCase()
+              : "ITUIUTABA",
             enderecoInstalacao: res.data.logradouro,
             ufInstalacao: res.data.uf,
           });

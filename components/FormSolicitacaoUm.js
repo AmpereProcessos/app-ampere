@@ -42,9 +42,16 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
           console.log(res.data.erro);
           return;
         } else {
+          console.log(
+            cidadesAtendidas.includes(res.data.localidade.toUpperCase())
+          );
+          console.log(res.data.localidade);
           setDados({
             ...dados,
             bairro: res.data.bairro,
+            cidade: cidadesAtendidas.includes(res.data.localidade.toUpperCase())
+              ? res.data.localidade.toUpperCase()
+              : "ITUIUTABA",
             [field]: res.data.logradouro,
             uf: res.data.uf,
           });
@@ -125,6 +132,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
       avancar();
     }
   }
+  console.log(dados.cidade);
   return (
     <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -193,6 +201,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
         <SelectInput
           label={"CIDADE"}
           editable={true}
+          value={dados.cidade}
           options={cidadesAtendidas.map((cidade) => {
             return { label: cidade, value: cidade };
           })}

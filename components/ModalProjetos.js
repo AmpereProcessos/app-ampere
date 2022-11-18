@@ -853,7 +853,7 @@ function ModalProjetos({
                             "projeto.acStatus":
                               e.target.checked &&
                               infoHolder.acStatus != "REALIZADO"
-                                ? "PÊNDENCIA"
+                                ? "PENDÊNCIA"
                                 : undefined,
                           });
                           setInfo({
@@ -864,7 +864,7 @@ function ModalProjetos({
                               acStatus:
                                 e.target.checked &&
                                 infoHolder.acStatus != "REALIZADO"
-                                  ? "PÊNDENCIA"
+                                  ? "PENDÊNCIA"
                                   : undefined,
                             },
                           });

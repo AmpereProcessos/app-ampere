@@ -2341,7 +2341,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                             "projeto.acStatus":
                               e.target.checked &&
                               infoHolder.acStatus != "REALIZADO"
-                                ? "PÊNDENCIA"
+                                ? "PENDÊNCIA"
                                 : undefined,
                           });
                           setInfo({
@@ -2352,7 +2352,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                               acStatus:
                                 e.target.checked &&
                                 infoHolder.acstatus != "REALIZADO"
-                                  ? "PÊNDENCIA"
+                                  ? "PENDÊNCIA"
                                   : undefined,
                             },
                           });

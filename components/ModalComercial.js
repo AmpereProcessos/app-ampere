@@ -614,7 +614,7 @@ function ModalComercial({
                             "projeto.acStatus":
                               e.target.checked &&
                               infoHolder.acStatus != "REALIZADO"
-                                ? "PÊNDENCIA"
+                                ? "PENDÊNCIA"
                                 : undefined,
                           });
                           setInfo({
@@ -625,7 +625,7 @@ function ModalComercial({
                               acStatus:
                                 e.target.checked &&
                                 infoHolder.acStatus != "REALIZADO"
-                                  ? "PÊNDENCIA"
+                                  ? "PENDÊNCIA"
                                   : undefined,
                             },
                           });

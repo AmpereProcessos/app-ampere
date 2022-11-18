@@ -1390,7 +1390,7 @@ function ModalObras({
                         "projeto.aumentoDeCarga": value,
                         "projeto.acStatus":
                           value == "SIM" && infoHolder.acStatus != "REALIZADO"
-                            ? "PÊNDENCIA"
+                            ? "PENDÊNCIA"
                             : undefined,
                       });
                       setInfo({
@@ -1400,7 +1400,7 @@ function ModalObras({
                           aumentoDeCarga: value,
                           acStatus:
                             value == "SIM" && infoHolder.acStatus != "REALIZADO"
-                              ? "PÊNDENCIA"
+                              ? "PENDÊNCIA"
                               : undefined,
                         },
                       });

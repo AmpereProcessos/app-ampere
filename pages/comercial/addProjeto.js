@@ -2245,7 +2245,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                         aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
                         acStatus:
                           e.target.checked && infoHolder.acstatus != "REALIZADO"
-                            ? "PÊNDENCIA"
+                            ? "PENDÊNCIA"
                             : undefined,
                       },
                     });

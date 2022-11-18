@@ -10,6 +10,7 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
   const [modalSolicitacao, setModalSolicitacao] = useState({});
   const [filteredSolicitacoes, setFilteredSolicitacoes] = useState([]);
   const [filters, setFilters] = useState({
+    nomeDoContratoFilter: "",
     pendenteFilter: false,
     vendedorFilter: [],
   });
@@ -35,7 +36,14 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
         filters.vendedorFilter.includes(solicitacao.nomeVendedor)
       );
     }
-    console.log(newArr);
+    if (filters.nomeDoContratoFilter.trim().length > 0) {
+      if (!newArr) newArr = solicitacoes;
+      newArr = newArr.filter((solicitacao) =>
+        solicitacao.nomeDoContrato
+          .toUpperCase()
+          .includes(filters.nomeDoContratoFilter.toUpperCase())
+      );
+    }
     if (!newArr) setFilteredSolicitacoes(solicitacoes);
     else {
       setFilteredSolicitacoes(newArr);
@@ -75,6 +83,14 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
           FORMULÁRIOS DE CONTRATO
         </p>
         <div className="flex flex-wrap gap-x-2">
+          <input
+            value={filters.nomeDoContratoFilter}
+            onChange={(e) =>
+              setFilters({ ...filters, nomeDoContratoFilter: e.target.value })
+            }
+            placeholder="NOME DO CONTRATO..."
+            className="outline-none border border-gray-200 p-2 text-sm h-[36px]"
+          />
           <Select
             placeholder="VENDEDOR"
             isMulti={true}

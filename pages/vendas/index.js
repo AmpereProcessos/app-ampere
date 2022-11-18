@@ -53,7 +53,9 @@ function Vendas({ credentials, setCredentials }) {
   return (
     <div className="p-6 flex flex-col grow bg-[#fff]">
       <div className="flex border-b border-gray-200">
-        <h1 className="text-[#15599a] font-bold text-xl">SEUS CLIENTES</h1>
+        <h1 className="text-[#15599a] font-bold text-xl">
+          SEUS CLIENTES ({projects.length})
+        </h1>
       </div>
       <div className="flex flex-wrap justify-around mt-4 gap-3">
         {projects.map((project) => (

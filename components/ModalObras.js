@@ -155,20 +155,22 @@ function ModalObras({
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
-            <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-[#15599a] pl-6  font-bold">
-                {infoHolder.qtde} - {infoHolder.nomeDoContrato}
-              </h1>
-              {infoHolder.codigoSVB && (
-                <p className="text-gray-600 text-sm font-bold">
-                  #{infoHolder.codigoSVB}
-                </p>
-              )}
-              {infoHolder.pagamento.credor == "SOL FÁCIL" && (
-                <div className="p-1 border border-red-500 text-sm text-red-500 font-bold">
-                  POSSUI DESLIGAMENTO REMOTO
-                </div>
-              )}
+            <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+              <div className="flex flex-wrap justify-center mb-2 lg:mb-0 gap-2 items-center">
+                <h1 className="text-[#15599a] pl-6 text-center font-bold">
+                  {infoHolder.qtde} - {infoHolder.nomeDoContrato}
+                </h1>
+                {infoHolder.codigoSVB && (
+                  <p className="text-gray-600 text-sm font-bold">
+                    #{infoHolder.codigoSVB}
+                  </p>
+                )}
+                {infoHolder.pagamento.credor == "SOL FÁCIL" && (
+                  <div className="p-1 border border-red-500 text-sm text-center text-red-500 font-bold">
+                    POSSUI DESLIGAMENTO REMOTO
+                  </div>
+                )}
+              </div>
               <div className="flex gap-x-2">
                 {msg && <p className="text-sm italic text-green-400">{msg}</p>}
                 <button
@@ -1042,7 +1044,7 @@ function ModalObras({
                 </div>
                 {infoHolder.ordensDeServico != undefined &&
                   infoHolder.ordensDeServico?.length > 0 && (
-                    <div className="w-full flex flex-col px-10 border-t border-gray-200 mt-2">
+                    <div className="w-full flex flex-col px-2 lg:px-10 border-t border-gray-200 mt-2">
                       <h1 className="text-[#fead61] font-bold">
                         OSs GERADAS DO PROJETO
                       </h1>
@@ -1057,7 +1059,7 @@ function ModalObras({
                               {ordem.categoria}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center">
+                          <div className="hidden lg:flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               SERVIÇO PARA EXECUÇÃO
                             </p>
@@ -1065,7 +1067,7 @@ function ModalObras({
                               {ordem.servicoExecutado}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center">
+                          <div className="hidden lg:flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               REALIZAR COBRANÇA?
                             </p>
@@ -1073,7 +1075,7 @@ function ModalObras({
                               {ordem.realizarCobranca ? "SIM" : "NÃO"}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center">
+                          <div className="hidden lg:flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               VALOR DA COBRANÇA
                             </p>
@@ -1081,7 +1083,7 @@ function ModalObras({
                               R$ {ordem.valorCobranca}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center">
+                          <div className="hidden lg:flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               EMISSOR DA OS
                             </p>
@@ -1089,7 +1091,7 @@ function ModalObras({
                               {ordem.usuarioEmissor}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center">
+                          <div className="hidden lg:flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               DATA DE ABERTURA
                             </p>
@@ -1099,7 +1101,7 @@ function ModalObras({
                               ).toLocaleDateString()}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center">
+                          <div className="hidden lg:flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               GRAU DE URGÊNCIA
                             </p>

@@ -131,33 +131,35 @@ function ModalProjetos({
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
-            <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-[#15599a] pl-6  font-bold">
-                {infoHolder.qtde} - {infoHolder.nomeDoContrato}
-              </h1>
-              {infoHolder.codigoSVB && (
-                <p className="text-gray-600 text-sm font-bold">
-                  #{infoHolder.codigoSVB}
-                </p>
-              )}
-              {infoHolder.parecer.dataParecerDeAcesso != undefined &&
-                infoHolder.vistoria.status != "REALIZADA" && (
-                  <div
-                    className={`p-1 text-xs font-bold italic ${
-                      getParecerWarning(
-                        new Date(infoHolder.parecer.dataParecerDeAcesso),
-                        new Date()
-                      ).style
-                    }`}
-                  >
-                    {
-                      getParecerWarning(
-                        new Date(infoHolder.parecer.dataParecerDeAcesso),
-                        new Date()
-                      ).text
-                    }
-                  </div>
+            <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+              <div className="flex gap-2 items-center">
+                <h1 className="text-[#15599a] pl-6 text-center font-bold">
+                  {infoHolder.qtde} - {infoHolder.nomeDoContrato}
+                </h1>
+                {infoHolder.codigoSVB && (
+                  <p className="text-gray-600 text-sm font-bold">
+                    #{infoHolder.codigoSVB}
+                  </p>
                 )}
+                {infoHolder.parecer.dataParecerDeAcesso != undefined &&
+                  infoHolder.vistoria.status != "REALIZADA" && (
+                    <div
+                      className={`p-1 text-xs text-center font-bold italic ${
+                        getParecerWarning(
+                          new Date(infoHolder.parecer.dataParecerDeAcesso),
+                          new Date()
+                        ).style
+                      }`}
+                    >
+                      {
+                        getParecerWarning(
+                          new Date(infoHolder.parecer.dataParecerDeAcesso),
+                          new Date()
+                        ).text
+                      }
+                    </div>
+                  )}
+              </div>
               <div className="flex gap-x-2">
                 {msg && <p className="text-sm italic text-green-400">{msg}</p>}
                 <button

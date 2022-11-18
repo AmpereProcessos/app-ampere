@@ -127,8 +127,8 @@ function Administracao({ credentials, setCredentials }) {
   return (
     <div className="p-6 grow">
       <div className="flex flex-col gap-y-2 items-center border-b border-gray-200 p-1">
-        <div className="flex items-center gap-x-2">
-          <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
+        <div className="flex flex-wrap justify-center items-center gap-2">
+          <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway text-center">
             Controle de projetos - Administração
           </p>
           <p className="font-raleway font-bold text-[#fead61]">
@@ -200,7 +200,7 @@ function Administracao({ credentials, setCredentials }) {
               }
             />
           </div>
-          <div className="flex gap-x-2">
+          <div className="flex flex-wrap justify-center gap-2">
             <Select
               isMulti
               placeholder="EQUIP.RESP"

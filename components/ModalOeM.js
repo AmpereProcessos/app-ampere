@@ -141,15 +141,18 @@ function ModalOeM({
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
-            <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-[#15599a] pl-6  font-bold">
-                {infoHolder.qtde} - {infoHolder.nomeDoContrato}
-              </h1>
-              {infoHolder.codigoSVB && (
-                <p className="text-gray-600 text-sm font-bold">
-                  #{infoHolder.codigoSVB}
-                </p>
-              )}
+            <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+              <div className="flex items-center gap-2">
+                <h1 className="text-[#15599a] pl-6  font-bold">
+                  {infoHolder.qtde} - {infoHolder.nomeDoContrato}
+                </h1>
+                {infoHolder.codigoSVB && (
+                  <p className="text-gray-600 text-sm font-bold">
+                    #{infoHolder.codigoSVB}
+                  </p>
+                )}
+              </div>
+
               <div className="flex gap-x-2">
                 {msg && <p className="text-sm italic text-green-400">{msg}</p>}
                 <button
@@ -993,7 +996,7 @@ function ModalOeM({
                               {ordem.categoria}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center">
+                          <div className="hidden lg:flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               SERVIÇO PARA EXECUÇÃO
                             </p>
@@ -1001,7 +1004,7 @@ function ModalOeM({
                               {ordem.servicoExecutado}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center">
+                          <div className="hidden lg:flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               REALIZAR COBRANÇA?
                             </p>
@@ -1009,7 +1012,7 @@ function ModalOeM({
                               {ordem.realizarCobranca ? "SIM" : "NÃO"}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center">
+                          <div className="hidden lg:flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               VALOR DA COBRANÇA
                             </p>
@@ -1017,7 +1020,7 @@ function ModalOeM({
                               R$ {ordem.valorCobranca}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center">
+                          <div className="hiddn lg:flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               EMISSOR DA OS
                             </p>
@@ -1025,7 +1028,7 @@ function ModalOeM({
                               {ordem.usuarioEmissor}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center">
+                          <div className="hidden lg:flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               DATA DE ABERTURA
                             </p>
@@ -1035,7 +1038,7 @@ function ModalOeM({
                               ).toLocaleDateString()}
                             </p>
                           </div>
-                          <div className="flex flex-col items-center">
+                          <div className="hidden lg:flex flex-col items-center">
                             <p className="uppercase text-gray-500">
                               GRAU DE URGÊNCIA
                             </p>

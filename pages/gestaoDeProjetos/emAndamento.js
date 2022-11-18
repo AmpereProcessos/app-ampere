@@ -11,6 +11,7 @@ function InProgress({ setCredentials, credentials, data }) {
   });
   const [InProgressProjects, setProjects] = useState({
     comercialPhase: data.comercial,
+    awaitingPayment: data.aguardandoPagamento,
     supplyPhase: data.suprimentos,
     projectPhase: data.projetos,
     installPhase: data.obras,
@@ -29,12 +30,18 @@ function InProgress({ setCredentials, credentials, data }) {
   return (
     <>
       <div className="flex flex-col bg-gray-100 grow p-6 w-full">
-        <div className="grid lg:grid-cols-4 lg:grid-rows-1 grid-rows-4 grid-cols-1  w-full px-6 py-2 gap-4 mt-5">
+        <div className="grid lg:grid-cols-5 lg:grid-rows-1 grid-rows-5 grid-cols-1  w-full px-6 py-2 gap-4 mt-5">
           <ProjectList
             handleOpenModal={() => setModalIsOpen(true)}
             setModalProject={setModalProject}
             title={"Comercial"}
             projects={InProgressProjects.comercialPhase}
+          />
+          <ProjectList
+            handleOpenModal={() => setModalIsOpen(true)}
+            setModalProject={setModalProject}
+            title={"Aguardando pagamento"}
+            projects={InProgressProjects.awaitingPayment}
           />
           <ProjectList
             handleOpenModal={() => setModalIsOpen(true)}
@@ -88,6 +95,15 @@ export async function getServerSideProps(context) {
               undefined,
             ],
           },
+        },
+      },
+    ])
+    .toArray();
+  let aguardandoPagamento = await collection
+    .aggregate([
+      {
+        $match: {
+          "compra.statusLiberacao": "AGUARDANDO PAGAMENTO",
         },
       },
     ])
@@ -149,9 +165,12 @@ export async function getServerSideProps(context) {
     .toArray();
   comercial = JSON.parse(JSON.stringify(comercial));
   suprimentos = JSON.parse(JSON.stringify(suprimentos));
+  aguardandoPagamento = JSON.parse(JSON.stringify(aguardandoPagamento));
   projetos = JSON.parse(JSON.stringify(projetos));
   obras = JSON.parse(JSON.stringify(obras));
   return {
-    props: { data: { comercial, suprimentos, projetos, obras } }, // will be passed to the page component as props
+    props: {
+      data: { comercial, aguardandoPagamento, suprimentos, projetos, obras },
+    }, // will be passed to the page component as props
   };
 }

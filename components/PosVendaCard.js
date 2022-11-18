@@ -37,7 +37,7 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
             <p className="text-gray-700 font-bold">
               {infoHolder.nomeDoContrato}
             </p>
-            <div className="flex items-center flex-wrap grow justify-between px-6">
+            <div className="hidden lg:flex items-center flex-wrap grow justify-between px-6">
               <div>
                 <span className="text-xs">TELEFONE</span>
                 <p className="text-gray-600">
@@ -107,8 +107,8 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
           </div>
           <div className="mt-1">
             <h1 className="text-[#fead61] font-bold">JORNADA</h1>
-            <div className="flex">
-              <div className="flex items-center flex-col gap-y-2 px-2 border-r border-gray-200">
+            <div className="flex flex-col lg:flex-row">
+              <div className="flex items-center flex-col gap-y-2 px-2 border-b border-r-0 pb-2 lg:pb-0 lg:border-r lg:border-b-0 border-gray-200">
                 <p className="text-gray-700 text-sm">
                   {infoHolder.jornada.dataUltimoContato
                     ? new Date(
@@ -466,7 +466,7 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
         </div>
       ) : (
         <div
-          className={`flex justify-between w-1/2 ${
+          className={`flex flex-col lg:flex-row justify-between w-1/2 ${
             project.jornada?.dataUltimoContato
               ? getDateDiff(
                   new Date(),

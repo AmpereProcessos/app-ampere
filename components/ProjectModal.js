@@ -41,7 +41,9 @@ function ProjectModal({ closeModal, project, estagio }) {
                 <VscChromeClose onClick={closeModal} style={{ color: "red" }} />
               </button>
             </div>
-            {estagio == "Comercial" && <ProjectCardComercial info={project} />}
+            {(estagio == "Comercial" || estagio == "Aguardando pagamento") && (
+              <ProjectCardComercial info={project} />
+            )}
             {estagio == "Suprimentos" && (
               <ProjectCardSuprimentos info={project} />
             )}

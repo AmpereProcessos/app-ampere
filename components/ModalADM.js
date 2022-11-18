@@ -114,7 +114,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
-            <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
+            <div className="flex flex-wrap items-center gap-2 lg:gap-0 justify-center lg:justify-between px-2 text-lg pb-2 border-b border-gray-200">
               <h1 className="text-[#15599a] pl-6  font-bold">
                 {infoHolder.qtde} - {infoHolder.nomeDoContrato}
               </h1>
@@ -123,7 +123,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   #{infoHolder.codigoSVB}
                 </p>
               )}
-              <div className="flex gap-x-2">
+              <div className="flex justify-around lg:justify-around items-center gap-2">
                 {msg.text && (
                   <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
                 )}

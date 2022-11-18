@@ -102,15 +102,17 @@ function ModalComercial({
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
-            <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-[#15599a] pl-6  font-bold">
-                {infoHolder.qtde} - {infoHolder.nomeDoContrato}
-              </h1>
-              {infoHolder.codigoSVB && (
-                <p className="text-gray-600 text-sm font-bold">
-                  #{infoHolder.codigoSVB}
-                </p>
-              )}
+            <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+              <div className="flex gap-x-2">
+                <h1 className="text-[#15599a] pl-6  font-bold">
+                  {infoHolder.qtde} - {infoHolder.nomeDoContrato}
+                </h1>
+                {infoHolder.codigoSVB && (
+                  <p className="text-gray-600 text-sm font-bold">
+                    #{infoHolder.codigoSVB}
+                  </p>
+                )}
+              </div>
               <div className="flex gap-x-2">
                 {msg.text && (
                   <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
@@ -1730,7 +1732,7 @@ function ModalComercial({
                       });
                     }}
                   />
-                  <div className="w-full flex items-center justify-center gap-x-4">
+                  <div className="w-full flex flex-col mx-2 lg:mx-0 lg:flex-row items-center justify-center gap-4">
                     <div className="flex flex-col w-[450px] self-center mt-2 items-center">
                       <span className="uppercase font-bold font-raleway text-center text-sm">
                         INFORMAÇÕES DO KIT
@@ -2842,7 +2844,7 @@ function ModalComercial({
                     }}
                   />
                 </div>
-                <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                <div className="flex flex-col w-full lg:w-[450px] self-center mt-2 items-center">
                   <span className="uppercase font-bold font-raleway text-center text-sm">
                     OBSERVAÇÕES
                   </span>

@@ -546,10 +546,6 @@ export const cidadesAtendidas = [
 ];
 export const statusLiberacao = [
   {
-    label: "AGUARDAR CONTRATO",
-    value: "AGUARDAR CONTRATO",
-  },
-  {
     label: "AGUARDAR PARECER DE ACESSO",
     value: "AGUARDAR PARECER DE ACESSO",
   },
@@ -570,12 +566,8 @@ export const statusLiberacao = [
     label: "AGUARDANDO N.F",
   },
   {
-    value: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
-    label: "AGUARDANDO LIBERAÇÃO DE CRÉDITO",
-  },
-  {
     label: "RECISÃO DE CONTRATO",
-    value: "RECISÃO DE CONTRATO",
+    value: "RECISÃO DE CONTRATO", //tirar
   },
   {
     label: "NÃO DEFINIDO",

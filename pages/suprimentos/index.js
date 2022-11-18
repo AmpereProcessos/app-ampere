@@ -141,7 +141,7 @@ function Suprimentos({ credentials, setCredentials }) {
   return (
     <div className="p-6 grow">
       <div className="flex flex-col justify-between border-b border-gray-200 p-1">
-        <div className="flex justify-center items-center gap-x-2">
+        <div className="flex flex-wrap justify-center items-center gap-2">
           <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-raleway">
             Projetos no estágio de suprimentos
           </p>

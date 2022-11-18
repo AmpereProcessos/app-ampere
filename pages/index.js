@@ -167,7 +167,7 @@ function Home({ credentials, setCredentials }) {
           setStatsData({
             ...statsData,
             graphData: res.data,
-            maxGraphValue: 500,
+            maxGraphValue: Math.max(...res.data.map((o) => o.Total)),
           });
         });
     } else if (credenciais.visualizacao == "VENDEDOR") {

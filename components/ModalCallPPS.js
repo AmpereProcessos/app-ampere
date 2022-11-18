@@ -253,7 +253,15 @@ function ModalCallPPS({
                   OBSERVAÇÕES
                 </span>
                 <span className="grow text-center font-raleway text-sm bg-gray-100 p-4 italic">
-                  {info.observacoes}
+                  {info.observacoes ? (
+                    <ul className="text-xs font-bold text-center list-none">
+                      {info.observacoes.split("/").map((string, index) => (
+                        <li key={index}>{string}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    false
+                  )}
                 </span>
               </div>
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">

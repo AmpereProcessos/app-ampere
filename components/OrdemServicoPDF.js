@@ -11,7 +11,6 @@ function ServiceOrderPDF({
   valorCobranca,
   servicoExecutado,
 }) {
-  console.log(realizarCobranca, valorCobranca);
   return (
     <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
       <h1 className="text-center font-bold text-xl mb-6">ORDEM DE SERVIÇO</h1>
@@ -108,7 +107,7 @@ function ServiceOrderPDF({
               <p className="text-xs text-center col-span-2 font-semibold uppercase">
                 Módulos:
               </p>
-              <p className="text-xs text-center col-span-3 text-center border border-black border-t-0">
+              <p className="text-xs col-span-3 text-center border border-black border-t-0">
                 {info.sistema?.qtdeModulos ? info.sistema?.qtdeModulos : "-"} -{" "}
                 {info.sistema.potModulos ? info.sistema.potModulos : "-"}W
               </p>

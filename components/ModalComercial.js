@@ -7,6 +7,7 @@ import {
   credores,
   localEntregaOptions,
   fornecedores,
+  tiposDeServico,
 } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
@@ -96,7 +97,6 @@ function ModalComercial({
       });
     }
   }
-  console.log(infoHolder.contrato);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -394,10 +394,11 @@ function ModalComercial({
                       setInfo({ ...infoHolder, linkDrive: value });
                     }}
                   />
-                  <TextInput
+                  <SelectInput
                     label="TIPO DE SERVIÇO"
                     value={infoHolder.tipoDeServico}
                     editable={editor}
+                    options={tiposDeServico.map((tipo) => tipo)}
                     handleChange={(value) => {
                       setChanges({ ...changes, tipoDeServico: value });
                       setInfo({ ...infoHolder, tipoDeServico: value });

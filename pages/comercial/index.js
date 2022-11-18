@@ -18,7 +18,6 @@ const statusStyles = {
   },
 };
 function Comercial({ credentials, setCredentials }) {
-  console.log(credentials);
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -185,7 +184,6 @@ function Comercial({ credentials, setCredentials }) {
     const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
     return Number(diffInDays).toFixed(0);
   }
-  console.log(dateFilter);
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">

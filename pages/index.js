@@ -200,9 +200,6 @@ function Home({ credentials, setCredentials }) {
     );
     setClientsBirthday(arr);
   }
-  if (statsData.graphData.length > 0) {
-    console.log(Math.max(...statsData.graphData.map((o) => o.Total)));
-  }
   return (
     <div className="p-6 grow">
       <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">

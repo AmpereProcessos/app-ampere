@@ -317,6 +317,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
           handleUpdates={handleUpdates}
           editor={
             credentials != {} &&
+            !credentials.visualizacao &&
             [
               "Projetos",
               "Obras",

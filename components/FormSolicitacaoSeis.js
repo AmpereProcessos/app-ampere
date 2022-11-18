@@ -4,7 +4,15 @@ import SelectInput from "./SelectInput";
 import NumberInput from "./NumberInput";
 function FormSolicitacaoSeis({ avancar, setDados, dados, voltar }) {
   const [message, setMessage] = useState("");
+
   function validarCamposObrigatorios() {
+    if (
+      dados.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" &&
+      dados.possuiOeM != "SIM"
+    ) {
+      setMessage("Por favor, preencha informações sobre o plano de O&M.");
+      return false;
+    }
     if (dados.possuiOeM == "SIM" && dados.planoOeM == "NÃO SE APLICA") {
       setMessage("Por favor, selecione uma opção de plano de O&M.");
       return false;

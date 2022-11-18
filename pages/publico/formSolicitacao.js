@@ -4,7 +4,11 @@ import Logo from "../../utils/whitelogo.png";
 import TextInput from "../../components/TextInput";
 import SelectInput from "../../components/SelectInput";
 import NumberInput from "../../components/NumberInput";
-import { cidadesAtendidas, vendedores } from "../../utils/constants";
+import {
+  cidadesAtendidas,
+  tiposDeServico,
+  vendedores,
+} from "../../utils/constants";
 import axios from "axios";
 import { FiDelete } from "react-icons/fi";
 import FormSolicitacaoUm from "../../components/FormSolicitacaoUm";
@@ -48,6 +52,7 @@ function FormularioSolicitacao() {
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",
     telefoneVendedor: "",
+    tipoDeServico: "NÃO DEFINIDO",
     nomeDoContrato: "",
     telefone: "",
     cpf_cnpj: "",
@@ -157,11 +162,6 @@ function FormularioSolicitacao() {
         });
       });
   }
-  function criarSolicitacao() {
-    axios
-      .post("/api/solicitacoes/contrato", dados)
-      .then((res) => console.log(res.data));
-  }
   return (
     <div className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
       <div className="flex self-center items-center h-[100px] w-[100px]">
@@ -190,6 +190,15 @@ function FormularioSolicitacao() {
             handleChange={(value) =>
               setDados({ ...dados, telefoneVendedor: phoneMask(value) })
             }
+          />
+          <SelectInput
+            label={"TIPO DE SERVIÇO"}
+            editable={true}
+            value={dados.tipoDeServico}
+            handleChange={(value) =>
+              setDados({ ...dados, tipoDeServico: value })
+            }
+            options={tiposDeServico.map((tipo) => tipo)}
           />
         </div>
         {estagio == 0 && (

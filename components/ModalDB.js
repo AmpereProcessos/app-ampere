@@ -358,7 +358,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <div>
                     <input
-                      disabled={false}
+                      disabled={!editor}
                       checked={infoHolder.oem?.aplicavel ? true : false}
                       onChange={(e) => {
                         setChanges({

@@ -585,6 +585,10 @@ export const tiposDeServico = [
     value: "SISTEMA FOTOVOLTAICO",
   },
   {
+    label: "OPERAÇÃO E MANUTENÇÃO",
+    value: "OPERAÇÃO E MANUTENÇÃO",
+  },
+  {
     label: "TROCA DE PADRÃO",
     value: "TROCA DE PADRÃO",
   },
@@ -611,6 +615,10 @@ export const tiposDeServico = [
   {
     label: "SUBESTAÇÃO DE ENERGIA",
     value: "SUBESTAÇÃO DE ENERGIA",
+  },
+  {
+    label: "NÃO DEFINIDO",
+    value: "NÃO DEFINIDO",
   },
 ];
 export const localEntregaOptions = [

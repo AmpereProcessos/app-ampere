@@ -52,6 +52,18 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
       });
   }
   function validarCamposObrigatorios() {
+    if (dados.nomeVendedor == "NÃO DEFINIDO") {
+      setMessage("Por favor, preencha o vendedor.");
+      return false;
+    }
+    if (dados.telefoneVendedor.trim().length < 5) {
+      setMessage("Por favor, preencha o contato do vendedor.");
+      return false;
+    }
+    if (dados.tipoVenda == "NÃO DEFINIDO") {
+      setMessage("Por favor, preencha o tipo de serviço.");
+      return false;
+    }
     if (dados.nomeDoContrato.trim().length < 5) {
       setMessage("Por favor, preencha um nome ou razão social válido.");
       return false;

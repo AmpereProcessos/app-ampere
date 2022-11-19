@@ -97,6 +97,7 @@ function ModalComercial({
       });
     }
   }
+  console.log(infoHolder.estruturaPersonalizada);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -923,12 +924,23 @@ function ModalComercial({
                           "estruturaPersonalizada.aplicavel": e.target.checked
                             ? "SIM"
                             : "NÃO",
+                          "estruturaPersonalizada.status": e.target.checked
+                            ? project.estruturaPersonalizada.status != "PRONTA"
+                              ? "PENDÊNCIA"
+                              : project.estruturaPersonalizada.status
+                            : "N/A",
                         });
                         setInfo({
                           ...infoHolder,
                           estruturaPersonalizada: {
                             ...infoHolder.estruturaPersonalizada,
                             aplicavel: e.target.checked ? "SIM" : "NÃO",
+                            status: e.target.checked
+                              ? project.estruturaPersonalizada.status !=
+                                "PRONTA"
+                                ? "PENDÊNCIA"
+                                : project.estruturaPersonalizada.status
+                              : "N/A",
                           },
                         });
                       }}

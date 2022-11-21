@@ -39,6 +39,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "obra.statusDaObra": { $nin: ["CONCLUIDA", "OBRA CANCELADA"] },
+            "contrato.status": "ASSINADO",
           },
         },
         {
@@ -64,6 +65,28 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
+    let compras = await collection
+      .aggregate([
+        {
+          $match: {
+            "contrato.status": "ASSINADO",
+            "obra.statusDaObra": { $ne: "CONCLUIDA" },
+            "compra.dataLiberacao": { $ne: null },
+            "compra.dataPedido": null,
+          },
+        },
+        {
+          $project: {
+            "compra.dataLiberacao": 1,
+          },
+        },
+      ])
+      .toArray();
+    console.log(
+      compras.filter(
+        (x) => dayjs(new Date()).diff(x.compra.dataLiberacao, "day") > 5
+      )
+    );
     var arr = {
       padroes: {
         total: padroes.length,
@@ -86,6 +109,12 @@ export default async function handler(req, res) {
       },
       oss: {
         total: oss.length,
+      },
+      compras: {
+        total: compras.length,
+        parcial: compras.filter(
+          (x) => dayjs(new Date()).diff(x.compra.dataLiberacao, "day") > 5
+        ).length,
       },
     };
     res.json(arr);

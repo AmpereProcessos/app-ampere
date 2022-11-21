@@ -27,6 +27,16 @@ function ProjectCardComercial({ info }) {
           {info.compra.statusLiberacao ? info.compra.statusLiberacao : "-"}
         </p>
       </div>
+      <div className="grid grid-cols-2">
+        <p className="text-md text-center text-[#15599a] font-bold">
+          DATA MÁXIMA DE PAGAMENTO
+        </p>
+        <p className="text-md text-center text-gray-600">
+          {info.compra.dataMaxPagamento
+            ? new Date(info.compra.dataMaxPagamento).toLocaleDateString("pt-br")
+            : "-"}
+        </p>
+      </div>
     </div>
   );
 }

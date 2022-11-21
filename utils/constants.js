@@ -11,6 +11,7 @@ export const routes = [
   "Financeiro",
   "ADM",
   "RH",
+  "Almoxarifado",
 ];
 export const vendedores = [
   {

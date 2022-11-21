@@ -245,8 +245,8 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
     });
   }
   var insertObj = {
-    nomeDoContrato: dados.nomeDoContrato,
-    nomeDoProjeto: dados.nomeDoProjeto ? dados.nomeDoProjeto : "",
+    nomeDoContrato: dados.nomeDoContrato.toUpperCase(),
+    nomeDoProjeto: dados.nomeDoProjeto ? dados.nomeDoProjeto.toUpperCase() : "",
     cpf_cnpj: dados.cpf_cnpj,
     telefone: dados.telefone,
     cidade: dados.cidadeInstalacao,

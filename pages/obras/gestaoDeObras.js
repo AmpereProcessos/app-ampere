@@ -38,7 +38,7 @@ function GestaoDeObras({ credentials, setCredentials }) {
         <h1 className="text-center text-[#15599a] text-xl font-bold uppercase font-ralewayBlack">
           PENDÊNCIAS
         </h1>
-        <div className="grid grid-cols-5 gap-x-3">
+        <div className="grid grid-cols-6 gap-x-3">
           <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">PADRÕES</h1>
@@ -78,6 +78,20 @@ function GestaoDeObras({ credentials, setCredentials }) {
               ENTREGUES:{" "}
               <strong className="text-red-500">
                 {stats.obras && stats.obras.parcial}
+              </strong>
+            </p>
+          </div>
+          <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex justify-between">
+              <h1 className="uppercase text-gray-600">COMPRAS A FAZER</h1>
+            </div>
+            <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
+              {stats.compras && stats.compras.total}
+            </p>
+            <p className="text-center text-gray-600">
+              ENTREGUES:{" "}
+              <strong className="text-red-500">
+                {stats.compras && stats.compras.parcial}
               </strong>
             </p>
           </div>

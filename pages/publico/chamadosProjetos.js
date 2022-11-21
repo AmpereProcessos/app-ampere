@@ -64,7 +64,9 @@ function ChamadosPPS() {
             className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
           >
             {projetistas.map((projetista) => (
-              <option value={projetista.nome}>{projetista.label}</option>
+              <option key={projetista.nome} value={projetista.nome}>
+                {projetista.label}
+              </option>
             ))}
             <option value={"A DEFINIR"}>A DEFINIR</option>
           </select>

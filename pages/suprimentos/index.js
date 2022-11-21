@@ -278,7 +278,7 @@ function Suprimentos({ credentials, setCredentials }) {
                     dayjs(project.compra.dataMaxPagamento).diff(
                       new Date(),
                       "days"
-                    ) < 5
+                    ) < 2
                       ? "text-red-500"
                       : "text-gray-600"
                   } italic`}

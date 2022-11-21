@@ -1672,6 +1672,318 @@ function ModalSolicitacaoVendas({
                 </>
               )}
             </div>
+            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                DOCUMENTOS NECESSÁRIOS
+              </span>
+              <div className="flex gap-2 justify-around flex-wrap mt-2">
+                <div className="w-fit">
+                  <input
+                    checked={dados.contaDeEnergia ? true : false}
+                    disabled={true}
+                    onChange={(e) =>
+                      setDados({
+                        ...dados,
+                        contaDeEnergia: e.target.checked,
+                      })
+                    }
+                    type="checkbox"
+                    name="contaDeEnergia"
+                    id="contaDeEnergia"
+                  />
+                  <label className="ml-2" htmlFor="contaDeEnergia">
+                    CONTA DE ENERGIA
+                  </label>
+                </div>
+                <div className="w-fit">
+                  <input
+                    checked={dados.propostaComercial ? true : false}
+                    disabled={true}
+                    onChange={(e) =>
+                      setDados({
+                        ...dados,
+                        propostaComercial: e.target.checked,
+                      })
+                    }
+                    type="checkbox"
+                    name="propostaComercial"
+                    id="propostaComercial"
+                  />
+                  <label className="ml-2" htmlFor="propostaComercial">
+                    PROPOSTA COMERCIAL ATUALIZADA
+                  </label>
+                </div>
+                <div className="w-fit">
+                  <input
+                    checked={dados.visitaTecnicaFeita ? true : false}
+                    disabled={true}
+                    onChange={(e) =>
+                      setDados({
+                        ...dados,
+                        visitaTecnicaFeita: e.target.checked,
+                      })
+                    }
+                    type="checkbox"
+                    name="visitaTecnicaFeita"
+                    id="visitaTecnicaFeita"
+                  />
+                  <label className="ml-2" htmlFor="visitaTecnicaFeita">
+                    VISITA TÉCNICA
+                  </label>
+                </div>
+                {dados.tipoDaInstalacao == "RURAL" && (
+                  <>
+                    <div className="w-fit">
+                      <input
+                        checked={dados.car ? true : false}
+                        disabled={true}
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            car: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="car"
+                        id="car"
+                      />
+                      <label className="ml-2" htmlFor="car">
+                        CAR
+                      </label>
+                    </div>
+                    <div className="w-fit">
+                      <input
+                        checked={dados.matricula ? true : false}
+                        disabled={true}
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            matricula: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="matricula"
+                        id="matricula"
+                      />
+                      <label className="ml-2" htmlFor="matricula">
+                        MATRÍCULA
+                      </label>
+                    </div>
+                    <div className="w-fit">
+                      <input
+                        checked={
+                          dados.comprovanteEnderecoCorrespondente ? true : false
+                        }
+                        disabled={true}
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            comprovanteEnderecoCorrespondente: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="comprovanteEnderecoCorrespondente"
+                        id="comprovanteEnderecoCorrespondente"
+                      />
+                      <label
+                        className="ml-2"
+                        htmlFor="comprovanteEnderecoCorrespondente"
+                      >
+                        COMPROVANTE ENDEREÇO CORRESPONDENTE
+                      </label>
+                    </div>
+                    <div className="w-fit">
+                      <input
+                        checked={dados.ramoDeAtividade ? true : false}
+                        disabled={true}
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            ramoDeAtividade: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="ramoDeAtividade"
+                        id="ramoDeAtividade"
+                      />
+                      <label className="ml-2" htmlFor="ramoDeAtividade">
+                        RAMO DE ATIVIDADE
+                      </label>
+                    </div>
+                  </>
+                )}
+                {dados.tipoDaInstalacao == "URBANO" && (
+                  <>
+                    <div className="w-fit">
+                      <input
+                        checked={dados.iptu ? true : false}
+                        disabled={true}
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            iptu: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="iptu"
+                        id="iptu"
+                      />
+                      <label className="ml-2" htmlFor="iptu">
+                        IPTU
+                      </label>
+                    </div>
+                  </>
+                )}
+                {dados.tipoDoTitular == "PESSOA FISICA" && (
+                  <>
+                    <div className="w-fit">
+                      <input
+                        checked={dados.documentoComFoto ? true : false}
+                        disabled={true}
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            documentoComFoto: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="documentoComFoto"
+                        id="documentoComFoto"
+                      />
+                      <label className="ml-2" htmlFor="documentoComFoto">
+                        DOCUMENTO COM FOTO
+                      </label>
+                    </div>
+                  </>
+                )}
+                {dados.tipoDoTitular == "PESSOA JURIDICA" && (
+                  <>
+                    <div className="w-fit">
+                      <input
+                        checked={dados.contratoSocial ? true : false}
+                        disabled={true}
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            contratoSocial: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="contratoSocial"
+                        id="contratoSocial"
+                      />
+                      <label className="ml-2" htmlFor="contratoSocial">
+                        CONTRATO SOCIAL
+                      </label>
+                    </div>
+                    <div className="w-fit">
+                      <input
+                        checked={dados.cartaoCnpj ? true : false}
+                        disabled={true}
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            cartaoCnpj: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="cartaoCnpj"
+                        id="cartaoCnpj"
+                      />
+                      <label className="ml-2" htmlFor="cartaoCnpj">
+                        CARTÃO CNPJ
+                      </label>
+                    </div>
+                    <div className="w-fit">
+                      <input
+                        checked={
+                          dados.comprovanteEnderecoRepresentante ? true : false
+                        }
+                        disabled={true}
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            comprovanteEnderecoRepresentante: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="comprovanteEnderecoRepresentante"
+                        id="comprovanteEnderecoRepresentante"
+                      />
+                      <label
+                        className="ml-2"
+                        htmlFor="comprovanteEnderecoRepresentante"
+                      >
+                        COMPROVANTE DE ENDEREÇO - REPRESENTANTE LEGAL
+                      </label>
+                    </div>
+                    <div className="w-fit">
+                      <input
+                        checked={dados.documentoComFotoSocios ? true : false}
+                        disabled={true}
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            documentoComFotoSocios: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="documentoComFotoSocios"
+                        id="documentoComFotoSocios"
+                      />
+                      <label className="ml-2" htmlFor="documentoComFotoSocios">
+                        DOCUMENTO COM FOTOS DE TODOS OS SÓCIOS
+                      </label>
+                    </div>
+                  </>
+                )}
+                {(dados.aumentoDeCarga == "SIM" ||
+                  dados.tipoDaLigacao == "NOVA") && (
+                  <>
+                    <div className="w-fit">
+                      <input
+                        checked={dados.relacaoDeCargas ? true : false}
+                        disabled={true}
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            relacaoDeCargas: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="relacaoDeCargas"
+                        id="relacaoDeCargas"
+                      />
+                      <label className="ml-2" htmlFor="relacaoDeCargas">
+                        RELAÇÃO DE CARGAS
+                      </label>
+                    </div>
+                  </>
+                )}
+                {dados.possuiDistribuicao == "SIM" && (
+                  <>
+                    <div className="w-fit">
+                      <input
+                        checked={dados.faturasRecebedoras ? true : false}
+                        disabled={true}
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            faturasRecebedoras: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="faturasRecebedoras"
+                        id="faturasRecebedoras"
+                      />
+                      <label className="ml-2" htmlFor="faturasRecebedoras">
+                        FATURAS DAS RECEBEDORAS
+                      </label>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

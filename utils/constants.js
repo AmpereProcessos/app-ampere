@@ -746,6 +746,14 @@ export const fornecedores = [
     value: "LOJA ELÉTRICA",
   },
   {
+    label: "SIRIUS",
+    value: "SIRIUS",
+  },
+  {
+    label: "MINHA CASA SOLAR",
+    value: "MINHA CASA SOLAR",
+  },
+  {
     label: "NÃO DEFINIDO",
     value: "NÃO DEFINIDO",
   },

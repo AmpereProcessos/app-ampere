@@ -544,6 +544,7 @@ export const cidadesAtendidas = [
   "NOVA PONTE", // ok to uppercase
   "QUIRINÓPOLIS", // ok to uppercase
   "TUPACIGUARA", // ok to uppercase
+  "PARANAIGUARA",
 ];
 export const statusLiberacao = [
   {

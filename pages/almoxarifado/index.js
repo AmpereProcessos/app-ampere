@@ -39,7 +39,7 @@ function GestaoAlmoxarifado({ credentials, setCredentials }) {
           Áreas de controle
         </h1>
         <div className="flex gap-4 mt-5 flex-wrap w-full">
-          <Link href="/obras/controlePadroes">
+          <Link href="/almoxarifado/formularios">
             <div className="flex flex-col justify-center cursor-pointer grow min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
                 Formulários de liberação

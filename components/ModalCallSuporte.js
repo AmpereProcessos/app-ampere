@@ -256,7 +256,7 @@ function ModalCallSuporte({
                 <select
                   value={cidade}
                   onChange={(e) => setCidade(e.target.value)}
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
+                  className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
                 >
                   {info.cidade && (
                     <option value={info.cidade}>{info.cidade}</option>
@@ -275,7 +275,7 @@ function ModalCallSuporte({
                 <select
                   value={responsavel}
                   onChange={(e) => setResponsavel(e.target.value)}
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0 text-center"
+                  className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
                 >
                   <option value={"A DEFINIR"}>A DEFINIR</option>
                   <option value={"GABRIEL MARTINS"}>GABRIEL MARTINS</option>
@@ -299,7 +299,7 @@ function ModalCallSuporte({
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Digite aqui as anotações do chamado"
-                  className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
+                  className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
                 />
               </div>
               {info.statusChamado == "RESOLVIDO" ? (

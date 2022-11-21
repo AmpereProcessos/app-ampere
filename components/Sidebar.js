@@ -236,7 +236,7 @@ function Sidebar({ credentials }) {
             )}
             {credentials.accessibleRoutes != undefined &&
             credentials.accessibleRoutes.includes("Almoxarifado") ? (
-              <Link href={"/adm/cobrancas"}>
+              <Link href={"/almoxarifado"}>
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                   <FaBox style={{ color: "#15599a", fontSize: "20px" }} />
                   <p className="pl-3 text-xs text-gray-600">Almoxarifado</p>

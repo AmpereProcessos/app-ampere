@@ -9,7 +9,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "projeto.aumentoDeCarga": "SIM",
-            "projeto.acStatus": { $in: ["PENDÊNCIA", "SOLICITADO COM G.D"] },
+            "projeto.acStatus": { $ne: "REALIZADO" },
           },
         },
         {
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "estruturaPersonalizada.aplicavel": "SIM",
-            "estruturaPersonalizada.status": "PENDÊNCIA",
+            "estruturaPersonalizada.status": { $ne: "PRONTA" },
           },
         },
         {

@@ -53,8 +53,7 @@ function ControlePadroes({ setCredentials, credentials }) {
       if (!newArr) newArr = projects;
       newArr = projects.filter(
         (call) =>
-          (call.projeto.acStatus == "PENDÊNCIA" ||
-            call.projeto.acStatus == "SOLICITADO COM G.D") &&
+          call.projeto.acStatus != "REALIZADO" &&
           call.compra.statusLiberacao == "PAGO"
       );
     }

@@ -53,7 +53,7 @@ function ControleEstruturas({ setCredentials, credentials }) {
       if (!newArr) newArr = projects;
       newArr = projects.filter(
         (call) =>
-          call.estruturaPersonalizada.status == "PENDÊNCIA" &&
+          call.estruturaPersonalizada.status != "PRONTA" &&
           call.compra.statusLiberacao == "PAGO"
       );
     }

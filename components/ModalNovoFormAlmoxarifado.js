@@ -79,7 +79,10 @@ function NovoFormulario({ setModalIsOpen }) {
       });
     } else {
       axios
-        .post("/api/almoxarifado/formularios", callInfo)
+        .post("/api/almoxarifado/formularios", {
+          ...callInfo,
+          tipo: "RETIRADA",
+        })
         .then((res) =>
           setMessage({ text: "Formulário criado !", color: "text-green-500" })
         );
@@ -89,6 +92,7 @@ function NovoFormulario({ setModalIsOpen }) {
     getClients();
     getMaterials();
   }, []);
+  console.log(callInfo);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -253,7 +257,10 @@ function NovoFormulario({ setModalIsOpen }) {
                 </div>
               </div>
 
-              <button className="bg-blue-300 align-bottom mt-1 hover:text-white font-bold hover:bg-[#15599a] p-2">
+              <button
+                onClick={addFormulario}
+                className="bg-blue-300 align-bottom mt-1 hover:text-white font-bold hover:bg-[#15599a] p-2"
+              >
                 ABRIR FORMULÁRIO
               </button>
 

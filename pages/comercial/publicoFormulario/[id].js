@@ -223,6 +223,7 @@ function Formulario({ info }) {
               />
               <TextInput
                 label={"EMAIL"}
+                normalCase={true}
                 value={dados.email}
                 handleChange={(value) => setDados({ ...dados, email: value })}
               />

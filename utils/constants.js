@@ -128,51 +128,51 @@ export const vendedores = [
   },
   {
     nome: "LUCIANO LOPES",
-    cod: 58,
-  },
-  {
-    nome: "RODRIGO DE MORAIS",
-    cod: 59,
-  },
-  {
-    nome: "EURIPEDES JUNIOR",
-    cod: 61,
-  },
-  {
-    nome: "FRANCO MUSTAFE",
-    cod: 60,
-  },
-  {
-    nome: "ALLISSON OSCAR",
-    cod: 61,
-  },
-  {
-    nome: "WILLIAM MENEZES",
     cod: 62,
   },
   {
-    nome: "MARIANA DE SOUZA",
+    nome: "RODRIGO DE MORAIS",
     cod: 63,
   },
   {
-    nome: "CÉLIO JUNIOR",
+    nome: "EURIPEDES JUNIOR",
+    cod: 59,
+  },
+  {
+    nome: "FRANCO MUSTAFE",
     cod: 64,
   },
   {
-    nome: "THIAGO DE PAULA",
+    nome: "ALLISSON OSCAR",
     cod: 65,
   },
   {
-    nome: "GLEITON RESENDE",
+    nome: "WILLIAM MENEZES",
     cod: 66,
   },
   {
-    nome: "ANA PAULA PEREIRA",
+    nome: "MARIANA DE SOUZA",
     cod: 67,
   },
   {
-    nome: "GRASIELE DA SILVA",
+    nome: "CÉLIO JUNIOR",
     cod: 68,
+  },
+  {
+    nome: "THIAGO DE PAULA",
+    cod: 69,
+  },
+  {
+    nome: "GLEITON RESENDE",
+    cod: 70,
+  },
+  {
+    nome: "ANA PAULA PEREIRA",
+    cod: 71,
+  },
+  {
+    nome: "GRASIELE DA SILVA",
+    cod: 72,
   },
   {
     nome: "NÃO DEFINIDO",
@@ -211,11 +211,17 @@ export const projetistas = [
     cod: 52,
   },
   {
+    nome: "TULIO HENRIQUE SILVA MEDEIROS",
+    label: "TULIO",
+    cod: 52,
+  },
+  {
     nome: "NÃO DEFINIDO",
     label: "NÃO DEFINIDO",
     cod: 0,
   },
 ];
+export const listaProjetista = [];
 export const acessAuth = {
   diretorExecutivo: {
     label: "Diretor(a) Executivo",

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import Logo from "../../utils/whitelogo.png";
-import { projetosSolicitations } from "../../utils/constants";
+import { projetistas, projetosSolicitations } from "../../utils/constants";
 import axios from "axios";
 import Link from "next/link";
 function ChamadosPPS() {
@@ -63,22 +63,10 @@ function ChamadosPPS() {
             onChange={(e) => setResponsavel(e.target.value)}
             className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
           >
+            {projetistas.map((projetista) => (
+              <option value={projetista.nome}>{projetista.label}</option>
+            ))}
             <option value={"A DEFINIR"}>A DEFINIR</option>
-            <option value={"ALINE APARECIDA RODRIGUES CARVALHO"}>
-              ALINE APARECIDA
-            </option>
-            <option value={"ANDRIELLY GARCIA DOS SANTOS MARQUES"}>
-              ANDRIELLY GARCIA
-            </option>
-            <option value={"GLENDA ELIAS NASCIMENTO SANTOS"}>
-              GLENDA ELIAS
-            </option>
-            <option value={"POLLIANA CRISTINA DE REZENDE"}>
-              POLLIANA CRISTINA
-            </option>
-            <option value={"TULIO HENRIQUE SILVA MEDEIROS"}>
-              TULIO HENRIQUE
-            </option>
           </select>
         </div>
         <div
@@ -117,7 +105,7 @@ function ChamadosPPS() {
             value={observacoes}
             onChange={(e) => setObservacoes(e.target.value)}
             placeholder={"Observações sobre a solicitação"}
-            className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
+            className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
           />
         </div>
         {callCreatedMessage && (

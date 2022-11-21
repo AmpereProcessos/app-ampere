@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ModalNovoFormAlmoxarifado from "../../components/ModalNovoFormAlmoxarifado";
 function Formularios() {
-  const [createModalIsOpen, setCreateModalIsOpen] = useState(true);
+  const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
   return (
     <div className="p-6 grow">
       <div className="border-b border-gray-200 pb-2">

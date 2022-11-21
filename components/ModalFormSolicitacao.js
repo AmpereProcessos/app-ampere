@@ -753,6 +753,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"EMAIL"}
+                      normalCase={true}
                       editable={true}
                       value={dados.email}
                       handleChange={(value) =>

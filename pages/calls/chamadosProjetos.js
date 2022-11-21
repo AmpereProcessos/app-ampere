@@ -3,8 +3,9 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineReload, AiOutlineSearch } from "react-icons/ai";
 import ModalCallProjetos from "../../components/ModalCallProjetos";
 import Select from "react-select";
-import { projetosSolicitations } from "../../utils/constants";
+import { projetistas, projetosSolicitations } from "../../utils/constants";
 import Link from "next/link";
+import { useRouter } from "next/router";
 const statusStyles = {
   "AGUARDANDO CONCESSIONÁRIA": {
     textColor: "text-yellow-500",
@@ -20,6 +21,7 @@ const statusStyles = {
   },
 };
 function ChamadosProjetos({ credentials, setCredentials }) {
+  const router = useRouter();
   const [chamadosAbertos, setChamadosAbertos] = useState([]);
   const [abertosFiltrados, setAbertosFiltrados] = useState([]);
   const [chamadosFechados, setChamadosFechados] = useState([]);
@@ -172,28 +174,9 @@ function ChamadosProjetos({ credentials, setCredentials }) {
                     responsavelFilter: e.map((x) => x.value),
                   })
                 }
-                options={[
-                  {
-                    value: "ALINE APARECIDA RODRIGUES CARVALHO",
-                    label: "ALINE APARECIDA",
-                  },
-                  {
-                    value: "ANDRIELLY GARCIA DOS SANTOS MARQUES",
-                    label: "ANDRIELLY GARCIA",
-                  },
-                  {
-                    value: "GLENDA ELIAS NASCIMENTO SANTOS",
-                    label: "GLENDA ELIAS",
-                  },
-                  {
-                    value: "POLLIANA CRISTINA DE REZENDE",
-                    label: "POLLIANA CRISTINA",
-                  },
-                  {
-                    value: "TULIO HENRIQUE SILVA MEDEIROS",
-                    label: "TULIO HENRIQUE",
-                  },
-                ]}
+                options={projetistas.map((projetista) => {
+                  return { label: projetista.label, value: projetista.nome };
+                })}
               />
               <Select
                 isMulti

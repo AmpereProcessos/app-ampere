@@ -124,7 +124,7 @@ function FormSolicitacaoOito({ dados, setDados, avancar, voltar }) {
               value: "SIM",
             },
           ]}
-          valor={idemContrato}
+          value={idemContrato}
           handleChange={(value) => {
             if (value == "SIM") {
               getIdemContrato();
@@ -339,7 +339,7 @@ function FormSolicitacaoOito({ dados, setDados, avancar, voltar }) {
                   value: "SICOOB ARACOOP",
                 },
               ]}
-              valor={dados.credor}
+              value={dados.credor}
               handleChange={(value) => setDados({ ...dados, credor: value })}
             />
             <TextInput

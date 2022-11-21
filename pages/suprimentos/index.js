@@ -5,6 +5,7 @@ import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { statusLiberacao } from "../../utils/constants";
 import ModalSuprimentos from "../../components/ModalSuprimentos";
+import dayjs from "dayjs";
 function Suprimentos({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
@@ -268,6 +269,35 @@ function Suprimentos({ credentials, setCredentials }) {
                 </p>
               </div>
             </div>
+            {project.compra.dataPagamento == undefined &&
+            project.compra.dataMaxPagamento != null &&
+            dayjs(new Date(project.compra.dataMaxPagamento)).isValid() ? (
+              dayjs(project.compra.dataMaxPagamento).isAfter(dayjs()) ? (
+                <p
+                  className={`text-center text-sm ${
+                    dayjs(project.compra.dataMaxPagamento).diff(
+                      new Date(),
+                      "days"
+                    ) < 5
+                      ? "text-red-500"
+                      : "text-gray-600"
+                  } italic`}
+                >
+                  DATA PAGAMENTO LIMITE EM:{" "}
+                  {dayjs(project.compra.dataMaxPagamento).diff(
+                    new Date(),
+                    "day"
+                  )}{" "}
+                  DIA(S)
+                </p>
+              ) : (
+                <p className="text-center text-sm text-red-500 italic font-bold">
+                  PAGAMENTO ATRASADO
+                </p>
+              )
+            ) : (
+              false
+            )}
           </div>
         ))}
       </div>

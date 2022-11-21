@@ -57,7 +57,7 @@ function FormSolicitacaoSete({ avancar, setDados, dados, voltar }) {
               value: "SIM",
             },
           ]}
-          valor={dados.aumentoDeCarga}
+          value={dados.aumentoDeCarga}
           handleChange={(value) =>
             setDados({ ...dados, aumentoDeCarga: value })
           }

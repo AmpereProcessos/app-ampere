@@ -179,7 +179,8 @@ function Sidebar({ credentials }) {
                   </Link>
                 )
               : false}
-            {credentials.accessibleRoutes != undefined ? (
+            {credentials.accessibleRoutes != undefined &&
+            credentials.visualizacao == undefined ? (
               credentials?.accessibleRoutes.includes("Pós-Venda") ||
               credentials?.accessibleRoutes.includes("Marketing") ? (
                 <Link href="/posvenda">

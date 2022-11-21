@@ -670,6 +670,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <SelectInput
                       label={"SEGMENTO"}
                       editable={true}
+                      value={dados.segmento}
                       options={[
                         {
                           value: "RESIDENCIAL",
@@ -1693,7 +1694,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                           value: "SIM",
                         },
                       ]}
-                      valor={dados.aumentoDeCarga}
+                      value={dados.aumentoDeCarga}
                       handleChange={(value) =>
                         setDados({ ...dados, aumentoDeCarga: value })
                       }
@@ -2018,6 +2019,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <SelectInput
                           label={"CREDOR"}
+                          value={dados.credor}
                           editable={true}
                           options={[
                             {
@@ -2065,7 +2067,6 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                               value: "SICOOB ARACOOP",
                             },
                           ]}
-                          valor={dados.credor}
                           handleChange={(value) =>
                             setDados({ ...dados, credor: value })
                           }

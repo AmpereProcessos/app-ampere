@@ -174,6 +174,7 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
           />
           <SelectInput
             label={"SEGMENTO"}
+            value={dados.segmento}
             editable={true}
             options={[
               {
@@ -1048,7 +1049,7 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
                 value: "SIM",
               },
             ]}
-            valor={dados.aumentoDeCarga}
+            value={dados.aumentoDeCarga}
             handleChange={(value) =>
               setDados({ ...dados, aumentoDeCarga: value })
             }
@@ -1416,7 +1417,7 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
                     value: "SICOOB ARACOOP",
                   },
                 ]}
-                valor={dados.credor}
+                value={dados.credor}
                 handleChange={(value) => setDados({ ...dados, credor: value })}
               />
               <TextInput

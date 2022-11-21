@@ -12,6 +12,7 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
+import dayjs from "dayjs";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -109,8 +110,9 @@ function ModalSuprimentos({
       return { liberar: true, message: "OK" };
     }
   }
-  console.log(changes);
-  console.log(infoHolder);
+  console.log(infoHolder.compra.dataMaxPagamento);
+  console.log(isNaN(new Date(infoHolder.compra.dataMaxPagamento)));
+  // console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -698,6 +700,34 @@ function ModalSuprimentos({
                         compra: {
                           ...infoHolder.compra,
                           dataLiberacao: new Date(value).toISOString(),
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
+                    label={"Data máx p/ pagamento"}
+                    editable={editor}
+                    value={
+                      infoHolder.compra.dataMaxPagamento
+                        ? new Date(infoHolder.compra.dataMaxPagamento)
+                            .toISOString()
+                            .slice(0, 10)
+                        : null
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "compra.dataMaxPagamento": dayjs(value).isValid()
+                          ? new Date(value).toISOString()
+                          : null,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          dataMaxPagamento: dayjs(value).isValid()
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}

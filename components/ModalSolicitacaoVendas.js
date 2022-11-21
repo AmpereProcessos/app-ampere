@@ -225,6 +225,7 @@ function ModalSolicitacaoVendas({
                 />
                 <SelectInput
                   label={"SEGMENTO"}
+                  value={dados.segmento}
                   editable={editable}
                   options={[
                     {
@@ -1129,7 +1130,7 @@ function ModalSolicitacaoVendas({
                       value: "SIM",
                     },
                   ]}
-                  valor={dados.aumentoDeCarga}
+                  value={dados.aumentoDeCarga}
                   handleChange={(value) =>
                     setDados({ ...dados, aumentoDeCarga: value })
                   }
@@ -1501,7 +1502,7 @@ function ModalSolicitacaoVendas({
                           value: "SICOOB ARACOOP",
                         },
                       ]}
-                      valor={dados.credor}
+                      value={dados.credor}
                       handleChange={(value) =>
                         setDados({ ...dados, credor: value })
                       }

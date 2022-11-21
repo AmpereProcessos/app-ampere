@@ -247,6 +247,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
         />
         <SelectInput
           label={"SEGMENTO"}
+          value={dados.segmento}
           editable={true}
           options={[
             {

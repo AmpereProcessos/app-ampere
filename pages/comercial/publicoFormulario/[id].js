@@ -141,6 +141,7 @@ function Formulario({ info }) {
               />
               <SelectInput
                 label={"SEGMENTO"}
+                value={dados.segmento}
                 options={[
                   {
                     value: "RESIDENCIAL",
@@ -165,6 +166,7 @@ function Formulario({ info }) {
               />
               <SelectInput
                 label={"FORMA DE ASSINATURA"}
+                value={dados.formaAssinatura}
                 options={[
                   {
                     value: "DIGITAL",
@@ -987,7 +989,7 @@ function Formulario({ info }) {
                     value: "SIM",
                   },
                 ]}
-                valor={dados.aumentoDeCarga}
+                value={dados.aumentoDeCarga}
                 handleChange={(value) =>
                   setDados({ ...dados, aumentoDeCarga: value })
                 }
@@ -1337,7 +1339,7 @@ function Formulario({ info }) {
                         value: "SICOOB ARACOOP",
                       },
                     ]}
-                    valor={dados.credor}
+                    value={dados.credor}
                     handleChange={(value) =>
                       setDados({ ...dados, credor: value })
                     }

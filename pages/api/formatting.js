@@ -93,6 +93,7 @@ export default async function handler(req, res) {
         kitInfo: project.kitsolar,
         fornecedor: project.fornecedor,
         dataPedido: fixDate(project.datadopedido), // formatar como data
+        dataMaxPagamento: project.datamaxpagamento,
         dataPagamento: fixDate(project.datapagamento),
         previsaoEntrega: fixDate(project.previsaoentrega), // formatar como data
         dataEntrega: projeto.dataentrega,

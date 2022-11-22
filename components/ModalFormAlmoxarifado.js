@@ -11,7 +11,7 @@ const MODAL_STYLES = {
   left: "50%",
   transform: "translate(-50%,-50%)",
   backgroundColor: "#fff",
-  minWidth: "40%",
+  minWidth: "85%",
   height: "90%",
   borderRadius: "10px",
   padding: "10px",

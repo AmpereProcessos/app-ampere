@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
-    let arr = await collection.find({}).skip(1000).toArray();
+    let arr = await collection.find({}).sort({ qtde: 1 }).skip(1000).toArray();
     let newArr = arr.map((obj) => {
       return {
         qtde: obj.qtde ? obj.qtde : "-",

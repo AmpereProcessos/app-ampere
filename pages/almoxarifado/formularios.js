@@ -2,10 +2,13 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import ModalNovoFormAlmoxarifado from "../../components/ModalNovoFormAlmoxarifado";
+import ModalFormAlmoxarifado from "../../components/ModalFormAlmoxarifado";
 function Formularios({ credentials, setCredentials }) {
   const router = useRouter();
   const [forms, setForms] = useState([]);
   const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalForm, setModalForm] = useState({});
   function getForms() {
     axios
       .get("/api/almoxarifado/formularios")
@@ -32,7 +35,6 @@ function Formularios({ credentials, setCredentials }) {
       }
     }
   }, []);
-  console.log(forms);
   return (
     <div className="p-6 grow">
       <div className="border-b border-gray-200 pb-2">
@@ -50,6 +52,10 @@ function Formularios({ credentials, setCredentials }) {
         {forms.map((form) => (
           <div
             key={form._id}
+            onClick={() => {
+              setModalForm(form);
+              setModalIsOpen(true);
+            }}
             className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
           >
             <div className="flex items-center justify-between">
@@ -67,6 +73,12 @@ function Formularios({ credentials, setCredentials }) {
           </div>
         ))}
       </div>
+      {modalIsOpen && (
+        <ModalFormAlmoxarifado
+          info={modalForm}
+          setModalIsOpen={setModalIsOpen}
+        />
+      )}
       {createModalIsOpen && (
         <ModalNovoFormAlmoxarifado setModalIsOpen={setCreateModalIsOpen} />
       )}

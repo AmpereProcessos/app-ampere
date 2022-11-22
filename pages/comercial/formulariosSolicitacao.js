@@ -75,7 +75,6 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
       return "bg-[#fff]";
     }
   }
-  console.log(solicitacoes);
   return (
     <div className="p-6 grow flex flex-col">
       <div className="flex items-center justify-between">

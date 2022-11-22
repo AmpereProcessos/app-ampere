@@ -57,7 +57,12 @@ function NovoFormulario({ setModalIsOpen }) {
   function addMaterial() {
     if (materialHolder.qtde > 0) {
       let arr = callInfo.saida;
-      arr.push(materialHolder);
+      let index = arr.findIndex((obj) => obj.id == materialHolder.id);
+      if (index != -1) {
+        arr[index].qtde += materialHolder.qtde;
+      } else {
+        arr.push(materialHolder);
+      }
       setCallInfo({ ...callInfo, saida: arr });
       setMaterialHolder({ ...materialHolder, qtde: null });
       setMaterialMsg("");

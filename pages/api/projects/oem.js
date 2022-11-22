@@ -23,7 +23,16 @@ export default async function handler(req, res) {
           },
         },
         {
-          $limit: 700,
+          $match: {
+            $or: [
+              { "medidor.data": { $gte: "2021-06-01T00:00:00.000Z" } },
+              { "medidor.data": null },
+              { "manutencaoPreventiva.status": { $ne: "REALIZADO" } },
+            ],
+          },
+        },
+        {
+          $sort: { qtde: -1 },
         },
       ])
       .toArray();

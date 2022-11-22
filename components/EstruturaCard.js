@@ -330,7 +330,7 @@ function EstruturaCard({ project, credentials }) {
             </div>
             {osInfo.categoria != "MONTAGEM" &&
               osInfo.categoria != "NÃO DEFINIDO" && (
-                <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                <div className="flex flex-col w-full lg:w-[450px] self-center mt-2 items-center">
                   <span className="uppercase font-bold font-raleway text-center text-sm">
                     OBSERVAÇÕES DA OS
                   </span>

@@ -9,6 +9,7 @@ import { cidadesAtendidas, vendedores } from "../../../utils/constants";
 import { ObjectId } from "mongodb";
 function Formulario({ info }) {
   const [dados, setDados] = useState(info);
+  console.log(dados);
   return (
     <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto py-2">
       <div className="flex flex-col gap-y-2 h-full">
@@ -335,6 +336,7 @@ function Formulario({ info }) {
                 COMO VOCÊ CHEGOU A ESSE CLIENTE?
               </span>
               <textarea
+                readOnly={true}
                 placeholder={"Descrição aqui.."}
                 value={dados.comoChegouAoCliente}
                 className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
@@ -385,6 +387,7 @@ function Formulario({ info }) {
                   CUIDADOS PARA CONTATO COM O CLIENTE
                 </span>
                 <textarea
+                  readOnly={true}
                   placeholder={
                     "Descreva aqui cuidados em relação ao contato do cliente durante a jornada. Melhores horários para contato, texto ou aúdio, etc..."
                   }
@@ -608,7 +611,7 @@ function Formulario({ info }) {
               />
             </div>
             <div className="flex gap-2 justify-around flex-wrap">
-              {dados.topologia != "NÃO DEFINIDO" && (
+              {dados.topologia != "NÃO DEFINIDO" ? (
                 <>
                   <TextInput
                     label={"MARCA DO INVERSOR/MICRO"}
@@ -633,6 +636,12 @@ function Formulario({ info }) {
                     }
                   />
                 </>
+              ) : (
+                <div className="flex justify-center">
+                  <p className="my-2 font-bold text-sm">
+                    SEM EQUIPAMENTOS (MICRO/INVERSORES) DEFINIDOS
+                  </p>
+                </div>
               )}
             </div>
             {dados.topologia == "OTIMIZADOR" && (
@@ -1450,6 +1459,7 @@ function Formulario({ info }) {
                 DESCRIÇÃO DA NEGOCIAÇÃO
               </span>
               <textarea
+                readOnly={true}
                 placeholder={"Descreva aqui a negociação"}
                 value={dados.descricaoNegociacao}
                 className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"

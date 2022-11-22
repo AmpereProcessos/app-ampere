@@ -40,7 +40,7 @@ function OSBlock({ ordem, index, emAberto, categoria, info, setOs, os }) {
           emAberto ? (ordem.dataDeFechamento != undefined ? "hidden" : "") : ""
         } ${
           !categoria.includes(ordem.categoria) ? "hidden" : ""
-        } items-center grid-cols-4 xl:grid-cols-14 border-b border-gray-200 pb-2`}
+        } items-center grid-cols-3 xl:grid-cols-14 border-b border-gray-200 pb-2`}
       >
         <div className="flex col-span-2 flex-col items-center">
           <p className="text-xs uppercase text-gray-500">CATEGORIA DA OS</p>
@@ -119,7 +119,7 @@ function OSBlock({ ordem, index, emAberto, categoria, info, setOs, os }) {
             </button>
           </Link>
         </div>
-        <div className="flex col-span-1 items-center justify-center">
+        <div className="hidden lg:flex col-span-1 items-center justify-center">
           <button
             onClick={() => handleChange(null, index, null)}
             className="flex text-xs gap-x-2 items-center bg-blue-400 hover:bg-[#15599a] hover:text-white font-bold p-1 rounded"

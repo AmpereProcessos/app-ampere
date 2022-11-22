@@ -58,12 +58,12 @@ function Cobrancas({ credentials, setCredentials }) {
   console.log(oss);
   return (
     <div className="p-6 grow">
-      <div className="grid grid-cols-6  items-center">
+      <div className="flex justify-around flex-wrap items-center">
         <h1 className="col-span-2 font-bold text-lg text-[#fead61]">
           COBRANÇAS DE ORDENS DE SERVIÇO
         </h1>
-        <div className="col-span-4 flex items-center justify-center gap-x-4">
-          <div className="hidden lg:flex gap-x-2">
+        <div className="col-span-4 flex flex-wrap items-center justify-center gap-x-4">
+          <div className="flex gap-x-2">
             <div className="flex flex-col w-fit items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
                 Fechamento Depois de:

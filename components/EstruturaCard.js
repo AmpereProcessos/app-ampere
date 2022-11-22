@@ -90,7 +90,7 @@ function EstruturaCard({ project, credentials }) {
   }
   return (
     <div className="w-full p-2 border border-[#15599a] rounded">
-      <div className="flex items-center gap-x-2 justify-between border-b border-gray-200 pb-2">
+      <div className="flex flex-col lg:flex-row items-center gap-x-2 justify-between border-b border-gray-200 pb-2">
         <div className="flex flex-col justify-center items-center">
           <strong className="text-[#15599a]">#{project.qtde} </strong>
           <p className="font-bold text-center">{project.nomeDoContrato}</p>
@@ -178,7 +178,7 @@ function EstruturaCard({ project, credentials }) {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-around mt-2">
+      <div className="flex flex-wrap items-center justify-around mt-2">
         <div className="flex flex-col">
           <h1 className="font-bold">DIA DA MONTAGEM</h1>
           <input
@@ -384,7 +384,7 @@ function EstruturaCard({ project, credentials }) {
                   </p>
                   <p className="text-xs uppercase">{ordem.servicoExecutado}</p>
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="hidden lg:flex flex-col items-center">
                   <p className="text-xs uppercase text-gray-500">
                     REALIZAR COBRANÇA?
                   </p>
@@ -392,19 +392,19 @@ function EstruturaCard({ project, credentials }) {
                     {ordem.realizarCobranca ? "SIM" : "NÃO"}
                   </p>
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="hidden lg:flex flex-col items-center">
                   <p className="text-xsuppercase text-gray-500">
                     VALOR DA COBRANÇA
                   </p>
                   <p className="text-xxs uppercase">R$ {ordem.valorCobranca}</p>
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="hidden lg:flex flex-col items-center">
                   <p className="text-xs uppercase text-gray-500">
                     EMISSOR DA OS
                   </p>
                   <p className="text-xxs uppercase">{ordem.usuarioEmissor}</p>
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="hidden lg:flex flex-col items-center">
                   <p className="text-xs uppercase text-gray-500">
                     DATA DE ABERTURA
                   </p>
@@ -412,7 +412,7 @@ function EstruturaCard({ project, credentials }) {
                     {new Date(ordem.dataDeAbertura).toLocaleDateString()}
                   </p>
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="hidden lg:flex flex-col items-center">
                   <p className="text-xs uppercase text-gray-500">
                     GRAU DE URGÊNCIA
                   </p>

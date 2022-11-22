@@ -94,11 +94,11 @@ function ControlePadroes({ setCredentials, credentials }) {
   console.log(projects);
   return (
     <div className="p-6 grow bg-[#fff]">
-      <div className="flex w-full items-center border-b border-gray-200 mb-2">
+      <div className="flex flex-col w-full items-center border-b border-gray-200 mb-2">
         <h1 className="text-[#fead61] font-bold text-xl pb-2">
           CONTROLE DE PADRÕES ({filteredProjects.length})
         </h1>
-        <div className="flex w-full items-center gap-x-2 justify-center">
+        <div className="flex flex-wrap w-full items-center gap-x-2 justify-center">
           <input
             type={"text"}
             placeholder="Digite o nome do contrato"

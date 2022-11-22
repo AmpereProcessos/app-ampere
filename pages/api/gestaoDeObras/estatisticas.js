@@ -82,11 +82,6 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    console.log(
-      compras.filter(
-        (x) => dayjs(new Date()).diff(x.compra.dataLiberacao, "day") > 5
-      )
-    );
     var arr = {
       padroes: {
         total: padroes.length,

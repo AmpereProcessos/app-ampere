@@ -82,14 +82,14 @@ function Comissionamento({ credentials, setCredentials }) {
   }, []);
   return (
     <div className="p-6 grow">
-      <div className="flex items-center justify-between border-b border-gray-200 p-1">
+      <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
         <div className="flex items-center gap-x-2">
           <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
             Comissionamento
           </p>
           {filteredProjects && <p>({filteredProjects.length})</p>}
         </div>
-        <div className="flex items-center gap-x-2 pl-4">
+        <div className="flex flex-wrap items-center gap-2 pl-4">
           <div
             onClick={() =>
               filterPendenciaComercial(!filters.pendenciaComercial)
@@ -120,7 +120,7 @@ function Comissionamento({ credentials, setCredentials }) {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 w-full gap-3 mt-4 ">
+      <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3 mt-4 ">
         {filteredProjects.map((project) => (
           <ComissionamentoCard
             getProjects={getProjects}

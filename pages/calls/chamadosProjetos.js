@@ -146,13 +146,13 @@ function ChamadosProjetos({ credentials, setCredentials }) {
           <AiOutlineReload />
         </div>
       </div>
-      <div className="w-full border max-h-[450px]  border-gray-200 bg-[#fff] shadow-xl p-4">
+      <div className="w-full border max-h-[750px] lg:max-h-[450px]  border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
-          <div className="flex w-full items-center justify-around">
+          <div className="flex flex-wrap w-full items-center justify-around">
             <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
               Chamados abertos ({abertosFiltrados.length})
             </h1>
-            <div className="flex items-center gap-x-2">
+            <div className="flex flex-wrap items-center justify-center gap-2">
               <input
                 type="text"
                 value={abertosFilters.procurarFilter}
@@ -228,7 +228,7 @@ function ChamadosProjetos({ credentials, setCredentials }) {
             </div>
           </div>
         </div>
-        <div className="flex max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
+        <div className="flex max-h-[500px] lg:max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
           {abertosFiltrados.map((call) => (
             <div
               onClick={() => handleOpenModal(call)}
@@ -265,12 +265,12 @@ function ChamadosProjetos({ credentials, setCredentials }) {
           ))}
         </div>
       </div>
-      <div className="w-full border max-h-[450px]  border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="flex w-full items-center justify-around">
+      <div className="w-full border max-h-[750px] lg:max-h-[450px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex flex-col lg:flex-row w-full items-center justify-around">
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             CHAMADOS FECHADOS ({fechadosFiltrados.length})
           </h1>
-          <div className="flex items-center gap-x-2">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             <input
               type="text"
               value={fechadosFilter.procurarFilter}
@@ -340,7 +340,7 @@ function ChamadosProjetos({ credentials, setCredentials }) {
             </button>
           </div>
         </div>
-        <div className="flex max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
+        <div className="flex max-h-[500px] lg:max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
           {fechadosFiltrados.map((call) => (
             <div
               onClick={() => handleOpenModal(call)}

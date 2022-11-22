@@ -171,7 +171,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             Chamados abertos ({inProgress.length})
           </h1>
-          <div className="flex items-center gap-x-2">
+          <div className="flex flex-wrap items-center gap-2">
             <input
               type="text"
               value={searchFilter}
@@ -229,7 +229,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
             </button>
           </div>
         </div>
-        <div className="flex justify-around max-h-[350px] pb-2 overflow-y-auto overscroll-y-auto gap-3 mt-4 flex-wrap">
+        <div className="flex justify-around h-full lg:max-h-[350px] pb-2 overflow-y-auto overscroll-y-auto gap-3 mt-4 flex-wrap">
           {filteredInProgress.map((call) => (
             <div
               key={call._id}
@@ -264,13 +264,13 @@ function ChamadosPPS({ setCredentials, credentials }) {
           ))}
         </div>
       </div>
-      <div className="w-full border max-h-[450px] border-gray-200 bg-[#fff] shadow-xl p-4">
+      <div className="w-full border max-h-[750px] lg:max-h-[450px] border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             CHAMADOS FINALIZADOS
           </h1>
           <p>{closedCalls.length} resolvidos no período</p>
-          <div className="flex gap-x-2 items-center">
+          <div className="flex flex-wrap gap-x-2 items-center">
             <p>Entre:</p>
             <input
               value={closedFilterDate.after}
@@ -304,7 +304,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
             <MdDateRange />
           </div>
         </div>
-        <div className="flex mt-2 max-h-[350px] overflow-y-auto overscroll-y-auto flex-wrap gap-2 justify-around">
+        <div className="flex mt-2 max-h-[500px] lg:max-h-[350px] overflow-y-auto overscroll-y-auto flex-wrap gap-2 justify-around">
           {closedCalls.map((call) => (
             <div
               key={call._id}

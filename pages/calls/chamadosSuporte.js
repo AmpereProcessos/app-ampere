@@ -319,12 +319,12 @@ function ChamadosSuporte({ credentials, setCredentials }) {
           ))}
         </div>
       </div>
-      <div className="w-full border max-h-[450px]  border-gray-200 bg-[#fff] shadow-xl p-4">
+      <div className="w-full border max-h-[750px] lg:max-h-[450px]  border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-3 gap-y-2 lg:gap-y-0">
           <h1 className="col-span-1 text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             CHAMADOS FINALIZADOS ({filteredClosedCalls.length})
           </h1>
-          <div className="col-span-2 flex gap-x-2 items-center justify-around">
+          <div className="col-span-2 flex-wrap flex gap-x-2 items-center justify-around">
             <div className="flex gap-x-2 items-center">
               <input
                 value={closedCallsFilter.searchFilter}
@@ -392,7 +392,7 @@ function ChamadosSuporte({ credentials, setCredentials }) {
             </div>
           </div>
         </div>
-        <div className="flex max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
+        <div className="flex max-h-[500px] lg:max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
           {filteredClosedCalls.map((call) => (
             <div
               onClick={() => handleOpenModal(call)}

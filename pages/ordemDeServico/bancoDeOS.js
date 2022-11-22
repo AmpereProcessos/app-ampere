@@ -85,7 +85,7 @@ function BancoDeOS({ credentials, setCredentials }) {
   }, []);
   return (
     <div className="p-6 grow">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col items-center justify-between">
         <h1 className="font-bold text-lg text-[#fead61]">
           BANCO DE ORDENS DE SERVIÇO ({filteredOss.length})
         </h1>
@@ -134,7 +134,7 @@ function BancoDeOS({ credentials, setCredentials }) {
               />
             </div>
           </div>
-          <div className="flex items-center gap-x-2">
+          <div className="flex flex-wrap justify-center items-center gap-2">
             <Select
               isMulti
               placeholder="CATEGORIA"

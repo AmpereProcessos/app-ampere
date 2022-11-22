@@ -88,7 +88,7 @@ function PadraoCard({ project, credentials }) {
   }
   return (
     <div className="w-full p-2 border border-[#15599a] rounded">
-      <div className="flex items-center gap-x-2 justify-between border-b border-gray-200 pb-2">
+      <div className="flex flex-col justify-center lg:flex-row items-center gap-x-2 lg:justify-between border-b border-gray-200 pb-2">
         <div className="flex flex-col justify-center items-center">
           <strong className="text-[#15599a]">#{project.qtde} </strong>
           <p className="font-bold text-center">{project.nomeDoContrato}</p>
@@ -194,7 +194,7 @@ function PadraoCard({ project, credentials }) {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-around mt-2">
+      <div className="flex flex-wrap items-center justify-around mt-2">
         <div className="flex flex-col">
           <h1 className="font-bold">DIA DA MONTAGEM</h1>
           <input
@@ -386,7 +386,7 @@ function PadraoCard({ project, credentials }) {
       </div>
       {project.ordensDeServico != undefined &&
         project.ordensDeServico?.length > 0 && (
-          <div className="w-full flex flex-col px-10 border-t border-gray-200 mt-2">
+          <div className="w-full flex flex-col px-3 border-t border-gray-200 mt-2">
             <h1 className="text-[#fead61] font-bold">OSs GERADAS DO PROJETO</h1>
             {project.ordensDeServico.map((ordem, index) => (
               <div
@@ -405,7 +405,7 @@ function PadraoCard({ project, credentials }) {
                   </p>
                   <p className="text-xs uppercase">{ordem.servicoExecutado}</p>
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="hidden lg:flex flex-col items-center">
                   <p className="text-xs uppercase text-gray-500">
                     REALIZAR COBRANÇA?
                   </p>
@@ -413,19 +413,19 @@ function PadraoCard({ project, credentials }) {
                     {ordem.realizarCobranca ? "SIM" : "NÃO"}
                   </p>
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="hidden lg:flex flex-col items-center">
                   <p className="text-xsuppercase text-gray-500">
                     VALOR DA COBRANÇA
                   </p>
                   <p className="text-xxs uppercase">R$ {ordem.valorCobranca}</p>
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="hidden lg:flex flex-col items-center">
                   <p className="text-xs uppercase text-gray-500">
                     EMISSOR DA OS
                   </p>
                   <p className="text-xxs uppercase">{ordem.usuarioEmissor}</p>
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="hidden lg:flex flex-col items-center">
                   <p className="text-xs uppercase text-gray-500">
                     DATA DE ABERTURA
                   </p>
@@ -433,7 +433,7 @@ function PadraoCard({ project, credentials }) {
                     {new Date(ordem.dataDeAbertura).toLocaleDateString()}
                   </p>
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="hidden lg:flex flex-col items-center">
                   <p className="text-xs uppercase text-gray-500">
                     GRAU DE URGÊNCIA
                   </p>

@@ -38,7 +38,7 @@ function GestaoDeObras({ credentials, setCredentials }) {
         <h1 className="text-center text-[#15599a] text-xl font-bold uppercase font-ralewayBlack">
           PENDÊNCIAS
         </h1>
-        <div className="grid grid-cols-6 gap-x-3">
+        <div className="grid grid-rows-6 grid-cols-1  lg:grid-cols-6 lg:grid-rows-1 gap-3">
           <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">PADRÕES</h1>
@@ -123,21 +123,21 @@ function GestaoDeObras({ credentials, setCredentials }) {
         </h1>
         <div className="flex gap-4 mt-5 flex-wrap w-full">
           <Link href="/obras/controlePadroes">
-            <div className="flex flex-col justify-center cursor-pointer grow min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
                 Controle de Padrões
               </h1>
             </div>
           </Link>
           <Link href="/obras/controleEstruturas">
-            <div className="flex flex-col justify-center cursor-pointer grow min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
                 Controle de Estruturas
               </h1>
             </div>
           </Link>
           <Link href="/obras/conferenciaMaterial">
-            <div className="flex flex-col justify-center cursor-pointer grow min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
                 Conferência de Material
               </h1>

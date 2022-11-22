@@ -31,15 +31,19 @@ function NovoFormulario({ setModalIsOpen }) {
   const [materialHolder, setMaterialHolder] = useState({
     nome: null,
     id: null,
-    qtde: null,
+    qtdeSaida: null,
   });
   const [callInfo, setCallInfo] = useState({
     idPai: null,
     codigoProjeto: null,
     nomeDoContrato: "",
+    cidade: null,
+    segmento: null,
+    topologia: null,
+    equipeResp: null,
     responsavel: "A DEFINIR",
     servico: "NÃO DEFINIDO",
-    saida: [],
+    materiais: [],
   });
   const [message, setMessage] = useState({
     text: "",
@@ -55,16 +59,16 @@ function NovoFormulario({ setModalIsOpen }) {
     axios.get("/api/projects/todos").then((res) => setClientes(res.data));
   }
   function addMaterial() {
-    if (materialHolder.qtde > 0) {
-      let arr = callInfo.saida;
+    if (materialHolder.qtdeSaida > 0) {
+      let arr = callInfo.materiais;
       let index = arr.findIndex((obj) => obj.id == materialHolder.id);
       if (index != -1) {
-        arr[index].qtde += materialHolder.qtde;
+        arr[index].qtdeSaida += materialHolder.qtdeSaida;
       } else {
         arr.push(materialHolder);
       }
-      setCallInfo({ ...callInfo, saida: arr });
-      setMaterialHolder({ ...materialHolder, qtde: null });
+      setCallInfo({ ...callInfo, materiais: arr });
+      setMaterialHolder({ ...materialHolder, qtdeSaida: null });
       setMaterialMsg("");
     } else {
       setMaterialMsg("Quantidade inválida");
@@ -77,7 +81,7 @@ function NovoFormulario({ setModalIsOpen }) {
       setMessage({ text: "Responsável não definido", color: "text-red-500" });
     } else if (callInfo.servico == "NÃO DEFINIDO") {
       setMessage({ text: "Serviço não definido", color: "text-red-500" });
-    } else if (callInfo.saida.length == 0) {
+    } else if (callInfo.materiais.length == 0) {
       setMessage({
         text: "Nenhum produto não definido",
         color: "text-red-500",
@@ -88,16 +92,27 @@ function NovoFormulario({ setModalIsOpen }) {
           ...callInfo,
           tipo: "RETIRADA",
         })
-        .then((res) =>
-          setMessage({ text: "Formulário criado !", color: "text-green-500" })
-        );
+        .then((res) => {
+          setCallInfo({
+            idPai: null,
+            codigoProjeto: null,
+            nomeDoContrato: "",
+            cidade: null,
+            segmento: null,
+            topologia: null,
+            equipeResp: null,
+            responsavel: "A DEFINIR",
+            servico: "NÃO DEFINIDO",
+            materiais: [],
+          });
+          setMessage({ text: "Formulário criado !", color: "text-green-500" });
+        });
     }
   }
   useEffect(() => {
     getClients();
     getMaterials();
   }, []);
-  console.log(callInfo);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -130,6 +145,10 @@ function NovoFormulario({ setModalIsOpen }) {
                         nomeDoContrato: e.value.nome,
                         idPai: e.value.id,
                         codigoProjeto: e.value.qtde,
+                        cidade: e.value.cidade,
+                        segmento: e.value.segmento,
+                        topologia: e.value.topologia,
+                        equipeResp: e.value.equipeResp,
                       })
                     }
                     options={clientes.map((cliente) => {
@@ -139,6 +158,14 @@ function NovoFormulario({ setModalIsOpen }) {
                           id: cliente._id,
                           qtde: cliente.qtde,
                           nome: cliente.nomeDoContrato,
+                          cidade: cliente.cidade ? cliente.cidade : "-",
+                          segmento: cliente.segmento ? cliente.segmento : "-",
+                          topologia: cliente.sistema.topologia
+                            ? cliente.sistema.topologia
+                            : "-",
+                          equipeResp: cliente.obra.equipeResp
+                            ? cliente.obra.equipeResp
+                            : "-",
                         },
                       };
                     })}
@@ -187,7 +214,7 @@ function NovoFormulario({ setModalIsOpen }) {
                 <span className="text-center uppercase font-bold">
                   ADICIONAR
                 </span>
-                <div className="grid grid-cols-6 gap-x-2">
+                <div className="grid grid-rows-3 grid-cols-1 lg:grid-cols-6 lg:grid-rows-1 gap-2">
                   <div className="grow col-span-4">
                     <Select
                       isMulti={false}
@@ -213,12 +240,12 @@ function NovoFormulario({ setModalIsOpen }) {
                   <input
                     placeholder="QTDE"
                     type="number"
-                    value={materialHolder.qtde}
+                    value={materialHolder.qtdeSaida}
                     className="col-span-1 outline-none text-center border border-gray-200"
                     onChange={(e) =>
                       setMaterialHolder({
                         ...materialHolder,
-                        qtde: Number(e.target.value),
+                        qtdeSaida: Number(e.target.value),
                       })
                     }
                   />
@@ -238,19 +265,19 @@ function NovoFormulario({ setModalIsOpen }) {
               <div className="flex grow flex-col gap-y-2 border border-gray-200 p-2 mt-4">
                 <h1 className="font-bold text-center">SAÍDA</h1>
                 <div className="flex flex-col overflow-y-auto overscroll-y-auto">
-                  {callInfo.saida.map((obj, index) => (
+                  {callInfo.materiais.map((obj, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between px-2"
                     >
                       <p className="list-none text-center text-gray-600 font-bold">
-                        {obj.nome} - ({obj.qtde})
+                        {obj.nome} - ({obj.qtdeSaida})
                       </p>
                       <button
                         onClick={() => {
-                          let arr = callInfo.saida;
+                          let arr = callInfo.materiais;
                           arr.splice(index, 1);
-                          setCallInfo({ ...callInfo, saida: arr });
+                          setCallInfo({ ...callInfo, materiais: arr });
                         }}
                       >
                         <VscChromeClose
@@ -261,19 +288,17 @@ function NovoFormulario({ setModalIsOpen }) {
                   ))}
                 </div>
               </div>
-
+              {message.text && (
+                <p className={`${message.color} text-center text-sm`}>
+                  {message.text}
+                </p>
+              )}
               <button
                 onClick={addFormulario}
                 className="bg-blue-300 align-bottom mt-1 hover:text-white font-bold hover:bg-[#15599a] p-2"
               >
                 ABRIR FORMULÁRIO
               </button>
-
-              {message.text && (
-                <p className={`${message.color} text-center text-sm`}>
-                  {message.text}
-                </p>
-              )}
             </div>
           </div>
         </div>

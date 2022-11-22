@@ -9,6 +9,15 @@ export default async function handler(req, res) {
           $project: {
             qtde: 1,
             nomeDoContrato: 1,
+            cidade: 1,
+            "sistema.topologia": 1,
+            "obra.equipeResp": 1,
+            segmento: 1,
+          },
+        },
+        {
+          $sort: {
+            qtde: 1,
           },
         },
       ])

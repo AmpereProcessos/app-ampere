@@ -70,7 +70,7 @@ function FormSolicitacaoNove({ dados, setDados, avancar, voltar }) {
               ADICIONAR DISTRIBUIÇÃO:
             </h1>
             <div className="flex flex-col lg:flex-row items-center justify-around">
-              <div className="flex flex-col w-full items-center">
+              <div className="flex flex-col w-fit lg:max-w-[350px] items-center">
                 <span className="uppercase font-bold font-raleway text-center text-sm">
                   Nº DA INSTALAÇÃO
                 </span>

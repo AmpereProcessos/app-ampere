@@ -14,6 +14,11 @@ export default async function handler(req, res) {
             "jornada.jornadaConcluida": { $ne: true },
           },
         },
+        {
+          $sort: {
+            qtde: 1,
+          },
+        },
       ])
       .toArray();
     res.json(posvenda);

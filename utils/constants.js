@@ -628,6 +628,18 @@ export const credores = [
     value: "NÃO DEFINIDO",
   },
 ];
+export const tiposDeEstruturas = [
+  { label: "INCLINAÇÃO", value: "INCLINAÇÃO" },
+  { label: "SOLO", value: "SOLO" },
+  { label: "TELHADO", value: "TELHADO" },
+  { label: "BARRACÃO", value: "BARRACÃO" },
+  { label: "CARPORT", value: "CARPORT" },
+  {
+    label: "ESTRUTURA PERSONALIZADA",
+    value: "ESTRUTURA PERSONALIZADA",
+  },
+  { label: "N/A", value: "N/A" },
+];
 export const tiposDeServico = [
   {
     label: "SISTEMA FOTOVOLTAICO",

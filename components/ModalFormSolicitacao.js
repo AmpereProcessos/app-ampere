@@ -235,15 +235,6 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
         })
       );
   }
-  async function addProject() {
-    await axios.put("/api/solicitacoes/contrato", {
-      _id: solicitacao._id,
-      aprovacao: true,
-    });
-    axios.post("/api/projects/add", insertObj).then((res) => {
-      setCreationMsg({ text: "Projeto adicionado!", color: "text-green-500" });
-    });
-  }
   var insertObj = {
     nomeDoContrato: dados.nomeDoContrato.toUpperCase(),
     nomeDoProjeto: dados.nomeDoProjeto ? dados.nomeDoProjeto.toUpperCase() : "",
@@ -352,7 +343,9 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
       desenhoTelhado: undefined,
       mapaDeMicro: undefined,
       aumentoDeCarga:
-        dados.aumentoDeCarga == "SIM" ? dados.aumentoDeCarga : "NÃO",
+        dados.aumentoDeCarga == "SIM" || dados.aumentoDisjuntor == "SIM"
+          ? "SIM"
+          : "NÃO",
       acStatus: dados.aumentoDeCarga == "SIM" ? "PENDÊNCIA" : "NÃO DEFINIDO",
       projetoConcluido: "NÃO",
       relatorioComissionamento: undefined,
@@ -440,6 +433,15 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
     },
     nps: undefined,
   };
+  async function addProject() {
+    await axios.put("/api/solicitacoes/contrato", {
+      _id: solicitacao._id,
+      aprovacao: true,
+    });
+    axios.post("/api/projects/add", insertObj).then((res) => {
+      setCreationMsg({ text: "Projeto adicionado!", color: "text-green-500" });
+    });
+  }
   function validateCreation() {
     var holder;
     Object.entries(insertObj).forEach((entry) => {

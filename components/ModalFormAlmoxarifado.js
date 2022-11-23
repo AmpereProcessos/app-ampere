@@ -171,8 +171,8 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                     <span className="text-center uppercase font-bold">
                       ADICIONAR
                     </span>
-                    <div className="grid grid-cols-6 gap-x-2">
-                      <div className="grow col-span-4">
+                    <div className="grid grid-rows-3 gap-2 grid-cols-1 lg:grid-cols-7 lg:grid-rows-1 gap-x-2">
+                      <div className="grow row-span-1 lg:col-span-5">
                         <Select
                           isMulti={false}
                           placeholder="MATERIAL"
@@ -198,7 +198,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                         placeholder="QTDE"
                         type="number"
                         value={saidaMaterialHolder.qtdeSaida}
-                        className="col-span-1 outline-none text-center border border-gray-200"
+                        className="row-span-1 lg:col-span-1 outline-none text-center border border-gray-200"
                         onChange={(e) =>
                           setSaidaMaterialHolder({
                             ...saidaMaterialHolder,
@@ -208,7 +208,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                       />
                       <div
                         onClick={addMaterialSaida}
-                        className="cursor-pointer flex justify-center items-center bg-green-300 hover:bg-green-500 text-white rounded font-bold col-span-1"
+                        className="cursor-pointer flex justify-center items-center bg-green-300 hover:bg-green-500 text-white rounded font-bold row-span-1 lg:col-span-1"
                       >
                         <MdOutlineAddCircle style={{ fontSize: "25px" }} />
                       </div>
@@ -224,7 +224,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
 
               <div className="flex h-[350px] flex-col gap-y-2 border border-gray-200 p-2 mt-4">
                 <h1 className="font-bold text-center">MATERIAIS</h1>
-                <div className="grid grid-cols-9">
+                <div className="hidden lg:grid grid-cols-9">
                   <p className="text-[#15599a] font-bold col-span-4 text-center">
                     NOME
                   </p>

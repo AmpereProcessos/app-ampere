@@ -14,6 +14,11 @@ export default async function handler(req, res) {
             ],
           },
         },
+        {
+          $sort: {
+            qtde: 1,
+          },
+        },
       ])
       .toArray();
     res.json(projetos);
@@ -35,6 +40,11 @@ export default async function handler(req, res) {
                 ],
               },
             },
+            {
+              $sort: {
+                qtde: 1,
+              },
+            },
           ])
           .toArray();
         break;
@@ -51,6 +61,11 @@ export default async function handler(req, res) {
                 ],
               },
             },
+            {
+              $sort: {
+                qtde: 1,
+              },
+            },
           ])
           .toArray();
       default:
@@ -63,6 +78,11 @@ export default async function handler(req, res) {
                   { "compra.statusLiberacao": "PAGO" },
                   { "projeto.iniciar": "SIM" },
                 ],
+              },
+            },
+            {
+              $sort: {
+                qtde: 1,
               },
             },
           ])

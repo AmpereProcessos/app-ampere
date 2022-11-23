@@ -30,7 +30,7 @@ export default async function handler(req, res) {
         {
           $set: {
             qtde: req.body.novaQtde,
-            infoAlteracoes: req.body.infoAlt,
+            infoAlteracoes: { ...req.body.infoAlt, dataAlt: new Date() },
           },
         }
       );

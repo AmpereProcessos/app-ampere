@@ -22,6 +22,11 @@ export default async function handler(req, res) {
             "contrato.status": "ASSINADO",
           },
         },
+        {
+          $sort: {
+            qtde: 1,
+          },
+        },
       ])
       .toArray();
     res.json(suprimentos);
@@ -51,6 +56,11 @@ export default async function handler(req, res) {
                 "contrato.status": "ASSINADO",
               },
             },
+            {
+              $sort: {
+                qtde: 1,
+              },
+            },
           ])
           .toArray();
         break;
@@ -75,6 +85,11 @@ export default async function handler(req, res) {
                 "contrato.status": "ASSINADO",
               },
             },
+            {
+              $sort: {
+                qtde: 1,
+              },
+            },
           ])
           .toArray();
       default:
@@ -95,6 +110,11 @@ export default async function handler(req, res) {
                   ],
                 },
                 "contrato.status": "ASSINADO",
+              },
+            },
+            {
+              $sort: {
+                qtde: 1,
               },
             },
           ])

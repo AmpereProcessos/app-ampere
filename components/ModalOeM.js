@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { fornecedores, vendedores } from "../utils/constants";
+import {
+  fornecedores,
+  tiposDeEstruturas,
+  vendedores,
+} from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import TextInput from "./TextInput";
@@ -1244,14 +1248,7 @@ function ModalOeM({
                         ? infoHolder.estruturaPersonalizada?.tipo
                         : "N/A"
                     }
-                    options={[
-                      { label: "INCLINAÇÃO", value: "INCLINAÇÃO" },
-                      { label: "SOLO", value: "SOLO" },
-                      { label: "TELHADO", value: "TELHADO" },
-                      { label: "BARRACÃO", value: "BARRACÃO" },
-                      { label: "CARPORT", value: "CARPORT" },
-                      { label: "N/A", value: "N/A" },
-                    ]}
+                    options={tiposDeEstruturas.map((tipo) => tipo)}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,

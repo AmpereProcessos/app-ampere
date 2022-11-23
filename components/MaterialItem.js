@@ -10,6 +10,7 @@ function MaterialItem({ obj, setDados, dados, index }) {
         </p>
         <input
           type={"number"}
+          disabled={dados.efetivado}
           className="outline-none text-center p-1 col-span-2 border border-gray-200"
           value={obj.qtdeSaida ? obj.qtdeSaida : null}
           onChange={(e) => {
@@ -23,6 +24,7 @@ function MaterialItem({ obj, setDados, dados, index }) {
         />
         <input
           type={"number"}
+          disabled={dados.efetivado}
           className="outline-none text-center p-1 col-span-2 border border-gray-200"
           value={obj.qtdeDevolucao ? obj.qtdeDevolucao : null}
           onChange={(e) => {
@@ -60,18 +62,20 @@ function MaterialItem({ obj, setDados, dados, index }) {
             }
           }}
         />
-        <div className="flex justify-center">
-          <button
-            className="col-span-1 self-center"
-            onClick={() => {
-              let infoMaterial = dados.materiais;
-              infoMaterial.splice(index, 1);
-              setDados({ ...dados, materiais: infoMaterial });
-            }}
-          >
-            <VscChromeClose style={{ color: "red", fontSize: "15px" }} />
-          </button>
-        </div>
+        {dados.efetivado != true && (
+          <div className="flex justify-center">
+            <button
+              className="col-span-1 self-center"
+              onClick={() => {
+                let infoMaterial = dados.materiais;
+                infoMaterial.splice(index, 1);
+                setDados({ ...dados, materiais: infoMaterial });
+              }}
+            >
+              <VscChromeClose style={{ color: "red", fontSize: "15px" }} />
+            </button>
+          </div>
+        )}
       </div>
       {message && <p className="text-center italic text-red-500">{message}</p>}
     </div>

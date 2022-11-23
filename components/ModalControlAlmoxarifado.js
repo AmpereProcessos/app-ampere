@@ -26,7 +26,7 @@ const OVERLAY_STYLES = {
   zIndex: 1000,
 };
 function ControleAlmoxarifado({
-  setModalIsOpen,
+  setModalAberta,
   info,
   credentials,
   handleUpdates,
@@ -71,7 +71,7 @@ function ControleAlmoxarifado({
               <button>
                 <VscChromeClose
                   onClick={() => {
-                    setModalIsOpen(false);
+                    setModalAberta(false);
                   }}
                   style={{ color: "red" }}
                 />

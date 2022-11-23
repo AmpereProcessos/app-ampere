@@ -22,6 +22,9 @@ export default async function handler(req, res) {
             },
           },
         },
+        {
+          $sort: { qtde: 1 },
+        },
       ])
       .toArray();
     res.json(comercial);
@@ -51,6 +54,11 @@ export default async function handler(req, res) {
                 },
               },
             },
+            {
+              $sort: {
+                qtde: 1,
+              },
+            },
           ])
           .toArray();
         break;
@@ -75,6 +83,11 @@ export default async function handler(req, res) {
                 },
               },
             },
+            {
+              $sort: {
+                qtde: 1,
+              },
+            },
           ])
           .toArray();
       default:
@@ -95,6 +108,11 @@ export default async function handler(req, res) {
                     undefined,
                   ],
                 },
+              },
+            },
+            {
+              $sort: {
+                qtde: 1,
               },
             },
           ])

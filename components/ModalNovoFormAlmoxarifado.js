@@ -25,7 +25,7 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function NovoFormulario({ setModalIsOpen }) {
+function NovoFormulario({ setModalIsOpen, getForms }) {
   const [clientes, setClientes] = useState([]);
   const [materiais, setMateriais] = useState([]);
   const [materialHolder, setMaterialHolder] = useState({
@@ -106,6 +106,7 @@ function NovoFormulario({ setModalIsOpen }) {
             materiais: [],
           });
           setMessage({ text: "Formulário criado !", color: "text-green-500" });
+          getForms();
         });
     }
   }
@@ -120,7 +121,7 @@ function NovoFormulario({ setModalIsOpen }) {
           <div className="flex flex-col h-full">
             <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
               <h1 className="text-[#15599a] pl-6 uppercase font-bold">
-                ABERTURA DE CHAMADO
+                ABERTURA DE REQUISIÇÃO
               </h1>
               <button>
                 <VscChromeClose

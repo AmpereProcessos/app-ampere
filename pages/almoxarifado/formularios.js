@@ -35,6 +35,15 @@ function Formularios({ credentials, setCredentials }) {
       }
     }
   }, []);
+  function getCardColor(status) {
+    if (status == true) {
+      return "bg-green-100";
+    } else if (status == false) {
+      return "bg-red-100";
+    } else {
+      return "bg-[#fff]";
+    }
+  }
   return (
     <div className="p-6 grow">
       <div className="border-b border-gray-200 pb-2">
@@ -56,7 +65,9 @@ function Formularios({ credentials, setCredentials }) {
               setModalForm(form);
               setModalIsOpen(true);
             }}
-            className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+            className={`w-[250px] lg:w-[450px] ${getCardColor(
+              form.efetivado
+            )} cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
           >
             <div className="flex items-center justify-between">
               <p className="text-xs text-gray-700">{form.nomeDoContrato}</p>
@@ -77,10 +88,14 @@ function Formularios({ credentials, setCredentials }) {
         <ModalFormAlmoxarifado
           info={modalForm}
           setModalIsOpen={setModalIsOpen}
+          getForms={getForms}
         />
       )}
       {createModalIsOpen && (
-        <ModalNovoFormAlmoxarifado setModalIsOpen={setCreateModalIsOpen} />
+        <ModalNovoFormAlmoxarifado
+          getForms={getForms}
+          setModalIsOpen={setCreateModalIsOpen}
+        />
       )}
     </div>
   );

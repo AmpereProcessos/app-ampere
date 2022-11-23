@@ -19,5 +19,25 @@ export default async function handler(req, res) {
     });
     await collection.bulkWrite(changes);
     res.json("UEPA");
+  } else if (req.method === "PUT") {
+    const db = await connectToDatabase(process.env.DB_KEY);
+    const collection = db.collection("material");
+    try {
+      await collection.updateOne(
+        {
+          _id: ObjectId(req.body.id),
+        },
+        {
+          $set: {
+            qtde: req.body.novaQtde,
+            infoAlteracoes: req.body.infoAlt,
+          },
+        }
+      );
+      console.log(req.body);
+      res.json("Alterações feitas");
+    } catch (error) {
+      res.json("Um erro ocorreu, tente novamente.");
+    }
   }
 }

@@ -26,7 +26,7 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function FormularioAlmoxarifado({ setModalIsOpen, info }) {
+function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
   const [dados, setDados] = useState(info);
   const [materiais, setMateriais] = useState([]);
   const [saidaMaterialHolder, setSaidaMaterialHolder] = useState({
@@ -71,12 +71,13 @@ function FormularioAlmoxarifado({ setModalIsOpen, info }) {
     });
     axios
       .post("/api/almoxarifado/materiais", dados.materiais)
-      .then((res) =>
+      .then((res) => {
         setResponseMessage({
           text: "Baixa de produtos realizado!",
           color: "text-green-500",
-        })
-      )
+        });
+        getForms();
+      })
       .catch((err) =>
         setResponseMessage({
           text: "Um erro ocorreu, por favor tente novamente.",
@@ -95,7 +96,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info }) {
           <div className="flex flex-col h-full">
             <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
               <h1 className="text-[#15599a] pl-6 uppercase font-bold">
-                ABERTURA DE CHAMADO
+                REQUISIÇÃO
               </h1>
               <button>
                 <VscChromeClose

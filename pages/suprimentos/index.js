@@ -18,6 +18,12 @@ function Suprimentos({ credentials, setCredentials }) {
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
+  const [dateFilter, setDateFilter] = useState({
+    after: null,
+    before: null,
+    field1: null,
+    field2: null,
+  });
   function getProjects(credenciais) {
     if (credenciais.visualizacao == "REGIONAL") {
       axios
@@ -115,6 +121,14 @@ function Suprimentos({ credentials, setCredentials }) {
         filters.liberacaoStatus.includes(project.compra.statusLiberacao)
       );
     }
+    if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) =>
+          call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
+          call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      );
+    }
     if (!newArr) setFilteredProjects(projects);
     else {
       setFilteredProjects(newArr);
@@ -185,6 +199,73 @@ function Suprimentos({ credentials, setCredentials }) {
               { value: undefined, label: "NÃO DEFINIDO" },
             ]}
           />
+          <div className="hidden lg:flex gap-x-2">
+            <div className="flex flex-col w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                Depois de:
+              </span>
+              <input
+                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                type="date"
+                value={
+                  dateFilter.after &&
+                  new Date(dateFilter.after).toISOString().slice(0, 10)
+                }
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    after: isNaN(e.target.value)
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <div className="flex flex-col w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                Antes de:
+              </span>
+              <input
+                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                type="date"
+                value={
+                  dateFilter.before &&
+                  new Date(dateFilter.before).toISOString().slice(0, 10)
+                }
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    before: isNaN(e.target.value)
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <Select
+              isMulti={false}
+              placeholder={"CAMPO DE FILTRO"}
+              options={[
+                { label: "DATA PAGAMENTO", value: "compra.dataPagamento" },
+                {
+                  label: "DATA MÁX P/ PAGAMENTO",
+                  value: "compra.dataMaxPagamento",
+                },
+                {
+                  label: "PREVISÃO DE ENTREGA",
+                  value: "compra.previsaoEntrega",
+                },
+                { label: "NÃO DEFINIDO", value: null },
+              ]}
+              onChange={(e) =>
+                setDateFilter({
+                  ...dateFilter,
+                  field1: e.value != null ? e.value.split(".")[0] : null,
+                  field2: e.value != null ? e.value.split(".")[1] : null,
+                })
+              }
+            />
+          </div>
           <button
             onClick={filterProjects}
             className="flex bg-[#fead61] hover:text-white h-[36px] hover:bg-[#15599a] font-bold rounded px-2 items-center gap-x-2"
@@ -218,7 +299,7 @@ function Suprimentos({ credentials, setCredentials }) {
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xxs">INFORMAÇÕES</span>
-                <p className="text-xxs font-bold text-gray-600">
+                <p className="text-xxs font-bold text-gray-600 uppercase">
                   {project.compra.informacoes
                     ? project.compra.informacoes
                     : "-"}
@@ -241,6 +322,27 @@ function Suprimentos({ credentials, setCredentials }) {
                 </p>
               </div>
               <div>
+                <span className="text-xxs">PREVISÃO ENTREGA</span>
+                <p
+                  className={`text-xs ${
+                    dayjs(project.compra.previsaoEntrega).diff(
+                      new Date(),
+                      "day"
+                    ) < 7
+                      ? "text-red-500 font-bold"
+                      : "text-green-500 font-bold"
+                  } text-center`}
+                >
+                  {project.compra.previsaoEntrega
+                    ? dayjs(new Date(project.compra.previsaoEntrega)).isValid()
+                      ? dayjs(
+                          dayjs(project.compra.previsaoEntrega).add(4, "hour")
+                        ).format("DD/MM/YYYY")
+                      : "-"
+                    : "-"}
+                </p>
+              </div>
+              <div>
                 <span className="text-xxs">STATUS ENTREGA</span>
                 <p className="text-xs text-gray-600">
                   {project.compra.statusEntrega
@@ -248,6 +350,14 @@ function Suprimentos({ credentials, setCredentials }) {
                     : "-"}
                 </p>
               </div>
+            </div>
+            <div className="flex flex-col items-center pt-1">
+              <span className="text-xxs">FATURAMENTO</span>
+              <p className="text-xs text-center text-gray-600 uppercase">
+                {project.faturamento?.previsaoFaturamento
+                  ? project.faturamento?.previsaoFaturamento
+                  : "-"}
+              </p>
             </div>
             <div className="flex items-center justify-center">
               <div>

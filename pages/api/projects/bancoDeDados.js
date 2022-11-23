@@ -11,7 +11,10 @@ export default async function handler(req, res) {
           },
         },
         {
-          $limit: 700,
+          $sort: { qtde: 1 },
+        },
+        {
+          $limit: 1000,
         },
       ])
       .toArray();
@@ -22,12 +25,17 @@ export default async function handler(req, res) {
     let arr = await collection
       .aggregate([
         {
+          $sort: {
+            qtde: 1,
+          },
+        },
+        {
           $match: {
-            qtde: { $gt: 715 },
             "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
           },
         },
       ])
+      .skip(1000)
       .toArray();
     res.json(arr);
   }

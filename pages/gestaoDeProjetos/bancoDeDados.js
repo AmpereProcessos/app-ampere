@@ -120,7 +120,6 @@ function BandoDeDados({ data, credentials, setCredentials }) {
       }
     }
   }, []);
-  console.log(filters.vendedorFilter);
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between gap-x-2 border-b border-gray-200 p-1">
@@ -133,7 +132,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
               ({filteredProjects.length})
             </p>
           )}
-          {projects.length < 701 && (
+          {projects.length < 1001 && (
             <button
               onClick={fetchMoreProjects}
               className="bg-[#fead61] h-[36px] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2"

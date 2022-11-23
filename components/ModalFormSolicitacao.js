@@ -879,6 +879,12 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       placeholder={"Descrição aqui.."}
                       value={dados.comoChegouAoCliente}
                       className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          comoChegouAoCliente: e.target.value.toUpperCase(),
+                        })
+                      }
                     />
                   </div>
                   <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
@@ -889,7 +895,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       placeholder={"Observações comerciais aqui.."}
                       value={dados.obsComercial ? dados.obsComercial : ""}
                       onChange={(e) =>
-                        setDados({ ...dados, obsComercial: e.target.value })
+                        setDados({
+                          ...dados,
+                          obsComercial: e.target.value.toUpperCase(),
+                        })
                       }
                       className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                     />
@@ -1052,6 +1061,13 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         }
                         value={dados.cuidadosContatoJornada}
                         className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                        onChange={(e) =>
+                          setDados({
+                            ...dados,
+                            cuidadosContatoJornada:
+                              e.target.value.toUpperCase(),
+                          })
+                        }
                       />
                     </div>
                   </div>
@@ -2191,6 +2207,12 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       placeholder={"Descreva aqui a negociação"}
                       value={dados.descricaoNegociacao}
                       className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          descricaoNegociacao: e.target.value.toUpperCase(),
+                        })
+                      }
                     />
                   </div>
                 </div>

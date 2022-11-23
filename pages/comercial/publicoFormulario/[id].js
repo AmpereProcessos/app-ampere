@@ -10,6 +10,7 @@ import { ObjectId } from "mongodb";
 function Formulario({ info }) {
   const [dados, setDados] = useState(info);
   console.log(dados);
+  console.log(dados.descricaoNegociacao.length);
   return (
     <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto py-2">
       <div className="flex flex-col gap-y-2 h-full">
@@ -339,7 +340,11 @@ function Formulario({ info }) {
                 readOnly={true}
                 placeholder={"Descrição aqui.."}
                 value={dados.comoChegouAoCliente}
-                className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                className={`w-full text-center ${
+                  dados.comoChegouAoCliente.length > 150
+                    ? "h-[100px]"
+                    : "h-[80px]"
+                } bg-gray-200 resize-none p-2 outline-none border border-gray-600`}
               />
             </div>
           </div>
@@ -392,7 +397,11 @@ function Formulario({ info }) {
                     "Descreva aqui cuidados em relação ao contato do cliente durante a jornada. Melhores horários para contato, texto ou aúdio, etc..."
                   }
                   value={dados.cuidadosContatoJornada}
-                  className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                  className={`w-full text-center ${
+                    dados.cuidadosContatoJornada.length > 150
+                      ? "h-[150px]"
+                      : "h-[80px]"
+                  } bg-gray-200 resize-none p-2 outline-none border border-gray-600`}
                 />
               </div>
             </div>
@@ -1462,7 +1471,11 @@ function Formulario({ info }) {
                 readOnly={true}
                 placeholder={"Descreva aqui a negociação"}
                 value={dados.descricaoNegociacao}
-                className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                className={`w-full text-center ${
+                  dados.descricaoNegociacao.length > 150
+                    ? "h-[150px]"
+                    : "h-[80px]"
+                } bg-gray-200 resize-none p-2 outline-none border border-gray-600`}
               />
             </div>
           </div>

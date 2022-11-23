@@ -5,6 +5,7 @@ import Select from "react-select";
 import { cities } from "../utils/constants";
 import axios from "axios";
 import MaterialItem from "./MaterialItem";
+import Link from "next/link";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -98,6 +99,15 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
               <h1 className="text-[#15599a] pl-6 uppercase font-bold">
                 REQUISIÇÃO
               </h1>
+              {dados.efetivado == true ? (
+                <Link href={`/almoxarifado/pdfFormulario/${dados._id}`}>
+                  <p className="p-2 rounded cursor-pointer bg-[#fead61] font-bold text-sm">
+                    VISUALIZAR PDF
+                  </p>
+                </Link>
+              ) : (
+                false
+              )}
               <button>
                 <VscChromeClose
                   onClick={() => {

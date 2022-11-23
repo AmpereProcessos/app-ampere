@@ -50,34 +50,34 @@ function PDFFormulario({ info }) {
             {info.nomeDoContrato} - (#{info.codigoProjeto})
           </h1>
         </div>
-        <div class="flex flex-col px-2">
-          <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-              <div class="overflow-hidden">
-                <table class="min-w-full border border-gray-700 text-center">
-                  <thead class="border-b bg-gray-800">
+        <div className="flex flex-col px-2">
+          <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+              <div className="overflow-hidden">
+                <table className="min-w-full border border-gray-700 text-center">
+                  <thead className="border-b bg-gray-800">
                     <tr>
                       <th
                         scope="col"
-                        class="text-sm font-medium text-white px-6 py-4"
+                        className="text-sm font-medium text-white px-6 py-4"
                       >
                         PRODUTO
                       </th>
                       <th
                         scope="col"
-                        class="text-sm font-medium text-white px-6 py-4"
+                        className="text-sm font-medium text-white px-6 py-4"
                       >
                         RETIRADA
                       </th>
                       <th
                         scope="col"
-                        class="text-sm font-medium text-white px-6 py-4"
+                        className="text-sm font-medium text-white px-6 py-4"
                       >
                         DEVOLUÇÃO
                       </th>
                       <th
                         scope="col"
-                        class="text-sm font-medium text-white px-6 py-4"
+                        className="text-sm font-medium text-white px-6 py-4"
                       >
                         DIFERENÇA
                       </th>
@@ -85,17 +85,17 @@ function PDFFormulario({ info }) {
                   </thead>
                   <tbody>
                     {info.materiais.map((material, index) => (
-                      <tr key={index} class="border-b border-gray-700">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <tr key={index} className="border-b border-gray-700">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {material.nome}
                         </td>
-                        <td class="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
+                        <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
                           {material.qtdeSaida}
                         </td>
-                        <td class="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
+                        <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
                           {material.qtdeDevolucao ? material.qtdeDevolucao : 0}
                         </td>
-                        <td class="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
+                        <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
                           {material.diff}
                         </td>
                       </tr>

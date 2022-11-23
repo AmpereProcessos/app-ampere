@@ -11,7 +11,7 @@ export default async function handler(req, res) {
       },
       {
         $set: {
-          dataDeConclusao: exists ? new Date().toJSON() : "",
+          dataDeConclusao: exists ? new Date() : null,
           status: req.body.status,
           ultAlteracoes: req.body.ultAlteracoes,
         },

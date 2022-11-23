@@ -147,7 +147,7 @@ function ModalCallPPS({
     axios
       .post("/api/calls/pps/updatePPS", {
         ...info,
-        dataDeConclusao: "",
+        dataDeConclusao: null,
         status: "PENDENTE",
         ultAlteracoes: ultAlteracoes,
       })

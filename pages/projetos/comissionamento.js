@@ -18,7 +18,7 @@ function Comissionamento({ credentials, setCredentials }) {
     });
   }
   function filterPendenciaComercial(value) {
-    setFilters({ ...filters, pendenciaComercial: value });
+    setFilters({ pendenciaComercial: value });
     var newArr;
     if (value) {
       newArr = projects.filter((obj) => !obj.comissionamento?.comercial);
@@ -30,7 +30,7 @@ function Comissionamento({ credentials, setCredentials }) {
     }
   }
   function filterPendenciaSuprimentos(value) {
-    setFilters({ ...filters, pendenciaSuprimentos: value });
+    setFilters({ pendenciaSuprimentos: value });
     var newArr;
     if (value) {
       newArr = projects.filter(
@@ -45,7 +45,7 @@ function Comissionamento({ credentials, setCredentials }) {
     }
   }
   function filterPendenciaProjetos(value) {
-    setFilters({ ...filters, pendenciaProjetos: value });
+    setFilters({ pendenciaProjetos: value });
     var newArr;
     if (value) {
       newArr = projects.filter(

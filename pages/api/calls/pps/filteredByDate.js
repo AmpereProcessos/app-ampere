@@ -16,7 +16,7 @@ export default async function handler(req, res) {
           $match: {
             dataDeConclusao: {
               $gte: after,
-              $lt: before,
+              $lte: before,
             },
           },
         },

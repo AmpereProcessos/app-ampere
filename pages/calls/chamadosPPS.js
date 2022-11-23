@@ -7,7 +7,9 @@ import { MdDateRange } from "react-icons/md";
 import Link from "next/link";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
+import dayjs from "dayjs";
 var dateFilterParam = new Date();
+dateFilterParam.setHours(0, 0, 0, 0);
 dateFilterParam.setDate(dateFilterParam.getDate() - 2);
 const statusStyles = {
   "EM ANDAMENTO": {
@@ -146,7 +148,6 @@ function ChamadosPPS({ setCredentials, credentials }) {
     setModalCall(call);
     setModalIsOpen(true);
   }
-  console.log(inProgress);
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
       <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
@@ -273,11 +274,13 @@ function ChamadosPPS({ setCredentials, credentials }) {
           <div className="flex flex-wrap gap-x-2 items-center">
             <p>Entre:</p>
             <input
-              value={closedFilterDate.after}
+              value={new Date(closedFilterDate.after)
+                .toISOString()
+                .slice(0, 10)}
               onChange={(e) =>
                 setClosedFilterDate({
                   ...closedFilterDate,
-                  after: e.target.value,
+                  after: new Date(e.target.value),
                 })
               }
               type="date"
@@ -285,11 +288,11 @@ function ChamadosPPS({ setCredentials, credentials }) {
             />
             <p>&</p>
             <input
-              value={closedFilterDate.before}
+              value={dayjs(closedFilterDate.before).format("YYYY-MM-DD")}
               onChange={(e) =>
                 setClosedFilterDate({
                   ...closedFilterDate,
-                  before: e.target.value,
+                  before: new Date(dayjs(e.target.value).add(22, "hours")),
                 })
               }
               type="date"

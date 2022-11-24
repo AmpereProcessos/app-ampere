@@ -16,14 +16,14 @@ function PDFFormulario({ info }) {
         <div className="flex justify-between">
           <Link href="/almoxarifado/formularios">
             <div className="flex justify-center items-center">
-              <Image height="80px" width="100px" src={Logo} />
+              <Image height="80px" width="240px" src={Logo} />
             </div>
           </Link>
           <div className="pl-2">
-            <p className="text-center font-bold">
+            <p className="text-center font-bold text-sm">
               AMPÈRE ENERGENHARIA E CONSULTORIA ELÉTRICA - ME
             </p>
-            <p className="text-center font-bold">
+            <p className="text-center font-bold text-sm">
               CNPJ <br />
               27.901.968/0001-45
             </p>
@@ -32,11 +32,11 @@ function PDFFormulario({ info }) {
         <div className="flex flex-col justify-center gap-y-2 border border-black pl-2">
           <div className="flex justify-between border-black border-b">
             <p className="text-center pr-2 text-sm">ID DO FORMULÁRIO</p>
-            <p className="text-center pr-2">{info._id}</p>
+            <p className="text-center pr-2 text-sm">{info._id}</p>
           </div>
           <div className="flex justify-between border-black border-b">
             <p className="text-end pr-2 text-sm">DATA DE ABERTURA</p>
-            <p className="text-center pr-2">
+            <p className="text-center pr-2 text-sm">
               {info.dataEfetivacao
                 ? dayjs(info.dataEfetivacao).format("DD/MM/YYYY HH:mm")
                 : "-"}

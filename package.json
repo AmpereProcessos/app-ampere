@@ -16,6 +16,7 @@
     "@fullcalendar/timegrid": "^5.11.3",
     "axios": "^0.27.2",
     "dayjs": "^1.11.6",
+    "dayjs-business-days": "^1.0.4",
     "googleapis": "^107.0.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",

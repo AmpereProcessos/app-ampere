@@ -29,7 +29,7 @@ function termPDF({ info, index }) {
       </h1>
       <div className="mt-8 px-4">
         <p className="text-center font-raleway">
-          Eu, Lucas Fernandes, inscrito sob o número de CPF/CNPJ{" "}
+          Eu, {info.nomeDoContrato}, inscrito sob o número de CPF/CNPJ{" "}
           <strong>
             {info.cpf_cnpj ? formatCnpjCpf(info.cpf_cnpj.toString()) : "-"}
           </strong>

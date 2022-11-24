@@ -6,8 +6,10 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { statusLiberacao } from "../../utils/constants";
 import ModalSuprimentos from "../../components/ModalSuprimentos";
 import dayjs from "dayjs";
+import dayjsBusinessDays from "dayjs-business-days";
 function Suprimentos({ credentials, setCredentials }) {
   const router = useRouter();
+  dayjs.extend(dayjsBusinessDays);
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
@@ -153,6 +155,14 @@ function Suprimentos({ credentials, setCredentials }) {
     const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
     return Number(diffInDays).toFixed(0);
   }
+  /*console.log(
+    dayjs("2022-11-25T22:00:00.000Z").businessDiff(
+      dayjs("2022-11-21T03:00:00.000Z")
+    )
+  );*/
+  console.log(
+    new Date(dayjs("2022-11-22T00:00:00.000Z").add(22, "hours")).toISOString()
+  );
   return (
     <div className="p-6 grow">
       <div className="flex flex-col justify-between border-b border-gray-200 p-1">
@@ -368,13 +378,11 @@ function Suprimentos({ credentials, setCredentials }) {
                   } text-center`}
                 >
                   {project.compra.dataPedido
-                    ? `${getDateDiff(
-                        new Date(project.compra.dataPedido),
-                        new Date(project.compra.dataLiberacao)
-                      )} DIAS`
-                    : `${getDateDiff(
-                        new Date(),
-                        new Date(project.compra.dataLiberacao)
+                    ? `${dayjs(
+                        dayjs(project.compra.dataPedido).add(22, "hour")
+                      ).businessDiff(dayjs(project.compra.dataLiberacao))} DIAS`
+                    : `${dayjs(new Date()).businessDiff(
+                        dayjs(project.compra.dataLiberacao)
                       )} DIAS`}
                 </p>
               </div>

@@ -60,14 +60,15 @@ function Suprimentos({ credentials, setCredentials }) {
       setFilteredProjects(projects);
     }
   }
-  function getBorderColor(date1, date2) {
-    var timeDiff = Math.abs(date2.getTime() - date1.getTime());
-    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    if (diffDays > 7) {
+  function getBorderColor(diff) {
+    console.log(diff);
+    /*var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));*/
+    if (diff > 5) {
       return "border-2 border-red-600";
-    } else if (diffDays >= 5) {
+    } else if (diff >= 4) {
       return "border-2 border-yellow-500";
-    } else if (diffDays > 3) {
+    } else if (diff > 2) {
       return "border-2 border-blue-700";
     } else {
       return "border border-gray-200";
@@ -296,8 +297,9 @@ function Suprimentos({ credentials, setCredentials }) {
             className={`w-[250px] lg:w-[450px] cursor-pointer ${
               project.compra.dataPedido == undefined
                 ? getBorderColor(
-                    new Date(project.compra.dataLiberacao),
-                    new Date()
+                    dayjs(new Date()).businessDiff(
+                      dayjs(project.compra.dataLiberacao)
+                    )
                   )
                 : "border border-gray-200"
             } p-3 hover:bg-blue-100`}

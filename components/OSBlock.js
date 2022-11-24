@@ -55,7 +55,7 @@ function OSBlock({ ordem, index, emAberto, categoria, info, setOs, os }) {
             <option value={"MANUTENÇÃO PREVENTIVA"}>
               MANUTENÇÃO PREVENTIVA
             </option>
-            <option value={"MANUTENÇÃO CORRETVA"}>MANUTENÇÃO CORRETVA</option>
+            <option value={"MANUTENÇÃO CORRETIVA"}>MANUTENÇÃO CORRETIVA</option>
           </select>
         </div>
         <div className="hidden xl:flex col-span-2 flex-col items-center">

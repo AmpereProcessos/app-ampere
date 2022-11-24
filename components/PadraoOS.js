@@ -104,7 +104,7 @@ function PadraoOSPDF({ info, observacoesOS, servicoExecutado }) {
                 <p className="text-xs text-center col-span-2 font-semibold uppercase">
                   SAÍDA DO CLIENTE
                 </p>
-                <p className="text-xs text-center col-span-3 text-center border border-black border-t-0">
+                <p className="text-xs col-span-3 text-center border border-black border-t-0">
                   {info.visitaTecnica?.saidaDoCliente
                     ? info.visitaTecnica?.saidaDoCliente
                     : "-"}{" "}
@@ -173,7 +173,7 @@ function PadraoOSPDF({ info, observacoesOS, servicoExecutado }) {
             </div>
             <div className="flex gap-x-2 mt-2">
               <div className="w-4 h-4 border rounded-md border-black"></div>
-              <p className="text-xs">RELIGAÇÃO DA ENERGIA FEITA ?</p>
+              <p className="text-xs">INTERLIGADO ?</p>
             </div>
           </div>
           <div className="grid grid-rows-2">

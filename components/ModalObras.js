@@ -12,6 +12,7 @@ import SelectInput from "./SelectInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
 import Link from "next/link";
+import OSCreationBlock from "./OSCreationBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -153,7 +154,7 @@ function ModalObras({
       }
     }
   }
-  console.log(changes);
+  console.log(osInfo);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -775,7 +776,7 @@ function ModalObras({
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   ORDENS DE SERVIÇO
                 </span>
-                <div className="flex gap-2 justify-center flex-wrap">
+                {/**                <div className="flex gap-2 justify-center flex-wrap">
                   <SelectInput
                     label={"CATEGORIA DA OS"}
                     value={osInfo.categoria}
@@ -821,6 +822,83 @@ function ModalObras({
                       })
                     }
                   />
+                  <div className="flex gap-2 justify-center flex-wrap mt-4">
+                    <div>
+                      <input
+                        disabled={!editor}
+                        checked={osInfo.realizarCobranca}
+                        onChange={(e) =>
+                          setOsInfo({
+                            ...osInfo,
+                            realizarCobranca: e.target.checked,
+                          })
+                        }
+                        type="checkbox"
+                        name="realizarCobranca"
+                        id="realizarCobranca"
+                      />
+                      <label className="ml-2" htmlFor="realizarCobranca">
+                        REALIZAR COBRANÇA ?
+                      </label>
+                    </div>
+                    <NumberInput
+                      label={"VALOR DO SERVIÇO A COBRAR"}
+                      value={osInfo.valorCobranca}
+                      editable={editor}
+                      handleChange={(value) =>
+                        setOsInfo({ ...osInfo, valorCobranca: Number(value) })
+                      }
+                    />
+                  </div>
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      PAGAMENTO DE TERCEIRO
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={osInfo.pagamentoTerceiro}
+                        onChange={(e) => {
+                          setOsInfo({
+                            ...osInfo,
+                            pagamentoTerceiro: e.target.checked,
+                          });
+                        }}
+                        type="checkbox"
+                        name="pagamentoTerceiro"
+                        id="pagamentoTerceiro"
+                      />
+                      <label className="ml-2" htmlFor="pagamentoTerceiro">
+                        APLICÁVEL?
+                      </label>
+                    </div>
+                  </div>
+                  {osInfo.pagamentoTerceiro && (
+                    <>
+                      <NumberInput
+                        label={"VALOR A PAGAR AO TERCEIRO?"}
+                        editable={editor}
+                        value={osInfo.valorPagamentoTerceiro}
+                        handleChange={(value) =>
+                          setOsInfo({
+                            ...osInfo,
+                            valorPagamentoTerceiro: Number(value),
+                          })
+                        }
+                      />
+                      <TextInput
+                        label={"NOME DO TERCEIRO"}
+                        editable={editor}
+                        value={osInfo.nomeTerceiro}
+                        handleChange={(value) =>
+                          setOsInfo({
+                            ...osInfo,
+                            nomeTerceiro: value.toUpperCase(),
+                          })
+                        }
+                      />
+                    </>
+                  )}
                   <SelectInput
                     label={"GRAU DE URGÊNCIA"}
                     value={osInfo.grauDeUrgencia}
@@ -921,34 +999,6 @@ function ModalObras({
                     </>
                   )}
                 </div>
-                <div className="flex gap-2 justify-center flex-wrap mt-4">
-                  <div>
-                    <input
-                      disabled={!editor}
-                      checked={osInfo.realizarCobranca}
-                      onChange={(e) =>
-                        setOsInfo({
-                          ...osInfo,
-                          realizarCobranca: e.target.checked,
-                        })
-                      }
-                      type="checkbox"
-                      name="realizarCobranca"
-                      id="realizarCobranca"
-                    />
-                    <label className="ml-2" htmlFor="realizarCobranca">
-                      REALIZAR COBRANÇA ?
-                    </label>
-                  </div>
-                  <NumberInput
-                    label={"VALOR DO SERVIÇO A COBRAR"}
-                    value={osInfo.valorCobranca}
-                    editable={editor}
-                    handleChange={(value) =>
-                      setOsInfo({ ...osInfo, valorCobranca: Number(value) })
-                    }
-                  />
-                </div>
                 {osInfo.categoria != "MONTAGEM" &&
                   osInfo.categoria != "NÃO DEFINIDO" && (
                     <div className="flex flex-col w-[450px] self-center mt-2 items-center">
@@ -1045,7 +1095,14 @@ function ModalObras({
                   >
                     GERAR OS DE OBRA
                   </button>
-                </div>
+                </div> */}
+                <OSCreationBlock
+                  editor={editor}
+                  credentials={credentials}
+                  id={infoHolder._id}
+                  ordensDeServico={infoHolder.ordensDeServico}
+                  handleUpdates={() => handleUpdates(project._id)}
+                />
                 {infoHolder.ordensDeServico != undefined &&
                   infoHolder.ordensDeServico?.length > 0 && (
                     <div className="w-full flex flex-col px-2 lg:px-10 border-t border-gray-200 mt-2">

@@ -718,7 +718,7 @@ function ModalADM({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       id="cobrancaFeita"
                     />
                     <label className="ml-2" htmlFor="cobrancaFeita">
-                      COBRANÇA REALIZADA
+                      COBRANÇA REALIZADA ?
                     </label>
                   </div>
                   {/**

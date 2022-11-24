@@ -91,7 +91,6 @@ function ControlePadroes({ setCredentials, credentials }) {
       }
     }
   }, []);
-  console.log(projects);
   return (
     <div className="p-6 grow bg-[#fff]">
       <div className="flex flex-col w-full items-center border-b border-gray-200 mb-2">

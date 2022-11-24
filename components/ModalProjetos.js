@@ -8,6 +8,7 @@ import SelectInput from "./SelectInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
 import Link from "next/link";
+import OSCreationBlock from "./OSCreationBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -2052,85 +2053,29 @@ function ModalProjetos({
                       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                         ORDENS DE SERVIÇO
                       </span>
-                      <div className="flex gap-2 justify-center flex-wrap">
-                        <TextInput
-                          label={"Serviço a ser executado"}
-                          value={osInfo.servicoExecutado}
-                          editable={editor}
-                          handleChange={(value) =>
-                            setOsInfo({ ...osInfo, servicoExecutado: value })
-                          }
-                        />
-                        <div>
-                          <input
-                            disabled={!editor}
-                            checked={osInfo.realizarCobranca}
-                            onChange={(e) =>
-                              setOsInfo({
-                                ...osInfo,
-                                realizarCobranca: e.target.checked,
-                              })
-                            }
-                            type="checkbox"
-                            name="realizarCobranca"
-                            id="realizarCobranca"
-                          />
-                          <label className="ml-2" htmlFor="realizarCobranca">
-                            REALIZAR COBRANÇA
-                          </label>
-                        </div>
-                        <NumberInput
-                          label={"VALOR DO SERVIÇO A COBRAR"}
-                          value={osInfo.valorCobranca}
-                          editable={editor}
-                          handleChange={(value) =>
-                            setOsInfo({
-                              ...osInfo,
-                              valorCobranca: Number(value),
-                            })
-                          }
-                        />
-                        <SelectInput
-                          label={"GRAU DE URGÊNCIA"}
-                          value={osInfo.grauDeUrgencia}
-                          editable={editor}
-                          options={[
-                            { label: "EMERGÊNCIA", value: "EMERGÊNCIA" },
-                            { label: "URGENTE", value: "URGENTE" },
-                            { label: "POUCO URGENTE", value: "POUCO URGENTE" },
-                            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                          ]}
-                          handleChange={(value) =>
-                            setOsInfo({ ...osInfo, grauDeUrgencia: value })
-                          }
-                        />
-                        <DateInput
-                          label={"DATA DE ABERTURA"}
-                          editable={editor}
-                          value={new Date(osInfo.dataDeAbertura)
-                            .toISOString()
-                            .slice(0, 10)}
-                          handleChange={(value) =>
-                            setOsInfo({
-                              ...osInfo,
-                              dataDeAbertura: new Date(value).toISOString(),
-                            })
-                          }
-                        />
-                      </div>
-                      {osMsg.text.length > 0 && (
-                        <p className={`text-center ${osMsg.color} italic`}>
-                          {osMsg.text}
-                        </p>
-                      )}
-                      <div className="flex justify-center mt-4">
-                        <button
-                          onClick={handleOSCreation}
-                          className="p-2 bg-[#fead61] font-bold rounded"
-                        >
-                          GERAR OS DE OBRA
-                        </button>
-                      </div>
+                      <OSCreationBlock
+                        editor={editor}
+                        credentials={credentials}
+                        id={infoHolder._id}
+                        ordensDeServico={infoHolder.ordensDeServico}
+                        handleUpdates={() => handleUpdates(project._id)}
+                        categories={[
+                          { label: "PADRÃO", value: "PADRÃO" },
+                          { label: "ESTRUTURA", value: "ESTRUTURA" },
+                          {
+                            label: "MANUTENÇÃO PREVENTIVA",
+                            value: "MANUTENÇÃO PREVENTIVA",
+                          },
+                          {
+                            label: "MANUTENÇÃO CORRETIVA",
+                            value: "MANUTENÇÃO CORRETIVA",
+                          },
+                          {
+                            label: "NÃO DEFINIDO",
+                            value: "NÃO DEFINIDO",
+                          },
+                        ]}
+                      />
                       {infoHolder.ordensDeServico != undefined &&
                         infoHolder.ordensDeServico?.length > 0 && (
                           <div className="w-full flex flex-col px-10 border-t border-gray-200 mt-2">

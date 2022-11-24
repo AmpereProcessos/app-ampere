@@ -107,6 +107,10 @@ export const vendedores = [
     cod: 5,
   },
   {
+    nome: "ADRIANO ARANTES",
+    cod: 48,
+  },
+  {
     nome: "ARIÁDNNY APARECIDA",
     cod: 49,
   },

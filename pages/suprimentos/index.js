@@ -161,9 +161,6 @@ function Suprimentos({ credentials, setCredentials }) {
       dayjs("2022-11-21T03:00:00.000Z")
     )
   );*/
-  console.log(
-    new Date(dayjs("2022-11-22T00:00:00.000Z").add(22, "hours")).toISOString()
-  );
   return (
     <div className="p-6 grow">
       <div className="flex flex-col justify-between border-b border-gray-200 p-1">

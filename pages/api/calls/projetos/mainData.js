@@ -21,7 +21,8 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    /*let assinatura = await collection2
+
+    let assinatura = await collection2
       .aggregate([
         {
           $match: {
@@ -36,7 +37,7 @@ export default async function handler(req, res) {
         {
           $project: {
             "projeto.dataAssDocumentacao": 1,
-            "projeto.statusDoParecerDeAcesso": 1,
+            "parecer.statusDoParecerDeAcesso": 1,
           },
         },
       ])
@@ -51,28 +52,65 @@ export default async function handler(req, res) {
           },
         },
         {
-          comissionamento: 1,
+          $project: {
+            comissionamento: 1,
+          },
         },
       ])
       .toArray();
-    let parecer = await aggregate([
-      {
-        $match: {
-          "contrato.status": "ASSINADO",
-          "parecer.statusDoParecerDeAcesso": {
-            $in: [
-              "PENDENCIAS",
-              "SOLICITAR ACESSO",
-              "SOLICITAR TROCA DE TITULARIDADE",
-              "SOLICITAR AUMENTO DE CARGA",
-              "AGUARDANDO TROCA DE TITULARIDADE",
-              "AGUARDANDO AUMENTO DE CARGA",
+    let parecer = await collection2
+      .aggregate([
+        {
+          $match: {
+            "projeto.projetoConcluido": { $ne: "SIM" },
+            $or: [
+              { "compra.statusLiberacao": "PAGO" },
+              { "projeto.iniciar": "SIM" },
             ],
+            "parecer.statusDoParecerDeAcesso": {
+              $in: [
+                "PENDENCIAS",
+                "SOLICITAR ACESSO",
+                "SOLICITAR TROCA DE TITULARIDADE",
+                "SOLICITAR AUMENTO DE CARGA",
+                "AGUARDANDO TROCA DE TITULARIDADE",
+                "AGUARDANDO AUMENTO DE CARGA",
+                "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
+              ],
+            },
           },
         },
-      },
-    ]);*/
+      ])
+      .toArray();
     res.json({
+      assinatura: {
+        confeccionar: assinatura.filter(
+          (x) => x.parecer.statusDoParecerDeAcesso != "AGUARDANDO ASSINATURA"
+        ).length,
+        paraAssinar: assinatura.filter(
+          (x) => x.parecer.statusDoParecerDeAcesso == "AGUARDANDO ASSINATURA"
+        ).length,
+      },
+      parecer: {
+        solicitar: parecer.filter(
+          (x) =>
+            x.parecer.statusDoParecerDeAcesso !=
+            "AGUARDANDO RESPOSTA DA CONCESSIONARIA"
+        ).length,
+        aguardando: parecer.filter(
+          (x) =>
+            x.parecer.statusDoParecerDeAcesso ==
+            "AGUARDANDO RESPOSTA DA CONCESSIONARIA"
+        ).length,
+      },
+      comissionamento: {
+        total: comissionamento.length,
+        parcial: comissionamento.filter(
+          (x) =>
+            x.comissionamento?.comercial == true &&
+            x.comissionamento?.suprimentos == true
+        ).length,
+      },
       chamadosAbertos: chamadosAbertos,
       chamadosFechados: chamadosFechados,
     });

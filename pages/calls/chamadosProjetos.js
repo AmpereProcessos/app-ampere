@@ -22,6 +22,21 @@ const statusStyles = {
 };
 function ChamadosProjetos({ credentials, setCredentials }) {
   const router = useRouter();
+  const [stats, setStats] = useState({
+    assinatura: {
+      confeccionar: 0,
+      paraAssinar: 0,
+    },
+    parecer: {
+      solicitar: 0,
+      aguardando: 0,
+    },
+    comissionamento: {
+      total: 0,
+      parcial: 0,
+    },
+    distribuicoes: 0,
+  });
   const [chamadosAbertos, setChamadosAbertos] = useState([]);
   const [abertosFiltrados, setAbertosFiltrados] = useState([]);
   const [chamadosFechados, setChamadosFechados] = useState([]);
@@ -41,6 +56,14 @@ function ChamadosProjetos({ credentials, setCredentials }) {
   });
   function getCalls() {
     axios.get("/api/calls/projetos/mainData").then((res) => {
+      setStats({
+        assinatura: res.data.assinatura,
+        parecer: res.data.parecer,
+        comissionamento: res.data.comissionamento,
+        distribuicoes: res.data.chamadosAbertos.filter(
+          (x) => x.tipoDoChamado == "DISTRIBUIÇÃO DE CRÉDITO"
+        ).length,
+      });
       setChamadosAbertos(res.data.chamadosAbertos);
       setAbertosFiltrados(res.data.chamadosAbertos);
       setChamadosFechados(res.data.chamadosFechados);
@@ -132,11 +155,12 @@ function ChamadosProjetos({ credentials, setCredentials }) {
       }
     }
   }, []);
+  console.log(stats);
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
       <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex items-center justify-around gap-x-2">
-          <p>CHAMADOS ABERTOS: ({chamadosAbertos.length})</p>
+          <p>CHAMADOS DE PROJETOS</p>
         </div>
         <div
           onClick={getCalls}
@@ -144,6 +168,64 @@ function ChamadosProjetos({ credentials, setCredentials }) {
         >
           <p className="mr-2 text-sm">Atualizar</p>
           <AiOutlineReload />
+        </div>
+      </div>
+      <div className="grid grid-rows-4 grid-cols-1  lg:grid-cols-4 lg:grid-rows-1 gap-3">
+        <div className="flex flex-col p-4 h-[150px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">ASSINATURAS</h1>
+          </div>
+          <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
+            CONFECCIONAR: {stats.assinatura && stats.assinatura.confeccionar}
+          </p>
+          <p className="text-center text-gray-600">
+            PARA ASSINAR:{" "}
+            <strong className="text-red-500">
+              {stats.assinatura && stats.assinatura.paraAssinar}
+            </strong>
+          </p>
+        </div>
+        <div className="flex flex-col p-4 h-[150px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">PARECER</h1>
+          </div>
+          <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
+            SOLICITAR: {stats.parecer && stats.parecer.solicitar}
+          </p>
+          <p className="text-center text-gray-600">
+            AGUARDANDO CONC.:{" "}
+            <strong className="text-red-500">
+              {stats.parecer && stats.parecer.aguardando}
+            </strong>
+          </p>
+        </div>
+        <div className="flex flex-col p-4 h-[150px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">COMISSIONAMENTO</h1>
+          </div>
+          <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
+            PROJETOS: {stats.comissionamento && stats.comissionamento.parcial}
+          </p>
+          <p className="text-center text-gray-600">
+            TOTAL:{" "}
+            <strong className="text-red-500">
+              {stats.comissionamento && stats.comissionamento.total}
+            </strong>
+          </p>
+        </div>
+        <div className="flex flex-col p-4 h-[150px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">CHAMADOS</h1>
+          </div>
+          <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
+            DISTRIBUIÇÕES: {stats.distribuicoes && stats.distribuicoes}
+          </p>
+          <p className="text-center text-gray-600">
+            TOTAL:{" "}
+            <strong className="text-red-500">
+              {chamadosAbertos && chamadosAbertos.length}
+            </strong>
+          </p>
         </div>
       </div>
       <div className="w-full border max-h-[750px] lg:max-h-[450px]  border-gray-200 bg-[#fff] shadow-xl p-4">

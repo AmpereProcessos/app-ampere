@@ -194,7 +194,7 @@ const validation = {
     msg: "Por favor, preencha o status do laudo",
   },
 };
-function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
+function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
   const router = useRouter();
   const [dados, setDados] = useState(solicitacao);
   const [msg, setMessage] = useState({ text: "", color: "" });
@@ -498,13 +498,16 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                 {msg.text && (
                   <p className={`italic ${msg.color}`}>{msg.text}</p>
                 )}
-                <button
-                  onClick={saveChanges}
-                  className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
-                >
-                  <p>Salvar alterações</p>
-                  <FaSave />
-                </button>
+                {editor && (
+                  <button
+                    onClick={saveChanges}
+                    className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
+                  >
+                    <p>Salvar alterações</p>
+                    <FaSave />
+                  </button>
+                )}
+
                 <button>
                   <VscChromeClose
                     onClick={() => setModalIsOpen(false)}
@@ -527,7 +530,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex gap-2 justify-around flex-wrap">
                     <TextInput
                       label={"Nome/Razão Social"}
-                      editable={true}
+                      editable={editor}
                       value={dados.nomeDoContrato}
                       handleChange={(value) =>
                         setDados({
@@ -539,7 +542,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <SelectInput
                       label={"Vendedor"}
                       value={dados.nomeVendedor}
-                      editable={true}
+                      editable={editor}
                       options={vendedores.map((vendedor) => {
                         return { label: vendedor.nome, value: vendedor.nome };
                       })}
@@ -549,7 +552,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"TIPO DE SERVIÇO"}
-                      editable={true}
+                      editable={editor}
                       value={
                         dados.tipoDeServico
                           ? dados.tipoDeServico
@@ -562,7 +565,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"Telefone"}
-                      editable={true}
+                      editable={editor}
                       value={dados.telefone}
                       handleChange={(value) =>
                         setDados({ ...dados, telefone: phoneMask(value) })
@@ -570,7 +573,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"CPF/CNPJ"}
-                      editable={true}
+                      editable={editor}
                       value={dados.cpf_cnpj}
                       handleChange={(value) =>
                         setDados({ ...dados, cpf_cnpj: formatCnpjCpf(value) })
@@ -578,7 +581,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"RG"}
-                      editable={true}
+                      editable={editor}
                       value={dados.rg}
                       handleChange={(value) =>
                         setDados({ ...dados, rg: value })
@@ -586,7 +589,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <DateInput
                       label={"DATA DE NASCIMENTO"}
-                      editable={true}
+                      editable={editor}
                       value={
                         dados.dataDeNascimento
                           ? new Date(dados.dataDeNascimento)
@@ -603,7 +606,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"CEP"}
-                      editable={true}
+                      editable={editor}
                       value={dados.cep}
                       handleChange={(value) =>
                         setDados({ ...dados, cep: formatCEP(value) })
@@ -617,7 +620,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     </button>
                     <SelectInput
                       label={"CIDADE"}
-                      editable={true}
+                      editable={editor}
                       value={dados.cidade}
                       options={cidadesAtendidas.map((cidade) => {
                         return { label: cidade, value: cidade };
@@ -628,7 +631,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"UF"}
-                      editable={true}
+                      editable={editor}
                       value={dados.uf}
                       handleChange={(value) =>
                         setDados({ ...dados, uf: value })
@@ -636,7 +639,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"ENDEREÇO DE COBRANÇA"}
-                      editable={true}
+                      editable={editor}
                       value={dados.enderecoCobranca}
                       handleChange={(value) =>
                         setDados({
@@ -647,7 +650,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <NumberInput
                       label={"Nº"}
-                      editable={true}
+                      editable={editor}
                       value={dados.numeroResCobranca}
                       handleChange={(value) =>
                         setDados({ ...dados, numeroResCobranca: Number(value) })
@@ -655,7 +658,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"BAIRRO"}
-                      editable={true}
+                      editable={editor}
                       value={dados.bairro}
                       handleChange={(value) =>
                         setDados({ ...dados, bairro: value.toUpperCase() })
@@ -663,7 +666,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"PONTO DE REFERÊNCIA"}
-                      editable={true}
+                      editable={editor}
                       value={dados.pontoDeReferencia}
                       handleChange={(value) =>
                         setDados({ ...dados, pontoDeReferencia: value })
@@ -671,7 +674,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"SEGMENTO"}
-                      editable={true}
+                      editable={editor}
                       value={dados.segmento}
                       options={[
                         {
@@ -697,7 +700,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"FORMA DE ASSINATURA"}
-                      editable={true}
+                      editable={editor}
                       options={[
                         {
                           value: "DIGITAL",
@@ -714,7 +717,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <NumberInput
                       label={"NºPROJETO SVB"}
-                      editable={true}
+                      editable={editor}
                       value={dados.codigoSVB}
                       handleChange={(value) =>
                         setDados({ ...dados, codigoSVB: Number(value) })
@@ -756,7 +759,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <TextInput
                       label={"EMAIL"}
                       normalCase={true}
-                      editable={true}
+                      editable={editor}
                       value={dados.email}
                       handleChange={(value) =>
                         setDados({ ...dados, email: value })
@@ -764,7 +767,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"PROFISSÃO"}
-                      editable={true}
+                      editable={editor}
                       value={dados.profissao}
                       handleChange={(value) =>
                         setDados({ ...dados, profissao: value })
@@ -772,7 +775,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"ONDE TRABALHA"}
-                      editable={true}
+                      editable={editor}
                       value={dados.ondeTrabalha}
                       handleChange={(value) =>
                         setDados({ ...dados, ondeTrabalha: value })
@@ -780,7 +783,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"POSSUI ALGUMA DEFICIÊNCIA"}
-                      editable={true}
+                      editable={editor}
                       value={dados.possuiDeficiencia}
                       handleChange={(value) =>
                         setDados({ ...dados, possuiDeficiencia: value })
@@ -800,7 +803,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <TextInput
                           label={"SE SIM, QUAL ?"}
-                          editable={true}
+                          editable={editor}
                           value={dados.qualDeficiencia}
                           handleChange={(value) =>
                             setDados({ ...dados, qualDeficiencia: value })
@@ -810,7 +813,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     )}
                     <SelectInput
                       label={"CANAL DE VENDA"}
-                      editable={true}
+                      editable={editor}
                       value={dados.canalVenda}
                       handleChange={(value) =>
                         setDados({ ...dados, canalVenda: value })
@@ -854,7 +857,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <TextInput
                           label={"NOME INDICADOR"}
-                          editable={true}
+                          editable={editor}
                           value={dados.nomeIndicador}
                           handleChange={(value) =>
                             setDados({ ...dados, nomeIndicador: value })
@@ -862,7 +865,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         />
                         <TextInput
                           label={"TELEFONE INDICADOR"}
-                          editable={true}
+                          editable={editor}
                           value={dados.telefoneIndicador}
                           handleChange={(value) =>
                             setDados({ ...dados, telefoneIndicador: value })
@@ -876,6 +879,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       COMO VOCÊ CHEGOU A ESSE CLIENTE?
                     </span>
                     <textarea
+                      readOnly={!editor}
                       placeholder={"Descrição aqui.."}
                       value={dados.comoChegouAoCliente}
                       className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
@@ -892,6 +896,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       OBS COMERCIAL
                     </span>
                     <textarea
+                      readOnly={!editor}
                       placeholder={"Observações comerciais aqui.."}
                       value={dados.obsComercial ? dados.obsComercial : ""}
                       onChange={(e) =>
@@ -912,14 +917,14 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <TextInput
                       label={"Nome do Projeto"}
                       value={dados.nomeDoProjeto ? dados.nomeDoProjeto : ""}
-                      editable={true}
+                      editable={editor}
                       handleChange={(value) => {
                         setDados({ ...dados, nomeDoProjeto: value });
                       }}
                     />
                     <SelectInput
                       label={"Regional"}
-                      editable={true}
+                      editable={editor}
                       value={dados.regional ? dados.regional : "NÃO DEFINIDO"}
                       options={[
                         {
@@ -941,7 +946,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"LINK PASTA DO DRIVE"}
-                      editable={true}
+                      editable={editor}
                       value={dados.linkDrive ? dados.linkDrive : ""}
                       handleChange={(value) => {
                         setDados({ ...dados, linkDrive: value });
@@ -949,7 +954,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"TIPO DE SERVIÇO"}
-                      editable={true}
+                      editable={editor}
                       options={tiposDeServico.map((tipo) => {
                         return { label: tipo.label, value: tipo.value };
                       })}
@@ -965,7 +970,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <NumberInput
                       tag={"R$"}
                       label={"Previsão de custos em insumos"}
-                      editable={true}
+                      editable={editor}
                       value={dados.previsaoCustos ? dados.previsaoCustos : 0}
                       handleChange={(value) => {
                         setDados({ ...dados, previsaoCustos: Number(value) });
@@ -974,7 +979,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <SelectInput
                       label={"TIPO DO KIT"}
                       value={dados.tipoDoKit ? dados.tipoDoKit : "NÃO DEFINIDO"}
-                      editable={true}
+                      editable={editor}
                       options={[
                         {
                           label: "NORMAL",
@@ -996,7 +1001,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <SelectInput
                       label={"Laudo"}
                       value={dados.laudo ? dados.laudo : "NÃO DEFINIDO"}
-                      editable={true}
+                      editable={editor}
                       options={[
                         { label: "EM ESTUDO", value: "EM ESTUDO" },
                         { label: "EMITIDO", value: "EMITIDO" },
@@ -1015,7 +1020,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex gap-2 justify-around flex-wrap">
                     <TextInput
                       label={"NOME DO CONTATO 1"}
-                      editable={true}
+                      editable={editor}
                       value={dados.nomeContatoJornadaUm}
                       handleChange={(value) =>
                         setDados({ ...dados, nomeContatoJornadaUm: value })
@@ -1023,7 +1028,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"TELEFONE DO CONTATO 1"}
-                      editable={true}
+                      editable={editor}
                       value={dados.telefoneContatoUm}
                       handleChange={(value) =>
                         setDados({
@@ -1034,7 +1039,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"NOME DO CONTATO 2"}
-                      editable={true}
+                      editable={editor}
                       value={dados.nomeContatoJornadaDois}
                       handleChange={(value) =>
                         setDados({ ...dados, nomeContatoJornadaDois: value })
@@ -1042,7 +1047,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"TELEFONE DO CONTATO 2"}
-                      editable={true}
+                      editable={editor}
                       value={dados.telefoneContatoDois}
                       handleChange={(value) =>
                         setDados({
@@ -1056,6 +1061,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         CUIDADOS PARA CONTATO COM O CLIENTE
                       </span>
                       <textarea
+                        readOnly={!editor}
                         placeholder={
                           "Descreva aqui cuidados em relação ao contato do cliente durante a jornada. Melhores horários para contato, texto ou aúdio, etc..."
                         }
@@ -1079,7 +1085,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex gap-2 justify-around flex-wrap">
                     <TextInput
                       label={"NOME DO TITULAR DO PROJETO"}
-                      editable={true}
+                      editable={editor}
                       value={dados.nomeTitularProjeto}
                       handleChange={(value) =>
                         setDados({
@@ -1090,7 +1096,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"TIPO DO TITULAR"}
-                      editable={true}
+                      editable={editor}
                       value={dados.tipoDoTitular}
                       handleChange={(value) =>
                         setDados({ ...dados, tipoDoTitular: value })
@@ -1108,7 +1114,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"TIPO DA LIGAÇÃO"}
-                      editable={true}
+                      editable={editor}
                       value={dados.tipoDaLigacao}
                       handleChange={(value) =>
                         setDados({ ...dados, tipoDaLigacao: value })
@@ -1126,7 +1132,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"TIPO DA INSTALAÇÃO"}
-                      editable={true}
+                      editable={editor}
                       value={dados.tipoDaInstalacao}
                       handleChange={(value) =>
                         setDados({ ...dados, tipoDaInstalacao: value })
@@ -1144,7 +1150,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"CEP INSTALAÇÃO"}
-                      editable={true}
+                      editable={editor}
                       value={dados.cepInstalacao}
                       handleChange={(value) =>
                         setDados({ ...dados, cepInstalacao: formatCEP(value) })
@@ -1158,7 +1164,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     </button>
                     <TextInput
                       label={"ENDEREÇO DE INSTALAÇÃO"}
-                      editable={true}
+                      editable={editor}
                       value={dados.enderecoInstalacao}
                       handleChange={(value) =>
                         setDados({ ...dados, enderecoInstalacao: value })
@@ -1166,7 +1172,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <NumberInput
                       label={"Nº"}
-                      editable={true}
+                      editable={editor}
                       value={dados.numeroResInstalacao}
                       handleChange={(value) =>
                         setDados({ ...dados, numeroResInstalacao: value })
@@ -1174,7 +1180,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <NumberInput
                       label={"Nº DA INSTALAÇÃO"}
-                      editable={true}
+                      editable={editor}
                       value={dados.numeroInstalacao}
                       handleChange={(value) =>
                         setDados({ ...dados, numeroInstalacao: value })
@@ -1182,7 +1188,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"BAIRRO"}
-                      editable={true}
+                      editable={editor}
                       value={dados.bairroInstalacao}
                       handleChange={(value) =>
                         setDados({ ...dados, bairroInstalacao: value })
@@ -1190,7 +1196,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"CIDADE"}
-                      editable={true}
+                      editable={editor}
                       value={dados.cidadeInstalacao}
                       options={cidadesAtendidas.map((cidade) => {
                         return { label: cidade, value: cidade };
@@ -1201,7 +1207,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"UF"}
-                      editable={true}
+                      editable={editor}
                       value={dados.ufInstalacao}
                       handleChange={(value) =>
                         setDados({ ...dados, ufInstalacao: value })
@@ -1209,7 +1215,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"PONTO DE REFERÊNCIA"}
-                      editable={true}
+                      editable={editor}
                       value={dados.pontoDeReferenciaInstalacao}
                       handleChange={(value) =>
                         setDados({
@@ -1220,7 +1226,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"LOGIN(CEMIG ATENDE)"}
-                      editable={true}
+                      editable={editor}
                       value={dados.loginCemigAtende}
                       handleChange={(value) =>
                         setDados({ ...dados, loginCemigAtende: value })
@@ -1228,7 +1234,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"SENHA(CEMIG ATENDE)"}
-                      editable={true}
+                      editable={editor}
                       value={dados.senhaCemigAtende}
                       handleChange={(value) =>
                         setDados({ ...dados, senhaCemigAtende: value })
@@ -1236,7 +1242,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"LATITUDE"}
-                      editable={true}
+                      editable={editor}
                       value={dados.latitude}
                       handleChange={(value) =>
                         setDados({ ...dados, latitude: value })
@@ -1244,7 +1250,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"LONGITUDE"}
-                      editable={true}
+                      editable={editor}
                       value={dados.longitude}
                       handleChange={(value) =>
                         setDados({ ...dados, longitude: value })
@@ -1252,7 +1258,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <NumberInput
                       label={"POTÊNIA PICO"}
-                      editable={true}
+                      editable={editor}
                       value={dados.potPico}
                       handleChange={(value) =>
                         setDados({
@@ -1264,7 +1270,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <NumberInput
                       label={"GERAÇÃO PREVISTA"}
-                      editable={true}
+                      editable={editor}
                       value={dados.geracaoPrevista}
                       handleChange={(value) =>
                         setDados({ ...dados, geracaoPrevista: value })
@@ -1279,7 +1285,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex justify-center">
                     <SelectInput
                       label={"TOPOLOGIA"}
-                      editable={true}
+                      editable={editor}
                       value={dados.topologia}
                       handleChange={(value) =>
                         setDados({ ...dados, topologia: value })
@@ -1309,7 +1315,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <TextInput
                           label={"MARCA DO INVERSOR/MICRO"}
-                          editable={true}
+                          editable={editor}
                           value={dados.marcaInversor}
                           handleChange={(value) =>
                             setDados({ ...dados, marcaInversor: value })
@@ -1317,7 +1323,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         />
                         <NumberInput
                           label={"QTDE INVERSOR/MICRO"}
-                          editable={true}
+                          editable={editor}
                           value={dados.qtdeInversor}
                           handleChange={(value) =>
                             setDados({ ...dados, qtdeInversor: Number(value) })
@@ -1325,7 +1331,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         />
                         <NumberInput
                           label={"POTÊNCIA INVERSOR/MICRO"}
-                          editable={true}
+                          editable={editor}
                           unit={"W"}
                           value={dados.potInversor}
                           handleChange={(value) =>
@@ -1339,7 +1345,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <div className="flex gap-2 justify-around flex-wrap mt-2">
                       <TextInput
                         label={"MARCA DO OTIMIZADOR"}
-                        editable={true}
+                        editable={editor}
                         value={
                           dados.marcaOtimizador ? dados.marcaOtimizador : ""
                         }
@@ -1349,7 +1355,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       />
                       <NumberInput
                         label={"QTDE DO OTIMIZADOR"}
-                        editable={true}
+                        editable={editor}
                         value={
                           dados.qtdeOtimizador ? dados.qtdeOtimizador : null
                         }
@@ -1359,7 +1365,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       />
                       <NumberInput
                         label={"POTÊNCIA DO OTIMIZADOR"}
-                        editable={true}
+                        editable={editor}
                         unit={"W"}
                         value={dados.potOtimizador ? dados.potOtimizador : null}
                         handleChange={(value) =>
@@ -1371,7 +1377,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
                     <TextInput
                       label={"MARCA DOS MÓDULOS"}
-                      editable={true}
+                      editable={editor}
                       value={dados.marcaModulos}
                       handleChange={(value) =>
                         setDados({ ...dados, marcaModulos: value })
@@ -1379,7 +1385,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <NumberInput
                       label={"Nº DE MÓDULOS"}
-                      editable={true}
+                      editable={editor}
                       value={dados.qtdeModulos}
                       handleChange={(value) =>
                         setDados({ ...dados, qtdeModulos: Number(value) })
@@ -1387,7 +1393,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <NumberInput
                       label={"POTÊNCIA DOS MÓDULOS"}
-                      editable={true}
+                      editable={editor}
                       unit={"W"}
                       value={dados.potModulos}
                       handleChange={(value) =>
@@ -1403,7 +1409,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex gap-2 justify-around flex-wrap">
                     <SelectInput
                       label={"TIPO DA ESTRUTURA"}
-                      editable={true}
+                      editable={editor}
                       options={[
                         {
                           label: "TELHADO",
@@ -1433,7 +1439,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"ESTRUTURA AMPÈRE"}
-                      editable={true}
+                      editable={editor}
                       options={[
                         {
                           label: "NÃO",
@@ -1455,7 +1461,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"RESPONSÁVEL PELA ESTRUTURA"}
-                      editable={true}
+                      editable={editor}
                       options={[
                         {
                           label: "AMPERE",
@@ -1479,7 +1485,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <SelectInput
                           label={"FORMA DE PAGAMENTO"}
-                          editable={true}
+                          editable={editor}
                           options={[
                             {
                               label: "INCLUSO NO FINANCIAMENTO",
@@ -1512,7 +1518,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         />
                         <NumberInput
                           label={"VALOR DA ESTRUTURA"}
-                          editable={true}
+                          editable={editor}
                           value={dados.valorEstrutura}
                           handleChange={(value) =>
                             setDados({
@@ -1532,7 +1538,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex gap-2 justify-around flex-wrap">
                     <SelectInput
                       label={"KIT COM O&M ?"}
-                      editable={true}
+                      editable={editor}
                       options={[
                         {
                           label: "NÃO",
@@ -1556,7 +1562,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <SelectInput
                           label={"QUAL PLANO DE O&M?"}
-                          editable={true}
+                          editable={editor}
                           options={[
                             {
                               label: "MANUTENÇÃO SIMLES",
@@ -1586,7 +1592,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex gap-2 justify-around flex-wrap mt-2">
                     <SelectInput
                       label={"CLIENTE SEGURADO?"}
-                      editable={true}
+                      editable={editor}
                       options={[
                         {
                           label: "SIM",
@@ -1610,7 +1616,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <SelectInput
                           label={"TEMPO SEGURADO"}
-                          editable={true}
+                          editable={editor}
                           options={[
                             {
                               label: "1 ANO",
@@ -1650,7 +1656,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <div className="flex gap-2 justify-around flex-wrap mt-2">
                       <SelectInput
                         label={"FORMA de PAGAMENTO"}
-                        editable={true}
+                        editable={editor}
                         options={[
                           {
                             label: "INCLUSO NO FINANCIAMENTO",
@@ -1679,7 +1685,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       />
                       <NumberInput
                         label={"VALOR O&M+SEGURO"}
-                        editable={true}
+                        editable={editor}
                         value={dados.valorOeMOuSeguro}
                         handleChange={(value) =>
                           setDados({
@@ -1698,7 +1704,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex justify-center">
                     <SelectInput
                       label={"HAVERÁ TROCA DE PADRÃO?"}
-                      editable={true}
+                      editable={editor}
                       options={[
                         {
                           label: "NÃO DEFINIDO",
@@ -1722,7 +1728,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   {dados.aumentoDeCarga == "SIM" && (
                     <div className="flex gap-2 justify-around flex-wrap mt-2">
                       <SelectInput
-                        editable={true}
+                        editable={editor}
                         label={"TIPO DO PADRÃO"}
                         value={dados.tipoDePadrao}
                         handleChange={(value) =>
@@ -1784,7 +1790,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         ]}
                       />
                       <SelectInput
-                        editable={true}
+                        editable={editor}
                         label={"HAVERÁ AUMENTO DO DISJUNTOR?"}
                         value={dados.aumentoDisjuntor}
                         handleChange={(value) =>
@@ -1803,7 +1809,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       />
                       <SelectInput
                         label={"RESPONSÁVEL PELA TROCA"}
-                        editable={true}
+                        editable={editor}
                         value={dados.respTrocaPadrao}
                         handleChange={(value) =>
                           setDados({ ...dados, respTrocaPadrao: value })
@@ -1825,7 +1831,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       />
                       <SelectInput
                         label={"PAGAMENTO DO PADRÃO"}
-                        editable={true}
+                        editable={editor}
                         value={
                           dados.formaPagamentoPadrao
                             ? dados.formaPagamentoPadrao
@@ -1855,7 +1861,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       />
                       <NumberInput
                         label={"VALOR DO PADRÃO"}
-                        editable={true}
+                        editable={editor}
                         value={dados.valorPadrao}
                         handleChange={(value) =>
                           setDados({ ...dados, valorPadrao: Number(value) })
@@ -1871,7 +1877,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex gap-2 justify-around flex-wrap mt-2">
                     <TextInput
                       label={"NOME DO PAGADOR"}
-                      editable={true}
+                      editable={editor}
                       value={dados.nomePagador}
                       handleChange={(value) =>
                         setDados({ ...dados, nomePagador: value })
@@ -1879,7 +1885,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"CONTATO DO PAGADOR"}
-                      editable={true}
+                      editable={editor}
                       value={dados.contatoPagador}
                       handleChange={(value) =>
                         setDados({ ...dados, contatoPagador: phoneMask(value) })
@@ -1887,7 +1893,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <TextInput
                       label={"CPF/CNPJ PARA NF"}
-                      editable={true}
+                      editable={editor}
                       value={dados.cpf_cnpjNF}
                       handleChange={(value) =>
                         setDados({ ...dados, cpf_cnpjNF: formatCnpjCpf(value) })
@@ -1897,7 +1903,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex gap-2 justify-around flex-wrap mt-2">
                     <SelectInput
                       label={"NECESSIDADE DE INSCRIÇÃO RURAL NA N.F?"}
-                      editable={true}
+                      editable={editor}
                       value={dados.necessidaInscricaoRural}
                       handleChange={(value) =>
                         setDados({ ...dados, necessidaInscricaoRural: value })
@@ -1916,7 +1922,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     {dados.necessidaInscricaoRural == "SIM" && (
                       <TextInput
                         label={"INSCRIÇÃO RURAL"}
-                        editable={true}
+                        editable={editor}
                         value={dados.inscriçãoRural}
                         handleChange={(value) =>
                           setDados({ ...dados, inscriçãoRural: value })
@@ -1927,7 +1933,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex gap-2 justify-around flex-wrap mt-2">
                     <SelectInput
                       label={"LOCAL DE ENTREGA"}
-                      editable={true}
+                      editable={editor}
                       options={[
                         {
                           label: "MESMO DO PROJETO",
@@ -1953,7 +1959,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"END. ENTREGA IGUAL COBRANÇA?"}
-                      editable={true}
+                      editable={editor}
                       value={dados.entregaIgualCobranca}
                       handleChange={(value) =>
                         setDados({ ...dados, entregaIgualCobranca: value })
@@ -1971,7 +1977,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"HÁ RESTRIÇÕES PARA ENTREGA?"}
-                      editable={true}
+                      editable={editor}
                       value={dados.restricoesEntrega}
                       handleChange={(value) =>
                         setDados({ ...dados, restricoesEntrega: value })
@@ -2005,7 +2011,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       label={
                         "VALOR DO CONTRATO FOTOVOLTAICO(SEM CUSTOS ADICIONAIS)"
                       }
-                      editable={true}
+                      editable={editor}
                       tag={"R$"}
                       value={dados.valorContrato}
                       handleChange={(value) =>
@@ -2014,7 +2020,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"ORIGEM DO RECURSO"}
-                      editable={true}
+                      editable={editor}
                       value={dados.origemRecurso}
                       handleChange={(value) =>
                         setDados({ ...dados, origemRecurso: value })
@@ -2039,7 +2045,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         <SelectInput
                           label={"CREDOR"}
                           value={dados.credor}
-                          editable={true}
+                          editable={editor}
                           options={[
                             {
                               label: "NÃO DEFINIDO",
@@ -2092,7 +2098,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         />
                         <TextInput
                           label={"NOME DO GERENTE"}
-                          editable={true}
+                          editable={editor}
                           value={dados.nomeGerente}
                           handleChange={(value) =>
                             setDados({ ...dados, nomeGerente: value })
@@ -2100,7 +2106,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         />
                         <TextInput
                           label={"CONTATO DO GERENTE"}
-                          editable={true}
+                          editable={editor}
                           value={dados.contatoGerente}
                           handleChange={(value) =>
                             setDados({
@@ -2113,7 +2119,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     )}
                     <NumberInput
                       label={"SE CARTÃO OU CHEQUE, QUANTAS PARCELAS?"}
-                      editable={true}
+                      editable={editor}
                       value={dados.numParcelas}
                       handleChange={(value) =>
                         setDados({
@@ -2126,7 +2132,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <NumberInput
                       label={"VALOR DA PARCELA"}
                       value={dados.valorParcela}
-                      editable={true}
+                      editable={editor}
                       tag={"R$"}
                       handleChange={(value) =>
                         setDados({ ...dados, valorParcela: Number(value) })
@@ -2135,7 +2141,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <SelectInput
                       label={"NECESSIDADE N.F ADIANTADA"}
                       value={dados.necessidadeNFAdiantada}
-                      editable={true}
+                      editable={editor}
                       options={[
                         {
                           label: "NÃO",
@@ -2153,7 +2159,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     <SelectInput
                       label={"NECESSIDADE CÓDIGO FINAME?"}
                       value={dados.necessidadeCodigoFiname}
-                      editable={true}
+                      editable={editor}
                       options={[
                         {
                           label: "NÃO",
@@ -2170,7 +2176,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     />
                     <SelectInput
                       label={"FORMA DE PAGAMENTO"}
-                      editable={true}
+                      editable={editor}
                       options={[
                         {
                           label:
@@ -2204,6 +2210,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       DESCRIÇÃO DA NEGOCIAÇÃO
                     </span>
                     <textarea
+                      readOnly={!editor}
                       placeholder={"Descreva aqui a negociação"}
                       value={dados.descricaoNegociacao}
                       className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
@@ -2223,7 +2230,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex justify-center mt-2">
                     <SelectInput
                       label={"POSSUI DISTRIBUIÇÕES DE CRÉDITOS?"}
-                      editable={true}
+                      editable={editor}
                       value={dados.possuiDistribuicao}
                       options={[
                         {
@@ -2266,7 +2273,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                           </div>
                           <NumberInput
                             label={"% EXCEDENTE"}
-                            editable={true}
+                            editable={editor}
                             value={dadosDistribuicao.excedente}
                             handleChange={(value) =>
                               setDadosDistribuicao({
@@ -2311,6 +2318,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                   <div className="flex gap-2 justify-around flex-wrap mt-2">
                     <div className="w-fit">
                       <input
+                        disabled={!editor}
                         checked={dados.contaDeEnergia ? true : false}
                         onChange={(e) =>
                           setDados({
@@ -2328,6 +2336,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     </div>
                     <div className="w-fit">
                       <input
+                        disabled={!editor}
                         checked={dados.propostaComercial ? true : false}
                         onChange={(e) =>
                           setDados({
@@ -2345,6 +2354,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     </div>
                     <div className="w-fit">
                       <input
+                        disabled={!editor}
                         checked={dados.visitaTecnicaFeita ? true : false}
                         onChange={(e) =>
                           setDados({
@@ -2364,6 +2374,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <div className="w-fit">
                           <input
+                            disabled={!editor}
                             checked={dados.car ? true : false}
                             onChange={(e) =>
                               setDados({
@@ -2381,6 +2392,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         </div>
                         <div className="w-fit">
                           <input
+                            disabled={!editor}
                             checked={dados.matricula ? true : false}
                             onChange={(e) =>
                               setDados({
@@ -2398,6 +2410,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         </div>
                         <div className="w-fit">
                           <input
+                            disabled={!editor}
                             checked={
                               dados.comprovanteEnderecoCorrespondente
                                 ? true
@@ -2423,6 +2436,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         </div>
                         <div className="w-fit">
                           <input
+                            disabled={!editor}
                             checked={dados.ramoDeAtividade ? true : false}
                             onChange={(e) =>
                               setDados({
@@ -2444,6 +2458,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <div className="w-fit">
                           <input
+                            disabled={!editor}
                             checked={dados.iptu ? true : false}
                             onChange={(e) =>
                               setDados({
@@ -2465,6 +2480,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <div className="w-fit">
                           <input
+                            disabled={!editor}
                             checked={dados.documentoComFoto ? true : false}
                             onChange={(e) =>
                               setDados({
@@ -2486,6 +2502,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <div className="w-fit">
                           <input
+                            disabled={!editor}
                             checked={dados.contratoSocial ? true : false}
                             onChange={(e) =>
                               setDados({
@@ -2503,6 +2520,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         </div>
                         <div className="w-fit">
                           <input
+                            disabled={!editor}
                             checked={dados.cartaoCnpj ? true : false}
                             onChange={(e) =>
                               setDados({
@@ -2520,6 +2538,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         </div>
                         <div className="w-fit">
                           <input
+                            disabled={!editor}
                             checked={
                               dados.comprovanteEnderecoRepresentante
                                 ? true
@@ -2545,6 +2564,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                         </div>
                         <div className="w-fit">
                           <input
+                            disabled={!editor}
                             checked={
                               dados.documentoComFotoSocios ? true : false
                             }
@@ -2572,6 +2592,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <div className="w-fit">
                           <input
+                            disabled={!editor}
                             checked={dados.relacaoDeCargas ? true : false}
                             onChange={(e) =>
                               setDados({
@@ -2593,6 +2614,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                       <>
                         <div className="w-fit">
                           <input
+                            disabled={!editor}
                             checked={dados.faturasRecebedoras ? true : false}
                             onChange={(e) =>
                               setDados({
@@ -2617,7 +2639,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
                     {creationMsg.text}
                   </p>
                 )}
-                {!dados.aprovacao && (
+                {editor && !dados.aprovacao && (
                   <div className="flex items-center justify-around w-full">
                     <div className="w-full flex justify-center">
                       <button

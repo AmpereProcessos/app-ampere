@@ -53,14 +53,20 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      if (!storedCredentials.accessibleRoutes.includes("PPS")) {
+      if (
+        !storedCredentials.accessibleRoutes.includes("PPS") &&
+        !storedCredentials.accessibleRoutes.includes("ADM")
+      ) {
         router.push("/");
       } else getFormularios();
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (!credentials.accessibleRoutes.includes("PPS")) {
+        if (
+          !credentials.accessibleRoutes.includes("PPS") &&
+          !credentials.accessibleRoutes.includes("ADM")
+        ) {
           router.push("/");
         } else getFormularios();
       }
@@ -166,6 +172,7 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
       </div>
       {modalIsOpen && (
         <ModalFormSolicitacao
+          editor={credentials.accessibleRoutes.includes("PPS") ? true : false}
           solicitacao={modalSolicitacao}
           setModalIsOpen={setModalIsOpen}
         />

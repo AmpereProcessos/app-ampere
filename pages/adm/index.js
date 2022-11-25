@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import ModalADM from "../../components/ModalADM";
 import DateInput from "../../components/DateInput";
 import { statusLiberacao } from "../../utils/constants";
+import Link from "next/link";
 function Administracao({ credentials, setCredentials }) {
   var editor;
   const router = useRouter();
@@ -392,6 +393,15 @@ function Administracao({ credentials, setCredentials }) {
           </div>
         ))}
       </div>
+      {credentials.visualizacao == undefined && (
+        <Link href={"/comercial/formulariosSolicitacao"}>
+          <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+            <p className="uppercase font-bold text-sm">
+              SOLICITAÇÕES DE CONTRATO
+            </p>
+          </a>
+        </Link>
+      )}
       {modalIsOpen && (
         <ModalADM
           handleUpdates={handleUpdates}

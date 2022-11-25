@@ -17,6 +17,12 @@ function Posvenda({ credentials, setCredentials }) {
     jornadaEmAberto: false,
     numModulos: null,
   });
+  const [dateFilter, setDateFilter] = useState({
+    after: null,
+    before: null,
+    field1: null,
+    field2: null,
+  });
   const [searchFilter, setSearchFilter] = useState("");
   const [cardMode, setCardMode] = useState(true);
   function getDateDiff(date1, date2) {
@@ -89,6 +95,16 @@ function Posvenda({ credentials, setCredentials }) {
           call.jornada.jornadaConcluida == undefined ||
           call.jornada.jornadaConcluida == null
       );
+    }
+    if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
+      if (!newArr) newArr = projects;
+      console.log(newArr);
+      newArr = newArr.filter(
+        (call) =>
+          call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
+          call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      );
+      console.log(newArr);
     }
     if (!newArr) setFilteredProjects(projects);
     else {
@@ -259,6 +275,74 @@ function Posvenda({ credentials, setCredentials }) {
             value={searchFilter}
             onChange={(e) => handleSearchFilter(e.target.value)}
           />
+          <div className="hidden lg:flex gap-x-2">
+            <div className="flex flex-col w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                Depois de:
+              </span>
+              <input
+                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                type="date"
+                value={
+                  dateFilter.after &&
+                  new Date(dateFilter.after).toISOString().slice(0, 10)
+                }
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    after: isNaN(e.target.value)
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <div className="flex flex-col w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                Antes de:
+              </span>
+              <input
+                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                type="date"
+                value={
+                  dateFilter.before &&
+                  new Date(dateFilter.before).toISOString().slice(0, 10)
+                }
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    before: isNaN(e.target.value)
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <Select
+              isMulti={false}
+              placeholder={"CAMPO DE FILTRO"}
+              options={[
+                { label: "SAÍDA DE OBRA", value: "obra.saida" },
+                { label: "TROCA DO MEDIDOR", value: "medidor.data" },
+                {
+                  label: "DATA ASS.CONTRATO",
+                  value: "contrato.dataAssinatura",
+                },
+                {
+                  label: "PREVISÃO DE ENTREGA",
+                  value: "compra.previsaoEntrega",
+                },
+                { label: "NÃO DEFINIDO", value: null },
+              ]}
+              onChange={(e) =>
+                setDateFilter({
+                  ...dateFilter,
+                  field1: e.value != null ? e.value.split(".")[0] : null,
+                  field2: e.value != null ? e.value.split(".")[1] : null,
+                })
+              }
+            />
+          </div>
           <button
             onClick={filterProjects}
             className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"

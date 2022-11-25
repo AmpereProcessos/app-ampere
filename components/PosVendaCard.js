@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import NumberInput from "../components/NumberInput";
+import dayjs from "dayjs";
 import axios from "axios";
 function PosVendaCard({ project, getUpdates, cardMode, editor }) {
   const [infoHolder, setInfo] = useState(project);
@@ -37,7 +38,7 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
             <p className="text-gray-700 font-bold">
               {infoHolder.nomeDoContrato}
             </p>
-            <div className="hidden lg:flex items-center flex-wrap grow justify-between px-6">
+            <div className="hidden lg:flex items-center gap-2 flex-wrap grow justify-between px-6">
               <div>
                 <span className="text-xs">TELEFONE</span>
                 <p className="text-gray-600">
@@ -68,11 +69,32 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
               </div>
               <div>
                 <span className="text-xs">PREV. ENTREGA</span>
-                <p className="text-gray-600 text-center">
-                  {infoHolder.compra?.previsaoEntrega
-                    ? new Date(
-                        infoHolder.compra.previsaoEntrega
-                      ).toLocaleDateString()
+                <p
+                  className={`text-xs ${
+                    dayjs(infoHolder.compra.previsaoEntrega).diff(
+                      new Date(),
+                      "day"
+                    ) > 0
+                      ? dayjs(infoHolder.compra.previsaoEntrega).diff(
+                          new Date(),
+                          "day"
+                        ) < 7
+                        ? "text-red-500 font-bold"
+                        : "text-green-500 font-bold"
+                      : "text-gray-600"
+                  } text-center`}
+                >
+                  {infoHolder.compra.previsaoEntrega
+                    ? dayjs(
+                        new Date(infoHolder.compra.previsaoEntrega)
+                      ).isValid()
+                      ? dayjs(
+                          dayjs(infoHolder.compra.previsaoEntrega).add(
+                            4,
+                            "hour"
+                          )
+                        ).format("DD/MM/YYYY")
+                      : "-"
                     : "-"}
                 </p>
               </div>
@@ -478,7 +500,30 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
           } hover:bg-blue-100 px-2`}
         >
           <p className="text-center font-bold">{project.nomeDoContrato}</p>
+          <p
+            className={`text-xs ${
+              dayjs(infoHolder.compra.previsaoEntrega).diff(new Date(), "day") >
+              0
+                ? dayjs(infoHolder.compra.previsaoEntrega).diff(
+                    new Date(),
+                    "day"
+                  ) < 7
+                  ? "text-red-500 font-bold"
+                  : "text-green-500 font-bold"
+                : "text-gray-600"
+            } text-center`}
+          >
+            PREV.ENTREGA:{" "}
+            {infoHolder.compra.previsaoEntrega
+              ? dayjs(new Date(infoHolder.compra.previsaoEntrega)).isValid()
+                ? dayjs(
+                    dayjs(infoHolder.compra.previsaoEntrega).add(4, "hour")
+                  ).format("DD/MM/YYYY")
+                : "-"
+              : "-"}
+          </p>
           <p className="text-center">
+            CONTATO:{" "}
             {project.jornada.dataUltimoContato
               ? new Date(
                   project.jornada?.dataUltimoContato

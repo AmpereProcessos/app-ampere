@@ -1,0 +1,138 @@
+import React, { useState } from "react";
+import SelectInput from "./SelectInput";
+import { FaSave } from "react-icons/fa";
+import axios from "axios";
+function SeparacaoCard({ info, editor }) {
+  const [infoHolder, setInfo] = useState(info);
+  const [changes, setChanges] = useState({});
+  const [msg, setMsg] = useState({
+    text: "",
+    color: "",
+  });
+  function handleChanges() {
+    axios.post(`/api/projects/update/${info._id}`, changes).then((res) =>
+      setMsg({
+        text: "Alterações feitas",
+        color: "text-green-500",
+      })
+    );
+  }
+  return (
+    <div className="flex flex-col border border-gray-200 p-2 w-full">
+      <div className="flex items-center pb-2 border-b border-gray-200">
+        <h1 className="font-bold uppercase mr-2">
+          <strong className="text-[#15599a]">({infoHolder.qtde})</strong>{" "}
+          {infoHolder.nomeDoContrato}
+        </h1>
+        <div className="flex flex-wrap justify-around gap-2 grow">
+          <div className="flex items-center flex-col">
+            <p className="text-gray-600 font-bold text-sm">EQUIPE</p>
+            <p className="text-gray-600 text-xs">
+              {infoHolder.obra.equipeResp ? infoHolder.obra.equipeResp : "-"}
+            </p>
+          </div>
+          <div className="flex items-center flex-col">
+            <p className="text-gray-600 font-bold text-sm">CIDADE</p>
+            <p className="text-gray-600 text-xs">
+              {infoHolder.cidade ? infoHolder.cidade : "-"}
+            </p>
+          </div>
+          <div className="flex items-center flex-col">
+            <p className="text-gray-600 font-bold text-sm">TOPOLOGIA</p>
+            <p className="text-gray-600 text-xs">
+              {infoHolder.sistema.topologia
+                ? infoHolder.sistema.topologia
+                : "-"}
+            </p>
+          </div>
+          <div className="flex items-center flex-col">
+            <p className="text-gray-600 font-bold text-sm">Nº DE MÓDULOS</p>
+            <p className="text-gray-600 text-xs">
+              {infoHolder.sistema.qtdeModulos
+                ? infoHolder.sistema.qtdeModulos
+                : "-"}
+            </p>
+          </div>
+          <div className="flex items-center flex-col">
+            <p className="text-gray-600 font-bold text-sm">POT. MÓDULOS</p>
+            <p className="text-gray-600 text-xs">
+              {infoHolder.sistema.potModulos
+                ? infoHolder.sistema.potModulos
+                : "-"}
+            </p>
+          </div>
+          <div className="flex items-center flex-col">
+            <p className="text-gray-600 font-bold text-sm">
+              INFO MICRO/INVERSOR
+            </p>
+            <p className="text-gray-600 text-xs">
+              {infoHolder.sistema.inversor ? infoHolder.sistema.inversor : "-"}
+            </p>
+          </div>
+          <div className="flex items-center flex-col">
+            <p className="text-gray-600 font-bold text-sm">TIPO ESTRUTURA</p>
+            <p className="text-gray-600 text-xs">
+              {infoHolder.estruturaPersonalizada.tipo
+                ? infoHolder.estruturaPersonalizada.tipo
+                : "-"}
+            </p>
+          </div>
+          <div className="flex items-center flex-col">
+            <p className="text-gray-600 font-bold text-sm">TIPO TELHA</p>
+            <p className="text-gray-600 text-xs uppercase">
+              {infoHolder.visitaTecnica.tipoDaTelha
+                ? infoHolder.visitaTecnica.tipoDaTelha
+                : "-"}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center justify-around py-2">
+        <SelectInput
+          label={"STATUS DA SEPARAÇÃO"}
+          editable={editor}
+          value={
+            infoHolder.material.statusSeparacao
+              ? infoHolder.material.statusSeparacao
+              : "NÃO DEFINIDO"
+          }
+          handleChange={(value) => {
+            setChanges({ ...changes, "material.statusSeparacao": value });
+            setInfo({
+              ...infoHolder,
+              material: { ...infoHolder.material, statusSeparacao: value },
+            });
+          }}
+          options={[
+            {
+              label: "INICIAR SEPARAÇÃO",
+              value: "INICIAR SEPARAÇÃO",
+            },
+            {
+              label: "SEPARADO",
+              value: "SEPARADO",
+            },
+            {
+              label: "NÃO DEFINIDO",
+              value: "NÃO DEFINIDO",
+            },
+          ]}
+        />
+      </div>
+      {msg.text && (
+        <p className={`${msg.color} italic text-center`}>{msg.text}</p>
+      )}
+      <div className="flex justify-center">
+        <button
+          onClick={handleChanges}
+          className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
+        >
+          <p>Salvar alterações</p>
+          <FaSave />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default SeparacaoCard;

@@ -21,6 +21,36 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    res.json(posvenda);
+    let assinatura = await collection
+      .aggregate([
+        {
+          $match: {
+            "projeto.projetoConcluido": { $ne: "SIM" },
+            $or: [
+              { "compra.statusLiberacao": "PAGO" },
+              { "projeto.iniciar": "SIM" },
+            ],
+            "projeto.dataAssDocumentacao": null, // filtrar statusDoParecerDeAcesso = "AGUARDANDO ASSINATURA"
+          },
+        },
+        {
+          $project: {
+            "projeto.dataAssDocumentacao": 1,
+            "parecer.statusDoParecerDeAcesso": 1,
+          },
+        },
+      ])
+      .toArray();
+    res.json({
+      projetos: posvenda,
+      assinatura: {
+        confeccionar: assinatura.filter(
+          (x) => x.parecer.statusDoParecerDeAcesso != "AGUARDANDO ASSINATURA"
+        ).length,
+        paraAssinar: assinatura.filter(
+          (x) => x.parecer.statusDoParecerDeAcesso == "AGUARDANDO ASSINATURA"
+        ).length,
+      },
+    });
   }
 }

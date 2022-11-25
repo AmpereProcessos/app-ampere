@@ -4,15 +4,17 @@ export default async function handler(req, res) {
   const collection = db.collection("dados");
   let arr = await collection.updateMany(
     {
-      cidade: "INACIOLANDIA",
+      "material.statusSeparacao": "INICIAR SEPARAÇÃO",
+      "obra.statusDaObra": "CONCLUIDA",
     },
     {
       $set: {
-        cidade: "INACIOLÂNDIA",
+        "material.statusSeparacao": "SEPARADO",
       },
     }
   );
   res.json(arr);*/
+  res.json("API DESATIVADA");
 }
 const info = [
   649, 836, 848, 849, 881, 919, 976, 992, 994, 1004, 1050, 1066, 1081, 1090,

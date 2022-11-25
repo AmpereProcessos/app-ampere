@@ -41,21 +41,34 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
             <div className="hidden lg:flex items-center gap-2 flex-wrap grow justify-between px-6">
               <div>
                 <span className="text-xs">TELEFONE</span>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-center">
                   {infoHolder.telefone ? infoHolder.telefone : "-"}
                 </p>
               </div>
               <div>
                 <span className="text-xs">VENDEDOR</span>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-center">
                   {infoHolder.vendedor?.nome ? infoHolder.vendedor?.nome : "-"}
                 </p>
               </div>
               <div>
                 <span className="text-xs">STATUS DO PARECER</span>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-center">
                   {infoHolder.parecer?.statusDoParecerDeAcesso
                     ? infoHolder.parecer?.statusDoParecerDeAcesso
+                    : "-"}
+                </p>
+              </div>
+              <div>
+                <span className="text-xs">DATA LIB.DOCUMENTAÇÃO</span>
+                <p className="text-gray-600 text-center">
+                  {infoHolder.projeto.dataLiberacaoDocumentacao
+                    ? dayjs(
+                        dayjs(infoHolder.projeto.dataLiberacaoDocumentacao).add(
+                          4,
+                          "hour"
+                        )
+                      ).format("DD/MM/YYYY")
                     : "-"}
                 </p>
               </div>
@@ -70,7 +83,7 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
               <div>
                 <span className="text-xs">PREV. ENTREGA</span>
                 <p
-                  className={`text-xs ${
+                  className={`${
                     dayjs(infoHolder.compra.previsaoEntrega).diff(
                       new Date(),
                       "day"

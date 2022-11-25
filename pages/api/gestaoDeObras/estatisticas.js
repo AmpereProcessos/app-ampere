@@ -45,6 +45,7 @@ export default async function handler(req, res) {
         {
           $project: {
             "compra.statusEntrega": 1,
+            "material.statusSeparacao": 1,
             "obra.observacoes": 1,
           },
         },
@@ -100,6 +101,9 @@ export default async function handler(req, res) {
         obsPendente: obras.filter(
           (x) =>
             x.obra.observacoes == undefined || x.obra.observacoes.trim() == 0
+        ).length,
+        separacaoPendente: obras.filter(
+          (x) => x.material.statusSeparacao != "SEPARADO"
         ).length,
       },
       oss: {

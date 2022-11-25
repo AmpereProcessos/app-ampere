@@ -7,6 +7,12 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { cidadesAtendidas, vendedores } from "../../utils/constants";
 function Posvenda({ credentials, setCredentials }) {
   const router = useRouter();
+  const [stats, setStats] = useState({
+    assinatura: {
+      confeccionar: 0,
+      paraAssinar: 0,
+    },
+  });
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filters, setFilters] = useState({
@@ -14,6 +20,7 @@ function Posvenda({ credentials, setCredentials }) {
     cidadeFilter: [],
     vendedorFilter: [],
     contratoFilter: [],
+    assinFaltando: false,
     jornadaEmAberto: false,
     numModulos: null,
   });
@@ -32,8 +39,11 @@ function Posvenda({ credentials, setCredentials }) {
   }
   function getProjects() {
     axios.get("/api/projects/posvenda").then((res) => {
-      setProjects(res.data);
-      setFilteredProjects(res.data);
+      setStats({
+        assinatura: res.data.assinatura,
+      });
+      setProjects(res.data.projetos);
+      setFilteredProjects(res.data.projetos);
     });
   }
   function handleSearchFilter(value) {
@@ -85,6 +95,15 @@ function Posvenda({ credentials, setCredentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
         (call) => Number(call.sistema.qtdeModulos) == Number(filters.numModulos)
+      );
+    }
+    if (filters.assinFaltando) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (project) =>
+          project.projeto.dataAssDocumentacao == undefined ||
+          project.projeto.dataAssDocumentacao == null ||
+          project.projeto.dataAssDocumentacao == "-"
       );
     }
     if (filters.jornadaEmAberto) {
@@ -166,6 +185,16 @@ function Posvenda({ credentials, setCredentials }) {
           <p className="font-raleway font-bold text-[#fead61]">
             ({filteredProjects.length})
           </p>
+        </div>
+        <div className="flex items-center w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
+          <div className="flex items-center justify-between px-12 w-full">
+            <p className="font-bold text-[#15599a]">
+              DOCUMENTAÇÕES A CONFECCIONAR: {stats.assinatura.confeccionar}
+            </p>
+            <p className="font-bold text-[#15599a]">
+              DOCUMENTAÇÕES PARA ASSINAR: {stats.assinatura.paraAssinar}
+            </p>
+          </div>
         </div>
         <div className="flex flex-wrap justify-center gap-2 items-center">
           <button
@@ -275,6 +304,16 @@ function Posvenda({ credentials, setCredentials }) {
             value={searchFilter}
             onChange={(e) => handleSearchFilter(e.target.value)}
           />
+          <div
+            onClick={() =>
+              setFilters({ ...filters, assinFaltando: !filters.assinFaltando })
+            }
+            className={`${
+              filters.assinFaltando ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            ASSINATURA PENDENTE
+          </div>
           <div className="hidden lg:flex gap-x-2">
             <div className="flex flex-col w-fit items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -327,6 +366,10 @@ function Posvenda({ credentials, setCredentials }) {
                 {
                   label: "DATA ASS.CONTRATO",
                   value: "contrato.dataAssinatura",
+                },
+                {
+                  label: "DATA LIB.DOCUMENTAÇÃO",
+                  value: "projeto.dataLiberacaoDocumentacao",
                 },
                 {
                   label: "PREVISÃO DE ENTREGA",

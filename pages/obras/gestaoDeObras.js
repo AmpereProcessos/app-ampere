@@ -74,12 +74,20 @@ function GestaoDeObras({ credentials, setCredentials }) {
             <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
               {stats.obras && stats.obras.total}
             </p>
-            <p className="text-center text-gray-600">
-              ENTREGUES:{" "}
-              <strong className="text-red-500">
-                {stats.obras && stats.obras.parcial}
-              </strong>
-            </p>
+            <div className="flex flex-col gap-2">
+              <p className="text-center text-gray-600">
+                ENTREGUES:{" "}
+                <strong className="text-red-500">
+                  {stats.obras && stats.obras.parcial}
+                </strong>
+              </p>
+              <p className="text-center text-gray-600">
+                PARA SEPARAR:
+                <strong className="text-red-500">
+                  {stats.obras && stats.obras.separacaoPendente}
+                </strong>
+              </p>
+            </div>
           </div>
           <div className="flex flex-col p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">

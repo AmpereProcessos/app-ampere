@@ -1590,7 +1590,7 @@ function ModalObras({
                   />
                   <TextInput
                     label={"Amperagem"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.visitaTecnica?.amperagem
                         ? infoHolder.visitaTecnica.amperagem

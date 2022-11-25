@@ -54,7 +54,24 @@ export default async function handler(req, res) {
           comissionamento: 1,
         },
       ])
-      .toArray();*/
+      .toArray();
+    let parecer = await aggregate([
+      {
+        $match: {
+          "contrato.status": "ASSINADO",
+          "parecer.statusDoParecerDeAcesso": {
+            $in: [
+              "PENDENCIAS",
+              "SOLICITAR ACESSO",
+              "SOLICITAR TROCA DE TITULARIDADE",
+              "SOLICITAR AUMENTO DE CARGA",
+              "AGUARDANDO TROCA DE TITULARIDADE",
+              "AGUARDANDO AUMENTO DE CARGA",
+            ],
+          },
+        },
+      },
+    ]);*/
     res.json({
       chamadosAbertos: chamadosAbertos,
       chamadosFechados: chamadosFechados,

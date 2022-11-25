@@ -1,8 +1,8 @@
 import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  /*const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
   const collection = db.collection("dados");
-  let arr = await collection.updateMany(
+  /*let arr = await collection.updateMany(
     {
       "material.statusSeparacao": "INICIAR SEPARAÇÃO",
       "obra.statusDaObra": "CONCLUIDA",
@@ -14,7 +14,55 @@ export default async function handler(req, res) {
     }
   );
   res.json(arr);*/
-  res.json("API DESATIVADA");
+  let arr = await collection
+    .aggregate([
+      {
+        $match: {
+          cidade: {
+            $nin: [
+              "ITUIUTABA", //ok to uppercase
+              "IPIAÇU", // ok to uppercase
+              "SANTA VITÓRIA", //ok to uppercase
+              "CAMPINA VERDE", // ok to uppercase
+              "UBERLÂNDIA", // ok to uppercase
+              "CAPINÓPOLIS", // ok to uppercase
+              "GURINHATÃ", // ok to uppercase
+              "PRATA", // ok to uppercase
+              "CANÁPOLIS", // ok to uppercaseC
+              "CACHOEIRA DOURADA", // ok to uppercase
+              "MONTE ALEGRE", // ok to uppercase
+              "UBERABA", // ok to uppercase
+              "CALDAS NOVAS", // ok to uppercase
+              "SÃO SEBASTIÃO DO PARAÍSO", // ok to uppercase
+              "BOM JESUS", // ok to uppercase
+              "PORTEIRÃO", // ok to uppercase
+              "JOÃO PINHEIRO", // ok to uppercase
+              "SÃO SIMÃO", // ok to uppercase
+              "INACIOLÂNDIA", // ok to uppercase
+              "TRINDADE", // ok to uppercase
+              "PATOS DE MINAS", // ok to uppecase
+              "ITUMBIARA", // ok to uppercase
+              "CENTRALINA", // ok to uppercase
+              "SÃO GONÇALO DO ABAETÉ", // ok to uppercase
+              "PATROCÍNIO", // ok to uppercase
+              "NOVA PONTE", // ok to uppercase
+              "QUIRINÓPOLIS", // ok to uppercase
+              "TUPACIGUARA", // ok to uppercase
+              "PARANAIGUARA",
+            ],
+          },
+          "obra.statusDaObra": { $ne: "CONCLUIDA" },
+          "compra.statusLiberacao": "PAGO",
+        },
+      },
+      {
+        $sort: {
+          qtde: -1,
+        },
+      },
+    ])
+    .toArray();
+  res.json(arr);
 }
 const info = [
   649, 836, 848, 849, 881, 919, 976, 992, 994, 1004, 1050, 1066, 1081, 1090,

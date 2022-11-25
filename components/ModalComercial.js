@@ -11,6 +11,7 @@ import {
   tiposDeEstruturas,
 } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
+import { AiOutlineSearch } from "react-icons/ai";
 import { VscChromeClose } from "react-icons/vsc";
 import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
@@ -67,6 +68,39 @@ function ModalComercial({
     text: "",
     color: "",
   });
+  async function findCPF(field) {
+    axios
+      .get(`https://viacep.com.br/ws/${infoHolder.cep.replace("-", "")}/json/`)
+      .then((res) => {
+        if (res.data.erro) {
+          console.log(res.data.erro);
+          return;
+        } else {
+          console.log(
+            cidadesAtendidas.includes(res.data.localidade.toUpperCase())
+          );
+          console.log(res.data.localidade);
+          setInfo({
+            ...infoHolder,
+            bairro: res.data.bairro,
+            cidade: cidadesAtendidas.includes(res.data.localidade.toUpperCase())
+              ? res.data.localidade.toUpperCase()
+              : "NÃO DEFINIDO",
+            logradouro: res.data.logradouro,
+            uf: res.data.uf,
+          });
+          setChanges({
+            ...changes,
+            bairro: res.data.bairro,
+            cidade: cidadesAtendidas.includes(res.data.localidade.toUpperCase())
+              ? res.data.localidade.toUpperCase()
+              : "NÃO DEFINIDO",
+            logradouro: res.data.logradouro,
+            uf: res.data.uf,
+          });
+        }
+      });
+  }
   async function handleChanges() {
     if (
       infoHolder.contrato.status != "ASSINADO" &&
@@ -203,13 +237,16 @@ function ModalComercial({
                     label={"Cidade"}
                     editable={editor}
                     value={
-                      infoHolder.cidade
+                      cidadesAtendidas.includes(infoHolder.cidade.toUpperCase())
                         ? infoHolder.cidade
-                        : cidadesAtendidas[0]
+                        : "NÃO DEFINIDO"
                     }
-                    options={cidadesAtendidas.map((cidade) => {
-                      return { label: cidade, value: cidade };
-                    })}
+                    options={[
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                      ...cidadesAtendidas.map((cidade) => {
+                        return { label: cidade, value: cidade };
+                      }),
+                    ]}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
@@ -234,6 +271,12 @@ function ModalComercial({
                       setInfo({ ...infoHolder, cep: value });
                     }}
                   />
+                  <button
+                    onClick={() => findCPF()}
+                    className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
+                  >
+                    <AiOutlineSearch />
+                  </button>
                   <TextInput
                     label={"Logradouro"}
                     editable={editor}

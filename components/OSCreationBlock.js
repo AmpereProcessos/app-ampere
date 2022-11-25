@@ -84,8 +84,7 @@ function OSCreationBlock({
             valor: osInfo.valorPagamentoTerceiro,
             servico: `${osInfo.categoria} - ${osInfo.servicoExecutado}`,
           });
-        }
-        */
+        }*/
         axios.post("/api/ordensDeServico", { id: id, arr: arr }).then((res) => {
           setOsMsg({
             text: "Ordem de serviço gerada",

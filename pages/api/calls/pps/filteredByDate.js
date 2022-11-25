@@ -13,8 +13,18 @@ export default async function handler(req, res) {
           },
         },
         {
+          $addFields: {
+            convertedDataDeConclusao: {
+              $convert: {
+                input: "$dataDeConclusao",
+                to: "string",
+              },
+            },
+          },
+        },
+        {
           $match: {
-            dataDeConclusao: {
+            convertedDataDeConclusao: {
               $gte: after,
               $lte: before,
             },

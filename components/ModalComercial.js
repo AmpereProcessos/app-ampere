@@ -40,11 +40,17 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function formataCPF(cpf) {
-  //retira os caracteres indesejados...
-  cpf = cpf.replace(/[^\d]/g, "");
-  //realizar a formatação...
-  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+function formatCnpjCpf(value) {
+  const cnpjCpf = value.replace(/\D/g, "");
+
+  if (cnpjCpf.length === 11) {
+    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+  }
+
+  return cnpjCpf.replace(
+    /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
+    "$1.$2.$3/$4-$5"
+  );
 }
 function formataCEP(cep) {
   cep = cep
@@ -213,7 +219,7 @@ function ModalComercial({
                     editable={editor}
                     value={
                       infoHolder.cpf_cnpj
-                        ? formataCPF(infoHolder.cpf_cnpj.toString())
+                        ? formatCnpjCpf(infoHolder.cpf_cnpj.toString())
                         : ""
                     }
                     handleChange={(value) => {

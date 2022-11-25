@@ -12,6 +12,7 @@ function ProjetosSeparacao({ credentials, setCredentials }) {
     cidadeFilter: [],
     topologiaFilter: [],
     statusDaObraFilter: [],
+    entregaStatusFilter: [],
     qtdeModulosFilter: null,
   });
   function getProjects() {
@@ -38,6 +39,12 @@ function ProjetosSeparacao({ credentials, setCredentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((project) =>
         filters.statusDaObraFilter.includes(project.obra.statusDaObra)
+      );
+    }
+    if (filters.entregaStatusFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((project) =>
+        filters.entregaStatusFilter.includes(project.compra.statusEntrega)
       );
     }
     if (filters.qtdeModulosFilter && filters.qtdeModulosFilter != 0) {
@@ -103,6 +110,22 @@ function ProjetosSeparacao({ credentials, setCredentials }) {
                 cidadeFilter: e.map((x) => x.value),
               })
             }
+          />
+          <Select
+            isMulti
+            placeholder="STATUS DA ENTREGA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                entregaStatusFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              { value: "EM ROTA", label: "EM ROTA" },
+              { value: "AGUARDANDO COMPRA", label: "AGUARDANDO COMPRA" },
+              { value: "ENTREGUE", label: "ENTREGUE" },
+              { value: undefined, label: "NÃO DEFINIDO" },
+            ]}
           />
           <Select
             placeholder="EQUIPE RESP."
@@ -173,7 +196,8 @@ function ProjetosSeparacao({ credentials, setCredentials }) {
           />
           <input
             type="number"
-            className="outline-none border border-gray-200 p-2 h-[36px] text-center w-[75px]"
+            className="outline-none border border-gray-200 p-2 h-[36px] text-center w-[100px] text-xs"
+            placeholder="NºMódulos"
             onChange={(e) =>
               setFilters({
                 ...filters,
@@ -183,7 +207,7 @@ function ProjetosSeparacao({ credentials, setCredentials }) {
           />
           <button
             onClick={filterProjects}
-            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+            className="flex h-[36px] bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
           >
             <p>Filtrar</p>
             <AiOutlineSearch />

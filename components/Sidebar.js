@@ -213,13 +213,18 @@ function Sidebar({ credentials }) {
           </div>
           <div className="mt-6">
             <h2 className="text-xs text-gray-500">OUTROS</h2>
-            {credentials.visualizacao == undefined && (
+            {credentials.visualizacao == undefined &&
+            ["Projetos", "PPS", "O&M"].every((x) =>
+              credentials?.accessibleRoutes?.includes(x)
+            ) ? (
               <Link href="/calls">
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                   <FaTasks style={{ color: "#15599a", fontSize: "20px" }} />
                   <p className="pl-3 text-xs text-gray-600">Chamados</p>
                 </a>
               </Link>
+            ) : (
+              false
             )}
             {credentials.controller != undefined &&
             credentials.controller == true ? (

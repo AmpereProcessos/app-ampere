@@ -27,6 +27,8 @@ function Comercial({ credentials, setCredentials }) {
   const [dateFilter, setDateFilter] = useState({
     after: null,
     before: null,
+    field1: null,
+    field2: null,
   });
   const [filters, setFilters] = useState({
     contratoFilter: [],
@@ -82,12 +84,12 @@ function Comercial({ credentials, setCredentials }) {
         filters.contratoFilter.includes(project.contrato.status)
       );
     }
-    if (dateFilter.after && dateFilter.before) {
+    if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
         (call) =>
-          call.contrato?.dataAssinatura >= dateFilter.after &&
-          call.contrato?.dataAssinatura <= dateFilter.before
+          call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
+          call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
     }
     if (!newArr) setFilteredProjects(projects);
@@ -224,7 +226,7 @@ function Comercial({ credentials, setCredentials }) {
             <div className="hidden lg:flex gap-x-2">
               <div className="flex flex-col w-fit items-center">
                 <span className="uppercase font-bold font-raleway text-center text-sm">
-                  Contrato depois de:
+                  Depois de:
                 </span>
                 <input
                   className="text-xs w-full text-center uppercase text-gray-600 outline-none"
@@ -245,7 +247,7 @@ function Comercial({ credentials, setCredentials }) {
               </div>
               <div className="flex flex-col w-fit items-center">
                 <span className="uppercase font-bold font-raleway text-center text-sm">
-                  Contrato antes de:
+                  Antes de:
                 </span>
                 <input
                   className="text-xs w-full text-center uppercase text-gray-600 outline-none"
@@ -264,6 +266,32 @@ function Comercial({ credentials, setCredentials }) {
                   }
                 />
               </div>
+              <Select
+                isMulti={false}
+                placeholder={"CAMPO DE FILTRO"}
+                options={[
+                  {
+                    label: "DATA DA LIBERAÇÃO",
+                    value: "contrato.dataLiberacao",
+                  },
+                  {
+                    label: "DATA ASS.CONTRATO",
+                    value: "contrato.dataAssinatura",
+                  },
+                  {
+                    label: "DATA PAG.KIT",
+                    value: "compra.dataPagamento",
+                  },
+                  { label: "NÃO DEFINIDO", value: null },
+                ]}
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    field1: e.value != null ? e.value.split(".")[0] : null,
+                    field2: e.value != null ? e.value.split(".")[1] : null,
+                  })
+                }
+              />
             </div>
           </div>
           <div className="flex items-center justify-around gap-x-2">

@@ -20,24 +20,29 @@ function Calls({ credentials, setCredentials }) {
       </h1>
       <div className="flex gap-4 mt-5 flex-wrap w-full">
         <Link href="/calls/chamadosPPS">
-          <div className="flex flex-col justify-center cursor-pointer grow w-full lg:min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <h1 className="text-center uppercase font-raleway">
               Chamados Suporte PPS
             </h1>
           </div>
         </Link>
         <Link href="/calls/chamadosSuporte">
-          <div className="flex flex-col justify-center cursor-pointer grow w-full lg:min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <h1 className="text-center uppercase font-raleway">
               Chamados Suporte
             </h1>
           </div>
         </Link>
         <Link href="/calls/chamadosProjetos">
-          <div className="flex flex-col justify-center cursor-pointer grow w-full lg:min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <h1 className="text-center uppercase font-raleway">
               Chamados Projetos
             </h1>
+          </div>
+        </Link>
+        <Link href="/calls/chamadosADM">
+          <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <h1 className="text-center uppercase font-raleway">Chamados adm</h1>
           </div>
         </Link>
       </div>

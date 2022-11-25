@@ -173,6 +173,8 @@ function EstruturaCard({ project, credentials }) {
             <OSCreationBlock
               editor={true}
               credentials={credentials}
+              qtde={project.qtde}
+              nomeDoContrato={project.nomeDoContrato}
               id={project._id}
               ordensDeServico={project.ordensDeServico}
               handleUpdates={(obj) => {

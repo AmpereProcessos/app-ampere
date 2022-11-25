@@ -200,6 +200,8 @@ function PadraoCard({ project, credentials }) {
               editor={true}
               credentials={credentials}
               id={project._id}
+              qtde={project.qtde}
+              nomeDoContrato={project.nomeDoContrato}
               ordensDeServico={project.ordensDeServico}
               handleUpdates={(obj) => {
                 if (project.ordensDeServico) {

@@ -12,6 +12,8 @@ function OSCreationBlock({
   ordensDeServico,
   id,
   categories,
+  nomeDoContrato,
+  qtde,
 }) {
   const [osInfo, setOsInfo] = useState({
     categoria: "NÃO DEFINIDO",
@@ -33,7 +35,7 @@ function OSCreationBlock({
     text: "",
     color: "",
   });
-  function handleOSCreation() {
+  async function handleOSCreation() {
     var arr;
     if (!credentials.controller) {
       setOsMsg({
@@ -61,6 +63,29 @@ function OSCreationBlock({
           ];
           ordensDeServico = arr;
         }
+        /*
+        if (osInfo.realizarCobranca) {
+          await axios.post("/api/calls/adm/mainData", {
+            codigoProjeto: qtde,
+            nomeCliente: nomeDoContrato,
+            usuarioEmissor: credentials.nome,
+            demanda: "COBRANÇA",
+            valor: osInfo.valorCobranca,
+            servico: `${osInfo.categoria} - ${osInfo.servicoExecutado}`,
+          });
+        }
+        if (osInfo.pagamentoTerceiro) {
+          await axios.post("/api/calls/adm/mainData", {
+            codigoProjeto: qtde,
+            nomeCliente: nomeDoContrato,
+            usuarioEmissor: credentials.nome,
+            demanda: "PAGAMENTO",
+            nomeRecebedor: osInfo.nomeTerceiro,
+            valor: osInfo.valorPagamentoTerceiro,
+            servico: `${osInfo.categoria} - ${osInfo.servicoExecutado}`,
+          });
+        }
+        */
         axios.post("/api/ordensDeServico", { id: id, arr: arr }).then((res) => {
           setOsMsg({
             text: "Ordem de serviço gerada",
@@ -149,6 +174,7 @@ function OSCreationBlock({
     }
     return true;
   }
+  console.log({ nomeDoContrato: nomeDoContrato, qtde: qtde, ...osInfo });
   return (
     <div className="flex flex-col">
       {" "}

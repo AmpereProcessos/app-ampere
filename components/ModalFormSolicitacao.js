@@ -725,6 +725,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
                     />
                     <SelectInput
                       label={"ESTADO CIVIL"}
+                      editable={editor}
                       options={[
                         {
                           label: "CASADO(A)",

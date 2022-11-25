@@ -785,6 +785,8 @@ function ModalOeM({
                 </span>
                 <OSCreationBlock
                   editor={editor}
+                  qtde={project.qtde}
+                  nomeDoContrato={project.nomeDoContrato}
                   credentials={credentials}
                   id={infoHolder._id}
                   ordensDeServico={infoHolder.ordensDeServico}

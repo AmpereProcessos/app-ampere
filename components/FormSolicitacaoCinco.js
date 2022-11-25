@@ -12,7 +12,7 @@ function FormSolicitacaoCinco({ avancar, setDados, dados, voltar }) {
     }
     if (dados.estruturaAmpere == "NÃO DEFINIDO") {
       setMessage(
-        "Por favor, preencha se estrutura é uma das estruturas Ampère."
+        "Por favor, preencha sobre a necessidade de adequações ou construção de estrutura."
       );
       return false;
     }
@@ -73,7 +73,9 @@ function FormSolicitacaoCinco({ avancar, setDados, dados, voltar }) {
           handleChange={(value) => setDados({ ...dados, tipoEstrutura: value })}
         />
         <SelectInput
-          label={"ESTRUTURA AMPÈRE"}
+          label={
+            "SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"
+          }
           editable={true}
           options={[
             {

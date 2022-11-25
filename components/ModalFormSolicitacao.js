@@ -270,7 +270,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen }) {
       valor: dados.valorPadrao,
     },
     estruturaPersonalizada: {
-      aplicavel: dados.estruturaAmpere == "NÃO" ? "SIM" : "NÃO",
+      aplicavel: dados.estruturaAmpere,
       tipo: dados.tipoEstrutura,
       respPagamento: dados.responsavelEstrutura,
       valor: dados.valorEstrutura,

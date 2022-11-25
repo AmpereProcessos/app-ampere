@@ -61,6 +61,22 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
       setMessage("Por favor, preencha um nome do titular válido.");
       return false;
     }
+    if (dados.tipoDoTitular == "NÃO DEFINIDO") {
+      setMessage("Por favor, preencha o tipo do titular.");
+      return false;
+    }
+    if (dados.tipoDaLigacao == "NÃO DEFINIDO") {
+      setMessage("Por favor, preencha o tipo da ligação.");
+      return false;
+    }
+    if (dados.tipoDaInstalacao == "NÃO DEFINIDO") {
+      setMessage("Por favor, preencha o tipo da instalação.");
+      return false;
+    }
+    if (dados.cidadeInstalacao == "NÃO DEFINIDO") {
+      setMessage("Por favor, preencha uma cidade válida.");
+      return false;
+    }
     if (dados.enderecoInstalacao.trim().length < 7) {
       setMessage("Por favor, preencha um endereço válido");
       return false;
@@ -135,6 +151,10 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
               label: "PESSOA JURIDICA",
               value: "PESSOA JURIDICA",
             },
+            {
+              label: "NÃO DEFINIDO",
+              value: "NÃO DEFINIDO",
+            },
           ]}
         />
         <SelectInput
@@ -150,6 +170,10 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
             {
               label: "EXISTENTE",
               value: "EXISTENTE",
+            },
+            {
+              label: "NÃO DEFINIDO",
+              value: "NÃO DEFINIDO",
             },
           ]}
         />
@@ -168,6 +192,10 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
             {
               label: "URBANO",
               value: "URBANO",
+            },
+            {
+              label: "NÃO DEFINIDO",
+              value: "NÃO DEFINIDO",
             },
           ]}
         />
@@ -221,9 +249,12 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
           label={"CIDADE"}
           editable={true}
           value={dados.cidadeInstalacao}
-          options={cidadesAtendidas.map((cidade) => {
-            return { label: cidade, value: cidade };
-          })}
+          options={[
+            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+            ...cidadesAtendidas.map((cidade) => {
+              return { label: cidade, value: cidade };
+            }),
+          ]}
           handleChange={(value) =>
             setDados({ ...dados, cidadeInstalacao: value })
           }

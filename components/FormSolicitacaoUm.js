@@ -87,6 +87,10 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
       setMessage("Por favor, preencha uma data de nascimento.");
       return false;
     }
+    if (dados.cidade == "NÃO DEFINIDO") {
+      setMessage("Por favor, preencha uma cidade válida.");
+      return false;
+    }
     if (dados.enderecoCobranca.trim().length < 7) {
       setMessage("Por favor, preencha um endereço de cobrança válido.");
       return false;
@@ -202,9 +206,12 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
           label={"CIDADE"}
           editable={true}
           value={dados.cidade}
-          options={cidadesAtendidas.map((cidade) => {
-            return { label: cidade, value: cidade };
-          })}
+          options={[
+            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+            ...cidadesAtendidas.map((cidade) => {
+              return { label: cidade, value: cidade };
+            }),
+          ]}
           handleChange={(value) => setDados({ ...dados, cidade: value })}
         />
         <TextInput

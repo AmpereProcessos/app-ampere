@@ -1989,7 +1989,7 @@ function ModalSolicitacaoVendas({
                     COMENTÁRIOS AO VENDEDOR
                   </span>
                   <textarea
-                    readOnly={!editor}
+                    readOnly={true}
                     placeholder={"Comentários aqui.."}
                     value={dados.comentariosAoVendedor}
                     className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"

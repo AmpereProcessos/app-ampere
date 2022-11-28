@@ -3,7 +3,7 @@ import { FaBars } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import WhiteLogo from "../utils/whitelogo.png";
+import WhiteLogo from "../utils/whitelogoHD.png";
 import { BiLogIn } from "react-icons/bi";
 import { MdAdminPanelSettings } from "react-icons/md";
 import axios from "axios";
@@ -37,7 +37,7 @@ function Header({ toggleSidebar, credentials, logout }) {
       </div>
       <Link href="/">
         <div className="flex cursor-pointer items-center justify-center">
-          <Image width={"65px"} height={"65px"} src={WhiteLogo} />
+          <Image width={"60px"} height={"60px"} src={WhiteLogo} />
         </div>
       </Link>
       <div className="flex justify-end items-center">

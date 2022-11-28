@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import connectToDatabase from "../../../../utils/callsDb";
 export default async function handler(req, res) {
   if (req.method == "POST") {
@@ -18,6 +19,27 @@ export default async function handler(req, res) {
         status: "ABERTO",
       })
       .toArray();
-    res.json(openCalls);
+    let closedCalls = await collection
+      .find({
+        status: "FINALIZADO",
+      })
+      .toArray();
+    res.json({ openCalls: openCalls, closedCalls: closedCalls });
+  } else if (req.method == "PUT") {
+    const db = await connectToDatabase(process.env.DB_KEY);
+    const collection = db.collection("adm");
+    let newObj = await collection.findOneAndUpdate(
+      { _id: ObjectId(req.body.id) },
+      {
+        $set: {
+          ...req.body.changes,
+          dataDeConclusao:
+            req.body.changes.status == "FINALIZADO" ? new Date() : null,
+        },
+      },
+      { returnDocument: "after" }
+    );
+    console.log(req.body);
+    res.json(newObj);
   }
 }

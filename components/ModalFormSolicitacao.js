@@ -441,6 +441,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
     axios.post("/api/projects/add", insertObj).then((res) => {
       setCreationMsg({ text: "Projeto adicionado!", color: "text-green-500" });
     });
+    setDados({ ...dados, aprovacao: true });
   }
   function validateCreation() {
     var holder;

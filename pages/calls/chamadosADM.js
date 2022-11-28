@@ -8,19 +8,20 @@ import Link from "next/link";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { cities } from "../../utils/constants";
+import ModalCallADM from "../../components/ModalCallADM";
 
 const statusStyles = {
   ABERTO: {
-    textColor: "text-yellow-500",
-    borderColor: "border-yellow-500",
+    textColor: "text-red-500",
+    borderColor: "border-red-500",
   },
   PENDENTE: {
     textColor: "text-red-400",
     borderColor: "border-red-400",
   },
-  "EM ANDAMENTO": {
-    textColor: "text-[#15599a]",
-    borderColor: "border-[#15599a]",
+  FINALIZADO: {
+    textColor: "text-green-500",
+    borderColor: "border-green-500",
   },
   RESOLVIDO: {
     textColor: "text-green-400",
@@ -36,6 +37,7 @@ function ChamadosADM({ credentials, setCredentials }) {
   const [closedCalls, setClosedCalls] = useState([]);
   const [filteredClosedCalls, setFilteredClosedCalls] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalCall, setModalCall] = useState({});
 
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -58,14 +60,25 @@ function ChamadosADM({ credentials, setCredentials }) {
       }
     }
   }, []);
+  function getDemandColor(demanda) {
+    if (demanda == "PAGAMENTO") {
+      return "text-[#EDAA25] font-bold";
+    }
+    if (demanda == "COBRANÇA") {
+      return "text-[#C43302] font-bold";
+    }
+  }
   function handleOpenModal(call) {
     setModalCall(call);
     setModalIsOpen(true);
   }
   function getCalls() {
-    axios
-      .get("/api/calls/adm/mainData")
-      .then((res) => setFilteredInProgress(res.data));
+    axios.get("/api/calls/adm/mainData").then((res) => {
+      setInProgress(res.data.openCalls);
+      setFilteredInProgress(res.data.openCalls);
+      setClosedCalls(res.data.closedCalls);
+      setFilteredClosedCalls(res.data.closedCalls);
+    });
   }
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
@@ -92,8 +105,28 @@ function ChamadosADM({ credentials, setCredentials }) {
               key={call._id}
               className="w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
-              <div className="flex">
-                <h1></h1>
+              <div className="flex justify-between mb-2">
+                <h1 className={`${getDemandColor(call.demanda)}`}>
+                  {call.demanda}
+                </h1>
+                <p
+                  className={`text-xs font-bold border p-1 rounded-lg ${
+                    statusStyles[call.status].textColor
+                  } ${statusStyles[call.status].borderColor}`}
+                >
+                  {call.status}
+                </p>
+              </div>
+              <div className="flex justify-between">
+                <h1 className="text-gray-600 text-xs">{call.nomeCliente}</h1>
+                <p className="text-[#15599a] font-bold text-xs">
+                  #{call.codigoProjeto}
+                </p>
+              </div>
+              <div className="flex justify-center">
+                <h1 className="text-gray-600 text-xs text-center">
+                  {call.servico}
+                </h1>
               </div>
             </div>
           ))}
@@ -110,13 +143,42 @@ function ChamadosADM({ credentials, setCredentials }) {
             <div
               onClick={() => handleOpenModal(call)}
               key={call._id}
-              className="w-[300px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+              className="w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
-              <div>TESTE</div>
+              <div className="flex justify-between mb-2">
+                <h1 className={`${getDemandColor(call.demanda)}`}>
+                  {call.demanda}
+                </h1>
+                <p
+                  className={`text-xs font-bold border p-1 rounded-lg ${
+                    statusStyles[call.status].textColor
+                  } ${statusStyles[call.status].borderColor}`}
+                >
+                  {call.status}
+                </p>
+              </div>
+              <div className="flex justify-between">
+                <h1 className="text-gray-600 text-xs">{call.nomeCliente}</h1>
+                <p className="text-[#15599a] font-bold text-xs">
+                  #{call.codigoProjeto}
+                </p>
+              </div>
+              <div className="flex justify-center">
+                <h1 className="text-gray-600 text-xs text-center">
+                  {call.servico}
+                </h1>
+              </div>
             </div>
           ))}
         </div>
       </div>
+      {modalIsOpen && (
+        <ModalCallADM
+          info={modalCall}
+          setModalIsOpen={setModalIsOpen}
+          getCalls={getCalls}
+        />
+      )}
     </div>
   );
 }

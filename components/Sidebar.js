@@ -36,6 +36,9 @@ function Sidebar({ credentials }) {
     router.pathname.includes("auth")
   )
     return null;
+  if (credentials.visualizacao == "VENDEDOR") {
+    return null;
+  }
   return (
     <div
       style={{ maxHeight: "calc(100vh - 70px)" }}

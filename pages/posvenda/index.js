@@ -101,9 +101,12 @@ function Posvenda({ credentials, setCredentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
         (project) =>
-          project.projeto.dataAssDocumentacao == undefined ||
-          project.projeto.dataAssDocumentacao == null ||
-          project.projeto.dataAssDocumentacao == "-"
+          (project.projeto.dataAssDocumentacao == undefined ||
+            project.projeto.dataAssDocumentacao == null ||
+            project.projeto.dataAssDocumentacao == "-") &&
+          (project.compra.statusLiberacao == "PAGO" ||
+            project.projeto.iniciar == "SIM") &&
+          project.projeto.projetoConcluido != "SIM"
       );
     }
     if (filters.jornadaEmAberto) {

@@ -141,13 +141,19 @@ function Home({ credentials, setCredentials }) {
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
-      setCredentials(storedCredentials);
-      getStats(storedCredentials);
-      getGraphDataByYear(2022, storedCredentials);
-      getBirthDay(storedCredentials);
+      if (storedCredentials.visualizacao == "VENDEDOR") {
+        router.push("/vendas/formularios");
+      } else {
+        setCredentials(storedCredentials);
+        getStats(storedCredentials);
+        getGraphDataByYear(2022, storedCredentials);
+        getBirthDay(storedCredentials);
+      }
     } else {
       if (credentials != {} && !credentials.nome) {
         router.push("/auth/authHome");
+      } else if (credentials.visualizacao == "VENDEDOR") {
+        router.push("/vendas/formularios");
       } else {
         getStats(credentials);
         getGraphDataByYear(2022, credentials);

@@ -223,17 +223,27 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
     });
   }
   async function rejectSolicitacao() {
-    axios
-      .put("/api/solicitacoes/contrato", {
-        _id: solicitacao._id,
-        aprovacao: false,
-      })
-      .then((res) =>
-        setCreationMsg({
-          text: "Solicitação rejeitada!",
-          color: "text-red-500",
+    if (
+      !dados.comentariosAoVendedor ||
+      dados.comentariosAoVendedor.trim().length < 5
+    ) {
+      setCreationMsg({
+        text: "Discorra sobre o motivo da reprova",
+        color: "text-red-500",
+      });
+    } else {
+      axios
+        .put("/api/solicitacoes/contrato", {
+          _id: solicitacao._id,
+          aprovacao: false,
         })
-      );
+        .then((res) =>
+          setCreationMsg({
+            text: "Solicitação rejeitada!",
+            color: "text-red-500",
+          })
+        );
+    }
   }
   var insertObj = {
     nomeDoContrato: dados.nomeDoContrato.toUpperCase(),
@@ -443,6 +453,126 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
     });
     setDados({ ...dados, aprovacao: true });
   }
+  function validateDocuments() {
+    if (!dados.contaDeEnergia) {
+      setCreationMsg({
+        text: "Por favor, preencha a conferência da conta de energia",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!dados.propostaComercial) {
+      setCreationMsg({
+        text: "Por favor, preencha a conferência da proposta comercial",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!dados.visitaTecnica) {
+      setCreationMsg({
+        text: "Por favor, preencha a conferência da visita técnica",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoDaInstalacao == "RURAL") {
+      if (!dados.car) {
+        setCreationMsg({
+          text: "Por favor, preencha a conferência de CAR",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!dados.matricula) {
+        setCreationMsg({
+          text: "Por favor, preencha a conferência da matrícula",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!dados.comprovanteEnderecoCorrespondente) {
+        setCreationMsg({
+          text: "Por favor, preencha a conferência do compravante de endereço correspondente",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!dados.ramoDeAtividade) {
+        setCreationMsg({
+          text: "Por favor, preencha a conferência do ramo de atividade",
+          color: "text-red-500",
+        });
+        return false;
+      }
+    }
+    if (dados.tipoDaInstalacao == "URBANO") {
+      if (!dados.iptu) {
+        setCreationMsg({
+          text: "Por favor, preencha a conferência do IPTU",
+          color: "text-red-500",
+        });
+        return false;
+      }
+    }
+    if (dados.tipoDoTitular == "PESSOA FISICA") {
+      if (!dados.documentoComFoto) {
+        setCreationMsg({
+          text: "Por favor, preencha a conferência do documento com foto",
+          color: "text-red-500",
+        });
+        return false;
+      }
+    }
+    if (dados.tipoDoTitular == "PESSOA JURIDICA") {
+      if (!dados.contratoSocial) {
+        setCreationMsg({
+          text: "Por favor, preencha a conferência do contrato social",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!dados.cartaoCnpj) {
+        setCreationMsg({
+          text: "Por favor, preencha a conferência do cartão CNPJ",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!dados.cartaoCnpj) {
+        setCreationMsg({
+          text: "Por favor, preencha a conferência do comprovante de endereço do representante legal",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!dados.documentoComFotoSocios) {
+        setCreationMsg({
+          text: "Por favor, preencha a conferência do documento com foto dos sócios",
+          color: "text-red-500",
+        });
+        return false;
+      }
+    }
+    if (dados.aumentoDeCarga == "SIM" || dados.tipoDaLigacao == "NOVA") {
+      if (!dados.relacaoDeCargas) {
+        setCreationMsg({
+          text: "Por favor, preencha a conferência da relação de cargas",
+          color: "text-red-500",
+        });
+        return false;
+      }
+    }
+    if (dados.possuiDistribuicao == "SIM") {
+      if (!dados.faturasRecebedoras) {
+        setCreationMsg({
+          text: "Por favor, preencha a conferência das faturas das recebedoras",
+          color: "text-red-500",
+        });
+        return false;
+      }
+    }
+    return true;
+  }
   function validateCreation() {
     var holder;
     Object.entries(insertObj).forEach((entry) => {
@@ -473,8 +603,10 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
       }
     });
     if (holder == undefined) {
-      setCreationMsg({ text: "", color: "" });
-      addProject();
+      if (validateDocuments()) {
+        setCreationMsg({ text: "", color: "" });
+        addProject();
+      }
     }
   }
   console.log(dados);
@@ -2634,6 +2766,25 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
                         </div>
                       </>
                     )}
+                  </div>
+                </div>
+                <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+                  <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      COMENTÁRIOS AO VENDEDOR
+                    </span>
+                    <textarea
+                      readOnly={!editor}
+                      placeholder={"Comentários aqui.."}
+                      value={dados.comentariosAoVendedor}
+                      className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          comentariosAoVendedor: e.target.value.toUpperCase(),
+                        })
+                      }
+                    />
                   </div>
                 </div>
                 {creationMsg.text && (

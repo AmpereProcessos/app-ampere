@@ -1983,6 +1983,25 @@ function ModalSolicitacaoVendas({
                   </>
                 )}
               </div>
+              <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+                <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
+                  <span className="uppercase font-bold font-raleway text-center text-sm">
+                    COMENTÁRIOS AO VENDEDOR
+                  </span>
+                  <textarea
+                    readOnly={!editor}
+                    placeholder={"Comentários aqui.."}
+                    value={dados.comentariosAoVendedor}
+                    className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                    onChange={(e) =>
+                      setDados({
+                        ...dados,
+                        comentariosAoVendedor: e.target.value.toUpperCase(),
+                      })
+                    }
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

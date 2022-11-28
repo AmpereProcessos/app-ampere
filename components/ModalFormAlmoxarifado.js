@@ -244,9 +244,11 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                   <p className="text-[#15599a] font-bold col-span-2 text-center ">
                     DEVOLUÇÃO
                   </p>
-                  <p className="text-[#15599a] font-bold col-span-1 text-center">
-                    EXCLUIR
-                  </p>
+                  {dados.efetivado != true && (
+                    <p className="text-[#15599a] font-bold col-span-1 text-center">
+                      EXCLUIR
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-2 grow overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                   {dados.materiais.map((obj, index) => (

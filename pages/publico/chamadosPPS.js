@@ -33,7 +33,6 @@ function ChamadosPPS() {
     }
   }
   function resetFields() {
-    setVendedorName(sellers[0]);
     setSolicitationType(ppsSolicitations[0]);
     setSvbCode(0);
     setSolicitationDesc("");

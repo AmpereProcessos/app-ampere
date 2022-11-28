@@ -63,7 +63,6 @@ function OSCreationBlock({
           ];
           ordensDeServico = arr;
         }
-        /*
         if (osInfo.realizarCobranca) {
           await axios.post("/api/calls/adm/mainData", {
             codigoProjeto: qtde,
@@ -84,7 +83,7 @@ function OSCreationBlock({
             valor: osInfo.valorPagamentoTerceiro,
             servico: `${osInfo.categoria} - ${osInfo.servicoExecutado}`,
           });
-        }*/
+        }
         axios.post("/api/ordensDeServico", { id: id, arr: arr }).then((res) => {
           setOsMsg({
             text: "Ordem de serviço gerada",
@@ -173,7 +172,7 @@ function OSCreationBlock({
     }
     return true;
   }
-  console.log({ nomeDoContrato: nomeDoContrato, qtde: qtde, ...osInfo });
+  console.log(ordensDeServico);
   return (
     <div className="flex flex-col">
       {" "}

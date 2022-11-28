@@ -36,23 +36,6 @@ function ChamadosADM({ credentials, setCredentials }) {
   const [closedCalls, setClosedCalls] = useState([]);
   const [filteredClosedCalls, setFilteredClosedCalls] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [creationModal, setCreationModal] = useState(false);
-  const [modalCall, setModalCall] = useState({});
-  const [closedFilterDate, setClosedFilterDate] = useState({
-    after: dateFilterParam,
-    before: new Date(),
-  });
-  const [filters, setFilters] = useState({
-    respFilter: [],
-    statusFilter: [],
-    cityFilter: [],
-  });
-  const [closedCallsFilter, setClosedCallsFilter] = useState({
-    cidadeFilter: [],
-    searchFilter: "",
-  });
-  const [searchFilter, setSearchFilter] = useState("");
-  const [searchByType, setSearchByType] = useState("");
 
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -60,6 +43,8 @@ function ChamadosADM({ credentials, setCredentials }) {
       setCredentials(storedCredentials);
       if (!storedCredentials.accessibleRoutes.includes("ADM")) {
         router.push("/");
+      } else {
+        getCalls();
       }
     } else {
       if (!credentials.nome) {
@@ -67,6 +52,8 @@ function ChamadosADM({ credentials, setCredentials }) {
       } else {
         if (!credentials.accessibleRoutes.includes("ADM")) {
           router.push("/");
+        } else {
+          getCalls();
         }
       }
     }
@@ -74,6 +61,11 @@ function ChamadosADM({ credentials, setCredentials }) {
   function handleOpenModal(call) {
     setModalCall(call);
     setModalIsOpen(true);
+  }
+  function getCalls() {
+    axios
+      .get("/api/calls/adm/mainData")
+      .then((res) => setFilteredInProgress(res.data));
   }
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
@@ -100,42 +92,8 @@ function ChamadosADM({ credentials, setCredentials }) {
               key={call._id}
               className="w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
-              <div className="flex justify-between items-center w-full">
-                <h1 className="uppercase text-sm">
-                  {call.nomeUsina ? call.nomeUsina : call.nomeCliente}
-                </h1>
-                {call.cidade && (
-                  <p className="text-xs uppercase text-gray-700">
-                    {call.cidade}
-                  </p>
-                )}
-                <p
-                  className={`text-xs font-bold border p-1 rounded-lg ${
-                    statusStyles[call.statusChamado].textColor
-                  } ${statusStyles[call.statusChamado].borderColor}`}
-                >
-                  {call.statusChamado}
-                </p>
-              </div>
-              <div className="flex justify-between mt-2 items-center w-full">
-                <p className="text-xs text-gray-500 uppercase">Responsável:</p>
-                <p className="text-xs text-gray-500">{call.responsavel}</p>
-              </div>
-              <div className="hidden lg:flex justify-between mt-2 items-center w-full">
-                <p className="text-xs text-gray-500 uppercase">DEMANDA</p>
-                <p
-                  className={`text-xs ${
-                    call.demanda == "EXTERNA" ? "text-red-500" : "text-gray-500"
-                  }`}
-                >
-                  {call.demanda ? call.demanda : "-"}
-                </p>
-              </div>
-              <div className="flex justify-between mt-2 items-center w-full">
-                <p className="text-xs text-gray-500 uppercase">
-                  Tipo de chamado:
-                </p>
-                <p className="text-xs text-gray-500">{call.tipoChamado}</p>
+              <div className="flex">
+                <h1></h1>
               </div>
             </div>
           ))}
@@ -154,48 +112,10 @@ function ChamadosADM({ credentials, setCredentials }) {
               key={call._id}
               className="w-[300px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
-              <div className="flex justify-between items-center w-full">
-                <h1 className="uppercase text-sm">
-                  {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
-                </h1>
-                {call.cidade && (
-                  <p className="text-xs uppercase text-gray-700">
-                    {call.cidade}
-                  </p>
-                )}
-                <p
-                  className={`text-xs font-bold border p-1 rounded-lg ${
-                    statusStyles[call.statusChamado].textColor
-                  } ${statusStyles[call.statusChamado].borderColor}`}
-                >
-                  {call.statusChamado}
-                </p>
-              </div>
-              <div className="flex justify-between mt-2 items-center w-full">
-                <p className="text-xs text-gray-500 uppercase">Responsável:</p>
-                <p className="text-xs text-gray-500">{call.responsavel}</p>
-              </div>
-              {call.demanda && (
-                <div className="hidden lg:flex justify-between mt-2 items-center w-full">
-                  <p className="text-xs text-gray-500 uppercase">DEMANDA</p>
-                  <p className="text-xs text-gray-500">{call.demanda}</p>
-                </div>
-              )}
-              <div className="flex justify-between mt-2 items-center w-full">
-                <p className="text-xs text-gray-500 uppercase">
-                  Tipo de chamado:
-                </p>
-                <p className="text-xs text-gray-500">{call.tipoChamado}</p>
-              </div>
+              <div>TESTE</div>
             </div>
           ))}
         </div>
-      </div>
-      <div
-        onClick={() => setCreationModal(true)}
-        className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
-      >
-        <p className="uppercase font-bold text-sm">Novo chamado</p>
       </div>
     </div>
   );

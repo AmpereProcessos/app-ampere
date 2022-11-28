@@ -13,9 +13,11 @@ export default async function handler(req, res) {
   } else if (req.method == "GET") {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("adm");
-    let openCalls = await collection.find({
-      status: "ABERTO",
-    });
+    let openCalls = await collection
+      .find({
+        status: "ABERTO",
+      })
+      .toArray();
     res.json(openCalls);
   }
 }

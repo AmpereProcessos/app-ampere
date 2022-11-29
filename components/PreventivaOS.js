@@ -178,7 +178,7 @@ function PreventivaOSPDF({
       <div className="border border-black mt-6">
         <h1 className="text-center font-bold py-2">SERVIÇO A SER EXECUTADO</h1>
         <div className="flex flex-col justify-center h-[120px] items-center">
-          <p>Serviço: {servicoExecutado.toUpperCase()}</p>
+          <p className="text-sm">SERVIÇO: {servicoExecutado.toUpperCase()}</p>
           <div className="flex flex-col justify-center min-h-[50px] items-center">
             {observacoesOS ? (
               <div
@@ -193,32 +193,40 @@ function PreventivaOSPDF({
                   : false}
               </div>
             ) : (
-              <p className="my-2">SEM OBSERVAÇÕES DE OS</p>
+              <p className="my-2 text-xs">SEM OBSERVAÇÕES DE OS</p>
             )}
           </div>
         </div>
       </div>
       <div className="border border-black mt-6 px-4 pb-4">
-        <h1 className="text-center font-bold py-2">
+        <h1 className="text-center font-bold py-1">
           CONFERÊNCIA DOS CHECKLIST
         </h1>
         <div className="grid grid-cols-2 pb-2">
           <div className="grid grid-rows-2">
-            <div className="flex gap-x-2">
-              <div className="w-6 h-6 border rounded-md border-black"></div>
-              <p>https://forms.gle/FTvLg1Eey2xzPqL37</p>
+            <div className="flex gap-x-2 items-center">
+              <div className="w-4 h-4 border rounded-md border-black"></div>
+              <p className="text-center text-xs">
+                https://forms.gle/FTvLg1Eey2xzPqL37
+              </p>
             </div>
-            <div className="flex gap-x-2 mt-2">
-              <div className="w-6 h-6 border rounded-md border-black"></div>
-              <p>CHECKLIST DE MATERIAL</p>
+            <div className="flex gap-x-2 items-center">
+              <div className="w-4 h-4 border rounded-md border-black"></div>
+              <p className="text-center text-xs">CHECKLIST DE MATERIAL</p>
             </div>
           </div>
-          <div className="flex">
-            <div className="flex">
-              <div className="w-6 h-6 border rounded-md border-black"></div>
-              <p className="text-center">
+          <div className="grid grid-rows-2">
+            <div className="flex items-center gap-x-2">
+              <div className="w-4 h-4 border rounded-md border-black"></div>
+              <p className="text-center text-xs">
                 TERMO DE REALIZAÇÃO DE MANUTENÇÃO PREVENTIVA
               </p>
+            </div>
+            <div className="flex items-center">
+              <div className="flex gap-x-2 items-center uppercase">
+                <p className="text-xs">Data execução:</p>
+                <p>____/____/_____</p>
+              </div>
             </div>
           </div>
         </div>

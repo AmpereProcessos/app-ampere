@@ -11,6 +11,11 @@ export default async function handler(req, res) {
             "estruturaPersonalizada.aplicavel": "SIM",
           },
         },
+        {
+          $sort: {
+            qtde: 1,
+          },
+        },
       ])
       .toArray();
     res.json(arr);

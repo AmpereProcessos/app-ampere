@@ -783,7 +783,9 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
             }
           />
           <SelectInput
-            label={"ESTRUTURA AMPÈRE"}
+            label={
+              "SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"
+            }
             editable={true}
             options={[
               {

@@ -53,7 +53,7 @@ function ChamadosPPS() {
       });
     }
   }
-  console.log(vendedorName);
+
   return (
     <section className="min-h-[100vh] flex items-center justify-center bg-[#15599a]">
       <div className="flex flex-col bg-[#fff] p-4 rounded">

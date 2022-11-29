@@ -36,12 +36,9 @@ function termPDF({ info, index }) {
           , declaro que a equipe técnica da empresa{" "}
           <strong>AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICA LTDA</strong>,
           inscrita sob o CNPJ nº 27.901.968/0001-45, realizou no dia{" "}
-          {new Date(
-            info.ordensDeServico[0].dataDeAbertura
-          ).toLocaleDateString()}{" "}
-          à manutenção preventiva, prevista em contrato, do sistema fotovoltaico
-          de {info.sistema.potPico ? info.sistema.potPico : "-"} kWp instalado
-          na{" "}
+          ____/____/_____ à manutenção preventiva, prevista em contrato, do
+          sistema fotovoltaico de{" "}
+          {info.sistema.potPico ? info.sistema.potPico : "-"} kWp instalado na{" "}
           <strong>
             {info.logradouro ? info.logradouro : "-"}, Nº{" "}
             {info.numeroResidencia ? info.numeroResidencia : "-"},{" "}
@@ -50,9 +47,7 @@ function termPDF({ info, index }) {
           , no município de <strong>{info.cidade ? info.cidade : "-"}</strong>.
         </p>
         <p className="mt-12">Por ser verdade assino este termo</p>
-        <p className="mt-6 text-end">
-          Ituiutaba, {new Date().toLocaleDateString()}
-        </p>
+        <p className="mt-6 text-end">Ituiutaba, ____/____/_____</p>
         <div className="mt-32 flex flex-col">
           <hr className="border-t-2 border-black" />
           <p className="text-center mt-4 font-raleway font-bold">TÉCNICO</p>

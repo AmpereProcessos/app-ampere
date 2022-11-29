@@ -52,7 +52,7 @@ export default async function handler(req, res) {
             ],
           },
           "obra.statusDaObra": { $ne: "CONCLUIDA" },
-          "compra.statusLiberacao": "PAGO",
+          "contrato.status": "ASSINADO",
         },
       },
       {

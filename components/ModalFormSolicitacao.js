@@ -1572,7 +1572,9 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
                       }
                     />
                     <SelectInput
-                      label={"ESTRUTURA AMPÈRE"}
+                      label={
+                        "SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"
+                      }
                       editable={editor}
                       options={[
                         {

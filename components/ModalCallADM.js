@@ -89,7 +89,7 @@ function ModalCallADM({ open, setModalIsOpen, info, getCalls }) {
                   CLIENTE
                 </span>
                 <span className="grow text-center font-raleway">
-                  {modalInfo.nomeCliente} - {modalInfo.codigoProjeto}
+                  {modalInfo.nomeCliente} - #{modalInfo.codigoProjeto}
                 </span>
               </div>
               <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 gap-x-2 border border-gray-200 p-2 mt-4">

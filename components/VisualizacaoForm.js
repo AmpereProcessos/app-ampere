@@ -6,6 +6,9 @@ import DateInput from "./DateInput";
 import { FiDelete } from "react-icons/fi";
 import { AiOutlineSearch } from "react-icons/ai";
 import { cidadesAtendidas, vendedores } from "../utils/constants";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
+import { storage } from "../utils/firebase";
 import axios from "axios";
 const phoneMask = (value) => {
   if (!value) return "";
@@ -38,6 +41,31 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
     text: "",
     color: "",
   });
+  const [images, setImages] = useState({
+    documentoComFoto: null,
+  });
+  const [imagesMsg, setImagesMsg] = useState({
+    text: "",
+    color: "",
+  });
+  async function uploadImage() {
+    if (images.contaDeEnergia == null) return;
+    const imageRef = ref(storage, `formSolicitacao/NOME TESTE/${v4()}`);
+    uploadBytes(imageRef, images.contaDeEnergia)
+      .then((res) => {
+        console.log(res);
+        setImagesMsg({ text: "Imagens enviadas!", color: "text-green-500" });
+        getDownloadURL(ref(storage, res.metadata.fullPath)).then((url) =>
+          console.log(url)
+        );
+      })
+      .catch((err) =>
+        setImagesMsg({
+          text: "Um erro ocorreu, por favor tente novamente.",
+          color: "text-red-500",
+        })
+      );
+  }
   function criarSolicitacao() {
     axios
       .post("/api/solicitacoes/contrato", dados)
@@ -1604,6 +1632,372 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
             )}
           </>
         )}
+      </div>
+      <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+          DOCUMENTAÇÃO NECESSÁRIA
+        </span>
+        <div className="flex flex-col gap-2 items-center">
+          <div className="flex flex-col items-center">
+            <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <div className="w-fit flex flex-col items-center">
+                <label
+                  className="ml-2 text-center text-[#15599a] font-bold"
+                  htmlFor="contaDeEnergia"
+                >
+                  CONTA DE ENERGIA
+                </label>
+                <div class="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                  <div class="absolute">
+                    {images.contaDeEnergia ? (
+                      <div class="flex flex-col items-center">
+                        <i class="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span class="block text-gray-400 font-normal text-center">
+                          {images.contaDeEnergia.name}
+                        </span>
+                      </div>
+                    ) : (
+                      <div class="flex flex-col items-center">
+                        <i class="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span class="block text-gray-400 font-normal">
+                          Adicione o arquivo aqui
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    onChange={(e) =>
+                      setImages({
+                        ...images,
+                        contaDeEnergia: e.target.files[0],
+                      })
+                    }
+                    className="h-full w-full opacity-0"
+                    type="file"
+                  />
+                </div>
+              </div>
+              {/**
+               *               <div className="w-fit">
+                <div class="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                  <div class="absolute">
+                    {images.propostaComercial ? (
+                      <div class="flex flex-col items-center">
+                        <i class="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span class="block text-gray-400 font-normal text-center">
+                          {images.propostaComercial.name}
+                        </span>
+                      </div>
+                    ) : (
+                      <div class="flex flex-col items-center">
+                        <i class="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span class="block text-gray-400 font-normal">
+                          Adicione o arquivo aqui
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    onChange={(e) =>
+                      setImageUpload({
+                        ...images,
+                        contaDeEnergia: e.target.files[0],
+                      })
+                    }
+                    className="h-full w-full opacity-0"
+                    type="file"
+                  />
+                </div>
+                <label className="ml-2" htmlFor="propostaComercial">
+                  PROPOSTA COMERCIAL ATUALIZADA
+                </label>
+              </div>
+              <div className="w-fit">
+                <input
+                  disabled={!editor}
+                  checked={dados.visitaTecnicaFeita ? true : false}
+                  onChange={(e) =>
+                    setDados({
+                      ...dados,
+                      visitaTecnicaFeita: e.target.checked,
+                    })
+                  }
+                  type="checkbox"
+                  name="visitaTecnicaFeita"
+                  id="visitaTecnicaFeita"
+                />
+                <label className="ml-2" htmlFor="visitaTecnicaFeita">
+                  VISITA TÉCNICA
+                </label>
+              </div>
+              {dados.tipoDaInstalacao == "RURAL" && (
+                <>
+                  <div className="w-fit">
+                    <input
+                      disabled={!editor}
+                      checked={dados.car ? true : false}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          car: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="car"
+                      id="car"
+                    />
+                    <label className="ml-2" htmlFor="car">
+                      CAR
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      disabled={!editor}
+                      checked={dados.matricula ? true : false}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          matricula: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="matricula"
+                      id="matricula"
+                    />
+                    <label className="ml-2" htmlFor="matricula">
+                      MATRÍCULA
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      disabled={!editor}
+                      checked={
+                        dados.comprovanteEnderecoCorrespondente ? true : false
+                      }
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          comprovanteEnderecoCorrespondente: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="comprovanteEnderecoCorrespondente"
+                      id="comprovanteEnderecoCorrespondente"
+                    />
+                    <label
+                      className="ml-2"
+                      htmlFor="comprovanteEnderecoCorrespondente"
+                    >
+                      COMPROVANTE ENDEREÇO CORRESPONDENTE
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      disabled={!editor}
+                      checked={dados.ramoDeAtividade ? true : false}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          ramoDeAtividade: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="ramoDeAtividade"
+                      id="ramoDeAtividade"
+                    />
+                    <label className="ml-2" htmlFor="ramoDeAtividade">
+                      RAMO DE ATIVIDADE
+                    </label>
+                  </div>
+                </>
+              )}
+              {dados.tipoDaInstalacao == "URBANO" && (
+                <>
+                  <div className="w-fit">
+                    <input
+                      disabled={!editor}
+                      checked={dados.iptu ? true : false}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          iptu: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="iptu"
+                      id="iptu"
+                    />
+                    <label className="ml-2" htmlFor="iptu">
+                      IPTU
+                    </label>
+                  </div>
+                </>
+              )}
+              {dados.tipoDoTitular == "PESSOA FISICA" && (
+                <>
+                  <div className="w-fit">
+                    <input
+                      disabled={!editor}
+                      checked={dados.documentoComFoto ? true : false}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          documentoComFoto: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="documentoComFoto"
+                      id="documentoComFoto"
+                    />
+                    <label className="ml-2" htmlFor="documentoComFoto">
+                      DOCUMENTO COM FOTO
+                    </label>
+                  </div>
+                </>
+              )}
+              {dados.tipoDoTitular == "PESSOA JURIDICA" && (
+                <>
+                  <div className="w-fit">
+                    <input
+                      disabled={!editor}
+                      checked={dados.contratoSocial ? true : false}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          contratoSocial: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="contratoSocial"
+                      id="contratoSocial"
+                    />
+                    <label className="ml-2" htmlFor="contratoSocial">
+                      CONTRATO SOCIAL
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      disabled={!editor}
+                      checked={dados.cartaoCnpj ? true : false}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          cartaoCnpj: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="cartaoCnpj"
+                      id="cartaoCnpj"
+                    />
+                    <label className="ml-2" htmlFor="cartaoCnpj">
+                      CARTÃO CNPJ
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      disabled={!editor}
+                      checked={
+                        dados.comprovanteEnderecoRepresentante ? true : false
+                      }
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          comprovanteEnderecoRepresentante: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="comprovanteEnderecoRepresentante"
+                      id="comprovanteEnderecoRepresentante"
+                    />
+                    <label
+                      className="ml-2"
+                      htmlFor="comprovanteEnderecoRepresentante"
+                    >
+                      COMPROVANTE DE ENDEREÇO - REPRESENTANTE LEGAL
+                    </label>
+                  </div>
+                  <div className="w-fit">
+                    <input
+                      disabled={!editor}
+                      checked={dados.documentoComFotoSocios ? true : false}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          documentoComFotoSocios: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="documentoComFotoSocios"
+                      id="documentoComFotoSocios"
+                    />
+                    <label className="ml-2" htmlFor="documentoComFotoSocios">
+                      DOCUMENTO COM FOTOS DE TODOS OS SÓCIOS
+                    </label>
+                  </div>
+                </>
+              )}
+              {(dados.aumentoDeCarga == "SIM" ||
+                dados.tipoDaLigacao == "NOVA") && (
+                <>
+                  <div className="w-fit">
+                    <input
+                      disabled={!editor}
+                      checked={dados.relacaoDeCargas ? true : false}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          relacaoDeCargas: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="relacaoDeCargas"
+                      id="relacaoDeCargas"
+                    />
+                    <label className="ml-2" htmlFor="relacaoDeCargas">
+                      RELAÇÃO DE CARGAS
+                    </label>
+                  </div>
+                </>
+              )}
+              {dados.possuiDistribuicao == "SIM" && (
+                <>
+                  <div className="w-fit">
+                    <input
+                      disabled={!editor}
+                      checked={dados.faturasRecebedoras ? true : false}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          faturasRecebedoras: e.target.checked,
+                        })
+                      }
+                      type="checkbox"
+                      name="faturasRecebedoras"
+                      id="faturasRecebedoras"
+                    />
+                    <label className="ml-2" htmlFor="faturasRecebedoras">
+                      FATURAS DAS RECEBEDORAS
+                    </label>
+                  </div>
+                </>
+              )}
+              */}
+            </div>
+          </div>
+        </div>
+        {imagesMsg.text && (
+          <p className={`text-center italic ${imagesMsg.color}`}>
+            {imagesMsg.text}
+          </p>
+        )}
+        <div className="flex justify-center mt-2">
+          <button
+            onClick={uploadImage}
+            className="p-2 bg-[#fead61] hover:bg-[#15599a] hover:text-white rounded font-bold"
+          >
+            ENVIAR FOTOS
+          </button>
+        </div>
       </div>
       {msg.text && (
         <p className={`text-sm text-center font-bold ${msg.color}`}>

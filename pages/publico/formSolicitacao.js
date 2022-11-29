@@ -48,7 +48,7 @@ function formatCEP(cep) {
   return cep;
 }
 function FormularioSolicitacao() {
-  const [estagio, setEstagio] = useState(9);
+  const [estagio, setEstagio] = useState(0);
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",
     telefoneVendedor: "",

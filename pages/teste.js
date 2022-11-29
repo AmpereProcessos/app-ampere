@@ -1,62 +1,50 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
+import { storage } from "../utils/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
 import { UiFileInputButton } from "../components/UiFileInputButton";
 function Teste() {
-  const [formHolder, setFormHolder] = useState({
-    config: {},
-    formData: undefined,
+  const [msg, setMsg] = useState({
+    text: "",
+    color: "",
   });
-  const [message, setMessage] = useState("");
-  const onChange = async (formData) => {
-    const config = {
-      headers: { "content-type": "multipart/form-data" },
-      onUploadProgress: (event) => {
-        console.log(
-          `Current progress:`,
-          Math.round((event.loaded * 100) / event.total)
+  const [imageUpload, setImageUpload] = useState(null);
+
+  async function uploadImage() {
+    if (imageUpload == null) return;
+    const imageRef = ref(storage, `formSolicitacao/NOME TESTE/${v4()}`);
+    uploadBytes(imageRef, imageUpload)
+      .then((res) => {
+        console.log(res);
+        setMsg({ text: "Imagem enviado", color: "text-gren-500" });
+        getDownloadURL(ref(storage, res.metadata.fullPath)).then((url) =>
+          console.log(url)
         );
-      },
-    };
-    setFormHolder({ config: config, formData: formData });
-  };
-  async function handleSend() {
-    const response = await axios.post(
-      "/api/teste",
-      formHolder.formData,
-      formHolder.config
-    );
-    setMessage(response.data);
+      })
+      .catch((err) =>
+        setMsg({
+          text: "Um erro ocorreu, por favor tente novamente.",
+          color: "text-red-500",
+        })
+      );
   }
   return (
-    <div className="flex flex-col items-center justify-center bg-[#15599a] min-h-screen w-screen max-w-screen">
+    <div className="flex flex-col items-center justify-center bg-[#15599a] grow p-6">
       <div className="flex flex-col items-center bg-[#fff] w-[400px] min-h-[400px] shadow-lg rounded">
         <h1 className="text-center font-bold text-[#15559]">FORMULÁRIO</h1>
-        <div className="flex items-center mt-12 flex-col">
-          <span>FOTO 1</span>
-          <UiFileInputButton
-            label="Adicione aqui o arquivo"
-            uploadFileName="theFiles"
-            onChange={onChange}
-            formData={formHolder.formData}
-          />
-        </div>
-        <div className="flex items-center mt-12 flex-col">
-          <span>FOTO 2</span>
-          <UiFileInputButton
-            label={"Adicione aqui o arquivo"}
-            uploadFileName="theFiles"
-            onChange={onChange}
-            formData={formHolder.formData}
-          />
-        </div>
+        <input
+          onChange={(e) => setImageUpload(e.target.files[0])}
+          type="file"
+        />
+        {msg.text && <p className={`text-center ${msg.color}`}>{msg.text}</p>}
         <button
           className="bg-[#15599a] text-center rounded-lg p-2 mt-6 text-white"
-          onClick={handleSend}
+          onClick={uploadImage}
         >
           Enviar
         </button>
       </div>
-      {message && <p className="text-center text-green-400">{message}</p>}
     </div>
   );
 }

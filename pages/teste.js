@@ -33,19 +33,19 @@ function Teste() {
     <div className="flex flex-col items-center justify-center bg-[#15599a] grow p-6">
       <h1 className="text-center font-bold text-[#15559]">FORMULÁRIO</h1>
       <div className="flex flex-col items-center bg-[#fff] w-[400px] min-h-[400px] shadow-lg rounded">
-        <div class="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-          <div class="absolute">
+        <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="absolute">
             {imageUpload ? (
-              <div class="flex flex-col items-center">
-                <i class="fa fa-folder-open fa-4x text-blue-700"></i>
-                <span class="block text-gray-400 font-normal text-center">
+              <div className="flex flex-col items-center">
+                <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                <span className="block text-gray-400 font-normal text-center">
                   {imageUpload.name}
                 </span>
               </div>
             ) : (
-              <div class="flex flex-col items-center">
-                <i class="fa fa-folder-open fa-4x text-blue-700"></i>
-                <span class="block text-gray-400 font-normal">
+              <div className="flex flex-col items-center">
+                <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                <span className="block text-gray-400 font-normal">
                   Adicione o arquivo aqui
                 </span>
               </div>

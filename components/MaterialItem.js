@@ -35,6 +35,7 @@ function MaterialItem({ obj, setDados, dados, index }) {
               infoMaterial[index].qtdeDevolucao = infoMaterial[index].qtdeSaida;
               infoMaterial[index].diff =
                 infoMaterial[index].qtdeSaida - Number(e.target.value);
+
               setDados({
                 ...dados,
                 materiais: infoMaterial,

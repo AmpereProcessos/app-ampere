@@ -62,10 +62,10 @@ function ChamadosADM({ credentials, setCredentials }) {
   }, []);
   function getDemandColor(demanda) {
     if (demanda == "PAGAMENTO") {
-      return "text-[#EDAA25] font-bold";
+      return "text-[#fead61] font-bold";
     }
     if (demanda == "COBRANÇA") {
-      return "text-[#C43302] font-bold";
+      return "text-[#15599a] font-bold";
     }
   }
   function handleOpenModal(call) {
@@ -87,7 +87,10 @@ function ChamadosADM({ credentials, setCredentials }) {
           <p>CHAMADOS ABERTOS:</p>
           <p>{inProgress.length}</p>
         </div>
-        <div className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg">
+        <div
+          onClick={getCalls}
+          className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg"
+        >
           <p className="mr-2 text-sm">Atualizar</p>
           <AiOutlineReload />
         </div>

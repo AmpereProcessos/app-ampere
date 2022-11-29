@@ -81,6 +81,18 @@ function PDFFormulario({ info }) {
                       >
                         DIFERENÇA
                       </th>
+                      <th
+                        scope="col"
+                        className="text-sm font-medium text-white px-6 py-4"
+                      >
+                        VALOR UNITÁRIO
+                      </th>
+                      <th
+                        scope="col"
+                        className="text-sm font-medium text-white px-6 py-4"
+                      >
+                        VALOR
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -97,6 +109,15 @@ function PDFFormulario({ info }) {
                         </td>
                         <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
                           {material.diff}
+                        </td>
+                        <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
+                          R${material.precoUnit.toFixed(2).replace(".", ",")}
+                        </td>
+                        <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
+                          R$
+                          {(material.diff * material.precoUnit)
+                            .toFixed(2)
+                            .replace(".", ",")}
                         </td>
                       </tr>
                     ))}

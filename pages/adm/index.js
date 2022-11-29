@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
-// casa em construção (Tais)
 import { useRouter } from "next/router";
 import ModalADM from "../../components/ModalADM";
 import DateInput from "../../components/DateInput";

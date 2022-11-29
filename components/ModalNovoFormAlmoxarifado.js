@@ -114,6 +114,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
     getClients();
     getMaterials();
   }, []);
+  console.log(materialHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -225,6 +226,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                           ...materialHolder,
                           nome: e.value.nome,
                           id: e.value.id,
+                          precoUnit: e.value.preco,
                         })
                       }
                       options={materiais.map((material) => {
@@ -233,6 +235,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                           value: {
                             id: material._id,
                             nome: material.nome,
+                            preco: material.preco,
                           },
                         };
                       })}

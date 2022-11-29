@@ -90,6 +90,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
   useEffect(() => {
     getMaterials();
   }, []);
+  console.log(dados);
   return (
     <>
       <div style={OVERLAY_STYLES}>

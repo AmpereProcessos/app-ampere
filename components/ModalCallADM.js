@@ -147,6 +147,24 @@ function ModalCallADM({ open, setModalIsOpen, info, getCalls }) {
               </div>
               <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="font-bold text-center font-raleway">
+                  OBSERVAÇÕES
+                </span>
+                <span className="grow text-center font-raleway text-sm bg-gray-100 p-4 italic">
+                  {modalInfo.observacoes ? (
+                    <ul className="text-xs font-bold text-center list-none">
+                      {modalInfo.observacoes.split("/").map((string, index) => (
+                        <li key={index}>{string}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-xs font-bold text-center">
+                      SEM OBSERVAÇÕES
+                    </p>
+                  )}
+                </span>
+              </div>
+              <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="font-bold text-center font-raleway">
                   ANOTAÇÕES
                 </span>
                 <textarea

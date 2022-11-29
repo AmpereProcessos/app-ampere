@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 import Select from "react-select";
-import { cities } from "../utils/constants";
+import { cidadesAtendidas, cities } from "../utils/constants";
 import axios from "axios";
 const MODAL_STYLES = {
   position: "fixed",
@@ -127,7 +127,7 @@ function CreateModal({ setModalIsOpen }) {
                   }
                   className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
                 >
-                  {cities.map((city) => (
+                  {cidadesAtendidas.map((city) => (
                     <option key={city.name} value={city.name}>
                       {city.name}
                     </option>

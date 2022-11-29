@@ -796,6 +796,40 @@ function ModalComercial({
                       }}
                     />
                   )}
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      CAIXA CONJUGADA
+                    </span>
+                    <div className="flex">
+                      <input
+                        disabled={!editor}
+                        checked={
+                          infoHolder.padrao.caixaConjugada ? true : false
+                        }
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            "padrao.caixaConjugada": e.target.checked
+                              ? "SIM"
+                              : "NÃO",
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            padrao: {
+                              ...infoHolder.padrao,
+                              caixaConjugada: e.target.checked ? "SIM" : "NÃO",
+                            },
+                          });
+                        }}
+                        type="checkbox"
+                        name="caixaConjugada"
+                        id="caixaConjugada"
+                      />
+                      <label className="ml-2" htmlFor="caixaConjugada">
+                        SIM ?
+                      </label>
+                    </div>
+                  </div>
                   <SelectInput
                     label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
                     editable={editor}

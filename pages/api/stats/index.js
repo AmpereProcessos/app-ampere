@@ -8,6 +8,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
+            "contrato.status": "ASSINADO",
             "obra.saida": { $ne: "-" },
           },
         },
@@ -39,6 +40,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
+            "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
             "parecer.statusDoParecerDeAcesso": { $ne: "CANCELADO" },
             "obra.saida": { $ne: "-" },
             "obra.statusDaObra": { $ne: "OBRA CANCELADA" },
@@ -212,6 +214,7 @@ export default async function handler(req, res) {
         {
           $match: {
             [`${queryKey}`]: queryValue,
+            "contrato.status": "ASSINADO",
             "obra.saida": { $ne: "-" },
           },
         },
@@ -244,6 +247,7 @@ export default async function handler(req, res) {
         {
           $match: {
             [`${queryKey}`]: queryValue,
+            "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
             "parecer.statusDoParecerDeAcesso": { $ne: "CANCELADO" },
             "obra.saida": { $ne: "-" },
             "obra.statusDaObra": { $ne: "OBRA CANCELADA" },

@@ -72,16 +72,21 @@ const routes = [
 
 function Home({ credentials, setCredentials }) {
   const router = useRouter();
-  const [regionalFilter, setRegionalFilter] = useState();
   const [selectedYear, setSelectedYear] = useState();
   const [installedData, setInstalledData] = useState([]);
   const [averageHomoData, setHomoData] = useState([]);
   const [averageBuyTime, setAverageBuyTime] = useState([]);
-  const [clientBirthday, setClientsBirthday] = useState([]);
+  const [clientBirthday, setClientsBirthday] = useState({
+    general: [],
+    filtered: [],
+  });
   const [nps, setNps] = useState(0);
   const [statsData, setStatsData] = useState({
     graphData: [],
     maxGraphValue: 1000,
+  });
+  const [filters, setFilters] = useState({
+    birthdayToday: false,
   });
   function getStats(credenciais) {
     if (credenciais.visualizacao == "REGIONAL") {
@@ -124,18 +129,24 @@ function Home({ credentials, setCredentials }) {
           filtrarPor: credenciais.visualizacao,
           parametro: credenciais.regional,
         })
-        .then((res) => setClientsBirthday(res.data));
+        .then((res) =>
+          setClientsBirthday({ general: res.data, filtered: res.data })
+        );
     } else if (credentials.visualizacao == "VENDEDOR") {
       axios
         .post("/api/stats/clientsBirthday", {
           filtrarPor: credenciais.visualizacao,
           parametro: credenciais.vendedor,
         })
-        .then((res) => setClientsBirthday(res.data));
+        .then((res) =>
+          setClientsBirthday({ general: res.data, filtered: res.data })
+        );
     } else {
       axios
         .get("/api/stats/clientsBirthday")
-        .then((res) => setClientsBirthday(res.data));
+        .then((res) =>
+          setClientsBirthday({ general: res.data, filtered: res.data })
+        );
     }
   }
   useEffect(() => {
@@ -199,12 +210,19 @@ function Home({ credentials, setCredentials }) {
       });
     }
   }
-  function filterBirthday() {
-    let arr = clientBirthday.filter(
-      (client) =>
-        new Date(client.dataNascimento).getDate() == new Date().getDate()
-    );
-    setClientsBirthday(arr);
+  function filterBirthday(value) {
+    var newArr;
+    setFilters({ ...filters, birthdayToday: value });
+    if (value == true) {
+      newArr = clientBirthday.general.filter(
+        (client) =>
+          new Date(client.dataNascimento).getDate() == new Date().getDate()
+      );
+    } else {
+      newArr = clientBirthday.general;
+    }
+
+    setClientsBirthday({ ...clientBirthday, filtered: newArr });
   }
   return (
     <div className="p-6 grow">
@@ -388,15 +406,15 @@ function Home({ credentials, setCredentials }) {
         <div className="flex w-full items-center justify-between px-4">
           <h1 className="text-gray-600 uppercase">ANIVERSARIANTES DO MÊS</h1>
           <button
-            onClick={filterBirthday}
+            onClick={() => filterBirthday(!filters.birthdayToday)}
             className="p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold"
           >
             Aniversariando hoje
           </button>
         </div>
         <div className="w-full grow flex flex-wrap justify-around gap-y-2 mt-2">
-          {clientBirthday.length > 0 &&
-            clientBirthday?.map((client, index) => (
+          {clientBirthday.filtered.length > 0 &&
+            clientBirthday.filtered?.map((client, index) => (
               <div
                 key={index}
                 className="w-[350px] text-xs text-center bg-[#fff] border border-gray-200 p-2"

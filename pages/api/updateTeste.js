@@ -1,19 +1,18 @@
 import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  /*const db = await connectToDatabase(process.env.DB_KEY, "projetos");
   const collection = db.collection("dados");
-  /*let arr = await collection.updateMany(
+  let arr = await collection.updateMany(
     {
-      "material.statusSeparacao": "INICIAR SEPARAÇÃO",
-      "obra.statusDaObra": "CONCLUIDA",
+      "contrato.status": "RECISÃO DE CONTRATO",
     },
     {
       $set: {
-        "material.statusSeparacao": "SEPARADO",
+        "contrato.dataAssinatura": null,
       },
     }
   );
-  res.json(arr);*/
+  res.json(arr);
   let arr = await collection
     .aggregate([
       {
@@ -61,8 +60,8 @@ export default async function handler(req, res) {
         },
       },
     ])
-    .toArray();
-  res.json(arr);
+    .toArray();*/
+  res.json("API DESATIVADA");
 }
 const info = [
   649, 836, 848, 849, 881, 919, 976, 992, 994, 1004, 1050, 1066, 1081, 1090,

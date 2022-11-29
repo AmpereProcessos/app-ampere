@@ -275,6 +275,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
     },
     padrao: {
       tipo: "NÃO DEFINIDO",
+      caixaConjugada: dados.caixaConjugada,
       respPagamento: dados.formaPagamentoPadrao,
       respInstalacao: dados.respTrocaPadrao,
       valor: dados.valorPadrao,
@@ -468,7 +469,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
       });
       return false;
     }
-    if (!dados.visitaTecnica) {
+    if (!dados.visitaTecnicaFeita) {
       setCreationMsg({
         text: "Por favor, preencha a conferência da visita técnica",
         color: "text-red-500",
@@ -1863,6 +1864,28 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
                   </div>
                   {dados.aumentoDeCarga == "SIM" && (
                     <div className="flex gap-2 justify-around flex-wrap mt-2">
+                      <SelectInput
+                        label={"CAIXA CONJUGADA?"}
+                        editable={true}
+                        options={[
+                          {
+                            label: "NÃO DEFINIDO",
+                            value: "NÃO DEFINIDO",
+                          },
+                          {
+                            label: "NÃO",
+                            value: "NÃO",
+                          },
+                          {
+                            label: "SIM",
+                            value: "SIM",
+                          },
+                        ]}
+                        value={dados.caixaConjugada}
+                        handleChange={(value) =>
+                          setDados({ ...dados, caixaConjugada: value })
+                        }
+                      />
                       <SelectInput
                         editable={editor}
                         label={"TIPO DO PADRÃO"}

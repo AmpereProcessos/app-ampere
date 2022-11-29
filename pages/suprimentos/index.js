@@ -305,8 +305,8 @@ function Suprimentos({ credentials, setCredentials }) {
               <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
               <p className="text-xs text-[#15599a]">#{project.qtde}</p>
             </div>
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="grid grid-cols-2 mt-2">
+              <div className="flex flex-col items-start">
                 <span className="text-xxs">INFORMAÇÕES</span>
                 <p className="text-xxs font-bold text-gray-600 uppercase">
                   {project.compra.informacoes
@@ -314,7 +314,7 @@ function Suprimentos({ credentials, setCredentials }) {
                     : "-"}
                 </p>
               </div>
-              <div>
+              <div className="flex flex-col items-end">
                 <span className="text-xxs">LIBERACÃO DE CRÉDITO</span>
                 <p className="text-xs text-center text-gray-600">
                   {project.compra.statusLiberacao
@@ -323,35 +323,47 @@ function Suprimentos({ credentials, setCredentials }) {
                 </p>
               </div>
             </div>
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="grid grid-cols-3 items-center mt-1">
+              <div className="flex flex-col items-start">
                 <span className="text-xxs">FORNECEDOR</span>
                 <p className="text-xs text-yellow-500">
                   {project.compra.fornecedor ? project.compra.fornecedor : "-"}
                 </p>
               </div>
-              <div>
+              <div className="flex flex-col items-center">
                 <span className="text-xxs">PREVISÃO ENTREGA</span>
-                <p
-                  className={`text-xs ${
-                    dayjs(project.compra.previsaoEntrega).diff(
-                      new Date(),
-                      "day"
-                    ) < 7
-                      ? "text-red-500 font-bold"
-                      : "text-green-500 font-bold"
-                  } text-center`}
-                >
-                  {project.compra.previsaoEntrega
-                    ? dayjs(new Date(project.compra.previsaoEntrega)).isValid()
+                {console.log(
+                  project.qtde,
+                  dayjs(project.compra.previsaoEntrega).diff(new Date(), "day")
+                )}
+                {dayjs(new Date()).isBefore(
+                  dayjs(dayjs(project.compra.previsaoEntrega).add(22, "hour"))
+                ) ? (
+                  <p
+                    className={`text-xs ${
+                      dayjs(project.compra.previsaoEntrega).diff(
+                        new Date(),
+                        "day"
+                      ) < 7
+                        ? "text-red-500 font-bold"
+                        : "text-green-500 font-bold"
+                    } text-center`}
+                  >
+                    {project.compra.previsaoEntrega
                       ? dayjs(
-                          dayjs(project.compra.previsaoEntrega).add(4, "hour")
-                        ).format("DD/MM/YYYY")
-                      : "-"
-                    : "-"}
-                </p>
+                          new Date(project.compra.previsaoEntrega)
+                        ).isValid()
+                        ? dayjs(
+                            dayjs(project.compra.previsaoEntrega).add(4, "hour")
+                          ).format("DD/MM/YYYY")
+                        : "-"
+                      : "-"}
+                  </p>
+                ) : (
+                  <p className="text-red-500 font-bold text-sm">PREV.VENCIDA</p>
+                )}
               </div>
-              <div>
+              <div className="flex flex-col items-end">
                 <span className="text-xxs">STATUS ENTREGA</span>
                 <p className="text-xs text-gray-600">
                   {project.compra.statusEntrega

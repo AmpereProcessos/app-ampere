@@ -1060,6 +1060,28 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
         {dados.aumentoDeCarga == "SIM" && (
           <div className="flex gap-2 justify-around flex-wrap mt-2">
             <SelectInput
+              label={"CAIXA CONJUGADA?"}
+              editable={true}
+              options={[
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+                {
+                  label: "NÃO",
+                  value: "NÃO",
+                },
+                {
+                  label: "SIM",
+                  value: "SIM",
+                },
+              ]}
+              value={dados.caixaConjugada}
+              handleChange={(value) =>
+                setDados({ ...dados, caixaConjugada: value })
+              }
+            />
+            <SelectInput
               label={"TIPO DO PADRÃO"}
               editable={true}
               value={dados.tipoDePadrao}

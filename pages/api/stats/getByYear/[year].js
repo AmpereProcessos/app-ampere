@@ -8,6 +8,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
+            "contrato.status": "ASSINADO",
             "contrato.dataAssinatura": { $ne: "-" },
           },
         },
@@ -69,6 +70,7 @@ export default async function handler(req, res) {
         {
           $match: {
             [`${queryKey}`]: queryValue,
+            "contrato.status": "ASSINADO",
             "contrato.dataAssinatura": { $ne: "-" },
           },
         },

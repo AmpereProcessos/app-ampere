@@ -120,6 +120,7 @@ function FormularioSolicitacao() {
     formaPagamentoOeMOuSeguro: "NÃO SE APLICA",
     valorOeMOuSeguro: null,
     aumentoDeCarga: "NÃO DEFINIDO",
+    caixaConjugada: "NÃO DEFINIDO",
     tipoDePadrao: "NÃO DEFINIDO",
     aumentoDisjuntor: "NÃO",
     respTrocaPadrao: "NÃO SE APLICA",

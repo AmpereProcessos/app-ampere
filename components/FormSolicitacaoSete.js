@@ -6,6 +6,10 @@ function FormSolicitacaoSete({ avancar, setDados, dados, voltar }) {
   const [message, setMessage] = useState("");
   function validarCamposObrigatorios() {
     if (dados.aumentoDeCarga == "SIM") {
+      if (dados.caixaConjugada == "NÃO DEFINIDO") {
+        setMessage("Por favor, preencha se há caixa conjugada.");
+        return false;
+      }
       if (dados.tipoDePadrao == "NÃO DEFINIDO") {
         setMessage("Por favor, preencha o tipo de padrão.");
         return false;
@@ -65,6 +69,28 @@ function FormSolicitacaoSete({ avancar, setDados, dados, voltar }) {
       </div>
       {dados.aumentoDeCarga == "SIM" && (
         <div className="flex gap-2 justify-around flex-wrap mt-2">
+          <SelectInput
+            label={"CAIXA CONJUGADA?"}
+            editable={true}
+            options={[
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+              {
+                label: "NÃO",
+                value: "NÃO",
+              },
+              {
+                label: "SIM",
+                value: "SIM",
+              },
+            ]}
+            value={dados.caixaConjugada}
+            handleChange={(value) =>
+              setDados({ ...dados, caixaConjugada: value })
+            }
+          />
           <SelectInput
             label={"TIPO DO PADRÃO"}
             editable={true}

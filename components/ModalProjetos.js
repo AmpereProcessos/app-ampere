@@ -981,13 +981,15 @@ function ModalProjetos({
                         onChange={(e) => {
                           setChanges({
                             ...changes,
-                            "padrao.caixaConjugada": e.target.checked,
+                            "padrao.caixaConjugada": e.target.checked
+                              ? "SIM"
+                              : "NÃO",
                           });
                           setInfo({
                             ...infoHolder,
                             padrao: {
                               ...infoHolder.padrao,
-                              caixaConjugada: e.target.checked,
+                              caixaConjugada: e.target.checked ? "SIM" : "NÃO",
                             },
                           });
                         }}
@@ -996,7 +998,7 @@ function ModalProjetos({
                         id="caixaConjugada"
                       />
                       <label className="ml-2" htmlFor="caixaConjugada">
-                        SIM
+                        SIM ?
                       </label>
                     </div>
                   </div>

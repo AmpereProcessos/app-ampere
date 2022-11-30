@@ -310,6 +310,22 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
             });
           }
         }
+        if (dados.possuiDistribuicao == "SIM") {
+          for (let i = 0; i < dados.distribuicoes.length; i++) {
+            var imageRef = ref(
+              storage,
+              `formSolicitacao/${dados.nomeDoContrato}/recebedora${i + 1}${(
+                Math.random() * 10000
+              ).toFixed(0)}`
+            );
+            let res = await uploadBytes(imageRef, images[`recebedora${i + 1}`]);
+            let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+            links.push({
+              title: `RECEBEDORA ${i + 1}`,
+              link: url,
+            });
+          }
+        }
       } catch (error) {}
       if (holder === undefined) {
         setChecks({ ...checks, allChecked: true });

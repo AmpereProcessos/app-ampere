@@ -6,6 +6,8 @@ import {
   MdOutlineKeyboardArrowDown,
 } from "react-icons/md";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import Logo from "../utils/10mega.png";
+import Image from "next/image";
 import "react-circular-progressbar/dist/styles.css";
 import {
   AreaChart,
@@ -72,6 +74,7 @@ const routes = [
 
 function Home({ credentials, setCredentials }) {
   const router = useRouter();
+  const [totalPeakPot, setTotalPeakPot] = useState(0);
   const [selectedYear, setSelectedYear] = useState();
   const [installedData, setInstalledData] = useState([]);
   const [averageHomoData, setHomoData] = useState([]);
@@ -96,6 +99,9 @@ function Home({ credentials, setCredentials }) {
           parametro: credenciais.regional,
         })
         .then((res) => {
+          setTotalPeakPot(
+            Number((res.data.totalPeakPot * 100) / 10000).toFixed(2)
+          );
           setNps(res.data.nps);
           setAverageBuyTime(res.data.suprimentosData);
           setInstalledData(res.data.installedInfo);
@@ -108,6 +114,9 @@ function Home({ credentials, setCredentials }) {
           parametro: credenciais.vendedor,
         })
         .then((res) => {
+          setTotalPeakPot(
+            Number((res.data.totalPeakPot * 100) / 10000).toFixed(2)
+          );
           setNps(res.data.nps);
           setAverageBuyTime(res.data.suprimentosData);
           setInstalledData(res.data.installedInfo);
@@ -115,6 +124,9 @@ function Home({ credentials, setCredentials }) {
         });
     } else {
       axios.get("/api/stats").then((res) => {
+        setTotalPeakPot(
+          Number((res.data.totalPeakPot * 100) / 10000).toFixed(2)
+        );
         setNps(res.data.nps);
         setAverageBuyTime(res.data.suprimentosData);
         setInstalledData(res.data.installedInfo);
@@ -226,6 +238,20 @@ function Home({ credentials, setCredentials }) {
   }
   return (
     <div className="p-6 grow">
+      <div className="flex flex-col border bg-[#fff] my-3 shadow-lg border-gray-200 p-2">
+        <div className="flex cursor-pointer items-center justify-center my-2">
+          <Image width={"60px"} height={"60px"} src={Logo} />
+        </div>
+        <div className="w-full h-[36px] border border-[#15599a]">
+          <div
+            style={{ width: `${totalPeakPot}%` }}
+            className={`bg-[#15599a] h-full col-span-8`}
+          ></div>
+        </div>
+        <p className="text-center font-bold text-[#15599a]">
+          Faltam {(100 - totalPeakPot).toFixed(2)}%...
+        </p>
+      </div>
       <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">
         <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">

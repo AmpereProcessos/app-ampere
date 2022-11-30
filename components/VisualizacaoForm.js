@@ -37,6 +37,7 @@ function formatCEP(cep) {
   return cep;
 }
 function VisualizacaoForm({ dados, voltar, setDados }) {
+  console.log(dados);
   const [msg, setMsg] = useState({
     text: "",
     color: "",

@@ -2476,8 +2476,8 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
                       DOCUMENTAÇÃO
                     </span>
                     <div className="flex flex-col items-center gap-2">
-                      {dados.links.map((x) => (
-                        <div className="flex items-center gap-x-2">
+                      {dados.links.map((x, index) => (
+                        <div key={index} className="flex items-center gap-x-2">
                           <a className="text-blue-300" href={x.link}>
                             {x.title}
                           </a>

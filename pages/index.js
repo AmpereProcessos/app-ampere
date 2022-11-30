@@ -239,16 +239,13 @@ function Home({ credentials, setCredentials }) {
   return (
     <div className="p-6 grow">
       <div className="flex flex-col border bg-[#fff] my-3 shadow-lg border-gray-200 p-2">
-        <div className="flex cursor-pointer items-center justify-center my-2">
-          <Image width={"60px"} height={"60px"} src={Logo} />
-        </div>
         <div className="w-full h-[36px] border border-[#15599a]">
           <div
             style={{ width: `${totalPeakPot}%` }}
             className={`bg-[#15599a] h-full col-span-8`}
           ></div>
         </div>
-        <p className="text-center font-bold text-[#15599a]">
+        <p className="text-center font-bold text-[#15599a] text-xl">
           Faltam {(100 - totalPeakPot).toFixed(2)}%...
         </p>
       </div>

@@ -3,7 +3,7 @@ import { FaBars } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import WhiteLogo from "../utils/whitelogoHD.png";
+import WhiteLogo from "../utils/10mega.png";
 import { BiLogIn } from "react-icons/bi";
 import { MdAdminPanelSettings } from "react-icons/md";
 import axios from "axios";

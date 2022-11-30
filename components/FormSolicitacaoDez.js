@@ -909,7 +909,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           {dados.possuiDistribuicao == "SIM" && (
             <>
               {dados.distribuicoes.map((dist, index) => (
-                <div className="w-fit flex flex-col items-center">
+                <div key={index} className="w-fit flex flex-col items-center">
                   <label
                     className="ml-2 text-center text-[#15599a] font-bold"
                     htmlFor="propostaComercial"

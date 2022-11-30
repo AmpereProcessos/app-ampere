@@ -128,8 +128,8 @@ function CreateModal({ setModalIsOpen }) {
                   className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
                 >
                   {cidadesAtendidas.map((city) => (
-                    <option key={city.name} value={city.name}>
-                      {city.name}
+                    <option key={city} value={city}>
+                      {city}
                     </option>
                   ))}
                 </select>
@@ -210,6 +210,7 @@ function CreateModal({ setModalIsOpen }) {
                   <option value={"INVERSOR/MICRO COM ERRO"}>
                     INVERSOR/MICRO COM ERRO
                   </option>
+                  <option value={"GARANTIA"}>GARANTIA</option>
                   <option value={"MANUTENÇÃO PREVENTIVA"}>
                     MANUTENÇÃO PREVENTIVA
                   </option>

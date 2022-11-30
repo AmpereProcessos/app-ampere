@@ -1653,9 +1653,7 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
           {dados.links?.length > 0 &&
             dados.links.map((x, index) => (
               <div key={index} className="flex items-center gap-x-2">
-                <a className="text-blue-300" href={x.link}>
-                  {x.title}
-                </a>
+                <p className="text-blue-300">{x.title}</p>
                 <AiOutlineCheck
                   style={{ color: "#49be25", fontSize: "18px" }}
                 />

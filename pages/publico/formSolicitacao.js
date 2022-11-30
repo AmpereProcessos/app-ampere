@@ -21,6 +21,7 @@ import FormSolicitacaoSete from "../../components/FormSolicitacaoSete";
 import FormSolicitacaoOito from "../../components/FormSolicitacaoOito";
 import FormSolicitacaoNove from "../../components/FormSolicitacaoNove";
 import VisualizacaoForm from "../../components/VisualizacaoForm";
+import FormSolicitacaoDez from "../../components/FormSolicitacaoDez";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -48,7 +49,7 @@ function formatCEP(cep) {
   return cep;
 }
 function FormularioSolicitacao() {
-  const [estagio, setEstagio] = useState(0);
+  const [estagio, setEstagio] = useState(9);
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",
     telefoneVendedor: "",
@@ -274,6 +275,14 @@ function FormularioSolicitacao() {
           />
         )}
         {estagio == 9 && (
+          <FormSolicitacaoDez
+            dados={dados}
+            setDados={setDados}
+            avancar={() => setEstagio(estagio + 1)}
+            voltar={() => setEstagio(estagio - 1)}
+          />
+        )}
+        {estagio == 10 && (
           <VisualizacaoForm
             dados={dados}
             setDados={setDados}

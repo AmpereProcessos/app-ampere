@@ -4,7 +4,7 @@ import SelectInput from "./SelectInput";
 import NumberInput from "./NumberInput";
 import DateInput from "./DateInput";
 import { FiDelete } from "react-icons/fi";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineCheck } from "react-icons/ai";
 import { cidadesAtendidas, vendedores } from "../utils/constants";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
@@ -1645,219 +1645,24 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
           </>
         )}
       </div>
-      {/**<div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+      <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
         <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          DOCUMENTAÇÃO NECESSÁRIA
+          DOCUMENTAÇÃO
         </span>
-        <div className="flex flex-col gap-2 items-center">
-          <div className="flex gap-2 justify-around flex-wrap mt-2">
-            <div className="w-fit flex flex-col items-center">
-              <label
-                className="ml-2 text-center text-[#15599a] font-bold"
-                htmlFor="contaDeEnergia"
-              >
-                CONTA DE ENERGIA
-              </label>
-              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-                <div className="absolute">
-                  {images.contaDeEnergia ? (
-                    <div className="flex flex-col items-center">
-                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">
-                        {images.contaDeEnergia.name}
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">
-                        Adicione o arquivo aqui...
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <input
-                  onChange={(e) =>
-                    setImages({
-                      ...images,
-                      contaDeEnergia: e.target.files[0],
-                    })
-                  }
-                  className="h-full w-full opacity-0"
-                  type="file"
+        <div className="flex flex-col items-center gap-2">
+          {dados.links?.length > 0 &&
+            dados.links.map((x) => (
+              <div className="flex items-center gap-x-2">
+                <a className="text-blue-300" href={x.link}>
+                  {x.title}
+                </a>
+                <AiOutlineCheck
+                  style={{ color: "#49be25", fontSize: "18px" }}
                 />
               </div>
-            </div>
-            <div className="w-fit flex flex-col items-center">
-              <label
-                className="ml-2 text-center text-[#15599a] font-bold"
-                htmlFor="propostaComercial"
-              >
-                PROPOSTA COMERCIAL ATUALIZADA
-              </label>
-              <div class="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-                <div class="absolute">
-                  {images.propostaComercial ? (
-                    <div class="flex flex-col items-center">
-                      <i class="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span class="block text-gray-400 font-normal text-center">
-                        {images.propostaComercial.name}
-                      </span>
-                    </div>
-                  ) : (
-                    <div class="flex flex-col items-center">
-                      <i class="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span class="block text-gray-400 font-normal">
-                        Adicione o arquivo aqui
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <input
-                  onChange={(e) =>
-                    setImageUpload({
-                      ...images,
-                      propostaComercial: e.target.files[0],
-                    })
-                  }
-                  className="h-full w-full opacity-0"
-                  type="file"
-                />
-              </div>
-            </div>
-            {dados.tipoDaInstalacao == "RURAL" && (
-              <>
-                <div className="w-fit">
-                  <label
-                    className="ml-2 text-center text-[#15599a] font-bold"
-                    htmlFor="propostaComercial"
-                  >
-                    CAR
-                  </label>
-                  <div class="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-                    <div class="absolute">
-                      {images.car ? (
-                        <div class="flex flex-col items-center">
-                          <i class="fa fa-folder-open fa-4x text-blue-700"></i>
-                          <span class="block text-gray-400 font-normal text-center">
-                            {images.car.name}
-                          </span>
-                        </div>
-                      ) : (
-                        <div class="flex flex-col items-center">
-                          <i class="fa fa-folder-open fa-4x text-blue-700"></i>
-                          <span class="block text-gray-400 font-normal">
-                            Adicione o arquivo aqui
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <input
-                      onChange={(e) =>
-                        setImageUpload({
-                          ...images,
-                          car: e.target.files[0],
-                        })
-                      }
-                      className="h-full w-full opacity-0"
-                      type="file"
-                    />
-                  </div>
-                </div>
-                <div className="w-fit">
-                  <label
-                    className="ml-2 text-center text-[#15599a] font-bold"
-                    htmlFor="propostaComercial"
-                  >
-                    MATRÍCULA
-                  </label>
-                  <div class="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-                    <div class="absolute">
-                      {images.matricula ? (
-                        <div class="flex flex-col items-center">
-                          <i class="fa fa-folder-open fa-4x text-blue-700"></i>
-                          <span class="block text-gray-400 font-normal text-center">
-                            {images.matricula.name}
-                          </span>
-                        </div>
-                      ) : (
-                        <div class="flex flex-col items-center">
-                          <i class="fa fa-folder-open fa-4x text-blue-700"></i>
-                          <span class="block text-gray-400 font-normal">
-                            Adicione o arquivo aqui
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <input
-                      onChange={(e) =>
-                        setImageUpload({
-                          ...images,
-                          matricula: e.target.files[0],
-                        })
-                      }
-                      className="h-full w-full opacity-0"
-                      type="file"
-                    />
-                  </div>
-                </div>
-                <div className="w-fit">
-                  <label
-                    className="ml-2 text-center text-[#15599a] font-bold"
-                    htmlFor="propostaComercial"
-                  >
-                    COMPROVANTE DE ENDEREÇO CORRESPONDENTE
-                  </label>
-                  <div class="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-                    <div class="absolute">
-                      {images.comprovanteEnderecoCorrespondente ? (
-                        <div class="flex flex-col items-center">
-                          <i class="fa fa-folder-open fa-4x text-blue-700"></i>
-                          <span class="block text-gray-400 font-normal text-center">
-                            {images.comprovanteEnderecoCorrespondente.name}
-                          </span>
-                        </div>
-                      ) : (
-                        <div class="flex flex-col items-center">
-                          <i class="fa fa-folder-open fa-4x text-blue-700"></i>
-                          <span class="block text-gray-400 font-normal">
-                            Adicione o arquivo aqui
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <input
-                      onChange={(e) =>
-                        setImageUpload({
-                          ...images,
-                          comprovanteEnderecoCorrespondente: e.target.files[0],
-                        })
-                      }
-                      className="h-full w-full opacity-0"
-                      type="file"
-                    />
-                  </div>
-                </div>
-              </>
-            )}
- 
-          </div>
+            ))}
         </div>
-        {imagesMsg.text && (
-          <p className={`text-center italic ${imagesMsg.color}`}>
-            {imagesMsg.text}
-          </p>
-        )}
-        <div className="flex justify-center mt-2">
-          <button
-            onClick={uploadImage}
-            className="p-2 bg-[#fead61] hover:bg-[#15599a] hover:text-white rounded font-bold"
-          >
-            ENVIAR FOTOS
-          </button>
-        </div>
-      </div> */}
-
+      </div>
       {msg.text && (
         <p className={`text-sm text-center font-bold ${msg.color}`}>
           {msg.text}

@@ -3,7 +3,7 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import NumberInput from "./NumberInput";
 import DateInput from "./DateInput";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineCheck } from "react-icons/ai";
 import {
   cidadesAtendidas,
   tiposDeServico,
@@ -2470,6 +2470,27 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
                     </>
                   )}
                 </div>
+                {dados.links?.length > 0 ? (
+                  <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                      DOCUMENTAÇÃO
+                    </span>
+                    <div className="flex flex-col items-center gap-2">
+                      {dados.links.map((x) => (
+                        <div className="flex items-center gap-x-2">
+                          <a className="text-blue-300" href={x.link}>
+                            {x.title}
+                          </a>
+                          <AiOutlineCheck
+                            style={{ color: "#49be25", fontSize: "18px" }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  false
+                )}
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                     DOCUMENTOS NECESSÁRIOS

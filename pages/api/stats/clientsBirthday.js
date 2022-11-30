@@ -1,5 +1,6 @@
 import connectToDatabase from "../../../utils/connectDb";
 export default async function handler(req, res) {
+  const currentMonth = new Date().getMonth() + 1;
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
@@ -26,7 +27,7 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            "data.mes": 11,
+            "data.mes": Number(currentMonth),
           },
         },
       ])
@@ -72,7 +73,7 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            "data.mes": 11,
+            "data.mes": Number(currentMonth),
           },
         },
       ])

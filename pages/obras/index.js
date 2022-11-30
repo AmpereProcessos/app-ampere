@@ -23,6 +23,7 @@ function Obras({ credentials, setCredentials }) {
     epFilter: [],
     epStatusFilter: [],
     cidadeFilter: [],
+    tipoDaTelhaFilter: "",
     obsPendente: false,
     osPendente: false,
     numModulos: null,
@@ -59,6 +60,21 @@ function Obras({ credentials, setCredentials }) {
     if (value != "" || " ") {
       let newArr = projects.filter((call) =>
         call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
+      );
+      setFilteredProjects(newArr);
+    } else {
+      setFilteredProjects(projects);
+    }
+  }
+  function handleTipoDaTelhaFilter(value) {
+    setFilters({ ...filters, tipoDaTelhaFilter: value });
+    if (value != "" || " ") {
+      let newArr = projects.filter(
+        (call) =>
+          call.visitaTecnica.tipoDaTelha &&
+          call.visitaTecnica?.tipoDaTelha
+            .toUpperCase()
+            .includes(value.toUpperCase())
       );
       setFilteredProjects(newArr);
     } else {
@@ -445,6 +461,15 @@ function Obras({ credentials, setCredentials }) {
               "outline-none p-1.5 rounded border border-gray-200 placeholder:italic"
             }
             onChange={(e) => handleSearchFilter(e.target.value)}
+          />
+          <input
+            type={"text"}
+            placeholder="Digite o tipo da telha"
+            value={filters.tipoDaTelhaFilter}
+            className={
+              "outline-none p-1.5 rounded border border-gray-200 placeholder:italic"
+            }
+            onChange={(e) => handleTipoDaTelhaFilter(e.target.value)}
           />
           <input
             type="number"

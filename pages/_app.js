@@ -21,7 +21,10 @@ function MyApp({ Component, pageProps }) {
       .then((res) => setNotificacoes(res.data));
   }
   useEffect(() => {
-    axios.get("/api/auth/user").then((res) => setUsers(res.data));
+    axios.get("/api/auth/user").then((res) => {
+      console.log(res.data);
+      setUsers(res.data);
+    });
   }, []);
   useEffect(() => {
     if (Object.keys(credentials).length == 0) {
@@ -40,8 +43,6 @@ function MyApp({ Component, pageProps }) {
     )
       setSidebarVisible(false);
   }, [Component]);
-  console.log(users);
-  console.log(notificacoes);
   return (
     <DndProvider backend={HTML5Backend}>
       <title>Sistema - Ampère Energias</title>

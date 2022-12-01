@@ -193,6 +193,18 @@ const validation = {
     },
     msg: "Por favor, preencha o status do laudo",
   },
+  "visitaTecnica.tecnico": {
+    test(value) {
+      return value.trim().length < 3;
+    },
+    msg: "Por favor, preencha o técnico responsável",
+  },
+  "visitaTecnica.tipoDaTelha": {
+    test(value) {
+      return value.trim().length < 3;
+    },
+    msg: "Por favor, preencha o tipo da telha",
+  },
 };
 function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
   const router = useRouter();
@@ -267,11 +279,11 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
     segmento: dados.segmento,
     obsComercial: dados.obsComercial ? dados.obsComercial : "",
     visitaTecnica: {
-      status: "PENDÊNCIA",
-      tecnico: "",
+      status: dados.visitaTecnica,
+      tecnico: dados.respVisitaTecnica,
       saidaDoCliente: "",
       amperagem: dados.tipoDePadrao,
-      tipoDaTelha: "",
+      tipoDaTelha: dados.tipoDaTelha,
     },
     padrao: {
       tipo: "NÃO DEFINIDO",
@@ -1144,6 +1156,47 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
                       ]}
                       handleChange={(value) => {
                         setDados({ ...dados, laudo: value });
+                      }}
+                    />
+                    <div>
+                      <input
+                        disabled={!editor}
+                        checked={
+                          dados.visitaTecnica == "REALIZADA" ? true : false
+                        }
+                        onChange={(e) => {
+                          setDados({
+                            ...dados,
+                            visitaTecnica: e.target.checked
+                              ? "REALIZADA"
+                              : "PENDÊNCIA",
+                          });
+                        }}
+                        type="checkbox"
+                        name="visitaTecnica"
+                        id="visitaTecnica"
+                      />
+                      <label className="ml-2" htmlFor="visitaTecnica">
+                        VISITA TÉCNICA REALIZADA ?
+                      </label>
+                    </div>
+                    <TextInput
+                      label={"TÉCNICO RESPONSÁVEL"}
+                      editable={editor}
+                      value={dados.respVisitaTecnica}
+                      handleChange={(value) => {
+                        setDados({
+                          ...dados,
+                          respVisitaTecnica: value.toUpperCase(),
+                        });
+                      }}
+                    />
+                    <TextInput
+                      label={"Tipo da telha"}
+                      editable={editor}
+                      value={dados.tipoDaTelha}
+                      handleChange={(value) => {
+                        setDados({ ...dados, tipoDaTelha: value });
                       }}
                     />
                   </div>

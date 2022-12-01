@@ -92,15 +92,19 @@ function Comercial({ credentials, setCredentials }) {
           call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
     }
-    if (!newArr) setFilteredProjects(projects);
-    else {
+    if (!newArr) {
+      setFilteredProjects(projects);
+      return projects;
+    } else {
       setFilteredProjects(newArr);
+      return newArr;
     }
   }
   function handleSearchFilter(value) {
     setSearchFilter(value);
     if (value != "" || " ") {
-      let newArr = projects.filter((call) =>
+      let filtered = filterProjects();
+      let newArr = filtered.filter((call) =>
         call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
       );
       setFilteredProjects(newArr);

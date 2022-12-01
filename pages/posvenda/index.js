@@ -49,7 +49,8 @@ function Posvenda({ credentials, setCredentials }) {
   function handleSearchFilter(value) {
     setSearchFilter(value);
     if (value != "" || " ") {
-      let newArr = projects.filter((call) =>
+      let filtered = filterProjects();
+      let newArr = filtered.filter((call) =>
         call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
       );
       setFilteredProjects(newArr);
@@ -128,9 +129,12 @@ function Posvenda({ credentials, setCredentials }) {
       );
       console.log(newArr);
     }
-    if (!newArr) setFilteredProjects(projects);
-    else {
+    if (!newArr) {
+      setFilteredProjects(projects);
+      return projects;
+    } else {
       setFilteredProjects(newArr);
+      return newArr;
     }
   }
   function ordenate() {

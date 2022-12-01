@@ -54,7 +54,8 @@ function Projetos({ credentials, setCredentials }) {
   function handleSearchFilter(value) {
     setSearchFilter(value);
     if (value != "" || " ") {
-      let newArr = projects.filter((call) =>
+      let filtered = filterProjects();
+      let newArr = filtered.filter((call) =>
         call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
       );
       setFilteredProjects(newArr);
@@ -128,9 +129,12 @@ function Projetos({ credentials, setCredentials }) {
           project.projeto.dataAssDocumentacao == "-"
       );
     }
-    if (!newArr) setFilteredProjects(projects);
-    else {
+    if (!newArr) {
+      setFilteredProjects(projects);
+      return projects;
+    } else {
       setFilteredProjects(newArr);
+      return newArr;
     }
   }
   function getListCumulativePeakPot() {

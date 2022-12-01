@@ -5,6 +5,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 function Comissionamento({ credentials, setCredentials }) {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
+  const [searchFilter, setSearchFilter] = useState();
   const [filters, setFilters] = useState({
     pendenciaComercial: false,
     pendenciaSuprimentos: false,
@@ -44,6 +45,7 @@ function Comissionamento({ credentials, setCredentials }) {
       setFilteredProjects(newArr);
     }
   }
+
   function filterPendenciaProjetos(value) {
     setFilters({ pendenciaProjetos: value });
     var newArr;
@@ -54,9 +56,21 @@ function Comissionamento({ credentials, setCredentials }) {
       );
       console.log("comercial", newArr);
     }
-    if (!newArr) setFilteredProjects(projects);
-    else {
+    if (!newArr) {
+      setFilteredProjects(projects);
+    } else {
       setFilteredProjects(newArr);
+    }
+  }
+  function handleSearchFilter(value) {
+    setSearchFilter(value);
+    if (value != "" || " ") {
+      let newArr = projects.filter((call) =>
+        call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
+      );
+      setFilteredProjects(newArr);
+    } else {
+      setFilteredProjects(projects);
     }
   }
   useEffect(() => {
@@ -90,6 +104,13 @@ function Comissionamento({ credentials, setCredentials }) {
           {filteredProjects && <p>({filteredProjects.length})</p>}
         </div>
         <div className="flex flex-wrap items-center gap-2 pl-4">
+          <input
+            type={"text"}
+            className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
+            placeholder="Digite o nome do contrato"
+            value={searchFilter}
+            onChange={(e) => handleSearchFilter(e.target.value)}
+          />
           <div
             onClick={() =>
               filterPendenciaComercial(!filters.pendenciaComercial)

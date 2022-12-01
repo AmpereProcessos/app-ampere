@@ -71,8 +71,9 @@ function NPS({ credentials, setCredentials }) {
           call.jornada.dataNps <= dateFilter.before
       );
     }
-    if (!newArr) setFilteredProjects(projects);
-    else {
+    if (!newArr) {
+      setFilteredProjects(projects);
+    } else {
       setFilteredProjects(newArr);
     }
   }

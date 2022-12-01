@@ -58,7 +58,9 @@ function Obras({ credentials, setCredentials }) {
   function handleSearchFilter(value) {
     setSearchFilter(value);
     if (value != "" || " ") {
-      let newArr = projects.filter((call) =>
+      let filtered = filterProjects();
+      console.log(filtered);
+      let newArr = filtered.filter((call) =>
         call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
       );
       setFilteredProjects(newArr);
@@ -69,7 +71,9 @@ function Obras({ credentials, setCredentials }) {
   function handleTipoDaTelhaFilter(value) {
     setFilters({ ...filters, tipoDaTelhaFilter: value });
     if (value != "" || " ") {
-      let newArr = projects.filter(
+      let filtered = filterProjects();
+      console.log(filtered);
+      let newArr = filtered.filter(
         (call) =>
           call.visitaTecnica.tipoDaTelha &&
           call.visitaTecnica?.tipoDaTelha
@@ -163,9 +167,12 @@ function Obras({ credentials, setCredentials }) {
           obj.ordensDeServico == undefined || obj.ordensDeServico?.length == 0
       );
     }
-    if (!newArr) setFilteredProjects(projects);
-    else {
+    if (!newArr) {
+      setFilteredProjects(projects);
+      return projects;
+    } else {
       setFilteredProjects(newArr);
+      return newArr;
     }
   }
   function getListCumulativePeakPot() {

@@ -187,7 +187,7 @@ function Entregas({ credentials, setCredentials }) {
       </div>
       <div className="flex flex-col gap-2 mt-2">
         {filteredProjects.map((project) => (
-          <EntregasCard project={project} />
+          <EntregasCard key={project._id} project={project} />
         ))}
       </div>
     </div>

@@ -35,7 +35,9 @@ function NotificationCreationBlock({ credentials, codProjeto, usuarios }) {
           className="outline-none border border-gray-200 font-bold h-[36px]"
         >
           {usuarios.map((usuario) => (
-            <option value={usuario._id}>{usuario.nome.toUpperCase()}</option>
+            <option key={usuario._id} value={usuario._id}>
+              {usuario.nome.toUpperCase()}
+            </option>
           ))}
           <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
         </select>

@@ -14,7 +14,7 @@ const statusStyles = {
     textColor: "text-red-500",
   },
 };
-function OeM({ credentials, setCredentials }) {
+function OeM({ credentials, setCredentials, users }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -554,6 +554,7 @@ function OeM({ credentials, setCredentials }) {
       </Link>
       {modalIsOpen && (
         <ModalOeM
+          users={users}
           setModalIsOpen={setModalIsOpen}
           project={modalProject}
           editor={credentials.accessibleRoutes.includes("O&M") ? true : false}

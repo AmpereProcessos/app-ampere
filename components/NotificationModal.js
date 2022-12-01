@@ -26,7 +26,7 @@ function NotificationModal({ notificacoes, getNotificacoes }) {
     not[index].lido = true;
     setNot([...not]);
     axios
-      .put("/api/notificacoes", {
+      .put("/api/notificacoes/1", {
         id: id,
       })
       .then((res) => getNotificacoes());

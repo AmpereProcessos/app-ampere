@@ -7,7 +7,7 @@ import ModalADM from "../../components/ModalADM";
 import DateInput from "../../components/DateInput";
 import { statusLiberacao } from "../../utils/constants";
 import Link from "next/link";
-function Administracao({ credentials, setCredentials }) {
+function Administracao({ credentials, setCredentials, users }) {
   var editor;
   const router = useRouter();
   const [projects, setProjects] = useState([]);
@@ -403,6 +403,7 @@ function Administracao({ credentials, setCredentials }) {
       )}
       {modalIsOpen && (
         <ModalADM
+          users={users}
           handleUpdates={handleUpdates}
           project={modalProject}
           editor={
@@ -411,6 +412,7 @@ function Administracao({ credentials, setCredentials }) {
               : false
           }
           setModalIsOpen={setModalIsOpen}
+          credentials={credentials}
         />
       )}
     </div>

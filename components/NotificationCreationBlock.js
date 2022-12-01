@@ -12,7 +12,7 @@ function NotificationCreationBlock({ credentials, codProjeto, usuarios }) {
   const [msg, setMsg] = useState({ text: "", color: "" });
   function notify() {
     axios
-      .post("/api/notificacoes", notInfo)
+      .post("/api/notificacoes/1", notInfo)
       .then((res) =>
         setMsg({ text: "Notificação enviada!", color: "text-green-500" })
       )

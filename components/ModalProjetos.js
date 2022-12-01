@@ -7,6 +7,7 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
+import NotificationCreationBlock from "./NotificationCreationBlock";
 import Link from "next/link";
 import OSCreationBlock from "./OSCreationBlock";
 const MODAL_STYLES = {
@@ -50,6 +51,7 @@ function ModalProjetos({
   editor,
   handleUpdates,
   credentials,
+  users,
 }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
@@ -179,6 +181,16 @@ function ModalProjetos({
               </div>
             </div>
             <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  NOTIFICAR
+                </span>
+                <NotificationCreationBlock
+                  codProjeto={project.qtde}
+                  usuarios={users}
+                  credentials={credentials}
+                />
+              </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   Informações do cliente

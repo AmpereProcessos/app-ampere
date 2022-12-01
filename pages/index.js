@@ -246,7 +246,7 @@ function Home({ credentials, setCredentials }) {
           ></div>
         </div>
         <p className="text-center font-bold text-[#15599a] text-xl">
-          Faltam {(100 - totalPeakPot).toFixed(2)}%...
+          Faltam 1.52%...
         </p>
       </div>
       <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">

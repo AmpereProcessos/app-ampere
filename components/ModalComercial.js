@@ -19,6 +19,7 @@ import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
 import axios from "axios";
 import dayjs from "dayjs";
+import NotificationCreationBlock from "./NotificationCreationBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -67,6 +68,7 @@ function ModalComercial({
   editor,
   handleUpdates,
   credentials,
+  users,
 }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
@@ -144,7 +146,7 @@ function ModalComercial({
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
-            <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+            <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg border-b border-gray-200 pb-2">
               <div className="flex gap-x-2">
                 <h1 className="text-[#15599a] pl-6  font-bold">
                   {infoHolder.qtde} - {infoHolder.nomeDoContrato}
@@ -175,6 +177,16 @@ function ModalComercial({
               </div>
             </div>
             <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  NOTIFICAR
+                </span>
+                <NotificationCreationBlock
+                  codProjeto={project.qtde}
+                  usuarios={users}
+                  credentials={credentials}
+                />
+              </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   Informações do cliente

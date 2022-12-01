@@ -18,7 +18,7 @@ const statusStyles = {
     textColor: "text-yellow-500",
   },
 };
-function Comercial({ credentials, setCredentials }) {
+function Comercial({ credentials, setCredentials, users }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -431,6 +431,7 @@ function Comercial({ credentials, setCredentials }) {
       )}
       {modalIsOpen && (
         <ModalComercial
+          users={users}
           handleUpdates={handleUpdates}
           project={modalProject}
           editor={

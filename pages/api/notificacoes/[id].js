@@ -1,16 +1,25 @@
 import { ObjectId } from "mongodb";
-import connectToDatabase from "../../utils/callsDb";
+import connectToDatabase from "../../../utils/callsDb";
 export default async function handler(req, res) {
   if (req.method === "POST") {
+    const db = await connectToDatabase(process.env.DB_KEY);
+    const collection = db.collection("notificacoes");
+    await collection.insertOne({
+      ...req.body,
+      dataDeEnvio: new Date(),
+      lido: false,
+    });
+    res.json("Enviado!");
   } else if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("notificacoes");
+    console.log(req.query.id);
     let notificacoes = await collection
       .aggregate([
         {
           $match: {
-            destinatario: "6318db05929e9f8731d8d9bb",
-            lido: null,
+            destinatario: req.query.id,
+            lido: false,
           },
         },
       ])

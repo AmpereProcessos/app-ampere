@@ -15,8 +15,10 @@ function MyApp({ Component, pageProps }) {
   const [users, setUsers] = useState([]);
   const [notificacoes, setNotificacoes] = useState([]);
   const router = useRouter();
-  function getNotificacoes() {
-    axios.get("/api/notificacoes").then((res) => setNotificacoes(res.data));
+  function getNotificacoes(id) {
+    axios
+      .get(`/api/notificacoes/${id}`)
+      .then((res) => setNotificacoes(res.data));
   }
   useEffect(() => {
     axios.get("/api/auth/user").then((res) => setUsers(res.data));
@@ -25,11 +27,11 @@ function MyApp({ Component, pageProps }) {
     if (Object.keys(credentials).length == 0) {
       var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
       if (storedCredentials != null) {
-        getNotificacoes();
+        getNotificacoes(storedCredentials._id);
         setCredentials(storedCredentials);
       }
     } else {
-      getNotificacoes();
+      getNotificacoes(credentials._id);
     }
     if (
       router.pathname.includes("pdf") ||
@@ -64,6 +66,7 @@ function MyApp({ Component, pageProps }) {
               } grow w-full`}
             >
               <Component
+                users={users}
                 sidebarVisible={sidebarVisible}
                 toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
                 setCredentials={setCredentials}
@@ -75,6 +78,7 @@ function MyApp({ Component, pageProps }) {
         </div>
       ) : (
         <Component
+          users={users}
           sidebarVisible={sidebarVisible}
           toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
           setCredentials={setCredentials}

@@ -5,11 +5,15 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import WhiteLogo from "../utils/10mega.png";
 import { BiLogIn } from "react-icons/bi";
-import { MdAdminPanelSettings } from "react-icons/md";
+import {
+  MdNotificationsNone,
+  MdOutlineNotificationsActive,
+} from "react-icons/md";
 import axios from "axios";
+import NotificationModal from "./NotificationModal";
 function Header({ toggleSidebar, credentials, logout }) {
   const router = useRouter();
-  const [frase, setFrase] = useState("");
+  const [notificationIsOpen, setNotificationIsOpen] = useState(false);
   {
     /**   useEffect(() => {
     axios
@@ -31,9 +35,6 @@ function Header({ toggleSidebar, credentials, logout }) {
           onClick={toggleSidebar}
           style={{ fontSize: "23px", color: "#15599a", cursor: "pointer" }}
         />
-        {/*<p className="hidden lg:block font-bold ml-12 italic font-raleway w-[450px]">
-          "{frase}" - Matheus Oliveira
-  </p>*/}
       </div>
       <Link href="/">
         <div className="flex cursor-pointer items-center justify-center">
@@ -54,7 +55,23 @@ function Header({ toggleSidebar, credentials, logout }) {
             color: "#fead61",
           }}
         />
+        <div
+          onClick={() => setNotificationIsOpen(!notificationIsOpen)}
+          className="flex cursor-pointer"
+        >
+          <MdNotificationsNone
+            style={{
+              fontSize: "25px",
+              marginLeft: "10px",
+              color: "#fead61",
+            }}
+          />
+          {/**<p className="bg-red-500 rounded-full font-bold w-[20px] h-[20px] text-xs text-center">
+            1
+          </p> */}
+        </div>
       </div>
+      {notificationIsOpen && <NotificationModal />}
     </div>
   );
 }

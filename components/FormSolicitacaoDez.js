@@ -118,7 +118,8 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
         return false;
       }
     }
-    if (dados.aumentoDeCarga == "SIM" || dados.tipoDaLigacao == "NOVA") {
+    {
+      /**if (dados.aumentoDeCarga == "SIM" || dados.tipoDaLigacao == "NOVA") {
       if (!images.relacaoDeCargas) {
         setImagesMsg({
           text: "Por favor, adicione uma foto ou pdf da relação de cargas",
@@ -126,7 +127,9 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
         });
         return false;
       }
+    } */
     }
+
     if (dados.possuiDistribuicao == "SIM") {
       for (let i = 0; i < dados.distribuicoes.length; i++) {
         if (!images[`recebedora${i + 1}`]) {
@@ -854,7 +857,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
               </div>
             </>
           )}
-          {dados.aumentoDeCarga == "SIM" ||
+          {/**{dados.aumentoDeCarga == "SIM" ||
             (dados.tipoDaLigacao == "NOVA" && (
               <>
                 <div className="w-fit flex flex-col items-center">
@@ -896,7 +899,8 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                   </div>
                 </div>
               </>
-            ))}
+            ))} */}
+
           {dados.possuiDistribuicao == "SIM" && (
             <>
               {dados.distribuicoes.map((dist, index) => (

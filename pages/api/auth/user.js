@@ -2,7 +2,7 @@ import connectToDatabase from "../../../utils/usersDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY, "authentication");
+    const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("users");
     /*let credential = await collection.findOne({ user: user });
     try {
@@ -18,5 +18,19 @@ export default async function handler(req, res) {
     }*/
     await collection.insertOne(req.body);
     return res.json("Usuário criado");
+  } else if (req.method === "GET") {
+    const db = await connectToDatabase(process.env.DB_KEY);
+    const collection = db.collection("users");
+    let users = await collection
+      .aggregate([
+        {
+          $project: {
+            _id: 1,
+            nome: 1,
+          },
+        },
+      ])
+      .toArray();
+    res.json(users);
   }
 }

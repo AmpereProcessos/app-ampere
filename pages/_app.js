@@ -8,16 +8,21 @@ import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { useRouter } from "next/router";
+import axios from "axios";
 function MyApp({ Component, pageProps }) {
   const [credentials, setCredentials] = useState({});
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [users, setUsers] = useState([]);
   const router = useRouter();
   useEffect(() => {
     if (Object.keys(credentials).length == 0) {
       var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
       if (storedCredentials != null) {
+        axios.get("/api/auth/user").then((res) => setUsers(res.data));
         setCredentials(storedCredentials);
       }
+    } else {
+      axios.get("/api/auth/user").then((res) => setUsers(res.data));
     }
     if (
       router.pathname.includes("pdf") ||
@@ -26,6 +31,7 @@ function MyApp({ Component, pageProps }) {
     )
       setSidebarVisible(false);
   }, [Component]);
+  console.log(users);
   return (
     <DndProvider backend={HTML5Backend}>
       <title>Sistema - Ampère Energias</title>

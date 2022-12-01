@@ -241,8 +241,12 @@ function Home({ credentials, setCredentials }) {
       <div className="flex flex-col border bg-[#fff] my-3 shadow-lg border-gray-200 p-2">
         <div className="w-full h-[36px] border border-[#15599a]">
           <div
-            style={{ width: `${98.48}%` }}
-            className={`bg-[#15599a] h-full col-span-8`}
+            style={{
+              width: `${98.48}%`,
+              background:
+                "linear-gradient(90deg, rgba(21,89,154,1) 20%, rgba(1,127,247,1) 90%)",
+            }}
+            className={`h-full col-span-8`}
           ></div>
         </div>
         <p className="text-center font-bold text-[#15599a] text-xl">

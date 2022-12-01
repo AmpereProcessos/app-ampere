@@ -71,7 +71,7 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
     axios
       .post("/api/solicitacoes/contrato", dados)
       .then((res) => {
-        setMsg({ text: "Solicitação enviada!", color: "text-gree-500" });
+        setMsg({ text: "Solicitação enviada!", color: "text-green-500" });
         setTimeout(() => {
           location.reload();
         }, 2800);

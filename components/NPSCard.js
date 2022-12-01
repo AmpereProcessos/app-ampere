@@ -8,7 +8,6 @@ function NPSCard({ project, credentials }) {
     text: "",
     color: "",
   });
-  console.log(project.qtde, nps);
   async function handleChanges() {
     axios
       .post(`/api/projects/update/${project._id}`, {

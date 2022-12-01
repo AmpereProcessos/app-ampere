@@ -5,9 +5,7 @@ import { storage } from "../utils/firebase";
 import { AiOutlineCheck } from "react-icons/ai";
 import Image from "next/image";
 function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
-  const [images, setImages] = useState({
-    documentoComFoto: null,
-  });
+  const [images, setImages] = useState({});
   const [checks, setChecks] = useState({
     contaDeEnergiaCheck: false,
     propostaComercialCheck: false,
@@ -30,14 +28,21 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
   function validateDocuments() {
     if (!images.contaDeEnergia) {
       setImagesMsg({
-        text: "Por favor, adicione uma foto da conta de energia",
+        text: "Por favor, adicione uma foto ou pdf da conta de energia",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.laudo) {
+      setImagesMsg({
+        text: "Por favor, adicione uma foto ou pdf do laudo técnico",
         color: "text-red-500",
       });
       return false;
     }
     if (!images.propostaComercial) {
       setImagesMsg({
-        text: "Por favor, adicione uma foto da proposta comercial",
+        text: "Por favor, adicione uma foto ou pdf da proposta comercial",
         color: "text-red-500",
       });
       return false;
@@ -52,14 +57,14 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
       }
       if (!images.matricula) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto da matrícula da inscrição rural",
+          text: "Por favor, adicione uma foto ou pdf da matrícula da inscrição rural",
           color: "text-red-500",
         });
         return false;
       }
       if (!images.comprovanteEnderecoCorrespondente) {
         setImagesMsg({
-          text: "Por favor,adicione uma foto do endereço de correspondência",
+          text: "Por favor,adicione uma foto ou pdf do endereço de correspondência",
           color: "text-red-500",
         });
         return false;
@@ -86,28 +91,28 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
     if (dados.tipoDoTitular == "PESSOA JURIDICA") {
       if (!images.contratoSocial) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou PDF do contrato social",
+          text: "Por favor, adicione uma foto ou pdf do contrato social",
           color: "text-red-500",
         });
         return false;
       }
       if (!images.cartaoCnpj) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou PDF do cartão CNPJ",
+          text: "Por favor, adicione uma foto ou pdf do cartão CNPJ",
           color: "text-red-500",
         });
         return false;
       }
       if (!images.comprovanteEnderecoRepresentante) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou PDF do comprovante de endereço do representante legal",
+          text: "Por favor, adicione uma foto ou pdf do comprovante de endereço do representante legal",
           color: "text-red-500",
         });
         return false;
       }
       if (!images.documentoComFotoSocios) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou PDF do documento com foto dos sócios",
+          text: "Por favor, adicione uma foto ou pdf do documento com foto dos sócios",
           color: "text-red-500",
         });
         return false;
@@ -116,21 +121,25 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
     if (dados.aumentoDeCarga == "SIM" || dados.tipoDaLigacao == "NOVA") {
       if (!images.relacaoDeCargas) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou PDF da relação de cargas",
+          text: "Por favor, adicione uma foto ou pdf da relação de cargas",
           color: "text-red-500",
         });
         return false;
       }
     }
-    /*if (dados.possuiDistribuicao == "SIM") {
-      if (!images.faturasRecebedoras) {
-        setImagesMsg({
-          text: "Por favor, preencha a conferência das faturas das recebedoras",
-          color: "text-red-500",
-        });
-        return false;
+    if (dados.possuiDistribuicao == "SIM") {
+      for (let i = 0; i < dados.distribuicoes.length; i++) {
+        if (!images[`recebedora${i + 1}`]) {
+          setImagesMsg({
+            text: `Por favor, adicione uma foto ou pdf da recebedora de Nº ${
+              i + 1
+            }`,
+            color: "text-red-500",
+          });
+          return false;
+        }
       }
-    }*/
+    }
     setImagesMsg({ text: "", color: "" });
     return true;
   }
@@ -153,6 +162,17 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           let res = await uploadBytes(imageRef, images.contaDeEnergia);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
           links.push({ title: "CONTA DE ENERGIA", link: url });
+        }
+        if (images.laudo) {
+          var imageRef = ref(
+            storage,
+            `formSolicitacao/${dados.nomeDoContrato}/laudo${(
+              Math.random() * 10000
+            ).toFixed(0)}`
+          );
+          let res = await uploadBytes(imageRef, images.laudo);
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          links.push({ title: "LAUDO", link: url });
         }
         if (images.propostaComercial) {
           var imageRef = ref(
@@ -354,6 +374,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
         })
       );*/
   }
+  console.log(images);
   return (
     <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -398,12 +419,43 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                 accept=".png, .jpeg, .pdf"
               />
             </div>
-            <div className="flex items-center justify-center mt-1 h-[25px]">
-              {checks.contaDeEnergiaCheck && (
-                <AiOutlineCheck
-                  style={{ color: "#49be25", fontSize: "18px" }}
-                />
-              )}
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label
+              className="ml-2 text-center text-[#15599a] font-bold"
+              htmlFor="contaDeEnergia"
+            >
+              LAUDO COMERCIAL
+            </label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.laudo ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.laudo.name}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">
+                      Adicione o arquivo aqui...
+                    </span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    laudo: e.target.files[0],
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                accept=".png, .jpeg, .pdf"
+              />
             </div>
           </div>
           <div className="w-fit flex flex-col items-center">
@@ -442,13 +494,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                 type="file"
                 accept=".png, .jpeg, .pdf"
               />
-            </div>
-            <div className="flex items-center justify-center mt-1 h-[25px]">
-              {checks.propostaComercialCheck && (
-                <AiOutlineCheck
-                  style={{ color: "#49be25", fontSize: "18px" }}
-                />
-              )}
             </div>
           </div>
           {dados.tipoDaInstalacao == "RURAL" && (
@@ -490,13 +535,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                     accept=".png, .jpeg, .pdf"
                   />
                 </div>
-                <div className="flex items-center justify-center mt-1 h-[25px]">
-                  {checks.carCheck && (
-                    <AiOutlineCheck
-                      style={{ color: "#49be25", fontSize: "18px" }}
-                    />
-                  )}
-                </div>
               </div>
               <div className="w-fit flex flex-col items-center">
                 <label
@@ -535,13 +573,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                     accept=".png, .jpeg, .pdf"
                   />
                 </div>
-                <div className="flex items-center justify-center mt-1 h-[25px]">
-                  {checks.matriculaCheck && (
-                    <AiOutlineCheck
-                      style={{ color: "#49be25", fontSize: "18px" }}
-                    />
-                  )}
-                </div>
               </div>
               <div className="w-fit flex flex-col items-center">
                 <label
@@ -579,13 +610,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                     type="file"
                     accept=".png, .jpeg, .pdf"
                   />
-                </div>
-                <div className="flex items-center justify-center mt-1 h-[25px]">
-                  {checks.comprovanteEnderecoCorrespondenteCheck && (
-                    <AiOutlineCheck
-                      style={{ color: "#49be25", fontSize: "18px" }}
-                    />
-                  )}
                 </div>
               </div>
             </>
@@ -629,13 +653,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                     accept=".png, .jpeg, .pdf"
                   />
                 </div>
-                <div className="flex items-center justify-center mt-1 h-[25px]">
-                  {checks.iptuCheck && (
-                    <AiOutlineCheck
-                      style={{ color: "#49be25", fontSize: "18px" }}
-                    />
-                  )}
-                </div>
               </div>
             </>
           )}
@@ -677,13 +694,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                     type="file"
                     accept=".png, .jpeg, .pdf"
                   />
-                </div>
-                <div className="flex items-center justify-center mt-1 h-[25px]">
-                  {checks.documentoComFotoCheck && (
-                    <AiOutlineCheck
-                      style={{ color: "#49be25", fontSize: "18px" }}
-                    />
-                  )}
                 </div>
               </div>
             </>
@@ -727,13 +737,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                     accept=".png, .jpeg, .pdf"
                   />
                 </div>
-                <div className="flex items-center justify-center mt-1 h-[25px]">
-                  {checks.contratoSocialCheck && (
-                    <AiOutlineCheck
-                      style={{ color: "#49be25", fontSize: "18px" }}
-                    />
-                  )}
-                </div>
               </div>
               <div className="w-fit flex flex-col items-center">
                 <label
@@ -771,13 +774,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                     type="file"
                     accept=".png, .jpeg, .pdf"
                   />
-                </div>
-                <div className="flex items-center justify-center mt-1 h-[25px]">
-                  {checks.cartaoCnpjCheck && (
-                    <AiOutlineCheck
-                      style={{ color: "#49be25", fontSize: "18px" }}
-                    />
-                  )}
                 </div>
               </div>
               <div className="w-fit flex flex-col items-center">
@@ -817,13 +813,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                     accept=".png, .jpeg, .pdf"
                   />
                 </div>
-                <div className="flex items-center justify-center mt-1 h-[25px]">
-                  {checks.comprovanteEnderecoRepresentanteCheck && (
-                    <AiOutlineCheck
-                      style={{ color: "#49be25", fontSize: "18px" }}
-                    />
-                  )}
-                </div>
               </div>
               <div className="w-fit flex flex-col items-center">
                 <label
@@ -861,13 +850,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                     type="file"
                     accept=".png, .jpeg, .pdf"
                   />
-                </div>
-                <div className="flex items-center justify-center mt-1 h-[25px]">
-                  {checks.documentoComFotoSociosCheck && (
-                    <AiOutlineCheck
-                      style={{ color: "#49be25", fontSize: "18px" }}
-                    />
-                  )}
                 </div>
               </div>
             </>
@@ -911,13 +893,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
                       type="file"
                       accept=".png, .jpeg, .pdf"
                     />
-                  </div>
-                  <div className="flex items-center justify-center mt-1 h-[25px]">
-                    {checks.relacaoDeCargasCheck && (
-                      <AiOutlineCheck
-                        style={{ color: "#49be25", fontSize: "18px" }}
-                      />
-                    )}
                   </div>
                 </div>
               </>

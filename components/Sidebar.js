@@ -9,6 +9,7 @@ import {
   FaSolarPanel,
   FaBox,
 } from "react-icons/fa";
+import { TbTruckDelivery } from "react-icons/tb";
 import { AiOutlineForm } from "react-icons/ai";
 import {
   MdEngineering,
@@ -221,6 +222,18 @@ function Sidebar({ credentials }) {
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                   <FaTasks style={{ color: "#15599a", fontSize: "20px" }} />
                   <p className="pl-3 text-xs text-gray-600">Chamados</p>
+                </a>
+              </Link>
+            ) : (
+              false
+            )}
+            {credentials.accessibleRoutes?.includes("Suprimentos") ? (
+              <Link href="/suprimentos/entregas">
+                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                  <TbTruckDelivery
+                    style={{ color: "#15599a", fontSize: "20px" }}
+                  />
+                  <p className="pl-3 text-xs text-gray-600">Entregas</p>
                 </a>
               </Link>
             ) : (

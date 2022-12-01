@@ -1,12 +1,13 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 const MODAL_STYLES = {
   position: "fixed",
-  top: "200px",
-  left: "92.6%",
+  top: "230px",
+  right: "-120px",
   transform: "translate(-50%,-50%)",
   backgroundColor: "#fff",
-  minWidth: "200px",
-  height: "300px",
+  width: "300px",
+  height: "350px",
   borderRadius: "10px",
   zIndex: 1000,
 };
@@ -19,13 +20,50 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function NotificationModal() {
+function NotificationModal({ notificacoes, getNotificacoes }) {
+  const [not, setNot] = useState(notificacoes);
+  function setAsRead(id, index) {
+    not[index].lido = true;
+    setNot([...not]);
+    axios
+      .put("/api/notificacoes", {
+        id: id,
+      })
+      .then((res) => getNotificacoes());
+  }
   return (
     <div style={MODAL_STYLES}>
-      <div className="w-full flex flex-col h-full border border-gray-200 p-2">
-        <h1 className="text-center uppercase text-[#15599a] font-bold text-sm">
+      <div className="w-full flex flex-col h-full border border-gray-200 p-2 shadow-xl">
+        <h1 className="text-center uppercase text-[#15599a] font-bold text-sm border-b border-gray-200">
           Notificações
         </h1>
+        <div className="flex flex-col max-w-full overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+          {not.map((notificacao, index) => (
+            <div
+              key={notificacao._id}
+              onClick={() => setAsRead(notificacao._id, index)}
+              className={` ${
+                notificacao.lido
+                  ? "hidden"
+                  : "cursor-pointer flex flex-col p-1 max-w-full border-b border-gray-200 hover:bg-blue-100"
+              }`}
+            >
+              <h1 className="text-sm italic font-bold text-gray-600">
+                <strong className="text-[#15599a]">
+                  {notificacao.remetente}
+                </strong>{" "}
+                diz{" "}
+                {notificacao.projetoReferencia
+                  ? `sobre o projeto ${notificacao.projetoReferencia}`
+                  : ""}
+                :
+              </h1>
+              <p className="text-xs text-gray-500 font-raleway text-center">
+                {notificacao.mensagem}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

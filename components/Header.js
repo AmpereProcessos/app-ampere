@@ -11,7 +11,13 @@ import {
 } from "react-icons/md";
 import axios from "axios";
 import NotificationModal from "./NotificationModal";
-function Header({ toggleSidebar, credentials, logout }) {
+function Header({
+  toggleSidebar,
+  credentials,
+  logout,
+  notificacoes,
+  getNotificacoes,
+}) {
   const router = useRouter();
   const [notificationIsOpen, setNotificationIsOpen] = useState(false);
   {
@@ -59,19 +65,36 @@ function Header({ toggleSidebar, credentials, logout }) {
           onClick={() => setNotificationIsOpen(!notificationIsOpen)}
           className="flex cursor-pointer"
         >
-          <MdNotificationsNone
-            style={{
-              fontSize: "25px",
-              marginLeft: "10px",
-              color: "#fead61",
-            }}
-          />
-          {/**<p className="bg-red-500 rounded-full font-bold w-[20px] h-[20px] text-xs text-center">
-            1
-          </p> */}
+          {notificacoes.length > 0 ? (
+            <MdOutlineNotificationsActive
+              style={{
+                fontSize: "25px",
+                marginLeft: "10px",
+                color: "red",
+              }}
+            />
+          ) : (
+            <MdNotificationsNone
+              style={{
+                fontSize: "25px",
+                marginLeft: "10px",
+                color: "#fead61",
+              }}
+            />
+          )}
+          {notificacoes.length > 0 && (
+            <p className="bg-red-500 rounded-full font-bold w-[20px] h-[20px] text-xs text-center">
+              {notificacoes.length}
+            </p>
+          )}
         </div>
       </div>
-      {notificationIsOpen && <NotificationModal />}
+      {notificationIsOpen && (
+        <NotificationModal
+          notificacoes={notificacoes}
+          getNotificacoes={getNotificacoes}
+        />
+      )}
     </div>
   );
 }

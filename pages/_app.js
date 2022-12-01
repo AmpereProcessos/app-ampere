@@ -13,16 +13,23 @@ function MyApp({ Component, pageProps }) {
   const [credentials, setCredentials] = useState({});
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [users, setUsers] = useState([]);
+  const [notificacoes, setNotificacoes] = useState([]);
   const router = useRouter();
+  function getNotificacoes() {
+    axios.get("/api/notificacoes").then((res) => setNotificacoes(res.data));
+  }
+  useEffect(() => {
+    axios.get("/api/auth/user").then((res) => setUsers(res.data));
+  }, []);
   useEffect(() => {
     if (Object.keys(credentials).length == 0) {
       var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
       if (storedCredentials != null) {
-        axios.get("/api/auth/user").then((res) => setUsers(res.data));
+        getNotificacoes();
         setCredentials(storedCredentials);
       }
     } else {
-      axios.get("/api/auth/user").then((res) => setUsers(res.data));
+      getNotificacoes();
     }
     if (
       router.pathname.includes("pdf") ||
@@ -32,6 +39,7 @@ function MyApp({ Component, pageProps }) {
       setSidebarVisible(false);
   }, [Component]);
   console.log(users);
+  console.log(notificacoes);
   return (
     <DndProvider backend={HTML5Backend}>
       <title>Sistema - Ampère Energias</title>
@@ -44,6 +52,8 @@ function MyApp({ Component, pageProps }) {
               setCredentials({});
             }}
             credentials={credentials}
+            notificacoes={notificacoes}
+            getNotificacoes={getNotificacoes}
             toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
           />
           <div className="flex min-h-[100%] grow">

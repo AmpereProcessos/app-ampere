@@ -13,9 +13,15 @@ function NotificationCreationBlock({ credentials, codProjeto, usuarios }) {
   function notify() {
     axios
       .post("/api/notificacoes/1", notInfo)
-      .then((res) =>
-        setMsg({ text: "Notificação enviada!", color: "text-green-500" })
-      )
+      .then((res) => {
+        setMsg({ text: "Notificação enviada!", color: "text-green-500" });
+        setNotInfo({
+          destinatario: null,
+          remetente: credentials.nome,
+          mensagem: "",
+          projetoReferencia: codProjeto,
+        });
+      })
       .catch((err) =>
         setMsg({
           text: "Um erro ocorreu, tente novamente.",
@@ -23,7 +29,6 @@ function NotificationCreationBlock({ credentials, codProjeto, usuarios }) {
         })
       );
   }
-  console.log(notInfo);
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-around flex-wrap gap-x-12 px-4">

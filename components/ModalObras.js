@@ -500,6 +500,18 @@ function ModalObras({
                         : 0
                     }
                   />
+                  <DateInput
+                    label={"ENTREGA DOS EQUIPAMENTOS"}
+                    editable={false}
+                    value={
+                      infoHolder.compra.dataEntrega != undefined &&
+                      infoHolder.compra.dataEntrega != "-"
+                        ? new Date(infoHolder.compra.dataEntrega)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                  />
                   <div className="flex flex-col w-[350px] items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
                       TRAFO

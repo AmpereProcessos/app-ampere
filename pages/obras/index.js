@@ -623,10 +623,10 @@ function Obras({ credentials, setCredentials, users }) {
               <div>
                 <span className="text-xxs">DESDE DE ENTREGA</span>
                 <p className="text-xs text-center text-[#15599a] uppercase">
-                  {project.compra.previsaoEntrega &&
+                  {project.compra.dataEntrega &&
                   project.compra.statusEntrega == "ENTREGUE"
                     ? `${dayjs(new Date()).diff(
-                        project.compra.previsaoEntrega,
+                        project.compra.dataEntrega,
                         "days"
                       )} dias`
                     : "-"}

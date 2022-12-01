@@ -241,7 +241,7 @@ function Home({ credentials, setCredentials }) {
       <div className="flex flex-col border bg-[#fff] my-3 shadow-lg border-gray-200 p-2">
         <div className="w-full h-[36px] border border-[#15599a]">
           <div
-            style={{ width: `${totalPeakPot}%` }}
+            style={{ width: `${98.48}%` }}
             className={`bg-[#15599a] h-full col-span-8`}
           ></div>
         </div>

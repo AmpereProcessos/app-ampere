@@ -33,32 +33,40 @@ function NotificationModal({ notificacoes, updateNotifications }) {
         <h1 className="text-center uppercase text-[#15599a] font-bold text-sm border-b border-gray-200">
           Notificações
         </h1>
-        <div className="flex flex-col max-w-full overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          {not.map((notificacao, index) => (
-            <div
-              key={notificacao._id}
-              onClick={() => setAsRead(notificacao._id, index)}
-              className={` ${
-                notificacao.lido
-                  ? "hidden"
-                  : "cursor-pointer flex flex-col p-1 max-w-full border-b border-gray-200 hover:bg-blue-100"
-              }`}
-            >
-              <h1 className="text-sm italic font-bold text-gray-600">
-                <strong className="text-[#15599a]">
-                  {notificacao.remetente}
-                </strong>{" "}
-                diz{" "}
-                {notificacao.projetoReferencia
-                  ? `sobre o projeto ${notificacao.projetoReferencia}`
-                  : ""}
-                :
-              </h1>
-              <p className="text-xs text-gray-500 font-raleway text-center">
-                {notificacao.mensagem}
+        <div className="flex flex-col h-full max-w-full overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+          {not.length > 0 ? (
+            not.map((notificacao, index) => (
+              <div
+                key={notificacao._id}
+                onClick={() => setAsRead(notificacao._id, index)}
+                className={` ${
+                  notificacao.lido
+                    ? "hidden"
+                    : "cursor-pointer flex flex-col p-1 max-w-full border-b border-gray-200 hover:bg-blue-100"
+                }`}
+              >
+                <h1 className="text-sm italic font-bold text-gray-600">
+                  <strong className="text-[#15599a]">
+                    {notificacao.remetente}
+                  </strong>{" "}
+                  diz{" "}
+                  {notificacao.projetoReferencia
+                    ? `sobre o projeto ${notificacao.projetoReferencia}`
+                    : ""}
+                  :
+                </h1>
+                <p className="text-xs text-gray-500 font-raleway text-center">
+                  {notificacao.mensagem}
+                </p>
+              </div>
+            ))
+          ) : (
+            <div className="h-full flex justify-center items-center">
+              <p className="italic text-gray-500 text-sm">
+                Sem notificações...
               </p>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

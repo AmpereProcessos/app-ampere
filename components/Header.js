@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import WhiteLogo from "../utils/10mega.png";
+import AlertVolts from "../utils/alertVolts-svg.svg";
+import SleepVolts from "../utils/sleepVolts-svg.svg";
 import { BiLogIn } from "react-icons/bi";
 import {
   MdNotificationsNone,
@@ -72,21 +74,13 @@ function Header({
           className="flex cursor-pointer"
         >
           {notificacoes.length > 0 ? (
-            <MdOutlineNotificationsActive
-              style={{
-                fontSize: "25px",
-                marginLeft: "10px",
-                color: "red",
-              }}
-            />
+            <div className="flex items-center w-[25px] h-[22px] ml-2">
+              <Image src={AlertVolts} />
+            </div>
           ) : (
-            <MdNotificationsNone
-              style={{
-                fontSize: "25px",
-                marginLeft: "10px",
-                color: "#fead61",
-              }}
-            />
+            <div className="flex items-center w-[25px] h-[22px] ml-2">
+              <Image src={SleepVolts} />
+            </div>
           )}
           {notificacoes.length > 0 && (
             <p className="bg-red-500 rounded-full font-bold w-[20px] h-[20px] text-xs text-center">

@@ -11,6 +11,15 @@ const withTM = require("next-transpile-modules")([
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  module: {
+    rules: [
+      {
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$/,
+        use: ["@svgr/webpack"],
+      },
+    ],
+  },
 };
 
 module.exports = withTM({ nextConfig });

@@ -9,12 +9,14 @@ function NotificationCreationBlock({ credentials, codProjeto, usuarios }) {
     mensagem: "",
     projetoReferencia: codProjeto,
   });
+  const [destinatarioNome, setDestinatarioNome] = useState("NÃO DEFINIDO");
   const [msg, setMsg] = useState({ text: "", color: "" });
   function notify() {
     axios
       .post("/api/notificacoes/1", notInfo)
       .then((res) => {
         setMsg({ text: "Notificação enviada!", color: "text-green-500" });
+        setDestinatarioNome("NÃO DEFINIDO");
         setNotInfo({
           destinatario: null,
           remetente: credentials.nome,
@@ -29,18 +31,25 @@ function NotificationCreationBlock({ credentials, codProjeto, usuarios }) {
         })
       );
   }
+  console.log(notInfo);
+  console.log(destinatarioNome);
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-around flex-wrap gap-x-12 px-4">
         <select
-          onChange={(e) =>
-            setNotInfo({ ...notInfo, destinatario: e.target.value })
-          }
-          defaultValue={"NÃO DEFINIDO"}
+          value={destinatarioNome}
+          onChange={(e) => {
+            console.log(e.target.value.split("/"));
+            setDestinatarioNome(e.target.value);
+            setNotInfo({
+              ...notInfo,
+              destinatario: e.target.value.split("/")[0],
+            });
+          }}
           className="outline-none border border-gray-200 font-bold h-[36px]"
         >
           {usuarios.map((usuario) => (
-            <option key={usuario._id} value={usuario._id}>
+            <option key={usuario._id} value={`${usuario._id}/${usuario.nome}`}>
               {usuario.nome.toUpperCase()}
             </option>
           ))}

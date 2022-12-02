@@ -15,19 +15,19 @@ function MyApp({ Component, pageProps }) {
   const [users, setUsers] = useState([]);
   const [notificacoes, setNotificacoes] = useState([]);
   const router = useRouter();
+  console.log(router.pathname);
   function getNotificacoes(id) {
+    console.log(id);
     axios
       .get(`/api/notificacoes/${id}`)
       .then((res) => setNotificacoes(res.data));
   }
   useEffect(() => {
     axios.get("/api/auth/user").then((res) => {
-      console.log(res.data);
       setUsers(res.data);
     });
   }, []);
   useEffect(() => {
-    console.log("Componente mudou!");
     if (Object.keys(credentials).length == 0) {
       var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
       if (storedCredentials != null) {
@@ -43,7 +43,7 @@ function MyApp({ Component, pageProps }) {
       router.pathname.includes("auth")
     )
       setSidebarVisible(false);
-  }, [Component]);
+  }, [router.pathname]);
   return (
     <DndProvider backend={HTML5Backend}>
       <title>Sistema - Ampère Energias</title>

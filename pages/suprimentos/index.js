@@ -62,7 +62,6 @@ function Suprimentos({ credentials, setCredentials, users }) {
     }
   }
   function getBorderColor(diff) {
-    console.log(diff);
     /*var timeDiff = Math.abs(date2.getTime() - date1.getTime());
     var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));*/
     if (diff > 5) {
@@ -336,10 +335,6 @@ function Suprimentos({ credentials, setCredentials, users }) {
               </div>
               <div className="flex flex-col items-center">
                 <span className="text-xxs">PREVISÃO ENTREGA</span>
-                {console.log(
-                  project.qtde,
-                  dayjs(project.compra.previsaoEntrega).diff(new Date(), "day")
-                )}
                 {dayjs(new Date()).isBefore(
                   dayjs(dayjs(project.compra.previsaoEntrega).add(22, "hour"))
                 ) ? (

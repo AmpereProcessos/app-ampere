@@ -7,6 +7,7 @@ function Entregas({ credentials, setCredentials }) {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filters, setFilters] = useState({
     deliveryStatus: [],
+    rastreioFilter: false,
     searchFilter: "",
   });
   const [dateFilter, setDateFilter] = useState({
@@ -27,6 +28,12 @@ function Entregas({ credentials, setCredentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((project) =>
         filters.deliveryStatus.includes(project.compra.statusEntrega)
+      );
+    }
+    if (filters.rastreioFilter) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (project) => project.compra.rastreio?.trim().length > 0
       );
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
@@ -92,11 +99,24 @@ function Entregas({ credentials, setCredentials }) {
         </h1>
         <div className="flex items-center gap-2">
           <input
-            className="outline-none p-1.5 w-[250px] h-[36px] rounded border border-gray-200 placeholder:italic"
+            className="outline-none p-1.5 w-[250px] h-[52px] rounded border border-gray-200 placeholder:italic"
             placeholder="Digite o nome do contrato"
             value={filters.searchFilter}
             onChange={(e) => handleSearchFilter(e.target.value)}
           />
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                rastreioFilter: !filters.rastreioFilter,
+              })
+            }
+            className={`${
+              filters.rastreioFilter ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[52px] text-center flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            RASTREIO PREENCHIDO
+          </div>
           <Select
             isMulti
             placeholder="STATUS ENTREGA"
@@ -178,7 +198,7 @@ function Entregas({ credentials, setCredentials }) {
             />
             <button
               onClick={filterProjects}
-              className="bg-[#fead61] p-2 h-[36px] rounded font-bold"
+              className="bg-[#fead61] p-2 h-[52px] rounded font-bold"
             >
               FILTRAR
             </button>

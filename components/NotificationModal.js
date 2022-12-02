@@ -20,16 +20,12 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function NotificationModal({ notificacoes, getNotificacoes }) {
+function NotificationModal({ notificacoes, updateNotifications }) {
   const [not, setNot] = useState(notificacoes);
   function setAsRead(id, index) {
-    not[index].lido = true;
+    not.splice(index, 1);
     setNot([...not]);
-    axios
-      .put("/api/notificacoes/1", {
-        id: id,
-      })
-      .then((res) => getNotificacoes());
+    updateNotifications(id);
   }
   return (
     <div style={MODAL_STYLES}>

@@ -27,7 +27,13 @@ function Header({
       .then((res) => setFrase(res.data.texto));
   }, []);*/
   }
-
+  function updateNotifications(id) {
+    axios
+      .put("/api/notificacoes/1", {
+        id: id,
+      })
+      .then((res) => getNotificacoes(credentials._id));
+  }
   if (
     router.pathname.includes("pdf") ||
     router.pathname.includes("publico") ||
@@ -92,7 +98,7 @@ function Header({
       {notificationIsOpen && (
         <NotificationModal
           notificacoes={notificacoes}
-          getNotificacoes={getNotificacoes}
+          updateNotifications={updateNotifications}
         />
       )}
     </div>

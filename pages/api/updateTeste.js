@@ -1,14 +1,14 @@
-import connectToDatabase from "../../utils/connectDb";
+import connectToSolicitacoesDatabase from "../../utils/solicitacoesDb";
 export default async function handler(req, res) {
-  /*const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-  const collection = db.collection("dados");
+  /*const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);
+  const collection = db.collection("contrato");
   let arr = await collection.updateMany(
     {
-      "contrato.status": "RECISÃO DE CONTRATO",
+      aprovacao: true,
     },
     {
       $set: {
-        "contrato.dataAssinatura": null,
+        confeccionado: true,
       },
     }
   );

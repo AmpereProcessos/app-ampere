@@ -206,7 +206,12 @@ const validation = {
     msg: "Por favor, preencha o tipo da telha",
   },
 };
-function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
+function ModalFormSolicitacao({
+  solicitacao,
+  setModalIsOpen,
+  editor,
+  financeiroEditor,
+}) {
   const router = useRouter();
   const [dados, setDados] = useState(solicitacao);
   const [msg, setMessage] = useState({ text: "", color: "" });
@@ -215,7 +220,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
     numInstalacao: "",
     excedente: null,
   });
-
+  console.log(financeiroEditor);
   function adicionarDistribuicao() {
     setDados({
       ...dados,
@@ -622,6 +627,22 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
       }
     }
   }
+  function contractMade() {
+    axios
+      .put("/api/solicitacoes/contrato", {
+        _id: solicitacao._id,
+        confeccionado: true,
+      })
+      .then(() =>
+        setMessage({ text: "Atualização feita!", color: "text-green-500" })
+      )
+      .catch((err) =>
+        setMessage({
+          text: "Um erro ocorreu, tente novamente",
+          color: "text-red-500",
+        })
+      );
+  }
   console.log(dados);
   return (
     <>
@@ -632,14 +653,25 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
               <h1 className="text-[#15599a] pl-6  font-bold">
                 {dados.nomeDoContrato}
               </h1>
-              <button
-                onClick={() =>
-                  router.push(`/comercial/publicoFormulario/${dados._id}`)
-                }
-                className="p-2 text-sm bg-[#fead61] font-bold rounded"
-              >
-                Visualização para PDF
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() =>
+                    router.push(`/comercial/publicoFormulario/${dados._id}`)
+                  }
+                  className="p-2 text-sm bg-[#fead61] font-bold rounded"
+                >
+                  Visualização para PDF
+                </button>
+                {dados.aprovacao && !dados.confeccionado && (
+                  <button
+                    onClick={contractMade}
+                    className="bg-green-300 text-sm hover:bg-green-600 hover:text-white font-bold rounded p-2"
+                  >
+                    Contrato confeccionado?
+                  </button>
+                )}
+              </div>
+
               <div className="flex items-center gap-x-2">
                 {msg.text && (
                   <p className={`italic ${msg.color}`}>{msg.text}</p>
@@ -653,7 +685,6 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor }) {
                     <FaSave />
                   </button>
                 )}
-
                 <button>
                   <VscChromeClose
                     onClick={() => setModalIsOpen(false)}

@@ -4,6 +4,7 @@ import ModalFormSolicitacao from "../../components/ModalFormSolicitacao";
 import { useRouter } from "next/router";
 import Select from "react-select";
 import { vendedores } from "../../utils/constants";
+import { BsPatchCheckFill } from "react-icons/bs";
 function FormulariosSolicitacao({ credentials, setCredentials }) {
   const [solicitacoes, setSolicitacoes] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -12,6 +13,7 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
   const [filters, setFilters] = useState({
     nomeDoContratoFilter: "",
     pendenteFilter: false,
+    confeccaoFilter: false,
     vendedorFilter: [],
   });
   const router = useRouter();
@@ -28,6 +30,13 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
       newArr = newArr.filter(
         (solicitacao) =>
           solicitacao.aprovacao == false || solicitacao.aprovacao == undefined
+      );
+    }
+    if (filters.confeccaoFilter) {
+      if (!newArr) newArr = solicitacoes;
+      newArr = newArr.filter(
+        (solicitacao) =>
+          solicitacao.aprovacao == true && !solicitacao.confeccionado
       );
     }
     if (filters.vendedorFilter.length > 0) {
@@ -120,7 +129,20 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
               filters.pendenteFilter ? "bg-[#15599a]" : "bg-blue-300"
             } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
           >
-            PENDENTES
+            APROVAÇÃO PENDENTE
+          </div>
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                confeccaoFilter: !filters.confeccaoFilter,
+              })
+            }
+            className={`${
+              filters.confeccaoFilter ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            PARA CONFECCIONAR
           </div>
           <button
             onClick={handleFilter}
@@ -146,6 +168,15 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
               <h1 className="text-xs text-[#15599a] font-bold">
                 {solicitacao.nomeDoContrato}
               </h1>
+              {solicitacao.confeccionado && (
+                <BsPatchCheckFill
+                  style={{
+                    fontSize: "20px",
+                    color: "rgb(21 128 61)",
+                    marginLeft: "10px",
+                  }}
+                />
+              )}
             </div>
             <div className="flex items-center justify-between">
               <div>
@@ -173,6 +204,9 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
       {modalIsOpen && (
         <ModalFormSolicitacao
           editor={credentials.accessibleRoutes.includes("PPS") ? true : false}
+          financeiroEditor={
+            credentials.accessibleRoutes.includes("ADM") ? true : false
+          }
           solicitacao={modalSolicitacao}
           setModalIsOpen={setModalIsOpen}
         />

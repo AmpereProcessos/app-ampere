@@ -209,6 +209,7 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
           }
           solicitacao={modalSolicitacao}
           setModalIsOpen={setModalIsOpen}
+          getFormularios={getFormularios}
         />
       )}
     </div>

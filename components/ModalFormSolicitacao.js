@@ -211,6 +211,7 @@ function ModalFormSolicitacao({
   setModalIsOpen,
   editor,
   financeiroEditor,
+  getFormularios,
 }) {
   const router = useRouter();
   const [dados, setDados] = useState(solicitacao);
@@ -633,9 +634,11 @@ function ModalFormSolicitacao({
         _id: solicitacao._id,
         confeccionado: true,
       })
-      .then(() =>
-        setMessage({ text: "Atualização feita!", color: "text-green-500" })
-      )
+      .then(() => {
+        getFormularios();
+        setDados({ ...dados, confeccionado: true });
+        setMessage({ text: "Atualização feita!", color: "text-green-500" });
+      })
       .catch((err) =>
         setMessage({
           text: "Um erro ocorreu, tente novamente",

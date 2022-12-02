@@ -77,7 +77,7 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
       setMessage("Por favor, preencha uma cidade válida.");
       return false;
     }
-    if (dados.enderecoInstalacao.trim().length < 7) {
+    if (dados.enderecoInstalacao.trim().length < 3) {
       setMessage("Por favor, preencha um endereço válido");
       return false;
     }

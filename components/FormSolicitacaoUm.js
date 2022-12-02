@@ -91,7 +91,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
       setMessage("Por favor, preencha uma cidade válida.");
       return false;
     }
-    if (dados.enderecoCobranca.trim().length < 7) {
+    if (dados.enderecoCobranca.trim().length < 3) {
       setMessage("Por favor, preencha um endereço de cobrança válido.");
       return false;
     }

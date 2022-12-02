@@ -27,6 +27,7 @@ function MyApp({ Component, pageProps }) {
     });
   }, []);
   useEffect(() => {
+    console.log("Componente mudou!");
     if (Object.keys(credentials).length == 0) {
       var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
       if (storedCredentials != null) {

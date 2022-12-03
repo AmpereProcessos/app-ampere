@@ -623,16 +623,17 @@ function Obras({ credentials, setCredentials, users }) {
               <div>
                 <span className="text-xxs">DESDE DE ENTREGA</span>
                 <p className="text-xs text-center text-[#15599a] uppercase">
-                  {project.compra.statusEntrega == "ENTREGUE" &&
-                  project.compra.dataEntrega
-                    ? `${dayjs(new Date()).diff(
-                        project.compra.dataEntrega,
-                        "days"
-                      )} dias`
-                    : `${dayjs(new Date()).diff(
-                        project.compra.previsaoEntrega,
-                        "days"
-                      )} dias`}
+                  {project.compra.statusEntrega == "ENTREGUE"
+                    ? project.compra.dataEntrega
+                      ? `${dayjs(new Date()).diff(
+                          project.compra.dataEntrega,
+                          "days"
+                        )} dias`
+                      : `${dayjs(new Date()).diff(
+                          project.compra.previsaoEntrega,
+                          "days"
+                        )} dias`
+                    : "-"}
                 </p>
               </div>
             </div>

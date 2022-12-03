@@ -64,6 +64,7 @@ function ModalObras({
     text: "",
     color: "text-red-500",
   });
+  console.log(project);
   const [changes, setChanges] = useState({});
   const [osInfo, setOsInfo] = useState({
     categoria: "NÃO DEFINIDO",

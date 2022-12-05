@@ -6,6 +6,11 @@ export default async function handler(req, res) {
     let suprimentos = await collection
       .aggregate([
         {
+          $sort: {
+            qtde: 1,
+          },
+        },
+        {
           $match: {
             "compra.statusEntrega": {
               $in: [
@@ -23,8 +28,13 @@ export default async function handler(req, res) {
           },
         },
         {
-          $sort: {
+          $project: {
+            _id: 1,
+            nomeDoContrato: 1,
             qtde: 1,
+            compra: 1,
+            "faturamento.previsaoFaturamento": 1,
+            "sistema.potPico": 1,
           },
         },
       ])

@@ -9,15 +9,27 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
     obsJornada: project.jornada.obsJornada ? project.jornada.obsJornada : null,
     dataNPS: project.jornada.dataNps ? project.jornada.dataNps : null,
   });
+  const [msg, setMsg] = useState({
+    text: "",
+    color: "",
+  });
   function getDateDiff(date1, date2) {
     const diffInMs = new Date(date1) - new Date(date2);
     const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
     return diffInDays;
   }
   function handleChanges(mudancas) {
-    axios.post(`/api/projects/update/${project._id}`, mudancas).then((res) => {
-      console.log("OK");
-    });
+    axios
+      .post(`/api/projects/update/${project._id}`, mudancas)
+      .then((res) => {
+        setMsg({ text: "Alterações feitas!", color: "text-green-500" });
+      })
+      .catch((err) =>
+        setMsg({
+          text: "Um erro ocorreu, tente novamente mais tarde",
+          color: "text-red-500",
+        })
+      );
   }
   return (
     <>
@@ -485,6 +497,11 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
                 }}
               />
             </div>
+            {msg.text && (
+              <p className={`text-center text-sm ${msg.color} italic`}>
+                {msg.text}
+              </p>
+            )}
             <button
               onClick={() => {
                 handleChanges({

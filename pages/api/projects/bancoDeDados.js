@@ -25,18 +25,23 @@ export default async function handler(req, res) {
     let arr = await collection
       .aggregate([
         {
-          $sort: {
-            qtde: 1,
-          },
-        },
-        {
           $match: {
-            qtde: { $gt: req.body.greater },
             "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
           },
         },
         {
-          $limit: 100,
+          $project: {
+            _id: 1,
+            qtde: 1,
+            nomeDoContrato: 1,
+            cidade: 1,
+            "vendedor.nome": 1,
+          },
+        },
+        {
+          $sort: {
+            qtde: 1,
+          },
         },
       ])
       .toArray();

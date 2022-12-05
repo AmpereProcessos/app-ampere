@@ -14,6 +14,26 @@ export default async function handler(req, res) {
           },
         },
         {
+          $project: {
+            _id: 1,
+            qtde: 1,
+            nomeDoContrato: 1,
+            cidade: 1,
+            obra: 1,
+            "compra.statusEntrega": 1,
+            "compra.previsaoEntrega": 1,
+            "compra.dataEntrega": 1,
+            "visitaTecnica.tecnico": 1,
+            "visitaTecnica.tipoDaTelha": 1,
+            "vistoria.status": 1,
+            "sistema.qtdeModulos": 1,
+            "sistema.potPico": 1,
+            "parecer.dataParecerDeAcesso": 1,
+            "contrato.dataAssinatura": 1,
+            "pagamento.credor": 1,
+          },
+        },
+        {
           $sort: {
             qtde: 1,
           },

@@ -15,6 +15,24 @@ export default async function handler(req, res) {
           },
         },
         {
+          $project: {
+            _id: 1,
+            qtde: 1,
+            nomeDoContrato: 1,
+            telefone: 1,
+            jornada: 1,
+            "vendedor.nome": 1,
+            "parecer.statusDoParecerDeAcesso": 1,
+            "projeto.dataLiberacaoDocumentacao": 1,
+            "compra.statusLiberacao": 1,
+            "compra.previsaoEntrega": 1,
+            "obra.entrada": 1,
+            "faturamento.previsaoFaturamento": 1,
+            "faturamento.dataFaturamento": 1,
+            nps: 1,
+          },
+        },
+        {
           $sort: {
             qtde: 1,
           },

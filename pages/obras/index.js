@@ -231,6 +231,12 @@ function Obras({ credentials, setCredentials, users }) {
       return "border border-gray-200";
     }
   }
+  function handleOpenModal(id) {
+    axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
+      setModalProject(res.data[0]);
+      setModalIsOpen(true);
+    });
+  }
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
@@ -502,8 +508,7 @@ function Obras({ credentials, setCredentials, users }) {
         {filteredProjects.map((project) => (
           <div
             onClick={() => {
-              setModalIsOpen(true);
-              setModalProject(project);
+              handleOpenModal(project._id);
             }}
             key={project._id}
             className={`w-[250px] lg:w-[450px] cursor-pointer ${

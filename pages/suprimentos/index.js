@@ -164,6 +164,12 @@ function Suprimentos({ credentials, setCredentials, users }) {
       dayjs("2022-11-21T03:00:00.000Z")
     )
   );*/
+  function handleOpenModal(id) {
+    axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
+      setModalProject(res.data[0]);
+      setModalIsOpen(true);
+    });
+  }
   return (
     <div className="p-6 grow">
       <div className="flex flex-col justify-between border-b border-gray-200 p-1">
@@ -290,8 +296,7 @@ function Suprimentos({ credentials, setCredentials, users }) {
         {filteredProjects.map((project) => (
           <div
             onClick={() => {
-              setModalIsOpen(true);
-              setModalProject(project);
+              handleOpenModal(project._id);
             }}
             key={project._id}
             className={`w-[250px] lg:w-[450px] cursor-pointer ${

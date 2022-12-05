@@ -175,6 +175,12 @@ function BandoDeDados({ data, credentials, setCredentials }) {
       }
     }
   }, []);
+  function handleOpenModal(id) {
+    axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
+      setModalProject(res.data[0]);
+      setModalIsOpen(true);
+    });
+  }
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between gap-x-2 border-b border-gray-200 p-1">
@@ -188,7 +194,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
             </p>
           )}
         </div>
-        <nav aria-label="Page navigation example mt-2">
+        {/**<nav aria-label="Page navigation example mt-2">
           <ul className="inline-flex -space-x-px">
             <li>
               <p
@@ -277,7 +283,8 @@ function BandoDeDados({ data, credentials, setCredentials }) {
           <p className="text-center italic text-[#15599a] text-sm">
             Carregando...
           </p>
-        )}
+        )} */}
+
         <div className="flex gap-2 flex-wrap justify-center mt-2">
           <Select
             isMulti
@@ -414,8 +421,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
         {filteredProjects.map((project) => (
           <div
             onClick={() => {
-              setModalIsOpen(true);
-              setModalProject(project);
+              handleOpenModal(project._id);
             }}
             key={project._id}
             className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"

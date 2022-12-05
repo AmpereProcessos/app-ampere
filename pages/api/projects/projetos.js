@@ -6,6 +6,11 @@ export default async function handler(req, res) {
     let projetos = await collection
       .aggregate([
         {
+          $sort: {
+            qtde: 1,
+          },
+        },
+        {
           $match: {
             "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
             "projeto.projetoConcluido": { $ne: "SIM" },
@@ -16,8 +21,16 @@ export default async function handler(req, res) {
           },
         },
         {
-          $sort: {
+          $project: {
+            _id: 1,
             qtde: 1,
+            nomeDoContrato: 1,
+            "parecer.statusDoParecerDeAcesso": 1,
+            "vistoria.status": 1,
+            "projeto.diagramaUnifilar": 1,
+            "projeto.desenhoTelhado": 1,
+            "contrato.dataAssinatura": 1,
+            "sistema.potPico": 1,
           },
         },
       ])

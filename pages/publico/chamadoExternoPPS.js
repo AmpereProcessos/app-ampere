@@ -27,7 +27,9 @@ function ChamadoExternoPPS() {
             className="outline-none p-2 text-sm border border-gray-200 w-full text-center"
           >
             {vendedores.map((vendedor) => (
-              <option value={vendedor.nome}>{vendedor.nome}</option>
+              <option key={vendedor.nome} value={vendedor.nome}>
+                {vendedor.nome}
+              </option>
             ))}
           </select>
         </div>

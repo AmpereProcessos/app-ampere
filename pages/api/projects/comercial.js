@@ -23,6 +23,16 @@ export default async function handler(req, res) {
           },
         },
         {
+          $project: {
+            _id: 1,
+            qtde: 1,
+            nomeDoContrato: 1,
+            contrato: 1,
+            vendedor: 1,
+            pagamento: 1,
+          },
+        },
+        {
           $sort: { qtde: 1 },
         },
       ])

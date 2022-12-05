@@ -50,7 +50,6 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            qtde: { $gt: req.body.greater },
             $or: [
               {
                 "obra.statusDaObra": {
@@ -76,7 +75,16 @@ export default async function handler(req, res) {
           },
         },
         {
-          $limit: 300,
+          $project: {
+            _id: 1,
+            qtde: 1,
+            nomeDoContrato: 1,
+            cidade: 1,
+            "projeto.topologia": 1,
+            "obra.equipeResp": 1,
+            "conferencias.usinaLigada": 1,
+            sistema: 1,
+          },
         },
       ])
       .toArray();

@@ -10,10 +10,6 @@ function BandoDeDados({ data, credentials, setCredentials }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
   const [searchFilter, setSearchFilter] = useState("");
-  const [orderFilter, setOrderFilter] = useState({
-    text: "ORDEM CRESC",
-    value: true,
-  });
   const [opInProgress, setOpInProgress] = useState(false);
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -21,6 +17,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     field1: null,
     field2: null,
   });
+  const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     cidadeFilter: [],
     vendedorFilter: [],
@@ -28,7 +25,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
   });
   function getProjects() {
     axios
-      .post("/api/projects/bancoDeDados", { skip: 0, lastId: 0 })
+      .post("/api/projects/bancoDeDados", { skip: 0, greater: 0 })
       .then((res) => {
         setProjects(res.data);
         setFilteredProjects(res.data);
@@ -46,38 +43,24 @@ function BandoDeDados({ data, credentials, setCredentials }) {
       setFilteredProjects(projects);
     }
   }
-  function fetchMoreProjects() {
+  function handleFetchMoreProjects(page) {
+    setCurrentPage(page);
     setOpInProgress(true);
     let lastId = projects.length > 0 ? projects[projects.length - 1].qtde : 0;
     console.log(projects, lastId);
     axios
       .post("/api/projects/bancoDeDados", {
         skip: projects.length,
-        lastId: lastId,
+        greater: page * 200 - 200,
       })
       .then((res) => {
         let arr = [...projects, ...res.data];
-        setProjects([...arr]);
-        setFilteredProjects([...arr]);
+        setProjects(res.data);
+        setFilteredProjects(res.data);
         setOpInProgress(false);
       });
   }
-  console.log(filteredProjects.length);
-  function handleOrderChange(value) {
-    if (value == false) {
-      setOrderFilter({ value: false, text: "ORDEM DECRESC" });
-      let arr = filteredProjects.sort((a, b) => {
-        return b.qtde - a.qtde;
-      });
-      setFilteredProjects(arr);
-    } else if (value == true) {
-      setOrderFilter({ value: true, text: "ORDEM CRESC" });
-      let arr = filteredProjects.sort((a, b) => {
-        return a.qtde - b.qtde;
-      });
-      setFilteredProjects(arr);
-    }
-  }
+
   function handleFilters() {
     var newArr;
     if (filters.cidadeFilter.length > 0) {
@@ -143,28 +126,107 @@ function BandoDeDados({ data, credentials, setCredentials }) {
               ({filteredProjects.length})
             </p>
           )}
-          {projects.length < 1500 ? (
-            opInProgress ? (
-              <p className="text-sm italic text-[#15599a]">Carregando...</p>
-            ) : (
-              <button
-                onClick={fetchMoreProjects}
-                className="bg-[#fead61] h-[36px] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2"
-              >
-                CARREGAR MAIS
-              </button>
-            )
-          ) : (
-            false
-          )}
         </div>
+        <nav aria-label="Page navigation example mt-2">
+          <ul className="inline-flex -space-x-px">
+            <li>
+              <p
+                onClick={() => handleFetchMoreProjects(1)}
+                className={`px-3 py-2 leading-tight text-gray-500 ${
+                  currentPage == 1 ? "bg-blue-100" : "bg-white"
+                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+              >
+                1
+              </p>
+            </li>
+            <li>
+              <p
+                onClick={() => handleFetchMoreProjects(2)}
+                className={`px-3 py-2 leading-tight text-gray-500 ${
+                  currentPage == 2 ? "bg-blue-100" : "bg-white"
+                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+              >
+                2
+              </p>
+            </li>
+            <li>
+              <p
+                onClick={() => handleFetchMoreProjects(3)}
+                className={`px-3 py-2 leading-tight text-gray-500 ${
+                  currentPage == 3 ? "bg-blue-100" : "bg-white"
+                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+              >
+                3
+              </p>
+            </li>
+            <li>
+              <p
+                onClick={() => handleFetchMoreProjects(4)}
+                className={`px-3 py-2 leading-tight text-gray-500 ${
+                  currentPage == 4 ? "bg-blue-100" : "bg-white"
+                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+              >
+                4
+              </p>
+            </li>
+            <li>
+              <p
+                onClick={() => handleFetchMoreProjects(5)}
+                className={`px-3 py-2 leading-tight text-gray-500 ${
+                  currentPage == 5 ? "bg-blue-100" : "bg-white"
+                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+              >
+                5
+              </p>
+            </li>
+            <li>
+              <p
+                onClick={() => handleFetchMoreProjects(6)}
+                className={`px-3 py-2 leading-tight text-gray-500 ${
+                  currentPage == 6 ? "bg-blue-100" : "bg-white"
+                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+              >
+                6
+              </p>
+            </li>
+            <li>
+              <p
+                onClick={() => handleFetchMoreProjects(7)}
+                className={`px-3 py-2 leading-tight text-gray-500 ${
+                  currentPage == 7 ? "bg-blue-100" : "bg-white"
+                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+              >
+                7
+              </p>
+            </li>
+            <li>
+              <p
+                onClick={() => handleFetchMoreProjects(8)}
+                className={`px-3 py-2 leading-tight text-gray-500 ${
+                  currentPage == 8 ? "bg-blue-100" : "bg-white"
+                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+              >
+                8
+              </p>
+            </li>
+            <li>
+              <p
+                onClick={() => handleFetchMoreProjects(9)}
+                className={`px-3 py-2 leading-tight text-gray-500 ${
+                  currentPage == 9 ? "bg-blue-100" : "bg-white"
+                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+              >
+                9
+              </p>
+            </li>
+          </ul>
+        </nav>
+        {opInProgress && (
+          <p className="text-center italic text-[#15599a] text-sm">
+            Carregando...
+          </p>
+        )}
         <div className="flex gap-2 flex-wrap justify-center mt-2">
-          <div
-            onClick={() => handleOrderChange(!orderFilter.value)}
-            className="bg-[#fead61] cursor-pointer p-2 hover:text-white hover:bg-[#15599a] font-bold rounded"
-          >
-            {orderFilter.text}
-          </div>
           <Select
             isMulti
             placeholder="CIDADE"

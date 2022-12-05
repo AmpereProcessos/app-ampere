@@ -34,12 +34,12 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            qtde: { $gt: req.body.lastId },
+            qtde: { $gt: req.body.greater },
             "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
           },
         },
         {
-          $limit: 100,
+          $limit: 200,
         },
       ])
       .toArray();

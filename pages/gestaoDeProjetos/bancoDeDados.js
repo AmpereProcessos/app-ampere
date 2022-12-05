@@ -14,6 +14,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     text: "ORDEM CRESC",
     value: true,
   });
+  const [opInProgress, setOpInProgress] = useState(false);
   const [dateFilter, setDateFilter] = useState({
     after: null,
     before: null,
@@ -27,7 +28,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
   });
   function getProjects() {
     axios
-      .get("/api/projects/bancoDeDados")
+      .post("/api/projects/bancoDeDados", { skip: 0, lastId: 0 })
       .then((res) => {
         setProjects(res.data);
         setFilteredProjects(res.data);
@@ -46,12 +47,22 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     }
   }
   function fetchMoreProjects() {
-    axios.post("/api/projects/bancoDeDados").then((res) => {
-      let arr = [...projects, ...res.data];
-      setProjects([...arr]);
-      setFilteredProjects([...arr]);
-    });
+    setOpInProgress(true);
+    let lastId = projects.length > 0 ? projects[projects.length - 1].qtde : 0;
+    console.log(projects, lastId);
+    axios
+      .post("/api/projects/bancoDeDados", {
+        skip: projects.length,
+        lastId: lastId,
+      })
+      .then((res) => {
+        let arr = [...projects, ...res.data];
+        setProjects([...arr]);
+        setFilteredProjects([...arr]);
+        setOpInProgress(false);
+      });
   }
+  console.log(filteredProjects.length);
   function handleOrderChange(value) {
     if (value == false) {
       setOrderFilter({ value: false, text: "ORDEM DECRESC" });
@@ -132,13 +143,19 @@ function BandoDeDados({ data, credentials, setCredentials }) {
               ({filteredProjects.length})
             </p>
           )}
-          {projects.length < 1001 && (
-            <button
-              onClick={fetchMoreProjects}
-              className="bg-[#fead61] h-[36px] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2"
-            >
-              CARREGAR MAIS
-            </button>
+          {projects.length < 1500 ? (
+            opInProgress ? (
+              <p className="text-sm italic text-[#15599a]">Carregando...</p>
+            ) : (
+              <button
+                onClick={fetchMoreProjects}
+                className="bg-[#fead61] h-[36px] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2"
+              >
+                CARREGAR MAIS
+              </button>
+            )
+          ) : (
+            false
           )}
         </div>
         <div className="flex gap-2 flex-wrap justify-center mt-2">

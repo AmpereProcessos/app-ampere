@@ -7,13 +7,31 @@ export default async function handler(req, res) {
     let arr = await collection
       .aggregate([
         {
+          $sort: {
+            qtde: 1,
+          },
+        },
+        {
           $match: {
             "projeto.aumentoDeCarga": "SIM",
           },
         },
         {
-          $sort: {
+          $project: {
+            _id: 1,
             qtde: 1,
+            nomeDoContrato: 1,
+            "compra.statusLiberacao": 1,
+            cidade: 1,
+            bairro: 1,
+            logradouro: 1,
+            numeroResidencia: 1,
+            "projeto.dataAssDocumentacao": 1,
+            padrao: 1,
+            visitaTecnica: 1,
+            "projeto.fechamentoAC": 1,
+            "projeto.acStatus": 1,
+            ordensDeServico: 1,
           },
         },
       ])

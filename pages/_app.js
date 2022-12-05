@@ -30,11 +30,12 @@ function MyApp({ Component, pageProps }) {
     if (Object.keys(credentials).length == 0) {
       var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
       if (storedCredentials != null) {
-        getNotificacoes(storedCredentials._id);
+        // getNotificacoes(storedCredentials._id);
         setCredentials(storedCredentials);
       }
     } else {
-      getNotificacoes(credentials._id);
+      // getNotificacoes(credentials._id);
+      console.log("teste");
     }
     if (
       router.pathname.includes("pdf") ||

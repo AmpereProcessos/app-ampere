@@ -8,6 +8,7 @@ function ChamadoExternoPPS() {
     referenteAProjeto: "NÃO DEFINIDO",
   });
   const [stage, setStage] = useState(0);
+  console.log("aaaa");
   return (
     <section className="min-h-[100vh] flex justify-center bg-[#155a9ab7]">
       <div className="flex flex-col bg-[#fff] p-4 rounded min-w-[450px]">

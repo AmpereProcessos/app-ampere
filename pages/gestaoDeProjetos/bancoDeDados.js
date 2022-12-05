@@ -25,12 +25,40 @@ function BandoDeDados({ data, credentials, setCredentials }) {
   });
   function getProjects() {
     axios
+      .all([
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 0 }), // 1
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 200 }), //2
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 400 }),
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 600 }),
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 800 }),
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1000 }),
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1200 }),
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1400 }),
+      ])
+      .then(
+        axios.spread((res1, res2, res3, res4, res5, res6, res7, res8) => {
+          let arr = [].concat(
+            res1.data,
+            res2.data,
+            res3.data,
+            res4.data,
+            res5.data,
+            res6.data,
+            res7.data,
+            res8.data
+          );
+          setFilteredProjects(arr);
+          setProjects(arr);
+        })
+      );
+    /*
+    axios
       .post("/api/projects/bancoDeDados", { skip: 0, greater: 0 })
       .then((res) => {
         setProjects(res.data);
         setFilteredProjects(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err));*/
   }
   function handleSearchFilter(value) {
     setSearchFilter(value);
@@ -127,7 +155,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
             </p>
           )}
         </div>
-        <nav aria-label="Page navigation example mt-2">
+        {/**<nav aria-label="Page navigation example mt-2">
           <ul className="inline-flex -space-x-px">
             <li>
               <p
@@ -209,18 +237,9 @@ function BandoDeDados({ data, credentials, setCredentials }) {
                 8
               </p>
             </li>
-            <li>
-              <p
-                onClick={() => handleFetchMoreProjects(9)}
-                className={`px-3 py-2 leading-tight text-gray-500 ${
-                  currentPage == 9 ? "bg-blue-100" : "bg-white"
-                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
-              >
-                9
-              </p>
-            </li>
           </ul>
-        </nav>
+        </nav> */}
+
         {opInProgress && (
           <p className="text-center italic text-[#15599a] text-sm">
             Carregando...

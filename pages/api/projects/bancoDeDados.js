@@ -22,9 +22,6 @@ export default async function handler(req, res) {
   } else if (req.method === "POST") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
-    let skip = req.body.skip;
-    console.log(req.body.lastId);
-    var limit = 300;
     let arr = await collection
       .aggregate([
         {

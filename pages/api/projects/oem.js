@@ -32,7 +32,7 @@ export default async function handler(req, res) {
           },
         },
         {
-          $sort: { qtde: -1 },
+          $limit: 50,
         },
       ])
       .toArray();
@@ -40,11 +40,17 @@ export default async function handler(req, res) {
   } else if (req.method === "POST") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
+    console.log("FUI CHAMADO");
     let oem = await collection
       .aggregate([
         {
+          $sort: {
+            qtde: 1,
+          },
+        },
+        {
           $match: {
-            qtde: { $gt: 713 },
+            qtde: { $gt: req.body.greater },
             $or: [
               {
                 "obra.statusDaObra": {
@@ -61,7 +67,16 @@ export default async function handler(req, res) {
           },
         },
         {
-          $limit: 700,
+          $match: {
+            $or: [
+              { "medidor.data": { $gte: "2021-06-01T00:00:00.000Z" } },
+              { "medidor.data": null },
+              { "manutencaoPreventiva.status": { $ne: "REALIZADO" } },
+            ],
+          },
+        },
+        {
+          $limit: 300,
         },
       ])
       .toArray();

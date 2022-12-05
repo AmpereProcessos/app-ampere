@@ -19,6 +19,7 @@ function OeM({ credentials, setCredentials, users }) {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [opInProgress, setOpInProgress] = useState(false);
   const [filters, setFilters] = useState({
     cidadeFilter: [],
     equipResp: [],
@@ -49,7 +50,7 @@ function OeM({ credentials, setCredentials, users }) {
           setFilteredProjects(res.data);
         });
     } else {
-      axios.get("/api/projects/oem").then((res) => {
+      axios.post("/api/projects/oem", { greater: 0 }).then((res) => {
         setProjects(res.data);
         setFilteredProjects(res.data);
       });
@@ -174,9 +175,11 @@ function OeM({ credentials, setCredentials, users }) {
     setModalProject(changedObj[0]);
   }
   function fetchMoreProjects() {
-    axios.post("/api/projects/oem").then((res) => {
+    setOpInProgress(true);
+    let lastQtde = projects.length > 0 ? projects[projects.length - 1].qtde : 0;
+    axios.post("/api/projects/oem", { greater: lastQtde }).then((res) => {
       let arr = [...projects, ...res.data];
-      console.log(arr);
+      setOpInProgress(false);
       setProjects([...arr]);
       setFilteredProjects([...arr]);
     });
@@ -223,13 +226,19 @@ function OeM({ credentials, setCredentials, users }) {
               ({getListCumulativeModules().replace(".", ",")} modulos)
             </p>
           )}
-          {projects.length < 701 && (
-            <button
-              onClick={fetchMoreProjects}
-              className="bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2"
-            >
-              CARREGAR MAIS
-            </button>
+          {projects.length < 1000 ? (
+            opInProgress ? (
+              <p className="text-sm italic text-[#15599a]">Carregando...</p>
+            ) : (
+              <button
+                onClick={fetchMoreProjects}
+                className="bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2"
+              >
+                CARREGAR MAIS
+              </button>
+            )
+          ) : (
+            false
           )}
         </div>
         <div className="flex flex-wrap gap-2 justify-around mt-2 items-center">

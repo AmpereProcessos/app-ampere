@@ -15,7 +15,6 @@ function MyApp({ Component, pageProps }) {
   const [users, setUsers] = useState([]);
   const [notificacoes, setNotificacoes] = useState([]);
   const router = useRouter();
-  console.log(router.pathname);
   function getNotificacoes(id) {
     console.log(id);
     axios

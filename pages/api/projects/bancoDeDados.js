@@ -36,7 +36,7 @@ export default async function handler(req, res) {
           },
         },
         {
-          $limit: 200,
+          $limit: 100,
         },
       ])
       .toArray();

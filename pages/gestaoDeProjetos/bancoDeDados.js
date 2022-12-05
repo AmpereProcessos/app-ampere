@@ -24,41 +24,74 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     sorteioFilter: false,
   });
   function getProjects() {
+    /*
     axios
       .all([
         axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 0 }), // 1
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 200 }), //2
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 400 }),
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 600 }),
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 800 }),
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1000 }),
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1200 }),
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1400 }),
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 100 }), //2
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 200 }), //3
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 300 }), //4
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 400 }), //5
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 500 }), //6
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 600 }), //7
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 700 }), //8
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 800 }), //9
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 900 }), //10
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1000 }), //11
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1100 }), //12
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1200 }), //13
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1300 }), //14
+        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1400 }), //15
       ])
       .then(
-        axios.spread((res1, res2, res3, res4, res5, res6, res7, res8) => {
-          let arr = [].concat(
-            res1.data,
-            res2.data,
-            res3.data,
-            res4.data,
-            res5.data,
-            res6.data,
-            res7.data,
-            res8.data
-          );
-          setFilteredProjects(arr);
-          setProjects(arr);
-        })
-      );
-    /*
+        axios.spread(
+          (
+            res1,
+            res2,
+            res3,
+            res4,
+            res5,
+            res6,
+            res7,
+            res8,
+            res9,
+            res10,
+            res11,
+            res12,
+            res13,
+            res14,
+            res15
+          ) => {
+            let arr = [].concat(
+              res1.data,
+              res2.data,
+              res3.data,
+              res4.data,
+              res5.data,
+              res6.data,
+              res7.data,
+              res8.data,
+              res9.data,
+              res10.data,
+              res11.data,
+              res12.data,
+              res13.data,
+              res14.data,
+              res15.data
+            );
+            setFilteredProjects(arr);
+            setProjects(arr);
+          }
+        )
+      ); */
+
     axios
       .post("/api/projects/bancoDeDados", { skip: 0, greater: 0 })
       .then((res) => {
         setProjects(res.data);
         setFilteredProjects(res.data);
       })
-      .catch((err) => console.log(err));*/
+      .catch((err) => console.log(err));
   }
   function handleSearchFilter(value) {
     setSearchFilter(value);
@@ -155,7 +188,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
             </p>
           )}
         </div>
-        {/**<nav aria-label="Page navigation example mt-2">
+        <nav aria-label="Page navigation example mt-2">
           <ul className="inline-flex -space-x-px">
             <li>
               <p
@@ -238,7 +271,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
               </p>
             </li>
           </ul>
-        </nav> */}
+        </nav>
 
         {opInProgress && (
           <p className="text-center italic text-[#15599a] text-sm">

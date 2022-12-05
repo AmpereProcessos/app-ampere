@@ -26,6 +26,11 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
+            "contrato.status": "ASSINADO",
+          },
+        },
+        {
+          $match: {
             "projeto.projetoConcluido": { $ne: "SIM" },
             $or: [
               { "compra.statusLiberacao": "PAGO" },
@@ -46,6 +51,11 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
+            "contrato.status": "ASSINADO",
+          },
+        },
+        {
+          $match: {
             "comissionamento.projetos": { $ne: true },
             "contrato.status": "ASSINADO",
             "compra.statusLiberacao": { $in: ["PAGO", "REALIZAR COMPRA"] },
@@ -60,6 +70,11 @@ export default async function handler(req, res) {
       .toArray();
     let parecer = await collection2
       .aggregate([
+        {
+          $match: {
+            "contrato.status": "ASSINADO",
+          },
+        },
         {
           $match: {
             "projeto.projetoConcluido": { $ne: "SIM" },

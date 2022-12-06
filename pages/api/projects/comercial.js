@@ -30,6 +30,10 @@ export default async function handler(req, res) {
             contrato: 1,
             vendedor: 1,
             pagamento: 1,
+            "sistema.valorProjeto": 1,
+            "padrao.valor": 1,
+            "estruturaPersonalizada.valor": 1,
+            "sistema.potPico": 1,
           },
         },
         {

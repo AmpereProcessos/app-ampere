@@ -67,7 +67,7 @@ function ChamadoExternoPPS() {
         ABERTURA DE CHAMADO
       </h1>
       {stage == 0 && (
-        <div className="mt-12 w-full self-center lg:w-[75%] min-h-[350px] gap-2 flex flex-col items-center flex-wrap  border border-[#15599a] shadow-lg bg-[#fff]">
+        <div className="mt-12 w-full p-5 self-center lg:w-[75%] min-h-[350px] gap-2 flex flex-col items-center flex-wrap  border border-[#15599a] shadow-lg bg-[#fff]">
           <SelectInput
             label={"VENDEDOR"}
             editable={true}

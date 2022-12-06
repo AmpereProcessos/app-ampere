@@ -167,8 +167,8 @@ function ChamadosPPS({ setCredentials, credentials }) {
           </button>
         </Link>
       </div>
-      <div className="w-full border h-[550px]  border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
+      <div className="w-full border flex flex-col h-[550px]  border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex h-[10%] flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             Chamados abertos ({inProgress.length})
           </h1>
@@ -230,12 +230,12 @@ function ChamadosPPS({ setCredentials, credentials }) {
             </button>
           </div>
         </div>
-        <div className="flex justify-around grow pb-2 overflow-y-auto overscroll-y-auto gap-3 mt-4 flex-wrap">
+        <div className="flex h-[90%] justify-around pb-2 overflow-y-auto overscroll-y-auto gap-3 mt-4 flex-wrap">
           {filteredInProgress.map((call) => (
             <div
               key={call._id}
               onClick={() => handleOpenModal(call)}
-              className="w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+              className="w-[450px] h-[240px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
               <div className="flex justify-between items-center w-full">
                 <h1 className="text-xs text-center">{call.vendedor}</h1>
@@ -255,7 +255,14 @@ function ChamadosPPS({ setCredentials, credentials }) {
               </div>
               <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
                 <p>Observações:</p>
-                <p>{call.observacoes && call.observacoes}</p>
+                <p>
+                  {console.log(call.observacoes.length)}
+                  {call.observacoes
+                    ? call.observacoes.trim().length > 250
+                      ? `${call.observacoes.substring(0, 250)}...`
+                      : call.observacoes
+                    : "-"}
+                </p>
               </div>
               <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
                 <p>Responsável:</p>

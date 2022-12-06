@@ -14,16 +14,17 @@ function ChamadoExternoPPS() {
     nomeDoCliente: "",
     telefone: "",
     cidade: "NÃO DEFINIDO",
+    tipoDoCliente: "NÃO DEFINIDO",
     observacoes: "",
   });
   const [msg, setMsg] = useState({
     text: "",
     color: "",
   });
-  const [stage, setStage] = useState(0);
+  const [stage, setStage] = useState(1);
   function nextStage() {
     if (validateFields()) {
-      setStage((prevState) => prevState + 1);
+      setStage(1);
     }
   }
   function validateFields() {

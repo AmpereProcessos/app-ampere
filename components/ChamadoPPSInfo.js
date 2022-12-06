@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import { cidadesAtendidas } from "../utils/constants";
@@ -6,6 +6,7 @@ import NumberInput from "./NumberInput";
 import DateInput from "./DateInput";
 import dayjs from "dayjs";
 function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
+  const [images, setImages] = useState({});
   const phoneMask = (value) => {
     if (!value) return "";
     value = value.replace(/\D/g, "");
@@ -26,6 +27,7 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
     );
   }
   console.log(dados);
+  console.log(images);
   return (
     <div className="mt-12 w-full self-center lg:w-[75%] min-h-[275px] gap-2 flex flex-col items-center flex-wrap  border border-[#15599a] p-2 shadow-lg bg-[#fff]">
       <TextInput
@@ -178,9 +180,359 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
           />
         </>
       )}
+      {dados.tipoDoCliente == "CPF" && (
+        <>
+          <div className="w-fit flex flex-col items-center">
+            <label
+              className="ml-2 text-center text-[#15599a] font-bold"
+              htmlFor="comprovanteDeEndereco"
+            >
+              COMPROVANTE DE ENDEREÇO
+            </label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.comprovanteDeEndereco ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.comprovanteDeEndereco.name}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">
+                      Adicione o arquivo aqui...
+                    </span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    comprovanteDeEndereco: e.target.files[0],
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label
+              className="ml-2 text-center text-[#15599a] font-bold"
+              htmlFor="comprovanteDeRenda"
+            >
+              COMPROVANTE DE RENDA
+            </label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.comprovanteDeRenda ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.comprovanteDeRenda.name}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">
+                      Adicione o arquivo aqui...
+                    </span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    comprovanteDeRenda: e.target.files[0],
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label
+              className="ml-2 text-center text-[#15599a] font-bold"
+              htmlFor="documentoPessoal"
+            >
+              DOCUMENTO COM CPF E RG
+            </label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.documentoPessoal ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.documentoPessoal.name}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">
+                      Adicione o arquivo aqui...
+                    </span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    documentoPessoal: e.target.files[0],
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+        </>
+      )}
+      {dados.tipoDoCliente == "CNPJ" && (
+        <>
+          <div className="w-fit flex flex-col items-center">
+            <label
+              className="ml-2 text-center text-[#15599a] font-bold"
+              htmlFor="cartaoCNPJ"
+            >
+              CARTÃO CNPJ
+            </label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.cartaoCNPJ ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.cartaoCNPJ.name}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">
+                      Adicione o arquivo aqui...
+                    </span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    cartaoCNPJ: e.target.files[0],
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label
+              className="ml-2 text-center text-[#15599a] font-bold"
+              htmlFor="contratoSocial"
+            >
+              CONTRATO SOCIAL
+            </label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.contratoSocial ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.contratoSocial.name}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">
+                      Adicione o arquivo aqui...
+                    </span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    contratoSocial: e.target.files[0],
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label
+              className="ml-2 text-center text-[#15599a] font-bold"
+              htmlFor="comprovanteDeEndereco"
+            >
+              COMPROVANTE DE ENDEREÇO DA INSTALAÇÃO
+            </label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.comprovanteDeEndereco ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.comprovanteDeEndereco.name}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">
+                      Adicione o arquivo aqui...
+                    </span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    comprovanteDeEndereco: e.target.files[0],
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label
+              className="ml-2 text-center text-[#15599a] font-bold"
+              htmlFor="comprovanteDeRenda"
+            >
+              COMPROVANTE DE RENDA (REPRESENTANTE LEGAL)
+            </label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.comprovanteDeRenda ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.comprovanteDeRenda.name}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">
+                      Adicione o arquivo aqui...
+                    </span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    comprovanteDeRenda: e.target.files[0],
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label
+              className="ml-2 text-center text-[#15599a] font-bold"
+              htmlFor="declaracaoDeFaturamento"
+            >
+              DECLARAÇÃO DE FATURAMENTO DA EMPRESA(12 MESES)
+            </label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.declaracaoDeFaturamento ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.declaracaoDeFaturamento.name}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">
+                      Adicione o arquivo aqui...
+                    </span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    declaracaoDeFaturamento: e.target.files[0],
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label
+              className="ml-2 text-center text-[#15599a] font-bold"
+              htmlFor="documentoPessoal"
+            >
+              DOCUMENTO PESSOAL DO REPRESENTANTE LEGAL
+            </label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.documentoPessoal ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.documentoPessoal.name}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">
+                      Adicione o arquivo aqui...
+                    </span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    documentoPessoal: e.target.files[0],
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+        </>
+      )}
       <div className="flex flex-wrap items-center justify-center gap-2">
         <button
-          onClick={() => setStage((prevState) => prevState - 1)}
+          onClick={() => setStage(0)}
           className="bg-[#15599a] text-white font-bold p-2 rounded hover:bg-[#fead61] hover:text-black"
         >
           VOLTAR

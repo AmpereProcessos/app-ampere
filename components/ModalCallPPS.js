@@ -288,6 +288,23 @@ function ModalCallPPS({
                   className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit grow"
                 />
               </div>
+              {info.links?.length > 0 && (
+                <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
+                  <span className="font-bold text-center font-raleway">
+                    LINKS
+                  </span>
+                  <div className="flex flex-col items-center">
+                    {info.links.map((x, index) => (
+                      <div key={index} className="flex items-center gap-x-2">
+                        <a className="text-blue-300" href={x.link}>
+                          {x.title}
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {info.dataDeConclusao ? (
                 <div className="text-center">
                   <button

@@ -9,6 +9,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import dayjs from "dayjs";
 import axios from "axios";
 function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
+  var links = [];
   const [images, setImages] = useState({});
   const [buttonBlocked, setButtonBlocked] = useState(false);
   const [msg, setMsg] = useState({
@@ -192,7 +193,7 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
         });
         return false;
       }
-      if (dados.enderecoDoCliente.trim()) {
+      if (dados.enderecoDoCliente.trim().length < 3) {
         setMsg({
           text: "Por favor, preencha a renda do cliente.",
           color: "text-red-500",
@@ -212,6 +213,7 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
             axios
               .post("/api/calls/pps/mainData", {
                 ...dados,
+                links: links,
                 status: "PENDENTE",
                 responsavel: "A DEFINIR",
                 demanda: "EXTERNA",
@@ -245,7 +247,6 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
     }
   }
   async function uploadImages() {
-    var links = [];
     var holder;
     try {
       if (dados.tipoDoCliente == "CPF") {
@@ -358,7 +359,6 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
       });
     }
     if (holder === undefined) {
-      setDados({ ...dados, links: links });
       return true;
     }
   }

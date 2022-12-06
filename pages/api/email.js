@@ -3,6 +3,7 @@ export default async function handler(req, res) {
   if (req.method == "POST") {
     const msg = {
       from: "ampereprocessos@email.com",
+      cc: req.body.copy,
       to: req.body.emailTo,
       subject: req.body.subject,
       text: req.body.message,

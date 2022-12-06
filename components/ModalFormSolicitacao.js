@@ -471,6 +471,7 @@ function ModalFormSolicitacao({
       emailTo: "amperecontasareceber@gmail.com",
       subject: "SOLICITAÇÃO DE CONTRATO",
       message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${dados.nomeDoContrato}. Desde já agradeço, Volts.`,
+      copy: ["ampereenergiascomercial@gmail.com"],
     });
     axios.post("/api/projects/add", insertObj).then((res) => {
       setCreationMsg({ text: "Projeto adicionado!", color: "text-green-500" });

@@ -59,7 +59,7 @@ function ChamadoExternoPPS() {
     return true;
   }
   return (
-    <section className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
+    <section className="p-2 bg-gray-100 min-h-[100vh] flex flex-col">
       <div className="flex self-center items-center h-[100px] w-[100px]">
         <Image src={Logo} />
       </div>
@@ -67,7 +67,7 @@ function ChamadoExternoPPS() {
         ABERTURA DE CHAMADO
       </h1>
       {stage == 0 && (
-        <div className="mt-12 w-full self-center lg:w-[75%] min-h-[350px] gap-2 flex flex-col items-center flex-wrap  border border-[#15599a] p-12 shadow-lg bg-[#fff]">
+        <div className="mt-12 w-full self-center lg:w-[75%] min-h-[350px] gap-2 flex flex-col items-center flex-wrap  border border-[#15599a] shadow-lg bg-[#fff]">
           <SelectInput
             label={"VENDEDOR"}
             editable={true}

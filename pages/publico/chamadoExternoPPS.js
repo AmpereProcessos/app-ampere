@@ -21,7 +21,7 @@ function ChamadoExternoPPS() {
     text: "",
     color: "",
   });
-  const [stage, setStage] = useState(1);
+  const [stage, setStage] = useState(0);
   function nextStage() {
     if (validateFields()) {
       setStage(1);
@@ -142,7 +142,7 @@ function ChamadoExternoPPS() {
           {dados.referenteAProjeto == "SIM" && (
             <div>
               <NumberInput
-                label={"CÓDIGO DO PROPOSTA"}
+                label={"CÓDIGO DO PROJETO"}
                 value={dados.codigoDoProjeto}
                 editable={true}
                 handleChange={(value) =>

@@ -230,12 +230,12 @@ function ChamadosPPS({ setCredentials, credentials }) {
             </button>
           </div>
         </div>
-        <div className="flex justify-around h-full lg:max-h-[350px] pb-2 overflow-y-auto overscroll-y-auto gap-3 mt-4 flex-wrap">
+        <div className="flex justify-around grow pb-2 overflow-y-auto overscroll-y-auto gap-3 mt-4 flex-wrap">
           {filteredInProgress.map((call) => (
             <div
               key={call._id}
               onClick={() => handleOpenModal(call)}
-              className="w-[420px] h-fit cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+              className="w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
               <div className="flex justify-between items-center w-full">
                 <h1 className="text-xs text-center">{call.vendedor}</h1>

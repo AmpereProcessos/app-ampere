@@ -4,15 +4,60 @@ import Logo from "../../utils/whitelogoHD.png";
 import { vendedores } from "../../utils/constants";
 import SelectInput from "../../components/SelectInput";
 import NumberInput from "../../components/NumberInput";
+import ChamadosExternoPPSInfo from "../../components/ChamadoPPSInfo";
 function ChamadoExternoPPS() {
   const [dados, setDados] = useState({
     vendedor: "NÃO DEFINIDO",
     referenteAProjeto: "NÃO DEFINIDO",
     codigoDoProjeto: 0,
     tipoDeSolicitacao: "NÃO DEFINIDO",
+    nomeDoCliente: "",
+    telefone: "",
+    cidade: "NÃO DEFINIDO",
+    observacoes: "",
+  });
+  const [msg, setMsg] = useState({
+    text: "",
+    color: "",
   });
   const [stage, setStage] = useState(0);
-  console.log("aaaa");
+  function nextStage() {
+    if (validateFields()) {
+      setStage((prevState) => prevState + 1);
+    }
+  }
+  function validateFields() {
+    if (dados.vendedor == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha o vendedor.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.referenteAProjeto == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha se o chamado se refere a algum projeto SVB.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.referenteAProjeto == "SIM" && dados.codigoDoProjeto == 0) {
+      setMsg({
+        text: "Por favor, preencha o código do projeto em questão.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+
+    if (dados.tipoDeSolicitacao == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha o tipo de solicitação.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    return true;
+  }
   return (
     <section className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
       <div className="flex self-center items-center h-[100px] w-[100px]">
@@ -22,7 +67,7 @@ function ChamadoExternoPPS() {
         ABERTURA DE CHAMADO
       </h1>
       {stage == 0 && (
-        <div className="mt-12 w-full self-center lg:w-[75%] min-h-[275px] gap-2 flex flex-col items-center flex-wrap  border border-[#15599a] p-12 shadow-lg bg-[#fff]">
+        <div className="mt-12 w-full self-center lg:w-[75%] min-h-[350px] gap-2 flex flex-col items-center flex-wrap  border border-[#15599a] p-12 shadow-lg bg-[#fff]">
           <SelectInput
             label={"VENDEDOR"}
             editable={true}
@@ -57,12 +102,16 @@ function ChamadoExternoPPS() {
                 dados.referenteAProjeto == "SIM"
                   ? [
                       {
-                        label: "PROPOSTA COMERCIAL SIMPLES(CADASTRO)",
-                        value: "PROPOSTA COMERCIAL SIMPLES(CADASTRO)",
+                        label: "PROPOSTA COMERCIAL",
+                        value: "PROPOSTA COMERCIAL",
                       },
                       {
                         label: "ANÁLISE DE CRÉDITO",
                         value: "ANÁLISE DE CRÉDITO",
+                      },
+                      {
+                        label: "OUTROS",
+                        value: "OUTROS",
                       },
                       {
                         label: "NÃO DEFINIDO",
@@ -71,8 +120,12 @@ function ChamadoExternoPPS() {
                     ]
                   : [
                       {
-                        label: "PROPOSTA COMERCIAL SIMPLES(CADASTRO)",
-                        value: "PROPOSTA COMERCIAL SIMPLES(CADASTRO)",
+                        label: "PROPOSTA COMERCIAL",
+                        value: "PROPOSTA COMERCIAL",
+                      },
+                      {
+                        label: "OUTROS",
+                        value: "OUTROS",
                       },
                       {
                         label: "NÃO DEFINIDO",
@@ -97,14 +150,28 @@ function ChamadoExternoPPS() {
               />
             </div>
           )}
+          <div className="flex flex-col items-center justify-end mt-2 grow gap-2">
+            {msg.text && (
+              <p className={`text-center italic text-sm ${msg.color}`}>
+                {msg.text}
+              </p>
+            )}
+            <button
+              onClick={() => nextStage()}
+              className="p-2 rounded bg-[#fead61] h-fit hover:bg-[#15599a] hover:text-white font-bold"
+            >
+              PRÓXIMA ETAPA
+            </button>
+          </div>
         </div>
       )}
-      {stage == 1 && <div></div>}
-      <div className="flex justify-center mt-2 grow justify-self-end">
-        <button className="p-2 rounded bg-[#fead61] h-fit hover:bg-[#15599a] hover:text-white font-bold">
-          PRÓXIMA ETAPA
-        </button>
-      </div>
+      {stage == 1 && (
+        <ChamadosExternoPPSInfo
+          dados={dados}
+          setDados={setDados}
+          setStage={setStage}
+        />
+      )}
     </section>
   );
 }

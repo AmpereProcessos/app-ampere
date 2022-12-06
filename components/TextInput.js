@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 function TextInput({ value, label, handleChange, editable, normalCase }) {
   return (
-    <div className="flex flex-col w-fit text-sm lg:text-base lg:w-[350px] items-center">
+    <div className="flex flex-col w-full text-sm lg:text-base lg:w-[350px] items-center">
       <span className="uppercase font-bold font-raleway text-center text-sm">
         {label}
       </span>

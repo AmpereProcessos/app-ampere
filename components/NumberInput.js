@@ -2,7 +2,7 @@ import React from "react";
 
 function NumberInput({ label, value, handleChange, editable, tag, unit }) {
   return (
-    <div className="flex flex-col w-fit text-xs lg:w-[350px] lg:text-base items-center">
+    <div className="flex flex-col w-full text-xs lg:w-[350px] lg:text-base items-center">
       <span className="uppercase font-bold font-raleway text-center text-sm">
         {label}
       </span>

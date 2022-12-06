@@ -2,7 +2,7 @@ import React from "react";
 
 function DateInput({ label, value, handleChange, editable }) {
   return (
-    <div className="flex flex-col w-fit text-sm lg:text-base lg:w-[350px] items-center">
+    <div className="flex flex-col w-full text-sm lg:text-base lg:w-[350px] items-center">
       <span className="uppercase font-bold font-raleway text-center text-sm">
         {label}
       </span>

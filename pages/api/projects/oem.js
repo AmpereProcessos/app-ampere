@@ -82,8 +82,13 @@ export default async function handler(req, res) {
             cidade: 1,
             "projeto.topologia": 1,
             "obra.equipeResp": 1,
+            "obra.statusDaObra": 1,
+            "obra.saida": 1,
             "conferencias.usinaLigada": 1,
             sistema: 1,
+            app: 1,
+            manutencaoPreventiva: 1,
+            "medidor.data": 1,
           },
         },
       ])

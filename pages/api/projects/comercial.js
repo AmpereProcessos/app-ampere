@@ -34,6 +34,8 @@ export default async function handler(req, res) {
             "padrao.valor": 1,
             "estruturaPersonalizada.valor": 1,
             "sistema.potPico": 1,
+            "compra.statusLiberacao": 1,
+            "compra.dataPagamento": 1,
           },
         },
         {

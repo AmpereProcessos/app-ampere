@@ -25,6 +25,7 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
       "$1.$2.$3/$4-$5"
     );
   }
+  console.log(dados);
   return (
     <div className="mt-12 w-full self-center lg:w-[75%] min-h-[275px] gap-2 flex flex-col items-center flex-wrap  border border-[#15599a] p-2 shadow-lg bg-[#fff]">
       <TextInput
@@ -54,6 +55,17 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
         ]}
         handleChange={(value) => setDados({ ...dados, cidade: value })}
       />
+      <SelectInput
+        label={"CPF ou CNPJ?"}
+        editable={true}
+        value={dados.tipoDoCliente}
+        options={[
+          { label: "CPF", value: "CPF" },
+          { label: "CNPJ", value: "CNPJ" },
+          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+        ]}
+        handleChange={(value) => setDados({ ...dados, tipoDoCliente: value })}
+      />
       <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
         <span className="uppercase font-bold font-raleway text-center text-sm">
           OBSERVAÇÕES
@@ -62,9 +74,10 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
           placeholder={"Descrição da solicitação aqui.."}
           value={dados.observacoes}
           onChange={(e) => setDados({ ...dados, observacoes: e.target.value })}
-          className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+          className="w-full text-center h-[80px] bg-gray-100 resize-none p-2 outline-none border border-gray-600"
         />
       </div>
+
       {dados.tipoDeSolicitacao == "PROPOSTA COMERCIAL" && (
         <>
           <NumberInput
@@ -98,7 +111,7 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
       {dados.tipoDeSolicitacao == "ANÁLISE DE CRÉDITO" && (
         <>
           <TextInput
-            label={"CPF"}
+            label={"CPF/CPNJ"}
             editable={true}
             value={dados.cpf_cnpj}
             handleChange={(value) =>

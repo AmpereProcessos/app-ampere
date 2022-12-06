@@ -34,7 +34,7 @@ function MyApp({ Component, pageProps }) {
         setCredentials(storedCredentials);
       }
     } else {
-      // getNotificacoes(credentials._id);
+      //getNotificacoes(credentials._id);
       console.log("teste");
     }
     if (

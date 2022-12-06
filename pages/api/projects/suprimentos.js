@@ -35,6 +35,7 @@ export default async function handler(req, res) {
             compra: 1,
             "faturamento.previsaoFaturamento": 1,
             "sistema.potPico": 1,
+            "pagamento.status": 1,
           },
         },
       ])

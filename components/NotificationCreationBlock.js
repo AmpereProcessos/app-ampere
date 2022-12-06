@@ -12,27 +12,47 @@ function NotificationCreationBlock({ credentials, codProjeto, usuarios }) {
   const [destinatarioNome, setDestinatarioNome] = useState("NÃO DEFINIDO");
   const [msg, setMsg] = useState({ text: "", color: "" });
   function notify() {
-    axios
-      .post("/api/notificacoes/1", notInfo)
-      .then((res) => {
-        setMsg({ text: "Notificação enviada!", color: "text-green-500" });
-        setDestinatarioNome("NÃO DEFINIDO");
-        setNotInfo({
-          destinatario: null,
-          remetente: credentials.nome,
-          mensagem: "",
-          projetoReferencia: codProjeto,
-        });
-      })
-      .catch((err) =>
-        setMsg({
-          text: "Um erro ocorreu, tente novamente.",
-          color: "text-red-500",
+    if (validateFields()) {
+      axios
+        .post("/api/notificacoes/1", notInfo)
+        .then((res) => {
+          setMsg({ text: "Notificação enviada!", color: "text-green-500" });
+          setDestinatarioNome("NÃO DEFINIDO");
+          setNotInfo({
+            destinatario: null,
+            remetente: credentials.nome,
+            mensagem: "",
+            projetoReferencia: codProjeto,
+          });
         })
-      );
+        .catch((err) =>
+          setMsg({
+            text: "Um erro ocorreu, tente novamente.",
+            color: "text-red-500",
+          })
+        );
+    }
   }
-  console.log(notInfo);
-  console.log(destinatarioNome);
+  function validateFields() {
+    if (
+      notInfo.destinatario == null ||
+      notInfo.destinatario == "NÃO DEFINIDO"
+    ) {
+      setMsg({
+        text: "Por favor, preencha o destinatário.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (notInfo.mensagem.trim().length < 3) {
+      setMsg({
+        text: "Por favor, digite uma mensagem válida.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    return true;
+  }
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-around flex-wrap gap-x-12 px-4">

@@ -2,7 +2,7 @@ import React from "react";
 
 function SelectInput({ label, value, options, handleChange, editable }) {
   return (
-    <div className="flex flex-col w-[350px] items-center">
+    <div className="flex flex-col min-w-[350px] items-center">
       <span className="uppercase font-bold font-raleway text-center text-sm">
         {label}
       </span>

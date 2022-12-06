@@ -1,18 +1,20 @@
-import connectToSolicitacoesDatabase from "../../utils/solicitacoesDb";
+import connectToSolicitacoesDatabase from "../../utils/callsDb";
 export default async function handler(req, res) {
-  /*const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);
-  const collection = db.collection("contrato");
+  /*
+  const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);
+  const collection = db.collection("pps");
   let arr = await collection.updateMany(
     {
-      aprovacao: true,
+      tipoDeSolicitacao: "PROPOSTA COMERCIAL PERSONALIZADA",
     },
     {
       $set: {
-        confeccionado: true,
+        tipoDeSolicitacao: "PROPOSTA COMERCIAL",
       },
     }
   );
   res.json(arr);
+  /*
   let arr = await collection
     .aggregate([
       {
@@ -61,7 +63,6 @@ export default async function handler(req, res) {
       },
     ])
     .toArray();*/
-  res.json("API DESATIVADA");
 }
 const info = [
   649, 836, 848, 849, 881, 919, 976, 992, 994, 1004, 1050, 1066, 1081, 1090,

@@ -28,6 +28,7 @@ function OeM({ credentials, setCredentials, users }) {
     manutencaoAtrasada: false,
     limparAteDezembro: false,
     appPendente: false,
+    ordenarAlfabeticamente: false,
     usinaLigadaFilter: [],
   });
   const [dateFilter, setDateFilter] = useState({
@@ -98,6 +99,14 @@ function OeM({ credentials, setCredentials, users }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((project) => project.app.data == undefined);
     }
+    if (filters.ordenarAlfabeticamente) {
+      console.log("OPA");
+      if (!newArr) newArr = projects;
+      newArr = newArr.sort((a, b) =>
+        a.nomeDoContrato.trim().localeCompare(b.nomeDoContrato.trim())
+      );
+      console.log(newArr);
+    }
     if (filters.manutencaoPendente) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
@@ -151,7 +160,7 @@ function OeM({ credentials, setCredentials, users }) {
       setFilteredProjects(projects);
       return projects;
     } else {
-      setFilteredProjects(newArr);
+      setFilteredProjects([...newArr]);
       return newArr;
     }
   }
@@ -380,6 +389,19 @@ function OeM({ credentials, setCredentials, users }) {
             } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
           >
             APP PENDENTE
+          </div>
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                ordenarAlfabeticamente: !filters.ordenarAlfabeticamente,
+              })
+            }
+            className={`${
+              filters.ordenarAlfabeticamente ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            ORDENAR ALFABETICAMENTE
           </div>
           <div
             onClick={() =>

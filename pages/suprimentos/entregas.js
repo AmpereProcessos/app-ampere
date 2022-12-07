@@ -2,12 +2,14 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import EntregasCard from "../../components/EntregasCard";
 import Select from "react-select";
+import dayjs from "dayjs";
 function Entregas({ credentials, setCredentials }) {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filters, setFilters] = useState({
     deliveryStatus: [],
     rastreioFilter: false,
+    ordenatePrev: false,
     searchFilter: "",
   });
   const [dateFilter, setDateFilter] = useState({
@@ -35,6 +37,21 @@ function Entregas({ credentials, setCredentials }) {
       newArr = newArr.filter(
         (project) => project.compra.rastreio?.trim().length > 0
       );
+    }
+    if (filters.ordenatePrev) {
+      console.log("PASSEI POR AQUI");
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((obj) => obj.compra.previsaoEntrega != null);
+      newArr = newArr.sort((a, b) => {
+        if (dayjs(a.compra.previsaoEntrega).isBefore(b.compra.previsaoEntrega))
+          return -1;
+        else if (
+          dayjs(a.compra.previsaoEntrega).isAfter(b.compra.previsaoEntrega)
+        )
+          return 1;
+        else return 0;
+      });
+      console.log(newArr);
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!newArr) newArr = projects;
@@ -91,6 +108,15 @@ function Entregas({ credentials, setCredentials }) {
       }
     }
   }, []);
+  function sortByPrevEntrega() {
+    var newArr = filteredProjects.sort((a, b) => {
+      return (
+        new Date(b.compra?.previsaoEntrega) -
+        new Date(a.compra?.previsaoEntrega)
+      );
+      setFilteredProjects(newArr);
+    });
+  }
   return (
     <div className="flex flex-col p-6 grow">
       <div className="flex justify-between border-b border-gray-200">
@@ -104,6 +130,19 @@ function Entregas({ credentials, setCredentials }) {
             value={filters.searchFilter}
             onChange={(e) => handleSearchFilter(e.target.value)}
           />
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                ordenatePrev: !filters.ordenatePrev,
+              })
+            }
+            className={`${
+              filters.ordenatePrev ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[52px] text-center flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            ORDENAR POR PREVISÃO
+          </div>
           <div
             onClick={() =>
               setFilters({

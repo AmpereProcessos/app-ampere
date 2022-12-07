@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
+import PPSModalCallInfo from "./PPSModalCallInfo";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -278,6 +279,12 @@ function ModalCallPPS({
                   <option value={"MATHEUS"}>MATHEUS</option>
                 </select>
               </div>
+              {info.demanda == "EXTERNA" && (
+                <PPSModalCallInfo
+                  tipoDeSolicitacao={info.tipoDeSolicitacao}
+                  dados={info}
+                />
+              )}
               <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="font-bold text-center font-raleway">
                   ANOTAÇÕES

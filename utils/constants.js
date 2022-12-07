@@ -554,6 +554,7 @@ export const cidadesAtendidas = [
   "QUIRINÓPOLIS", // ok to uppercase
   "TUPACIGUARA", // ok to uppercase
   "PARANAIGUARA",
+  "ARAGUARI",
 ];
 export const statusLiberacao = [
   {
@@ -775,6 +776,10 @@ export const fornecedores = [
   {
     label: "MINHA CASA SOLAR",
     value: "MINHA CASA SOLAR",
+  },
+  {
+    label: "SOLAR INOVE",
+    value: "SOLAR INOVE",
   },
   {
     label: "NÃO DEFINIDO",

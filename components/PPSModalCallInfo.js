@@ -26,7 +26,7 @@ function PPSModalCallInfo({ tipoDeSolicitacao, dados }) {
           <>
             <div className="grid grid-cols-2 items-center text-gray-600 w-full">
               <p className="font-bold text-xs text-center">GERAÇÃO</p>
-              <p className="text-xs text-center">{dados.geracaoAplicada}</p>
+              <p className="text-xs text-center">{dados.geracaoEstimada} kWh</p>
             </div>
             <div className="grid grid-cols-2 items-center text-gray-600 w-full">
               <p className="font-bold text-xs text-center">TOPOLOGIA</p>

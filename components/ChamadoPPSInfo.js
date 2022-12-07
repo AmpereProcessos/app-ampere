@@ -195,7 +195,7 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
       }
       if (dados.enderecoDoCliente.trim().length < 3) {
         setMsg({
-          text: "Por favor, preencha a renda do cliente.",
+          text: "Por favor, preencha o endereço do cliente.",
           color: "text-red-500",
         });
         return false;

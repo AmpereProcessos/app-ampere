@@ -258,8 +258,8 @@ function ChamadosPPS({ setCredentials, credentials }) {
                 <p>
                   {console.log(call.observacoes.length)}
                   {call.observacoes
-                    ? call.observacoes.trim().length > 250
-                      ? `${call.observacoes.substring(0, 250)}...`
+                    ? call.observacoes.trim().length > 220
+                      ? `${call.observacoes.substring(0, 220)}...`
                       : call.observacoes
                     : "-"}
                 </p>
@@ -271,7 +271,9 @@ function ChamadosPPS({ setCredentials, credentials }) {
               <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
                 <p
                   className={`${
-                    call.demanda == "EXTERNA" ? "text-red-500" : "text-gray-600"
+                    call.demanda == "EXTERNA"
+                      ? "text-[#fead61]"
+                      : "text-gray-600"
                   }`}
                 >
                   {call.demanda == "EXTERNA" && "DEMANDA EXTERNA"}

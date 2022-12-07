@@ -6,6 +6,7 @@ import { vendedores } from "../../utils/constants";
 import Image from "next/image";
 import FormVisitaTecnicaUm from "../../components/FormVisitaTecnicaUm";
 import FormVisitaTecnicaDois from "../../components/FormVisitaTecnicaDois";
+import FormVisitaTecnicaTres from "../../components/FormVisitaTecnicaTres";
 function FormVisitaTecnica() {
   const phoneMask = (value) => {
     if (!value) return "";
@@ -33,7 +34,7 @@ function FormVisitaTecnica() {
       .replace(/(-\d{3})\d+?$/, "$1");
     return cep;
   }
-  const [estagio, setEstagio] = useState(1);
+  const [estagio, setEstagio] = useState(2);
   const [images, setImages] = useState({});
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",
@@ -62,6 +63,10 @@ function FormVisitaTecnica() {
     ramalSaida: "NÃO DEFINIDO",
     tipoPadrao: "NÃO DEFINIDO",
     numeroMedidor: "",
+    estruturaMontagem: "NÃO DEFINIDO",
+    tipoEstrutura: "NÃO DEFINIDO",
+    tipoTelha: "NÃO DEFINIDO",
+    telhasReservas: "NÃO DEFINIDO",
   });
   return (
     <div className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
@@ -103,6 +108,14 @@ function FormVisitaTecnica() {
         )}
         {estagio == 1 && (
           <FormVisitaTecnicaDois
+            dados={dados}
+            setDados={setDados}
+            images={images}
+            setImages={setImages}
+          />
+        )}
+        {estagio == 2 && (
+          <FormVisitaTecnicaTres
             dados={dados}
             setDados={setDados}
             images={images}

@@ -16,7 +16,6 @@ function MyApp({ Component, pageProps }) {
   const [notificacoes, setNotificacoes] = useState([]);
   const router = useRouter();
   function getNotificacoes(id) {
-    console.log(id);
     axios
       .get(`/api/notificacoes/${id}`)
       .then((res) => setNotificacoes(res.data));
@@ -35,7 +34,6 @@ function MyApp({ Component, pageProps }) {
       }
     } else {
       getNotificacoes(credentials._id);
-      console.log("teste");
     }
     if (
       router.pathname.includes("pdf") ||

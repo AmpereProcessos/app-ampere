@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Logo from "../../utils/whiteLogoHD.png";
+import Logo from "../../utils/whitelogoHD.png";
 import SelectInput from "../../components/SelectInput";
 import TextInput from "../../components/TextInput";
 import { vendedores } from "../../utils/constants";

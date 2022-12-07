@@ -268,6 +268,15 @@ function ChamadosPPS({ setCredentials, credentials }) {
                 <p>Responsável:</p>
                 <p>{call.responsavel && call.responsavel}</p>
               </div>
+              <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
+                <p
+                  className={`${
+                    call.demanda == "EXTERNA" ? "text-red-500" : "text-gray-600"
+                  }`}
+                >
+                  {call.demanda == "EXTERNA" && "DEMANDA EXTERNA"}
+                </p>
+              </div>
             </div>
           ))}
         </div>

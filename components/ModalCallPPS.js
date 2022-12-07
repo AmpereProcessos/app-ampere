@@ -47,6 +47,7 @@ function ModalCallPPS({
   updateModalInfo,
   credentials,
 }) {
+  console.log(info);
   var ultAlteracoes = {
     anotAlteracoes: {
       usuario: info.ultAlteracoes?.anotAlteracoes

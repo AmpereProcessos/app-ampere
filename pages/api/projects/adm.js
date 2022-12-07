@@ -19,6 +19,13 @@ export default async function handler(req, res) {
             "vendedor.nome": 1,
             "pagamento.forma": 1,
             "pagamento.status": 1,
+            "contrato.status": 1,
+            "contrato.dataAssinatura": 1,
+            "compra.statusLiberacao": 1,
+            "obra.equipeResp": 1,
+            "obra.saida": 1,
+            "medidor.data": 1,
+            "vistoria.status": 1,
           },
         },
         {

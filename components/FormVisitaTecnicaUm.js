@@ -4,13 +4,37 @@ import NumberInput from "./NumberInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 import { AiOutlineSearch } from "react-icons/ai";
-function FormVisitaTecnicaUm({ dados, setDados }) {
+import axios from "axios";
+function FormVisitaTecnicaUm({ dados, setDados, images, setImages }) {
   function formatPhone(value) {
     if (!value) return "";
     value = value.replace(/\D/g, "");
     value = value.replace(/(\d{2})(\d)/, "($1) $2");
     value = value.replace(/(\d)(\d{4})$/, "$1-$2");
     return value;
+  }
+  async function findCPF(field) {
+    axios
+      .get(`https://viacep.com.br/ws/${dados.cep.replace("-", "")}/json/`)
+      .then((res) => {
+        if (res.data.erro) {
+          console.log(res.data.erro);
+          return;
+        } else {
+          console.log(
+            cidadesAtendidas.includes(res.data.localidade.toUpperCase())
+          );
+          console.log(res.data.localidade);
+          setDados({
+            ...dados,
+            bairro: res.data.bairro,
+            cidade: cidadesAtendidas.includes(res.data.localidade.toUpperCase())
+              ? res.data.localidade.toUpperCase()
+              : "ITUIUTABA",
+            logradouro: res.data.logradouro,
+          });
+        }
+      });
   }
   function formatCEP(cep) {
     cep = cep
@@ -20,7 +44,7 @@ function FormVisitaTecnicaUm({ dados, setDados }) {
     return cep;
   }
   return (
-    <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+    <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
         INFORMAÇÕES INICIAIS
       </span>
@@ -69,7 +93,10 @@ function FormVisitaTecnicaUm({ dados, setDados }) {
             setDados({ ...dados, cep: formatCEP(value) })
           }
         />
-        <button className="flex items-center p-1 h-[30px] bg-[#fead61] rounded">
+        <button
+          onClick={() => findCPF()}
+          className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
+        >
           <AiOutlineSearch />
         </button>
         <TextInput
@@ -160,6 +187,113 @@ function FormVisitaTecnicaUm({ dados, setDados }) {
             setDados({ ...dados, marcaModulos: value.toUpperCase() })
           }
         />
+        <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
+          <span className="uppercase font-bold font-raleway text-center text-sm">
+            OBSERVAÇÕES PARA VISITA
+          </span>
+          <textarea
+            placeholder={"Descrição aqui.."}
+            value={dados.obsVisita}
+            onChange={(e) => setDados({ ...dados, obsVisita: e.target.value })}
+            className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+          />
+        </div>
+      </div>
+      <div className="flex gap-2 justify-around flex-wrap mt-2">
+        <SelectInput
+          label={"TIPO DE LAUDO"}
+          editable={true}
+          value={dados.tipoDeLaudo}
+          options={[
+            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+            {
+              label: "ESTUDO SIMPLES (36 HORAS)",
+              value: "ESTUDO SIMPLES (36 HORAS)",
+            },
+            {
+              label: "ESTUDO INTERMEDIÁRIO (48 HORAS)",
+              value: "ESTUDO INTERMEDIÁRIO (48 HORAS)",
+            },
+            {
+              label: "ESTUDO COMPLEXO (72 HORAS)",
+              value: "ESTUDO COMPLEXO (72 HORAS)",
+            },
+          ]}
+          handleChange={(value) => setDados({ ...dados, tipoDeLaudo: value })}
+        />
+        <SelectInput
+          label={"TIPO DE SOLICITAÇÃO"}
+          editable={true}
+          value={dados.tipoDeSolicitacao}
+          options={[
+            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+            {
+              label: "VISITA TÉCNICA REMOTA - URBANA",
+              value: "VISITA TÉCNICA REMOTA - URBANA",
+            },
+            {
+              label: "VISITA TÉCNICA REMOTA - RURAL",
+              value: "VISITA TÉCNICA REMOTA - RURAL",
+            },
+            {
+              label: "VISITA TÉCNICA IN LOCO - URBANA",
+              value: "VISITA TÉCNICA IN LOCO - URBANA",
+            },
+            {
+              label: "VISITA TÉCNICA IN LOCO - RURAL",
+              value: "VISITA TÉCNICA IN LOCO - RURAL",
+            },
+            { label: "ALTERAÇÃO DE PROJETO", value: "ALTERAÇÃO DE PROJETO" },
+            { label: "DESENHO PERSONALIZADO", value: "DESENHO PERSONALIZADO" },
+            { label: "ORÇAMENTAÇÃO", value: "ORÇAMENTAÇÃO" },
+          ]}
+          handleChange={(value) =>
+            setDados({ ...dados, tipoDeSolicitacao: value })
+          }
+        />
+      </div>
+      <div className="w-fit flex flex-col items-center self-center">
+        <label
+          className="ml-2 text-center text-[#15599a] font-bold"
+          htmlFor="propostaComercial"
+        >
+          PRINT A TELA E ENVIE SUA LOCALIZAÇÃO
+        </label>
+        <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+          <div className="absolute">
+            {images.locallizacao ? (
+              <div className="flex flex-col items-center">
+                <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                <span className="block text-gray-400 font-normal text-center">
+                  {images.locallizacao.name}
+                </span>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center">
+                <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                <span className="block text-gray-400 font-normal">
+                  Adicione o arquivo aqui
+                </span>
+              </div>
+            )}
+          </div>
+          <input
+            onChange={(e) =>
+              setImages({
+                ...images,
+                locallizacao: e.target.files[0],
+              })
+            }
+            className="h-full w-full opacity-0"
+            type="file"
+            accept=".png, .jpeg, .pdf"
+          />
+        </div>
+      </div>
+      <div className="flex items-center justify-center mt-2">
+        <button className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded">
+          PRÓXIMA ETAPA
+        </button>
       </div>
     </div>
   );

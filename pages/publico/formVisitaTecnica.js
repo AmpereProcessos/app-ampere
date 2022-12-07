@@ -33,6 +33,7 @@ function FormVisitaTecnica() {
     return cep;
   }
   const [estagio, setEstagio] = useState(0);
+  const [images, setImages] = useState({});
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",
     telefoneVendedor: "",
@@ -51,6 +52,9 @@ function FormVisitaTecnica() {
     qtdeModulos: "",
     potModulos: "",
     marcaModulos: "",
+    obsVisita: "",
+    tipoDeLaudo: "NÃO DEFINIDO",
+    tipoDeSolicitacao: "NÃO DEFINIDO",
   });
   return (
     <div className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
@@ -83,7 +87,12 @@ function FormVisitaTecnica() {
           />
         </div>
         {estagio == 0 && (
-          <FormVisitaTecnicaUm dados={dados} setDados={setDados} />
+          <FormVisitaTecnicaUm
+            dados={dados}
+            setDados={setDados}
+            images={images}
+            setImages={setImages}
+          />
         )}
       </div>
     </div>

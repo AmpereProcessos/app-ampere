@@ -261,11 +261,11 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages }) {
         </label>
         <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
           <div className="absolute">
-            {images.locallizacao ? (
+            {images.localizacao ? (
               <div className="flex flex-col items-center">
                 <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                 <span className="block text-gray-400 font-normal text-center">
-                  {images.locallizacao.name}
+                  {images.localizacao.name}
                 </span>
               </div>
             ) : (
@@ -281,7 +281,7 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages }) {
             onChange={(e) =>
               setImages({
                 ...images,
-                locallizacao: e.target.files[0],
+                localizacao: e.target.files[0],
               })
             }
             className="h-full w-full opacity-0"

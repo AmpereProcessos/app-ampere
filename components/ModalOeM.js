@@ -15,6 +15,7 @@ import Link from "next/link";
 import axios from "axios";
 import dayjs from "dayjs";
 import OSCreationBlock from "./OSCreationBlock";
+import { equipesTecnicas } from "../utils/constants";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -2335,68 +2336,7 @@ function ModalOeM({
                           : infoHolder.obra?.equipeResp
                         : "NÃO DEFINIDO"
                     }
-                    options={[
-                      {
-                        label: "EQUIPE 1 - JOSÉ ROBERTO",
-                        value: "EQUIPE 1 - JOSÉ ROBERTO",
-                      },
-                      {
-                        label: "EQUIPE 2 - EDUARDO",
-                        value: "EQUIPE 2-EDUARDO",
-                      },
-                      {
-                        label: "EQUIPE 3 - EDMAR",
-                        value: "EQUIPE 3-EDIMAR",
-                      },
-                      {
-                        label: "EQUIPE 4 - ERICK",
-                        value: "EQUIPE 4-ERICK",
-                      },
-                      {
-                        label: "EQUIPE 5 - JUNIN",
-                        value: "EQUIPE 5-JUNIN",
-                      },
-                      {
-                        label: "EQUIPE 6 - FELIPE",
-                        value: "EQUIPE 6-FELIPE",
-                      },
-                      {
-                        label: "EQUIPE 7 - ADENILSON",
-                        value: "EQUIPE 7- ADENILSON",
-                      },
-                      {
-                        label: "EQUIPE 8 - GERSON",
-                        value: "EQUIPE 8-GERSON",
-                      },
-                      {
-                        label: "EQUIPE 9 - REGINALDO",
-                        value: "EQUIPE 9 - REGINALDO",
-                      },
-                      {
-                        label: "EQUIPE 10 - LUIZ",
-                        value: "EQUIPE 10 - LUIZ",
-                      },
-                      {
-                        label: "EQUIPE 11 - GILMAR",
-                        value: "EQUIPE 11 - GILMAR",
-                      },
-                      {
-                        label: "EQUIPE 12 - MARCUS V.",
-                        value: "EQUIPE 12 - MARCUS V.",
-                      },
-                      {
-                        label: "EQUIPE 13 - EDUARDO FRANCO",
-                        value: "EQUIPE 13 - EDUARDO FRANCO",
-                      },
-                      {
-                        label: "EQUIPE 15 - MARCOS B.",
-                        value: "EQUIPE 15 - MARCOS B.",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
+                    options={equipesTecnicas.map((equipe) => equipe)}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,

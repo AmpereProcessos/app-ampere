@@ -2573,6 +2573,7 @@ function ModalFormSolicitacao({
                         <div key={index} className="flex items-center gap-x-2">
                           <a className="text-blue-300" href={x.link}>
                             {x.title}
+                            {x.format ? ` - ${x.format}` : false}
                           </a>
                           <AiOutlineCheck
                             style={{ color: "#49be25", fontSize: "18px" }}

@@ -39,7 +39,7 @@ function FormVisitaTecnica() {
       .replace(/(-\d{3})\d+?$/, "$1");
     return cep;
   }
-  const [estagio, setEstagio] = useState(1);
+  const [estagio, setEstagio] = useState(0);
   const [images, setImages] = useState({});
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",

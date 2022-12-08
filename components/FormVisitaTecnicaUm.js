@@ -167,6 +167,7 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages, avancar }) {
       });
       return false;
     }
+    setMsg({ text: "", color: "" });
     return true;
   }
   function goToNext() {

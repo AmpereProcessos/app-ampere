@@ -986,7 +986,7 @@ function FormVisitaTecnicaRural({
           onClick={uploadImages}
           className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
         >
-          PRÓXIMA ETAPA
+          ENVIAR FORMULÁRIO
         </button>
       </div>
     </div>

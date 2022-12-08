@@ -52,6 +52,7 @@ function FormVisitaTecnicaQuatro({
       });
       return false;
     }
+    return true;
   }
   function goToNext() {
     if (validateFields()) {

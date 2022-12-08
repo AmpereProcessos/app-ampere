@@ -79,6 +79,7 @@ function FormVisitaTecnicaDois({
       });
       return false;
     }
+    setMsg({ text: "", color: "" });
     return true;
   }
   function goToNext() {

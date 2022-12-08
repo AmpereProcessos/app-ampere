@@ -67,6 +67,8 @@ function FormVisitaTecnicaTres({
       });
       return false;
     }
+    setMsg({ text: "", color: "" });
+    return true;
   }
   function goToNext() {
     if (validateFields()) {

@@ -1,126 +1,108 @@
 import React from "react";
-import NumberInput from "./NumberInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 
-function FormVisitaTecnicaDois({ dados, setDados, images, setImages }) {
+function FormVisitaTecnicaQuatro({ dados, setDados, images, setImages }) {
   return (
     <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-        PADRÃO
+        INSTALAÇÃO
       </span>
       <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
         <SelectInput
-          label={"AMPERAGEM"}
+          label={"LOCAL DE INSTALAÇÃO DO INVERSOR"}
           editable={true}
-          value={dados.amperagem}
+          value={
+            dados.localInstalacaoInversor
+              ? dados.localInstalacaoInversor
+              : "NÃO DEFINIDO"
+          }
           options={[
             { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            { label: "40A", value: "40A" },
-            { label: "50A", value: "50A" },
-            { label: "60A", value: "60A" },
-            { label: "63A", value: "63A" },
-            { label: "70A", value: "70A" },
-            { label: "90A", value: "90A" },
-            { label: "100A", value: "100A" },
-            { label: "200A", value: "200A" },
-            { label: "PADRÃO CONJUGADO", value: "PADRÃO CONJUGADO" },
+            { label: "MICRO-INVERSOR", value: "MICRO-INVERSOR" },
+            { label: "LAVANDERIA", value: "LAVANDERIA" },
+            { label: "VARANDA", value: "VARANDA" },
+            { label: "GARAGEM", value: "GARAGEM" },
+            {
+              label: "OUTRO(DESCREVA EM OBSERVAÇÕES)",
+              value: "OUTRO(DESCREVA EM OBSERVAÇÕES)",
+            },
           ]}
-          handleChange={(value) => setDados({ ...dados, amperagem: value })}
+          handleChange={(value) =>
+            setDados({ ...dados, localInstalacaoInversor: value })
+          }
         />
         <SelectInput
-          label={"TIPO DO DISJUNTOR"}
+          label={
+            "DISTÂNCIA MÉDIA DO SISTEMA FOTOVOLTAICO ATÉ O QUADRO DE DISTRIBUIÇÃO"
+          }
           editable={true}
-          value={dados.tipoDisjuntor}
+          value={dados.distanciaSistemaQuadro}
           options={[
             { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            { label: "MONOFÁSICO", value: "MONOFÁSICO" },
-            { label: "BIFÁSICO", value: "BIFÁSICO" },
-            { label: "TRIFÁSICO", value: "TRIFÁSICO" },
-            { label: "PADRÃO CONJUGADO", value: "PADRÃO CONJUGADO" },
+            { label: "5 METROS", value: "5 METROS" },
+            { label: "10 METROS", value: "10 METROS" },
+            { label: "15 METROS", value: "15 METROS" },
+            { label: "20 METROS", value: "20 METROS" },
+            { label: "25 METROS", value: "25 METROS" },
+            { label: "30 METROS", value: "30 METROS" },
           ]}
-          handleChange={(value) => setDados({ ...dados, tipoDisjuntor: value })}
-        />
-        <NumberInput
-          label={"NÚMERO DO MEDIDOR"}
-          editable={true}
-          value={dados.numeroMedidor}
           handleChange={(value) =>
-            setDados({ ...dados, numeroMedidor: Number(value) })
+            setDados({ ...dados, distanciaSistemaQuadro: value })
+          }
+        />
+        <SelectInput
+          label={"DISTÂNCIA MÉDIA DO INVERSOR ATÉ O ROTEADOR"}
+          editable={true}
+          value={dados.distanciaInversorRoteador}
+          options={[
+            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+            { label: "5 METROS", value: "5 METROS" },
+            { label: "10 METROS", value: "10 METROS" },
+            { label: "15 METROS", value: "15 METROS" },
+            { label: "20 METROS", value: "20 METROS" },
+          ]}
+          handleChange={(value) =>
+            setDados({ ...dados, distanciaInversorRoteador: value })
           }
         />
         <TextInput
-          label={"PARA PADRÕES CONJUGADOS"}
-          placeholder="ESCREVA: CAIXA 1 - APD1111111 - 40A MONOFÁSICO/ CAIXA 2 - APD222222 - 60A BIFÁSICO ..."
+          label={"LOCAL DO ATERRAMENTO DO SISTEMA (SOMENTE P/GOIÁS)"}
           editable={true}
-          value={dados.infoPadraoConjugado}
+          value={dados.localAterramento ? dados.localAterramento : ""}
           handleChange={(value) =>
-            setDados({ ...dados, infoPadraoConjugado: value.toUpperCase() })
-          }
-        />
-        <SelectInput
-          label={"RAMAL DE ENTRADA"}
-          editable={true}
-          value={dados.ramalEntrada}
-          options={[
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            { label: "AÉREO", value: "AÉREO" },
-            { label: "SUBTERRÂNEO", value: "SUBTERRÂNEO" },
-          ]}
-          handleChange={(value) => setDados({ ...dados, ramalEntrada: value })}
-        />
-        <SelectInput
-          label={"RAMAL DE SAÍDA"}
-          editable={true}
-          value={dados.ramalSaida}
-          options={[
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            { label: "AÉREO", value: "AÉREO" },
-            { label: "SUBTERRÂNEO", value: "SUBTERRÂNEO" },
-          ]}
-          handleChange={(value) => setDados({ ...dados, ramalSaida: value })}
-        />
-        <SelectInput
-          label={"EM RELAÇÃO A CASA DO CLIENTE, O PADRÃO ESTÁ:"}
-          editable={true}
-          value={dados.tipoPadrao}
-          options={[
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            {
-              label: "CONTRA À REDE - POSTE DO OUTRO LADO DA RUA",
-              value: "CONTRA À REDE - POSTE DO OUTRO LADO DA RUA",
-            },
-            {
-              label: "À FAVOR DA REDE - POSTE DO MESMO LADO DA RUA",
-              value: "À FAVOR DA REDE - POSTE DO MESMO LADO DA RUA",
-            },
-          ]}
-          handleChange={(value) => setDados({ ...dados, tipoPadrao: value })}
-        />
-        <NumberInput
-          label={"NÚMERO DO POSTE (SOMENTE P/GOIÁS)"}
-          editable={true}
-          value={dados.numeroPoste ? dados.numeroPoste : ""}
-          handleChange={(value) =>
-            setDados({ ...dados, numeroPoste: Number(value) })
+            setDados({ ...dados, localAterramento: value.toUpperCase() })
           }
         />
       </div>
-      <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
+      <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
+        <span className="uppercase font-bold font-raleway text-center text-sm">
+          OBSERVAÇÕES SOBRE A INSTALAÇÃO
+        </span>
+        <textarea
+          placeholder={"Descrição aqui.."}
+          value={dados.obsInstalacao}
+          onChange={(e) =>
+            setDados({ ...dados, obsInstalacao: e.target.value })
+          }
+          className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+        />
+      </div>
+      <div className="flex gap-2 items-center justify-around flex-wrap mt-4">
         <div className="w-fit flex flex-col items-center self-center">
           <label
             className="ml-2 text-center text-[#15599a] font-bold"
             htmlFor="propostaComercial"
           >
-            FOTO DO PADRÃO
+            FOTO DA FAIXADA
           </label>
           <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
             <div className="absolute">
-              {images.fotoPadrao ? (
+              {images.fotoFaixada ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                   <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoPadrao.name}
+                    {images.fotoFaixada.name}
                   </span>
                 </div>
               ) : (
@@ -136,7 +118,7 @@ function FormVisitaTecnicaDois({ dados, setDados, images, setImages }) {
               onChange={(e) =>
                 setImages({
                   ...images,
-                  fotoPadrao: e.target.files[0],
+                  fotoFaixada: e.target.files[0],
                 })
               }
               className="h-full w-full opacity-0"
@@ -150,15 +132,20 @@ function FormVisitaTecnicaDois({ dados, setDados, images, setImages }) {
             className="ml-2 text-center text-[#15599a] font-bold"
             htmlFor="propostaComercial"
           >
-            FOTO DO DISJUNTOR
+            FOTO DO LOCAL DA INSTALÇÃO DO INVERSOR OU NOVO LOCAL QUADRO DE
+            DISTRIBUIÇÃO
           </label>
+          <p className="text-center text-xs">
+            CASO O QUADRO NÃO TENHA ESPAÇO TIRE UMA FOTO DO LOCAL NOVO DE
+            INSTALAÇÃO
+          </p>
           <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
             <div className="absolute">
-              {images.fotoDisjuntor ? (
+              {images.fotoLocalInstalacao ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                   <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoDisjuntor.name}
+                    {images.fotoLocalInstalacao.name}
                   </span>
                 </div>
               ) : (
@@ -174,7 +161,7 @@ function FormVisitaTecnicaDois({ dados, setDados, images, setImages }) {
               onChange={(e) =>
                 setImages({
                   ...images,
-                  fotoDisjuntor: e.target.files[0],
+                  fotoLocalInstalacao: e.target.files[0],
                 })
               }
               className="h-full w-full opacity-0"
@@ -188,15 +175,19 @@ function FormVisitaTecnicaDois({ dados, setDados, images, setImages }) {
             className="ml-2 text-center text-[#15599a] font-bold"
             htmlFor="propostaComercial"
           >
-            FOTO DOS CABOS DO PADRÃO
+            FOTO DO QUADRO DE DISTRIBUIÇÃO
           </label>
+          <p className="text-center text-xs">
+            TIRE A FOTO COM A TAMPA ABERTA PARA VISUALIZAR ESPAÇO DOS
+            DISJUNTORES
+          </p>
           <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
             <div className="absolute">
-              {images.fotoCabosPadrao ? (
+              {images.fotoQuadroDistribuicao ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                   <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoCabosPadrao.name}
+                    {images.fotoQuadroDistribuicao.name}
                   </span>
                 </div>
               ) : (
@@ -212,7 +203,7 @@ function FormVisitaTecnicaDois({ dados, setDados, images, setImages }) {
               onChange={(e) =>
                 setImages({
                   ...images,
-                  fotoCabosPadrao: e.target.files[0],
+                  fotoQuadroDistribuicao: e.target.files[0],
                 })
               }
               className="h-full w-full opacity-0"
@@ -226,15 +217,16 @@ function FormVisitaTecnicaDois({ dados, setDados, images, setImages }) {
             className="ml-2 text-center text-[#15599a] font-bold"
             htmlFor="propostaComercial"
           >
-            FOTO DO POSTE (SOMENTE P/ GOIÁS)
+            FOTO DO ATERRAMENTO
           </label>
+          <p className="text-center text-xs">SOMENTE P/ GOIÁS</p>
           <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
             <div className="absolute">
-              {images.fotoPoste ? (
+              {images.fotoAterramento ? (
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                   <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoPoste.name}
+                    {images.fotoAterramento.name}
                   </span>
                 </div>
               ) : (
@@ -250,7 +242,7 @@ function FormVisitaTecnicaDois({ dados, setDados, images, setImages }) {
               onChange={(e) =>
                 setImages({
                   ...images,
-                  fotoPoste: e.target.files[0],
+                  fotoAterramento: e.target.files[0],
                 })
               }
               className="h-full w-full opacity-0"
@@ -260,7 +252,7 @@ function FormVisitaTecnicaDois({ dados, setDados, images, setImages }) {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-center mt-2">
+      <div className="flex items-center justify-center gap-2">
         <button className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded">
           PRÓXIMA ETAPA
         </button>
@@ -269,4 +261,4 @@ function FormVisitaTecnicaDois({ dados, setDados, images, setImages }) {
   );
 }
 
-export default FormVisitaTecnicaDois;
+export default FormVisitaTecnicaQuatro;

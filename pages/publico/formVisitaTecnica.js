@@ -7,6 +7,8 @@ import Image from "next/image";
 import FormVisitaTecnicaUm from "../../components/FormVisitaTecnicaUm";
 import FormVisitaTecnicaDois from "../../components/FormVisitaTecnicaDois";
 import FormVisitaTecnicaTres from "../../components/FormVisitaTecnicaTres";
+import FormVisitaTecnicaQuatro from "../../components/FormVisitaTecnicaQuatro";
+import FormVisitaTecnicaRural from "../../components/FormVisitaTecnicaRural";
 function FormVisitaTecnica() {
   const phoneMask = (value) => {
     if (!value) return "";
@@ -34,7 +36,7 @@ function FormVisitaTecnica() {
       .replace(/(-\d{3})\d+?$/, "$1");
     return cep;
   }
-  const [estagio, setEstagio] = useState(2);
+  const [estagio, setEstagio] = useState(0);
   const [images, setImages] = useState({});
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",
@@ -56,7 +58,7 @@ function FormVisitaTecnica() {
     marcaModulos: "",
     obsVisita: "",
     tipoDeLaudo: "NÃO DEFINIDO",
-    tipoDeSolicitacao: "NÃO DEFINIDO",
+    tipoDeSolicitacao: "NÃO DEFINIDO", // RESETAR PARA NÃO DEFINIDO -  VISITA TÉCNICA REMOTA - RURAL
     amperagem: "NÃO DEFINIDO",
     tipoDisjuntor: "NÃO DEFINIDO",
     ramalEntrada: "NÃO DEFINIDO",
@@ -67,6 +69,10 @@ function FormVisitaTecnica() {
     tipoEstrutura: "NÃO DEFINIDO",
     tipoTelha: "NÃO DEFINIDO",
     telhasReservas: "NÃO DEFINIDO",
+    orientacaoEstrutura: "",
+    distanciaSistemaQuadro: "NÃO DEFINIDO",
+    distanciaInversorRoteador: "NÃO DEFINIDO",
+    obsInstalacao: "",
   });
   return (
     <div className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
@@ -106,7 +112,15 @@ function FormVisitaTecnica() {
             setImages={setImages}
           />
         )}
-        {estagio == 1 && (
+        {estagio == 1 &&
+        dados.tipoDeSolicitacao == "VISITA TÉCNICA REMOTA - RURAL" ? (
+          <FormVisitaTecnicaRural
+            dados={dados}
+            setDados={setDados}
+            images={images}
+            setImages={setImages}
+          />
+        ) : (
           <FormVisitaTecnicaDois
             dados={dados}
             setDados={setDados}
@@ -116,6 +130,14 @@ function FormVisitaTecnica() {
         )}
         {estagio == 2 && (
           <FormVisitaTecnicaTres
+            dados={dados}
+            setDados={setDados}
+            images={images}
+            setImages={setImages}
+          />
+        )}
+        {estagio == 3 && (
+          <FormVisitaTecnicaQuatro
             dados={dados}
             setDados={setDados}
             images={images}

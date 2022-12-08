@@ -65,6 +65,9 @@ function FormVisitaTecnicaTres({ dados, setDados, images, setImages }) {
             { label: "SIM", value: "SIM" },
             { label: "NÃO", value: "NÃO" },
           ]}
+          handleChange={(value) =>
+            setDados({ ...dados, telhasReservas: value })
+          }
         />
         <TextInput
           label={"LINK FOTOS DO DRONE"}
@@ -73,6 +76,15 @@ function FormVisitaTecnicaTres({ dados, setDados, images, setImages }) {
           normalCase={true}
           value={dados.fotosDrone}
           handleChange={(value) => setDados({ ...dados, fotosDrone: value })}
+        />
+        <TextInput
+          label={"ORIENTAÇÃO DO TELHADO (EX:10°NORTE)"}
+          placeholder="TENDO MAIS DE UM TELHADO APTO ESCREVER MAIS DE UMA"
+          editable={true}
+          value={dados.orientacaoEstrutura}
+          handleChange={(value) =>
+            setDados({ ...dados, orientacaoEstrutura: value })
+          }
         />
       </div>
       <div className="flex items-center justify-center border border-gray-200 py-2 w-[300px] h-[165px] lg:w-[450px] lg:h-[250px] self-center my-3">

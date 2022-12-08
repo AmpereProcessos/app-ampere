@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { cidadesAtendidas } from "../utils/constants";
 import NumberInput from "./NumberInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
-function FormVisitaTecnicaUm({ dados, setDados, images, setImages }) {
+function FormVisitaTecnicaUm({ dados, setDados, images, setImages, avancar }) {
+  const [msg, setMsg] = useState({
+    text: "",
+    color: "",
+  });
   function formatPhone(value) {
     if (!value) return "";
     value = value.replace(/\D/g, "");
@@ -42,6 +46,134 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages }) {
       .replace(/(\d{5})(\d)/, "$1-$2")
       .replace(/(-\d{3})\d+?$/, "$1");
     return cep;
+  }
+  function validateFields() {
+    if (dados.nomeDoCliente.trim().length < 3) {
+      setMsg({
+        text: "Por favor, preencha o nome do cliente.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.telefoneDoCliente.trim().length < 9) {
+      setMsg({
+        text: "Por favor, preencha o telefone do cliente.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!dados.codigoSVB) {
+      setMsg({
+        text: "Por favor, preencha o código SVB.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.cidade == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha a cidade do cliente.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.bairro.trim().length < 3) {
+      setMsg({
+        text: "Por favor, preencha o bairro do cliente.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.logradouro.trim().length < 3) {
+      setMsg({
+        text: "Por favor, preencha o logradouro do cliente.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!dados.numeroResidencia) {
+      setMsg({
+        text: "Por favor, preencha o número da residência do cliente.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoInversor == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha o tipo do inversor.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!dados.qtdeInversor) {
+      setMsg({
+        text: "Por favor, preencha a quantidade de inversor(es).",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!dados.potInversor) {
+      setMsg({
+        text: "Por favor, preencha a potência do(s) inversor(es).",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.marcaInversor.trim().length < 2) {
+      setMsg({
+        text: "Por favor, preencha a marca do(s) inversor(es).",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!dados.qtdeModulos) {
+      setMsg({
+        text: "Por favor, preencha a quantidade de módulos.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!dados.potModulos) {
+      setMsg({
+        text: "Por favor, preencha a potência dos módulos.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.marcaModulos.trim() < 2) {
+      setMsg({
+        text: "Por favor, preencha a marca dos módulos.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoDeLaudo == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha o tipo de laudo a ser requisitado",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoDeSolicitacao == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha o tipo de solicitação.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.localizacao) {
+      setMsg({
+        text: "Por favor, anexe um comprovante da sua localização.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    return true;
+  }
+  function goToNext() {
+    if (validateFields()) {
+      console.log(validateFields());
+      avancar();
+    }
   }
   return (
     <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
@@ -131,7 +263,7 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages }) {
         <SelectInput
           label={"TIPO DE INVERSOR"}
           editable={true}
-          value={dados.tipoDeInversor}
+          value={dados.tipoInversor}
           options={[
             { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
             { label: "MICRO-INVERSOR", value: "MICRO-INVERSOR" },
@@ -265,7 +397,7 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages }) {
               <div className="flex flex-col items-center">
                 <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                 <span className="block text-gray-400 font-normal text-center">
-                  {images.localizacao.name}
+                  {images.localizacao.file.name}
                 </span>
               </div>
             ) : (
@@ -281,7 +413,10 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages }) {
             onChange={(e) =>
               setImages({
                 ...images,
-                localizacao: e.target.files[0],
+                localizacao: {
+                  title: "LOCALIZAÇÃO",
+                  file: e.target.files[0],
+                },
               })
             }
             className="h-full w-full opacity-0"
@@ -290,8 +425,14 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages }) {
           />
         </div>
       </div>
+      {msg.text && (
+        <p className={`text-center text-sm italic ${msg.color}`}>{msg.text}</p>
+      )}
       <div className="flex items-center justify-center mt-2">
-        <button className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded">
+        <button
+          onClick={goToNext}
+          className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
+        >
           PRÓXIMA ETAPA
         </button>
       </div>

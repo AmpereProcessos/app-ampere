@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
-import { cidadesAtendidas } from "../utils/constants";
+import { cidadesAtendidas, fileTypes } from "../utils/constants";
 import NumberInput from "./NumberInput";
 import DateInput from "./DateInput";
 import { storage } from "../utils/firebase";
@@ -259,7 +259,13 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
           );
           let res = await uploadBytes(imageRef, images.comprovanteDeEndereco);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          links.push({ title: "COMPROVANTE DE ENDEREÇO", link: url });
+          links.push({
+            title: "COMPROVANTE DE ENDEREÇO",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
         }
         if (images.comprovanteDeRenda) {
           var imageRef = ref(
@@ -270,7 +276,13 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
           );
           let res = await uploadBytes(imageRef, images.comprovanteDeRenda);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          links.push({ title: "COMPROVANTE DE RENDA", link: url });
+          links.push({
+            title: "COMPROVANTE DE RENDA",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
         }
         if (images.documentoPessoal) {
           var imageRef = ref(
@@ -281,7 +293,13 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
           );
           let res = await uploadBytes(imageRef, images.documentoPessoal);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          links.push({ title: "DOCUMENTO PESSOAL", link: url });
+          links.push({
+            title: "DOCUMENTO PESSOAL",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
         }
       }
       if (dados.tipoDoCliente == "CNPJ") {
@@ -294,7 +312,13 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
           );
           let res = await uploadBytes(imageRef, images.cartaoCNPJ);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          links.push({ title: "CARTÃO CNPJ", link: url });
+          links.push({
+            title: "CARTÃO CNPJ",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
         }
         if (images.contratoSocial) {
           var imageRef = ref(
@@ -305,7 +329,13 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
           );
           let res = await uploadBytes(imageRef, images.contratoSocial);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          links.push({ title: "CONTRATO SOCIAL", link: url });
+          links.push({
+            title: "CONTRATO SOCIAL",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
         }
         if (images.comprovanteDeEndereco) {
           var imageRef = ref(
@@ -316,7 +346,13 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
           );
           let res = await uploadBytes(imageRef, images.comprovanteDeEndereco);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          links.push({ title: "COMPROVANTE DE ENDEREÇO", link: url });
+          links.push({
+            title: "COMPROVANTE DE ENDEREÇO",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
         }
         if (images.comprovanteDeRenda) {
           var imageRef = ref(
@@ -327,7 +363,13 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
           );
           let res = await uploadBytes(imageRef, images.comprovanteDeRenda);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          links.push({ title: "COMPROVANTE DE RENDA", link: url });
+          links.push({
+            title: "COMPROVANTE DE RENDA",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
         }
         if (images.declaracaoDeFaturamento) {
           var imageRef = ref(
@@ -338,7 +380,13 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
           );
           let res = await uploadBytes(imageRef, images.declaracaoDeFaturamento);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          links.push({ title: "DECLARAÇÃO DE FATURAMENTO", link: url });
+          links.push({
+            title: "DECLARAÇÃO DE FATURAMENTO",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
         }
         if (images.documentoPessoal) {
           var imageRef = ref(
@@ -349,7 +397,13 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
           );
           let res = await uploadBytes(imageRef, images.documentoPessoal);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          links.push({ title: "DOCUMENTO PESSOAL", link: url });
+          links.push({
+            title: "DOCUMENTO PESSOAL",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
         }
       }
     } catch (error) {

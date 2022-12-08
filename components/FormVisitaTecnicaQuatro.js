@@ -1,8 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 
-function FormVisitaTecnicaQuatro({ dados, setDados, images, setImages }) {
+function FormVisitaTecnicaQuatro({
+  dados,
+  setDados,
+  images,
+  setImages,
+  uploadImages,
+}) {
+  const [msg, setMsg] = useState({ text: "", color: "" });
+  function validateFields() {
+    if (
+      dados.localInstalacaoInversor == "" ||
+      dados.localInstalacaoInversor == "NÃO DEFINIDO"
+    ) {
+      setMsg({
+        text: "Por favor, preencha o local de instalação do inversor.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (
+      dados.distanciaInversorRoteador == "" ||
+      dados.distanciaInversorRoteador == "NÃO DEFINIDO"
+    ) {
+      setMsg({
+        text: "Por favor, preencha a distância do inversor até o roteador.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoFaixada) {
+      setMsg({
+        text: "Por favor, anexe a foto da faixada",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoLocalInstalacao) {
+      setMsg({
+        text: "Por favor, anexe a foto do local da instalação.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoQuadroDistribuicao) {
+      setMsg({
+        text: "Por favor, anexe a foto do quadro de distribuição.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+  }
+  function goToNext() {
+    if (validateFields()) {
+      setMsg({ text: "", color: "" });
+      uploadImages();
+    }
+  }
   return (
     <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -102,7 +158,7 @@ function FormVisitaTecnicaQuatro({ dados, setDados, images, setImages }) {
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                   <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoFaixada.name}
+                    {images.fotoFaixada.file.name}
                   </span>
                 </div>
               ) : (
@@ -132,7 +188,7 @@ function FormVisitaTecnicaQuatro({ dados, setDados, images, setImages }) {
             className="ml-2 text-center text-[#15599a] font-bold"
             htmlFor="propostaComercial"
           >
-            FOTO DO LOCAL DA INSTALÇÃO DO INVERSOR OU NOVO LOCAL QUADRO DE
+            FOTO DO LOCAL DA INSTALAÇÃO DO INVERSOR OU NOVO LOCAL QUADRO DE
             DISTRIBUIÇÃO
           </label>
           <p className="text-center text-xs">
@@ -145,7 +201,7 @@ function FormVisitaTecnicaQuatro({ dados, setDados, images, setImages }) {
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                   <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoLocalInstalacao.name}
+                    {images.fotoLocalInstalacao.file.name}
                   </span>
                 </div>
               ) : (
@@ -187,7 +243,7 @@ function FormVisitaTecnicaQuatro({ dados, setDados, images, setImages }) {
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                   <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoQuadroDistribuicao.name}
+                    {images.fotoQuadroDistribuicao.file.name}
                   </span>
                 </div>
               ) : (
@@ -226,7 +282,7 @@ function FormVisitaTecnicaQuatro({ dados, setDados, images, setImages }) {
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                   <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoAterramento.name}
+                    {images.fotoAterramento.file.name}
                   </span>
                 </div>
               ) : (
@@ -253,8 +309,11 @@ function FormVisitaTecnicaQuatro({ dados, setDados, images, setImages }) {
         </div>
       </div>
       <div className="flex items-center justify-center gap-2">
-        <button className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded">
-          PRÓXIMA ETAPA
+        <button
+          onClick={goToNext}
+          className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
+        >
+          ENVIAR FORMULÁRIO
         </button>
       </div>
     </div>

@@ -3,7 +3,13 @@ import NumberInput from "./NumberInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 
-function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
+function FormVisitaTecnicaRural({
+  dados,
+  setDados,
+  images,
+  setImages,
+  uploadImages,
+}) {
   return (
     <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
       <span className="text-md text-center font-bold text-[#15599a] uppercase py-2">
@@ -27,7 +33,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.fotoPadrao.name}
+                      {images.fotoPadrao.file.name}
                     </span>
                   </div>
                 ) : (
@@ -43,7 +49,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    fotoPadrao: e.target.files[0],
+                    fotoPadrao: {
+                      title: "FOTO DO PADRÃO",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -65,7 +74,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.fotoLocalizacaoPadraoAntigo.name}
+                      {images.fotoLocalizacaoPadraoAntigo.file.name}
                     </span>
                   </div>
                 ) : (
@@ -81,7 +90,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    fotoLocalizacaoPadraoAntigo: e.target.files[0],
+                    fotoLocalizacaoPadraoAntigo: {
+                      title: "FOTO lOCALIZAÇÃO DO PADRÃO ANTIGO",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -103,7 +115,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.fotoLocalizacaoPadraoNovo.name}
+                      {images.fotoLocalizacaoPadraoNovo.file.name}
                     </span>
                   </div>
                 ) : (
@@ -119,7 +131,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    fotoLocalizacaoPadraoNovo: e.target.files[0],
+                    fotoLocalizacaoPadraoNovo: {
+                      title: "FOTO DA LOCALIZAÇÃO DO PADRÃO NOVO",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -141,7 +156,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.fotoDisjuntor.name}
+                      {images.fotoDisjuntor.file.name}
                     </span>
                   </div>
                 ) : (
@@ -157,7 +172,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    fotoDisjuntor: e.target.files[0],
+                    fotoDisjuntor: {
+                      title: "FOTO DO DISJUNTOR DO PADRÃO",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -262,7 +280,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.fotoTrafo.name}
+                      {images.fotoTrafo.file.name}
                     </span>
                   </div>
                 ) : (
@@ -278,7 +296,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    fotoTrafo: e.target.files[0],
+                    fotoTrafo: {
+                      title: "FOTO DO TRANSFORMADOR",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -300,7 +321,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.fotoLocalizacaoTrafo.name}
+                      {images.fotoLocalizacaoTrafo.file.name}
                     </span>
                   </div>
                 ) : (
@@ -316,7 +337,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    fotoLocalizacaoTrafo: e.target.files[0],
+                    fotoLocalizacaoTrafo: {
+                      title: "FOTO DA LOCALIZAÇÃO DO TRAFO",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -338,7 +362,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.fotoNumeroTrafo.name}
+                      {images.fotoNumeroTrafo.file.name}
                     </span>
                   </div>
                 ) : (
@@ -354,7 +378,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    fotoNumeroTrafo: e.target.files[0],
+                    fotoNumeroTrafo: {
+                      title: "FOTO DO NÚMERO DO TRANSFORMADOR",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -383,7 +410,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.fotoRamalTrafoPadrao.name}
+                      {images.fotoRamalTrafoPadrao.file.name}
                     </span>
                   </div>
                 ) : (
@@ -399,7 +426,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    fotoRamalTrafoPadrao: e.target.files[0],
+                    fotoRamalTrafoPadrao: {
+                      title: "FOTO DO RAMAL DO TRAFO AO PADRÃO",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -425,7 +455,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.fotoCabosReligacao.name}
+                      {images.fotoCabosReligacao.file.name}
                     </span>
                   </div>
                 ) : (
@@ -441,7 +471,11 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    fotoCabosReligacao: e.target.files[0],
+                    fotoCabosReligacao: {
+                      title:
+                        "FOTO DOS CABOS DO PADRÃO PARA RELIGAÇÃO DA FAZENDA",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -470,7 +504,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.fotoLocalMontagem.name}
+                      {images.fotoLocalMontagem.file.name}
                     </span>
                   </div>
                 ) : (
@@ -486,7 +520,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    fotoLocalMontagem: e.target.files[0],
+                    fotoLocalMontagem: {
+                      title: "FOTO DO LOCAL DA MONTAGEM",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -653,7 +690,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.fotoLocalMontagemModulos.name}
+                      {images.fotoLocalMontagemModulos.file.name}
                     </span>
                   </div>
                 ) : (
@@ -669,7 +706,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    fotoLocalMontagemModulos: e.target.files[0],
+                    fotoLocalMontagemModulos: {
+                      title: "FOTO DA LOCALIZAÇÃO DA MONTAGEM DOS MÓDULOS",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -691,7 +731,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.fotoLocalInversor.name}
+                      {images.fotoLocalInversor.file.name}
                     </span>
                   </div>
                 ) : (
@@ -707,7 +747,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    fotoLocalInversor: e.target.files[0],
+                    fotoLocalInversor: {
+                      title: "FOTO DO LOCAL DO INVERSOR",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -729,7 +772,7 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                     <span className="block text-gray-400 font-normal text-center">
-                      {images.estudoDeCaso.name}
+                      {images.estudoDeCaso.file.name}
                     </span>
                   </div>
                 ) : (
@@ -745,7 +788,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
                 onChange={(e) =>
                   setImages({
                     ...images,
-                    estudoDeCaso: e.target.files[0],
+                    estudoDeCaso: {
+                      title: "ESTUDO DE CASO",
+                      file: e.target.files[0],
+                    },
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -936,7 +982,10 @@ function FormVisitaTecnicaRural({ dados, setDados, images, setImages }) {
         </div>
       </div>
       <div className="flex items-center justify-center gap-2">
-        <button className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded">
+        <button
+          onClick={uploadImages}
+          className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
+        >
           PRÓXIMA ETAPA
         </button>
       </div>

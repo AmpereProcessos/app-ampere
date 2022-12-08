@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { v4 } from "uuid";
+import { fileTypes } from "../utils/constants";
 import { storage } from "../utils/firebase";
 import { AiOutlineCheck } from "react-icons/ai";
 import Image from "next/image";
@@ -164,7 +164,13 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           );
           let res = await uploadBytes(imageRef, images.contaDeEnergia);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          links.push({ title: "CONTA DE ENERGIA", link: url });
+          links.push({
+            title: "CONTA DE ENERGIA",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
         }
         if (images.laudo) {
           var imageRef = ref(
@@ -175,7 +181,13 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           );
           let res = await uploadBytes(imageRef, images.laudo);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          links.push({ title: "LAUDO", link: url });
+          links.push({
+            title: "LAUDO",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
         }
         if (images.propostaComercial) {
           var imageRef = ref(
@@ -186,7 +198,13 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           );
           let res = await uploadBytes(imageRef, images.propostaComercial);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          links.push({ title: "PROPOSTA COMERCIAL", link: url });
+          links.push({
+            title: "PROPOSTA COMERCIAL",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
         }
         if (dados.tipoDaInstalacao == "RURAL") {
           if (images.car) {
@@ -198,7 +216,13 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
             );
             let res = await uploadBytes(imageRef, images.car);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-            links.push({ title: "CAR", link: url });
+            links.push({
+              title: "CAR",
+              link: url,
+              format: fileTypes[res.metadata.contentType]
+                ? fileTypes[res.metadata.contentType].title
+                : "INDEFINIDO",
+            });
           }
           if (images.matricula) {
             var imageRef = ref(
@@ -209,7 +233,13 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
             );
             let res = await uploadBytes(imageRef, images.matricula);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-            links.push({ title: "MATRÍCULA", link: url });
+            links.push({
+              title: "MATRÍCULA",
+              link: url,
+              format: fileTypes[res.metadata.contentType]
+                ? fileTypes[res.metadata.contentType].title
+                : "INDEFINIDO",
+            });
           }
           if (images.comprovanteEnderecoCorrespondente) {
             var imageRef = ref(
@@ -228,6 +258,9 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
             links.push({
               title: "COMPROVANTE DE ENDEREÇO - CORRESPONDÊNCIA",
               link: url,
+              format: fileTypes[res.metadata.contentType]
+                ? fileTypes[res.metadata.contentType].title
+                : "INDEFINIDO",
             });
           }
         }
@@ -241,7 +274,13 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
             );
             let res = await uploadBytes(imageRef, images.iptu);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-            links.push({ title: "IPTU", link: url });
+            links.push({
+              title: "IPTU",
+              link: url,
+              format: fileTypes[res.metadata.contentType]
+                ? fileTypes[res.metadata.contentType].title
+                : "INDEFINIDO",
+            });
           }
         }
         if (dados.tipoDoTitular == "PESSOA FISICA") {
@@ -254,7 +293,13 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
             );
             let res = await uploadBytes(imageRef, images.documentoComFoto);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-            links.push({ title: "DOCUMENTO COM FOTO", link: url });
+            links.push({
+              title: "DOCUMENTO COM FOTO",
+              link: url,
+              format: fileTypes[res.metadata.contentType]
+                ? fileTypes[res.metadata.contentType].title
+                : "INDEFINIDO",
+            });
           }
         }
         if (dados.tipoDoTitular == "PESSOA JURIDICA") {
@@ -267,7 +312,13 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
             );
             let res = await uploadBytes(imageRef, images.contratoSocial);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-            links.push({ title: "CONTRATO SOCIAL", link: url });
+            links.push({
+              title: "CONTRATO SOCIAL",
+              link: url,
+              format: fileTypes[res.metadata.contentType]
+                ? fileTypes[res.metadata.contentType].title
+                : "INDEFINIDO",
+            });
           }
           if (images.cartaoCnpj) {
             var imageRef = ref(
@@ -278,7 +329,13 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
             );
             let res = await uploadBytes(imageRef, images.cartaoCnpj);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-            links.push({ title: "CARTÃO CNPJ", link: url });
+            links.push({
+              title: "CARTÃO CNPJ",
+              link: url,
+              format: fileTypes[res.metadata.contentType]
+                ? fileTypes[res.metadata.contentType].title
+                : "INDEFINIDO",
+            });
           }
           if (images.comprovanteEnderecoRepresentante) {
             var imageRef = ref(
@@ -297,6 +354,9 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
             links.push({
               title: "COMPROVANTE DE ENDEREÇO - REPRESENTANTE",
               link: url,
+              format: fileTypes[res.metadata.contentType]
+                ? fileTypes[res.metadata.contentType].title
+                : "INDEFINIDO",
             });
           }
           if (images.documentoComFotoSocios) {
@@ -314,6 +374,9 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
             links.push({
               title: "DOCUMENTO COM FOTO DOS SÓCIOS",
               link: url,
+              format: fileTypes[res.metadata.contentType]
+                ? fileTypes[res.metadata.contentType].title
+                : "INDEFINIDO",
             });
           }
         }
@@ -330,6 +393,9 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
             links.push({
               title: "RELAÇÃO DE CARGAS",
               link: url,
+              format: fileTypes[res.metadata.contentType]
+                ? fileTypes[res.metadata.contentType].title
+                : "INDEFINIDO",
             });
           }
         }
@@ -346,6 +412,9 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
             links.push({
               title: `RECEBEDORA ${i + 1}`,
               link: url,
+              format: fileTypes[res.metadata.contentType]
+                ? fileTypes[res.metadata.contentType].title
+                : "INDEFINIDO",
             });
           }
         }

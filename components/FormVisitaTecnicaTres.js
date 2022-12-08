@@ -1,9 +1,78 @@
-import React from "react";
+import React, { useState } from "react";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 import TipoTelhas from "../utils/tipoTelhas.png";
 import Image from "next/image";
-function FormVisitaTecnicaTres({ dados, setDados, images, setImages }) {
+function FormVisitaTecnicaTres({
+  dados,
+  setDados,
+  images,
+  setImages,
+  avancar,
+  voltar,
+}) {
+  const [msg, setMsg] = useState({
+    text: "",
+    color: "",
+  });
+  function validateFields() {
+    if (dados.estruturaMontagem == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha a estrutura de montagem.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoEstrutura == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha o tipo da estrutura.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.estruturaMontagem == "TELHADO CONVENCIONAL") {
+      if (dados.tipoTelha == "NÃO DEFINIDO") {
+        setMsg({
+          text: "Por favor, preencha o tipo da telha.",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (dados.telhasReservas == "NÃO DEFINIDO") {
+        setMsg({
+          text: "Por favor, preencha sobre a existência de telhas reservas",
+          color: "text-red-500",
+        });
+        return false;
+      }
+    }
+    if (dados.orientacaoEstrutura.trim().length) {
+      setMsg({
+        text: "Por favor, preencha a orientação da estrutura/telhado.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoEstrutura) {
+      setMsg({
+        text: "Por favor, anexe a foto da estrutura",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoTelhas) {
+      setMsg({
+        text: "Por favor, anexe uma foto das telhas",
+        color: "text-red-500",
+      });
+      return false;
+    }
+  }
+  function goToNext() {
+    if (validateFields()) {
+      avancar();
+    }
+  }
   return (
     <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -108,7 +177,7 @@ function FormVisitaTecnicaTres({ dados, setDados, images, setImages }) {
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                   <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoEstrutura.name}
+                    {images.fotoEstrutura.file.name}
                   </span>
                 </div>
               ) : (
@@ -124,7 +193,10 @@ function FormVisitaTecnicaTres({ dados, setDados, images, setImages }) {
               onChange={(e) =>
                 setImages({
                   ...images,
-                  fotoEstrutura: e.target.files[0],
+                  fotoEstrutura: {
+                    title: "FOTO DA ESTRUTURA DO TELHADO",
+                    file: e.target.files[0],
+                  },
                 })
               }
               className="h-full w-full opacity-0"
@@ -149,7 +221,7 @@ function FormVisitaTecnicaTres({ dados, setDados, images, setImages }) {
                 <div className="flex flex-col items-center">
                   <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                   <span className="block text-gray-400 font-normal text-center">
-                    {images.fotoTelhas.name}
+                    {images.fotoTelhas.file.name}
                   </span>
                 </div>
               ) : (
@@ -165,7 +237,10 @@ function FormVisitaTecnicaTres({ dados, setDados, images, setImages }) {
               onChange={(e) =>
                 setImages({
                   ...images,
-                  fotoTelhas: e.target.files[0],
+                  fotoTelhas: {
+                    title: "FOTO DAS TELHAS",
+                    file: e.target.files[0],
+                  },
                 })
               }
               className="h-full w-full opacity-0"
@@ -175,8 +250,22 @@ function FormVisitaTecnicaTres({ dados, setDados, images, setImages }) {
           </div>
         </div>
       </div>
+      {msg.text && (
+        <p className={`text-center text-sm italic my-2 ${msg.color}`}>
+          {msg.text}
+        </p>
+      )}
       <div className="flex items-center justify-center gap-2">
-        <button className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded">
+        <button
+          onClick={voltar}
+          className="bg-blue-300 hover:bg-blue-500 hover:text-white font-bold p-2 rounded"
+        >
+          VOLTAR
+        </button>
+        <button
+          onClick={goToNext}
+          className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
+        >
           PRÓXIMA ETAPA
         </button>
       </div>

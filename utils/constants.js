@@ -13,6 +13,20 @@ export const routes = [
   "RH",
   "Almoxarifado",
 ];
+export const fileTypes = {
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
+    title: "WORD",
+  },
+  "image/png": {
+    title: "IMAGEM(PNG)",
+  },
+  "image/jpeg": {
+    title: "IMAGEM(JPEG)",
+  },
+  "application/pdf": {
+    title: "PDF",
+  },
+};
 export const vendedores = [
   {
     nome: "ARTHUR CARVALHO",

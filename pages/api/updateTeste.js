@@ -1,19 +1,18 @@
-import connectToSolicitacoesDatabase from "../../utils/callsDb";
+import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  /*
-  const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);
-  const collection = db.collection("pps");
+  /*const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  const collection = db.collection("dados");
   let arr = await collection.updateMany(
     {
-      tipoDeSolicitacao: "PROPOSTA COMERCIAL PERSONALIZADA",
+      "obra.equipeResp": "EQUIPE 8- DIONLEN",
     },
     {
       $set: {
-        tipoDeSolicitacao: "PROPOSTA COMERCIAL",
+        "obra.equipeResp": "EQUIPE 8 - DIONLEN",
       },
     }
   );
-  res.json(arr);
+  res.json(arr);*/
   /*
   let arr = await collection
     .aggregate([

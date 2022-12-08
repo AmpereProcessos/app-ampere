@@ -816,8 +816,8 @@ export const equipesTecnicas = [
     value: "EQUIPE 7- ADENILSON",
   },
   {
-    label: "EQUIPE 8 - GERSON",
-    value: "EQUIPE 8-GERSON",
+    label: "EQUIPE 8 - DIONLEN", // mudar para DIONLEN
+    value: "EQUIPE 8 - DIONLEN", // mudar para DIONLEN
   },
   {
     label: "EQUIPE 9 - REGINALDO",
@@ -838,6 +838,10 @@ export const equipesTecnicas = [
   {
     label: "EQUIPE 13 - EDUARDO FRANCO",
     value: "EQUIPE 13 - EDUARDO FRANCO",
+  },
+  {
+    label: "EQUIPE 14 - GERSON",
+    value: "EQUIPE 14 - GERSON",
   },
   {
     label: "EQUIPE 15 - MARCOS B.",

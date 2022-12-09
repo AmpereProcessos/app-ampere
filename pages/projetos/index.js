@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalProjetos from "../../components/ModalProjetos";
@@ -545,6 +546,11 @@ function Projetos({ credentials, setCredentials, users }) {
           </div>
         ))}
       </div>
+      <Link href={"/projetos/visitaTecnica"}>
+        <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">Visitas técnicas</p>
+        </a>
+      </Link>
       {modalIsOpen && (
         <ModalProjetos
           users={users}

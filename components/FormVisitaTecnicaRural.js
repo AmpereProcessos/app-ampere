@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import NumberInput from "./NumberInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
@@ -10,6 +10,206 @@ function FormVisitaTecnicaRural({
   setImages,
   uploadImages,
 }) {
+  const [msg, setMsg] = useState({ text: "", color: "" });
+  function validateFields() {
+    if (!images.fotoPadrao) {
+      setMsg({
+        text: "Por favor, anexe a foto do padrão.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoLocalizacaoPadraoAntigo) {
+      setMsg({
+        text: "Por favor, anexe a foto da localização do padrão antigo.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoDisjuntor) {
+      setMsg({
+        text: "Por favor, anexe a foto do disjuntor.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoDisjuntor == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha o tipo do disjuntor",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.amperagem == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha a amperagem.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.numeroMedidor == "" || dados.numeroMedidor == 0) {
+      setMsg({
+        text: "Por favor, preencha o número do medidor.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.padraoTrafoAcoplados == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha se o trafo e o padrão são acoplados.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.potTrafo == 0 || dados.potTrafo == "") {
+      setMsg({
+        text: "Por favor, preencha a potência do transformador.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoTrafo) {
+      setMsg({
+        text: "Por favor, anexe a foto do transformador.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoLocalizacaoTrafo) {
+      setMsg({
+        text: "Por favor, anexe a foto da localização do transformador.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoNumeroTrafo) {
+      setMsg({
+        text: "Por favor, anexe a foto do número do transformador.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoLocalMontagem) {
+      setMsg({
+        text: "Por favor, anexe a foto do local de montagem.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.estruturaMontagem == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha o tipo da estrutura.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoLocalMontagemModulos) {
+      setMsg({
+        text: "Por favor, anexe a foto do local de montagem dos módulos.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.orientacaoEstrutura.trim().length < 5) {
+      setMsg({
+        text: "Por favor, preencha a orientação da montagem dos módulos.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoEstrutura == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha o tipo de estrutura.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoTelha == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha o tipo de telha.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.localInstalacaoInversor.trim().length < 4) {
+      setMsg({
+        text: "Por favor, preencha o local de instalação do inversor.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.distanciaModulosInversores.trim().length < 1) {
+      setMsg({
+        text: "Por favor, preencha a distância dos módulos aos inversores.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.distanciaInversorPadrao.trim().length < 1) {
+      setMsg({
+        text: "Por favor, preencha a distância dos inversores ao padrão.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.distanciaInversorRoteador.trim().length < 1) {
+      setMsg({
+        text: "Por favor, preencha a distância dos inversores ao roteador.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.estudoDeCaso) {
+      setMsg({
+        text: "Por favor, anexe o estudo de caso.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.casaDeMaquinas == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha sobre a necessidade de casa de máquinas.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.alambrado == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha sobre a necessidade de alambrado.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.britagem == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha sobre a necessidade de britagem.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.construcaoBarracao == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha sobre a necessidade de construção de barracão.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.instalacaoRoteador == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha sobre a necessidade de instalação de roteador.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.redeReligacao == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha sobre a necessidade de rede para religação da fazenda.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    return true;
+  }
   return (
     <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
       <span className="text-md text-center font-bold text-[#15599a] uppercase py-2">
@@ -537,7 +737,7 @@ function FormVisitaTecnicaRural({
           <SelectInput
             label={"TIPO DE ESTRUTURA - MONTAGEM DOS MÓDULOS"}
             editable={true}
-            value={dados.tipoEstrutura}
+            value={dados.estruturaMontagem}
             options={[
               { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               {
@@ -549,7 +749,7 @@ function FormVisitaTecnicaRural({
               { label: "BEZERREIRO", value: "BEZERREIRO" },
             ]}
             handleChange={(value) =>
-              setDados({ ...dados, tipoEstrutura: value })
+              setDados({ ...dados, estruturaMontagem: value })
             }
           />
           <TextInput
@@ -632,9 +832,9 @@ function FormVisitaTecnicaRural({
           <TextInput
             label={"DISTÂNCIA DOS INVERSORES ATÉ O PADRÃO"}
             editable={true}
-            value={dados.distanciaInversoresPadrao}
+            value={dados.distanciaInversorPadrao}
             handleChange={(value) =>
-              setDados({ ...dados, distanciaInversoresPadrao: value })
+              setDados({ ...dados, distanciaInversorPadrao: value })
             }
           />
           <TextInput

@@ -44,7 +44,7 @@ function FormVisitaTecnica() {
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",
     telefoneVendedor: "",
-    nomeDoCliente: "TESTE",
+    nomeDoCliente: "",
     telefoneDoCliente: "",
     codigoSVB: "",
     cidade: "NÃO DEFINIDO",

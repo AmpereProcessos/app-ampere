@@ -46,7 +46,7 @@ function FormVisitaTecnicaTres({
         return false;
       }
     }
-    if (dados.orientacaoEstrutura.trim().length) {
+    if (dados.orientacaoEstrutura.trim().length < 3) {
       setMsg({
         text: "Por favor, preencha a orientação da estrutura/telhado.",
         color: "text-red-500",

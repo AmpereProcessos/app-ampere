@@ -30,7 +30,7 @@ function FormVisitaTecnicaDois({
       });
       return false;
     }
-    if (!dados.numeroMedidor) {
+    if (dados.numeroMedidor.trim().length < 5) {
       setMsg({
         text: "Por favor, preencha o número do medidor.",
         color: "text-red-500",
@@ -124,13 +124,11 @@ function FormVisitaTecnicaDois({
           ]}
           handleChange={(value) => setDados({ ...dados, tipoDisjuntor: value })}
         />
-        <NumberInput
+        <TextInput
           label={"NÚMERO DO MEDIDOR"}
           editable={true}
           value={dados.numeroMedidor}
-          handleChange={(value) =>
-            setDados({ ...dados, numeroMedidor: Number(value) })
-          }
+          handleChange={(value) => setDados({ ...dados, numeroMedidor: value })}
         />
         <TextInput
           label={"PARA PADRÕES CONJUGADOS"}

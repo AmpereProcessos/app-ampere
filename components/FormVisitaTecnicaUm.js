@@ -283,6 +283,7 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages, avancar }) {
         <NumberInput
           label={"POTÊNCIA DO INVERSOR"}
           editable={true}
+          unit={"W"}
           value={dados.potInversor}
           handleChange={(value) =>
             setDados({ ...dados, potInversor: Number(value) })

@@ -458,7 +458,7 @@ function FormVisitaTecnicaRural({
           />
           <NumberInput
             label={"POTÊNCIA DO TRANSFORMADOR"}
-            unit={"W"}
+            unit={"kVA"}
             editable={true}
             value={dados.potTrafo ? dados.potTrafo : ""}
             handleChange={(value) =>

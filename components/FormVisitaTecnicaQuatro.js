@@ -10,6 +10,7 @@ function FormVisitaTecnicaQuatro({
   uploadImages,
 }) {
   const [msg, setMsg] = useState({ text: "", color: "" });
+  console.log(images);
   function validateFields() {
     if (
       dados.localInstalacaoInversor == "" ||
@@ -321,6 +322,9 @@ function FormVisitaTecnicaQuatro({
           </div>
         </div>
       </div>
+      {msg.text && (
+        <p className={`text-center text-sm italic ${msg.color}`}>{msg.text}</p>
+      )}
       <div className="flex items-center justify-center gap-2">
         <button
           onClick={goToNext}

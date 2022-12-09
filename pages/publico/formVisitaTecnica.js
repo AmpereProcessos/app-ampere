@@ -61,7 +61,7 @@ function FormVisitaTecnica() {
     marcaModulos: "",
     obsVisita: "",
     tipoDeLaudo: "NÃO DEFINIDO",
-    tipoDeSolicitacao: "VISITA TÉCNICA REMOTA - RURAL", // RESETAR PARA NÃO DEFINIDO -  VISITA TÉCNICA REMOTA - RURAL
+    tipoDeSolicitacao: "NÃO DEFINIDO", // RESETAR PARA NÃO DEFINIDO -  VISITA TÉCNICA REMOTA - RURAL
     amperagem: "NÃO DEFINIDO",
     tipoDisjuntor: "NÃO DEFINIDO",
     ramalEntrada: "NÃO DEFINIDO",
@@ -117,9 +117,9 @@ function FormVisitaTecnica() {
       .post("/api/solicitacoes/visitaTecnica", { ...dados, links: links })
       .then((res) => {
         setMsg({ text: "Solicitação enviada!", color: "text-green-500" });
-        /*setTimeout(() => {
+        setTimeout(() => {
           location.reload();
-        }, 2800);*/
+        }, 2800);
       });
   }
   return (

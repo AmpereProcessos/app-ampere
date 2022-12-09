@@ -175,7 +175,10 @@ function FormVisitaTecnicaQuatro({
               onChange={(e) =>
                 setImages({
                   ...images,
-                  fotoFaixada: e.target.files[0],
+                  fotoFaixada: {
+                    title: "FOTO DA FAIXADA",
+                    file: e.target.files[0],
+                  },
                 })
               }
               className="h-full w-full opacity-0"
@@ -218,7 +221,10 @@ function FormVisitaTecnicaQuatro({
               onChange={(e) =>
                 setImages({
                   ...images,
-                  fotoLocalInstalacao: e.target.files[0],
+                  fotoLocalInstalacao: {
+                    title: "FOTO DO LOCAL DE INSTALAÇÃO DO INVERSOR",
+                    file: e.target.files[0],
+                  },
                 })
               }
               className="h-full w-full opacity-0"
@@ -260,7 +266,10 @@ function FormVisitaTecnicaQuatro({
               onChange={(e) =>
                 setImages({
                   ...images,
-                  fotoQuadroDistribuicao: e.target.files[0],
+                  fotoQuadroDistribuicao: {
+                    title: "FOTO DO QUADRO DE DISTRIBUIÇÃO",
+                    file: e.target.files[0],
+                  },
                 })
               }
               className="h-full w-full opacity-0"
@@ -299,7 +308,10 @@ function FormVisitaTecnicaQuatro({
               onChange={(e) =>
                 setImages({
                   ...images,
-                  fotoAterramento: e.target.files[0],
+                  fotoAterramento: {
+                    title: "FOTO DO ATERRAMENTO",
+                    file: e.target.files[0],
+                  },
                 })
               }
               className="h-full w-full opacity-0"

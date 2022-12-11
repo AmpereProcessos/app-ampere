@@ -38,7 +38,9 @@ function MyApp({ Component, pageProps }) {
       getNotificacoes(credentials._id);
     } */
     }
-
+    if (credentials) {
+      getNotificacoes(credentials._id);
+    }
     if (
       router.pathname.includes("pdf") ||
       router.pathname.includes("publico") ||

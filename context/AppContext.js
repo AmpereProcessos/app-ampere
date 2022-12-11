@@ -1,30 +1,36 @@
 import axios from "axios";
 import { createContext, useState, useEffect } from "react";
-import { setCookie } from "nookies";
 import Router from "next/router";
 export const AppContext = createContext();
 
-export function AppProvider({ children }) {
+export function AppProvider({ children, pathname }) {
   const [credentials, setCredentials] = useState(null);
-
-  const isAuthenticated = !!credentials;
-
-  useEffect(() => {}, []);
-  async function signIn({ email, password }) {
-    const { data } = await axios.post("/api/auth/login", {
-      email,
-      password,
-    });
-    setCookie(undefined, "credentials", data, {
-      maxAge: 60 * 60 * 3, // 3 hours
-    });
-    setCredentials(data);
-    Router.push("/");
-  }
-  console.log("AppContext", credentials);
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    if (!credentials) {
+      var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
+      if (storedCredentials != null) {
+        setCredentials(storedCredentials);
+      } else {
+        Router.push("/auth/authHome");
+      }
+    } else {
+      return;
+    }
+    setLoaded(true);
+  }, []);
   return (
-    <AppContext.Provider value={{ isAuthenticated, signIn, credentials }}>
-      {children}
+    <AppContext.Provider value={{ credentials, setCredentials }}>
+      {loaded
+        ? credentials || window.location.pathname.includes("/auth/authHome")
+          ? children
+          : false
+        : false}
     </AppContext.Provider>
   );
 }
+AppProvider.getInitialProps = async (ctx) => {
+  const { req, query, res, asPath, pathname } = ctx;
+  console.log(pathname);
+  return { pathname: pathname };
+};

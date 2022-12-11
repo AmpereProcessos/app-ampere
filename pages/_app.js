@@ -9,6 +9,7 @@ import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { AppContext, AppProvider } from "../context/AppContext";
 function MyApp({ Component, pageProps }) {
   const [credentials, setCredentials] = useState({});
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -26,7 +27,8 @@ function MyApp({ Component, pageProps }) {
     });
   }, []);
   useEffect(() => {
-    if (Object.keys(credentials).length == 0) {
+    {
+      /** if (Object.keys(credentials).length == 0) {
       var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
       if (storedCredentials != null) {
         getNotificacoes(storedCredentials._id);
@@ -34,7 +36,9 @@ function MyApp({ Component, pageProps }) {
       }
     } else {
       getNotificacoes(credentials._id);
+    } */
     }
+
     if (
       router.pathname.includes("pdf") ||
       router.pathname.includes("publico") ||
@@ -45,7 +49,39 @@ function MyApp({ Component, pageProps }) {
   return (
     <DndProvider backend={HTML5Backend}>
       <title>Sistema - Ampère Energias</title>
-      {credentials != {} ? (
+      <AppProvider>
+        <div className="flex flex-col bg-[#fff] w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">
+          <Header
+            logout={() => {
+              localStorage.removeItem("credentials");
+              router.push("/auth/authHome");
+              setCredentials({});
+            }}
+            credentials={credentials}
+            notificacoes={notificacoes}
+            getNotificacoes={getNotificacoes}
+            toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
+          />
+          <div className="flex min-h-[100%] grow">
+            {sidebarVisible && <Sidebar credentials={credentials} />}
+            <div
+              className={`${
+                sidebarVisible ? "hidden md:flex md:flex-col" : "flex flex-col"
+              } grow w-full`}
+            >
+              <Component
+                users={users}
+                sidebarVisible={sidebarVisible}
+                toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
+                setCredentials={setCredentials}
+                credentials={credentials}
+                {...pageProps}
+              />
+            </div>
+          </div>
+        </div>
+      </AppProvider>
+      {/**{credentials != {} ? (
         <div className="flex flex-col bg-[#fff] w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">
           <Header
             logout={() => {
@@ -85,7 +121,7 @@ function MyApp({ Component, pageProps }) {
           credentials={credentials}
           {...pageProps}
         />
-      )}
+      )} */}
     </DndProvider>
   );
 }

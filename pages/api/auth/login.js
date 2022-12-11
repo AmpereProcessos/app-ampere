@@ -11,6 +11,7 @@ export default async function handler(req, res) {
       if (!credential) {
         throw "Usuário inexistente";
       } else if (credential.password == password) {
+        delete credential.password;
         res.status(201).json({ credentials: credential });
       } else {
         throw "Senha inválida";

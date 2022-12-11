@@ -3,7 +3,10 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import EmptyLogo from "../../utils/empty-logo.png";
 import axios from "axios";
-function Auth({ setCredentials }) {
+import { useContext } from "react";
+import { AppContext } from "../../context/AppContext";
+function Auth() {
+  const { setCredentials, credentials } = useContext(AppContext);
   const router = useRouter();
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");

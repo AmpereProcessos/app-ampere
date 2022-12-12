@@ -236,13 +236,14 @@ function Home({ credentials, setCredentials }) {
 
     setClientsBirthday({ ...clientBirthday, filtered: newArr });
   }
+
   return (
     <div className="p-6 grow">
       <div className="flex flex-col border bg-[#fff] my-3 shadow-lg border-gray-200 p-2">
         <div className="w-full h-[36px] border border-[#15599a]">
           <div
             style={{
-              width: `${98.7}%`,
+              width: `${totalPeakPot}%`,
               background:
                 "linear-gradient(90deg, rgba(21,89,154,1) 20%, rgba(1,127,247,1) 90%)",
             }}
@@ -250,7 +251,11 @@ function Home({ credentials, setCredentials }) {
           ></div>
         </div>
         <p className="text-center font-bold text-[#15599a] text-xl">
-          Faltam 1.30%...
+          Faltam{" "}
+          {totalPeakPot
+            ? `${(100 - totalPeakPot).toFixed(2).replace(".", ",")}%`
+            : "-"}
+          ...
         </p>
       </div>
       <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">

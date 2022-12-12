@@ -28,7 +28,7 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function ModalVisitaTecnica({ info, setModalIsOpen }) {
+function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
   const [dados, setDados] = useState(info);
   const [msg, setMessage] = useState({ text: "", color: "" });
   async function findCPF(field) {
@@ -57,9 +57,10 @@ function ModalVisitaTecnica({ info, setModalIsOpen }) {
   function saveChanges() {
     axios
       .put("/api/solicitacoes/visitaTecnica", dados)
-      .then((res) =>
-        setMessage({ text: "Alterações feitas", color: "text-green-500" })
-      )
+      .then((res) => {
+        setMessage({ text: "Alterações feitas", color: "text-green-500" });
+        handleUpdates();
+      })
       .catch((err) =>
         setMessage({
           text: "Houve um erro, por favor tente novamente.",
@@ -68,15 +69,17 @@ function ModalVisitaTecnica({ info, setModalIsOpen }) {
       );
   }
   function concludeVisita() {
+    setDados({ ...dados, status: "CONCLUIDO" });
     axios
       .put("/api/solicitacoes/visitaTecnica", {
         _id: dados._id,
         status: "CONCLUIDO",
         dataDeConclusao: new Date().toISOString(),
       })
-      .then((res) =>
-        setMessage({ text: "Alterações feitas", color: "text-green-500" })
-      )
+      .then((res) => {
+        setMessage({ text: "Alterações feitas", color: "text-green-500" });
+        handleUpdates();
+      })
       .catch((err) =>
         setMessage({
           text: "Houve um erro, por favor tente novamente.",

@@ -54,6 +54,36 @@ function ModalVisitaTecnica({ info, setModalIsOpen }) {
         }
       });
   }
+  function saveChanges() {
+    axios
+      .put("/api/solicitacoes/visitaTecnica", dados)
+      .then((res) =>
+        setMessage({ text: "Alterações feitas", color: "text-green-500" })
+      )
+      .catch((err) =>
+        setMessage({
+          text: "Houve um erro, por favor tente novamente.",
+          color: "text-red-500",
+        })
+      );
+  }
+  function concludeVisita() {
+    axios
+      .put("/api/solicitacoes/visitaTecnica", {
+        _id: dados._id,
+        status: "CONCLUIDA",
+        dataDeConclusao: new Date().toISOString(),
+      })
+      .then((res) =>
+        setMessage({ text: "Alterações feitas", color: "text-green-500" })
+      )
+      .catch((err) =>
+        setMessage({
+          text: "Houve um erro, por favor tente novamente.",
+          color: "text-red-500",
+        })
+      );
+  }
   function formatCEP(cep) {
     cep = cep
       .replace(/\D/g, "")
@@ -69,9 +99,30 @@ function ModalVisitaTecnica({ info, setModalIsOpen }) {
             <h1 className="text-[#15599a] pl-6  font-bold">
               {dados.nomeDoCliente}
             </h1>
+            <div className="flex items-center">
+              <select
+                value={dados.status ? dados.status : "NÃO DEFINIDO"}
+                onChange={(e) => setDados({ ...dados, status: e.target.value })}
+                className="outline-none p-2 text-[#15599a] font-bold"
+              >
+                <option value="EM ANÁLISE TÉCNICA">EM ANÁLISE TÉCNICA</option>
+                <option value="PENDÊNCIA COMERCIAL">PENDÊNCIA COMERCIAL</option>
+                <option value="VISITA IN LOCO">VISITA IN LOCO</option>
+                <option value="NÃO DEFINIDO">NÃO DEFINIDO</option>
+              </select>
+            </div>
+            <button
+              onClick={concludeVisita}
+              className="bg-green-200 hover:bg-green-500 p-2 rounded outline-none font-bold text-white"
+            >
+              VISITA CONCLUÍDA?
+            </button>
             <div className="flex items-center gap-x-2">
               {msg.text && <p className={`italic ${msg.color}`}>{msg.text}</p>}
-              <button className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm">
+              <button
+                onClick={saveChanges}
+                className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
+              >
                 <p>Salvar alterações</p>
                 <FaSave />
               </button>
@@ -1086,6 +1137,21 @@ function ModalVisitaTecnica({ info, setModalIsOpen }) {
                 </div>
               </>
             )}
+            <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
+              <span className="text-md text-center font-bold text-[#15599a] uppercase py-2">
+                ARQUIVOS
+              </span>
+              <div className="flex items-center flex-wrap gap-2 justify-around">
+                {dados.links.map((link) => (
+                  <a
+                    href={link.link}
+                    className="text-blue-400 font-bold cursor-pointer"
+                  >
+                    {link.title} - {link.format}
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

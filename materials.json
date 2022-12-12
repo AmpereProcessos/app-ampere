@@ -1,0 +1,337 @@
+[
+  {
+    "nome": "CONDULETE (3/4')",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CONDULETE (1')",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "TAMPA CEGA (3/4')",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "TAMPA CEGA (1')",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "UNIDUTE (3/4')",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "UNIDUTE (1')",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "ELETRODUTO (3/4')",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "ELETRODUTO (1')",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "ABRAÇADEIRA (3/4')",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "ABRAÇADEIRA (1')",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CONECTOR BIMETÁLICO 16MM",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CONECTOR BIMETÁLICO 25M",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CONECTOR BIMETÁLICO 35MM",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CONECTOR BIMETÁLICO 50MM",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CONECTOR BIMETÁLICO 55MM",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "ROLDANA",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "BOX RETO (3/4')",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "BOX RETO (1')",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "ABRAÇADEIRA HELLERMANN 140",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "ABRAÇADEIRA HELLERMANN 200",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "ABRAÇADEIRA HELLERMANN 280",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "QUADRO DE DISTRIBUIÇÃO 3 a 4",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "QUADRO DE DISTRIBUIÇÃO 6 a 8",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "QUADRO DE DISTRIBUIÇÃO 16",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "ADESIVO AMPÈRE",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "PLACA DE GERAÇÃO MINAS",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "PLACA DE GERAÇÃO GOIÁS METAL",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "PLACA DE GERAÇÃO GOIÁS FIBRA",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "PLACA AMPÈRE",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "DPS",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CONECTOR DE PERFURAÇÃO 70",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CONECTOR DE PERFURAÇÃO 6",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CONECTOR DE PERFURAÇÃO 120-120",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CONECTOR DE PERFURAÇÃO 150-35",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "MANGUEIRA HIPERFLEX",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "DISJUNTOR BIFÁSICO 10A",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "DISJUNTOR BIFÁSICO 16A",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "DISJUNTOR BIFÁSICO 20A",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "DISJUNTOR BIFÁSICO 25A",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "DISJUNTOR BIFÁSICO 32A",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "DISJUNTOR BIFÁSICO 40A",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "DISJUNTOR BIFÁSICO 63A",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "FIO RÍGIDO 1,5MM PRETO",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 2,5mm (AZUL)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 2,5mm (VERMELHO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 2,5mm (VERDE)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 4mm (AMARELO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 4mm (BRANCO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 4mm (PRETO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 4mm (VERDE)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 6mm (AMARELO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 6mm (BRANCO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 6mm (PRETO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 6mm (VERDE)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 10mm (AMARELO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 10mm (BRANCO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 10mm (PRETO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 10mm (VERDE)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 10mm (AZUL)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 16mm (AMARELO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 16mm (BRANCO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 16mm (PRETO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 16mm (VERDE)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO FLEX 16mm (AZUL)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "PAR DE MC4",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO SOLAR (VERMELHO)",
+    "qtde": 100,
+    "preco": 50
+  },
+  {
+    "nome": "CABO SOLAR (PRETO)",
+    "qtde": 100,
+    "preco": 50
+  }
+]

@@ -435,8 +435,8 @@ function ModalOeM({
                   <SelectInput
                     label={"DIAGNÓSTICO"}
                     value={
-                      infoHolder.oem.diagnostico
-                        ? infoHolder.oem.diagnostico
+                      infoHolder.oem?.diagnostico
+                        ? infoHolder.oem?.diagnostico
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}

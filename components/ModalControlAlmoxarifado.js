@@ -10,8 +10,8 @@ const MODAL_STYLES = {
   left: "50%",
   transform: "translate(-50%,-50%)",
   backgroundColor: "#fff",
-  minWidth: "40%",
-  height: "40%",
+  width: "30%",
+  height: "50%",
   borderRadius: "10px",
   padding: "10px",
   zIndex: 1000,
@@ -32,6 +32,7 @@ function ControleAlmoxarifado({
   handleUpdates,
 }) {
   const [novaQuantidade, setNovaQuantidade] = useState();
+  const [novoPreco, setNovoPreco] = useState();
   const [msg, setMsg] = useState({
     text: "",
     color: "",
@@ -40,7 +41,8 @@ function ControleAlmoxarifado({
     axios
       .put("/api/almoxarifado/materiais", {
         id: info._id,
-        novaQtde: novaQuantidade,
+        novaQtde: novaQuantidade ? novaQuantidade : info.qtde,
+        novoPreco: novoPreco ? novoPreco : info.preco,
         infoAlt: {
           valorAnterior: info.qtde,
           respAlteracao: credentials.nome,
@@ -77,9 +79,9 @@ function ControleAlmoxarifado({
                 />
               </button>
             </div>
-            <div className="flex flex-col h-full justify-around">
+            <div className="flex flex-col h-full justify-around overflow-y-auto">
               <div className="flex flex-col">
-                <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2  mt-4">
                   <span className="text-center uppercase font-bold">
                     QUANTIDADE ATUAL
                   </span>
@@ -87,9 +89,19 @@ function ControleAlmoxarifado({
                     <p className="text-gray-600 text-center">{info.qtde}</p>
                   </div>
                 </div>
+                <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2  mt-4">
+                  <span className="text-center uppercase font-bold">
+                    PREÇO ATUAL
+                  </span>
+                  <div className={"grow"}>
+                    <p className="text-gray-600 text-center">
+                      R${info.preco.toFixed(2).replace(".", ",")}
+                    </p>
+                  </div>
+                </div>
               </div>
               <div className="flex flex-col">
-                <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2 mt-4">
                   <span className="text-center uppercase font-bold">
                     NOVA QUANTIDADE
                   </span>
@@ -100,6 +112,19 @@ function ControleAlmoxarifado({
                       onChange={(e) =>
                         setNovaQuantidade(Number(e.target.value))
                       }
+                      className="text-gray-600 w-full p-1 h-full text-sm text-center outline-none"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2 mt-4">
+                  <span className="text-center uppercase font-bold">
+                    NOVO PREÇO
+                  </span>
+                  <div className={"grow"}>
+                    <input
+                      type={"number"}
+                      value={novoPreco}
+                      onChange={(e) => setNovoPreco(Number(e.target.value))}
                       className="text-gray-600 w-full p-1 h-full text-sm text-center outline-none"
                     />
                   </div>

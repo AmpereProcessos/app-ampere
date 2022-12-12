@@ -12,7 +12,8 @@ export function AppProvider({ children, pathname }) {
       if (storedCredentials != null) {
         setCredentials(storedCredentials);
       } else {
-        Router.push("/auth/authHome");
+        if (!window.location.pathname.includes("publico"))
+          Router.push("/auth/authHome");
       }
     } else {
       return;
@@ -22,7 +23,9 @@ export function AppProvider({ children, pathname }) {
   return (
     <AppContext.Provider value={{ credentials, setCredentials }}>
       {loaded
-        ? credentials || window.location.pathname.includes("/auth/authHome")
+        ? credentials ||
+          window.location.pathname.includes("/auth/authHome") ||
+          window.location.pathname.includes("publico")
           ? children
           : false
         : false}

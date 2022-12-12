@@ -71,7 +71,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen }) {
     axios
       .put("/api/solicitacoes/visitaTecnica", {
         _id: dados._id,
-        status: "CONCLUIDA",
+        status: "CONCLUIDO",
         dataDeConclusao: new Date().toISOString(),
       })
       .then((res) =>
@@ -95,28 +95,39 @@ function ModalVisitaTecnica({ info, setModalIsOpen }) {
     <div style={OVERLAY_STYLES}>
       <div style={MODAL_STYLES}>
         <div className="flex flex-col h-full">
-          <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
+          <div className="flex justify-between items-center px-2 text-lg pb-2 border-b border-gray-200">
             <h1 className="text-[#15599a] pl-6  font-bold">
               {dados.nomeDoCliente}
             </h1>
-            <div className="flex items-center">
-              <select
-                value={dados.status ? dados.status : "NÃO DEFINIDO"}
-                onChange={(e) => setDados({ ...dados, status: e.target.value })}
-                className="outline-none p-2 text-[#15599a] font-bold"
-              >
-                <option value="EM ANÁLISE TÉCNICA">EM ANÁLISE TÉCNICA</option>
-                <option value="PENDÊNCIA COMERCIAL">PENDÊNCIA COMERCIAL</option>
-                <option value="VISITA IN LOCO">VISITA IN LOCO</option>
-                <option value="NÃO DEFINIDO">NÃO DEFINIDO</option>
-              </select>
-            </div>
-            <button
-              onClick={concludeVisita}
-              className="bg-green-200 hover:bg-green-500 p-2 rounded outline-none font-bold text-white"
-            >
-              VISITA CONCLUÍDA?
-            </button>
+            {dados.status != "CONCLUIDO" ? (
+              <div className="flex items-center gap-2">
+                <select
+                  value={dados.status ? dados.status : "NÃO DEFINIDO"}
+                  onChange={(e) =>
+                    setDados({ ...dados, status: e.target.value })
+                  }
+                  className="outline-none p-2 text-[#15599a] font-bold"
+                >
+                  <option value="EM ANÁLISE TÉCNICA">EM ANÁLISE TÉCNICA</option>
+                  <option value="PENDÊNCIA COMERCIAL">
+                    PENDÊNCIA COMERCIAL
+                  </option>
+                  <option value="VISITA IN LOCO">VISITA IN LOCO</option>
+                  <option value="NÃO DEFINIDO">NÃO DEFINIDO</option>
+                </select>
+                <button
+                  onClick={concludeVisita}
+                  className="bg-green-200 hover:bg-green-500 p-2 rounded outline-none font-bold text-white"
+                >
+                  VISITA CONCLUÍDA?
+                </button>
+              </div>
+            ) : (
+              <p className="font-bold p-1 bg-green-400 text-white rounded">
+                CONCLUIDO
+              </p>
+            )}
+
             <div className="flex items-center gap-x-2">
               {msg.text && <p className={`italic ${msg.color}`}>{msg.text}</p>}
               <button
@@ -1144,6 +1155,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen }) {
               <div className="flex items-center flex-wrap gap-2 justify-around">
                 {dados.links.map((link) => (
                   <a
+                    key={link.link}
                     href={link.link}
                     className="text-blue-400 font-bold cursor-pointer"
                   >

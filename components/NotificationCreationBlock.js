@@ -1,8 +1,8 @@
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
-
-function NotificationCreationBlock({ credentials, codProjeto, usuarios }) {
+import { AppContext } from "../context/AppContext";
+function NotificationCreationBlock({ credentials, codProjeto }) {
   const [notInfo, setNotInfo] = useState({
     destinatario: null,
     remetente: credentials.nome,
@@ -11,6 +11,7 @@ function NotificationCreationBlock({ credentials, codProjeto, usuarios }) {
   });
   const [destinatarioNome, setDestinatarioNome] = useState("NÃO DEFINIDO");
   const [msg, setMsg] = useState({ text: "", color: "" });
+  const { users } = useContext(AppContext);
   function notify() {
     if (validateFields()) {
       axios
@@ -68,7 +69,7 @@ function NotificationCreationBlock({ credentials, codProjeto, usuarios }) {
           }}
           className="outline-none border border-gray-200 font-bold h-[36px]"
         >
-          {usuarios.map((usuario) => (
+          {users.map((usuario) => (
             <option key={usuario._id} value={`${usuario._id}/${usuario.nome}`}>
               {usuario.nome.toUpperCase()}
             </option>

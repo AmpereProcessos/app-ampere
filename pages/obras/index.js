@@ -10,7 +10,7 @@ import {
   statusLiberacao,
 } from "../../utils/constants";
 import dayjs from "dayjs";
-function Obras({ credentials, setCredentials, users }) {
+function Obras({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
@@ -654,7 +654,6 @@ function Obras({ credentials, setCredentials, users }) {
       </div>
       {modalIsOpen && (
         <ModalObras
-          users={users}
           credentials={credentials}
           handleUpdates={handleUpdates}
           project={modalProject}

@@ -10,7 +10,7 @@ import {
   cidadesAtendidas,
   vendedores,
 } from "../../utils/constants";
-function Projetos({ credentials, setCredentials, users }) {
+function Projetos({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -553,7 +553,6 @@ function Projetos({ credentials, setCredentials, users }) {
       </Link>
       {modalIsOpen && (
         <ModalProjetos
-          users={users}
           credentials={credentials}
           handleUpdates={handleUpdates}
           project={modalProject}

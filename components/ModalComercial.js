@@ -69,7 +69,6 @@ function ModalComercial({
   editor,
   handleUpdates,
   credentials,
-  users,
 }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
@@ -184,7 +183,6 @@ function ModalComercial({
                 </span>
                 <NotificationCreationBlock
                   codProjeto={project.qtde}
-                  usuarios={users}
                   credentials={credentials}
                 />
               </div>

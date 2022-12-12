@@ -51,7 +51,6 @@ function ModalProjetos({
   editor,
   handleUpdates,
   credentials,
-  users,
 }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
@@ -187,7 +186,6 @@ function ModalProjetos({
                 </span>
                 <NotificationCreationBlock
                   codProjeto={project.qtde}
-                  usuarios={users}
                   credentials={credentials}
                 />
               </div>
@@ -2300,7 +2298,7 @@ function ModalProjetos({
                           : infoHolder.obra?.equipeResp
                         : "NÃO DEFINIDO"
                     }
-                    options={equipesTecnicas.map(equipe => equipe)}
+                    options={equipesTecnicas.map((equipe) => equipe)}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,

@@ -4,7 +4,7 @@ import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { useRouter } from "next/router";
@@ -21,11 +21,19 @@ function MyApp({ Component, pageProps }) {
       .get(`/api/notificacoes/${id}`)
       .then((res) => setNotificacoes(res.data));
   }
-  useEffect(() => {
-    axios.get("/api/auth/user").then((res) => {
-      setUsers(res.data);
-    });
-  }, []);
+  {
+    /** useEffect(() => {
+    console.log(credentials.nome);
+    if (credentials.nome) {
+      console.log(credentials);
+      console.log("FUI CHAMADO");
+      axios.get("/api/auth/user").then((res) => {
+        setUsers(res.data);
+      });
+    }
+  }, []); */
+  }
+
   useEffect(() => {
     {
       /** if (Object.keys(credentials).length == 0) {
@@ -38,7 +46,7 @@ function MyApp({ Component, pageProps }) {
       getNotificacoes(credentials._id);
     } */
     }
-    if (credentials) {
+    if (credentials.nome) {
       getNotificacoes(credentials._id);
     }
     if (
@@ -72,7 +80,6 @@ function MyApp({ Component, pageProps }) {
               } grow w-full`}
             >
               <Component
-                users={users}
                 sidebarVisible={sidebarVisible}
                 toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
                 setCredentials={setCredentials}

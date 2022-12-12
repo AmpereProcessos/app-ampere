@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalComercial from "../../components/ModalComercial";
@@ -7,6 +7,7 @@ import ModalComercial from "../../components/ModalComercial";
 import { useRouter } from "next/router";
 import { statusLiberacao } from "../../utils/constants";
 import Link from "next/link";
+import { AppContext } from "../../context/AppContext";
 const statusStyles = {
   ASSINADO: {
     textColor: "text-green-500",
@@ -197,6 +198,7 @@ function Comercial({ credentials, setCredentials, users }) {
       setModalIsOpen(true);
     });
   }
+  console.log("CREDENTIALS FROM PROPS", credentials);
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
@@ -436,7 +438,6 @@ function Comercial({ credentials, setCredentials, users }) {
       )}
       {modalIsOpen && (
         <ModalComercial
-          users={users}
           handleUpdates={handleUpdates}
           project={modalProject}
           editor={

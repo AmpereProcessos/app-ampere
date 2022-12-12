@@ -7,7 +7,7 @@ import { statusLiberacao } from "../../utils/constants";
 import ModalSuprimentos from "../../components/ModalSuprimentos";
 import dayjs from "dayjs";
 import dayjsBusinessDays from "dayjs-business-days";
-function Suprimentos({ credentials, setCredentials, users }) {
+function Suprimentos({ credentials, setCredentials }) {
   const router = useRouter();
   dayjs.extend(dayjsBusinessDays);
   const [projects, setProjects] = useState([]);
@@ -436,7 +436,6 @@ function Suprimentos({ credentials, setCredentials, users }) {
       </div>
       {modalIsOpen && (
         <ModalSuprimentos
-          users={users}
           handleUpdates={handleUpdates}
           project={modalProject}
           editor={

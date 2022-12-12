@@ -5,23 +5,30 @@ export const AppContext = createContext();
 
 export function AppProvider({ children, pathname }) {
   const [credentials, setCredentials] = useState(null);
+  const [users, setUsers] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  function getUsers() {
+    axios.get("/api/auth/user").then((res) => {
+      setUsers(res.data);
+    });
+  }
   useEffect(() => {
     if (!credentials) {
       var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
       if (storedCredentials != null) {
         setCredentials(storedCredentials);
+        getUsers();
       } else {
         if (!window.location.pathname.includes("publico"))
           Router.push("/auth/authHome");
       }
     } else {
-      return;
+      getUsers();
     }
     setLoaded(true);
   }, []);
   return (
-    <AppContext.Provider value={{ credentials, setCredentials }}>
+    <AppContext.Provider value={{ credentials, setCredentials, users }}>
       {loaded
         ? credentials ||
           window.location.pathname.includes("/auth/authHome") ||

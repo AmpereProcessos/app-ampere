@@ -56,7 +56,6 @@ function ModalSuprimentos({
   ppsEditor,
   handleUpdates,
   credentials,
-  users,
 }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
@@ -157,7 +156,6 @@ function ModalSuprimentos({
                 </span>
                 <NotificationCreationBlock
                   codProjeto={project.qtde}
-                  usuarios={users}
                   credentials={credentials}
                 />
               </div>

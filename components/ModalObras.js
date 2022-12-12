@@ -56,7 +56,6 @@ function ModalObras({
   editor,
   handleUpdates,
   credentials,
-  users,
 }) {
   const [infoHolder, setInfo] = useState(project);
   const [msg, setMsg] = useState("");
@@ -203,7 +202,6 @@ function ModalObras({
                 </span>
                 <NotificationCreationBlock
                   codProjeto={project.qtde}
-                  usuarios={users}
                   credentials={credentials}
                 />
               </div>

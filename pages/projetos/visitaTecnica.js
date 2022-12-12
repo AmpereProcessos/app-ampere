@@ -1,11 +1,15 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-
+import ModalVisitaTecnica from "../../components/ModalVisitaTecnica";
 function VisitaTecnica({ credentials, setCredentials }) {
   const router = useRouter();
   const [forms, setForms] = useState([]);
   const [filteredForms, setFilteredForms] = useState([]);
+  const [modal, setModal] = useState({
+    open: false,
+    form: {},
+  });
   function getProjects() {
     axios.get("/api/solicitacoes/visitaTecnica").then((res) => {
       setFilteredForms(res.data);
@@ -43,6 +47,9 @@ function VisitaTecnica({ credentials, setCredentials }) {
       <div className="flex flex-wrap justify-around gap-3 mt-4">
         {filteredForms.map((form) => (
           <div
+            onClick={() => {
+              setModal({ open: true, form: form });
+            }}
             key={form._id}
             className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
           >
@@ -66,6 +73,12 @@ function VisitaTecnica({ credentials, setCredentials }) {
             </div>
           </div>
         ))}
+        {modal.open && (
+          <ModalVisitaTecnica
+            info={modal.form}
+            setModalIsOpen={() => setModal({ ...modal, open: false })}
+          />
+        )}
       </div>
     </div>
   );

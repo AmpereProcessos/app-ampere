@@ -8,6 +8,9 @@ function VisitaTecnica({ credentials, setCredentials }) {
   const router = useRouter();
   const [forms, setForms] = useState([]);
   const [filteredForms, setFilteredForms] = useState([]);
+  const [filters, setFilters] = useState({
+    statusChamado: [],
+  });
   const [modal, setModal] = useState({
     open: false,
     form: {},
@@ -41,9 +44,15 @@ function VisitaTecnica({ credentials, setCredentials }) {
     if (dateFilter.after && dateFilter.before && dateFilter.field != null) {
       if (!newArr) newArr = forms;
       newArr = newArr.filter(
-        (call) =>
-          call[dateFilter.field] >= dateFilter.after &&
-          call[dateFilter.field] <= dateFilter.before
+        (form) =>
+          form[dateFilter.field] >= dateFilter.after &&
+          form[dateFilter.field] <= dateFilter.before
+      );
+    }
+    if (filters.statusChamado.length > 0) {
+      if (!newArr) newArr = forms;
+      newArr = newArr.filter((form) =>
+        filters.statusChamado.includes(form.status)
       );
     }
     if (!newArr) {
@@ -161,6 +170,22 @@ function VisitaTecnica({ credentials, setCredentials }) {
               }
             />
           </div>
+          <Select
+            isMulti
+            placeholder="STATUS"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                statusChamado: e.map((x) => x.value),
+              })
+            }
+            options={[
+              { label: "CONCLUIDO", value: "CONCLUIDO" },
+              { label: "EM ANÁLISE TÉCNICA", value: "EM ANÁLISE TÉCNICA" },
+              { label: "PENDÊNCIA COMERCIAL", value: "PENDÊNCIA COMERCIAL" },
+              { label: "VISITA IN LOCO", value: "VISITA IN LOCO" },
+            ]}
+          />
           <button
             onClick={filterForms}
             className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"

@@ -176,6 +176,7 @@ export default async function handler(req, res) {
         dataNps: obj.jornada?.dataNps ? fixDate(obj.jornada.dataNps) : "-",
         codSVB: obj.codigoSVB ? obj.codigoSVB : "-",
         potenciaPico: obj.sistema.potPico ? obj.sistema.potPico : "-",
+        dataNascimento: obj.dataNascimento ? obj.dataNascimento : "-",
       };
     });
     res.json(newArr);

@@ -6,9 +6,15 @@ import Link from "next/link";
 import Image from "next/image";
 import dayjs from "dayjs";
 function PDFFormulario({ info }) {
-  console.log(info);
+  function getTotalCost() {
+    var total = 0;
+    for (let i = 0; i < info.materiais.length; i++) {
+      total = total + info.materiais[i].diff * info.materiais[i].precoUnit;
+    }
+    return total.toFixed(2);
+  }
   return (
-    <div className="w-[21cm] h-[29.7cm]  p-4 px-6">
+    <div className="w-[21cm] h-[29.7cm]  p-4 px-4">
       <h1 className="text-center font-bold text-xl mb-6">
         REQUISIÇÃO DE SAÍDA DE MATERIAIS
       </h1>
@@ -85,12 +91,6 @@ function PDFFormulario({ info }) {
                         scope="col"
                         className="text-sm font-medium text-white px-6 py-4"
                       >
-                        VALOR UNITÁRIO
-                      </th>
-                      <th
-                        scope="col"
-                        className="text-sm font-medium text-white px-6 py-4"
-                      >
                         VALOR
                       </th>
                     </tr>
@@ -108,10 +108,7 @@ function PDFFormulario({ info }) {
                           {material.qtdeDevolucao ? material.qtdeDevolucao : 0}
                         </td>
                         <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
-                          {material.diff}
-                        </td>
-                        <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
-                          R${material.precoUnit.toFixed(2).replace(".", ",")}
+                          {material.diff ? material.diff.toFixed(2) : "-"}
                         </td>
                         <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
                           R$
@@ -121,6 +118,24 @@ function PDFFormulario({ info }) {
                         </td>
                       </tr>
                     ))}
+                    <tr className="border-b border-gray-700">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        TOTAL
+                      </td>
+                      <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
+                        -
+                      </td>
+                      <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
+                        -
+                      </td>
+                      <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
+                        -
+                      </td>
+                      <td className="text-sm text-gray-900 font-medium px-6 py-4 whitespace-nowrap">
+                        R$
+                        {getTotalCost()}
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>

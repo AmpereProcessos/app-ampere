@@ -215,6 +215,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                               ...saidaMaterialHolder,
                               nome: e.value.nome,
                               id: e.value.id,
+                              precoUnit: e.value.preco,
                             })
                           }
                           options={materiais.map((material) => {
@@ -223,6 +224,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                               value: {
                                 id: material._id,
                                 nome: material.nome,
+                                preco: material.preco,
                               },
                             };
                           })}

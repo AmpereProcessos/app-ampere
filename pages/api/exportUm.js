@@ -224,7 +224,7 @@ export default async function handler(req, res) {
           obj.estruturaPersonalizada.valor
         ),
         dataUltimoContato: obj.jornada.dataUltimoContato
-          ? obj.jornada.dataUltimoContato
+          ? fixDate(obj.jornada.dataUltimoContato)
           : "-",
         statusContato: getContactStatus(
           obj.jornada.dataUltimoContato,

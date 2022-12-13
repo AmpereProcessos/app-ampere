@@ -251,11 +251,16 @@ function Home({ credentials, setCredentials }) {
           ></div>
         </div>
         <p className="text-center font-bold text-[#15599a] text-xl">
-          Faltam{" "}
-          {totalPeakPot
-            ? `${(100 - totalPeakPot).toFixed(2).replace(".", ",")}%`
-            : "-"}
-          ...
+          {totalPeakPot < 100 ? (
+            <>
+              Faltam {(100 - totalPeakPot).toFixed(2).replace(".", ",")}% para
+              os <strong className="text-[#fead41]">10 MEGA !</strong>
+            </>
+          ) : (
+            <strong className="font-bold text-[#fead41]">
+              SOMOS 10 MEGA !!!
+            </strong>
+          )}
         </p>
       </div>
       <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">

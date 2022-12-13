@@ -68,13 +68,12 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
         arr.push(materialHolder);
       }
       setCallInfo({ ...callInfo, materiais: arr });
-      setMaterialHolder({ ...materialHolder, qtdeSaida: null });
       setMaterialMsg("");
     } else {
       setMaterialMsg("Quantidade inválida");
     }
   }
-  function addFormulario() {
+  async function addFormulario() {
     if (callInfo.nomeDoContrato.trim().length < 3) {
       setMessage({ text: "Nome do contrato inválido", color: "text-red-500" });
     } else if (callInfo.responsavel == "A DEFINIR") {
@@ -87,6 +86,9 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
         color: "text-red-500",
       });
     } else {
+      await axios.post(`/api/projects/update/${callInfo.idPai}`, {
+        "material.statusSeparacao": "SEPARADO",
+      });
       axios
         .post("/api/almoxarifado/formularios", {
           ...callInfo,

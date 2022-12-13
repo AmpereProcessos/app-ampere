@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
-import { MdOutlineAddCircle } from "react-icons/md";
+import { MdOutlineAddCircle, MdSportsGolf } from "react-icons/md";
+import { FaSave } from "react-icons/fa";
 import Select from "react-select";
 import { cities } from "../utils/constants";
 import axios from "axios";
@@ -68,7 +69,14 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
   async function validateForm() {
     await axios.put("/api/almoxarifado/formularios", {
       id: dados._id,
-      data: dados.materiais,
+      data: {
+        materiais: dados.materiais,
+        dataEfetivacao: new Date(),
+        efetivado: true,
+      },
+    });
+    await axios.post(`/api/projects/update/${dados.idPai}`, {
+      "material.lista": dados.materiais,
     });
     axios
       .post("/api/almoxarifado/materiais", dados.materiais)
@@ -86,6 +94,21 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
         })
       );
     setDados({ ...dados, efetivado: true });
+  }
+  function saveChanges() {
+    axios
+      .put("/api/almoxarifado/formularios", {
+        id: dados._id,
+        data: {
+          materiais: dados.materiais,
+        },
+      })
+      .then((res) =>
+        setResponseMessage({
+          text: "Alterações feitas",
+          color: "text-[#15599a]",
+        })
+      );
   }
   useEffect(() => {
     getMaterials();
@@ -263,13 +286,25 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                   ))}
                 </div>
               </div>
+              {responseMessage.text && (
+                <p className={`text-center italic ${responseMessage.color}`}>
+                  {responseMessage.text}
+                </p>
+              )}
               {dados.efetivado != true && (
-                <div className="flex justify-center mt-2">
+                <div className="flex justify-center mt-2 gap-2">
                   <button
                     onClick={validateForm}
                     className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
                   >
                     DAR BAIXA
+                  </button>
+                  <button
+                    onClick={saveChanges}
+                    className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
+                  >
+                    <p>Salvar alterações</p>
+                    <FaSave />
                   </button>
                 </div>
               )}

@@ -20,9 +20,7 @@ export default async function handler(req, res) {
       },
       {
         $set: {
-          materiais: req.body.data,
-          dataEfetivacao: new Date(),
-          efetivado: true,
+          ...req.body.data,
         },
       }
     );

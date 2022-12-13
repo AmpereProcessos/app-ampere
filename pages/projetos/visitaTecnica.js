@@ -33,9 +33,9 @@ function VisitaTecnica({ credentials, setCredentials }) {
     } else if (statusAprovacao == "EM ANÁLISE TÉCNICA") {
       return "bg-yellow-100";
     } else if (statusAprovacao == "PENDÊNCIA COMERCIAL") {
-      return "bg-cyan-200";
+      return "bg-cyan-100";
     } else if (statusAprovacao == "VISITA IN LOCO") {
-      return "bg-indigo-200";
+      return "bg-indigo-100";
     } else {
       return "bg-[#fff]";
     }
@@ -62,6 +62,42 @@ function VisitaTecnica({ credentials, setCredentials }) {
     } else {
       setFilteredForms(newArr);
       return newArr;
+    }
+  }
+  function getPendenceStatusBorder(tipoDeLaudo, currentTimeDiff, status) {
+    console.log(status);
+    if (status != "CONCLUIDO") {
+      var matches = /\(([^)]+)\)/.exec(tipoDeLaudo)[1];
+      var expectedHours = matches.split(" ")[0];
+      console.log(expectedHours);
+      console.log(currentTimeDiff);
+      if (Number(expectedHours) - Number(currentTimeDiff) <= 3) {
+        return "border-2 border-red-500";
+      } else if (Number(expectedHours) - Number(currentTimeDiff) <= 5) {
+        return "border-2 border-yellow-500";
+      } else {
+        return;
+      }
+    } else {
+      return;
+    }
+  }
+  function getPendenceStatusText(tipoDeLaudo, currentTimeDiff, status) {
+    console.log(status);
+    if (status != "CONCLUIDO") {
+      var matches = /\(([^)]+)\)/.exec(tipoDeLaudo)[1];
+      var expectedHours = matches.split(" ")[0];
+      console.log(expectedHours);
+      console.log(currentTimeDiff);
+      if (Number(expectedHours) - Number(currentTimeDiff) <= 3) {
+        return "text-red-500";
+      } else if (Number(expectedHours) - Number(currentTimeDiff) <= 5) {
+        return "text-yellow-500";
+      } else {
+        return "text-gray-700";
+      }
+    } else {
+      return "text-gray-700";
     }
   }
   useEffect(() => {
@@ -205,6 +241,10 @@ function VisitaTecnica({ credentials, setCredentials }) {
             key={form._id}
             className={`w-[250px] ${getCardColor(
               form.status
+            )} ${getPendenceStatusBorder(
+              form.tipoDeLaudo,
+              dayjs().diff(dayjs(form.dataDeAbertura), "hours"),
+              form.status
             )} lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
           >
             <div className="flex items-center justify-center">
@@ -231,9 +271,15 @@ function VisitaTecnica({ credentials, setCredentials }) {
                   {form.tipoDeLaudo}
                 </p>
               </div>
-              <div className="flex flex-col items-center">
-                <p className="text-xxs text-gray-700">TEMPO DESDE ABERTURA</p>
-                <p className="text-xs text-gray-700 font-bold">
+              <div
+                className={`flex flex-col ${getPendenceStatusText(
+                  form.tipoDeLaudo,
+                  dayjs().diff(dayjs(form.dataDeAbertura), "hours"),
+                  form.status
+                )} items-center mt-2`}
+              >
+                <p className="text-xxs">TEMPO DESDE ABERTURA</p>
+                <p className="text-xs font-bold">
                   {dayjs().diff(dayjs(form.dataDeAbertura), "hours")} HORAS
                 </p>
               </div>

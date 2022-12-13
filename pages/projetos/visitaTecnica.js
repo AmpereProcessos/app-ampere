@@ -4,6 +4,7 @@ import Select from "react-select";
 import React, { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalVisitaTecnica from "../../components/ModalVisitaTecnica";
+import dayjs from "dayjs";
 function VisitaTecnica({ credentials, setCredentials }) {
   const router = useRouter();
   const [forms, setForms] = useState([]);
@@ -216,11 +217,24 @@ function VisitaTecnica({ credentials, setCredentials }) {
                 <p className="text-xxs text-gray-700">CIDADE</p>
                 <p className="text-xs text-gray-700 font-bold">{form.cidade}</p>
               </div>
-
               <div className="flex flex-col items-center">
                 <p className="text-xxs text-gray-700">VENDEDOR</p>
                 <p className="text-xs text-gray-700 font-bold">
                   {form.nomeVendedor}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col items-center">
+                <p className="text-xxs text-gray-700">TIPO DE LAUDO</p>
+                <p className="text-xs text-gray-700 font-bold">
+                  {form.tipoDeLaudo}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-xxs text-gray-700">TEMPO DESDE ABERTURA</p>
+                <p className="text-xs text-gray-700 font-bold">
+                  {dayjs().diff(dayjs(form.dataDeAbertura), "hours")} HORAS
                 </p>
               </div>
             </div>

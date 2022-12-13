@@ -114,7 +114,11 @@ function FormVisitaTecnica() {
   }
   function sendForm() {
     axios
-      .post("/api/solicitacoes/visitaTecnica", { ...dados, links: links })
+      .post("/api/solicitacoes/visitaTecnica", {
+        ...dados,
+        links: links,
+        dataDeAbertura: new Date().toISOString(),
+      })
       .then((res) => {
         setMsg({ text: "Solicitação enviada!", color: "text-green-500" });
         setTimeout(() => {

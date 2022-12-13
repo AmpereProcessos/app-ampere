@@ -1,9 +1,40 @@
 import connectToDatabase from "../../utils/connectDb";
+import dayjs from "dayjs";
 function fixDate(value) {
   if (isNaN(Date.parse(value)) == true) {
     return "-";
   } else {
     return new Date(value).toLocaleDateString("pt-br");
+  }
+}
+function getContractValue(valorProjeto, valorPadrao, valorEstrutura) {
+  var totalSum = 0;
+
+  let projeto = !isNaN(valorProjeto) ? valorProjeto : 0;
+  let padrao = !isNaN(valorPadrao) ? valorPadrao : 0;
+  let estrutura = !isNaN(valorEstrutura) ? valorEstrutura : 0;
+  totalSum =
+    Number(totalSum) + Number(projeto) + Number(padrao) + Number(estrutura);
+  return totalSum;
+}
+function getContactStatus(dataUltimoContato, jornadaConcluida) {
+  if (jornadaConcluida != true) {
+    if (!isNaN(new Date(dataUltimoContato))) {
+      return dayjs().diff(dayjs(dataUltimoContato)) < 7
+        ? "OK"
+        : "CONTATO PENDENTE";
+    } else {
+      return "CONTATO PENDENTE";
+    }
+  } else {
+    return "OK";
+  }
+}
+function done(value) {
+  if (isNaN(Date.parse(value)) == true) {
+    return true;
+  } else {
+    return false;
   }
 }
 export default async function handler(req, res) {
@@ -176,7 +207,53 @@ export default async function handler(req, res) {
         dataNps: obj.jornada?.dataNps ? fixDate(obj.jornada.dataNps) : "-",
         codSVB: obj.codigoSVB ? obj.codigoSVB : "-",
         potenciaPico: obj.sistema.potPico ? obj.sistema.potPico : "-",
-        dataNascimento: obj.dataNascimento ? obj.dataNascimento : "-",
+        dataNascimento: obj.dataNascimento ? obj.dataNascimento : "-", // novas infos
+        email: obj.email ? obj.email : "-",
+        logradouro: obj.logradouro ? obj.logradouro : "-",
+        numeroResidencia: obj.numeroResidencia ? obj.numeroResidencia : "-",
+        bairro: obj.bairro ? obj.bairro : "-",
+        cep: obj.cep ? obj.cep : "-",
+        canalDeVenda: obj.canalVenda ? obj.canalVenda : "-",
+        indicador: obj.indicacao?.quemIndicou
+          ? obj.indicacao?.quemIndicou
+          : "-",
+        ondeTrabalha: obj.ondeTrabalha ? obj.ondeTrabalha : "-",
+        valorContrato: getContractValue(
+          obj.sistema.valorProjeto,
+          obj.padrao.valor,
+          obj.estruturaPersonalizada.valor
+        ),
+        dataUltimoContato: obj.jornada.dataUltimoContato
+          ? obj.jornada.dataUltimoContato
+          : "-",
+        statusContato: getContactStatus(
+          obj.jornada.dataUltimoContato,
+          obj.jornada.jornadaConcluida
+        ),
+        jornadaConcluida: obj.jornada.jornadaConcluida
+          ? obj.jornada.jornadaConcluida
+          : "-",
+        boasVindas: obj.jornada.boasVindas ? obj.jornada.boasVindas : "-",
+        assDocumentacao: obj.jornada.assDocumentacoes
+          ? obj.jornada.assDocumentacoes
+          : "-",
+        compraDoKit: obj.jornada.compraDoKit ? obj.jornada.compraDoKit : "-",
+        nfFaturada: obj.jornada.nfFaturada ? obj.jornada.nfFaturada : "-",
+        prevChegada: obj.jornada.prevChegada ? obj.jornada.prevChegada : "-",
+        respConcessionaria: obj.jornada.respConcessionaria
+          ? obj.jornada.respConcessionaria
+          : "-",
+        entregaDoKit: obj.jornada.entregaDoKit ? obj.jornada.entregaDoKit : "-",
+        instalacaoAgendada: obj.jornada.instalacaoAgendada
+          ? obj.jornada.instalacaoAgendada
+          : "-",
+        instalacaoRealizada: obj.jornada.instalacaoRealizada
+          ? obj.jornada.instalacaoRealizada
+          : "-",
+        vistoriaConcessionaria: obj.jornada.vistoriaConcessionaria
+          ? obj.jornada.vistoriaConcessionaria
+          : "-",
+        sistemaLigado: done(obj.jornada.sistemaLigado),
       };
     });
     res.json(newArr);

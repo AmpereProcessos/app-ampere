@@ -176,7 +176,53 @@ export default async function handler(req, res) {
         dataNps: obj.jornada?.dataNps ? fixDate(obj.jornada.dataNps) : "-",
         codSVB: obj.codigoSVB ? obj.codigoSVB : "-",
         potenciaPico: obj.sistema.potPico ? obj.sistema.potPico : "-",
-        dataNascimento: obj.dataNascimento ? obj.dataNascimento : "-",
+        dataNascimento: obj.dataNascimento ? obj.dataNascimento : "-", // novas infos
+        email: obj.email ? obj.email : "-",
+        logradouro: obj.logradouro ? obj.logradouro : "-",
+        numeroResidencia: obj.numeroResidencia ? obj.numeroResidencia : "-",
+        bairro: obj.bairro ? obj.bairro : "-",
+        cep: obj.cep ? obj.cep : "-",
+        canalDeVenda: obj.canalVenda ? obj.canalVenda : "-",
+        indicador: obj.indicacao?.quemIndicou
+          ? obj.indicacao?.quemIndicou
+          : "-",
+        ondeTrabalha: obj.ondeTrabalha ? obj.ondeTrabalha : "-",
+        valorContrato: getContractValue(
+          obj.sistema.valorProjeto,
+          obj.padrao.valor,
+          obj.estruturaPersonalizada.valor
+        ),
+        dataUltimoContato: obj.jornada.dataUltimoContato
+          ? obj.jornada.dataUltimoContato
+          : "-",
+        statusContato: getContactStatus(
+          obj.jornada.dataUltimoContato,
+          obj.jornada.jornadaConcluida
+        ),
+        jornadaConcluida: obj.jornada.jornadaConcluida
+          ? obj.jornada.jornadaConcluida
+          : "-",
+        boasVindas: obj.jornada.boasVindas ? obj.jornada.boasVindas : "-",
+        assDocumentacao: obj.jornada.assDocumentacoes
+          ? obj.jornada.assDocumentacoes
+          : "-",
+        compraDoKit: obj.jornada.compraDoKit ? obj.jornada.compraDoKit : "-",
+        nfFaturada: obj.jornada.nfFaturada ? obj.jornada.nfFaturada : "-",
+        prevChegada: obj.jornada.prevChegada ? obj.jornada.prevChegada : "-",
+        respConcessionaria: obj.jornada.respConcessionaria
+          ? obj.jornada.respConcessionaria
+          : "-",
+        entregaDoKit: obj.jornada.entregaDoKit ? obj.jornada.entregaDoKit : "-",
+        instalacaoAgendada: obj.jornada.instalacaoAgendada
+          ? obj.jornada.instalacaoAgendada
+          : "-",
+        instalacaoRealizada: obj.jornada.instalacaoRealizada
+          ? obj.jornada.instalacaoRealizada
+          : "-",
+        vistoriaConcessionaria: obj.jornada.vistoriaConcessionaria
+          ? obj.jornada.vistoriaConcessionaria
+          : "-",
+        sistemaLigado: done(obj.jornada.sistemaLigado),
       };
     });
     res.json(newArr);

@@ -8,14 +8,20 @@ function GestaoAlmoxarifado({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      if (!storedCredentials.accessibleRoutes.includes("Obras")) {
+      if (
+        !storedCredentials.accessibleRoutes.includes("Obras") &&
+        !storedCredentials.accessibleRoutes.includes("Almoxarifado")
+      ) {
         router.push("/");
       }
     } else {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (!credentials.accessibleRoutes.includes("Obras")) {
+        if (
+          !credentials.accessibleRoutes.includes("Obras") &&
+          !storedCredentials.accessibleRoutes.includes("Almoxarifado")
+        ) {
           router.push("/");
         }
       }

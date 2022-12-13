@@ -252,6 +252,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                       setMaterialHolder({
                         ...materialHolder,
                         qtdeSaida: Number(e.target.value),
+                        qtdeDevolucao: 0,
                       })
                     }
                   />

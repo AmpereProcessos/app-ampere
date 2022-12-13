@@ -9,7 +9,14 @@ function PDFFormulario({ info }) {
   function getTotalCost() {
     var total = 0;
     for (let i = 0; i < info.materiais.length; i++) {
-      total = total + info.materiais[i].diff * info.materiais[i].precoUnit;
+      if (info.materiais[i].diff) {
+        total = total + info.materiais[i].diff * info.materiais[i].precoUnit;
+      } else {
+        total =
+          total +
+          (info.materiais[i].qtdeSaida - info.materiais[i].qtdeDevolucao) *
+            info.materiais[i].precoUnit;
+      }
     }
     return total.toFixed(2);
   }
@@ -57,7 +64,76 @@ function PDFFormulario({ info }) {
           </h1>
         </div>
         <div className="flex flex-col px-2">
-          <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="grid grid-cols-6 gap-x-2 border-b bg-gray-800">
+            <p className="text-sm col-span-2 font-medium text-white px-6 py-4 text-center">
+              PRODUTO
+            </p>
+            <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
+              RETIRADA
+            </p>
+            <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
+              DEVOLUÇÃO
+            </p>
+            <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
+              DIFERENÇA
+            </p>
+            <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
+              VALOR
+            </p>
+          </div>
+          {info.materiais.map((material, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-6 gap-x-2 border-b border-x border-gray-700"
+            >
+              <p className="col-span-2 py-4 text-center whitespace-nowrap text-xs font-medium text-gray-900">
+                {material.nome}
+              </p>
+              <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+                {material.qtdeSaida}
+              </p>
+              <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+                {material.qtdeDevolucao ? material.qtdeDevolucao : 0}
+              </p>
+              <p className="text-sm col-span-1  text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+                {material.diff
+                  ? material.diff.toFixed(2)
+                  : (material.qtdeSaida - material.qtdeDevolucao).toFixed(2)}
+              </p>
+              <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+                R$
+                {material.diff
+                  ? (material.diff * material.precoUnit)
+                      .toFixed(2)
+                      .replace(".", ",")
+                  : (
+                      (material.qtdeSaida - material.qtdeDevolucao) *
+                      material.precoUnit
+                    )
+                      .toFixed(2)
+                      .replace(".", ",")}
+              </p>
+            </div>
+          ))}
+          <div className="grid grid-cols-6 gap-x-2  border-b border-x border-gray-700">
+            <p className="px-6 py-4 col-span-2 text-center whitespace-nowrap text-sm font-medium text-gray-900">
+              TOTAL
+            </p>
+            <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+              -
+            </p>
+            <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+              -
+            </p>
+            <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+              -
+            </p>
+            <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+              R$
+              {getTotalCost()}
+            </p>
+          </div>
+          {/**<div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
               <div className="overflow-hidden">
                 <table className="min-w-full border border-gray-700 text-center">
@@ -140,7 +216,7 @@ function PDFFormulario({ info }) {
                 </table>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

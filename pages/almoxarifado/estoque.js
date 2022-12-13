@@ -23,7 +23,10 @@ function Estoque({ credentials, setCredentials }) {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
       setCredentials(storedCredentials);
-      if (!storedCredentials.accessibleRoutes.includes("Obras")) {
+      if (
+        !storedCredentials.accessibleRoutes.includes("Obras") &&
+        !storedCredentials.accessibleRoutes.includes("Almoxarifado")
+      ) {
         router.push("/");
       } else {
         getMateriais();
@@ -32,7 +35,10 @@ function Estoque({ credentials, setCredentials }) {
       if (!credentials.nome) {
         router.push("/auth/authHome");
       } else {
-        if (!credentials.accessibleRoutes.includes("Obras")) {
+        if (
+          !storedCredentials.accessibleRoutes.includes("Obras") &&
+          !storedCredentials.accessibleRoutes.includes("Almoxarifado")
+        ) {
           router.push("/");
         } else {
           getMateriais();
@@ -117,16 +123,19 @@ function Estoque({ credentials, setCredentials }) {
               setModalMaterial(material);
             }}
             key={material._id}
-            className="w-[250px] lg:w-[250px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+            className="w-[250px] lg:w-[250px] hover:bg-blue-100 bg-[#fff] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100flex flex-col"
           >
             <div className="flex items-center justify-center">
               <p className="text-xs text-gray-700 text-center">
                 {material.nome}
               </p>
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-around mt-2">
               <p className="text-xs text-gray-700 text-center">
                 {material.qtde}
+              </p>
+              <p className="text-xs text-gray-700 text-center">
+                R${material.preco.toFixed(2).replace(".", ",")}
               </p>
             </div>
           </div>

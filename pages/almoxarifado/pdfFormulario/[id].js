@@ -5,7 +5,8 @@ import { ObjectId } from "mongodb";
 import Link from "next/link";
 import Image from "next/image";
 import dayjs from "dayjs";
-function PDFFormulario({ info }) {
+function PDFFormulario({ info, backTo }) {
+  console.log(backTo);
   function getTotalCost() {
     var total = 0;
     for (let i = 0; i < info.materiais.length; i++) {
@@ -27,7 +28,7 @@ function PDFFormulario({ info }) {
       </h1>
       <div className="grid grid-cols-2">
         <div className="flex justify-between">
-          <Link href="/almoxarifado/formularios">
+          <Link href={backTo ? `/${backTo}` : "/almoxarifado/formularios"}>
             <div className="flex justify-center items-center">
               <Image height="80px" width="240px" src={Logo} />
             </div>
@@ -227,6 +228,7 @@ export default PDFFormulario;
 export async function getServerSideProps({ query }) {
   // Fetch data from external API
   const id = query.id;
+  const backTo = query.backTo;
   const db = await connectToDatabase(process.env.DB_KEY);
   const collection = db.collection("formularios");
   let form = await collection.findOne({
@@ -234,5 +236,5 @@ export async function getServerSideProps({ query }) {
   });
   let info = JSON.parse(JSON.stringify(form));
   // Pass data to the page via props
-  return { props: { info } };
+  return { props: { info, backTo } };
 }

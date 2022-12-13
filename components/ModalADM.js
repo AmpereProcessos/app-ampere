@@ -8,6 +8,7 @@ import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
 import NotificationCreationBlock from "./NotificationCreationBlock";
 import axios from "axios";
+import Link from "next/link";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -1651,6 +1652,15 @@ function ModalADM({
                   MATERIAL
                 </span>
                 <div className="flex gap-2 justify-center flex-wrap">
+                  {infoHolder.material?.formularioId && (
+                    <Link
+                      href={`/almoxarifado/pdfFormulario/${infoHolder.material.formularioId}?backTo=adm`}
+                    >
+                      <p className="cursor-pointer bg-[#15599a] text-white items-center justify-center p-2 rounded font-bold">
+                        VER SOLICITAÇÃO
+                      </p>
+                    </Link>
+                  )}
                   <SelectInput
                     label={"Separação do material"}
                     value={
@@ -1694,7 +1704,7 @@ function ModalADM({
                     value={
                       infoHolder.material?.previsaoCustos != undefined &&
                       infoHolder.material?.previsaoCustos != "#VALUE!"
-                        ? infoHolder.material?.previsaoCustos
+                        ? infoHolder.material?.previsaoCustos.toFixed(2)
                         : 0
                     }
                     handleChange={(value) => {

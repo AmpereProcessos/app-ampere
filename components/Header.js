@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,13 +13,9 @@ import {
 } from "react-icons/md";
 import axios from "axios";
 import NotificationModal from "./NotificationModal";
-function Header({
-  toggleSidebar,
-  credentials,
-  logout,
-  notificacoes,
-  getNotificacoes,
-}) {
+import { AppContext } from "../context/AppContext";
+function Header({ toggleSidebar, credentials, notificacoes, getNotificacoes }) {
+  const { setCredentials } = useContext(AppContext);
   const router = useRouter();
   const [notificationIsOpen, setNotificationIsOpen] = useState(false);
   {
@@ -28,6 +24,11 @@ function Header({
       .get("https://testefunctionsbeto.azurewebsites.net/api/frases-api")
       .then((res) => setFrase(res.data.texto));
   }, []);*/
+  }
+  function logout() {
+    setCredentials(null);
+    localStorage.removeItem("credentials");
+    router.push("/auth/authHome");
   }
   function updateNotifications(id) {
     axios

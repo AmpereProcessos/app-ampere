@@ -62,11 +62,6 @@ function MyApp({ Component, pageProps }) {
       <AppProvider>
         <div className="flex flex-col bg-[#fff] w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">
           <Header
-            logout={() => {
-              localStorage.removeItem("credentials");
-              router.push("/auth/authHome");
-              setCredentials({});
-            }}
             credentials={credentials}
             notificacoes={notificacoes}
             getNotificacoes={getNotificacoes}

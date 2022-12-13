@@ -77,6 +77,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
     });
     await axios.post(`/api/projects/update/${dados.idPai}`, {
       "material.lista": dados.materiais,
+      "material.formularioId": dados._id,
     });
     axios
       .post("/api/almoxarifado/materiais", dados.materiais)

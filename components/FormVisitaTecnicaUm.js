@@ -5,7 +5,14 @@ import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
-function FormVisitaTecnicaUm({ dados, setDados, images, setImages, avancar }) {
+function FormVisitaTecnicaUm({
+  dados,
+  setDados,
+  images,
+  setImages,
+  avancar,
+  uploadImages,
+}) {
   const [msg, setMsg] = useState({
     text: "",
     color: "",
@@ -25,10 +32,6 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages, avancar }) {
           console.log(res.data.erro);
           return;
         } else {
-          console.log(
-            cidadesAtendidas.includes(res.data.localidade.toUpperCase())
-          );
-          console.log(res.data.localidade);
           setDados({
             ...dados,
             bairro: res.data.bairro,
@@ -48,6 +51,20 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages, avancar }) {
     return cep;
   }
   function validateFields() {
+    if (dados.nomeVendedor == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha o vendedor.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.telefoneVendedor.trim().length < 9) {
+      setMsg({
+        text: "Por favor, preencha o telefone do vendedor.",
+        color: "text-red-500",
+      });
+      return false;
+    }
     if (dados.nomeDoCliente.trim().length < 3) {
       setMsg({
         text: "Por favor, preencha o nome do cliente.",
@@ -378,6 +395,10 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages, avancar }) {
               value: "VISITA TÉCNICA IN LOCO - RURAL",
             },
             { label: "ALTERAÇÃO DE PROJETO", value: "ALTERAÇÃO DE PROJETO" },
+            {
+              label: "AUMENTO DE SISTEMA AMPÈRE",
+              value: "AUMENTO DE SISTEMA AMPÈRE",
+            },
             { label: "DESENHO PERSONALIZADO", value: "DESENHO PERSONALIZADO" },
             { label: "ORÇAMENTAÇÃO", value: "ORÇAMENTAÇÃO" },
           ]}
@@ -430,14 +451,28 @@ function FormVisitaTecnicaUm({ dados, setDados, images, setImages, avancar }) {
       {msg.text && (
         <p className={`text-center text-sm italic ${msg.color}`}>{msg.text}</p>
       )}
-      <div className="flex items-center justify-center mt-2">
-        <button
-          onClick={goToNext}
-          className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
-        >
-          PRÓXIMA ETAPA
-        </button>
-      </div>
+      {dados.tipoDeSolicitacao == "VISITA TÉCNICA IN LOCO - URBANA" ||
+      dados.tipoDeSolicitacao == "VISITA TÉCNICA IN LOCO - RURAL" ||
+      dados.tipoDeSolicitacao == "ALTERAÇÃO DE PROJETO" ||
+      dados.tipoDeSolicitacao == "AUMENTO DE SISTEMA AMPÈRE" ? (
+        <div className="flex justify-center items-center mt-3">
+          <button
+            onClick={uploadImages}
+            className="bg-[#fead61] hover:bg-[#15599a] text-center hover:text-white font-bold p-2 rounded w-fit"
+          >
+            ENVIAR FORMULÁRIO
+          </button>
+        </div>
+      ) : (
+        <div className="flex justify-center items-center mt-3">
+          <button
+            onClick={goToNext}
+            className="bg-[#fead61] hover:bg-[#15599a] text-center hover:text-white font-bold p-2 rounded w-fit"
+          >
+            PRÓXIMA ETAPA
+          </button>
+        </div>
+      )}
     </div>
   );
 }

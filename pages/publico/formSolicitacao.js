@@ -295,3 +295,18 @@ function FormularioSolicitacao() {
 }
 
 export default FormularioSolicitacao;
+/*
+export async function getServerSideProps(ctx) {
+  const cliente = ctx.query.cliente;
+
+  // The next line will only be logged on the server and never on the browser console even if we make
+  // client-side navigation.
+  // This confirms that `getServerSideProps` is guaranteed to run on the server and never on the client (or browser).
+
+  return {
+    props: {
+      cliente,
+    },
+  };
+}
+*/

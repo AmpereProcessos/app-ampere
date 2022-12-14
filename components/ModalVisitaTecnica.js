@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { FaSave } from "react-icons/fa";
-import { VscChromeClose } from "react-icons/vsc";
+import Link from "next/link";
 import NumberInput from "./NumberInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 import { cidadesAtendidas } from "../utils/constants";
 import { AiOutlineSearch } from "react-icons/ai";
+import { FaSave } from "react-icons/fa";
+import { VscChromeClose } from "react-icons/vsc";
 import axios from "axios";
 const MODAL_STYLES = {
   position: "fixed",
@@ -1151,6 +1152,137 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 </div>
               </>
             )}
+            {dados.tipoDeSolicitacao == "DESENHO PERSONALIZADO" && (
+              <>
+                <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                    DESENHO PERSONALIZADO
+                  </span>
+                  <div className="flex flex-col w-full text-sm lg:text-base items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      OBSERVAÇÕES PERTINENTES
+                    </span>
+                    <input
+                      className={`text-xs w-full text-center uppercase text-gray-600 outline-none`}
+                      value={dados.obsDesenho}
+                      placeholder={
+                        "DEIXE AQUI OBSERVAÇÕES SOBRE ESSA SOLICITAÇÃO"
+                      }
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          obsDesenho: e.target.value.toUpperCase(),
+                        })
+                      }
+                      type="text"
+                    />
+                  </div>
+                  <div className="flex items-center justify-center mt-2">
+                    <SelectInput
+                      label="TIPO DE DESENHO"
+                      editable={true}
+                      value={
+                        dados.tipoDesenho ? dados.tipoDesenho : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        {
+                          label: "SOLAR EDGE DESIGN",
+                          value: "SOLAR EDGE DESIGN",
+                        },
+                        { label: "REVIT 3D", value: "REVIT 3D" },
+                        { label: "AUTOCAD 2D", value: "AUTOCAD 2D" },
+                        {
+                          label: "APENAS VIABILIDADE DE ESPAÇO",
+                          value: "APENAS VIABILIDADE DE ESPAÇO",
+                        },
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, tipoDesenho: value })
+                      }
+                    />
+                  </div>
+                  <div className="flex flex-col w-full text-sm lg:text-base items-center mt-2">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      LOCALIZAÇÃO DO LOCAL DE INSTALAÇÃO
+                    </span>
+                    <input
+                      className={`text-xs w-full text-center uppercase text-gray-600 outline-none`}
+                      value={dados.localizacaoInstalacao}
+                      placeholder={"DESCREVA AQUI DETALHES DA ORÇAMENTAÇÃO"}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          localizacaoInstalacao: e.target.value.toUpperCase(),
+                        })
+                      }
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+            {dados.tipoDeSolicitacao == "ORÇAMENTAÇÃO" && (
+              <>
+                <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                    ORÇAMENTAÇÃO
+                  </span>
+                  <div className="flex gap-2 justify-around flex-wrap mt-2">
+                    <SelectInput
+                      label={"TIPO DE ORÇAMENTAÇÃO"}
+                      editable={true}
+                      value={
+                        dados.tipoOrcamentacao
+                          ? dados.tipoOrcamentacao
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "PADRÃO", value: "PADRÃO" },
+                        {
+                          label: "BARRACÃO COM TELHA",
+                          value: "BARRACÃO COM TELHA",
+                        },
+                        {
+                          label: "BARRACÃO SEM TELHA",
+                          value: "BARRACÃO SEM TELHA",
+                        },
+                        { label: "SUBESTAÇÃO", value: "SUBESTAÇÃO" },
+                        {
+                          label: "INFRAESTRUTURA ELÉTRICA",
+                          value: "INFRAESTRUTURA ELÉTRICA",
+                        },
+                        {
+                          label: "OUTRO (INDIQUE NA DESCRIÇÃO)",
+                          value: "OUTRO (INDIQUE NA DESCRIÇÃO)",
+                        },
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, tipoOrcamentacao: value })
+                      }
+                    />
+                  </div>
+                  <div className="flex flex-col w-full text-sm lg:text-base items-center mt-2">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      DESCRIÇÃO PARA ORÇAMENTAÇÃO
+                    </span>
+                    <input
+                      className={`text-xs w-full text-center uppercase text-gray-600 outline-none`}
+                      value={dados.descricaoOrcamentacao}
+                      placeholder={"DESCREVA AQUI DETALHES DA ORÇAMENTAÇÃO"}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          descricaoOrcamentacao: e.target.value.toUpperCase(),
+                        })
+                      }
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
             <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
               <span className="text-md text-center font-bold text-[#15599a] uppercase py-2">
                 ARQUIVOS
@@ -1166,6 +1298,15 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   </a>
                 ))}
               </div>
+            </div>
+            <div className="w-full flex items-center justify-center">
+              <Link
+                href={`/publico/formSolicitacao?cliente=${dados.nomeDoCliente}`}
+              >
+                <button className="p-2 rounded bg-[#fead61] font-bold hover:bg-[#15599a] hover:text-white">
+                  SOLICITAR CONTRATO
+                </button>
+              </Link>
             </div>
           </div>
         </div>

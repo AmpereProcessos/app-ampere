@@ -12,14 +12,16 @@ import FormVisitaTecnicaTres from "../../components/FormVisitaTecnicaTres";
 import FormVisitaTecnicaQuatro from "../../components/FormVisitaTecnicaQuatro";
 import FormVisitaTecnicaRural from "../../components/FormVisitaTecnicaRural";
 import axios from "axios";
+import FormVisitaTecnicaOrcamentacao from "../../components/FormVisitaTecnicaOrcamentacao";
+import FormVisitaTecnicaDesenho from "../../components/FormVisitaTecnicaDesenho";
 function FormVisitaTecnica() {
-  const phoneMask = (value) => {
+  function formatPhoneNumber(value) {
     if (!value) return "";
     value = value.replace(/\D/g, "");
     value = value.replace(/(\d{2})(\d)/, "($1) $2");
     value = value.replace(/(\d)(\d{4})$/, "$1-$2");
     return value;
-  };
+  }
   function formatCnpjCpf(value) {
     const cnpjCpf = value.replace(/\D/g, "");
 
@@ -86,7 +88,7 @@ function FormVisitaTecnica() {
       for (let i = 0; i < arrOfImagesKeys.length; i++) {
         var imageRef = ref(
           storage,
-          `visitaTecnica/${dados.nomeDoCliente}/${arrOfImagesKeys[i]}${(
+          `clientes/${dados.nomeDoCliente}/${arrOfImagesKeys[i]}${(
             Math.random() * 10000
           ).toFixed(0)}`
         );
@@ -126,6 +128,54 @@ function FormVisitaTecnica() {
         }, 2800);
       });
   }
+  function renderFirstStage(type) {
+    switch (type) {
+      case "VISITA TÉCNICA REMOTA - RURAL":
+        return (
+          <FormVisitaTecnicaRural
+            dados={dados}
+            setDados={setDados}
+            images={images}
+            setImages={setImages}
+            uploadImages={uploadImages}
+            voltar={() => setEstagio((prevStage) => prevStage - 1)}
+          />
+        );
+      case "VISITA TÉCNICA REMOTA - URBANA":
+        return (
+          <FormVisitaTecnicaDois
+            dados={dados}
+            setDados={setDados}
+            images={images}
+            setImages={setImages}
+            avancar={() => setEstagio((prevStage) => prevStage + 1)}
+            voltar={() => setEstagio((prevStage) => prevStage - 1)}
+          />
+        );
+      case "DESENHO PERSONALIZADO":
+        return (
+          <FormVisitaTecnicaDesenho
+            dados={dados}
+            setDados={setDados}
+            images={images}
+            setImages={setImages}
+            uploadImages={uploadImages}
+          />
+        );
+      case "ORÇAMENTAÇÃO":
+        return (
+          <FormVisitaTecnicaOrcamentacao
+            dados={dados}
+            setDados={setDados}
+            images={images}
+            setImages={setImages}
+            uploadImages={uploadImages}
+          />
+        );
+      default:
+        return;
+    }
+  }
   return (
     <div className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
       <div className="flex self-center items-center h-[100px] w-[100px]">
@@ -152,7 +202,7 @@ function FormVisitaTecnica() {
             editable={true}
             value={dados.telefoneVendedor}
             handleChange={(value) =>
-              setDados({ ...dados, telefoneVendedor: phoneMask(value) })
+              setDados({ ...dados, telefoneVendedor: formatPhoneNumber(value) })
             }
           />
         </div>
@@ -163,10 +213,12 @@ function FormVisitaTecnica() {
             images={images}
             setImages={setImages}
             avancar={() => setEstagio((prevStage) => prevStage + 1)}
+            uploadImages={uploadImages}
           />
         )}
-        {estagio == 1 ? (
-          dados.tipoDeSolicitacao == "VISITA TÉCNICA REMOTA - RURAL" ? (
+        {estagio == 1 && renderFirstStage(dados.tipoDeSolicitacao)}
+        {/**{estagio == 1 &&
+          dados.tipoDeSolicitacao == "VISITA TÉCNICA REMOTA - RURAL" && (
             <FormVisitaTecnicaRural
               dados={dados}
               setDados={setDados}
@@ -175,7 +227,9 @@ function FormVisitaTecnica() {
               uploadImages={uploadImages}
               voltar={() => setEstagio((prevStage) => prevStage - 1)}
             />
-          ) : (
+          )}
+        {estagio == 1 &&
+          dados.tipoDeSolicitacao == "VISITA TÉCNICA REMOTA - URBANA" && (
             <FormVisitaTecnicaDois
               dados={dados}
               setDados={setDados}
@@ -184,10 +238,8 @@ function FormVisitaTecnica() {
               avancar={() => setEstagio((prevStage) => prevStage + 1)}
               voltar={() => setEstagio((prevStage) => prevStage - 1)}
             />
-          )
-        ) : (
-          false
-        )}
+          )} */}
+
         {estagio == 2 && (
           <FormVisitaTecnicaTres
             dados={dados}

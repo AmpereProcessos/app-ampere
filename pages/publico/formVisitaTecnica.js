@@ -88,9 +88,9 @@ function FormVisitaTecnica() {
       for (let i = 0; i < arrOfImagesKeys.length; i++) {
         var imageRef = ref(
           storage,
-          `clientes/${dados.nomeDoCliente}/${arrOfImagesKeys[i]}${(
-            Math.random() * 10000
-          ).toFixed(0)}`
+          `clientes/${dados.nomeDoCliente}-${dados.codigoSVB}/${
+            arrOfImagesKeys[i]
+          }${(Math.random() * 10000).toFixed(0)}`
         );
         let res = await uploadBytes(
           imageRef,

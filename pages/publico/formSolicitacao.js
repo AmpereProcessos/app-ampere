@@ -22,6 +22,8 @@ import FormSolicitacaoOito from "../../components/FormSolicitacaoOito";
 import FormSolicitacaoNove from "../../components/FormSolicitacaoNove";
 import VisualizacaoForm from "../../components/VisualizacaoForm";
 import FormSolicitacaoDez from "../../components/FormSolicitacaoDez";
+import connectToSolicitacoesDatabase from "../../utils/solicitacoesDb";
+import { ObjectId } from "mongodb";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -48,10 +50,12 @@ function formatCEP(cep) {
     .replace(/(-\d{3})\d+?$/, "$1");
   return cep;
 }
-function FormularioSolicitacao() {
+function FormularioSolicitacao({ cliente, links, formVisitaId }) {
+  console.log(formVisitaId);
   const [estagio, setEstagio] = useState(0);
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",
+    nomeDoProjeto: cliente ? cliente : null,
     telefoneVendedor: "",
     tipoDeServico: "NÃO DEFINIDO",
     nomeDoContrato: "",
@@ -164,6 +168,7 @@ function FormularioSolicitacao() {
         });
       });
   }
+  console.log(dados);
   return (
     <div className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
       <div className="flex self-center items-center h-[100px] w-[100px]">
@@ -280,12 +285,14 @@ function FormularioSolicitacao() {
             setDados={setDados}
             avancar={() => setEstagio(estagio + 1)}
             voltar={() => setEstagio(estagio - 1)}
+            links={links ? links : []}
           />
         )}
         {estagio == 10 && (
           <VisualizacaoForm
             dados={dados}
             setDados={setDados}
+            formVisitaId={formVisitaId ? formVisitaId : undefined}
             voltar={() => setEstagio(estagio - 1)}
           />
         )}
@@ -295,18 +302,35 @@ function FormularioSolicitacao() {
 }
 
 export default FormularioSolicitacao;
-/*
+
 export async function getServerSideProps(ctx) {
   const cliente = ctx.query.cliente;
-
+  const formId = ctx.query.id;
   // The next line will only be logged on the server and never on the browser console even if we make
   // client-side navigation.
   // This confirms that `getServerSideProps` is guaranteed to run on the server and never on the client (or browser).
-
-  return {
-    props: {
-      cliente,
-    },
-  };
+  if (cliente && formId) {
+    const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);
+    const collection = db.collection("visitaTecnica");
+    let obj = await collection.findOne(
+      {
+        _id: ObjectId(formId),
+      },
+      {
+        $project: {
+          links: 1,
+        },
+      }
+    );
+    return {
+      props: {
+        cliente,
+        links: obj.links,
+        formVisitaId: formId,
+      },
+    };
+  } else
+    return {
+      props: {},
+    };
 }
-*/

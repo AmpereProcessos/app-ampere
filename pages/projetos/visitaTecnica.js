@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalVisitaTecnica from "../../components/ModalVisitaTecnica";
 import dayjs from "dayjs";
+import { BsPatchCheckFill } from "react-icons/bs";
 function VisitaTecnica({ credentials, setCredentials }) {
   const router = useRouter();
   const [forms, setForms] = useState([]);
@@ -247,10 +248,19 @@ function VisitaTecnica({ credentials, setCredentials }) {
               form.status
             )} lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
           >
-            <div className="flex items-center justify-center">
-              <p className="text-xs text-[#15599a] font-bold text-center">
+            <div className="flex justify-center">
+              <h1 className="text-xs text-[#15599a] font-bold">
                 {form.nomeDoCliente}
-              </p>
+              </h1>
+              {form.solicitacaoContrato && (
+                <BsPatchCheckFill
+                  style={{
+                    fontSize: "20px",
+                    color: "rgb(21 128 61)",
+                    marginLeft: "10px",
+                  }}
+                />
+              )}
             </div>
             <div className="flex items-center justify-between">
               <div className="flex flex-col items-center">

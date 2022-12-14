@@ -176,7 +176,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <NumberInput
                   label={"Nº DO PROJETO SVB"}
-                  editable={true}
+                  editable={false}
                   value={dados.codigoSVB ? dados.codigoSVB : ""}
                   handleChange={(value) =>
                     setDados({ ...dados, codigoSVB: Number(value) })
@@ -1301,7 +1301,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
             </div>
             <div className="w-full flex items-center justify-center">
               <Link
-                href={`/publico/formSolicitacao?cliente=${dados.nomeDoCliente}`}
+                href={`/publico/formSolicitacao?cliente=${dados.nomeDoCliente}-${dados.codigoSVB}&id=${dados._id}`}
               >
                 <button className="p-2 rounded bg-[#fead61] font-bold hover:bg-[#15599a] hover:text-white">
                   SOLICITAR CONTRATO

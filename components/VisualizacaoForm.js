@@ -36,7 +36,7 @@ function formatCEP(cep) {
     .replace(/(-\d{3})\d+?$/, "$1");
   return cep;
 }
-function VisualizacaoForm({ dados, voltar, setDados }) {
+function VisualizacaoForm({ dados, voltar, setDados, formVisitaId }) {
   console.log(dados);
   const [msg, setMsg] = useState({
     text: "",
@@ -67,7 +67,13 @@ function VisualizacaoForm({ dados, voltar, setDados }) {
         })
       );
   }
-  function criarSolicitacao() {
+  async function criarSolicitacao() {
+    if (formVisitaId) {
+      await axios.put("/api/solicitacoes/visitaTecnica", {
+        _id: formVisitaId,
+        solicitacaoContrato: true,
+      });
+    }
     axios
       .post("/api/solicitacoes/contrato", dados)
       .then((res) => {

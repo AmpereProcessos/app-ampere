@@ -4,7 +4,8 @@ import { fileTypes } from "../utils/constants";
 import { storage } from "../utils/firebase";
 import { AiOutlineCheck } from "react-icons/ai";
 import Image from "next/image";
-function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
+function FormSolicitacaoDez({ dados, setDados, voltar, avancar, links }) {
+  console.log(links);
   const [images, setImages] = useState({});
   const [checks, setChecks] = useState({
     contaDeEnergiaCheck: false,
@@ -25,6 +26,10 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
     text: "",
     color: "",
   });
+  const savingRef = dados.nomeDoProjeto
+    ? `clientes/${dados.nomeDoProjeto}`
+    : `formSolicitacao/${dados.nomeDoContrato}`;
+  console.log(savingRef);
   function validateDocuments() {
     if (!images.contaDeEnergia) {
       setImagesMsg({
@@ -148,7 +153,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
   }
   async function uploadImage() {
     if (validateDocuments()) {
-      var links = [];
       var holder;
       setImagesMsg({
         text: "Processando...",
@@ -158,9 +162,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
         if (images.contaDeEnergia) {
           var imageRef = ref(
             storage,
-            `formSolicitacao/${dados.nomeDoContrato}/contaDeEnergia${(
-              Math.random() * 10000
-            ).toFixed(0)}`
+            `${savingRef}/contaDeEnergia${(Math.random() * 10000).toFixed(0)}`
           );
           let res = await uploadBytes(imageRef, images.contaDeEnergia);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
@@ -175,9 +177,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
         if (images.laudo) {
           var imageRef = ref(
             storage,
-            `formSolicitacao/${dados.nomeDoContrato}/laudo${(
-              Math.random() * 10000
-            ).toFixed(0)}`
+            `${savingRef}/laudo${(Math.random() * 10000).toFixed(0)}`
           );
           let res = await uploadBytes(imageRef, images.laudo);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
@@ -192,9 +192,9 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
         if (images.propostaComercial) {
           var imageRef = ref(
             storage,
-            `formSolicitacao/${dados.nomeDoContrato}/propostaComercial${(
-              Math.random() * 10000
-            ).toFixed(0)}`
+            `${savingRef}/propostaComercial${(Math.random() * 10000).toFixed(
+              0
+            )}`
           );
           let res = await uploadBytes(imageRef, images.propostaComercial);
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
@@ -210,9 +210,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           if (images.car) {
             var imageRef = ref(
               storage,
-              `formSolicitacao/${dados.nomeDoContrato}/car${(
-                Math.random() * 10000
-              ).toFixed(0)}`
+              `${savingRef}/car${(Math.random() * 10000).toFixed(0)}`
             );
             let res = await uploadBytes(imageRef, images.car);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
@@ -227,9 +225,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           if (images.matricula) {
             var imageRef = ref(
               storage,
-              `formSolicitacao/${dados.nomeDoContrato}/matricula${(
-                Math.random() * 10000
-              ).toFixed(0)}`
+              `${savingRef}/matricula${(Math.random() * 10000).toFixed(0)}`
             );
             let res = await uploadBytes(imageRef, images.matricula);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
@@ -268,9 +264,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           if (images.iptu) {
             var imageRef = ref(
               storage,
-              `formSolicitacao/${dados.nomeDoContrato}/iptu${(
-                Math.random() * 10000
-              ).toFixed(0)}`
+              `${savingRef}/iptu${(Math.random() * 10000).toFixed(0)}`
             );
             let res = await uploadBytes(imageRef, images.iptu);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
@@ -287,9 +281,9 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           if (images.documentoComFoto) {
             var imageRef = ref(
               storage,
-              `formSolicitacao/${dados.nomeDoContrato}/documentoComFoto${(
-                Math.random() * 10000
-              ).toFixed(0)}`
+              `${savingRef}/documentoComFoto${(Math.random() * 10000).toFixed(
+                0
+              )}`
             );
             let res = await uploadBytes(imageRef, images.documentoComFoto);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
@@ -306,9 +300,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           if (images.contratoSocial) {
             var imageRef = ref(
               storage,
-              `formSolicitacao/${dados.nomeDoContrato}/contratoSocial${(
-                Math.random() * 10000
-              ).toFixed(0)}`
+              `${savingRef}/contratoSocial${(Math.random() * 10000).toFixed(0)}`
             );
             let res = await uploadBytes(imageRef, images.contratoSocial);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
@@ -323,9 +315,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           if (images.cartaoCnpj) {
             var imageRef = ref(
               storage,
-              `formSolicitacao/${dados.nomeDoContrato}/cartaoCnpj${(
-                Math.random() * 10000
-              ).toFixed(0)}`
+              `${savingRef}/cartaoCnpj${(Math.random() * 10000).toFixed(0)}`
             );
             let res = await uploadBytes(imageRef, images.cartaoCnpj);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
@@ -362,7 +352,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           if (images.documentoComFotoSocios) {
             var imageRef = ref(
               storage,
-              `formSolicitacao/${dados.nomeDoContrato}/documentoComFotoSocios${(
+              `${savingRef}/documentoComFotoSocios${(
                 Math.random() * 10000
               ).toFixed(0)}`
             );
@@ -384,9 +374,9 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           if (images.relacaoDeCargas) {
             var imageRef = ref(
               storage,
-              `formSolicitacao/${dados.nomeDoContrato}/relacaoDeCargas${(
-                Math.random() * 10000
-              ).toFixed(0)}`
+              `${savingRef}/relacaoDeCargas${(Math.random() * 10000).toFixed(
+                0
+              )}`
             );
             let res = await uploadBytes(imageRef, images.relacaoDeCargas);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
@@ -403,9 +393,9 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar }) {
           for (let i = 0; i < dados.distribuicoes.length; i++) {
             var imageRef = ref(
               storage,
-              `formSolicitacao/${dados.nomeDoContrato}/recebedora${i + 1}${(
-                Math.random() * 10000
-              ).toFixed(0)}`
+              `${savingRef}/recebedora${i + 1}${(Math.random() * 10000).toFixed(
+                0
+              )}`
             );
             let res = await uploadBytes(imageRef, images[`recebedora${i + 1}`]);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));

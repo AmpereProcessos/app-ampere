@@ -99,9 +99,7 @@ function Home({ credentials, setCredentials }) {
           parametro: credenciais.regional,
         })
         .then((res) => {
-          setTotalPeakPot(
-            Number((res.data.totalPeakPot * 100) / 10000).toFixed(2)
-          );
+          setTotalPeakPot(Number(res.data.totalPeakPot));
           setNps(res.data.nps);
           setAverageBuyTime(res.data.suprimentosData);
           setInstalledData(res.data.installedInfo);
@@ -114,9 +112,7 @@ function Home({ credentials, setCredentials }) {
           parametro: credenciais.vendedor,
         })
         .then((res) => {
-          setTotalPeakPot(
-            Number((res.data.totalPeakPot * 100) / 10000).toFixed(2)
-          );
+          setTotalPeakPot(Number(res.data.totalPeakPot));
           setNps(res.data.nps);
           setAverageBuyTime(res.data.suprimentosData);
           setInstalledData(res.data.installedInfo);
@@ -124,9 +120,8 @@ function Home({ credentials, setCredentials }) {
         });
     } else {
       axios.get("/api/stats").then((res) => {
-        setTotalPeakPot(
-          Number((res.data.totalPeakPot * 100) / 10000).toFixed(2)
-        );
+        console.log(Number(res.data.totalPeakPot));
+        setTotalPeakPot(Number(res.data.totalPeakPot));
         setNps(res.data.nps);
         setAverageBuyTime(res.data.suprimentosData);
         setInstalledData(res.data.installedInfo);
@@ -243,7 +238,7 @@ function Home({ credentials, setCredentials }) {
         <div className="w-full h-[36px] border border-[#15599a]">
           <div
             style={{
-              width: `${totalPeakPot}%`,
+              width: `${Number((totalPeakPot * 100) / 10000).toFixed(2)}%`,
               background:
                 "linear-gradient(90deg, rgba(21,89,154,1) 20%, rgba(1,127,247,1) 90%)",
             }}
@@ -251,10 +246,10 @@ function Home({ credentials, setCredentials }) {
           ></div>
         </div>
         <p className="text-center font-bold text-[#15599a] text-xl">
-          {totalPeakPot < 100 ? (
+          {totalPeakPot < 10000 ? (
             <>
-              Faltam {(100 - totalPeakPot).toFixed(2).replace(".", ",")}% para
-              os <strong className="text-[#fead41]">10 MEGA !</strong>
+              Faltam {(10000 - totalPeakPot).toFixed(1).replace(".", ",")}kWp
+              para os <strong className="text-[#fead41]">10 MEGA !</strong>
             </>
           ) : (
             <strong className="font-bold text-[#fead41]">

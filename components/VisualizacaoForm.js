@@ -10,6 +10,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../utils/firebase";
 import axios from "axios";
+import { Router, useRouter } from "next/router";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -37,7 +38,7 @@ function formatCEP(cep) {
   return cep;
 }
 function VisualizacaoForm({ dados, voltar, setDados, formVisitaId }) {
-  console.log(dados);
+  const router = useRouter();
   const [msg, setMsg] = useState({
     text: "",
     color: "",
@@ -80,6 +81,7 @@ function VisualizacaoForm({ dados, voltar, setDados, formVisitaId }) {
         setMsg({ text: "Solicitação enviada!", color: "text-green-500" });
         setTimeout(() => {
           location.reload();
+          router.push("/publico/formSolicitacao");
         }, 2800);
       })
       .catch((err) =>
@@ -164,9 +166,12 @@ function VisualizacaoForm({ dados, voltar, setDados, formVisitaId }) {
             label={"CIDADE"}
             editable={true}
             value={dados.cidade}
-            options={cidadesAtendidas.map((cidade) => {
-              return { label: cidade, value: cidade };
-            })}
+            options={[
+              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              ...cidadesAtendidas.map((cidade) => {
+                return { label: cidade, value: cidade };
+              }),
+            ]}
             handleChange={(value) => setDados({ ...dados, cidade: value })}
           />
           <TextInput

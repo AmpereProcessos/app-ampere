@@ -101,6 +101,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
+            "contrato.status": "ASSINADO",
             "obra.statusDaObra": "CONCLUIDA",
             "vistoria.status": {
               $in: ["NÃO DEFINIDO", "AGUARDANDO CONCESSIONARIA"],
@@ -115,7 +116,6 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    console.log(vistoria);
     res.json({
       assinatura: {
         confeccionar: assinatura.filter(

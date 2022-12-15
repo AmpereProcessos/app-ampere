@@ -1299,12 +1299,21 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 ))}
               </div>
             </div>
-            <div className="w-full flex items-center justify-center">
+            <div className="w-full flex items-center justify-center gap-2">
               <Link
                 href={`/publico/formSolicitacao?cliente=${dados.nomeDoCliente}-${dados.codigoSVB}&id=${dados._id}`}
               >
                 <button className="p-2 rounded bg-[#fead61] font-bold hover:bg-[#15599a] hover:text-white">
                   SOLICITAR CONTRATO
+                </button>
+              </Link>
+              <Link
+                href={`/projetos/laudo/pdf/${
+                  dados._id
+                }?tipo=${"LAUDO TÉCNICO(URBANO)"}`}
+              >
+                <button className="p-2 rounded bg-[#fead61] font-bold hover:bg-[#15599a] hover:text-white">
+                  LAUDO
                 </button>
               </Link>
             </div>

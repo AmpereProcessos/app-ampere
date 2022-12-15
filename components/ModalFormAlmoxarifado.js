@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
-import { MdOutlineAddCircle, MdSportsGolf } from "react-icons/md";
+import { MdOutlineAddCircle } from "react-icons/md";
 import { FaSave } from "react-icons/fa";
 import Select from "react-select";
 import { cities } from "../utils/constants";

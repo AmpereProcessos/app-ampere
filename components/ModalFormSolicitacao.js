@@ -388,7 +388,7 @@ function ModalFormSolicitacao({
     },
     vistoria: {
       dataPedido: undefined, // formatar como data
-      status: null,
+      status: "NÃO DEFINIDO",
       vistoriaReprovada: "NÃO",
       qtdeReprovas: 0,
       motivoReprova: undefined,
@@ -1549,21 +1549,21 @@ function ModalFormSolicitacao({
                             setDados({ ...dados, marcaInversor: value })
                           }
                         />
-                        <NumberInput
+                        <TextInput
                           label={"QTDE INVERSOR/MICRO"}
                           editable={editor}
                           value={dados.qtdeInversor}
                           handleChange={(value) =>
-                            setDados({ ...dados, qtdeInversor: Number(value) })
+                            setDados({ ...dados, qtdeInversor: value })
                           }
                         />
-                        <NumberInput
+                        <TextInput
                           label={"POTÊNCIA INVERSOR/MICRO"}
                           editable={editor}
                           unit={"W"}
                           value={dados.potInversor}
                           handleChange={(value) =>
-                            setDados({ ...dados, potInversor: Number(value) })
+                            setDados({ ...dados, potInversor: value })
                           }
                         />
                       </>

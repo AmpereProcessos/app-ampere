@@ -2,9 +2,16 @@ import React, { useState } from "react";
 import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import NumberInput from "./NumberInput";
-
+import { MdOutlineAddCircle } from "react-icons/md";
+import { FiDelete } from "react-icons/fi";
 function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
   const [message, setMessage] = useState("");
+  const [dadosInversores, setDadosInvesores] = useState({
+    marca: "",
+    qtde: 0,
+    pot: 0,
+  });
+  const [arrInv, setArrInv] = useState([]);
   function validarCamposObrigatorios() {
     if (dados.topologia == "NÃO DEFINIDO") {
       setMessage("Por favor, preencha uma topologia válida.");
@@ -59,11 +66,30 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
     setMessage("");
     return true;
   }
+  function addInversor() {
+    arrInv.push(dadosInversores);
+    setArrInv((arrInv) => [...arrInv]);
+    let marcaArr = arrInv.map((i) => i.marca);
+    let qtdeArr = arrInv.map((i) => i.qtde);
+    let potArr = arrInv.map((i) => i.pot);
+    let joinedMarcaArr = marcaArr.join("/");
+    let joinedQtdeArr = qtdeArr.join("/");
+    let joinedPotArr = potArr.join("/");
+    setDados({
+      ...dados,
+      marcaInversor: joinedMarcaArr,
+      qtdeInversor: joinedQtdeArr,
+      potInversor: joinedPotArr,
+    });
+  }
   function proximaEtapa() {
     if (validarCamposObrigatorios()) {
       avancar();
     }
   }
+  console.log(dados.marcaInversor);
+  console.log(dados.qtdeInversor);
+  console.log(dados.potInversor);
   return (
     <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -95,36 +121,79 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
           ]}
         />
       </div>
-      <div className="flex gap-2 justify-around flex-wrap">
+      <div className="flex gap-2 justify-around items-center flex-wrap">
         {dados.topologia != "NÃO DEFINIDO" && (
           <>
             <TextInput
               label={"MARCA DO INVERSOR/MICRO"}
               editable={true}
-              value={dados.marcaInversor}
+              value={dadosInversores.marca}
               handleChange={(value) =>
-                setDados({ ...dados, marcaInversor: value })
+                setDadosInvesores({
+                  ...dadosInversores,
+                  marca: value.toUpperCase(),
+                })
               }
             />
             <NumberInput
               label={"QTDE INVERSOR/MICRO"}
               editable={true}
-              value={dados.qtdeInversor}
+              value={dadosInversores.qtde}
               handleChange={(value) =>
-                setDados({ ...dados, qtdeInversor: Number(value) })
+                setDadosInvesores({ ...dadosInversores, qtde: value })
               }
             />
             <NumberInput
               label={"POTÊNCIA INVERSOR/MICRO"}
               unit={"W"}
               editable={true}
-              value={dados.potInversor}
+              value={dadosInversores.pot}
               handleChange={(value) =>
-                setDados({ ...dados, potInversor: Number(value) })
+                setDadosInvesores({ ...dadosInversores, pot: value })
               }
             />
+            <div
+              onClick={addInversor}
+              className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
+            >
+              <MdOutlineAddCircle style={{ fontSize: "15px" }} />
+            </div>
           </>
         )}
+      </div>
+      <div className="flex flex-col mt-2 font-bold">
+        <h1 className="text-center text-[#15599a] text-xs">
+          INVERSORES ADICIONADOS
+        </h1>
+        {arrInv.map((inv, index) => (
+          <div className="flex justify-around items-center my-1">
+            <p className="text-xs font-bold">{inv.marca}</p>
+            <p className="text-xs font-bold">{inv.qtde}</p>
+            <p className="text-xs font-bold">{inv.pot}</p>
+            <button
+              onClick={() => {
+                let arr = arrInv;
+                arr.splice(index, 1);
+                let marcaArr = arrInv.map((i) => i.marca);
+                let qtdeArr = arrInv.map((i) => i.qtde);
+                let potArr = arrInv.map((i) => i.pot);
+                let joinedMarcaArr = marcaArr.join("/");
+                let joinedQtdeArr = qtdeArr.join("/");
+                let joinedPotArr = potArr.join("/");
+                setDados({
+                  ...dados,
+                  marcaInversor: joinedMarcaArr,
+                  qtdeInversor: joinedQtdeArr,
+                  potInversor: joinedPotArr,
+                });
+                setArrInv([...arr]);
+              }}
+              className="bg-red-500 p-1 rounded"
+            >
+              <FiDelete />
+            </button>
+          </div>
+        ))}
       </div>
       {dados.topologia == "OTIMIZADOR" && (
         <div className="flex gap-2 justify-around flex-wrap mt-2">

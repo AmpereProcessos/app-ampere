@@ -238,7 +238,7 @@ function ChamadosProjetos({ credentials, setCredentials }) {
             <h1 className="uppercase text-gray-600">VISTORIAS</h1>
           </div>
           <p className="grow text-center text-xl font-bold text-[#fead61] flex items-center justify-center">
-            PENDENTES: {stats.vistoria.pendente && stats.vistoria.pendente}
+            SOLICITAR: {stats.vistoria.pendente && stats.vistoria.pendente}
           </p>
           <p className="text-center text-gray-600">
             AGUARDANDO CONCESSIONÁRIA:{" "}

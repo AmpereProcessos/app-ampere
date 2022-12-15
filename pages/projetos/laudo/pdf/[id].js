@@ -12,8 +12,8 @@ function Laudo({ info, tipo }) {
   return (
     <>
       {/** <LaudoTecnicoUrbano /> */}
-      {/**{tipo == "LAUDO TÉCNICO(URBANO)" && <LaudoTecnicoUrbano info={info} />} */}
-      {tipo == "LAUDO TÉCNICO(URBANO)" && <LaudoSimplesUrbano info={info} />}
+      {tipo == "LAUDO TÉCNICO(URBANO)" && <LaudoTecnicoUrbano info={info} />}
+      {/*{tipo == "LAUDO TÉCNICO(URBANO)" && <LaudoSimplesUrbano info={info} />}*/}
     </>
   );
 }

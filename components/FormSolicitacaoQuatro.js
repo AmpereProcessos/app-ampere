@@ -166,7 +166,7 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
           INVERSORES ADICIONADOS
         </h1>
         {arrInv.map((inv, index) => (
-          <div className="flex justify-around items-center my-1">
+          <div key={index} className="flex justify-around items-center my-1">
             <p className="text-xs font-bold">{inv.marca}</p>
             <p className="text-xs font-bold">{inv.qtde}</p>
             <p className="text-xs font-bold">{inv.pot}</p>

@@ -36,6 +36,10 @@ function ChamadosProjetos({ credentials, setCredentials }) {
       parcial: 0,
     },
     distribuicoes: 0,
+    vistoria: {
+      pendente: 0,
+      aguardando: 0,
+    },
   });
   const [chamadosAbertos, setChamadosAbertos] = useState([]);
   const [abertosFiltrados, setAbertosFiltrados] = useState([]);
@@ -56,6 +60,7 @@ function ChamadosProjetos({ credentials, setCredentials }) {
   });
   function getCalls() {
     axios.get("/api/calls/projetos/mainData").then((res) => {
+      console.log(res.data);
       setStats({
         assinatura: res.data.assinatura,
         parecer: res.data.parecer,
@@ -63,6 +68,7 @@ function ChamadosProjetos({ credentials, setCredentials }) {
         distribuicoes: res.data.chamadosAbertos.filter(
           (x) => x.tipoDoChamado == "DISTRIBUIÇÃO DE CRÉDITO"
         ).length,
+        vistoria: res.data.vistoria,
       });
       setChamadosAbertos(res.data.chamadosAbertos);
       setAbertosFiltrados(res.data.chamadosAbertos);
@@ -170,12 +176,12 @@ function ChamadosProjetos({ credentials, setCredentials }) {
           <AiOutlineReload />
         </div>
       </div>
-      <div className="grid grid-rows-4 grid-cols-1  lg:grid-cols-4 lg:grid-rows-1 gap-3">
+      <div className="grid grid-rows-5 grid-cols-1  lg:grid-cols-5 lg:grid-rows-1 gap-3">
         <div className="flex flex-col p-4 h-[150px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
             <h1 className="uppercase text-gray-600">ASSINATURAS</h1>
           </div>
-          <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
+          <p className="grow text-center text-xl font-bold text-[#fead61] flex items-center justify-center">
             CONFECCIONAR: {stats.assinatura && stats.assinatura.confeccionar}
           </p>
           <p className="text-center text-gray-600">
@@ -189,7 +195,7 @@ function ChamadosProjetos({ credentials, setCredentials }) {
           <div className="flex justify-between">
             <h1 className="uppercase text-gray-600">PARECER</h1>
           </div>
-          <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
+          <p className="grow text-center text-xl font-bold text-[#fead61] flex items-center justify-center">
             SOLICITAR: {stats.parecer && stats.parecer.solicitar}
           </p>
           <p className="text-center text-gray-600">
@@ -203,7 +209,7 @@ function ChamadosProjetos({ credentials, setCredentials }) {
           <div className="flex justify-between">
             <h1 className="uppercase text-gray-600">COMISSIONAMENTO</h1>
           </div>
-          <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
+          <p className="grow text-center text-xl font-bold text-[#fead61] flex items-center justify-center">
             PROJETOS: {stats.comissionamento && stats.comissionamento.parcial}
           </p>
           <p className="text-center text-gray-600">
@@ -217,13 +223,27 @@ function ChamadosProjetos({ credentials, setCredentials }) {
           <div className="flex justify-between">
             <h1 className="uppercase text-gray-600">CHAMADOS</h1>
           </div>
-          <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
+          <p className="grow text-center text-xl font-bold text-[#fead61] flex items-center justify-center">
             DISTRIBUIÇÕES: {stats.distribuicoes && stats.distribuicoes}
           </p>
           <p className="text-center text-gray-600">
             TOTAL:{" "}
             <strong className="text-red-500">
               {chamadosAbertos && chamadosAbertos.length}
+            </strong>
+          </p>
+        </div>
+        <div className="flex flex-col p-4 h-[150px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="flex justify-between">
+            <h1 className="uppercase text-gray-600">VISTORIAS</h1>
+          </div>
+          <p className="grow text-center text-xl font-bold text-[#fead61] flex items-center justify-center">
+            PENDENTES: {stats.vistoria.pendente && stats.vistoria.pendente}
+          </p>
+          <p className="text-center text-gray-600">
+            AGUARDANDO CONCESSIONÁRIA:{" "}
+            <strong className="text-red-500">
+              {stats.vistoria.aguardando && stats.vistoria.aguardando}
             </strong>
           </p>
         </div>

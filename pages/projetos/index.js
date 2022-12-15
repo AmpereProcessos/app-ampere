@@ -375,7 +375,7 @@ function Projetos({ credentials, setCredentials }) {
                 label: "AGUARDANDO CONCESSIONARIA",
                 value: "AGUARDANDO CONCESSIONARIA",
               },
-              { label: "NÃO DEFINIDO", value: undefined },
+              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
             ]}
           />
           <Select

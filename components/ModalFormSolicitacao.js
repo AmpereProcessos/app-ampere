@@ -388,7 +388,7 @@ function ModalFormSolicitacao({
     },
     vistoria: {
       dataPedido: undefined, // formatar como data
-      status: "NÃO DEFINIDO",
+      status: null,
       vistoriaReprovada: "NÃO",
       qtdeReprovas: 0,
       motivoReprova: undefined,

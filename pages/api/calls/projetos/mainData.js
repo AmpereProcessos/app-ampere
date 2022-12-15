@@ -97,6 +97,25 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
+    let vistoria = await collection2
+      .aggregate([
+        {
+          $match: {
+            "obra.statusDaObra": "CONCLUIDA",
+            "vistoria.status": {
+              $in: ["NÃO DEFINIDO", "AGUARDANDO CONCESSIONARIA"],
+            },
+          },
+        },
+        {
+          $project: {
+            "obra.statusDaObra": 1,
+            "vistoria.status": 1,
+          },
+        },
+      ])
+      .toArray();
+    console.log(vistoria);
     res.json({
       assinatura: {
         confeccionar: assinatura.filter(
@@ -116,6 +135,13 @@ export default async function handler(req, res) {
           (x) =>
             x.parecer.statusDoParecerDeAcesso ==
             "AGUARDANDO RESPOSTA DA CONCESSIONARIA"
+        ).length,
+      },
+      vistoria: {
+        pendente: vistoria.filter((x) => x.vistoria.status == "NÃO DEFINIDO")
+          .length,
+        aguardando: vistoria.filter(
+          (x) => x.vistoria.status == "AGUARDANDO CONCESSIONARIA"
         ).length,
       },
       comissionamento: {

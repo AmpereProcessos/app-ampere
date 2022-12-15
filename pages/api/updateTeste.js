@@ -1,18 +1,19 @@
 import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  /*const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  /*
+  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
   const collection = db.collection("dados");
   let arr = await collection.updateMany(
     {
-      "obra.equipeResp": "EQUIPE 8- DIONLEN",
+      "vistoria.status": null,
     },
     {
       $set: {
-        "obra.equipeResp": "EQUIPE 8 - DIONLEN",
+        "vistoria.status": "NÃO DEFINIDO",
       },
     }
   );
-  res.json(arr);*/
+  res.json(arr);
   /*
   let arr = await collection
     .aggregate([

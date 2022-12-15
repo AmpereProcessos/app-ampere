@@ -91,6 +91,7 @@ function Home({ credentials, setCredentials }) {
   const [filters, setFilters] = useState({
     birthdayToday: false,
   });
+  const [regional, setRegional] = useState("GERAL");
   function getStats(credenciais) {
     if (credenciais.visualizacao == "REGIONAL") {
       axios
@@ -231,9 +232,43 @@ function Home({ credentials, setCredentials }) {
 
     setClientsBirthday({ ...clientBirthday, filtered: newArr });
   }
-
+  function getDataByRegional(value) {
+    setRegional(value);
+    getGraphDataByYear(2022, { visualizacao: "REGIONAL", regional: value });
+    getStats({ visualizacao: "REGIONAL", regional: value });
+  }
   return (
     <div className="p-6 grow">
+      <div className="flex items-center justify-center gap-2">
+        <button
+          onClick={() => getDataByRegional("REGIONAL ITUIUTABA")}
+          className={`border border-gray-200 p-1 ${
+            regional == "REGIONAL ITUIUTABA" ? "bg-blue-100" : ""
+          } hover:bg-blue-100 font-raleway font-bold text-sm`}
+        >
+          REGIONAL ITUIUTABA
+        </button>
+        <button
+          onClick={() => getDataByRegional("REGIONAL UBERLÂNDIA")}
+          className={`border border-gray-200 p-1 ${
+            regional == "REGIONAL UBERLÂNDIA" ? "bg-blue-100" : ""
+          } hover:bg-blue-100 font-raleway font-bold text-sm`}
+        >
+          REGIONAL UBERLÂNDIA
+        </button>
+        <button
+          onClick={() => {
+            setRegional("GERAL");
+            getStats(credentials);
+            getGraphDataByYear(2022, credentials);
+          }}
+          className={`border border-gray-200 p-1 ${
+            regional == "GERAL" ? "bg-blue-100" : ""
+          } hover:bg-blue-100 font-raleway font-bold text-sm`}
+        >
+          GERAL
+        </button>
+      </div>
       <div className="flex flex-col border bg-[#fff] my-3 shadow-lg border-gray-200 p-2">
         <div className="w-full h-[36px] border border-[#15599a]">
           <div
@@ -381,7 +416,16 @@ function Home({ credentials, setCredentials }) {
             </h1>
             <div className="flex items-center gap-x-2 justify-center">
               <p
-                onClick={() => getGraphDataByYear(2020, credentials)}
+                onClick={() => {
+                  if (regional != undefined && regional != "GERAL") {
+                    getGraphDataByYear(2020, {
+                      visualizacao: "REGIONAL",
+                      regional: regional,
+                    });
+                  } else {
+                    getGraphDataByYear(2020, credentials);
+                  }
+                }}
                 className={`border cursor-pointer border-gray-200 ${
                   selectedYear == 2020
                     ? "bg-blue-200 hover:bg-transparent"
@@ -391,7 +435,16 @@ function Home({ credentials, setCredentials }) {
                 2020
               </p>
               <p
-                onClick={() => getGraphDataByYear(2021, credentials)}
+                onClick={() => {
+                  if (regional != undefined && regional != "GERAL") {
+                    getGraphDataByYear(2021, {
+                      visualizacao: "REGIONAL",
+                      regional: regional,
+                    });
+                  } else {
+                    getGraphDataByYear(2021, credentials);
+                  }
+                }}
                 className={`border cursor-pointer border-gray-200 ${
                   selectedYear == 2021
                     ? "bg-blue-200 hover:bg-transparent"
@@ -401,7 +454,16 @@ function Home({ credentials, setCredentials }) {
                 2021
               </p>
               <p
-                onClick={() => getGraphDataByYear(2022, credentials)}
+                onClick={() => {
+                  if (regional != undefined && regional != "GERAL") {
+                    getGraphDataByYear(2022, {
+                      visualizacao: "REGIONAL",
+                      regional: regional,
+                    });
+                  } else {
+                    getGraphDataByYear(2022, credentials);
+                  }
+                }}
                 className={`border cursor-pointer border-gray-200 ${
                   selectedYear == 2022
                     ? "bg-blue-200 hover:bg-transparent"

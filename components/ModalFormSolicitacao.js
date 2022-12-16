@@ -652,7 +652,18 @@ function ModalFormSolicitacao({
         })
       );
   }
-  console.log(dados);
+  function getJoinedInfo({ marca, qtde, pot }) {
+    let splitMarca = marca.split("/");
+    let splitQtde = qtde.split("/");
+    let splitPot = pot.split("/");
+
+    let holder = [];
+    for (let i = 0; i < splitMarca.length; i++) {
+      let str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`;
+      holder.push(str);
+    }
+    return holder.join(" - ");
+  }
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -1569,6 +1580,18 @@ function ModalFormSolicitacao({
                       </>
                     )}
                   </div>
+                  <div className="flex flex-col text-sm lg:text-base  items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      INFORMAÇÃO MICRO/INVERSOR
+                    </span>
+                    <p className="text-xs w-full text-center  text-gray-600 outline-none">
+                      {getJoinedInfo({
+                        marca: dados.marcaInversor.toString().toUpperCase(),
+                        qtde: dados.qtdeInversor.toString(),
+                        pot: dados.potInversor.toString(),
+                      })}
+                    </p>
+                  </div>
                   {dados.topologia == "OTIMIZADOR" && (
                     <div className="flex gap-2 justify-around flex-wrap mt-2">
                       <TextInput
@@ -1611,23 +1634,35 @@ function ModalFormSolicitacao({
                         setDados({ ...dados, marcaModulos: value })
                       }
                     />
-                    <NumberInput
+                    <TextInput
                       label={"Nº DE MÓDULOS"}
                       editable={editor}
                       value={dados.qtdeModulos}
                       handleChange={(value) =>
-                        setDados({ ...dados, qtdeModulos: Number(value) })
+                        setDados({ ...dados, qtdeModulos: value })
                       }
                     />
-                    <NumberInput
+                    <TextInput
                       label={"POTÊNCIA DOS MÓDULOS"}
                       editable={editor}
                       unit={"W"}
                       value={dados.potModulos}
                       handleChange={(value) =>
-                        setDados({ ...dados, potModulos: Number(value) })
+                        setDados({ ...dados, potModulos: value })
                       }
                     />
+                  </div>
+                  <div className="flex flex-col text-sm lg:text-base  items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      INFORMAÇÃO MÓDULOS
+                    </span>
+                    <p className="text-xs w-full text-center  text-gray-600 outline-none">
+                      {getJoinedInfo({
+                        marca: dados.marcaModulos.toString().toUpperCase(),
+                        qtde: dados.qtdeModulos.toString(),
+                        pot: dados.potModulos.toString(),
+                      })}
+                    </p>
                   </div>
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">

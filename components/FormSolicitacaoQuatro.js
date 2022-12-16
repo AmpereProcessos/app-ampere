@@ -11,6 +11,12 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
     qtde: 0,
     pot: 0,
   });
+  const [dadosModulos, setDadosModulos] = useState({
+    marca: "",
+    qtde: 0,
+    pot: 0,
+  });
+  const [arrModulos, setArrModulos] = useState([]);
   const [arrInv, setArrInv] = useState([]);
   function validarCamposObrigatorios() {
     if (dados.topologia == "NÃO DEFINIDO") {
@@ -82,14 +88,27 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
       potInversor: joinedPotArr,
     });
   }
+  function addModulos() {
+    arrModulos.push(dadosModulos);
+    setArrModulos((arrModulos) => [...arrModulos]);
+    let marcaArr = arrModulos.map((i) => i.marca);
+    let qtdeArr = arrModulos.map((i) => i.qtde);
+    let potArr = arrModulos.map((i) => i.pot);
+    let joinedMarcaArr = marcaArr.join("/");
+    let joinedQtdeArr = qtdeArr.join("/");
+    let joinedPotArr = potArr.join("/");
+    setDados({
+      ...dados,
+      marcaModulos: joinedMarcaArr,
+      qtdeModulos: joinedQtdeArr,
+      potModulos: joinedPotArr,
+    });
+  }
   function proximaEtapa() {
     if (validarCamposObrigatorios()) {
       avancar();
     }
   }
-  console.log(dados.marcaInversor);
-  console.log(dados.qtdeInversor);
-  console.log(dados.potInversor);
   return (
     <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -228,28 +247,68 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
         <TextInput
           label={"MARCA DOS MÓDULOS"}
           editable={true}
-          value={dados.marcaModulos}
+          value={dadosModulos.marca}
           handleChange={(value) =>
-            setDados({ ...dados, marcaModulos: value.toUpperCase() })
+            setDadosModulos({ ...dadosModulos, marca: value.toUpperCase() })
           }
         />
         <NumberInput
           label={"Nº DE MÓDULOS"}
           editable={true}
-          value={dados.qtdeModulos}
+          value={dadosModulos.qtde}
           handleChange={(value) =>
-            setDados({ ...dados, qtdeModulos: Number(value) })
+            setDadosModulos({ ...dadosModulos, qtde: Number(value) })
           }
         />
         <NumberInput
           label={"POTÊNCIA DOS MÓDULOS"}
           unit={"W"}
           editable={true}
-          value={dados.potModulos}
+          value={dadosModulos.pot}
           handleChange={(value) =>
-            setDados({ ...dados, potModulos: Number(value) })
+            setDadosModulos({ ...dadosModulos, pot: Number(value) })
           }
         />
+        <div
+          onClick={addModulos}
+          className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
+        >
+          <MdOutlineAddCircle style={{ fontSize: "15px" }} />
+        </div>
+      </div>
+      <div className="flex flex-col mt-2 font-bold">
+        <h1 className="text-center text-[#15599a] text-xs">
+          MÓDULOS ADICIONADOS
+        </h1>
+        {arrModulos.map((inv, index) => (
+          <div key={index} className="flex justify-around items-center my-1">
+            <p className="text-xs font-bold">{inv.marca}</p>
+            <p className="text-xs font-bold">{inv.qtde}</p>
+            <p className="text-xs font-bold">{inv.pot}</p>
+            <button
+              onClick={() => {
+                let arr = arrModulos;
+                arr.splice(index, 1);
+                let marcaArr = arrModulos.map((i) => i.marca);
+                let qtdeArr = arrModulos.map((i) => i.qtde);
+                let potArr = arrModulos.map((i) => i.pot);
+                let joinedMarcaArr = marcaArr.join("/");
+                let joinedQtdeArr = qtdeArr.join("/");
+                let joinedPotArr = potArr.join("/");
+                setDados({
+                  ...dados,
+                  marcaModulos: joinedMarcaArr,
+                  qtdeModulos: joinedQtdeArr,
+                  potModulos: joinedPotArr,
+                });
+                setArrModulos([...arr]);
+              }}
+              className="bg-red-500 p-1 rounded"
+            >
+              <FiDelete />
+            </button>
+          </div>
+        ))}
       </div>
       {message && <p className="text-red-400 italic text-center">{message}</p>}
       <div className="flex w-full justify-center gap-2 flex-wrap mt-2">

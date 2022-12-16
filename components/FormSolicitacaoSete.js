@@ -5,6 +5,10 @@ import NumberInput from "./NumberInput";
 function FormSolicitacaoSete({ avancar, setDados, dados, voltar }) {
   const [message, setMessage] = useState("");
   function validarCamposObrigatorios() {
+    if (dados.aumentoDeCarga == "NÃO DEFINIDO") {
+      setMessage("Por favor, preencha se há aumento de carga.");
+      return false;
+    }
     if (dados.aumentoDeCarga == "SIM") {
       if (dados.caixaConjugada == "NÃO DEFINIDO") {
         setMessage("Por favor, preencha se há caixa conjugada.");

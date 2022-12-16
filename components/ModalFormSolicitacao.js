@@ -353,11 +353,21 @@ function ModalFormSolicitacao({
         dados.distribuicoes.length != 0 ? dados.distribuicoes.length : 0,
     },
     sistema: {
-      qtdeModulos: dados.qtdeModulos,
+      qtdeModulos: getSummedValues({
+        qtde: dados.qtdeModulos.toString(),
+        pot: dados.potModulos.toString(),
+      }).summedModules,
       potModulos: dados.potModulos,
-      potPico: dados.potPico,
+      potPico: getSummedValues({
+        qtde: dados.qtdeModulos.toString(),
+        pot: dados.potModulos.toString(),
+      }).totalPot,
       topologia: dados.topologia,
-      inversor: `${dados.qtdeInversor} - ${dados.potInversor}`,
+      inversor: getJoinedInfo({
+        marca: dados.marcaInversor.toString().toUpperCase(),
+        qtde: dados.qtdeInversor.toString(),
+        pot: dados.potInversor.toString(),
+      }),
       valorProjeto: dados.valorContrato,
     },
     projeto: {
@@ -656,13 +666,25 @@ function ModalFormSolicitacao({
     let splitMarca = marca.split("/");
     let splitQtde = qtde.split("/");
     let splitPot = pot.split("/");
-
     let holder = [];
     for (let i = 0; i < splitMarca.length; i++) {
       let str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`;
       holder.push(str);
     }
     return holder.join(" - ");
+  }
+  function getSummedValues({ qtde, pot }) {
+    let splitQtde = qtde.split("/");
+    let splitPot = pot.split("/");
+    let totalPot = 0;
+    for (let i = 0; i < splitQtde.length; i++) {
+      totalPot = totalPot + splitQtde[i] * splitPot[i];
+    }
+    let summedModules = splitQtde.reduce(
+      (partialSum, a) => Number(partialSum) + Number(a),
+      0
+    );
+    return { totalPot, summedModules };
   }
   return (
     <>

@@ -569,6 +569,7 @@ export const cidadesAtendidas = [
   "TUPACIGUARA", // ok to uppercase
   "PARANAIGUARA",
   "ARAGUARI",
+  "IRAÍ DE MINAS",
 ];
 export const statusLiberacao = [
   {

@@ -2028,7 +2028,7 @@ function ModalComercial({
                       });
                     }}
                   />
-                  <NumberInput
+                  <TextInput
                     unit={"W"}
                     label={"POTÊNCIA DOS MÓDULOS"}
                     editable={editor}
@@ -2036,12 +2036,12 @@ function ModalComercial({
                       infoHolder.sistema?.potModulos != undefined &&
                       infoHolder.sistema?.potModulos != "-"
                         ? infoHolder.sistema?.potModulos
-                        : 0
+                        : ""
                     }
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "sistema.potModulos": Number(value),
+                        "sistema.potModulos": value,
                         "sistema.potPico":
                           Number(value * infoHolder.sistema?.qtdeModulos) /
                           1000,
@@ -2050,7 +2050,7 @@ function ModalComercial({
                         ...infoHolder,
                         sistema: {
                           ...infoHolder.sistema,
-                          potModulos: Number(value),
+                          potModulos: value,
                           potPico:
                             Number(value * infoHolder.sistema?.qtdeModulos) /
                             1000,

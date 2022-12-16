@@ -32,6 +32,7 @@ const OVERLAY_STYLES = {
 function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
   const [dados, setDados] = useState(info);
   const [msg, setMessage] = useState({ text: "", color: "" });
+  const [laudoType, setLaudoType] = useState("LAUDO TÉCNICO(URBANO)");
   async function findCPF(field) {
     axios
       .get(`https://viacep.com.br/ws/${dados.cep.replace("-", "")}/json/`)
@@ -1299,19 +1300,48 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 ))}
               </div>
             </div>
+            <div className="w-full flex items-center justify-center border border-[#15599a] p-4 shadow-lg bg-[#fff]">
+              <SelectInput
+                label={"TIPO DE LAUDO(PDF)"}
+                editable={true}
+                value={laudoType}
+                options={[
+                  {
+                    label: "LAUDO TÉCNICO(URBANO)",
+                    value: "LAUDO TÉCNICO(URBANO)",
+                  },
+                  {
+                    label: "LAUDO SIMPLES(URBANO)",
+                    value: "LAUDO SIMPLES(URBANO)",
+                  },
+                  {
+                    label: "LAUDO INTERMEDIÁRIO(URBANO)",
+                    value: "LAUDO INTERMEDIÁRIO(URBANO)",
+                  },
+                  {
+                    label: "LAUDO TÉCNICO(RURAL)",
+                    value: "LAUDO TÉCNICO(RURAL)",
+                  },
+                  {
+                    label: "LAUDO SIMPLES(RURAL)",
+                    value: "LAUDO SIMPLES(RURAL)",
+                  },
+                ]}
+                handleChange={(value) => setLaudoType(value)}
+              />
+            </div>
             <div className="w-full flex items-center justify-center gap-2">
-              <Link
-                href={`/publico/formSolicitacao?cliente=${dados.nomeDoCliente}-${dados.codigoSVB}&id=${dados._id}`}
-              >
-                <button className="p-2 rounded bg-[#fead61] font-bold hover:bg-[#15599a] hover:text-white">
-                  SOLICITAR CONTRATO
-                </button>
-              </Link>
-              <Link
-                href={`/projetos/laudo/pdf/${
-                  dados._id
-                }?tipo=${"LAUDO TÉCNICO(URBANO)"}`}
-              >
+              {!dados.solicitacaoContrato && (
+                <Link
+                  href={`/publico/formSolicitacao?cliente=${dados.nomeDoCliente}-${dados.codigoSVB}&id=${dados._id}`}
+                >
+                  <button className="p-2 rounded bg-[#fead61] font-bold hover:bg-[#15599a] hover:text-white">
+                    SOLICITAR CONTRATO
+                  </button>
+                </Link>
+              )}
+
+              <Link href={`/projetos/laudo/pdf/${dados._id}?tipo=${laudoType}`}>
                 <button className="p-2 rounded bg-[#fead61] font-bold hover:bg-[#15599a] hover:text-white">
                   LAUDO
                 </button>

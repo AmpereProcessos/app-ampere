@@ -1045,29 +1045,32 @@ function ModalProjetos({
                       });
                     }}
                   />
-                  <NumberInput
+                  <TextInput
                     unit={"W"}
                     label={"POTÊNCIA DOS MÓDULOS"}
-                    editable={false}
+                    editable={editor}
                     value={
                       infoHolder.sistema?.potModulos != undefined &&
                       infoHolder.sistema?.potModulos != "-"
                         ? infoHolder.sistema?.potModulos
-                        : 0
+                        : ""
                     }
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          potModulos: Number(value),
-                        },
+                        "sistema.potModulos": value,
+                        "sistema.potPico":
+                          Number(value * infoHolder.sistema?.qtdeModulos) /
+                          1000,
                       });
                       setInfo({
                         ...infoHolder,
                         sistema: {
                           ...infoHolder.sistema,
-                          potModulos: Number(value),
+                          potModulos: value,
+                          potPico:
+                            Number(value * infoHolder.sistema?.qtdeModulos) /
+                            1000,
                         },
                       });
                     }}

@@ -2,7 +2,8 @@ import React from "react";
 import Image from "next/image";
 import Logo from "../utils/whitelogoHD.png";
 import Assinatura from "../utils/assinatura.jpg";
-function LaudoSimplesUrbano() {
+import dayjs from "dayjs";
+function LaudoSimplesUrbano({ info }) {
   return (
     <div className="w-[21cm] h-[29.7cm]">
       <div className="flex flex-col w-full h-full">
@@ -24,37 +25,49 @@ function LaudoSimplesUrbano() {
                 <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   CLIENTE
                 </p>
-                <p className="text-center text-xs border-r border-black">-</p>
+                <p className="text-center text-xs border-r border-black">
+                  {info.nomeDoCliente}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   REPRESENTANTE
                 </p>
-                <p className="text-center text-xs border-r border-black">-</p>
+                <p className="text-center text-xs border-r border-black">
+                  {info.nomeVendedor}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   ENDEREÇO
                 </p>
-                <p className="text-center text-xs border-r border-black">-</p>
+                <p className="text-center text-xs border-r border-black">
+                  {info.logradouro}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   BAIRRO
                 </p>
-                <p className="text-center text-xs border-r border-black">-</p>
+                <p className="text-center text-xs border-r border-black">
+                  {info.bairro}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   DATA DA VISITA
                 </p>
-                <p className="text-center text-xs border-r border-black">-</p>
+                <p className="text-center text-xs border-r border-black">
+                  {dayjs().format("DD/MM/YYYY")}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   TIPO DE SOLICITAÇÃO
                 </p>
-                <p className="text-center text-xs border-r border-black">-</p>
+                <p className="text-center text-xs border-r border-black">
+                  {info.tipoDeSolicitacao}
+                </p>
               </div>
             </div>
             <div className="grid grid-rows-6 w-[40%]">
@@ -62,37 +75,49 @@ function LaudoSimplesUrbano() {
                 <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   TELEFONE
                 </p>
-                <p className="text-center text-xs border-r border-black">-</p>
+                <p className="text-center text-xs border-r border-black">
+                  {info.telefoneDoCliente}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   Nº DE PROJETO
                 </p>
-                <p className="text-center text-xs border-r border-black">-</p>
+                <p className="text-center text-xs border-r border-black">
+                  {info.codigoSVB}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   NÚMERO
                 </p>
-                <p className="text-center text-xs border-r border-black">-</p>
+                <p className="text-center text-xs border-r border-black">
+                  {info.numeroResidencia}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   MUNICÍPIO
                 </p>
-                <p className="text-center text-xs border-r border-black">-</p>
+                <p className="text-center text-xs border-r border-black">
+                  {info.cidade}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   PRAZO LAUDO
                 </p>
-                <p className="text-center text-xs border-r border-black">-</p>
+                <p className="text-center text-xs border-r border-black">
+                  {/\(([^)]+)\)/.exec(info.tipoDeLaudo)[1]}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   TIPO DE LAUDO
                 </p>
-                <p className="text-center text-xs border-r border-black">-</p>
+                <p className="text-center text-xs border-r border-black">
+                  {info.tipoDeLaudo.split("(")[0]}
+                </p>
               </div>
             </div>
           </div>
@@ -115,13 +140,17 @@ function LaudoSimplesUrbano() {
                     <p className="bg-gray-200 text-center text-xs font-bold">
                       TOPOLOGIA
                     </p>
-                    <p className="text-center text-xs font-bold">-</p>
+                    <p className="text-center text-xs font-bold">
+                      {info.tipoInversor}
+                    </p>
                   </div>
                   <div className="grid grid-cols-2">
                     <p className="bg-gray-200 text-center text-xs font-bold">
                       QUANTIDADE
                     </p>
-                    <p className="text-center text-xs font-bold">-</p>
+                    <p className="text-center text-xs font-bold">
+                      {info.qtdeInversor}
+                    </p>
                   </div>
                 </div>
                 <div className="flex flex-col w-[50%]">
@@ -129,13 +158,17 @@ function LaudoSimplesUrbano() {
                     <p className="bg-gray-200 text-center text-xs font-bold">
                       MARCA DO INVERSOR
                     </p>
-                    <p className="text-center text-xs font-bold">-</p>
+                    <p className="text-center text-xs font-bold">
+                      {info.marcaInversor}
+                    </p>
                   </div>
                   <div className="grid grid-cols-2">
                     <p className="bg-gray-200 text-center text-xs font-bold">
                       POTÊNCIA
                     </p>
-                    <p className="text-center text-xs font-bold">-</p>
+                    <p className="text-center text-xs font-bold">
+                      {info.potInversor}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -148,7 +181,9 @@ function LaudoSimplesUrbano() {
                     <p className="bg-gray-200 text-center text-xs font-bold">
                       QUANTIDADE
                     </p>
-                    <p className="text-center text-xs font-bold">-</p>
+                    <p className="text-center text-xs font-bold">
+                      {info.qtdeModulos}
+                    </p>
                   </div>
                 </div>
                 <div className="flex flex-col w-[50%]">
@@ -156,7 +191,9 @@ function LaudoSimplesUrbano() {
                     <p className="bg-gray-200 text-center text-xs font-bold">
                       POTÊNCIA
                     </p>
-                    <p className="text-center text-xs font-bold">-</p>
+                    <p className="text-center text-xs font-bold">
+                      {info.potModulos}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -164,7 +201,9 @@ function LaudoSimplesUrbano() {
                 <p className="bg-gray-200 text-center text-xs font-bold w-[50%]">
                   MARCA DOS MÓDULOS
                 </p>
-                <p className="text-center text-xs font-bold w-[50%]">-</p>
+                <p className="text-center text-xs font-bold w-[50%]">
+                  {info.marcaModulos}
+                </p>
               </div>
             </div>
           </div>

@@ -1511,7 +1511,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     </p>
                   </div>
                   {dados.suprimentos?.map((suprimento, index) => (
-                    <div className="grid grid-cols-5 w-full">
+                    <div key={index} className="grid grid-cols-5 w-full">
                       <p className="text-xs text-gray-600 font-bold text-center">
                         {suprimento.insumo}
                       </p>
@@ -1963,7 +1963,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     </p>
                   </div>
                   {dados.custosAdicionais?.map((custo, index) => (
-                    <div className="grid grid-cols-6 w-full">
+                    <div key={index} className="grid grid-cols-6 w-full">
                       <p className="text-xs text-gray-600 font-bold text-center">
                         {custo.descricao}
                       </p>

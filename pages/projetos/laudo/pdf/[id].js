@@ -8,6 +8,7 @@ import LaudoSimplesRural from "../../../../components/LaudoSimplesRural";
 import connectToSolicitacoesDatabase from "../../../../utils/solicitacoesDb";
 import { ObjectId } from "mongodb";
 function Laudo({ info, tipo }) {
+  console.log(info);
   return (
     <>
       {tipo == "LAUDO TÉCNICO(URBANO)" && <LaudoTecnicoUrbano info={info} />}

@@ -4,6 +4,13 @@ import Logo from "../utils/whitelogoHD.png";
 import Assinatura from "../utils/assinatura.jpg";
 import dayjs from "dayjs";
 function LaudoSimplesUrbano({ info }) {
+  function getAdditionalCostsSum(custos) {
+    var sum = 0;
+    for (let i = 0; i < custos.length; i++) {
+      sum = sum + custos[i].qtde * custos[i].valor;
+    }
+    return sum;
+  }
   return (
     <div className="w-[21cm] h-[29.7cm]">
       <div className="flex flex-col w-full h-full">
@@ -230,59 +237,37 @@ function LaudoSimplesUrbano({ info }) {
                 TOTAL
               </p>
             </div>
-            <div className="flex flex-col">
-              <div className="grid grid-cols-10 border-b border-black">
-                <p className="text-center text-xs font-bold col-span-3 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-1 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  R$ -
-                </p>
+            {info.custosAdicionais ? (
+              <div className="flex flex-col">
+                {info.custosAdicionais.map((custo, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-10 border-b border-black"
+                  >
+                    <p className="text-center text-xs font-bold col-span-3 border-r border-black">
+                      {custo.descricao}
+                    </p>
+                    <p className="text-center text-xs font-bold col-span-2 border-r border-black">
+                      {custo.qtde}
+                    </p>
+                    <p className="text-center text-xs font-bold col-span-1 border-r border-black">
+                      {custo.grandeza}
+                    </p>
+                    <p className="text-center text-xs font-bold col-span-2 border-r border-black">
+                      {custo.valor}
+                    </p>
+                    <p className="text-center text-xs font-bold col-span-2 border-r border-black">
+                      R$
+                      {(custo.valor * custo.qtde).toFixed(2).replace(".", ",")}
+                    </p>
+                  </div>
+                ))}
               </div>
-              <div className="grid grid-cols-10 border-b border-black">
-                <p className="text-center text-xs font-bold col-span-3 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-1 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  R$ -
-                </p>
+            ) : (
+              <div className="flex items-center justify-center h-[50px] border-b border-r border-black italic">
+                SEM CUSTOS ADICIONAIS
               </div>
-              <div className="grid grid-cols-10 border-b border-black">
-                <p className="text-center text-xs font-bold col-span-3 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-1 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  R$ -
-                </p>
-              </div>
-            </div>
+            )}
           </div>
           <div className="grid grid-cols-10">
             <div className="bg-[#15599a] text-white font-bold flex justify-center items-center text-center col-span-3 border border-black border-t-0 border-l-0">
@@ -294,7 +279,12 @@ function LaudoSimplesUrbano({ info }) {
                   VALOR À VISTA
                 </div>
                 <div className="w-[25%] bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">
-                  R$ -
+                  R${" "}
+                  {info.custosAdicionais
+                    ? getAdditionalCostsSum(info.custosAdicionais)
+                        .toFixed(2)
+                        .replace(".", ",")
+                    : "-"}
                 </div>
               </div>
               <div className="flex border-b border-black">
@@ -302,7 +292,12 @@ function LaudoSimplesUrbano({ info }) {
                   VALOR FINANCIAMENTO
                 </div>
                 <div className="w-[25%] bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
-                  R$ -
+                  R${" "}
+                  {info.custosAdicionais
+                    ? (getAdditionalCostsSum(info.custosAdicionais) * 1.175)
+                        .toFixed(2)
+                        .replace(".", ",")
+                    : "-"}
                 </div>
               </div>
             </div>
@@ -320,7 +315,7 @@ function LaudoSimplesUrbano({ info }) {
                     PADRÃO
                   </p>
                   <p className="font-bold text-center text-sm py-1 border-r border-black">
-                    -
+                    {info.respostaPadrao ? info.respostaPadrao : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -328,7 +323,9 @@ function LaudoSimplesUrbano({ info }) {
                     ESPAÇO PARA PROJETO
                   </p>
                   <p className="font-bold text-center text-sm py-1 border-r border-black">
-                    -
+                    {info.respostaEspacoProjeto
+                      ? info.respostaEspacoProjeto
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -336,7 +333,9 @@ function LaudoSimplesUrbano({ info }) {
                     ESTRUTURA DE INCLINAÇÃO
                   </p>
                   <p className="font-bold text-center text-sm py-1 border-r border-black">
-                    -
+                    {info.respostaEstruturaInclinacao
+                      ? info.respostaEstruturaInclinacao
+                      : "-"}
                   </p>
                 </div>
               </div>
@@ -346,7 +345,9 @@ function LaudoSimplesUrbano({ info }) {
                     POSSUI SOMBRA?
                   </p>
                   <p className="font-bold text-center text-sm py-1 border-r border-black">
-                    -
+                    {info.respostaPossuiSombra
+                      ? info.respostaPossuiSombra
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -354,7 +355,7 @@ function LaudoSimplesUrbano({ info }) {
                     MADEIRAMENTO
                   </p>
                   <p className="font-bold text-center text-sm py-1 border-r border-black">
-                    -
+                    {info.respostaMaderamento ? info.respostaMaderamento : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -362,7 +363,9 @@ function LaudoSimplesUrbano({ info }) {
                     EXPLICAÇÃO DETALHADA
                   </p>
                   <p className="font-bold text-center text-sm py-1 border-r border-black">
-                    -
+                    {info.respostaExplicacaoDetalhada
+                      ? info.respostaExplicacaoDetalhada
+                      : "-"}
                   </p>
                 </div>
               </div>
@@ -374,10 +377,7 @@ function LaudoSimplesUrbano({ info }) {
             CONCLUSÃO
           </h1>
           <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[60px] text-center p-2">
-            Laboris et minim quis et nisi ea est reprehenderit elit. Eu duis
-            velit consequat cillum qui eiusmod id sunt. Proident laboris
-            exercitation labore est culpa incididunt tempor commodo nisi esse
-            irure. Aute qui incididunt incididunt proident magna.
+            {info.respostaConclusao}
           </div>
         </div>
         <div className="mt-2 grid gap-x-4 grid-cols-2">

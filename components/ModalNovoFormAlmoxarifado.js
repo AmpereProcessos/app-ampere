@@ -93,6 +93,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
         .post("/api/almoxarifado/formularios", {
           ...callInfo,
           tipo: "RETIRADA",
+          abertura: new Date().toISOString(),
         })
         .then((res) => {
           setCallInfo({

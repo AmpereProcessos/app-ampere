@@ -571,6 +571,32 @@ export const cidadesAtendidas = [
   "ARAGUARI",
   "IRAÍ DE MINAS",
 ];
+export const suprimentoOption = {
+  GRAMPO: {
+    tipo: ["FINAL", "INTERMEDIÁRIO"],
+    unidade: "UNIDADE",
+  },
+  TRILHO: {
+    tipo: ["1,85", "2,20", "2,36", "2,40", "2,50", "3,20", "3,30", "4,20"],
+    unidade: "UNIDADE",
+  },
+  "PARAFUSO FIBROCIMENTO": {
+    tipo: ["MADEIRA", "FERRO"],
+    unidade: "UNIDADE",
+  },
+  "PAR DE JUNÇÃO": {
+    tipo: ["TRILHO"],
+    unidade: "UNIDADE",
+  },
+  CABO: {
+    tipo: ["SOLAR"],
+    unidade: "METRO",
+  },
+  "CONECTOR MC4": {
+    tipo: ["-"],
+    unidade: "UNIDADE",
+  },
+};
 export const statusLiberacao = [
   {
     label: "AGUARDAR PARECER DE ACESSO",

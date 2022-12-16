@@ -240,7 +240,7 @@ function LaudoTecnicoUrbano({ info }) {
                     TIPO DA TELHA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.tipoTelha}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -248,7 +248,7 @@ function LaudoTecnicoUrbano({ info }) {
                     TELHA RESERVA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.tipoTelha}
+                    {info.telhasReservas}
                   </p>
                 </div>
               </div>
@@ -291,7 +291,7 @@ function LaudoTecnicoUrbano({ info }) {
                     ESPAÇO NO QGBT
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.espacoQGBT}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -299,7 +299,7 @@ function LaudoTecnicoUrbano({ info }) {
                     ADAPTAÇÃO NO QGBT
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.adaptacaoQGBT}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -325,7 +325,7 @@ function LaudoTecnicoUrbano({ info }) {
                     AVALIAR TELHADO
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.avaliarTelhado}
                   </p>
                 </div>
               </div>
@@ -335,7 +335,7 @@ function LaudoTecnicoUrbano({ info }) {
                     DPS NO QGBT
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.dpsQGBT}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -351,7 +351,7 @@ function LaudoTecnicoUrbano({ info }) {
                     INFRA PARA LANÇAMENTO DE CABOS
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.infraCabos}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -378,10 +378,7 @@ function LaudoTecnicoUrbano({ info }) {
               OBSERVAÇÕES
             </h1>
             <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[50px] text-center p-2">
-              Laboris et minim quis et nisi ea est reprehenderit elit. Eu duis
-              velit consequat cillum qui eiusmod id sunt. Proident laboris
-              exercitation labore est culpa incididunt tempor commodo nisi esse
-              irure. Aute qui incididunt incididunt proident magna.
+              {info.obsObras}
             </div>
           </div>
         </div>
@@ -404,100 +401,35 @@ function LaudoTecnicoUrbano({ info }) {
                 MEDIDA
               </p>
             </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                GRAMPO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                FINAL
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                UNIDADE
-              </p>
-            </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                GRAMPO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                INTERMEDIÁRIO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                UNIDADE
-              </p>
-            </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                TRILHO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                2,5
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                UNIDADE
-              </p>
-            </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                PARAFUSO FIBROCIMENTO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                UNIDADE
-              </p>
-            </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                PAR DE JUNÇÃO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                TRILHO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                UNIDADE
-              </p>
-            </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                CABO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                SOLAR
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                METRO
-              </p>
-            </div>
+            {info.suprimentos ? (
+              info.suprimentos.map((suprimento, index) => (
+                <div key={index} className="grid grid-cols-10">
+                  <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
+                    {suprimento.insumo}
+                  </p>
+                  <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
+                    {suprimento.tipo}
+                  </p>
+                  <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
+                    {suprimento.qtde}
+                  </p>
+                  <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
+                    {suprimento.medida}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="flex items-center justify-center h-[50px] border-b border-r border-black italic">
+                SEM ITENS ADICIONADOS
+              </div>
+            )}
           </div>
           <div className="flex flex-col">
             <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0 text-xs">
               OBSERVAÇÕES
             </h1>
             <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[50px] text-center p-2">
-              Laboris et minim quis et nisi ea est reprehenderit elit. Eu duis
-              velit consequat cillum qui eiusmod id sunt. Proident laboris
-              exercitation labore est culpa incididunt tempor commodo nisi esse
-              irure. Aute qui incididunt incididunt proident magna.
+              {info.obsSuprimentos}
             </div>
           </div>
         </div>
@@ -540,7 +472,7 @@ function LaudoTecnicoUrbano({ info }) {
                     PENDÊNCIA
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.pendenciasProjetos}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -558,7 +490,7 @@ function LaudoTecnicoUrbano({ info }) {
                     CONCESSIONÁRIA
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.concessionaria}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -574,7 +506,7 @@ function LaudoTecnicoUrbano({ info }) {
                     MODELO DA CAIXA
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.modeloCaixa}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -610,7 +542,7 @@ function LaudoTecnicoUrbano({ info }) {
                     TIPO DE PADRÃO
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.novaLigacaoPadrao}
                   </p>
                 </div>
                 <div className="w-[50%] grid grid-cols-2">
@@ -618,7 +550,7 @@ function LaudoTecnicoUrbano({ info }) {
                     AMPERAGEM
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.novaAmperagem}
                   </p>
                 </div>
               </div>
@@ -635,7 +567,7 @@ function LaudoTecnicoUrbano({ info }) {
                     FOTO DO DRONE
                   </p>
                   <p className="text-xxs text-center font-bold border-r border-black">
-                    -
+                    {info.fotoDroneDesenho}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -643,7 +575,7 @@ function LaudoTecnicoUrbano({ info }) {
                     MEDIDAS NO LOCAL
                   </p>
                   <p className="text-xxs text-center font-bold border-r border-black">
-                    -
+                    {info.medidasLocal}
                   </p>
                 </div>
               </div>
@@ -653,7 +585,7 @@ function LaudoTecnicoUrbano({ info }) {
                     FOTO DA FAIXADA
                   </p>
                   <p className="text-xxs text-center font-bold border-r border-black">
-                    -
+                    {info.fotoFaixada}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -661,7 +593,7 @@ function LaudoTecnicoUrbano({ info }) {
                     GOOGLE EARTH
                   </p>
                   <p className="text-xxs text-center font-bold border-r border-black">
-                    -
+                    {info.googleEarth}
                   </p>
                 </div>
               </div>
@@ -672,10 +604,7 @@ function LaudoTecnicoUrbano({ info }) {
               OBSERVAÇÕES
             </h1>
             <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[50px] text-center p-2">
-              Laboris et minim quis et nisi ea est reprehenderit elit. Eu duis
-              velit consequat cillum qui eiusmod id sunt. Proident laboris
-              exercitation labore est culpa incididunt tempor commodo nisi esse
-              irure. Aute qui incididunt incididunt proident magna.
+              {info.obsProjetos}
             </div>
           </div>
         </div>

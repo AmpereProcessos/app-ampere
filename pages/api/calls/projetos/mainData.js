@@ -72,7 +72,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            "contrato.status": "ASSINADO",
+            "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
           },
         },
         {

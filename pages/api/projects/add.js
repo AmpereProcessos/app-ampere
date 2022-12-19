@@ -11,9 +11,11 @@ export default async function handler(req, res) {
             qtde: -1,
           },
         },
+        {
+          $limit: 1,
+        },
       ])
       .toArray();
-    console.log(lastestInserted[0]);
     let project = await collection.insertOne({
       ...req.body,
       qtde: lastestInserted[0].qtde + 1,

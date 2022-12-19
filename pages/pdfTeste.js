@@ -38,25 +38,25 @@ function Teste() {
             <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
               Qtd.Módulos - Potência
             </p>
-            <p>- W</p>
+            <p>380 - 335W</p>
           </div>
           <div className="flex flex-col items-center">
             <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
               Potência kWp
             </p>
-            <p> - kWp</p>
+            <p> 127,3 kWp</p>
           </div>
           <div className="flex flex-col items-center">
             <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
               Eficiência atual
             </p>
-            <p>- %</p>
+            <p>100%</p>
           </div>
           <div className="flex flex-col items-center border-r-2 border-black">
             <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
               Estimativa de perda financeira anual
             </p>
-            <p>R$ -</p>
+            <p>-</p>
           </div>
         </div>
       </div>
@@ -86,7 +86,7 @@ function Teste() {
       </div>
       <div className="mt-2">
         <h1 className="w-full bg-[#15599b] text-white font-bold text-center ">
-          PLANOS E SERVIÇOS DE OPERAÇÃO E MANUTENÇÃO
+          SERVIÇO DE OPERAÇÃO E MANUTENÇÃO
         </h1>
         <div className="flex flex-col">
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -215,29 +215,11 @@ function Teste() {
                       </td>
                     </tr>
                     <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
-                        MANUTENÇÃO CORRETIVA EM CASO DE NECESSIDADE (SEM INSUMOS
-                        ELÉTRICOS)
-                      </td>
-                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                        <div className="flex justify-center items-center">
-                          <p>2x</p>
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b bg-white">
                       <td className="px-2 py-1 text-sm font-medium text-gray-900 border-r">
                         VALOR DO PLANO ANUAL
                       </td>
                       <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
-                        R$ -
+                        R$ 6990,00
                       </td>
                     </tr>
                   </tbody>

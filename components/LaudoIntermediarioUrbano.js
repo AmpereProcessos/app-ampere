@@ -4,6 +4,13 @@ import Logo from "../utils/whitelogoHD.png";
 import Assinatura from "../utils/assinatura.jpg";
 import dayjs from "dayjs";
 function LaudoIntermediarioUrbano({ info }) {
+  function getAdditionalCostsSum(custos) {
+    var sum = 0;
+    for (let i = 0; i < custos.length; i++) {
+      sum = sum + custos[i].qtde * custos[i].valor;
+    }
+    return sum;
+  }
   return (
     <div className="w-[21cm] h-[29.7cm]">
       <div className="flex flex-col w-full h-full">
@@ -212,7 +219,21 @@ function LaudoIntermediarioUrbano({ info }) {
           <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-b-0 border-black">
             VISUALIZAÇÃO DO PROJETO
           </h1>
-          <div className="h-[450px] border border-black">-</div>
+          <div className="h-[450px] border border-black">
+            {info.linkVisualizacaoProjeto ? (
+              <div className="w-[793.7px] h-full">
+                <Image
+                  width={"793px"}
+                  height={"450px"}
+                  src={info.linkVisualizacaoProjeto}
+                  objectFit="fill"
+                  alt="Picture of the author"
+                />
+              </div>
+            ) : (
+              false
+            )}
+          </div>
         </div>
         <div className="flex flex-col mt-6">
           <h1 className="bg-[#15599a] text-white text-center font-bold border border-black">
@@ -236,79 +257,67 @@ function LaudoIntermediarioUrbano({ info }) {
                 TOTAL
               </p>
             </div>
-            <div className="flex flex-col">
-              <div className="grid grid-cols-10 border-b border-black">
-                <p className="text-center text-xs font-bold col-span-3 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-1 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  R$ -
-                </p>
+            {info.custosAdicionais ? (
+              <div className="flex flex-col">
+                {info.custosAdicionais.map((custo, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-10 border-b border-black"
+                  >
+                    <p className="text-center text-xs font-bold col-span-3 border-r border-black">
+                      {custo.descricao}
+                    </p>
+                    <p className="text-center text-xs font-bold col-span-2 border-r border-black">
+                      {custo.qtde}
+                    </p>
+                    <p className="text-center text-xs font-bold col-span-1 border-r border-black">
+                      {custo.grandeza}
+                    </p>
+                    <p className="text-center text-xs font-bold col-span-2 border-r border-black">
+                      {custo.valor}
+                    </p>
+                    <p className="text-center text-xs font-bold col-span-2 border-r border-black">
+                      R$
+                      {(custo.valor * custo.qtde).toFixed(2).replace(".", ",")}
+                    </p>
+                  </div>
+                ))}
               </div>
-              <div className="grid grid-cols-10 border-b border-black">
-                <p className="text-center text-xs font-bold col-span-3 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-1 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  R$ -
-                </p>
+            ) : (
+              <div className="flex items-center justify-center h-[50px] border-b border-r border-black italic">
+                SEM CUSTOS ADICIONAIS
               </div>
-              <div className="grid grid-cols-10 border-b border-black">
-                <p className="text-center text-xs font-bold col-span-3 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-1 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  -
-                </p>
-                <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                  R$ -
-                </p>
-              </div>
-            </div>
+            )}
           </div>
           <div className="grid grid-cols-10">
-            <div className="bg-[#15599a] text-white font-bold flex justify-center items-center text-sm text-center col-span-3 border border-black border-t-0 border-l-0">
+            <div className="bg-[#15599a] text-white font-bold flex justify-center items-center text-center col-span-3 border border-black border-t-0 border-l-0">
               VALOR PARA AJUSTE NA PROPOSTA COMERCIAL
             </div>
             <div className="flex flex-col col-span-7 h-full">
-              <div className="flex border-b border-black">
-                <div className="w-[75%] bg-[#fead61] text-white text-center p-1 font-bold border-r border-black text-sm">
+              <div className="grid grid-cols-7 border-b border-black">
+                <div className="col-span-5 bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">
                   VALOR À VISTA
                 </div>
-                <div className="w-[25%] bg-[#fead61] text-white text-center p-1 font-bold border-r border-black text-sm">
-                  R$ -
+                <div className="col-span-2 bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">
+                  R${" "}
+                  {info.custosAdicionais
+                    ? getAdditionalCostsSum(info.custosAdicionais)
+                        .toFixed(2)
+                        .replace(".", ",")
+                    : "-"}
                 </div>
               </div>
-              <div className="flex border-b border-black">
-                <div className="w-[75%] bg-[#15599a] text-white text-center p-1 font-bold border-r border-black text-sm">
+              <div className="grid grid-cols-7 border-black">
+                <div className="col-span-5 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
                   VALOR FINANCIAMENTO
                 </div>
-                <div className="w-[25%] bg-[#15599a] text-white text-center p-1 font-bold border-r border-black text-sm">
-                  R$ -
+                <div className="col-span-2 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
+                  R${" "}
+                  {info.custosAdicionais
+                    ? (getAdditionalCostsSum(info.custosAdicionais) * 1.175)
+                        .toFixed(2)
+                        .replace(".", ",")
+                    : "-"}
                 </div>
               </div>
             </div>
@@ -464,10 +473,7 @@ function LaudoIntermediarioUrbano({ info }) {
             CONCLUSÃO
           </h1>
           <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[60px] text-center p-2">
-            Laboris et minim quis et nisi ea est reprehenderit elit. Eu duis
-            velit consequat cillum qui eiusmod id sunt. Proident laboris
-            exercitation labore est culpa incididunt tempor commodo nisi esse
-            irure. Aute qui incididunt incididunt proident magna.
+            {info.respostaConclusao ? info.respostaConclusao : "-"}
           </div>
         </div>
         <div className="mt-2 grid gap-x-4 grid-cols-2">

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import NumberInput from "./NumberInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 import { cidadesAtendidas, suprimentoOption } from "../utils/constants";
+import { storage } from "../utils/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
@@ -34,6 +37,7 @@ const OVERLAY_STYLES = {
 function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
   const [dados, setDados] = useState(info);
   const [msg, setMessage] = useState({ text: "", color: "" });
+  const [imageMsg, setImageMsg] = useState({ text: "", color: "" });
   const [laudoType, setLaudoType] = useState("LAUDO TÉCNICO(URBANO)");
   const [suprimentoHolder, setSuprimentoHolder] = useState({
     insumo: Object.keys(suprimentoOption)[0],
@@ -46,6 +50,9 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
     qtde: 0,
     grandeza: "",
     valor: 0,
+  });
+  const [images, setImages] = useState({
+    visualizacaoProjeto: "",
   });
   async function findCPF(field) {
     axios
@@ -121,6 +128,27 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
     setDados({ ...dados, custosAdicionais: [...arr, custoAdicionalHolder] });
     setCustoAdicionalHolder({ descricao: "", qtde: 0, grandeza: "", valor: 0 });
   }
+  async function uploadImage() {
+    try {
+      var imageRef = ref(
+        storage,
+        `clientes/${dados.nomeDoCliente}-${dados.codigoSVB}/visualizacaoProjeto`
+      );
+      let res = await uploadBytes(imageRef, images.visualizacaoProjeto.file);
+      let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+      await axios.put("/api/solicitacoes/visitaTecnica", {
+        _id: dados._id,
+        linkVisualizacaoProjeto: url,
+      });
+      setDados({ ...dados, linkVisualizacaoProjeto: url });
+      setImageMsg({
+        text: "Imagem salva com sucesso",
+        color: "text-green-500",
+      });
+    } catch (error) {
+      setImageMsg({ text: "Erro ao enviar imagem.", color: "text-red-500" });
+    }
+  }
   function formatCEP(cep) {
     cep = cep
       .replace(/\D/g, "")
@@ -128,7 +156,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
       .replace(/(-\d{3})\d+?$/, "$1");
     return cep;
   }
-  console.log(dados);
+  console.log(images);
   return (
     <div style={OVERLAY_STYLES}>
       <div style={MODAL_STYLES}>
@@ -2124,6 +2152,84 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   ))}
                 </div>
               </div>
+            </div>
+            <div className="w-full flex flex-col items-center justify-center gap-2 border border-[#15599a] p-4 shadow-lg bg-[#fff]">
+              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                IMAGEM PARA VISUALIZAÇÃO DO PROJETO
+              </span>
+              {dados.linkVisualizacaoProjeto && (
+                <div className="flex flex-col items-center">
+                  <a
+                    href={dados.linkVisualizacaoProjeto}
+                    className="text-green-400 font-bold cursor-pointer"
+                  >
+                    IMAGEM ATUAL
+                  </a>
+                  <div className="w-[100px] h-[100px]">
+                    <Image
+                      width={"100px"}
+                      height={"100px"}
+                      src="https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/clientes%2FPASTA%20TESTE%2Fdesenho%20pardal.jpg?alt=media&token=77ce181c-16ad-444f-89a2-cd76e7e89b3e"
+                      objectFit="fill"
+                      alt="Picture of the author"
+                    />
+                  </div>
+                </div>
+              )}
+              <div className="w-fit flex flex-col items-center self-center">
+                <label
+                  className="ml-2 text-center text-[#15599a] font-bold text-sm"
+                  htmlFor="propostaComercial"
+                >
+                  {dados.linkVisualizacaoProjeto
+                    ? "SUBSTITUIR IMAGEM"
+                    : "ADICIONAR IMAGEM"}
+                </label>
+                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                  <div className="absolute">
+                    {images.visualizacaoProjeto ? (
+                      <div className="flex flex-col items-center">
+                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span className="block text-gray-400 font-normal text-center">
+                          {images.visualizacaoProjeto.file.name}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span className="block text-gray-400 font-normal">
+                          Adicione o arquivo aqui
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    onChange={(e) =>
+                      setImages({
+                        ...images,
+                        visualizacaoProjeto: {
+                          title: "VISUALIZAÇÃO DO PROJETO",
+                          file: e.target.files[0],
+                        },
+                      })
+                    }
+                    className="h-full w-full opacity-0"
+                    type="file"
+                    accept=".png, .jpeg,.jpg"
+                  />
+                </div>
+              </div>
+              {imageMsg.text && (
+                <p className={`text-center text-sm italic ${imageMsg.color}`}>
+                  {imageMsg.text}
+                </p>
+              )}
+              <button
+                onClick={uploadImage}
+                className="p-2 rounded bg-[#fead61] font-bold hover:bg-[#15599a] hover:text-white"
+              >
+                SALVAR IMAGEM
+              </button>
             </div>
             <div className="w-full flex items-center justify-center gap-2 border border-[#15599a] p-4 shadow-lg bg-[#fff]">
               <SelectInput

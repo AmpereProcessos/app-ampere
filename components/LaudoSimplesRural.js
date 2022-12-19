@@ -220,14 +220,19 @@ function LaudoSimplesRural({ info }) {
             VISUALIZAÇÃO DO PROJETO
           </h1>
           <div className="h-[450px] border border-black">
-            <div className="w-[793.7px] h-full">
-              <Image
-                width={"793.7px"}
-                height={"450px"}
-                style={{ width: "793.7px", height: "450px" }}
-                src="https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/clientes%2FLUCAS%20FERNANDES-999%2FcontaDeEnergia4559?alt=media&token=859272b0-1bed-47de-86f3-91120570811b"
-              />
-            </div>
+            {info.linkVisualizacaoProjeto ? (
+              <div className="w-[793.7px] h-full">
+                <Image
+                  width={"793px"}
+                  height={"450px"}
+                  src={info.linkVisualizacaoProjeto}
+                  objectFit="fill"
+                  alt="Picture of the author"
+                />
+              </div>
+            ) : (
+              false
+            )}
           </div>
         </div>
         <div className="mt-2 flex flex-col">
@@ -394,34 +399,34 @@ function LaudoSimplesRural({ info }) {
           <div className="flex">
             <div className="grid grid-rows-4 w-[50%]">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
+                <p className="bg-gray-200 font-bold text-xs text-center border-r border-black">
                   CASA DE MÁQUINAS
                 </p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="text-xs text-center border-r border-black">
                   {info.casaDeMaquinas ? info.casaDeMaquinas : "-"}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
+                <p className="bg-gray-200 font-bold text-xs text-center border-r border-black">
                   INSTALAÇÃO INTERNET
                 </p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="text-xs text-center border-r border-black">
                   {info.instalacaoRoteador ? info.instalacaoRoteador : "-"}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
+                <p className="bg-gray-200 font-bold text-xs text-center border-r border-black">
                   INSTALAÇÃO DE ALAMBRADO
                 </p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="text-xs text-center border-r border-black">
                   {info.alambrado ? info.alambrado : "-"}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
+                <p className="bg-gray-200 font-bold text-xs text-center border-r border-black">
                   TERRAPLANAGEM USINA DE SOLO
                 </p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="text-xs text-center border-r border-black">
                   {info.terraplanagemUsinaSolo
                     ? info.terraplanagemUsinaSolo
                     : "-"}
@@ -430,34 +435,34 @@ function LaudoSimplesRural({ info }) {
             </div>
             <div className="grid grid-rows-4 w-[50%]">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
+                <p className="bg-gray-200 font-bold text-xs text-center border-r border-black">
                   CONSTRUÇÃO DE BARRACÃO
                 </p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="text-xs text-center border-r border-black">
                   {info.construcaoBarracao ? info.construcaoBarracao : "-"}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
+                <p className="bg-gray-200 font-bold text-xs text-center border-r border-black">
                   REDE PARA INTERLIGAR FAZENDA
                 </p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="text-xs text-center border-r border-black">
                   {info.redeReligacao ? info.redeReligacao : "-"}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
+                <p className="bg-gray-200 font-bold text-xs text-center border-r border-black">
                   BRITAGEM
                 </p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="text-xs text-center border-r border-black">
                   {info.britagem ? info.britagem : "-"}
                 </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
+                <p className="bg-gray-200 font-bold text-xs text-center border-r border-black">
                   LIMPEZA DO LOCAL USINA DE SOLO
                 </p>
-                <p className="text-xxs text-center border-r border-black">
+                <p className="text-xs text-center border-r border-black">
                   {info.limpezaLocalUsinaSolo
                     ? info.limpezaLocalUsinaSolo
                     : "-"}

@@ -696,6 +696,7 @@ function ModalFormSolicitacao({
               <h1 className="text-[#15599a] pl-6  font-bold">
                 {dados.nomeDoContrato}
               </h1>
+              <p className="text-xxs italic text-gray-600">#{dados._id}</p>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() =>

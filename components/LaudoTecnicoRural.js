@@ -487,8 +487,8 @@ function LaudoTecnicoRural({ info }) {
                 MEDIDA
               </p>
             </div>
-            {info.suprimentos.map((suprimento) => (
-              <div className="grid grid-cols-10">
+            {info.suprimentos.map((suprimento, index) => (
+              <div key={index} className="grid grid-cols-10">
                 <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
                   {suprimento.insumo}
                 </p>

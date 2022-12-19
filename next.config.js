@@ -20,6 +20,32 @@ const nextConfig = {
       },
     ],
   },
+  images: {
+    domains: ["firebasestorage.googleapis.com"],
+  },
 };
 
-module.exports = withTM({ nextConfig });
+module.exports = withTM({
+  reactStrictMode: true,
+  swcMinify: true,
+  module: {
+    rules: [
+      {
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$/,
+        use: ["@svgr/webpack"],
+      },
+    ],
+  },
+  images: {
+    formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
+});

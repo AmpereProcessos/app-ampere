@@ -596,6 +596,10 @@ export const suprimentoOption = {
     tipo: ["-"],
     unidade: "UNIDADE",
   },
+  "ESTRUTURA SOLO": {
+    tipo: ["MESA DUPLA"],
+    unidade: "MESA",
+  },
 };
 export const statusLiberacao = [
   {

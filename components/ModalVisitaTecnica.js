@@ -133,18 +133,18 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
     <div style={OVERLAY_STYLES}>
       <div style={MODAL_STYLES}>
         <div className="flex flex-col h-full">
-          <div className="flex justify-between items-center px-2 text-lg pb-2 border-b border-gray-200">
-            <h1 className="text-[#15599a] pl-6  font-bold">
+          <div className="flex flex-col lg:flex-row justify-around gap-2 flex-wrap items-center px-2 text-lg pb-2 border-b border-gray-200">
+            <h1 className="text-[#15599a] p-0 lg:pl-6 font-bold text-xs lg:text-base">
               {dados.nomeDoCliente}
             </h1>
             {dados.status != "CONCLUIDO" ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 justify-evenly">
                 <select
                   value={dados.status ? dados.status : "NÃO DEFINIDO"}
                   onChange={(e) =>
                     setDados({ ...dados, status: e.target.value })
                   }
-                  className="outline-none p-2 text-[#15599a] font-bold"
+                  className="outline-none p-2 text-[#15599a] font-bold text-xs lg:text-base"
                 >
                   <option value="EM ANÁLISE TÉCNICA">EM ANÁLISE TÉCNICA</option>
                   <option value="PENDÊNCIA COMERCIAL">
@@ -155,7 +155,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 </select>
                 <button
                   onClick={concludeVisita}
-                  className="bg-green-200 hover:bg-green-500 p-2 rounded outline-none font-bold text-white"
+                  className="bg-green-200 hover:bg-green-500 p-2 rounded outline-none font-bold text-white text-xs lg:text-base"
                 >
                   VISITA CONCLUÍDA?
                 </button>
@@ -165,12 +165,11 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 CONCLUIDO
               </p>
             )}
-
-            <div className="flex items-center gap-x-2">
+            <div className="flex items-center justify-around gap-x-2">
               {msg.text && <p className={`italic ${msg.color}`}>{msg.text}</p>}
               <button
                 onClick={saveChanges}
-                className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
+                className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm w-fit"
               >
                 <p>Salvar alterações</p>
                 <FaSave />
@@ -814,6 +813,39 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                           setDados({ ...dados, potTrafo: Number(value) })
                         }
                       />
+                      <TextInput
+                        label={"NÚMERO DO TRANSFORMADOR"}
+                        editable={true}
+                        value={dados.numeroTrafo}
+                        handleChange={(value) =>
+                          setDados({ ...dados, numeroTrafo: value })
+                        }
+                      />
+                      <TextInput
+                        label={"NÚMERO POSTE DO TRANSFORMADOR"}
+                        editable={true}
+                        value={dados.numeroPosteTrafo}
+                        handleChange={(value) =>
+                          setDados({ ...dados, numeroPosteTrafo: value })
+                        }
+                      />
+                      <SelectInput
+                        label={"PENDÊNCIAS"}
+                        editable={true}
+                        value={
+                          dados.pendenciasTrafo
+                            ? dados.pendenciasTrafo
+                            : "NÃO DEFINIDO"
+                        }
+                        options={[
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                          { label: "SIM", value: "SIM" },
+                          { label: "NÃO", value: "NÃO" },
+                        ]}
+                        handleChange={(value) =>
+                          setDados({ ...dados, pendenciasTrafo: value })
+                        }
+                      />
                     </div>
                   </div>
                   <div className="flex flex-col items-center mt-2">
@@ -1414,6 +1446,54 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       setDados({ ...dados, infraCabos: value })
                     }
                   />
+                  <TextInput
+                    label={"DISTÂNCIA ITBA À ZONA RURAL"}
+                    editable={true}
+                    value={dados.distanciaItbaRural}
+                    handleChange={(value) =>
+                      setDados({ ...dados, distanciaItbaRural: value })
+                    }
+                  />
+                  <TextInput
+                    label={"DISTÂNCIA DO SISTEMA AO INVERSOR"}
+                    editable={true}
+                    value={dados.distanciaSistemaInversor}
+                    handleChange={(value) =>
+                      setDados({ ...dados, distanciaSistemaInversor: value })
+                    }
+                  />
+                  <SelectInput
+                    label={"REALIMENTAR A FAZENDA ?"}
+                    editable={true}
+                    value={
+                      dados.realimentar ? dados.realimentar : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                      { label: "NÃO", value: "NÃO" },
+                      { label: "SIM", value: "SIM" },
+                    ]}
+                    handleChange={(value) =>
+                      setDados({ ...dados, realimentar: value })
+                    }
+                  />
+                  <SelectInput
+                    label={"TEM ESTUDO DE CASO?"}
+                    editable={true}
+                    value={
+                      dados.temEstudoDeCaso
+                        ? dados.temEstudoDeCaso
+                        : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                      { label: "NÃO", value: "NÃO" },
+                      { label: "SIM", value: "SIM" },
+                    ]}
+                    handleChange={(value) =>
+                      setDados({ ...dados, temEstudoDeCaso: value })
+                    }
+                  />
                 </div>
                 <div className="flex flex-col w-full self-center mt-2 items-center">
                   <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -1580,6 +1660,23 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     }
                   />
                   <SelectInput
+                    label={"TIPO DE PROJETO"}
+                    editable={true}
+                    value={
+                      dados.tipoProjeto ? dados.tipoProjeto : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                      { label: "MINI GERAÇÃO", value: "MINI GERAÇÃO" },
+                      { label: "MICRO GERAÇÃO", value: "MICRO GERAÇÃO" },
+                      { label: "REDE MÉDIA", value: "REDE MÉDIA" },
+                      { label: "REDE BAIXA", value: "REDE BAIXA" },
+                    ]}
+                    handleChange={(value) =>
+                      setDados({ ...dados, tipoProjeto: value })
+                    }
+                  />
+                  <SelectInput
                     label={"MODELO DA CAIXA"}
                     editable={true}
                     value={
@@ -1621,6 +1718,22 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     ]}
                     handleChange={(value) =>
                       setDados({ ...dados, pendenciasProjetos: value })
+                    }
+                  />
+                  <TextInput
+                    label={"NÚMERO POSTE DE DERIVAÇÃO(GOIÁS)"}
+                    editable={true}
+                    value={dados.numeroPosteDerivacao}
+                    handleChange={(value) =>
+                      setDados({ ...dados, numeroPosteDerivacao: value })
+                    }
+                  />
+                  <NumberInput
+                    label={"POTÊNCIA DO FUSÍVEL"}
+                    editable={true}
+                    value={dados.potFusivel}
+                    handleChange={(value) =>
+                      setDados({ ...dados, potFusivel: value })
                     }
                   />
                   <SelectInput
@@ -1737,6 +1850,22 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       setDados({
                         ...dados,
                         obsProjetos: e.target.value.toUpperCase(),
+                      });
+                    }}
+                    className="w-full text-center h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                  />
+                </div>
+                <div className="flex flex-col w-full self-center mt-2 items-center">
+                  <span className="uppercase font-bold font-raleway text-center text-sm">
+                    DESCRITIVO INFRAESTRUTURA ELÉTRICA
+                  </span>
+                  <textarea
+                    value={dados.descritivoInfraEletrica}
+                    placeholder={"Observações da obra aqui..."}
+                    onChange={(e) => {
+                      setDados({
+                        ...dados,
+                        descritivoInfraEletrica: e.target.value.toUpperCase(),
                       });
                     }}
                     className="w-full text-center h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"

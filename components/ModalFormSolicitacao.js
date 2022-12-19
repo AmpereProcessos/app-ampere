@@ -476,6 +476,7 @@ function ModalFormSolicitacao({
     await axios.put("/api/solicitacoes/contrato", {
       _id: solicitacao._id,
       aprovacao: true,
+      dataAprovacao: new Date().toISOString(),
     });
     await axios.post("/api/email", {
       emailTo: "amperecontasareceber@gmail.com",

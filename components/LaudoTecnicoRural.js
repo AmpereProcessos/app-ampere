@@ -255,7 +255,7 @@ function LaudoTecnicoRural({ info }) {
                     AVALIAR TELHADO
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.avaliarTelhado}
                   </p>
                 </div>
               </div>
@@ -281,7 +281,7 @@ function LaudoTecnicoRural({ info }) {
                     POSSUI SOMBRA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.respostaPossuiSombra}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -289,7 +289,7 @@ function LaudoTecnicoRural({ info }) {
                     DISTÂNCIA DE ITUIUTABA À ZONA RURAL
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.distanciaItbaRural}
                   </p>
                 </div>
               </div>
@@ -306,7 +306,9 @@ function LaudoTecnicoRural({ info }) {
                     LOCAL INSTALAÇÃO DO EQUIPAMENTO
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.localInstalacaoInversor
+                      ? info.localInstalacaoInversor
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -314,7 +316,9 @@ function LaudoTecnicoRural({ info }) {
                     DISTÂNCIA DO SISTEMA AO INVERSOR
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.distanciaSistemaInversor
+                      ? info.distanciaSistemaInversor
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -322,7 +326,9 @@ function LaudoTecnicoRural({ info }) {
                     PAREDE DE FIXAÇÃO DOS EQUIPAMENTOS
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.tipoFixacaoInversores
+                      ? info.tipoFixacaoInversores
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -330,7 +336,9 @@ function LaudoTecnicoRural({ info }) {
                     DISTÂNCIA DOS INVERSORES ATÉ O PADRÃO
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.distanciaInversorPadrao
+                      ? info.distanciaInversorPadrao
+                      : "-"}
                   </p>
                 </div>
               </div>
@@ -340,7 +348,7 @@ function LaudoTecnicoRural({ info }) {
                     INFRA PARA LANÇAMENTO DE CABOS
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.infraCabos ? info.infraCabos : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -348,7 +356,9 @@ function LaudoTecnicoRural({ info }) {
                     DISTÂNCIA DO ROTEADOR AO INVERSOR
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.distanciaInversorRoteador}
+                    {info.distanciaInversorRoteador
+                      ? info.distanciaInversorRoteador
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -356,7 +366,7 @@ function LaudoTecnicoRural({ info }) {
                     REALIMENTAR A FAZENDA?
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.realimentar ? info.realimentar : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -364,7 +374,7 @@ function LaudoTecnicoRural({ info }) {
                     TEM ESTUDO DE CASO?
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.temEstudoDeCaso ? info.temEstudoDeCaso : "-"}
                   </p>
                 </div>
               </div>
@@ -375,10 +385,7 @@ function LaudoTecnicoRural({ info }) {
               OBSERVAÇÕES
             </h1>
             <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[50px] text-center p-2">
-              Laboris et minim quis et nisi ea est reprehenderit elit. Eu duis
-              velit consequat cillum qui eiusmod id sunt. Proident laboris
-              exercitation labore est culpa incididunt tempor commodo nisi esse
-              irure. Aute qui incididunt incididunt proident magna.
+              {info.obsObras ? info.obsObras : "SEM OBSERVAÇÕES"}
             </div>
           </div>
         </div>
@@ -392,25 +399,35 @@ function LaudoTecnicoRural({ info }) {
                 <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
                   CASA DE MÁQUINAS
                 </p>
-                <p className="text-xxs text-center border-r border-black">-</p>
+                <p className="text-xxs text-center border-r border-black">
+                  {info.casaDeMaquinas ? info.casaDeMaquinas : "-"}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
                   INSTALAÇÃO INTERNET
                 </p>
-                <p className="text-xxs text-center border-r border-black">-</p>
+                <p className="text-xxs text-center border-r border-black">
+                  {info.instalacaoRoteador ? info.instalacaoRoteador : "-"}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
                   INSTALAÇÃO DE ALAMBRADO
                 </p>
-                <p className="text-xxs text-center border-r border-black">-</p>
+                <p className="text-xxs text-center border-r border-black">
+                  {info.alambrado ? info.alambrado : "-"}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
                   TERRAPLANAGEM USINA DE SOLO
                 </p>
-                <p className="text-xxs text-center border-r border-black">-</p>
+                <p className="text-xxs text-center border-r border-black">
+                  {info.terraplanagemUsinaSolo
+                    ? info.terraplanagemUsinaSolo
+                    : "-"}
+                </p>
               </div>
             </div>
             <div className="grid grid-rows-4 w-[50%]">
@@ -418,25 +435,35 @@ function LaudoTecnicoRural({ info }) {
                 <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
                   CONSTRUÇÃO DE BARRACÃO
                 </p>
-                <p className="text-xxs text-center border-r border-black">-</p>
+                <p className="text-xxs text-center border-r border-black">
+                  {info.construcaoBarracao ? info.construcaoBarracao : "-"}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
                   REDE PARA INTERLIGAR FAZENDA
                 </p>
-                <p className="text-xxs text-center border-r border-black">-</p>
+                <p className="text-xxs text-center border-r border-black">
+                  {info.redeReligacao ? info.redeReligacao : "-"}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
                   BRITAGEM
                 </p>
-                <p className="text-xxs text-center border-r border-black">-</p>
+                <p className="text-xxs text-center border-r border-black">
+                  {info.britagem ? info.britagem : "-"}
+                </p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
                 <p className="bg-gray-200 font-bold text-xxs text-center border-r border-black">
                   LIMPEZA DO LOCAL USINA DE SOLO
                 </p>
-                <p className="text-xxs text-center border-r border-black">-</p>
+                <p className="text-xxs text-center border-r border-black">
+                  {info.limpezaLocalUsinaSolo
+                    ? info.limpezaLocalUsinaSolo
+                    : "-"}
+                </p>
               </div>
             </div>
           </div>
@@ -460,114 +487,29 @@ function LaudoTecnicoRural({ info }) {
                 MEDIDA
               </p>
             </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                GRAMPO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                FINAL
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                UNIDADE
-              </p>
-            </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                GRAMPO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                INTERMEDIÁRIO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                UNIDADE
-              </p>
-            </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                TRILHO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                2,5
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                UNIDADE
-              </p>
-            </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                PARAFUSO FIBROCIMENTO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                UNIDADE
-              </p>
-            </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                PAR DE JUNÇÃO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                TRILHO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                UNIDADE
-              </p>
-            </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                CABO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                SOLAR
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                METRO
-              </p>
-            </div>
-            <div className="grid grid-cols-10">
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                ESTRUTURA SOLO
-              </p>
-              <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                MESA DUPLA
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                -
-              </p>
-              <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                MESA
-              </p>
-            </div>
+            {info.suprimentos.map((suprimento) => (
+              <div className="grid grid-cols-10">
+                <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
+                  {suprimento.insumo}
+                </p>
+                <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
+                  {suprimento.tipo}
+                </p>
+                <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
+                  {suprimento.qtde}
+                </p>
+                <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
+                  {suprimento.medida}
+                </p>
+              </div>
+            ))}
           </div>
           <div className="flex flex-col">
             <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0 text-xs">
               OBSERVAÇÕES
             </h1>
             <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[50px] text-center p-2">
-              Laboris et minim quis et nisi ea est reprehenderit elit. Eu duis
-              velit consequat cillum qui eiusmod id sunt. Proident laboris
-              exercitation labore est culpa incididunt tempor commodo nisi esse
-              irure. Aute qui incididunt incididunt proident magna.
+              {info.obsSuprimentos ? info.obsSuprimentos : "SEM OBSERVAÇÕES"}
             </div>
           </div>
         </div>
@@ -581,7 +523,7 @@ function LaudoTecnicoRural({ info }) {
                 CONCESSIONÁRIA
               </p>
               <p className="font-bold text-xxs text-center border-r border-black">
-                -
+                {info.concessionaria ? info.concessionaria : "-"}
               </p>
             </div>
             <div className="w-[50%] grid grid-cols-2 border-b border-black">
@@ -589,7 +531,7 @@ function LaudoTecnicoRural({ info }) {
                 TIPO DE PROJETO
               </p>
               <p className="font-bold text-xxs text-center border-r border-black">
-                -
+                {info.tipoProjeto ? info.tipoProjeto : "-"}
               </p>
             </div>
           </div>
@@ -604,7 +546,7 @@ function LaudoTecnicoRural({ info }) {
                     AMPERAGEM
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    {info.amperagem}
+                    {info.amperagem ? info.amperagem : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -612,7 +554,7 @@ function LaudoTecnicoRural({ info }) {
                     Nº DO MEDIDOR
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    {info.numeroMedidor}
+                    {info.numeroMedidor ? info.numeroMedidor : "-"}
                   </p>
                 </div>
               </div>
@@ -622,7 +564,7 @@ function LaudoTecnicoRural({ info }) {
                     TIPO DO DISJUNTOR
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    {info.tipoDisjuntor}
+                    {info.tipoDisjuntor ? info.tipoDisjuntor : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -630,7 +572,7 @@ function LaudoTecnicoRural({ info }) {
                     MODELO DA CAIXA
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.modeloCaixa ? info.modeloCaixa : "-"}
                   </p>
                 </div>
               </div>
@@ -647,7 +589,7 @@ function LaudoTecnicoRural({ info }) {
                     POTÊNCIA DO TRANSFORMADOR
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.potTrafo ? info.potTrafo : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -655,7 +597,7 @@ function LaudoTecnicoRural({ info }) {
                     Nº DO TRANSFORMADOR
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.numeroTrafo ? info.numeroTrafo : "-"}
                   </p>
                 </div>
               </div>
@@ -665,7 +607,9 @@ function LaudoTecnicoRural({ info }) {
                     PADRÃO ACOPLADO
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.padraoTrafoAcoplados
+                      ? info.padraoTrafoAcoplados
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -673,7 +617,7 @@ function LaudoTecnicoRural({ info }) {
                     PENDÊNCIAS
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.pendenciasTrafo ? info.pendenciasTrafo : "-"}
                   </p>
                 </div>
               </div>
@@ -690,7 +634,7 @@ function LaudoTecnicoRural({ info }) {
                     Nº DO POSTE TRANSFORMADOR
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.numeroPosteTrafo ? info.numeroPosteTrafo : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -698,7 +642,7 @@ function LaudoTecnicoRural({ info }) {
                     POTÊNCIA FUSÍVEL
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.potFusivel ? info.potFusivel : "-"}
                   </p>
                 </div>
               </div>
@@ -708,7 +652,9 @@ function LaudoTecnicoRural({ info }) {
                     Nº POSTE DE DERIVAÇÃO
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.numeroPosteDerivacao
+                      ? info.numeroPosteDerivacao
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -716,7 +662,7 @@ function LaudoTecnicoRural({ info }) {
                     POTÊNCIA DO TRANSFORMADOR
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.potTrafo ? info.potTrafo : "-"}
                   </p>
                 </div>
               </div>
@@ -736,7 +682,7 @@ function LaudoTecnicoRural({ info }) {
                     TIPO DE PADRÃO
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.novaLigacaoPadrao ? info.novaLigacaoPadrao : "-"}
                   </p>
                 </div>
                 <div className="w-[50%] grid grid-cols-2">
@@ -744,7 +690,7 @@ function LaudoTecnicoRural({ info }) {
                     AMPERAGEM
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.novaAmperagem ? info.novaAmperagem : "-"}
                   </p>
                 </div>
               </div>
@@ -761,7 +707,7 @@ function LaudoTecnicoRural({ info }) {
                     FOTO DO DRONE
                   </p>
                   <p className="text-xxs text-center font-bold border-r border-black">
-                    -
+                    {info.fotoDroneDesenho ? info.fotoDroneDesenho : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -769,7 +715,7 @@ function LaudoTecnicoRural({ info }) {
                     MEDIDAS NO LOCAL
                   </p>
                   <p className="text-xxs text-center font-bold border-r border-black">
-                    -
+                    {info.medidasLocal ? info.medidasLocal : "-"}
                   </p>
                 </div>
               </div>
@@ -779,7 +725,7 @@ function LaudoTecnicoRural({ info }) {
                     FOTO DA FAIXADA
                   </p>
                   <p className="text-xxs text-center font-bold border-r border-black">
-                    -
+                    {info.fotoFaixada ? info.fotoFaixada : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -787,7 +733,7 @@ function LaudoTecnicoRural({ info }) {
                     GOOGLE EARTH
                   </p>
                   <p className="text-xxs text-center font-bold border-r border-black">
-                    -
+                    {info.googleEarth ? info.googleEarth : "-"}
                   </p>
                 </div>
               </div>
@@ -798,10 +744,7 @@ function LaudoTecnicoRural({ info }) {
               OBSERVAÇÕES
             </h1>
             <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[50px] text-center p-2">
-              Laboris et minim quis et nisi ea est reprehenderit elit. Eu duis
-              velit consequat cillum qui eiusmod id sunt. Proident laboris
-              exercitation labore est culpa incididunt tempor commodo nisi esse
-              irure. Aute qui incididunt incididunt proident magna.
+              {info.obsProjetos ? info.obsProjetos : "SEM OBSERVAÇÕES"}
             </div>
           </div>
         </div>

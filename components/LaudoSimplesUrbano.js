@@ -274,11 +274,11 @@ function LaudoSimplesUrbano({ info }) {
               VALOR PARA AJUSTE NA PROPOSTA COMERCIAL
             </div>
             <div className="flex flex-col col-span-7 h-full">
-              <div className="flex border-b border-black">
-                <div className="w-[75%] bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">
+              <div className="grid grid-cols-7  border-b border-black">
+                <div className="col-span-5 bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">
                   VALOR À VISTA
                 </div>
-                <div className="w-[25%] bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">
+                <div className="col-span-2 bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">
                   R${" "}
                   {info.custosAdicionais
                     ? getAdditionalCostsSum(info.custosAdicionais)
@@ -287,11 +287,11 @@ function LaudoSimplesUrbano({ info }) {
                     : "-"}
                 </div>
               </div>
-              <div className="flex border-b border-black">
-                <div className="w-[75%] bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
+              <div className="grid grid-cols-7  border-b border-black">
+                <div className="col-span-5 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
                   VALOR FINANCIAMENTO
                 </div>
-                <div className="w-[25%] bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
+                <div className="col-span-2 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
                   R${" "}
                   {info.custosAdicionais
                     ? (getAdditionalCostsSum(info.custosAdicionais) * 1.175)

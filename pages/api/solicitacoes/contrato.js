@@ -9,6 +9,13 @@ export default async function handler(req, res) {
   } else if (req.method === "GET") {
     const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);
     const collection = db.collection("contrato");
+    // {
+    //   $addFields: {
+    //     dataInsercao: {
+    //       $toDate: "$_id";
+    //     }
+    //   }
+    // }
     let arr = await collection.find({}).toArray();
     res.json(arr);
   } else if (req.method === "PUT") {

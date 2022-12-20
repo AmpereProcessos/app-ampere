@@ -217,6 +217,7 @@ function ModalFormSolicitacao({
   const [dados, setDados] = useState(solicitacao);
   const [msg, setMessage] = useState({ text: "", color: "" });
   const [creationMsg, setCreationMsg] = useState({ text: "", color: "" });
+  const [emailMsg, setEmailMsg] = useState({ text: "", color: "" });
   const [dadosDistribuicao, setDadosDistribuicao] = useState({
     numInstalacao: "",
     excedente: null,
@@ -478,12 +479,22 @@ function ModalFormSolicitacao({
       aprovacao: true,
       dataAprovacao: new Date().toISOString(),
     });
-    await axios.post("/api/email", {
-      emailTo: "amperecontasareceber@gmail.com",
-      subject: "SOLICITAÇÃO DE CONTRATO",
-      message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${dados.nomeDoContrato}. Desde já agradeço, Volts.`,
-      copy: ["ampereenergiascomercial@gmail.com"],
-    });
+    axios
+      .post("/api/email", {
+        emailTo: "amperecontasareceber@gmail.com",
+        subject: "SOLICITAÇÃO DE CONTRATO",
+        message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${dados.nomeDoContrato}. Desde já agradeço, Volts.`,
+        copy: ["ampereenergiascomercial@gmail.com"],
+      })
+      .then((res) =>
+        setEmailMsg({ text: "Email enviado", color: "text-green-500" })
+      )
+      .catch((err) =>
+        setEmailMsg({
+          text: `Houve um erro no envio do email - ${err}`,
+          color: "text-red-500",
+        })
+      );
     axios.post("/api/projects/add", insertObj).then((res) => {
       setCreationMsg({ text: "Projeto adicionado!", color: "text-green-500" });
     });
@@ -2989,6 +3000,11 @@ function ModalFormSolicitacao({
                 {creationMsg.text && (
                   <p className={`text-center italic ${creationMsg.color}`}>
                     {creationMsg.text}
+                  </p>
+                )}
+                {emailMsg.text && (
+                  <p className={`text-center italic ${emailMsg.color} mt-2`}>
+                    {emailMsg.text}
                   </p>
                 )}
                 {editor && !dados.aprovacao && (

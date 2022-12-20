@@ -21,6 +21,7 @@ import NumberInput from "./NumberInput";
 import axios from "axios";
 import dayjs from "dayjs";
 import NotificationCreationBlock from "./NotificationCreationBlock";
+import AnexoArquivo from "./AnexoArquivo";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -140,7 +141,6 @@ function ModalComercial({
       });
     }
   }
-  console.log(infoHolder.estruturaPersonalizada);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -3007,6 +3007,49 @@ function ModalComercial({
                     </>
                   )}
                 </div>
+              </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  ARQUIVOS
+                </span>
+                <div className="flex flex-col items-center">
+                  <h1 className="text-xs text-center font-bold text-[#15599a] uppercase py-2">
+                    ANEXE ARQUIVOS
+                  </h1>
+                  <AnexoArquivo
+                    id={infoHolder._id}
+                    prevLinks={infoHolder.links ? infoHolder.links : {}}
+                    cliente={`${infoHolder.nomeDoContrato}-${infoHolder.codigoSVB}`}
+                    categorias={[
+                      { label: "DOCUMENTOS", value: "links.documentos" },
+                      { label: "EQUIPAMENTOS", value: "links.equipamentos" },
+                      { label: "PROJETOS", value: "links.projetos" },
+                    ]}
+                    handleUpdates={handleUpdates}
+                  />
+                </div>
+                {project.links && (
+                  <div className="flex justify-around gap-2 mt-3">
+                    {Object.keys(project.links).map((category, index) => (
+                      <div key={index} className="flex flex-col">
+                        <h1 className="text-sm font-bold text-center text-[#15599a]">
+                          {category.toUpperCase()}
+                        </h1>
+                        <div className="flex flex-col items-center gap-1">
+                          {project.links[category].map((obj, index2) => (
+                            <a
+                              className="text-xs text-[#15599a] font-bold"
+                              key={index2}
+                              href={obj.link}
+                            >
+                              {obj.title}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -377,7 +377,7 @@ function LaudoSimplesUrbano({ info }) {
             CONCLUSÃO
           </h1>
           <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[60px] text-center p-2">
-            {info.respostaConclusao}
+            {info.respostaConclusao ? info.respostaConclusao : "-"}
           </div>
         </div>
         <div className="mt-2 grid gap-x-4 grid-cols-2">

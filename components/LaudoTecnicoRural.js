@@ -213,7 +213,7 @@ function LaudoTecnicoRural({ info }) {
             OBSERVAÇÕES VISITA
           </div>
           <div className="w-[80%] text-xxs text-center border-r border-black">
-            -
+            {info.obsVisita}
           </div>
         </div>
         <div className="flex flex-col">
@@ -231,7 +231,7 @@ function LaudoTecnicoRural({ info }) {
                     ESTRUTURA DE MONTAGEM
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.estruturaMontagem}
+                    {info.estruturaMontagem ? info.estruturaMontagem : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -239,7 +239,7 @@ function LaudoTecnicoRural({ info }) {
                     TIPO DA TELHA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.tipoTelha}
+                    {info.tipoTelha ? info.tipoTelha : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -247,7 +247,7 @@ function LaudoTecnicoRural({ info }) {
                     TELHA RESERVA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.telhasReservas}
+                    {info.telhasReservas ? info.telhasReservas : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -255,7 +255,7 @@ function LaudoTecnicoRural({ info }) {
                     AVALIAR TELHADO
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.avaliarTelhado}
+                    {info.avaliarTelhado ? info.avaliarTelhado : "-"}
                   </p>
                 </div>
               </div>
@@ -265,7 +265,7 @@ function LaudoTecnicoRural({ info }) {
                     TIPO DA ESTRUTURA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.tipoEstrutura}
+                    {info.tipoEstrutura ? info.tipoEstrutura : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -273,7 +273,7 @@ function LaudoTecnicoRural({ info }) {
                     ORIENTAÇÃO DA ESTRUTURA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.orientacaoEstrutura}
+                    {info.orientacaoEstrutura ? info.orientacaoEstrutura : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -281,7 +281,9 @@ function LaudoTecnicoRural({ info }) {
                     POSSUI SOMBRA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.respostaPossuiSombra}
+                    {info.respostaPossuiSombra
+                      ? info.respostaPossuiSombra
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -289,7 +291,7 @@ function LaudoTecnicoRural({ info }) {
                     DISTÂNCIA DE ITUIUTABA À ZONA RURAL
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.distanciaItbaRural}
+                    {info.distanciaItbaRural ? info.distanciaItbaRural : "-"}
                   </p>
                 </div>
               </div>

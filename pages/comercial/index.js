@@ -152,9 +152,11 @@ function Comercial({ credentials, setCredentials, users }) {
     }
   }, []);
   function handleUpdates(id) {
-    getProjects(credentials);
-    let changedObj = projects.filter((project) => project._id == id);
-    setModalProject(changedObj[0]);
+    axios
+      .get(`/api/projects/fetchDoc/${id}`)
+      .then((res) => setModalProject(res.data[0]));
+    // let changedObj = projects.filter((project) => project._id == id);
+    // setModalProject(changedObj[0]);
   }
   function getListCumulativePeakPot() {
     var totalSum = 0;
@@ -198,7 +200,6 @@ function Comercial({ credentials, setCredentials, users }) {
       setModalIsOpen(true);
     });
   }
-  console.log("CREDENTIALS FROM PROPS", credentials);
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">

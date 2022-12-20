@@ -240,7 +240,7 @@ function LaudoTecnicoUrbano({ info }) {
                     TIPO DA TELHA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.tipoTelha}
+                    {info.tipoTelha ? info.tipoTelha : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -248,7 +248,7 @@ function LaudoTecnicoUrbano({ info }) {
                     TELHA RESERVA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.telhasReservas}
+                    {info.telhasReservas ? info.telhasReservas : "-"}
                   </p>
                 </div>
               </div>
@@ -258,7 +258,7 @@ function LaudoTecnicoUrbano({ info }) {
                     TIPO DA ESTRUTURA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.tipoEstrutura}
+                    {info.tipoEstrutura ? info.tipoEstrutura : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -266,7 +266,7 @@ function LaudoTecnicoUrbano({ info }) {
                     ORIENTAÇÃO DA ESTRUTURA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.orientacaoEstrutura}
+                    {info.orientacaoEstrutura ? info.orientacaoEstrutura : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -274,7 +274,9 @@ function LaudoTecnicoUrbano({ info }) {
                     POSSUI SOMBRA
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.respostaPossuiSombra
+                      ? info.respostaPossuiSombra
+                      : "-"}
                   </p>
                 </div>
               </div>
@@ -291,7 +293,7 @@ function LaudoTecnicoUrbano({ info }) {
                     ESPAÇO NO QGBT
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.espacoQGBT}
+                    {info.espacoQGBT ? info.espacoQGBT : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -299,7 +301,7 @@ function LaudoTecnicoUrbano({ info }) {
                     ADAPTAÇÃO NO QGBT
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.adaptacaoQGBT}
+                    {info.adaptacaoQGBT ? info.adaptacaoQGBT : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -317,7 +319,9 @@ function LaudoTecnicoUrbano({ info }) {
                     DISTÂNCIA DO SISTEMA AO QGBT
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.distanciaSistemaQuadro}
+                    {info.distanciaSistemaQuadro
+                      ? info.distanciaSistemaQuadro
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -325,7 +329,7 @@ function LaudoTecnicoUrbano({ info }) {
                     AVALIAR TELHADO
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.avaliarTelhado}
+                    {info.avaliarTelhado ? info.avaliarTelhado : "-"}
                   </p>
                 </div>
               </div>
@@ -335,7 +339,7 @@ function LaudoTecnicoUrbano({ info }) {
                     DPS NO QGBT
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.dpsQGBT}
+                    {info.dpsQGBT ? info.dpsQGBT : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -343,7 +347,9 @@ function LaudoTecnicoUrbano({ info }) {
                     PAREDE DE FIXAÇÃO DOS EQUIPAMENTOS
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.tipoFixacaoInversores
+                      ? info.tipoFixacaoInversores
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -351,7 +357,7 @@ function LaudoTecnicoUrbano({ info }) {
                     INFRA PARA LANÇAMENTO DE CABOS
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.infraCabos}
+                    {info.infraCabos ? info.infraCabos : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -359,7 +365,9 @@ function LaudoTecnicoUrbano({ info }) {
                     DISTÂNCIA DO ROTEADOR AO INVERSOR
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    {info.distanciaInversorRoteador}
+                    {info.distanciaInversorRoteador
+                      ? info.distanciaInversorRoteador
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
@@ -367,7 +375,7 @@ function LaudoTecnicoUrbano({ info }) {
                     LOCAL DO ATERRAMENTO SISTEMA (GOIÁS)
                   </p>
                   <p className="text-xxs text-center border-r border-black">
-                    -
+                    {info.localAterramento ? info.localAterramento : "-"}
                   </p>
                 </div>
               </div>

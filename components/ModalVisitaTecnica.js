@@ -130,21 +130,28 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
   }
   async function uploadImage() {
     try {
-      var imageRef = ref(
-        storage,
-        `clientes/${dados.nomeDoCliente}-${dados.codigoSVB}/visualizacaoProjeto`
-      );
-      let res = await uploadBytes(imageRef, images.visualizacaoProjeto.file);
-      let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-      await axios.put("/api/solicitacoes/visitaTecnica", {
-        _id: dados._id,
-        linkVisualizacaoProjeto: url,
-      });
-      setDados({ ...dados, linkVisualizacaoProjeto: url });
-      setImageMsg({
-        text: "Imagem salva com sucesso",
-        color: "text-green-500",
-      });
+      if (images.visualizacaoProjeto) {
+        var imageRef = ref(
+          storage,
+          `clientes/${dados.nomeDoCliente}-${dados.codigoSVB}/visualizacaoProjeto`
+        );
+        let res = await uploadBytes(imageRef, images.visualizacaoProjeto.file);
+        let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+        await axios.put("/api/solicitacoes/visitaTecnica", {
+          _id: dados._id,
+          linkVisualizacaoProjeto: url,
+        });
+        setDados({ ...dados, linkVisualizacaoProjeto: url });
+        setImageMsg({
+          text: "Imagem salva com sucesso",
+          color: "text-green-500",
+        });
+      } else {
+        setImageMsg({
+          text: "Por favor, anexe uma imagem.",
+          color: "text-red-500",
+        });
+      }
     } catch (error) {
       setImageMsg({ text: "Erro ao enviar imagem.", color: "text-red-500" });
     }
@@ -602,6 +609,28 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       }
                     />
                     <SelectInput
+                      label={"TIPO DE PAREDE PARA FIXAÇÃO DOS INVERSORES"}
+                      editable={true}
+                      value={
+                        dados.tipoFixacaoInversores
+                          ? dados.tipoFixacaoInversores
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "ALVENARIA", value: "ALVENARIA" },
+                        { label: "LANCE DE MURO", value: "LANCE DE MURO" },
+                        { label: "PILAR", value: "PILAR" },
+                        {
+                          label: "OUTRO(DESCREVA EM OBSERVAÇÕES)",
+                          value: "OUTRO(DESCREVA EM OBSERVAÇÕES)",
+                        },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, tipoFixacaoInversores: value })
+                      }
+                    />
+                    <SelectInput
                       label={"TIPO DA TELHA (EXEMPLO ABAIXO)"}
                       editable={true}
                       value={dados.tipoTelha}
@@ -1014,28 +1043,6 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                           })
                         }
                       />
-                      <SelectInput
-                        label={"TIPO DE PAREDE PARA FIXAÇÃO DOS INVERSORES"}
-                        editable={true}
-                        value={
-                          dados.tipoFixacaoInversores
-                            ? dados.tipoFixacaoInversores
-                            : "NÃO DEFINIDO"
-                        }
-                        options={[
-                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                          { label: "ALVENARIA", value: "ALVENARIA" },
-                          { label: "LANCE DE MURO", value: "LANCE DE MURO" },
-                          { label: "PILAR", value: "PILAR" },
-                          {
-                            label: "OUTRO(DESCREVA EM OBSERVAÇÕES)",
-                            value: "OUTRO(DESCREVA EM OBSERVAÇÕES)",
-                          },
-                        ]}
-                        handleChange={(value) =>
-                          setDados({ ...dados, tipoFixacaoInversores: value })
-                        }
-                      />
                       <TextInput
                         label={"LINK PARA FOTOS DO DRONE"}
                         editable={true}
@@ -1397,7 +1404,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   CAMPOS ADICIONAIS P/OBRAS
                 </span>
-                <div className="w-full flex items-center justify-center gap-2">
+                <div className="w-full flex items-center justify-center gap-2 flex-wrap">
                   <SelectInput
                     label={"ESPAÇO NO QGBT"}
                     editable={true}
@@ -2392,9 +2399,9 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     <Image
                       width={"100px"}
                       height={"100px"}
-                      src="https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/clientes%2FPASTA%20TESTE%2Fdesenho%20pardal.jpg?alt=media&token=77ce181c-16ad-444f-89a2-cd76e7e89b3e"
+                      src={dados.linkVisualizacaoProjeto}
                       objectFit="fill"
-                      alt="Picture of the author"
+                      alt="VISUALIZAÇÃO DO PROJETO"
                     />
                   </div>
                 </div>

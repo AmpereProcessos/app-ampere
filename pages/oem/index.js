@@ -179,9 +179,9 @@ function OeM({ credentials, setCredentials, users }) {
     return totalSum.toFixed(0);
   }
   function handleUpdates(id) {
-    getProjects();
-    let changedObj = projects.filter((project) => project._id == id);
-    setModalProject(changedObj[0]);
+    axios
+      .get(`/api/projects/fetchDoc/${id}`)
+      .then((res) => setModalProject(res.data[0]));
   }
   function fetchMoreProjects() {
     setOpInProgress(true);

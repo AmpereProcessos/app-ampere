@@ -49,9 +49,9 @@ function Projetos({ credentials, setCredentials }) {
     }
   }
   function handleUpdates(id) {
-    getProjects(credentials);
-    let changedObj = projects.filter((project) => project._id == id);
-    setModalProject(changedObj[0]);
+    axios
+      .get(`/api/projects/fetchDoc/${id}`)
+      .then((res) => setModalProject(res.data[0]));
   }
   function handleSearchFilter(value) {
     setSearchFilter(value);

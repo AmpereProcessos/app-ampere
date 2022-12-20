@@ -2,11 +2,13 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import ModalControlAlmoxarifado from "../../components/ModalControlAlmoxarifado";
+import ModalNovoItemAlmoxarifado from "../../components/ModalNovoItemAlmoxarifado";
 import { AiOutlineSearch } from "react-icons/ai";
 function Estoque({ credentials, setCredentials }) {
   const [materiais, setMateriais] = useState([]);
   const [materiaisFiltrados, setMateriaisFiltrados] = useState([]);
   const [modalAberta, setModalAberta] = useState(false);
+  const [modalNovoItem, setModalNovoItem] = useState(false);
   const [modalMaterial, setModalMaterial] = useState({});
   const [filtros, setFiltros] = useState({
     filtroPesquisa: "",
@@ -141,6 +143,12 @@ function Estoque({ credentials, setCredentials }) {
           </div>
         ))}
       </div>
+      <div
+        onClick={() => setModalNovoItem(true)}
+        className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
+      >
+        <p className="uppercase font-bold text-sm">NOVO ITEM</p>
+      </div>
       {modalAberta && (
         <ModalControlAlmoxarifado
           credentials={credentials}
@@ -148,6 +156,9 @@ function Estoque({ credentials, setCredentials }) {
           info={modalMaterial}
           handleUpdates={handleUpdates}
         />
+      )}
+      {modalNovoItem && (
+        <ModalNovoItemAlmoxarifado setModalAberta={setModalNovoItem} />
       )}
     </div>
   );

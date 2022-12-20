@@ -158,9 +158,9 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     }
   }
   function handleUpdates(id) {
-    getProjects();
-    let changedObj = projects.filter((project) => project._id == id);
-    setModalProject(changedObj[0]);
+    axios
+      .get(`/api/projects/fetchDoc/${id}`)
+      .then((res) => setModalProject(res.data[0]));
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));

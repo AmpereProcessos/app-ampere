@@ -111,8 +111,6 @@ function ModalSuprimentos({
       return { liberar: true, message: "OK" };
     }
   }
-  console.log(infoHolder.compra.dataMaxPagamento);
-  console.log(isNaN(new Date(infoHolder.compra.dataMaxPagamento)));
   // console.log(infoHolder);
   return (
     <>

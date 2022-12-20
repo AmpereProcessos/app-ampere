@@ -172,7 +172,7 @@ function OSCreationBlock({
     }
     return true;
   }
-  console.log(ordensDeServico);
+
   return (
     <div className="flex flex-col">
       {" "}

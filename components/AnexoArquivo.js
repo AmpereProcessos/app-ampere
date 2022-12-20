@@ -12,15 +12,22 @@ function AnexoArquivo({ categorias, cliente, id, prevLinks, handleUpdates }) {
   async function anexarArquivo() {
     var splitNome = nomeDoArquivo.toLowerCase().split(" ");
     var fixedNome = splitNome.join("_");
-    console.log({
-      title: fixedNome,
-      file: imagem,
-      format: fileTypes[imagem.type]
-        ? fileTypes[imagem.type].title
-        : "INDEFINIDO",
-    });
+    if (nomeDoArquivo.trim().length < 3) {
+      setMsg({
+        text: "Por favor, preenche um nome de arquivo válido",
+        color: "text-red-500",
+      });
+      return;
+    }
+    if (categoria == "NÃO DEFINIDO") {
+      setMsg({
+        text: "Por favor, preencha uma categoria",
+        color: "text-red-500",
+      });
+      return;
+    }
     try {
-      if (imagem && categoria) {
+      if (imagem) {
         var imageRef = ref(storage, `clientes/${cliente}/${fixedNome}`);
         let res = await uploadBytes(imageRef, imagem);
         let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
@@ -47,7 +54,12 @@ function AnexoArquivo({ categorias, cliente, id, prevLinks, handleUpdates }) {
         });
         handleUpdates(id);
       }
-    } catch (error) {}
+    } catch (error) {
+      setMsg({
+        text: "Houve um erro com o envio da imagem, por favor tente novamente.",
+        color: "text-red-500",
+      });
+    }
   }
   return (
     <div className="flex flex-col gap-2">
@@ -73,7 +85,7 @@ function AnexoArquivo({ categorias, cliente, id, prevLinks, handleUpdates }) {
           onChange={(e) => setImagem(e.target.files[0])}
           className="h-full w-full opacity-0"
           type="file"
-          accept=".png, .jpeg,.jpg"
+          accept=".png, .jpeg, .jpg, .pdf, .docx, .doc"
         />
       </div>
       <input

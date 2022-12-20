@@ -3022,6 +3022,7 @@ function ModalComercial({
                     cliente={`${infoHolder.nomeDoContrato}-${infoHolder.codigoSVB}`}
                     categorias={[
                       { label: "DOCUMENTOS", value: "links.documentos" },
+                      { label: "CONTRATOS", value: "links.contratos" },
                       { label: "EQUIPAMENTOS", value: "links.equipamentos" },
                       { label: "PROJETOS", value: "links.projetos" },
                     ]}

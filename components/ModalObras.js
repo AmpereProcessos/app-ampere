@@ -156,7 +156,6 @@ function ModalObras({
       }
     }
   }
-  console.log(osInfo);
   return (
     <>
       <div style={OVERLAY_STYLES}>

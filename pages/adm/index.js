@@ -106,9 +106,9 @@ function Administracao({ credentials, setCredentials, users }) {
     }
   }, []);
   function handleUpdates(id) {
-    getProjects();
-    let changedObj = projects.filter((project) => project._id == id);
-    setModalProject(changedObj[0]);
+    axios
+      .get(`/api/projects/fetchDoc/${id}`)
+      .then((res) => setModalProject(res.data[0]));
   }
   function getListCumulativePeakPot() {
     var totalSum = 0;

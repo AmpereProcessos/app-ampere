@@ -137,7 +137,9 @@ function Estoque({ credentials, setCredentials }) {
                 {material.qtde}
               </p>
               <p className="text-xs text-gray-700 text-center">
-                R${material.preco.toFixed(2).replace(".", ",")}
+                {material.preco
+                  ? `R$${material.preco.toFixed(2).replace(".", ",")}`
+                  : "-"}
               </p>
             </div>
           </div>

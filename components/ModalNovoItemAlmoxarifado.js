@@ -28,7 +28,7 @@ const OVERLAY_STYLES = {
 function Novoitem({ setModalAberta }) {
   const [nome, setNome] = useState("");
   const [quantidade, setQuantidade] = useState(0);
-  const [preco, setPreco] = useState();
+  const [preco, setPreco] = useState(0);
   const [msg, setMsg] = useState({
     text: "",
     color: "",
@@ -39,6 +39,27 @@ function Novoitem({ setModalAberta }) {
       qtde: quantidade,
       preco: preco,
     };
+    if (nome.trim().length < 3) {
+      setMsg({
+        text: "Por favor, preencha um nome válido.",
+        color: "text-red-500",
+      });
+      return;
+    }
+    if (quantidade == 0) {
+      setMsg({
+        text: "Por favor, preencha uma quantidade válida.",
+        color: "text-red-500",
+      });
+      return;
+    }
+    if (preco == 0) {
+      setMsg({
+        text: "Por favor, preencha um preço válido.",
+        color: "text-red-500",
+      });
+      return;
+    }
     axios.post("/api/almoxarifado/novoMaterial", obj).then((res) => {
       console.log(res.data);
       setMsg({ text: "Item adicionado!", color: "text-green-500" });

@@ -230,9 +230,8 @@ export const irradByCity = [
   { cidade: "ARAGUARI", irrad: 5.299 },
   { cidade: "IRAÍ DE MINAS", irrad: 5.155 },
 ];
-export const fatorDeGeracaoPorOrientacao = [
-  {
-    cidade: "ITUIUTABA",
+export const fatorDeGeracaoPorOrientacao = {
+  ITUIUTABA: {
     fatorGen: "125.62",
     LESTE: "113.93",
     NORDESTE: "123.23",
@@ -243,8 +242,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "98.86",
     SUDESTE: "107.00",
   },
-  {
-    cidade: "IPIAÇU",
+  IPIAÇU: {
     fatorGen: "127.13",
     LESTE: "115.31",
     NORDESTE: "124.71",
@@ -255,8 +253,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "100.05",
     SUDESTE: "108.29",
   },
-  {
-    cidade: "SANTA VITÓRIA",
+  "SANTA VITÓRIA": {
     fatorGen: "127.25",
     LESTE: "115.41",
     NORDESTE: "124.83",
@@ -267,8 +264,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "100.14",
     SUDESTE: "108.39",
   },
-  {
-    cidade: "CAMPINA VERDE",
+  "CAMPINA VERDE": {
     fatorGen: "124.92",
     LESTE: "113.30",
     NORDESTE: "122.55",
@@ -279,8 +275,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "98.31",
     SUDESTE: "106.41",
   },
-  {
-    cidade: "UBERLÂNDIA",
+  UBERLÂNDIA: {
     fatorGen: "125.71",
     LESTE: "114.02",
     NORDESTE: "123.32",
@@ -291,8 +286,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "98.94",
     SUDESTE: "107.08",
   },
-  {
-    cidade: "CAPINÓPOLIS",
+  CAPINÓPOLIS: {
     fatorGen: "126.22",
     LESTE: "114.48",
     NORDESTE: "123.82",
@@ -303,8 +297,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "99.33",
     SUDESTE: "107.51",
   },
-  {
-    cidade: "GURINHATÃ",
+  GURINHATÃ: {
     fatorGen: "125.83",
     LESTE: "114.13",
     NORDESTE: "123.44",
@@ -315,8 +308,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "99.03",
     SUDESTE: "107.18",
   },
-  {
-    cidade: "PRATA",
+  PRATA: {
     fatorGen: "124.97",
     LESTE: "113.35",
     NORDESTE: "122.59",
@@ -327,8 +319,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "98.35",
     SUDESTE: "106.45",
   },
-  {
-    cidade: "CANÁPOLIS",
+  CANÁPOLIS: {
     fatorGen: "126.84",
     LESTE: "115.04",
     NORDESTE: "124.43",
@@ -339,8 +330,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "99.82",
     SUDESTE: "108.04",
   },
-  {
-    cidade: "CACHOEIRA DOURADA",
+  "CACHOEIRA DOURADA": {
     fatorGen: "125.81",
     LESTE: "114.11",
     NORDESTE: "123.42",
@@ -351,8 +341,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "99.01",
     SUDESTE: "107.16",
   },
-  {
-    cidade: "MONTE ALEGRE",
+  "MONTE ALEGRE": {
     fatorGen: "117.02",
     LESTE: "106.14",
     NORDESTE: "114.80",
@@ -363,8 +352,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "92.10",
     SUDESTE: "99.68",
   },
-  {
-    cidade: "UBERABA",
+  UBERABA: {
     fatorGen: "123.55",
     LESTE: "112.06",
     NORDESTE: "121.20",
@@ -375,8 +363,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "97.24",
     SUDESTE: "105.24",
   },
-  {
-    cidade: "CALDAS NOVAS",
+  "CALDAS NOVAS": {
     fatorGen: "125.16",
     LESTE: "113.52",
     NORDESTE: "122.78",
@@ -387,8 +374,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "98.50",
     SUDESTE: "106.61",
   },
-  {
-    cidade: "SÃO SEBASTIÃO DO PARAÍSO",
+  "SÃO SEBASTIÃO DO PARAÍSO": {
     fatorGen: "121.27",
     LESTE: "109.99",
     NORDESTE: "118.97",
@@ -399,8 +385,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "95.44",
     SUDESTE: "103.30",
   },
-  {
-    cidade: "BOM JESUS",
+  "BOM JESUS": {
     fatorGen: "119.09",
     LESTE: "108.01",
     NORDESTE: "116.83",
@@ -411,8 +396,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "93.72",
     SUDESTE: "101.44",
   },
-  {
-    cidade: "PORTEIRÃO",
+  PORTEIRÃO: {
     fatorGen: "125.16",
     LESTE: "113.52",
     NORDESTE: "122.78",
@@ -423,8 +407,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "98.50",
     SUDESTE: "106.61",
   },
-  {
-    cidade: "JOÃO PINHEIRO",
+  "JOÃO PINHEIRO": {
     fatorGen: "132.34",
     LESTE: "120.03",
     NORDESTE: "129.82",
@@ -435,8 +418,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "104.15",
     SUDESTE: "112.72",
   },
-  {
-    cidade: "SÃO SIMÃO",
+  "SÃO SIMÃO": {
     fatorGen: "123.96",
     LESTE: "112.43",
     NORDESTE: "121.60",
@@ -447,8 +429,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "97.56",
     SUDESTE: "105.59",
   },
-  {
-    cidade: "INACIOLÂNDIA",
+  INACIOLÂNDIA: {
     fatorGen: "125.16",
     LESTE: "113.52",
     NORDESTE: "122.78",
@@ -459,8 +440,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "98.50",
     SUDESTE: "106.61",
   },
-  {
-    cidade: "TRINDADE",
+  TRINDADE: {
     fatorGen: "125.16",
     LESTE: "113.52",
     NORDESTE: "122.78",
@@ -471,8 +451,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "98.50",
     SUDESTE: "106.61",
   },
-  {
-    cidade: "PATOS DE MINAS",
+  "PATOS DE MINAS": {
     fatorGen: "127.18",
     LESTE: "115.35",
     NORDESTE: "124.76",
@@ -483,8 +462,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "100.09",
     SUDESTE: "108.33",
   },
-  {
-    cidade: "ITUMBIARA",
+  ITUMBIARA: {
     fatorGen: "125.16",
     LESTE: "113.52",
     NORDESTE: "122.78",
@@ -495,8 +473,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "98.50",
     SUDESTE: "106.61",
   },
-  {
-    cidade: "CENTRALINA",
+  CENTRALINA: {
     fatorGen: "127.37",
     LESTE: "115.52",
     NORDESTE: "124.95",
@@ -507,8 +484,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "100.24",
     SUDESTE: "108.49",
   },
-  {
-    cidade: "SÃO GONÇALO DO ABAETÉ",
+  "SÃO GONÇALO DO ABAETÉ": {
     fatorGen: "129.10",
     LESTE: "117.09",
     NORDESTE: "126.64",
@@ -519,8 +495,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "101.60",
     SUDESTE: "109.96",
   },
-  {
-    cidade: "PATROCÍNIO",
+  PATROCÍNIO: {
     fatorGen: "125.93",
     LESTE: "114.22",
     NORDESTE: "123.54",
@@ -531,8 +506,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "99.11",
     SUDESTE: "107.27",
   },
-  {
-    cidade: "NOVA PONTE",
+  "NOVA PONTE": {
     fatorGen: "123.38",
     LESTE: "111.91",
     NORDESTE: "121.04",
@@ -543,8 +517,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "97.10",
     SUDESTE: "105.10",
   },
-  {
-    cidade: "QUIRINÓPOLIS",
+  QUIRINÓPOLIS: {
     fatorGen: "125.47",
     LESTE: "113.80",
     NORDESTE: "123.09",
@@ -555,8 +528,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "98.75",
     SUDESTE: "106.88",
   },
-  {
-    cidade: "TUPACIGUARA",
+  TUPACIGUARA: {
     fatorGen: "126.46",
     LESTE: "114.70",
     NORDESTE: "124.05",
@@ -567,8 +539,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "99.52",
     SUDESTE: "107.72",
   },
-  {
-    cidade: "PARANAIGUARA",
+  PARANAIGUARA: {
     fatorGen: "125.16",
     LESTE: "113.52",
     NORDESTE: "122.78",
@@ -579,8 +550,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "98.50",
     SUDESTE: "106.61",
   },
-  {
-    cidade: "ARAGUARI",
+  ARAGUARI: {
     fatorGen: "127.18",
     LESTE: "115.35",
     NORDESTE: "124.76",
@@ -591,8 +561,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "100.09",
     SUDESTE: "108.33",
   },
-  {
-    cidade: "IRAÍ DE MINAS",
+  "IRAÍ DE MINAS": {
     fatorGen: "123.72",
     LESTE: "112.21",
     NORDESTE: "121.37",
@@ -603,7 +572,7 @@ export const fatorDeGeracaoPorOrientacao = [
     SUL: "97.37",
     SUDESTE: "105.38",
   },
-];
+};
 
 export const projetistas = [
   {

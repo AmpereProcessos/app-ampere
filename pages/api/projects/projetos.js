@@ -33,6 +33,8 @@ export default async function handler(req, res) {
             "dadosCemig.distCreditos": 1,
             "obra.statusDaObra": 1,
             "compra.statusEntrega": 1,
+            "compra.dataEntrega": 1,
+            "compra.previsaoEntrega": 1,
             "contrato.dataAssinatura": 1,
             "sistema.potPico": 1,
           },

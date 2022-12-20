@@ -10,6 +10,7 @@ import {
   cidadesAtendidas,
   vendedores,
 } from "../../utils/constants";
+import dayjs from "dayjs";
 function Projetos({ credentials, setCredentials }) {
   const router = useRouter();
   const [projects, setProjects] = useState([]);
@@ -519,6 +520,26 @@ function Projetos({ credentials, setCredentials }) {
                   {project.projeto.diagramaUnifilar
                     ? project.projeto.diagramaUnifilar
                     : "PENDENTE"}
+                </p>
+              </div>
+              <div>
+                <span className="text-xxs text-center">
+                  {project.compra.statusEntrega == "ENTREGUE"
+                    ? "DATA DE ENTREGA"
+                    : "PREV. DE ENTREGA"}
+                </span>
+                <p className={`text-gray-600 text-xs uppercase text-center`}>
+                  {console.log(project.compra)}
+                  {project.compra.statusEntrega == "ENTREGUE" &&
+                  project.compra.dataEntrega
+                    ? dayjs(project.compra.dataEntrega)
+                        .add(4, "h")
+                        .format("DD/MM/YYYY")
+                    : project.compra.previsaoEntrega
+                    ? dayjs(project.compra.previsaoEntrega)
+                        .add(4, "h")
+                        .format("DD/MM/YYYY")
+                    : "-"}
                 </p>
               </div>
               <div>

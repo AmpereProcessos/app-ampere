@@ -4,7 +4,11 @@ import Image from "next/image";
 import NumberInput from "./NumberInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
-import { cidadesAtendidas, suprimentoOption } from "../utils/constants";
+import {
+  cidadesAtendidas,
+  fatorDeGeracaoPorOrientacao,
+  suprimentoOption,
+} from "../utils/constants";
 import { storage } from "../utils/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -62,10 +66,6 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
           console.log(res.data.erro);
           return;
         } else {
-          console.log(
-            cidadesAtendidas.includes(res.data.localidade.toUpperCase())
-          );
-          console.log(res.data.localidade);
           setDados({
             ...dados,
             bairro: res.data.bairro,
@@ -156,7 +156,6 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
       .replace(/(-\d{3})\d+?$/, "$1");
     return cep;
   }
-  console.log(images);
   return (
     <div style={OVERLAY_STYLES}>
       <div style={MODAL_STYLES}>
@@ -2150,6 +2149,230 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                ESTUDO DE GERAÇÃO - DESVIO AZIMUTAL
+              </span>
+              <div className="grid grid-cols-2 grid-rows-4">
+                <div className="grid grid-cols-3 items-center">
+                  <p className="text-center font-bold text-gray-700">NORTE</p>
+                  <input
+                    className="outline-none p-2 text-center font-bold text-gray-700"
+                    type={"number"}
+                    value={dados.modNorte}
+                    onChange={(e) =>
+                      setDados({ ...dados, modNorte: Number(e.target.value) })
+                    }
+                  />
+                  <p className="text-center font-bold text-gray-700">
+                    {dados.modNorte && fatorDeGeracaoPorOrientacao[dados.cidade]
+                      ? (
+                          (Number(
+                            fatorDeGeracaoPorOrientacao[dados.cidade]["NORTE"]
+                          ) *
+                            dados.modNorte *
+                            dados.potModulos) /
+                          1000
+                        ).toFixed(2)
+                      : false}{" "}
+                    kWh
+                  </p>
+                </div>
+                <div className="grid grid-cols-3 items-center">
+                  <p className="text-center font-bold text-gray-700">
+                    NORDESTE
+                  </p>
+                  <input
+                    className="outline-none p-2 text-center font-bold text-gray-700"
+                    type={"number"}
+                    value={dados.modNordeste}
+                    onChange={(e) =>
+                      setDados({
+                        ...dados,
+                        modNordeste: Number(e.target.value),
+                      })
+                    }
+                  />
+                  <p className="text-center font-bold text-gray-700">
+                    {dados.modNordeste &&
+                    fatorDeGeracaoPorOrientacao[dados.cidade]
+                      ? (
+                          (Number(
+                            fatorDeGeracaoPorOrientacao[dados.cidade][
+                              "NORDESTE"
+                            ]
+                          ) *
+                            dados.modNordeste *
+                            dados.potModulos) /
+                          1000
+                        ).toFixed(2)
+                      : false}{" "}
+                    kWh
+                  </p>
+                </div>
+                <div className="grid grid-cols-3 items-center">
+                  <p className="text-center font-bold text-gray-700">LESTE</p>
+                  <input
+                    className="outline-none p-2 text-center font-bold text-gray-700"
+                    type={"number"}
+                    value={dados.modLeste}
+                    onChange={(e) =>
+                      setDados({ ...dados, modLeste: Number(e.target.value) })
+                    }
+                  />
+                  <p className="text-center font-bold text-gray-700">
+                    {dados.modLeste && fatorDeGeracaoPorOrientacao[dados.cidade]
+                      ? (
+                          (Number(
+                            fatorDeGeracaoPorOrientacao[dados.cidade]["LESTE"]
+                          ) *
+                            dados.modLeste *
+                            dados.potModulos) /
+                          1000
+                        ).toFixed(2)
+                      : false}{" "}
+                    kWh
+                  </p>
+                </div>
+                <div className="grid grid-cols-3 items-center">
+                  <p className="text-center font-bold text-gray-700">SUDESTE</p>
+                  <input
+                    className="outline-none p-2 text-center font-bold text-gray-700"
+                    type={"number"}
+                    value={dados.modSudeste}
+                    onChange={(e) =>
+                      setDados({ ...dados, modSudeste: Number(e.target.value) })
+                    }
+                  />
+                  <p className="text-center font-bold text-gray-700">
+                    {dados.modSudeste &&
+                    fatorDeGeracaoPorOrientacao[dados.cidade]
+                      ? (
+                          (Number(
+                            fatorDeGeracaoPorOrientacao[dados.cidade]["SUDESTE"]
+                          ) *
+                            dados.modSudeste *
+                            dados.potModulos) /
+                          1000
+                        ).toFixed(2)
+                      : false}{" "}
+                    kWh
+                  </p>
+                </div>
+                <div className="grid grid-cols-3 items-center">
+                  <p className="text-center font-bold text-gray-700">SUL</p>
+                  <input
+                    className="outline-none p-2 text-center font-bold text-gray-700"
+                    type={"number"}
+                    value={dados.modSul}
+                    onChange={(e) =>
+                      setDados({ ...dados, modSul: Number(e.target.value) })
+                    }
+                  />
+                  <p className="text-center font-bold text-gray-700">
+                    {dados.modSul && fatorDeGeracaoPorOrientacao[dados.cidade]
+                      ? (
+                          (Number(
+                            fatorDeGeracaoPorOrientacao[dados.cidade]["SUL"]
+                          ) *
+                            dados.modSul *
+                            dados.potModulos) /
+                          1000
+                        ).toFixed(2)
+                      : false}{" "}
+                    kWh
+                  </p>
+                </div>
+                <div className="grid grid-cols-3 items-center">
+                  <p className="text-center font-bold text-gray-700">
+                    SUDOESTE
+                  </p>
+                  <input
+                    className="outline-none p-2 text-center font-bold text-gray-700"
+                    type={"number"}
+                    value={dados.modSudoeste}
+                    onChange={(e) =>
+                      setDados({
+                        ...dados,
+                        modSudoeste: Number(e.target.value),
+                      })
+                    }
+                  />
+                  <p className="text-center font-bold text-gray-700">
+                    {dados.modSudoeste &&
+                    fatorDeGeracaoPorOrientacao[dados.cidade]
+                      ? (
+                          (Number(
+                            fatorDeGeracaoPorOrientacao[dados.cidade][
+                              "SUDOESTE"
+                            ]
+                          ) *
+                            dados.modSudoeste *
+                            dados.potModulos) /
+                          1000
+                        ).toFixed(2)
+                      : false}{" "}
+                    kWh
+                  </p>
+                </div>
+                <div className="grid grid-cols-3 items-center">
+                  <p className="text-center font-bold text-gray-700">OESTE</p>
+                  <input
+                    className="outline-none p-2 text-center font-bold text-gray-700"
+                    type={"number"}
+                    value={dados.modOeste}
+                    onChange={(e) =>
+                      setDados({ ...dados, modOeste: Number(e.target.value) })
+                    }
+                  />
+                  <p className="text-center font-bold text-gray-700">
+                    {dados.modOeste && fatorDeGeracaoPorOrientacao[dados.cidade]
+                      ? (
+                          (Number(
+                            fatorDeGeracaoPorOrientacao[dados.cidade]["OESTE"]
+                          ) *
+                            dados.modOeste *
+                            dados.potModulos) /
+                          1000
+                        ).toFixed(2)
+                      : false}{" "}
+                    kWh
+                  </p>
+                </div>
+                <div className="grid grid-cols-3 items-center">
+                  <p className="text-center font-bold text-gray-700">
+                    NOROESTE
+                  </p>
+                  <input
+                    className="outline-none p-2 text-center font-bold text-gray-700"
+                    type={"number"}
+                    value={dados.modNoroeste}
+                    onChange={(e) =>
+                      setDados({
+                        ...dados,
+                        modNoroeste: Number(e.target.value),
+                      })
+                    }
+                  />
+                  <p className="text-center font-bold text-gray-700">
+                    {dados.modNoroeste &&
+                    fatorDeGeracaoPorOrientacao[dados.cidade]
+                      ? (
+                          (Number(
+                            fatorDeGeracaoPorOrientacao[dados.cidade][
+                              "NOROESTE"
+                            ]
+                          ) *
+                            dados.modNoroeste *
+                            dados.potModulos) /
+                          1000
+                        ).toFixed(2)
+                      : false}{" "}
+                    kWh
+                  </p>
                 </div>
               </div>
             </div>

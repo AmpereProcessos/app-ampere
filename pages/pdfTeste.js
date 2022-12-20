@@ -1,12 +1,162 @@
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Logo from "../utils/logo.png";
 import Link from "next/link";
 import Image from "next/image";
 import { FiCheck } from "react-icons/fi";
+import dayjs from "dayjs";
 function Teste() {
+  const [entregues, setEntregues] = useState([]);
+  const [emRota, setEmRota] = useState([]);
+  function sortByEntrega(arr) {
+    var newArr = arr.sort((a, b) => {
+      let paramA = a.compra.dataEntrega
+        ? a.compra.dataEntrega
+        : a.compra.previsaoEntrega;
+      let paramB = b.compra.dataEntrega
+        ? b.compra.dataEntrega
+        : b.compra.previsaoEntrega;
+      return new Date(paramA) - new Date(paramB);
+    });
+    return newArr;
+  }
+  function sortByPrev(arr) {
+    var newArr = arr.sort((a, b) => {
+      /*
+      let paramA = a.compra.dataEntrega
+        ? a.compra.dataEntrega
+        : a.compra.previsaoEntrega;
+      let paramB = b.compra.dataEntrega
+        ? b.compra.dataEntrega
+        : b.compra.previsaoEntrega;*/
+      return (
+        new Date(a.compra.previsaoEntrega) - new Date(b.compra.previsaoEntrega)
+      );
+    });
+    return newArr;
+  }
+  function getProjects() {
+    axios.get("/api/report").then((res) => {
+      console.log(res.data);
+      setEntregues(sortByEntrega(res.data.entregues));
+      setEmRota(sortByPrev(res.data.emRota));
+    });
+  }
+  useEffect(() => {
+    getProjects();
+  }, []);
+  console.log(emRota);
   return (
-    <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
+    <div className="w-[21cm] h-[29.7cm] bg-zinc-100 p-4">
+      <div className="flex flex-col items-center">
+        {/**<h1 className="text-center text-[#15599a] font-bold">ENTREGUES</h1>
+        <div className="grid grid-cols-6">
+          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+            NOME DO PROJETO
+          </div>
+          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+            NOME DO CONTRATO
+          </div>
+          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+            QTDE MÓDULOS
+          </div>
+          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+            TOPOLOGIA
+          </div>
+          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+            CIDADE
+          </div>
+          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+            DESDE ENTREGA
+          </div>
+        </div>
+        <div className="flex flex-col bg-[#fff]">
+          {entregues.map((obj) => (
+            <div className="grid grid-cols-6 h-[36px]">
+              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+                {obj.nomeDoProjeto}
+              </div>
+              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+                {obj.nomeDoContrato}
+              </div>
+              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+                {obj.sistema.qtdeModulos}
+              </div>
+              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+                {obj.sistema.topologia}
+              </div>
+              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+                {obj.cidade}
+              </div>
+              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+                {obj.compra.statusEntrega == "ENTREGUE"
+                  ? obj.compra.dataEntrega
+                    ? `${dayjs(new Date()).diff(
+                        obj.compra.dataEntrega,
+                        "days"
+                      )} dias`
+                    : `${dayjs(new Date()).diff(
+                        obj.compra.previsaoEntrega,
+                        "days"
+                      )} dias`
+                  : "-"}
+              </div>
+            </div>
+          ))}
+        </div> */}
+        <h1 className="text-center text-[#15599a] font-bold">EM ROTA</h1>
+        <div className="grid grid-cols-6">
+          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+            NOME DO PROJETO
+          </div>
+          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+            NOME DO CONTRATO
+          </div>
+          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+            QTDE MÓDULOS
+          </div>
+          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+            TOPOLOGIA
+          </div>
+          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+            CIDADE
+          </div>
+          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+            ATÉ ENTREGA
+          </div>
+        </div>
+        <div className="flex flex-col bg-[#fff]">
+          {emRota.map((obj) => (
+            <div className="grid grid-cols-6 h-[36px]">
+              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+                {obj.nomeDoProjeto}
+              </div>
+              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+                {obj.nomeDoContrato}
+              </div>
+              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+                {obj.sistema.qtdeModulos}
+              </div>
+              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+                {obj.sistema.topologia}
+              </div>
+              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+                {obj.cidade}
+              </div>
+              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+                {dayjs(obj.compra.previsaoEntrega).diff(new Date(), "day")} dias
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Teste;
+/* 
+      <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
       <div className="grid grid-cols-5 w-full">
         <div className="col-span-2">
           <h1 className="text-xl font-bold text-[#15599b]">SEST SENAT</h1>
@@ -245,7 +395,4 @@ function Teste() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default Teste;
+ */

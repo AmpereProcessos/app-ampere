@@ -66,12 +66,9 @@ function VisitaTecnica({ credentials, setCredentials }) {
     }
   }
   function getPendenceStatusBorder(tipoDeLaudo, currentTimeDiff, status) {
-    console.log(status);
     if (status != "CONCLUIDO") {
       var matches = /\(([^)]+)\)/.exec(tipoDeLaudo)[1];
       var expectedHours = matches.split(" ")[0];
-      console.log(expectedHours);
-      console.log(currentTimeDiff);
       if (Number(expectedHours) - Number(currentTimeDiff) <= 3) {
         return "border-2 border-red-500";
       } else if (Number(expectedHours) - Number(currentTimeDiff) <= 5) {
@@ -84,12 +81,9 @@ function VisitaTecnica({ credentials, setCredentials }) {
     }
   }
   function getPendenceStatusText(tipoDeLaudo, currentTimeDiff, status) {
-    console.log(status);
     if (status != "CONCLUIDO") {
       var matches = /\(([^)]+)\)/.exec(tipoDeLaudo)[1];
       var expectedHours = matches.split(" ")[0];
-      console.log(expectedHours);
-      console.log(currentTimeDiff);
       if (Number(expectedHours) - Number(currentTimeDiff) <= 3) {
         return "text-red-500";
       } else if (Number(expectedHours) - Number(currentTimeDiff) <= 5) {

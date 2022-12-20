@@ -1185,6 +1185,64 @@ function ModalProjetos({
                       });
                     }}
                   />
+                  <DateInput
+                    label={"Previsão de entrega"}
+                    editable={false}
+                    value={
+                      infoHolder.compra.previsaoEntrega != undefined &&
+                      infoHolder.compra.previsaoEntrega != "-"
+                        ? new Date(infoHolder.compra.previsaoEntrega)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "compra.previsaoEntrega": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          previsaoEntrega: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
+                    label={"Data de entrega"}
+                    editable={false}
+                    value={
+                      infoHolder.compra.dataEntrega != undefined &&
+                      infoHolder.compra.dataEntrega != "-"
+                        ? new Date(infoHolder.compra.dataEntrega)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "compra.dataEntrega": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          dataEntrega: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
+                        },
+                      });
+                    }}
+                  />
                   <SelectInput
                     label={"STATUS DA ENTREGA"}
                     editable={false}

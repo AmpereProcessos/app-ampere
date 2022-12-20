@@ -1,8 +1,22 @@
 import React from "react";
 import Image from "next/image";
 import Logo from "../utils/whitelogoHD.png";
+import { fatorDeGeracaoPorOrientacao } from "../utils/constants";
 import Assinatura from "../utils/assinatura.jpg";
 import dayjs from "dayjs";
+import {
+  Bar,
+  BarChart,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  LabelList,
+} from "recharts";
 function LaudoIntermediarioUrbano({ info }) {
   function getAdditionalCostsSum(custos) {
     var sum = 0;
@@ -10,6 +24,90 @@ function LaudoIntermediarioUrbano({ info }) {
       sum = sum + custos[i].qtde * custos[i].valor;
     }
     return sum;
+  }
+  function getCorrectedGen() {
+    let norte = info.modNorte
+      ? (
+          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["NORTE"]) *
+            info.modNorte *
+            info.potModulos) /
+          1000
+        ).toFixed(2)
+      : 0;
+    let nordeste = info.modNordeste
+      ? (
+          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["NORDESTE"]) *
+            info.modNordeste *
+            info.potModulos) /
+          1000
+        ).toFixed(2)
+      : 0;
+    let leste = info.modLeste
+      ? (
+          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["LESTE"]) *
+            info.modLeste *
+            info.potModulos) /
+          1000
+        ).toFixed(2)
+      : 0;
+    let sudeste = info.modSudeste
+      ? (
+          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["NORTE"]) *
+            info.modSudeste *
+            info.potModulos) /
+          1000
+        ).toFixed(2)
+      : 0;
+    let sul = info.modSul
+      ? (
+          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["SUL"]) *
+            info.modSul *
+            info.potModulos) /
+          1000
+        ).toFixed(2)
+      : 0;
+    let sudoeste = info.modSudoeste
+      ? (
+          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["SUDESTE"]) *
+            info.modSudoeste *
+            info.potModulos) /
+          1000
+        ).toFixed(2)
+      : 0;
+    let oeste = info.modOeste
+      ? (
+          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["OESTE"]) *
+            info.modOeste *
+            info.potModulos) /
+          1000
+        ).toFixed(2)
+      : 0;
+    let noroeste = info.modNoroeste
+      ? (
+          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["NOROESTE"]) *
+            info.modNoroeste *
+            info.potModulos) /
+          1000
+        ).toFixed(2)
+      : 0;
+    return (
+      Number(norte) +
+      Number(nordeste) +
+      Number(leste) +
+      Number(sudeste) +
+      Number(sul) +
+      Number(sudoeste) +
+      Number(oeste) +
+      Number(noroeste)
+    ).toFixed(2);
+  }
+  function getProposedGen() {
+    return (
+      (info.qtdeModulos *
+        info.potModulos *
+        Number(fatorDeGeracaoPorOrientacao[info.cidade].fatorGen)) /
+      1000
+    ).toFixed(2);
   }
   return (
     <div className="w-[21cm] h-[29.7cm]">
@@ -345,10 +443,19 @@ function LaudoIntermediarioUrbano({ info }) {
                   NORTE
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modNorte ? info.modNorte : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modNorte && fatorDeGeracaoPorOrientacao[info.cidade]
+                    ? `${(
+                        (Number(
+                          fatorDeGeracaoPorOrientacao[info.cidade]["NORTE"]
+                        ) *
+                          info.modNorte *
+                          info.potModulos) /
+                        1000
+                      ).toFixed(2)} kWh`
+                    : " - "}{" "}
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
@@ -356,10 +463,19 @@ function LaudoIntermediarioUrbano({ info }) {
                   NORDESTE
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modNordeste ? info.modNordeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modNordeste && fatorDeGeracaoPorOrientacao[info.cidade]
+                    ? `${(
+                        (Number(
+                          fatorDeGeracaoPorOrientacao[info.cidade]["NORDESTE"]
+                        ) *
+                          info.modNordeste *
+                          info.potModulos) /
+                        1000
+                      ).toFixed(2)} kWh`
+                    : " - "}{" "}
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
@@ -367,10 +483,19 @@ function LaudoIntermediarioUrbano({ info }) {
                   LESTE
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modLeste ? info.modLeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modLeste && fatorDeGeracaoPorOrientacao[info.cidade]
+                    ? `${(
+                        (Number(
+                          fatorDeGeracaoPorOrientacao[info.cidade]["LESTE"]
+                        ) *
+                          info.modLeste *
+                          info.potModulos) /
+                        1000
+                      ).toFixed(2)} kWh`
+                    : "-"}{" "}
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
@@ -378,10 +503,19 @@ function LaudoIntermediarioUrbano({ info }) {
                   SUDESTE
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modSudeste ? info.modSudeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modSudeste && fatorDeGeracaoPorOrientacao[info.cidade]
+                    ? `${(
+                        (Number(
+                          fatorDeGeracaoPorOrientacao[info.cidade]["SUDESTE"]
+                        ) *
+                          info.modSudeste *
+                          info.potModulos) /
+                        1000
+                      ).toFixed(2)}`
+                    : "-"}{" "}
                 </p>
               </div>
             </div>
@@ -399,46 +533,82 @@ function LaudoIntermediarioUrbano({ info }) {
               </div>
               <div className="grid grid-cols-3 border-b border-black">
                 <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">
-                  NORTE
+                  SUL
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modSul ? info.modSul : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modSul && fatorDeGeracaoPorOrientacao[info.cidade]
+                    ? `${(
+                        (Number(
+                          fatorDeGeracaoPorOrientacao[info.cidade]["SUL"]
+                        ) *
+                          info.modSul *
+                          info.potModulos) /
+                        1000
+                      ).toFixed(2)} kWh`
+                    : "-"}{" "}
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
                 <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">
-                  NORDESTE
+                  SUDOESTE
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modSudoeste ? info.modSudoeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modSudoeste && fatorDeGeracaoPorOrientacao[info.cidade]
+                    ? `${(
+                        (Number(
+                          fatorDeGeracaoPorOrientacao[info.cidade]["SUDOESTE"]
+                        ) *
+                          info.modSudoeste *
+                          info.potModulos) /
+                        1000
+                      ).toFixed(2)} kWh`
+                    : "-"}{" "}
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
                 <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">
-                  LESTE
+                  OESTE
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modOeste ? info.modOeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modOeste && fatorDeGeracaoPorOrientacao[info.cidade]
+                    ? `${(
+                        (Number(
+                          fatorDeGeracaoPorOrientacao[info.cidade]["OESTE"]
+                        ) *
+                          info.modOeste *
+                          info.potModulos) /
+                        1000
+                      ).toFixed(2)} kWh`
+                    : "-"}{" "}
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
                 <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">
-                  SUDESTE
+                  NOROESTE
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modNoroeste ? info.modNoroeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  -
+                  {info.modNoroeste && fatorDeGeracaoPorOrientacao[info.cidade]
+                    ? `${(
+                        (Number(
+                          fatorDeGeracaoPorOrientacao[info.cidade]["NOROESTE"]
+                        ) *
+                          info.modNoroeste *
+                          info.potModulos) /
+                        1000
+                      ).toFixed(2)} kWh`
+                    : "-"}{" "}
                 </p>
               </div>
             </div>
@@ -448,7 +618,7 @@ function LaudoIntermediarioUrbano({ info }) {
               GERAÇÃO PROPOSTA COMERCIAL
             </div>
             <div className="col-span-2 text-xs font-bold text-center border-r border-black py-1">
-              -
+              {getProposedGen()} kWh
             </div>
           </div>
           <div className="grid grid-cols-6 border-b border-black">
@@ -456,7 +626,7 @@ function LaudoIntermediarioUrbano({ info }) {
               GERAÇÃO PREVISTA TOTAL
             </div>
             <div className="col-span-2 text-xs font-bold text-center border-r border-black py-1">
-              -
+              {getCorrectedGen()} kWh
             </div>
           </div>
           <div className="grid grid-cols-6 border-b border-black">
@@ -464,8 +634,48 @@ function LaudoIntermediarioUrbano({ info }) {
               PERCENTUAL DE GERAÇÃO DEVIDO AO DESVIO AZIMUTAL
             </div>
             <div className="col-span-2 text-xs font-bold text-center border-r border-black py-1">
-              -
+              {getProposedGen() / getCorrectedGen() < 1
+                ? ((getCorrectedGen() / getProposedGen() - 1) * 100)
+                    .toFixed(2)
+                    .replace(".", ",")
+                : ((getCorrectedGen() / getProposedGen() - 1) * 100)
+                    .toFixed(2)
+                    .replace(".", ",")}
+              %
             </div>
+          </div>
+        </div>
+        <div className="flex flex-col items-center my-2">
+          <h1 className="text-center font-bold text-[#15599a]">
+            VISUALIZAÇÃO GRÁFICA
+          </h1>
+          <div className="w-[600px] h-[300px]">
+            <ResponsiveContainer width="100%">
+              <BarChart
+                width={500}
+                height={250}
+                data={[
+                  {
+                    name: "PROPOSTA",
+                    PROPOSTO: getProposedGen(),
+                    PREVISTO: 0,
+                  },
+                  {
+                    name: "PREVISTO",
+                    PROPOSTO: 0,
+                    PREVISTO: getCorrectedGen(),
+                  },
+                ]}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis unit="kWh" />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="PROPOSTO" fill="#15599a" unit={"kWh"}></Bar>
+                <Bar dataKey="PREVISTO" fill="#fead61" unit={"kWh"}></Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
         <div className="flex flex-col mt-2">

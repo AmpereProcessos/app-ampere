@@ -126,8 +126,8 @@ function Teste() {
           </div>
         </div>
         <div className="flex flex-col bg-[#fff]">
-          {emRota.map((obj) => (
-            <div className="grid grid-cols-6 h-[36px]">
+          {emRota.map((obj, index) => (
+            <div key={index} className="grid grid-cols-6 h-[36px]">
               <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {obj.nomeDoProjeto}
               </div>

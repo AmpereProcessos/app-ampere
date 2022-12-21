@@ -13,6 +13,18 @@ export default async function handler(req, res) {
           },
         },
         {
+          $project: {
+            nomeDoContrato: 1,
+            "contrato.status": 1,
+            "contrato.dataAssinatura": 1,
+            "compra.dataPagamento": 1,
+            "pagamento.status": 1,
+            cidade: 1,
+            "obra.statusDaObra": 1,
+            "vistoria.status": 1,
+          },
+        },
+        {
           $sort: {
             qtde: -1,
           },

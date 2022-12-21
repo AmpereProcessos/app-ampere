@@ -9,7 +9,7 @@ import {
   FaSolarPanel,
   FaBox,
 } from "react-icons/fa";
-import { TbTruckDelivery } from "react-icons/tb";
+import { TbTruckDelivery, TbReportAnalytics } from "react-icons/tb";
 import { AiOutlineForm } from "react-icons/ai";
 import {
   MdEngineering,
@@ -37,9 +37,6 @@ function Sidebar({ credentials }) {
     router.pathname.includes("auth")
   )
     return null;
-  if (credentials.visualizacao == "VENDEDOR") {
-    return null;
-  }
   return (
     <div
       style={{ maxHeight: "calc(100vh - 70px)" }}
@@ -363,6 +360,19 @@ function Sidebar({ credentials }) {
                     }}
                   />
                   <p className="pl-3 text-xs text-gray-600">Formulários</p>
+                </a>
+              </Link>
+            )}
+            {credentials.vendedor && (
+              <Link href={`/vendas/visitasTecnicas`}>
+                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                  <TbReportAnalytics
+                    style={{
+                      color: "#15599a",
+                      fontSize: "20px",
+                    }}
+                  />
+                  <p className="pl-3 text-xs text-gray-600">Visitas Técnicas</p>
                 </a>
               </Link>
             )}

@@ -118,7 +118,11 @@ function ServiceOrderPDF({
               </p>
               <div className="flex items-center justify-center text-xs col-span-3 border border-black border-t-0">
                 {info.compra?.kitInfo ? (
-                  <div className="text-xs font-bold text-center">
+                  <div
+                    className={`${
+                      info.compra.kitInfo.length > 120 ? "text-xxs" : "text-xs"
+                    } font-bold text-center`}
+                  >
                     {info.compra?.kitInfo
                       ? info.compra?.kitInfo
                           .split("/")
@@ -148,7 +152,13 @@ function ServiceOrderPDF({
               </p>
               <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black">
                 {info.material.materialFaltante ? (
-                  <div className="text-xs font-bold text-center">
+                  <div
+                    className={`${
+                      info.material.materialFaltante.length > 120
+                        ? "text-xxs"
+                        : "text-xs"
+                    } font-bold text-center`}
+                  >
                     {info.material.materialFaltante
                       ? info.material.materialFaltante
                           .split("/")

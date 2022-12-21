@@ -475,11 +475,27 @@ function LaudoSimplesRural({ info }) {
           <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0">
             DESCRITIVO DO PROJETO
           </h1>
-          <h1 className="bg-[#15599a] text-white text-center text-sm font-bold border border-black border-t-0">
-            INFRAESTRUTURA ELÉTRICA
-          </h1>
           <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[60px] text-center p-2">
-            {info.descritivoInfraEletrica ? info.descritivoInfraEletrica : "-"}
+            {info.descritivo?.length ? (
+              info.descritivo?.map((item, index) => (
+                <div className="grid grid-cols-10 gap-3 w-full items-center py-1 border-b border-gray-200">
+                  <p className="text-xxs lg:text-xs text-[#15599a] font-bold col-span-3 text-center">
+                    {item.topico}
+                  </p>
+                  <p
+                    className={`${
+                      item.texto.length > 100 ? "text-xxs" : "text-xs"
+                    } text-gray-600 font-bold text-center col-span-7`}
+                  >
+                    {item.texto}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="flex items-center justify-center text-center h-full italic text-gray-600">
+                SEM DESCRITIVO
+              </div>
+            )}
           </div>
         </div>
         <div className="flex flex-col mt-2">

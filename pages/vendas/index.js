@@ -72,6 +72,12 @@ function Vendas({ credentials, setCredentials }) {
       setFilteredProjects(newArr);
     }
   }
+  function handleOpenModal(id) {
+    axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
+      setModalProject(res.data[0]);
+      setModalIsOpen(true);
+    });
+  }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
@@ -93,6 +99,7 @@ function Vendas({ credentials, setCredentials }) {
       }
     }
   }, []);
+  console.log(filteredProjects);
   return (
     <div className="p-6 flex flex-col grow bg-[#fff]">
       <div className="flex flex-col items-center border-b border-gray-200 pb-3">
@@ -200,8 +207,7 @@ function Vendas({ credentials, setCredentials }) {
         {filteredProjects.map((project) => (
           <div
             onClick={() => {
-              setModalIsOpen(true);
-              setModalProject(project);
+              handleOpenModal(project._id);
             }}
             key={project._id}
             className={`w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}

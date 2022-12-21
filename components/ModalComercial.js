@@ -141,6 +141,7 @@ function ModalComercial({
       });
     }
   }
+  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -1833,7 +1834,7 @@ function ModalComercial({
                     }}
                   />
                   <div className="w-full flex flex-col mx-2 lg:mx-0 lg:flex-row items-center justify-center gap-4">
-                    <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                    <div className="flex flex-col w-full lg:w-[450px] self-center mt-2 items-center">
                       <span className="uppercase font-bold font-raleway text-center text-sm">
                         INFORMAÇÕES DO KIT
                       </span>
@@ -1861,7 +1862,7 @@ function ModalComercial({
                         className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                       />
                     </div>
-                    <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+                    <div className="flex flex-col w-full lg:w-[450px] self-center mt-2 items-center">
                       <span className="uppercase font-bold font-raleway text-center text-sm">
                         MATERIAL FALTANTE
                       </span>
@@ -3030,7 +3031,7 @@ function ModalComercial({
                   />
                 </div>
                 {project.links && (
-                  <div className="flex justify-around gap-2 mt-3">
+                  <div className="flex justify-around gap-2 mt-3 flex-wrap">
                     {Object.keys(project.links).map((category, index) => (
                       <div key={index} className="flex flex-col">
                         <h1 className="text-sm font-bold text-center text-[#15599a]">
@@ -3039,11 +3040,11 @@ function ModalComercial({
                         <div className="flex flex-col items-center gap-1">
                           {project.links[category].map((obj, index2) => (
                             <a
-                              className="text-xs text-[#15599a] font-bold"
+                              className="text-xs text-[#15599a] font-bold text-center"
                               key={index2}
                               href={obj.link}
                             >
-                              {obj.title}
+                              {obj.title} ({obj.format})
                             </a>
                           ))}
                         </div>

@@ -38,7 +38,7 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
+function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
   const [dados, setDados] = useState(info);
   const [msg, setMessage] = useState({ text: "", color: "" });
   const [imageMsg, setImageMsg] = useState({ text: "", color: "" });
@@ -81,6 +81,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
         }
       });
   }
+  /*
   function saveChanges() {
     axios
       .put("/api/solicitacoes/visitaTecnica", dados)
@@ -176,7 +177,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
       .replace(/(-\d{3})\d+?$/, "$1");
     return cep;
   }
-
+  */
   return (
     <div style={OVERLAY_STYLES}>
       <div style={MODAL_STYLES}>
@@ -188,6 +189,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
             {dados.status != "CONCLUIDO" ? (
               <div className="flex items-center gap-2 justify-evenly">
                 <select
+                  disabled={true}
                   value={dados.status ? dados.status : "NÃO DEFINIDO"}
                   onChange={(e) =>
                     setDados({ ...dados, status: e.target.value })
@@ -201,12 +203,6 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <option value="VISITA IN LOCO">VISITA IN LOCO</option>
                   <option value="NÃO DEFINIDO">NÃO DEFINIDO</option>
                 </select>
-                <button
-                  onClick={concludeVisita}
-                  className="bg-green-200 hover:bg-green-500 p-2 rounded outline-none font-bold text-white text-xs lg:text-base"
-                >
-                  VISITA CONCLUÍDA?
-                </button>
               </div>
             ) : (
               <p className="font-bold p-1 bg-green-400 text-white rounded">
@@ -214,14 +210,6 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
               </p>
             )}
             <div className="flex items-center justify-around gap-x-2">
-              {msg.text && <p className={`italic ${msg.color}`}>{msg.text}</p>}
-              <button
-                onClick={saveChanges}
-                className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm w-fit"
-              >
-                <p>Salvar alterações</p>
-                <FaSave />
-              </button>
               <button>
                 <VscChromeClose
                   onClick={() => setModalIsOpen(false)}
@@ -238,7 +226,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
               <div className="flex gap-2 justify-around flex-wrap mt-2">
                 <TextInput
                   label={"NOME DO CLIENTE"}
-                  editable={true}
+                  editable={false}
                   value={dados.nomeDoCliente}
                   handleChange={(value) =>
                     setDados({ ...dados, nomeDoCliente: value.toUpperCase() })
@@ -246,7 +234,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <TextInput
                   label={"TELEFONE DO CLIENTE"}
-                  editable={true}
+                  editable={false}
                   value={dados.telefoneDoCliente}
                   handleChange={(value) =>
                     setDados({
@@ -265,7 +253,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <SelectInput
                   label={"CIDADE"}
-                  editable={true}
+                  editable={false}
                   value={dados.cidade}
                   options={[
                     { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -279,21 +267,15 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <TextInput
                   label={"CEP"}
-                  editable={true}
+                  editable={false}
                   value={dados.cep}
                   handleChange={(value) =>
                     setDados({ ...dados, cep: formatCEP(value) })
                   }
                 />
-                <button
-                  onClick={() => findCPF()}
-                  className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-                >
-                  <AiOutlineSearch />
-                </button>
                 <TextInput
                   label={"BAIRRO"}
-                  editable={true}
+                  editable={false}
                   value={dados.bairro}
                   handleChange={(value) =>
                     setDados({ ...dados, bairro: value.toUpperCase() })
@@ -301,7 +283,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <TextInput
                   label={"LOGRADOURO"}
-                  editable={true}
+                  editable={false}
                   value={dados.logradouro}
                   handleChange={(value) =>
                     setDados({ ...dados, logradouro: value.toUpperCase() })
@@ -309,7 +291,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <NumberInput
                   label={"N°RESIDÊNCIA"}
-                  editable={true}
+                  editable={false}
                   value={dados.numeroResidencia}
                   handleChange={(value) =>
                     setDados({ ...dados, numeroResidencia: Number(value) })
@@ -322,7 +304,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
               <div className="flex gap-2 justify-around flex-wrap mt-2">
                 <SelectInput
                   label={"TIPO DE INVERSOR"}
-                  editable={true}
+                  editable={false}
                   value={dados.tipoInversor}
                   options={[
                     { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -335,7 +317,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <NumberInput
                   label={"QTDE DE INVERSORES"}
-                  editable={true}
+                  editable={false}
                   value={dados.qtdeInversor}
                   handleChange={(value) =>
                     setDados({ ...dados, qtdeInversor: Number(value) })
@@ -343,7 +325,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <NumberInput
                   label={"POTÊNCIA DO INVERSOR"}
-                  editable={true}
+                  editable={false}
                   unit={"W"}
                   value={dados.potInversor}
                   handleChange={(value) =>
@@ -352,7 +334,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <TextInput
                   label={"MARCA DO INVERSOR"}
-                  editable={true}
+                  editable={false}
                   value={dados.marcaInversor}
                   handleChange={(value) =>
                     setDados({ ...dados, marcaInversor: value.toUpperCase() })
@@ -360,7 +342,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <NumberInput
                   label={"QTDE DE MODULOS"}
-                  editable={true}
+                  editable={false}
                   value={dados.qtdeModulos}
                   handleChange={(value) =>
                     setDados({ ...dados, qtdeModulos: Number(value) })
@@ -368,7 +350,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <NumberInput
                   label={"POTÊNCIA DOS MÓDULOS"}
-                  editable={true}
+                  editable={false}
                   value={dados.potModulos}
                   handleChange={(value) =>
                     setDados({ ...dados, potModulos: Number(value) })
@@ -376,7 +358,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <TextInput
                   label={"MARCA DOS MÓDULOS"}
-                  editable={true}
+                  editable={false}
                   value={dados.marcaModulos}
                   handleChange={(value) =>
                     setDados({ ...dados, marcaModulos: value.toUpperCase() })
@@ -388,6 +370,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   </span>
                   <textarea
                     placeholder={"Descrição aqui.."}
+                    readOnly={true}
                     value={dados.obsVisita}
                     onChange={(e) =>
                       setDados({ ...dados, obsVisita: e.target.value })
@@ -399,7 +382,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
               <div className="flex gap-2 justify-around flex-wrap mt-2">
                 <SelectInput
                   label={"TIPO DE LAUDO"}
-                  editable={true}
+                  editable={false}
                   value={dados.tipoDeLaudo}
                   options={[
                     { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -422,7 +405,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <SelectInput
                   label={"TIPO DE SOLICITAÇÃO"}
-                  editable={true}
+                  editable={false}
                   value={dados.tipoDeSolicitacao}
                   options={[
                     { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -467,7 +450,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
                     <SelectInput
                       label={"AMPERAGEM"}
-                      editable={true}
+                      editable={false}
                       value={dados.amperagem}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -490,7 +473,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"TIPO DO DISJUNTOR"}
-                      editable={true}
+                      editable={false}
                       value={dados.tipoDisjuntor}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -508,7 +491,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <TextInput
                       label={"NÚMERO DO MEDIDOR"}
-                      editable={true}
+                      editable={false}
                       value={dados.numeroMedidor}
                       handleChange={(value) =>
                         setDados({ ...dados, numeroMedidor: value })
@@ -517,7 +500,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     <TextInput
                       label={"PARA PADRÕES CONJUGADOS"}
                       placeholder="ESCREVA: CAIXA 1 - APD1111111 - 40A MONOFÁSICO/ CAIXA 2 - APD222222 - 60A BIFÁSICO ..."
-                      editable={true}
+                      editable={false}
                       value={dados.infoPadraoConjugado}
                       handleChange={(value) =>
                         setDados({
@@ -528,7 +511,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"RAMAL DE ENTRADA"}
-                      editable={true}
+                      editable={false}
                       value={dados.ramalEntrada}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -541,7 +524,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"RAMAL DE SAÍDA"}
-                      editable={true}
+                      editable={false}
                       value={dados.ramalSaida}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -554,7 +537,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"EM RELAÇÃO A CASA DO CLIENTE, O PADRÃO ESTÁ:"}
-                      editable={true}
+                      editable={false}
                       value={dados.tipoPadrao}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -573,7 +556,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <NumberInput
                       label={"NÚMERO DO POSTE (SOMENTE P/GOIÁS)"}
-                      editable={true}
+                      editable={false}
                       value={dados.numeroPoste ? dados.numeroPoste : ""}
                       handleChange={(value) =>
                         setDados({ ...dados, numeroPoste: Number(value) })
@@ -588,7 +571,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
                     <SelectInput
                       label={"ESTRUTURA DE MONTAGEM"}
-                      editable={true}
+                      editable={false}
                       value={dados.estruturaMontagem}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -611,7 +594,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"TIPO DA ESTRUTURA"}
-                      editable={true}
+                      editable={false}
                       value={dados.tipoEstrutura}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -624,7 +607,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"TIPO DE PAREDE PARA FIXAÇÃO DOS INVERSORES"}
-                      editable={true}
+                      editable={false}
                       value={
                         dados.tipoFixacaoInversores
                           ? dados.tipoFixacaoInversores
@@ -646,7 +629,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"TIPO DA TELHA (EXEMPLO ABAIXO)"}
-                      editable={true}
+                      editable={false}
                       value={dados.tipoTelha}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -665,7 +648,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"CLIENTE POSSUI TELHAS RESERVAS"}
-                      editable={true}
+                      editable={false}
                       value={dados.telhasReservas}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -678,7 +661,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <TextInput
                       label={"LINK FOTOS DO DRONE"}
-                      editable={true}
+                      editable={false}
                       placeholder="TENDO MAIS DE UM TELHADO APTO ESCREVER MAIS DE UMA"
                       normalCase={true}
                       value={dados.fotosDrone}
@@ -689,7 +672,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     <TextInput
                       label={"ORIENTAÇÃO DO TELHADO (EX:10°NORTE)"}
                       placeholder="TENDO MAIS DE UM TELHADO APTO ESCREVER MAIS DE UMA"
-                      editable={true}
+                      editable={false}
                       value={dados.orientacaoEstrutura}
                       handleChange={(value) =>
                         setDados({ ...dados, orientacaoEstrutura: value })
@@ -704,7 +687,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
                     <SelectInput
                       label={"LOCAL DE INSTALAÇÃO DO INVERSOR"}
-                      editable={true}
+                      editable={false}
                       value={
                         dados.localInstalacaoInversor
                           ? dados.localInstalacaoInversor
@@ -729,7 +712,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       label={
                         "DISTÂNCIA MÉDIA DO SISTEMA FOTOVOLTAICO ATÉ O QUADRO DE DISTRIBUIÇÃO"
                       }
-                      editable={true}
+                      editable={false}
                       value={dados.distanciaSistemaQuadro}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -746,7 +729,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"DISTÂNCIA MÉDIA DO INVERSOR ATÉ O ROTEADOR"}
-                      editable={true}
+                      editable={false}
                       value={dados.distanciaInversorRoteador}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -763,7 +746,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       label={
                         "LOCAL DO ATERRAMENTO DO SISTEMA (SOMENTE P/GOIÁS)"
                       }
-                      editable={true}
+                      editable={false}
                       value={
                         dados.localAterramento ? dados.localAterramento : ""
                       }
@@ -804,7 +787,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
                       <SelectInput
                         label={"DISJUNTOR DO PADRÃO"}
-                        editable={true}
+                        editable={false}
                         value={dados.tipoDisjuntor}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -817,7 +800,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"AMPERAGEM"}
-                        editable={true}
+                        editable={false}
                         value={dados.amperagem}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -844,7 +827,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"NÚMERO DO MEDIDOR"}
-                        editable={true}
+                        editable={false}
                         value={dados.numeroMedidor}
                         handleChange={(value) =>
                           setDados({ ...dados, numeroMedidor: value })
@@ -859,7 +842,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
                       <SelectInput
                         label={"PADRÃO E TRANSFORMADOR ACOPLADOS"}
-                        editable={true}
+                        editable={false}
                         value={
                           dados.padraoTrafoAcoplados
                             ? dados.padraoTrafoAcoplados
@@ -877,7 +860,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       <NumberInput
                         label={"POTÊNCIA DO TRANSFORMADOR"}
                         unit={"kVA"}
-                        editable={true}
+                        editable={false}
                         value={dados.potTrafo ? dados.potTrafo : ""}
                         handleChange={(value) =>
                           setDados({ ...dados, potTrafo: Number(value) })
@@ -885,7 +868,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"NÚMERO DO TRANSFORMADOR"}
-                        editable={true}
+                        editable={false}
                         value={dados.numeroTrafo}
                         handleChange={(value) =>
                           setDados({ ...dados, numeroTrafo: value })
@@ -893,7 +876,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"NÚMERO POSTE DO TRANSFORMADOR"}
-                        editable={true}
+                        editable={false}
                         value={dados.numeroPosteTrafo}
                         handleChange={(value) =>
                           setDados({ ...dados, numeroPosteTrafo: value })
@@ -901,7 +884,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"PENDÊNCIAS"}
-                        editable={true}
+                        editable={false}
                         value={
                           dados.pendenciasTrafo
                             ? dados.pendenciasTrafo
@@ -925,7 +908,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     <div className="flex gap-2 items-center justify-around flex-wrap mt-4">
                       <SelectInput
                         label={"TIPO DE ESTRUTURA - MONTAGEM DOS MÓDULOS"}
-                        editable={true}
+                        editable={false}
                         value={dados.estruturaMontagem}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -949,7 +932,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"ORIENTAÇÃO DA MONTAGEM DOS MÓDULOS"}
-                        editable={true}
+                        editable={false}
                         value={dados.orientacaoEstrutura}
                         handleChange={(value) =>
                           setDados({
@@ -960,7 +943,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"TIPO DA ESTRUTURA"}
-                        editable={true}
+                        editable={false}
                         value={dados.tipoEstrutura}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -977,7 +960,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"TIPO DA TELHA"}
-                        editable={true}
+                        editable={false}
                         value={dados.tipoTelha}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1000,7 +983,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"CLIENTE POSSUI TELHAS RESERVAS"}
-                        editable={true}
+                        editable={false}
                         value={dados.telhasReservas}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1014,7 +997,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"LOCAL DE MONTAGEM DO INVERSOR"}
-                        editable={true}
+                        editable={false}
                         value={dados.localInstalacaoInversor}
                         handleChange={(value) =>
                           setDados({
@@ -1025,7 +1008,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"DISTÂNCIA DOS MÓDULOS ATÉ OS INVERSORES"}
-                        editable={true}
+                        editable={false}
                         value={
                           dados.distanciaModulosInversores
                             ? dados.distanciaModulosInversores
@@ -1040,7 +1023,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"DISTÂNCIA DOS INVERSORES ATÉ O PADRÃO"}
-                        editable={true}
+                        editable={false}
                         value={dados.distanciaInversorPadrao}
                         handleChange={(value) =>
                           setDados({ ...dados, distanciaInversorPadrao: value })
@@ -1048,7 +1031,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"DISTÂNCIA MÉDIA DO INVERSOR ATÉ O ROTEADOR"}
-                        editable={true}
+                        editable={false}
                         value={dados.distanciaInversorRoteador}
                         handleChange={(value) =>
                           setDados({
@@ -1059,7 +1042,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"LINK PARA FOTOS DO DRONE"}
-                        editable={true}
+                        editable={false}
                         value={dados.fotosDrone}
                         handleChange={(value) =>
                           setDados({
@@ -1077,7 +1060,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     <div className="flex gap-2 items-center justify-around flex-wrap mt-4">
                       <SelectInput
                         label={"CASA DE MÁQUINAS"}
-                        editable={true}
+                        editable={false}
                         value={
                           dados.casaDeMaquinas
                             ? dados.casaDeMaquinas
@@ -1101,7 +1084,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"ALAMBRADO"}
-                        editable={true}
+                        editable={false}
                         value={
                           dados.alambrado ? dados.alambrado : "NÃO DEFINIDO"
                         }
@@ -1123,7 +1106,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"BRITAGEM"}
-                        editable={true}
+                        editable={false}
                         value={dados.britagem ? dados.britagem : "NÃO DEFINIDO"}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1143,7 +1126,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"CONSTRUÇÃO DE BARRACÃO"}
-                        editable={true}
+                        editable={false}
                         value={
                           dados.construcaoBarracao
                             ? dados.construcaoBarracao
@@ -1167,7 +1150,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"INSTALAÇÃO DE ROTEADOR"}
-                        editable={true}
+                        editable={false}
                         value={
                           dados.instalacaoRoteador
                             ? dados.instalacaoRoteador
@@ -1191,7 +1174,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"REDE PARA RELIGAÇÃO DA FAZENDA"}
-                        editable={true}
+                        editable={false}
                         value={
                           dados.redeReligacao
                             ? dados.redeReligacao
@@ -1215,7 +1198,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"LIMPEZA DO LOCAL DA USINA DE SOLO"}
-                        editable={true}
+                        editable={false}
                         value={
                           dados.limpezaLocalUsinaSolo
                             ? dados.limpezaLocalUsinaSolo
@@ -1239,7 +1222,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"TERRAPLANAGEM PARA USINA DE SOLO"}
-                        editable={true}
+                        editable={false}
                         value={
                           dados.terraplanagemUsinaSolo
                             ? dados.terraplanagemUsinaSolo
@@ -1294,7 +1277,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex items-center justify-center mt-2">
                     <SelectInput
                       label="TIPO DE DESENHO"
-                      editable={true}
+                      editable={false}
                       value={
                         dados.tipoDesenho ? dados.tipoDesenho : "NÃO DEFINIDO"
                       }
@@ -1345,7 +1328,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex gap-2 justify-around flex-wrap mt-2">
                     <SelectInput
                       label={"TIPO DE ORÇAMENTAÇÃO"}
-                      editable={true}
+                      editable={false}
                       value={
                         dados.tipoOrcamentacao
                           ? dados.tipoOrcamentacao
@@ -1384,6 +1367,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     <input
                       className={`text-xs w-full text-center uppercase text-gray-600 outline-none`}
                       value={dados.descricaoOrcamentacao}
+                      readOnly={true}
                       placeholder={"DESCREVA AQUI DETALHES DA ORÇAMENTAÇÃO"}
                       onChange={(e) =>
                         setDados({
@@ -1421,7 +1405,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 <div className="w-full flex items-center justify-center gap-2 flex-wrap">
                   <SelectInput
                     label={"ESPAÇO NO QGBT"}
-                    editable={true}
+                    editable={false}
                     value={dados.espacoQGBT ? dados.espacoQGBT : "NÃO DEFINIDO"}
                     options={[
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1434,7 +1418,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"ADAPTAÇÃO NO QGBT"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.adaptacaoQGBT ? dados.adaptacaoQGBT : "NÃO DEFINIDO"
                     }
@@ -1452,7 +1436,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"AVALIAR TELHADO"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.avaliarTelhado
                         ? dados.avaliarTelhado
@@ -1469,7 +1453,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"DPS NO QGBT"}
-                    editable={true}
+                    editable={false}
                     value={dados.dpsQGBT ? dados.dpsQGBT : "NÃO DEFINIDO"}
                     options={[
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1482,7 +1466,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"INFRA PARA LANÇAMENTOS DE CABOS"}
-                    editable={true}
+                    editable={false}
                     value={dados.infraCabos ? dados.infraCabos : "NÃO DEFINIDO"}
                     options={[
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1496,7 +1480,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <TextInput
                     label={"DISTÂNCIA ITBA À ZONA RURAL"}
-                    editable={true}
+                    editable={false}
                     value={dados.distanciaItbaRural}
                     handleChange={(value) =>
                       setDados({ ...dados, distanciaItbaRural: value })
@@ -1504,7 +1488,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <TextInput
                     label={"DISTÂNCIA DO SISTEMA AO INVERSOR"}
-                    editable={true}
+                    editable={false}
                     value={dados.distanciaSistemaInversor}
                     handleChange={(value) =>
                       setDados({ ...dados, distanciaSistemaInversor: value })
@@ -1512,7 +1496,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"REALIMENTAR A FAZENDA ?"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.realimentar ? dados.realimentar : "NÃO DEFINIDO"
                     }
@@ -1527,7 +1511,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"TEM ESTUDO DE CASO?"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.temEstudoDeCaso
                         ? dados.temEstudoDeCaso
@@ -1550,6 +1534,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <textarea
                     value={dados.obsObras}
                     placeholder={"Observações da obra aqui..."}
+                    readOnly={true}
                     onChange={(e) => {
                       setDados({
                         ...dados,
@@ -1564,10 +1549,10 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   CAMPOS ADICIONAIS P/SUPRIMENTOS
                 </span>
-                <div className="w-full grid items-center grid-cols-5">
+                <div className="w-full grid items-center grid-cols-4">
                   <SelectInput
                     label={"INSUMO"}
-                    editable={true}
+                    editable={false}
                     value={suprimentoHolder.insumo}
                     options={Object.keys(suprimentoOption).map((key) => {
                       return { label: key, value: key };
@@ -1583,7 +1568,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"TIPO"}
-                    editable={true}
+                    editable={false}
                     value={suprimentoHolder.tipo}
                     options={suprimentoOption[suprimentoHolder.insumo].tipo.map(
                       (tipo) => {
@@ -1599,7 +1584,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <NumberInput
                     label={"QUANTIDADE"}
-                    editable={true}
+                    editable={false}
                     value={suprimentoHolder.qtde}
                     handleChange={(value) =>
                       setSuprimentoHolder({
@@ -1611,17 +1596,9 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <p className="text-gray-600 text-xs text-center">
                     {suprimentoHolder.medida}
                   </p>
-                  <div
-                    onClick={addSupply}
-                    className="flex justify-center items-center h-fit p-2 rounded cursor-pointer"
-                  >
-                    <div className="bg-green-300 hover:bg-green-500 text-white p-2 rounded">
-                      <MdOutlineAddCircle style={{ fontSize: "15px" }} />
-                    </div>
-                  </div>
                 </div>
                 <div className="flex flex-col mx-12 mt-2 gap-2">
-                  <div className="grid grid-cols-5 w-full">
+                  <div className="grid grid-cols-4 w-full">
                     <p className="text-md text-[#fead61] font-bold text-center">
                       INSUMO
                     </p>
@@ -1634,12 +1611,9 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     <p className="text-md text-[#fead61] font-bold text-center">
                       UNIDADE
                     </p>
-                    <p className="text-md text-[#fead61] font-bold text-center">
-                      EXCLUIR
-                    </p>
                   </div>
                   {dados.suprimentos?.map((suprimento, index) => (
-                    <div key={index} className="grid grid-cols-5 w-full">
+                    <div key={index} className="grid grid-cols-4 w-full">
                       <p className="text-xs text-gray-600 font-bold text-center">
                         {suprimento.insumo}
                       </p>
@@ -1652,18 +1626,6 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       <p className="text-xs text-gray-600 font-bold text-center">
                         {suprimento.medida}
                       </p>
-                      <div
-                        onClick={() => {
-                          let suprimentos = dados.suprimentos;
-                          suprimentos.splice(index, 1);
-                          setDados({ ...dados, suprimentos: suprimentos });
-                        }}
-                        className="flex items-center justify-center cursor-pointer"
-                      >
-                        <div className="bg-red-500 rounded w-fit p-1">
-                          <FiDelete />
-                        </div>
-                      </div>
                     </div>
                   ))}
                 </div>
@@ -1674,6 +1636,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <textarea
                     value={dados.obsSuprimentos}
                     placeholder={"Observações da obra aqui..."}
+                    readOnly={true}
                     onChange={(e) => {
                       setDados({
                         ...dados,
@@ -1691,7 +1654,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 <div className="flex items-center justify-around flex-wrap">
                   <SelectInput
                     label={"CONCESSIONÁRIA"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.concessionaria
                         ? dados.concessionaria
@@ -1709,7 +1672,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"TIPO DE PROJETO"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.tipoProjeto ? dados.tipoProjeto : "NÃO DEFINIDO"
                     }
@@ -1726,7 +1689,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"MODELO DA CAIXA"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.modeloCaixa ? dados.modeloCaixa : "NÃO DEFINIDO"
                     }
@@ -1748,7 +1711,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"PENDÊNCIAS"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.pendenciasProjetos
                         ? dados.pendenciasProjetos
@@ -1770,7 +1733,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <TextInput
                     label={"NÚMERO POSTE DE DERIVAÇÃO(GOIÁS)"}
-                    editable={true}
+                    editable={false}
                     value={dados.numeroPosteDerivacao}
                     handleChange={(value) =>
                       setDados({ ...dados, numeroPosteDerivacao: value })
@@ -1778,7 +1741,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <NumberInput
                     label={"POTÊNCIA DO FUSÍVEL"}
-                    editable={true}
+                    editable={false}
                     value={dados.potFusivel}
                     handleChange={(value) =>
                       setDados({ ...dados, potFusivel: value })
@@ -1786,7 +1749,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"SE AUMENTO, NOVO TIPO DE LIGAÇÃO DO PADRÃO"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.novaLigacaoPadrao
                         ? dados.novaLigacaoPadrao
@@ -1805,7 +1768,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"SE AUMENTO, NOVA AMPERAGEM"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.novaAmperagem ? dados.novaAmperagem : "NÃO DEFINIDO"
                     }
@@ -1826,7 +1789,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label="FOTOS DO DRONE"
-                    editable={true}
+                    editable={false}
                     value={
                       dados.fotoDroneDesenho
                         ? dados.fotoDroneDesenho
@@ -1843,7 +1806,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label="FOTO CLARA DA FAIXADA"
-                    editable={true}
+                    editable={false}
                     value={
                       dados.fotoFaixada ? dados.fotoFaixada : "NÃO DEFINIDO"
                     }
@@ -1858,7 +1821,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label="MEDIDAS DO LOCAL"
-                    editable={true}
+                    editable={false}
                     value={
                       dados.medidasLocal ? dados.medidasLocal : "NÃO DEFINIDO"
                     }
@@ -1873,7 +1836,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label="GOOGLE EARTH"
-                    editable={true}
+                    editable={false}
                     value={
                       dados.googleEarth ? dados.googleEarth : "NÃO DEFINIDO"
                     }
@@ -1894,6 +1857,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <textarea
                     value={dados.obsProjetos}
                     placeholder={"Observações da obra aqui..."}
+                    readOnly={true}
                     onChange={(e) => {
                       setDados({
                         ...dados,
@@ -1910,7 +1874,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex items-center justify-around">
                     <SelectInput
                       label={"TÓPICO"}
-                      editable={true}
+                      editable={false}
                       value={descritivoHolder.topico}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1927,7 +1891,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <TextInput
                       label={"TEXTO"}
-                      editable={true}
+                      editable={false}
                       value={descritivoHolder.texto}
                       handleChange={(value) =>
                         setDescritivoHolder({
@@ -1936,12 +1900,6 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                         })
                       }
                     />
-                    <div
-                      onClick={addDesc}
-                      className="bg-green-300 hover:bg-green-500 text-white p-2 rounded cursor-pointer"
-                    >
-                      <MdOutlineAddCircle style={{ fontSize: "15px" }} />
-                    </div>
                   </div>
                   <div className="flex items-center flex-col h-[100px] border border-gray-200 w-full my-2 p-2 overflow-y-auto overscroll-y-auto">
                     {dados.descritivo?.length ? (
@@ -1989,7 +1947,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 <div className="flex flex-wrap justify-around gap-2">
                   <SelectInput
                     label={"PADRÃO"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.respostaPadrao
                         ? dados.respostaPadrao
@@ -2007,7 +1965,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"ESPAÇO PARA PROJETO"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.respostaEspacoProjeto
                         ? dados.respostaEspacoProjeto
@@ -2024,7 +1982,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"ESTRUTURA DE INCLINAÇÃO"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.respostaEstruturaInclinacao
                         ? dados.respostaEstruturaInclinacao
@@ -2041,7 +1999,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"POSSUI SOMBRA ?"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.respostaPossuiSombra
                         ? dados.respostaPossuiSombra
@@ -2058,7 +2016,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"MADERAMENTO"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.respostaMaderamento
                         ? dados.respostaMaderamento
@@ -2080,7 +2038,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"NECESSÁRIO EXPLICAÇÃO DETALHADA"}
-                    editable={true}
+                    editable={false}
                     value={
                       dados.respostaExplicacaoDetalhada
                         ? dados.respostaExplicacaoDetalhada
@@ -2102,6 +2060,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   </span>
                   <textarea
                     value={dados.respostaConclusao}
+                    readOnly={true}
                     placeholder={"Observações da obra aqui..."}
                     onChange={(e) => {
                       setDados({
@@ -2120,7 +2079,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 <div className="grid grid-cols-6 gap-2 items-center">
                   <TextInput
                     label={"DESCRIÇÃO"}
-                    editable={true}
+                    editable={false}
                     value={custoAdicionalHolder.descricao}
                     handleChange={(value) =>
                       setCustoAdicionalHolder({
@@ -2131,7 +2090,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <NumberInput
                     label={"QUANTIDADE"}
-                    editable={true}
+                    editable={false}
                     value={custoAdicionalHolder.qtde}
                     handleChange={(value) =>
                       setCustoAdicionalHolder({
@@ -2142,7 +2101,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <TextInput
                     label={"GRANDEZA"}
-                    editable={true}
+                    editable={false}
                     value={custoAdicionalHolder.grandeza}
                     handleChange={(value) =>
                       setCustoAdicionalHolder({
@@ -2153,7 +2112,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <NumberInput
                     label={"VALOR"}
-                    editable={true}
+                    editable={false}
                     value={custoAdicionalHolder.valor}
                     handleChange={(value) =>
                       setCustoAdicionalHolder({
@@ -2171,17 +2130,9 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                         .replace(".", ",")}
                     </p>
                   </div>
-                  <div className="flex justify-center items-center h-fit p-2 rounded cursor-pointer">
-                    <div
-                      onClick={addCost}
-                      className="bg-green-300 hover:bg-green-500 text-white p-2 rounded cursor-pointer"
-                    >
-                      <MdOutlineAddCircle style={{ fontSize: "15px" }} />
-                    </div>
-                  </div>
                 </div>
                 <div className="flex flex-col mx-12 mt-2 gap-2">
-                  <div className="grid grid-cols-6 w-full">
+                  <div className="grid grid-cols-5 w-full">
                     <p className="text-md text-[#fead61] font-bold text-center">
                       DESCRIÇÃO
                     </p>
@@ -2197,12 +2148,9 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     <p className="text-md text-[#fead61] font-bold text-center">
                       VALOR TOTAL
                     </p>
-                    <p className="text-md text-[#fead61] font-bold text-center">
-                      EXCLUIR
-                    </p>
                   </div>
                   {dados.custosAdicionais?.map((custo, index) => (
-                    <div key={index} className="grid grid-cols-6 w-full">
+                    <div key={index} className="grid grid-cols-5 w-full">
                       <p className="text-xs text-gray-600 font-bold text-center">
                         {custo.descricao}
                       </p>
@@ -2218,18 +2166,6 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       <p className="text-xs text-gray-600 font-bold text-center">
                         {(custo.valor * custo.qtde).toFixed(2)}
                       </p>
-                      <div
-                        onClick={() => {
-                          let custos = dados.custosAdicionais;
-                          custos.splice(index, 1);
-                          setDados({ ...dados, custosAdicionais: custos });
-                        }}
-                        className="flex items-center justify-center cursor-pointer"
-                      >
-                        <div className="bg-red-500 rounded w-fit p-1">
-                          <FiDelete />
-                        </div>
-                      </div>
                     </div>
                   ))}
                 </div>
@@ -2245,6 +2181,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <input
                     className="outline-none p-2 text-center font-bold text-gray-700"
                     type={"number"}
+                    readOnly={true}
                     value={dados.modNorte}
                     onChange={(e) =>
                       setDados({ ...dados, modNorte: Number(e.target.value) })
@@ -2271,6 +2208,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <input
                     className="outline-none p-2 text-center font-bold text-gray-700"
                     type={"number"}
+                    readOnly={true}
                     value={dados.modNordeste}
                     onChange={(e) =>
                       setDados({
@@ -2301,6 +2239,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <input
                     className="outline-none p-2 text-center font-bold text-gray-700"
                     type={"number"}
+                    readOnly={true}
                     value={dados.modLeste}
                     onChange={(e) =>
                       setDados({ ...dados, modLeste: Number(e.target.value) })
@@ -2325,6 +2264,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <input
                     className="outline-none p-2 text-center font-bold text-gray-700"
                     type={"number"}
+                    readOnly={true}
                     value={dados.modSudeste}
                     onChange={(e) =>
                       setDados({ ...dados, modSudeste: Number(e.target.value) })
@@ -2350,6 +2290,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <input
                     className="outline-none p-2 text-center font-bold text-gray-700"
                     type={"number"}
+                    readOnly={true}
                     value={dados.modSul}
                     onChange={(e) =>
                       setDados({ ...dados, modSul: Number(e.target.value) })
@@ -2376,6 +2317,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <input
                     className="outline-none p-2 text-center font-bold text-gray-700"
                     type={"number"}
+                    readOnly={true}
                     value={dados.modSudoeste}
                     onChange={(e) =>
                       setDados({
@@ -2406,6 +2348,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <input
                     className="outline-none p-2 text-center font-bold text-gray-700"
                     type={"number"}
+                    readOnly={true}
                     value={dados.modOeste}
                     onChange={(e) =>
                       setDados({ ...dados, modOeste: Number(e.target.value) })
@@ -2432,6 +2375,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <input
                     className="outline-none p-2 text-center font-bold text-gray-700"
                     type={"number"}
+                    readOnly={true}
                     value={dados.modNoroeste}
                     onChange={(e) =>
                       setDados({
@@ -2482,60 +2426,6 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   </div>
                 </div>
               )}
-              <div className="w-fit flex flex-col items-center self-center">
-                <label
-                  className="ml-2 text-center text-[#15599a] font-bold text-sm"
-                  htmlFor="propostaComercial"
-                >
-                  {dados.linkVisualizacaoProjeto
-                    ? "SUBSTITUIR IMAGEM"
-                    : "ADICIONAR IMAGEM"}
-                </label>
-                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-                  <div className="absolute">
-                    {images.visualizacaoProjeto ? (
-                      <div className="flex flex-col items-center">
-                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">
-                          {images.visualizacaoProjeto.file.name}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center">
-                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">
-                          Adicione o arquivo aqui
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <input
-                    onChange={(e) =>
-                      setImages({
-                        ...images,
-                        visualizacaoProjeto: {
-                          title: "VISUALIZAÇÃO DO PROJETO",
-                          file: e.target.files[0],
-                        },
-                      })
-                    }
-                    className="h-full w-full opacity-0"
-                    type="file"
-                    accept=".png, .jpeg,.jpg"
-                  />
-                </div>
-              </div>
-              {imageMsg.text && (
-                <p className={`text-center text-sm italic ${imageMsg.color}`}>
-                  {imageMsg.text}
-                </p>
-              )}
-              <button
-                onClick={uploadImage}
-                className="p-2 rounded bg-[#fead61] font-bold hover:bg-[#15599a] hover:text-white"
-              >
-                SALVAR IMAGEM
-              </button>
             </div>
             <div className="w-full flex items-center justify-center gap-2 border border-[#15599a] p-4 shadow-lg bg-[#fff]">
               <SelectInput
@@ -2590,4 +2480,4 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
   );
 }
 
-export default ModalVisitaTecnica;
+export default ModalVisitaTecnicaVendedor;

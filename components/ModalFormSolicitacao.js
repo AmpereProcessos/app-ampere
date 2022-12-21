@@ -483,7 +483,7 @@ function ModalFormSolicitacao({
       .post("/api/email", {
         emailTo: "amperecontasareceber@gmail.com",
         subject: "SOLICITAÇÃO DE CONTRATO",
-        message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${dados.nomeDoContrato}. Desde já agradeço, Volts.`,
+        message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Desde já agradeço, Volts.`,
         copy: ["ampereenergiascomercial@gmail.com"],
       })
       .then((res) =>
@@ -620,6 +620,7 @@ function ModalFormSolicitacao({
     }
     return true;
   }
+  console.log(solicitacao.nomeDoContrato);
   function validateCreation() {
     var holder;
     Object.entries(insertObj).forEach((entry) => {

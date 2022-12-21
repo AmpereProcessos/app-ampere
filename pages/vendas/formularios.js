@@ -11,6 +11,7 @@ function FormulariosVendedor({ setCredentials, credentials }) {
     axios
       .post("/api/solicitacoes/byVendedor", {
         vendedor: credenciais.vendedor,
+        tipo: "CONTRATO",
       })
       .then((res) => {
         setForms(res.data);
@@ -56,7 +57,9 @@ function FormulariosVendedor({ setCredentials, credentials }) {
   return (
     <div className="p-6 flex flex-col grow bg-[#fff]">
       <div className="flex border-b border-gray-200">
-        <h1 className="text-[#15599a] font-bold text-xl">SEUS FORMULÁRIOS</h1>
+        <h1 className="text-[#15599a] font-bold text-xl">
+          SEUS FORMULÁRIOS DE SOLICITAÇÃO DE CONTRATO
+        </h1>
       </div>
       <div className="flex flex-wrap justify-around mt-4 gap-3">
         {filteredForms.map((solicitacao) => (

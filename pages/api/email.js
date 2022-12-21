@@ -8,20 +8,25 @@ export default async function handler(req, res) {
       subject: req.body.subject,
       text: req.body.message,
     };
-    nodemailer
-      .createTransport({
-        service: "gmail",
-        auth: {
-          user: "ampereprocessos@gmail.com",
-          pass: "ccyecqdvssayztwe",
-        },
-        port: 465,
-        host: "smtp.gmail.com",
-      })
-      .sendMail(msg)
-      .then((res) => {
-        console.log(res);
-      });
-    res.json("FOI");
+    console.log(msg);
+    try {
+      nodemailer
+        .createTransport({
+          service: "gmail",
+          auth: {
+            user: "ampereprocessos@gmail.com",
+            pass: "ccyecqdvssayztwe",
+          },
+          port: 465,
+          host: "smtp.gmail.com",
+        })
+        .sendMail(msg)
+        .then((res) => {
+          console.log(res);
+        });
+      res.json("FOI");
+    } catch (error) {
+      res.json(error);
+    }
   }
 }

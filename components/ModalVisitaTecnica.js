@@ -1946,7 +1946,10 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex items-center flex-col h-[100px] border border-gray-200 w-full my-2 p-2 overflow-y-auto overscroll-y-auto">
                     {dados.descritivo?.length ? (
                       dados.descritivo?.map((item, index) => (
-                        <div className="grid grid-cols-10 gap-3 w-full items-center">
+                        <div
+                          key={index}
+                          className="grid grid-cols-10 gap-3 w-full items-center"
+                        >
                           <p className="text-xxs lg:text-xs text-[#15599a] font-bold col-span-1">
                             {item.topico}
                           </p>

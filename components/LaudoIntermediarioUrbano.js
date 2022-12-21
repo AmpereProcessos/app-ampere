@@ -685,7 +685,10 @@ function LaudoIntermediarioUrbano({ info }) {
           <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[60px] text-center p-2">
             {info.descritivo?.length ? (
               info.descritivo?.map((item, index) => (
-                <div className="grid grid-cols-10 gap-3 w-full items-center py-1 border-b border-gray-200">
+                <div
+                  key={index}
+                  className="grid grid-cols-10 gap-3 w-full items-center py-1 border-b border-gray-200"
+                >
                   <p className="text-xxs lg:text-xs text-[#15599a] font-bold col-span-3 text-center">
                     {item.topico}
                   </p>

@@ -160,19 +160,13 @@ function Home({ credentials, setCredentials }) {
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     if (storedCredentials) {
-      if (storedCredentials.visualizacao == "VENDEDOR") {
-        router.push("/vendas/formularios");
-      } else {
-        setCredentials(storedCredentials);
-        getStats(storedCredentials);
-        getGraphDataByYear(2022, storedCredentials);
-        getBirthDay(storedCredentials);
-      }
+      setCredentials(storedCredentials);
+      getStats(storedCredentials);
+      getGraphDataByYear(2022, storedCredentials);
+      getBirthDay(storedCredentials);
     } else {
       if (credentials != {} && !credentials.nome) {
         router.push("/auth/authHome");
-      } else if (credentials.visualizacao == "VENDEDOR") {
-        router.push("/vendas/formularios");
       } else {
         getStats(credentials);
         getGraphDataByYear(2022, credentials);
@@ -239,36 +233,39 @@ function Home({ credentials, setCredentials }) {
   }
   return (
     <div className="p-6 grow">
-      <div className="flex items-center justify-center gap-2">
-        <button
-          onClick={() => getDataByRegional("REGIONAL ITUIUTABA")}
-          className={`border border-gray-200 p-1 ${
-            regional == "REGIONAL ITUIUTABA" ? "bg-blue-100" : ""
-          } hover:bg-blue-100 font-raleway font-bold text-sm`}
-        >
-          REGIONAL ITUIUTABA
-        </button>
-        <button
-          onClick={() => getDataByRegional("REGIONAL UBERLÂNDIA")}
-          className={`border border-gray-200 p-1 ${
-            regional == "REGIONAL UBERLÂNDIA" ? "bg-blue-100" : ""
-          } hover:bg-blue-100 font-raleway font-bold text-sm`}
-        >
-          REGIONAL UBERLÂNDIA
-        </button>
-        <button
-          onClick={() => {
-            setRegional("GERAL");
-            getStats(credentials);
-            getGraphDataByYear(2022, credentials);
-          }}
-          className={`border border-gray-200 p-1 ${
-            regional == "GERAL" ? "bg-blue-100" : ""
-          } hover:bg-blue-100 font-raleway font-bold text-sm`}
-        >
-          GERAL
-        </button>
-      </div>
+      {!credentials.visualizacao && (
+        <div className="flex items-center justify-center gap-2">
+          <button
+            onClick={() => getDataByRegional("REGIONAL ITUIUTABA")}
+            className={`border border-gray-200 p-1 ${
+              regional == "REGIONAL ITUIUTABA" ? "bg-blue-100" : ""
+            } hover:bg-blue-100 font-raleway font-bold text-sm`}
+          >
+            REGIONAL ITUIUTABA
+          </button>
+          <button
+            onClick={() => getDataByRegional("REGIONAL UBERLÂNDIA")}
+            className={`border border-gray-200 p-1 ${
+              regional == "REGIONAL UBERLÂNDIA" ? "bg-blue-100" : ""
+            } hover:bg-blue-100 font-raleway font-bold text-sm`}
+          >
+            REGIONAL UBERLÂNDIA
+          </button>
+          <button
+            onClick={() => {
+              setRegional("GERAL");
+              getStats(credentials);
+              getGraphDataByYear(2022, credentials);
+            }}
+            className={`border border-gray-200 p-1 ${
+              regional == "GERAL" ? "bg-blue-100" : ""
+            } hover:bg-blue-100 font-raleway font-bold text-sm`}
+          >
+            GERAL
+          </button>
+        </div>
+      )}
+
       <div className="flex flex-col border bg-[#fff] my-3 shadow-lg border-gray-200 p-2">
         <div className="w-full h-[36px] border border-[#15599a]">
           <div

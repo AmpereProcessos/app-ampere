@@ -140,45 +140,50 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
           ]}
         />
       </div>
-      <div className="flex gap-2 justify-around items-center flex-wrap">
-        {dados.topologia != "NÃO DEFINIDO" && (
-          <>
-            <TextInput
-              label={"MARCA DO INVERSOR/MICRO"}
-              editable={true}
-              value={dadosInversores.marca}
-              handleChange={(value) =>
-                setDadosInvesores({
-                  ...dadosInversores,
-                  marca: value.toUpperCase(),
-                })
-              }
-            />
-            <NumberInput
-              label={"QTDE INVERSOR/MICRO"}
-              editable={true}
-              value={dadosInversores.qtde}
-              handleChange={(value) =>
-                setDadosInvesores({ ...dadosInversores, qtde: value })
-              }
-            />
-            <NumberInput
-              label={"POTÊNCIA INVERSOR/MICRO"}
-              unit={"W"}
-              editable={true}
-              value={dadosInversores.pot}
-              handleChange={(value) =>
-                setDadosInvesores({ ...dadosInversores, pot: value })
-              }
-            />
-            <div
-              onClick={addInversor}
-              className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
-            >
-              <MdOutlineAddCircle style={{ fontSize: "15px" }} />
-            </div>
-          </>
-        )}
+      <div className="flex flex-col">
+        <h1 className="text-center text-[#15599a] text-xs">
+          ADICIONE INVERSORES
+        </h1>
+        <div className="flex gap-2 justify-around items-center flex-wrap">
+          {dados.topologia != "NÃO DEFINIDO" && (
+            <>
+              <TextInput
+                label={"MARCA DO INVERSOR/MICRO"}
+                editable={true}
+                value={dadosInversores.marca}
+                handleChange={(value) =>
+                  setDadosInvesores({
+                    ...dadosInversores,
+                    marca: value.toUpperCase(),
+                  })
+                }
+              />
+              <NumberInput
+                label={"QTDE INVERSOR/MICRO"}
+                editable={true}
+                value={dadosInversores.qtde}
+                handleChange={(value) =>
+                  setDadosInvesores({ ...dadosInversores, qtde: value })
+                }
+              />
+              <NumberInput
+                label={"POTÊNCIA INVERSOR/MICRO"}
+                unit={"W"}
+                editable={true}
+                value={dadosInversores.pot}
+                handleChange={(value) =>
+                  setDadosInvesores({ ...dadosInversores, pot: value })
+                }
+              />
+              <div
+                onClick={addInversor}
+                className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
+              >
+                <MdOutlineAddCircle style={{ fontSize: "15px" }} />
+              </div>
+            </>
+          )}
+        </div>
       </div>
       <div className="flex flex-col mt-2 font-bold">
         <h1 className="text-center text-[#15599a] text-xs">

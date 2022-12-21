@@ -280,9 +280,11 @@ function Home({ credentials, setCredentials }) {
         <p className="text-center font-bold text-[#15599a] text-xl">
           {totalPeakPot < 10000 ? (
             <>
-              Faltam apenas{" "}
+              {/** Faltam apenas{" "}
               {((10000 - totalPeakPot) / 8).toFixed(0).replace(".", ",")}{" "}
               contratos para os{" "}
+              <strong className="text-[#fead41]">10 MEGA !</strong> */}
+              Faltam apenas 4 contratos para os{" "}
               <strong className="text-[#fead41]">10 MEGA !</strong>
             </>
           ) : (

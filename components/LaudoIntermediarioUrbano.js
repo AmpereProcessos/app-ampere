@@ -317,12 +317,12 @@ function LaudoIntermediarioUrbano({ info }) {
           <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-b-0 border-black">
             VISUALIZAÇÃO DO PROJETO
           </h1>
-          <div className="h-[450px] border border-black">
+          <div className="h-[704px] flex items-center border border-black">
             {info.linkVisualizacaoProjeto ? (
               <div className="w-[793.7px] h-full">
                 <Image
                   width={"793px"}
-                  height={"450px"}
+                  height={"560px"}
                   src={info.linkVisualizacaoProjeto}
                   objectFit="fill"
                   alt="Picture of the author"
@@ -333,7 +333,7 @@ function LaudoIntermediarioUrbano({ info }) {
             )}
           </div>
         </div>
-        <div className="flex flex-col mt-6">
+        <div className="flex flex-col">
           <h1 className="bg-[#15599a] text-white text-center font-bold border border-black">
             CUSTOS ADICIONAIS
           </h1>

@@ -26,6 +26,7 @@ function Obras({ credentials, setCredentials }) {
     tipoDaTelhaFilter: "",
     obsPendente: false,
     osPendente: false,
+    foraDeItba: false,
     numModulos: null,
     equipResp: [],
     liberacaoStatus: [],
@@ -166,6 +167,10 @@ function Obras({ credentials, setCredentials }) {
         (obj) =>
           obj.ordensDeServico == undefined || obj.ordensDeServico?.length == 0
       );
+    }
+    if (filters.foraDeItba) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((obj) => obj.cidade != "ITUIUTABA");
     }
     if (!newArr) {
       setFilteredProjects(projects);
@@ -465,6 +470,16 @@ function Obras({ credentials, setCredentials }) {
             } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
           >
             SEM OSs GERADAS
+          </div>
+          <div
+            onClick={() =>
+              setFilters({ ...filters, foraDeItba: !filters.foraDeItba })
+            }
+            className={`${
+              filters.foraDeItba ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            PROJETOS FORA DE ITBA
           </div>
           <input
             type={"text"}

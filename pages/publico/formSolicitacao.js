@@ -284,13 +284,14 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             setDados={setDados}
             avancar={() => setEstagio(estagio + 1)}
             voltar={() => setEstagio(estagio - 1)}
-            links={links ? links : []}
+            prevLinks={links ? links : []}
           />
         )}
         {estagio == 10 && (
           <VisualizacaoForm
             dados={dados}
             setDados={setDados}
+            linksVisita={links ? links : undefined}
             formVisitaId={formVisitaId ? formVisitaId : undefined}
             voltar={() => setEstagio(estagio - 1)}
           />

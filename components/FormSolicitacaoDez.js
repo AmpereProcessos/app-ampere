@@ -4,8 +4,7 @@ import { fileTypes } from "../utils/constants";
 import { storage } from "../utils/firebase";
 import { AiOutlineCheck } from "react-icons/ai";
 import Image from "next/image";
-function FormSolicitacaoDez({ dados, setDados, voltar, avancar, links }) {
-  console.log(links);
+function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
   const [images, setImages] = useState({});
   const [checks, setChecks] = useState({
     contaDeEnergiaCheck: false,
@@ -154,6 +153,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, links }) {
   async function uploadImage() {
     if (validateDocuments()) {
       var holder;
+      var links = [];
       setImagesMsg({
         text: "Processando...",
         color: "text-[#15599a]",

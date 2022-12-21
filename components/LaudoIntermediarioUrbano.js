@@ -109,6 +109,7 @@ function LaudoIntermediarioUrbano({ info }) {
       1000
     ).toFixed(2);
   }
+  console.log(info.logradouro.length);
   return (
     <div className="w-[21cm] h-[29.7cm]">
       <div className="flex flex-col w-full h-full">
@@ -126,103 +127,107 @@ function LaudoIntermediarioUrbano({ info }) {
           </h1>
           <div className="flex">
             <div className="grid grid-rows-6 w-[60%]">
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   CLIENTE
-                </p>
-                <p className="text-center text-xs border-r border-black">
+                </div>
+                <div className="text-center text-xs border-r border-black">
                   {info.nomeDoCliente}
-                </p>
+                </div>
               </div>
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   REPRESENTANTE
-                </p>
-                <p className="text-center text-xs border-r border-black">
+                </div>
+                <div className="text-center text-xs border-r border-black">
                   {info.nomeVendedor}
-                </p>
+                </div>
               </div>
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   ENDEREÇO
-                </p>
-                <p className="text-center text-xs border-r border-black">
+                </div>
+                <div
+                  className={`text-center ${
+                    info.logradouro.length > 37 ? "text-xxs" : "text-xxs"
+                  } border-r border-black`}
+                >
                   {info.logradouro}
-                </p>
+                </div>
               </div>
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   BAIRRO
-                </p>
-                <p className="text-center text-xs border-r border-black">
+                </div>
+                <div className="text-center text-xs border-r border-black">
                   {info.bairro}
-                </p>
+                </div>
               </div>
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   DATA DA VISITA
-                </p>
-                <p className="text-center text-xs border-r border-black">
+                </div>
+                <div className="text-center text-xs border-r border-black">
                   {dayjs().format("DD/MM/YYYY")}
-                </p>
+                </div>
               </div>
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   TIPO DE SOLICITAÇÃO
-                </p>
-                <p className="text-center text-xs border-r border-black">
+                </div>
+                <div className="text-center text-xs border-r border-black">
                   {info.tipoDeSolicitacao}
-                </p>
+                </div>
               </div>
             </div>
             <div className="grid grid-rows-6 w-[40%]">
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   TELEFONE
-                </p>
-                <p className="text-center text-xs border-r border-black">
+                </div>
+                <div className="text-center text-xs border-r border-black">
                   {info.telefoneDoCliente}
-                </p>
+                </div>
               </div>
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   Nº DE PROJETO
-                </p>
-                <p className="text-center text-xs border-r border-black">
+                </div>
+                <div className="text-center text-xs border-r border-black">
                   {info.codigoSVB}
-                </p>
+                </div>
               </div>
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   NÚMERO
-                </p>
-                <p className="text-center text-xs border-r border-black">
+                </div>
+                <div className="text-center text-xs border-r border-black">
                   {info.numeroResidencia}
-                </p>
+                </div>
               </div>
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   MUNICÍPIO
-                </p>
-                <p className="text-center text-xs border-r border-black">
+                </div>
+                <div className="text-center text-xs border-r border-black">
                   {info.cidade}
-                </p>
+                </div>
               </div>
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   PRAZO LAUDO
-                </p>
-                <p className="text-center text-xs border-r border-black">
+                </div>
+                <div className="text-center text-xs border-r border-black">
                   {/\(([^)]+)\)/.exec(info.tipoDeLaudo)[1]}
-                </p>
+                </div>
               </div>
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   TIPO DE LAUDO
-                </p>
-                <p className="text-center text-xs border-r border-black">
+                </div>
+                <div className="text-center text-xs border-r border-black">
                   {info.tipoDeLaudo.split("(")[0]}
-                </p>
+                </div>
               </div>
             </div>
           </div>
@@ -317,7 +322,7 @@ function LaudoIntermediarioUrbano({ info }) {
           <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-b-0 border-black">
             VISUALIZAÇÃO DO PROJETO
           </h1>
-          <div className="h-[704px] flex items-center border border-black">
+          <div className="h-[600px] flex items-center border border-black">
             {info.linkVisualizacaoProjeto ? (
               <div className="w-[793.7px] h-full">
                 <Image
@@ -421,7 +426,7 @@ function LaudoIntermediarioUrbano({ info }) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col mt-20">
+        <div className="flex flex-col mt-6">
           <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border  border-black">
             ESTUDO DE GERAÇÃO - DESVIO AZIMUTAL
           </h1>

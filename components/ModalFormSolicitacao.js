@@ -222,7 +222,6 @@ function ModalFormSolicitacao({
     numInstalacao: "",
     excedente: null,
   });
-  console.log(financeiroEditor);
   function adicionarDistribuicao() {
     setDados({
       ...dados,
@@ -355,19 +354,19 @@ function ModalFormSolicitacao({
     },
     sistema: {
       qtdeModulos: getSummedValues({
-        qtde: dados.qtdeModulos.toString(),
-        pot: dados.potModulos.toString(),
+        qtde: dados.qtdeModulos ? dados.qtdeModulos.toString() : "0",
+        pot: dados.potModulos ? dados.potModulos.toString() : "0",
       }).summedModules,
       potModulos: dados.potModulos,
       potPico: getSummedValues({
-        qtde: dados.qtdeModulos.toString(),
-        pot: dados.potModulos.toString(),
+        qtde: dados.qtdeModulos ? dados.qtdeModulos.toString() : "0",
+        pot: dados.potModulos ? dados.potModulos.toString() : "0",
       }).totalPot,
       topologia: dados.topologia,
       inversor: getJoinedInfo({
         marca: dados.marcaInversor.toString().toUpperCase(),
-        qtde: dados.qtdeInversor.toString(),
-        pot: dados.potInversor.toString(),
+        qtde: dados.qtdeInversor ? dados.qtdeInversor.toString() : "0",
+        pot: dados.potInversor ? dados.potInversor.toString() : "0",
       }),
       valorProjeto: dados.valorContrato,
     },
@@ -472,6 +471,10 @@ function ModalFormSolicitacao({
       dataNps: undefined,
     },
     nps: undefined,
+    links: {
+      documentos: dados.links,
+      visitaTecnica: dados.linksVisita ? dados.linksVisita : undefined,
+    },
   };
   async function addProject() {
     await axios.put("/api/solicitacoes/contrato", {
@@ -699,6 +702,7 @@ function ModalFormSolicitacao({
     );
     return { totalPot, summedModules };
   }
+  console.log(dados);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -2641,6 +2645,28 @@ function ModalFormSolicitacao({
                     </span>
                     <div className="flex flex-col items-center gap-2">
                       {dados.links.map((x, index) => (
+                        <div key={index} className="flex items-center gap-x-2">
+                          <a className="text-blue-300" href={x.link}>
+                            {x.title}
+                            {x.format ? ` - ${x.format}` : false}
+                          </a>
+                          <AiOutlineCheck
+                            style={{ color: "#49be25", fontSize: "18px" }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  false
+                )}
+                {dados.linksVisita?.length > 0 ? (
+                  <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                      ARQUIVOS VISITA TÉCNICA
+                    </span>
+                    <div className="flex flex-col items-center gap-2">
+                      {dados.linksVisita.map((x, index) => (
                         <div key={index} className="flex items-center gap-x-2">
                           <a className="text-blue-300" href={x.link}>
                             {x.title}

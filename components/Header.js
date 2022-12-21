@@ -3,7 +3,7 @@ import { FaBars } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import WhiteLogo from "../utils/10mega.png";
+import WhiteLogo from "../utils/felizNatalHD.png";
 import AlertVolts from "../utils/alertVolts-svg.svg";
 import SleepVolts from "../utils/sleepVolts-svg.svg";
 import { BiLogIn } from "react-icons/bi";
@@ -53,7 +53,7 @@ function Header({ toggleSidebar, credentials, notificacoes, getNotificacoes }) {
       </div>
       <Link href="/">
         <div className="flex cursor-pointer items-center justify-center">
-          <Image width={"60px"} height={"60px"} src={WhiteLogo} />
+          <Image height={"60px"} src={WhiteLogo} objectFit="fill" />
         </div>
       </Link>
       <div className="flex justify-end items-center">

@@ -407,6 +407,16 @@ function ModalFormSolicitacao({
       data: undefined, // formatar como data
       status: "NÃO DEFINIDO",
     },
+    oem: {
+      aplicavel: dados.possuiOeM == "SIM" ? true : false, // checar se existe campo existente na gestao
+      duracao: getOeMInfo({ possuiOEM: dados.possuiOeM, plano: dados.planoOeM })
+        .duracao,
+      qtdeManutencoes: getOeMInfo({
+        possuiOEM: dados.possuiOeM,
+        plano: dados.planoOeM,
+      }).qtdeManutencoes,
+      diagnostico: undefined,
+    },
     obra: {
       laudo: dados.laudo ? dados.laudo : "NÃO DEFINIDO",
       observacoes: "", // possibilidade de substituir \n por /, e quebrar textp em pontos
@@ -623,7 +633,7 @@ function ModalFormSolicitacao({
     }
     return true;
   }
-  console.log(solicitacao.nomeDoContrato);
+  console.log(insertObj);
   function validateCreation() {
     var holder;
     Object.entries(insertObj).forEach((entry) => {
@@ -701,6 +711,21 @@ function ModalFormSolicitacao({
       0
     );
     return { totalPot, summedModules };
+  }
+  function getOeMInfo({ possuiOEM, plano }) {
+    if (possuiOEM == "SIM") {
+      if (plano == "MANUTENÇÃO SIMPLES" || plano == "MANUTENÇÃO SIMLES") {
+        return { duracao: 0, qtdeManutencoes: 1 };
+      } else if (plano == "PLANO SOL") {
+        return { duracao: 1, qtdeManutencoes: 1 };
+      } else if (plano == "PLANO SOL +") {
+        return { duracao: 1, qtdeManutencoes: 2 };
+      } else if (plano == "NÃO SE APLICA") {
+        return { duracao: 0, qtdeManutencoes: 0 };
+      }
+    } else {
+      return { duracao: 0, qtdeManutencoes: 0 };
+    }
   }
   console.log(dados);
   return (
@@ -1870,8 +1895,8 @@ function ModalFormSolicitacao({
                           editable={editor}
                           options={[
                             {
-                              label: "MANUTENÇÃO SIMLES",
-                              value: "MANUTENÇÃO SIMLES",
+                              label: "MANUTENÇÃO SIMPLES",
+                              value: "MANUTENÇÃO SIMPLES",
                             },
                             {
                               label: "PLANO SOL",

@@ -1278,3 +1278,28 @@ export const equipesTecnicas = [
     value: undefined,
   },
 ];
+// Função para deletar arquivos antigos do Firebase
+// async function listFiles() {
+//   const listRef = ref(storage);
+//   let arq = await listAll(listRef);
+//   arq.prefixes.forEach(async (folderRef) => {
+//     console.log(folderRef.name);
+//     if (folderRef.name == "chamadosPPS") {
+//       let chamadosRef = await listAll(folderRef);
+//       chamadosRef.prefixes.forEach(async (pasta) => {
+//         let clientes = await listAll(pasta);
+//         clientes.items.forEach(async (cliente) => {
+//           let clienteRef = ref(storage, cliente.fullPath);
+//           let metaData = await getMetadata(clienteRef);
+//           if (
+//             new Date(metaData.timeCreated) <
+//             new Date("2022-12-10T19:39:13.481Z")
+//           ) {
+//             let fileRef = ref(storage, metaData.fullPath);
+//             deleteObject(fileRef).then((res) => console.log(res));
+//           }
+//         });
+//       });
+//     }
+//   });
+// }

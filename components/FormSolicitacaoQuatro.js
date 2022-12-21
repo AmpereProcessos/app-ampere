@@ -142,7 +142,7 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
       </div>
       <div className="flex flex-col border-t border-gray-200 py-2">
         <h1 className="text-center text-[#15599a] text-sm font-bold mt-2">
-          ADICIONE INVERSORES
+          ADICIONE MICRO/INVERSORES
         </h1>
         <div className="flex flex-col mb-1 px-2">
           <p className="text-center italic text-xs">

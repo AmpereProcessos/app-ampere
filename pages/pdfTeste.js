@@ -1,5 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
+import {
+  getStorage,
+  ref,
+  listAll,
+  list,
+  getMetadata,
+  deleteObject,
+} from "firebase/storage";
+import { storage } from "../utils/firebase";
 import Logo from "../utils/logo.png";
 import Link from "next/link";
 import Image from "next/image";
@@ -42,10 +51,36 @@ function Teste() {
       setEmRota(sortByPrev(res.data.emRota));
     });
   }
-  useEffect(() => {
-    getProjects();
-  }, []);
+  // useEffect(() => {
+  //   getProjects();
+  // }, []);
   console.log(emRota);
+  // async function listFiles() {
+  //   const listRef = ref(storage);
+  //   let arq = await listAll(listRef);
+  //   arq.prefixes.forEach(async (folderRef) => {
+  //     console.log(folderRef.name);
+  //     if (folderRef.name == "chamadosPPS") {
+  //       let chamadosRef = await listAll(folderRef);
+  //       chamadosRef.prefixes.forEach(async (pasta) => {
+  //         let clientes = await listAll(pasta);
+  //         clientes.items.forEach(async (cliente) => {
+  //           let clienteRef = ref(storage, cliente.fullPath);
+  //           let metaData = await getMetadata(clienteRef);
+  //           console.log("CHEGUEI AQUI", metaData);
+  //           if (
+  //             new Date(metaData.timeCreated) <
+  //             new Date("2022-12-10T19:39:13.481Z")
+  //           ) {
+  //             console.log(metaData);
+  //             let fileRef = ref(storage, metaData.fullPath);
+  //             // deleteObject(fileRef).then((res) => console.log(res));
+  //           }
+  //         });
+  //       });
+  //     }
+  //   });
+  // }
   return (
     <div className="w-[21cm] h-[29.7cm] bg-zinc-100 p-4">
       <div className="flex flex-col items-center">

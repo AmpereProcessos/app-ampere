@@ -258,8 +258,8 @@ function ChamadosPPS({ setCredentials, credentials }) {
                 <p>
                   {console.log(call.observacoes.length)}
                   {call.observacoes
-                    ? call.observacoes.trim().length > 200
-                      ? `${call.observacoes.substring(0, 200)}...`
+                    ? call.observacoes.trim().length > 160
+                      ? `${call.observacoes.substring(0, 160)}...`
                       : call.observacoes
                     : "-"}
                 </p>

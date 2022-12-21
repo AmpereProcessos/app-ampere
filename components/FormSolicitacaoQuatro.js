@@ -114,7 +114,7 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
         DADOS DO SISTEMA
       </span>
-      <div className="flex justify-center">
+      <div className="flex justify-center my-2">
         <SelectInput
           label={"TOPOLOGIA"}
           editable={true}
@@ -140,10 +140,20 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
           ]}
         />
       </div>
-      <div className="flex flex-col">
-        <h1 className="text-center text-[#15599a] text-xs">
+      <div className="flex flex-col border-t border-gray-200 py-2">
+        <h1 className="text-center text-[#15599a] text-sm font-bold mt-2">
           ADICIONE INVERSORES
         </h1>
+        <div className="flex flex-col mb-1 px-2">
+          <p className="text-center italic text-xs">
+            Você agora pode adicionar micro/inversores de potência e/ou marca
+            diferentes.
+          </p>
+          <p className="text-center italic text-xs text-[#fead61] font-bold">
+            Preencha as informações do micro/inversor e clique em adicionar.
+          </p>
+        </div>
+
         <div className="flex gap-2 justify-around items-center flex-wrap">
           {dados.topologia != "NÃO DEFINIDO" && (
             <>
@@ -185,40 +195,43 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
           )}
         </div>
       </div>
-      <div className="flex flex-col mt-2 font-bold">
-        <h1 className="text-center text-[#15599a] text-xs">
-          INVERSORES ADICIONADOS
-        </h1>
-        {arrInv.map((inv, index) => (
-          <div key={index} className="flex justify-around items-center my-1">
-            <p className="text-xs font-bold">{inv.marca}</p>
-            <p className="text-xs font-bold">{inv.qtde}</p>
-            <p className="text-xs font-bold">{inv.pot}</p>
-            <button
-              onClick={() => {
-                let arr = arrInv;
-                arr.splice(index, 1);
-                let marcaArr = arrInv.map((i) => i.marca);
-                let qtdeArr = arrInv.map((i) => i.qtde);
-                let potArr = arrInv.map((i) => i.pot);
-                let joinedMarcaArr = marcaArr.join("/");
-                let joinedQtdeArr = qtdeArr.join("/");
-                let joinedPotArr = potArr.join("/");
-                setDados({
-                  ...dados,
-                  marcaInversor: joinedMarcaArr,
-                  qtdeInversor: joinedQtdeArr,
-                  potInversor: joinedPotArr,
-                });
-                setArrInv([...arr]);
-              }}
-              className="bg-red-500 p-1 rounded"
-            >
-              <FiDelete />
-            </button>
-          </div>
-        ))}
-      </div>
+      {arrInv.length > 0 && (
+        <div className="flex flex-col mt-2 font-bold">
+          <h1 className="text-center text-[#15599a] text-xs">
+            INVERSORES ADICIONADOS
+          </h1>
+          {arrInv.map((inv, index) => (
+            <div key={index} className="flex justify-around items-center my-1">
+              <p className="text-xs font-bold">{inv.marca}</p>
+              <p className="text-xs font-bold">{inv.qtde}</p>
+              <p className="text-xs font-bold">{inv.pot}</p>
+              <button
+                onClick={() => {
+                  let arr = arrInv;
+                  arr.splice(index, 1);
+                  let marcaArr = arrInv.map((i) => i.marca);
+                  let qtdeArr = arrInv.map((i) => i.qtde);
+                  let potArr = arrInv.map((i) => i.pot);
+                  let joinedMarcaArr = marcaArr.join("/");
+                  let joinedQtdeArr = qtdeArr.join("/");
+                  let joinedPotArr = potArr.join("/");
+                  setDados({
+                    ...dados,
+                    marcaInversor: joinedMarcaArr,
+                    qtdeInversor: joinedQtdeArr,
+                    potInversor: joinedPotArr,
+                  });
+                  setArrInv([...arr]);
+                }}
+                className="bg-red-500 p-1 rounded"
+              >
+                <FiDelete />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       {dados.topologia == "OTIMIZADOR" && (
         <div className="flex gap-2 justify-around flex-wrap mt-2">
           <TextInput
@@ -248,73 +261,90 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
           />
         </div>
       )}
-      <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
-        <TextInput
-          label={"MARCA DOS MÓDULOS"}
-          editable={true}
-          value={dadosModulos.marca}
-          handleChange={(value) =>
-            setDadosModulos({ ...dadosModulos, marca: value.toUpperCase() })
-          }
-        />
-        <NumberInput
-          label={"Nº DE MÓDULOS"}
-          editable={true}
-          value={dadosModulos.qtde}
-          handleChange={(value) =>
-            setDadosModulos({ ...dadosModulos, qtde: Number(value) })
-          }
-        />
-        <NumberInput
-          label={"POTÊNCIA DOS MÓDULOS"}
-          unit={"W"}
-          editable={true}
-          value={dadosModulos.pot}
-          handleChange={(value) =>
-            setDadosModulos({ ...dadosModulos, pot: Number(value) })
-          }
-        />
-        <div
-          onClick={addModulos}
-          className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
-        >
-          <MdOutlineAddCircle style={{ fontSize: "15px" }} />
+      <div className="flex flex-col border-t border-gray-200 py-2">
+        <h1 className="text-center text-[#15599a] text-sm font-bold mt-2">
+          ADICIONE MÓDULOS
+        </h1>
+        <div className="flex flex-col mb-1 px-2">
+          <p className="text-center italic text-xs">
+            Você agora pode adicionar módulos de potência e/ou marca diferentes.
+          </p>
+          <p className="text-center italic text-xs text-[#fead61] font-bold">
+            Preencha as informações do módulos e clique em adicionar.
+          </p>
+        </div>
+        <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
+          <TextInput
+            label={"MARCA DOS MÓDULOS"}
+            editable={true}
+            value={dadosModulos.marca}
+            handleChange={(value) =>
+              setDadosModulos({ ...dadosModulos, marca: value.toUpperCase() })
+            }
+          />
+          <NumberInput
+            label={"Nº DE MÓDULOS"}
+            editable={true}
+            value={dadosModulos.qtde}
+            handleChange={(value) =>
+              setDadosModulos({ ...dadosModulos, qtde: Number(value) })
+            }
+          />
+          <NumberInput
+            label={"POTÊNCIA DOS MÓDULOS"}
+            unit={"W"}
+            editable={true}
+            value={dadosModulos.pot}
+            handleChange={(value) =>
+              setDadosModulos({ ...dadosModulos, pot: Number(value) })
+            }
+          />
+          <div
+            onClick={addModulos}
+            className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
+          >
+            <MdOutlineAddCircle style={{ fontSize: "15px" }} />
+          </div>
         </div>
       </div>
-      <div className="flex flex-col mt-2 font-bold">
-        <h1 className="text-center text-[#15599a] text-xs">
-          MÓDULOS ADICIONADOS
-        </h1>
-        {arrModulos.map((inv, index) => (
-          <div key={index} className="flex justify-around items-center my-1">
-            <p className="text-xs font-bold">{inv.marca}</p>
-            <p className="text-xs font-bold">{inv.qtde}</p>
-            <p className="text-xs font-bold">{inv.pot}</p>
-            <button
-              onClick={() => {
-                let arr = arrModulos;
-                arr.splice(index, 1);
-                let marcaArr = arrModulos.map((i) => i.marca);
-                let qtdeArr = arrModulos.map((i) => i.qtde);
-                let potArr = arrModulos.map((i) => i.pot);
-                let joinedMarcaArr = marcaArr.join("/");
-                let joinedQtdeArr = qtdeArr.join("/");
-                let joinedPotArr = potArr.join("/");
-                setDados({
-                  ...dados,
-                  marcaModulos: joinedMarcaArr,
-                  qtdeModulos: joinedQtdeArr,
-                  potModulos: joinedPotArr,
-                });
-                setArrModulos([...arr]);
-              }}
-              className="bg-red-500 p-1 rounded"
-            >
-              <FiDelete />
-            </button>
-          </div>
-        ))}
-      </div>
+
+      {arrModulos.length > 0 && (
+        <div className="flex flex-col mt-2 font-bold">
+          <h1 className="text-center text-[#15599a] text-xs">
+            MÓDULOS ADICIONADOS
+          </h1>
+          {arrModulos.map((inv, index) => (
+            <div key={index} className="flex justify-around items-center my-1">
+              <p className="text-xs font-bold">{inv.marca}</p>
+              <p className="text-xs font-bold">{inv.qtde}</p>
+              <p className="text-xs font-bold">{inv.pot}</p>
+              <button
+                onClick={() => {
+                  let arr = arrModulos;
+                  arr.splice(index, 1);
+                  let marcaArr = arrModulos.map((i) => i.marca);
+                  let qtdeArr = arrModulos.map((i) => i.qtde);
+                  let potArr = arrModulos.map((i) => i.pot);
+                  let joinedMarcaArr = marcaArr.join("/");
+                  let joinedQtdeArr = qtdeArr.join("/");
+                  let joinedPotArr = potArr.join("/");
+                  setDados({
+                    ...dados,
+                    marcaModulos: joinedMarcaArr,
+                    qtdeModulos: joinedQtdeArr,
+                    potModulos: joinedPotArr,
+                  });
+                  setArrModulos([...arr]);
+                }}
+                className="bg-red-500 p-1 rounded"
+              >
+                <FiDelete />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       {message && <p className="text-red-400 italic text-center">{message}</p>}
       <div className="flex w-full justify-center gap-2 flex-wrap mt-2">
         <button

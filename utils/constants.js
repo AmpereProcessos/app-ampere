@@ -13,6 +13,24 @@ export const routes = [
   "RH",
   "Almoxarifado",
 ];
+export const oemPlans = [
+  {
+    label: "MANUTENÇÃO SIMPLES",
+    value: "MANUTENÇÃO SIMPLES",
+  },
+  {
+    label: "PLANO SOL",
+    value: "PLANO SOL",
+  },
+  {
+    label: "PLANO SOL +",
+    value: "PLANO SOL +",
+  },
+  {
+    label: "INCLUSO NO CONTRATO",
+    value: "INCLUSO NO CONTRATO",
+  },
+];
 export const fileTypes = {
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
     title: "WORD",

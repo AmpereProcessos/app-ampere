@@ -163,7 +163,9 @@ export default async function handler(req, res) {
         aplicavel: project.possuioem, // checar se existe campo existente na gestao
         duracao: project.duracaooem,
         qtdeManutencoes: project.qtdemanutencoes,
+        oemConcluido: project.oemconcluido,
         diagnostico: project.diagnostico,
+        plano: project.plano,
       },
       obra: {
         laudo: project.laudo,

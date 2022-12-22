@@ -53,7 +53,7 @@ function OeM({ users }) {
           setFilteredProjects(res.data);
         });
     } else {
-      axios.post("/api/projects/oem", { greater: 0 }).then((res) => {
+      axios.get("/api/projects/oem").then((res) => {
         setProjects(res.data);
         setFilteredProjects(res.data);
       });
@@ -225,20 +225,6 @@ function OeM({ users }) {
             <p className="font-raleway font-bold text-[#fead61]">
               ({getListCumulativeModules().replace(".", ",")} modulos)
             </p>
-          )}
-          {projects.length < 1000 ? (
-            opInProgress ? (
-              <p className="text-sm italic text-[#15599a]">Carregando...</p>
-            ) : (
-              <button
-                onClick={fetchMoreProjects}
-                className="bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2"
-              >
-                CARREGAR MAIS
-              </button>
-            )
-          ) : (
-            false
           )}
         </div>
         <div className="flex flex-wrap gap-2 justify-around mt-2 items-center">

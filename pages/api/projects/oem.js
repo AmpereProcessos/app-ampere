@@ -6,6 +6,16 @@ export default async function handler(req, res) {
     let oem = await collection
       .aggregate([
         {
+          $sort: {
+            qtde: 1,
+          },
+        },
+        {
+          $match: {
+            "oem.oemConcluido": { $ne: true },
+          },
+        },
+        {
           $match: {
             $or: [
               {
@@ -23,16 +33,21 @@ export default async function handler(req, res) {
           },
         },
         {
-          $match: {
-            $or: [
-              { "medidor.data": { $gte: "2021-06-01T00:00:00.000Z" } },
-              { "medidor.data": null },
-              { "manutencaoPreventiva.status": { $ne: "REALIZADO" } },
-            ],
+          $project: {
+            _id: 1,
+            qtde: 1,
+            nomeDoContrato: 1,
+            cidade: 1,
+            "projeto.topologia": 1,
+            "obra.equipeResp": 1,
+            "obra.statusDaObra": 1,
+            "obra.saida": 1,
+            "conferencias.usinaLigada": 1,
+            sistema: 1,
+            app: 1,
+            manutencaoPreventiva: 1,
+            "medidor.data": 1,
           },
-        },
-        {
-          $limit: 50,
         },
       ])
       .toArray();

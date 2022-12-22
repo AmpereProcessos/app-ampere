@@ -17,10 +17,11 @@ import {
   MdDesignServices,
   MdOutlineBuildCircle,
   MdSentimentSatisfiedAlt,
+  MdAddIcCall,
 } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import { SiCashapp } from "react-icons/si";
-import { BsFillCalendarEventFill, BsTelephoneXFill } from "react-icons/bs";
+import { BsFillCalendarEventFill, BsFolderPlu } from "react-icons/bs";
 import { BsFolderPlus } from "react-icons/bs";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
 import { ImFolderOpen } from "react-icons/im";
@@ -214,11 +215,9 @@ function Sidebar() {
                 )
               : false}
             {credentials.accessibleRoutes.includes("InsideSales") && (
-              <Link href="/adm">
+              <Link href="/insideSales">
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
-                  <BsTelephoneXFill
-                    style={{ color: "#15599a", fontSize: "20px" }}
-                  />
+                  <MdAddIcCall style={{ color: "#15599a", fontSize: "20px" }} />
                   <p className="pl-3 text-xs text-gray-600">Inside Sales</p>
                 </a>
               </Link>

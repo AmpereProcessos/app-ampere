@@ -416,6 +416,7 @@ function ModalFormSolicitacao({
         plano: dados.planoOeM,
       }).qtdeManutencoes,
       diagnostico: undefined,
+      plano: dados.planoOeM,
     },
     obra: {
       laudo: dados.laudo ? dados.laudo : "NÃO DEFINIDO",

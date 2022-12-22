@@ -14,8 +14,9 @@ import {
 import axios from "axios";
 import NotificationModal from "./NotificationModal";
 import { AppContext } from "../context/AppContext";
-function Header({ toggleSidebar, credentials, notificacoes, getNotificacoes }) {
-  const { setCredentials } = useContext(AppContext);
+function Header({ toggleSidebar }) {
+  const { setCredentials, credentials, notificacoes, getNotificacoes } =
+    useContext(AppContext);
   const router = useRouter();
   const [notificationIsOpen, setNotificationIsOpen] = useState(false);
   {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Select from "react-select";
@@ -6,6 +6,7 @@ import { cidadesAtendidas, equipesTecnicas } from "../../utils/constants";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalOeM from "../../components/ModalOeM";
 import Link from "next/link";
+import { AppContext } from "../../context/AppContext";
 const statusStyles = {
   REALIZADO: {
     textColor: "text-green-500",
@@ -14,8 +15,9 @@ const statusStyles = {
     textColor: "text-red-500",
   },
 };
-function OeM({ credentials, setCredentials, users }) {
+function OeM({ users }) {
   const router = useRouter();
+  const { credentials, setCredentials } = useContext(AppContext);
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -194,30 +196,13 @@ function OeM({ credentials, setCredentials, users }) {
     });
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      if (
-        !storedCredentials.accessibleRoutes.includes("O&M") &&
-        !storedCredentials.accessibleRoutes.includes("Marketing")
-      ) {
-        router.push("/");
-      } else {
-        getProjects(storedCredentials);
-      }
+    if (
+      !credentials.accessibleRoutes.includes("O&M") &&
+      !credentials.accessibleRoutes.includes("Marketing")
+    ) {
+      router.push("/");
     } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      } else {
-        if (
-          !credentials.accessibleRoutes.includes("O&M") &&
-          !credentials.accessibleRoutes.includes("Marketing")
-        ) {
-          router.push("/");
-        } else {
-          getProjects(credentials);
-        }
-      }
+      getProjects(credentials);
     }
   }, []);
   function handleOpenModal(id) {

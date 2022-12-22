@@ -2,7 +2,8 @@ import axios from "axios";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { AppContext } from "../context/AppContext";
-function NotificationCreationBlock({ credentials, codProjeto }) {
+function NotificationCreationBlock({ codProjeto }) {
+  const { credentials, users } = useContext(AppContext);
   const [notInfo, setNotInfo] = useState({
     destinatario: null,
     remetente: credentials.nome,
@@ -11,7 +12,6 @@ function NotificationCreationBlock({ credentials, codProjeto }) {
   });
   const [destinatarioNome, setDestinatarioNome] = useState("NÃO DEFINIDO");
   const [msg, setMsg] = useState({ text: "", color: "" });
-  const { users } = useContext(AppContext);
   function notify() {
     if (validateFields()) {
       axios

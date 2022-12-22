@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { AppContext } from "../context/AppContext";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import {
   MdOutlineKeyboardArrowUp,
   MdOutlineKeyboardArrowDown,
 } from "react-icons/md";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import Logo from "../utils/10mega.png";
-import Image from "next/image";
 import "react-circular-progressbar/dist/styles.css";
 import {
   AreaChart,
@@ -72,7 +73,8 @@ const routes = [
   },
 ];
 
-function Home({ credentials, setCredentials }) {
+function Home() {
+  const { credentials, setCredentials } = useContext(AppContext);
   const router = useRouter();
   const [totalPeakPot, setTotalPeakPot] = useState(0);
   const [selectedYear, setSelectedYear] = useState();

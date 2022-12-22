@@ -1,13 +1,12 @@
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import axios from "axios";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
-import ModalComercial from "../../components/ModalComercial";
-// casa em construção (Tais)
-import { useRouter } from "next/router";
-import { statusLiberacao } from "../../utils/constants";
-import Link from "next/link";
 import { AppContext } from "../../context/AppContext";
+import ModalComercial from "../../components/ModalComercial";
+import { statusLiberacao } from "../../utils/constants";
 const statusStyles = {
   ASSINADO: {
     textColor: "text-green-500",
@@ -19,8 +18,9 @@ const statusStyles = {
     textColor: "text-yellow-500",
   },
 };
-function Comercial({ credentials, setCredentials, users }) {
+function Comercial({ users }) {
   const router = useRouter();
+  const { credentials, setCredentials } = useContext(AppContext);
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
@@ -125,30 +125,13 @@ function Comercial({ credentials, setCredentials, users }) {
     }
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      if (
-        !storedCredentials.accessibleRoutes.includes("PPS") &&
-        !storedCredentials.accessibleRoutes.includes("Marketing")
-      ) {
-        router.push("/");
-      } else {
-        getProjects(storedCredentials);
-      }
+    if (
+      !credentials.accessibleRoutes.includes("PPS") &&
+      !credentials.accessibleRoutes.includes("Marketing")
+    ) {
+      router.push("/");
     } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      } else {
-        if (
-          !credentials.accessibleRoutes.includes("PPS") &&
-          !credentials.accessibleRoutes.includes("Marketing")
-        ) {
-          router.push("/");
-        } else {
-          getProjects(credentials);
-        }
-      }
+      getProjects(credentials);
     }
   }, []);
   function handleUpdates(id) {

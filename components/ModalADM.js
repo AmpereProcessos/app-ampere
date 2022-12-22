@@ -159,7 +159,6 @@ function ModalADM({
                 </span>
                 <NotificationCreationBlock
                   codProjeto={project.qtde}
-                  usuarios={users}
                   credentials={credentials}
                 />
               </div>

@@ -888,8 +888,8 @@ function Formulario({ info }) {
                     label={"QUAL PLANO DE O&M?"}
                     options={[
                       {
-                        label: "MANUTENÇÃO SIMLES",
-                        value: "MANUTENÇÃO SIMLES",
+                        label: "MANUTENÇÃO SIMPLES",
+                        value: "MANUTENÇÃO SIMPLES",
                       },
                       {
                         label: "PLANO SOL",

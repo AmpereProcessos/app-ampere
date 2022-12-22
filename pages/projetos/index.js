@@ -1,7 +1,8 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import axios from "axios";
+import dayjs from "dayjs";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalProjetos from "../../components/ModalProjetos";
@@ -10,9 +11,10 @@ import {
   cidadesAtendidas,
   vendedores,
 } from "../../utils/constants";
-import dayjs from "dayjs";
-function Projetos({ credentials, setCredentials }) {
+import { AppContext } from "../../context/AppContext";
+function Projetos() {
   const router = useRouter();
+  const { credentials, setCredentials } = useContext(AppContext);
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
@@ -154,30 +156,13 @@ function Projetos({ credentials, setCredentials }) {
     return totalSum.toFixed(2);
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      if (
-        !storedCredentials.accessibleRoutes.includes("Projetos") &&
-        !storedCredentials.accessibleRoutes.includes("Pós-Venda")
-      ) {
-        router.push("/");
-      } else {
-        getProjects(storedCredentials);
-      }
+    if (
+      !credentials.accessibleRoutes.includes("Projetos") &&
+      !credentials.accessibleRoutes.includes("Pós-Venda")
+    ) {
+      router.push("/");
     } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      } else {
-        if (
-          !credentials.accessibleRoutes.includes("Projetos") &&
-          !credentials.accessibleRoutes.includes("Pós-Venda")
-        ) {
-          router.push("/");
-        } else {
-          getProjects(credentials);
-        }
-      }
+      getProjects(credentials);
     }
   }, []);
   function getBorderColorByParecer(date1, date2) {

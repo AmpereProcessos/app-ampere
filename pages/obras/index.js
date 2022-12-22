@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -10,8 +10,10 @@ import {
   statusLiberacao,
 } from "../../utils/constants";
 import dayjs from "dayjs";
-function Obras({ credentials, setCredentials }) {
+import { AppContext } from "../../context/AppContext";
+function Obras() {
   const router = useRouter();
+  const { credentials, setCredentials } = useContext(AppContext);
   const [projects, setProjects] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -195,30 +197,13 @@ function Obras({ credentials, setCredentials }) {
     return totalSum.toFixed(2);
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      if (
-        !storedCredentials.accessibleRoutes.includes("Obras") &&
-        !storedCredentials.accessibleRoutes.includes("Marketing")
-      ) {
-        router.push("/");
-      } else {
-        getProjects(storedCredentials);
-      }
+    if (
+      !credentials.accessibleRoutes.includes("Obras") &&
+      !credentials.accessibleRoutes.includes("Marketing")
+    ) {
+      router.push("/");
     } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      } else {
-        if (
-          !credentials.accessibleRoutes.includes("Obras") &&
-          !credentials.accessibleRoutes.includes("Marketing")
-        ) {
-          router.push("/");
-        } else {
-          getProjects(credentials);
-        }
-      }
+      getProjects(credentials);
     }
   }, []);
   function getBorderColorByParecer(date1, date2, statusObra) {

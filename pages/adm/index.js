@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
@@ -7,9 +7,10 @@ import ModalADM from "../../components/ModalADM";
 import DateInput from "../../components/DateInput";
 import { equipesTecnicas, statusLiberacao } from "../../utils/constants";
 import Link from "next/link";
-function Administracao({ credentials, setCredentials, users }) {
-  var editor;
+import { AppContext } from "../../context/AppContext";
+function Administracao() {
   const router = useRouter();
+  const { credentials, setCredentials } = useContext(AppContext);
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filters, setFilters] = useState({
@@ -79,30 +80,13 @@ function Administracao({ credentials, setCredentials, users }) {
     }
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      if (
-        !storedCredentials.accessibleRoutes.includes("ADM") &&
-        !storedCredentials.accessibleRoutes.includes("Marketing")
-      ) {
-        router.push("/");
-      } else {
-        getProjects();
-      }
+    if (
+      !credentials.accessibleRoutes.includes("ADM") &&
+      !credentials.accessibleRoutes.includes("Marketing")
+    ) {
+      router.push("/");
     } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      } else {
-        if (
-          !credentials.accessibleRoutes.includes("ADM") &&
-          !credentials.accessibleRoutes.includes("Marketing")
-        ) {
-          router.push("/");
-        } else {
-          getProjects();
-        }
-      }
+      getProjects();
     }
   }, []);
   function handleUpdates(id) {
@@ -346,7 +330,6 @@ function Administracao({ credentials, setCredentials, users }) {
       )}
       {modalIsOpen && (
         <ModalADM
-          users={users}
           handleUpdates={handleUpdates}
           project={modalProject}
           editor={

@@ -983,8 +983,8 @@ function ModalSolicitacaoVendas({
                       editable={editable}
                       options={[
                         {
-                          label: "MANUTENÇÃO SIMLES",
-                          value: "MANUTENÇÃO SIMLES",
+                          label: "MANUTENÇÃO SIMPLES",
+                          value: "MANUTENÇÃO SIMPLES",
                         },
                         {
                           label: "PLANO SOL",

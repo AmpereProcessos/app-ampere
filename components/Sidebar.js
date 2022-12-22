@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { RiDashboardFill } from "react-icons/ri";
 import { TbRecharging } from "react-icons/tb";
 import {
@@ -29,7 +29,9 @@ const style = {
   heigth: "calc(100% - 350px)",
 };
 import { useRouter } from "next/router";
-function Sidebar({ credentials }) {
+import { AppContext } from "../context/AppContext";
+function Sidebar() {
+  const { credentials } = useContext(AppContext);
   const router = useRouter();
   if (
     router.pathname.includes("pdf") ||

@@ -1,12 +1,14 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import PosVendaCard from "../../components/PosVendaCard";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { cidadesAtendidas, vendedores } from "../../utils/constants";
-function Posvenda({ credentials, setCredentials }) {
+import { AppContext } from "../../context/AppContext";
+function Posvenda() {
   const router = useRouter();
+  const { credentials, setCredentials } = useContext(AppContext);
   const [stats, setStats] = useState({
     assinatura: {
       confeccionar: 0,
@@ -156,30 +158,13 @@ function Posvenda({ credentials, setCredentials }) {
     setFilteredProjects([...arr, ...nulls]);
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      if (
-        !storedCredentials.accessibleRoutes.includes("Marketing") &&
-        !storedCredentials.accessibleRoutes.includes("Pós-Venda")
-      ) {
-        router.push("/");
-      } else {
-        getProjects();
-      }
+    if (
+      !credentials.accessibleRoutes.includes("Marketing") &&
+      !credentials.accessibleRoutes.includes("Pós-Venda")
+    ) {
+      router.push("/");
     } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      } else {
-        if (
-          !credentials.accessibleRoutes.includes("Marketing") &&
-          !credentials.accessibleRoutes.includes("Pós-Venda")
-        ) {
-          router.push("/");
-        } else {
-          getProjects();
-        }
-      }
+      getProjects();
     }
   }, []);
   return (

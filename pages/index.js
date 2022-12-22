@@ -289,7 +289,7 @@ function Home() {
               {((10000 - totalPeakPot) / 8).toFixed(0).replace(".", ",")}{" "}
               contratos para os{" "}
               <strong className="text-[#fead41]">10 MEGA !</strong> */}
-              Faltam apenas 4 contratos para os{" "}
+              Faltam apenas 3 contratos para os{" "}
               <strong className="text-[#fead41]">10 MEGA !</strong>
             </>
           ) : (

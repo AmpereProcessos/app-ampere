@@ -272,9 +272,12 @@ function Home() {
         <div className="w-full h-[36px] border border-[#15599a]">
           <div
             style={{
-              width: `${Number((totalPeakPot * 100) / 10000).toFixed(2)}%`,
-              background:
-                "linear-gradient(90deg, rgba(21,89,154,1) 20%, rgba(1,127,247,1) 90%)",
+              width: `99.7%`, // `${Number((totalPeakPot * 100) / 10000).toFixed(2)}%`
+              background: `${
+                9999 > 10000
+                  ? "linear-gradient(90deg, rgba(254,199,97,1) 29%, rgba(226,141,59,1) 100%)"
+                  : "linear-gradient(90deg, rgba(21,89,154,1) 20%, rgba(1,127,247,1) 90%)"
+              }`,
             }}
             className={`h-full col-span-8`}
           ></div>

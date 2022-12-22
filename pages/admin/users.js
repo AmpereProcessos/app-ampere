@@ -212,9 +212,9 @@ export default function UsersControl({ credentials, setCredentials }) {
               className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
               onChange={(e) => handlePositionChange(e.target.value)}
             >
-              {positions.map((position) => (
+              {positions.map((position, index) => (
                 <option
-                  key={position}
+                  key={index}
                   value={position}
                   className="pl-4 ml-4 text-black"
                 >
@@ -259,9 +259,9 @@ export default function UsersControl({ credentials, setCredentials }) {
                   setOptions({ ...options, vendedor: e.target.value })
                 }
               >
-                {vendedores.map((vendedor) => (
+                {vendedores.map((vendedor, index) => (
                   <option
-                    key={vendedor}
+                    key={index}
                     value={vendedor.nome}
                     className="pl-4 ml-4 text-black"
                   >
@@ -284,8 +284,12 @@ export default function UsersControl({ credentials, setCredentials }) {
                   setOptions({ ...options, regional: e.target.value })
                 }
               >
-                {regionais.map((regional) => (
-                  <option value={regional} className="pl-4 ml-4 text-black">
+                {regionais.map((regional, index) => (
+                  <option
+                    key={index}
+                    value={regional}
+                    className="pl-4 ml-4 text-black"
+                  >
                     {regional}
                   </option>
                 ))}

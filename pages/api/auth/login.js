@@ -6,7 +6,6 @@ export default async function handler(req, res) {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("users");
     let credential = await collection.findOne({ email: email });
-    console.log(credential);
     try {
       if (!credential) {
         throw "Usuário inexistente";

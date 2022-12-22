@@ -167,7 +167,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
           </button>
         </Link>
       </div>
-      <div className="w-full border flex flex-col h-[550px]  border-gray-200 bg-[#fff] shadow-xl p-4">
+      <div className="w-full border flex flex-col h-[720px] lg:h-[550px]  border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex h-[10%] flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             Chamados abertos ({inProgress.length})

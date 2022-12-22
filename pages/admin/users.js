@@ -2,7 +2,12 @@ import { TiDelete } from "react-icons/ti";
 import { RiAddCircleFill } from "react-icons/ri";
 import { AiFillEyeInvisible } from "react-icons/ai";
 import RoutesCard from "../../components/RoutesCard";
-import { acessAuth, routes } from "../../utils/constants";
+import {
+  acessAuth,
+  regionais,
+  routes,
+  vendedores,
+} from "../../utils/constants";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -18,6 +23,11 @@ export default function UsersControl({ credentials, setCredentials }) {
   const [userIsAdmin, setUserIsAdmin] = useState("N");
   const [message, setMessage] = useState("");
   const [passwordInputType, setPasswordInputType] = useState(false);
+  const [options, setOptions] = useState({
+    visualizacao: undefined,
+    vendedor: "NÃO DEFINIDO",
+    regional: "NÃO DEFINIDO",
+  });
   function resetStates() {
     setName("");
     setLogin("");
@@ -26,17 +36,38 @@ export default function UsersControl({ credentials, setCredentials }) {
     setUserRoutes(acessAuth[positions[0]].accessibleRoutes);
     setAdditionalRoutes(undefined);
     setUserIsAdmin("N");
+    setOptions({
+      visualizacao: undefined,
+      vendedor: "NÃO DEFINIDO",
+      regional: "NÃO DEFINIDO",
+    });
   }
   function checkInputs() {
     try {
       if (name.trim().length == 0) {
         setMessage("Nome não válido.");
         throw false;
-      } else if (login.trim().length == 0) {
+      }
+      if (login.trim().length == 0) {
         setMessage("Login não válido.");
         throw false;
-      } else if (password.trim().length == 0) {
+      }
+      if (password.trim().length == 0) {
         setMessage("Senha não válida.");
+        throw false;
+      }
+      if (
+        options.visualizacao == "VENDEDOR" &&
+        options.vendedor == "NÃO DEFINIDO"
+      ) {
+        setMessage("Por favor, preencha o nome do vendedor.");
+        throw false;
+      }
+      if (
+        options.visualizacao == "REGIONAL" &&
+        options.regional == "NÃO DEFINIDO"
+      ) {
+        setMessage("Por favor, preencha a regional.");
         throw false;
       } else {
         throw true;
@@ -53,6 +84,14 @@ export default function UsersControl({ credentials, setCredentials }) {
         password: password,
         accessibleRoutes: userAcessibleRoutes,
         admin: userIsAdmin == "N" ? false : true,
+        visualizacao:
+          options.visualizacao && options.visualizacao != "NORMAL"
+            ? options.visualizacao
+            : undefined,
+        regional:
+          options.visualizacao == "REGIONAL" ? options.regional : undefined,
+        vendedor:
+          options.visualizacao == "VENDEDOR" ? options.vendedor : undefined,
       };
       axios.post("/api/auth/user", obj).then((res) => {
         setMessage(res.data);
@@ -99,7 +138,19 @@ export default function UsersControl({ credentials, setCredentials }) {
     admin: userIsAdmin == "N" ? false : true,
   });*/
   }
-  console.log(credentials);
+  console.log({
+    nome: name,
+    email: login,
+    password: password,
+    accessibleRoutes: userAcessibleRoutes,
+    admin: userIsAdmin == "N" ? false : true,
+    visualizacao:
+      options.visualizacao && options.visualizacao != "NORMAL"
+        ? options.visualizacao
+        : undefined,
+    regional: options.visualizacao == "REGIONAL" ? options.regional : undefined,
+    vendedor: options.visualizacao == "VENDEDOR" ? options.vendedor : undefined,
+  });
   return (
     <div className="p-6 grow bg-[#15599a]">
       <div className="grid px-24 grid-cols-3 grid-rows-2 mt-20 gap-x-4">
@@ -152,24 +203,98 @@ export default function UsersControl({ credentials, setCredentials }) {
         </div>
       )}
       <div className="grid grid-cols-5 mt-4 px-12">
-        <div className="flex flex-col col-span-1">
-          <span className="font-bold pb-4 text-white uppercase">Posição</span>
-          <select
-            defaultValue={userPosition}
-            id="underline_select"
-            className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-            onChange={(e) => handlePositionChange(e.target.value)}
-          >
-            {positions.map((position) => (
-              <option
-                key={position}
-                value={position}
-                className="pl-4 ml-4 text-black"
-              >
-                {acessAuth[position].label}
+        <div className="flex flex-col col-span-1 gap-2">
+          <div className="flex flex-col">
+            <span className="font-bold pb-4 text-white uppercase">Posição</span>
+            <select
+              defaultValue={userPosition}
+              id="underline_select"
+              className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+              onChange={(e) => handlePositionChange(e.target.value)}
+            >
+              {positions.map((position) => (
+                <option
+                  key={position}
+                  value={position}
+                  className="pl-4 ml-4 text-black"
+                >
+                  {acessAuth[position].label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-bold pb-4 text-white uppercase">
+              VISUALIZAÇÃO
+            </span>
+            <select
+              value={options.visualizacao}
+              id="underline_select"
+              className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+              onChange={(e) =>
+                setOptions({ ...options, visualizacao: e.target.value })
+              }
+            >
+              <option value={undefined} className="pl-4 ml-4 text-black">
+                NORMAL
               </option>
-            ))}
-          </select>
+              <option value={"REGIONAL"} className="pl-4 ml-4 text-black">
+                REGIONAL
+              </option>
+              <option value={"VENDEDOR"} className="pl-4 ml-4 text-black">
+                VENDEDOR
+              </option>
+            </select>
+          </div>
+          {options.visualizacao == "VENDEDOR" && (
+            <div className="flex flex-col">
+              <span className="font-bold pb-4 text-white uppercase">
+                NOME DO VENDEDOR
+              </span>
+              <select
+                value={options.vendedor}
+                id="underline_select"
+                className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                onChange={(e) =>
+                  setOptions({ ...options, vendedor: e.target.value })
+                }
+              >
+                {vendedores.map((vendedor) => (
+                  <option
+                    key={vendedor}
+                    value={vendedor.nome}
+                    className="pl-4 ml-4 text-black"
+                  >
+                    {vendedor.nome}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          {options.visualizacao == "REGIONAL" && (
+            <div className="flex flex-col">
+              <span className="font-bold pb-4 text-white uppercase">
+                REGIONAL
+              </span>
+              <select
+                value={options.regional}
+                id="underline_select"
+                className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                onChange={(e) =>
+                  setOptions({ ...options, regional: e.target.value })
+                }
+              >
+                {regionais.map((regional) => (
+                  <option value={regional} className="pl-4 ml-4 text-black">
+                    {regional}
+                  </option>
+                ))}
+                <option value={"NÃO DEFINIDO"} className="pl-4 ml-4 text-black">
+                  {"NÃO DEFINIDO"}
+                </option>
+              </select>
+            </div>
+          )}
         </div>
         <div className="flex flex-col px-12 col-span-4">
           <span className="text-center pb-4 font-bold text-white uppercase">

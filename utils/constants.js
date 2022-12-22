@@ -616,7 +616,7 @@ export const projetistas = [
     cod: 0,
   },
 ];
-export const listaProjetista = [];
+export const regionais = ["REGIONAL UBERLÂNDIA", "REGIONAL ITUIUTABA"];
 export const acessAuth = {
   diretorExecutivo: {
     label: "Diretor(a) Executivo",
@@ -633,6 +633,7 @@ export const acessAuth = {
       "Financeiro",
       "ADM",
       "RH",
+      "Almoxarifado",
     ],
     tiers: false,
   },

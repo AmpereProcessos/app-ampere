@@ -1329,8 +1329,12 @@ export const equipesTecnicas = [
     value: "EQUIPE 14 - GERSON",
   },
   {
-    label: "EQUIPE 15 - MARCOS B.",
+    label: "EQUIPE 15 - MARCUS B. (INACIOLANDIA)",
     value: "EQUIPE 15 - MARCOS B.",
+  },
+  {
+    label: "EQUIPE 16 - JOÃO FILHO",
+    value: "EQUIPE 16 - JOÃO FILHO",
   },
   {
     label: "NÃO DEFINIDO",

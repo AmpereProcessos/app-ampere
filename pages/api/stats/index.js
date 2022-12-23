@@ -9,6 +9,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "contrato.status": "ASSINADO",
+            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
           },
         },
         {
@@ -26,6 +27,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "contrato.status": "ASSINADO",
+            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
             "obra.saida": { $ne: "-" },
           },
         },
@@ -58,6 +60,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
+            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
             "parecer.statusDoParecerDeAcesso": { $ne: "CANCELADO" },
             "obra.saida": { $ne: "-" },
             "obra.statusDaObra": { $ne: "OBRA CANCELADA" },
@@ -114,6 +117,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "contrato.status": "ASSINADO",
+            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
             "obra.statusDaObra": { $ne: "OBRA CANCELADA" },
           },
         },

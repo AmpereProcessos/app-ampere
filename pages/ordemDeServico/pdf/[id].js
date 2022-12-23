@@ -52,13 +52,15 @@ function OSInfo({ info, index }) {
           servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
         />
       )}
-      {osInfo.ordensDeServico[index].categoria == "MANUTENÇÃO CORRETIVA" && (
-        <OSCorretivaPDF
-          info={osInfo}
-          observacoesOS={osInfo.ordensDeServico[index].observacoes}
-          servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
-        />
-      )}
+      {osInfo.ordensDeServico[index].categoria == "MANUTENÇÃO CORRETIVA" ||
+        (osInfo.ordensDeServico[index].categoria == "OUTROS" && (
+          <OSCorretivaPDF
+            info={osInfo}
+            categoria={osInfo.ordensDeServico[index].categoria}
+            observacoesOS={osInfo.ordensDeServico[index].observacoes}
+            servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
+          />
+        ))}
       {/*<ServiceOrderPDF
         info={osInfo}
         openingDate={osInfo.ordensDeServico[index].dataDeAbertura}

@@ -10,6 +10,7 @@ export default async function handler(req, res) {
           $match: {
             "contrato.status": "ASSINADO",
             "contrato.dataAssinatura": { $ne: "-" },
+            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
           },
         },
         {

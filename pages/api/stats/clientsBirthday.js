@@ -9,6 +9,7 @@ export default async function handler(req, res) {
         {
           $match: {
             dataNascimento: { $ne: "-" },
+            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
           },
         },
         {

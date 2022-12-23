@@ -197,6 +197,10 @@ function OSCreationBlock({
                     value: "MANUTENÇÃO CORRETIVA",
                   },
                   {
+                    label: "OUTROS",
+                    value: "OUTROS",
+                  },
+                  {
                     label: "NÃO DEFINIDO",
                     value: "NÃO DEFINIDO",
                   },

@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import Assinatura from "../utils/assinatura.jpg";
 import Logo from "../utils/whitelogo.png";
-function OSCorretivaPDF({ info, observacoesOS, servicoExecutado }) {
+function OSCorretivaPDF({ info, observacoesOS, servicoExecutado, categoria }) {
   return (
     <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
       <h1 className="text-center font-bold text-xl mb-6">
-        ORDEM DE SERVIÇO CORRETIVA
+        ORDEM DE SERVIÇO - {categoria}
       </h1>
       <div className="grid grid-cols-2">
         <div className="flex justify-between items-center">

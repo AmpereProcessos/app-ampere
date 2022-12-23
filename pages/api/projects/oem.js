@@ -44,6 +44,7 @@ export default async function handler(req, res) {
             "obra.saida": 1,
             "conferencias.usinaLigada": 1,
             "oem.plano": 1,
+            tipoDeServico: 1,
             sistema: 1,
             app: 1,
             manutencaoPreventiva: 1,

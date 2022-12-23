@@ -166,6 +166,7 @@ export default async function handler(req, res) {
         oemConcluido: project.oemconcluido,
         diagnostico: project.diagnostico,
         plano: project.plano,
+        value: project.valorOem,
       },
       obra: {
         laudo: project.laudo,

@@ -5,6 +5,7 @@ import {
   credores,
   tiposDeServico,
   equipesTecnicas,
+  oemPlans,
 } from "../../utils/constants";
 import NumberInput from "../../components/NumberInput";
 import SelectInput from "../../components/SelectInput";
@@ -288,6 +289,14 @@ function NovoProjeto({ credentials, setCredentials }) {
     medidor: {
       data: undefined, // formatar como data
       status: "NÃO DEFINIDO",
+    },
+    oem: {
+      aplicavel: false, // checar se existe campo existente na gestao
+      duracao: null,
+      qtdeManutencoes: null,
+      oemConcluido: null,
+      diagnostico: null,
+      plano: "NÃO DEFINIDO",
     },
     obra: {
       laudo: "NÃO DEFINIDO",
@@ -605,6 +614,7 @@ function NovoProjeto({ credentials, setCredentials }) {
       addProject();
     }
   }
+  console.log(infoHolder);
   return (
     <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
       <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
@@ -875,34 +885,73 @@ function NovoProjeto({ credentials, setCredentials }) {
               </label>
             </div>
             {infoHolder.oem?.aplicavel && (
-              <NumberInput
-                label={"Duração O&M (anos)"}
-                value={infoHolder.oem?.duracao ? infoHolder.oem?.duracao : 0}
-                editable={true}
-                handleChange={(value) =>
-                  setInfo({
-                    ...infoHolder,
-                    oem: { ...infoHolder.oem, duracao: Number(value) },
-                  })
-                }
-              />
-            )}
-            {infoHolder.oem?.aplicavel && (
-              <NumberInput
-                label={"QTDE de manutenções"}
-                value={
-                  infoHolder.oem?.qtdeManutencoes
-                    ? infoHolder.oem?.qtdeManutencoes
-                    : 0
-                }
-                editable={true}
-                handleChange={(value) =>
-                  setInfo({
-                    ...infoHolder,
-                    oem: { ...infoHolder.oem, qtdeManutencoes: Number(value) },
-                  })
-                }
-              />
+              <>
+                <NumberInput
+                  label={"Duração O&M (anos)"}
+                  value={infoHolder.oem?.duracao ? infoHolder.oem?.duracao : 0}
+                  editable={true}
+                  handleChange={(value) =>
+                    setInfo({
+                      ...infoHolder,
+                      oem: { ...infoHolder.oem, duracao: Number(value) },
+                    })
+                  }
+                />
+                <NumberInput
+                  label={"QTDE de manutenções"}
+                  value={
+                    infoHolder.oem?.qtdeManutencoes
+                      ? infoHolder.oem?.qtdeManutencoes
+                      : 0
+                  }
+                  editable={true}
+                  handleChange={(value) =>
+                    setInfo({
+                      ...infoHolder,
+                      oem: {
+                        ...infoHolder.oem,
+                        qtdeManutencoes: Number(value),
+                      },
+                    })
+                  }
+                />
+                <SelectInput
+                  label={"PLANO DE O&M"}
+                  editable={true}
+                  value={
+                    infoHolder.oem?.plano
+                      ? infoHolder.oem.plano
+                      : "NÃO DEFINIDO"
+                  }
+                  options={[
+                    ...oemPlans.map((plan) => plan),
+                    { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  ]}
+                  handleChange={(value) => {
+                    setInfo({
+                      ...infoHolder,
+                      oem: {
+                        ...infoHolder.oem,
+                        plano: value,
+                      },
+                    });
+                  }}
+                />
+                <NumberInput
+                  label={"VALOR DO PLANO"}
+                  editable={true}
+                  value={infoHolder.oem?.valor}
+                  handleChange={(value) =>
+                    setInfo({
+                      ...infoHolder,
+                      oem: {
+                        ...infoHolder.oem,
+                        valor: Number(value),
+                      },
+                    })
+                  }
+                />
+              </>
             )}
           </div>
         </div>
@@ -2529,7 +2578,7 @@ function NovoProjeto({ credentials, setCredentials }) {
                     : infoHolder.obra?.equipeResp
                   : "NÃO DEFINIDO"
               }
-              options={equipesTecnicas.map(equipe => equipe)}
+              options={equipesTecnicas.map((equipe) => equipe)}
               handleChange={(value) => {
                 setInfo({
                   ...infoHolder,

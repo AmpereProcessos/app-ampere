@@ -283,7 +283,7 @@ function Home() {
           ></div>
         </div>
         <p className="text-center font-bold text-[#15599a] text-xl">
-          {totalPeakPot < 10000 ? (
+          {9999 < 10000 ? (
             <>
               {/** Faltam apenas{" "}
               {((10000 - totalPeakPot) / 8).toFixed(0).replace(".", ",")}{" "}

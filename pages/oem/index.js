@@ -8,6 +8,7 @@ import {
   oemPlans,
 } from "../../utils/constants";
 import { AiOutlineSearch } from "react-icons/ai";
+import { MdLightMode } from "react-icons/md";
 import ModalOeM from "../../components/ModalOeM";
 import Link from "next/link";
 import { AppContext } from "../../context/AppContext";
@@ -31,6 +32,7 @@ function OeM({ users }) {
     equipResp: [],
     obraStatusFilter: [],
     planoOeM: [],
+    clienteOeM: false,
     manutencaoPendente: false,
     manutencaoAtrasada: false,
     limparAteDezembro: false,
@@ -106,6 +108,12 @@ function OeM({ users }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.planoOeM.includes(call.oem?.plano)
+      );
+    }
+    if (filters.clienteOeM) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (project) => project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO"
       );
     }
     if (filters.appPendente) {
@@ -316,6 +324,19 @@ function OeM({ users }) {
             onClick={() =>
               setFilters({
                 ...filters,
+                clienteOeM: !filters.clienteOeM,
+              })
+            }
+            className={`${
+              filters.clienteOeM ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            CLIENTES O&M
+          </div>
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
                 appPendente: !filters.appPendente,
               })
             }
@@ -477,6 +498,15 @@ function OeM({ users }) {
           >
             <div className="flex items-center justify-between">
               <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
+              {console.log(project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO")}
+              {project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
+                <MdLightMode
+                  style={{
+                    fontSize: "20px",
+                    color: "#15599a",
+                  }}
+                />
+              )}
               <p className="text-xs text-[#15599a]">#{project.qtde}</p>
             </div>
             <div className="flex items-center justify-between">

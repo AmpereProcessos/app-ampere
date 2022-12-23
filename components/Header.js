@@ -7,6 +7,7 @@ import WhiteLogo from "../utils/felizNatalHD.png";
 import AlertVolts from "../utils/alertVolts-svg.svg";
 import SleepVolts from "../utils/sleepVolts-svg.svg";
 import { BiLogIn } from "react-icons/bi";
+import { TbPresentationAnalytics } from "react-icons/tb";
 import {
   MdNotificationsNone,
   MdOutlineNotificationsActive,
@@ -90,6 +91,16 @@ function Header({ toggleSidebar }) {
             </p>
           )}
         </div>
+        {credentials.manager && (
+          <TbPresentationAnalytics
+            style={{
+              fontSize: "25px",
+              marginLeft: "10px",
+              cursor: "pointer",
+              color: "#fead61",
+            }}
+          />
+        )}
       </div>
       {notificationIsOpen && (
         <NotificationModal

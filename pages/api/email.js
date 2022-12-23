@@ -10,20 +10,18 @@ export default async function handler(req, res) {
     };
     console.log(msg);
     try {
-      nodemailer
+      let data = await nodemailer
         .createTransport({
           service: "gmail",
           auth: {
             user: "ampereprocessos@gmail.com",
             pass: "ccyecqdvssayztwe",
           },
-          port: 465,
+          port: 587,
           host: "smtp.gmail.com",
         })
-        .sendMail(msg)
-        .then((res) => {
-          console.log(res);
-        });
+        .sendMail(msg);
+      console.log(data);
       res.json("FOI");
     } catch (error) {
       res.json(error);

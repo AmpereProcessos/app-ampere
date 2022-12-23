@@ -33,7 +33,7 @@ function formatPhone(value) {
   value = value.replace(/(\d)(\d{4})$/, "$1-$2");
   return value;
 }
-function NovoLead({ setModalIsOpen }) {
+function NovoLead({ setModalIsOpen, getLeads }) {
   const [msg, setMsg] = useState({ text: "", color: "" });
   const [info, setInfo] = useState({
     telefone: "",
@@ -104,7 +104,7 @@ function NovoLead({ setModalIsOpen }) {
           ...info,
           responsavel: "DEVISSON LIMA",
         })
-        .then((res) => console.log(res));
+        .then((res) => getLeads());
     }
   }
   console.log(info);

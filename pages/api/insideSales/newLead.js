@@ -6,7 +6,6 @@ export default async function handler(req, res) {
   try {
     let arr = await collection.insertOne({
       ...req.body,
-      dataEnvio: new Date().toISOString(),
     });
     console.log(arr);
     res.json(arr);

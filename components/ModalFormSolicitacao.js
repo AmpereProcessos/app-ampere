@@ -488,28 +488,30 @@ function ModalFormSolicitacao({
       visitaTecnica: dados.linksVisita ? dados.linksVisita : undefined,
     },
   };
+  async function sendEmail() {
+    try {
+      await axios.post("/api/email", {
+        emailTo: "amperecontasareceber@gmail.com", // amperecontasareceber@gmail.com
+        subject: "SOLICITAÇÃO DE CONTRATO",
+        message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Desde já agradeço, Volts.`,
+        copy: ["ampereenergiascomercial@gmail.com"],
+      });
+
+      setEmailMsg({ text: "Email enviado", color: "text-green-500" });
+    } catch (error) {
+      setEmailMsg({
+        text: `Houve um erro no envio do email - ${error}`,
+        color: "text-red-500",
+      });
+    }
+  }
   async function addProject() {
     await axios.put("/api/solicitacoes/contrato", {
       _id: solicitacao._id,
       aprovacao: true,
       dataAprovacao: new Date().toISOString(),
     });
-    axios
-      .post("/api/email", {
-        emailTo: "amperecontasareceber@gmail.com",
-        subject: "SOLICITAÇÃO DE CONTRATO",
-        message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Desde já agradeço, Volts.`,
-        copy: ["ampereenergiascomercial@gmail.com"],
-      })
-      .then((res) =>
-        setEmailMsg({ text: "Email enviado", color: "text-green-500" })
-      )
-      .catch((err) =>
-        setEmailMsg({
-          text: `Houve um erro no envio do email - ${err}`,
-          color: "text-red-500",
-        })
-      );
+    sendEmail();
     axios.post("/api/projects/add", insertObj).then((res) => {
       setCreationMsg({ text: "Projeto adicionado!", color: "text-green-500" });
     });

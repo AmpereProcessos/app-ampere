@@ -744,6 +744,7 @@ function ModalOeM({
                     ? reportsByPlan[infoHolder.oem.plano].relatorios.map(
                         (relatorio, index) => (
                           <DateInput
+                            key={index}
                             label={`RELATÓRIO ${index + 1}`}
                             editable={editor}
                             value={

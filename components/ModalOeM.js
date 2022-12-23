@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   fornecedores,
   oemPlans,
+  reportsByPlan,
   tiposDeEstruturas,
   vendedores,
 } from "../utils/constants";
@@ -146,6 +147,8 @@ function ModalOeM({
     });
   }
   console.log(infoHolder.oem);
+  console.log(infoHolder.relatorios);
+  console.log(changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -718,7 +721,7 @@ function ModalOeM({
                     label={"PLANO DE O&M"}
                     editable={false}
                     value={
-                      infoHolder.oem.plano
+                      infoHolder.oem?.plano
                         ? infoHolder.oem.plano
                         : "NÃO DEFINIDO"
                     }
@@ -737,6 +740,50 @@ function ModalOeM({
                       });
                     }}
                   />
+                  {infoHolder.oem?.plano
+                    ? reportsByPlan[infoHolder.oem.plano].relatorios.map(
+                        (relatorio, index) => (
+                          <DateInput
+                            label={`RELATÓRIO ${index + 1}`}
+                            editable={editor}
+                            value={
+                              infoHolder.relatorios[relatorio]?.data !=
+                                undefined &&
+                              infoHolder.relatorios[relatorio]?.data != "-"
+                                ? new Date(
+                                    infoHolder.relatorios[relatorio].data
+                                  )
+                                    .toISOString()
+                                    .slice(0, 10)
+                                : 0
+                            }
+                            handleChange={(value) => {
+                              setChanges({
+                                ...changes,
+                                [`relatorios.${relatorio}.data`]: new Date(
+                                  value
+                                ).toISOString(),
+                                [`relatorios.${relatorio}.status`]: "REALIZADO",
+                              });
+                              setInfo({
+                                ...infoHolder,
+                                relatorios: {
+                                  ...infoHolder.relatorios,
+                                  [`${relatorio}`]: {
+                                    data: new Date(value).toISOString(),
+                                    status: "REALIZADO",
+                                  },
+                                },
+                              });
+                            }}
+                          />
+                        )
+                      )
+                    : false}
+                  {/**{console.log(
+                    reportsByPlan["PLANO SOL"]?.relatorios,
+                    infoHolder.oem?.plano
+                  )}
                   <DateInput
                     label={"RELATÓRIO 1"}
                     editable={editor}
@@ -860,7 +907,8 @@ function ModalOeM({
                         },
                       });
                     }}
-                  />
+                  /> */}
+
                   <DateInput
                     label={"MANUTENÇÃO PREVENTIVA"}
                     editable={editor}
@@ -898,7 +946,7 @@ function ModalOeM({
                       <input
                         disabled={!editor}
                         checked={
-                          infoHolder.oem.oemConcluido == true ? true : false
+                          infoHolder.oem?.oemConcluido == true ? true : false
                         }
                         onChange={(e) => {
                           setChanges({
@@ -918,7 +966,7 @@ function ModalOeM({
                         id="oemConcluido"
                       />
                       <label className="ml-2" htmlFor="oemConcluido">
-                        {infoHolder.oem.oemConcluido ? "SIM" : "NÃO"}
+                        {infoHolder.oem?.oemConcluido ? "SIM" : "NÃO"}
                       </label>
                     </div>
                   </div>

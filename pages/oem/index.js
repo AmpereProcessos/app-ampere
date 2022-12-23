@@ -2,7 +2,11 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Select from "react-select";
-import { cidadesAtendidas, equipesTecnicas } from "../../utils/constants";
+import {
+  cidadesAtendidas,
+  equipesTecnicas,
+  oemPlans,
+} from "../../utils/constants";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalOeM from "../../components/ModalOeM";
 import Link from "next/link";
@@ -26,6 +30,7 @@ function OeM({ users }) {
     cidadeFilter: [],
     equipResp: [],
     obraStatusFilter: [],
+    planoOeM: [],
     manutencaoPendente: false,
     manutencaoAtrasada: false,
     limparAteDezembro: false,
@@ -95,6 +100,12 @@ function OeM({ users }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.obraStatusFilter.includes(call.obra?.statusDaObra)
+      );
+    }
+    if (filters.planoOeM.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.planoOeM.includes(call.oem?.plano)
       );
     }
     if (filters.appPendente) {
@@ -233,6 +244,20 @@ function OeM({ users }) {
             placeholder="Digite o nome do contrato"
             value={searchFilter}
             onChange={(e) => handleSearchFilter(e.target.value)}
+          />
+          <Select
+            isMulti
+            placeholder="PLANO DE O&M"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                planoOeM: e.map((x) => x.value),
+              })
+            }
+            options={[
+              ...oemPlans.map((plano) => plano),
+              { label: "NÃO DEFINIDO", value: undefined },
+            ]}
           />
           <Select
             isMulti
@@ -487,6 +512,14 @@ function OeM({ users }) {
                   project.conferencias.usinaLigada.status != "-"
                     ? project.conferencias.usinaLigada.status
                     : "-"}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center">
+              <div className="flex flex-col items-center">
+                <span className="text-xxs text-center">PLANO O&M</span>
+                <p className="text-xs text-yellow-500 text-center">
+                  {project.oem?.plano ? project.oem.plano : "-"}
                 </p>
               </div>
             </div>

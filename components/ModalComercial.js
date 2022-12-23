@@ -10,6 +10,7 @@ import {
   tiposDeServico,
   tiposDeEstruturas,
   equipesTecnicas,
+  oemPlans,
 } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -536,28 +537,53 @@ function ModalComercial({
                     />
                   )}
                   {infoHolder.oem?.aplicavel && (
-                    <NumberInput
-                      label={"QTDE de manutenções"}
-                      value={
-                        infoHolder.oem?.qtdeManutencoes
-                          ? infoHolder.oem?.qtdeManutencoes
-                          : 0
-                      }
-                      editable={editor}
-                      handleChange={(value) => {
-                        setChanges({
-                          ...changes,
-                          "oem.qtdeManutencoes": Number(value),
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          oem: {
-                            ...infoHolder.oem,
-                            qtdeManutencoes: Number(value),
-                          },
-                        });
-                      }}
-                    />
+                    <>
+                      <NumberInput
+                        label={"QTDE de manutenções"}
+                        value={
+                          infoHolder.oem?.qtdeManutencoes
+                            ? infoHolder.oem?.qtdeManutencoes
+                            : 0
+                        }
+                        editable={editor}
+                        handleChange={(value) => {
+                          setChanges({
+                            ...changes,
+                            "oem.qtdeManutencoes": Number(value),
+                          });
+                          setInfo({
+                            ...infoHolder,
+                            oem: {
+                              ...infoHolder.oem,
+                              qtdeManutencoes: Number(value),
+                            },
+                          });
+                        }}
+                      />
+                      <SelectInput
+                        label={"PLANO DE O&M"}
+                        editable={editor}
+                        value={
+                          infoHolder.oem?.plano
+                            ? infoHolder.oem.plano
+                            : "NÃO DEFINIDO"
+                        }
+                        options={[
+                          ...oemPlans.map((plan) => plan),
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        ]}
+                        handleChange={(value) => {
+                          setChanges({ ...changes, "oem.plano": value });
+                          setInfo({
+                            ...infoHolder,
+                            oem: {
+                              ...infoHolder.oem,
+                              plano: value,
+                            },
+                          });
+                        }}
+                      />
+                    </>
                   )}
                 </div>
                 {infoHolder.linkDrive && (

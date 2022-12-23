@@ -31,6 +31,46 @@ export const oemPlans = [
     value: "INCLUSO NO CONTRATO",
   },
 ];
+export const reportsByPlan = {
+  "MANUTENÇÃO SIMPLES": {
+    relatorios: [],
+  },
+  "PLANO SOL": {
+    relatorios: [
+      "envioUm",
+      "envioDois",
+      "envioTres",
+      "envioQuatro",
+      "envioCinco",
+      "envioSeis",
+      "envioSete",
+      "envioOito",
+      "envioNove",
+      "envioDez",
+      "envioOnze",
+      "envioDoze",
+    ],
+  },
+  "PLANO SOL +": {
+    relatorios: [
+      "envioUm",
+      "envioDois",
+      "envioTres",
+      "envioQuatro",
+      "envioCinco",
+      "envioSeis",
+      "envioSete",
+      "envioOito",
+      "envioNove",
+      "envioDez",
+      "envioOnze",
+      "envioDoze",
+    ],
+  },
+  "INCLUSO NO CONTRATO": {
+    relatorios: ["envioUm", "envioDois", "envioTres", "envioQuatro"],
+  },
+};
 export const fileTypes = {
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
     title: "WORD",
@@ -1067,6 +1107,10 @@ export const credores = [
   {
     label: "SICOOB ARACOOP",
     value: "SICOOB ARACOOP",
+  },
+  {
+    label: "SICOOB",
+    value: "SICOOB",
   },
   {
     label: "NÃO DEFINIDO",

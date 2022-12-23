@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import NumberInput from "./NumberInput";
+import { credores } from "../utils/constants";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -105,6 +106,7 @@ function FormSolicitacaoOito({ dados, setDados, avancar, voltar }) {
       cpf_cnpjNF: dados.cpf_cnpj,
     });
   }
+  console.log(dados.credor);
   return (
     <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -293,52 +295,7 @@ function FormSolicitacaoOito({ dados, setDados, avancar, voltar }) {
             <SelectInput
               label={"CREDOR"}
               editable={true}
-              options={[
-                {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
-                },
-                {
-                  label: "BANCO DO BRASIL",
-                  value: "BANCO DO BRASIL",
-                },
-                {
-                  label: "BRADESCO",
-                  value: "BRADESCO",
-                },
-                {
-                  label: "BV FINANCEIRA",
-                  value: "BV FINANCEIRA",
-                },
-                {
-                  label: "CAIXA",
-                  value: "CAIXA",
-                },
-                {
-                  label: "COOPACREDI",
-                  value: "COOPACREDI",
-                },
-                {
-                  label: "CREDICAMPINA",
-                  value: "CREDICAMPINA",
-                },
-                {
-                  label: "CREDIPONTAL",
-                  value: "CREDIPONTAL",
-                },
-                {
-                  label: "SANTANDER",
-                  value: "SANTANDER",
-                },
-                {
-                  label: "SOL FACIL",
-                  value: "SOL FACIL",
-                },
-                {
-                  label: "SICOOB ARACOOP",
-                  value: "SICOOB ARACOOP",
-                },
-              ]}
+              options={credores.map((credor) => credor)}
               value={dados.credor}
               handleChange={(value) => setDados({ ...dados, credor: value })}
             />

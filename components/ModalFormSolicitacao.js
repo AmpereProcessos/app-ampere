@@ -6,6 +6,7 @@ import DateInput from "./DateInput";
 import { AiOutlineSearch, AiOutlineCheck } from "react-icons/ai";
 import {
   cidadesAtendidas,
+  credores,
   tiposDeServico,
   vendedores,
 } from "../utils/constants";
@@ -2399,52 +2400,7 @@ function ModalFormSolicitacao({
                           label={"CREDOR"}
                           value={dados.credor}
                           editable={editor}
-                          options={[
-                            {
-                              label: "NÃO DEFINIDO",
-                              value: "NÃO DEFINIDO",
-                            },
-                            {
-                              label: "BANCO DO BRASIL",
-                              value: "BANCO DO BRASIL",
-                            },
-                            {
-                              label: "BRADESCO",
-                              value: "BRADESCO",
-                            },
-                            {
-                              label: "BV FINANCEIRA",
-                              value: "BV FINANCEIRA",
-                            },
-                            {
-                              label: "CAIXA",
-                              value: "CAIXA",
-                            },
-                            {
-                              label: "COOPACREDI",
-                              value: "COOPACREDI",
-                            },
-                            {
-                              label: "CREDICAMPINA",
-                              value: "CREDICAMPINA",
-                            },
-                            {
-                              label: "CREDIPONTAL",
-                              value: "CREDIPONTAL",
-                            },
-                            {
-                              label: "SANTANDER",
-                              value: "SANTANDER",
-                            },
-                            {
-                              label: "SOL FACIL",
-                              value: "SOL FACIL",
-                            },
-                            {
-                              label: "SICOOB ARACOOP",
-                              value: "SICOOB ARACOOP",
-                            },
-                          ]}
+                          options={credores.map((credor) => credor)}
                           handleChange={(value) =>
                             setDados({ ...dados, credor: value })
                           }

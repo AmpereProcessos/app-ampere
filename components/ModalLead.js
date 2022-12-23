@@ -33,20 +33,9 @@ function formatPhone(value) {
   value = value.replace(/(\d)(\d{4})$/, "$1-$2");
   return value;
 }
-function NovoLead({ setModalIsOpen }) {
+function NovoLead({ setModalIsOpen, lead }) {
   const [msg, setMsg] = useState({ text: "", color: "" });
-  const [info, setInfo] = useState({
-    telefone: "",
-    nome: "",
-    cidade: cidadesAtendidas[0],
-    canal: "NÃO DEFINIDO",
-    campanha: "",
-    dataAquisicao: new Date(),
-    consumo: 0,
-    vendedor: "NÃO DEFINIDO",
-    dataEnvio: null,
-    codigoSVB: 0,
-  });
+  const [info, setInfo] = useState(lead);
   // console.log({
   //   ...info,
   //   dataAquisicao: dayjs(info.dataAquisicao).add(4, "h").format("DD/MM/YYYY"),

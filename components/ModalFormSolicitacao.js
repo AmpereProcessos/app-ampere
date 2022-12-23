@@ -706,7 +706,7 @@ function ModalFormSolicitacao({
     let splitPot = pot.split("/");
     let totalPot = 0;
     for (let i = 0; i < splitQtde.length; i++) {
-      totalPot = totalPot + splitQtde[i] * splitPot[i];
+      totalPot = totalPot + (splitQtde[i] * splitPot[i]) / 1000;
     }
     let summedModules = splitQtde.reduce(
       (partialSum, a) => Number(partialSum) + Number(a),

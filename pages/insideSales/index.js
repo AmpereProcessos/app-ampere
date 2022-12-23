@@ -14,7 +14,7 @@ function InsideSales() {
 
   function getLeads() {
     axios
-      .post("/api/insideSales", { responsavel: "DEVISSON LIMA" })
+      .post("/api/insideSales", { responsavel: credentials.vendedor })
       .then((res) => setLeads(res.data));
   }
   useEffect(() => {

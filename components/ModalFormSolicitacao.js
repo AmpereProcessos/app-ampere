@@ -488,6 +488,17 @@ function ModalFormSolicitacao({
       visitaTecnica: dados.linksVisita ? dados.linksVisita : undefined,
     },
   };
+  async function notifyCobrancas() {
+    try {
+      let data = await axios.post("/api/notificacoes/1", {
+        destinatario: "6353eb83ef4e1a367a877949",
+        remetente: "SISTEMA",
+        mensagem: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Desde já agradeço, Volts.`,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async function sendEmail() {
     try {
       await axios.post("/api/email", {
@@ -512,6 +523,7 @@ function ModalFormSolicitacao({
       dataAprovacao: new Date().toISOString(),
     });
     sendEmail();
+    notifyCobrancas();
     axios.post("/api/projects/add", insertObj).then((res) => {
       setCreationMsg({ text: "Projeto adicionado!", color: "text-green-500" });
     });

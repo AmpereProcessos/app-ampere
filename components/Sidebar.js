@@ -330,6 +330,22 @@ function Sidebar() {
           </div>
         </>
       )}
+      {credentials.vendedor != undefined &&
+      credentials.accessibleRoutes.includes("InsideSales") ? (
+        <>
+          <div className="mt-6">
+            <h2 className="text-xs text-gray-500">SETORES</h2>{" "}
+            <Link href="/insideSales">
+              <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <MdAddIcCall style={{ color: "#15599a", fontSize: "20px" }} />
+                <p className="pl-3 text-xs text-gray-600">Inside Sales</p>
+              </a>
+            </Link>
+          </div>
+        </>
+      ) : (
+        false
+      )}
       {credentials.accessibleRoutes != undefined &&
         credentials?.accessibleRoutes.includes("Vendas") &&
         credentials.vendedor && (

@@ -436,15 +436,20 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
+    promotores = promotores.length > 0 ? promotores : [{ nps: 0 }];
+    detratores = detratores.length > 0 ? detratores : [{ nps: 0 }];
+    consultasTotais =
+      consultasTotais.length > 0 ? consultasTotais : [{ nps: 0 }];
     let nps = (
       ((promotores[0].nps - detratores[0].nps) * 100) /
       consultasTotais[0].nps
     ).toFixed(2);
+    console.log(nps);
     return res.status(201).json({
       installedInfo,
       averageHomoData,
       suprimentosData,
-      nps,
+      nps: isNaN(nps) ? 0 : nps,
       totalPeakPot: totalPeakPot[0].potPico,
     });
   }

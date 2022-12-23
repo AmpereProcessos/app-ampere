@@ -272,7 +272,7 @@ function Home() {
         <div className="w-full h-[36px] border border-[#15599a]">
           <div
             style={{
-              width: `99.7%`, // `${totalPeakPot >10000 ? 100 :   Number((totalPeakPot * 100) / 10000).toFixed(2)}%`
+              width: `99.8%`, // `${totalPeakPot >10000 ? 100 :   Number((totalPeakPot * 100) / 10000).toFixed(2)}%`
               background: `${
                 9999 > 10000
                   ? "linear-gradient(90deg, rgba(254,199,97,1) 29%, rgba(226,141,59,1) 100%)"

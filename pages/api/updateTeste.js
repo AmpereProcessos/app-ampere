@@ -1,35 +1,35 @@
 import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-  const collection = db.collection("dados");
-  let arr = await collection.updateMany(
-    {
-      "oem.oemConcluido": { $ne: true },
-      "oem.aplicavel": { $ne: true },
-      $or: [
-        {
-          "obra.statusDaObra": {
-            $in: [
-              "AGENDADA",
-              "AGUARDANDO AGENDAMENTO",
-              "EM ANDAMENTO",
-              "CONCLUIDA",
-            ],
-          },
-        },
-        { tipoDeServico: "OPERAÇÃO E MANUTENÇÃO" },
-      ],
-    },
-    {
-      $set: {
-        "oem.aplicavel": true,
-        "oem.duracao": 1,
-        "oem.qtdeManutencoes": 1,
-        "oem.plano": "INCLUSO NO CONTRATO",
-      },
-    }
-  );
-  res.json(arr);
+  // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  // const collection = db.collection("dados");
+  // let arr = await collection.updateMany(
+  //   {
+  //     "oem.oemConcluido": { $ne: true },
+  //     "oem.aplicavel": { $ne: true },
+  //     $or: [
+  //       {
+  //         "obra.statusDaObra": {
+  //           $in: [
+  //             "AGENDADA",
+  //             "AGUARDANDO AGENDAMENTO",
+  //             "EM ANDAMENTO",
+  //             "CONCLUIDA",
+  //           ],
+  //         },
+  //       },
+  //       { tipoDeServico: "OPERAÇÃO E MANUTENÇÃO" },
+  //     ],
+  //   },
+  //   {
+  //     $set: {
+  //       "oem.aplicavel": true,
+  //       "oem.duracao": 1,
+  //       "oem.qtdeManutencoes": 1,
+  //       "oem.plano": "INCLUSO NO CONTRATO",
+  //     },
+  //   }
+  // );
+  // res.json(arr);
   /*
   let arr = await collection
     .aggregate([

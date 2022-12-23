@@ -231,6 +231,15 @@ function ModalSuprimentos({
                     }}
                   />
                   <TextInput
+                    label={"Logradouro"}
+                    editable={false}
+                    value={infoHolder.logradouro ? infoHolder.logradouro : ""}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, logradouro: value });
+                      setInfo({ ...infoHolder, logradouro: value });
+                    }}
+                  />
+                  <TextInput
                     label={"Bairro"}
                     editable={false}
                     value={infoHolder.bairro ? infoHolder.bairro : ""}

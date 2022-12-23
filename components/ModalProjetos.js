@@ -272,6 +272,15 @@ function ModalProjetos({
                       setInfo({ ...infoHolder, bairro: value });
                     }}
                   />
+                  <TextInput
+                    label={"Logradouro"}
+                    editable={false}
+                    value={infoHolder.logradouro ? infoHolder.logradouro : ""}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, logradouro: value });
+                      setInfo({ ...infoHolder, logradouro: value });
+                    }}
+                  />
                   <NumberInput
                     label={"Número da residência"}
                     editable={false}

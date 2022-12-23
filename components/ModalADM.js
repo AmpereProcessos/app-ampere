@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { equipesTecnicas, fornecedores, vendedores } from "../utils/constants";
+import {
+  equipesTecnicas,
+  fornecedores,
+  vendedores,
+  cidadesAtendidas,
+} from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import TextInput from "./TextInput";
@@ -170,7 +175,7 @@ function ModalADM({
                   <TextInput
                     label={"Nome do contrato"}
                     value={infoHolder.nomeDoContrato}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) => {
                       setChanges({ ...changes, nomeDoContrato: value });
                       setInfo({ ...infoHolder, nomeDoContrato: value });
@@ -179,7 +184,7 @@ function ModalADM({
                   <TextInput
                     label={"Nome do Projeto"}
                     value={infoHolder.nomeDoProjeto}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) => {
                       setChanges({ ...changes, nomeDoProjeto: value });
                       setInfo({
@@ -190,7 +195,7 @@ function ModalADM({
                   />
                   <TextInput
                     label={"CPF/CNPJ"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.cpf_cnpj
                         ? formataCPF(infoHolder.cpf_cnpj.toString())
@@ -206,25 +211,41 @@ function ModalADM({
                   />
                   <TextInput
                     label={"Telefone"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.telefone ? infoHolder.telefone : "-"}
                     handleChange={(value) => {
                       setChanges({ ...changes, telefone: value });
                       setInfo({ ...infoHolder, telefone: value });
                     }}
                   />
-                  <TextInput
+                  <SelectInput
                     label={"Cidade"}
-                    editable={editor}
-                    value={infoHolder.cidade ? infoHolder.cidade : "-"}
+                    editable={false}
+                    value={
+                      cidadesAtendidas.includes(infoHolder.cidade.toUpperCase())
+                        ? infoHolder.cidade
+                        : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                      ...cidadesAtendidas.map((cidade) => {
+                        return { label: cidade, value: cidade };
+                      }),
+                    ]}
                     handleChange={(value) => {
-                      setChanges({ ...changes, cidade: value });
-                      setInfo({ ...infoHolder, cidade: value });
+                      setChanges({
+                        ...changes,
+                        cidade: value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        cidade: value,
+                      });
                     }}
                   />
                   <TextInput
                     label={"CEP"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.cep
                         ? formataCEP(infoHolder.cep.toString())
@@ -236,8 +257,17 @@ function ModalADM({
                     }}
                   />
                   <TextInput
+                    label={"Logradouro"}
+                    editable={false}
+                    value={infoHolder.logradouro ? infoHolder.logradouro : ""}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, logradouro: value });
+                      setInfo({ ...infoHolder, logradouro: value });
+                    }}
+                  />
+                  <TextInput
                     label={"Bairro"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.bairro ? infoHolder.bairro : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, bairro: value });
@@ -246,7 +276,7 @@ function ModalADM({
                   />
                   <NumberInput
                     label={"Número da residência"}
-                    editable={editor}
+                    editable={false}
                     value={
                       infoHolder.numeroResidencia
                         ? infoHolder.numeroResidencia
@@ -265,7 +295,7 @@ function ModalADM({
                   />
                   <SelectInput
                     label={"Regional"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.regional}
                     options={[
                       {
@@ -284,7 +314,7 @@ function ModalADM({
                   />
                   <TextInput
                     label={"EMAIL"}
-                    editable={editor}
+                    editable={false}
                     value={infoHolder.email ? infoHolder.email : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, email: value });
@@ -299,7 +329,7 @@ function ModalADM({
                         ? infoHolder.canalVenda
                         : "NÃO DEFINIDO"
                     }
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "EVENTO", value: "EVENTO" },
                       {
@@ -331,7 +361,7 @@ function ModalADM({
                       options={vendedores.map((vendedor) => {
                         return { label: vendedor.nome, value: vendedor.nome };
                       })}
-                      editable={editor}
+                      editable={false}
                       handleChange={(value) => {
                         console.log(value);
                         setChanges({
@@ -359,7 +389,7 @@ function ModalADM({
                   <SelectInput
                     label={"SEGMENTO"}
                     value={infoHolder.segmento}
-                    editable={editor}
+                    editable={false}
                     options={[
                       { label: "COMERCIAL", value: "COMERCIAL" },
                       { label: "INDUSTRIAL", value: "INDUSTRIAL" },
@@ -384,7 +414,7 @@ function ModalADM({
                   <TextInput
                     label="TIPO DE SERVIÇO"
                     value={infoHolder.tipoDeServico}
-                    editable={editor}
+                    editable={false}
                     handleChange={(value) => {
                       setChanges({ ...changes, tipoDeServico: value });
                       setInfo({ ...infoHolder, tipoDeServico: value });

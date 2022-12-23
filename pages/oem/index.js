@@ -8,7 +8,7 @@ import {
   oemPlans,
 } from "../../utils/constants";
 import { AiOutlineSearch } from "react-icons/ai";
-import { MdLightMode } from "react-icons/md";
+import { GiPoliceBadge } from "react-icons/gi";
 import ModalOeM from "../../components/ModalOeM";
 import Link from "next/link";
 import { AppContext } from "../../context/AppContext";
@@ -497,16 +497,20 @@ function OeM({ users }) {
             className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
           >
             <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
-              {console.log(project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO")}
-              {project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
-                <MdLightMode
-                  style={{
-                    fontSize: "20px",
-                    color: "#15599a",
-                  }}
-                />
-              )}
+              <div className="flex items-center gap-2">
+                {project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
+                  <GiPoliceBadge
+                    style={{
+                      fontSize: "20px",
+                      color: "#15599a",
+                    }}
+                  />
+                )}{" "}
+                <p className="text-xs text-gray-700">
+                  {project.nomeDoContrato}
+                </p>
+              </div>
+
               <p className="text-xs text-[#15599a]">#{project.qtde}</p>
             </div>
             <div className="flex items-center justify-between">

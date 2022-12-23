@@ -99,7 +99,12 @@ function NovoLead({ setModalIsOpen }) {
   }
   function addLead() {
     if (validateInfo()) {
-      setMsg({ text: "Lead criado !", color: "text-green-500" });
+      axios
+        .post("/api/insideSales/newLead", {
+          ...info,
+          responsavel: "DEVISSON LIMA",
+        })
+        .then((res) => console.log(res));
     }
   }
   return (

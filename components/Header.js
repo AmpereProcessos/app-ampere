@@ -92,14 +92,16 @@ function Header({ toggleSidebar }) {
           )}
         </div>
         {credentials.manager && (
-          <TbPresentationAnalytics
-            style={{
-              fontSize: "25px",
-              marginLeft: "10px",
-              cursor: "pointer",
-              color: "#fead61",
-            }}
-          />
+          <Link href="/admin/reports">
+            <TbPresentationAnalytics
+              style={{
+                fontSize: "25px",
+                marginLeft: "10px",
+                cursor: "pointer",
+                color: "#fead61",
+              }}
+            />
+          </Link>
         )}
       </div>
       {notificationIsOpen && (

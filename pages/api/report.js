@@ -8,6 +8,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "contrato.status": "ASSINADO",
+            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
           },
         },
         {
@@ -20,6 +21,11 @@ export default async function handler(req, res) {
             "obra.saida": 1,
             "contrato.dataAssinatura": 1,
             "parecer.dataParecerDeAcesso": 1,
+            "parecer.statusDoParecerDeAcess": 1,
+            "projeto.dataAssDocumentacao": 1,
+            "compra.dataPedido": 1,
+            "compra.dataLiberacao": 1,
+            nps: 1,
           },
         },
       ])

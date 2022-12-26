@@ -65,6 +65,12 @@ function Acompanhamento() {
   }
   function getPotenciaHomologada() {
     var filteredArr = info;
+    filteredArr = filteredArr.filter(
+      (x) =>
+        x.parecer.dataParecerDeAcesso != null &&
+        x.parecer.dataParecerDeAcesso != undefined &&
+        x.parecer.dataParecerDeAcesso != "-"
+    );
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter(
@@ -512,6 +518,10 @@ function Acompanhamento() {
                 placeholder={"CAMPO DE FILTRO"}
                 options={[
                   { label: "SAÍDA DE OBRA", value: "obra.saida" },
+                  {
+                    label: "DATA DO PARECER",
+                    value: "parecer.dataParecerDeAcesso",
+                  },
                   { label: "ASS.CONTRATO", value: "contrato.dataAssinatura" },
                   { label: "NÃO DEFINIDO", value: null },
                 ]}

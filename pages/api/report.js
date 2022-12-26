@@ -25,7 +25,7 @@ export default async function handler(req, res) {
             "obra.saida": 1,
             "contrato.dataAssinatura": 1,
             "parecer.dataParecerDeAcesso": 1,
-            "parecer.statusDoParecerDeAcess": 1,
+            "parecer.statusDoParecerDeAcesso": 1,
             "projeto.dataAssDocumentacao": 1,
             "compra.dataPedido": 1,
             "compra.dataLiberacao": 1,

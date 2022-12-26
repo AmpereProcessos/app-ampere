@@ -1,72 +1,37 @@
 import axios from "axios";
-
-/* nextConnect from "next-connect";
-import multer from "multer";
-import fs from "fs";
-import { google } from "googleapis";
-const KEYFILEPATH = "./utils/serviceAccount.json";
-const SCOPES = ["https://www.googleapis.com/auth/drive"];
-const auth = new google.auth.GoogleAuth({
-  keyFile: KEYFILEPATH,
-  scopes: SCOPES,
-});
-const drive = google.drive({
-  version: "v3",
-  auth: auth,
-});
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: "./public/uploads",
-    filename: (req, file, cb) => cb(null, file.originalname),
-  }),
-});
-
-const upload2 = multer({ dest: "./public/uploads" });
-const apiRoute = nextConnect({
-  onError(error, req, res) {
-    res
-      .status(501)
-      .json({ error: `Sorry something Happened! ${error.message}` });
-  },
-  onNoMatch(req, res) {
-    res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
-  },
-});
-
-apiRoute.use(upload.array("theFiles"));
-apiRoute.post(async (req, res) => {
-  req.files.forEach(async (file) => {
-    try {
-      const fileMetadata = {
-        name: file.filename,
-        parents: ["1ILtrL6glYzz0ArbR_y7ciAI8wKyTbSe6"],
-      };
-      const media = {
-        mimeType: "image/jpeg",
-        body: fs.createReadStream(file.path),
-      };
-      var file = await drive.files.create({
-        resource: fileMetadata,
-        media: media,
-        fields: "id",
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  });
-  res.json("FORMULÁRIO ENVIADO");
-});
-export default apiRoute;
-
-export const config = {
-  api: {
-    bodyParser: false, // Disallow body parsing, consume as stream
-  },
-};
-*/
+import connectToDatabase from "../../utils/connectDb";
+import connectToISDatabase from "../../utils/insideSalesDb";
 export default async function handler(req, res) {
-  const cidadesAtendidas = [
+  if (req.method == "GET") {
+    //UPDATING GESTÃO DE PROJETOS
+    // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+    // const collection = db.collection("dados");
+    // const dbIS = await connectToISDatabase(process.env.DB_KEY);
+    // const collectionIS = dbIS.collection("leads");
+    // var leads = await collectionIS.find({}).toArray();
+    // let arr = await collection
+    //   .aggregate([
+    //     {
+    //       $project: {
+    //         codigoSVB: 1,
+    //       },
+    //     },
+    //   ])
+    //   .forEach(function (x) {
+    //     let indexInLeads = leads.findIndex((y) => y.codigoSVB == x.codigoSVB);
+    //     if (indexInLeads != -1) {
+    //       collection.updateOne(
+    //         { _id: x._id },
+    //         { $set: { insider: leads[indexInLeads].responsavel } }
+    //       );
+    //     }
+    //   });
+
+    // res.json("OK");
+    res.json("DESATIVADO");
+  }
+}
+/*  const cidadesAtendidas = [
     "ITUIUTABA", //ok to uppercase
     "IPIAÇU", // ok to uppercase
     "SANTA VITÓRIA", //ok to uppercase
@@ -207,6 +172,4 @@ export default async function handler(req, res) {
       SUL: (irradByCity[i].irrad * 30 * 0.8 * 0.787).toFixed(2),
       SUDESTE: (irradByCity[i].irrad * 30 * 0.8 * 0.8518).toFixed(2),
     });
-  }
-  res.json(arr);
-}
+  }*/

@@ -1,5 +1,15 @@
 import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
+  // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  // const collection = db.collection("dados");
+  // let arr = await collection.updateMany(
+  //   { insider: "-" },
+  //   {
+  //     $set: {
+  //       insider: null,
+  //     },
+  //   }
+  // );
   res.json("DESATIVADA");
 }
 /*

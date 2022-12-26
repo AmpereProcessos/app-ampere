@@ -21,6 +21,7 @@ const statusStyles = {
 function Comercial({ users }) {
   const router = useRouter();
   const { credentials, setCredentials } = useContext(AppContext);
+  console.log(credentials);
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");

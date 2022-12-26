@@ -275,6 +275,52 @@ function Acompanhamento() {
 
     return (sum / filteredArr.length).toFixed(2);
   }
+  function getTempoMedioDeInstalacao() {
+    var filteredArr = info;
+    filteredArr = filteredArr.filter(
+      (x) => x.obra?.statusDaObra == "CONCLUIDA"
+    );
+    if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter(
+        (x) =>
+          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
+          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      );
+    }
+    if (filters.vendedorFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((call) =>
+        filters.vendedorFilter.includes(call.vendedor.nome)
+      );
+    }
+    if (filters.cidadeFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((call) =>
+        filters.cidadeFilter.includes(call.cidade)
+      );
+    }
+
+    if (filters.regionalFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter(
+        (x) => x.regional == filters.regionalFilter
+      );
+    }
+    var sum = 0;
+    for (let i = 0; i < filteredArr.length; i++) {
+      let diff = dayjs(filteredArr[i].obra.saida).diff(
+        filteredArr[i].obra.entrada,
+        "day"
+      );
+      if (isNaN(diff)) {
+        sum = sum;
+      } else {
+        sum = sum + diff;
+      }
+    }
+    return (sum / filteredArr.length).toFixed(2);
+  }
   function getNps() {
     var filteredArr = info;
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
@@ -357,7 +403,11 @@ function Acompanhamento() {
       totalSum =
         Number(totalSum) + Number(projeto) + Number(padrao) + Number(estrutura);
     }
-    return totalSum;
+    return {
+      total: totalSum,
+      ticketMedio: totalSum / filteredArr.length,
+      vendas: filteredArr.length,
+    };
   }
   useEffect(() => {
     if (credentials) {
@@ -373,7 +423,7 @@ function Acompanhamento() {
     return (
       <div className="grow p-6 flex flex-col gap-2">
         <div className="flex flex-col items-center border-b border-gray-200 py-2">
-          <h1 className="text-2xl font-bold text-[#fead61]">
+          <h1 className="text-2xl font-bold text-[#15599a] font-raleway">
             RESULTADOS AMPÈRE
           </h1>
           <div className="flex items-center justify-around gap-2 py-2">
@@ -508,11 +558,11 @@ function Acompanhamento() {
           <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">
-                TEMPO MÉDIO PARA COMPRA
+                TEMPO MÉDIO PARA INSTALAÇÃO
               </h1>
             </div>
             <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-              {getTempoMedioDeCompra()} dias
+              {getTempoMedioDeInstalacao()} dias
             </p>
           </div>
           <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
@@ -526,12 +576,20 @@ function Acompanhamento() {
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-x-3">
+        <div className="grid grid-cols-5 gap-x-3">
+          <div className="flex flex-col col-span- p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex justify-between">
+              <h1 className="uppercase text-gray-600">Nº DE VENDAS</h1>
+            </div>
+            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
+              {getTotalVendido().vendas}
+            </p>
+          </div>
           <div className="flex flex-col col-span- p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">Potência Pico Vendida</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
+            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
               {getPotenciaVendida()} kWp
             </p>
           </div>
@@ -539,8 +597,16 @@ function Acompanhamento() {
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">TOTAL VENDIDO</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-              R$ {getTotalVendido().toLocaleString("pt-BR")}
+            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
+              R$ {getTotalVendido().total.toLocaleString("pt-BR")}
+            </p>
+          </div>
+          <div className="flex flex-col col-span-1 p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex justify-between">
+              <h1 className="uppercase text-gray-600">TICKET MÉDIO</h1>
+            </div>
+            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
+              R$ {getTotalVendido().ticketMedio.toLocaleString("pt-BR")}
             </p>
           </div>
           <div className="flex flex-col p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl col-span-1">
@@ -560,7 +626,7 @@ function Acompanhamento() {
                     // pathTransition: 'none',
 
                     // Colors
-                    pathColor: `#fead61`,
+                    pathColor: `#15599a`,
                     textColor: "#15599a",
                     trailColor: "#d6d6d6",
                     backgroundColor: "#3e98c7",

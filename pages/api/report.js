@@ -21,6 +21,7 @@ export default async function handler(req, res) {
             "padrao.valor": 1,
             "estruturaPersonalizada.valor": 1,
             "obra.statusDaObra": 1,
+            "obra.entrada": 1,
             "obra.saida": 1,
             "contrato.dataAssinatura": 1,
             "parecer.dataParecerDeAcesso": 1,

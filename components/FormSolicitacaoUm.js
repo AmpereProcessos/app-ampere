@@ -103,7 +103,11 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
       setMessage("Por favor, preencha um bairro válido.");
       return false;
     }
-    if (dados.codigoSVB == undefined || dados.codigoSVB == 0) {
+    if (
+      dados.codigoSVB == undefined ||
+      dados.codigoSVB == 0 ||
+      dados.codigoSVB.toString().trim().length > 4
+    ) {
       setMessage("Por favor, preencha um código SVB válido.");
       return false;
     }

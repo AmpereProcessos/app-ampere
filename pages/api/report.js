@@ -14,9 +14,12 @@ export default async function handler(req, res) {
         {
           $project: {
             "vendedor.nome": 1,
+            cidade: 1,
             "sistema.qtdeModulos": 1,
             "sistema.potPico": 1,
             "sistema.valorProjeto": 1,
+            "padrao.valor": 1,
+            "estruturaPersonalizada.valor": 1,
             "obra.statusDaObra": 1,
             "obra.saida": 1,
             "contrato.dataAssinatura": 1,
@@ -25,6 +28,7 @@ export default async function handler(req, res) {
             "projeto.dataAssDocumentacao": 1,
             "compra.dataPedido": 1,
             "compra.dataLiberacao": 1,
+            regional: 1,
             nps: 1,
           },
         },

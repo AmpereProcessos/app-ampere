@@ -13,6 +13,7 @@ function ControlePadroes({ setCredentials, credentials }) {
     acStatusFilter: [],
     liberacaoStatus: [],
     segmentoFilter: [],
+    parecerFilter: [],
     pendencia: false,
   });
   function getProjects() {
@@ -41,6 +42,12 @@ function ControlePadroes({ setCredentials, credentials }) {
         filters.segmentoFilter.includes(call.segmento)
       );
     }
+    if (filters.parecerFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = projects.filter((project) =>
+        filters.parecerFilter.includes(project.parecer.statusDoParecerDeAcesso)
+      );
+    }
     if (filters.searchFilter.trim().length > 0) {
       if (!newArr) newArr = projects;
       newArr = projects.filter((call) =>
@@ -51,7 +58,7 @@ function ControlePadroes({ setCredentials, credentials }) {
     }
     if (filters.pendencia) {
       if (!newArr) newArr = projects;
-      newArr = projects.filter(
+      newArr = newArr.filter(
         (call) =>
           call.projeto.acStatus != "REALIZADO" &&
           call.compra.statusLiberacao == "PAGO"
@@ -217,6 +224,82 @@ function ControlePadroes({ setCredentials, credentials }) {
               {
                 value: "AGUARDANDO N.F",
                 label: "AGUARDANDO N.F",
+              },
+            ]}
+          />
+          <Select
+            isMulti
+            placeholder="STATUS DO PARECER"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                parecerFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                label: "AGUARDANDO ASSINATURA",
+                value: "AGUARDANDO ASSINATURA",
+              },
+              {
+                label: "AGUARDANDO AUMENTO DE CARGA",
+                value: "AGUARDANDO AUMENTO DE CARGA",
+              },
+              {
+                label: "INICIAR PROJETO",
+                value: "INICIAR PROJETO",
+              },
+              {
+                label: "SOLICITAR TROCA DE TITULARIDADE",
+                value: "SOLICITAR TROCA DE TITULARIDADE",
+              },
+              {
+                label: "AGUARDANDO FATURAMENTO ART",
+                value: "AGUARDANDO FATURAMENTO ART",
+              },
+              {
+                label: "AGUARDANDO FORMULÁRIOS",
+                value: "AGUARDANDO FORMULÁRIOS",
+              },
+              {
+                label: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
+                value: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
+              },
+              {
+                label: "AGUARDANDO TROCA DE TITULARIDADE",
+                value: "AGUARDANDO TROCA DE TITULARIDADE",
+              },
+              {
+                label: "AUMENTO DE CARGA",
+                value: "AUMENTO DE CARGA",
+              },
+              {
+                label: "CANCELADO",
+                value: "CANCELADO",
+              },
+              {
+                label: "PARECER DE ACESSO APROVADO",
+                value: "PARECER DE ACESSO APROVADO",
+              },
+              {
+                label: "PENDENCIAS",
+                value: "PENDENCIAS",
+              },
+              {
+                label: "SOLICITAR ACESSO",
+                value: "SOLICITAR ACESSO",
+              },
+              {
+                label: "SOLICITAR AUMENTO DE CARGA",
+                value: "SOLICITAR AUMENTO DE CARGA",
+              },
+              {
+                label: "PARECER DE ACESSO COM OBRAS",
+                value: "PARECER DE ACESSO COM OBRAS",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
               },
             ]}
           />

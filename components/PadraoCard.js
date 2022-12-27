@@ -77,33 +77,11 @@ function PadraoCard({ project, credentials }) {
           </div>
           <div className="flex flex-col items-center">
             <p className="text-sm uppercase text-[#15599a] font-bold">
-              STATUS DA ENTREGA
+              STATUS DO PARECER
             </p>
             <p className="text-xs uppercase text-gray-500">
-              {project.compra.statusEntrega
-                ? project.compra.statusEntrega
-                : "-"}
-            </p>
-          </div>
-          <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">
-              {project.compra.statusEntrega == "ENTREGUE"
-                ? "DATA DE ENTREGA"
-                : "PREVISÃO DE ENTREGA"}
-            </p>
-            <p className="text-xs uppercase text-gray-500">
-              {project.compra.statusEntrega == "ENTREGUE"
-                ? project.compra.dataEntrega
-                  ? dayjs(new Date(project.compra.dataEntrega))
-                      .add(4, "hours")
-                      .format("DD/MM/YYYY")
-                  : dayjs(new Date(project.compra.previsaoEntrega))
-                      .add(4, "hours")
-                      .format("DD/MM/YYYY")
-                : project.compra.previsaoEntrega
-                ? dayjs(new Date(project.compra.previsaoEntrega))
-                    .add(4, "hours")
-                    .format("DD/MM/YYYY")
+              {project.parecer.statusDoParecerDeAcesso
+                ? project.parecer.statusDoParecerDeAcesso
                 : "-"}
             </p>
           </div>

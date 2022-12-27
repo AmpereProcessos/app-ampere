@@ -17,6 +17,7 @@ function MyApp({ Component, pageProps }) {
   const [notificacoes, setNotificacoes] = useState([]);
   const router = useRouter();
   function getNotificacoes(id) {
+    console.log("NOT EM APP");
     axios
       .get(`/api/notificacoes/${id}`)
       .then((res) => setNotificacoes(res.data));
@@ -33,7 +34,6 @@ function MyApp({ Component, pageProps }) {
     }
   }, []); */
   }
-
   useEffect(() => {
     {
       /** if (Object.keys(credentials).length == 0) {
@@ -45,9 +45,6 @@ function MyApp({ Component, pageProps }) {
     } else {
       getNotificacoes(credentials._id);
     } */
-    }
-    if (credentials.nome) {
-      getNotificacoes(credentials._id);
     }
     if (
       router.pathname.includes("pdf") ||

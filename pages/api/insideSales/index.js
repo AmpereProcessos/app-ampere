@@ -13,7 +13,7 @@ export default async function handler(req, res) {
         },
         {
           $sort: {
-            dataEnvio: -1,
+            dataDeAquisicao: -1,
           },
         },
       ])

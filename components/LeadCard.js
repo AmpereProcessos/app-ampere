@@ -12,7 +12,7 @@ function LeadCard({ lead, getLeads }) {
     axios
       .put("/api/insideSales", {
         id: lead._id,
-        changes: { vendedor: vendedor, dataEnvio: new Date() },
+        changes: { vendedor: vendedor, dataDeEnvio: new Date() },
       })
       .then((res) => {
         setMsg({ text: "Alterações feitas!", color: "text-green-500" });

@@ -349,7 +349,9 @@ function Suprimentos() {
                       : "-"}
                   </p>
                 ) : (
-                  <p className="text-red-500 font-bold text-sm">PREV.VENCIDA</p>
+                  <p className="text-red-500 font-bold text-xs lg:text-sm">
+                    PREV.VENCIDA
+                  </p>
                 )}
               </div>
               <div className="flex flex-col items-end">

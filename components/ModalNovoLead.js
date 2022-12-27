@@ -41,7 +41,7 @@ function NovoLead({ setModalIsOpen, getLeads }) {
     cidade: cidadesAtendidas[0],
     canal: "NÃO DEFINIDO",
     campanha: "",
-    dataAquisicao: new Date(),
+    dataDeAquisicao: new Date(),
     consumo: 0,
     vendedor: "NÃO DEFINIDO",
     dataEnvio: null,
@@ -97,6 +97,20 @@ function NovoLead({ setModalIsOpen, getLeads }) {
     setMsg({ text: "", color: "" });
     return true;
   }
+  function resetState() {
+    setInfo({
+      telefone: "",
+      nome: "",
+      cidade: cidadesAtendidas[0],
+      canal: "NÃO DEFINIDO",
+      campanha: "",
+      dataDeAquisicao: new Date(),
+      consumo: 0,
+      vendedor: "NÃO DEFINIDO",
+      dataEnvio: null,
+      codigoSVB: 0,
+    });
+  }
   function addLead() {
     if (validateInfo()) {
       axios
@@ -104,7 +118,17 @@ function NovoLead({ setModalIsOpen, getLeads }) {
           ...info,
           responsavel: "DEVISSON LIMA",
         })
-        .then((res) => getLeads());
+        .then((res) => {
+          setMsg({ text: "Lead adicionado!", color: "text-green-500" });
+          resetState();
+          getLeads();
+        })
+        .catch((err) =>
+          setMsg({
+            text: "Um erro ocorreu, por favor tente novamente",
+            color: "text-red-500",
+          })
+        );
     }
   }
   console.log(info);
@@ -230,14 +254,14 @@ function NovoLead({ setModalIsOpen, getLeads }) {
                 <input
                   type="date"
                   value={
-                    info.dataAquisicao
-                      ? dayjs(info.dataAquisicao).format("YYYY-MM-DD")
+                    info.dataDeAquisicao
+                      ? dayjs(info.dataDeAquisicao).format("YYYY-MM-DD")
                       : null
                   }
                   onChange={(e) =>
                     setInfo({
                       ...info,
-                      dataAquisicao: e.target.value,
+                      dataDeAquisicao: e.target.value,
                     })
                   }
                   className="outline-none grow p-2 h-full text-center col-span-8"

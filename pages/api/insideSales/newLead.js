@@ -7,7 +7,6 @@ export default async function handler(req, res) {
     let arr = await collection.insertOne({
       ...req.body,
     });
-    console.log(arr);
     res.json(arr);
   } catch (error) {
     res.status(500).send(error);

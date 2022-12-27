@@ -77,7 +77,7 @@ function Formularios({ credentials, setCredentials }) {
         <h1 className="text-[#fead61] font-raleway font-bold text-xl">
           FORMULÁRIOS ({filteredForms.length})
         </h1>
-        <div className="flex items-center justify-around gap-2">
+        <div className="flex items-center flex-wrap justify-around gap-2">
           <button
             onClick={() =>
               setFilters({ ...filters, efetivados: !filters.efetivados })

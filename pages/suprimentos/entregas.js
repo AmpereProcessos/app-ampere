@@ -119,13 +119,13 @@ function Entregas({ credentials, setCredentials }) {
   }
   return (
     <div className="flex flex-col p-6 grow">
-      <div className="flex justify-between border-b border-gray-200">
+      <div className="flex flex-col items-center gap-2 border-b border-gray-200 py-2">
         <h1 className="font-bold text-[#15599a] text-xl">
           ENTREGAS ({filteredProjects.length})
         </h1>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap justify-between items-center gap-2">
           <input
-            className="outline-none p-1.5 w-[250px] h-[52px] rounded border border-gray-200 placeholder:italic"
+            className="outline-none p-1.5 text-xs lg:text-base w-[250px] h-[36px] rounded border border-gray-200 placeholder:italic"
             placeholder="Digite o nome do contrato"
             value={filters.searchFilter}
             onChange={(e) => handleSearchFilter(e.target.value)}
@@ -139,7 +139,7 @@ function Entregas({ credentials, setCredentials }) {
             }
             className={`${
               filters.ordenatePrev ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[52px] text-center flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            } rounded h-[36px] text-center flex text-xs lg:text-base justify-center cursor-pointer items-center font-bold px-2 text-white`}
           >
             ORDENAR POR PREVISÃO
           </div>
@@ -152,7 +152,7 @@ function Entregas({ credentials, setCredentials }) {
             }
             className={`${
               filters.rastreioFilter ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[52px] text-center flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            } rounded h-[36px] text-center flex text-xs lg:text-base justify-center cursor-pointer items-center font-bold px-2 text-white`}
           >
             RASTREIO PREENCHIDO
           </div>
@@ -212,36 +212,36 @@ function Entregas({ credentials, setCredentials }) {
                 }
               />
             </div>
-            <Select
-              isMulti={false}
-              placeholder={"CAMPO DE FILTRO"}
-              options={[
-                { label: "DATA PAGAMENTO", value: "compra.dataPagamento" },
-                {
-                  label: "DATA MÁX P/ PAGAMENTO",
-                  value: "compra.dataMaxPagamento",
-                },
-                {
-                  label: "PREVISÃO DE ENTREGA",
-                  value: "compra.previsaoEntrega",
-                },
-                { label: "NÃO DEFINIDO", value: null },
-              ]}
-              onChange={(e) =>
-                setDateFilter({
-                  ...dateFilter,
-                  field1: e.value != null ? e.value.split(".")[0] : null,
-                  field2: e.value != null ? e.value.split(".")[1] : null,
-                })
-              }
-            />
-            <button
-              onClick={filterProjects}
-              className="bg-[#fead61] p-2 h-[52px] rounded font-bold"
-            >
-              FILTRAR
-            </button>
           </div>
+          <Select
+            isMulti={false}
+            placeholder={"CAMPO DE FILTRO"}
+            options={[
+              { label: "DATA PAGAMENTO", value: "compra.dataPagamento" },
+              {
+                label: "DATA MÁX P/ PAGAMENTO",
+                value: "compra.dataMaxPagamento",
+              },
+              {
+                label: "PREVISÃO DE ENTREGA",
+                value: "compra.previsaoEntrega",
+              },
+              { label: "NÃO DEFINIDO", value: null },
+            ]}
+            onChange={(e) =>
+              setDateFilter({
+                ...dateFilter,
+                field1: e.value != null ? e.value.split(".")[0] : null,
+                field2: e.value != null ? e.value.split(".")[1] : null,
+              })
+            }
+          />
+          <button
+            onClick={filterProjects}
+            className="bg-[#fead61] p-2 h-[36px] text-xs lg:text-base rounded font-bold"
+          >
+            FILTRAR
+          </button>
         </div>
       </div>
       <div className="flex flex-col gap-2 mt-2">

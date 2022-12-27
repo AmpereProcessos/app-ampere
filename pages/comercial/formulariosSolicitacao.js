@@ -92,11 +92,11 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
   }
   return (
     <div className="p-6 grow flex flex-col">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col items-center gap-2">
         <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
           FORMULÁRIOS DE CONTRATO ({filteredSolicitacoes.length})
         </p>
-        <div className="flex flex-wrap gap-x-2">
+        <div className="flex flex-wrap justify-between gap-2">
           <input
             value={filters.nomeDoContratoFilter}
             onChange={(e) =>

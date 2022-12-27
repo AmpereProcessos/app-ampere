@@ -35,26 +35,26 @@ function GestaoAlmoxarifado({ credentials, setCredentials }) {
         </h1>
         <div className="flex gap-4 mt-5 flex-wrap w-full">
           <Link href="/almoxarifado/formularios">
-            <div className="flex flex-col justify-center cursor-pointer grow min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
                 Formulários
               </h1>
             </div>
           </Link>
           <Link href="/almoxarifado/estoque">
-            <div className="flex flex-col justify-center cursor-pointer grow min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">ESTOQUE</h1>
             </div>
           </Link>
           <Link href="/obras/conferenciaMaterial">
-            <div className="flex flex-col justify-center cursor-pointer grow min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
                 Conferência de Material
               </h1>
             </div>
           </Link>
           <Link href="/almoxarifado/separacao">
-            <div className="flex flex-col justify-center cursor-pointer grow min-w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
                 PROJETOS P/SEPARAÇÃO
               </h1>

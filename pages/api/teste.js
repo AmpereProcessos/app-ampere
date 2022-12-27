@@ -28,7 +28,12 @@ export default async function handler(req, res) {
     //   });
 
     // res.json("OK");
-    res.json("DESATIVADO");
+    const dbIS = await connectToISDatabase(process.env.DB_KEY);
+    const collectionIS = dbIS.collection("leads");
+    let cod = isNaN(req.query.cod) ? 0 : Number(req.query.cod);
+    let obj = await collectionIS.findOne({ codigoSVB: cod });
+
+    res.json(obj);
   }
 }
 /*  const cidadesAtendidas = [

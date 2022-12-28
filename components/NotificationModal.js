@@ -133,7 +133,10 @@ function NotificationModal() {
                   diz{" "}
                   {notificacao.projetoReferencia
                     ? `sobre o projeto ${notificacao.projetoReferencia}`
-                    : ""}
+                    : ""}{" "}
+                  {notificacao.nomeDoProjeto
+                    ? `(${notificacao.nomeDoProjeto})`
+                    : false}
                   :
                 </h1>
                 <p className="text-xs text-gray-500 font-raleway text-center">

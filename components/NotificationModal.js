@@ -1,5 +1,7 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { BsCheck, BsCheckAll } from "react-icons/bs";
+import { AppContext } from "../context/AppContext";
 const MODAL_STYLES = {
   position: "fixed",
   top: "230px",
@@ -20,16 +22,26 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function NotificationModal({ notificacoes, updateNotifications }) {
+function NotificationModal() {
+  const { notificacoes, getNotificacoes, credentials } = useContext(AppContext);
   const [not, setNot] = useState(notificacoes);
+  function updateNotifications(id) {
+    axios
+      .put("/api/notificacoes/1", {
+        id: id,
+      })
+      .then((res) => getNotificacoes(credentials._id));
+  }
   function setAsRead(id, index) {
-    not.splice(index, 1);
-    setNot([...not]);
+    let arr = [...not];
+    arr[index].lido = true;
+    setNot([...arr]);
     updateNotifications(id);
+    getNotificacoes(credentials._id);
   }
   return (
     <div style={MODAL_STYLES}>
-      <div className="w-full flex flex-col h-full border border-gray-200 p-2 shadow-xl">
+      <div className="w-full flex flex-col h-full border border-gray-200 py-2 px-1 shadow-xl">
         <h1 className="text-center uppercase text-[#15599a] font-bold text-sm border-b border-gray-200">
           Notificações
         </h1>
@@ -41,7 +53,7 @@ function NotificationModal({ notificacoes, updateNotifications }) {
                 onClick={() => setAsRead(notificacao._id, index)}
                 className={` ${
                   notificacao.lido
-                    ? "hidden"
+                    ? "cursor-pointer flex flex-col p-1 max-w-full border-b border-gray-200 hover:bg-blue-100 bg-green-100"
                     : "cursor-pointer flex flex-col p-1 max-w-full border-b border-gray-200 hover:bg-blue-100"
                 }`}
               >
@@ -58,6 +70,13 @@ function NotificationModal({ notificacoes, updateNotifications }) {
                 <p className="text-xs text-gray-500 font-raleway text-center">
                   {notificacao.mensagem}
                 </p>
+                <div className="flex items-center justify-end pr-4">
+                  {notificacao.lido ? (
+                    <BsCheckAll style={{ fontSize: "20px", color: "green" }} />
+                  ) : (
+                    <BsCheck style={{ fontSize: "20px", color: "gray" }} />
+                  )}
+                </div>
               </div>
             ))
           ) : (

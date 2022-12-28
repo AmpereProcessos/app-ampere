@@ -10,7 +10,7 @@ import {
   FaBox,
 } from "react-icons/fa";
 import { TbTruckDelivery, TbReportAnalytics } from "react-icons/tb";
-import { AiOutlineForm } from "react-icons/ai";
+import { AiOutlineForm, AiOutlinePercentage } from "react-icons/ai";
 import {
   MdEngineering,
   MdOutlinePayments,
@@ -234,6 +234,16 @@ function Sidebar() {
               </Link>
             ) : (
               false
+            )}
+            {credentials.manager == true && (
+              <Link href="/admin/comissao">
+                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                  <AiOutlinePercentage
+                    style={{ color: "#15599a", fontSize: "20px" }}
+                  />
+                  <p className="pl-3 text-xs text-gray-600">Comissões</p>
+                </a>
+              </Link>
             )}
             {credentials.accessibleRoutes?.includes("Suprimentos") ? (
               <Link href="/suprimentos/entregas">

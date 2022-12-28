@@ -76,7 +76,7 @@ const routes = [
 function Home() {
   const { credentials, setCredentials } = useContext(AppContext);
   const router = useRouter();
-  const [totalPeakPot, setTotalPeakPot] = useState(0);
+  const [totalPeakPot, setTotalPeakPot] = useState(null);
   const [selectedYear, setSelectedYear] = useState();
   const [installedData, setInstalledData] = useState([]);
   const [averageHomoData, setHomoData] = useState([]);
@@ -272,9 +272,13 @@ function Home() {
         <div className="w-full h-[36px] border border-[#15599a]">
           <div
             style={{
-              width: `99.8%`, // `${totalPeakPot >10000 ? 100 :   Number((totalPeakPot * 100) / 10000).toFixed(2)}%`
+              width: `${
+                totalPeakPot > 10165
+                  ? 100
+                  : Number((totalPeakPot * 100) / 10165).toFixed(2)
+              }%`, // `${totalPeakPot >10000 ? 100 :   Number((totalPeakPot * 100) / 10000).toFixed(2)}%`
               background: `${
-                9999 > 10000
+                totalPeakPot > 10165
                   ? "linear-gradient(90deg, rgba(254,199,97,1) 29%, rgba(226,141,59,1) 100%)"
                   : "linear-gradient(90deg, rgba(21,89,154,1) 20%, rgba(1,127,247,1) 90%)"
               }`,
@@ -283,19 +287,20 @@ function Home() {
           ></div>
         </div>
         <p className="text-center font-bold text-[#15599a] text-xl">
-          {9999 < 10000 ? (
-            <>
-              {/** Faltam apenas{" "}
-              {((10000 - totalPeakPot) / 8).toFixed(0).replace(".", ",")}{" "}
-              contratos para os{" "}
-              <strong className="text-[#fead41]">10 MEGA !</strong> */}
-              FALTAM APENAS 34,00 kWp PARA OS{" "}
-              <strong className="text-[#fead41]">10 MEGA !</strong>
-            </>
+          {totalPeakPot ? (
+            totalPeakPot < 10165 ? (
+              <>
+                Faltam apenas{" "}
+                {(10165 - totalPeakPot).toFixed(2).replace(".", ",")} kWp para
+                os <strong className="text-[#fead41]">10 MEGA !</strong>
+              </>
+            ) : (
+              <strong className="font-bold text-[#fead41]">
+                SOMOS 10 MEGA !!!
+              </strong>
+            )
           ) : (
-            <strong className="font-bold text-[#fead41]">
-              SOMOS 10 MEGA !!!
-            </strong>
+            false
           )}
         </p>
       </div>

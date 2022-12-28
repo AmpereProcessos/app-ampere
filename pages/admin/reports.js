@@ -28,6 +28,7 @@ function Acompanhamento() {
   }
   function getPotenciaVendida() {
     var filteredArr = info;
+    filteredArr = filteredArr.filter((x) => x.contrato.status == "ASSINADO");
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter(
@@ -368,6 +369,7 @@ function Acompanhamento() {
   }
   function getTotalVendido() {
     var filteredArr = info;
+    filteredArr = filteredArr.filter((x) => x.contrato.status == "ASSINADO");
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter(

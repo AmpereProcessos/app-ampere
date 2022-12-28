@@ -20,6 +20,12 @@ function Header({ toggleSidebar }) {
     useContext(AppContext);
   const router = useRouter();
   const [notificationIsOpen, setNotificationIsOpen] = useState(false);
+  let unreadArr = notificacoes
+    ? notificacoes.filter((x) => x.lido == false)
+    : 0;
+  console.log(unreadArr.length);
+  const [unreadCount, setUnreadCount] = useState(unreadArr.length);
+  console.log(unreadCount);
   {
     /**   useEffect(() => {
     axios
@@ -39,6 +45,12 @@ function Header({ toggleSidebar }) {
       })
       .then((res) => getNotificacoes(credentials._id));
   }
+  useEffect(() => {
+    let unreadArr = notificacoes
+      ? notificacoes.filter((x) => x.lido == false)
+      : 0;
+    setUnreadCount(unreadArr.length);
+  }, [notificacoes]);
   if (
     router.pathname.includes("pdf") ||
     router.pathname.includes("publico") ||
@@ -76,7 +88,7 @@ function Header({ toggleSidebar }) {
           onClick={() => setNotificationIsOpen(!notificationIsOpen)}
           className="flex cursor-pointer"
         >
-          {notificacoes.length > 0 ? (
+          {unreadCount > 0 ? (
             <div className="flex items-center w-[25px] h-[22px] ml-2">
               <Image src={AlertVolts} />
             </div>
@@ -85,9 +97,9 @@ function Header({ toggleSidebar }) {
               <Image src={SleepVolts} />
             </div>
           )}
-          {notificacoes.length > 0 && (
+          {unreadCount > 0 && (
             <p className="bg-red-500 rounded-full font-bold w-[20px] h-[20px] text-xs text-center">
-              {notificacoes.length}
+              {unreadCount}
             </p>
           )}
         </div>
@@ -104,12 +116,7 @@ function Header({ toggleSidebar }) {
           </Link>
         )}
       </div>
-      {notificationIsOpen && (
-        <NotificationModal
-          notificacoes={notificacoes}
-          updateNotifications={updateNotifications}
-        />
-      )}
+      {notificationIsOpen && <NotificationModal />}
     </div>
   );
 }

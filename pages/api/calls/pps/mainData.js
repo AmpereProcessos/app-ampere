@@ -46,11 +46,17 @@ export default async function handler(req, res) {
     let svbCode = Number(req.body.codigoDoProjeto);
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("pps");
-    await collection.insertOne({
-      ...req.body,
-      carimboDataHora: new Date().toJSON(),
-      codigoDoProjeto: svbCode,
-    });
-    return res.json("Chamado criado!");
+    try {
+      await collection.insertOne({
+        ...req.body,
+        carimboDataHora: new Date().toJSON(),
+        codigoDoProjeto: svbCode,
+      });
+      return res.json("Chamado criado!");
+    } catch (error) {
+      res
+        .status(500)
+        .send("Houve um erro no servidor, por favor tente novamente.");
+    }
   }
 }

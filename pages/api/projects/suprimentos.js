@@ -12,6 +12,7 @@ export default async function handler(req, res) {
         },
         {
           $match: {
+            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
             "compra.statusEntrega": {
               $in: [
                 "EM ROTA",

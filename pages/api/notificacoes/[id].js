@@ -18,7 +18,12 @@ export default async function handler(req, res) {
         {
           $match: {
             destinatario: req.query.id,
-            lido: false,
+          },
+        },
+        {
+          $sort: {
+            lido: 1,
+            dataDeLeitura: -1,
           },
         },
       ])

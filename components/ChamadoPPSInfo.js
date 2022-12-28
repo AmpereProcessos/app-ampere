@@ -106,14 +106,14 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
     return true;
   }
   function validateFields() {
-    if (dados.nomeDoCliente.trim().length < 3) {
+    if (dados.nomeDoCliente && dados.nomeDoCliente.trim().length < 3) {
       setMsg({
         text: "Por favor, preencha o nome do cliente.",
         color: "text-red-500",
       });
       return false;
     }
-    if (dados.telefone.trim().length < 7) {
+    if (dados.telefone && dados.telefone.trim().length < 7) {
       setMsg({
         text: "Por favor, preencha um telefone válido.",
         color: "text-red-500",
@@ -158,14 +158,14 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
       }
     }
     if (dados.tipoDeSolicitacao == "ANÁLISE DE CRÉDITO") {
-      if (dados.cpf_cnpj.trim().length < 8) {
+      if (dados.cpf_cnpj && dados.cpf_cnpj.trim().length < 8) {
         setMsg({
           text: "Por favor, preencha um CPF/CNPJ válido.",
           color: "text-red-500",
         });
         return false;
       }
-      if (dados.email.trim().length < 8) {
+      if (dados.email && dados.email.trim().length < 8) {
         setMsg({
           text: "Por favor, preencha um email válido.",
           color: "text-red-500",
@@ -193,7 +193,10 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
         });
         return false;
       }
-      if (dados.enderecoDoCliente.trim().length < 3) {
+      if (
+        dados.enderecoDoCliente &&
+        dados.enderecoDoCliente?.trim().length < 3
+      ) {
         setMsg({
           text: "Por favor, preencha o endereço do cliente.",
           color: "text-red-500",
@@ -223,6 +226,13 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
                 setTimeout(() => {
                   location.reload();
                 }, 2000);
+              })
+              .catch((err) => {
+                console.log(err);
+                setMsg({
+                  text: "Houve um erro na criação do chamado, por favor tente novamente.",
+                  color: "text-red-500",
+                });
               });
           }
         }

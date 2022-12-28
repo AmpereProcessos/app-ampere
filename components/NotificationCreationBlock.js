@@ -2,13 +2,15 @@ import axios from "axios";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { AppContext } from "../context/AppContext";
-function NotificationCreationBlock({ codProjeto }) {
+function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
   const { credentials, users } = useContext(AppContext);
   const [notInfo, setNotInfo] = useState({
     destinatario: null,
     remetente: credentials.nome,
+    remetenteId: credentials._id,
     mensagem: "",
     projetoReferencia: codProjeto,
+    nomeDoProjeto: nomeDoProjeto,
   });
   const [destinatarioNome, setDestinatarioNome] = useState("NÃO DEFINIDO");
   const [msg, setMsg] = useState({ text: "", color: "" });

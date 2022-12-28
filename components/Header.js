@@ -23,9 +23,7 @@ function Header({ toggleSidebar }) {
   let unreadArr = notificacoes
     ? notificacoes.filter((x) => x.lido == false)
     : 0;
-  console.log(unreadArr.length);
   const [unreadCount, setUnreadCount] = useState(unreadArr.length);
-  console.log(unreadCount);
   {
     /**   useEffect(() => {
     axios

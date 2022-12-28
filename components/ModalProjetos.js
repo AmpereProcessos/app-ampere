@@ -186,8 +186,8 @@ function ModalProjetos({
                   NOTIFICAR
                 </span>
                 <NotificationCreationBlock
+                  nomeDoProjeto={project.nomeDoContrato}
                   codProjeto={project.qtde}
-                  credentials={credentials}
                 />
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

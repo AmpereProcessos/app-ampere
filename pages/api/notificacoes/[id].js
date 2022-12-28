@@ -13,11 +13,21 @@ export default async function handler(req, res) {
   } else if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("notificacoes");
+
+    var dateObj = new Date();
+    // Setando date de parâmetro pra buscar notificações dos últimos 14 dias
+    dateObj.setDate(dateObj.getDate() - 14);
     let notificacoes = await collection
       .aggregate([
         {
           $match: {
             destinatario: req.query.id,
+            $or: [
+              { lido: false },
+              {
+                dataDeLeitura: { $gte: new Date(dateObj) },
+              },
+            ],
           },
         },
         {

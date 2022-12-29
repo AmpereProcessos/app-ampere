@@ -18,6 +18,8 @@ export default async function handler(req, res) {
             qtde: 1,
             app: 1,
             conferencias: 1,
+            cidade: 1,
+            "obra.equipeResp": 1,
           },
         },
       ])

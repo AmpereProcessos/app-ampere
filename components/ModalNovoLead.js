@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 import { FaSave } from "react-icons/fa";
 import Select from "react-select";
 import { cidadesAtendidas, cities, vendedores } from "../utils/constants";
 import axios from "axios";
 import dayjs from "dayjs";
+import { AppContext } from "../context/AppContext";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -34,6 +35,7 @@ function formatPhone(value) {
   return value;
 }
 function NovoLead({ setModalIsOpen, getLeads }) {
+  const { credentials } = useContext(AppContext);
   const [msg, setMsg] = useState({ text: "", color: "" });
   const [info, setInfo] = useState({
     telefone: "",
@@ -116,7 +118,9 @@ function NovoLead({ setModalIsOpen, getLeads }) {
       axios
         .post("/api/insideSales/newLead", {
           ...info,
-          responsavel: "DEVISSON LIMA",
+          responsavel: credentials.vendedor
+            ? credentials.vendedor
+            : credentials.nome,
         })
         .then((res) => {
           setMsg({ text: "Lead adicionado!", color: "text-green-500" });

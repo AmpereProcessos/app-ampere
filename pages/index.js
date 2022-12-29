@@ -1,14 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import {
-  MdOutlineKeyboardArrowUp,
-  MdOutlineKeyboardArrowDown,
-} from "react-icons/md";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
-import Logo from "../utils/10mega.png";
 import "react-circular-progressbar/dist/styles.css";
 import {
   AreaChart,
@@ -22,6 +17,7 @@ import {
   ResponsiveContainer,
   YAxis,
 } from "recharts";
+import { Fireworks } from "fireworks-js";
 const routes = [
   {
     title: "Projetos",
@@ -75,6 +71,7 @@ const routes = [
 
 function Home() {
   const { credentials, setCredentials } = useContext(AppContext);
+  const fireWorkEl = useRef();
   const router = useRouter();
   const [totalPeakPot, setTotalPeakPot] = useState(null);
   const [selectedYear, setSelectedYear] = useState();
@@ -94,6 +91,61 @@ function Home() {
     birthdayToday: false,
   });
   const [regional, setRegional] = useState("GERAL");
+  function runFireworks() {
+    const container = document.querySelector(".firework");
+    console.log(fireWorkEl.current);
+    const fireworks = new Fireworks(fireWorkEl.current, {
+      autoresize: true,
+      opacity: 0.5,
+      acceleration: 1.05,
+      friction: 0.97,
+      gravity: 1.5,
+      particles: 50,
+      traceLength: 3,
+      traceSpeed: 10,
+      explosion: 5,
+      intensity: 30,
+      flickering: 50,
+      lineStyle: "round",
+      hue: {
+        min: 0,
+        max: 360,
+      },
+      delay: {
+        min: 30,
+        max: 60,
+      },
+      rocketsPoint: {
+        min: 50,
+        max: 50,
+      },
+      lineWidth: {
+        explosion: {
+          min: 1,
+          max: 3,
+        },
+        trace: {
+          min: 1,
+          max: 2,
+        },
+      },
+      brightness: {
+        min: 50,
+        max: 80,
+      },
+      decay: {
+        min: 0.015,
+        max: 0.03,
+      },
+      mouse: {
+        click: false,
+        move: false,
+        max: 1,
+      },
+    });
+    console.log(fireworks);
+    fireworks.start();
+  }
   function getStats(credenciais) {
     if (credenciais.visualizacao == "REGIONAL") {
       axios
@@ -103,6 +155,7 @@ function Home() {
         })
         .then((res) => {
           setTotalPeakPot(Number(res.data.totalPeakPot));
+          if (res.data.totalPeakPot > 10000) runFireworks();
           setNps(res.data.nps);
           setAverageBuyTime(res.data.suprimentosData);
           setInstalledData(res.data.installedInfo);
@@ -116,6 +169,7 @@ function Home() {
         })
         .then((res) => {
           setTotalPeakPot(Number(res.data.totalPeakPot));
+          if (res.data.totalPeakPot > 10000) runFireworks();
           setNps(res.data.nps);
           setAverageBuyTime(res.data.suprimentosData);
           setInstalledData(res.data.installedInfo);
@@ -123,8 +177,8 @@ function Home() {
         });
     } else {
       axios.get("/api/stats").then((res) => {
-        console.log(Number(res.data.totalPeakPot));
         setTotalPeakPot(Number(res.data.totalPeakPot));
+        if (res.data.totalPeakPot > 10000) runFireworks();
         setNps(res.data.nps);
         setAverageBuyTime(res.data.suprimentosData);
         setInstalledData(res.data.installedInfo);
@@ -233,6 +287,7 @@ function Home() {
     getGraphDataByYear(2022, { visualizacao: "REGIONAL", regional: value });
     getStats({ visualizacao: "REGIONAL", regional: value });
   }
+  console.log(totalPeakPot);
   return (
     <div className="p-6 grow">
       {!credentials.visualizacao && (
@@ -272,9 +327,13 @@ function Home() {
         <div className="w-full h-[36px] border border-[#15599a]">
           <div
             style={{
-              width: `${99.9}%`, // `${totalPeakPot >10000 ? 100 :   Number((totalPeakPot * 100) / 10000).toFixed(2)}%`
+              width: `${
+                totalPeakPot > 10000
+                  ? 100
+                  : Number((totalPeakPot * 100) / 10000).toFixed(2)
+              }%`, // `${totalPeakPot >10000 ? 100 :   Number((totalPeakPot * 100) / 10000).toFixed(2)}%`
               background: `${
-                10000 > 10165
+                totalPeakPot > 10000
                   ? "linear-gradient(90deg, rgba(254,199,97,1) 29%, rgba(226,141,59,1) 100%)"
                   : "linear-gradient(90deg, rgba(21,89,154,1) 20%, rgba(1,127,247,1) 90%)"
               }`,
@@ -284,7 +343,7 @@ function Home() {
         </div>
         <p className="text-center font-bold text-[#15599a] text-xl">
           {totalPeakPot ? (
-            10000 < 10165 ? (
+            totalPeakPot < 10000 ? (
               <>
                 Faltam apenas 6,73 kWp para os{" "}
                 <strong className="text-[#fead41]">10 MEGA !</strong>
@@ -299,7 +358,8 @@ function Home() {
           )}
         </p>
       </div>
-      <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">
+      <div id="firework" ref={fireWorkEl}></div>
+      {/* <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">
         <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
             <h1 className="uppercase text-gray-600">
@@ -527,7 +587,7 @@ function Home() {
               </div>
             ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

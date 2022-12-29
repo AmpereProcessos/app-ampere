@@ -203,8 +203,8 @@ function Comissionamento() {
         </div>
       </div>
       <div className="flex flex-col gap-2 mt-2">
-        {filteredProjects.map((project) => (
-          <ComissionamentoPosObraCard project={project} />
+        {filteredProjects.map((project, index) => (
+          <ComissionamentoPosObraCard key={index} project={project} />
         ))}
       </div>
     </div>

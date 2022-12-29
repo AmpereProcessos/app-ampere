@@ -54,12 +54,14 @@ export default async function handler(req, res) {
           ...x,
           porcentagemComissaoAtivo: getComissao(x.vendedor.nome).pcAtivo,
           valorComissaoAtivo:
-            getComissao(x.vendedor.nome).pcAtivo *
-            Number(x.sistema.valorProjeto),
+            (getComissao(x.vendedor.nome).pcAtivo *
+              Number(x.sistema.valorProjeto)) /
+            100,
           porcentagemComissaoInside: getComissao(x.vendedor.nome).pcInside,
           valorComissaoInside:
-            getComissao(x.vendedor.nome).pcInside *
-            Number(x.sistema.valorProjeto),
+            (getComissao(x.vendedor.nome).pcInside *
+              Number(x.sistema.valorProjeto)) /
+            100,
         };
       });
       res.json(arr);

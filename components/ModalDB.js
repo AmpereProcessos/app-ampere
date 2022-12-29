@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   cidadesAtendidas,
   vendedores,
@@ -8,6 +8,7 @@ import {
   localEntregaOptions,
   equipesTecnicas,
 } from "../utils/constants";
+import { AppContext } from "../context/AppContext";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import TextInput from "./TextInput";
@@ -15,6 +16,7 @@ import SelectInput from "./SelectInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
 import axios from "axios";
+import OSCreationBlock from "./OSCreationBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -51,6 +53,7 @@ function formataCEP(cep) {
   return cep;
 }
 function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
+  const { credentials } = useContext(AppContext);
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
   const [msg, setMsg] = useState({
@@ -70,7 +73,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
       });
     }
   }
-  console.log(infoHolder);
+  console.log("CREDENCIAIS EM DB", credentials);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -2909,6 +2912,133 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                 </div>
               </div>
+              {credentials.accessibleRoutes.includes("O&M") ||
+              credentials.accessibleRoutes.includes("Obras") ? (
+                <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                    ORDENS DE SERVIÇO
+                  </span>
+                  <OSCreationBlock
+                    editor={editor}
+                    qtde={project.qtde}
+                    nomeDoContrato={project.nomeDoContrato}
+                    credentials={credentials}
+                    id={infoHolder._id}
+                    ordensDeServico={infoHolder.ordensDeServico}
+                    handleUpdates={() => handleUpdates(project._id)}
+                    categories={[
+                      {
+                        label: "MANUTENÇÃO PREVENTIVA",
+                        value: "MANUTENÇÃO PREVENTIVA",
+                      },
+                      {
+                        label: "MANUTENÇÃO CORRETIVA",
+                        value: "MANUTENÇÃO CORRETIVA",
+                      },
+                      {
+                        label: "OUTROS",
+                        value: "OUTROS",
+                      },
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                    ]}
+                  />
+                  {infoHolder.ordensDeServico != undefined &&
+                    infoHolder.ordensDeServico?.length > 0 && (
+                      <div className="w-full flex flex-col px-10 border-t border-gray-200 mt-2">
+                        <h1 className="text-[#fead61] font-bold">
+                          OSs GERADAS DO PROJETO
+                        </h1>
+                        {infoHolder.ordensDeServico.map((ordem, index) => (
+                          <div
+                            key={index}
+                            className="flex mt-1 items-center justify-around"
+                          >
+                            <div className="flex flex-col items-center">
+                              <p className="uppercase text-gray-500">
+                                CATEGORIA
+                              </p>
+                              <p className="text-xs uppercase">
+                                {ordem.categoria}
+                              </p>
+                            </div>
+                            <div className="hidden lg:flex flex-col items-center">
+                              <p className="uppercase text-gray-500">
+                                SERVIÇO PARA EXECUÇÃO
+                              </p>
+                              <p className="text-xs uppercase">
+                                {ordem.servicoExecutado}
+                              </p>
+                            </div>
+                            <div className="hidden lg:flex flex-col items-center">
+                              <p className="uppercase text-gray-500">
+                                REALIZAR COBRANÇA?
+                              </p>
+                              <p className="text-xs uppercase">
+                                {ordem.realizarCobranca ? "SIM" : "NÃO"}
+                              </p>
+                            </div>
+                            <div className="hidden lg:flex flex-col items-center">
+                              <p className="uppercase text-gray-500">
+                                VALOR DA COBRANÇA
+                              </p>
+                              <p className="text-xs uppercase">
+                                R$ {ordem.valorCobranca}
+                              </p>
+                            </div>
+                            <div className="hiddn lg:flex flex-col items-center">
+                              <p className="uppercase text-gray-500">
+                                EMISSOR DA OS
+                              </p>
+                              <p className="text-xs uppercase">
+                                {ordem.usuarioEmissor}
+                              </p>
+                            </div>
+                            <div className="hidden lg:flex flex-col items-center">
+                              <p className="uppercase text-gray-500">
+                                DATA DE ABERTURA
+                              </p>
+                              <p className="text-xs uppercase">
+                                {new Date(
+                                  ordem.dataDeAbertura
+                                ).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <div className="hidden lg:flex flex-col items-center">
+                              <p className="uppercase text-gray-500">
+                                GRAU DE URGÊNCIA
+                              </p>
+                              <p className="text-xs uppercase">
+                                {ordem.grauDeUrgencia}
+                              </p>
+                            </div>
+                            <Link
+                              href={`/ordemDeServico/pdf/${project._id}?index=${index}`}
+                            >
+                              <button className="p-2 bg-[#fead61] font-bold rounded">
+                                VER OS
+                              </button>
+                            </Link>
+                            {ordem.categoria == "MANUTENÇÃO PREVENTIVA" && (
+                              <Link
+                                href={`/oem/pdfTermo/${project._id}?index=${index}`}
+                              >
+                                <button className="p-2 bg-[#fead61] font-bold rounded">
+                                  VER TERMO
+                                </button>
+                              </Link>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                </div>
+              ) : (
+                false
+              )}
+
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   JORNADA

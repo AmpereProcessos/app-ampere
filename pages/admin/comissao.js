@@ -66,11 +66,17 @@ function Comissao() {
     return sum;
   }
   function getTotalComission() {
-    var sum = 0;
+    var sumAtivo = 0;
+    var sumInside = 0;
     for (let i = 0; i < filteredProjects.length; i++) {
-      sum = sum + filteredProjects[i].valorComissao;
+      sumAtivo = sumAtivo + filteredProjects[i].valorComissaoAtivo;
+      sumInside = sumInside + filteredProjects[i].valorComissaoInside;
     }
-    return sum.toFixed(2);
+    return {
+      ativo: sumAtivo.toFixed(2),
+      inside: sumInside.toFixed(2),
+      total: (sumAtivo + sumInside).toFixed(2),
+    };
   }
   function getTotalPeakPot() {
     var sum = 0;
@@ -84,6 +90,7 @@ function Comissao() {
       getProjects();
     }
   }, []);
+  console.log(filteredProjects);
   if (credentials?.manager)
     return (
       <div className="flex flex-col p-6 grow">
@@ -167,7 +174,7 @@ function Comissao() {
               >
                 BAIXAR DADOS
               </button>
-              <buttton
+              <button
                 onClick={() => setView("GERAL")}
                 className={`p-1 cursor-pointer rounded font-bold ${
                   view == "GERAL"
@@ -176,8 +183,8 @@ function Comissao() {
                 }`}
               >
                 VISÃO GERAL
-              </buttton>
-              <buttton
+              </button>
+              <button
                 onClick={() => setView("PDF")}
                 className={`p-1 cursor-pointer rounded font-bold ${
                   view == "PDF"
@@ -186,7 +193,7 @@ function Comissao() {
                 }`}
               >
                 VISÃO PDF
-              </buttton>
+              </button>
             </div>
           </div>
           <div className="flex items-center justify-center gap-1">
@@ -200,10 +207,18 @@ function Comissao() {
             </div>
             <div className="flex flex-col border-x border-gray-200 px-2">
               <h1 className="text-[#15599a] font-bold text-center">
-                COMISSÃO TOTAL
+                COMISSÃO TOTAL ATIVO
               </h1>
               <p className="text-gray-700 text-center text-xs">
-                R$ {getTotalComission().toLocaleString("pt-br")}
+                R$ {getTotalComission().ativo.toLocaleString("pt-br")}
+              </p>
+            </div>
+            <div className="flex flex-col border-x border-gray-200 px-2">
+              <h1 className="text-[#15599a] font-bold text-center">
+                COMISSÃO TOTAL INSIDE
+              </h1>
+              <p className="text-gray-700 text-center text-xs">
+                R$ {getTotalComission().inside.toLocaleString("pt-br")}
               </p>
             </div>
             <div className="flex flex-col border-x border-gray-200 px-2">
@@ -211,7 +226,10 @@ function Comissao() {
                 COMISSÃO TOTAL SOBRE FATURAMENTO
               </h1>
               <p className="text-gray-700 text-center text-xs">
-                {((getTotalComission() * 100) / getTotalSold()).toFixed(2)}%
+                {((getTotalComission().total * 100) / getTotalSold()).toFixed(
+                  2
+                )}
+                %
               </p>
             </div>
             <div className="flex flex-col border-x border-gray-200 px-2">

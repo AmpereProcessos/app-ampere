@@ -44,6 +44,7 @@ export default async function handler(req, res) {
             "compra.dataPagamento": 1,
             "medidor.data": 1,
             "compra.dataPedido": 1,
+            "sistema.qtdeModulos": 1,
           },
         },
         {

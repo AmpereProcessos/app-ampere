@@ -22,6 +22,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     cidadeFilter: [],
     vendedorFilter: [],
     sorteioFilter: false,
+    numModulos: null,
   });
   function getProjects() {
     /*
@@ -144,6 +145,12 @@ function BandoDeDados({ data, credentials, setCredentials }) {
         (project) =>
           project.vendedor.nome != "ARTUR MILANE" &&
           (project.nps > 5 || project.jornada.dataNps == undefined)
+      );
+    }
+    if (filters.numModulos > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) => Number(call.sistema.qtdeModulos) > Number(filters.numModulos)
       );
     }
     if (filters.vendedorFilter.length > 0) {
@@ -328,6 +335,17 @@ function BandoDeDados({ data, credentials, setCredentials }) {
               })
             }
             closeMenuOnSelect={false}
+          />
+          <input
+            type="number"
+            placeholder="NºModulos > que"
+            className={
+              "outline-none p-1.5 text-center rounded border border-gray-200 placeholder:italic"
+            }
+            value={filters.numModulos}
+            onChange={(e) =>
+              setFilters({ ...filters, numModulos: Number(e.target.value) })
+            }
           />
           <div className="hidden lg:flex gap-x-2">
             <div className="flex flex-col w-fit items-center">

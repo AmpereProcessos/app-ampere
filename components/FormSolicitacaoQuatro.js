@@ -57,7 +57,7 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
       setMessage("Por favor, preencha uma potência de otimizador válida");
       return false;
     }
-    if (dados.marcaModulos.trim().length < 3) {
+    if (dados.marcaModulos.trim().length < 2) {
       setMessage("Por favor,preencha uma marca de módulos válida");
       return false;
     }

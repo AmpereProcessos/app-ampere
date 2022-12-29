@@ -24,7 +24,7 @@ import { SiCashapp } from "react-icons/si";
 import { BsFillCalendarEventFill, BsFolderPlu } from "react-icons/bs";
 import { BsFolderPlus } from "react-icons/bs";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
-import { ImFolderOpen } from "react-icons/im";
+import { ImFolderOpen, ImCheckboxChecked } from "react-icons/im";
 import Link from "next/link";
 const style = {
   heigth: "calc(100% - 350px)",
@@ -304,6 +304,21 @@ function Sidebar() {
                       />
                       <p className="pl-3 text-xs text-gray-600">
                         Comissionamento
+                      </p>
+                    </a>
+                  </Link>
+                )
+              : false}
+            {credentials.accessibleRoutes != undefined &&
+            credentials.regional == undefined
+              ? credentials?.accessibleRoutes.includes("O&M") && (
+                  <Link href={"/oem/comissionamento"}>
+                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <ImCheckboxChecked
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-xs text-gray-600">
+                        Comissionamento Pós-Obra
                       </p>
                     </a>
                   </Link>

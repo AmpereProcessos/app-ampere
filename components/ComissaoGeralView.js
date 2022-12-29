@@ -87,7 +87,11 @@ function ComissaoGeralView({ projects, setProjects }) {
               </p>
               <input
                 type="number"
-                value={project.porcentagemComissaoAtivo.toFixed(2)}
+                value={
+                  project.porcentagemComissaoAtivo
+                    ? project.porcentagemComissaoAtivo.toFixed(2)
+                    : 0
+                }
                 className="outline-none p-2 text-xs text-gray-600"
                 onChange={(e) => {
                   let arr = [...projects];
@@ -102,7 +106,10 @@ function ComissaoGeralView({ projects, setProjects }) {
             <div className="flex flex-col items-center">
               <p className="text-sm font-bold text-gray-700">VALOR</p>
               <p className="text-xs  text-gray-600 p-2">
-                R${project.valorComissaoAtivo.toFixed(2)}
+                R$
+                {project.valorComissaoAtivo
+                  ? project.valorComissaoAtivo.toFixed(2)
+                  : 0}
               </p>
             </div>
             <div className="flex flex-col items-center">
@@ -111,7 +118,11 @@ function ComissaoGeralView({ projects, setProjects }) {
               </p>
               <input
                 type="number"
-                value={project.porcentagemComissaoInside.toFixed(2)}
+                value={
+                  project.porcentagemComissaoInside
+                    ? project.porcentagemComissaoInside.toFixed(2)
+                    : 0
+                }
                 className="outline-none p-2 text-xs text-gray-600"
                 onChange={(e) => {
                   let arr = [...projects];
@@ -126,7 +137,10 @@ function ComissaoGeralView({ projects, setProjects }) {
             <div className="flex flex-col items-center">
               <p className="text-sm font-bold text-gray-700">VALOR</p>
               <p className="text-xs  text-gray-600 p-2">
-                R${project.valorComissaoAtivo.toFixed(2)}
+                R$
+                {project.valorComissaoAtivo
+                  ? project.valorComissaoAtivo.toFixed(2)
+                  : 0}
               </p>
             </div>
           </div>

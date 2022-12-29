@@ -1071,6 +1071,7 @@ export const ppsSolicitations = [
 export const projetosSolicitations = [
   "A DEFINIR",
   "DIAGRAMA UNIFILAR",
+  "PLANTA DE SITUAÇÃO",
   "MEMORIAL DESCRITIVO",
   "DESENHO MONTAGEM",
   "DISTRIBUIÇÃO DE CRÉDITO",

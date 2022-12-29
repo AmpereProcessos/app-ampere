@@ -12,6 +12,8 @@ import { GiPoliceBadge } from "react-icons/gi";
 import ModalOeM from "../../components/ModalOeM";
 import Link from "next/link";
 import { AppContext } from "../../context/AppContext";
+import dayjs from "dayjs";
+import SelectInput from "../../components/SelectInput";
 const statusStyles = {
   REALIZADO: {
     textColor: "text-green-500",
@@ -38,7 +40,9 @@ function OeM({ users }) {
     limparAteDezembro: false,
     appPendente: false,
     ordenarAlfabeticamente: false,
+    numModulos: null,
     usinaLigadaFilter: [],
+    condicaoOeM: "TODOS",
   });
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -121,18 +125,34 @@ function OeM({ users }) {
       newArr = newArr.filter((project) => project.app.data == undefined);
     }
     if (filters.ordenarAlfabeticamente) {
-      console.log("OPA");
       if (!newArr) newArr = projects;
       newArr = newArr.sort((a, b) =>
         a.nomeDoContrato.trim().localeCompare(b.nomeDoContrato.trim())
       );
-      console.log(newArr);
     }
     if (filters.manutencaoPendente) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
         (project) => project.manutencaoPreventiva.status == "NÃO REALIZADO"
       );
+    }
+    if (filters.condicaoOeM != "TODOS") {
+      if (!newArr) newArr = projects;
+      if (filters.condicaoOeM == "O&M EM VENCIMENTO") {
+        newArr = newArr.filter(
+          (project) =>
+            project.medidor?.data &&
+            dayjs().diff(dayjs(project.medidor?.data), "days") > 350 &&
+            dayjs().diff(dayjs(project.medidor?.data), "days") <= 365
+        );
+      }
+      if (filters.condicaoOeM == "O&M VENCIDO") {
+        newArr = newArr.filter(
+          (project) =>
+            project.medidor?.data &&
+            dayjs().diff(dayjs(project.medidor?.data), "days") > 365
+        );
+      }
     }
     if (filters.manutencaoAtrasada) {
       if (!newArr) newArr = projects;
@@ -169,13 +189,17 @@ function OeM({ users }) {
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!newArr) newArr = projects;
-      console.log(newArr);
       newArr = newArr.filter(
         (call) =>
           call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
           call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
-      console.log(newArr);
+    }
+    if (filters.numModulos > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) => Number(call.sistema.qtdeModulos) > Number(filters.numModulos)
+      );
     }
     if (!newArr) {
       setFilteredProjects(projects);
@@ -204,15 +228,32 @@ function OeM({ users }) {
       .get(`/api/projects/fetchDoc/${id}`)
       .then((res) => setModalProject(res.data[0]));
   }
-  function fetchMoreProjects() {
-    setOpInProgress(true);
-    let lastQtde = projects.length > 0 ? projects[projects.length - 1].qtde : 0;
-    axios.post("/api/projects/oem", { greater: lastQtde }).then((res) => {
-      let arr = [...projects, ...res.data];
-      setOpInProgress(false);
-      setProjects([...arr]);
-      setFilteredProjects([...arr]);
+  // function fetchMoreProjects() {
+  //   setOpInProgress(true);
+  //   let lastQtde = projects.length > 0 ? projects[projects.length - 1].qtde : 0;
+  //   axios.post("/api/projects/oem", { greater: lastQtde }).then((res) => {
+  //     let arr = [...projects, ...res.data];
+  //     setOpInProgress(false);
+  //     setProjects([...arr]);
+  //     setFilteredProjects([...arr]);
+  //   });
+  // }
+  function handleOpenModal(id) {
+    axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
+      setModalProject(res.data[0]);
+      setModalIsOpen(true);
     });
+  }
+  function checkOeMEnding(dataMedidor) {
+    if (dataMedidor) {
+      if (dayjs().diff(dayjs(dataMedidor), "days") > 365) {
+        return { text: "O&M VENCIDO", color: "text-red-500" };
+      } else if (dayjs().diff(dayjs(dataMedidor), "days") > 350) {
+        return { text: "O&M EM VENCIMENTO", color: "text-orange-500" };
+      } else {
+        return { text: "O&M EM ANDAMENTO", color: "text-green-500" };
+      }
+    } else return { text: "O&M EM ANDAMENTO", color: "text-green-500" };
   }
   useEffect(() => {
     if (
@@ -224,12 +265,6 @@ function OeM({ users }) {
       getProjects(credentials);
     }
   }, []);
-  function handleOpenModal(id) {
-    axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
-      setModalProject(res.data[0]);
-      setModalIsOpen(true);
-    });
-  }
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
@@ -247,173 +282,189 @@ function OeM({ users }) {
           )}
         </div>
         <div className="flex flex-wrap gap-2 justify-around mt-2 items-center">
-          <input
-            className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
-            placeholder="Digite o nome do contrato"
-            value={searchFilter}
-            onChange={(e) => handleSearchFilter(e.target.value)}
-          />
-          <Select
-            isMulti
-            placeholder="PLANO DE O&M"
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                planoOeM: e.map((x) => x.value),
-              })
-            }
-            options={[
-              ...oemPlans.map((plano) => plano),
-              { label: "NÃO DEFINIDO", value: undefined },
-            ]}
-          />
-          <Select
-            isMulti
-            placeholder="STATUS DA OBRA"
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                obraStatusFilter: e.map((x) => x.value),
-              })
-            }
-            options={[
-              {
-                value: "EM ANDAMENTO",
-                label: "EM ANDAMENTO",
-              },
-              {
-                value: "PAUSADA",
-                label: "PAUSADA",
-              },
-              {
-                value: "AGENDADA",
-                label: "AGENDADA",
-              },
-              {
-                value: "AGUARDANDO AGENDAMENTO",
-                label: "AGUARDANDO AGENDAMENTO",
-              },
-            ]}
-          />
-          <Select
-            isMulti
-            placeholder="USINA LIGADA"
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                usinaLigadaFilter: e.map((x) => x.value),
-              })
-            }
-            options={[
-              { label: "NÃO REALIZADO", value: "NÃO REALIZADO" },
-              { label: "REALIZADO", value: "REALIZADO" },
-            ]}
-          />
-          <Select
-            isMulti
-            placeholder="EQUIP.RESP"
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                equipResp: e.map((x) => x.value),
-              })
-            }
-            options={equipesTecnicas.map((equipe) => equipe)}
-          />
-          <div
-            onClick={() =>
-              setFilters({
-                ...filters,
-                clienteOeM: !filters.clienteOeM,
-              })
-            }
-            className={`${
-              filters.clienteOeM ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-          >
-            CLIENTES O&M
+          <div className="flex flex-wrap gap-2 justify-around mt-2 items-center">
+            <input
+              className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
+              placeholder="Digite o nome do contrato"
+              value={searchFilter}
+              onChange={(e) => handleSearchFilter(e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="NºModulos > que"
+              className={
+                "outline-none text-xs p-1.5 h-[36px] text-center rounded border border-gray-200 placeholder:italic"
+              }
+              value={filters.numModulos}
+              onChange={(e) =>
+                setFilters({ ...filters, numModulos: Number(e.target.value) })
+              }
+            />
+            <Select
+              isMulti
+              placeholder="PLANO DE O&M"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  planoOeM: e.map((x) => x.value),
+                })
+              }
+              options={[
+                ...oemPlans.map((plano) => plano),
+                { label: "NÃO DEFINIDO", value: undefined },
+              ]}
+            />
+            <Select
+              isMulti
+              placeholder="STATUS DA OBRA"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  obraStatusFilter: e.map((x) => x.value),
+                })
+              }
+              options={[
+                {
+                  value: "EM ANDAMENTO",
+                  label: "EM ANDAMENTO",
+                },
+                {
+                  value: "PAUSADA",
+                  label: "PAUSADA",
+                },
+                {
+                  value: "AGENDADA",
+                  label: "AGENDADA",
+                },
+                {
+                  value: "AGUARDANDO AGENDAMENTO",
+                  label: "AGUARDANDO AGENDAMENTO",
+                },
+              ]}
+            />
+            <Select
+              isMulti
+              placeholder="USINA LIGADA"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  usinaLigadaFilter: e.map((x) => x.value),
+                })
+              }
+              options={[
+                { label: "NÃO REALIZADO", value: "NÃO REALIZADO" },
+                { label: "REALIZADO", value: "REALIZADO" },
+              ]}
+            />
+            <Select
+              isMulti
+              placeholder="EQUIP.RESP"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  equipResp: e.map((x) => x.value),
+                })
+              }
+              options={equipesTecnicas.map((equipe) => equipe)}
+            />
+            <Select
+              isMulti
+              placeholder="CIDADE"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  cidadeFilter: e.map((x) => x.value),
+                })
+              }
+              options={cidadesAtendidas.map((cidade) => {
+                return {
+                  label: cidade,
+                  value: cidade,
+                };
+              })}
+            />
           </div>
-          <div
-            onClick={() =>
-              setFilters({
-                ...filters,
-                appPendente: !filters.appPendente,
-              })
-            }
-            className={`${
-              filters.appPendente ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-          >
-            APP PENDENTE
+          <div className="flex flex-wrap gap-2 justify-around mt-2 items-center">
+            <div
+              onClick={() =>
+                setFilters({
+                  ...filters,
+                  clienteOeM: !filters.clienteOeM,
+                })
+              }
+              className={`${
+                filters.clienteOeM ? "bg-[#15599a]" : "bg-blue-300"
+              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            >
+              CLIENTES O&M
+            </div>
+            <div
+              onClick={() =>
+                setFilters({
+                  ...filters,
+                  appPendente: !filters.appPendente,
+                })
+              }
+              className={`${
+                filters.appPendente ? "bg-[#15599a]" : "bg-blue-300"
+              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            >
+              APP PENDENTE
+            </div>
+            <div
+              onClick={() =>
+                setFilters({
+                  ...filters,
+                  ordenarAlfabeticamente: !filters.ordenarAlfabeticamente,
+                })
+              }
+              className={`${
+                filters.ordenarAlfabeticamente ? "bg-[#15599a]" : "bg-blue-300"
+              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            >
+              ORDENAR ALFABETICAMENTE
+            </div>
+            <div
+              onClick={() =>
+                setFilters({
+                  ...filters,
+                  manutencaoPendente: !filters.manutencaoPendente,
+                })
+              }
+              className={`${
+                filters.manutencaoPendente ? "bg-[#15599a]" : "bg-blue-300"
+              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            >
+              MANUTENÇÃO PENDENTE
+            </div>
+            <div
+              onClick={() =>
+                setFilters({
+                  ...filters,
+                  manutencaoAtrasada: !filters.manutencaoAtrasada,
+                })
+              }
+              className={`${
+                filters.manutencaoAtrasada ? "bg-[#15599a]" : "bg-blue-300"
+              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            >
+              MANUTENÇÃO ATRASADA
+            </div>
+            <div
+              onClick={() =>
+                setFilters({
+                  ...filters,
+                  limparAteDezembro: !filters.limparAteDezembro,
+                })
+              }
+              className={`${
+                filters.limparAteDezembro ? "bg-[#15599a]" : "bg-blue-300"
+              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            >
+              LIMPAR ATÉ DEZEMBRO
+            </div>
           </div>
-          <div
-            onClick={() =>
-              setFilters({
-                ...filters,
-                ordenarAlfabeticamente: !filters.ordenarAlfabeticamente,
-              })
-            }
-            className={`${
-              filters.ordenarAlfabeticamente ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-          >
-            ORDENAR ALFABETICAMENTE
-          </div>
-          <div
-            onClick={() =>
-              setFilters({
-                ...filters,
-                manutencaoPendente: !filters.manutencaoPendente,
-              })
-            }
-            className={`${
-              filters.manutencaoPendente ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-          >
-            MANUTENÇÃO PENDENTE
-          </div>
-          <div
-            onClick={() =>
-              setFilters({
-                ...filters,
-                manutencaoAtrasada: !filters.manutencaoAtrasada,
-              })
-            }
-            className={`${
-              filters.manutencaoAtrasada ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-          >
-            MANUTENÇÃO ATRASADA
-          </div>
-          <div
-            onClick={() =>
-              setFilters({
-                ...filters,
-                limparAteDezembro: !filters.limparAteDezembro,
-              })
-            }
-            className={`${
-              filters.limparAteDezembro ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-          >
-            LIMPAR ATÉ DEZEMBRO
-          </div>
-          <Select
-            isMulti
-            placeholder="CIDADE"
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                cidadeFilter: e.map((x) => x.value),
-              })
-            }
-            options={cidadesAtendidas.map((cidade) => {
-              return {
-                label: cidade,
-                value: cidade,
-              };
-            })}
-          />
+
           <div className="hidden lg:flex gap-x-2">
             <div className="flex flex-col w-fit items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -478,6 +529,21 @@ function OeM({ users }) {
               }
             />
           </div>
+          <div className="flex gap-x-2">
+            <SelectInput
+              label={"CONDIÇÃO DO O&M"}
+              editable={true}
+              value={filters.condicaoOeM}
+              options={[
+                { label: "TODOS", value: "TODOS" },
+                { label: "O&M EM VENCIMENTO", value: "O&M EM VENCIMENTO" },
+                { label: "O&M VENCIDO", value: "O&M VENCIDO" },
+              ]}
+              handleChange={(value) =>
+                setFilters({ ...filters, condicaoOeM: value })
+              }
+            />
+          </div>
           <button
             onClick={filterProjects}
             className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
@@ -520,6 +586,15 @@ function OeM({ users }) {
                   {project.cidade ? project.cidade : "-"}
                 </p>
               </div>
+              {checkOeMEnding(project.medidor.data).text && (
+                <span
+                  className={`text-xs ${
+                    checkOeMEnding(project.medidor.data).color
+                  } text-center font-bold`}
+                >
+                  {checkOeMEnding(project.medidor.data).text}
+                </span>
+              )}
               <div>
                 <span className="text-xxs">TOPOLOGIA</span>
                 <p className="text-xs text-center text-gray-600">

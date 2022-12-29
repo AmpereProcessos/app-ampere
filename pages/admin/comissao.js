@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import ComissaoGeralView from "../../components/ComissaoGeralView";
 import ComissaoPDFView from "../../components/ComissaoPDFView";
+import ComissaoPDFViewInside from "../../components/ComissaoPDFViewInside";
 import { AppContext } from "../../context/AppContext";
 import { vendedores } from "../../utils/constants";
 const currentDate = new Date();
@@ -13,6 +14,7 @@ function Comissao() {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filters, setFilters] = useState({
+    insider: [],
     vendedor: [],
   });
   const [dateFilter, setDateFilter] = useState({
@@ -36,6 +38,10 @@ function Comissao() {
       newArr = newArr.filter((call) =>
         filters.vendedor.includes(call.vendedor.nome)
       );
+    }
+    if (filters.insider.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) => filters.insider.includes(call.insider));
     }
     if (!newArr) {
       setFilteredProjects(projects);
@@ -69,8 +75,14 @@ function Comissao() {
     var sumAtivo = 0;
     var sumInside = 0;
     for (let i = 0; i < filteredProjects.length; i++) {
-      sumAtivo = sumAtivo + filteredProjects[i].valorComissaoAtivo;
-      sumInside = sumInside + filteredProjects[i].valorComissaoInside;
+      let comAtivo = !isNaN(filteredProjects[i].valorComissaoAtivo)
+        ? filteredProjects[i].valorComissaoAtivo
+        : 0;
+      let comInside = !isNaN(filteredProjects[i].valorComissaoInside)
+        ? filteredProjects[i].valorComissaoInside
+        : 0;
+      sumAtivo = sumAtivo + Number(comAtivo);
+      sumInside = sumInside + Number(comInside);
     }
     return {
       ativo: sumAtivo.toFixed(2),
@@ -90,7 +102,6 @@ function Comissao() {
       getProjects();
     }
   }, []);
-  console.log(filteredProjects);
   if (credentials?.manager)
     return (
       <div className="flex flex-col p-6 grow">
@@ -159,6 +170,21 @@ function Comissao() {
                   return { label: vendedor.nome, value: vendedor.nome };
                 })}
               />
+              <Select
+                isMulti
+                placeholder="INSIDER"
+                onChange={(e) =>
+                  setFilters({
+                    ...filters,
+                    insider: e.map((x) => x.value),
+                  })
+                }
+                options={vendedores
+                  .filter((x) => x.qualificacao?.includes("INSIDE"))
+                  .map((vendedor) => {
+                    return { label: vendedor.nome, value: vendedor.nome };
+                  })}
+              />
               <button
                 onClick={filterProjects}
                 className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
@@ -194,6 +220,16 @@ function Comissao() {
               >
                 VISÃO PDF
               </button>
+              <button
+                onClick={() => setView("PDF INSIDE")}
+                className={`p-1 cursor-pointer rounded font-bold ${
+                  view == "PDF INSIDE"
+                    ? "bg-[#0781F2] text-white hover:bg-blue-300 hover:text-black"
+                    : "bg-blue-300 hover:bg-[#0781F2] hover:text-white"
+                }`}
+              >
+                VISÃO PDF INSIDE
+              </button>
             </div>
           </div>
           <div className="flex items-center justify-center gap-1">
@@ -202,7 +238,7 @@ function Comissao() {
                 FATURAMENTO TOTAL
               </h1>
               <p className="text-gray-700 text-center text-xs">
-                R$ {getTotalSold().toLocaleString("pt-br")}
+                R$ {Number(getTotalSold()).toLocaleString("pt-br")}
               </p>
             </div>
             <div className="flex flex-col border-x border-gray-200 px-2">
@@ -210,7 +246,7 @@ function Comissao() {
                 COMISSÃO TOTAL ATIVO
               </h1>
               <p className="text-gray-700 text-center text-xs">
-                R$ {getTotalComission().ativo.toLocaleString("pt-br")}
+                R$ {Number(getTotalComission().ativo).toLocaleString("pt-br")}
               </p>
             </div>
             <div className="flex flex-col border-x border-gray-200 px-2">
@@ -218,7 +254,7 @@ function Comissao() {
                 COMISSÃO TOTAL INSIDE
               </h1>
               <p className="text-gray-700 text-center text-xs">
-                R$ {getTotalComission().inside.toLocaleString("pt-br")}
+                R$ {Number(getTotalComission().inside).toLocaleString("pt-br")}
               </p>
             </div>
             <div className="flex flex-col border-x border-gray-200 px-2">
@@ -250,6 +286,12 @@ function Comissao() {
         )}
         {view == "PDF" && (
           <ComissaoPDFView
+            projects={filteredProjects}
+            totalComission={getTotalComission()}
+          />
+        )}
+        {view == "PDF INSIDE" && (
+          <ComissaoPDFViewInside
             projects={filteredProjects}
             totalComission={getTotalComission()}
           />

@@ -1,3 +1,4 @@
+import axios from "axios";
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import DateInput from "./DateInput";
@@ -5,13 +6,40 @@ import TextInput from "./TextInput";
 
 function ComissionamentoPosObraCard({ project }) {
   const [info, setInfo] = useState(project);
+  const [changes, setChanges] = useState({});
+  const [msg, setMsg] = useState({ text: "", color: "" });
+  function handleChanges() {
+    axios
+      .post(`/api/projects/update/${project._id}`, changes)
+      .then((res) => {
+        setMsg({
+          text: "Alterações feitas !",
+          color: "text-green-400",
+        });
+      })
+      .catch((err) =>
+        setMsg({
+          text: "Houve um erro na alterações, por favor tente novamente",
+          color: "text-red-500",
+        })
+      );
+  }
+
   return (
     <div className="grid grid-cols-10 border border-[#15599a] p-2">
       <div className="flex flex-col justify-around col-span-1">
         <h1 className="font-bold text-[#15599a] text-center">
           {info.nomeDoContrato}
         </h1>
-        <button className="p-1 rounded bg-blue-300 hover:bg-[#15599a] hover:text-white hover:scale-105 duration-300 ease-in-out font-bold">
+        {msg.text && (
+          <p className={`text-center text-xs italic ${msg.color}`}>
+            {msg.text}
+          </p>
+        )}
+        <button
+          onClick={handleChanges}
+          className="p-1 rounded bg-blue-300 hover:bg-[#15599a] hover:text-white hover:scale-105 duration-300 ease-in-out font-bold"
+        >
           SALVAR
         </button>
       </div>

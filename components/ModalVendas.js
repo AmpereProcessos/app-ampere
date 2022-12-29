@@ -292,6 +292,14 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                       }}
                     />
                   </div>
+                  <TextInput
+                    label={"INSIDER"}
+                    value={infoHolder.insider ? infoHolder.insider : ""}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, insider: value });
+                      setInfo({ ...infoHolder, insider: value });
+                    }}
+                  />
                   <SelectInput
                     label={"SEGMENTO"}
                     value={

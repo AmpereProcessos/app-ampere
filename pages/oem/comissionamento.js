@@ -39,6 +39,13 @@ function Comissionamento() {
           call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
           call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
+      console.log(newArr);
+    }
+    if (filters.pesquisaFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        call.nomeDoContrato.includes(filters.pesquisaFilter)
+      );
     }
     if (filters.cidadeFilter.length > 0) {
       if (!newArr) newArr = projects;
@@ -73,6 +80,7 @@ function Comissionamento() {
       router.push("/");
     }
   }, []);
+  console.log(filteredProjects);
   return (
     <div className="p-6 grow flex flex-col">
       <div className="flex flex-col py-2 border-b border-gray-200">
@@ -137,10 +145,6 @@ function Comissionamento() {
               options={[
                 { label: "SAÍDA DE OBRA", value: "obra.saida" },
                 { label: "TROCA DO MEDIDOR", value: "medidor.data" },
-                {
-                  label: "DATA MANUTENÇÃO",
-                  value: "manutencaoPreventiva.data",
-                },
                 { label: "NÃO DEFINIDO", value: null },
               ]}
               onChange={(e) =>
@@ -203,8 +207,8 @@ function Comissionamento() {
         </div>
       </div>
       <div className="flex flex-col gap-2 mt-2">
-        {filteredProjects.map((project, index) => (
-          <ComissionamentoPosObraCard key={index} project={project} />
+        {filteredProjects?.map((project, index) => (
+          <ComissionamentoPosObraCard key={project._id} project={project} />
         ))}
       </div>
     </div>

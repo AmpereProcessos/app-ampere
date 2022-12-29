@@ -230,7 +230,12 @@ export default async function handler(req, res) {
     } else if (req.body.filtrarPor == "VENDEDOR") {
       queryKey = "vendedor.nome";
       queryValue = req.body.parametro;
+    } else if (req.body.filtrarPor == "INSIDE") {
+      queryKey = "insider";
+      queryValue = req.body.parametro;
     }
+    console.log(queryKey);
+    console.log(queryValue);
     let totalPeakPot = await collection
       .aggregate([
         {

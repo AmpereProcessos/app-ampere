@@ -83,6 +83,9 @@ export async function getServerSideProps({ query }) {
   } else if (visualizacao == "VENDEDOR") {
     queryKey = "vendedor.nome";
     queryValue = parametro;
+  } else if (visualizacao == "INSIDE") {
+    queryKey = "insider";
+    queryValue = parametro;
   }
   let comercial = await collection
     .aggregate([

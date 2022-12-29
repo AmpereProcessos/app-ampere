@@ -107,9 +107,7 @@ function ComissaoGeralView({ projects, setProjects }) {
               <p className="text-sm font-bold text-gray-700">VALOR</p>
               <p className="text-xs  text-gray-600 p-2">
                 R$
-                {project.valorComissaoAtivo
-                  ? project.valorComissaoAtivo.toFixed(2)
-                  : 0}
+                {project.valorComissaoAtivo ? project.valorComissaoAtivo : 0}
               </p>
             </div>
             <div className="flex flex-col items-center">
@@ -120,7 +118,7 @@ function ComissaoGeralView({ projects, setProjects }) {
                 type="number"
                 value={
                   project.porcentagemComissaoInside
-                    ? project.porcentagemComissaoInside.toFixed(2)
+                    ? project.porcentagemComissaoInside
                     : 0
                 }
                 className="outline-none p-2 text-xs text-gray-600"
@@ -138,9 +136,7 @@ function ComissaoGeralView({ projects, setProjects }) {
               <p className="text-sm font-bold text-gray-700">VALOR</p>
               <p className="text-xs  text-gray-600 p-2">
                 R$
-                {project.valorComissaoAtivo
-                  ? project.valorComissaoAtivo.toFixed(2)
-                  : 0}
+                {project.valorComissaoAtivo ? project.valorComissaoAtivo : 0}
               </p>
             </div>
           </div>

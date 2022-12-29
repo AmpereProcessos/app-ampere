@@ -36,7 +36,8 @@ function Vendas({ credentials, setCredentials }) {
   function getProjects(credenciais) {
     axios
       .post("/api/projects/vendas", {
-        vendedor: credenciais.vendedor,
+        filtrarPor: credenciais.visualizacao,
+        parametro: credenciais.vendedor,
       })
       .then((res) => {
         setProjects(res.data);

@@ -50,18 +50,36 @@ export default async function handler(req, res) {
         ])
         .toArray();
       arr = arr.map((x) => {
+        let valorAtivo = (
+          (getComissao(x.vendedor.nome).pcAtivo *
+            Number(x.sistema.valorProjeto)) /
+          100
+        ).toFixed(2);
+        let valorInside = (
+          (getComissao(x.vendedor.nome).pcInside *
+            Number(x.sistema.valorProjeto)) /
+          100
+        ).toFixed(2);
+        if (valorAtivo == "NaN") {
+          valorAtivo = 0;
+        }
+        if ((valorInside = "NaN")) {
+          valorInside = 0;
+        }
         return {
           ...x,
           porcentagemComissaoAtivo: getComissao(x.vendedor.nome).pcAtivo,
-          valorComissaoAtivo:
+          valorComissaoAtivo: (
             (getComissao(x.vendedor.nome).pcAtivo *
               Number(x.sistema.valorProjeto)) /
-            100,
+            100
+          ).toFixed(2),
           porcentagemComissaoInside: getComissao(x.vendedor.nome).pcInside,
-          valorComissaoInside:
+          valorComissaoInside: (
             (getComissao(x.vendedor.nome).pcInside *
               Number(x.sistema.valorProjeto)) /
-            100,
+            100
+          ).toFixed(2),
         };
       });
       res.json(arr);

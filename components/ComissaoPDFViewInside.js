@@ -57,14 +57,14 @@ function ComissaoPDFView({ projects }) {
         </div>
 
         <h1 className="font-bold text-[#fead61] text-center my-4">
-          RELATÓRIO DE COMISSÃO DE VENDEDOR
+          RELATÓRIO DE COMISSÃO DE INSIDER
         </h1>
         <div className="grid grid-cols-8 border border-gray-700 w-full">
           <div className="col-span-7 flex items-center justify-center h-[35px] border-r border-gray-700 text-xs bg-[#fead61] text-white font-bold text-center p-1">
             VALOR TOTAL
           </div>
           <div className="col-span-1 flex items-center justify-center h-[35px] border-r border-gray-700 text-xxs text-gray-700 font-bold text-center p-1">
-            R$ {getTotalComission().ativo}
+            R$ {getTotalComission().inside}
           </div>
         </div>
         <div className="grid grid-cols-8 border border-gray-700 w-full">
@@ -112,12 +112,12 @@ function ComissaoPDFView({ projects }) {
                 {project.insider ? project.insider : "N/A"}
               </div>
               <div className="flex items-center justify-center h-[35px] border-r border-gray-700 text-xxs text-gray-700 col-span-1 font-bold text-center p-1">
-                {project.porcentagemComissaoAtivo}
+                {project.porcentagemComissaoInside}
               </div>
               <div className="flex items-center justify-center h-[35px] text-xxs text-gray-700 col-span-1 font-bold text-center p-1">
                 R${" "}
-                {project.valorComissaoAtivo
-                  ? project.valorComissaoAtivo.toLocaleString("pt-br")
+                {project.valorComissaoInside
+                  ? project.valorComissaoInside.toLocaleString("pt-br")
                   : "-"}
               </div>
             </div>

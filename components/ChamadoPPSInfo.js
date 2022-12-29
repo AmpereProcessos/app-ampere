@@ -431,7 +431,7 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
   return (
     <div className="mt-12 w-full self-center lg:w-[75%] min-h-[275px] gap-2 flex flex-col items-center flex-wrap  border border-[#15599a] p-2 shadow-lg bg-[#fff]">
       <TextInput
-        label={"NOME COMPLETO"}
+        label={"NOME COMPLETO DO CLIENTE"}
         editable={true}
         value={dados.nomeDoCliente}
         handleChange={(value) =>
@@ -439,7 +439,7 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
         }
       />
       <TextInput
-        label={"Telefone"}
+        label={"TELEFONE DO CLIENTE"}
         editable={true}
         value={dados.telefone}
         handleChange={(value) =>

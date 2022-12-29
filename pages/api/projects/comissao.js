@@ -1,5 +1,20 @@
 import connectToDatabase from "../../../utils/connectDb";
+import { vendedores } from "../../../utils/constants";
 export default async function handler(req, res) {
+  function getComissao(vendedorNome) {
+    let vendedorInfo = vendedores.filter((x) => x.nome == vendedorNome)[0];
+    if (vendedorInfo != undefined) {
+      return {
+        pcAtivo: Number(vendedorInfo.comissaoAtivo),
+        pcInside: Number(vendedorInfo.comissaoInside),
+      };
+    } else {
+      return {
+        pcAtivo: 0,
+        pcInside: 0,
+      };
+    }
+  }
   if (req.method == "GET") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
@@ -37,10 +52,14 @@ export default async function handler(req, res) {
       arr = arr.map((x) => {
         return {
           ...x,
-          porcentagemComissao: x.insider ? 3.0 : 4.0,
-          valorComissao: x.insider
-            ? Number((x.sistema.valorProjeto * 0.03).toFixed(2))
-            : Number((x.sistema.valorProjeto * 0.04).toFixed(2)),
+          porcentagemComissaoAtivo: getComissao(x.vendedor.nome).pcAtivo,
+          valorComissaoAtivo:
+            getComissao(x.vendedor.nome).pcAtivo *
+            Number(x.sistema.valorProjeto),
+          porcentagemComissaoInside: getComissao(x.vendedor.nome).pcInside,
+          valorComissaoInside:
+            getComissao(x.vendedor.nome).pcInside *
+            Number(x.sistema.valorProjeto),
         };
       });
       res.json(arr);

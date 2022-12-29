@@ -83,16 +83,16 @@ function ComissaoGeralView({ projects, setProjects }) {
           <div className="flex items-start justify-center gap-2 py-2">
             <div className="flex flex-col items-center">
               <p className="text-sm font-bold text-gray-700">
-                PORCENTAGEM DE COMISSÃO
+                PORCENTAGEM DE COMISSÃO ATIVO
               </p>
               <input
                 type="number"
-                value={project.porcentagemComissao.toFixed(2)}
+                value={project.porcentagemComissaoAtivo.toFixed(2)}
                 className="outline-none p-2 text-xs text-gray-600"
                 onChange={(e) => {
                   let arr = [...projects];
-                  arr[index].porcentagemComissao = Number(e.target.value);
-                  arr[index].valorComissao =
+                  arr[index].porcentagemComissaoAtivo = Number(e.target.value);
+                  arr[index].valorComissaoAtivo =
                     Number(e.target.value / 100) *
                     arr[index].sistema.valorProjeto;
                   setProjects([...arr]);
@@ -102,7 +102,31 @@ function ComissaoGeralView({ projects, setProjects }) {
             <div className="flex flex-col items-center">
               <p className="text-sm font-bold text-gray-700">VALOR</p>
               <p className="text-xs  text-gray-600 p-2">
-                R${project.valorComissao.toFixed(2)}
+                R${project.valorComissaoAtivo.toFixed(2)}
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <p className="text-sm font-bold text-gray-700">
+                PORCENTAGEM DE COMISSÃO INSIDE
+              </p>
+              <input
+                type="number"
+                value={project.porcentagemComissaoInside.toFixed(2)}
+                className="outline-none p-2 text-xs text-gray-600"
+                onChange={(e) => {
+                  let arr = [...projects];
+                  arr[index].porcentagemComissaoInside = Number(e.target.value);
+                  arr[index].valorComissaoInside =
+                    Number(e.target.value / 100) *
+                    arr[index].sistema.valorProjeto;
+                  setProjects([...arr]);
+                }}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <p className="text-sm font-bold text-gray-700">VALOR</p>
+              <p className="text-xs  text-gray-600 p-2">
+                R${project.valorComissaoAtivo.toFixed(2)}
               </p>
             </div>
           </div>

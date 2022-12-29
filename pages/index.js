@@ -272,27 +272,22 @@ function Home() {
         <div className="w-full h-[36px] border border-[#15599a]">
           <div
             style={{
-              width: `${
-                totalPeakPot > 10165
-                  ? 100
-                  : Number((totalPeakPot * 100) / 10165).toFixed(2)
-              }%`, // `${totalPeakPot >10000 ? 100 :   Number((totalPeakPot * 100) / 10000).toFixed(2)}%`
+              width: `${99.9}%`, // `${totalPeakPot >10000 ? 100 :   Number((totalPeakPot * 100) / 10000).toFixed(2)}%`
               background: `${
-                totalPeakPot > 10165
+                10000 > 10165
                   ? "linear-gradient(90deg, rgba(254,199,97,1) 29%, rgba(226,141,59,1) 100%)"
                   : "linear-gradient(90deg, rgba(21,89,154,1) 20%, rgba(1,127,247,1) 90%)"
               }`,
             }}
-            className={`h-full col-span-8`}
+            className={`h-full col-span-8`} //  {(10165 - totalPeakPot).toFixed(2).replace(".", ",")}
           ></div>
         </div>
         <p className="text-center font-bold text-[#15599a] text-xl">
           {totalPeakPot ? (
-            totalPeakPot < 10165 ? (
+            10000 < 10165 ? (
               <>
-                Faltam apenas{" "}
-                {(10165 - totalPeakPot).toFixed(2).replace(".", ",")} kWp para
-                os <strong className="text-[#fead41]">10 MEGA !</strong>
+                Faltam apenas 6,73 kWp para os{" "}
+                <strong className="text-[#fead41]">10 MEGA !</strong>
               </>
             ) : (
               <strong className="font-bold text-[#fead41]">

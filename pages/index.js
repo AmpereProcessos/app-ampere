@@ -358,7 +358,7 @@ function Home() {
           )}
         </p>
       </div>
-      <div id="firework" ref={fireWorkEl}></div>
+      <div id="firework" className="h-[600px]" ref={fireWorkEl}></div>
       {/* <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">
         <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">

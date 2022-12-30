@@ -56,7 +56,7 @@ function Obras() {
   function handleUpdates(id) {
     axios
       .get(`/api/projects/fetchDoc/${id}`)
-      .then((res) => setModalProject(res.data[0]));
+      .then((res) => setModalProject({ ...res.data[0] }));
   }
   function handleSearchFilter(value) {
     setSearchFilter(value);

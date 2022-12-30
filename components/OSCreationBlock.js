@@ -100,12 +100,13 @@ function OSCreationBlock({
             dataDeAbertura: new Date().toISOString(),
             agendar: false,
           });
-          handleUpdates({
-            ...osInfo,
-            usuarioEmissor: credentials.nome,
-            index: ordensDeServico?.length,
-            cobrancaRealizada: false,
-          });
+          // handleUpdates({
+          //   ...osInfo,
+          //   usuarioEmissor: credentials.nome,
+          //   index: ordensDeServico?.length,
+          //   cobrancaRealizada: false,
+          // });
+          handleUpdates(id);
         });
       }
     }
@@ -172,7 +173,7 @@ function OSCreationBlock({
     }
     return true;
   }
-
+  console.log(osInfo);
   return (
     <div className="flex flex-col">
       {" "}
@@ -231,7 +232,7 @@ function OSCreationBlock({
           }
         />
         <div className="flex gap-2 justify-center flex-wrap mt-4">
-          <div>
+          <div className="mx-3 flex gap-2 items-center">
             <input
               disabled={!editor}
               checked={osInfo.realizarCobranca}
@@ -249,14 +250,33 @@ function OSCreationBlock({
               REALIZAR COBRANÇA ?
             </label>
           </div>
-          <NumberInput
-            label={"VALOR DO SERVIÇO A COBRAR"}
-            value={osInfo.valorCobranca}
-            editable={editor}
-            handleChange={(value) =>
-              setOsInfo({ ...osInfo, valorCobranca: Number(value) })
-            }
-          />
+          <div className="mx-3 flex gap-2 items-center">
+            <input
+              checked={osInfo.valorCobranca == "NÃO DEFINIDO"}
+              onChange={(e) =>
+                setOsInfo({
+                  ...osInfo,
+                  valorCobranca: e.target.checked ? "NÃO DEFINIDO" : 0,
+                })
+              }
+              type="checkbox"
+              name="valorCobranca"
+              id="valorCobranca"
+            />
+            <label className="" htmlFor="valorCobranca">
+              VALOR NÃO DEFINIDO ?
+            </label>
+          </div>
+          {osInfo.valorCobranca != "NÃO DEFINIDO" && (
+            <NumberInput
+              label={"VALOR DO SERVIÇO A COBRAR"}
+              value={osInfo.valorCobranca}
+              editable={editor}
+              handleChange={(value) =>
+                setOsInfo({ ...osInfo, valorCobranca: Number(value) })
+              }
+            />
+          )}
         </div>
         <div className="flex flex-col w-[350px] items-center">
           <span className="uppercase font-bold font-raleway text-center text-sm">

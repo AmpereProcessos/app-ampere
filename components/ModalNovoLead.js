@@ -75,20 +75,6 @@ function NovoLead({ setModalIsOpen, getLeads }) {
       });
       return false;
     }
-    if (info.consumo <= 0) {
-      setMsg({
-        text: "Por favor, preencha um consumo válido.",
-        color: "text-red-500",
-      });
-      return false;
-    }
-    if (info.vendedor == "NÃO DEFINIDO") {
-      setMsg({
-        text: "Por favor, preencha um vendedor.",
-        color: "text-red-500",
-      });
-      return false;
-    }
     if (info.codigoSVB <= 0) {
       setMsg({
         text: "Por favor, preencha um código SVB válido.",
@@ -286,30 +272,6 @@ function NovoLead({ setModalIsOpen, getLeads }) {
                   }
                   className="outline-none grow p-2 h-full text-center col-span-8"
                 />
-              </div>
-              <div className="grid grid-cols-10 w-full border p-1 border-gray-200">
-                <span className="font-bold text-center p-2 col-span-2">
-                  VENDEDOR
-                </span>
-                <div className="flex grow justify-center items-center col-span-8">
-                  <select
-                    type="text"
-                    value={info.vendedor}
-                    onChange={(e) =>
-                      setInfo({
-                        ...info,
-                        vendedor: e.target.value,
-                      })
-                    }
-                    className="outline-none p-2 h-full text-center"
-                  >
-                    {vendedores.map((vendedor, index) => (
-                      <option key={index} value={vendedor.nome}>
-                        {vendedor.nome}
-                      </option>
-                    ))}
-                  </select>
-                </div>
               </div>
               <div className="grid grid-cols-10 w-full border p-1 border-gray-200">
                 <span className="font-bold text-center p-2 col-span-2">

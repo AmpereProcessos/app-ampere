@@ -226,7 +226,7 @@ function OeM({ users }) {
   function handleUpdates(id) {
     axios
       .get(`/api/projects/fetchDoc/${id}`)
-      .then((res) => setModalProject(res.data[0]));
+      .then((res) => setModalProject({ ...res.data[0] }));
   }
   // function fetchMoreProjects() {
   //   setOpInProgress(true);

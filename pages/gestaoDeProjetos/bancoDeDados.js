@@ -4,6 +4,8 @@ import ModalDB from "../../components/ModalDB";
 import Select from "react-select";
 import { cidadesAtendidas, vendedores } from "../../utils/constants";
 import axios from "axios";
+import SelectInput from "../../components/SelectInput";
+import dayjs from "dayjs";
 function BandoDeDados({ data, credentials, setCredentials }) {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -22,70 +24,10 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     cidadeFilter: [],
     vendedorFilter: [],
     sorteioFilter: false,
+    condicaoOeM: "TODOS",
     numModulos: null,
   });
   function getProjects() {
-    /*
-    axios
-      .all([
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 0 }), // 1
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 100 }), //2
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 200 }), //3
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 300 }), //4
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 400 }), //5
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 500 }), //6
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 600 }), //7
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 700 }), //8
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 800 }), //9
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 900 }), //10
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1000 }), //11
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1100 }), //12
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1200 }), //13
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1300 }), //14
-        axios.post("/api/projects/bancoDeDados", { skip: 0, greater: 1400 }), //15
-      ])
-      .then(
-        axios.spread(
-          (
-            res1,
-            res2,
-            res3,
-            res4,
-            res5,
-            res6,
-            res7,
-            res8,
-            res9,
-            res10,
-            res11,
-            res12,
-            res13,
-            res14,
-            res15
-          ) => {
-            let arr = [].concat(
-              res1.data,
-              res2.data,
-              res3.data,
-              res4.data,
-              res5.data,
-              res6.data,
-              res7.data,
-              res8.data,
-              res9.data,
-              res10.data,
-              res11.data,
-              res12.data,
-              res13.data,
-              res14.data,
-              res15.data
-            );
-            setFilteredProjects(arr);
-            setProjects(arr);
-          }
-        )
-      ); */
-
     axios
       .post("/api/projects/bancoDeDados", { skip: 0, greater: 0 })
       .then((res) => {
@@ -158,6 +100,24 @@ function BandoDeDados({ data, credentials, setCredentials }) {
       newArr = newArr.filter((call) =>
         filters.vendedorFilter.includes(call.vendedor.nome)
       );
+    }
+    if (filters.condicaoOeM != "TODOS") {
+      if (!newArr) newArr = projects;
+      if (filters.condicaoOeM == "O&M EM VENCIMENTO") {
+        newArr = newArr.filter(
+          (project) =>
+            project.medidor?.data &&
+            dayjs().diff(dayjs(project.medidor?.data), "days") > 350 &&
+            dayjs().diff(dayjs(project.medidor?.data), "days") <= 365
+        );
+      }
+      if (filters.condicaoOeM == "O&M VENCIDO") {
+        newArr = newArr.filter(
+          (project) =>
+            project.medidor?.data &&
+            dayjs().diff(dayjs(project.medidor?.data), "days") > 365
+        );
+      }
     }
     if (!newArr) setFilteredProjects(projects);
     else {
@@ -420,6 +380,19 @@ function BandoDeDados({ data, credentials, setCredentials }) {
               }
             />
           </div>
+          <SelectInput
+            label={"CONDIÇÃO DO O&M"}
+            editable={true}
+            value={filters.condicaoOeM}
+            options={[
+              { label: "TODOS", value: "TODOS" },
+              { label: "O&M EM VENCIMENTO", value: "O&M EM VENCIMENTO" },
+              { label: "O&M VENCIDO", value: "O&M VENCIDO" },
+            ]}
+            handleChange={(value) =>
+              setFilters({ ...filters, condicaoOeM: value })
+            }
+          />
           <input
             className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
             placeholder="Digite o nome do contrato"

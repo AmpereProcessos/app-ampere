@@ -3,13 +3,33 @@ export default async function handler(req, res) {
   // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
   // const collection = db.collection("dados");
   // let arr = await collection.updateMany(
-  //   { insider: "-" },
+  //   {
+  //     "contrato.dataAssinatura": { $gte: "2022-09-01T00:00:00.000Z" },
+  //     "vendedor.nome": "GETULIO EDUARDO",
+  //   },
   //   {
   //     $set: {
-  //       insider: null,
+  //       "vendedor.nome": "EURIPEDES JUNIOR",
   //     },
   //   }
   // );
+  // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  // const collection = db.collection("dados");
+  // let arr = await collection
+  //   .aggregate([
+  //     {
+  //       $match: {
+  //         "contrato.status": "ASSINADO",
+  //         "sistema.valorProjeto": null,
+  //       },
+  //     },
+  //     {
+  //       $project: {
+  //         nomeDoContrato: 1,
+  //       },
+  //     },
+  //   ])
+  //   .toArray();
   res.json("DESATIVADA");
 }
 /*

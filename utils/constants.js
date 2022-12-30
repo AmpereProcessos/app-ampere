@@ -226,7 +226,7 @@ export const vendedores = [
     nome: "LEANDRO VIALI",
     cod: 37,
     cargo: "EXTERNO",
-    qualificacao: "JUNIOR",
+    qualificacao: "INSIDE JUNIOR",
     comissaoInside: 0.89,
     comissaoAtivo: 0.89,
   },

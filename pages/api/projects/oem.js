@@ -12,11 +12,7 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            "oem.oemConcluido": { $ne: true },
-          },
-        },
-        {
-          $match: {
+            "contrato.status": "ASSINADO",
             $or: [
               {
                 "obra.statusDaObra": {
@@ -30,6 +26,8 @@ export default async function handler(req, res) {
               },
               { tipoDeServico: "OPERAÇÃO E MANUTENÇÃO" },
             ],
+            "oem.oemConcluido": { $ne: true },
+            "oem.plano": { $ne: null },
           },
         },
         {

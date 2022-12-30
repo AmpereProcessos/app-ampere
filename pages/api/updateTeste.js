@@ -4,12 +4,11 @@ export default async function handler(req, res) {
   // const collection = db.collection("dados");
   // let arr = await collection.updateMany(
   //   {
-  //     "contrato.dataAssinatura": { $gte: "2022-09-01T00:00:00.000Z" },
-  //     "vendedor.nome": "GETULIO EDUARDO",
+  //     "medidor.data": { $lte: "2022-10-01T00:00:00.000Z" },
   //   },
   //   {
   //     $set: {
-  //       "vendedor.nome": "EURIPEDES JUNIOR",
+  //       "jornada.entregaTecnica": true,
   //     },
   //   }
   // );

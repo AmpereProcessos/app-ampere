@@ -7,9 +7,21 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            "conferencias.energiaInjetada.data": null,
             "contrato.status": "ASSINADO",
-            "obra.saida": { $gte: "2022-10-01T00:00:00.000Z" },
+            $or: [
+              {
+                "obra.statusDaObra": {
+                  $in: [
+                    "AGENDADA",
+                    "AGUARDANDO AGENDAMENTO",
+                    "EM ANDAMENTO",
+                    "CONCLUIDA",
+                  ],
+                },
+              },
+              { tipoDeServico: "OPERAÇÃO E MANUTENÇÃO" },
+            ],
+            "jornada.entregaTecnica": { $ne: true },
           },
         },
         {

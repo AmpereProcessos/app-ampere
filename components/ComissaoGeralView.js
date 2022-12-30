@@ -9,75 +9,83 @@ function ComissaoGeralView({ projects, setProjects }) {
           key={index}
           className="flex flex-col w-full p-2 rounded border border-gray-300"
         >
-          <div className="flex justify-between pb-1 border-b border-gray-200 flex-wrap">
-            <h1 className="font-bold text-[#15599a] text-md">
+          <div className="grid grid-cols-10 gap-1 pb-1 border-b border-gray-200">
+            <h1 className="font-bold text-[#15599a] text-md col-span-2 text-center">
               #{project.qtde} - {project.nomeDoContrato}
             </h1>
-            <div className="flex flex-col items-center">
-              <p className="text-xs text-gray-700 font-bold">CÓDIGO SVB</p>
-              <p className="text-xs text-gray-600">
-                {project.codigoSVB ? project.codigoSVB : "-"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-xs text-gray-700 font-bold">DATA ASSINATURA</p>
-              <p className="text-xs text-gray-600">
-                {project.contrato.dataAssinatura
-                  ? dayjs(project.contrato.dataAssinatura)
-                      .add(4, "hours")
-                      .format("DD/MM/YYYY")
-                  : "-"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-xs text-gray-700 font-bold">DATA PAGAMENTO</p>
-              <p className="text-xs text-gray-600">
-                {project.compra && project.compra.dataPagamento
-                  ? dayjs(project.compra.dataPagamento)
-                      .add(4, "hours")
-                      .format("DD/MM/YYYY")
-                  : "-"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-xs text-gray-700 font-bold">CIDADE</p>
-              <p className="text-xs text-gray-600">
-                {project.cidade ? project.cidade : "-"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-xs text-gray-700 font-bold">VENDEDOR</p>
-              <p className="text-xs text-gray-600">
-                {project.vendedor ? project.vendedor.nome : "-"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-xs text-gray-700 font-bold">VENDEDOR</p>
-              <p className="text-xs text-gray-600">
-                {project.sistema ? `${project.sistema.potPico} kWp` : "-"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-xs text-gray-700 font-bold">CANAL DE VENDA</p>
-              <p className="text-xs text-gray-600">
-                {typeof project.canalVenda == "string"
-                  ? project.canalVenda
-                  : "-"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-xs text-gray-700 font-bold">INSIDER</p>
-              <p className="text-xs text-gray-600">
-                {project.insider ? project.insider : "NÃO POSSUI"}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-xs text-gray-700 font-bold">
-                VALOR DO PROJETO
-              </p>
-              <p className="text-xs text-gray-600">
-                R${project.sistema ? project.sistema.valorProjeto : "-"}
-              </p>
+            <div className="flex items-center justify-between flex-wrap col-span-8">
+              <div className="flex flex-col items-center">
+                <p className="text-xs text-gray-700 font-bold">CÓDIGO SVB</p>
+                <p className="text-xs text-gray-600">
+                  {project.codigoSVB ? project.codigoSVB : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-xs text-gray-700 font-bold">
+                  DATA ASSINATURA
+                </p>
+                <p className="text-xs text-gray-600">
+                  {project.contrato.dataAssinatura
+                    ? dayjs(project.contrato.dataAssinatura)
+                        .add(4, "hours")
+                        .format("DD/MM/YYYY")
+                    : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-xs text-gray-700 font-bold">
+                  DATA PAGAMENTO
+                </p>
+                <p className="text-xs text-gray-600">
+                  {project.compra && project.compra.dataPagamento
+                    ? dayjs(project.compra.dataPagamento)
+                        .add(4, "hours")
+                        .format("DD/MM/YYYY")
+                    : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-xs text-gray-700 font-bold">CIDADE</p>
+                <p className="text-xs text-gray-600">
+                  {project.cidade ? project.cidade : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-xs text-gray-700 font-bold">VENDEDOR</p>
+                <p className="text-xs text-gray-600">
+                  {project.vendedor ? project.vendedor.nome : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-xs text-gray-700 font-bold">POTÊNCIA PICO</p>
+                <p className="text-xs text-gray-600">
+                  {project.sistema ? `${project.sistema.potPico} kWp` : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-xs text-gray-700 font-bold">
+                  CANAL DE VENDA
+                </p>
+                <p className="text-xs text-gray-600">
+                  {typeof project.canalVenda == "string"
+                    ? project.canalVenda
+                    : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-xs text-gray-700 font-bold">INSIDER</p>
+                <p className="text-xs text-gray-600">
+                  {project.insider ? project.insider : "NÃO POSSUI"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-xs text-gray-700 font-bold">
+                  VALOR DO PROJETO
+                </p>
+                <p className="text-xs text-gray-600">
+                  R${project.sistema ? project.sistema.valorProjeto : "-"}
+                </p>
+              </div>
             </div>
           </div>
           <div className="flex items-start justify-center gap-2 py-2">

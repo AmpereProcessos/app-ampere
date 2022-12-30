@@ -29,7 +29,7 @@ function ComissionamentoPosObraCard({ project }) {
     <div className="grid grid-cols-10 border border-[#15599a] p-2">
       <div className="flex flex-col justify-around col-span-1">
         <h1 className="font-bold text-[#15599a] text-center">
-          {info.nomeDoContrato}
+          {info.nomeDoContrato} - ({info.qtde})
         </h1>
         {msg.text && (
           <p className={`text-center text-xs italic ${msg.color}`}>

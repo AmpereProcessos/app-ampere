@@ -21,6 +21,11 @@ export default async function handler(req, res) {
             "jornada.obsNps": 1,
           },
         },
+        {
+          $sort: {
+            qtde: 1,
+          },
+        },
       ])
       .toArray();
     res.json(arr);

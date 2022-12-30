@@ -433,6 +433,31 @@ function ModalComercial({
                     />
                   </div>
                   <SelectInput
+                    label={"INSIDER"}
+                    value={
+                      infoHolder.insider ? infoHolder.insider : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      { label: "NÃO DEFINIDO", valor: "NÃO DEFINIDO" },
+                      ...vendedores
+                        .filter((x) => x.qualificacao?.includes("INSIDE"))
+                        .map((vendedor) => {
+                          return { label: vendedor.nome, value: vendedor.nome };
+                        }),
+                    ]}
+                    editable={editor}
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        insider: value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        insider: value,
+                      });
+                    }}
+                  />
+                  <SelectInput
                     label={"SEGMENTO"}
                     value={
                       infoHolder.segmento ? infoHolder.segmento : "NÃO DEFINIDO"

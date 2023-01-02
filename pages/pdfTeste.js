@@ -82,8 +82,8 @@ function Teste() {
   //   });
   // }
   return (
-    <div classNameName="w-[21cm] h-[29.7cm] bg-zinc-100 p-4">
-      <div classNameName="flex flex-col items-center">
+    <div className="w-[21cm] h-[29.7cm] bg-zinc-100 p-4">
+      <div className="flex flex-col items-center">
         {/**<h1 classNameName="text-center text-[#15599a] font-bold">ENTREGUES</h1>
         <div classNameName="grid grid-cols-6">
           <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">

@@ -22,12 +22,22 @@ function InsideSales() {
     field: null,
   });
   function getLeads() {
-    axios
-      .post("/api/insideSales", { responsavel: credentials.vendedor })
-      .then((res) => {
+    if (
+      credentials.accessibleRoutes.includes("PPS") ||
+      credentials.accessibleRoutes.includes("Marketing")
+    ) {
+      axios.get("api/insideSales").then((res) => {
         setLeads(res.data);
         setFilteredLeads(res.data);
       });
+    } else {
+      axios
+        .post("/api/insideSales", { responsavel: credentials.vendedor })
+        .then((res) => {
+          setLeads(res.data);
+          setFilteredLeads(res.data);
+        });
+    }
   }
   function filterLeads() {
     var newArr;

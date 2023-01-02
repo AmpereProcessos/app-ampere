@@ -1,7 +1,20 @@
 import { ObjectId } from "mongodb";
 import connectToDatabase from "../../../utils/insideSalesDb";
 export default async function handler(req, res) {
-  if (req.method == "POST") {
+  if (req.method == "GET") {
+    const db = await connectToDatabase(process.env.DB_KEY);
+    const collection = db.collection("leads");
+    var arr = await collection
+      .aggregate([
+        {
+          $sort: {
+            dataDeAquisicao: -1,
+          },
+        },
+      ])
+      .toArray();
+    res.json(arr);
+  } else if (req.method == "POST") {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("leads");
     var arr = await collection

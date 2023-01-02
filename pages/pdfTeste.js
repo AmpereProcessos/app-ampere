@@ -82,48 +82,48 @@ function Teste() {
   //   });
   // }
   return (
-    <div className="w-[21cm] h-[29.7cm] bg-zinc-100 p-4">
-      <div className="flex flex-col items-center">
-        {/**<h1 className="text-center text-[#15599a] font-bold">ENTREGUES</h1>
-        <div className="grid grid-cols-6">
-          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+    <div classNameName="w-[21cm] h-[29.7cm] bg-zinc-100 p-4">
+      <div classNameName="flex flex-col items-center">
+        {/**<h1 classNameName="text-center text-[#15599a] font-bold">ENTREGUES</h1>
+        <div classNameName="grid grid-cols-6">
+          <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
             NOME DO PROJETO
           </div>
-          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+          <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
             NOME DO CONTRATO
           </div>
-          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+          <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
             QTDE MÓDULOS
           </div>
-          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+          <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
             TOPOLOGIA
           </div>
-          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+          <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
             CIDADE
           </div>
-          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+          <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
             DESDE ENTREGA
           </div>
         </div>
-        <div className="flex flex-col bg-[#fff]">
+        <div classNameName="flex flex-col bg-[#fff]">
           {entregues.map((obj) => (
-            <div className="grid grid-cols-6 h-[36px]">
-              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+            <div classNameName="grid grid-cols-6 h-[36px]">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {obj.nomeDoProjeto}
               </div>
-              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {obj.nomeDoContrato}
               </div>
-              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {obj.sistema.qtdeModulos}
               </div>
-              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {obj.sistema.topologia}
               </div>
-              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {obj.cidade}
               </div>
-              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {obj.compra.statusEntrega == "ENTREGUE"
                   ? obj.compra.dataEntrega
                     ? `${dayjs(new Date()).diff(
@@ -139,67 +139,67 @@ function Teste() {
             </div>
           ))}
         </div> */}
-        {/* <h1 className="text-center text-[#15599a] font-bold">EM ROTA</h1>
-        <div className="grid grid-cols-6">
-          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+        {/* <h1 classNameName="text-center text-[#15599a] font-bold">EM ROTA</h1>
+        <div classNameName="grid grid-cols-6">
+          <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
             NOME DO PROJETO
           </div>
-          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+          <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
             NOME DO CONTRATO
           </div>
-          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+          <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
             QTDE MÓDULOS
           </div>
-          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+          <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
             TOPOLOGIA
           </div>
-          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+          <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
             CIDADE
           </div>
-          <div className=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
+          <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
             ATÉ ENTREGA
           </div>
         </div>
-        <div className="flex flex-col bg-[#fff]">
+        <div classNameName="flex flex-col bg-[#fff]">
           {emRota.map((obj, index) => (
-            <div key={index} className="grid grid-cols-6 h-[36px]">
-              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+            <div key={index} classNameName="grid grid-cols-6 h-[36px]">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {obj.nomeDoProjeto}
               </div>
-              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {obj.nomeDoContrato}
               </div>
-              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {obj.sistema.qtdeModulos}
               </div>
-              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {obj.sistema.topologia}
               </div>
-              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {obj.cidade}
               </div>
-              <div className="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
+              <div classNameName="text-center flex items-center justify-center text-xxs p-1 text-gray-600 font-bold border-b border-gray-200">
                 {dayjs(obj.compra.previsaoEntrega).diff(new Date(), "day")} dias
               </div>
             </div>
           ))}
         </div> */}
-        <ol class="border-l-2 border-blue-600">
+        <ol className="border-l-2 border-blue-600">
           <li>
-            <div class="flex flex-start items-center">
-              <div class="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 class="text-gray-800 font-semibold text-xl -mt-2">
+            <div className="flex flex-start items-center">
+              <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
+              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
                 Title of section 1
               </h4>
             </div>
-            <div class="ml-6 mb-6 pb-6">
+            <div className="ml-6 mb-6 pb-6">
               <a
                 href="#!"
-                class="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm"
+                className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm"
               >
                 4 February, 2022
               </a>
-              <p class="text-gray-700 mt-2 mb-4">
+              <p className="text-gray-700 mt-2 mb-4">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
                 enim ad minim veniam, quis nostrud exercitation ullamco laboris
@@ -207,27 +207,27 @@ function Teste() {
               </p>
               <button
                 type="button"
-                class="inline-block px-4 py-1.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                className="inline-block px-4 py-1.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
               >
                 Read more
               </button>
             </div>
           </li>
           <li>
-            <div class="flex flex-start items-center">
-              <div class="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 class="text-gray-800 font-semibold text-xl -mt-2">
+            <div className="flex flex-start items-center">
+              <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
+              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
                 Title of section 2
               </h4>
             </div>
-            <div class="ml-6 mb-6 pb-6">
+            <div className="ml-6 mb-6 pb-6">
               <a
                 href="#!"
-                class="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm"
+                className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm"
               >
                 12 January, 2022
               </a>
-              <p class="text-gray-700 mt-2 mb-4">
+              <p className="text-gray-700 mt-2 mb-4">
                 Sed ut perspiciatis unde omnis iste natus error sit voluptatem
                 accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
                 quae ab illo inventore veritatis et quasi architecto beatae
@@ -238,27 +238,27 @@ function Teste() {
               </p>
               <button
                 type="button"
-                class="inline-block px-4 py-1.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                className="inline-block px-4 py-1.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
               >
                 Read more
               </button>
             </div>
           </li>
           <li>
-            <div class="flex flex-start items-center">
-              <div class="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 class="text-gray-800 font-semibold text-xl -mt-2">
+            <div className="flex flex-start items-center">
+              <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
+              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
                 Title of section 3
               </h4>
             </div>
-            <div class="ml-6 mb-6 pb-6">
+            <div className="ml-6 mb-6 pb-6">
               <a
                 href="#!"
-                class="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm"
+                className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm"
               >
                 27 December, 2021
               </a>
-              <p class="text-gray-700 mt-2 mb-4">
+              <p className="text-gray-700 mt-2 mb-4">
                 At vero eos et accusamus et iusto odio dignissimos ducimus qui
                 blanditiis praesentium voluptatum deleniti atque corrupti quos
                 dolores et quas molestias excepturi sint occaecati cupiditate
@@ -268,7 +268,7 @@ function Teste() {
               </p>
               <button
                 type="button"
-                class="inline-block px-4 py-1.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                className="inline-block px-4 py-1.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
               >
                 Read more
               </button>
@@ -282,66 +282,66 @@ function Teste() {
 
 export default Teste;
 /* 
-      <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
-      <div className="grid grid-cols-5 w-full">
-        <div className="col-span-2">
-          <h1 className="text-xl font-bold text-[#15599b]">SEST SENAT</h1>
-          <p className="text-xl font-bold">ITUIUTABA</p>
-          <p className="text-xl font-bold">{new Date().toLocaleDateString()}</p>
+      <div classNameName="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
+      <div classNameName="grid grid-cols-5 w-full">
+        <div classNameName="col-span-2">
+          <h1 classNameName="text-xl font-bold text-[#15599b]">SEST SENAT</h1>
+          <p classNameName="text-xl font-bold">ITUIUTABA</p>
+          <p classNameName="text-xl font-bold">{new Date().toLocaleDateString()}</p>
         </div>
         <Link href="/oem/propostas">
-          <div className="flex justify-center">
+          <div classNameName="flex justify-center">
             <Image
               width="80px"
               height="80px"
-              className="rounded-full cursor-pointer"
+              classNameName="rounded-full cursor-pointer"
               src={Logo}
             />
           </div>
         </Link>
-        <div className="col-span-2 place-self-end">
-          <h1 className="text-xl font-bold">Atendido por:</h1>
-          <p className="font-bold text-center">LEANDRO VIALI</p>
-          <p className="font-bold">(34) 9 9775-7001</p>
+        <div classNameName="col-span-2 place-self-end">
+          <h1 classNameName="text-xl font-bold">Atendido por:</h1>
+          <p classNameName="font-bold text-center">LEANDRO VIALI</p>
+          <p classNameName="font-bold">(34) 9 9775-7001</p>
         </div>
       </div>
-      <div className="mt-5 border-2 border-black">
-        <h1 className="text-xl w-full text-center bg-[#15599b] text-white font-semibold">
+      <div classNameName="mt-5 border-2 border-black">
+        <h1 classNameName="text-xl w-full text-center bg-[#15599b] text-white font-semibold">
           ESCOPO DO PROJETO
         </h1>
-        <div className="grid grid-cols-4 divide-x-2 divide-black">
-          <div className="flex flex-col items-center">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
+        <div classNameName="grid grid-cols-4 divide-x-2 divide-black">
+          <div classNameName="flex flex-col items-center">
+            <p classNameName="flex items-center h-14 text-center text-[#15599b] font-bold">
               Qtd.Módulos - Potência
             </p>
             <p>380 - 335W</p>
           </div>
-          <div className="flex flex-col items-center">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
+          <div classNameName="flex flex-col items-center">
+            <p classNameName="flex items-center h-14 text-center text-[#15599b] font-bold">
               Potência kWp
             </p>
             <p> 127,3 kWp</p>
           </div>
-          <div className="flex flex-col items-center">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
+          <div classNameName="flex flex-col items-center">
+            <p classNameName="flex items-center h-14 text-center text-[#15599b] font-bold">
               Eficiência atual
             </p>
             <p>100%</p>
           </div>
-          <div className="flex flex-col items-center border-r-2 border-black">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
+          <div classNameName="flex flex-col items-center border-r-2 border-black">
+            <p classNameName="flex items-center h-14 text-center text-[#15599b] font-bold">
               Estimativa de perda financeira anual
             </p>
             <p>-</p>
           </div>
         </div>
       </div>
-      <div className="flex flex-col mt-2">
-        <h1 className="w-full text-center text-xl text-[#15599b] font-semibold">
+      <div classNameName="flex flex-col mt-2">
+        <h1 classNameName="w-full text-center text-xl text-[#15599b] font-semibold">
           CONSEQUÊNCIAS DA FALTA DE MANUTENÇÃO
         </h1>
-        <div className="flex justify-center">
-          <ul className="font-semibold">
+        <div classNameName="flex justify-center">
+          <ul classNameName="font-semibold">
             <li>1. Perda de geração de energia e eficiência;</li>
             <li>
               2. Danificação e perda de vida útil dos modulos por criação de
@@ -360,38 +360,38 @@ export default Teste;
           </ul>
         </div>
       </div>
-      <div className="mt-2">
-        <h1 className="w-full bg-[#15599b] text-white font-bold text-center ">
+      <div classNameName="mt-2">
+        <h1 classNameName="w-full bg-[#15599b] text-white font-bold text-center ">
           SERVIÇO DE OPERAÇÃO E MANUTENÇÃO
         </h1>
-        <div className="flex flex-col">
-          <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full sm:px-6 lg:px-8">
-              <div className="overflow-hidden">
-                <table className="min-w-full border text-center">
-                  <thead className="border-b bg-white">
+        <div classNameName="flex flex-col">
+          <div classNameName="overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div classNameName="inline-block min-w-full sm:px-6 lg:px-8">
+              <div classNameName="overflow-hidden">
+                <table classNameName="min-w-full border text-center">
+                  <thead classNameName="border-b bg-white">
                     <tr>
                       <th
                         scope="col"
-                        className="text-sm font-medium text-[#15599a] px-2 py-2 border-r"
+                        classNameName="text-sm font-medium text-[#15599a] px-2 py-2 border-r"
                       >
                         SERVIÇOS
                       </th>
                       <th
                         scope="col"
-                        className="text-sm font-medium text-[#15599a] px-2 py-2"
+                        classNameName="text-sm font-medium text-[#15599a] px-2 py-2"
                       >
                         PLANO SOL +
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                    <tr classNameName="border-b bg-white">
+                      <td classNameName="px-2 text-sm font-medium text-gray-900 border-r">
                         MANUTENÇÃO ELÉTRICA INVERSORES + QUADROS ELÉTRICOS
                       </td>
-                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap text-center">
-                        <div className="flex justify-center items-center">
+                      <td classNameName="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap text-center">
+                        <div classNameName="flex justify-center items-center">
                           <p>2x</p>
                           <FiCheck
                             style={{
@@ -403,12 +403,12 @@ export default Teste;
                         </div>
                       </td>
                     </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                    <tr classNameName="border-b bg-white">
+                      <td classNameName="px-2 text-sm font-medium text-gray-900 border-r">
                         REAPERTO CONEXÕES ELÉTRICAS
                       </td>
-                      <td className="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap">
-                        <div className="flex justify-center items-center">
+                      <td classNameName="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap">
+                        <div classNameName="flex justify-center items-center">
                           <p>2x</p>
                           <FiCheck
                             style={{
@@ -420,13 +420,13 @@ export default Teste;
                         </div>
                       </td>
                     </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                    <tr classNameName="border-b bg-white">
+                      <td classNameName="px-2 text-sm font-medium text-gray-900 border-r">
                         ANÁLISE E CONFERÊNCIA DE GRANDEZAS ELÉTRICAS DOS
                         EQUIPAMENTOS ELÉTRICOS
                       </td>
-                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                        <div className="flex justify-center items-center">
+                      <td classNameName="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
+                        <div classNameName="flex justify-center items-center">
                           <p>2x</p>
                           <FiCheck
                             style={{
@@ -438,13 +438,13 @@ export default Teste;
                         </div>
                       </td>
                     </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                    <tr classNameName="border-b bg-white">
+                      <td classNameName="px-2 text-sm font-medium text-gray-900 border-r">
                         CONFIGURAÇÃO E INSTALAÇÃO DE APLICATIVO DE MONITORAMENTO
                         DE GERAÇÃO DO INVERSOR
                       </td>
-                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                        <div className="flex justify-center items-center">
+                      <td classNameName="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
+                        <div classNameName="flex justify-center items-center">
                           <p>2x</p>
                           <FiCheck
                             style={{
@@ -456,12 +456,12 @@ export default Teste;
                         </div>
                       </td>
                     </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                    <tr classNameName="border-b bg-white">
+                      <td classNameName="px-2 text-sm font-medium text-gray-900 border-r">
                         LIMPEZA NOS MÓDULOS FOTOVOLTAICOS
                       </td>
-                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                        <div className="flex justify-center items-center">
+                      <td classNameName="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
+                        <div classNameName="flex justify-center items-center">
                           <p>2x</p>
                           <FiCheck
                             style={{
@@ -473,13 +473,13 @@ export default Teste;
                         </div>
                       </td>
                     </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                    <tr classNameName="border-b bg-white">
+                      <td classNameName="px-2 text-sm font-medium text-gray-900 border-r">
                         MONITORAMENTO DA GERAÇÃO DE ENERGIA POR 12 MESES C/
                         RELATÓRIOS MENSAIS DE GERAÇÃO
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                        <div className="flex justify-center">
+                      <td classNameName="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                        <div classNameName="flex justify-center">
                           <FiCheck
                             style={{
                               color: "#23c906",
@@ -490,11 +490,11 @@ export default Teste;
                         </div>
                       </td>
                     </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 py-1 text-sm font-medium text-gray-900 border-r">
+                    <tr classNameName="border-b bg-white">
+                      <td classNameName="px-2 py-1 text-sm font-medium text-gray-900 border-r">
                         VALOR DO PLANO ANUAL
                       </td>
-                      <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
+                      <td classNameName="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
                         R$ 6990,00
                       </td>
                     </tr>
@@ -506,17 +506,17 @@ export default Teste;
         </div>
       </div>
       <div>
-        <h1 className="w-full bg-[#15599b] text-white font-bold text-center">
+        <h1 classNameName="w-full bg-[#15599b] text-white font-bold text-center">
           ASSINATURA
         </h1>
-        <div className="mt-10 flex justify-between">
-          <div className="w-[35%]">
-            <hr className="border-t-2 border-black" />
-            <p className="text-center">Cliente</p>
+        <div classNameName="mt-10 flex justify-between">
+          <div classNameName="w-[35%]">
+            <hr classNameName="border-t-2 border-black" />
+            <p classNameName="text-center">Cliente</p>
           </div>
-          <div className="w-[35%]">
-            <hr className="border-t-2 border-black" />
-            <p className="text-center">Ampère Energias</p>
+          <div classNameName="w-[35%]">
+            <hr classNameName="border-t-2 border-black" />
+            <p classNameName="text-center">Ampère Energias</p>
           </div>
         </div>
       </div>

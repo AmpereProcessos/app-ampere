@@ -6,22 +6,23 @@ import whiteLogo from "../utils/whitelogoHD.png";
 function ComissaoPDFView({ projects }) {
   const printRef = useRef();
   function getTotalComission() {
-    var sumAtivo = 0;
+    var sum = 0;
     var sumInside = 0;
     for (let i = 0; i < projects.length; i++) {
-      let comAtivo = !isNaN(projects[i].valorComissaoAtivo)
-        ? projects[i].valorComissaoAtivo
+      var com = !isNaN(projects[i].valorComissao)
+        ? projects[i].valorComissao
         : 0;
-      let comInside = !isNaN(projects[i].valorComissaoInside)
-        ? projects[i].valorComissaoInside
-        : 0;
-      sumAtivo = sumAtivo + Number(comAtivo);
-      sumInside = sumInside + Number(comInside);
+      if (projects[i].insider != null || projects[i].insider != undefined) {
+        sumInside = sumInside + 0.003 * projects[i].sistema.valorProjeto;
+      }
+      sum = sum + Number(com);
     }
+    sum = sum != undefined ? sum : 0;
+    sumInside = sumInside != undefined ? sumInside : 0;
     return {
-      ativo: sumAtivo.toFixed(2),
+      ativo: sum.toFixed(2),
       inside: sumInside.toFixed(2),
-      total: (sumAtivo + sumInside).toFixed(2),
+      total: (sum + sumInside).toFixed(2),
     };
   }
   const handleDownloadPdf = async () => {
@@ -112,12 +113,12 @@ function ComissaoPDFView({ projects }) {
                 {project.insider ? project.insider : "N/A"}
               </div>
               <div className="flex items-center justify-center h-[35px] border-r border-gray-700 text-xxs text-gray-700 col-span-1 font-bold text-center p-1">
-                {project.porcentagemComissaoAtivo}
+                {project.porcentagemComissao}
               </div>
               <div className="flex items-center justify-center h-[35px] text-xxs text-gray-700 col-span-1 font-bold text-center p-1">
                 R${" "}
-                {project.valorComissaoAtivo
-                  ? project.valorComissaoAtivo.toLocaleString("pt-br")
+                {project.valorComissao
+                  ? project.valorComissao.toLocaleString("pt-br")
                   : "-"}
               </div>
             </div>

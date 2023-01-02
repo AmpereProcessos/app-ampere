@@ -72,22 +72,27 @@ function Comissao() {
     return sum;
   }
   function getTotalComission() {
-    var sumAtivo = 0;
+    var sum = 0;
     var sumInside = 0;
     for (let i = 0; i < filteredProjects.length; i++) {
-      let comAtivo = !isNaN(filteredProjects[i].valorComissaoAtivo)
-        ? filteredProjects[i].valorComissaoAtivo
+      var com = !isNaN(filteredProjects[i].valorComissao)
+        ? filteredProjects[i].valorComissao
         : 0;
-      let comInside = !isNaN(filteredProjects[i].valorComissaoInside)
-        ? filteredProjects[i].valorComissaoInside
-        : 0;
-      sumAtivo = sumAtivo + Number(comAtivo);
-      sumInside = sumInside + Number(comInside);
+      if (
+        filteredProjects[i].insider != null ||
+        filteredProjects[i].insider != undefined
+      ) {
+        sumInside =
+          sumInside + 0.003 * filteredProjects[i].sistema.valorProjeto;
+      }
+      sum = sum + Number(com);
     }
+    sum = sum != undefined ? sum : 0;
+    sumInside = sumInside != undefined ? sumInside : 0;
     return {
-      ativo: sumAtivo.toFixed(2),
+      ativo: sum.toFixed(2),
       inside: sumInside.toFixed(2),
-      total: (sumAtivo + sumInside).toFixed(2),
+      total: (sum + sumInside).toFixed(2),
     };
   }
   function getTotalPeakPot() {

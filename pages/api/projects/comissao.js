@@ -50,36 +50,30 @@ export default async function handler(req, res) {
         ])
         .toArray();
       arr = arr.map((x) => {
-        let valorAtivo = (
-          (getComissao(x.vendedor.nome).pcAtivo *
-            Number(x.sistema.valorProjeto)) /
-          100
-        ).toFixed(2);
-        let valorInside = (
-          (getComissao(x.vendedor.nome).pcInside *
-            Number(x.sistema.valorProjeto)) /
-          100
-        ).toFixed(2);
-        if (valorAtivo == "NaN") {
-          valorAtivo = 0;
-        }
-        if ((valorInside = "NaN")) {
-          valorInside = 0;
-        }
-        return {
-          ...x,
-          porcentagemComissaoAtivo: getComissao(x.vendedor.nome).pcAtivo,
-          valorComissaoAtivo: (
-            (getComissao(x.vendedor.nome).pcAtivo *
-              Number(x.sistema.valorProjeto)) /
-            100
-          ).toFixed(2),
-          porcentagemComissaoInside: getComissao(x.vendedor.nome).pcInside,
-          valorComissaoInside: (
+        var valor;
+        var pc;
+        if (x.insider != undefined) {
+          valor = (
             (getComissao(x.vendedor.nome).pcInside *
               Number(x.sistema.valorProjeto)) /
             100
-          ).toFixed(2),
+          ).toFixed(2);
+          pc = getComissao(x.vendedor.nome).pcInside;
+        } else {
+          valor = (
+            (getComissao(x.vendedor.nome).pcAtivo *
+              Number(x.sistema.valorProjeto)) /
+            100
+          ).toFixed(2);
+          pc = getComissao(x.vendedor.nome).pcAtivo;
+        }
+        if (valor == "NaN") {
+          valor = 0;
+        }
+        return {
+          ...x,
+          porcentagemComissao: pc,
+          valorComissao: valor,
         };
       });
       res.json(arr);

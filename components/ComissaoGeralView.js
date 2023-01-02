@@ -91,20 +91,20 @@ function ComissaoGeralView({ projects, setProjects }) {
           <div className="flex items-start justify-center gap-2 py-2">
             <div className="flex flex-col items-center">
               <p className="text-sm font-bold text-gray-700 text-center">
-                PORCENTAGEM DE COMISSÃO ATIVO
+                PORCENTAGEM DE COMISSÃO
               </p>
               <input
                 type="number"
                 value={
-                  project.porcentagemComissaoAtivo
-                    ? project.porcentagemComissaoAtivo.toFixed(2)
+                  project.porcentagemComissao
+                    ? project.porcentagemComissao.toFixed(2)
                     : 0
                 }
                 className="outline-none p-2 text-xs text-gray-600 text-center"
                 onChange={(e) => {
                   let arr = [...projects];
-                  arr[index].porcentagemComissaoAtivo = Number(e.target.value);
-                  arr[index].valorComissaoAtivo =
+                  arr[index].porcentagemComissao = Number(e.target.value);
+                  arr[index].valorComissao =
                     Number(e.target.value / 100) *
                     arr[index].sistema.valorProjeto;
                   setProjects([...arr]);
@@ -117,38 +117,7 @@ function ComissaoGeralView({ projects, setProjects }) {
               </p>
               <p className="text-xs  text-gray-600 p-2 text-center">
                 R$
-                {project.valorComissaoAtivo ? project.valorComissaoAtivo : 0}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-sm font-bold text-gray-700 text-center">
-                PORCENTAGEM DE COMISSÃO INSIDE
-              </p>
-              <input
-                type="number"
-                value={
-                  project.porcentagemComissaoInside
-                    ? project.porcentagemComissaoInside
-                    : 0
-                }
-                className="outline-none p-2 text-xs text-gray-600 text-center"
-                onChange={(e) => {
-                  let arr = [...projects];
-                  arr[index].porcentagemComissaoInside = Number(e.target.value);
-                  arr[index].valorComissaoInside =
-                    Number(e.target.value / 100) *
-                    arr[index].sistema.valorProjeto;
-                  setProjects([...arr]);
-                }}
-              />
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-sm font-bold text-gray-700 text-center">
-                VALOR
-              </p>
-              <p className="text-xs  text-gray-600 p-2 text-center">
-                R$
-                {project.valorComissaoAtivo ? project.valorComissaoAtivo : 0}
+                {project.valorComissao ? project.valorComissao : 0}
               </p>
             </div>
           </div>

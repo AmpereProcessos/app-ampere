@@ -317,7 +317,7 @@ function Home() {
             onClick={() => {
               setRegional("GERAL");
               getStats(credentials);
-              getGraphDataByYear(2022, credentials);
+              getGraphDataByYear(2023, credentials);
             }}
             className={`border border-gray-200 p-1 ${
               regional == "GERAL" ? "bg-blue-100" : ""
@@ -505,6 +505,25 @@ function Home() {
                 } p-2 text-xs text-gray-600`}
               >
                 2022
+              </p>
+              <p
+                onClick={() => {
+                  if (regional != undefined && regional != "GERAL") {
+                    getGraphDataByYear(2023, {
+                      visualizacao: "REGIONAL",
+                      regional: regional,
+                    });
+                  } else {
+                    getGraphDataByYear(2023, credentials);
+                  }
+                }}
+                className={`border cursor-pointer border-gray-200 ${
+                  selectedYear == 2023
+                    ? "bg-blue-200 hover:bg-transparent"
+                    : "hover:bg-blue-200 bg-transparent"
+                } p-2 text-xs text-gray-600`}
+              >
+                2023
               </p>
             </div>
           </div>

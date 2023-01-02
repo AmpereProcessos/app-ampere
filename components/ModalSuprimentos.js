@@ -81,6 +81,51 @@ function ModalSuprimentos({
         message: "Por favor, preencha iniciar projeto.",
       };
     }
+    if (
+      infoHolder.compra.statusLiberacao == "PAGO" &&
+      infoHolder.compra.dataPagamento == undefined
+    ) {
+      return {
+        liberar: false,
+        message: "Por favor, preencha a data de pagamento.",
+      };
+    }
+    if (
+      infoHolder.compra.statusEntrega == "ENTREGUE" &&
+      infoHolder.compra.dataEntrega == undefined
+    ) {
+      return {
+        liberar: false,
+        message: "Por favor, preencha a data de entrega.",
+      };
+    }
+    if (
+      infoHolder.compra.statusEntrega == "EM ROTA" &&
+      infoHolder.compra.previsaoEntrega == undefined
+    ) {
+      return {
+        liberar: false,
+        message: "Por favor, preencha a previsão de entrega.",
+      };
+    }
+    if (
+      infoHolder.compra.statusEntrega == "EM ROTA" &&
+      infoHolder.faturamento?.previsaoFaturamento == undefined
+    ) {
+      return {
+        liberar: false,
+        message: "Por favor, preencha as informações de faturamento.",
+      };
+    }
+    if (
+      infoHolder.compra.statusEntrega == "EM ROTA" &&
+      infoHolder.compra.rastreio == undefined
+    ) {
+      return {
+        liberar: false,
+        message: "Por favor, preencha as informações de rastreio.",
+      };
+    }
     if (infoHolder.projeto.iniciar == "SIM") {
       if (infoHolder.compra.previsaoEntrega == undefined) {
         return {

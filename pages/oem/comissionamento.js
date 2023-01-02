@@ -44,7 +44,7 @@ function Comissionamento() {
     if (filters.pesquisaFilter.length > 0) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
-        call.nomeDoContrato.includes(filters.pesquisaFilter)
+        call.nomeDoContrato.toUpperCase().includes(filters.pesquisaFilter)
       );
     }
     if (filters.cidadeFilter.length > 0) {
@@ -93,7 +93,10 @@ function Comissionamento() {
             placeholder="Digite o nome do contrato"
             value={filters.pesquisaFilter}
             onChange={(e) =>
-              setFilters({ ...filters, pesquisaFilter: e.target.value })
+              setFilters({
+                ...filters,
+                pesquisaFilter: e.target.value.toUpperCase(),
+              })
             }
           />
           <div className="hidden lg:flex gap-x-2">

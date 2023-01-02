@@ -2920,7 +2920,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     ORDENS DE SERVIÇO
                   </span>
                   <OSCreationBlock
-                    editor={editor}
+                    editor={
+                      credentials.accessibleRoutes.includes("O&M") ||
+                      credentials.accessibleRoutes.includes("Obras")
+                    }
                     qtde={project.qtde}
                     nomeDoContrato={project.nomeDoContrato}
                     credentials={credentials}

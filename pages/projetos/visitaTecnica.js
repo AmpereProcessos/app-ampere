@@ -282,9 +282,19 @@ function VisitaTecnica({ credentials, setCredentials }) {
                   form.status
                 )} items-center mt-2`}
               >
-                <p className="text-xxs">TEMPO DESDE ABERTURA</p>
+                <p className="text-xxs">
+                  {form.dataDeConclusao
+                    ? "TEMPO ATÉ CONCLUSÃO"
+                    : "TEMPO DESDE ABERTURA"}
+                </p>
                 <p className="text-xs font-bold">
-                  {dayjs().diff(dayjs(form.dataDeAbertura), "hours")} HORAS
+                  {form.dataDeConclusao
+                    ? dayjs(form.dataDeConclusao).diff(
+                        dayjs(form.dataDeAbertura),
+                        "hours"
+                      )
+                    : dayjs().diff(dayjs(form.dataDeAbertura), "hours")}{" "}
+                  HORAS
                 </p>
               </div>
             </div>

@@ -93,7 +93,9 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                 {msg.text && (
                   <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
                 )}
-                {editor && (
+                {(credentials.accessibleRoutes.includes("O&M") ||
+                  credentials.accessibleRoutes.includes("Obras") ||
+                  editor) && (
                   <button
                     onClick={handleChanges}
                     className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
@@ -3318,7 +3320,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                 <div className="flex gap-2 justify-around flex-wrap">
                   <DateInput
                     label={"Usina Ligada"}
-                    editable={editor}
+                    editable={
+                      credentials.accessibleRoutes.includes("O&M") ||
+                      credentials.accessibleRoutes.includes("Obras")
+                    }
                     value={
                       infoHolder.conferencias.usinaLigada.data != undefined &&
                       infoHolder.conferencias.usinaLigada.data != "-"
@@ -3350,7 +3355,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"Monitoramento feito"}
-                    editable={editor}
+                    editable={
+                      credentials.accessibleRoutes.includes("O&M") ||
+                      credentials.accessibleRoutes.includes("Obras")
+                    }
                     value={
                       infoHolder.conferencias.monitoramentoFeito.data !=
                         undefined &&
@@ -3385,7 +3393,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"Data APP no celular"}
-                    editable={editor}
+                    editable={
+                      credentials.accessibleRoutes.includes("O&M") ||
+                      credentials.accessibleRoutes.includes("Obras")
+                    }
                     value={
                       infoHolder.app.data != undefined &&
                       infoHolder.app.data != "-" &&
@@ -3411,7 +3422,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"Energia Injetada"}
-                    editable={editor}
+                    editable={
+                      credentials.accessibleRoutes.includes("O&M") ||
+                      credentials.accessibleRoutes.includes("Obras")
+                    }
                     value={
                       infoHolder.conferencias.energiaInjetada.data !=
                         undefined &&
@@ -3446,7 +3460,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     label={"LOGIN NO APP"}
                     value={infoHolder.app.login ? infoHolder.app.login : ""}
                     normalCase={true}
-                    editable={editor}
+                    editable={
+                      credentials.accessibleRoutes.includes("O&M") ||
+                      credentials.accessibleRoutes.includes("Obras")
+                    }
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
@@ -3463,6 +3480,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <TextInput
                     label={"SENHA NO APP"}
+                    editable={
+                      credentials.accessibleRoutes.includes("O&M") ||
+                      credentials.accessibleRoutes.includes("Obras")
+                    }
                     value={infoHolder.app.senha}
                     normalCase={true}
                     handleChange={(value) => {
@@ -3481,7 +3502,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"RELATÓRIO 1"}
-                    editable={editor}
+                    editable={
+                      credentials.accessibleRoutes.includes("O&M") ||
+                      credentials.accessibleRoutes.includes("Obras")
+                    }
                     value={
                       infoHolder.relatorios.envioUm.data != undefined &&
                       infoHolder.relatorios.envioUm.data != "-"
@@ -3512,7 +3536,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"RELATÓRIO 2"}
-                    editable={editor}
+                    editable={
+                      credentials.accessibleRoutes.includes("O&M") ||
+                      credentials.accessibleRoutes.includes("Obras")
+                    }
                     value={
                       infoHolder.relatorios.envioDois.data != undefined &&
                       infoHolder.relatorios.envioDois.data != "-"
@@ -3543,7 +3570,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"RELATÓRIO 3"}
-                    editable={editor}
+                    editable={
+                      credentials.accessibleRoutes.includes("O&M") ||
+                      credentials.accessibleRoutes.includes("Obras")
+                    }
                     value={
                       infoHolder.relatorios.envioTres.data != undefined &&
                       infoHolder.relatorios.envioTres.data != "-"
@@ -3574,7 +3604,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"RELATÓRIO 4"}
-                    editable={editor}
+                    editable={
+                      credentials.accessibleRoutes.includes("O&M") ||
+                      credentials.accessibleRoutes.includes("Obras")
+                    }
                     value={
                       infoHolder.relatorios.envioQuatro.data != undefined &&
                       infoHolder.relatorios.envioQuatro.data != "-"
@@ -3605,7 +3638,10 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                   <DateInput
                     label={"MANUTENÇÃO PREVENTIVA"}
-                    editable={editor}
+                    editable={
+                      credentials.accessibleRoutes.includes("O&M") ||
+                      credentials.accessibleRoutes.includes("Obras")
+                    }
                     value={
                       infoHolder.manutencaoPreventiva.data != undefined &&
                       infoHolder.manutencaoPreventiva.data != "-"

@@ -12,6 +12,7 @@ function VisitaTecnica({ credentials, setCredentials }) {
   const [filteredForms, setFilteredForms] = useState([]);
   const [filters, setFilters] = useState({
     statusChamado: [],
+    numModulos: "",
   });
   const [modal, setModal] = useState({
     open: false,
@@ -56,6 +57,10 @@ function VisitaTecnica({ credentials, setCredentials }) {
       newArr = newArr.filter((form) =>
         filters.statusChamado.includes(form.status)
       );
+    }
+    if (filters.numModulos > 0) {
+      if (!newArr) newArr = forms;
+      newArr = newArr.filter((form) => form.qtdeModulos > filters.numModulos);
     }
     if (!newArr) {
       setFilteredForms(forms);
@@ -142,6 +147,17 @@ function VisitaTecnica({ credentials, setCredentials }) {
         </div>
         <div className="flex items-center justify-center grow gap-2">
           <div className="hidden lg:flex gap-x-2">
+            <input
+              type="number"
+              placeholder="NºModulos > que"
+              className={
+                "outline-none text-xs p-1.5 h-[36px] text-center rounded border border-gray-200 placeholder:italic"
+              }
+              value={filters.numModulos}
+              onChange={(e) =>
+                setFilters({ ...filters, numModulos: Number(e.target.value) })
+              }
+            />
             <div className="flex flex-col w-fit items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
                 Depois de:

@@ -15,14 +15,7 @@ export default async function handler(req, res) {
             "contrato.status": "ASSINADO",
             $or: [
               {
-                "obra.statusDaObra": {
-                  $in: [
-                    "AGENDADA",
-                    "AGUARDANDO AGENDAMENTO",
-                    "EM ANDAMENTO",
-                    "CONCLUIDA",
-                  ],
-                },
+                "obra.statusDaObra": "CONCLUIDA",
               },
               { tipoDeServico: "OPERAÇÃO E MANUTENÇÃO" },
             ],

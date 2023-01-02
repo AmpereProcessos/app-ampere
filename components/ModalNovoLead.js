@@ -215,6 +215,7 @@ function NovoLead({ setModalIsOpen, getLeads }) {
                   >
                     <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
                     <option value={"GOOGLE ADS"}>GOOGLE ADS</option>
+                    <option value={"FACEBOOK ADS"}>FACEBOOK ADS</option>
                     <option value={"INDICAÇÃO"}>INDICAÇÃO</option>
                     <option value={"PASSIVO"}>PASSIVO</option>
                     <option value={"PROSPECÇÃO ATIVA"}>PROSPECÇÃO ATIVA</option>

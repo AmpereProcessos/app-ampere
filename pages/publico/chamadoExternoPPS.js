@@ -73,12 +73,15 @@ function ChamadoExternoPPS() {
             label={"VENDEDOR"}
             editable={true}
             value={dados.vendedor}
-            options={vendedores.map((vendedor) => {
-              return {
-                label: vendedor.nome,
-                value: vendedor.nome,
-              };
-            })}
+            options={[
+              { label: "CHAMADO INTERNO", value: "CHAMADO INTERNO" },
+              ...vendedores.map((vendedor) => {
+                return {
+                  label: vendedor.nome,
+                  value: vendedor.nome,
+                };
+              }),
+            ]}
             handleChange={(value) => setDados({ ...dados, vendedor: value })}
           />
           <SelectInput

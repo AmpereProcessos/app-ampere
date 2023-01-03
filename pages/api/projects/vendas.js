@@ -15,8 +15,6 @@ export default async function handler(req, res) {
       queryKey = "insider";
       queryValue = req.body.parametro;
     }
-    console.log(queryKey);
-    console.log(queryValue);
     let vendas = await collection
       .aggregate([
         {
@@ -36,6 +34,7 @@ export default async function handler(req, res) {
             cidade: 1,
             "obra.statusDaObra": 1,
             "vistoria.status": 1,
+            nps: 1,
           },
         },
         {

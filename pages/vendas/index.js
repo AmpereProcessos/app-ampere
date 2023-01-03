@@ -6,6 +6,7 @@ import Link from "next/link";
 import { AiOutlineSearch } from "react-icons/ai";
 import Select from "react-select";
 import { cidadesAtendidas } from "../../utils/constants";
+import SelectInput from "../../components/SelectInput";
 const statusStyles = {
   ASSINADO: {
     textColor: "text-green-500",
@@ -26,6 +27,8 @@ function Vendas({ credentials, setCredentials }) {
   const [filters, setFilters] = useState({
     searchFilter: "",
     cidadeFilter: [],
+    npsValor: "",
+    npsTipo: "NÃO DEFINIDO",
   });
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -59,6 +62,15 @@ function Vendas({ credentials, setCredentials }) {
           .toUpperCase()
           .includes(filters.searchFilter.toUpperCase())
       );
+    }
+    if (filters.npsValor && filters.npsTipo != "NÃO DEFINIDO") {
+      if (!newArr) newArr = projects;
+      if (filters.npsTipo == "ACIMA DE") {
+        newArr = newArr.filter((x) => x.nps > filters.npsValor);
+      }
+      if (filters.npsTipo == "ABAIXO DE") {
+        newArr = newArr.filter((x) => x.nps < filters.npsValor);
+      }
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!newArr) newArr = projects;
@@ -116,6 +128,33 @@ function Vendas({ credentials, setCredentials }) {
             className="outline-none p-2 h-[36px] text-sm border border-gray-200 grow lg:w-[350px]"
             placeholder="Nome do cliente..."
           />
+          <div className="flex items-center gap-2">
+            <input
+              value={filters.npsValor}
+              type="number"
+              onChange={(e) =>
+                setFilters({ ...filters, npsValor: Number(e.target.value) })
+              }
+              placeholder={"VALOR DE NPS"}
+              className="outline-none p-2 h-[36px] text-sm border border-gray-200 "
+            />
+            <div className="flex flex-col text-sm lg:text-base w-fit items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                TIPO DE FILTRO
+              </span>
+              <select
+                className="text-xs w-full text-center bg-transparent uppercase text-gray-600 outline-none"
+                onChange={(e) =>
+                  setFilters({ ...filters, npsTipo: e.target.value })
+                }
+                value={filters.npsTipo}
+              >
+                <option value={"ACIMA DE"}>ACIMA DE</option>
+                <option value={"ABAIXO DE"}>ABAIXO DE</option>
+                <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+              </select>
+            </div>
+          </div>
           <Select
             isMulti={true}
             placeholder="CIDADE"

@@ -7,6 +7,7 @@ import Select from "react-select";
 import axios from "axios";
 import dayjs from "dayjs";
 import LeadCard from "../../components/LeadCard";
+import { cidadesAtendidas, vendedores } from "../../utils/constants";
 function InsideSales() {
   const router = useRouter();
   const [leads, setLeads] = useState([]);
@@ -15,6 +16,9 @@ function InsideSales() {
   const [modalNovoLead, setModalNovoLead] = useState(false);
   const [filters, setFilters] = useState({
     pesquisaFilter: "",
+    cidadeFilter: [],
+    vendedorFilter: [],
+    insiderFilter: [],
   });
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -47,6 +51,24 @@ function InsideSales() {
         (call) =>
           call[dateFilter.field] >= dateFilter.after &&
           call[dateFilter.field] <= dateFilter.before
+      );
+    }
+    if (filters.cidadeFilter.length > 0) {
+      if (!newArr) newArr = leads;
+      newArr = newArr.filter((lead) =>
+        filters.cidadeFilter.includes(lead.cidade)
+      );
+    }
+    if (filters.vendedorFilter.length > 0) {
+      if (!newArr) newArr = leads;
+      newArr = newArr.filter((lead) =>
+        filters.vendedorFilter.includes(lead.vendedor)
+      );
+    }
+    if (filters.insiderFilter.length > 0) {
+      if (!newArr) newArr = leads;
+      newArr = newArr.filter((lead) =>
+        filters.insiderFilter.includes(lead.responsavel)
       );
     }
     if (filters.pesquisaFilter.trim().length > 0) {
@@ -87,6 +109,59 @@ function InsideSales() {
               setFilters({ ...filters, pesquisaFilter: e.target.value })
             }
           />
+          <Select
+            isMulti
+            placeholder="CIDADE"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                cidadeFilter: e.map((x) => x.value),
+              })
+            }
+            options={cidadesAtendidas.map((cidade) => {
+              return {
+                label: cidade,
+                value: cidade,
+              };
+            })}
+          />
+          <Select
+            isMulti
+            placeholder="VENDEDOR"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                vendedorFilter: e.map((x) => x.value),
+              })
+            }
+            options={vendedores.map((vendedor) => {
+              return {
+                label: vendedor.nome,
+                value: vendedor.nome,
+              };
+            })}
+          />
+          {credentials.accessibleRoutes.includes("PPS") ||
+          credentials.accessibleRoutes.includes("Marketing") ? (
+            <Select
+              isMulti
+              placeholder="INSIDER"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  insiderFilter: e.map((x) => x.value),
+                })
+              }
+              options={vendedores
+                .filter((x) => x.qualificacao?.includes("INSIDE"))
+                .map((vendedor) => {
+                  return { label: vendedor.nome, value: vendedor.nome };
+                })}
+            />
+          ) : (
+            false
+          )}
+
           <div className="hidden lg:flex gap-x-2">
             <div className="flex flex-col w-fit items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">

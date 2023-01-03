@@ -640,6 +640,13 @@ function OeM({ users }) {
           <p className="uppercase font-bold text-sm">Propostas</p>
         </a>
       </Link>
+      <Link href={"/oem/baixaPerformance"}>
+        <a className="fixed ml-36 bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">
+            ACOMPANHAMENTO DE PERFORMANCE
+          </p>
+        </a>
+      </Link>
       {modalIsOpen && (
         <ModalOeM
           users={users}

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Select from "react-select";
+import Link from "next/link";
 import { AiOutlineSearch } from "react-icons/ai";
 import { statusLiberacao } from "../../utils/constants";
 import ModalSuprimentos from "../../components/ModalSuprimentos";
@@ -421,6 +422,13 @@ function Suprimentos() {
           </div>
         ))}
       </div>
+      <Link href={"/obras/conferenciaMaterial"}>
+        <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">
+            CONFERÊNCIA DE MATERIAIS
+          </p>
+        </a>
+      </Link>
       {modalIsOpen && (
         <ModalSuprimentos
           handleUpdates={handleUpdates}

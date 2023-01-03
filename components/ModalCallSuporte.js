@@ -79,10 +79,10 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
   var selectableCities = cities.filter((cidade) => cidade.name != info.cidade);
   const [responsavel, setResponsavel] = useState(info.responsavel);
   const [notes, setNotes] = useState(initialNote);
-  const [feedbackValue, setFeedbackValue] = useState(info.feedback);
+  const [feedbackValue, setFeedbackValue] = useState(info.feedbackValor);
   const [selectedStatus, setSelectedStatus] = useState(info.statusChamado);
   const [cidade, setCidade] = useState(initialCidade);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({ text: "", color: "" });
   function saveCallChanges() {
     if (info.statusChamado != selectedStatus) {
       ultAlteracoes.statusAlteracoes.usuario = credentials._id;
@@ -103,30 +103,38 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
         anotacoes: notes,
         cidade: cidade,
         responsavel: responsavel ? responsavel : info.responsavel,
+        feedbackValor: feedbackValue,
         ultAlteracoes: ultAlteracoes,
       })
       .then((res) => {
-        setMessage(res.data);
+        setMessage({ text: res.data, color: "text-green-500" });
         updateModalInfo(info._id);
       });
   }
   function closeCall() {
-    if (info.statusChamado != "RESOLVIDO") {
-      ultAlteracoes.statusAlteracoes.usuario = credentials._id;
-      ultAlteracoes.statusAlteracoes.antes = info.statusChamado;
-      ultAlteracoes.statusAlteracoes.depois = "RESOLVIDO";
-      ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
-    }
-    axios
-      .post("/api/calls/suporte/updateSuporte", {
-        ...info,
-        fechamento: new Date(),
-        statusChamado: "RESOLVIDO",
-        ultAlteracoes: ultAlteracoes,
-      })
-      .then((res) => {
-        updateModalInfo(info._id);
+    if (info.anotacoes?.trim().length > 0) {
+      if (info.statusChamado != "RESOLVIDO") {
+        ultAlteracoes.statusAlteracoes.usuario = credentials._id;
+        ultAlteracoes.statusAlteracoes.antes = info.statusChamado;
+        ultAlteracoes.statusAlteracoes.depois = "RESOLVIDO";
+        ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
+      }
+      axios
+        .post("/api/calls/suporte/updateSuporte", {
+          ...info,
+          fechamento: new Date(),
+          statusChamado: "RESOLVIDO",
+          ultAlteracoes: ultAlteracoes,
+        })
+        .then((res) => {
+          updateModalInfo(info._id);
+        });
+    } else {
+      setMessage({
+        text: "Por favor, adicione anotações sobre o chamado pra prosseguir com a finalização.",
+        color: "text-red-500",
       });
+    }
   }
   function reopenCall() {
     if (info.status != "ABERTO") {
@@ -147,8 +155,9 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
       });
   }
   useEffect(() => {
-    setMessage("");
+    setMessage({ text: "", color: "" });
   }, [notes, responsavel]);
+  console.log(feedbackValue);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -166,7 +175,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
               <button>
                 <VscChromeClose
                   onClick={() => {
-                    setMessage("");
+                    setMessage({ text: "", color: "" });
                     setModalIsOpen(false);
                   }}
                   style={{ color: "red" }}
@@ -174,7 +183,8 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
               </button>
             </div>
             <div className="overflow-y-auto">
-              {credentials.accessibleRoutes.includes("Pós-Venda") && (
+              {credentials.accessibleRoutes.includes("Pós-Venda") &&
+              info.fechamento ? (
                 <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                   <span className="text-center font-bold font-raleway">
                     COLETA DE FEEDBACK
@@ -188,6 +198,8 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                     min={0}
                   />
                 </div>
+              ) : (
+                false
               )}
               <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="font-bold font-raleway">STATUS</span>
@@ -334,9 +346,9 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                   </button>
                 </div>
               )}
-              {message && (
-                <p className="text-center text-green-300 mt-2 italic">
-                  {message}
+              {message.text && (
+                <p className={`text-center ${message.color} mt-2 italic`}>
+                  {message.text}
                 </p>
               )}
               <div className="text-center">

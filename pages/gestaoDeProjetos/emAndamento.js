@@ -414,22 +414,23 @@ export async function getServerSideProps(context) {
   );
   let entregaDoKit = arr.filter((x) => x.compra?.statusEntrega == "EM ROTA");
   let assDocumentacoes = arr.filter((x) =>
-    ["AGUARDANDO ASSINATURA", "AGUARDANDO FORMULÁRIOS"].includes(
-      x.parecer?.statusDoParecerDeAcesso
-    )
+    [
+      "AGUARDANDO ASSINATURA",
+      "AGUARDANDO FORMULÁRIOS",
+      "INICIAR PROJETO",
+      "AGUARDANDO FATURAMENTO ART",
+      "AUMENTO DE CARGA",
+    ].includes(x.parecer?.statusDoParecerDeAcesso)
   );
   let libConc = arr.filter((x) =>
     [
       "AGUARDANDO AUMENTO DE CARGA",
       "SOLICITAR TROCA DE TITULARIDADE",
-      "AGUARDANDO FATURAMENTO ART",
-      "AGUARDANDO FORMULÁRIOS",
-      "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
       "AGUARDANDO TROCA DE TITULARIDADE",
-      "AUMENTO DE CARGA",
-      "PENDENCIAS",
+      "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
       "SOLICITAR ACESSO",
-      "PARECER DE ACESSO COM OBRAS",
+      "SOLICITAR AUMENTO DE CARGA",
+      "PENDENCIAS",
     ].includes(x.parecer?.statusDoParecerDeAcesso)
   );
   let agendamentoObra = arr.filter((x) =>

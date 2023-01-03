@@ -32,6 +32,7 @@ export default async function handler(req, res) {
           responsavel: req.body.responsavel,
           statusChamado: req.body.statusChamado,
           ultAlteracoes: req.body.ultAlteracoes,
+          feedbackValor: req.body.feedbackValor,
           cidade: req.body.cidade,
         },
       },

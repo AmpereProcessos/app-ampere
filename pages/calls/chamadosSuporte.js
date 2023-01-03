@@ -1,14 +1,16 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ModalCallSuporte from "../../components/ModalCallSuporte";
 import CreateModal from "../../components/SuportCallCreation";
 import { AiOutlineReload } from "react-icons/ai";
 import { MdDateRange } from "react-icons/md";
+import { BsFillPatchCheckFill } from "react-icons/bs";
 import Link from "next/link";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { cities } from "../../utils/constants";
+import { AppContext } from "../../context/AppContext";
 
 const statusStyles = {
   ABERTO: {
@@ -30,7 +32,8 @@ const statusStyles = {
 };
 var dateFilterParam = new Date();
 dateFilterParam.setDate(dateFilterParam.getDate() - 2);
-function ChamadosSuporte({ credentials, setCredentials }) {
+function ChamadosSuporte() {
+  const { credentials, setCredentials } = useContext(AppContext);
   const router = useRouter();
   const [inProgress, setInProgress] = useState([]);
   const [filteredInProgress, setFilteredInProgress] = useState([]);
@@ -146,24 +149,13 @@ function ChamadosSuporte({ credentials, setCredentials }) {
     }
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      if (!storedCredentials.accessibleRoutes.includes("O&M")) {
-        router.push("/");
-      } else {
-        getCalls();
-      }
+    if (
+      credentials.accessibleRoutes?.includes("O&M") ||
+      credentials.accessibleRoutes.includes("Pós-Venda")
+    ) {
+      getCalls();
     } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      } else {
-        if (!credentials.accessibleRoutes.includes("O&M")) {
-          router.push("/");
-        } else {
-          getCalls();
-        }
-      }
+      router.push("/");
     }
   }, []);
   function updateModalInfo(id) {
@@ -315,6 +307,12 @@ function ChamadosSuporte({ credentials, setCredentials }) {
                 </p>
                 <p className="text-xs text-gray-500">{call.tipoChamado}</p>
               </div>
+              <div className="flex justify-between mt-2 items-center w-full">
+                <p className="text-xs text-gray-500 uppercase">ABERTURA</p>
+                <p className="text-xs text-gray-500">
+                  {new Date(call.abertura).toLocaleString()}
+                </p>
+              </div>
             </div>
           ))}
         </div>
@@ -397,9 +395,20 @@ function ChamadosSuporte({ credentials, setCredentials }) {
             <div
               onClick={() => handleOpenModal(call)}
               key={call._id}
-              className="w-[350px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+              className="w-[370px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
               <div className="flex justify-between items-center w-full gap-2">
+                {call.feedbackValor != undefined && call.feedbackValor != "" ? (
+                  <BsFillPatchCheckFill
+                    style={{
+                      fontSize: "20px",
+                      color: "rgb(21 128 61)",
+                      marginLeft: "3px",
+                    }}
+                  />
+                ) : (
+                  false
+                )}
                 <h1 className="uppercase text-sm">
                   {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
                 </h1>

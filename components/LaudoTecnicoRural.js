@@ -489,22 +489,28 @@ function LaudoTecnicoRural({ info }) {
                 MEDIDA
               </p>
             </div>
-            {info.suprimentos.map((suprimento, index) => (
-              <div key={index} className="grid grid-cols-10">
-                <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                  {suprimento.insumo}
-                </p>
-                <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
-                  {suprimento.tipo}
-                </p>
-                <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                  {suprimento.qtde}
-                </p>
-                <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
-                  {suprimento.medida}
-                </p>
+            {info.suprimentos ? (
+              info.suprimentos.map((suprimento, index) => (
+                <div key={index} className="grid grid-cols-10">
+                  <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
+                    {suprimento.insumo}
+                  </p>
+                  <p className="text-center text-xxs font-bold col-span-3 border-b border-r border-black">
+                    {suprimento.tipo}
+                  </p>
+                  <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
+                    {suprimento.qtde}
+                  </p>
+                  <p className="text-center text-xxs font-bold col-span-2 border-b border-r border-black">
+                    {suprimento.medida}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="flex items-center justify-center h-[50px] border-b border-r border-black italic">
+                SEM ITENS ADICIONADOS
               </div>
-            ))}
+            )}
           </div>
           <div className="flex flex-col">
             <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0 text-xs">

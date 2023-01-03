@@ -78,8 +78,8 @@ function BaixaPerformance() {
             <span className="sr-only">Loading...</span>
           </div>
         )}
-        {badPerformers.map((usina) => (
-          <div className="flex items-center gap-2 justify-center">
+        {badPerformers.map((usina, index) => (
+          <div key={index} className="flex items-center gap-2 justify-center">
             <p className="text-gray-700">{usina.nome}</p>
             <p className="font-bold text-red-500">
               {usina.performance.toFixed(2)}

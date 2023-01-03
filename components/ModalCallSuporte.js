@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 import { cities } from "../utils/constants";
 import axios from "axios";
+import { AppContext } from "../context/AppContext";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -41,12 +42,8 @@ const statusStyles = {
     borderColor: "border-green-400",
   },
 };
-function ModalCallSuporte({
-  setModalIsOpen,
-  info,
-  updateModalInfo,
-  credentials,
-}) {
+function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
+  const { credentials } = useContext(AppContext);
   var ultAlteracoes = {
     anotAlteracoes: {
       usuario: info.ultAlteracoes?.anotAlteracoes
@@ -82,6 +79,7 @@ function ModalCallSuporte({
   var selectableCities = cities.filter((cidade) => cidade.name != info.cidade);
   const [responsavel, setResponsavel] = useState(info.responsavel);
   const [notes, setNotes] = useState(initialNote);
+  const [feedbackValue, setFeedbackValue] = useState(info.feedback);
   const [selectedStatus, setSelectedStatus] = useState(info.statusChamado);
   const [cidade, setCidade] = useState(initialCidade);
   const [message, setMessage] = useState("");
@@ -176,6 +174,21 @@ function ModalCallSuporte({
               </button>
             </div>
             <div className="overflow-y-auto">
+              {credentials.accessibleRoutes.includes("Pós-Venda") && (
+                <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                  <span className="text-center font-bold font-raleway">
+                    COLETA DE FEEDBACK
+                  </span>
+                  <input
+                    value={feedbackValue ? feedbackValue : ""}
+                    onChange={(e) => setFeedbackValue(Number(e.target.value))}
+                    className="outline-none text-sm text-center grow placeholder:italic"
+                    type="number"
+                    max={10}
+                    min={0}
+                  />
+                </div>
+              )}
               <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="font-bold font-raleway">STATUS</span>
                 <div className="flex gap-x-2 justify-center grow">

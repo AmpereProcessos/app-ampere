@@ -397,9 +397,9 @@ function ChamadosSuporte({ credentials, setCredentials }) {
             <div
               onClick={() => handleOpenModal(call)}
               key={call._id}
-              className="w-[300px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+              className="w-[350px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
-              <div className="flex justify-between items-center w-full">
+              <div className="flex justify-between items-center w-full gap-2">
                 <h1 className="uppercase text-sm">
                   {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
                 </h1>

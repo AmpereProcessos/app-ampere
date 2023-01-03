@@ -286,8 +286,8 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </p>
           </div>
           <div className="flex flex-col overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 max-h-[520px]">
-            {selectedProjects.projetos.map((info) => (
-              <div className="border-b p-2 flex items-center gap-3">
+            {selectedProjects.projetos.map((info, index) => (
+              <div key={index} className="border-b p-2 flex items-center gap-3">
                 <FaUser />
                 <p className="text-xs">
                   {info.nomeDoContrato}

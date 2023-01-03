@@ -1,18 +1,10 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
-function Calls({ credentials, setCredentials }) {
+import { AppContext } from "../../context/AppContext";
+function Calls() {
+  const { credentials } = useContext(AppContext);
   const router = useRouter();
-  useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-    } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      }
-    }
-  }, []);
   return (
     <div className="flex flex-col bg-gray-100 grow p-6 w-full">
       <h1 className="text-center text-[#15599a] text-xl font-bold uppercase font-ralewayBlack">
@@ -31,8 +23,8 @@ function Calls({ credentials, setCredentials }) {
         ) : (
           false
         )}
-        {credentials.accessibleRoutes != undefined &&
-        credentials.accessibleRoutes.includes("O&M") ? (
+        {credentials?.accessibleRoutes?.includes("O&M") ||
+        credentials?.accessibleRoutes?.includes("Pós-Venda") ? (
           <Link href="/calls/chamadosSuporte">
             <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">

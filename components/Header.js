@@ -3,7 +3,7 @@ import { FaBars } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import WhiteLogo from "../utils/felizAnoNovo.png";
+import WhiteLogo from "../utils/whitelogoHD.png";
 import AlertVolts from "../utils/alertVolts-svg.svg";
 import SleepVolts from "../utils/sleepVolts-svg.svg";
 import { BiLogIn } from "react-icons/bi";
@@ -63,16 +63,18 @@ function Header({ toggleSidebar }) {
           style={{ fontSize: "23px", color: "#15599a", cursor: "pointer" }}
         />
       </div>
-      <Link href="/">
-        <div className="flex cursor-pointer items-center justify-center h-[50px]">
+
+      <div className="flex cursor-pointer items-center justify-center h-[50px]">
+        <Link href="/">
           <Image
             height={"50px"}
-            width={"183px"}
+            width={"50px"}
             src={WhiteLogo}
             objectFit="fill"
           />
-        </div>
-      </Link>
+        </Link>
+      </div>
+
       <div className="flex justify-end items-center">
         <p className="hidden lg:block">
           Seja bem vindo,{" "}

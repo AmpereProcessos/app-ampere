@@ -2500,7 +2500,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                         <span className="block text-gray-400 font-normal text-center">
-                          {images.visualizacaoProjeto.file.name}
+                          {images.visualizacaoProjeto.file?.name}
                         </span>
                       </div>
                     ) : (

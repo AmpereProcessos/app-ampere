@@ -193,6 +193,7 @@ function FormVisitaTecnicaUm({
       avancar();
     }
   }
+  console.log(dados);
   return (
     <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">

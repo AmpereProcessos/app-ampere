@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProjectList from "../../components/ProjectList";
 import ProjectModal from "../../components/ProjectModal";
+import { FaUser } from "react-icons/fa";
 import connectToDatabase from "../../utils/projectsDb";
 function InProgress({ setCredentials, credentials, assContrato, data }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalProject, setModalProject] = useState({
-    estagio: "",
-    projeto: {},
+  const [selectedProjects, setProjects] = useState({
+    estagio: "ASSINATURA DO CONTRATO",
+    projetos: data.assContrato,
   });
   console.log(data);
   useEffect(() => {
@@ -33,9 +34,15 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </div>
             <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
               <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
+                {data.assContrato.length} projetos nesse estágio
               </p>
               <button
+                onClick={() =>
+                  setProjects({
+                    estagio: "ASSINATURA DO CONTRATO",
+                    projetos: data.assContrato,
+                  })
+                }
                 type="button"
                 className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
               >
@@ -52,9 +59,15 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </div>
             <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
               <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
+                {data.compraDoKit.length} projetos nesse estágio
               </p>
               <button
+                onClick={() =>
+                  setProjects({
+                    estagio: "COMPRA DO KIT",
+                    projetos: data.compraDoKit,
+                  })
+                }
                 type="button"
                 className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
               >
@@ -71,9 +84,15 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </div>
             <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
               <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
+                {data.entregaDoKit.length} projetos nesse estágio
               </p>
               <button
+                onClick={() =>
+                  setProjects({
+                    estagio: "ENTREGA DO KIT",
+                    projetos: data.entregaDoKit,
+                  })
+                }
                 type="button"
                 className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
               >
@@ -90,9 +109,15 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </div>
             <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
               <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
+                {data.assDocumentacoes.length} projetos nesse estágio
               </p>
               <button
+                onClick={() =>
+                  setProjects({
+                    estagio: "ASSINATURA DA DOCUMENTAÇÃO",
+                    projetos: data.assDocumentacoes,
+                  })
+                }
                 type="button"
                 className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
               >
@@ -109,9 +134,15 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </div>
             <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
               <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
+                {data.libConc.length} projetos nesse estágio
               </p>
               <button
+                onClick={() =>
+                  setProjects({
+                    estagio: "LIBERAÇÃO DA CONCESSIONÁRIA",
+                    projetos: data.libConc,
+                  })
+                }
                 type="button"
                 className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
               >
@@ -128,9 +159,15 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </div>
             <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
               <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
+                {data.agendamentoObra.length} projetos nesse estágio
               </p>
               <button
+                onClick={() =>
+                  setProjects({
+                    estagio: "AGENDAMENTO DA OBRA",
+                    projetos: data.agendamentoObra,
+                  })
+                }
                 type="button"
                 className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
               >
@@ -147,9 +184,15 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </div>
             <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
               <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
+                {data.terminoObra.length} projetos nesse estágio
               </p>
               <button
+                onClick={() =>
+                  setProjects({
+                    estagio: "TÉRMINO DA OBRA",
+                    projetos: data.terminoObra,
+                  })
+                }
                 type="button"
                 className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
               >
@@ -166,9 +209,15 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </div>
             <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
               <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
+                {data.vistoriaConcessionaria.length} projetos nesse estágio
               </p>
               <button
+                onClick={() =>
+                  setProjects({
+                    estagio: "VISTORIA DA CONCESSIONÁRIA",
+                    projetos: data.vistoriaConcessionaria,
+                  })
+                }
                 type="button"
                 className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
               >
@@ -185,9 +234,15 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </div>
             <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
               <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
+                {data.ligamentoUsina.length} projetos nesse estágio
               </p>
               <button
+                onClick={() =>
+                  setProjects({
+                    estagio: "LIGAMENTO DA USINA",
+                    projetos: data.ligamentoUsina,
+                  })
+                }
                 type="button"
                 className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
               >
@@ -204,9 +259,15 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </div>
             <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
               <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
+                {data.entregaTecnica.length} projetos nesse estágio
               </p>
               <button
+                onClick={() =>
+                  setProjects({
+                    estagio: "ENTREGA TÉCNICA",
+                    projetos: data.entregaTecnica,
+                  })
+                }
                 type="button"
                 className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
               >
@@ -216,17 +277,36 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
           </li>
         </ol>
         <div className="sticky top-[10%] left-[60%] h-[600px] w-[500px] bg-[#fff] rounded-sm border border-gray-200 shadow-lg p-3">
-          <h1 className="font-bold text-center text-[#15599a] text-xl">
-            PROJETOS
-          </h1>
+          <div className="flex flex-col items-center border-b border-gray-200 pb-2">
+            <h1 className="font-bold text-center text-[#15599a] text-xl">
+              PROJETOS
+            </h1>
+            <p className="text-xs text-gray-600">
+              CLIENTES NO ESTÁGIO: {selectedProjects.estagio}
+            </p>
+          </div>
+          <div className="flex flex-col overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 max-h-[520px]">
+            {selectedProjects.projetos.map((info) => (
+              <div className="border-b p-2 flex items-center gap-3">
+                <FaUser />
+                <p className="text-xs">
+                  {info.nomeDoContrato}
+                  {"  "}
+                  <strong className="font-bold text-[#15599a]">
+                    (#{info.qtde})
+                  </strong>
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-        {modalIsOpen && (
+        {/* {modalIsOpen && (
           <ProjectModal
             closeModal={() => setModalIsOpen(false)}
             estagio={modalProject.estagio}
             project={modalProject.projeto}
           />
-        )}
+        )} */}
       </div>
     </>
   );
@@ -252,7 +332,7 @@ export async function getServerSideProps(context) {
           "compra.statusLiberacao": 1,
           "compra.statusEntrega": 1,
           "projeto.dataAssDocumentacao": 1,
-          "projeto.statusDoParecerDeAcesso": 1,
+          "parecer.statusDoParecerDeAcesso": 1,
           "obra.statusDaObra": 1,
           vistoria: 1,
           "conferencias.usinaLigada": 1,
@@ -333,10 +413,10 @@ export async function getServerSideProps(context) {
     (x) => x.compra.statusLiberacao == "REALIZAR COMPRA"
   );
   let entregaDoKit = arr.filter((x) => x.compra?.statusEntrega == "EM ROTA");
-  let assDocumentacoes = arr.filter(
-    (x) =>
-      x.statusDoParecerDeAcesso == "AGUARDANDO ASSINATURA" ||
-      x.statusDoParecerDeAcesso == "AGUARDANDO FORMULÁRIOS"
+  let assDocumentacoes = arr.filter((x) =>
+    ["AGUARDANDO ASSINATURA", "AGUARDANDO FORMULÁRIOS"].includes(
+      x.parecer?.statusDoParecerDeAcesso
+    )
   );
   let libConc = arr.filter((x) =>
     [

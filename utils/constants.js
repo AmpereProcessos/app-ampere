@@ -13,6 +13,83 @@ export const routes = [
   "RH",
   "Almoxarifado",
 ];
+export const tiposChamadosSuporte = [
+  {
+    tipo: "PROBLEMAS COM CONCESSIONÁRIA",
+    grauUrgenciaOeM: "B",
+    grauUrgenciaNormal: "C",
+  },
+  {
+    tipo: "APP OFFLINE",
+    grauUrgenciaOeM: "B",
+    grauUrgenciaNormal: "D",
+  },
+  {
+    tipo: "INVERSOR NÃO CONFIGURADO",
+    grauUrgenciaOeM: "A",
+    grauUrgenciaNormal: "D",
+  },
+  {
+    tipo: "SISTEMA SEM GERAÇÃO",
+    grauUrgenciaOeM: "A",
+    grauUrgenciaNormal: "A",
+  },
+  {
+    tipo: "SISTEMA COM BAIXA GERAÇÃO",
+    grauUrgenciaOeM: "B",
+    grauUrgenciaNormal: "C",
+  },
+  {
+    tipo: "ATUALIZAÇÃO DE FIRMWARE",
+    grauUrgenciaOeM: "B",
+    grauUrgenciaNormal: "C",
+  },
+  {
+    tipo: "PROBLEMA NO DISJUNTOR CA",
+    grauUrgenciaOeM: "A",
+    grauUrgenciaNormal: "B",
+  },
+  {
+    tipo: "GOTEIRA",
+    grauUrgenciaOeM: "B",
+    grauUrgenciaNormal: "B",
+  },
+  {
+    tipo: "RETRABALHO EM ESTRUTURA",
+    grauUrgenciaOeM: "A",
+    grauUrgenciaNormal: "B",
+  },
+  {
+    tipo: "DEFEITOS E GARANTIA (PLACA)",
+    grauUrgenciaOeM: "A",
+    grauUrgenciaNormal: "B",
+  },
+  {
+    tipo: "DEFEITOS E GARANTIA (DATALOGGER)",
+    grauUrgenciaOeM: "A",
+    grauUrgenciaNormal: "B",
+  },
+  {
+    tipo: "DEFEITOS E GARANTIA (INVERSOR)",
+    grauUrgenciaOeM: "A",
+    grauUrgenciaNormal: "B",
+  },
+  {
+    tipo: "DISTRIBUIÇÃO DE CRÉDITOS",
+    grauUrgenciaOeM: "A",
+    grauUrgenciaNormal: "B",
+  },
+  {
+    tipo: "MANUTENÇÃO PREVENTIVA",
+    grauUrgenciaOeM: "C",
+    grauUrgenciaNormal: "D",
+  },
+  {
+    tipo: "OUTROS",
+    grauUrgenciaOeM: "C",
+    grauUrgenciaNormal: "C",
+  },
+];
 export const oemPlans = [
   {
     label: "MANUTENÇÃO SIMPLES",

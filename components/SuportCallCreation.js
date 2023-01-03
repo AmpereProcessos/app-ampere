@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 import Select from "react-select";
-import { cidadesAtendidas, cities } from "../utils/constants";
+import {
+  cidadesAtendidas,
+  cities,
+  tiposChamadosSuporte,
+} from "../utils/constants";
 import axios from "axios";
 const MODAL_STYLES = {
   position: "fixed",
@@ -24,7 +28,7 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function CreateModal({ setModalIsOpen }) {
+function CreateModal({ setModalIsOpen, getCalls }) {
   const [clientes, setClientes] = useState([]);
   const [callInfo, setCallInfo] = useState({
     clientName: "",
@@ -49,6 +53,7 @@ function CreateModal({ setModalIsOpen }) {
         problemType: "OUTROS",
         problemDesc: "",
       });
+      getCalls();
     });
   }
   function getClients() {
@@ -91,6 +96,8 @@ function CreateModal({ setModalIsOpen }) {
                         ...callInfo,
                         clientName: e.value.nome,
                         idPai: e.value.id,
+                        plano: e.value.plano,
+                        oemConcluido: e.value.oemConcluido,
                       })
                     }
                     options={clientes.map((cliente) => {
@@ -99,6 +106,8 @@ function CreateModal({ setModalIsOpen }) {
                         value: {
                           id: cliente._id,
                           nome: cliente.nomeDoContrato,
+                          plano: cliente.oem?.plano,
+                          oemConcluido: cliente.oem?.oemConcluido,
                         },
                       };
                     })}
@@ -175,46 +184,11 @@ function CreateModal({ setModalIsOpen }) {
                   }
                   className="text-xs grow text-center outline-none mt-2 lg:mt-0"
                 >
-                  <option value={"CONTA DE LUZ ALTA"}>CONTA DE LUZ ALTA</option>
-                  <option value={"APP OFFLINE"}>APP OFFLINE</option>
-                  <option value={"INVERSOR NÃO CONFIGURADO"}>
-                    INVERSOR NÃO CONFIGURADO
-                  </option>
-                  <option value={"SISTEMA SEM GERAÇÃO"}>
-                    SISTEMA SEM GERAÇÃO
-                  </option>
-                  <option value={"ATUALIZAÇÃO DE FIRMWARE"}>
-                    ATUALIZAÇÃO DE FIRMWARE
-                  </option>
-                  <option value={"PROBLEMA NO DISJUNTOR CA"}>
-                    PROBLEMA NO DISJUNTOR CA
-                  </option>
-                  <option value={"GOTEIRA"}>GOTEIRA</option>
-                  <option value={"MEDIDOR TRAVADO"}>MEDIDOR TRAVADO</option>
-                  <option value={"ERRO DE LEITURA"}>ERRO DE LEITURA</option>
-                  <option value={"RETRABALHO EM ESTRUTURA"}>
-                    RETRABALHO EM ESTRUTURA
-                  </option>
-                  <option value={"PROBLEMA COM PLACA"}>
-                    PROBLEMA COM PLACA
-                  </option>
-                  <option value={"PROBLEMA COM DATALOGGER/DTU"}>
-                    PROBLEMA COM DATALOGGER/DTU
-                  </option>
-                  <option value={"DISTRIBUIÇÃO DE CRÉDITOS"}>
-                    DISTRIBUIÇÃO DE CRÉDITOS
-                  </option>
-                  <option value={"SISTEMA COM BAIXA GERAÇÃO"}>
-                    SISTEMA COM BAIXA GERAÇÃO
-                  </option>
-                  <option value={"INVERSOR/MICRO COM ERRO"}>
-                    INVERSOR/MICRO COM ERRO
-                  </option>
-                  <option value={"GARANTIA"}>GARANTIA</option>
-                  <option value={"MANUTENÇÃO PREVENTIVA"}>
-                    MANUTENÇÃO PREVENTIVA
-                  </option>
-                  <option value={"OUTROS"}>OUTROS</option>
+                  {tiposChamadosSuporte.map((chamado) => (
+                    <option key={chamado.tipo} value={chamado.tipo}>
+                      {chamado.tipo}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">

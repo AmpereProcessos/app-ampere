@@ -13,6 +13,8 @@ export default async function handler(req, res) {
             "sistema.topologia": 1,
             "obra.equipeResp": 1,
             segmento: 1,
+            "oem.plano": 1,
+            "oem.oemConcluido": 1,
           },
         },
         {

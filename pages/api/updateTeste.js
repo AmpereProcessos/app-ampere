@@ -1,17 +1,17 @@
-import connectToDatabase from "../../utils/connectDb";
+import connectToDatabase from "../../utils/callsDb";
 export default async function handler(req, res) {
-  // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-  // const collection = db.collection("dados");
-  // let arr = await collection.updateMany(
-  //   {
-  //     "vendedor.nome": "LUCIANO LOPES",
-  //   },
-  //   {
-  //     $set: {
-  //       "vendedor.cod": 62,
-  //     },
-  //   }
-  // );
+  const db = await connectToDatabase(process.env.DB_KEY);
+  const collection = db.collection("suporte");
+  let arr = await collection.updateMany(
+    {
+      tipoChamado: "INVERSOR/MICRO COM ERRO",
+    },
+    {
+      $set: {
+        tipoChamado: "DEFEITOS E GARANTIA (INVERSOR)",
+      },
+    }
+  );
   // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
   // const collection = db.collection("dados");
   // let arr = await collection
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
   //     },
   //   ])
   //   .toArray();
-  res.json("DESATIVADA");
+  res.json(arr);
 }
 /*
   let arr = await collection.updateMany(

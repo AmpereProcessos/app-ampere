@@ -48,6 +48,7 @@ export default async function handler(req, res) {
       descricaoProblema: req.body.problemDesc,
       statusChamado: "ABERTO",
       responsavel: req.body.responsavel ? req.body.responsavel : "DEFINIR",
+      plano: req.body.plano,
     };
     const db = await connectToDatabase(process.env.DB_KEY, "chamados");
     const collection = db.collection("suporte");
@@ -62,6 +63,8 @@ export default async function handler(req, res) {
       statusChamado: "ABERTO",
       responsavel: req.body.responsavel ? req.body.responsavel : "DEFINIR",
       demanda: req.body.demanda,
+      plano: req.body.plano,
+      oemConcluido: req.body.oemConcluido,
     });
     return res.json("CHAMADO CRIADO");
   }

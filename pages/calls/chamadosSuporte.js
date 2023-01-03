@@ -9,8 +9,9 @@ import { BsFillPatchCheckFill } from "react-icons/bs";
 import Link from "next/link";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
-import { cities } from "../../utils/constants";
+import { cities, tiposChamadosSuporte } from "../../utils/constants";
 import { AppContext } from "../../context/AppContext";
+import dayjs from "dayjs";
 
 const statusStyles = {
   ABERTO: {
@@ -148,16 +149,6 @@ function ChamadosSuporte() {
       setFilteredInProgress(inProgress);
     }
   }
-  useEffect(() => {
-    if (
-      credentials.accessibleRoutes?.includes("O&M") ||
-      credentials.accessibleRoutes.includes("Pós-Venda")
-    ) {
-      getCalls();
-    } else {
-      router.push("/");
-    }
-  }, []);
   function updateModalInfo(id) {
     axios.get(`/api/calls/getSuporte/${id}`).then((res) => {
       setModalCall(res.data);
@@ -168,6 +159,49 @@ function ChamadosSuporte() {
     setModalCall(call);
     setModalIsOpen(true);
   }
+  function getDeadlineStatus(
+    tipoDoChamado,
+    plano,
+    statusPlano,
+    abertura,
+    statusChamado
+  ) {
+    if (statusChamado == "ABERTO") {
+      let tipoInfo = tiposChamadosSuporte.filter(
+        (chamado) => chamado.tipo == tipoDoChamado
+      )[0];
+      var grau;
+      if (plano && plano != "MANUTENÇÃO PREVENTIVA" && statusPlano != true) {
+        grau = tipoInfo ? tipoInfo.grauUrgenciaOeM : "B";
+      } else {
+        grau = tipoInfo ? tipoInfo.grauUrgenciaNormal : "B";
+      }
+      let diffTempo = dayjs().diff(dayjs(abertura), "hours");
+      if (grau == "A" && diffTempo > 24) {
+        return "border-red-500";
+      } else if (grau == "B" && diffTempo > 48) {
+        return "border-red-500";
+      } else if (grau == "C" && diffTempo > 72) {
+        return "border-red-500";
+      } else if (grau == "D" && diffTempo > 96) {
+        return "border-red-500";
+      } else {
+        return "border-gray-200";
+      }
+    } else {
+      return "border-gray-200";
+    }
+  }
+  useEffect(() => {
+    if (
+      credentials.accessibleRoutes?.includes("O&M") ||
+      credentials.accessibleRoutes.includes("Pós-Venda")
+    ) {
+      getCalls();
+    } else {
+      router.push("/");
+    }
+  }, []);
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
       <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
@@ -183,7 +217,7 @@ function ChamadosSuporte() {
           <AiOutlineReload />
         </div>
       </div>
-      <div className="w-full border max-h-[450px]  border-gray-200 bg-[#fff] shadow-xl p-4">
+      <div className="w-full border max-h-[575px]  border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
           <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             Chamados abertos ({filteredInProgress.length})
@@ -263,14 +297,20 @@ function ChamadosSuporte() {
             </button>
           </div>
         </div>
-        <div className="flex max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
+        <div className="flex max-h-[425px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
           {filteredInProgress.map((call) => (
             <div
               onClick={() => handleOpenModal(call)}
               key={call._id}
-              className="w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+              className={`w-[420px] cursor-pointer border ${getDeadlineStatus(
+                call.tipoChamado,
+                call.plano,
+                call.oemConcluido,
+                call.abertura,
+                call.statusChamado
+              )} p-3 hover:bg-blue-100`}
             >
-              <div className="flex justify-between items-center w-full">
+              <div className="flex justify-between gap-3 items-center w-full">
                 <h1 className="uppercase text-sm">
                   {call.nomeUsina ? call.nomeUsina : call.nomeCliente}
                 </h1>
@@ -280,7 +320,7 @@ function ChamadosSuporte() {
                   </p>
                 )}
                 <p
-                  className={`text-xs font-bold border p-1 rounded-lg ${
+                  className={`text-xs text-center font-bold border p-1 rounded-lg ${
                     statusStyles[call.statusChamado].textColor
                   } ${statusStyles[call.statusChamado].borderColor}`}
                 >
@@ -309,6 +349,9 @@ function ChamadosSuporte() {
               </div>
               <div className="flex justify-between mt-2 items-center w-full">
                 <p className="text-xs text-gray-500 uppercase">ABERTURA</p>
+                <p className="text-xxs text-gray-500 uppercase">
+                  {dayjs().diff(dayjs(call.abertura), "hours")} horas em aberto
+                </p>
                 <p className="text-xs text-gray-500">
                   {new Date(call.abertura).toLocaleString()}
                 </p>
@@ -317,7 +360,7 @@ function ChamadosSuporte() {
           ))}
         </div>
       </div>
-      <div className="w-full border max-h-[750px] lg:max-h-[450px]  border-gray-200 bg-[#fff] shadow-xl p-4">
+      <div className="w-full border max-h-[750px] lg:max-h-[550px]  border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-3 gap-y-2 lg:gap-y-0">
           <h1 className="col-span-1 text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
             CHAMADOS FINALIZADOS ({filteredClosedCalls.length})
@@ -451,7 +494,9 @@ function ChamadosSuporte() {
       >
         <p className="uppercase font-bold text-sm">Novo chamado</p>
       </div>
-      {creationModal && <CreateModal setModalIsOpen={setCreationModal} />}
+      {creationModal && (
+        <CreateModal getCalls={getCalls} setModalIsOpen={setCreationModal} />
+      )}
       {modalIsOpen && (
         <ModalCallSuporte
           credentials={credentials}

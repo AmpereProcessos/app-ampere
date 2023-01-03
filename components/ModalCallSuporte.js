@@ -3,6 +3,7 @@ import { VscChromeClose } from "react-icons/vsc";
 import { cities } from "../utils/constants";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
+import dayjs from "dayjs";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -182,6 +183,17 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                 />
               </button>
             </div>
+            <p className="text-gray-700 text-center text-xs mt-2 italic">
+              {info.fechamento
+                ? `${dayjs(dayjs(info.fechamento)).diff(
+                    dayjs(info.abertura),
+                    "hours"
+                  )} horas até fechamento`
+                : `${dayjs().diff(
+                    dayjs(info.abertura),
+                    "hours"
+                  )} horas em aberto`}
+            </p>
             <div className="overflow-y-auto">
               {credentials.accessibleRoutes.includes("Pós-Venda") &&
               info.fechamento ? (

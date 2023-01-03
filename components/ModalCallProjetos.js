@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
-import { cities } from "../utils/constants";
+import { cities, projetistas } from "../utils/constants";
 import axios from "axios";
 const MODAL_STYLES = {
   position: "fixed",
@@ -189,22 +189,11 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                   }}
                   className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
                 >
-                  <option value={"A DEFINIR"}>A DEFINIR</option>
-                  <option value={"ALINE APARECIDA RODRIGUES CARVALHO"}>
-                    ALINE APARECIDA
-                  </option>
-                  <option value={"ANDRIELLY GARCIA DOS SANTOS MARQUES"}>
-                    ANDRIELLY GARCIA
-                  </option>
-                  <option value={"GLENDA ELIAS NASCIMENTO SANTOS"}>
-                    GLENDA ELIAS
-                  </option>
-                  <option value={"POLLIANA CRISTINA DE REZENDE"}>
-                    POLLIANA CRISTINA
-                  </option>
-                  <option value={"TULIO HENRIQUE SILVA MEDEIROS"}>
-                    TULIO HENRIQUE
-                  </option>
+                  {projetistas.map((projetista) => (
+                    <option key={projetista.label} value={projetista.nome}>
+                      {projetista.label}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">

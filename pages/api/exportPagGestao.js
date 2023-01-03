@@ -56,7 +56,7 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            $and: [{ qtde: { $gte: infLimit } }, { qtde: { $lte: supLimit } }],
+            $and: [{ qtde: { $gt: infLimit } }, { qtde: { $lte: supLimit } }],
           },
         },
       ])

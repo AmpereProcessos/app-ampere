@@ -280,7 +280,7 @@ export default async function handler(req, res) {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
     var start = req.body.start;
-    var suplimit = req.body.start + req.body.limit;
+    var supLimit = req.body.start + req.body.limit;
     let arr = await collection
       .aggregate([
         {

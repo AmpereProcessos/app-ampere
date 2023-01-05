@@ -5,6 +5,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../utils/firebase";
 import axios from "axios";
 function AnexoArquivo({ categorias, cliente, id, prevLinks, handleUpdates }) {
+  console.log(prevLinks);
   const [nomeDoArquivo, setNomeDoArquivo] = useState("");
   const [categoria, setCategoria] = useState("NÃO DEFINIDO");
   const [imagem, setImagem] = useState(null);
@@ -52,6 +53,9 @@ function AnexoArquivo({ categorias, cliente, id, prevLinks, handleUpdates }) {
           text: "Imagem salva com sucesso",
           color: "text-green-500",
         });
+        setNomeDoArquivo("");
+        setCategoria("NÃO DEFINIDO");
+        setImagem(null);
         handleUpdates(id);
       }
     } catch (error) {
@@ -69,7 +73,7 @@ function AnexoArquivo({ categorias, cliente, id, prevLinks, handleUpdates }) {
             <div className="flex flex-col items-center">
               <i className="fa fa-folder-open fa-4x text-blue-700"></i>
               <span className="block text-gray-400 font-normal text-center">
-                {imagem.name}
+                {imagem?.name}
               </span>
             </div>
           ) : (

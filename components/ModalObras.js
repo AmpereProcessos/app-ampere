@@ -2001,7 +2001,7 @@ function ModalObras({
                   </h1>
                   <AnexoArquivo
                     id={infoHolder._id}
-                    prevLinks={infoHolder.links ? infoHolder.links : {}}
+                    prevLinks={project.links ? project.links : {}}
                     cliente={`${infoHolder.nomeDoContrato}-${infoHolder.codigoSVB}`}
                     categorias={[
                       { label: "DOCUMENTOS", value: "links.documentos" },

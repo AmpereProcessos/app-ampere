@@ -142,7 +142,6 @@ function ModalComercial({
       });
     }
   }
-  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -409,7 +408,6 @@ function ModalComercial({
                       })}
                       editable={editor}
                       handleChange={(value) => {
-                        console.log(value);
                         setChanges({
                           ...changes,
                           "vendedor.nome": value,
@@ -3070,7 +3068,7 @@ function ModalComercial({
                   </h1>
                   <AnexoArquivo
                     id={infoHolder._id}
-                    prevLinks={infoHolder.links ? infoHolder.links : {}}
+                    prevLinks={project.links ? project.links : {}}
                     cliente={`${infoHolder.nomeDoContrato}-${infoHolder.codigoSVB}`}
                     categorias={[
                       { label: "DOCUMENTOS", value: "links.documentos" },

@@ -210,6 +210,15 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     }}
                   />
                   <TextInput
+                    label={"Logradouro"}
+                    editable={editor}
+                    value={infoHolder.logradouro ? infoHolder.logradouro : ""}
+                    handleChange={(value) => {
+                      setChanges({ ...changes, logradouro: value });
+                      setInfo({ ...infoHolder, logradouro: value });
+                    }}
+                  />
+                  <TextInput
                     label={"Bairro"}
                     editable={editor}
                     value={infoHolder.bairro ? infoHolder.bairro : ""}

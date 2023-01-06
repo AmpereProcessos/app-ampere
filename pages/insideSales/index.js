@@ -18,6 +18,7 @@ function InsideSales() {
     pesquisaFilter: "",
     cidadeFilter: [],
     vendedorFilter: [],
+    canalFilter: [],
     insiderFilter: [],
   });
   const [dateFilter, setDateFilter] = useState({
@@ -63,6 +64,12 @@ function InsideSales() {
       if (!newArr) newArr = leads;
       newArr = newArr.filter((lead) =>
         filters.vendedorFilter.includes(lead.vendedor)
+      );
+    }
+    if (filters.canalFilter.length > 0) {
+      if (!newArr) newArr = leads;
+      newArr = newArr.filter((lead) =>
+        filters.canalFilter.includes(lead.canal)
       );
     }
     if (filters.insiderFilter.length > 0) {
@@ -140,6 +147,24 @@ function InsideSales() {
                 value: vendedor.nome,
               };
             })}
+          />
+          <Select
+            isMulti
+            placeholder="CANAL"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                canalFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              { label: "GOOGLE ADS", value: "GOOGLE ADS" },
+              { label: "FACEBOOK ADS", value: "FACEBOOK ADS" },
+              { label: "INDICAÇÃO", value: "INDICAÇÃO" },
+              { label: "PASSIVO", value: "PASSIVO" },
+              { label: "PROSPECÇÃO ATIVA", value: "PROSPECÇÃO ATIVA" },
+            ]}
           />
           {credentials.accessibleRoutes.includes("PPS") ||
           credentials.accessibleRoutes.includes("Marketing") ? (

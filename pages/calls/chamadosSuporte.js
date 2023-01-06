@@ -9,7 +9,11 @@ import { BsFillPatchCheckFill } from "react-icons/bs";
 import Link from "next/link";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
-import { cities, tiposChamadosSuporte } from "../../utils/constants";
+import {
+  cidadesAtendidas,
+  cities,
+  tiposChamadosSuporte,
+} from "../../utils/constants";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
 
@@ -242,8 +246,8 @@ function ChamadosSuporte() {
               onChange={(e) =>
                 setFilters({ ...filters, cityFilter: e.map((x) => x.value) })
               }
-              options={cities.map((city) => {
-                return { value: city.name, label: city.name };
+              options={cidadesAtendidas.map((cidade) => {
+                return { value: cidade, label: cidade };
               })}
             />
             <Select

@@ -6,7 +6,7 @@ import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AppContext } from "../../context/AppContext";
 import ModalComercial from "../../components/ModalComercial";
-import { statusLiberacao } from "../../utils/constants";
+import { statusLiberacao, vendedores } from "../../utils/constants";
 const statusStyles = {
   ASSINADO: {
     textColor: "text-green-500",
@@ -34,6 +34,7 @@ function Comercial({ users }) {
   const [filters, setFilters] = useState({
     contratoFilter: [],
     pagamentoFilter: [],
+    vendedorFilter: [],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -83,6 +84,12 @@ function Comercial({ users }) {
     } else if (filters.contratoFilter.length > 0) {
       newArr = projects.filter((project) =>
         filters.contratoFilter.includes(project.contrato.status)
+      );
+    }
+    if (filters.vendedorFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((project) =>
+        filters.vendedorFilter.includes(project.vendedor.nome)
       );
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
@@ -319,6 +326,19 @@ function Comercial({ users }) {
                   label: "ASSINADO",
                 },
               ]}
+            />
+            <Select
+              isMulti
+              placeholder="VENDEDOR"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  vendedorFilter: e.map((x) => x.value),
+                })
+              }
+              options={vendedores.map((vendedor) => {
+                return { label: vendedor.nome, value: vendedor.nome };
+              })}
             />
             <Select
               isMulti

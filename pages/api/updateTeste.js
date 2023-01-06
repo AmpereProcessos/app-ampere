@@ -4,11 +4,11 @@ export default async function handler(req, res) {
   const collection = db.collection("suporte");
   let arr = await collection.updateMany(
     {
-      tipoChamado: "INVERSOR/MICRO COM ERRO",
+      cidade: "Cachoeira Dourada",
     },
     {
       $set: {
-        tipoChamado: "DEFEITOS E GARANTIA (INVERSOR)",
+        cidade: "CACHOEIRA DOURADA",
       },
     }
   );

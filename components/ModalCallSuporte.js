@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
-import { cities } from "../utils/constants";
+import { cidadesAtendidas, cities } from "../utils/constants";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import dayjs from "dayjs";
@@ -77,7 +77,9 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
   };
   let initialNote = info.anotacoes ? info.anotacoes : "";
   let initialCidade = info.cidade ? info.cidade : "A DEFINIR";
-  var selectableCities = cities.filter((cidade) => cidade.name != info.cidade);
+  var selectableCities = cidadesAtendidas.filter(
+    (cidade) => cidade != info.cidade
+  );
   const [responsavel, setResponsavel] = useState(info.responsavel);
   const [notes, setNotes] = useState(initialNote);
   const [feedbackValue, setFeedbackValue] = useState(info.feedbackValor);
@@ -299,8 +301,8 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                     <option value={info.cidade}>{info.cidade}</option>
                   )}
                   {selectableCities.map((city) => (
-                    <option key={city.name} value={city.name}>
-                      {city.name}
+                    <option key={city} value={city}>
+                      {city}
                     </option>
                   ))}
                   <option value={"A DEFINIR"}>A DEFINIR</option>

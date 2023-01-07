@@ -338,7 +338,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Digite aqui as anotações do chamado"
-                  className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
+                  className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-100 min-h-[175px] h-fit text-center grow"
                 />
               </div>
               {info.statusChamado == "RESOLVIDO" ? (

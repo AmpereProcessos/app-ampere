@@ -1,9 +1,25 @@
 import React from "react";
 
-function SelectInput({ label, value, options, handleChange, editable }) {
+function SelectInput({
+  label,
+  value,
+  options,
+  handleChange,
+  editable,
+  widthFit,
+  labelColor,
+}) {
   return (
-    <div className="flex flex-col w-full text-sm lg:text-base  lg:w-[350px] items-center">
-      <span className="uppercase font-bold font-raleway text-center text-sm">
+    <div
+      className={`flex flex-col w-full text-sm lg:text-base ${
+        widthFit ? "w-fit" : "lg:w-[350px]"
+      } items-center`}
+    >
+      <span
+        className={`uppercase font-bold font-raleway text-center text-sm ${
+          labelColor ? labelColor : ""
+        }`}
+      >
         {label}
       </span>
       <select

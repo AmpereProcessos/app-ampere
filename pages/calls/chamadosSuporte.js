@@ -40,40 +40,51 @@ dateFilterParam.setDate(dateFilterParam.getDate() - 2);
 function ChamadosSuporte() {
   const { credentials, setCredentials } = useContext(AppContext);
   const router = useRouter();
+  // Array com os chamados, filtrados ou não.
   const [inProgress, setInProgress] = useState([]);
   const [filteredInProgress, setFilteredInProgress] = useState([]);
   const [closedCalls, setClosedCalls] = useState([]);
   const [filteredClosedCalls, setFilteredClosedCalls] = useState([]);
+  // Controle booleano da abertura de modais
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [creationModal, setCreationModal] = useState(false);
+  // Controle do chamado da modal
   const [modalCall, setModalCall] = useState({});
-  const [closedFilterDate, setClosedFilterDate] = useState({
-    after: dateFilterParam,
-    before: new Date(),
-  });
-  const [filters, setFilters] = useState({
+  // Controle de filtros
+  const [inProgressCallsFilters, setInProgressCallsFilters] = useState({
+    searchFilter: "",
     respFilter: [],
     statusFilter: [],
     cityFilter: [],
+    typeFilter: [],
   });
-  const [closedCallsFilter, setClosedCallsFilter] = useState({
-    cidadeFilter: [],
+  const [closedCallsFilters, setClosedCallsFilters] = useState({
     searchFilter: "",
+    respFilter: [],
+    cityFilter: [],
+    typeFilter: [],
+    afterDateFilter: dateFilterParam,
+    beforeDateFilter: new Date(),
   });
-  const [searchFilter, setSearchFilter] = useState("");
-  const [searchByType, setSearchByType] = useState("");
   function getCalls() {
-    axios.get("/api/calls/suporte/mainData").then((res) => {
-      setInProgress(res.data.openCalls);
-      setFilteredInProgress(res.data.openCalls);
-      setClosedCalls(res.data.closedCalls);
-      setFilteredClosedCalls(res.data.closedCalls);
-    });
+    axios
+      .get(
+        `/api/calls/suporte/mainData?closedAfter=${closedCallsFilters.afterDateFilter}&closedBefore=${closedCallsFilters.beforeDateFilter}`
+      )
+      .then((res) => {
+        setInProgress(res.data.openCalls);
+        setFilteredInProgress(res.data.openCalls);
+        setClosedCalls(res.data.closedCalls);
+        setFilteredClosedCalls(res.data.closedCalls);
+      });
   }
-  function filterClosedCallsByDate() {
+  function getClosedCallsByDate() {
     axios
       .post("/api/calls/suporte/filteredByDate", {
-        date: closedFilterDate,
+        date: {
+          after: closedCallsFilters.afterDateFilter,
+          before: closedCallsFilters.beforeDateFilter,
+        },
       })
       .then((res) => {
         setFilteredClosedCalls(res.data);
@@ -82,57 +93,81 @@ function ChamadosSuporte() {
   }
   function filterInProgressCalls() {
     var newArr;
-    if (filters.statusFilter.length > 0 && filters.respFilter.length > 0) {
+    if (
+      inProgressCallsFilters.statusFilter.length > 0 &&
+      inProgressCallsFilters.respFilter.length > 0
+    ) {
       newArr = inProgress.filter(
         (call) =>
-          filters.respFilter.includes(call.responsavel) &&
-          filters.statusFilter.includes(call.statusChamado)
+          inProgressCallsFilters.respFilter.includes(call.responsavel) &&
+          inProgressCallsFilters.statusFilter.includes(call.statusChamado)
       );
-    } else if (filters.respFilter.length > 0) {
+    } else if (inProgressCallsFilters.respFilter.length > 0) {
       newArr = inProgress.filter((call) =>
-        filters.respFilter.includes(call.responsavel)
+        inProgressCallsFilters.respFilter.includes(call.responsavel)
       );
-    } else if (filters.statusFilter.length > 0) {
+    } else if (inProgressCallsFilters.statusFilter.length > 0) {
       newArr = inProgress.filter((call) =>
-        filters.statusFilter.includes(call.statusChamado)
+        inProgressCallsFilters.statusFilter.includes(call.statusChamado)
       );
     }
-    if (filters.cityFilter.length > 0) {
+    if (inProgressCallsFilters.cityFilter.length > 0) {
       if (!newArr) newArr = inProgress;
       newArr = newArr.filter((call) =>
-        filters.cityFilter.includes(call.cidade)
+        inProgressCallsFilters.cityFilter.includes(call.cidade)
       );
     }
-    if (!newArr) setFilteredInProgress(inProgress);
-    else {
+    if (inProgressCallsFilters.typeFilter.length > 0) {
+      if (!newArr) newArr = inProgress;
+      newArr = newArr.filter((call) =>
+        inProgressCallsFilters.typeFilter.includes(call.tipoChamado)
+      );
+    }
+    if (!newArr) {
+      setFilteredInProgress(inProgress);
+      return inProgress;
+    } else {
       setFilteredInProgress(newArr);
+      return newArr;
     }
   }
-  function filterCloseCalls() {
+  function filterClosedCalls() {
     var newArr;
-    if (closedCallsFilter.cidadeFilter.length > 0) {
+    if (closedCallsFilters.cityFilter.length > 0) {
       if (!newArr) newArr = closedCalls;
       newArr = newArr.filter((call) =>
-        closedCallsFilter.cidadeFilter.includes(call.cidade)
+        closedCallsFilters.cityFilter.includes(call.cidade)
       );
     }
-    if (closedCallsFilter.searchFilter.length > 0) {
+    if (closedCallsFilters.typeFilter.length > 0) {
       if (!newArr) newArr = closedCalls;
-      newArr = closedCalls.filter((call) =>
-        call.tipoChamado
-          .toUpperCase()
-          .includes(closedCallsFilter.searchFilter.toUpperCase())
+      newArr = newArr.filter((call) =>
+        closedCallsFilters.typeFilter.includes(call.tipoChamado)
       );
     }
-    if (!newArr) setFilteredClosedCalls(closedCalls);
-    else {
+    if (closedCallsFilters.respFilter.length > 0) {
+      if (!newArr) newArr = closedCalls;
+      newArr = newArr.filter((call) =>
+        closedCallsFilters.respFilter.includes(call.responsavel)
+      );
+    }
+    if (!newArr) {
+      setFilteredClosedCalls(closedCalls);
+      return closedCalls;
+    } else {
       setFilteredClosedCalls(newArr);
+      return newArr;
     }
   }
-  function handleSearchFilter(value) {
-    setSearchFilter(value);
+  // Filtros de pesquisa
+  function handleInProgressCallsSearchFilter(value) {
+    setInProgressCallsFilters({
+      ...inProgressCallsFilters,
+      searchFilter: value,
+    });
     if (value != "" || " ") {
-      let newArr = inProgress.filter((call) =>
+      let filteredByOptions = filterInProgressCalls();
+      let newArr = filteredByOptions.filter((call) =>
         call.nomeCliente
           ? call.nomeCliente.toUpperCase().includes(value.toUpperCase())
           : call.nomeUsina.toUpperCase().includes(value.toUpperCase())
@@ -142,15 +177,18 @@ function ChamadosSuporte() {
       setFilteredInProgress(inProgress);
     }
   }
-  function handleSearchByType(value) {
-    setSearchByType(value);
+  function handleClosedCallsSearchFilter(value) {
+    setClosedCallsFilters({ ...closedCallsFilters, searchFilter: value });
     if (value != "" || " ") {
-      let newArr = inProgress.filter((call) =>
-        call.tipoChamado.toUpperCase().includes(value.toUpperCase())
+      let filteredByOptions = filterClosedCalls();
+      let newArr = filteredByOptions.filter((call) =>
+        call.nomeCliente
+          ? call.nomeCliente.toUpperCase().includes(value.toUpperCase())
+          : call.nomeUsina.toUpperCase().includes(value.toUpperCase())
       );
-      setFilteredInProgress(newArr);
+      setFilteredClosedCalls(newArr);
     } else {
-      setFilteredInProgress(inProgress);
+      setFilteredClosedCalls(inProgress);
     }
   }
   function updateModalInfo(id) {
@@ -159,9 +197,11 @@ function ChamadosSuporte() {
       getCalls();
     });
   }
-  function handleOpenModal(call) {
-    setModalCall(call);
-    setModalIsOpen(true);
+  function handleOpenModal(id) {
+    axios.get(`/api/calls/getSuporte/${id}`).then((res) => {
+      setModalCall(res.data);
+      setModalIsOpen(true);
+    });
   }
   function getDeadlineStatus(
     tipoDoChamado,
@@ -229,22 +269,34 @@ function ChamadosSuporte() {
           <div className="flex flex-wrap justify-center gap-y-2 items-center gap-x-2">
             <input
               type="text"
-              value={searchFilter}
+              value={inProgressCallsFilters.searchFilter}
               placeholder={"Digite o nome do cliente..."}
-              onChange={(e) => handleSearchFilter(e.target.value)}
-              className="outline-none text-gray-700 border border-gray-200 px-2 py-1.5 rounded-md"
+              onChange={(e) =>
+                handleInProgressCallsSearchFilter(e.target.value)
+              }
+              className="outline-none text-gray-700 border border-gray-200 px-2 py-1.5 rounded-sm"
             />
-            <input
-              value={searchByType}
-              onChange={(e) => handleSearchByType(e.target.value)}
-              placeholder="Digite o tipo do chamado..."
-              className="outline-none text-gray-700 border border-gray-200 px-2 py-1.5 rounded-md"
+            <Select
+              isMulti
+              placeholder="TIPO DE CHAMADO"
+              onChange={(e) =>
+                setInProgressCallsFilters({
+                  ...inProgressCallsFilters,
+                  typeFilter: e.map((x) => x.value),
+                })
+              }
+              options={tiposChamadosSuporte.map((chamado) => {
+                return { value: chamado.tipo, label: chamado.tipo };
+              })}
             />
             <Select
               isMulti
               placeholder="CIDADE"
               onChange={(e) =>
-                setFilters({ ...filters, cityFilter: e.map((x) => x.value) })
+                setInProgressCallsFilters({
+                  ...inProgressCallsFilters,
+                  cityFilter: e.map((x) => x.value),
+                })
               }
               options={cidadesAtendidas.map((cidade) => {
                 return { value: cidade, label: cidade };
@@ -254,7 +306,10 @@ function ChamadosSuporte() {
               isMulti
               placeholder="STATUS DO CHAMADOS"
               onChange={(e) =>
-                setFilters({ ...filters, statusFilter: e.map((x) => x.value) })
+                setInProgressCallsFilters({
+                  ...inProgressCallsFilters,
+                  statusFilter: e.map((x) => x.value),
+                })
               }
               options={[
                 {
@@ -271,7 +326,10 @@ function ChamadosSuporte() {
               isMulti
               placeholder="RESPONSÁVEL"
               onChange={(e) =>
-                setFilters({ ...filters, respFilter: e.map((x) => x.value) })
+                setInProgressCallsFilters({
+                  ...inProgressCallsFilters,
+                  respFilter: e.map((x) => x.value),
+                })
               }
               options={[
                 {
@@ -304,7 +362,7 @@ function ChamadosSuporte() {
         <div className="flex max-h-[425px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
           {filteredInProgress.map((call) => (
             <div
-              onClick={() => handleOpenModal(call)}
+              onClick={() => handleOpenModal(call._id)}
               key={call._id}
               className={`w-[420px] cursor-pointer border ${getDeadlineStatus(
                 call.tipoChamado,
@@ -365,51 +423,21 @@ function ChamadosSuporte() {
         </div>
       </div>
       <div className="w-full border max-h-[750px] lg:max-h-[550px]  border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-3 gap-y-2 lg:gap-y-0">
-          <h1 className="col-span-1 text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
-            CHAMADOS FINALIZADOS ({filteredClosedCalls.length})
-          </h1>
-          <div className="col-span-2 flex-wrap flex gap-x-2 items-center justify-around">
-            <div className="flex gap-x-2 items-center">
-              <input
-                value={closedCallsFilter.searchFilter}
-                onChange={(e) =>
-                  setClosedCallsFilter({
-                    ...closedCallsFilter,
-                    searchFilter: e.target.value,
-                  })
-                }
-                placeholder="Digite o tipo do chamado..."
-                className="outline-none text-gray-700 border border-gray-200 px-2 py-1.5 rounded-md"
-              />
-              <Select
-                isMulti
-                placeholder="CIDADE"
-                onChange={(e) =>
-                  setClosedCallsFilter({
-                    ...closedCallsFilter,
-                    cidadeFilter: e.map((x) => x.value),
-                  })
-                }
-                options={cities.map((city) => {
-                  return { value: city.name, label: city.name };
-                })}
-              />
-              <div
-                onClick={filterCloseCalls}
-                className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg"
-              >
-                <p className="mr-2 text-sm">Filtrar</p>
-              </div>
-            </div>
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex items-center gap-3">
+            <h1 className="col-span-1 text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
+              CHAMADOS FINALIZADOS ({filteredClosedCalls.length})
+            </h1>
             <div className="flex gap-x-2 items-center justify-around">
               <p>Entre:</p>
               <input
-                value={closedFilterDate.after}
+                value={dayjs(closedCallsFilters.afterDateFilter).format(
+                  "YYYY-MM-DD"
+                )}
                 onChange={(e) =>
-                  setClosedFilterDate({
-                    ...closedFilterDate,
-                    after: e.target.value,
+                  setClosedCallsFilters({
+                    ...closedCallsFilters,
+                    afterDateFilter: e.target.value,
                   })
                 }
                 type="date"
@@ -417,22 +445,94 @@ function ChamadosSuporte() {
               />
               <p>&</p>
               <input
-                value={closedFilterDate.before}
+                value={dayjs(closedCallsFilters.beforeDateFilter).format(
+                  "YYYY-MM-DD"
+                )}
                 onChange={(e) =>
-                  setClosedFilterDate({
-                    ...closedFilterDate,
-                    before: e.target.value,
+                  setClosedCallsFilters({
+                    ...closedCallsFilters,
+                    beforeDateFilter: e.target.value,
                   })
                 }
                 type="date"
                 className="border border-gray-200 outline-none p-2"
               />
               <div
-                onClick={filterClosedCallsByDate}
+                onClick={getClosedCallsByDate}
+                className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg"
+              >
+                <p className="mr-2 text-sm">BUSCAR CHAMADOS</p>
+                <MdDateRange />
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <div className="flex gap-x-2 items-center">
+              <input
+                value={closedCallsFilters.searchFilter}
+                onChange={(e) => handleClosedCallsSearchFilter(e.target.value)}
+                placeholder="Digite o nome do cliente/usina..."
+                className="outline-none text-gray-700 border border-gray-200 px-2 py-1.5 rounded-md w-[280px]"
+              />
+              <Select
+                isMulti
+                placeholder="TIPO DE CHAMADO"
+                onChange={(e) =>
+                  setClosedCallsFilters({
+                    ...closedCallsFilters,
+                    typeFilter: e.map((x) => x.value),
+                  })
+                }
+                options={tiposChamadosSuporte.map((chamado) => {
+                  return { value: chamado.tipo, label: chamado.tipo };
+                })}
+              />
+              <Select
+                isMulti
+                placeholder="CIDADE"
+                onChange={(e) =>
+                  setClosedCallsFilters({
+                    ...closedCallsFilters,
+                    cityFilter: e.map((x) => x.value),
+                  })
+                }
+                options={cidadesAtendidas.map((cidade) => {
+                  return { value: cidade, label: cidade };
+                })}
+              />
+              <Select
+                isMulti
+                placeholder="RESPONSÁVEL"
+                onChange={(e) =>
+                  setClosedCallsFilters({
+                    ...closedCallsFilters,
+                    respFilter: e.map((x) => x.value),
+                  })
+                }
+                options={[
+                  {
+                    value: "GABRIEL MARTINS",
+                    label: "GABRIEL MARTINS",
+                  },
+                  {
+                    value: "LUCAS FERNANDES",
+                    label: "LUCAS FERNANDES",
+                  },
+                  {
+                    value: "LUIS EDUARDO",
+                    label: "LUIS EDUARDO",
+                  },
+                  {
+                    value: "A DEFINIR",
+                    label: "A DEFINIR",
+                  },
+                ]}
+              />
+              <div
+                onClick={filterClosedCalls}
                 className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg"
               >
                 <p className="mr-2 text-sm">Filtrar</p>
-                <MdDateRange />
               </div>
             </div>
           </div>
@@ -440,7 +540,7 @@ function ChamadosSuporte() {
         <div className="flex max-h-[500px] lg:max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
           {filteredClosedCalls.map((call) => (
             <div
-              onClick={() => handleOpenModal(call)}
+              onClick={() => handleOpenModal(call._id)}
               key={call._id}
               className="w-[370px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >

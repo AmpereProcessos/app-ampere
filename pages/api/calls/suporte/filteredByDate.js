@@ -14,14 +14,14 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            abertura: {
+            fechamento: {
               $gte: after,
               $lt: before,
             },
           },
         },
         {
-          $sort: { abertura: -1 },
+          $sort: { fechamento: -1 },
         },
       ])
       .toArray();

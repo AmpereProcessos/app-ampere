@@ -1,9 +1,26 @@
 import React from "react";
 
-function NumberInput({ label, value, handleChange, editable, tag, unit }) {
+function NumberInput({
+  label,
+  value,
+  handleChange,
+  editable,
+  tag,
+  unit,
+  labelColor,
+  widthFit,
+}) {
   return (
-    <div className="flex flex-col w-full text-xs lg:w-[350px] lg:text-base items-center">
-      <span className="uppercase font-bold font-raleway text-center text-sm">
+    <div
+      className={`flex flex-col w-full text-xs ${
+        widthFit ? "w-fit" : "lg:w-[350px]"
+      } lg:text-base items-center`}
+    >
+      <span
+        className={`uppercase font-bold font-raleway ${
+          labelColor ? labelColor : ""
+        } text-center text-sm`}
+      >
         {label}
       </span>
       <div className="flex items-center justify-center">
@@ -13,7 +30,7 @@ function NumberInput({ label, value, handleChange, editable, tag, unit }) {
           </p>
         )}
         <input
-          className="text-xs w-fit text-center uppercase text-gray-600 outline-none"
+          className="text-xs w-fit text-center uppercase text-gray-600 outline-none bg-transparent"
           type="number"
           readOnly={!editable}
           value={value}

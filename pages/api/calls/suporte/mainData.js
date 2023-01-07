@@ -1,9 +1,8 @@
 import connectToDatabase from "../../../../utils/callsDb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
-    var dateFilterParam = new Date();
-    dateFilterParam.setDate(dateFilterParam.getDate() - 2);
-    let filter = dateFilterParam.toJSON();
+    const after = new Date(req.query.closedAfter).toJSON();
+    const before = new Date(req.query.closedBefore).toJSON();
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("suporte");
     let openCalls = await collection
@@ -11,6 +10,18 @@ export default async function handler(req, res) {
         {
           $match: {
             statusChamado: { $in: ["EM ANDAMENTO", "ABERTO", "PENDENTE"] },
+          },
+        },
+        {
+          $project: {
+            nomeCliente: 1,
+            nomeUsina: 1,
+            abertura: 1,
+            demanda: 1,
+            responsavel: 1,
+            tipoChamado: 1,
+            statusChamado: 1,
+            cidade: 1,
           },
         },
         {
@@ -25,6 +36,22 @@ export default async function handler(req, res) {
         {
           $match: {
             statusChamado: "RESOLVIDO",
+            fechamento: {
+              $gte: after,
+              $lt: before,
+            },
+          },
+        },
+        {
+          $project: {
+            nomeCliente: 1,
+            nomeUsina: 1,
+            abertura: 1,
+            demanda: 1,
+            responsavel: 1,
+            tipoChamado: 1,
+            statusChamado: 1,
+            cidade: 1,
           },
         },
         {

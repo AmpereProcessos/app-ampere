@@ -6,16 +6,26 @@ function TextInput({
   editable,
   normalCase,
   placeholder,
+  widthFit,
+  labelColor,
 }) {
   return (
-    <div className="flex flex-col w-full text-sm lg:text-base lg:w-[350px] items-center">
-      <span className="uppercase font-bold font-raleway text-center text-sm">
+    <div
+      className={`flex flex-col w-full text-sm lg:text-base ${
+        widthFit ? "w-fit" : "lg:w-[350px]"
+      } items-center`}
+    >
+      <span
+        className={`uppercase font-bold font-raleway text-center ${
+          labelColor ? labelColor : ""
+        } text-sm`}
+      >
         {label}
       </span>
       <input
         className={`text-xs w-full text-center ${
           normalCase ? "" : "uppercase"
-        }  text-gray-600 outline-none`}
+        }  text-gray-600 outline-none bg-transparent`}
         value={value}
         readOnly={!editable}
         placeholder={placeholder ? placeholder : "INFORMAÇÃO A PREENCHER..."}

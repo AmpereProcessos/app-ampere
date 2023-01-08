@@ -418,6 +418,16 @@ function ChamadosSuporte() {
                   {new Date(call.abertura).toLocaleString()}
                 </p>
               </div>
+              {call.tipoChamado.includes("GARANTIA") &&
+              (!call.ultAtualizacaoCliente ||
+                dayjs().diff(dayjs(call.ultAtualizacaoCliente), "days") >=
+                  7) ? (
+                <p className="text-center font-bold text-red-500">
+                  ATUALIZAR CLIENTE
+                </p>
+              ) : (
+                false
+              )}
             </div>
           ))}
         </div>

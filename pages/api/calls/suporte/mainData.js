@@ -80,18 +80,8 @@ export default async function handler(req, res) {
     const db = await connectToDatabase(process.env.DB_KEY, "chamados");
     const collection = db.collection("suporte");
     let created = await collection.insertOne({
-      idPai: req.body.idPai,
-      abertura: date,
-      nomeCliente: req.body.clientName,
-      nomeUsina: req.body.nomeUsina ? req.body.nomeUsina : "",
-      cidade: req.body.clientCity,
-      tipoChamado: req.body.problemType,
-      descricaoProblema: req.body.problemDesc,
+      ...req.body,
       statusChamado: "ABERTO",
-      responsavel: req.body.responsavel ? req.body.responsavel : "DEFINIR",
-      demanda: req.body.demanda,
-      plano: req.body.plano,
-      oemConcluido: req.body.oemConcluido,
     });
     return res.json("CHAMADO CRIADO");
   }

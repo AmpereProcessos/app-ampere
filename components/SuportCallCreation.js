@@ -31,30 +31,35 @@ const OVERLAY_STYLES = {
 function CreateModal({ setModalIsOpen, getCalls }) {
   const [clientes, setClientes] = useState([]);
   const [callInfo, setCallInfo] = useState({
-    clientName: "",
+    nomeCliente: "",
     nomeUsina: "",
-    clientCity: cities[0].name,
+    cidade: cidadesAtendidas[0],
     responsavel: "A DEFINIR",
     demanda: "INTERNA",
-    problemType: "OUTROS",
-    problemDesc: "",
+    tipoChamado: "OUTROS",
+    descricaoProblema: "",
   });
   const [message, setMessage] = useState("");
   function createCall() {
-    axios.post("/api/calls/suporte/mainData", callInfo).then((res) => {
-      setMessage("CHAMADO ABERTO");
-      setCallInfo({
-        idPai: "",
-        clientName: "",
-        nomeUsina: "",
-        clientCity: cities[0].name,
-        responsavel: "A DEFINIR",
-        demanda: "INTERNA",
-        problemType: "OUTROS",
-        problemDesc: "",
+    axios
+      .post("/api/calls/suporte/mainData", {
+        ...callInfo,
+        abertura: new Date(),
+      })
+      .then((res) => {
+        setMessage("CHAMADO ABERTO");
+        setCallInfo({
+          nomeCliente: "",
+          nomeUsina: "",
+          cidade: cidadesAtendidas[0],
+          responsavel: "A DEFINIR",
+          demanda: "INTERNA",
+          tipoChamado: "OUTROS",
+          descricaoProblema: "",
+          linkMonitoramento: "",
+        });
+        getCalls();
       });
-      getCalls();
-    });
   }
   function getClients() {
     axios.get("/api/projects/todos").then((res) => setClientes(res.data));
@@ -94,10 +99,11 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                     onChange={(e) =>
                       setCallInfo({
                         ...callInfo,
-                        clientName: e.value.nome,
+                        nomeCliente: e.value.nome,
                         idPai: e.value.id,
                         plano: e.value.plano,
                         oemConcluido: e.value.oemConcluido,
+                        equipeResp: e.value.equipeResp,
                       })
                     }
                     options={clientes.map((cliente) => {
@@ -108,6 +114,7 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                           nome: cliente.nomeDoContrato,
                           plano: cliente.oem?.plano,
                           oemConcluido: cliente.oem?.oemConcluido,
+                          equipeResp: cliente.obra.equipeResp,
                         },
                       };
                     })}
@@ -128,11 +135,19 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                 />
               </div>
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center uppercase font-bold">
+                  EQUIPE RESPONSÁVEL
+                </span>
+                <p className="text-sm text-center grow">
+                  {callInfo.equipeResp ? callInfo.equipeResp : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center uppercase font-bold">Cidade</span>
                 <select
-                  value={callInfo.clientCity}
+                  value={callInfo.cidade}
                   onChange={(e) =>
-                    setCallInfo({ ...callInfo, clientCity: e.target.value })
+                    setCallInfo({ ...callInfo, cidade: e.target.value })
                   }
                   className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
                 >
@@ -178,9 +193,9 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                   TIPO DE CHAMADO
                 </span>
                 <select
-                  value={callInfo.problemType}
+                  value={callInfo.tipoChamado}
                   onChange={(e) =>
-                    setCallInfo({ ...callInfo, problemType: e.target.value })
+                    setCallInfo({ ...callInfo, tipoChamado: e.target.value })
                   }
                   className="text-xs grow text-center outline-none mt-2 lg:mt-0"
                 >
@@ -191,16 +206,39 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                   ))}
                 </select>
               </div>
+              {![
+                "PROBLEMAS COM CONCESSIONÁRIA",
+                "GOTEIRA",
+                "DISTRIBUIÇÃO DE CRÉDITOS",
+                "RETRABALHO EM ESTRUTURA",
+              ].includes(callInfo.tipoChamado) && (
+                <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                  <span className="text-center uppercase font-bold">
+                    LINK DA PLANTA
+                  </span>
+                  <input
+                    value={callInfo.linkMonitoramento}
+                    onChange={(e) =>
+                      setCallInfo({
+                        ...callInfo,
+                        linkMonitoramento: e.target.value,
+                      })
+                    }
+                    className="outline-none text-sm text-center grow placeholder:italic"
+                    type="text"
+                  />
+                </div>
+              )}
               <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="font-bold text-center font-raleway">
                   DESCRIÇÃO DO CHAMADO
                 </span>
                 <textarea
-                  value={callInfo.problemDesc}
+                  value={callInfo.descricaoProblema}
                   onChange={(e) =>
                     setCallInfo({
                       ...callInfo,
-                      problemDesc: e.target.value,
+                      descricaoProblema: e.target.value,
                     })
                   }
                   placeholder="Digite aqui as anotações do chamado"

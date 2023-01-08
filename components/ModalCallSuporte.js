@@ -75,38 +75,27 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
         : "",
     },
   };
-  let initialNote = info.anotacoes ? info.anotacoes : "";
-  let initialCidade = info.cidade ? info.cidade : "A DEFINIR";
   var selectableCities = cidadesAtendidas.filter(
     (cidade) => cidade != info.cidade
   );
-  const [responsavel, setResponsavel] = useState(info.responsavel);
-  const [notes, setNotes] = useState(initialNote);
-  const [feedbackValue, setFeedbackValue] = useState(info.feedbackValor);
-  const [selectedStatus, setSelectedStatus] = useState(info.statusChamado);
-  const [cidade, setCidade] = useState(initialCidade);
+  const [infoHolder, setInfo] = useState(info);
   const [message, setMessage] = useState({ text: "", color: "" });
   function saveCallChanges() {
-    if (info.statusChamado != selectedStatus) {
+    if (info.statusChamado != infoHolder.statusChamado) {
       ultAlteracoes.statusAlteracoes.usuario = credentials._id;
       ultAlteracoes.statusAlteracoes.antes = info.statusChamado;
-      ultAlteracoes.statusAlteracoes.depois = selectedStatus;
+      ultAlteracoes.statusAlteracoes.depois = infoHolder.statusChamado;
       ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
     }
-    if (info.anotacoes != notes) {
+    if (info.anotacoes != infoHolder.anotacoes) {
       ultAlteracoes.anotAlteracoes.usuario = credentials._id;
       ultAlteracoes.anotAlteracoes.antes = info.anotacoes;
-      ultAlteracoes.anotAlteracoes.depois = notes;
+      ultAlteracoes.anotAlteracoes.depois = infoHolder.anotacoes;
       ultAlteracoes.anotAlteracoes.data = new Date().toJSON();
     }
     axios
       .put("/api/calls/suporte/updateSuporte", {
-        ...info,
-        statusChamado: selectedStatus,
-        anotacoes: notes,
-        cidade: cidade,
-        responsavel: responsavel ? responsavel : info.responsavel,
-        feedbackValor: feedbackValue,
+        ...infoHolder,
         ultAlteracoes: ultAlteracoes,
       })
       .then((res) => {
@@ -124,7 +113,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
       }
       axios
         .post("/api/calls/suporte/updateSuporte", {
-          ...info,
+          ...infoHolder,
           fechamento: new Date(),
           statusChamado: "RESOLVIDO",
           ultAlteracoes: ultAlteracoes,
@@ -140,7 +129,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
     }
   }
   function reopenCall() {
-    if (info.status != "ABERTO") {
+    if (info.statusChamado != "ABERTO") {
       ultAlteracoes.statusAlteracoes.usuario = credentials._id;
       ultAlteracoes.statusAlteracoes.antes = info.statusChamado;
       ultAlteracoes.statusAlteracoes.depois = "ABERTO";
@@ -148,7 +137,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
     }
     axios
       .post("/api/calls/suporte/updateSuporte", {
-        ...info,
+        ...infoHolder,
         fechamento: "",
         statusChamado: "ABERTO",
         ultAlteracoes: ultAlteracoes,
@@ -159,8 +148,8 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
   }
   useEffect(() => {
     setMessage({ text: "", color: "" });
-  }, [notes, responsavel]);
-  console.log(feedbackValue);
+  }, [infoHolder]);
+  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -204,8 +193,15 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                     COLETA DE FEEDBACK
                   </span>
                   <input
-                    value={feedbackValue ? feedbackValue : ""}
-                    onChange={(e) => setFeedbackValue(Number(e.target.value))}
+                    value={
+                      infoHolder.feedbackValor ? infoHolder.feedbackValor : ""
+                    }
+                    onChange={(e) =>
+                      setInfo({
+                        ...infoHolder,
+                        feedbackValor: Number(e.target.value),
+                      })
+                    }
                     className="outline-none text-sm text-center grow placeholder:italic"
                     type="number"
                     max={10}
@@ -221,9 +217,11 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                   {info.statusChamado == "ABERTO" ? (
                     <>
                       <p
-                        onClick={() => setSelectedStatus("ABERTO")}
+                        onClick={() =>
+                          setInfo({ ...infoHolder, statusChamado: "ABERTO" })
+                        }
                         className={`${
-                          selectedStatus != "ABERTO" && "opacity-30"
+                          infoHolder.statusChamado != "ABERTO" && "opacity-30"
                         } text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg ${
                           info && statusStyles[info?.statusChamado].textColor
                         } ${
@@ -233,9 +231,15 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                         {info?.statusChamado}
                       </p>
                       <p
-                        onClick={() => setSelectedStatus("EM ANDAMENTO")}
+                        onClick={() =>
+                          setInfo({
+                            ...infoHolder,
+                            statusChamado: "EM ANDAMENTO",
+                          })
+                        }
                         className={`${
-                          selectedStatus != "EM ANDAMENTO" && "opacity-30"
+                          infoHolder.statusChamado != "EM ANDAMENTO" &&
+                          "opacity-30"
                         } text-xs font-bold border p-3 w-fit hover:opacity-100 cursor-pointer text-center rounded-lg ${
                           statusStyles["EM ANDAMENTO"].textColor
                         } ${statusStyles["EM ANDAMENTO"].borderColor}`}
@@ -270,6 +274,32 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                   {info.nomeUsina ? info.nomeUsina : "-"}
                 </p>
               </div>
+              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center uppercase font-bold">
+                  EQUIPE RESPONSÁVEL
+                </span>
+                <p className="text-sm text-center grow">
+                  {info.equipeResp ? info.equipeResp : "-"}
+                </p>
+              </div>
+              {![
+                "PROBLEMAS COM CONCESSIONÁRIA",
+                "GOTEIRA",
+                "DISTRIBUIÇÃO DE CRÉDITOS",
+                "RETRABALHO EM ESTRUTURA",
+              ].includes(info.tipoChamado) && (
+                <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                  <span className="text-center uppercase font-bold">
+                    LINK DA PLANTA
+                  </span>
+                  <a
+                    href={info.linkMonitoramento}
+                    className="text-sm text-center grow text-blue-400"
+                  >
+                    {info.linkMonitoramento ? info.linkMonitoramento : "-"}
+                  </a>
+                </div>
+              )}
               <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center font-bold font-raleway">
                   ABERTURA
@@ -293,8 +323,10 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                   CIDADE
                 </span>
                 <select
-                  value={cidade}
-                  onChange={(e) => setCidade(e.target.value)}
+                  value={infoHolder.cidade}
+                  onChange={(e) =>
+                    setInfo({ ...infoHolder, cidade: e.target.value })
+                  }
                   className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
                 >
                   {info.cidade && (
@@ -312,8 +344,10 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center font-bold">RESPONSÁVEL</span>
                 <select
-                  value={responsavel}
-                  onChange={(e) => setResponsavel(e.target.value)}
+                  value={infoHolder.responsavel}
+                  onChange={(e) =>
+                    setInfo({ ...infoHolder, responsavel: e.target.value })
+                  }
                   className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
                 >
                   <option value={"A DEFINIR"}>A DEFINIR</option>
@@ -330,13 +364,76 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                   {info.descricaoProblema ? info.descricaoProblema : ""}
                 </span>
               </div>
+              {info.tipoChamado.includes("GARANTIA") && (
+                <>
+                  <div className="flex flex-col gap-1 border border-gray-200 p-2 mt-4">
+                    <span className="text-center font-bold font-raleway">
+                      ÚLTIMA ATUALIZAÇÃO DO CLIENTE
+                    </span>
+                    <input
+                      value={
+                        infoHolder.ultAtualizacaoCliente
+                          ? dayjs(infoHolder.ultAtualizacaoCliente)
+                              .add(4, "hours")
+                              .format("YYYY-MM-DD")
+                          : null
+                      }
+                      onChange={(e) =>
+                        setInfo({
+                          ...infoHolder,
+                          ultAtualizacaoCliente: new Date(
+                            e.target.value
+                          ).toISOString(),
+                        })
+                      }
+                      type={"date"}
+                      className="grow outline-none text-center font-raleway"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1 border border-gray-200 p-2 mt-4">
+                    <span className="text-center font-bold font-raleway">
+                      STATUS DA GARANTIA
+                    </span>
+                    <select
+                      value={
+                        infoHolder.statusGarantia
+                          ? infoHolder.statusGarantia
+                          : "NÃO DEFINIDO"
+                      }
+                      onChange={(e) =>
+                        setInfo({
+                          ...infoHolder,
+                          statusGarantia: e.target.value,
+                        })
+                      }
+                      className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
+                    >
+                      <option value={"IDENTIFICAÇÃO E TESTES"}>
+                        IDENTIFICAÇÃO E TESTES
+                      </option>
+                      <option value={"EM PROCESSO DE APROVAÇÃO"}>
+                        EM PROCESSO DE APROVAÇÃO
+                      </option>
+                      <option value={"APROVADO"}>APROVADO</option>
+                      <option value={"EQUIPAMENTO EM ROTA"}>
+                        EQUIPAMENTO EM ROTA
+                      </option>
+                      <option value={"ENTREGUE"}>ENTREGUE</option>
+                      <option value={"INSTALADO"}>INSTALADO</option>
+                      <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+                    </select>
+                  </div>
+                </>
+              )}
               <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="font-bold text-center font-raleway">
                   ANOTAÇÕES
                 </span>
                 <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
+                  value={infoHolder.anotacoes ? infoHolder.anotacoes : ""}
+                  onChange={(e) =>
+                    setInfo({ ...infoHolder, anotacoes: e.target.value })
+                  }
                   placeholder="Digite aqui as anotações do chamado"
                   className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-100 min-h-[175px] h-fit text-center grow"
                 />

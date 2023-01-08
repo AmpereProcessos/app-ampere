@@ -22,6 +22,7 @@ export default async function handler(req, res) {
             tipoChamado: 1,
             statusChamado: 1,
             cidade: 1,
+            ultAtualizacaoCliente: 1,
           },
         },
         {

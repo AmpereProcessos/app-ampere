@@ -29,6 +29,12 @@ export default async function handler(req, res) {
             "obra.equipeResp": 1,
           },
         },
+        {
+          $sort: {
+            "medidor.data": 1,
+            "obra.saida": 1,
+          },
+        },
       ])
       .toArray();
     res.json(arr);

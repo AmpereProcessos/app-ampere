@@ -17,6 +17,8 @@ function Comissionamento() {
     cidadeFilter: [],
     equipResp: [],
     usinaLigadaFilter: [],
+    appPendente: false,
+    energiaInjetadaPendente: false,
   });
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -39,7 +41,16 @@ function Comissionamento() {
           call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
           call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
-      console.log(newArr);
+    }
+    if (filters.appPendente) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((project) => project.app.data == undefined);
+    }
+    if (filters.energiaInjetadaPendente) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (project) => project.conferencias.energiaInjetada.data == undefined
+      );
     }
     if (filters.pesquisaFilter.length > 0) {
       if (!newArr) newArr = projects;
@@ -99,6 +110,32 @@ function Comissionamento() {
               })
             }
           />
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                appPendente: !filters.appPendente,
+              })
+            }
+            className={`${
+              filters.appPendente ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            APP PENDENTE
+          </div>
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                energiaInjetadaPendente: !filters.energiaInjetadaPendente,
+              })
+            }
+            className={`${
+              filters.energiaInjetadaPendente ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            COLETAR ENERGIA INJETADA
+          </div>
           <div className="hidden lg:flex gap-x-2">
             <div className="flex flex-col w-fit items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">

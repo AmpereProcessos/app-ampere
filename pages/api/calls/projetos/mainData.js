@@ -2,6 +2,9 @@ import connectToDatabase from "../../../../utils/callsDb";
 import connectToProjectsDatabase from "../../../../utils/connectDb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
+    // const after = new Date(req.query.closedAfter).toJSON();
+    // const before = new Date(req.query.closedBefore).toJSON();
+    // console.log(after, before);
     const db = await connectToDatabase(process.env.DB_KEY);
     const projectsDb = await connectToProjectsDatabase(
       process.env.DB_KEY,
@@ -10,13 +13,35 @@ export default async function handler(req, res) {
     const collection = db.collection("projetos");
     const collection2 = projectsDb.collection("dados");
     let chamadosAbertos = await collection
-      .find({ status: { $ne: "FINALIZADO" } })
+      .aggregate([
+        { $match: { status: { $ne: "FINALIZADO" } } },
+        {
+          $project: {
+            projeto: 1,
+            status: 1,
+            responsavel: 1,
+            tipoDoChamado: 1,
+          },
+        },
+      ])
       .toArray();
     let chamadosFechados = await collection
       .aggregate([
         {
           $match: {
             status: "FINALIZADO",
+            // fechamento: {
+            //   $gte: after,
+            //   $lt: before,
+            // },
+          },
+        },
+        {
+          $project: {
+            projeto: 1,
+            status: 1,
+            responsavel: 1,
+            tipoDoChamado: 1,
           },
         },
       ])

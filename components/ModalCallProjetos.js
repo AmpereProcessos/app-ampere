@@ -51,6 +51,7 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
         mudancas: {
           ...changes,
           status: status ? status : infoHolder.status,
+          fechamento: status == "FINALIZADO" ? new Date() : info.fechamento,
         },
       })
       .then((res) => {

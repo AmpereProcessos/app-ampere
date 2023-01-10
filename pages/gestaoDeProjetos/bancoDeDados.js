@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalDB from "../../components/ModalDB";
 import Select from "react-select";
@@ -6,7 +6,9 @@ import { cidadesAtendidas, vendedores } from "../../utils/constants";
 import axios from "axios";
 import SelectInput from "../../components/SelectInput";
 import dayjs from "dayjs";
-function BandoDeDados({ data, credentials, setCredentials }) {
+import { AppContext } from "../../context/AppContext";
+function BandoDeDados({ data }) {
+  const { credentials, setCredentials } = useContext(AppContext);
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -52,17 +54,12 @@ function BandoDeDados({ data, credentials, setCredentials }) {
     setOpInProgress(true);
     let lastId = projects.length > 0 ? projects[projects.length - 1].qtde : 0;
     console.log(projects, lastId);
-    axios
-      .post("/api/projects/bancoDeDados", {
-        skip: projects.length,
-        greater: page * 200 - 200,
-      })
-      .then((res) => {
-        let arr = [...projects, ...res.data];
-        setProjects(res.data);
-        setFilteredProjects(res.data);
-        setOpInProgress(false);
-      });
+    axios.get("/api/projects/bancoDeDados").then((res) => {
+      let arr = [...projects, ...res.data];
+      setProjects(res.data);
+      setFilteredProjects(res.data);
+      setOpInProgress(false);
+    });
   }
 
   function handleFilters() {
@@ -79,14 +76,6 @@ function BandoDeDados({ data, credentials, setCredentials }) {
         (call) =>
           call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
           call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
-    }
-    if (filters.sorteioFilter) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter(
-        (project) =>
-          project.vendedor.nome != "ARTUR MILANE" &&
-          (project.nps > 5 || project.jornada.dataNps == undefined)
       );
     }
     if (filters.numModulos > 0) {
@@ -130,17 +119,7 @@ function BandoDeDados({ data, credentials, setCredentials }) {
       .then((res) => setModalProject(res.data[0]));
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      getProjects();
-    } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      } else {
-        getProjects();
-      }
-    }
+    getProjects();
   }, []);
   function handleOpenModal(id) {
     axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
@@ -269,16 +248,6 @@ function BandoDeDados({ data, credentials, setCredentials }) {
               };
             })}
           />
-          <div
-            onClick={() =>
-              setFilters({ ...filters, sorteioFilter: !filters.sorteioFilter })
-            }
-            className={`${
-              filters.sorteioFilter ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-          >
-            FILTRO SORTEIO
-          </div>
           <Select
             isMulti
             placeholder="VENDEDOR"

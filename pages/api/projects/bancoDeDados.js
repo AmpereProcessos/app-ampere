@@ -11,10 +11,21 @@ export default async function handler(req, res) {
           },
         },
         {
-          $sort: { qtde: 1 },
-        },
-        {
-          $limit: 800,
+          $project: {
+            _id: 1,
+            qtde: 1,
+            nomeDoContrato: 1,
+            cidade: 1,
+            "vendedor.nome": 1,
+            "jornada.dataNps": 1,
+            "obra.saida": 1,
+            "parecer.dataParecerDeAcesso": 1,
+            "contrato.dataAssinatura": 1,
+            "compra.dataPagamento": 1,
+            "medidor.data": 1,
+            "compra.dataPedido": 1,
+            "sistema.qtdeModulos": 1,
+          },
         },
       ])
       .toArray();

@@ -995,8 +995,8 @@ function ModalSolicitacaoVendas({
                           value: "PLANO SOL +",
                         },
                         {
-                          label: "NÃO SE ALICA",
-                          value: "NÃO SE ALICA",
+                          label: "NÃO SE APLICA",
+                          value: "NÃO SE APLICA",
                         },
                       ]}
                       value={dados.planoOeM}

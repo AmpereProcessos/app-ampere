@@ -35,31 +35,82 @@ function CreateModal({ setModalIsOpen, getCalls }) {
     nomeUsina: "",
     cidade: cidadesAtendidas[0],
     responsavel: "A DEFINIR",
-    demanda: "INTERNA",
+    demanda: "NÃO DEFINIDO",
     tipoChamado: "OUTROS",
     descricaoProblema: "",
   });
-  const [message, setMessage] = useState("");
-  function createCall() {
-    axios
-      .post("/api/calls/suporte/mainData", {
-        ...callInfo,
-        abertura: new Date(),
-      })
-      .then((res) => {
-        setMessage("CHAMADO ABERTO");
-        setCallInfo({
-          nomeCliente: "",
-          nomeUsina: "",
-          cidade: cidadesAtendidas[0],
-          responsavel: "A DEFINIR",
-          demanda: "INTERNA",
-          tipoChamado: "OUTROS",
-          descricaoProblema: "",
-          linkMonitoramento: "",
-        });
-        getCalls();
+  const [message, setMessage] = useState({ text: "", color: "" });
+  function validateFields() {
+    if (callInfo.nomeCliente.trim().length == 0) {
+      setMessage({
+        text: "Por favor, preencha o cliente.",
+        color: "text-red-500",
       });
+      return false;
+    }
+    if (callInfo.demanda == "NÃO DEFINIDO") {
+      setMessage({
+        text: "Por favor, preencha o canal de demanda",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (
+      ![
+        "PROBLEMAS COM CONCESSIONÁRIA",
+        "GOTEIRA",
+        "DISTRIBUIÇÃO DE CRÉDITOS",
+        "RETRABALHO EM ESTRUTURA",
+      ].includes(callInfo.tipoChamado) &&
+      !callInfo.linkMonitoramento
+    ) {
+      setMessage({
+        text: "Por favor, preencha o link monitoramento",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (
+      callInfo.tipoChamado == "DEFEITOS E GARANTIA" &&
+      !callInfo.equipamento
+    ) {
+      setMessage({
+        text: "Por favor, preencha o equipamento defeituoso.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (callInfo.descricaoProblema.trim().length < 5) {
+      setMessage({
+        text: "Por favor, preencha uma descrição válida.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    return true;
+  }
+  function createCall() {
+    if (validateFields()) {
+      axios
+        .post("/api/calls/suporte/mainData", {
+          ...callInfo,
+          abertura: new Date(),
+        })
+        .then((res) => {
+          setMessage({ text: "CHAMADO ABERTO", color: "text-green-500" });
+          setCallInfo({
+            nomeCliente: "",
+            nomeUsina: "",
+            cidade: cidadesAtendidas[0],
+            responsavel: "A DEFINIR",
+            demanda: "INTERNA",
+            tipoChamado: "OUTROS",
+            descricaoProblema: "",
+            linkMonitoramento: "",
+          });
+          getCalls();
+        });
+    }
   }
   function getClients() {
     axios.get("/api/projects/todos").then((res) => setClientes(res.data));
@@ -102,6 +153,7 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                         nomeCliente: e.value.nome,
                         idPai: e.value.id,
                         plano: e.value.plano,
+                        cidade: e.value.cidade,
                         oemConcluido: e.value.oemConcluido,
                         equipeResp: e.value.equipeResp,
                       })
@@ -112,6 +164,7 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                         value: {
                           id: cliente._id,
                           nome: cliente.nomeDoContrato,
+                          cidade: cliente.cidade,
                           plano: cliente.oem?.plano,
                           oemConcluido: cliente.oem?.oemConcluido,
                           equipeResp: cliente.obra.equipeResp,
@@ -186,6 +239,7 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                 >
                   <option value={"INTERNA"}>INTERNA</option>
                   <option value={"EXTERNA"}>EXTERNA</option>
+                  <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
                 </select>
               </div>
               <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
@@ -206,6 +260,32 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                   ))}
                 </select>
               </div>
+              {callInfo.tipoChamado == "DEFEITOS E GARANTIA" && (
+                <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                  <span className="text-center uppercase font-bold">
+                    EQUIPAMENTO DEFEITUOSO
+                  </span>
+                  <select
+                    value={
+                      callInfo.equipamento
+                        ? callInfo.equipamento
+                        : "NÃO DEFINIDO"
+                    }
+                    onChange={(e) =>
+                      setCallInfo({
+                        ...callInfo,
+                        equipamento: e.target.value,
+                      })
+                    }
+                    className="text-xs grow text-center outline-none mt-2 lg:mt-0"
+                  >
+                    <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+                    <option value={"PLACA"}>PLACA</option>
+                    <option value={"INVERSOR/MICRO"}>INVERSOR/MICRO</option>
+                    <option value={"COMUNICADOR"}>COMUNICADOR</option>
+                  </select>
+                </div>
+              )}
               {![
                 "PROBLEMAS COM CONCESSIONÁRIA",
                 "GOTEIRA",
@@ -251,8 +331,10 @@ function CreateModal({ setModalIsOpen, getCalls }) {
               >
                 CRIAR CHAMADO
               </button>
-              {message && (
-                <p className="text-green-400 text-center text-sm">{message}</p>
+              {message.text && (
+                <p className={`${message.color} text-center text-sm`}>
+                  {message.text}
+                </p>
               )}
             </div>
           </div>

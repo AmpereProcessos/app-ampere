@@ -81,6 +81,12 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
       }
     }
   }, []);
+  function handleOpenModal(id) {
+    axios.get(`/api/solicitacoes/getContrato/${id}`).then((res) => {
+      setModalSolicitacao(res.data[0]);
+      setModalIsOpen(true);
+    });
+  }
   function getCardColor(statusAprovacao) {
     if (statusAprovacao == true) {
       return "bg-green-100";
@@ -157,8 +163,7 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
           <div
             key={solicitacao._id}
             onClick={() => {
-              setModalIsOpen(true);
-              setModalSolicitacao(solicitacao);
+              handleOpenModal(solicitacao._id);
             }}
             className={`flex flex-col ${getCardColor(
               solicitacao.aprovacao

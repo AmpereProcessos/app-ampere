@@ -40,16 +40,6 @@ export const tiposChamadosSuporte = [
     grauUrgenciaNormal: "C",
   },
   {
-    tipo: "ATUALIZAÇÃO DE FIRMWARE",
-    grauUrgenciaOeM: "B",
-    grauUrgenciaNormal: "C",
-  },
-  {
-    tipo: "PROBLEMA NO DISJUNTOR CA",
-    grauUrgenciaOeM: "A",
-    grauUrgenciaNormal: "B",
-  },
-  {
     tipo: "GOTEIRA",
     grauUrgenciaOeM: "B",
     grauUrgenciaNormal: "B",
@@ -60,29 +50,9 @@ export const tiposChamadosSuporte = [
     grauUrgenciaNormal: "B",
   },
   {
-    tipo: "DEFEITOS E GARANTIA (PLACA)",
+    tipo: "DEFEITOS E GARANTIA",
     grauUrgenciaOeM: "A",
     grauUrgenciaNormal: "B",
-  },
-  {
-    tipo: "DEFEITOS E GARANTIA (DATALOGGER)",
-    grauUrgenciaOeM: "A",
-    grauUrgenciaNormal: "B",
-  },
-  {
-    tipo: "DEFEITOS E GARANTIA (INVERSOR)",
-    grauUrgenciaOeM: "A",
-    grauUrgenciaNormal: "B",
-  },
-  {
-    tipo: "DISTRIBUIÇÃO DE CRÉDITOS",
-    grauUrgenciaOeM: "A",
-    grauUrgenciaNormal: "B",
-  },
-  {
-    tipo: "MANUTENÇÃO PREVENTIVA",
-    grauUrgenciaOeM: "C",
-    grauUrgenciaNormal: "D",
   },
   {
     tipo: "OUTROS",

@@ -157,7 +157,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
               <h1 className="text-[#15599a] pl-6 uppercase font-bold">
-                {info.tipoChamado}
+                {info.tipoChamado} {info.equipamento && `- ${info.equipamento}`}
               </h1>
               {info.demanda && (
                 <span className="text-xs border border-gray-200 p-2 font-bold text-gray-600">
@@ -274,6 +274,32 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                   {info.nomeUsina ? info.nomeUsina : "-"}
                 </p>
               </div>
+              {info.tipoChamado == "DEFEITOS E GARANTIA" && (
+                <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                  <span className="text-center uppercase font-bold">
+                    EQUIPAMENTO DEFEITUOSO
+                  </span>
+                  <select
+                    value={
+                      infoHolder.equipamento
+                        ? infoHolder.equipamento
+                        : "NÃO DEFINIDO"
+                    }
+                    onChange={(e) =>
+                      setInfo({
+                        ...infoHolder,
+                        equipamento: e.target.value,
+                      })
+                    }
+                    className="text-xs grow text-center outline-none mt-2 lg:mt-0"
+                  >
+                    <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+                    <option value={"PLACA"}>PLACA</option>
+                    <option value={"INVERSOR/MICRO"}>INVERSOR/MICRO</option>
+                    <option value={"COMUNICADOR"}>COMUNICADOR</option>
+                  </select>
+                </div>
+              )}
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center uppercase font-bold">
                   EQUIPE RESPONSÁVEL
@@ -292,14 +318,30 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                   <span className="text-center uppercase font-bold">
                     LINK DA PLANTA
                   </span>
-                  <a
-                    href={info.linkMonitoramento}
-                    className="text-sm text-center grow text-blue-400"
-                  >
-                    {info.linkMonitoramento ? info.linkMonitoramento : "-"}
-                  </a>
+                  <input
+                    value={infoHolder.linkMonitoramento}
+                    onChange={(e) =>
+                      setInfo({
+                        ...infoHolder,
+                        linkMonitoramento: e.target.value,
+                      })
+                    }
+                    className="outline-none text-sm text-center grow placeholder:italic"
+                    type="text"
+                  />
                 </div>
               )}
+              <div className="flex justify-center mt-4">
+                <a
+                  href={infoHolder.linkMonitoramento}
+                  className="text-sm text-center grow text-blue-400"
+                >
+                  {infoHolder.linkMonitoramento
+                    ? infoHolder.linkMonitoramento
+                    : "-"}
+                </a>
+              </div>
+
               <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center font-bold font-raleway">
                   ABERTURA
@@ -340,7 +382,6 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                   <option value={"A DEFINIR"}>A DEFINIR</option>
                 </select>
               </div>
-
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center font-bold">RESPONSÁVEL</span>
                 <select
@@ -356,6 +397,18 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                   <option value={"LUIS EDUARDO"}>LUIS EDUARDO</option>
                 </select>
               </div>
+              <div className="flex flex-col lg:flex-row gap-x-2 justify-center items-center border border-gray-200 p-2 mt-4">
+                <span className="text-center font-bold">O.S GERADA?</span>
+                <input
+                  checked={infoHolder.osGerada}
+                  onChange={(e) =>
+                    setInfo({ ...infoHolder, osGerada: e.target.checked })
+                  }
+                  type={"checkbox"}
+                  className={"ml-2"}
+                />
+              </div>
+
               <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="font-bold text-center font-raleway">
                   DESCRIÇÃO DO PROBLEMA

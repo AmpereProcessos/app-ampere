@@ -1,17 +1,18 @@
 import connectToDatabase from "../../utils/callsDb";
 export default async function handler(req, res) {
-  const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("suporte");
-  let arr = await collection.updateMany(
-    {
-      cidade: "Cachoeira Dourada",
-    },
-    {
-      $set: {
-        cidade: "CACHOEIRA DOURADA",
-      },
-    }
-  );
+  // const db = await connectToDatabase(process.env.DB_KEY);
+  // const collection = db.collection("suporte");
+  // let arr = await collection.updateMany(
+  //   {
+  //     tipoChamado: "DEFEITOS E GARANTIA (INVERSOR)",
+  //   },
+  //   {
+  //     $set: {
+  //       tipoChamado: "DEFEITOS E GARANTIA",
+  //       equipamento: "INVERSOR/MICRO",
+  //     },
+  //   }
+  // );
   // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
   // const collection = db.collection("dados");
   // let arr = await collection
@@ -29,7 +30,7 @@ export default async function handler(req, res) {
   //     },
   //   ])
   //   .toArray();
-  res.json(arr);
+  res.json("DESATIVADA");
 }
 /*
   let arr = await collection.updateMany(

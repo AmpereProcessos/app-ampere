@@ -2547,6 +2547,7 @@ function ModalProjetos({
                     categorias={[
                       { label: "DOCUMENTOS", value: "links.documentos" },
                       { label: "PROJETOS", value: "links.projetos" },
+                      { label: "OBRAS", value: "links.obras" },
                     ]}
                     handleUpdates={handleUpdates}
                   />

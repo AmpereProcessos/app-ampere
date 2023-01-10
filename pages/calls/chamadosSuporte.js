@@ -374,7 +374,7 @@ function ChamadosSuporte() {
             >
               <div className="flex justify-between gap-3 items-center w-full">
                 <h1 className="uppercase text-sm">
-                  {call.nomeUsina ? call.nomeUsina : call.nomeCliente}
+                  {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
                 </h1>
                 {call.cidade && (
                   <p className="text-xs uppercase text-gray-700">
@@ -419,6 +419,7 @@ function ChamadosSuporte() {
                 </p>
               </div>
               {call.tipoChamado.includes("GARANTIA") &&
+              call.statusGarantia != "IDENTIFICAÇÃO E TESTES" &&
               (!call.ultAtualizacaoCliente ||
                 dayjs().diff(dayjs(call.ultAtualizacaoCliente), "days") >=
                   7) ? (

@@ -16,7 +16,20 @@ export default async function handler(req, res) {
     //     }
     //   }
     // }
-    let arr = await collection.find({}).toArray();
+    let arr = await collection
+      .aggregate([
+        {
+          $project: {
+            nomeDoContrato: 1,
+            nomeVendedor: 1,
+            tipoDeServico: 1,
+            cidade: 1,
+            confeccionado: 1,
+            aprovacao: 1,
+          },
+        },
+      ])
+      .toArray();
     res.json(arr);
   } else if (req.method === "PUT") {
     const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);

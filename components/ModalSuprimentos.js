@@ -675,6 +675,89 @@ function ModalSuprimentos({
                   )}
                 </div>
               </div>
+              {infoHolder.estruturaPersonalizada.aplicavel == "SIM" && (
+                <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                    ESTRUTURA PERSONALIZADA
+                  </span>
+                  <div className="flex gap-2 justify-center flex-wrap">
+                    <SelectInput
+                      label={"STATUS DA ENTREGA DA ESTRUTURA"}
+                      editable={editor}
+                      value={
+                        infoHolder.estruturaPersonalizada.statusEntrega
+                          ? infoHolder.estruturaPersonalizada?.statusEntrega
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        {
+                          label: "AGUARDANDO COMPRA",
+                          value: "AGUARDANDO COMPRA",
+                        },
+                        {
+                          label: "EM ROTA",
+                          value: "EM ROTA",
+                        },
+                        {
+                          label: "ENTREGUE",
+                          value: "ENTREGUE",
+                        },
+                        {
+                          label: "CANCELADO",
+                          value: "CANCELADO",
+                        },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
+                        },
+                      ]}
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          "estruturaPersonalizada.statusEntrega": value,
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          estruturaPersonalizada: {
+                            ...infoHolder.estruturaPersonalizada,
+                            statusEntrega: value,
+                          },
+                        });
+                      }}
+                    />
+                    <DateInput
+                      label={"DATA DE ENTREGA DA ESTRUTURA"}
+                      editable={editor}
+                      value={
+                        infoHolder.estruturaPersonalizada?.dataEntrega !=
+                          undefined &&
+                        infoHolder.estruturaPersonalizada.dataEntrega != "-"
+                          ? new Date(
+                              infoHolder.estruturaPersonalizada.dataEntrega
+                            )
+                              .toISOString()
+                              .slice(0, 10)
+                          : null
+                      }
+                      handleChange={(value) => {
+                        setChanges({
+                          ...changes,
+                          "estruturaPersonalizada.dataEntrega": new Date(
+                            value
+                          ).toISOString(),
+                        });
+                        setInfo({
+                          ...infoHolder,
+                          estruturaPersonalizada: {
+                            ...infoHolder.estruturaPersonalizada,
+                            dataEntrega: new Date(value).toISOString(),
+                          },
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   Informações da compra

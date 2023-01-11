@@ -62,11 +62,11 @@ function ComissionamentoPosObraCard({ project }) {
   console.log(changes);
   return (
     <div
-      className={`grid grid-cols-10 ${getBorderColor(
+      className={`grid grid-rows-6 grid-cols-1 lg:grid-cols-10 lg:grid-rows-1 ${getBorderColor(
         dayjs().diff(info.medidor.data, "days")
       )} p-2`}
     >
-      <div className="flex flex-col justify-around col-span-1">
+      <div className="flex flex-col justify-around row-span-1 col-span-1">
         <h1 className="font-bold text-[#15599a] text-center">
           {info.nomeDoContrato} - ({info.qtde})
         </h1>
@@ -82,8 +82,8 @@ function ComissionamentoPosObraCard({ project }) {
           SALVAR
         </button>
       </div>
-      <div className="col-span-9 flex flex-col">
-        <div className="flex items-center justify-center gap-2">
+      <div className="col-span-9 flex flex-col row-span-5">
+        <div className="flex items-center justify-center gap-4">
           <div className="flex flex-col items-center">
             <p className="text-xs text-gray-600 text-[#15599a] font-bold">
               TROCA DO MEDIDOR

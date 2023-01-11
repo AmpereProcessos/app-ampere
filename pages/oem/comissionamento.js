@@ -19,6 +19,7 @@ function Comissionamento() {
     usinaLigadaFilter: [],
     appPendente: false,
     energiaInjetadaPendente: false,
+    entregaTecnicaPendente: false,
   });
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -49,7 +50,17 @@ function Comissionamento() {
     if (filters.energiaInjetadaPendente) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
-        (project) => project.conferencias.energiaInjetada.data == undefined
+        (project) =>
+          project.medidor.data != undefined &&
+          project.conferencias.energiaInjetada.data == undefined
+      );
+    }
+    if (filters.entregaTecnicaPendente) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (project) =>
+          project.medidor.data != undefined &&
+          project.jornada?.entregaTecnica == undefined
       );
     }
     if (filters.pesquisaFilter.length > 0) {
@@ -134,7 +145,20 @@ function Comissionamento() {
               filters.energiaInjetadaPendente ? "bg-[#15599a]" : "bg-blue-300"
             } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
           >
-            COLETAR ENERGIA INJETADA
+            ENERGIA INJETADA PENDENTE
+          </div>
+          <div
+            onClick={() =>
+              setFilters({
+                ...filters,
+                entregaTecnicaPendente: !filters.entregaTecnicaPendente,
+              })
+            }
+            className={`${
+              filters.entregaTecnicaPendente ? "bg-[#15599a]" : "bg-blue-300"
+            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+          >
+            ENTREGA TÉCNICA PENDENTE
           </div>
           <div className="hidden lg:flex gap-x-2">
             <div className="flex flex-col w-fit items-center">

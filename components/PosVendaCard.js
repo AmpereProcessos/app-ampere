@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NumberInput from "../components/NumberInput";
+import SelectInput from "../components/SelectInput";
 import dayjs from "dayjs";
 import axios from "axios";
 function PosVendaCard({ project, getUpdates, cardMode, editor }) {
@@ -23,6 +23,9 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
       .post(`/api/projects/update/${project._id}`, mudancas)
       .then((res) => {
         setMsg({ text: "Alterações feitas!", color: "text-green-500" });
+        setTimeout(() => {
+          setMsg({ text: "", color: "" });
+        }, 2000);
       })
       .catch((err) =>
         setMsg({
@@ -48,32 +51,40 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
         >
           <div className="flex items-center justify-between border-b border-gray-200 pb-2">
             <p className="text-gray-700 font-bold">
-              {infoHolder.nomeDoContrato}
+              ({infoHolder.qtde}) {infoHolder.nomeDoContrato}
             </p>
-            <div className="hidden lg:flex items-center gap-2 flex-wrap grow justify-between px-6">
-              <div>
-                <span className="text-xs">TELEFONE</span>
-                <p className="text-gray-600 text-center">
+            <div className="hidden lg:flex items-center gap-x-4 gap-y-2 flex-wrap grow justify-center px-6">
+              <div className="flex flex-col items-center">
+                <p className="text-sm uppercase text-[#15599a] font-bold">
+                  TELEFONE
+                </p>
+                <p className="text-xs uppercase text-gray-500">
                   {infoHolder.telefone ? infoHolder.telefone : "-"}
                 </p>
               </div>
-              <div>
-                <span className="text-xs">VENDEDOR</span>
-                <p className="text-gray-600 text-center">
-                  {infoHolder.vendedor?.nome ? infoHolder.vendedor?.nome : "-"}
+              <div className="flex flex-col items-center">
+                <p className="text-sm uppercase text-[#15599a] font-bold">
+                  VENDEDOR
+                </p>
+                <p className="text-xs uppercase text-gray-500">
+                  {infoHolder.vendedor.nome ? infoHolder.vendedor.nome : "-"}
                 </p>
               </div>
-              <div>
-                <span className="text-xs">STATUS DO PARECER</span>
-                <p className="text-gray-600 text-center">
+              <div className="flex flex-col items-center">
+                <p className="text-sm uppercase text-[#15599a] font-bold">
+                  STATUS DO PARECER
+                </p>
+                <p className="text-xs uppercase text-gray-500">
                   {infoHolder.parecer?.statusDoParecerDeAcesso
                     ? infoHolder.parecer?.statusDoParecerDeAcesso
                     : "-"}
                 </p>
               </div>
-              <div>
-                <span className="text-xs">DATA LIB.DOCUMENTAÇÃO</span>
-                <p className="text-gray-600 text-center">
+              <div className="flex flex-col items-center">
+                <p className="text-sm uppercase text-[#15599a] font-bold">
+                  DATA LIB.DOCUMENTAÇÃO
+                </p>
+                <p className="text-xs uppercase text-gray-500">
                   {infoHolder.projeto.dataLiberacaoDocumentacao
                     ? dayjs(
                         dayjs(infoHolder.projeto.dataLiberacaoDocumentacao).add(
@@ -84,16 +95,35 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
                     : "-"}
                 </p>
               </div>
-              <div>
-                <span className="text-xs">STATUS DA COMPRA</span>
-                <p className="text-center text-gray-600">
+              <div className="flex flex-col items-center">
+                <p className="text-sm uppercase text-[#15599a] font-bold">
+                  DATA ASS.DOCUMENTAÇÃO
+                </p>
+                <p className="text-xs uppercase text-gray-500">
+                  {infoHolder.projeto.dataAssDocumentacao
+                    ? dayjs(
+                        dayjs(infoHolder.projeto.dataAssDocumentacao).add(
+                          4,
+                          "hour"
+                        )
+                      ).format("DD/MM/YYYY")
+                    : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-sm uppercase text-[#15599a] font-bold">
+                  STATUS DA COMPRA
+                </p>
+                <p className="text-xs uppercase text-gray-500">
                   {infoHolder.compra?.statusLiberacao
                     ? infoHolder.compra?.statusLiberacao
                     : "-"}
                 </p>
               </div>
-              <div>
-                <span className="text-xs">PREV. ENTREGA</span>
+              <div className="flex flex-col items-center">
+                <p className="text-sm uppercase text-[#15599a] font-bold">
+                  PREV. ENTREGA
+                </p>
                 <p
                   className={`${
                     dayjs(infoHolder.compra.previsaoEntrega).diff(
@@ -106,8 +136,8 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
                         ) < 7
                         ? "text-red-500 font-bold"
                         : "text-green-500 font-bold"
-                      : "text-gray-600"
-                  } text-center`}
+                      : "text-gray-500"
+                  } text-center text-xs`}
                 >
                   {infoHolder.compra.previsaoEntrega
                     ? dayjs(
@@ -123,25 +153,31 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
                     : "-"}
                 </p>
               </div>
-              <div>
-                <span className="text-xs">PREV. OBRA</span>
-                <p className="text-gray-600 text-center">
+              <div className="flex flex-col items-center">
+                <p className="text-sm uppercase text-[#15599a] font-bold">
+                  PREV. OBRA
+                </p>
+                <p className="text-xs uppercase text-gray-500">
                   {infoHolder.obra?.entrada
                     ? new Date(infoHolder.obra.entrada).toLocaleDateString()
                     : "-"}
                 </p>
               </div>
-              <div>
-                <span className="text-xs">INFO FATURAMENTO</span>
-                <p className="text-gray-600 text-center">
+              <div className="flex flex-col items-center">
+                <p className="text-sm uppercase text-[#15599a] font-bold">
+                  INFO fATURAMENTO
+                </p>
+                <p className="text-xs uppercase text-gray-500">
                   {infoHolder.faturamento?.previsaoFaturamento
                     ? infoHolder.faturamento.previsaoFaturamento
                     : "-"}
                 </p>
               </div>
-              <div>
-                <span className="text-xs">PREV. FATURAMENTO</span>
-                <p className="text-gray-600 text-center">
+              <div className="flex flex-col items-center">
+                <p className="text-sm uppercase text-[#15599a] font-bold">
+                  PREV FATURAMENTO
+                </p>
+                <p className="text-xs uppercase text-gray-500">
                   {infoHolder.faturamento?.dataFaturamento
                     ? new Date(
                         infoHolder.faturamento?.dataFaturamento
@@ -209,6 +245,41 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
                       JORNADA CONCLUIDA
                     </label>
                   </div>
+                </div>
+                <div className="flex items-center flex-wrap gap-2">
+                  <SelectInput
+                    label={"TIPO DE ENTREGA"}
+                    editable={editor}
+                    value={
+                      infoHolder.jornada?.tipoEntregaTecnica
+                        ? infoHolder.jornada.tipoEntregaTecnica
+                        : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      {
+                        label: "NÃO DEFINIDO",
+                        value: "NÃO DEFINIDO",
+                      },
+                      {
+                        label: "PRESENCIAL",
+                        value: "PRESENCIAL",
+                      },
+                      {
+                        label: "REMOTO",
+                        value: "REMOTO",
+                      },
+                    ]}
+                    handleChange={(value) => {
+                      handleChanges({ "jornada.tipoEntregaTecnica": value });
+                      setInfo({
+                        ...infoHolder,
+                        jornada: {
+                          ...infoHolder.jornada,
+                          tipoEntregaTecnica: value,
+                        },
+                      });
+                    }}
+                  />
                 </div>
               </div>
               <div className="flex items-center flex-wrap gap-2 justify-around w-full">
@@ -458,6 +529,30 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
                   />
                   <label className="ml-2" htmlFor="sistemaLigado">
                     SISTEMA LIGADO
+                  </label>
+                </div>
+                <div className="w-fit">
+                  <input
+                    disabled={!editor}
+                    checked={infoHolder.jornada?.entregaTecnica ? true : false}
+                    onChange={(e) => {
+                      handleChanges({
+                        "jornada.entregaTecnica": e.target.checked,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        jornada: {
+                          ...infoHolder.jornada,
+                          entregaTecnica: e.target.checked,
+                        },
+                      });
+                    }}
+                    type="checkbox"
+                    name="entregaTecnica"
+                    id="entregaTecnica"
+                  />
+                  <label className="ml-2" htmlFor="entregaTecnica">
+                    ENTREGA TÉCNICA FEITA
                   </label>
                 </div>
               </div>

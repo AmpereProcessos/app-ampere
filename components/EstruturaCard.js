@@ -126,6 +126,28 @@ function EstruturaCard({ project, credentials }) {
           </div>
           <div className="flex flex-col items-center">
             <p className="text-sm uppercase text-[#15599a] font-bold">
+              ENTREGA DA ESTRUTURA
+            </p>
+            <p className="text-xs uppercase text-gray-500">
+              {project.estruturaPersonalizada?.statusEntrega
+                ? project.estruturaPersonalizada?.statusEntrega
+                : "-"}
+            </p>
+          </div>
+          <div className="flex flex-col items-center">
+            <p className="text-sm uppercase text-[#15599a] font-bold">
+              DATA DE ENTREGA DA ESTRUTURA
+            </p>
+            <p className="text-xs uppercase text-gray-500">
+              {project.estruturaPersonalizada?.dataEntrega
+                ? dayjs(project.estruturaPersonalizada?.dataEntrega)
+                    .add(4, "hours")
+                    .format("DD/MM/YYYY")
+                : "-"}
+            </p>
+          </div>
+          <div className="flex flex-col items-center">
+            <p className="text-sm uppercase text-[#15599a] font-bold">
               NºModulos
             </p>
             <p className="text-xs uppercase text-gray-500">

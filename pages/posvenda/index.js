@@ -23,7 +23,7 @@ function Posvenda() {
     vendedorFilter: [],
     contratoFilter: [],
     assinFaltando: false,
-    jornadaEmAberto: false,
+    entregaTecnicaPendente: false,
     numModulos: null,
   });
   const [dateFilter, setDateFilter] = useState({
@@ -112,14 +112,9 @@ function Posvenda() {
           project.projeto.projetoConcluido != "SIM"
       );
     }
-    if (filters.jornadaEmAberto) {
+    if (filters.entregaTecnicaPendente) {
       if (!newArr) newArr = projects;
-      newArr = newArr.filter(
-        (call) =>
-          call.jornada.jornadaConcluida == false ||
-          call.jornada.jornadaConcluida == undefined ||
-          call.jornada.jornadaConcluida == null
-      );
+      newArr = newArr.filter((call) => call.jornada.entregaTecnica != true);
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!newArr) newArr = projects;
@@ -281,14 +276,14 @@ function Posvenda() {
             onClick={() =>
               setFilters({
                 ...filters,
-                jornadaEmAberto: !filters.jornadaEmAberto,
+                entregaTecnicaPendente: !filters.entregaTecnicaPendente,
               })
             }
             className={`${
-              filters.jornadaEmAberto ? "bg-[#15599a]" : "bg-blue-300"
+              filters.entregaTecnicaPendente ? "bg-[#15599a]" : "bg-blue-300"
             } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
           >
-            JORNADA NÃO CONCLUIDA
+            ENTREGA TÉCNICA PENDENTE
           </div>
           <input
             className="outline-none p-1.5 w-[300px] rounded border border-gray-200 placeholder:italic"

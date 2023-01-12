@@ -53,6 +53,7 @@ export default async function handler(req, res) {
             responsavel: 1,
             tipoChamado: 1,
             statusChamado: 1,
+            feedbackValor: 1,
             cidade: 1,
           },
         },

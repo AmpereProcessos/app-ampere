@@ -2548,6 +2548,7 @@ function ModalProjetos({
                       { label: "DOCUMENTOS", value: "links.documentos" },
                       { label: "PROJETOS", value: "links.projetos" },
                       { label: "OBRAS", value: "links.obras" },
+                      { label: "VISITA TÉCNICA", value: "links.visitaTecnica" },
                     ]}
                     handleUpdates={handleUpdates}
                   />
@@ -2566,7 +2567,7 @@ function ModalProjetos({
                               key={index2}
                               href={obj.link}
                             >
-                              {obj.title}
+                              {obj.title} ({obj.format})
                             </a>
                           ))}
                         </div>

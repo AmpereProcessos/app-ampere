@@ -12,6 +12,7 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
+import AnexoArquivo from "./AnexoArquivo";
 import NotificationCreationBlock from "./NotificationCreationBlock";
 import Link from "next/link";
 import axios from "axios";
@@ -2653,35 +2654,86 @@ function ModalOeM({
                       });
                     }}
                   />
-                  <div className="flex flex-col w-[450px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      OBSERVAÇÕES
-                    </span>
-                    <textarea
-                      readOnly={true}
-                      value={
-                        infoHolder.obra.observacoes
-                          ? infoHolder.obra.observacoes
-                          : ""
-                      }
-                      placeholder={"Observações da obra aqui..."}
-                      onChange={(e) => {
-                        setChanges({
-                          ...changes,
-                          "obra.observacoes": e.target.value,
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          obra: {
-                            ...infoHolder.obra,
-                            observacoes: e.target.value,
-                          },
-                        });
-                      }}
-                      className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                    />
-                  </div>
                 </div>
+                <div className="flex flex-col w-[450px] items-center self-center">
+                  <span className="uppercase font-bold font-raleway text-center text-sm">
+                    OBSERVAÇÕES
+                  </span>
+                  <textarea
+                    readOnly={true}
+                    value={
+                      infoHolder.obra.observacoes
+                        ? infoHolder.obra.observacoes
+                        : ""
+                    }
+                    placeholder={"Observações da obra aqui..."}
+                    onChange={(e) => {
+                      setChanges({
+                        ...changes,
+                        "obra.observacoes": e.target.value,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        obra: {
+                          ...infoHolder.obra,
+                          observacoes: e.target.value,
+                        },
+                      });
+                    }}
+                    className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  ARQUIVOS
+                </span>
+                <div className="flex flex-col items-center">
+                  <h1 className="text-xs text-center font-bold text-[#15599a] uppercase py-2">
+                    ANEXE ARQUIVOS
+                  </h1>
+                  <AnexoArquivo
+                    id={infoHolder._id}
+                    prevLinks={project.links ? project.links : {}}
+                    cliente={`${infoHolder.nomeDoProjeto}-${infoHolder.codigoSVB}`}
+                    categorias={[
+                      { label: "DOCUMENTOS", value: "links.documentos" },
+                      { label: "PROJETOS", value: "links.projetos" },
+                      { label: "OBRAS", value: "links.obras" },
+                      {
+                        label: "MANUTENÇÃO PREVENTIVA",
+                        value: "links.manutencaoPreventiva",
+                      },
+                      {
+                        label: "MANUTENÇÃO CORRETIVA",
+                        value: "links.manutencaoCorretiva",
+                      },
+                    ]}
+                    handleUpdates={handleUpdates}
+                  />
+                </div>
+                {project.links && (
+                  <div className="flex justify-around gap-2 mt-3">
+                    {Object.keys(project.links).map((category, index) => (
+                      <div key={index} className="flex flex-col">
+                        <h1 className="text-sm font-bold text-center text-[#15599a]">
+                          {category.toUpperCase()}
+                        </h1>
+                        <div className="flex flex-col items-center gap-1">
+                          {project.links[category].map((obj, index2) => (
+                            <a
+                              className="text-xs text-[#15599a] font-bold"
+                              key={index2}
+                              href={obj.link}
+                            >
+                              {obj.title} ({obj.format})
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -106,7 +106,7 @@ function InsideSales() {
         <h1 className="font-bold uppercase text-2xl text-[#15599a] font-raleway text-center">
           ACOMPANHAMENTO DE OPORTUNIDADES ({filteredLeads.length})
         </h1>
-        <div className="flex items-center justify-center gap-2 mt-2">
+        <div className="flex items-center justify-center flex-wrap gap-2 mt-2">
           <input
             type={"text"}
             className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"

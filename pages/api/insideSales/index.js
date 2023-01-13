@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $sort: {
-            dataDeAquisicao: -1,
+            dataDeEnvio: -1,
           },
         },
       ])
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         },
         {
           $sort: {
-            dataDeAquisicao: -1,
+            dataDeEnvio: -1,
           },
         },
       ])

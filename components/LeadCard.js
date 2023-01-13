@@ -132,7 +132,7 @@ function LeadCard({ lead, getLeads }) {
             editable={true}
             value={infoHolder.campanha}
             handleChange={(value) =>
-              setInfo({ ...infoHolder, campanha: phoneMask(value) })
+              setInfo({ ...infoHolder, campanha: value.toUpperCase() })
             }
           />
         </div>

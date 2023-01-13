@@ -37,7 +37,8 @@ function BaixaPerformance() {
         })
         .catch((error) => {
           setInProgress(false);
-          alert(error.response.data);
+          console.log(error);
+          alert("Erro no servidor.");
         });
     } else {
       setInProgress(false);

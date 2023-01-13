@@ -35,9 +35,9 @@ function BaixaPerformance() {
           setInProgress(false);
           getToBeAnalized(res.data);
         })
-        .catch((err) => {
+        .catch((error) => {
           setInProgress(false);
-          alert("Houve um erro no servidor. Por favor tente novamente.");
+          alert(error.response.data);
         });
     } else {
       setInProgress(false);

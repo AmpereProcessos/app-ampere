@@ -23,7 +23,20 @@ function BaixaPerformance() {
     searchFilter: "",
   });
   const [inProgress, setInProgress] = useState(false);
-
+  const statusStyles = {
+    PENDENTE: {
+      textColor: "text-red-400",
+      borderColor: "border-red-400",
+    },
+    "EM ANDAMENTO": {
+      textColor: "text-blue-300",
+      borderColor: "border-blue-300",
+    },
+    RESOLVIDO: {
+      textColor: "text-green-400",
+      borderColor: "border-green-400",
+    },
+  };
   const [modalItem, setModalItem] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
   async function getBadPerformers() {
@@ -153,6 +166,11 @@ function BaixaPerformance() {
             <span className="sr-only">Loading...</span>
           </div>
         )}
+        <h1 className="text-center font-bold text-xl text-[#fead41]">
+          {badPerformers.length > 0
+            ? `USINAS A ANALISAR (${badPerformers.length})`
+            : "SEM USINAS A ANALISAR..."}
+        </h1>
         <div className="flex flex-wrap justify-between gap-2">
           {badPerformers.map((usina, index) => (
             <div
@@ -206,8 +224,10 @@ function BaixaPerformance() {
               onClick={() => handleOpenModal({ ...item, created: true })}
               className="grid bg-slate-50 hover:bg-blue-100 grid-cols-6 w-full border-b border-[#15599a] cursor-pointer"
             >
-              <div className="text-gray-700 text-center font-bold border-x border-[#15599a] p-1">
-                {item.status}
+              <div className="text-center font-bold border-x border-[#15599a] p-1">
+                <h1 className={`${statusStyles[item.status].textColor}`}>
+                  {item.status}
+                </h1>
               </div>
               <div className="text-gray-700 text-center font-bold border-r border-[#15599a] p-1">
                 #{item.codProjeto}

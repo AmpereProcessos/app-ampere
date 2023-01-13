@@ -10,7 +10,7 @@ export default async function handler(req, res) {
         .aggregate([
           {
             $match: {
-              status: { $ne: "RESOLVIDO" },
+              status: { $nin: ["RESOLVIDO", "FECHADO"] },
             },
           },
           {
@@ -21,6 +21,11 @@ export default async function handler(req, res) {
               nomeCliente: 1,
               problema: 1,
               observacoes: 1,
+            },
+          },
+          {
+            $sort: {
+              abertura: 1,
             },
           },
         ])

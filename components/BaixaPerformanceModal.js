@@ -24,6 +24,20 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
+const statusStyles = {
+  PENDENTE: {
+    textColor: "text-red-400",
+    borderColor: "border-red-400",
+  },
+  "EM ANDAMENTO": {
+    textColor: "text-[#15599a]",
+    borderColor: "border-[#15599a]",
+  },
+  RESOLVIDO: {
+    textColor: "text-green-400",
+    borderColor: "border-green-400",
+  },
+};
 function BaixaPerformanceModal({ info, setModalIsOpen, handleUpdates }) {
   const [infoHolder, setInfo] = useState(info);
   const [clientes, setClientes] = useState([]);
@@ -37,11 +51,30 @@ function BaixaPerformanceModal({ info, setModalIsOpen, handleUpdates }) {
       handleUpdates();
     });
   }
+  function closeCall() {
+    setInfo({ ...infoHolder, status: "RESOLVIDO" });
+    axios
+      .put("/api/o&m/monitoramento", {
+        ...infoHolder,
+        fechamento: new Date(),
+        status: "RESOLVIDO",
+      })
+      .then((res) => {
+        setMsg({ text: "Alterações feitas!", color: "text-green-500" });
+        handleUpdates();
+      });
+  }
   function createCall() {
-    axios.post("/api/o&m/monitoramento", infoHolder).then((res) => {
-      setMsg({ text: "Chamado criado!", color: "text-green-500" });
-      handleUpdates();
-    });
+    axios
+      .post("/api/o&m/monitoramento", {
+        ...infoHolder,
+        status: "PENDENTE",
+        abertura: new Date(),
+      })
+      .then((res) => {
+        setMsg({ text: "Chamado criado!", color: "text-green-500" });
+        handleUpdates();
+      });
   }
   useEffect(() => {
     getClients();
@@ -55,120 +88,160 @@ function BaixaPerformanceModal({ info, setModalIsOpen, handleUpdates }) {
               <h1 className="text-[#15599a] pl-6  font-bold">
                 {info.nomeUsina}
               </h1>
-              <div className="flex gap-x-2">
-                <button className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm">
-                  <p>Salvar alterações</p>
-                  <FaSave />
-                </button>
-                <button>
-                  <VscChromeClose
-                    onClick={() => setModalIsOpen(false)}
-                    style={{ color: "red" }}
-                  />
-                </button>
-              </div>
+              <button>
+                <VscChromeClose
+                  onClick={() => setModalIsOpen(false)}
+                  style={{ color: "red" }}
+                />
+              </button>
             </div>
-            <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-              <span className="text-center uppercase font-bold">
-                Nome do cliente
-              </span>
-              <div className={"grow"}>
-                {!info.created ? (
-                  <Select
-                    isMulti={false}
-                    placeholder="NOME DO CLIENTE"
-                    onChange={(e) =>
-                      setInfo({
-                        ...infoHolder,
-                        idPai: e.value.id,
-                        nomeCliente: e.value.nome,
-                        cidade: e.value.cidade,
-                        codProjeto: e.value.codProjeto,
-                      })
-                    }
-                    options={clientes.map((cliente) => {
-                      return {
-                        label: cliente.nomeDoContrato,
-                        value: {
-                          id: cliente._id,
-                          nome: cliente.nomeDoContrato,
-                          cidade: cliente.cidade,
-                          codProjeto: cliente.qtde,
-                        },
-                      };
-                    })}
-                  />
+            <div className="flex items-center justify-center gap-2 flex-wrap my-2">
+              {infoHolder.created ? (
+                infoHolder.status == "RESOLVIDO" ? (
+                  <h1
+                    className={`p-2 rounded   text-xs border border-green-400 text-green-400 font-bold`}
+                  >
+                    RESOLVIDO
+                  </h1>
                 ) : (
-                  <p className="text-gray-700 uppercase text-center">
-                    {info.nomeCliente}
-                  </p>
+                  <>
+                    <h1
+                      onClick={() =>
+                        setInfo({ ...infoHolder, status: "PENDENTE" })
+                      }
+                      className={`p-2 rounded cursor-pointer transition duration-300 ease-in-out hover:scale-105 text-xs border border-red-400 text-red-400 font-bold ${
+                        infoHolder.status == "PENDENTE" ? "" : "opacity-30"
+                      }`}
+                    >
+                      PENDENTE
+                    </h1>
+                    <h1
+                      onClick={() =>
+                        setInfo({ ...infoHolder, status: "EM ANDAMENTO" })
+                      }
+                      className={`p-2 rounded cursor-pointer transition duration-300 ease-in-out hover:scale-105 text-xs border border-[#15599a] text-[#15599a] font-bold ${
+                        infoHolder.status == "EM ANDAMENTO" ? "" : "opacity-30"
+                      }`}
+                    >
+                      EM ANDAMENTO
+                    </h1>
+                  </>
+                )
+              ) : (
+                false
+              )}
+            </div>
+            <div className="flex flex-col overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+              <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center uppercase font-bold">
+                  Nome do cliente
+                </span>
+                <div className={"grow"}>
+                  {!info.created ? (
+                    <Select
+                      isMulti={false}
+                      placeholder="NOME DO CLIENTE"
+                      onChange={(e) =>
+                        setInfo({
+                          ...infoHolder,
+                          idPai: e.value.id,
+                          nomeCliente: e.value.nome,
+                          cidade: e.value.cidade,
+                          codProjeto: e.value.codProjeto,
+                        })
+                      }
+                      options={clientes.map((cliente) => {
+                        return {
+                          label: cliente.nomeDoContrato,
+                          value: {
+                            id: cliente._id,
+                            nome: cliente.nomeDoContrato,
+                            cidade: cliente.cidade,
+                            codProjeto: cliente.qtde,
+                          },
+                        };
+                      })}
+                    />
+                  ) : (
+                    <p className="text-gray-700 uppercase text-center">
+                      {info.nomeCliente}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center uppercase font-bold">
+                  CÓDIGO DO PROJETO
+                </span>
+                <p className="text-sm text-center grow">
+                  {infoHolder.codProjeto ? infoHolder.codProjeto : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center font-bold">PROBLEMA</span>
+                <select
+                  value={
+                    infoHolder.problema ? infoHolder.problema : "NÃO DEFINIDO"
+                  }
+                  onChange={(e) =>
+                    setInfo({ ...infoHolder, problema: e.target.value })
+                  }
+                  className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
+                >
+                  <option value={"PLANO EXPIRADO"}>PLANO EXPIRADO</option>
+                  <option value={"PROBLEMA COM GERAÇÃO"}>
+                    PROBLEMA COM GERAÇÃO
+                  </option>
+                  <option value={"PROBLEMA COM CONEXÃO"}>
+                    PROBLEMA COM CONEXÃO
+                  </option>
+                  <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="font-bold text-center font-raleway">
+                  OBSERVAÇÕES
+                </span>
+                <textarea
+                  value={infoHolder.observacoes}
+                  onChange={(e) =>
+                    setInfo({
+                      ...infoHolder,
+                      observacoes: e.target.value,
+                    })
+                  }
+                  placeholder="Digite aqui as anotações do chamado"
+                  className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-200 min-h-[100px] h-fit text-center grow"
+                />
+              </div>
+              {msg.text && (
+                <p className={`text-center italic ${msg.color}`}>{msg.text}</p>
+              )}
+              <div className="flex items-center justify-center w-full mt-4">
+                {info.created ? (
+                  <div className="flex flex-col gap-2">
+                    <button
+                      onClick={saveChanges}
+                      className="p-2 bg-[#fead49] text-[#15599a] rounded hover:bg-[#15599a] hover:text-white font-bold transition duration-300 ease-in-out hover:scale-105"
+                    >
+                      SALVAR
+                    </button>
+                    <button
+                      onClick={closeCall}
+                      className="p-2 bg-green-300 rounded font-bold hover:bg-green-500 hover:text-white transition duration-300 ease-in-out hover:scale-105"
+                    >
+                      FINALIZAR CHAMADO
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={createCall}
+                    className="p-2 bg-green-300 rounded font-bold hover:bg-green-500 hover:text-white transition duration-300 ease-in-out hover:scale-105"
+                  >
+                    CRIAR CHAMADO DE MONITORAMENTO
+                  </button>
                 )}
               </div>
-            </div>
-            <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-              <span className="text-center uppercase font-bold">
-                CÓDIGO DO PROJETO
-              </span>
-              <p className="text-sm text-center grow">
-                {infoHolder.codProjeto ? infoHolder.codProjeto : "-"}
-              </p>
-            </div>
-            <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-              <span className="text-center font-bold">PROBLEMA</span>
-              <select
-                value={
-                  infoHolder.problema ? infoHolder.problema : "NÃO DEFINIDO"
-                }
-                onChange={(e) =>
-                  setInfo({ ...infoHolder, problema: e.target.value })
-                }
-                className="text-xs grow outline-none mt-2 lg:mt-0 text-center"
-              >
-                <option value={"PLANO EXPIRADO"}>PLANO EXPIRADO</option>
-                <option value={"PROBLEMA COM GERAÇÃO"}>
-                  PROBLEMA COM GERAÇÃO
-                </option>
-                <option value={"PROBLEMA COM CONEXÃO"}>
-                  PROBLEMA COM CONEXÃO
-                </option>
-                <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
-              </select>
-            </div>
-            <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
-              <span className="font-bold text-center font-raleway">
-                OBSERVAÇÕES
-              </span>
-              <textarea
-                value={infoHolder.observacoes}
-                onChange={(e) =>
-                  setInfo({
-                    ...infoHolder,
-                    observacoes: e.target.value,
-                  })
-                }
-                placeholder="Digite aqui as anotações do chamado"
-                className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-200 min-h-[100px] h-fit text-center grow"
-              />
-            </div>
-            {msg.text && (
-              <p className={`text-center italic ${msg.color}`}>{msg.text}</p>
-            )}
-            <div className="flex items-center justify-center w-full mt-4">
-              {info.created ? (
-                <button
-                  onClick={saveChanges}
-                  className="p-2 bg-[#fead49] text-[#15599a] rounded hover:bg-[#15599a] hover:text-white font-bold"
-                >
-                  SALVAR
-                </button>
-              ) : (
-                <button
-                  onClick={createCall}
-                  className="p-2 bg-green-300 rounded font-bold hover:bg-green-500 hover:text-white"
-                >
-                  CRIAR CHAMADO DE MONITORAMENTO
-                </button>
-              )}
             </div>
           </div>
         </div>

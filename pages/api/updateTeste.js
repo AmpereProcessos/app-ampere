@@ -4,11 +4,11 @@ export default async function handler(req, res) {
   // const collection = db.collection("monitoramento");
   // let arr = await collection.updateMany(
   //   {
-  //     problema: { $regex: "Desconfigurado" },
+  //     status: { $in: ["FECHADO", "RESOLVIDO"] },
   //   },
   //   {
   //     $set: {
-  //       problema: "PROBLEMA COM CONEXÃO",
+  //       fechamento: "2023-01-12T08:00:00.000Z",
   //     },
   //   }
   // );

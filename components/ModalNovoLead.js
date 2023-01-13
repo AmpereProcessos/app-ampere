@@ -48,6 +48,9 @@ function NovoLead({ setModalIsOpen, getLeads }) {
     vendedor: "NÃO DEFINIDO",
     dataEnvio: null,
     codigoSVB: 0,
+    nicho: "NÃO DEFINIDO",
+    leadscoreProduto: "NÃO DEFINIDO",
+    leadscoreBranding: "NÃO DEFINIDO",
   });
   // console.log({
   //   ...info,
@@ -97,6 +100,9 @@ function NovoLead({ setModalIsOpen, getLeads }) {
       vendedor: "NÃO DEFINIDO",
       dataEnvio: null,
       codigoSVB: 0,
+      nicho: "NÃO DEFINIDO",
+      leadscoreProduto: "NÃO DEFINIDO",
+      leadscoreBranding: "NÃO DEFINIDO",
     });
   }
   function addLead() {
@@ -219,6 +225,76 @@ function NovoLead({ setModalIsOpen, getLeads }) {
                     <option value={"INDICAÇÃO"}>INDICAÇÃO</option>
                     <option value={"PASSIVO"}>PASSIVO</option>
                     <option value={"PROSPECÇÃO ATIVA"}>PROSPECÇÃO ATIVA</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-10 w-full border p-1 border-gray-200">
+                <span className="font-bold text-center p-2 col-span-2">
+                  NICHO
+                </span>
+                <div className="flex grow justify-center items-center col-span-8">
+                  <select
+                    type="text"
+                    value={info.nicho}
+                    onChange={(e) =>
+                      setInfo({
+                        ...info,
+                        nicho: e.target.value,
+                      })
+                    }
+                    className="outline-none p-2 h-full text-center"
+                  >
+                    <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+                    <option value={"RESIDENCIAL"}>RESIDENCIAL</option>
+                    <option value={"COMERCIAL"}>COMERCIAL</option>
+                    <option value={"RURAL"}>RURAL</option>
+                    <option value={"INDUSTRIAL"}>INDUSTRIAL</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-10 w-full border p-1 border-gray-200">
+                <span className="font-bold text-center p-2 col-span-2">
+                  LEADSCORE - BRANDING
+                </span>
+                <div className="flex grow justify-center items-center col-span-8">
+                  <select
+                    type="text"
+                    value={info.leadscoreBranding}
+                    onChange={(e) =>
+                      setInfo({
+                        ...info,
+                        leadscoreBranding: e.target.value,
+                      })
+                    }
+                    className="outline-none p-2 h-full text-center"
+                  >
+                    <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+                    <option value={"A"}>A</option>
+                    <option value={"B"}>B</option>
+                    <option value={"C"}>C</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-10 w-full border p-1 border-gray-200">
+                <span className="font-bold text-center p-2 col-span-2">
+                  LEADSCORE - PRODUTO
+                </span>
+                <div className="flex grow justify-center items-center col-span-8">
+                  <select
+                    type="text"
+                    value={info.leadscoreProduto}
+                    onChange={(e) =>
+                      setInfo({
+                        ...info,
+                        leadscoreProduto: e.target.value,
+                      })
+                    }
+                    className="outline-none p-2 h-full text-center"
+                  >
+                    <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+                    <option value={"1"}>1</option>
+                    <option value={"2"}>2</option>
+                    <option value={"3"}>3</option>
                   </select>
                 </div>
               </div>

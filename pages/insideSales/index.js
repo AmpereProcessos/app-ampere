@@ -3,11 +3,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import ModalNovoLead from "../../components/ModalNovoLead";
 import { AiOutlineSearch } from "react-icons/ai";
+import { MdDateRange } from "react-icons/md";
 import Select from "react-select";
 import axios from "axios";
 import dayjs from "dayjs";
 import LeadCard from "../../components/LeadCard";
 import { cidadesAtendidas, vendedores } from "../../utils/constants";
+var dateFilterParam = new Date();
+dateFilterParam.setMonth(dateFilterParam.getMonth() - 3);
 function InsideSales() {
   const router = useRouter();
   const [leads, setLeads] = useState([]);
@@ -21,6 +24,10 @@ function InsideSales() {
     canalFilter: [],
     insiderFilter: [],
   });
+  const [fetchDateFilter, setFetchDateFilter] = useState({
+    after: new Date(dateFilterParam).toISOString(),
+    before: new Date().toISOString(),
+  });
   const [dateFilter, setDateFilter] = useState({
     after: null,
     before: null,
@@ -31,13 +38,23 @@ function InsideSales() {
       credentials.accessibleRoutes.includes("PPS") ||
       credentials.accessibleRoutes.includes("Marketing")
     ) {
-      axios.get("api/insideSales").then((res) => {
-        setLeads(res.data);
-        setFilteredLeads(res.data);
-      });
+      axios
+        .get(
+          `api/insideSales?after=${new Date(
+            fetchDateFilter.after
+          ).toISOString()}&before=${fetchDateFilter.before}`
+        )
+        .then((res) => {
+          setLeads(res.data);
+          setFilteredLeads(res.data);
+        });
     } else {
       axios
-        .post("/api/insideSales", { responsavel: credentials.vendedor })
+        .post("/api/insideSales", {
+          responsavel: credentials.vendedor,
+          after: new Date(fetchDateFilter.after).toISOString(),
+          before: fetchDateFilter.before,
+        })
         .then((res) => {
           setLeads(res.data);
           setFilteredLeads(res.data);
@@ -106,6 +123,41 @@ function InsideSales() {
         <h1 className="font-bold uppercase text-2xl text-[#15599a] font-raleway text-center">
           ACOMPANHAMENTO DE OPORTUNIDADES ({filteredLeads.length})
         </h1>
+
+        <div className="flex gap-x-2 items-center justify-around">
+          <p>Adquiridos entre:</p>
+          <input
+            value={dayjs(fetchDateFilter.after).format("YYYY-MM-DD")}
+            onChange={(e) =>
+              setFetchDateFilter({
+                ...fetchDateFilter,
+                after: e.target.value,
+              })
+            }
+            type="date"
+            className="border border-gray-200 outline-none p-2"
+          />
+          <p>&</p>
+          <input
+            value={dayjs(fetchDateFilter.before).format("YYYY-MM-DD")}
+            onChange={(e) =>
+              setFetchDateFilter({
+                ...fetchDateFilter,
+                before: e.target.value,
+              })
+            }
+            type="date"
+            className="border border-gray-200 outline-none p-2"
+          />
+          <div
+            onClick={getLeads}
+            className="flex cursor-pointer bg-[#fead61] text-[#15599a] hover:bg-[#15599a] hover:text-white items-center  font-bold p-2 rounded-lg transition duration-300 ease-in-out hover:scale-105"
+          >
+            <p className="mr-2 text-sm">BUSCAR LEADS</p>
+            <MdDateRange />
+          </div>
+        </div>
+
         <div className="flex items-center justify-center flex-wrap gap-2 mt-2">
           <input
             type={"text"}
@@ -254,7 +306,7 @@ function InsideSales() {
           </div>
           <button
             onClick={filterLeads}
-            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
+            className="flex bg-[#fead61] text-[#15599a] hover:bg-[#15599a] hover:text-white h-[36px] font-bold rounded px-2 items-center gap-x-2"
           >
             <p>Filtrar</p>
             <AiOutlineSearch />

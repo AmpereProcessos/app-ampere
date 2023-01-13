@@ -640,7 +640,9 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                         { label: "ETHERNIT", value: "ETHERNIT" },
                         { label: "SANDUÍCHE", value: "SANDUÍCHE" },
                         { label: "AMERICANA", value: "AMERICANA" },
+                        { label: "ZINCO", value: "ZINCO" },
                         { label: "CAPE E BICA", value: "CAPE E BICA" },
+                        { label: "LAJE", value: "LAJE" },
                       ]}
                       handleChange={(value) =>
                         setDados({ ...dados, tipoTelha: value })

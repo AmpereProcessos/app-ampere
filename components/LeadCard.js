@@ -44,7 +44,7 @@ function LeadCard({ lead, getLeads }) {
       key={lead._id}
       className={`flex flex-col w-full border border-gray-200 p-3 hover:bg-blue-100 items-center`}
     >
-      <div className="grid grid-cols-1 lg:grid-cols-8 items-center border-b border-gray-200 pb-1 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-10 items-center border-b border-gray-200 pb-1 w-full">
         <p className="text-sm text-[#15599a] font-bold text-center">
           #{lead.codigoSVB} - {lead.nome?.toUpperCase()}
         </p>
@@ -77,7 +77,6 @@ function LeadCard({ lead, getLeads }) {
             }
           />
         </div>
-
         <div className="hidden lg:flex flex-col items-center">
           <p className="text-gray-600 text-center font-bold text-sm">CIDADE</p>
           <p className="text-gray-600 text-center text-sm">
@@ -86,12 +85,24 @@ function LeadCard({ lead, getLeads }) {
         </div>
         <div className="hidden lg:flex flex-col items-center">
           <p className="text-gray-600 text-center font-bold text-sm">
-            TEMPO P/ENVIO
+            BRANDING SCORE
           </p>
           <p className="text-gray-600 text-center text-sm">
-            {lead.dataDeAquisicao && lead.dataDeEnvio
-              ? dayjs(lead.dataDeEnvio).diff(dayjs(lead.dataDeAquisicao), "day")
-              : "-"}
+            {lead.leadscoreBranding ? lead.leadscoreBranding : "-"}
+          </p>
+        </div>
+        <div className="hidden lg:flex flex-col items-center">
+          <p className="text-gray-600 text-center font-bold text-sm">
+            PRODUTO SCORE
+          </p>
+          <p className="text-gray-600 text-center text-sm">
+            {lead.leadscoreProduto ? lead.leadscoreProduto : "-"}
+          </p>
+        </div>
+        <div className="hidden lg:flex flex-col items-center">
+          <p className="text-gray-600 text-center font-bold text-sm">NICHO</p>
+          <p className="text-gray-600 text-center text-sm">
+            {lead.nicho ? lead.nicho : "-"}
           </p>
         </div>
         <div className="hidden lg:block">
@@ -157,6 +168,20 @@ function LeadCard({ lead, getLeads }) {
               <p className="text-gray-600 text-center text-sm">
                 {lead.dataDeEnvio
                   ? dayjs(lead.dataDeEnvio).format("DD/MM/YYYY")
+                  : "-"}
+              </p>
+            </div>
+
+            <div className="hidden lg:flex flex-col items-center">
+              <p className="text-gray-600 text-center font-bold text-sm">
+                TEMPO P/ENVIO
+              </p>
+              <p className="text-gray-600 text-center text-sm">
+                {lead.dataDeAquisicao && lead.dataDeEnvio
+                  ? dayjs(lead.dataDeEnvio).diff(
+                      dayjs(lead.dataDeAquisicao),
+                      "day"
+                    )
                   : "-"}
               </p>
             </div>

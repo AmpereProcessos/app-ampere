@@ -113,7 +113,7 @@ function ComissaoPDFView({ projects }) {
                 {project.insider ? project.insider : "N/A"}
               </div>
               <div className="flex items-center justify-center h-[35px] border-r border-gray-700 text-xxs text-gray-700 col-span-1 font-bold text-center p-1">
-                {project.insider ? 0.003 : "-"}
+                {project.insider ? "0,3" : "-"}
               </div>
               <div className="flex items-center justify-center h-[35px] text-xxs text-gray-700 col-span-1 font-bold text-center p-1">
                 R${" "}

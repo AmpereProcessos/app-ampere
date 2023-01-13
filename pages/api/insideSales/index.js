@@ -2,10 +2,20 @@ import { ObjectId } from "mongodb";
 import connectToDatabase from "../../../utils/insideSalesDb";
 export default async function handler(req, res) {
   if (req.method == "GET") {
+    const after = req.query.after;
+    const before = req.query.before;
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("leads");
     var arr = await collection
       .aggregate([
+        {
+          $match: {
+            dataDeAquisicao: {
+              $gte: after,
+              $lt: before,
+            },
+          },
+        },
         {
           $sort: {
             dataDeEnvio: -1,
@@ -15,6 +25,8 @@ export default async function handler(req, res) {
       .toArray();
     res.json(arr);
   } else if (req.method == "POST") {
+    const after = req.body.after;
+    const before = req.body.before;
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("leads");
     var arr = await collection
@@ -22,6 +34,10 @@ export default async function handler(req, res) {
         {
           $match: {
             responsavel: req.body.responsavel,
+            dataDeAquisicao: {
+              $gte: after,
+              $lt: before,
+            },
           },
         },
         {

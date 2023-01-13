@@ -174,7 +174,6 @@ function BaixaPerformance() {
         <div className="flex flex-wrap justify-between gap-2">
           {badPerformers.map((usina, index) => (
             <div
-              onClick={() => handleOpenModal(usina)}
               key={index}
               className="flex items-center gap-2 justify-between w-[300px] h-[60px] rounded-md border border-gray-200 shadow-md"
             >
@@ -184,7 +183,10 @@ function BaixaPerformance() {
               <p className="text-gray-700 text-center text-xs">
                 {usina.nomeUsina}
               </p>
-              <button className="bg-[#fead61] flex items-center justify-center h-full text-[#15599a] hover:bg-[#15599a] w-[30px] hover:text-white rounded-tr-md rounded-br-md">
+              <button
+                onClick={() => handleOpenModal(usina)}
+                className="bg-[#fead61] flex items-center justify-center h-full text-[#15599a] hover:bg-[#15599a] w-[30px] hover:text-white rounded-tr-md rounded-br-md"
+              >
                 <HiPencilAlt />
               </button>
             </div>

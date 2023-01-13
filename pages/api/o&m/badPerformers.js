@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         let reg = dados30d[4];
         let nomeUsina = user.consumerUnitName;
         if (Number(reg) <= 80) {
-          arr.push({ nome: nomeUsina, performance: Number(reg) });
+          arr.push({ nomeUsina: nomeUsina, performance: Number(reg) });
         }
       }
     });

@@ -1,15 +1,14 @@
-import connectToDatabase from "../../utils/callsDb";
+import connectToDatabase from "../../utils/auxiliaresDb";
 export default async function handler(req, res) {
   // const db = await connectToDatabase(process.env.DB_KEY);
-  // const collection = db.collection("suporte");
+  // const collection = db.collection("monitoramento");
   // let arr = await collection.updateMany(
   //   {
-  //     tipoChamado: "DEFEITOS E GARANTIA (INVERSOR)",
+  //     problema: { $regex: "Desconfigurado" },
   //   },
   //   {
   //     $set: {
-  //       tipoChamado: "DEFEITOS E GARANTIA",
-  //       equipamento: "INVERSOR/MICRO",
+  //       problema: "PROBLEMA COM CONEXÃO",
   //     },
   //   }
   // );

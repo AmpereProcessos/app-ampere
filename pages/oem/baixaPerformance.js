@@ -3,12 +3,29 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import TextInput from "../../components/TextInput";
 import { AppContext } from "../../context/AppContext";
+import { HiPencilAlt } from "react-icons/hi";
+import { TbLicenseOff } from "react-icons/tb";
+import { BsGraphDown } from "react-icons/bs";
+import { MdSignalWifiStatusbarConnectedNoInternet4 } from "react-icons/md";
+import BaixaPerformanceModal from "../../components/BaixaPerformanceModal";
 function BaixaPerformance() {
   const { credentials } = useContext(AppContext);
   const router = useRouter();
   const [token, setToken] = useState("");
+
   const [badPerformers, setBadPerformers] = useState([]);
+  const [monitoramentoBook, setMonitoramentoBook] = useState([]);
+  const [filteredMonitoramentoBook, setFilteredMonitoramentoBook] = useState(
+    []
+  );
+
+  const [filters, setFilters] = useState({
+    searchFilter: "",
+  });
   const [inProgress, setInProgress] = useState(false);
+
+  const [modalItem, setModalItem] = useState({});
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   function getBadPerformers() {
     if (token.trim().length > 15) {
       setInProgress(true);
@@ -16,7 +33,7 @@ function BaixaPerformance() {
         .get(`/api/o&m/badPerformers?token=${token}`)
         .then((res) => {
           setInProgress(false);
-          setBadPerformers(res.data);
+          getToBeAnalized(res.data);
         })
         .catch((err) => {
           setInProgress(false);
@@ -27,12 +44,50 @@ function BaixaPerformance() {
       alert("Por favor, preencha um token válido.");
     }
   }
-  console.log(badPerformers);
+  async function getMonitoramentoBook() {
+    try {
+      let { data } = await axios.get("/api/o&m/monitoramento");
+      setMonitoramentoBook(data);
+      setFilteredMonitoramentoBook(data);
+    } catch (error) {
+      alert(error.response.data);
+    }
+  }
+  function getToBeAnalized(arrayOfBadPerformers) {
+    let toAnalize = arrayOfBadPerformers.filter((item) => {
+      let holder = monitoramentoBook.find(
+        (cliente) =>
+          cliente.nomeUsina == item.nome && cliente.status != "RESOLVIDO"
+      );
+      console.log(holder);
+      return !holder;
+    });
+    console.log(toAnalize);
+    setBadPerformers(toAnalize);
+  }
+  function handleOpenModal(item) {
+    setModalItem(item);
+    setModalIsOpen(true);
+  }
+  function handleSearchFilter(value) {
+    setFilters({ ...filters, searchFilter: value });
+    if (value != "" || " ") {
+      let filtered = monitoramentoBook.filter((item) =>
+        item.nomeUsina.toUpperCase().includes(value.toUpperCase())
+      );
+      setFilteredMonitoramentoBook(filtered);
+    } else {
+      setFilteredMonitoramentoBook(monitoramentoBook);
+    }
+  }
   useEffect(() => {
     if (!credentials.accessibleRoutes.includes("O&M")) {
       router.push("/");
+    } else {
+      getMonitoramentoBook();
     }
   }, []);
+  console.log(badPerformers);
   return (
     <div className="p-6 grow flex flex-col">
       <div className="p-2 border-b border-gray-200">
@@ -78,15 +133,97 @@ function BaixaPerformance() {
             <span className="sr-only">Loading...</span>
           </div>
         )}
-        {badPerformers.map((usina, index) => (
-          <div key={index} className="flex items-center gap-2 justify-center">
-            <p className="text-gray-700">{usina.nome}</p>
-            <p className="font-bold text-red-500">
-              {usina.performance.toFixed(2)}
-            </p>
+        <div className="flex flex-wrap justify-between gap-2">
+          {badPerformers.map((usina, index) => (
+            <div
+              onClick={() => handleOpenModal(usina)}
+              key={index}
+              className="flex items-center gap-2 justify-between w-[300px] h-[60px] rounded-md border border-gray-200 shadow-md"
+            >
+              <div className="flex items-center justify-center bg-red-400 text-white font-bold h-full w-[50px] text-xs rounded-tl-md rounded-bl-md">
+                {usina.performance.toFixed(2).replace(".", ",")} %
+              </div>
+              <p className="text-gray-700 text-center text-xs">
+                {usina.nomeUsina}
+              </p>
+              <button className="bg-[#fead61] flex items-center justify-center h-full text-[#15599a] hover:bg-[#15599a] w-[30px] hover:text-white rounded-tr-md rounded-br-md">
+                <HiPencilAlt />
+              </button>
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-col mt-6 w-full">
+          <h1 className="text-center font-bold text-[#fead41] text-xl">
+            ANÁLISES EM ABERTO ({monitoramentoBook.length})
+          </h1>
+          <div className="flex items-center justify-center gap-2 my-2">
+            <input
+              type={"text"}
+              className={
+                "outline-none h-[36px] w-[350px] border border-gray-200 text-center text-xs p-2 rounded-md"
+              }
+              placeholder={"DIGITE O NOME DA USINA..."}
+              onChange={(e) => handleSearchFilter(e.target.value)}
+            />
           </div>
-        ))}
+          <div className="grid grid-cols-6 w-full">
+            <div className="bg-[#15599a] text-white text-center font-bold border-r border-white">
+              STATUS
+            </div>
+            <div className="bg-[#15599a] text-white text-center font-bold border-r border-white">
+              CÓDIGO DO CLIENTE
+            </div>
+            <div className="bg-[#15599a] text-white text-center font-bold col-span-2 border-r border-white">
+              NOME DA USINA
+            </div>
+            <div className="bg-[#15599a] text-white text-center font-bold col-span-2">
+              PROBLEMA
+            </div>
+          </div>
+          {filteredMonitoramentoBook.map((item, index) => (
+            <div
+              key={index}
+              onClick={() => handleOpenModal({ ...item, created: true })}
+              className="grid grid-cols-6 w-full border-b border-[#15599a] cursor-pointer"
+            >
+              <div className="bg-slate-50 text-gray-700 text-center font-bold border-x border-[#15599a] p-1">
+                {item.status}
+              </div>
+              <div className="bg-slate-50 text-gray-700 text-center font-bold border-r border-[#15599a] p-1">
+                #{item.codProjeto}
+              </div>
+              <div className="bg-slate-50 text-gray-700 text-center font-bold col-span-2 border-r border-[#15599a] p-1">
+                {item.nomeUsina}
+              </div>
+              <div className="flex items-center justify-center gap-4 bg-slate-50 col-span-2 border-r border-[#15599a] p-1">
+                <p className="text-gray-700 text-center font-bold">
+                  {item.problema}
+                </p>
+                {item.problema == "PROBLEMA COM CONEXÃO" && (
+                  <MdSignalWifiStatusbarConnectedNoInternet4
+                    style={{ color: "#FF9D00", fontSize: "20px" }}
+                  />
+                )}
+                {item.problema == "PROBLEMA COM GERAÇÃO" && (
+                  <BsGraphDown style={{ color: "#FF9D00", fontSize: "20px" }} />
+                )}
+                {item.problema == "PLANO EXPIRADO" && (
+                  <TbLicenseOff
+                    style={{ color: "#FF9D00", fontSize: "20px" }}
+                  />
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
+      {modalIsOpen && (
+        <BaixaPerformanceModal
+          info={modalItem}
+          setModalIsOpen={setModalIsOpen}
+          handleUpdates={getMonitoramentoBook}
+        />
+      )}
     </div>
   );
 }

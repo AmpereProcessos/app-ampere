@@ -184,18 +184,18 @@ function BaixaPerformance() {
             <div
               key={index}
               onClick={() => handleOpenModal({ ...item, created: true })}
-              className="grid grid-cols-6 w-full border-b border-[#15599a] cursor-pointer"
+              className="grid bg-slate-50 hover:bg-blue-100 grid-cols-6 w-full border-b border-[#15599a] cursor-pointer"
             >
-              <div className="bg-slate-50 text-gray-700 text-center font-bold border-x border-[#15599a] p-1">
+              <div className="text-gray-700 text-center font-bold border-x border-[#15599a] p-1">
                 {item.status}
               </div>
-              <div className="bg-slate-50 text-gray-700 text-center font-bold border-r border-[#15599a] p-1">
+              <div className="text-gray-700 text-center font-bold border-r border-[#15599a] p-1">
                 #{item.codProjeto}
               </div>
-              <div className="bg-slate-50 text-gray-700 text-center font-bold col-span-2 border-r border-[#15599a] p-1">
+              <div className="text-gray-700 text-center font-bold col-span-2 border-r border-[#15599a] p-1">
                 {item.nomeUsina}
               </div>
-              <div className="flex items-center justify-center gap-4 bg-slate-50 col-span-2 border-r border-[#15599a] p-1">
+              <div className="flex items-center justify-center gap-4 col-span-2 border-r border-[#15599a] p-1">
                 <p className="text-gray-700 text-center font-bold">
                   {item.problema}
                 </p>

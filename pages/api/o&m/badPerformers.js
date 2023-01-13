@@ -2,11 +2,10 @@ import axios from "axios";
 
 export default async function handler(req, res) {
   if (req.method == "GET") {
-    console.log("FUI CHAMADO");
     let { data } = await axios.post(
       "https://api-v2.solarview.com.br/unitList?page=1",
       {
-        pageSize: 1050,
+        pageSize: 942,
       },
       {
         headers: {

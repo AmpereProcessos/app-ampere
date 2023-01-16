@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import connectToDatabase from "../../../utils/connectDb";
 import { vendedores } from "../../../utils/constants";
 export default async function handler(req, res) {
@@ -40,6 +41,7 @@ export default async function handler(req, res) {
               cidade: 1,
               vendedor: 1,
               "contrato.dataAssinatura": 1,
+              "contrato.comissaoVendedor": 1,
               "sistema.potPico": 1,
               "sistema.valorProjeto": 1,
               "compra.dataPagamento": 1,
@@ -53,19 +55,29 @@ export default async function handler(req, res) {
         var valor;
         var pc;
         if (x.insider != undefined) {
-          valor = (
-            (getComissao(x.vendedor.nome).pcInside *
-              Number(x.sistema.valorProjeto)) /
-            100
-          ).toFixed(2);
-          pc = getComissao(x.vendedor.nome).pcInside;
+          valor = x.contrato.comissaoVendedor
+            ? (x.contrato.comissaoVendedor * Number(x.sistema.valorProjeto)) /
+              100
+            : (
+                (getComissao(x.vendedor.nome).pcInside *
+                  Number(x.sistema.valorProjeto)) /
+                100
+              ).toFixed(2);
+          pc = x.contrato.comissaoVendedor
+            ? x.contrato.comissaoVendedor
+            : getComissao(x.vendedor.nome).pcInside;
         } else {
-          valor = (
-            (getComissao(x.vendedor.nome).pcAtivo *
-              Number(x.sistema.valorProjeto)) /
-            100
-          ).toFixed(2);
-          pc = getComissao(x.vendedor.nome).pcAtivo;
+          valor = x.contrato.comissaoVendedor
+            ? (x.contrato.comissaoVendedor * Number(x.sistema.valorProjeto)) /
+              100
+            : (
+                (getComissao(x.vendedor.nome).pcAtivo *
+                  Number(x.sistema.valorProjeto)) /
+                100
+              ).toFixed(2);
+          pc = x.contrato.comissaoVendedor
+            ? x.contrato.comissaoVendedor
+            : getComissao(x.vendedor.nome).pcAtivo;
         }
         if (valor == "NaN") {
           valor = 0;
@@ -80,5 +92,21 @@ export default async function handler(req, res) {
     } catch (error) {
       res.status(500).send("Erro na comunicação com o servidor.");
     }
+  } else if (req.method === "POST") {
+    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+    const collection = db.collection("dados");
+    let changes = req.body.map((mat) => {
+      return {
+        updateOne: {
+          filter: { _id: ObjectId(mat._id) },
+          update: {
+            $set: { "contrato.comissaoVendedor": mat.porcentagemComissao },
+          },
+        },
+      };
+    });
+    let output = await collection.bulkWrite(changes);
+    console.log(output);
+    res.json("OK");
   }
 }

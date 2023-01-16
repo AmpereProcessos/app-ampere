@@ -1407,6 +1407,28 @@ function ModalComercial({
                       });
                     }}
                   />
+                  <NumberInput
+                    label={"PORCENTAGEM DE COMISSÃO"}
+                    editable={true}
+                    value={
+                      infoHolder.contrato.comissaoVendedor
+                        ? infoHolder.contrato.comissaoVendedor
+                        : null
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "contrato.comissaoVendedor": Number(value),
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        contrato: {
+                          ...infoHolder.contrato,
+                          comissaoVendedor: Number(value),
+                        },
+                      });
+                    }}
+                  />
                 </div>
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

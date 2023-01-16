@@ -71,6 +71,7 @@ export default async function handler(req, res) {
         dataLiberacao: fixDate(project.dataliberacaoassinatura), // formatar como data
         dataAssinatura: fixDate(project.dataassinatura), // formatar como data
         formaAssinatura: project.formadeassinatura,
+        comissaoVendedor: project.comissaovendedor,
       },
       pagamento: {
         status: project.statuspagamento,

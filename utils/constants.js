@@ -400,6 +400,10 @@ export const vendedores = [
   {
     nome: "MARIANA DE SOUZA",
     cod: 67,
+    cargo: "INTERNO",
+    qualificacao: "INSIDE JUNIOR",
+    comissaoInside: 0.9,
+    comissaoAtivo: 0.9,
   },
   {
     nome: "CÉLIO JUNIOR",

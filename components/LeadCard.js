@@ -59,6 +59,7 @@ function LeadCard({ lead, getLeads }) {
               { label: "DÁFINY VILLANO", value: "DÁFINY VILLANO" },
               { label: "DEVISSON LIMA", value: "DEVISSON LIMA" },
               { label: "LEANDRO VIALI", value: "LEANDRO VIALI" },
+              { label: "MARIANA DE SOUZA", value: "MARIANA DE SOUZA" },
             ]}
             handleChange={(value) =>
               setInfo({ ...infoHolder, responsavel: value })

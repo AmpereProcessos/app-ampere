@@ -1,89 +1,92 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  getStorage,
-  ref,
-  listAll,
-  list,
-  getMetadata,
-  deleteObject,
-} from "firebase/storage";
 import { storage } from "../utils/firebase";
 import Logo from "../utils/logo.png";
 import Link from "next/link";
 import Image from "next/image";
 import { FiCheck } from "react-icons/fi";
 import dayjs from "dayjs";
+import xml2js from "xml2js";
+import * as XLSX from "xlsx";
 function Teste() {
-  const [entregues, setEntregues] = useState([]);
-  const [emRota, setEmRota] = useState([]);
-  function sortByEntrega(arr) {
-    var newArr = arr.sort((a, b) => {
-      let paramA = a.compra.dataEntrega
-        ? a.compra.dataEntrega
-        : a.compra.previsaoEntrega;
-      let paramB = b.compra.dataEntrega
-        ? b.compra.dataEntrega
-        : b.compra.previsaoEntrega;
-      return new Date(paramA) - new Date(paramB);
-    });
-    return newArr;
+  const [file, setFile] = useState();
+  function handleFileConvertion() {
+    const reader = new FileReader();
+    // const result = excelToJson({ sourceFile: file });
+    // console.log(result);
+    console.log(reader);
   }
-  function sortByPrev(arr) {
-    var newArr = arr.sort((a, b) => {
-      /*
-      let paramA = a.compra.dataEntrega
-        ? a.compra.dataEntrega
-        : a.compra.previsaoEntrega;
-      let paramB = b.compra.dataEntrega
-        ? b.compra.dataEntrega
-        : b.compra.previsaoEntrega;*/
-      return (
-        new Date(a.compra.previsaoEntrega) - new Date(b.compra.previsaoEntrega)
-      );
+  function readExcel(file) {
+    const promise = new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(file);
+      fileReader.onload = (e) => {
+        const bufferArray = e.target.result;
+        const wb = XLSX.read(bufferArray, { type: "buffer" });
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        const data = XLSX.utils.sheet_to_json(ws);
+        resolve(data);
+      };
+      fileReader.onerror = (err) => {
+        reject(err);
+      };
     });
-    return newArr;
+    promise.then((d) => {
+      console.log(d);
+      return d;
+    });
   }
-  function getProjects() {
-    axios.get("/ppi/report").then((res) => {
-      console.log(res.data);
-      setEntregues(sortByEntrega(res.data.entregues));
-      setEmRota(sortByPrev(res.data.emRota));
-    });
+  function readXML(file) {
+    const fileReader = new FileReader();
+    fileReader.readAsText(file);
+    fileReader.onload = (e) => {
+      console.log(e.target.result);
+    };
+    // xml2js.parseString(file, (err, result) => {
+    //   if (err) {
+    //     console.log(err);
+    //     throw err;
+    //   }
+    //   var json = JSON.stringify(result, null, 4);
+    //   console.log(JSON.parse(json));
+    //   return JSON.parse(json);
+    // });
   }
   // useEffect(() => {
-  //   getProjects();
-  // }, []);
-  console.log(emRota);
-  // async function listFiles() {
-  //   const listRef = ref(storage);
-  //   let arq = await listAll(listRef);
-  //   arq.prefixes.forEach(async (folderRef) => {
-  //     console.log(folderRef.name);
-  //     if (folderRef.name == "chamadosPPS") {
-  //       let chamadosRef = await listAll(folderRef);
-  //       chamadosRef.prefixes.forEach(async (pasta) => {
-  //         let clientes = await listAll(pasta);
-  //         clientes.items.forEach(async (cliente) => {
-  //           let clienteRef = ref(storage, cliente.fullPath);
-  //           let metaData = await getMetadata(clienteRef);
-  //           console.log("CHEGUEI AQUI", metaData);
-  //           if (
-  //             new Date(metaData.timeCreated) <
-  //             new Date("2022-12-10T19:39:13.481Z")
-  //           ) {
-  //             console.log(metaData);
-  //             let fileRef = ref(storage, metaData.fullPath);
-  //             // deleteObject(fileRef).then((res) => console.log(res));
-  //           }
-  //         });
-  //       });
+  //   xml2js.parseString(dom, (err, result) => {
+  //     if (err) {
+  //       throw err;
   //     }
+  //     var json = JSON.stringify(result, null, 4);
+  //     console.log(JSON.parse(json));
   //   });
-  // }
+  // }, []);
+  function handleFileInput() {
+    // xlsx application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+    // xml text/xml
+    if (
+      file.type ==
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ) {
+      readExcel(file);
+    } else if (file.type == "text/xml") {
+      readXML(file);
+      console.log("XML");
+    } else {
+      alert("FORMATO INVÁLIDO");
+    }
+  }
   return (
     <div className="w-[21cm] h-[29.7cm] bg-zinc-100 p-4">
       <div className="flex flex-col items-center">
+        <input type={"file"} onChange={(e) => setFile(e.target.files[0])} />
+        <button
+          className="p-2 rounded border-2 border-[#15599a] text-[#15599a] font-bold hover:border-0 hover:bg-[#15599a] hover:text-white"
+          onClick={() => handleFileInput()}
+        >
+          READ XLSX
+        </button>
         {/**<h1 classNameName="text-center text-[#15599a] font-bold">ENTREGUES</h1>
         <div classNameName="grid grid-cols-6">
           <div classNameName=" flex items-center justify-center text-center text-xs p-2 bg-[#15599a] text-white font-bold">
@@ -184,442 +187,9 @@ function Teste() {
             </div>
           ))}
         </div> */}
-        <ol className="border-l-2 border-[#15599a]">
-          <li>
-            <div className="flex flex-start items-center">
-              <div className="bg-blue-600 w-4 h-4 flex text-white text-xxs items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
-                ASSINATURA DO CONTRATO
-              </h4>
-            </div>
-            <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
-              <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
-              </p>
-              <button
-                type="button"
-                className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
-              >
-                Ver projetos
-              </button>
-            </div>
-          </li>
-          <li>
-            <div className="flex flex-start items-center">
-              <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
-                COMPRA DO KIT
-              </h4>
-            </div>
-            <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
-              <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
-              </p>
-              <button
-                type="button"
-                className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
-              >
-                Ver projetos
-              </button>
-            </div>
-          </li>
-          <li>
-            <div className="flex flex-start items-center">
-              <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
-                ENTREGA DO KIT
-              </h4>
-            </div>
-            <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
-              <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
-              </p>
-              <button
-                type="button"
-                className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
-              >
-                Ver projetos
-              </button>
-            </div>
-          </li>
-          <li>
-            <div className="flex flex-start items-center">
-              <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
-                ASSINATURA DA DOCUMENTAÇÃO
-              </h4>
-            </div>
-            <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
-              <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
-              </p>
-              <button
-                type="button"
-                className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
-              >
-                Ver projetos
-              </button>
-            </div>
-          </li>
-          <li>
-            <div className="flex flex-start items-center">
-              <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
-                LIBERAÇÃO DA CONCESSIONÁRIA
-              </h4>
-            </div>
-            <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
-              <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
-              </p>
-              <button
-                type="button"
-                className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
-              >
-                Ver projetos
-              </button>
-            </div>
-          </li>
-          <li>
-            <div className="flex flex-start items-center">
-              <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
-                AGENDAMENTO DA OBRA
-              </h4>
-            </div>
-            <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
-              <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
-              </p>
-              <button
-                type="button"
-                className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
-              >
-                Ver projetos
-              </button>
-            </div>
-          </li>
-          <li>
-            <div className="flex flex-start items-center">
-              <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
-                TÉRMINO DA OBRA
-              </h4>
-            </div>
-            <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
-              <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
-              </p>
-              <button
-                type="button"
-                className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
-              >
-                Ver projetos
-              </button>
-            </div>
-          </li>
-          <li>
-            <div className="flex flex-start items-center">
-              <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
-                VISTORIA DA CONCESSIONÁRIA
-              </h4>
-            </div>
-            <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
-              <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
-              </p>
-              <button
-                type="button"
-                className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
-              >
-                Ver projetos
-              </button>
-            </div>
-          </li>
-          <li>
-            <div className="flex flex-start items-center">
-              <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
-                LIGAMENTO DA USINA
-              </h4>
-            </div>
-            <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
-              <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
-              </p>
-              <button
-                type="button"
-                className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
-              >
-                Ver projetos
-              </button>
-            </div>
-          </li>
-          <li>
-            <div className="flex flex-start items-center">
-              <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
-                ENTREGA TÉCNICA
-              </h4>
-            </div>
-            <div className="ml-6 mb-6 pb-6 flex flex-col gap-3">
-              <p className="text-blue-600 hover:text-blue-700 focus:text-blue-800 duration-300 transition ease-in-out text-sm">
-                15 projetos nesse estágio
-              </p>
-              <button
-                type="button"
-                className="w-fit px-4 py-1.5 bg-blue-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:font-bold"
-              >
-                Ver projetos
-              </button>
-            </div>
-          </li>
-        </ol>
       </div>
     </div>
   );
 }
 
 export default Teste;
-/* 
-      <div classNameName="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
-      <div classNameName="grid grid-cols-5 w-full">
-        <div classNameName="col-span-2">
-          <h1 classNameName="text-xl font-bold text-[#15599b]">SEST SENAT</h1>
-          <p classNameName="text-xl font-bold">ITUIUTABA</p>
-          <p classNameName="text-xl font-bold">{new Date().toLocaleDateString()}</p>
-        </div>
-        <Link href="/oem/propostas">
-          <div classNameName="flex justify-center">
-            <Image
-              width="80px"
-              height="80px"
-              classNameName="rounded-full cursor-pointer"
-              src={Logo}
-            />
-          </div>
-        </Link>
-        <div classNameName="col-span-2 place-self-end">
-          <h1 classNameName="text-xl font-bold">Atendido por:</h1>
-          <p classNameName="font-bold text-center">LEANDRO VIALI</p>
-          <p classNameName="font-bold">(34) 9 9775-7001</p>
-        </div>
-      </div>
-      <div classNameName="mt-5 border-2 border-black">
-        <h1 classNameName="text-xl w-full text-center bg-[#15599b] text-white font-semibold">
-          ESCOPO DO PROJETO
-        </h1>
-        <div classNameName="grid grid-cols-4 divide-x-2 divide-black">
-          <div classNameName="flex flex-col items-center">
-            <p classNameName="flex items-center h-14 text-center text-[#15599b] font-bold">
-              Qtd.Módulos - Potência
-            </p>
-            <p>380 - 335W</p>
-          </div>
-          <div classNameName="flex flex-col items-center">
-            <p classNameName="flex items-center h-14 text-center text-[#15599b] font-bold">
-              Potência kWp
-            </p>
-            <p> 127,3 kWp</p>
-          </div>
-          <div classNameName="flex flex-col items-center">
-            <p classNameName="flex items-center h-14 text-center text-[#15599b] font-bold">
-              Eficiência atual
-            </p>
-            <p>100%</p>
-          </div>
-          <div classNameName="flex flex-col items-center border-r-2 border-black">
-            <p classNameName="flex items-center h-14 text-center text-[#15599b] font-bold">
-              Estimativa de perda financeira anual
-            </p>
-            <p>-</p>
-          </div>
-        </div>
-      </div>
-      <div classNameName="flex flex-col mt-2">
-        <h1 classNameName="w-full text-center text-xl text-[#15599b] font-semibold">
-          CONSEQUÊNCIAS DA FALTA DE MANUTENÇÃO
-        </h1>
-        <div classNameName="flex justify-center">
-          <ul classNameName="font-semibold">
-            <li>1. Perda de geração de energia e eficiência;</li>
-            <li>
-              2. Danificação e perda de vida útil dos modulos por criação de
-              pontos de aquecimento;
-            </li>
-            <li>3. Redução da vida útil dos equipamentos elétricos;</li>
-            <li>
-              4. Riscos de falhas elétricas e mecânicas, ocasionando
-              danificações e até possíveis incêndios;
-            </li>
-            <li>
-              5. Falta de monitoramento e consequentemente o sistema ficar
-              desconectado sem gerar energia;
-            </li>
-            <li>6. Perda da garantia de instalação do sistema fotovoltaico.</li>
-          </ul>
-        </div>
-      </div>
-      <div classNameName="mt-2">
-        <h1 classNameName="w-full bg-[#15599b] text-white font-bold text-center ">
-          SERVIÇO DE OPERAÇÃO E MANUTENÇÃO
-        </h1>
-        <div classNameName="flex flex-col">
-          <div classNameName="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div classNameName="inline-block min-w-full sm:px-6 lg:px-8">
-              <div classNameName="overflow-hidden">
-                <table classNameName="min-w-full border text-center">
-                  <thead classNameName="border-b bg-white">
-                    <tr>
-                      <th
-                        scope="col"
-                        classNameName="text-sm font-medium text-[#15599a] px-2 py-2 border-r"
-                      >
-                        SERVIÇOS
-                      </th>
-                      <th
-                        scope="col"
-                        classNameName="text-sm font-medium text-[#15599a] px-2 py-2"
-                      >
-                        PLANO SOL +
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr classNameName="border-b bg-white">
-                      <td classNameName="px-2 text-sm font-medium text-gray-900 border-r">
-                        MANUTENÇÃO ELÉTRICA INVERSORES + QUADROS ELÉTRICOS
-                      </td>
-                      <td classNameName="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap text-center">
-                        <div classNameName="flex justify-center items-center">
-                          <p>2x</p>
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr classNameName="border-b bg-white">
-                      <td classNameName="px-2 text-sm font-medium text-gray-900 border-r">
-                        REAPERTO CONEXÕES ELÉTRICAS
-                      </td>
-                      <td classNameName="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap">
-                        <div classNameName="flex justify-center items-center">
-                          <p>2x</p>
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr classNameName="border-b bg-white">
-                      <td classNameName="px-2 text-sm font-medium text-gray-900 border-r">
-                        ANÁLISE E CONFERÊNCIA DE GRANDEZAS ELÉTRICAS DOS
-                        EQUIPAMENTOS ELÉTRICOS
-                      </td>
-                      <td classNameName="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                        <div classNameName="flex justify-center items-center">
-                          <p>2x</p>
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr classNameName="border-b bg-white">
-                      <td classNameName="px-2 text-sm font-medium text-gray-900 border-r">
-                        CONFIGURAÇÃO E INSTALAÇÃO DE APLICATIVO DE MONITORAMENTO
-                        DE GERAÇÃO DO INVERSOR
-                      </td>
-                      <td classNameName="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                        <div classNameName="flex justify-center items-center">
-                          <p>2x</p>
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr classNameName="border-b bg-white">
-                      <td classNameName="px-2 text-sm font-medium text-gray-900 border-r">
-                        LIMPEZA NOS MÓDULOS FOTOVOLTAICOS
-                      </td>
-                      <td classNameName="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                        <div classNameName="flex justify-center items-center">
-                          <p>2x</p>
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr classNameName="border-b bg-white">
-                      <td classNameName="px-2 text-sm font-medium text-gray-900 border-r">
-                        MONITORAMENTO DA GERAÇÃO DE ENERGIA POR 12 MESES C/
-                        RELATÓRIOS MENSAIS DE GERAÇÃO
-                      </td>
-                      <td classNameName="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                        <div classNameName="flex justify-center">
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr classNameName="border-b bg-white">
-                      <td classNameName="px-2 py-1 text-sm font-medium text-gray-900 border-r">
-                        VALOR DO PLANO ANUAL
-                      </td>
-                      <td classNameName="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
-                        R$ 6990,00
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <h1 classNameName="w-full bg-[#15599b] text-white font-bold text-center">
-          ASSINATURA
-        </h1>
-        <div classNameName="mt-10 flex justify-between">
-          <div classNameName="w-[35%]">
-            <hr classNameName="border-t-2 border-black" />
-            <p classNameName="text-center">Cliente</p>
-          </div>
-          <div classNameName="w-[35%]">
-            <hr classNameName="border-t-2 border-black" />
-            <p classNameName="text-center">Ampère Energias</p>
-          </div>
-        </div>
-      </div>
-    </div>
- */

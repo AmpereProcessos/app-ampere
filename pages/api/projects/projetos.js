@@ -28,6 +28,7 @@ export default async function handler(req, res) {
             cidade: 1,
             "vendedor.nome": 1,
             "parecer.statusDoParecerDeAcesso": 1,
+            "parecer.dataParecerDeAcesso": 1,
             "vistoria.status": 1,
             projeto: 1,
             "dadosCemig.distCreditos": 1,

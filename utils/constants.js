@@ -131,6 +131,12 @@ export const fileTypes = {
   "application/pdf": {
     title: "PDF",
   },
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+    title: "EXCEL",
+  },
+  "text/xml": {
+    title: "XML",
+  },
 };
 export const vendedores = [
   {

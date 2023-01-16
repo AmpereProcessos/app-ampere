@@ -185,6 +185,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
             <h1 className="text-[#15599a] p-0 lg:pl-6 font-bold text-xs lg:text-base">
               {dados.nomeDoCliente}
             </h1>
+            <p className="text-gray-600 text-xs italic">{dados._id}</p>
             {dados.status != "CONCLUIDO" ? (
               <div className="flex items-center gap-2 justify-evenly">
                 <select

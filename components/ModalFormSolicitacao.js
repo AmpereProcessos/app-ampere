@@ -223,6 +223,7 @@ function ModalFormSolicitacao({
     numInstalacao: "",
     excedente: null,
   });
+  const [idVisitaTecnica, setIdVisitaTecnica] = useState("");
   function adicionarDistribuicao() {
     setDados({
       ...dados,
@@ -741,6 +742,18 @@ function ModalFormSolicitacao({
       }
     } else {
       return { duracao: 0, qtdeManutencoes: 0 };
+    }
+  }
+  function vinculateVisitaTecnica() {
+    if (idVisitaTecnica.trim().length < 10) {
+      alert("Preencha um ID válido");
+    } else {
+      axios
+        .get(`/api/solicitacoes/getVisitaTecnica/${idVisitaTecnica}`)
+        .then((res) => {
+          console.log("VISITA TECNICA", res.data);
+          setDados({ ...dados, linksVisita: res.data.links });
+        });
     }
   }
   console.log(dados);
@@ -2676,7 +2689,26 @@ function ModalFormSolicitacao({
                     </div>
                   </div>
                 ) : (
-                  false
+                  <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                      VINCULAR VISITA TÉCNICA
+                    </span>
+                    <div className="flex flex-col items-center">
+                      <TextInput
+                        normalCase={true}
+                        label={"ID DA VISITA TÉCNICA"}
+                        editable={true}
+                        value={idVisitaTecnica}
+                        handleChange={(value) => setIdVisitaTecnica(value)}
+                      />
+                      <button
+                        onClick={vinculateVisitaTecnica}
+                        className="p-1 mt-4 text-xs rounded border-2 font-bold border-[#fead61] text-[#fead61] hover:text-black hover:bg-[#fead61] transition duration-300 ease-in-out hover:scale-105 "
+                      >
+                        VINCULAR VISITA TÉCNICA
+                      </button>
+                    </div>
+                  </div>
                 )}
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">

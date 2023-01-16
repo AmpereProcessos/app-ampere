@@ -36,7 +36,9 @@ function Teste() {
       };
     });
     promise.then((d) => {
-      var newArr = d.filter((item) => item.Período == "01/2023");
+      var newArr = d.filter(
+        (item) => item.Período == dayjs().format("MM/YYYY")
+      );
       var mappedArr = newArr.map((item) => {
         return {
           periodo: item.Período,
@@ -75,7 +77,7 @@ function Teste() {
           var json = JSON.stringify(result, null, 4);
           var newArr = JSON.parse(json);
           newArr = newArr.Relatorio_gd.Linha.filter(
-            (item) => item.Periodo == "2023/01"
+            (item) => item.Periodo == dayjs().format("YYYY/MM")
           );
           var mappedArr = newArr.map((item) => {
             return {
@@ -162,8 +164,7 @@ function Teste() {
     );
   };
   function getGraficoData(data) {
-    let arr = data.filter((item) => item.modalidade != "Auto consumo-Geradora");
-    arr = arr.map((item) => {
+    var arr = data.map((item) => {
       return {
         name: item.instalacao,
         value: Number(item.compensacao),
@@ -175,7 +176,8 @@ function Teste() {
     let color = `bg-[${COLORS[index]}]`;
     return color;
   }
-  console.log(instalacoes, Object.keys(instalacoes));
+  console.log(instalacoes);
+  console.log(dayjs().format("YYYY/MM"));
   return (
     <div className="grow bg-zinc-100 p-4">
       <div className="flex flex-col items-center">
@@ -280,7 +282,7 @@ function Teste() {
                       </p>
                       <p
                         style={{
-                          color: index2 > 0 ? COLORS[index2 - 1] : "#4B5563",
+                          color: COLORS[index2],
                         }}
                         className={`text-xxs font-bold text-center border-r border-gray-200 p-1`}
                       >

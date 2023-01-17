@@ -46,13 +46,13 @@ function FormVisitaTecnicaDesenho({
           OBSERVAÇÕES PERTINENTES
         </span>
         <input
-          className={`text-xs w-full text-center uppercase text-gray-600 outline-none`}
+          className={`text-xs w-full text-center text-gray-600 outline-none`}
           value={dados.obsDesenho}
           placeholder={"DEIXE AQUI OBSERVAÇÕES SOBRE ESSA SOLICITAÇÃO"}
           onChange={(e) =>
             setDados({
               ...dados,
-              obsDesenho: e.target.value.toUpperCase(),
+              obsDesenho: e.target.value,
             })
           }
           type="text"
@@ -136,13 +136,13 @@ function FormVisitaTecnicaDesenho({
           LOCALIZAÇÃO DO LOCAL DE INSTALAÇÃO
         </span>
         <input
-          className={`text-xs w-full text-center uppercase text-gray-600 outline-none`}
+          className={`text-xs w-full text-center  text-gray-600 outline-none`}
           value={dados.localizacaoInstalacao}
           placeholder={"DESCREVA AQUI DETALHES DA ORÇAMENTAÇÃO"}
           onChange={(e) =>
             setDados({
               ...dados,
-              localizacaoInstalacao: e.target.value.toUpperCase(),
+              localizacaoInstalacao: e.target.value,
             })
           }
           type="text"

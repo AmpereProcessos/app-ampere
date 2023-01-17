@@ -41,11 +41,6 @@ function FormVisitaTecnica() {
       .replace(/(-\d{3})\d+?$/, "$1");
     return cep;
   }
-  const httpsRef = ref(
-    storage,
-    "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/clientes%2FEDIVAN%20DA%20SILVA%20SANTOS-6311%2FfotoPoste1136?alt=media&token=d88e47c7-cb9b-492c-be2c-87fed61badff"
-  );
-  console.log(httpsRef);
   const [estagio, setEstagio] = useState(0);
   const [images, setImages] = useState({});
   const [dados, setDados] = useState({

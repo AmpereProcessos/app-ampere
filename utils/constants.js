@@ -1182,6 +1182,7 @@ export const cidadesAtendidas = [
   "PARANAIGUARA",
   "ARAGUARI",
   "IRAÍ DE MINAS",
+  "CATALÃO",
 ];
 export const suprimentoOption = {
   GRAMPO: {

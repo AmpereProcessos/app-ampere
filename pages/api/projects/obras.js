@@ -30,6 +30,7 @@ export default async function handler(req, res) {
             "vistoria.status": 1,
             "sistema.qtdeModulos": 1,
             "sistema.potPico": 1,
+            "sistema.topologia": 1,
             "parecer.dataParecerDeAcesso": 1,
             "contrato.dataAssinatura": 1,
             "pagamento.credor": 1,

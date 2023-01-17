@@ -25,6 +25,7 @@ function Obras() {
     epFilter: [],
     epStatusFilter: [],
     cidadeFilter: [],
+    topologiaFilter: [],
     tipoDaTelhaFilter: "",
     obsPendente: false,
     osPendente: false,
@@ -148,6 +149,12 @@ function Obras() {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.equipResp.includes(call.obra?.equipeResp)
+      );
+    }
+    if (filters.topologiaFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.topologiaFilter.includes(call.sistema.topologia)
       );
     }
     if (filters.numModulos > 0) {
@@ -435,6 +442,22 @@ function Obras() {
               })
             }
             options={equipesTecnicas.map((equipe) => equipe)}
+          />
+          <Select
+            isMulti
+            placeholder="TOPOLOGIA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                topologiaFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              { label: "INVERSOR", value: "INVERSOR" },
+              { label: "MICRO", value: "MICRO" },
+              { label: "OUTROS SERV.", value: "OUTROS SERV." },
+              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+            ]}
           />
           <div
             onClick={() =>

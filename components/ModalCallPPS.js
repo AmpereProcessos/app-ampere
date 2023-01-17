@@ -275,6 +275,7 @@ function ModalCallPPS({
                 >
                   <option value={"A DEFINIR"}>A DEFINIR</option>
                   <option value={"ARTHUR"}>ARTHUR</option>
+                  <option value={"NATHAN"}>NATHAN</option>
                   <option value={"ADRIANO"}>ADRIANO</option>
                   <option value={"MATHEUS"}>MATHEUS</option>
                 </select>

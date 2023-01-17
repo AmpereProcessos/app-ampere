@@ -212,6 +212,10 @@ function ChamadosPPS({ setCredentials, credentials }) {
                   label: "ARTHUR",
                 },
                 {
+                  value: "NATHAN",
+                  label: "NATHAN",
+                },
+                {
                   value: "MATHEUS",
                   label: "MATHEUS",
                 },

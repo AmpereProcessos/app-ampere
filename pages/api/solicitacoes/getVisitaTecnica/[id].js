@@ -7,5 +7,23 @@ export default async function handler(req, res) {
     const collection = db.collection("visitaTecnica");
     var arr = await collection.find({ _id: ObjectId(id) }).toArray();
     res.json(arr[0]);
+  } else if (req.method == "POST") {
+    let id = req.query.id;
+    let toProject = req.body;
+    const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);
+    const collection = db.collection("visitaTecnica");
+    var arr = await collection
+      .aggregate([
+        {
+          $match: {
+            _id: ObjectId(id),
+          },
+        },
+        {
+          $project: toProject,
+        },
+      ])
+      .toArray();
+    res.json(arr[0]);
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   vendedores,
@@ -7,6 +7,7 @@ import {
   fornecedores,
 } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
+import { IoMdAdd } from "react-icons/io";
 import { VscChromeClose } from "react-icons/vsc";
 import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
@@ -59,6 +60,7 @@ function ModalSuprimentos({
   credentials,
 }) {
   const [infoHolder, setInfo] = useState(project);
+  const [infoVisita, setInfoVisita] = useState({});
   const [changes, setChanges] = useState({});
   const [msg, setMsg] = useState({ text: "", color: "" });
   async function handleChanges() {
@@ -157,6 +159,25 @@ function ModalSuprimentos({
       return { liberar: true, message: "OK" };
     }
   }
+  function getVisitaInfo(id) {
+    axios
+      .post(`/api/solicitacoes/getVisitaTecnica/${id}`, {
+        suprimentos: 1,
+        obsSuprimentos: 1,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setInfoVisita({
+          suprimentos: res.data.suprimentos,
+          obsSuprimentos: res.data.obsSuprimentos,
+        });
+      });
+  }
+  useEffect(() => {
+    if (infoHolder.idVisitaTecnica?.trim().length > 10) {
+      getVisitaInfo(infoHolder.idVisitaTecnica);
+    }
+  }, []);
   // console.log(infoHolder);
   return (
     <>
@@ -435,6 +456,20 @@ function ModalSuprimentos({
                     }}
                   />
                   <TextInput
+                    label={"ID DA VISITA TÉCNICA"}
+                    editable={editor}
+                    normalCase={true}
+                    value={
+                      infoHolder.idVisitaTecnica
+                        ? infoHolder.idVisitaTecnica
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, idVisitaTecnica: value });
+                      setInfo({ ...infoHolder, idVisitaTecnica: value });
+                    }}
+                  />
+                  <TextInput
                     label="TIPO DE SERVIÇO"
                     value={infoHolder.tipoDeServico}
                     editable={false}
@@ -509,6 +544,111 @@ function ModalSuprimentos({
                     }}
                   />
                 </div>
+                {infoVisita && (
+                  <div className="flex flex-col items-center">
+                    {" "}
+                    <div className="flex flex-col mx-12 mt-2 gap-2">
+                      <div className="grid grid-cols-6 w-full">
+                        <p className="text-md text-[#fead61] font-bold text-center">
+                          INSUMO
+                        </p>
+                        <p className="text-md text-[#fead61] font-bold text-center">
+                          TIPO
+                        </p>
+                        <p className="text-md text-[#fead61] font-bold text-center">
+                          QUANTIDADE
+                        </p>
+                        <p className="text-md text-[#fead61] font-bold text-center">
+                          UNIDADE
+                        </p>
+                        <p className="text-md text-[#fead61] font-bold text-center col-span-2">
+                          AÇÃO
+                        </p>
+                      </div>
+                      {infoVisita.suprimentos?.map((suprimento, index) => (
+                        <div key={index} className="grid grid-cols-6 w-full">
+                          <p className="text-xs text-gray-600 font-bold text-center">
+                            {suprimento.insumo}
+                          </p>
+                          <p className="text-xs text-gray-600 font-bold text-center">
+                            {suprimento.tipo}
+                          </p>
+                          <p className="text-xs text-gray-600 font-bold text-center">
+                            {suprimento.qtde}
+                          </p>
+                          <p className="text-xs text-gray-600 font-bold text-center">
+                            {suprimento.medida}
+                          </p>
+                          <div className="flex items-center justify-center gap-1 col-span-2">
+                            <button
+                              onClick={() => {
+                                setChanges({
+                                  ...changes,
+                                  "compra.kitInfo": infoHolder.compra?.kitInfo
+                                    ? infoHolder.compra?.kitInfo +
+                                      `/${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`
+                                    : `${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`,
+                                });
+                                setInfo({
+                                  ...infoHolder,
+                                  compra: {
+                                    ...infoHolder.compra,
+                                    kitInfo: infoHolder.compra?.kitInfo
+                                      ? infoHolder.compra?.kitInfo +
+                                        `/${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`
+                                      : `${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`,
+                                  },
+                                });
+                              }}
+                              className="flex items-center gap-1 text-xs p-1 rounded border border-[#fead61] text-[#fead61] hover:bg-[#fead61] hover:text-black font-bold"
+                            >
+                              <IoMdAdd />
+                              <p>KIT</p>
+                            </button>
+                            <button
+                              onClick={() => {
+                                setChanges({
+                                  ...changes,
+                                  "material.materialFaltante": infoHolder
+                                    .material?.materialFaltante
+                                    ? infoHolder.material?.materialFaltante +
+                                      `/${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`
+                                    : `${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`,
+                                });
+                                setInfo({
+                                  ...infoHolder,
+                                  material: {
+                                    ...infoHolder.material,
+                                    materialFaltante: infoHolder.material
+                                      ?.materialFaltante
+                                      ? infoHolder.material?.materialFaltante +
+                                        `/${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`
+                                      : `${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`,
+                                  },
+                                });
+                              }}
+                              className="flex items-center gap-1 text-xs p-1 rounded border border-[#15599a] text-[#15599a] hover:bg-[#15599a] hover:text-white font-bold"
+                            >
+                              <IoMdAdd />
+                              <p>FALTANTE</p>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex flex-col w-full self-center mt-2 items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        OBSERVAÇÕES P/SUPRIMENTOS
+                      </span>
+                      <textarea
+                        value={infoVisita.obsSuprimentos}
+                        readOnly={true}
+                        placeholder={"Observações da obra aqui..."}
+                        className="w-full text-center h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">

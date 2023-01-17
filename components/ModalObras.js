@@ -421,6 +421,20 @@ function ModalObras({
                       setInfo({ ...infoHolder, linkDrive: value });
                     }}
                   />
+                  <TextInput
+                    label={"ID DA VISITA TÉCNICA"}
+                    editable={editor}
+                    normalCase={true}
+                    value={
+                      infoHolder.idVisitaTecnica
+                        ? infoHolder.idVisitaTecnica
+                        : ""
+                    }
+                    handleChange={(value) => {
+                      setChanges({ ...changes, idVisitaTecnica: value });
+                      setInfo({ ...infoHolder, idVisitaTecnica: value });
+                    }}
+                  />
                   <SelectInput
                     label={"SEGMENTO"}
                     value={infoHolder.segmento}

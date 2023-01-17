@@ -128,104 +128,104 @@ function LaudoIntermediarioUrbano({ info }) {
           <div className="flex">
             <div className="grid grid-rows-6 w-[60%]">
               <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   CLIENTE
                 </div>
-                <div className="text-center text-xs border-r border-black">
+                <div className="flex justify-center items-center text-xs border-r border-black">
                   {info.nomeDoCliente}
                 </div>
               </div>
               <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   REPRESENTANTE
                 </div>
-                <div className="text-center text-xs border-r border-black">
+                <div className="flex justify-center items-center text-xs border-r border-black">
                   {info.nomeVendedor}
                 </div>
               </div>
               <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   ENDEREÇO
                 </div>
                 <div
-                  className={`text-center ${
-                    info.logradouro.length > 37 ? "text-xxs" : "text-xxs"
+                  className={`flex justify-center items-center ${
+                    info.logradouro.length > 37 ? "text-xxs" : "text-xs"
                   } border-r border-black`}
                 >
                   {info.logradouro}
                 </div>
               </div>
               <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   BAIRRO
                 </div>
-                <div className="text-center text-xs border-r border-black">
+                <div className="flex justify-center items-center text-xs border-r border-black">
                   {info.bairro}
                 </div>
               </div>
               <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   DATA DA VISITA
                 </div>
-                <div className="text-center text-xs border-r border-black">
+                <div className="flex justify-center items-center text-xs border-r border-black">
                   {dayjs().format("DD/MM/YYYY")}
                 </div>
               </div>
               <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   TIPO DE SOLICITAÇÃO
                 </div>
-                <div className="text-center text-xs border-r border-black">
+                <div className="flex justify-center items-center text-xs border-r border-black">
                   {info.tipoDeSolicitacao}
                 </div>
               </div>
             </div>
             <div className="grid grid-rows-6 w-[40%]">
               <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   TELEFONE
                 </div>
-                <div className="text-center text-xs border-r border-black">
+                <div className="flex justify-center items-center text-xs border-r border-black">
                   {info.telefoneDoCliente}
                 </div>
               </div>
               <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   Nº DE PROJETO
                 </div>
-                <div className="text-center text-xs border-r border-black">
+                <div className="flex justify-center items-center text-xs border-r border-black">
                   {info.codigoSVB}
                 </div>
               </div>
               <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   NÚMERO
                 </div>
-                <div className="text-center text-xs border-r border-black">
+                <div className="flex justify-center items-center text-xs border-r border-black">
                   {info.numeroResidencia}
                 </div>
               </div>
               <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   MUNICÍPIO
                 </div>
-                <div className="text-center text-xs border-r border-black">
+                <div className="flex justify-center items-center text-xs border-r border-black">
                   {info.cidade}
                 </div>
               </div>
               <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   PRAZO LAUDO
                 </div>
-                <div className="text-center text-xs border-r border-black">
+                <div className="flex justify-center items-center text-xs border-r border-black">
                   {/\(([^)]+)\)/.exec(info.tipoDeLaudo)[1]}
                 </div>
               </div>
               <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
                   TIPO DE LAUDO
                 </div>
-                <div className="text-center text-xs border-r border-black">
+                <div className="flex justify-center items-center text-xs border-r border-black">
                   {info.tipoDeLaudo.split("(")[0]}
                 </div>
               </div>

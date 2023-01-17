@@ -749,10 +749,16 @@ function ModalFormSolicitacao({
       alert("Preencha um ID válido");
     } else {
       axios
-        .get(`/api/solicitacoes/getVisitaTecnica/${idVisitaTecnica}`)
+        .post(`/api/solicitacoes/getVisitaTecnica/${idVisitaTecnica}`, {
+          links: 1,
+        })
         .then((res) => {
           console.log("VISITA TECNICA", res.data);
-          setDados({ ...dados, linksVisita: res.data.links });
+          setDados({
+            ...dados,
+            linksVisita: res.data.links,
+            idVisitaTecnica: idVisitaTecnica,
+          });
         });
     }
   }

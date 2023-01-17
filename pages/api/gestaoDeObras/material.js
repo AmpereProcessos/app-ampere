@@ -7,18 +7,29 @@ export default async function handler(req, res) {
     let arr = await collection
       .aggregate([
         {
+          $match: {
+            "compra.statusEntrega": "ENTREGUE",
+            "compra.previsaoEntrega": { $ne: null },
+          },
+        },
+        {
+          $addFields: {
+            tempoPassado: {
+              $dateDiff: {
+                startDate: { $toDate: "$compra.previsaoEntrega" },
+                endDate: { $toDate: "2023-01-17" },
+                unit: "day",
+              },
+            },
+          },
+        },
+        {
           $project: {
             qtde: 1,
             nomeDoContrato: 1,
             compra: 1,
             material: 1,
-            tempoPassado: {
-              $dateDiff: {
-                startDate: { $toDate: "$compra.previsaoEntrega" },
-                endDate: { $toDate: "2022-10-28" },
-                unit: "day",
-              },
-            },
+            tempoPassado: 1,
           },
         },
         {

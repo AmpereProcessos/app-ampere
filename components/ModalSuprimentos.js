@@ -544,7 +544,7 @@ function ModalSuprimentos({
                     }}
                   />
                 </div>
-                {infoVisita && (
+                {infoVisita.suprimentos && (
                   <div className="flex flex-col items-center">
                     {" "}
                     <div className="flex flex-col mx-12 mt-2 gap-2">

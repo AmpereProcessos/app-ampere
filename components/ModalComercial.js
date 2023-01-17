@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   cidadesAtendidas,
   vendedores,
@@ -73,6 +73,7 @@ function ModalComercial({
   credentials,
 }) {
   const [infoHolder, setInfo] = useState(project);
+  const [infoVisita, setInfoVisita] = useState({});
   const [changes, setChanges] = useState({});
   const [msg, setMsg] = useState({
     text: "",
@@ -142,6 +143,34 @@ function ModalComercial({
       });
     }
   }
+  function getVisitaInfo(id) {
+    axios
+      .post(`/api/solicitacoes/getVisitaTecnica/${id}`, {
+        links: 1,
+      })
+      .then((res) => {
+        console.log(res.data);
+        if (!project.links?.visitaTecnica) {
+          project.links = { ...project.links, visitaTecnica: res.data.links };
+          setInfo({
+            ...infoHolder,
+            links: {
+              ...infoHolder.links,
+              visitaTecnica: res.data.links,
+            },
+          });
+          return setChanges({
+            ...changes,
+            "links.visitaTecnica": res.data.links,
+          });
+        }
+      });
+  }
+  // useEffect(() => {
+  //   if (infoHolder.idVisitaTecnica?.trim().length > 10) {
+  //     getVisitaInfo(infoHolder.idVisitaTecnica);
+  //   }
+  // }, []);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -497,6 +526,15 @@ function ModalComercial({
                       setInfo({ ...infoHolder, idVisitaTecnica: value });
                     }}
                   />
+                  {!project.links?.visitaTecnica && (
+                    <button
+                      onClick={() => getVisitaInfo(infoHolder.idVisitaTecnica)}
+                      className="flex items-center p-1 h-[30px] bg-[#15599a] rounded text-white"
+                    >
+                      <AiOutlineSearch />
+                    </button>
+                  )}
+
                   <SelectInput
                     label="TIPO DE SERVIÇO"
                     value={infoHolder.tipoDeServico}

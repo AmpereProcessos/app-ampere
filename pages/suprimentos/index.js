@@ -48,9 +48,17 @@ function Suprimentos() {
     }
   }
   function handleUpdates(id) {
-    axios
-      .get(`/api/projects/fetchDoc/${id}`)
-      .then((res) => setModalProject(res.data[0]));
+    var index = projects.findIndex((x) => x._id == id);
+    var indexFiltered = filteredProjects.findIndex((x) => x._id == id);
+    axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
+      var arr = [...projects];
+      arr[index] = res.data[0];
+      var arrFiltered = [...filteredProjects];
+      arrFiltered[indexFiltered] = res.data[0];
+      setModalProject(res.data[0]);
+      setProjects(arr);
+      setFilteredProjects(arrFiltered);
+    });
   }
   function handleSearchFilter(value) {
     setSearchFilter(value);

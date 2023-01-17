@@ -85,7 +85,7 @@ function Sidebar() {
           </Link>
         )}
         {credentials.accessibleRoutes != undefined &&
-        credentials.accessibleRoutes.includes("Obras") &&
+        credentials.accessibleRoutes?.includes("Obras") &&
         credentials.regional == undefined ? (
           <Link href="/calendario">
             <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -107,8 +107,8 @@ function Sidebar() {
           <div className="mt-6">
             <h2 className="text-xs text-gray-500">SETORES</h2>
             {credentials.accessibleRoutes != undefined ? (
-              credentials?.accessibleRoutes.includes("PPS") ||
-              credentials?.accessibleRoutes.includes("Marketing") ? (
+              credentials?.accessibleRoutes?.includes("PPS") ||
+              credentials?.accessibleRoutes?.includes("Marketing") ? (
                 <Link href="/comercial">
                   <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                     <SiCashapp style={{ color: "#15599a", fontSize: "20px" }} />
@@ -122,8 +122,8 @@ function Sidebar() {
               false
             )}
             {credentials.accessibleRoutes != undefined ? (
-              credentials?.accessibleRoutes.includes("Suprimentos") ||
-              credentials.accessibleRoutes.includes("Marketing") ? (
+              credentials?.accessibleRoutes?.includes("Suprimentos") ||
+              credentials.accessibleRoutes?.includes("Marketing") ? (
                 <Link href="/suprimentos">
                   <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                     <FaShoppingCart
@@ -139,8 +139,8 @@ function Sidebar() {
               false
             )}
             {credentials.accessibleRoutes != undefined ? (
-              credentials?.accessibleRoutes.includes("Projetos") ||
-              credentials?.accessibleRoutes.includes("Pós-Venda") ? (
+              credentials?.accessibleRoutes?.includes("Projetos") ||
+              credentials?.accessibleRoutes?.includes("Pós-Venda") ? (
                 <Link href="/projetos">
                   <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                     <MdEngineering
@@ -156,8 +156,8 @@ function Sidebar() {
               false
             )}
             {credentials.accessibleRoutes != undefined ? (
-              credentials?.accessibleRoutes.includes("Obras") ||
-              credentials?.accessibleRoutes.includes("Marketing") ? (
+              credentials?.accessibleRoutes?.includes("Obras") ||
+              credentials?.accessibleRoutes?.includes("Marketing") ? (
                 <Link href="/obras">
                   <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                     <FaTools style={{ color: "#15599a", fontSize: "20px" }} />
@@ -170,7 +170,7 @@ function Sidebar() {
             ) : (
               false
             )}
-            {credentials?.accessibleRoutes.includes("O&M") && (
+            {credentials?.accessibleRoutes?.includes("O&M") && (
               <Link href={"/oem/comissionamento"}>
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                   <ImCheckboxChecked
@@ -184,8 +184,8 @@ function Sidebar() {
             )}
             {credentials.accessibleRoutes != undefined &&
             credentials.visualizacao == undefined ? (
-              credentials?.accessibleRoutes.includes("Pós-Venda") ||
-              credentials?.accessibleRoutes.includes("Marketing") ? (
+              credentials?.accessibleRoutes?.includes("Pós-Venda") ||
+              credentials?.accessibleRoutes?.includes("Marketing") ? (
                 <Link href="/posvenda">
                   <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                     <BiSupport style={{ color: "#15599a", fontSize: "20px" }} />
@@ -200,8 +200,8 @@ function Sidebar() {
             )}
             {credentials.accessibleRoutes != undefined &&
             credentials.regional == undefined
-              ? (credentials?.accessibleRoutes.includes("ADM") ||
-                  credentials?.accessibleRoutes.includes("Marketing")) && (
+              ? (credentials?.accessibleRoutes?.includes("ADM") ||
+                  credentials?.accessibleRoutes?.includes("Marketing")) && (
                   <Link href="/adm">
                     <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <BsFolderPlus
@@ -212,7 +212,7 @@ function Sidebar() {
                   </Link>
                 )
               : false}
-            {credentials.accessibleRoutes.includes("InsideSales") && (
+            {credentials.accessibleRoutes?.includes("InsideSales") && (
               <Link href="/insideSales">
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                   <MdAddIcCall style={{ color: "#15599a", fontSize: "20px" }} />
@@ -268,8 +268,18 @@ function Sidebar() {
             ) : (
               false
             )}
+            {credentials.visualizacao == "OBRAS" && (
+              <Link href={"/ordemDeServico/controleDeOS"}>
+                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                  <MdDesignServices
+                    style={{ color: "#15599a", fontSize: "20px" }}
+                  />
+                  <p className="pl-3 text-xs text-gray-600">Controle de OSs</p>
+                </a>
+              </Link>
+            )}
             {credentials.accessibleRoutes != undefined &&
-            credentials.accessibleRoutes.includes("Almoxarifado") ? (
+            credentials.accessibleRoutes?.includes("Almoxarifado") ? (
               <Link href={"/almoxarifado"}>
                 <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                   <FaBox style={{ color: "#15599a", fontSize: "20px" }} />
@@ -281,7 +291,7 @@ function Sidebar() {
             )}
             {credentials.accessibleRoutes != undefined &&
             credentials.regional == undefined
-              ? credentials?.accessibleRoutes.includes("ADM") && (
+              ? credentials?.accessibleRoutes?.includes("ADM") && (
                   <Link href={"/adm/cobrancas"}>
                     <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <MdOutlinePayments
@@ -294,7 +304,7 @@ function Sidebar() {
               : false}
             {credentials.accessibleRoutes != undefined &&
             credentials.regional == undefined
-              ? credentials?.accessibleRoutes.includes("Projetos") && (
+              ? credentials?.accessibleRoutes?.includes("Projetos") && (
                   <Link href={"/projetos/comissionamento"}>
                     <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <VscWorkspaceTrusted
@@ -309,8 +319,8 @@ function Sidebar() {
               : false}
             {credentials.accessibleRoutes != undefined &&
             credentials.regional == undefined
-              ? (credentials?.accessibleRoutes.includes("O&M") ||
-                  credentials?.accessibleRoutes.includes("Marketing")) && (
+              ? (credentials?.accessibleRoutes?.includes("O&M") ||
+                  credentials?.accessibleRoutes?.includes("Marketing")) && (
                   <Link href="/oem">
                     <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <FaSolarPanel
@@ -323,7 +333,7 @@ function Sidebar() {
               : false}
             {credentials.accessibleRoutes != undefined &&
             credentials.regional == undefined
-              ? credentials?.accessibleRoutes.includes("Obras") && (
+              ? credentials?.accessibleRoutes?.includes("Obras") && (
                   <Link href="/obras/gestaoDeObras">
                     <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <MdOutlineBuildCircle
@@ -338,7 +348,7 @@ function Sidebar() {
               : false}
             {credentials.accessibleRoutes != undefined &&
             credentials.regional == undefined
-              ? credentials?.accessibleRoutes.includes("Pós-Venda") && (
+              ? credentials?.accessibleRoutes?.includes("Pós-Venda") && (
                   <Link href="/posvenda/nps">
                     <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <MdSentimentSatisfiedAlt
@@ -353,7 +363,7 @@ function Sidebar() {
         </>
       )}
       {credentials.vendedor != undefined &&
-      credentials.accessibleRoutes.includes("InsideSales") ? (
+      credentials.accessibleRoutes?.includes("InsideSales") ? (
         <>
           <div className="mt-6">
             <h2 className="text-xs text-gray-500">SETORES</h2>{" "}
@@ -369,7 +379,7 @@ function Sidebar() {
         false
       )}
       {credentials.accessibleRoutes != undefined &&
-        credentials?.accessibleRoutes.includes("Vendas") &&
+        credentials?.accessibleRoutes?.includes("Vendas") &&
         credentials.vendedor && (
           <div className="mt-6">
             <h2 className="text-xs text-gray-500">ÁREA DO VENDEDOR</h2>

@@ -18,6 +18,7 @@ export default async function handler(req, res) {
           $project: {
             qtde: 1,
             nomeDoContrato: 1,
+            codigoSVB: 1,
             cidade: 1,
             logradouro: 1,
             bairro: 1,
@@ -38,6 +39,7 @@ export default async function handler(req, res) {
             id: item._id,
             index: index,
             qtde: item.qtde,
+            cliente: `${item.nomeDoContrato}-${item.codigoSVB}`,
             nomeDoContrato: item.nomeDoContrato,
             categoria: x.categoria,
             servicoExecutado: x.servicoExecutado,

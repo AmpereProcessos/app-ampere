@@ -2,6 +2,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import React, { useState, useEffect } from "react";
 import { VscChromeClose } from "react-icons/vsc";
+import ConferenciaPadraoOS from "./ConferenciaPadraoOS";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -24,25 +25,21 @@ const OVERLAY_STYLES = {
   zIndex: 1000,
 };
 function ModalOS({ info, setModalIsOpen }) {
-  const [holder, setHolder] = useState(info);
-  const [changes, setChanges] = useState({});
-  const [msg, setMsg] = useState({ text: "", color: "" });
-  function saveChanges() {
+  // const [holder, setHolder] = useState(info);
+  // const [changes, setChanges] = useState({});
+  function saveChanges(changes) {
+    console.log(changes);
     axios
-      .post(`/api/projects/update/${info.id}`, {
-        [`ordensDeServico.${info.index}.dataDeFechamento`]:
-          changes.dataDeFechamento,
+      .post(`/api/projects/update/${info.id}`, changes)
+      .then((res) => {
+        alert("OS finalizada com sucesso!");
+        location.reload();
       })
-      .then((res) =>
-        setMsg({ text: "Alterações feitas", color: "text-green-500" })
-      )
       .catch((err) =>
-        setMsg({
-          text: "Ocorreu um erro, por favor tente novamente.",
-          color: "text-red-500",
-        })
+        alert("Erro ao finalizar baixa na OS. Por favor, tente novamente.")
       );
   }
+  console.log(info);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -164,39 +161,14 @@ function ModalOS({ info, setModalIsOpen }) {
                   )}
                 </div>
               </div>
-              <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
-                <h1 className="font-bold text-center md:text-start text-[#15599a]">
-                  DATA DE FECHAMENTO
-                </h1>
-                <input
-                  type={"datetime-local"}
-                  className="outline-none text-center col-span-2 mx-2"
-                  value={holder.dataDeFechamento}
-                  onChange={(e) => {
-                    setHolder({
-                      ...holder,
-                      dataDeFechamento: e.target.value,
-                    });
-                    setChanges({
-                      ...changes,
-                      dataDeFechamento: new Date(e.target.value).toISOString(),
-                    });
-                  }}
+              {info.categoria == "PADRÃO" && (
+                <ConferenciaPadraoOS
+                  conferencias={info.conferencias}
+                  cliente={info.cliente}
+                  index={info.index}
+                  saveChanges={saveChanges}
                 />
-              </div>
-              {msg.text && (
-                <p className={`text-center italic text-xs ${msg.color}`}>
-                  {msg.text}
-                </p>
               )}
-              <div className="my-2 flex items-center justify-center">
-                <button
-                  onClick={saveChanges}
-                  className="p-2 rounded font-bold border border-[#15599a] text-[#15599a] hover:bg-[#15599a] hover:text-white "
-                >
-                  SALVAR
-                </button>
-              </div>
             </div>
           </div>
         </div>

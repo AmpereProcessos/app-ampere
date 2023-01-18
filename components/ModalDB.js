@@ -3770,6 +3770,33 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   />
                 </div>
               </div>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  ARQUIVOS
+                </span>
+                {project.links && (
+                  <div className="flex justify-around gap-2 mt-3 flex-wrap">
+                    {Object.keys(project.links).map((category, index) => (
+                      <div key={index} className="flex flex-col">
+                        <h1 className="text-sm font-bold text-center text-[#15599a]">
+                          {category.toUpperCase()}
+                        </h1>
+                        <div className="flex flex-col items-center gap-1">
+                          {project.links[category].map((obj, index2) => (
+                            <a
+                              className="text-xs text-[#15599a] font-bold text-center"
+                              key={index2}
+                              href={obj.link}
+                            >
+                              {obj.title} ({obj.format})
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

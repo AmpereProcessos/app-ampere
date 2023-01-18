@@ -408,7 +408,12 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
             });
           }
         }
-      } catch (error) {}
+      } catch (error) {
+        setImagesMsg({
+          text: "Houve um erro no envio das imagens. Por favor, tente novamente.",
+          color: "text-green-500",
+        });
+      }
       if (holder === undefined) {
         setChecks({ ...checks, allChecked: true });
         setDados({ ...dados, links: links });

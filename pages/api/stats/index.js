@@ -4,24 +4,6 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
-    let totalPeakPot = await collection
-      .aggregate([
-        {
-          $match: {
-            "contrato.status": "ASSINADO",
-            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
-          },
-        },
-        {
-          $group: {
-            _id: {},
-            potPico: {
-              $sum: "$sistema.potPico",
-            },
-          },
-        },
-      ])
-      .toArray();
     let installedInfo = await collection
       .aggregate([
         {
@@ -216,7 +198,6 @@ export default async function handler(req, res) {
       averageHomoData,
       suprimentosData,
       nps,
-      totalPeakPot: totalPeakPot[0].potPico,
     });
   }
   if (req.method === "POST") {
@@ -236,23 +217,6 @@ export default async function handler(req, res) {
     }
     console.log(queryKey);
     console.log(queryValue);
-    let totalPeakPot = await collection
-      .aggregate([
-        {
-          $match: {
-            "contrato.status": "ASSINADO",
-          },
-        },
-        {
-          $group: {
-            _id: {},
-            potPico: {
-              $sum: "$sistema.potPico",
-            },
-          },
-        },
-      ])
-      .toArray();
     let installedInfo = await collection
       .aggregate([
         {
@@ -455,7 +419,6 @@ export default async function handler(req, res) {
       averageHomoData,
       suprimentosData,
       nps: isNaN(nps) ? 0 : nps,
-      totalPeakPot: totalPeakPot[0].potPico,
     });
   }
 }

@@ -84,7 +84,10 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
 
   function saveChanges() {
     axios
-      .put("/api/solicitacoes/visitaTecnica", dados)
+      .put("/api/solicitacoes/visitaTecnica", {
+        ...dados,
+        status: "NÃO DEFINIDO",
+      })
       .then((res) => {
         setMessage({ text: "Alterações feitas", color: "text-green-500" });
         handleUpdates();

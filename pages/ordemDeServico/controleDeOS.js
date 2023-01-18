@@ -214,8 +214,6 @@ function ControleDeOSs({ arr }) {
 
 export default ControleDeOSs;
 export async function getServerSideProps() {
-  // Call an external API endpoint to get posts.
-  // You can use any data fetching library
   const db = await connectToDatabase(process.env.DB_KEY);
   const collection = db.collection("dados");
   var arr = await collection
@@ -271,29 +269,6 @@ export async function getServerSideProps() {
     })
   );
   eventos = JSON.parse(JSON.stringify(eventos));
-  // eventos = eventos?.map((evento) => {
-  //   return {
-  //     title: evento.nomeDoContrato,
-  //     index: evento.index,
-  //     categoria: evento.categoria,
-  //     servicoExecutado: evento.servicoExecutado,
-  //     start: dayJS(evento.inicioServico).add(3, "hours").format("YYYY-MM-DD"),
-  //     end: dayJS(evento.fimServico).add(1, "days").format("YYYY-MM-DD"),
-  //     id: evento.id.toString(),
-  //     qtde: evento.qtde,
-  //     equipe: evento.equipe ? evento.equipe : "-",
-  //     cidade: evento.cidade ? evento.cidade : "-",
-  //     logradouro: evento.logradouro ? evento.logradouro : "-",
-  //     bairro: evento.bairro ? evento.bairro : "-",
-  //     numeroResidencia: evento.numeroResidencia ? evento.numeroResidencia : "-",
-  //     qtdeModulos: evento.qtdeModulos ? evento.qtdeModulos : "-",
-  //     topologia: evento.topologia ? evento.topologia : "-",
-  //     backgroundColor: getColor(evento.cidade),
-  //   };
-  // });
-
-  // By returning { props: { posts } }, the Blog component
-  // will receive `posts` as a prop at build time
   return {
     props: {
       arr: eventos,

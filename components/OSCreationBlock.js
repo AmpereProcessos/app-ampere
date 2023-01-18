@@ -173,7 +173,6 @@ function OSCreationBlock({
     }
     return true;
   }
-  console.log(osInfo);
   return (
     <div className="flex flex-col">
       {" "}

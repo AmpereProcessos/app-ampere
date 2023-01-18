@@ -65,7 +65,6 @@ function ModalObras({
     text: "",
     color: "text-red-500",
   });
-  console.log(project);
   const [changes, setChanges] = useState({});
   const [osInfo, setOsInfo] = useState({
     categoria: "NÃO DEFINIDO",
@@ -193,6 +192,7 @@ function ModalObras({
       getVisitaInfo(infoHolder.idVisitaTecnica);
     }
   }, []);
+  console.log(changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -421,7 +421,6 @@ function ModalObras({
                       })}
                       editable={false}
                       handleChange={(value) => {
-                        console.log(value);
                         setChanges({
                           ...changes,
                           vendedor: {
@@ -609,13 +608,17 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "obra.entrada": new Date(value).toISOString(),
+                        "obra.entrada": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         obra: {
                           ...infoHolder.obra,
-                          entrada: new Date(value).toISOString(),
+                          entrada: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -634,13 +637,17 @@ function ModalObras({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "obra.saida": new Date(value).toISOString(),
+                        "obra.saida": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         obra: {
                           ...infoHolder.obra,
-                          saida: new Date(value).toISOString(),
+                          saida: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}

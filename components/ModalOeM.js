@@ -147,8 +147,6 @@ function ModalOeM({
       handleUpdates(project._id);
     });
   }
-  console.log(infoHolder.oem);
-  console.log(infoHolder.relatorios);
   console.log(changes);
   return (
     <>
@@ -492,18 +490,24 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "conferencias.usinaLigada.data": new Date(
-                          value
-                        ).toISOString(),
-                        "conferencias.usinaLigada.status": "REALIZADO",
+                        "conferencias.usinaLigada.data": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
+                        "conferencias.usinaLigada.status": isNaN(value)
+                          ? "REALIZADO"
+                          : "NÃO REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
                         conferencias: {
                           ...infoHolder.conferencias,
                           usinaLigada: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
+                            data: isNaN(value)
+                              ? new Date(value).toISOString()
+                              : null,
+                            status: isNaN(value)
+                              ? "REALIZADO"
+                              : "NÃO REALIZADO",
                           },
                         },
                       });
@@ -528,18 +532,24 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "conferencias.monitoramentoFeito.data": new Date(
-                          value
-                        ).toISOString(),
-                        "conferencias.monitoramentoFeito.status": "REALIZADO",
+                        "conferencias.monitoramentoFeito.data": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
+                        "conferencias.monitoramentoFeito.status": isNaN(value)
+                          ? "REALIZADO"
+                          : "NÃO REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
                         conferencias: {
                           ...infoHolder.conferencias,
                           monitoramentoFeito: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
+                            data: isNaN(value)
+                              ? new Date(value).toISOString()
+                              : null,
+                            status: isNaN(value)
+                              ? "REALIZADO"
+                              : "NÃO REALIZADO",
                           },
                         },
                       });
@@ -559,13 +569,17 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "app.data": new Date(value).toISOString(),
+                        "app.data": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         app: {
                           ...infoHolder.app,
-                          data: new Date(value).toISOString(),
+                          data: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -587,18 +601,24 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "conferencias.energiaInjetada.data": new Date(
-                          value
-                        ).toISOString(),
-                        "conferencias.energiaInjetada.status": "REALIZADO",
+                        "conferencias.energiaInjetada.data": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
+                        "conferencias.energiaInjetada.status": isNaN(value)
+                          ? "REALIZADO"
+                          : "NÃO REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
                         conferencias: {
                           ...infoHolder.conferencias,
                           energiaInjetada: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
+                            data: isNaN(value)
+                              ? new Date(value).toISOString()
+                              : null,
+                            status: isNaN(value)
+                              ? "REALIZADO"
+                              : "NÃO REALIZADO",
                           },
                         },
                       });
@@ -761,18 +781,24 @@ function ModalOeM({
                             handleChange={(value) => {
                               setChanges({
                                 ...changes,
-                                [`relatorios.${relatorio}.data`]: new Date(
-                                  value
-                                ).toISOString(),
-                                [`relatorios.${relatorio}.status`]: "REALIZADO",
+                                [`relatorios.${relatorio}.data`]: isNaN(value)
+                                  ? new Date(value).toISOString()
+                                  : null,
+                                [`relatorios.${relatorio}.status`]: isNaN(value)
+                                  ? "REALIZADO"
+                                  : "NÃO REALIZADO",
                               });
                               setInfo({
                                 ...infoHolder,
                                 relatorios: {
                                   ...infoHolder.relatorios,
                                   [`${relatorio}`]: {
-                                    data: new Date(value).toISOString(),
-                                    status: "REALIZADO",
+                                    data: isNaN(value)
+                                      ? new Date(value).toISOString()
+                                      : null,
+                                    status: isNaN(value)
+                                      ? "REALIZADO"
+                                      : "NÃO REALIZADO",
                                   },
                                 },
                               });
@@ -924,17 +950,21 @@ function ModalOeM({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "manutencaoPreventiva.data": new Date(
-                          value
-                        ).toISOString(),
-                        "manutencaoPreventiva.status": "REALIZADO",
+                        "manutencaoPreventiva.data": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
+                        "manutencaoPreventiva.status": isNaN(value)
+                          ? "REALIZADO"
+                          : "NÃO REALIZADO",
                       });
                       setInfo({
                         ...infoHolder,
                         manutencaoPreventiva: {
                           ...infoHolder.manutencaoPreventiva,
-                          data: new Date(value).toISOString(),
-                          status: "REALIZADO",
+                          data: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
+                          status: isNaN(value) ? "REALIZADO" : "NÃO REALIZADO",
                         },
                       });
                     }}

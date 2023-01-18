@@ -84,13 +84,11 @@ function ModalComercial({
       .get(`https://viacep.com.br/ws/${infoHolder.cep.replace("-", "")}/json/`)
       .then((res) => {
         if (res.data.erro) {
-          console.log(res.data.erro);
           return;
         } else {
           console.log(
             cidadesAtendidas.includes(res.data.localidade.toUpperCase())
           );
-          console.log(res.data.localidade);
           setInfo({
             ...infoHolder,
             bairro: res.data.bairro,
@@ -2334,7 +2332,6 @@ function ModalComercial({
                       };
                     })}
                     handleChange={(value) => {
-                      console.log(value);
                       setChanges({
                         ...changes,
                         "projeto.projetista.nome": value,

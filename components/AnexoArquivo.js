@@ -5,7 +5,6 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../utils/firebase";
 import axios from "axios";
 function AnexoArquivo({ categorias, cliente, id, prevLinks, handleUpdates }) {
-  console.log(prevLinks);
   const [nomeDoArquivo, setNomeDoArquivo] = useState("");
   const [categoria, setCategoria] = useState("NÃO DEFINIDO");
   const [imagem, setImagem] = useState(null);

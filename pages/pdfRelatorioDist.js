@@ -12,6 +12,7 @@ import * as XLSX from "xlsx";
 function Teste() {
   const [file, setFile] = useState();
   const [month, setMonth] = useState();
+  const [nomeInstalacao, setNomeInstalacao] = useState("");
   const [instalacoes, setInstalacoes] = useState({});
   const [pdfMode, setPDFMode] = useState(false);
   function handleFileConvertion() {
@@ -58,7 +59,13 @@ function Teste() {
       console.log(Object.keys(instalacoes).length);
       setInstalacoes({
         ...instalacoes,
-        [`Instalação ${Object.keys(instalacoes).length + 1}`]: mappedArr,
+        [`${
+          nomeInstalacao
+            ? `${nomeInstalacao} (${dayjs(month).format("MM/YYYY")})`
+            : `Instalação ${Object.keys(instalacoes).length + 1} (${dayjs(
+                month
+              ).format("MM/YYYY")})`
+        }`]: mappedArr,
       });
       console.log(mappedArr);
       return mappedArr;
@@ -97,7 +104,13 @@ function Teste() {
           });
           setInstalacoes({
             ...instalacoes,
-            [`Instalação ${Object.keys(instalacoes).length + 1}`]: mappedArr,
+            [`${
+              nomeInstalacao
+                ? `${nomeInstalacao} (${dayjs(month).format("MM/YYYY")})`
+                : `Instalação ${Object.keys(instalacoes).length + 1} (${dayjs(
+                    month
+                  ).format("MM/YYYY")})`
+            }`]: mappedArr,
           });
           return mappedArr;
         }
@@ -230,6 +243,13 @@ function Teste() {
               type={"month"}
               value={month}
               onChange={(e) => setMonth(e.target.value)}
+            />
+            <input
+              type="text"
+              className="outline-none bg-transparent py-1 px-2 text-center border border-gray-200"
+              placeholder="Nomeie a instalação..."
+              value={nomeInstalacao}
+              onChange={(e) => setNomeInstalacao(e.target.value.toUpperCase())}
             />
             <button
               className="p-2 text-xs rounded border-2 border-[#15599a] text-[#15599a] font-bold hover:border-0 hover:bg-[#15599a] hover:text-white"

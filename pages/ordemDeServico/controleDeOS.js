@@ -17,10 +17,18 @@ function ControleDeOSs({ arr }) {
   const { credentials } = useContext(AppContext);
   const [groupedByEquipe, setGroupedByEquipe] = useState([]);
   function saveChanges(id, index, change) {
-    console.log(id, index, change);
-    axios.post(`/api/projects/update/${id}`, {
-      [`ordensDeServico.${index}.equipe`]: change,
-    });
+    console.log("FUI CHAMADO", id, index, change);
+    axios
+      .post(`/api/projects/update/${id}`, {
+        [`ordensDeServico.${index}.equipe`]: change,
+      })
+      .then(() => {
+        if (credentials.visualizacao == "OBRAS") {
+          alert("Alteração feita. OS disponível em Minhas OSs");
+        } else {
+          alert("Alteração feita!");
+        }
+      });
   }
   useEffect(() => {
     let newArr = groupByEquipe(arr);
@@ -89,16 +97,14 @@ function ControleDeOSs({ arr }) {
                       }}
                       className="outline-none text-center text-xs text-gray-500 p-1 border-r border-gray-200"
                     >
-                      {equipesTecnicas.map((equipe) => (
-                        <option key={equipe.value} value={equipe.value}>
-                          {equipe.label}
-                        </option>
-                      ))}
+                      <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+                      <option value={credentials.equipe}>
+                        {credentials.equipe}
+                      </option>
                     </select>
                     <div className="flex items-center justify-center">
                       <button
                         onClick={() => {
-                          console.log(groupedByEquipe["undefined"][i]);
                           saveChanges(
                             groupedByEquipe["undefined"][i].id,
                             groupedByEquipe["undefined"][i].index,
@@ -117,12 +123,12 @@ function ControleDeOSs({ arr }) {
           </div>
         ) : (
           Object.keys(groupedByEquipe).map((key, y) => (
-            <div key={y} className="flex flex-col">
+            <div key={y} className="flex flex-col w-full">
               <h1 className="text-center font-bold text-white p-1 bg-black">
                 {key == "undefined" ? "NÃO DEFINIDO" : key}
               </h1>
-              <div className="flex flex-col">
-                <div className="grid grid-cols-3 lg:grid-cols-6 border-x border-gray-200">
+              <div className="flex flex-col w-full">
+                <div className="grid grid-cols-3 lg:grid-cols-6 border-x border-gray-200 w-full">
                   <h1 className="bg-[#15599a] text-center text-white border-r border-white font-bold font-raleway">
                     NOME
                   </h1>
@@ -145,7 +151,7 @@ function ControleDeOSs({ arr }) {
                 {groupedByEquipe[key].map((item, i) => (
                   <div
                     key={i}
-                    className="grid grid-cols-3 lg:grid-cols-6 border-b border-x border-gray-200"
+                    className="grid grid-cols-3 lg:grid-cols-6 border-b border-x border-gray-200 w-full"
                   >
                     <p className="text-center text-xs text-gray-500 p-1 border-r border-gray-200">
                       ({item.qtde}) - {item.nomeDoContrato}
@@ -161,6 +167,13 @@ function ControleDeOSs({ arr }) {
                     </p>
                     <select
                       value={item.equipe ? item.equipe : "NÃO DEFINIDO"}
+                      onChange={(e) => {
+                        let newObj = groupedByEquipe;
+                        newObj[key][i].equipe = e.target.value;
+                        // console.log(newObj);
+                        // console.log("INDIVIDUAL", newObj["undefined"][i]);
+                        setGroupedByEquipe({ ...newObj });
+                      }}
                       className="outline-none text-center text-xs text-gray-500 p-1 border-r border-gray-200"
                     >
                       {equipesTecnicas.map((equipe) => (
@@ -170,7 +183,16 @@ function ControleDeOSs({ arr }) {
                       ))}
                     </select>
                     <div className="flex items-center justify-center">
-                      <button className="rounded font-bold text-xs p-1 border border-[#15599a] text-[#15599a] hover:bg-[#15599a] hover:text-white">
+                      <button
+                        onClick={() => {
+                          saveChanges(
+                            groupedByEquipe[key][i].id,
+                            groupedByEquipe[key][i].index,
+                            groupedByEquipe[key][i].equipe
+                          );
+                        }}
+                        className="rounded font-bold text-xs p-1 border border-[#15599a] text-[#15599a] hover:bg-[#15599a] hover:text-white"
+                      >
                         <BsFillSaveFill />
                       </button>
                     </div>

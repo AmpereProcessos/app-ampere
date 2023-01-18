@@ -129,16 +129,20 @@ function ComissionamentoPosObraCard({ project }) {
             handleChange={(value) => {
               setChanges({
                 ...changes,
-                "conferencias.usinaLigada.data": new Date(value).toISOString(),
-                "conferencias.usinaLigada.status": "REALIZADO",
+                "conferencias.usinaLigada.data": isNaN(value)
+                  ? new Date(value).toISOString()
+                  : null,
+                "conferencias.usinaLigada.status": isNaN(value)
+                  ? "REALIZADO"
+                  : "NÃO REALIZADO",
               });
               setInfo({
                 ...info,
                 conferencias: {
                   ...info.conferencias,
                   usinaLigada: {
-                    data: new Date(value).toISOString(),
-                    status: "REALIZADO",
+                    data: isNaN(value) ? new Date(value).toISOString() : null,
+                    status: isNaN(value) ? "REALIZADO" : "NÃO REALIZADO",
                   },
                 },
               });
@@ -158,18 +162,20 @@ function ComissionamentoPosObraCard({ project }) {
             handleChange={(value) => {
               setChanges({
                 ...changes,
-                "conferencias.monitoramentoFeito.data": new Date(
-                  value
-                ).toISOString(),
-                "conferencias.monitoramentoFeito.status": "REALIZADO",
+                "conferencias.monitoramentoFeito.data": isNaN(value)
+                  ? new Date(value).toISOString()
+                  : null,
+                "conferencias.monitoramentoFeito.status": isNaN(value)
+                  ? "REALIZADO"
+                  : "NÃO REALIZADO",
               });
               setInfo({
                 ...info,
                 conferencias: {
                   ...info.conferencias,
                   monitoramentoFeito: {
-                    data: new Date(value).toISOString(),
-                    status: "REALIZADO",
+                    data: isNaN(value) ? new Date(value).toISOString() : null,
+                    status: isNaN(value) ? "REALIZADO" : "NÃO REALIZADO",
                   },
                 },
               });
@@ -186,13 +192,13 @@ function ComissionamentoPosObraCard({ project }) {
             handleChange={(value) => {
               setChanges({
                 ...changes,
-                "app.data": new Date(value).toISOString(),
+                "app.data": isNaN(value) ? new Date(value).toISOString() : null,
               });
               setInfo({
                 ...info,
                 app: {
                   ...info.app,
-                  data: new Date(value).toISOString(),
+                  data: isNaN(value) ? new Date(value).toISOString() : null,
                 },
               });
             }}
@@ -211,18 +217,20 @@ function ComissionamentoPosObraCard({ project }) {
             handleChange={(value) => {
               setChanges({
                 ...changes,
-                "conferencias.energiaInjetada.data": new Date(
-                  value
-                ).toISOString(),
-                "conferencias.energiaInjetada.status": "REALIZADO",
+                "conferencias.energiaInjetada.data": isNaN(value)
+                  ? new Date(value).toISOString()
+                  : null,
+                "conferencias.energiaInjetada.status": isNaN(value)
+                  ? "REALIZADO"
+                  : "NÃO REALIZADO",
               });
               setInfo({
                 ...info,
                 conferencias: {
                   ...info.conferencias,
                   energiaInjetada: {
-                    data: new Date(value).toISOString(),
-                    status: "REALIZADO",
+                    data: isNaN(value) ? new Date(value).toISOString() : null,
+                    status: isNaN(value) ? "REALIZADO" : "NÃO REALIZADO",
                   },
                 },
               });

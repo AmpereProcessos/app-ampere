@@ -179,6 +179,7 @@ function ModalSuprimentos({
     }
   }, []);
   // console.log(infoHolder);
+  console.log(changes);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -404,7 +405,6 @@ function ModalSuprimentos({
                       })}
                       editable={false}
                       handleChange={(value) => {
-                        console.log(value);
                         setChanges({
                           ...changes,
                           vendedor: {
@@ -882,15 +882,17 @@ function ModalSuprimentos({
                       handleChange={(value) => {
                         setChanges({
                           ...changes,
-                          "estruturaPersonalizada.dataEntrega": new Date(
-                            value
-                          ).toISOString(),
+                          "estruturaPersonalizada.dataEntrega": isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         });
                         setInfo({
                           ...infoHolder,
                           estruturaPersonalizada: {
                             ...infoHolder.estruturaPersonalizada,
-                            dataEntrega: new Date(value).toISOString(),
+                            dataEntrega: isNaN(value)
+                              ? new Date(value).toISOString()
+                              : null,
                           },
                         });
                       }}
@@ -979,13 +981,17 @@ function ModalSuprimentos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "compra.dataLiberacao": new Date(value).toISOString(),
+                        "compra.dataLiberacao": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         compra: {
                           ...infoHolder.compra,
-                          dataLiberacao: new Date(value).toISOString(),
+                          dataLiberacao: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}

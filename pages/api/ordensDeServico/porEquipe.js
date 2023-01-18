@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     let eventos = [];
     arr.forEach((item) =>
       item.ordensDeServico.forEach((x, index) => {
-        if (x.equipe == equipe) {
+        if (x.equipe == equipe && !x.dataDeFechamento) {
           eventos.push({
             id: item._id,
             index: index,

@@ -46,7 +46,7 @@ function ModalOS({ info, setModalIsOpen }) {
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
             <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-[#15599a] pl-6 text-center font-bold">
+              <h1 className="text-[#15599a] p-0 lg:pl-6 text-center font-bold">
                 {info.nomeDoContrato}
               </h1>
               <button>
@@ -56,28 +56,28 @@ function ModalOS({ info, setModalIsOpen }) {
                 />
               </button>
             </div>
-            <div className="flex flex-col gap-2 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 border-r border-gray-300">
+            <div className="flex flex-col gap-2 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 border-r border-gray-300 p-3">
               <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
-                <h1 className="font-bold text-center md:text-start text-[#15599a]">
+                <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   CATEGORIA
                 </h1>
-                <h1 className="font-bold text-center col-span-2">
+                <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
                   {info.categoria}
                 </h1>
               </div>
               <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
-                <h1 className="font-bold text-center md:text-start text-[#15599a]">
+                <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   SERVIÇO
                 </h1>
-                <h1 className="font-bold text-center col-span-2">
+                <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
                   {info.servicoExecutado}
                 </h1>
               </div>
               <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
-                <h1 className="font-bold text-center md:text-start text-[#15599a]">
+                <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   ABERTURA
                 </h1>
-                <h1 className="font-bold text-center col-span-2">
+                <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
                   {info.dataDeAbertura
                     ? dayjs(info.dataDeAbertura)
                         .add(4, "hours")
@@ -86,63 +86,63 @@ function ModalOS({ info, setModalIsOpen }) {
                 </h1>
               </div>
               <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
-                <h1 className="font-bold text-center md:text-start text-[#15599a]">
+                <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   CIDADE
                 </h1>
-                <h1 className="font-bold text-center col-span-2">
+                <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
                   {info.cidade}
                 </h1>
               </div>
               <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
-                <h1 className="font-bold text-center md:text-start text-[#15599a]">
+                <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   BAIRRO
                 </h1>
-                <h1 className="font-bold text-center col-span-2">
+                <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
                   {info.bairro}
                 </h1>
               </div>
               <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
-                <h1 className="font-bold text-center md:text-start text-[#15599a]">
+                <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   LOGRADOURO
                 </h1>
-                <h1 className="font-bold text-center col-span-2">
+                <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
                   {info.logradouro}
                 </h1>
               </div>
               <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
-                <h1 className="font-bold text-center md:text-start text-[#15599a]">
+                <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   NÚMERO DA RESIDÊNCIA
                 </h1>
-                <h1 className="font-bold text-center col-span-2">
+                <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
                   {info.numeroResidencia}
                 </h1>
               </div>
               <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
-                <h1 className="font-bold text-center md:text-start text-[#15599a]">
+                <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   TOPOLOGIA
                 </h1>
-                <h1 className="font-bold text-center col-span-2">
+                <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
                   {info.topologia}
                 </h1>
               </div>
               <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
-                <h1 className="font-bold text-center md:text-start text-[#15599a]">
+                <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   QUANTIDADE DE MÓDULOS
                 </h1>
-                <h1 className="font-bold text-center col-span-2">
+                <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
                   {info.qtdeModulos}
                 </h1>
               </div>
               <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
-                <h1 className="font-bold text-center md:text-start text-[#15599a]">
+                <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   POTÊNCIA DOS MÓDULOS
                 </h1>
-                <h1 className="font-bold text-center col-span-2">
+                <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
                   {info.potModulos} W
                 </h1>
               </div>
               <div className="flex flex-col items-center border border-gray-200 p-2 ">
-                <h1 className="font-bold text-center md:text-start text-[#15599a]">
+                <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   OBSERVAÇÕES DA OS
                 </h1>
                 <div className="flex flex-col justify-center border border-gray-600 bg-gray-100 h-[300px] w-full lg:w-[600px] items-center overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
@@ -163,7 +163,7 @@ function ModalOS({ info, setModalIsOpen }) {
               </div>
               {info.categoria == "PADRÃO" && (
                 <ConferenciaPadraoOS
-                  conferencias={info.conferencias}
+                  info={info}
                   cliente={info.cliente}
                   index={info.index}
                   saveChanges={saveChanges}

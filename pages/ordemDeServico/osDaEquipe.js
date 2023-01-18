@@ -30,7 +30,7 @@ function OSDaEquipe() {
         <div className="flex flex-col items-center pb-2 border-b border-gray-200">
           <h1 className="text-center font-bold text-[#15599a]">MINHAS OSs</h1>
         </div>
-        {ordensDeServico ? (
+        {ordensDeServico.length > 0 ? (
           <div className="flex  justify-around gap-3 mt-4 flex-wrap">
             {ordensDeServico.map((item, i) => (
               <div
@@ -60,7 +60,7 @@ function OSDaEquipe() {
             ))}
           </div>
         ) : (
-          <p className="text-center italic text-gray-500 text-xs pb-2 border-b border-gray-200">
+          <p className="text-center italic text-gray-500 text-xs mt-4">
             SEM ORDENS DE SERVIÇO ATIVAS PARA SUA EQUIPE...
           </p>
         )}

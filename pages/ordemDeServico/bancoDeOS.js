@@ -4,6 +4,7 @@ import OSControlCard from "../../components/OSControlCard";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
+import Link from "next/link";
 function BancoDeOS({ credentials, setCredentials }) {
   const router = useRouter();
   const [oss, setOSs] = useState([]);
@@ -200,6 +201,11 @@ function BancoDeOS({ credentials, setCredentials }) {
           />
         ))}
       </div>
+      <Link href={"/ordemDeServico/controleDeOS"}>
+        <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">OSs EM ABERTO</p>
+        </a>
+      </Link>
     </div>
   );
 }

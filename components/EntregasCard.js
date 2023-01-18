@@ -1,7 +1,8 @@
 import axios from "axios";
-import React, { useState } from "react";
-
+import React, { useContext, useState } from "react";
+import { AppContext } from "../context/AppContext";
 function EntregasCard({ project }) {
+  const { credentials } = useContext(AppContext);
   const [prevEntrega, setPrevEntrega] = useState(
     project.compra.previsaoEntrega
   );
@@ -11,20 +12,30 @@ function EntregasCard({ project }) {
     color: "",
   });
   async function handleChanges() {
-    axios
-      .post(`/api/projects/update/${project._id}`, {
-        "compra.previsaoEntrega": prevEntrega,
-        "compra.dataEntrega": dataEntrega,
-      })
-      .then((res) => {
-        setMsg({ text: "Alterações feitas", color: "text-green-500" });
-      })
-      .catch((err) =>
-        setMsg({
-          text: "Um erro ocorreu, por favor tente novamente",
-          color: "text-red-500",
+    if (
+      credentials.visualizacao == "REGIONAL" ||
+      credentials.visualizacao == "VENDEDOR"
+    ) {
+      setMsg({
+        text: "Seu usuário não tem permisssão de alteração nesse área.",
+        color: "text-red-500",
+      });
+    } else {
+      axios
+        .post(`/api/projects/update/${project._id}`, {
+          "compra.previsaoEntrega": prevEntrega,
+          "compra.dataEntrega": dataEntrega,
         })
-      );
+        .then((res) => {
+          setMsg({ text: "Alterações feitas", color: "text-green-500" });
+        })
+        .catch((err) =>
+          setMsg({
+            text: "Um erro ocorreu, por favor tente novamente",
+            color: "text-red-500",
+          })
+        );
+    }
   }
   return (
     <>

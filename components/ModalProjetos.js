@@ -1401,17 +1401,17 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "projeto.dataLiberacaoDocumentacao": new Date(
-                          value
-                        ).toISOString(),
+                        "projeto.dataLiberacaoDocumentacao": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         projeto: {
                           ...infoHolder.projeto,
-                          dataLiberacaoDocumentacao: new Date(
-                            value
-                          ).toISOString(),
+                          dataLiberacaoDocumentacao: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -1430,15 +1430,17 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "projeto.dataAssDocumentacao": new Date(
-                          value
-                        ).toISOString(),
+                        "projeto.dataAssDocumentacao": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         projeto: {
                           ...infoHolder.projeto,
-                          dataAssDocumentacao: new Date(value).toISOString(),
+                          dataAssDocumentacao: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -1493,15 +1495,17 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "parecer.dataParecerDeAcesso": new Date(
-                          value
-                        ).toISOString(),
+                        "parecer.dataParecerDeAcesso": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         parecer: {
                           ...infoHolder.parecer,
-                          dataParecerDeAcesso: new Date(value).toISOString(),
+                          dataParecerDeAcesso: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -1737,13 +1741,17 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "vistoria.dataPedido": new Date(value).toISOString(),
+                        "vistoria.dataPedido": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         vistoria: {
                           ...infoHolder.vistoria,
-                          dataPedido: new Date(value).toISOString(),
+                          dataPedido: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -1796,13 +1804,17 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "medidor.data": new Date(value).toISOString(),
+                        "medidor.data": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         medidor: {
                           ...infoHolder.medidor,
-                          data: new Date(value).toISOString(),
+                          data: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -2334,13 +2346,17 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "obra.entrada": new Date(value).toISOString(),
+                        "obra.entrada": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         obra: {
                           ...infoHolder.obra,
-                          entrada: new Date(value).toISOString(),
+                          entrada: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}
@@ -2359,13 +2375,17 @@ function ModalProjetos({
                     handleChange={(value) => {
                       setChanges({
                         ...changes,
-                        "obra.saida": new Date(value).toISOString(),
+                        "obra.saida": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
                       });
                       setInfo({
                         ...infoHolder,
                         obra: {
                           ...infoHolder.obra,
-                          saida: new Date(value).toISOString(),
+                          saida: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
                         },
                       });
                     }}

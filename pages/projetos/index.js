@@ -163,16 +163,6 @@ function Projetos() {
     }
     return totalSum.toFixed(2);
   }
-  useEffect(() => {
-    if (
-      !credentials.accessibleRoutes.includes("Projetos") &&
-      !credentials.accessibleRoutes.includes("Pós-Venda")
-    ) {
-      router.push("/");
-    } else {
-      getProjects(credentials);
-    }
-  }, []);
   function getBorderColorByParecer(date1, date2) {
     var timeDiff = Math.abs(date2.getTime() - date1.getTime());
     var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -197,6 +187,16 @@ function Projetos() {
       setModalIsOpen(true);
     });
   }
+  useEffect(() => {
+    if (
+      !credentials.accessibleRoutes.includes("Projetos") &&
+      !credentials.accessibleRoutes.includes("Pós-Venda")
+    ) {
+      router.push("/");
+    } else {
+      getProjects(credentials);
+    }
+  }, []);
   return (
     <div className="p-6 grow">
       <div className="flex flex-col justify-between items-center  gap-2 border-b border-gray-200 p-1">

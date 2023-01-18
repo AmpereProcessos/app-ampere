@@ -11,6 +11,7 @@ import xml2js from "xml2js";
 import * as XLSX from "xlsx";
 function Teste() {
   const [file, setFile] = useState();
+  const [month, setMonth] = useState();
   const [instalacoes, setInstalacoes] = useState({});
   const [pdfMode, setPDFMode] = useState(false);
   function handleFileConvertion() {
@@ -36,8 +37,9 @@ function Teste() {
       };
     });
     promise.then((d) => {
+      console.log(d);
       var newArr = d.filter(
-        (item) => item.Período == dayjs().format("MM/YYYY")
+        (item) => item.Período == dayjs(month).format("MM/YYYY") //dayjs().format("MM/YYYY")
       );
       var mappedArr = newArr.map((item) => {
         return {
@@ -77,7 +79,7 @@ function Teste() {
           var json = JSON.stringify(result, null, 4);
           var newArr = JSON.parse(json);
           newArr = newArr.Relatorio_gd.Linha.filter(
-            (item) => item.Periodo == dayjs().format("YYYY/MM")
+            (item) => item.Periodo == dayjs(month).format("YYYY/MM")
           );
           var mappedArr = newArr.map((item) => {
             return {
@@ -105,15 +107,20 @@ function Teste() {
   async function handleFileInput() {
     // xlsx application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
     // xml text/xml
-    if (
-      file?.type ==
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    ) {
-      readExcel(file);
-    } else if (file?.type == "text/xml") {
-      readXML(file);
+    if (month == null || month == {}) {
+      alert("MÊS DE ANÁLISE INVÁLIDO");
+      return;
     } else {
-      alert("FORMATO INVÁLIDO");
+      if (
+        file?.type ==
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ) {
+        readExcel(file);
+      } else if (file?.type == "text/xml") {
+        readXML(file);
+      } else {
+        alert("FORMATO INVÁLIDO");
+      }
     }
   }
   function formatPeriodo(periodo) {
@@ -177,7 +184,7 @@ function Teste() {
     return color;
   }
   console.log(instalacoes);
-  console.log(dayjs().format("YYYY/MM"));
+  console.log(dayjs(month).format("MM/YYYY"));
   return (
     <div className="grow bg-zinc-100 p-4">
       <div className="flex flex-col items-center">
@@ -218,6 +225,12 @@ function Teste() {
                 accept=".xlsx, .xml"
               />
             </div>
+            <input
+              className="outline-none bg-transparent p-1 border border-gray-200"
+              type={"month"}
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
+            />
             <button
               className="p-2 text-xs rounded border-2 border-[#15599a] text-[#15599a] font-bold hover:border-0 hover:bg-[#15599a] hover:text-white"
               onClick={() => handleFileInput()}

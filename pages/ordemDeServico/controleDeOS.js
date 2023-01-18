@@ -3,9 +3,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { BsFillSaveFill } from "react-icons/bs";
 import { equipesTecnicas } from "../../utils/constants";
 import { AppContext } from "../../context/AppContext";
-import ModalOS from "../../components/ModalOS";
 import connectToDatabase from "../../utils/projectsDb";
 import axios from "axios";
+import Link from "next/link";
 const groupBy = (key) => (array) =>
   array.reduce((objectsByKeyValue, obj) => {
     const value = obj[key];
@@ -15,13 +15,7 @@ const groupBy = (key) => (array) =>
 const groupByEquipe = groupBy("equipe");
 function ControleDeOSs({ arr }) {
   const { credentials } = useContext(AppContext);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalOS, setModalOS] = useState({});
   const [groupedByEquipe, setGroupedByEquipe] = useState([]);
-  function handleOpenModal(os) {
-    setModalIsOpen(true);
-    setModalOS(os);
-  }
   function saveChanges(id, index, change) {
     console.log(id, index, change);
     axios.post(`/api/projects/update/${id}`, {
@@ -36,54 +30,12 @@ function ControleDeOSs({ arr }) {
     <div className="flex flex-col p-6 grow bg-[#fff]">
       <div className="flex flex-col items-center pb-2 border-b border-gray-200">
         <h1 className="text-[#15599a] font-bold text-xl">
-          {credentials.visualizacao == "OBRAS" ? "MINHAS OSs" : "OSs EM ABERTO"}
+          ORDENS DE SERVIÇO EM ABERTO
         </h1>
       </div>
       <div className="flex justify-around gap-3 mt-4 flex-wrap">
         {credentials.visualizacao == "OBRAS" ? (
           <div className="flex flex-col">
-            <div className="flex flex-col">
-              {groupedByEquipe[credentials.equipe] ? (
-                <div className="flex  justify-around gap-3 mt-4 flex-wrap">
-                  {groupedByEquipe[credentials.equipe].map((item, i) => (
-                    <div
-                      key={i}
-                      onClick={() => handleOpenModal(item)}
-                      className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
-                    >
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs text-gray-700">
-                          {item.nomeDoContrato}
-                        </p>
-                        <p className="text-xs text-[#15599a]">#{item.qtde}</p>
-                      </div>
-                      <div className="flex items-center justify-between mt-3">
-                        <div className="flex flex-col items-center">
-                          <span className="text-xxs text-center">
-                            CATEGORIA
-                          </span>
-                          <p className="text-xs text-gray-600 text-center">
-                            {item.categoria ? item.categoria : "-"}
-                          </p>
-                        </div>
-                        <div className="flex flex-col items-center">
-                          <span className="text-xxs text-center">SERVIÇO</span>
-                          <p className="text-xs text-gray-600 text-center">
-                            {item.servicoExecutado
-                              ? item.servicoExecutado
-                              : "-"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-center italic text-gray-500 text-xs pb-2 border-b border-gray-200">
-                  SEM ORDENS DE SERVIÇO ATIVAS PARA SUA EQUIPE...
-                </p>
-              )}
-            </div>
             <div className="flex flex-col mt-5">
               <h1 className="text-[#15599a] font-bold text-xl text-center">
                 AINDA NÃO DESIGNADAS
@@ -229,9 +181,11 @@ function ControleDeOSs({ arr }) {
           ))
         )}
       </div>
-      {modalIsOpen && (
-        <ModalOS info={modalOS} setModalIsOpen={setModalIsOpen} />
-      )}
+      <Link href={"/ordemDeServico/osDaEquipe"}>
+        <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">MINHAS OSs</p>
+        </a>
+      </Link>
     </div>
   );
 }

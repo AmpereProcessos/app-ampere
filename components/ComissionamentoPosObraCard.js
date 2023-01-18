@@ -1,24 +1,51 @@
 import axios from "axios";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AppContext } from "../context/AppContext";
 import DateInput from "./DateInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 
 function ComissionamentoPosObraCard({ project }) {
+  const { credentials } = useContext(AppContext);
   const [info, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
   const [msg, setMsg] = useState({ text: "", color: "" });
   function handleChanges() {
-    if (info.jornada?.entregaTecnica == true) {
-      if (
-        info.jornada?.tipoEntregaTecnica == undefined ||
-        info.jornada?.tipoEntregaTecnica == "NÃO DEFINIDO"
-      ) {
-        setMsg({
-          text: "Por favor, preencha o tipo de visita técnica",
-          color: "text-red-500",
-        });
+    if (
+      credentials.visualizacao == "REGIONAL" ||
+      credentials.visualizacao == "VENDEDOR"
+    ) {
+      setMsg({
+        text: "Seu usuário não tem permissão de alteração nessa área.",
+        color: "text-red-500",
+      });
+    } else {
+      if (info.jornada?.entregaTecnica == true) {
+        if (
+          info.jornada?.tipoEntregaTecnica == undefined ||
+          info.jornada?.tipoEntregaTecnica == "NÃO DEFINIDO"
+        ) {
+          setMsg({
+            text: "Por favor, preencha o tipo de visita técnica",
+            color: "text-red-500",
+          });
+        } else {
+          axios
+            .post(`/api/projects/update/${project._id}`, changes)
+            .then((res) => {
+              setMsg({
+                text: "Alterações feitas !",
+                color: "text-green-400",
+              });
+            })
+            .catch((err) =>
+              setMsg({
+                text: "Houve um erro na alterações, por favor tente novamente",
+                color: "text-red-500",
+              })
+            );
+        }
       } else {
         axios
           .post(`/api/projects/update/${project._id}`, changes)
@@ -35,21 +62,6 @@ function ComissionamentoPosObraCard({ project }) {
             })
           );
       }
-    } else {
-      axios
-        .post(`/api/projects/update/${project._id}`, changes)
-        .then((res) => {
-          setMsg({
-            text: "Alterações feitas !",
-            color: "text-green-400",
-          });
-        })
-        .catch((err) =>
-          setMsg({
-            text: "Houve um erro na alterações, por favor tente novamente",
-            color: "text-red-500",
-          })
-        );
     }
   }
   function getBorderColor(diff) {
@@ -85,9 +97,7 @@ function ComissionamentoPosObraCard({ project }) {
       <div className="col-span-9 flex flex-col row-span-5">
         <div className="flex items-center justify-center gap-4">
           <div className="flex flex-col items-center">
-            <p className="text-xs text-gray-600 text-[#15599a] font-bold">
-              TROCA DO MEDIDOR
-            </p>
+            <p className="text-xs text-[#15599a] font-bold">TROCA DO MEDIDOR</p>
             <p className="text-xs text-gray-600">
               {info.medidor.data
                 ? dayjs(info.medidor.data).add(4, "hours").format("DD/MM/YYYY")
@@ -95,9 +105,7 @@ function ComissionamentoPosObraCard({ project }) {
             </p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="text-xs text-gray-600 text-[#15599a] font-bold">
-              SAÍDA DE OBRA
-            </p>
+            <p className="text-xs text-[#15599a] font-bold">SAÍDA DE OBRA</p>
             <p className="text-xs text-gray-600">
               {info.obra.saida
                 ? dayjs(info.obra.saida).add(4, "hours").format("DD/MM/YYYY")

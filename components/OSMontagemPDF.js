@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Assinatura from "../utils/assinatura.jpg";
 import Logo from "../utils/whitelogo.png";
-function ServiceOrderPDF({
+function OSMontagemPDF({
   info,
   openingDate,
   urgency,
@@ -270,4 +270,4 @@ function ServiceOrderPDF({
   );
 }
 
-export default ServiceOrderPDF;
+export default OSMontagemPDF;

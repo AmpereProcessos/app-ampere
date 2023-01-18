@@ -47,7 +47,7 @@ function FormVisitaTecnicaRural({
       });
       return false;
     }
-    if (dados.numeroMedidor == "" || dados.numeroMedidor == 0) {
+    if (dados.numeroMedidor.trim().length < 5) {
       setMsg({
         text: "Por favor, preencha o número do medidor.",
         color: "text-red-500",
@@ -424,12 +424,12 @@ function FormVisitaTecnicaRural({
             ]}
             handleChange={(value) => setDados({ ...dados, amperagem: value })}
           />
-          <NumberInput
+          <TextInput
             label={"NÚMERO DO MEDIDOR"}
             editable={true}
             value={dados.numeroMedidor}
             handleChange={(value) =>
-              setDados({ ...dados, numeroMedidor: Number(value) })
+              setDados({ ...dados, numeroMedidor: value })
             }
           />
         </div>

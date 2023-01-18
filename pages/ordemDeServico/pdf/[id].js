@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import connectToDatabase from "../../../utils/projectsDb";
-import ServiceOrderPDF from "../../../components/OrdemServicoPDF";
+import ServiceOrderPDF from "../../../components/OSMontagemPDF";
 import PadraoOS from "../../../components/PadraoOS";
-import PreventivaOSPDF from "../../../components/PreventivaOS";
+import PreventivaOS from "../../../components/PreventivaOS";
 import Logo from "../../../utils/whitelogo.png";
 import Image from "next/image";
 import { ObjectId } from "mongodb";
-import EstruturaOSPDF from "../../../components/EstruturaOS";
-import OSCorretivaPDF from "../../../components/OSCorretivaPDF";
+import EstruturaOS from "../../../components/EstruturaOS";
+import OSCorretiva from "../../../components/OSCorretivaPDF";
 function OSInfo({ info, index }) {
   const [pdfVisible, setPdfVisible] = useState(false);
   const [osInfo, setosInfo] = useState(info);
@@ -33,7 +33,7 @@ function OSInfo({ info, index }) {
         />
       )}
       {osInfo.ordensDeServico[index].categoria == "MANUTENÇÃO PREVENTIVA" && (
-        <PreventivaOSPDF
+        <PreventivaOS
           info={osInfo}
           openingDate={osInfo.ordensDeServico[index].dataDeAbertura}
           urgencia={osInfo.ordensDeServico[index].grauDeUrgencia}
@@ -46,7 +46,7 @@ function OSInfo({ info, index }) {
         />
       )}
       {osInfo.ordensDeServico[index].categoria == "ESTRUTURA" && (
-        <EstruturaOSPDF
+        <EstruturaOS
           info={osInfo}
           observacoesOS={osInfo.ordensDeServico[index].observacoes}
           servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
@@ -54,7 +54,7 @@ function OSInfo({ info, index }) {
       )}
       {(osInfo.ordensDeServico[index].categoria == "MANUTENÇÃO CORRETIVA" ||
         osInfo.ordensDeServico[index].categoria == "OUTROS") && (
-        <OSCorretivaPDF
+        <OSCorretiva
           info={osInfo}
           categoria={osInfo.ordensDeServico[index].categoria}
           observacoesOS={osInfo.ordensDeServico[index].observacoes}

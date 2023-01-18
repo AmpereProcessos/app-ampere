@@ -95,6 +95,24 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
         })
       );
   }
+  function rejectVisita() {
+    setDados({ ...dados, status: "REJEITADA" });
+    axios
+      .put("/api/solicitacoes/visitaTecnica", {
+        _id: dados._id,
+        status: "REJEITADA",
+      })
+      .then((res) => {
+        setMessage({ text: "Alterações feitas", color: "text-green-500" });
+        handleUpdates();
+      })
+      .catch((err) =>
+        setMessage({
+          text: "Houve um erro, por favor tente novamente.",
+          color: "text-red-500",
+        })
+      );
+  }
   function concludeVisita() {
     setDados({ ...dados, status: "CONCLUIDO" });
     axios
@@ -200,6 +218,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     PENDÊNCIA COMERCIAL
                   </option>
                   <option value="VISITA IN LOCO">VISITA IN LOCO</option>
+                  <option value="REJEITADA">REJEITADA</option>
                   <option value="NÃO DEFINIDO">NÃO DEFINIDO</option>
                 </select>
                 <button
@@ -2579,6 +2598,17 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
               </Link>
             </div>
             <div className="w-full flex items-center justify-center gap-2">
+              {dados.status != "REJEITADA" && (
+                <div className="flex justify-center">
+                  <button
+                    onClick={rejectVisita}
+                    className="p-2 rounded bg-red-300 hover:bg-red-500 text-white font-bold"
+                  >
+                    REJEITAR SOLICITAÇÃO
+                  </button>
+                </div>
+              )}
+
               {!dados.solicitacaoContrato && (
                 <Link
                   href={`/publico/formSolicitacao?cliente=${dados.nomeDoCliente}-${dados.codigoSVB}&id=${dados._id}`}

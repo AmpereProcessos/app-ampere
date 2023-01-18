@@ -81,7 +81,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
         }
       });
   }
-  /*
+
   function saveChanges() {
     axios
       .put("/api/solicitacoes/visitaTecnica", dados)
@@ -96,6 +96,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
         })
       );
   }
+  /*
   function concludeVisita() {
     setDados({ ...dados, status: "CONCLUIDO" });
     axios
@@ -201,6 +202,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     PENDÊNCIA COMERCIAL
                   </option>
                   <option value="VISITA IN LOCO">VISITA IN LOCO</option>
+                  <option value="REJEITADA">REJEITADA</option>
                   <option value="NÃO DEFINIDO">NÃO DEFINIDO</option>
                 </select>
               </div>
@@ -210,6 +212,14 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
               </p>
             )}
             <div className="flex items-center justify-around gap-x-2">
+              {msg.text && <p className={`italic ${msg.color}`}>{msg.text}</p>}
+              <button
+                onClick={saveChanges}
+                className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm w-fit"
+              >
+                <p>Salvar alterações</p>
+                <FaSave />
+              </button>
               <button>
                 <VscChromeClose
                   onClick={() => setModalIsOpen(false)}
@@ -234,7 +244,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <TextInput
                   label={"TELEFONE DO CLIENTE"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.telefoneDoCliente}
                   handleChange={(value) =>
                     setDados({
@@ -253,7 +263,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <SelectInput
                   label={"CIDADE"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.cidade}
                   options={[
                     { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -267,7 +277,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <TextInput
                   label={"CEP"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.cep}
                   handleChange={(value) =>
                     setDados({ ...dados, cep: formatCEP(value) })
@@ -275,7 +285,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <TextInput
                   label={"BAIRRO"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.bairro}
                   handleChange={(value) =>
                     setDados({ ...dados, bairro: value.toUpperCase() })
@@ -283,7 +293,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <TextInput
                   label={"LOGRADOURO"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.logradouro}
                   handleChange={(value) =>
                     setDados({ ...dados, logradouro: value.toUpperCase() })
@@ -291,7 +301,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <NumberInput
                   label={"N°RESIDÊNCIA"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.numeroResidencia}
                   handleChange={(value) =>
                     setDados({ ...dados, numeroResidencia: Number(value) })
@@ -304,7 +314,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
               <div className="flex gap-2 justify-around flex-wrap mt-2">
                 <SelectInput
                   label={"TIPO DE INVERSOR"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.tipoInversor}
                   options={[
                     { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -317,7 +327,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <NumberInput
                   label={"QTDE DE INVERSORES"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.qtdeInversor}
                   handleChange={(value) =>
                     setDados({ ...dados, qtdeInversor: Number(value) })
@@ -325,7 +335,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <NumberInput
                   label={"POTÊNCIA DO INVERSOR"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   unit={"W"}
                   value={dados.potInversor}
                   handleChange={(value) =>
@@ -334,7 +344,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <TextInput
                   label={"MARCA DO INVERSOR"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.marcaInversor}
                   handleChange={(value) =>
                     setDados({ ...dados, marcaInversor: value.toUpperCase() })
@@ -342,7 +352,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <NumberInput
                   label={"QTDE DE MODULOS"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.qtdeModulos}
                   handleChange={(value) =>
                     setDados({ ...dados, qtdeModulos: Number(value) })
@@ -350,7 +360,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <NumberInput
                   label={"POTÊNCIA DOS MÓDULOS"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.potModulos}
                   handleChange={(value) =>
                     setDados({ ...dados, potModulos: Number(value) })
@@ -358,7 +368,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <TextInput
                   label={"MARCA DOS MÓDULOS"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.marcaModulos}
                   handleChange={(value) =>
                     setDados({ ...dados, marcaModulos: value.toUpperCase() })
@@ -382,7 +392,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
               <div className="flex gap-2 justify-around flex-wrap mt-2">
                 <SelectInput
                   label={"TIPO DE LAUDO"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.tipoDeLaudo}
                   options={[
                     { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -405,7 +415,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <SelectInput
                   label={"TIPO DE SOLICITAÇÃO"}
-                  editable={false}
+                  editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.tipoDeSolicitacao}
                   options={[
                     { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -450,7 +460,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
                     <SelectInput
                       label={"AMPERAGEM"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.amperagem}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -473,7 +483,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"TIPO DO DISJUNTOR"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.tipoDisjuntor}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -491,7 +501,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <TextInput
                       label={"NÚMERO DO MEDIDOR"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.numeroMedidor}
                       handleChange={(value) =>
                         setDados({ ...dados, numeroMedidor: value })
@@ -500,7 +510,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     <TextInput
                       label={"PARA PADRÕES CONJUGADOS"}
                       placeholder="ESCREVA: CAIXA 1 - APD1111111 - 40A MONOFÁSICO/ CAIXA 2 - APD222222 - 60A BIFÁSICO ..."
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.infoPadraoConjugado}
                       handleChange={(value) =>
                         setDados({
@@ -511,7 +521,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"RAMAL DE ENTRADA"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.ramalEntrada}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -524,7 +534,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"RAMAL DE SAÍDA"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.ramalSaida}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -537,7 +547,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"EM RELAÇÃO A CASA DO CLIENTE, O PADRÃO ESTÁ:"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.tipoPadrao}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -556,7 +566,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <NumberInput
                       label={"NÚMERO DO POSTE (SOMENTE P/GOIÁS)"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.numeroPoste ? dados.numeroPoste : ""}
                       handleChange={(value) =>
                         setDados({ ...dados, numeroPoste: Number(value) })
@@ -571,7 +581,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
                     <SelectInput
                       label={"ESTRUTURA DE MONTAGEM"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.estruturaMontagem}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -594,7 +604,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"TIPO DA ESTRUTURA"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.tipoEstrutura}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -607,7 +617,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"TIPO DE PAREDE PARA FIXAÇÃO DOS INVERSORES"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={
                         dados.tipoFixacaoInversores
                           ? dados.tipoFixacaoInversores
@@ -629,7 +639,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"TIPO DA TELHA (EXEMPLO ABAIXO)"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.tipoTelha}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -650,7 +660,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"CLIENTE POSSUI TELHAS RESERVAS"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.telhasReservas}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -663,7 +673,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <TextInput
                       label={"LINK FOTOS DO DRONE"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       placeholder="TENDO MAIS DE UM TELHADO APTO ESCREVER MAIS DE UMA"
                       normalCase={true}
                       value={dados.fotosDrone}
@@ -674,7 +684,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     <TextInput
                       label={"ORIENTAÇÃO DO TELHADO (EX:10°NORTE)"}
                       placeholder="TENDO MAIS DE UM TELHADO APTO ESCREVER MAIS DE UMA"
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.orientacaoEstrutura}
                       handleChange={(value) =>
                         setDados({ ...dados, orientacaoEstrutura: value })
@@ -689,7 +699,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
                     <SelectInput
                       label={"LOCAL DE INSTALAÇÃO DO INVERSOR"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={
                         dados.localInstalacaoInversor
                           ? dados.localInstalacaoInversor
@@ -714,7 +724,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       label={
                         "DISTÂNCIA MÉDIA DO SISTEMA FOTOVOLTAICO ATÉ O QUADRO DE DISTRIBUIÇÃO"
                       }
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.distanciaSistemaQuadro}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -731,7 +741,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <SelectInput
                       label={"DISTÂNCIA MÉDIA DO INVERSOR ATÉ O ROTEADOR"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={dados.distanciaInversorRoteador}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -748,7 +758,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       label={
                         "LOCAL DO ATERRAMENTO DO SISTEMA (SOMENTE P/GOIÁS)"
                       }
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={
                         dados.localAterramento ? dados.localAterramento : ""
                       }
@@ -789,7 +799,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
                       <SelectInput
                         label={"DISJUNTOR DO PADRÃO"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.tipoDisjuntor}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -802,7 +812,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"AMPERAGEM"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.amperagem}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -829,7 +839,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"NÚMERO DO MEDIDOR"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.numeroMedidor}
                         handleChange={(value) =>
                           setDados({ ...dados, numeroMedidor: value })
@@ -844,7 +854,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
                       <SelectInput
                         label={"PADRÃO E TRANSFORMADOR ACOPLADOS"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={
                           dados.padraoTrafoAcoplados
                             ? dados.padraoTrafoAcoplados
@@ -862,7 +872,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       <NumberInput
                         label={"POTÊNCIA DO TRANSFORMADOR"}
                         unit={"kVA"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.potTrafo ? dados.potTrafo : ""}
                         handleChange={(value) =>
                           setDados({ ...dados, potTrafo: Number(value) })
@@ -870,7 +880,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"NÚMERO DO TRANSFORMADOR"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.numeroTrafo}
                         handleChange={(value) =>
                           setDados({ ...dados, numeroTrafo: value })
@@ -878,7 +888,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"NÚMERO POSTE DO TRANSFORMADOR"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.numeroPosteTrafo}
                         handleChange={(value) =>
                           setDados({ ...dados, numeroPosteTrafo: value })
@@ -886,7 +896,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"PENDÊNCIAS"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={
                           dados.pendenciasTrafo
                             ? dados.pendenciasTrafo
@@ -910,7 +920,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     <div className="flex gap-2 items-center justify-around flex-wrap mt-4">
                       <SelectInput
                         label={"TIPO DE ESTRUTURA - MONTAGEM DOS MÓDULOS"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.estruturaMontagem}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -934,7 +944,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"ORIENTAÇÃO DA MONTAGEM DOS MÓDULOS"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.orientacaoEstrutura}
                         handleChange={(value) =>
                           setDados({
@@ -945,7 +955,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"TIPO DA ESTRUTURA"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.tipoEstrutura}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -962,7 +972,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"TIPO DA TELHA"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.tipoTelha}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -985,7 +995,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"CLIENTE POSSUI TELHAS RESERVAS"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.telhasReservas}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -999,7 +1009,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"LOCAL DE MONTAGEM DO INVERSOR"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.localInstalacaoInversor}
                         handleChange={(value) =>
                           setDados({
@@ -1010,7 +1020,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"DISTÂNCIA DOS MÓDULOS ATÉ OS INVERSORES"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={
                           dados.distanciaModulosInversores
                             ? dados.distanciaModulosInversores
@@ -1025,7 +1035,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"DISTÂNCIA DOS INVERSORES ATÉ O PADRÃO"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.distanciaInversorPadrao}
                         handleChange={(value) =>
                           setDados({ ...dados, distanciaInversorPadrao: value })
@@ -1033,7 +1043,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"DISTÂNCIA MÉDIA DO INVERSOR ATÉ O ROTEADOR"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.distanciaInversorRoteador}
                         handleChange={(value) =>
                           setDados({
@@ -1044,7 +1054,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <TextInput
                         label={"LINK PARA FOTOS DO DRONE"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.fotosDrone}
                         handleChange={(value) =>
                           setDados({
@@ -1062,7 +1072,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     <div className="flex gap-2 items-center justify-around flex-wrap mt-4">
                       <SelectInput
                         label={"CASA DE MÁQUINAS"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={
                           dados.casaDeMaquinas
                             ? dados.casaDeMaquinas
@@ -1086,7 +1096,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"ALAMBRADO"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={
                           dados.alambrado ? dados.alambrado : "NÃO DEFINIDO"
                         }
@@ -1108,7 +1118,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"BRITAGEM"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={dados.britagem ? dados.britagem : "NÃO DEFINIDO"}
                         options={[
                           { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1128,7 +1138,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"CONSTRUÇÃO DE BARRACÃO"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={
                           dados.construcaoBarracao
                             ? dados.construcaoBarracao
@@ -1152,7 +1162,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"INSTALAÇÃO DE ROTEADOR"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={
                           dados.instalacaoRoteador
                             ? dados.instalacaoRoteador
@@ -1176,7 +1186,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"REDE PARA RELIGAÇÃO DA FAZENDA"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={
                           dados.redeReligacao
                             ? dados.redeReligacao
@@ -1200,7 +1210,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"LIMPEZA DO LOCAL DA USINA DE SOLO"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={
                           dados.limpezaLocalUsinaSolo
                             ? dados.limpezaLocalUsinaSolo
@@ -1224,7 +1234,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       />
                       <SelectInput
                         label={"TERRAPLANAGEM PARA USINA DE SOLO"}
-                        editable={false}
+                        editable={dados.status == "REJEITADA" ? true : false}
                         value={
                           dados.terraplanagemUsinaSolo
                             ? dados.terraplanagemUsinaSolo
@@ -1279,7 +1289,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex items-center justify-center mt-2">
                     <SelectInput
                       label="TIPO DE DESENHO"
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={
                         dados.tipoDesenho ? dados.tipoDesenho : "NÃO DEFINIDO"
                       }
@@ -1330,7 +1340,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex gap-2 justify-around flex-wrap mt-2">
                     <SelectInput
                       label={"TIPO DE ORÇAMENTAÇÃO"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={
                         dados.tipoOrcamentacao
                           ? dados.tipoOrcamentacao
@@ -1407,7 +1417,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 <div className="w-full flex items-center justify-center gap-2 flex-wrap">
                   <SelectInput
                     label={"ESPAÇO NO QGBT"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={dados.espacoQGBT ? dados.espacoQGBT : "NÃO DEFINIDO"}
                     options={[
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1420,7 +1430,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"ADAPTAÇÃO NO QGBT"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.adaptacaoQGBT ? dados.adaptacaoQGBT : "NÃO DEFINIDO"
                     }
@@ -1438,7 +1448,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"AVALIAR TELHADO"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.avaliarTelhado
                         ? dados.avaliarTelhado
@@ -1455,7 +1465,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"DPS NO QGBT"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={dados.dpsQGBT ? dados.dpsQGBT : "NÃO DEFINIDO"}
                     options={[
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1468,7 +1478,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"INFRA PARA LANÇAMENTOS DE CABOS"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={dados.infraCabos ? dados.infraCabos : "NÃO DEFINIDO"}
                     options={[
                       { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1482,7 +1492,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <TextInput
                     label={"DISTÂNCIA ITBA À ZONA RURAL"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={dados.distanciaItbaRural}
                     handleChange={(value) =>
                       setDados({ ...dados, distanciaItbaRural: value })
@@ -1490,7 +1500,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <TextInput
                     label={"DISTÂNCIA DO SISTEMA AO INVERSOR"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={dados.distanciaSistemaInversor}
                     handleChange={(value) =>
                       setDados({ ...dados, distanciaSistemaInversor: value })
@@ -1498,7 +1508,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"REALIMENTAR A FAZENDA ?"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.realimentar ? dados.realimentar : "NÃO DEFINIDO"
                     }
@@ -1513,7 +1523,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"TEM ESTUDO DE CASO?"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.temEstudoDeCaso
                         ? dados.temEstudoDeCaso
@@ -1554,7 +1564,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 <div className="w-full grid items-center grid-cols-4">
                   <SelectInput
                     label={"INSUMO"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={suprimentoHolder.insumo}
                     options={Object.keys(suprimentoOption).map((key) => {
                       return { label: key, value: key };
@@ -1570,7 +1580,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"TIPO"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={suprimentoHolder.tipo}
                     options={suprimentoOption[suprimentoHolder.insumo].tipo.map(
                       (tipo) => {
@@ -1586,7 +1596,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <NumberInput
                     label={"QUANTIDADE"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={suprimentoHolder.qtde}
                     handleChange={(value) =>
                       setSuprimentoHolder({
@@ -1656,7 +1666,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 <div className="flex items-center justify-around flex-wrap">
                   <SelectInput
                     label={"CONCESSIONÁRIA"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.concessionaria
                         ? dados.concessionaria
@@ -1674,7 +1684,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"TIPO DE PROJETO"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.tipoProjeto ? dados.tipoProjeto : "NÃO DEFINIDO"
                     }
@@ -1691,7 +1701,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"MODELO DA CAIXA"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.modeloCaixa ? dados.modeloCaixa : "NÃO DEFINIDO"
                     }
@@ -1713,7 +1723,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"PENDÊNCIAS"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.pendenciasProjetos
                         ? dados.pendenciasProjetos
@@ -1735,7 +1745,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <TextInput
                     label={"NÚMERO POSTE DE DERIVAÇÃO(GOIÁS)"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={dados.numeroPosteDerivacao}
                     handleChange={(value) =>
                       setDados({ ...dados, numeroPosteDerivacao: value })
@@ -1743,7 +1753,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <NumberInput
                     label={"POTÊNCIA DO FUSÍVEL"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={dados.potFusivel}
                     handleChange={(value) =>
                       setDados({ ...dados, potFusivel: value })
@@ -1751,7 +1761,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"SE AUMENTO, NOVO TIPO DE LIGAÇÃO DO PADRÃO"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.novaLigacaoPadrao
                         ? dados.novaLigacaoPadrao
@@ -1770,7 +1780,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"SE AUMENTO, NOVA AMPERAGEM"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.novaAmperagem ? dados.novaAmperagem : "NÃO DEFINIDO"
                     }
@@ -1791,7 +1801,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label="FOTOS DO DRONE"
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.fotoDroneDesenho
                         ? dados.fotoDroneDesenho
@@ -1808,7 +1818,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label="FOTO CLARA DA FAIXADA"
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.fotoFaixada ? dados.fotoFaixada : "NÃO DEFINIDO"
                     }
@@ -1823,7 +1833,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label="MEDIDAS DO LOCAL"
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.medidasLocal ? dados.medidasLocal : "NÃO DEFINIDO"
                     }
@@ -1838,7 +1848,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label="GOOGLE EARTH"
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.googleEarth ? dados.googleEarth : "NÃO DEFINIDO"
                     }
@@ -1876,7 +1886,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   <div className="flex items-center justify-around">
                     <SelectInput
                       label={"TÓPICO"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={descritivoHolder.topico}
                       options={[
                         { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1893,7 +1903,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     />
                     <TextInput
                       label={"TEXTO"}
-                      editable={false}
+                      editable={dados.status == "REJEITADA" ? true : false}
                       value={descritivoHolder.texto}
                       handleChange={(value) =>
                         setDescritivoHolder({
@@ -1952,7 +1962,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 <div className="flex flex-wrap justify-around gap-2">
                   <SelectInput
                     label={"PADRÃO"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.respostaPadrao
                         ? dados.respostaPadrao
@@ -1970,7 +1980,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"ESPAÇO PARA PROJETO"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.respostaEspacoProjeto
                         ? dados.respostaEspacoProjeto
@@ -1987,7 +1997,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"ESTRUTURA DE INCLINAÇÃO"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.respostaEstruturaInclinacao
                         ? dados.respostaEstruturaInclinacao
@@ -2004,7 +2014,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"POSSUI SOMBRA ?"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.respostaPossuiSombra
                         ? dados.respostaPossuiSombra
@@ -2021,7 +2031,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"MADERAMENTO"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.respostaMaderamento
                         ? dados.respostaMaderamento
@@ -2043,7 +2053,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <SelectInput
                     label={"NECESSÁRIO EXPLICAÇÃO DETALHADA"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.respostaExplicacaoDetalhada
                         ? dados.respostaExplicacaoDetalhada
@@ -2084,7 +2094,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 <div className="grid grid-cols-6 gap-2 items-center">
                   <TextInput
                     label={"DESCRIÇÃO"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={custoAdicionalHolder.descricao}
                     handleChange={(value) =>
                       setCustoAdicionalHolder({
@@ -2095,7 +2105,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <NumberInput
                     label={"QUANTIDADE"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={custoAdicionalHolder.qtde}
                     handleChange={(value) =>
                       setCustoAdicionalHolder({
@@ -2106,7 +2116,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <TextInput
                     label={"GRANDEZA"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={custoAdicionalHolder.grandeza}
                     handleChange={(value) =>
                       setCustoAdicionalHolder({
@@ -2117,7 +2127,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   />
                   <NumberInput
                     label={"VALOR"}
-                    editable={false}
+                    editable={dados.status == "REJEITADA" ? true : false}
                     value={custoAdicionalHolder.valor}
                     handleChange={(value) =>
                       setCustoAdicionalHolder({

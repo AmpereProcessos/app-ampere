@@ -43,7 +43,8 @@ export default async function handler(req, res) {
         },
         {
           $sort: {
-            qtde: 1,
+            "compra.dataEntrega": 1,
+            "compra.previsaoEntrega": 1,
           },
         },
       ])

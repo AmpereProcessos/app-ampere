@@ -17,7 +17,6 @@ export default async function handler(req, res) {
           nomeVendedor: req.body.vendedor,
         })
         .toArray();
-      console.log(arr);
       res.json(arr);
     }
   }

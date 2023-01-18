@@ -38,6 +38,8 @@ function VisitaTecnica({ credentials, setCredentials }) {
       return "bg-cyan-100";
     } else if (statusAprovacao == "VISITA IN LOCO") {
       return "bg-indigo-100";
+    } else if (statusAprovacao == "REJEITADA") {
+      return "bg-red-300";
     } else {
       return "bg-[#fff]";
     }

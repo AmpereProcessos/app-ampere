@@ -20,6 +20,21 @@ function VisitasTecnicas({ setCredentials }) {
         setFilteredForms(res.data);
       });
   }
+  function getCardColor(statusAprovacao) {
+    if (statusAprovacao == "CONCLUIDO") {
+      return "bg-green-100";
+    } else if (statusAprovacao == "EM ANÁLISE TÉCNICA") {
+      return "bg-yellow-100";
+    } else if (statusAprovacao == "PENDÊNCIA COMERCIAL") {
+      return "bg-cyan-100";
+    } else if (statusAprovacao == "VISITA IN LOCO") {
+      return "bg-indigo-100";
+    } else if (statusAprovacao == "REJEITADA") {
+      return "bg-red-300";
+    } else {
+      return "bg-[#fff]";
+    }
+  }
   useEffect(() => {
     setCredentials(credentials);
     getForms();
@@ -39,7 +54,9 @@ function VisitasTecnicas({ setCredentials }) {
               setModalIsOpen(true);
             }}
             key={solicitacao._id}
-            className={`flex flex-col w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
+            className={`flex flex-col w-[250px] lg:w-[450px] cursor-pointer ${getCardColor(
+              solicitacao.status
+            )} border border-gray-200 p-3 hover:bg-blue-100`}
           >
             <div className="flex justify-center">
               <h1 className="text-xs text-[#15599a] font-bold">

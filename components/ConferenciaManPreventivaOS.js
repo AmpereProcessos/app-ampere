@@ -141,7 +141,7 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
             let res = await uploadBytes(imageRef, file);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
             links.push({
-              title: `IRREGULARIDADES (${i + 1})`,
+              title: `PAINÉIS PÓS-LIMPEZA (${i + 1})`,
               link: url,
               format: fileTypes[res.metadata.contentType]
                 ? fileTypes[res.metadata.contentType].title

@@ -8,6 +8,7 @@ function Teste() {
   const [file, setFile] = useState();
   const [month, setMonth] = useState();
   const [nomeInstalacao, setNomeInstalacao] = useState("");
+  const [geracaoInstalacao, setGeracaoInstalacao] = useState("");
   const [instalacoes, setInstalacoes] = useState({});
   const [pdfMode, setPDFMode] = useState(false);
   function handleFileConvertion() {
@@ -15,6 +16,26 @@ function Teste() {
     // const result = excelToJson({ sourceFile: file });
     // console.log(result);
     console.log(reader);
+  }
+  function setNome(nome, mes, geracao, numInstalacao) {
+    if (!nome && !geracao) {
+      return `Instalação ${numInstalacao} (${dayjs(mes).format("MM/YYYY")})`;
+    } else {
+      if (!nome && geracao && geracao != 0) {
+        return `Instalação ${numInstalacao} (${dayjs(mes).format(
+          "MM/YYYY"
+        )}) - ${geracao}kWh gerados`;
+      } else {
+        if (nome && mes && geracao) {
+          return `${nome} (${dayjs(mes).format(
+            "MM/YYYY"
+          )}) - ${geracao}kWh gerados`;
+        }
+        if (nome && mes && !geracao) {
+          return `${nome} (${dayjs(mes).format("MM/YYYY")})`;
+        }
+      }
+    }
   }
   function readExcel(file) {
     const promise = new Promise((resolve, reject) => {
@@ -33,7 +54,6 @@ function Teste() {
       };
     });
     promise.then((d) => {
-      console.log(d);
       var newArr = d.filter(
         (item) => item.Período == dayjs(month).format("MM/YYYY") //dayjs().format("MM/YYYY")
       );
@@ -51,18 +71,15 @@ function Teste() {
           saldoAtual: item["Saldo Atual"],
         };
       });
-      console.log(Object.keys(instalacoes).length);
       setInstalacoes({
         ...instalacoes,
-        [`${
-          nomeInstalacao
-            ? `${nomeInstalacao} (${dayjs(month).format("MM/YYYY")})`
-            : `Instalação ${Object.keys(instalacoes).length + 1} (${dayjs(
-                month
-              ).format("MM/YYYY")})`
-        }`]: mappedArr,
+        [`${setNome(
+          nomeInstalacao,
+          month,
+          geracaoInstalacao,
+          Object.keys(instalacoes).length + 1
+        )}`]: mappedArr,
       });
-      console.log(mappedArr);
       return mappedArr;
     });
   }
@@ -178,6 +195,15 @@ function Teste() {
       </text>
     );
   };
+  function getConsumoInstantaneo(geracaoText, arr) {
+    let geradora = arr.filter((x) => x.modalidade == "Auto consumo-Geradora");
+    let injecao = geradora[0] ? geradora[0].geracao : 0;
+    let geracaoNumber = geracaoText.split("kWh")[0];
+    geracaoNumber = Number(geracaoNumber);
+    console.log(geradora);
+    let consumoInstantaneo = geracaoNumber - injecao;
+    return consumoInstantaneo;
+  }
   function getGraficoData(data) {
     var arr = data.map((item) => {
       return {
@@ -188,11 +214,17 @@ function Teste() {
     return arr;
   }
   function sumEnergiaCompensada(arr) {
-    var sum = 0;
+    var sumEconomizado = 0;
+    var sumCompensada = 0;
     for (let i = 0; i < arr.length; i++) {
-      sum = sum + Number(arr[i].compensacao);
+      let valorkWh = arr[i].valorkWh ? arr[i].valorkWh : 0.75;
+      sumCompensada = sumCompensada + Number(arr[i].compensacao);
+      sumEconomizado = sumEconomizado + Number(arr[i].compensacao) * valorkWh;
     }
-    return sum;
+    return {
+      sumCompensada: sumCompensada,
+      sumEconomizado: sumEconomizado,
+    };
   }
   function sumValorFatura(arr) {
     var sum = 0;
@@ -210,9 +242,10 @@ function Teste() {
       let arr = obj[key];
       // console.log(arr);
       for (let j = 0; j < arr.length; j++) {
+        let valorkWh = arr[j].valorkWh ? arr[j].valorkWh : 0.75;
         let valorFatura = arr[j].valorFatura ? Number(arr[j].valorFatura) : 0;
         let valorEconomizado = arr[j].compensacao
-          ? Number(arr[j].compensacao) * 0.75
+          ? Number(arr[j].compensacao) * valorkWh
           : 0;
         // console.log(valorFatura);
         // console.log(valorEconomizado);
@@ -220,8 +253,6 @@ function Teste() {
         sumEconomizado = sumEconomizado + valorEconomizado;
       }
     }
-    console.log("ECONOMIZADO", sumEconomizado);
-    console.log("FATURAS", sumFatura);
     return {
       faturas: sumFatura,
       economizado: sumEconomizado,
@@ -281,10 +312,17 @@ function Teste() {
             />
             <input
               type="text"
-              className="outline-none bg-transparent py-1 px-2 text-center border border-gray-200"
-              placeholder="Nomeie a instalação..."
+              className="outline-none bg-transparent py-1 px-2 text-center border border-gray-200 w-[300px]"
+              placeholder="NOMEIE A INSTALAÇÃO"
               value={nomeInstalacao}
               onChange={(e) => setNomeInstalacao(e.target.value.toUpperCase())}
+            />
+            <input
+              type="text"
+              className="outline-none bg-transparent py-1 px-2 text-center border border-gray-200 w-[300px]"
+              placeholder="GERAÇÃO MENSAL DA INSTALAÇÃO..."
+              value={geracaoInstalacao}
+              onChange={(e) => setGeracaoInstalacao(Number(e.target.value))}
             />
             <button
               className="p-2 text-xs rounded border-2 border-[#15599a] text-[#15599a] font-bold hover:border-0 hover:bg-[#15599a] hover:text-white"
@@ -305,10 +343,10 @@ function Teste() {
           {Object.keys(instalacoes).length > 0 && (
             <div className="grid grid-cols-2">
               <div className="grid grid-cols-2">
-                <div className="bg-[#fead61] flex items-center justify-center text-center font-bold border-r border-gray-600">
+                <div className="bg-[#fead61] text-xxs lg:text-base flex items-center justify-center text-center font-bold border-r border-gray-600">
                   VALOR TOTAL DAS FATURAS
                 </div>
-                <div className="flex items-center justify-center text-center font-bold border-gray-600">
+                <div className="flex items-center text-xxs lg:text-base justify-center text-center font-bold border-gray-600">
                   R${" "}
                   {getGeneralTotal(instalacoes)
                     .faturas.toFixed(2)
@@ -316,10 +354,10 @@ function Teste() {
                 </div>
               </div>
               <div className="grid grid-cols-2">
-                <div className="bg-[#15599a] flex items-center justify-center text-center text-white font-bold border-r border-gray-600">
+                <div className="bg-[#15599a] flex items-center text-xxs lg:text-base justify-center text-center text-white font-bold border-r border-gray-600">
                   VALOR TOTAL ECONOMIZADO
                 </div>
-                <div className="flex items-center justify-center text-center font-bold border-gray-600">
+                <div className="flex items-center text-xxs lg:text-base justify-center text-center font-bold border-gray-600">
                   R${" "}
                   {getGeneralTotal(instalacoes)
                     .economizado.toFixed(2)
@@ -332,20 +370,20 @@ function Teste() {
           {Object.keys(instalacoes).length > 0
             ? Object.keys(instalacoes).map((key, index) => (
                 <div key={index} className="flex flex-col">
-                  <h1 className="text-center font-bold bg-black uppercase text-white text-sm p-1">
+                  <h1 className="text-center font-bold bg-black  text-white text-sm p-1">
                     {key}
                   </h1>
-                  <div className="grid grid-cols-11 border-b border-gray-200">
-                    <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
+                  <div className="grid grid-cols-6 lg:grid-cols-12 border-b border-gray-200">
+                    <p className="hidden lg:block text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       PERÍODO
                     </p>
                     <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       INSTALAÇÃO
                     </p>
-                    <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
+                    <p className="hidden lg:block text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       MODALIDADE
                     </p>
-                    <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
+                    <p className="hidden lg:block text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       QUOTA
                     </p>
                     <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
@@ -354,10 +392,10 @@ function Teste() {
                     <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       CONSUMO
                     </p>
-                    <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
+                    <p className="hidden lg:block text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       TRANSFERIDO
                     </p>
-                    <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
+                    <p className="hidden lg:block text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       RECEBIDO
                     </p>
                     <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
@@ -366,6 +404,9 @@ function Teste() {
                     <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       SALDO ATUAL
                     </p>
+                    <p className="hidden lg:block text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
+                      PREÇO DO kWh
+                    </p>
                     <p className="text-xxs font-bold text-white bg-[#15599a] text-center p-1">
                       VALOR DA FATURA
                     </p>
@@ -373,9 +414,9 @@ function Teste() {
                   {instalacoes[key].map((item, index2) => (
                     <div
                       key={index2}
-                      className="grid grid-cols-11 gap-1 border-b border-gray-200"
+                      className="grid grid-cols-6 lg:grid-cols-12 gap-1 border-b border-gray-200"
                     >
-                      <p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+                      <p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
                         {formatPeriodo(item.periodo)}
                       </p>
                       <p
@@ -386,12 +427,12 @@ function Teste() {
                       >
                         {item.instalacao}
                       </p>
-                      <p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+                      <p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
                         {item.modalidade == "Auto consumo-Geradora"
                           ? "GERADORA"
                           : "RECEBEDORA"}
                       </p>
-                      <p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+                      <p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
                         {item.quota
                           ? `${item.quota.substr(0, item.quota.length - 4)}%`
                           : "-"}
@@ -406,14 +447,14 @@ function Teste() {
                           ? Number(item.consumo).toFixed(2).replace(".", ",")
                           : "-"}
                       </p>
-                      <p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+                      <p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
                         {item.transferido != "0.0"
                           ? Number(item.transferido)
                               .toFixed(2)
                               .replace(".", ",")
                           : "-"}
                       </p>
-                      <p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+                      <p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
                         {item.recebimento != "0.0"
                           ? Number(item.recebimento)
                               .toFixed(2)
@@ -432,6 +473,22 @@ function Teste() {
                           ? Number(item.saldoAtual).toFixed(2).replace(".", ",")
                           : "-"}
                       </p>
+                      <div className="hidden lg:flex items-center border-r border-gray-200">
+                        <input
+                          type={"number"}
+                          placeholder="-"
+                          value={instalacoes[key][index2].valorkWh}
+                          onChange={(e) => {
+                            var obj = instalacoes;
+                            obj[key][index2].valorkWh = Number(e.target.value);
+                            setInstalacoes({ ...obj });
+                          }}
+                          className="text-xxs font-bold text-gray-600 text-center p-1 outline-none h-full w-full bg-transparent"
+                        />
+                        <p className="text-xxs font-bold text-gray-600 text-center mr-2">
+                          R$/kWh
+                        </p>
+                      </div>
                       <div className="flex items-center">
                         <p className="text-xxs font-bold text-gray-600 text-center">
                           R$
@@ -452,14 +509,14 @@ function Teste() {
                       </div>
                     </div>
                   ))}
-                  <div className="grid grid-cols-2 px-2 pt-2">
-                    <div className="flex flex-col justify-center items-center">
-                      <h1 className="text-xs text-center font-bold">
+                  <div className="grid grid-rows-2 grid-cols-1 xs:grid-rows-1 xs:grid-cols-2 px-2 my-2">
+                    <div className="col-span-1 flex flex-col justify-center items-center">
+                      <h1 className="text-xss lg:text-xs text-center font-bold">
                         ENERGIA COMPENSADA POR INSTALAÇÃO
                       </h1>
-                      <div className=" w-[250px] h-[250px] self-center">
+                      <div className="w-[250px] h-[250px] lg:w-[250px] lg:h-[250px] self-center">
                         <ResponsiveContainer width="100%" height="100%">
-                          <PieChart width={250} height={250}>
+                          <PieChart width="100%" height="80%">
                             <Pie
                               data={getGraficoData(instalacoes[key])}
                               cx="50%"
@@ -483,12 +540,26 @@ function Teste() {
                         </ResponsiveContainer>
                       </div>
                     </div>
-                    <div className="flex flex-col gap-2 justify-center">
+                    <div className="col-span-1 flex flex-col gap-2 justify-center">
+                      {key.split("-").length > 1 && (
+                        <div className="border border-[#15599a] p-2 rounded-md">
+                          <h1 className="text-center font-bold text-xxs lg:text-xs">
+                            CONSUMO INSTANTÂNEO
+                          </h1>
+                          <p className="text-center font-bold text-xxs lg:text-base text-[#fead61]">
+                            {getConsumoInstantaneo(
+                              key.split("-")[1],
+                              instalacoes[key]
+                            )}{" "}
+                            kWh
+                          </p>
+                        </div>
+                      )}
                       <div className="border border-[#15599a] p-2 rounded-md">
-                        <h1 className="text-center font-bold text-xs">
+                        <h1 className="text-center font-bold text-xxs lg:text-xs">
                           VALOR TOTAL DE FATURAS
                         </h1>
-                        <p className="text-center font-bold text-orange-500">
+                        <p className="text-center font-bold text-xxs lg:text-base text-orange-500">
                           R${" "}
                           {sumValorFatura(instalacoes[key])
                             .toFixed(2)
@@ -496,21 +567,22 @@ function Teste() {
                         </p>
                       </div>
                       <div className="border border-[#15599a] p-2 rounded-md">
-                        <h1 className="text-center font-bold text-xs">
+                        <h1 className="text-center font-bold text-xxs lg:text-xs">
                           ENERGIA TOTAL COMPENSADA
                         </h1>
-                        <p className="text-center font-bold text-[#15599a]">
-                          {sumEnergiaCompensada(instalacoes[key])} kWh
+                        <p className="text-center font-bold text-xxs lg:text-base text-[#15599a]">
+                          {sumEnergiaCompensada(instalacoes[key]).sumCompensada}{" "}
+                          kWh
                         </p>
                       </div>
                       <div className="border border-[#15599a] p-2 rounded-md">
-                        <h1 className="text-center font-bold text-xs">
+                        <h1 className="text-center font-bold text-xxs lg:text-xs">
                           VALOR APROXIMADO ECONOMIZADO
                         </h1>
-                        <p className="text-center font-bold text-green-500">
+                        <p className="text-center font-bold text-xxs lg:text-base text-green-500">
                           R${" "}
-                          {(sumEnergiaCompensada(instalacoes[key]) * 0.75)
-                            .toFixed(2)
+                          {sumEnergiaCompensada(instalacoes[key])
+                            .sumEconomizado.toFixed(2)
                             .replace(".", ",")}
                         </p>
                       </div>

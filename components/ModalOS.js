@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import React, { useState, useEffect } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 import ConferenciaManPreventivaOS from "./ConferenciaManPreventivaOS";
+import ConferenciaMontagemOS from "./ConferenciaMontagemOS";
 import ConferenciaPadraoOS from "./ConferenciaPadraoOS";
 const MODAL_STYLES = {
   position: "fixed",
@@ -209,6 +210,14 @@ function ModalOS({ info, setModalIsOpen }) {
               )}
               {info.categoria == "MANUTENÇÃO PREVENTIVA" && (
                 <ConferenciaManPreventivaOS
+                  info={info}
+                  cliente={info.cliente}
+                  index={info.index}
+                  saveChanges={saveChanges}
+                />
+              )}
+              {info.categoria == "MONTAGEM" && (
+                <ConferenciaMontagemOS
                   info={info}
                   cliente={info.cliente}
                   index={info.index}

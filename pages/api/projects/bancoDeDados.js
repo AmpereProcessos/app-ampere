@@ -1,4 +1,5 @@
 import connectToDatabase from "../../../utils/connectDb";
+import { NextResponse } from "next/server";
 export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
@@ -88,7 +89,8 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    res.json(arr);
+    // res.json(arr);
+    return NextResponse.json(arr);
   }
 }
 export const config = {

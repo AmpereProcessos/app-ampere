@@ -1,11 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
-import { storage } from "../utils/firebase";
-import Logo from "../utils/logo.png";
-import Link from "next/link";
-import Image from "next/image";
-import { FiCheck } from "react-icons/fi";
 import dayjs from "dayjs";
 import xml2js from "xml2js";
 import * as XLSX from "xlsx";
@@ -192,12 +187,52 @@ function Teste() {
     });
     return arr;
   }
+  function sumEnergiaCompensada(arr) {
+    var sum = 0;
+    for (let i = 0; i < arr.length; i++) {
+      sum = sum + Number(arr[i].compensacao);
+    }
+    return sum;
+  }
+  function sumValorFatura(arr) {
+    var sum = 0;
+    for (let i = 0; i < arr.length; i++) {
+      let valor = arr[i].valorFatura ? Number(arr[i].valorFatura) : 0;
+      sum = sum + valor;
+    }
+    return sum;
+  }
+  function getGeneralTotal(obj) {
+    var sumFatura = 0;
+    var sumEconomizado = 0;
+    for (let i = 0; i < Object.keys(obj).length; i++) {
+      let key = Object.keys(obj)[i];
+      let arr = obj[key];
+      // console.log(arr);
+      for (let j = 0; j < arr.length; j++) {
+        let valorFatura = arr[j].valorFatura ? Number(arr[j].valorFatura) : 0;
+        let valorEconomizado = arr[j].compensacao
+          ? Number(arr[j].compensacao) * 0.75
+          : 0;
+        // console.log(valorFatura);
+        // console.log(valorEconomizado);
+        sumFatura = sumFatura + valorFatura;
+        sumEconomizado = sumEconomizado + valorEconomizado;
+      }
+    }
+    console.log("ECONOMIZADO", sumEconomizado);
+    console.log("FATURAS", sumFatura);
+    return {
+      faturas: sumFatura,
+      economizado: sumEconomizado,
+    };
+  }
   function getTextColor(index) {
     let color = `bg-[${COLORS[index]}]`;
     return color;
   }
-  console.log(instalacoes);
-  console.log(dayjs(month).format("MM/YYYY"));
+  // console.log(instalacoes);
+  // console.log(dayjs(month).format("MM/YYYY"));
   return (
     <div className="grow bg-zinc-100 p-4">
       <div className="flex flex-col items-center">
@@ -267,13 +302,40 @@ function Teste() {
         )}
 
         <div className="flex flex-col border border-gray-600 mt-2">
+          {Object.keys(instalacoes).length > 0 && (
+            <div className="grid grid-cols-2">
+              <div className="grid grid-cols-2">
+                <div className="bg-[#fead61] flex items-center justify-center text-center font-bold border-r border-gray-600">
+                  VALOR TOTAL DAS FATURAS
+                </div>
+                <div className="flex items-center justify-center text-center font-bold border-gray-600">
+                  R${" "}
+                  {getGeneralTotal(instalacoes)
+                    .faturas.toFixed(2)
+                    .replace(".", ",")}
+                </div>
+              </div>
+              <div className="grid grid-cols-2">
+                <div className="bg-[#15599a] flex items-center justify-center text-center text-white font-bold border-r border-gray-600">
+                  VALOR TOTAL ECONOMIZADO
+                </div>
+                <div className="flex items-center justify-center text-center font-bold border-gray-600">
+                  R${" "}
+                  {getGeneralTotal(instalacoes)
+                    .economizado.toFixed(2)
+                    .replace(".", ",")}
+                </div>
+              </div>
+            </div>
+          )}
+
           {Object.keys(instalacoes).length > 0
             ? Object.keys(instalacoes).map((key, index) => (
                 <div key={index} className="flex flex-col">
                   <h1 className="text-center font-bold bg-black uppercase text-white text-sm p-1">
                     {key}
                   </h1>
-                  <div className="grid grid-cols-10 border-b border-gray-200">
+                  <div className="grid grid-cols-11 border-b border-gray-200">
                     <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       PERÍODO
                     </p>
@@ -301,14 +363,17 @@ function Teste() {
                     <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       COMPENSADO
                     </p>
-                    <p className="text-xxs font-bold text-white bg-[#15599a] text-center p-1">
+                    <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       SALDO ATUAL
+                    </p>
+                    <p className="text-xxs font-bold text-white bg-[#15599a] text-center p-1">
+                      VALOR DA FATURA
                     </p>
                   </div>
                   {instalacoes[key].map((item, index2) => (
                     <div
                       key={index2}
-                      className="grid grid-cols-10 gap-1 border-b border-gray-200"
+                      className="grid grid-cols-11 gap-1 border-b border-gray-200"
                     >
                       <p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
                         {formatPeriodo(item.periodo)}
@@ -362,37 +427,94 @@ function Teste() {
                               .replace(".", ",")
                           : "-"}
                       </p>
-                      <p className="text-xxs font-bold text-gray-600 text-center p-1">
+                      <p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
                         {item.saldoAtual
                           ? Number(item.saldoAtual).toFixed(2).replace(".", ",")
                           : "-"}
                       </p>
+                      <div className="flex items-center">
+                        <p className="text-xxs font-bold text-gray-600 text-center">
+                          R$
+                        </p>
+                        <input
+                          type={"number"}
+                          placeholder="-"
+                          value={instalacoes[key][index2].valorFatura}
+                          onChange={(e) => {
+                            var obj = instalacoes;
+                            obj[key][index2].valorFatura = Number(
+                              e.target.value
+                            );
+                            setInstalacoes({ ...obj });
+                          }}
+                          className="text-xxs font-bold text-gray-600 text-center p-1 outline-none h-full w-full bg-transparent"
+                        />
+                      </div>
                     </div>
                   ))}
-                  <div className="flex justify-center items-center w-[250px] h-[250px] self-center">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart width={250} height={250}>
-                        <Pie
-                          data={getGraficoData(instalacoes[key])}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          label={renderCustomizedLabel}
-                          outerRadius={100}
-                          fill="#8884d8"
-                          dataKey="value"
-                        >
-                          {getGraficoData(instalacoes[key]).map(
-                            (entry, index) => (
-                              <Cell
-                                key={`cell-${index}`}
-                                fill={COLORS[index % COLORS.length]}
-                              />
-                            )
-                          )}
-                        </Pie>
-                      </PieChart>
-                    </ResponsiveContainer>
+                  <div className="grid grid-cols-2 px-2 pt-2">
+                    <div className="flex flex-col justify-center items-center">
+                      <h1 className="text-xs text-center font-bold">
+                        ENERGIA COMPENSADA POR INSTALAÇÃO
+                      </h1>
+                      <div className=" w-[250px] h-[250px] self-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart width={250} height={250}>
+                            <Pie
+                              data={getGraficoData(instalacoes[key])}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              label={renderCustomizedLabel}
+                              outerRadius={100}
+                              fill="#8884d8"
+                              dataKey="value"
+                            >
+                              {getGraficoData(instalacoes[key]).map(
+                                (entry, index) => (
+                                  <Cell
+                                    key={`cell-${index}`}
+                                    fill={COLORS[index % COLORS.length]}
+                                  />
+                                )
+                              )}
+                            </Pie>
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2 justify-center">
+                      <div className="border border-[#15599a] p-2 rounded-md">
+                        <h1 className="text-center font-bold text-xs">
+                          VALOR TOTAL DE FATURAS
+                        </h1>
+                        <p className="text-center font-bold text-orange-500">
+                          R${" "}
+                          {sumValorFatura(instalacoes[key])
+                            .toFixed(2)
+                            .replace(".", ",")}
+                        </p>
+                      </div>
+                      <div className="border border-[#15599a] p-2 rounded-md">
+                        <h1 className="text-center font-bold text-xs">
+                          ENERGIA TOTAL COMPENSADA
+                        </h1>
+                        <p className="text-center font-bold text-[#15599a]">
+                          {sumEnergiaCompensada(instalacoes[key])} kWh
+                        </p>
+                      </div>
+                      <div className="border border-[#15599a] p-2 rounded-md">
+                        <h1 className="text-center font-bold text-xs">
+                          VALOR APROXIMADO ECONOMIZADO
+                        </h1>
+                        <p className="text-center font-bold text-green-500">
+                          R${" "}
+                          {(sumEnergiaCompensada(instalacoes[key]) * 0.75)
+                            .toFixed(2)
+                            .replace(".", ",")}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))

@@ -44,48 +44,90 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
       });
       return false;
     }
-    if (!images.paineisPreLimpeza) {
+    if (!images.padraoComPlacaDeGeracao) {
       setMsg({
-        text: "Por favor, adicione foto(s) dos painéis pré-limpeza.",
+        text: "Por favor, adicione foto(s) do padrão com placa de geração.",
         color: "text-red-500",
       });
       return false;
     }
-    if (!images.paineisPosLimpeza) {
+    if (!images.estruturaMontada) {
       setMsg({
-        text: "Por favor, adicione foto(s) dos painéis pós-limpeza.",
+        text: "Por favor, adicione foto(s) da estrutura montada.",
         color: "text-red-500",
       });
       return false;
     }
-    if (!images.kitInversor) {
+    if (!images.modulosInstalados) {
       setMsg({
-        text: "Por favor, adicione foto(s) do quadro(s), string box (se houver) e inversor(res).",
+        text: "Por favor, adicione foto(s) dos módulos instalados.",
         color: "text-red-500",
       });
       return false;
     }
-    if (!images.infraEletromecanica) {
+    if (!images.datasheetModulos) {
       setMsg({
-        text: "Por favor, adicione foto(s) da infraestrutura eletromecânica.",
+        text: "Por favor, adicione foto(s) dos datasheets dos módulos.",
         color: "text-red-500",
       });
       return false;
     }
-    if (!images.sistemaLigado) {
+    if (!images.datasheetInversores) {
       setMsg({
-        text: "Por favor, adicione foto(s) do sistema ligado.",
+        text: "Por favor, adicione foto(s) dos datasheets dos inversores.",
         color: "text-red-500",
       });
       return false;
     }
-    if (!images.termoAssinado) {
+    if (!images.inversoresInstalados) {
       setMsg({
-        text: "Por favor, adicione foto(s) do termo assinado.",
+        text: "Por favor, adicione foto(s) dos inversores instalados.",
         color: "text-red-500",
       });
       return false;
     }
+    if (!images.quadroCA) {
+      setMsg({
+        text: "Por favor, adicione foto(s) do quadro CA.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    // if (!images.paineisPosLimpeza) {
+    //   setMsg({
+    //     text: "Por favor, adicione foto(s) dos painéis pós-limpeza.",
+    //     color: "text-red-500",
+    //   });
+    //   return false;
+    // }
+    // if (!images.kitInversor) {
+    //   setMsg({
+    //     text: "Por favor, adicione foto(s) do quadro(s), string box (se houver) e inversor(res).",
+    //     color: "text-red-500",
+    //   });
+    //   return false;
+    // }
+    // if (!images.infraEletromecanica) {
+    //   setMsg({
+    //     text: "Por favor, adicione foto(s) da infraestrutura eletromecânica.",
+    //     color: "text-red-500",
+    //   });
+    //   return false;
+    // }
+    // if (!images.sistemaLigado) {
+    //   setMsg({
+    //     text: "Por favor, adicione foto(s) do sistema ligado.",
+    //     color: "text-red-500",
+    //   });
+    //   return false;
+    // }
+    // if (!images.termoAssinado) {
+    //   setMsg({
+    //     text: "Por favor, adicione foto(s) do termo assinado.",
+    //     color: "text-red-500",
+    //   });
+    //   return false;
+    // }
     setMsg({ text: "", color: "" });
     return true;
   }
@@ -95,17 +137,17 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
       var links = [];
       setMsg({ text: "Enviando imagens...", color: "text-[#15599a]" });
       try {
-        if (images.paineisPreLimpeza) {
-          for (let i = 0; i < images.paineisPreLimpeza.length; i++) {
-            let file = images.paineisPreLimpeza.item(i);
+        if (images.padraoComPlacaDeGeracao) {
+          for (let i = 0; i < images.padraoComPlacaDeGeracao.length; i++) {
+            let file = images.padraoComPlacaDeGeracao.item(i);
             var imageRef = ref(
               storage,
-              `clientes/${cliente}/paineisPreLimpeza${i + 1}`
+              `clientes/${cliente}/padraoComPlacaDeGeracao${i + 1}`
             );
             let res = await uploadBytes(imageRef, file);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
             links.push({
-              title: `PAINÉIS PRÉ-LIMPEZA (${i + 1})`,
+              title: `PADRÃO COM PLACA DE GERAÇÃO (${i + 1})`,
               link: url,
               format: fileTypes[res.metadata.contentType]
                 ? fileTypes[res.metadata.contentType].title
@@ -113,17 +155,17 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
             });
           }
         }
-        if (images.irregularidades) {
-          for (let i = 0; i < images.irregularidades.length; i++) {
-            let file = images.irregularidades.item(i);
+        if (images.estruturaMontada) {
+          for (let i = 0; i < images.estruturaMontada.length; i++) {
+            let file = images.estruturaMontada.item(i);
             var imageRef = ref(
               storage,
-              `clientes/${cliente}/irregularidades${i + 1}`
+              `clientes/${cliente}/estruturaMontada${i + 1}`
             );
             let res = await uploadBytes(imageRef, file);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
             links.push({
-              title: `IRREGULARIDADES (${i + 1})`,
+              title: `ESTRUTURA MONTADA (${i + 1})`,
               link: url,
               format: fileTypes[res.metadata.contentType]
                 ? fileTypes[res.metadata.contentType].title
@@ -131,17 +173,17 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
             });
           }
         }
-        if (images.paineisPosLimpeza) {
-          for (let i = 0; i < images.paineisPosLimpeza.length; i++) {
-            let file = images.paineisPosLimpeza.item(i);
+        if (images.modulosInstalados) {
+          for (let i = 0; i < images.modulosInstalados.length; i++) {
+            let file = images.modulosInstalados.item(i);
             var imageRef = ref(
               storage,
-              `clientes/${cliente}/paineisPosLimpeza${i + 1}`
+              `clientes/${cliente}/modulosInstalados${i + 1}`
             );
             let res = await uploadBytes(imageRef, file);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
             links.push({
-              title: `PAINÉIS PÓS-LIMPEZA (${i + 1})`,
+              title: `MÓDULOS INSTALADOS (${i + 1})`,
               link: url,
               format: fileTypes[res.metadata.contentType]
                 ? fileTypes[res.metadata.contentType].title
@@ -149,17 +191,17 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
             });
           }
         }
-        if (images.irregularidadesCorrigidas) {
-          for (let i = 0; i < images.irregularidadesCorrigidas.length; i++) {
-            let file = images.irregularidadesCorrigidas.item(i);
+        if (images.datasheetModulos) {
+          for (let i = 0; i < images.datasheetModulos.length; i++) {
+            let file = images.datasheetModulos.item(i);
             var imageRef = ref(
               storage,
-              `clientes/${cliente}/irregularidadesCorrigidas${i + 1}`
+              `clientes/${cliente}/datasheetModulos${i + 1}`
             );
             let res = await uploadBytes(imageRef, file);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
             links.push({
-              title: `IRREGULARIDADES CORRIGIDAS (${i + 1})`,
+              title: `DATASHEETS DOS MÓDULOS (${i + 1})`,
               link: url,
               format: fileTypes[res.metadata.contentType]
                 ? fileTypes[res.metadata.contentType].title
@@ -167,17 +209,17 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
             });
           }
         }
-        if (images.kitInversor) {
-          for (let i = 0; i < images.kitInversor.length; i++) {
-            let file = images.kitInversor.item(i);
+        if (images.datasheetInversores) {
+          for (let i = 0; i < images.datasheetInversores.length; i++) {
+            let file = images.datasheetInversores.item(i);
             var imageRef = ref(
               storage,
-              `clientes/${cliente}/kitInversor${i + 1}`
+              `clientes/${cliente}/datasheetInversores${i + 1}`
             );
             let res = await uploadBytes(imageRef, file);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
             links.push({
-              title: `KIT INVERSOR (${i + 1})`,
+              title: `DATASHEETS DOS INVERSORES (${i + 1})`,
               link: url,
               format: fileTypes[res.metadata.contentType]
                 ? fileTypes[res.metadata.contentType].title
@@ -185,17 +227,17 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
             });
           }
         }
-        if (images.infraEletromecanica) {
-          for (let i = 0; i < images.infraEletromecanica.length; i++) {
-            let file = images.infraEletromecanica.item(i);
+        if (images.inversoresInstalados) {
+          for (let i = 0; i < images.inversoresInstalados.length; i++) {
+            let file = images.inversoresInstalados.item(i);
             var imageRef = ref(
               storage,
-              `clientes/${cliente}/infraEletromecanica${i + 1}`
+              `clientes/${cliente}/inversoresInstalados${i + 1}`
             );
             let res = await uploadBytes(imageRef, file);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
             links.push({
-              title: `INFRAELETROMECÂNICA LIMPA (${i + 1})`,
+              title: `INVERSORES INSTALADOS (${i + 1})`,
               link: url,
               format: fileTypes[res.metadata.contentType]
                 ? fileTypes[res.metadata.contentType].title
@@ -203,17 +245,14 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
             });
           }
         }
-        if (images.sistemaLigado) {
-          for (let i = 0; i < images.sistemaLigado.length; i++) {
-            let file = images.sistemaLigado.item(i);
-            var imageRef = ref(
-              storage,
-              `clientes/${cliente}/sistemaLigado${i + 1}`
-            );
+        if (images.quadroCA) {
+          for (let i = 0; i < images.quadroCA.length; i++) {
+            let file = images.quadroCA.item(i);
+            var imageRef = ref(storage, `clientes/${cliente}/quadroCA${i + 1}`);
             let res = await uploadBytes(imageRef, file);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
             links.push({
-              title: `SISTEMA LIGADO (${i + 1})`,
+              title: `QUADRO CA (${i + 1})`,
               link: url,
               format: fileTypes[res.metadata.contentType]
                 ? fileTypes[res.metadata.contentType].title
@@ -221,17 +260,14 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
             });
           }
         }
-        if (images.termoAssinado) {
-          for (let i = 0; i < images.termoAssinado.length; i++) {
-            let file = images.termoAssinado.item(i);
-            var imageRef = ref(
-              storage,
-              `clientes/${cliente}/termoAssinado${i + 1}`
-            );
+        if (images.quadroCC) {
+          for (let i = 0; i < images.quadroCC.length; i++) {
+            let file = images.quadroCC.item(i);
+            var imageRef = ref(storage, `clientes/${cliente}/quadroCC${i + 1}`);
             let res = await uploadBytes(imageRef, file);
             let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
             links.push({
-              title: `TERMO ASSINADO (${i + 1})`,
+              title: `QUADRO CC (${i + 1})`,
               link: url,
               format: fileTypes[res.metadata.contentType]
                 ? fileTypes[res.metadata.contentType].title

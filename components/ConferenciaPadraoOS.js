@@ -122,25 +122,25 @@ function ConferenciaPadraoOS({ info, cliente, index, saveChanges }) {
       }
     }
   }
-  function getMaterials() {
-    axios.get("/api/almoxarifado/materiais").then((res) => {
-      setMateriais(res.data);
-    });
-  }
-  function addMaterial() {
-    let arr = infoHolder.materiais ? infoHolder.materiais : [];
-    let index = arr.findIndex((obj) => obj.id == materialHolder.id);
-    if (index != -1) {
-      arr[index].qtde += materialHolder.qtde;
-    } else {
-      arr.push(materialHolder);
-    }
-    setInfo({ ...infoHolder, materiais: arr });
-    setMaterialHolder({ ...materialHolder, qtde: null });
-  }
-  useEffect(() => {
-    getMaterials();
-  }, []);
+  // function getMaterials() {
+  //   axios.get("/api/almoxarifado/materiais").then((res) => {
+  //     setMateriais(res.data);
+  //   });
+  // }
+  // function addMaterial() {
+  //   let arr = infoHolder.materiais ? infoHolder.materiais : [];
+  //   let index = arr.findIndex((obj) => obj.id == materialHolder.id);
+  //   if (index != -1) {
+  //     arr[index].qtde += materialHolder.qtde;
+  //   } else {
+  //     arr.push(materialHolder);
+  //   }
+  //   setInfo({ ...infoHolder, materiais: arr });
+  //   setMaterialHolder({ ...materialHolder, qtde: null });
+  // }
+  // useEffect(() => {
+  //   getMaterials();
+  // }, []);
   console.log(infoHolder);
   return (
     <div className="w-full flex flex-col items-center">
@@ -291,98 +291,6 @@ function ConferenciaPadraoOS({ info, cliente, index, saveChanges }) {
               />
             </div>
           </div>
-        </div>
-        <div className="flex flex-col items-center mt-2 border border-gray-200 p-2 w-full">
-          <h1 className="text-center font-bold text-[#15599a] ">
-            ADICIONE MATERIAIS GASTOS
-          </h1>
-          <div className="flex flex-col lg:items-center lg:flex-row gap-x-2  p-2 mt-4 w-full">
-            <span className="text-center uppercase font-bold">ADICIONAR</span>
-            <div className="grid grid-rows-3 gap-2 grid-cols-1 lg:grid-cols-7 lg:grid-rows-1 gap-x-2">
-              <div className="grow row-span-1 lg:col-span-5">
-                <Select
-                  isMulti={false}
-                  placeholder="MATERIAL"
-                  onChange={(e) =>
-                    setMaterialHolder({
-                      ...materialHolder,
-                      nome: e.value.nome,
-                      id: e.value.id,
-                    })
-                  }
-                  options={materiais.map((material) => {
-                    return {
-                      label: material.nome,
-                      value: {
-                        id: material._id,
-                        nome: material.nome,
-                      },
-                    };
-                  })}
-                />
-              </div>
-              <input
-                placeholder="QTDE"
-                type="number"
-                value={materialHolder.qtdeSaida}
-                className="row-span-1 lg:col-span-1 outline-none text-center border border-gray-200"
-                onChange={(e) =>
-                  setMaterialHolder({
-                    ...materialHolder,
-                    qtde: Number(e.target.value),
-                  })
-                }
-              />
-              <div
-                onClick={addMaterial}
-                className="cursor-pointer flex justify-center items-center bg-green-300 hover:bg-green-500 text-white rounded font-bold row-span-1 lg:col-span-1"
-              >
-                <MdOutlineAddCircle style={{ fontSize: "25px" }} />
-              </div>
-            </div>
-          </div>
-          {infoHolder.materiais?.length > 0 && (
-            <div className="flex flex-col items-center w-full">
-              <h1 className="text-center text-[#fead41] font-bold">
-                LISTA DE MATERIAIS
-              </h1>
-              <div className="lg:grid hidden grid-cols-7 w-full">
-                <p className="text-[#15599a] font-bold :col-span-4 text-center text-xs lg:text-base">
-                  NOME
-                </p>
-                <p className="text-[#15599a] font-bold col-span-2 text-center text-xs lg:text-base">
-                  QTDE USADA
-                </p>
-                <p className="text-[#15599a] font-bold col-span-1 text-center text-xs lg:text-base">
-                  EXCLUIR
-                </p>
-              </div>
-              {infoHolder.materiais.map((x, index) => (
-                <div key={index} className="grid grid-cols-7 w-full">
-                  <p className="text-[#15599a] font-bold col-span-4 text-center text-xs lg:text-base">
-                    {x.nome}
-                  </p>
-                  <p className="text-[#15599a] font-bold col-span-2 text-center text-xs lg:text-base">
-                    {x.qtde}
-                  </p>
-                  <div className="flex justify-center col-span-1">
-                    <button
-                      className="col-span-1 self-center"
-                      onClick={() => {
-                        let infoMaterial = infoHolder.materiais;
-                        infoMaterial.splice(index, 1);
-                        setInfo({ ...infoHolder, materiais: infoMaterial });
-                      }}
-                    >
-                      <VscChromeClose
-                        style={{ color: "red", fontSize: "15px" }}
-                      />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
         <div className="flex flex-col items-center">
           <h1 className="text-center text-[#15599a] font-bold">

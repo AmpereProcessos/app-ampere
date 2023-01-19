@@ -2,6 +2,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import React, { useState, useEffect } from "react";
 import { VscChromeClose } from "react-icons/vsc";
+import ConferenciaManPreventivaOS from "./ConferenciaManPreventivaOS";
 import ConferenciaPadraoOS from "./ConferenciaPadraoOS";
 const MODAL_STYLES = {
   position: "fixed",
@@ -141,6 +142,43 @@ function ModalOS({ info, setModalIsOpen }) {
                   {info.potModulos} W
                 </h1>
               </div>
+              {info.categoria == "MANUTENÇÃO PREVENTIVA" && (
+                <>
+                  <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+                    <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
+                      INVERSOR
+                    </h1>
+                    <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
+                      {info.inversor ? info.inversor : "-"}
+                    </h1>
+                  </div>
+                  <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+                    <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
+                      SENHA DO WI-FI
+                    </h1>
+                    <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
+                      {info.senhaDoWifi ? info.senhaDoWifi : "-"}
+                    </h1>
+                  </div>
+                  <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+                    <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
+                      PONTO DE ÁGUA
+                    </h1>
+                    <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
+                      {info.pontoDeAgua ? info.pontoDeAgua : "-"}
+                    </h1>
+                  </div>
+                  <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+                    <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
+                      CONFIGURAR ?
+                    </h1>
+                    <h1 className="font-bold text-center col-span-2 text-xs lg:text-base">
+                      {info.configurar ? "SIM" : "NÃO"}
+                    </h1>
+                  </div>
+                </>
+              )}
+
               <div className="flex flex-col items-center border border-gray-200 p-2 ">
                 <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   OBSERVAÇÕES DA OS
@@ -163,6 +201,14 @@ function ModalOS({ info, setModalIsOpen }) {
               </div>
               {info.categoria == "PADRÃO" && (
                 <ConferenciaPadraoOS
+                  info={info}
+                  cliente={info.cliente}
+                  index={info.index}
+                  saveChanges={saveChanges}
+                />
+              )}
+              {info.categoria == "MANUTENÇÃO PREVENTIVA" && (
+                <ConferenciaManPreventivaOS
                   info={info}
                   cliente={info.cliente}
                   index={info.index}

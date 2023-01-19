@@ -31,7 +31,7 @@ function BandoDeDados({ data }) {
   });
   function getProjects() {
     axios
-      .post("/api/projects/bancoDeDados", { skip: 0, greater: 0 })
+      .get("/api/projects/bancoDeDados")
       .then((res) => {
         setProjects(res.data);
         setFilteredProjects(res.data);

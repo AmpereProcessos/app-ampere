@@ -96,7 +96,10 @@ function Comissionamento() {
     }
   }
   useEffect(() => {
-    if (credentials.accessibleRoutes.includes("O&M")) {
+    if (
+      credentials.accessibleRoutes.includes("O&M") ||
+      credentials.accessibleRoutes.includes("Pós-Venda")
+    ) {
       getProjects();
     } else {
       router.push("/");

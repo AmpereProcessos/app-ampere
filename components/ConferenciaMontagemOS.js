@@ -14,7 +14,18 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
   const [images, setImages] = useState({});
 
   const [msg, setMsg] = useState({ text: "", color: "" });
-
+  const cidadesGoias = [
+    "CALDAS NOVAS", // GO
+    "PORTEIRÃO", // GO
+    "SÃO SIMÃO", // GO
+    "INACIOLÂNDIA", // GO
+    "TRINDADE", // GO
+    "ITUMBIARA", // GO
+    "QUIRINÓPOLIS", // GO
+    "PARANAIGUARA", // GO
+    "CATALÃO", // GO
+  ];
+  console.log(info.cidade);
   function validateOSClosing() {
     if (!infoHolder.testesCCeCA) {
       setMsg({
@@ -92,6 +103,15 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
         color: "text-red-500",
       });
       return false;
+    }
+    if (cidadesGoias.includes(info.cidade)) {
+      if (!images.medicoesCC) {
+        setMsg({
+          text: "Por favor, adicione foto(s) de medições.",
+          color: "text-red-500",
+        });
+        return false;
+      }
     }
     // if (!images.paineisPosLimpeza) {
     //   setMsg({
@@ -724,6 +744,164 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
               />
             </div>
           </div>
+          {cidadesGoias.includes(info.cidade) && (
+            <>
+              <div className="w-fit flex flex-col items-center">
+                <label className="ml-2 text-center text-[#15599a] font-bold">
+                  FOTOS DE MEDIÇÕES DE CORRENTE E TENSÃO CC DE TODAS AS STRINGS
+                </label>
+                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                  <div className="absolute">
+                    {images.medicoesCC ? (
+                      <div className="flex flex-col items-center">
+                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span className="block text-gray-400 font-normal text-center">
+                          {images.medicoesCC.length == 1
+                            ? images.medicoesCC[0].name
+                            : `${images.medicoesCC[0].name}...`}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span className="block text-gray-400 font-normal">
+                          Adicione o arquivo aqui...
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    onChange={(e) =>
+                      setImages({
+                        ...images,
+                        medicoesCC: e.target.files,
+                      })
+                    }
+                    className="h-full w-full opacity-0"
+                    type="file"
+                    multiple={true}
+                    accept=".png, .jpeg, .pdf"
+                  />
+                </div>
+              </div>
+              <div className="w-fit flex flex-col items-center">
+                <label className="ml-2 text-center text-[#15599a] font-bold">
+                  FOTOS DE TENSÃO CA FASE E LINHA NA ENTRADA DE ENERGIA
+                </label>
+                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                  <div className="absolute">
+                    {images.tensaoCAEntrada ? (
+                      <div className="flex flex-col items-center">
+                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span className="block text-gray-400 font-normal text-center">
+                          {images.tensaoCAEntrada.length == 1
+                            ? images.tensaoCAEntrada[0].name
+                            : `${images.tensaoCAEntrada[0].name}...`}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span className="block text-gray-400 font-normal">
+                          Adicione o arquivo aqui...
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    onChange={(e) =>
+                      setImages({
+                        ...images,
+                        tensaoCAEntrada: e.target.files,
+                      })
+                    }
+                    className="h-full w-full opacity-0"
+                    type="file"
+                    multiple={true}
+                    accept=".png, .jpeg, .pdf"
+                  />
+                </div>
+              </div>
+              <div className="w-fit flex flex-col items-center">
+                <label className="ml-2 text-center text-[#15599a] font-bold">
+                  FOTOS DE TENSÃO CA FASE E LINHA NO QUADRO CA ANTES DO
+                  DISJUNTOR
+                </label>
+                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                  <div className="absolute">
+                    {images.tensaoCAQuadroCAAntesDoDisjuntor ? (
+                      <div className="flex flex-col items-center">
+                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span className="block text-gray-400 font-normal text-center">
+                          {images.tensaoCAQuadroCAAntesDoDisjuntor.length == 1
+                            ? images.tensaoCAQuadroCAAntesDoDisjuntor[0].name
+                            : `${images.tensaoCAQuadroCAAntesDoDisjuntor[0].name}...`}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span className="block text-gray-400 font-normal">
+                          Adicione o arquivo aqui...
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    onChange={(e) =>
+                      setImages({
+                        ...images,
+                        tensaoCAQuadroCAAntesDoDisjuntor: e.target.files,
+                      })
+                    }
+                    className="h-full w-full opacity-0"
+                    type="file"
+                    multiple={true}
+                    accept=".png, .jpeg, .pdf"
+                  />
+                </div>
+              </div>
+              <div className="w-fit flex flex-col items-center">
+                <label className="ml-2 text-center text-[#15599a] font-bold">
+                  FOTOS DE TENSÃO CA FASE E LINHA NO QUADRO CA DEPOIS DO
+                  DISJUNTOR
+                </label>
+                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                  <div className="absolute">
+                    {images.tensaoCAQuadroCADepoisDoDisjuntor ? (
+                      <div className="flex flex-col items-center">
+                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span className="block text-gray-400 font-normal text-center">
+                          {images.tensaoCAQuadroCADepoisDoDisjuntor.length == 1
+                            ? images.tensaoCAQuadroCADepoisDoDisjuntor[0].name
+                            : `${images.tensaoCAQuadroCADepoisDoDisjuntor[0].name}...`}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span className="block text-gray-400 font-normal">
+                          Adicione o arquivo aqui...
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    onChange={(e) =>
+                      setImages({
+                        ...images,
+                        tensaoCAQuadroCADepoisDoDisjuntor: e.target.files,
+                      })
+                    }
+                    className="h-full w-full opacity-0"
+                    type="file"
+                    multiple={true}
+                    accept=".png, .jpeg, .pdf"
+                  />
+                </div>
+              </div>
+            </>
+          )}
         </div>
         <div className="flex flex-col items-center">
           <h1 className="text-center text-[#15599a] font-bold">

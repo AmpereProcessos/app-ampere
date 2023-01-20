@@ -1151,38 +1151,38 @@ export const projetosSolicitations = [
   "OUTRO",
 ];
 export const cidadesAtendidas = [
-  "ITUIUTABA", //ok to uppercase
-  "IPIAÇU", // ok to uppercase
-  "SANTA VITÓRIA", //ok to uppercase
-  "CAMPINA VERDE", // ok to uppercase
-  "UBERLÂNDIA", // ok to uppercase
-  "CAPINÓPOLIS", // ok to uppercase
-  "GURINHATÃ", // ok to uppercase
-  "PRATA", // ok to uppercase
-  "CANÁPOLIS", // ok to uppercaseC
-  "CACHOEIRA DOURADA", // ok to uppercase
-  "MONTE ALEGRE", // ok to uppercase
-  "UBERABA", // ok to uppercase
-  "CALDAS NOVAS", // ok to uppercase
-  "SÃO SEBASTIÃO DO PARAÍSO", // ok to uppercase
-  "BOM JESUS", // ok to uppercase
-  "PORTEIRÃO", // ok to uppercase
-  "JOÃO PINHEIRO", // ok to uppercase
-  "SÃO SIMÃO", // ok to uppercase
-  "INACIOLÂNDIA", // ok to uppercase
-  "TRINDADE", // ok to uppercase
-  "PATOS DE MINAS", // ok to uppecase
-  "ITUMBIARA", // ok to uppercase
-  "CENTRALINA", // ok to uppercase
-  "SÃO GONÇALO DO ABAETÉ", // ok to uppercase
-  "PATROCÍNIO", // ok to uppercase
-  "NOVA PONTE", // ok to uppercase
-  "QUIRINÓPOLIS", // ok to uppercase
-  "TUPACIGUARA", // ok to uppercase
-  "PARANAIGUARA",
-  "ARAGUARI",
-  "IRAÍ DE MINAS",
-  "CATALÃO",
+  "ITUIUTABA", // MG
+  "IPIAÇU", //  MG
+  "SANTA VITÓRIA", // MG
+  "CAMPINA VERDE", // MG
+  "UBERLÂNDIA", //  MG
+  "CAPINÓPOLIS", // MG
+  "GURINHATÃ", // MG
+  "PRATA", // MG
+  "CANÁPOLIS", // MG
+  "CACHOEIRA DOURADA", // MG
+  "MONTE ALEGRE", // MG
+  "UBERABA", // MG
+  "CALDAS NOVAS", // GO
+  "SÃO SEBASTIÃO DO PARAÍSO", // MG
+  "BOM JESUS", // MG
+  "PORTEIRÃO", // GO
+  "JOÃO PINHEIRO", // MG
+  "SÃO SIMÃO", // GO
+  "INACIOLÂNDIA", // GO
+  "TRINDADE", // GO
+  "PATOS DE MINAS", // MG
+  "ITUMBIARA", // GO
+  "CENTRALINA", // MG
+  "SÃO GONÇALO DO ABAETÉ", // MG
+  "PATROCÍNIO", // MG
+  "NOVA PONTE", // MG
+  "QUIRINÓPOLIS", // GO
+  "TUPACIGUARA", // MG
+  "PARANAIGUARA", // GO
+  "ARAGUARI", // MG
+  "IRAÍ DE MINAS", // MG
+  "CATALÃO", // GO
 ];
 export const suprimentoOption = {
   GRAMPO: {

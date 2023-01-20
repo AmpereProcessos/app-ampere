@@ -192,7 +192,8 @@ function Sidebar() {
                 ) : (
                   false
                 )}
-                {credentials?.accessibleRoutes?.includes("O&M") && (
+                {credentials?.accessibleRoutes?.includes("O&M") ||
+                credentials?.accessibleRoutes?.includes("Pós-Venda") ? (
                   <Link href={"/oem/comissionamento"}>
                     <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <ImCheckboxChecked
@@ -203,6 +204,8 @@ function Sidebar() {
                       </p>
                     </a>
                   </Link>
+                ) : (
+                  false
                 )}
                 {credentials.accessibleRoutes != undefined &&
                 credentials.visualizacao == undefined ? (

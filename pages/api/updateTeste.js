@@ -4,11 +4,13 @@ export default async function handler(req, res) {
   // const collection = db.collection("dados");
   // let arr = await collection.updateMany(
   //   {
-  //     "vendedor.nome": "DIOGO PAULINO ",
+  //     "conferencias.usinaLigada.data": {
+  //       $lte: "2022-12-01T00:00:00.000Z",
+  //     },
   //   },
   //   {
   //     $set: {
-  //       "vendedor.nome": "DIOGO PAULINO",
+  //       "conferencias.energiaInjetada.data": "2023-01-20T00:00:00.000Z",
   //     },
   //   }
   // );

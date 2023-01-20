@@ -1,8 +1,11 @@
 import connectToDatabase from "../../../utils/connectDb";
+import connectToVendedoresDatabase from "../../../utils/auxiliaresDb";
+import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
+    let year = Number(req.query.ano);
     let result = await collection
       .aggregate([
         {
@@ -35,7 +38,7 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            "_id.ano": 2022,
+            "_id.ano": year,
           },
         },
         {
@@ -55,5 +58,18 @@ export default async function handler(req, res) {
       };
     });
     res.json(newArr);
+  } else if (req.method == "PUT") {
+    const db = await connectToVendedoresDatabase(process.env.DB_KEY);
+    const collection = db.collection("vendedoresInfo");
+    let id = req.query.id;
+    let ano = req.body.year;
+    let novasMetas = req.body.goalArr;
+    var newObj = await collection.updateOne(
+      { _id: ObjectId(id) },
+      { $set: { [ano]: novasMetas } }
+    );
+    console.log(id);
+    console.log(req.body);
+    res.json(newObj);
   }
 }

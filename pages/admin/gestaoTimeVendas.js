@@ -31,8 +31,8 @@ function GestaoTimeDeVendas() {
           <h1 className="text-center font-bold">
             POTÊNCIA VENDIDA POR MÊS POR VENDEDOR
           </h1>
-          <div className="grid grid-cols-13 items-center border border-gray-200">
-            <h1 className="p-1 bg-[#15599a] font-bold text-center text-white border-r border-white">
+          <div className="grid grid-cols-13 items-center border border-gray-200 rounded-tr-lg rounded-tl-lg">
+            <h1 className="p-1 bg-[#15599a] font-bold text-center text-white border-r border-white rounded-tl-lg">
               NOME
             </h1>
             <h1 className="p-1 bg-[#15599a] font-bold text-center text-white border-r border-white">
@@ -68,12 +68,15 @@ function GestaoTimeDeVendas() {
             <h1 className="p-1 bg-[#15599a] font-bold text-center text-white border-r border-white">
               NOVEMBRO
             </h1>
-            <h1 className="p-1 bg-[#15599a] font-bold text-center text-white">
+            <h1 className="p-1 bg-[#15599a] font-bold text-center text-white rounded-tr-lg">
               DEZEMBRO
             </h1>
           </div>
-          {vendedores.map((vendedor) => (
-            <div className="grid grid-cols-13 items-center border border-gray-200">
+          {vendedores.map((vendedor, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-13 items-center border border-gray-200"
+            >
               <div className="p-1 font-bold flex items-center justify-center text-center text-xs bg-[#fff] text-gray-600 border-r border-gray-200 h-[60px]">
                 {vendedor.nome}
               </div>

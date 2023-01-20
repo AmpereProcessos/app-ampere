@@ -45,6 +45,15 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    res.json(result);
+    let newArr = result.map((item) => {
+      return {
+        vendedor: item._id.vendedor,
+        ano: item._id.ano,
+        mes: item._id.mes,
+        numProjetos: item.count,
+        potVendida: item.total,
+      };
+    });
+    res.json(newArr);
   }
 }

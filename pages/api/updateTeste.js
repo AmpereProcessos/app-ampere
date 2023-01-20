@@ -1,14 +1,14 @@
-import connectToDatabase from "../../utils/auxiliaresDb";
+import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  // const db = await connectToDatabase(process.env.DB_KEY);
-  // const collection = db.collection("monitoramento");
+  // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  // const collection = db.collection("dados");
   // let arr = await collection.updateMany(
   //   {
-  //     status: { $in: ["FECHADO", "RESOLVIDO"] },
+  //     "vendedor.nome": "DIOGO PAULINO ",
   //   },
   //   {
   //     $set: {
-  //       fechamento: "2023-01-12T08:00:00.000Z",
+  //       "vendedor.nome": "DIOGO PAULINO",
   //     },
   //   }
   // );

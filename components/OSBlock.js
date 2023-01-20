@@ -30,9 +30,7 @@ function OSBlock({ ordem, index, emAberto, categoria, info, setOs, os }) {
           color: "text-red-500",
         })
       );
-    console.log(index);
   }
-  console.log(info._id);
   return (
     <>
       <div

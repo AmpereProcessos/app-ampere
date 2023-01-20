@@ -915,7 +915,9 @@ function ModalComercial({
                       <input
                         disabled={!editor}
                         checked={
-                          infoHolder.padrao.caixaConjugada ? true : false
+                          infoHolder.padrao.caixaConjugada == "SIM"
+                            ? true
+                            : false
                         }
                         onChange={(e) => {
                           setChanges({

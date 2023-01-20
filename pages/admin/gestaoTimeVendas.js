@@ -700,7 +700,11 @@ function GestaoTimeDeVendas() {
         </div>
         {sellersInfo ? (
           sellersInfo.map((vendedor, index) => (
-            <VendedorMetaCard vendedor={vendedor} ano={filters.year} />
+            <VendedorMetaCard
+              key={index}
+              vendedor={vendedor}
+              ano={filters.year}
+            />
           ))
         ) : (
           <></>

@@ -25,7 +25,7 @@ function BandoDeDados({ data }) {
   const [filters, setFilters] = useState({
     cidadeFilter: [],
     vendedorFilter: [],
-    sorteioFilter: false,
+    entregaTecnicaFeita: false,
     condicaoOeM: "TODOS",
     numModulos: null,
   });
@@ -69,6 +69,10 @@ function BandoDeDados({ data }) {
       newArr = newArr.filter((call) =>
         filters.cidadeFilter.includes(call.cidade)
       );
+    }
+    if (filters.entregaTecnicaFeita) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) => call.jornada.entregaTecnica == true);
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!newArr) newArr = projects;
@@ -140,98 +144,22 @@ function BandoDeDados({ data }) {
             </p>
           )}
         </div>
-        {/**<nav aria-label="Page navigation example mt-2">
-          <ul className="inline-flex -space-x-px">
-            <li>
-              <p
-                onClick={() => handleFetchMoreProjects(1)}
-                className={`px-3 py-2 leading-tight text-gray-500 ${
-                  currentPage == 1 ? "bg-blue-100" : "bg-white"
-                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
-              >
-                1
-              </p>
-            </li>
-            <li>
-              <p
-                onClick={() => handleFetchMoreProjects(2)}
-                className={`px-3 py-2 leading-tight text-gray-500 ${
-                  currentPage == 2 ? "bg-blue-100" : "bg-white"
-                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
-              >
-                2
-              </p>
-            </li>
-            <li>
-              <p
-                onClick={() => handleFetchMoreProjects(3)}
-                className={`px-3 py-2 leading-tight text-gray-500 ${
-                  currentPage == 3 ? "bg-blue-100" : "bg-white"
-                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
-              >
-                3
-              </p>
-            </li>
-            <li>
-              <p
-                onClick={() => handleFetchMoreProjects(4)}
-                className={`px-3 py-2 leading-tight text-gray-500 ${
-                  currentPage == 4 ? "bg-blue-100" : "bg-white"
-                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
-              >
-                4
-              </p>
-            </li>
-            <li>
-              <p
-                onClick={() => handleFetchMoreProjects(5)}
-                className={`px-3 py-2 leading-tight text-gray-500 ${
-                  currentPage == 5 ? "bg-blue-100" : "bg-white"
-                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
-              >
-                5
-              </p>
-            </li>
-            <li>
-              <p
-                onClick={() => handleFetchMoreProjects(6)}
-                className={`px-3 py-2 leading-tight text-gray-500 ${
-                  currentPage == 6 ? "bg-blue-100" : "bg-white"
-                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
-              >
-                6
-              </p>
-            </li>
-            <li>
-              <p
-                onClick={() => handleFetchMoreProjects(7)}
-                className={`px-3 py-2 leading-tight text-gray-500 ${
-                  currentPage == 7 ? "bg-blue-100" : "bg-white"
-                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
-              >
-                7
-              </p>
-            </li>
-            <li>
-              <p
-                onClick={() => handleFetchMoreProjects(8)}
-                className={`px-3 py-2 leading-tight text-gray-500 ${
-                  currentPage == 8 ? "bg-blue-100" : "bg-white"
-                } border border-gray-300 hover:bg-gray-100 cursor-pointer hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
-              >
-                8
-              </p>
-            </li>
-          </ul>
-        </nav>
-
-        {opInProgress && (
-          <p className="text-center italic text-[#15599a] text-sm">
-            Carregando...
-          </p>
-        )} */}
-
         <div className="flex gap-2 flex-wrap justify-center mt-2">
+          <div
+            onClick={() => {
+              setFilters({
+                ...filters,
+                entregaTecnicaFeita: !filters.entregaTecnicaFeita,
+              });
+            }}
+            className={`${
+              filters.entregaTecnicaFeita
+                ? "bg-blue-500 hover:bg-blue-300 text-black hover:text-white"
+                : "bg-blue-300 hover:bg-blue-500 text-white hover:text-black"
+            } font-bold p-2 rounded h-[36px] cursor-pointer`}
+          >
+            ENTREGA TÉCNICA FEITA
+          </div>
           <Select
             isMulti
             placeholder="CIDADE"

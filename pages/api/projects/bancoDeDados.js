@@ -44,6 +44,7 @@ export default async function handler(req, res) {
             "medidor.data": 1,
             "compra.dataPedido": 1,
             "sistema.qtdeModulos": 1,
+            "jornada.entregaTecnica": 1,
           },
         },
         {

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { RiDashboardFill } from "react-icons/ri";
-import { TbRecharging } from "react-icons/tb";
+import { TbRecharging, TbDashboard } from "react-icons/tb";
 import {
   FaDatabase,
   FaShoppingCart,
@@ -367,6 +367,18 @@ function Sidebar() {
                       </Link>
                     )
                   : false}
+                {credentials.manager == true && (
+                  <Link href="/admin/gestaoTimeVendas">
+                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <TbDashboard
+                        style={{ color: "#15599a", fontSize: "20px" }}
+                      />
+                      <p className="pl-3 text-xs text-gray-600">
+                        Gestão - Time de Vendas
+                      </p>
+                    </a>
+                  </Link>
+                )}
                 {credentials.accessibleRoutes != undefined &&
                 credentials.regional == undefined
                   ? credentials?.accessibleRoutes?.includes("Pós-Venda") && (

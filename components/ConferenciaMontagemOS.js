@@ -107,7 +107,28 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
     if (cidadesGoias.includes(info.cidade)) {
       if (!images.medicoesCC) {
         setMsg({
-          text: "Por favor, adicione foto(s) de medições.",
+          text: "Por favor, adicione foto(s) de medições de corrente e tensão CC de todas as strings.",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!images.tensaoCAEntrada) {
+        setMsg({
+          text: "Por favor, adicione foto(s) de tensão CA fase e linha na entrada de energia.",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!images.tensaoCAQuadroCAAntesDoDisjuntor) {
+        setMsg({
+          text: "Por favor, adicione foto(s) de tensão CA fase e linha no quadro CA antes do disjuntor",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!images.tensaoCAQuadroCADepoisDoDisjuntor) {
+        setMsg({
+          text: "Por favor, adicione foto(s) de tensão CA fase e linha no quadro CA depois do disjuntor",
           color: "text-red-500",
         });
         return false;
@@ -293,6 +314,96 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
                 ? fileTypes[res.metadata.contentType].title
                 : "INDEFINIDO",
             });
+          }
+        }
+        if (cidadesGoias.includes(info.cidade)) {
+          if (images.medicoesCC) {
+            for (let i = 0; i < images.medicoesCC.length; i++) {
+              let file = images.medicoesCC.item(i);
+              var imageRef = ref(
+                storage,
+                `clientes/${cliente}/medicoesCC${i + 1}`
+              );
+              let res = await uploadBytes(imageRef, file);
+              let url = await getDownloadURL(
+                ref(storage, res.metadata.fullPath)
+              );
+              links.push({
+                title: `MEDIÇÕES CC (${i + 1})`,
+                link: url,
+                format: fileTypes[res.metadata.contentType]
+                  ? fileTypes[res.metadata.contentType].title
+                  : "INDEFINIDO",
+              });
+            }
+          }
+          if (images.tensaoCAEntrada) {
+            for (let i = 0; i < images.tensaoCAEntrada.length; i++) {
+              let file = images.tensaoCAEntrada.item(i);
+              var imageRef = ref(
+                storage,
+                `clientes/${cliente}/tensaoCAEntrada${i + 1}`
+              );
+              let res = await uploadBytes(imageRef, file);
+              let url = await getDownloadURL(
+                ref(storage, res.metadata.fullPath)
+              );
+              links.push({
+                title: `TENSÃO CA (ENTRADA) (${i + 1})`,
+                link: url,
+                format: fileTypes[res.metadata.contentType]
+                  ? fileTypes[res.metadata.contentType].title
+                  : "INDEFINIDO",
+              });
+            }
+          }
+          if (images.tensaoCAQuadroCAAntesDoDisjuntor) {
+            for (
+              let i = 0;
+              i < images.tensaoCAQuadroCAAntesDoDisjuntor.length;
+              i++
+            ) {
+              let file = images.tensaoCAQuadroCAAntesDoDisjuntor.item(i);
+              var imageRef = ref(
+                storage,
+                `clientes/${cliente}/tensaoCAQuadroCAAntesDoDisjuntor${i + 1}`
+              );
+              let res = await uploadBytes(imageRef, file);
+              let url = await getDownloadURL(
+                ref(storage, res.metadata.fullPath)
+              );
+              links.push({
+                title: `TENSÃO CA (QUADRO CA - ANTES DO DISJUNTOR) (${i + 1})`,
+                link: url,
+                format: fileTypes[res.metadata.contentType]
+                  ? fileTypes[res.metadata.contentType].title
+                  : "INDEFINIDO",
+              });
+            }
+          }
+          if (images.tensaoCAQuadroCADepoisDoDisjuntor) {
+            for (
+              let i = 0;
+              i < images.tensaoCAQuadroCADepoisDoDisjuntor.length;
+              i++
+            ) {
+              let file = images.tensaoCAQuadroCADepoisDoDisjuntor.item(i);
+              var imageRef = ref(
+                storage,
+                `clientes/${cliente}/tensaoCAQuadroCADepoisDoDisjuntor${i + 1}`
+              );
+              let res = await uploadBytes(imageRef, file);
+              let url = await getDownloadURL(
+                ref(storage, res.metadata.fullPath)
+              );
+              links.push({
+                title: `TENSÃO CA (QUADRO CA - DEPOIS DO DISJUNTOR) (${i + 1})`,
+                link: url,
+                format: fileTypes[res.metadata.contentType]
+                  ? fileTypes[res.metadata.contentType].title
+                  : "INDEFINIDO",
+              });
+            }
           }
         }
         // if (images.ligacoesFeitas) {

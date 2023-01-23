@@ -1,8 +1,30 @@
 import axios from "axios";
-import connectToDatabase from "../../utils/connectDb";
+import dayjs from "dayjs";
+import connectToDatabase from "../../utils/callsDb";
 import connectToISDatabase from "../../utils/insideSalesDb";
 export default async function handler(req, res) {
   if (req.method == "GET") {
+    const db = await connectToDatabase(process.env.DB_KEY);
+    const collection = db.collection("suporte");
+    let arr = await collection.find({}).toArray();
+    arr = arr.map((item) => {
+      return {
+        nomeUsina: item.nomeUsina ? item.nomeUsina : "-",
+        nomeCliente: item.nomeCliente ? item.nomeCliente : "-",
+        abertura: item.abertura
+          ? dayjs(item.abertura).format("DD/MM/YYYY")
+          : "-",
+        fechamento: item.fechamento
+          ? dayjs(item.fechamento).format("DD/MM/YYYY")
+          : "-",
+        tipoChamado: item.tipoChamado ? item.tipoChamado : "-",
+        descricao: item.descricaoProblema ? item.descricaoProblema : "-",
+        status: item.statusChamado ? item.statusChamado : "-",
+        anotacoes: item.anotacoes ? item.anotacoes : "-",
+        cidade: item.cidade ? item.cidade : "-",
+      };
+    });
+    res.json(arr);
     //UPDATING GESTÃO DE PROJETOS
     // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     // const collection = db.collection("dados");
@@ -26,14 +48,12 @@ export default async function handler(req, res) {
     //       );
     //     }
     //   });
-
     // res.json("OK");
-    const dbIS = await connectToISDatabase(process.env.DB_KEY);
-    const collectionIS = dbIS.collection("leads");
-    let cod = isNaN(req.query.cod) ? 0 : Number(req.query.cod);
-    let obj = await collectionIS.findOne({ codigoSVB: cod });
-
-    res.json(obj);
+    // const dbIS = await connectToISDatabase(process.env.DB_KEY);
+    // const collectionIS = dbIS.collection("leads");
+    // let cod = isNaN(req.query.cod) ? 0 : Number(req.query.cod);
+    // let obj = await collectionIS.findOne({ codigoSVB: cod });
+    // res.json(obj);
   }
 }
 /*  const cidadesAtendidas = [

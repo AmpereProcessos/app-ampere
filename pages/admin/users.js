@@ -2,17 +2,19 @@ import { TiDelete } from "react-icons/ti";
 import { RiAddCircleFill } from "react-icons/ri";
 import { AiFillEyeInvisible } from "react-icons/ai";
 import RoutesCard from "../../components/RoutesCard";
+import { AppContext } from "../../context/AppContext";
 import {
   acessAuth,
   regionais,
   routes,
   vendedores,
 } from "../../utils/constants";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 let positions = Object.keys(acessAuth);
 export default function UsersControl({ credentials, setCredentials }) {
+  const { credentials, setCredentials } = useContext(AppContext);
   const router = useRouter();
   const [name, setName] = useState("");
   const [login, setLogin] = useState("");
@@ -116,6 +118,9 @@ export default function UsersControl({ credentials, setCredentials }) {
   }
   // renders and re-render definers
   useEffect(() => {
+    if (!credentials.manager) {
+      router.push("/");
+    }
     setUserPosition(positions[0]);
     setUserRoutes(acessAuth[positions[0]].accessibleRoutes);
   }, []);

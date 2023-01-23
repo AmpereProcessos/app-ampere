@@ -3,6 +3,7 @@ import { VscChromeClose } from "react-icons/vsc";
 import { cidadesAtendidas, cities } from "../utils/constants";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
+import AnexoArquivo from "./AnexoArquivo";
 import dayjs from "dayjs";
 const MODAL_STYLES = {
   position: "fixed",
@@ -143,6 +144,22 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
         ultAlteracoes: ultAlteracoes,
       })
       .then((res) => {
+        updateModalInfo(info._id);
+      });
+  }
+  function addLinks(obj) {
+    setInfo({
+      ...infoHolder,
+      links: infoHolder.links ? [...infoHolder.links, obj] : [obj],
+    });
+    axios
+      .put("/api/calls/suporte/updateSuporte", {
+        ...infoHolder,
+        links:
+          infoHolder.links?.length > 0 ? [...infoHolder.links, obj] : [obj],
+      })
+      .then(() => {
+        setMessage({ text: "Link adicionado", color: "text-green-500" });
         updateModalInfo(info._id);
       });
   }
@@ -491,6 +508,54 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                   className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-100 min-h-[175px] h-fit text-center grow"
                 />
               </div>
+              {info.tipoChamado == "GOTEIRA" ||
+              info.tipoChamado == "DEFEITOS E GARANTIA" ? (
+                <div className="flex flex-col">
+                  <h1 className="text-center text-[#15599a] my-2 font-bold">
+                    ADIÇÃO DE IMAGENS
+                  </h1>
+                  <AnexoArquivo
+                    id={infoHolder.idPai}
+                    prevLinks={
+                      infoHolder.links
+                        ? { chamadosSuporte: infoHolder.links }
+                        : {}
+                    }
+                    cliente={
+                      infoHolder.nomeCliente
+                        ? `${infoHolder.nomeCliente}`
+                        : `${infoHolder.nomeUsina}`
+                    }
+                    categorias={[
+                      {
+                        label: "CHAMADOS DE SUPORTE",
+                        value: "links.chamadosSuporte",
+                      },
+                    ]}
+                    handleUpdates={(_, obj) => addLinks(obj)}
+                  />
+                  {infoHolder.links?.length > 0 && (
+                    <div className="flex flex-col">
+                      <h1 className="text-center font-bold">
+                        IMAGENS ANEXADAS
+                      </h1>
+                      <div className="flex flex-col items-center gap-1">
+                        {infoHolder.links.map((obj, index2) => (
+                          <a
+                            className="text-xs text-[#15599a] font-bold text-center"
+                            key={index2}
+                            href={obj.link}
+                          >
+                            {obj.title} ({obj.format})
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                false
+              )}
               {info.statusChamado == "RESOLVIDO" ? (
                 <div className="text-center">
                   <button

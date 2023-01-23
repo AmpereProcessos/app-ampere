@@ -55,7 +55,14 @@ function AnexoArquivo({ categorias, cliente, id, prevLinks, handleUpdates }) {
         setNomeDoArquivo("");
         setCategoria("NÃO DEFINIDO");
         setImagem(null);
-        handleUpdates(id);
+        handleUpdates(id, {
+          title: nomeDoArquivo,
+          link: url,
+          category: categorias.filter((x) => x.value == categoria)[0].label,
+          format: fileTypes[imagem.type]
+            ? fileTypes[imagem.type].title
+            : "INDEFINIDO",
+        });
       }
     } catch (error) {
       setMsg({

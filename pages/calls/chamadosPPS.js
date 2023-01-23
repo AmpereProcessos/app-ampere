@@ -260,7 +260,6 @@ function ChamadosPPS({ setCredentials, credentials }) {
               <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
                 <p>Observações:</p>
                 <p>
-                  {console.log(call.observacoes.length)}
                   {call.observacoes
                     ? call.observacoes.trim().length > 160
                       ? `${call.observacoes.substring(0, 160)}...`

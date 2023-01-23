@@ -48,7 +48,6 @@ function ModalCallPPS({
   updateModalInfo,
   credentials,
 }) {
-  console.log(info);
   var ultAlteracoes = {
     anotAlteracoes: {
       usuario: info.ultAlteracoes?.anotAlteracoes
@@ -80,6 +79,9 @@ function ModalCallPPS({
     },
   };
   let initialNote = info.anotacoes ? info.anotacoes : "";
+  // Letter handler
+  const escPress = useKeyPress("Escape");
+  // State Holders
   const [responsavel, setResponsavel] = useState(info.responsavel);
   const [notes, setNotes] = useState(initialNote);
   const [selectedStatus, setSelectedStatus] = useState(info.status);
@@ -87,6 +89,7 @@ function ModalCallPPS({
     text: "",
     color: "",
   });
+  // Functions
   function saveProject() {
     if (info.status != selectedStatus) {
       ultAlteracoes.statusAlteracoes.usuario = credentials._id;
@@ -154,6 +157,34 @@ function ModalCallPPS({
         ultAlteracoes: ultAlteracoes,
       })
       .then((res) => updateModalInfo(info._id));
+  }
+  function useKeyPress(targetKey) {
+    // State for keeping track of whether key is pressed
+    const [keyPressed, setKeyPressed] = useState(false);
+    // If pressed key is our target key then set to true
+    function downHandler({ key }) {
+      if (key === targetKey) {
+        setKeyPressed(true);
+        setModalIsOpen(false);
+      }
+    }
+    // If released key is our target key then set to false
+    const upHandler = ({ key }) => {
+      if (key === targetKey) {
+        setKeyPressed(false);
+      }
+    };
+    // Add event listeners
+    useEffect(() => {
+      window.addEventListener("keydown", downHandler);
+      window.addEventListener("keyup", upHandler);
+      // Remove event listeners on cleanup
+      return () => {
+        window.removeEventListener("keydown", downHandler);
+        window.removeEventListener("keyup", upHandler);
+      };
+    }, []); // Empty array ensures that effect is only run on mount and unmount
+    return keyPressed;
   }
   return (
     <>

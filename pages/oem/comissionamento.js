@@ -93,6 +93,12 @@ function Comissionamento() {
         filters.equipResp.includes(call.obra?.equipeResp)
       );
     }
+    if (filters.tipoEntregaFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.tipoEntregaFilter.includes(call.jornada.tipoEntregaTecnica)
+      );
+    }
     if (filters.usinaLigadaFilter.length > 0) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
@@ -288,6 +294,30 @@ function Comissionamento() {
                 value: cidade,
               };
             })}
+          />
+          <Select
+            isMulti
+            placeholder="TIPO DA ENTREGA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                tipoEntregaFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                label: "PRESENCIAL",
+                value: "PRESENCIAL",
+              },
+              {
+                label: "REMOTO",
+                value: "REMOTO",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
           />
           <button
             onClick={filterProjects}

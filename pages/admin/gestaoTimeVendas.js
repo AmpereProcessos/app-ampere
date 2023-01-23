@@ -18,6 +18,7 @@ function GestaoTimeDeVendas() {
   // Filters
   const [filters, setFilters] = useState({
     year: 2023,
+    yearFetched: 2023,
     seller: [],
   });
   function filterSellers() {
@@ -51,6 +52,7 @@ function GestaoTimeDeVendas() {
   );
   // Fetch functions
   function getStats(ano) {
+    setFilters({ ...filters, yearFetched: ano });
     axios.get(`/api/stats/gestaoTimeVendas?ano=${ano}`).then((res) => {
       let newArr = groupByVendedor(res.data);
       setStats(newArr);
@@ -71,8 +73,8 @@ function GestaoTimeDeVendas() {
         (item) => item.nome == nomeVendedor
       )[0];
       let metaVendedor =
-        vendedorInfo && vendedorInfo[filters.year]
-          ? vendedorInfo[filters.year][mes - 1]
+        vendedorInfo && vendedorInfo[filters.yearFetched]
+          ? vendedorInfo[filters.yearFetched][mes - 1]
           : 0;
       if (mesObj) {
         let text = `${Number(mesObj.potVendida)
@@ -125,9 +127,9 @@ function GestaoTimeDeVendas() {
         <h1 className="text-center text-[#15599a] font-bold">
           CONTROLE E GESTÃO DO TIME DE VENDAS
         </h1>
-        <div className="flex items-center justify-center gap-2">
-          <div className="flex flex-col items-center">
-            <h1 className="text-center font-bold">ANO DE ANÁLISE</h1>
+        <div className="flex items-center justify-center gap-2 my-2">
+          <div className="flex items-center gap-2">
+            <h1 className="text-center font-bold">ANO DE ANÁLISE:</h1>
             <input
               value={filters.year}
               onChange={(e) =>
@@ -691,7 +693,8 @@ function GestaoTimeDeVendas() {
             <VendedorMetaCard
               key={index}
               vendedor={vendedor}
-              ano={filters.year}
+              ano={filters.yearFetched}
+              getVendedoresInfo={getVendedoresInfo}
             />
           ))
         ) : (

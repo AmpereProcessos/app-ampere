@@ -112,6 +112,10 @@ function ComissionamentoPosObraCard({ project }) {
                 : "-"}
             </p>
           </div>
+          <div className="flex flex-col items-center">
+            <p className="text-xs text-[#15599a] font-bold">VENDEDOR</p>
+            <p className="text-xs text-gray-600">{info.vendedor.nome}</p>
+          </div>
         </div>
 
         <div className="flex items-center justify-center gap-1 flex-wrap col-span-9">

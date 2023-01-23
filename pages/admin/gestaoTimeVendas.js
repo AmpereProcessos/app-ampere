@@ -22,20 +22,30 @@ function GestaoTimeDeVendas() {
   });
   function filterSellers() {
     var newArr;
+    var newArrSellersInfo;
     if (filters.seller.length > 0) {
       if (!newArr) newArr = vendedores.filter((x) => x.nome != "NÃO DEFINIDO");
+      if (!newArrSellersInfo) newArrSellersInfo = sellersInfo;
       newArr = newArr.filter((item) => filters.seller.includes(item.nome));
+      newArrSellersInfo = newArrSellersInfo.filter((item) =>
+        filters.seller.includes(item.nome)
+      );
     }
 
-    if (!newArr)
-      return setSellers(vendedores.filter((x) => x.nome != "NÃO DEFINIDO"));
-    else {
-      return setSellers(newArr);
+    if (!newArr) {
+      setSellers(vendedores.filter((x) => x.nome != "NÃO DEFINIDO"));
+      setFilteredSellersInfo([...sellersInfo]);
+      return;
+    } else {
+      setFilteredSellersInfo(newArrSellersInfo);
+      setSellers(newArr);
+      return;
     }
   }
   // Data
   const [stats, setStats] = useState([]);
   const [sellersInfo, setSellersInfo] = useState([]);
+  const [filteredSellersInfo, setFilteredSellersInfo] = useState([]);
   const [sellers, setSellers] = useState(
     vendedores.filter((x) => x.nome != "NÃO DEFINIDO")
   );
@@ -47,9 +57,10 @@ function GestaoTimeDeVendas() {
     });
   }
   function getVendedoresInfo() {
-    axios
-      .get("/api/auxiliares/vendedoresInfo")
-      .then((res) => setSellersInfo(res.data));
+    axios.get("/api/auxiliares/vendedoresInfo").then((res) => {
+      setSellersInfo(res.data);
+      setFilteredSellersInfo(res.data);
+    });
   }
   // UI feeding function
   function getMonthlyPerformance(nomeVendedor, mes) {
@@ -100,7 +111,7 @@ function GestaoTimeDeVendas() {
     }
   }
   useEffect(() => {
-    if (credentials.manager) {
+    if (credentials.manager || credentials.visualizacao == "REGIONAL") {
       getVendedoresInfo();
       getStats(2023);
     } else {
@@ -631,29 +642,6 @@ function GestaoTimeDeVendas() {
         <h1 className="text-center font-bold text-xl">
           META MENSAL POR VENDEDOR
         </h1>
-        <div className="flex items-center flex-wrap gap-2 my-2">
-          <Select
-            isMulti
-            placeholder="VENDEDOR"
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                seller: e.map((x) => x.value),
-              })
-            }
-            options={vendedores
-              .filter((x) => x.nome != "NÃO DEFINIDO")
-              .map((vendedor) => {
-                return { label: vendedor.nome, value: vendedor.nome };
-              })}
-          />
-          <button
-            onClick={filterSellers}
-            className="bg-[#15599a] text-[#fead61] hover:bg-[#fead61] hover:text-[#15599a] font-bold text-center rounded p-2 h-[36px] self-end"
-          >
-            FILTRAR
-          </button>
-        </div>
         <div className="grid grid-cols-14 items-center border border-gray-200 rounded-tr-lg rounded-tl-lg w-full">
           <h1 className="p-1 bg-[#15599a] font-bold text-center text-white border-r border-white rounded-tl-lg">
             NOME
@@ -698,8 +686,8 @@ function GestaoTimeDeVendas() {
             AÇÃO
           </h1>
         </div>
-        {sellersInfo ? (
-          sellersInfo.map((vendedor, index) => (
+        {filteredSellersInfo ? (
+          filteredSellersInfo.map((vendedor, index) => (
             <VendedorMetaCard
               key={index}
               vendedor={vendedor}

@@ -367,7 +367,8 @@ function Sidebar() {
                       </Link>
                     )
                   : false}
-                {credentials.manager == true && (
+                {credentials.manager == true ||
+                credentials.visualizacao == "REGIONAL" ? (
                   <Link href="/admin/gestaoTimeVendas">
                     <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <TbDashboard
@@ -378,6 +379,8 @@ function Sidebar() {
                       </p>
                     </a>
                   </Link>
+                ) : (
+                  false
                 )}
                 {credentials.accessibleRoutes != undefined &&
                 credentials.regional == undefined

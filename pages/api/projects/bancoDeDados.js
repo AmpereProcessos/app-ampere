@@ -4,6 +4,8 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
+    var page = req.query.page;
+    let matchFrom = 500 * (page - 1);
     // let arr = await collection
     //   .find(
     //     {
@@ -30,6 +32,9 @@ export default async function handler(req, res) {
     let arr = await collection
       .aggregate([
         {
+          $match: { qtde: { $gte: matchFrom } },
+        },
+        {
           $project: {
             _id: 1,
             qtde: 1,
@@ -52,18 +57,21 @@ export default async function handler(req, res) {
             "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
           },
         },
+        {
+          $limit: 500,
+        },
       ])
       .toArray();
     res.json(arr);
   } else if (req.method === "POST") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
+    let matchObj = req.body;
+    console.log(matchObj);
     let arr = await collection
       .aggregate([
         {
-          $match: {
-            "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
-          },
+          $match: matchObj,
         },
         {
           $project: {
@@ -91,7 +99,7 @@ export default async function handler(req, res) {
       ])
       .toArray();
     // res.json(arr);
-    return NextResponse.json(arr);
+    return res.json(arr);
   }
 }
 export const config = {

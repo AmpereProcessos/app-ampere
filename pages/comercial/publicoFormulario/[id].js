@@ -29,6 +29,9 @@ function Formulario({ info }) {
             <h1 className="text-center font-bold text-[#fead61] mt-1 text-xl">
               FORMULÁRIO DE SOLICITAÇÃO DE CONTRATO
             </h1>
+            <h1 className="text-center font-bold my-1 text-green-500">
+              SERVIÇO: {dados.tipoDeServico}
+            </h1>
           </div>
           <div className="w-full flex justify-around border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
             <div className="text-center">

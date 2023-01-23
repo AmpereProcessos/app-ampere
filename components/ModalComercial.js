@@ -126,7 +126,7 @@ function ModalComercial({
         color: "text-red-400",
       });
     } else if (
-      infoHolder.linkDrive?.trim().length < 15 &&
+      infoHolder.linkDrive?.trim().length < 5 &&
       (infoHolder.compra?.statusLiberacao == "REALIZAR COMPRA" ||
         infoHolder.compra?.statusLiberacao == "PAGO")
     ) {

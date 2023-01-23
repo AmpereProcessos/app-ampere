@@ -27,6 +27,9 @@ export default async function handler(req, res) {
             "medidor.data": 1,
             "obra.saida": 1,
             "obra.equipeResp": 1,
+            "jornada.entregaTecnica": 1,
+            "jornada.tipoEntregaTecnica": 1,
+            "vendedor.nome": 1,
           },
         },
         {

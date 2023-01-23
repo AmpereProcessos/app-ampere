@@ -9,10 +9,16 @@ import dayjs from "dayjs";
 import { AppContext } from "../../context/AppContext";
 function BandoDeDados({ data }) {
   const { credentials, setCredentials } = useContext(AppContext);
+
+  // Data
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
+
+  // Modal Control
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
+
+  // Filters
   const [searchFilter, setSearchFilter] = useState("");
   const [opInProgress, setOpInProgress] = useState(false);
   const [dateFilter, setDateFilter] = useState({
@@ -29,6 +35,8 @@ function BandoDeDados({ data }) {
     condicaoOeM: "TODOS",
     numModulos: null,
   });
+
+  // Functions
   function getProjects(page) {
     setOpInProgress(true);
     axios
@@ -81,7 +89,7 @@ function BandoDeDados({ data }) {
           : { $ne: null },
       "jornada.entregaTecnica": filters.entregaTecnicaFeita
         ? true
-        : { $ne: null },
+        : { $in: [null, true, false] },
     };
     // setCurrentPage(page);
     // setOpInProgress(true);

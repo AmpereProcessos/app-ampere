@@ -5,7 +5,11 @@ import { useRouter } from "next/router";
 import Select from "react-select";
 import { AppContext } from "../../context/AppContext";
 import ComissionamentoPosObraCard from "../../components/ComissionamentoPosObraCard";
-import { cidadesAtendidas, equipesTecnicas } from "../../utils/constants";
+import {
+  cidadesAtendidas,
+  equipesTecnicas,
+  vendedores,
+} from "../../utils/constants";
 
 function Comissionamento() {
   const { credentials } = useContext(AppContext);
@@ -17,6 +21,7 @@ function Comissionamento() {
     cidadeFilter: [],
     equipResp: [],
     usinaLigadaFilter: [],
+    vendedorFilter: [],
     appPendente: false,
     energiaInjetadaPendente: false,
     entregaTecnicaPendente: false,
@@ -60,7 +65,8 @@ function Comissionamento() {
       newArr = newArr.filter(
         (project) =>
           project.medidor.data != undefined &&
-          project.jornada?.entregaTecnica == undefined
+          (project.jornada?.tipoEntregaTecnica == undefined ||
+            project.jornada?.tipoEntregaTecnica == "NÃO DEFINIDO")
       );
     }
     if (filters.pesquisaFilter.length > 0) {
@@ -73,6 +79,12 @@ function Comissionamento() {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.cidadeFilter.includes(call.cidade)
+      );
+    }
+    if (filters.vendedorFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.vendedorFilter.includes(call.vendedor.nome)
       );
     }
     if (filters.equipResp.length > 0) {
@@ -247,6 +259,19 @@ function Comissionamento() {
               })
             }
             options={equipesTecnicas.map((equipe) => equipe)}
+          />
+          <Select
+            isMulti
+            placeholder="VENDEDOR"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                vendedorFilter: e.map((x) => x.value),
+              })
+            }
+            options={vendedores.map((vendedor) => {
+              return { label: vendedor.nome, value: vendedor.nome };
+            })}
           />
           <Select
             isMulti

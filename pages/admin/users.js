@@ -13,7 +13,7 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 let positions = Object.keys(acessAuth);
-export default function UsersControl({ credentials, setCredentials }) {
+export default function UsersControl() {
   const { credentials, setCredentials } = useContext(AppContext);
   const router = useRouter();
   const [name, setName] = useState("");

@@ -31,6 +31,7 @@ function GestaoTimeDeVendas() {
       newArrSellersInfo = newArrSellersInfo.filter((item) =>
         filters.seller.includes(item.nome)
       );
+      console.log(newArrSellersInfo);
     }
 
     if (!newArr) {
@@ -120,6 +121,7 @@ function GestaoTimeDeVendas() {
       router.push("/");
     }
   }, []);
+  console.log(filteredSellersInfo);
   // console.log(stats);
   return (
     <div className="flex flex-col p-6 grow">
@@ -691,7 +693,7 @@ function GestaoTimeDeVendas() {
         {filteredSellersInfo ? (
           filteredSellersInfo.map((vendedor, index) => (
             <VendedorMetaCard
-              key={index}
+              key={vendedor.nome}
               vendedor={vendedor}
               ano={filters.yearFetched}
               getVendedoresInfo={getVendedoresInfo}

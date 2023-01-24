@@ -450,7 +450,12 @@ export async function getServerSideProps(context) {
   let ligamentoUsina = arr.filter(
     (x) => x.conferencias?.usinaLigada.status == "NÃO REALIZADO"
   );
-  let entregaTecnica = arr.filter((x) => x.jornada?.entregaTecnica != true);
+  let entregaTecnica = arr.filter(
+    (x) =>
+      x.jornada?.entregaTecnica != true &&
+      x.contrato.status == "ASSINADO" &&
+      x.obra.statusDaObra == "CONCLUIDA"
+  );
 
   assContrato = JSON.parse(JSON.stringify(assContrato));
   compraDoKit = JSON.parse(JSON.stringify(compraDoKit));

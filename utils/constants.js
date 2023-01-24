@@ -426,6 +426,14 @@ export const vendedores = [
     cod: 72,
   },
   {
+    nome: "MARCUS VINÍCIUS",
+    cod: 73,
+  },
+  {
+    nome: "LEONARDO VILARINHO",
+    cod: 75,
+  },
+  {
     nome: "NÃO DEFINIDO",
     cod: 999,
   },

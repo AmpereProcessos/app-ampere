@@ -60,37 +60,154 @@ function BandoDeDados({ data }) {
   //   }
   // }
   function handleGetByFilters() {
-    var matchObj = {
-      cidade:
-        filters.cidadeFilter.length > 0
-          ? { $in: filters.cidadeFilter }
+    var matchObj;
+    if (filters.condicaoOeM == "TODOS") {
+      matchObj = {
+        cidade:
+          filters.cidadeFilter.length > 0
+            ? { $in: filters.cidadeFilter }
+            : { $ne: null },
+        "vendedor.nome":
+          filters.vendedorFilter.length > 0
+            ? { $in: filters.vendedorFilter }
+            : { $ne: null },
+        "sistema.qtdeModulos":
+          filters.numModulos != 0 && filters.numModulos
+            ? { $gte: filters.numModulos }
+            : { $ne: null },
+        [`${
+          dateFilter.field1
+            ? `${[dateFilter.field1]}.${[dateFilter.field2]}`
+            : "qtde"
+        }`]: dateFilter.field1
+          ? {
+              $gte: dateFilter.after,
+              $lte: dateFilter.before,
+            }
           : { $ne: null },
-      "vendedor.nome":
-        filters.vendedorFilter.length > 0
-          ? { $in: filters.vendedorFilter }
+        nomeDoContrato:
+          searchFilter.length > 0
+            ? { $regex: searchFilter.toUpperCase() }
+            : { $ne: null },
+        "jornada.entregaTecnica": filters.entregaTecnicaFeita
+          ? true
+          : { $in: [null, true, false] },
+      };
+    }
+    if (filters.condicaoOeM == "O&M EM VENCIMENTO") {
+      matchObj = {
+        cidade:
+          filters.cidadeFilter.length > 0
+            ? { $in: filters.cidadeFilter }
+            : { $ne: null },
+        "vendedor.nome":
+          filters.vendedorFilter.length > 0
+            ? { $in: filters.vendedorFilter }
+            : { $ne: null },
+        "sistema.qtdeModulos":
+          filters.numModulos != 0 && filters.numModulos
+            ? { $gte: filters.numModulos }
+            : { $ne: null },
+        [`${
+          dateFilter.field1
+            ? `${[dateFilter.field1]}.${[dateFilter.field2]}`
+            : "qtde"
+        }`]: dateFilter.field1
+          ? {
+              $gte: dateFilter.after,
+              $lte: dateFilter.before,
+            }
           : { $ne: null },
-      "sistema.qtdeModulos":
-        filters.numModulos != 0 && filters.numModulos
-          ? { $gte: filters.numModulos }
+        nomeDoContrato:
+          searchFilter.length > 0
+            ? { $regex: searchFilter.toUpperCase() }
+            : { $ne: null },
+        "jornada.entregaTecnica": filters.entregaTecnicaFeita
+          ? true
+          : { $in: [null, true, false] },
+        $and: [
+          {
+            $expr: {
+              $gt: [
+                {
+                  $dateDiff: {
+                    startDate: {
+                      $dateFromString: { dateString: "$medidor.data" },
+                    },
+                    endDate: ISODate("2023-01-24T08:00:00.000Z"),
+                    unit: "day",
+                  },
+                },
+                350,
+              ],
+            },
+          },
+          {
+            $expr: {
+              $lt: [
+                {
+                  $dateDiff: {
+                    startDate: {
+                      $dateFromString: { dateString: "$medidor.data" },
+                    },
+                    endDate: ISODate("2023-01-24T08:00:00.000Z"),
+                    unit: "day",
+                  },
+                },
+                365,
+              ],
+            },
+          },
+        ],
+      };
+    }
+    if (filters.condicaoOeM == "O&M VENDIDO") {
+      matchObj = {
+        cidade:
+          filters.cidadeFilter.length > 0
+            ? { $in: filters.cidadeFilter }
+            : { $ne: null },
+        "vendedor.nome":
+          filters.vendedorFilter.length > 0
+            ? { $in: filters.vendedorFilter }
+            : { $ne: null },
+        "sistema.qtdeModulos":
+          filters.numModulos != 0 && filters.numModulos
+            ? { $gte: filters.numModulos }
+            : { $ne: null },
+        [`${
+          dateFilter.field1
+            ? `${[dateFilter.field1]}.${[dateFilter.field2]}`
+            : "qtde"
+        }`]: dateFilter.field1
+          ? {
+              $gte: dateFilter.after,
+              $lte: dateFilter.before,
+            }
           : { $ne: null },
-      [`${
-        dateFilter.field1
-          ? `${[dateFilter.field1]}.${[dateFilter.field2]}`
-          : "qtde"
-      }`]: dateFilter.field1
-        ? {
-            $gte: dateFilter.after,
-            $lte: dateFilter.before,
-          }
-        : { $ne: null },
-      nomeDoContrato:
-        searchFilter.length > 0
-          ? { $regex: searchFilter.toUpperCase() }
-          : { $ne: null },
-      "jornada.entregaTecnica": filters.entregaTecnicaFeita
-        ? true
-        : { $in: [null, true, false] },
-    };
+        nomeDoContrato:
+          searchFilter.length > 0
+            ? { $regex: searchFilter.toUpperCase() }
+            : { $ne: null },
+        "jornada.entregaTecnica": filters.entregaTecnicaFeita
+          ? true
+          : { $in: [null, true, false] },
+        $expr: {
+          $gt: [
+            {
+              $dateDiff: {
+                startDate: {
+                  $dateFromString: { dateString: "$medidor.data" },
+                },
+                endDate: ISODate("2023-01-24T08:00:00.000Z"),
+                unit: "day",
+              },
+            },
+            365,
+          ],
+        },
+      };
+    }
     // setCurrentPage(page);
     // setOpInProgress(true);
     // let lastId = projects.length > 0 ? projects[projects.length - 1].qtde : 0;

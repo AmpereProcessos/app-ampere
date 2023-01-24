@@ -7,6 +7,8 @@ import LaudoTecnicoRural from "../../../../components/LaudoTecnicoRural";
 import LaudoSimplesRural from "../../../../components/LaudoSimplesRural";
 import connectToSolicitacoesDatabase from "../../../../utils/solicitacoesDb";
 import { ObjectId } from "mongodb";
+import LaudoFormularioVisitaUrbano from "../../../../components/LaudoFormularioVisitaUrbano";
+import LaudoFormularioVisitaRural from "../../../../components/LaudoFormularioVisitaRural";
 function Laudo({ info, tipo }) {
   console.log(info);
   return (
@@ -18,6 +20,12 @@ function Laudo({ info, tipo }) {
       )}
       {tipo == "LAUDO TÉCNICO(RURAL)" && <LaudoTecnicoRural info={info} />}
       {tipo == "LAUDO SIMPLES(RURAL)" && <LaudoSimplesRural info={info} />}
+      {tipo == "FORMULÁRIO(URBANO)" && (
+        <LaudoFormularioVisitaUrbano info={info} />
+      )}
+      {tipo == "FORMULÁRIO(RURAL)" && (
+        <LaudoFormularioVisitaRural info={info} />
+      )}
     </>
   );
 }

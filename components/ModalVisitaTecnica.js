@@ -2588,6 +2588,14 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     label: "LAUDO SIMPLES(RURAL)",
                     value: "LAUDO SIMPLES(RURAL)",
                   },
+                  {
+                    label: "FORMULÁRIO(URBANO)",
+                    value: "FORMULÁRIO(URBANO)",
+                  },
+                  {
+                    label: "FORMULÁRIO(RURAL)",
+                    value: "FORMULÁRIO(RURAL)",
+                  },
                 ]}
                 handleChange={(value) => setLaudoType(value)}
               />

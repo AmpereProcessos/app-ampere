@@ -22,6 +22,7 @@ function Comissionamento() {
     equipResp: [],
     usinaLigadaFilter: [],
     vendedorFilter: [],
+    tipoEntregaFilter: [],
     appPendente: false,
     energiaInjetadaPendente: false,
     entregaTecnicaPendente: false,
@@ -51,6 +52,7 @@ function Comissionamento() {
     if (filters.appPendente) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((project) => project.app.data == undefined);
+      console.log(newArr);
     }
     if (filters.energiaInjetadaPendente) {
       if (!newArr) newArr = projects;

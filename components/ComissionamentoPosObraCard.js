@@ -71,7 +71,6 @@ function ComissionamentoPosObraCard({ project }) {
       return "border border-[#15599a]";
     }
   }
-  console.log(changes);
   return (
     <div
       className={`grid grid-rows-6 grid-cols-1 lg:grid-cols-10 lg:grid-rows-1 ${getBorderColor(

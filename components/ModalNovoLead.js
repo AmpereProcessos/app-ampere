@@ -333,7 +333,7 @@ function NovoLead({ setModalIsOpen, getLeads }) {
                   onChange={(e) =>
                     setInfo({
                       ...info,
-                      dataDeAquisicao: e.target.value,
+                      dataDeAquisicao: new Date(e.target.value).toISOString(),
                     })
                   }
                   className="outline-none grow p-2 h-full text-center col-span-8"

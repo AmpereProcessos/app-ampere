@@ -1,53 +1,45 @@
 import axios from "axios";
 import dayjs from "dayjs";
+import { ObjectId } from "mongodb";
 import connectToDatabase from "../../utils/callsDb";
 import connectToISDatabase from "../../utils/insideSalesDb";
 export default async function handler(req, res) {
   if (req.method == "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY);
-    const collection = db.collection("suporte");
-    let arr = await collection.find({}).toArray();
-    arr = arr.map((item) => {
-      return {
-        nomeUsina: item.nomeUsina ? item.nomeUsina : "-",
-        nomeCliente: item.nomeCliente ? item.nomeCliente : "-",
-        abertura: item.abertura
-          ? dayjs(item.abertura).format("DD/MM/YYYY")
-          : "-",
-        fechamento: item.fechamento
-          ? dayjs(item.fechamento).format("DD/MM/YYYY")
-          : "-",
-        tipoChamado: item.tipoChamado ? item.tipoChamado : "-",
-        descricao: item.descricaoProblema ? item.descricaoProblema : "-",
-        status: item.statusChamado ? item.statusChamado : "-",
-        anotacoes: item.anotacoes ? item.anotacoes : "-",
-        cidade: item.cidade ? item.cidade : "-",
-      };
-    });
-    res.json(arr);
+    // const db = await connectToDatabase(process.env.DB_KEY);
+    // const collection = db.collection("suporte");
+    // let arr = await collection.find({}).toArray();
+    // arr = arr.map((item) => {
+    //   return {
+    //     nomeUsina: item.nomeUsina ? item.nomeUsina : "-",
+    //     nomeCliente: item.nomeCliente ? item.nomeCliente : "-",
+    //     abertura: item.abertura
+    //       ? dayjs(item.abertura).format("DD/MM/YYYY")
+    //       : "-",
+    //     fechamento: item.fechamento
+    //       ? dayjs(item.fechamento).format("DD/MM/YYYY")
+    //       : "-",
+    //     tipoChamado: item.tipoChamado ? item.tipoChamado : "-",
+    //     descricao: item.descricaoProblema ? item.descricaoProblema : "-",
+    //     status: item.statusChamado ? item.statusChamado : "-",
+    //     anotacoes: item.anotacoes ? item.anotacoes : "-",
+    //     cidade: item.cidade ? item.cidade : "-",
+    //   };
+    // });
+    // res.json(arr);
     //UPDATING GESTÃO DE PROJETOS
-    // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    // const collection = db.collection("dados");
     // const dbIS = await connectToISDatabase(process.env.DB_KEY);
     // const collectionIS = dbIS.collection("leads");
-    // var leads = await collectionIS.find({}).toArray();
-    // let arr = await collection
-    //   .aggregate([
-    //     {
-    //       $project: {
-    //         codigoSVB: 1,
-    //       },
-    //     },
-    //   ])
-    //   .forEach(function (x) {
-    //     let indexInLeads = leads.findIndex((y) => y.codigoSVB == x.codigoSVB);
-    //     if (indexInLeads != -1) {
-    //       collection.updateOne(
-    //         { _id: x._id },
-    //         { $set: { insider: leads[indexInLeads].responsavel } }
-    //       );
-    //     }
-    //   });
+    // let arr = await collectionIS.find().forEach(function (x) {
+    //   let date = x.dataDeAquisicao
+    //     ? new Date(x.dataDeAquisicao).toISOString()
+    //     : null;
+    //   console.log(date);
+    //   collectionIS.updateOne(
+    //     { _id: ObjectId(x._id) },
+    //     { $set: { dataDeAquisicao: date } }
+    //   );
+    // });
+    // res.json("OK");
     // res.json("OK");
     // const dbIS = await connectToISDatabase(process.env.DB_KEY);
     // const collectionIS = dbIS.collection("leads");

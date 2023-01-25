@@ -46,7 +46,7 @@ function NovoLead({ setModalIsOpen, getLeads }) {
     dataDeAquisicao: new Date(),
     consumo: 0,
     vendedor: "NÃO DEFINIDO",
-    dataEnvio: null,
+    dataDeEnvio: null,
     codigoSVB: 0,
     nicho: "NÃO DEFINIDO",
     leadscoreProduto: "NÃO DEFINIDO",
@@ -113,7 +113,7 @@ function NovoLead({ setModalIsOpen, getLeads }) {
       axios
         .post("/api/insideSales/newLead", {
           ...info,
-          dataEnvio: new Date().toISOString(),
+          dataDeEnvio: new Date().toISOString(),
           responsavel: credentials.vendedor
             ? credentials.vendedor
             : credentials.nome,

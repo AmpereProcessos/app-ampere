@@ -151,13 +151,17 @@ function Comercial({ users }) {
   function getListCumulativePeakPot() {
     var totalSum = 0;
     for (var i = 0; i < filteredProjects.length; i++) {
-      let pot = filteredProjects[i].sistema?.potPico
-        ? filteredProjects[i].sistema.potPico
-        : null;
-      if (isNaN(pot)) {
+      if (filteredProjects[i].tipoDeServico == "OPERAÇÃO E MANUTENÇÃO") {
         totalSum = totalSum;
       } else {
-        totalSum = totalSum + pot;
+        let pot = filteredProjects[i].sistema?.potPico
+          ? filteredProjects[i].sistema.potPico
+          : null;
+        if (isNaN(pot)) {
+          totalSum = totalSum;
+        } else {
+          totalSum = totalSum + pot;
+        }
       }
     }
     return totalSum.toFixed(2);

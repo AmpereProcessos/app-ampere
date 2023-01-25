@@ -189,6 +189,7 @@ export default async function handler(req, res) {
         efetivoCustos: project.custosinsumos,
         notaFiscal: project.notafiscal,
         materialFaltante: project.materialfaltando,
+        chamadoIrregularidade: project.chamadoIrregularidade,
       },
       manutencaoPreventiva: fixUsinaLigada(project.datamanutencaoprev),
       relatorios: {

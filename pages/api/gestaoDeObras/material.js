@@ -10,14 +10,15 @@ export default async function handler(req, res) {
           $match: {
             "compra.statusEntrega": "ENTREGUE",
             "compra.previsaoEntrega": { $ne: null },
+            "compra.dataEntrega": { $ne: null },
           },
         },
         {
           $addFields: {
             tempoPassado: {
               $dateDiff: {
-                startDate: { $toDate: "$compra.previsaoEntrega" },
-                endDate: { $toDate: "2023-01-17" },
+                startDate: { $toDate: "$compra.dataEntrega" },
+                endDate: { $toDate: new Date().toISOString() },
                 unit: "day",
               },
             },
@@ -42,7 +43,7 @@ export default async function handler(req, res) {
         },
         {
           $sort: {
-            qtde: 1,
+            tempoPassado: -1,
           },
         },
       ])

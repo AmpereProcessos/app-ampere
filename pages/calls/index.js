@@ -52,7 +52,19 @@ function Calls() {
           <Link href="/calls/chamadosADM">
             <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
-                Chamados adm
+                Chamados ADM
+              </h1>
+            </div>
+          </Link>
+        ) : (
+          false
+        )}
+        {credentials.accessibleRoutes != undefined &&
+        credentials.accessibleRoutes.includes("Suprimentos") ? (
+          <Link href="/calls/chamadosSuprimentos">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+              <h1 className="text-center uppercase font-raleway">
+                Chamados Suprimentos
               </h1>
             </div>
           </Link>

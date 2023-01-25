@@ -1,6 +1,7 @@
-import axios from "axios";
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import { FaSave } from "react-icons/fa";
+import axios from "axios";
 function MaterialCard({ project }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
@@ -8,15 +9,15 @@ function MaterialCard({ project }) {
     text: "",
     color: "",
   });
-  function handleChanges() {
+  function handleChanges(changes) {
     axios
       .post("/api/gestaoDeObras/material", {
         id: project._id,
         mudancas: changes,
       })
-      .then((res) =>
-        setMsg({ text: "Alterações feitas", color: "text-green-500" })
-      )
+      .then((res) => {
+        setMsg({ text: "Alterações feitas!", color: "text-green-500" });
+      })
       .catch((err) =>
         setMsg({
           text: "Ocorreu um problema com o salvamento, tente novamente.",
@@ -24,13 +25,80 @@ function MaterialCard({ project }) {
         })
       );
   }
-  console.log(project.nomeDoContrato, changes["material.conferenciaFeita"]);
+  function openCall() {
+    let obj = {
+      status: "ABERTO",
+      idPai: infoHolder._id,
+      codigoProjeto: infoHolder.qtde,
+      nomeDoContrato: infoHolder.nomeDoContrato,
+      dataEntrega: infoHolder.compra?.dataEntrega,
+      fornecedor: infoHolder.compra.fornecedor,
+      kitInfo: infoHolder.compra?.kitInfo,
+      materialFaltante: infoHolder.material?.materialFaltante,
+      avarias: infoHolder.material.avarias ? true : false,
+      entregaFaltando: infoHolder.material.entregaFaltando ? true : false,
+      observacao: infoHolder.material.descricaoProblema,
+      abertura: new Date().toISOString(),
+    };
+    axios
+      .post("/api/calls/suprimentos/mainData", obj)
+      .then((res) => {
+        {
+          setMsg({ text: res.data, color: "text-green-500" });
+          setTimeout(
+            () =>
+              handleChanges({
+                ...changes,
+                "material.chamadoIrregularidade": true,
+              }),
+            1000
+          );
+          setTimeout;
+        }
+      })
+      .catch((err) =>
+        setMsg({ text: err.response.data, color: "text-red-500" })
+      );
+  }
   return (
     <div className="flex flex-col p-2 shadow-lg w-full border border-[#15599a]">
       <div className="flex items-center justify-between">
         <h1 className="text-[#15599a] font-bold">
           (#{project.qtde}) {project.nomeDoContrato}
         </h1>
+        <div className="flex items-center gap-2">
+          <div className="flex flex-col items-center">
+            <h1 className="text-center font-bold text-gray-700 text-sm">
+              FORNECEDOR
+            </h1>
+            <h1 className="text-center text-xs text-gray-500">
+              {infoHolder.compra?.fornecedor
+                ? infoHolder.compra.fornecedor
+                : "-"}
+            </h1>
+          </div>
+          <div className="flex flex-col items-center">
+            <h1 className="text-center font-bold text-gray-700 text-sm">
+              DATA DE ENTREGA
+            </h1>
+            <h1 className="text-center text-xs text-gray-500">
+              {infoHolder.compra?.dataEntrega
+                ? dayjs(infoHolder.compra.dataEntrega).format("DD/MM/YYYY")
+                : "-"}
+            </h1>
+          </div>
+          <div className="flex flex-col items-center">
+            <h1 className="text-center font-bold text-gray-700 text-sm">
+              TEMPO DESDE ENTREGA
+            </h1>
+            <h1 className="text-center text-xs text-gray-500">
+              {infoHolder.tempoPassado
+                ? `${infoHolder.tempoPassado} DIAS`
+                : "-"}
+            </h1>
+          </div>
+        </div>
+
         <div className="flex items-center gap-x-2 flex-wrap justify-center pb-2">
           <div className="flex flex-col w-fit items-center">
             <span className="font-bold font-raleway text-center text-sm">
@@ -123,7 +191,7 @@ function MaterialCard({ project }) {
             </div>
           </div>
           <button
-            onClick={handleChanges}
+            onClick={() => handleChanges(changes)}
             className="flex items-center gap-x-3 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
           >
             <p>Salvar alterações</p>
@@ -131,35 +199,7 @@ function MaterialCard({ project }) {
           </button>
         </div>
       </div>
-      {msg.text && (
-        <p className={`text-center italic ${msg.color}`}>{msg.text}</p>
-      )}
       <div className="w-full flex flex-wrap items-center justify-center gap-x-4  border-t border-gray-200">
-        <div className="flex justify-center">
-          <div className="flex flex-col w-[300px] self-center mt-2 items-center">
-            <span className="uppercase font-bold font-raleway text-center text-sm">
-              DESCRIÇÃO DO PROBLEMA
-            </span>
-            <textarea
-              value={infoHolder.material.descricaoProblema}
-              placeholder={"Descrição do problema encontrado aqui..."}
-              onChange={(e) => {
-                setInfo({
-                  ...infoHolder,
-                  material: {
-                    ...infoHolder.material,
-                    descricaoProblema: e.target.checked,
-                  },
-                });
-                setChanges({
-                  ...changes,
-                  "material.descricaoProblema": e.target.value,
-                });
-              }}
-              className="w-full mb-2 text-center text-xs h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-            />
-          </div>
-        </div>
         <div className="flex flex-col w-[300px] self-center mt-2 items-center">
           <span className="uppercase font-bold font-raleway text-center text-sm">
             INFORMAÇÕES DO KIT
@@ -215,6 +255,52 @@ function MaterialCard({ project }) {
           />
         </div>
       </div>
+      {infoHolder.material.entregaFaltando || infoHolder.material.avarias ? (
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex justify-center">
+            <div className="flex flex-col w-[300px] self-center mt-2 items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                DESCRIÇÃO DO PROBLEMA
+              </span>
+              <textarea
+                value={infoHolder.material.descricaoProblema}
+                placeholder={"Descrição do problema encontrado aqui..."}
+                onChange={(e) => {
+                  setInfo({
+                    ...infoHolder,
+                    material: {
+                      ...infoHolder.material,
+                      descricaoProblema: e.target.value,
+                    },
+                  });
+                  setChanges({
+                    ...changes,
+                    "material.descricaoProblema": e.target.value,
+                  });
+                }}
+                className="w-full mb-2 text-center text-xs h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+              />
+            </div>
+          </div>
+          {msg.text && (
+            <p className={`text-center italic ${msg.color}`}>{msg.text}</p>
+          )}
+          {infoHolder.material.chamadoIrregularidade ? (
+            <p className="text-center text-green-500 font-bold">
+              CHAMADO CRIADO PARA ESSE CLIENTE
+            </p>
+          ) : (
+            <button
+              onClick={openCall}
+              className="p-2 rounded border border-[#15599a] text-[#15599a] font-bold hover:text-white hover:bg-[#15599a]"
+            >
+              ABRIR CHAMADO
+            </button>
+          )}
+        </div>
+      ) : (
+        false
+      )}
     </div>
   );
 }

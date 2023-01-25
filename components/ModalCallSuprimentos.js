@@ -60,7 +60,7 @@ function ModalCallSuprimentos({ setModalIsOpen, info, getCalls }) {
         mudancas: { status: "ABERTO", fechamento: undefined },
       })
       .then((res) => {
-        setModalInfo({ ...modalInfo, status: "FECHADO" });
+        setModalInfo({ ...modalInfo, status: "ABERTO" });
         setMessage({ text: "Chamado finalizado !", color: "text-green-500" });
         getCalls();
       });
@@ -91,10 +91,50 @@ function ModalCallSuprimentos({ setModalIsOpen, info, getCalls }) {
               </button>
             </div>
             <div className="flex flex-col gap-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 py-3">
-              <div className="flex items-center justify-center w-full  p-2">
-                <h1 className="text-sm font-bold text-yellow-500 border-2 border-yellow-500 p-2 rounded">
-                  {modalInfo.status}
-                </h1>
+              <div className="flex items-center justify-center gap-2 w-full  p-2">
+                {modalInfo.status != "FECHADO" ? (
+                  <>
+                    <h1
+                      onClick={() => {
+                        if (modalInfo.status != "ABERTO") {
+                          setModalInfo({ ...modalInfo, status: "ABERTO" });
+                          setChanges({ ...changes, status: "ABERTO" });
+                        }
+                      }}
+                      className={`cursor-pointer text-sm font-bold text-yellow-500 border-2 border-yellow-500 p-2 rounded ${
+                        modalInfo.status == "ABERTO"
+                          ? "opacity-100"
+                          : "opacity-30 hover::opacity-100"
+                      }`}
+                    >
+                      ABERTO
+                    </h1>
+                    <h1
+                      onClick={() => {
+                        if (modalInfo.status != "EM ANDAMENTO") {
+                          setModalInfo({
+                            ...modalInfo,
+                            status: "EM ANDAMENTO",
+                          });
+                          setChanges({ ...changes, status: "EM ANDAMENTO" });
+                        }
+                      }}
+                      className={`cursor-pointer text-sm font-bold text-[#15599a] border-2 border-[#15599a] p-2 rounded ${
+                        modalInfo.status == "EM ANDAMENTO"
+                          ? "opacity-100"
+                          : "opacity-30 hover::opacity-100"
+                      }`}
+                    >
+                      EM ANDAMENTO
+                    </h1>
+                  </>
+                ) : (
+                  <h1
+                    className={`text-sm font-bold text-green-500 border-2 border-green-500 p-2 rounded`}
+                  >
+                    FECHADO
+                  </h1>
+                )}
               </div>
               <div className="flex items-center justify-between w-full border-y border-gray-300 p-4">
                 <h1 className="text-sm font-bold">FORNECEDOR</h1>
@@ -170,7 +210,7 @@ function ModalCallSuprimentos({ setModalIsOpen, info, getCalls }) {
               >
                 SALVAR ALTERAÇÕES
               </button>
-              {modalInfo.status == "ABERTO" ? (
+              {modalInfo.status != "FECHADO" ? (
                 <button
                   onClick={() => closeCall()}
                   className="mt-3 self-center rounded w-fit p-2 border border-green-500 text-green-500 hover:text-white hover:bg-green-500 hover:font-bold"

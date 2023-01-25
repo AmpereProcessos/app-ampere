@@ -532,6 +532,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo }) {
                         value: "links.chamadosSuporte",
                       },
                     ]}
+                    multiple={false}
                     handleUpdates={(_, obj) => addLinks(obj)}
                   />
                   {infoHolder.links?.length > 0 && (

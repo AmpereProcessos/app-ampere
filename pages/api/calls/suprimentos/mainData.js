@@ -59,7 +59,6 @@ export default async function handler(req, res) {
         .catch((err) => {
           throw "Houve um erro na inserção do chamado. Por favor, tente novamente.";
         });
-      console.log(id, mudancas);
       res.json("Chamado criado!");
     } catch (error) {
       res.status(500).send(error);

@@ -5,10 +5,19 @@ import React, { useContext, useEffect, useState } from "react";
 import ModalCallSuprimentos from "../../components/ModalCallSuprimentos";
 import { AppContext } from "../../context/AppContext";
 
+const statusStyles = {
+  ABERTO: {
+    text: "text-yellow-500",
+    border: "border-yellow-500",
+  },
+  "EM ANDAMENTO": {
+    text: "text-[#15599a]",
+    border: "border-[#15599a]",
+  },
+};
 function ChamadosSuprimentos() {
   const router = useRouter();
   const { credentials } = useContext(AppContext);
-
   // Data
   const [modalAberta, setModalAberta] = useState(false);
   const [modalChamado, setModalChamado] = useState({});
@@ -52,7 +61,10 @@ function ChamadosSuprimentos() {
         <h1 className="text-center font-bold text-[#15599a] text-xl">
           CHAMADOS DE SUPRIMENTOS
         </h1>
-        <button className="border border-[#fead61] text-[#fead61] hover:text-black hover:bg-[#fead61] font-bold p-2 rounded">
+        <button
+          onClick={getChamados}
+          className="border border-[#fead61] text-[#fead61] hover:text-black hover:bg-[#fead61] font-bold p-2 rounded"
+        >
           BUSCAR CHAMADOS
         </button>
       </div>
@@ -64,12 +76,12 @@ function ChamadosSuprimentos() {
         </div>
         <div className="flex justify-around flex-wrap gap-2 w-full h-[600px] p-4 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
           {chamadosAbertos.filtrados ? (
-            chamadosAbertos.filtrados.length > 0 ? (
+            chamadosAbertos.filtrados?.length > 0 ? (
               chamadosAbertos.filtrados.map((chamado) => (
                 <div
                   key={chamado._id}
                   onClick={() => handleAbrirModal(chamado)}
-                  className={`w-[420px] h-[160px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
+                  className={`w-[420px] h-[200px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
                 >
                   <div className="flex justify-between gap-3 items-center w-full">
                     <h1 className="uppercase text-base font-bold">
@@ -79,7 +91,9 @@ function ChamadosSuprimentos() {
                       {chamado.nomeDoContrato}
                     </h1>
                     <p
-                      className={`text-xs text-center font-bold border-2 border-yellow-500 text-yellow-500 p-1 rounded-lg`}
+                      className={`text-xs text-center font-bold border-2 ${
+                        statusStyles[chamado.status].text
+                      } ${statusStyles[chamado.status].border} p-1 rounded-lg`}
                     >
                       {chamado.status}
                     </p>
@@ -105,6 +119,28 @@ function ChamadosSuprimentos() {
                     <p className="text-red-500 font-bold text-xs">
                       {chamado.entregaFaltando ? "SIM" : "NÃO"}
                     </p>
+                  </div>
+                  <div className="flex justify-between mt-3">
+                    <div className="flex flex-col items-center">
+                      <p className="text-gray-500 font-bold text-xs">
+                        DATA DE ENTREGA
+                      </p>
+                      <p className="text-red-500 font-bold text-xs">
+                        {chamado.dataEntrega
+                          ? dayjs(chamado.dataEntrega).format("DD/MM/YYYY")
+                          : "-"}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <p className="text-gray-500 font-bold text-xs">
+                        DIAS DESDE ENTREGA
+                      </p>
+                      <p className="text-gray-500 font-bold text-xs">
+                        {chamado.dataEntrega
+                          ? dayjs().diff(new Date(chamado.dataEntrega), "days")
+                          : "-"}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))
@@ -144,12 +180,12 @@ function ChamadosSuprimentos() {
         </div>
         <div className="flex justify-around flex-wrap gap-2 w-full h-[600px] p-4 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
           {chamadosFechados.filtrados ? (
-            chamadosFechados.filtrados.length > 0 ? (
+            chamadosFechados.filtrados?.length > 0 ? (
               chamadosFechados.filtrados.map((chamado) => (
                 <div
                   onClick={() => handleAbrirModal(chamado)}
                   key={chamado._id}
-                  className={`w-[420px] h-[160px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
+                  className={`w-[420px] h-[200px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
                 >
                   <div className="flex justify-between gap-3 items-center w-full">
                     <h1 className="uppercase text-base font-bold">

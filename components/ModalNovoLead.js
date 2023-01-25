@@ -113,6 +113,7 @@ function NovoLead({ setModalIsOpen, getLeads }) {
       axios
         .post("/api/insideSales/newLead", {
           ...info,
+          dataEnvio: new Date().toISOString(),
           responsavel: credentials.vendedor
             ? credentials.vendedor
             : credentials.nome,

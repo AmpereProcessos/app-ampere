@@ -10,7 +10,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            dataDeAquisicao: {
+            dataDeEnvio: {
               $gte: after,
               $lt: before,
             },

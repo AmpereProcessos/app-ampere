@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            fechamento: {
+            abertura: {
               $gte: after,
               $lt: before,
             },
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
           },
         },
         {
-          $sort: { fechamento: -1 },
+          $sort: { abertura: -1 },
         },
       ])
       .toArray();

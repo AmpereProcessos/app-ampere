@@ -2,9 +2,8 @@ import connectToDatabase from "../../../../utils/callsDb";
 import connectToProjectsDatabase from "../../../../utils/connectDb";
 export default async function handler(req, res) {
   if (req.method === "GET") {
-    // const after = new Date(req.query.closedAfter).toJSON();
-    // const before = new Date(req.query.closedBefore).toJSON();
-    // console.log(after, before);
+    const after = new Date(req.query.closedAfter).toJSON();
+    const before = new Date(req.query.closedBefore).toJSON();
     const db = await connectToDatabase(process.env.DB_KEY);
     const projectsDb = await connectToProjectsDatabase(
       process.env.DB_KEY,
@@ -30,10 +29,10 @@ export default async function handler(req, res) {
         {
           $match: {
             status: "FINALIZADO",
-            // fechamento: {
-            //   $gte: after,
-            //   $lt: before,
-            // },
+            abertura: {
+              $gte: after,
+              $lt: before,
+            },
           },
         },
         {
@@ -42,6 +41,12 @@ export default async function handler(req, res) {
             status: 1,
             responsavel: 1,
             tipoDoChamado: 1,
+            abertura: 1,
+          },
+        },
+        {
+          $sort: {
+            abertura: -1,
           },
         },
       ])

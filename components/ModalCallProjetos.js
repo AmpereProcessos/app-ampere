@@ -43,19 +43,53 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
   const [responsavel, setResponsavel] = useState(info.responsavel);
   const [notes, setNotes] = useState(info.anotacoes);
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({ text: "", color: "" });
+  function resetMessage() {
+    setTimeout(() => setMessage({ text: "", color: "" }), 2000);
+  }
   function saveCallChanges(status, mode) {
     axios
       .post("/api/calls/projetos/updateProjetos", {
         id: info._id,
         mudancas: {
           ...changes,
-          status: status ? status : infoHolder.status,
-          fechamento: status == "FINALIZADO" ? new Date() : info.fechamento,
         },
       })
       .then((res) => {
-        setMessage(res.data);
+        setMessage({ text: res.data, color: "text-green-500" });
+        resetMessage();
+        getCalls();
+      });
+  }
+  function closeCall() {
+    axios
+      .post("/api/calls/projetos/updateProjetos", {
+        id: info._id,
+        mudancas: {
+          ...changes,
+          status: "FINALIZADO",
+          fechamento: new Date().toISOString(),
+        },
+      })
+      .then((res) => {
+        setMessage({ text: res.data, color: "text-green-500" });
+        resetMessage();
+        getCalls();
+      });
+  }
+  function reopenCall() {
+    axios
+      .post("/api/calls/projetos/updateProjetos", {
+        id: info._id,
+        mudancas: {
+          ...changes,
+          status: null,
+          fechamento: null,
+        },
+      })
+      .then((res) => {
+        setMessage({ text: res.data, color: "text-green-500" });
+        resetMessage();
         getCalls();
       });
   }
@@ -65,7 +99,7 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
         _id: info._id,
       })
       .then((res) => {
-        setMessage(res.data);
+        setMessage({ text: res.data, color: "text-green-500" });
         getCalls();
       });
   }
@@ -82,6 +116,7 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
               <h1 className="text-[#15599a] pl-6 uppercase font-bold">
                 {info.tipoDoChamado}
               </h1>
+              <h1 className="text-center text-xs italic">{info._id}</h1>
               <button>
                 <VscChromeClose
                   onClick={() => {
@@ -228,9 +263,9 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                   className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
                 />
               </div>
-              {message && (
-                <p className="text-center text-green-300 mt-2 italic">
-                  {message}
+              {message.text && (
+                <p className={`text-center ${message.color} mt-2 italic`}>
+                  {message.text}
                 </p>
               )}
               {infoHolder.status == "FINALIZADO" ? (
@@ -238,7 +273,7 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                   <button
                     onClick={() => {
                       setInfo({ ...infoHolder, status: "EM ANDAMENTO" });
-                      saveCallChanges("EM ANDAMENTO", "ABERTO");
+                      reopenCall();
                     }}
                     className="p-3 font-raleway mt-4 hover:bg-[#f18701] hover:text-white font-bold rounded-lg bg-yellow-400"
                   >
@@ -251,7 +286,7 @@ function ModalCallProjetos({ setModalIsOpen, info, getCalls, credentials }) {
                     <button
                       onClick={() => {
                         setInfo({ ...infoHolder, status: "FINALIZADO" });
-                        saveCallChanges("FINALIZADO", "FECHADO");
+                        closeCall();
                       }}
                       className="p-3 font-raleway mt-4 hover:bg-[#06d6a0] hover:text-white font-bold rounded-lg bg-green-400"
                     >

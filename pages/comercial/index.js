@@ -194,6 +194,7 @@ function Comercial({ users }) {
       setModalIsOpen(true);
     });
   }
+  console.log("OK");
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">

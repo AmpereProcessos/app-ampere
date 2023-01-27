@@ -227,6 +227,17 @@ function NovoLead({ setModalIsOpen, getLeads }) {
                   >
                     <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
                     <option value={"GOOGLE ADS"}>GOOGLE ADS</option>
+                    <option value={"COLD CALL"}>COLD CALL</option>
+                    <option value={"LIGOU NA EMPRESA"}>LIGOU NA EMPRESA</option>
+                    <option value={"INDICAÇÃO DE CLIENTE"}>
+                      INDICAÇÃO DE CLIENTE
+                    </option>
+                    <option value={"INDICAÇÃO DE PARCEIRO"}>
+                      INDICAÇÃO DE PARCEIRO
+                    </option>
+                    <option value={"INDICAÇÃO AMPÈRE INTERNO"}>
+                      INDICAÇÃO AMPÈRE INTERNO
+                    </option>
                     <option value={"FACEBOOK ADS"}>FACEBOOK ADS</option>
                     <option value={"INDICAÇÃO"}>INDICAÇÃO</option>
                     <option value={"PASSIVO"}>PASSIVO</option>

@@ -116,8 +116,6 @@ function InsideSales() {
       router.push("/");
     }
   }, []);
-  console.log(leads);
-  console.log(new Date(dayjs().hour(22).$d));
   return (
     <div className="flex flex-col p-6 grow">
       <div className="flex flex-col items-center border-b border-gray-200 pb-2">

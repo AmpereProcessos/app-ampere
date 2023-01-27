@@ -54,6 +54,7 @@ export default async function handler(req, res) {
     var id = req.body.id;
     var changes = req.body.changes;
     delete changes._id;
+    console.log(changes);
     var newObj = await collection.updateOne(
       {
         _id: ObjectId(id),

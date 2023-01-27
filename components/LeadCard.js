@@ -17,6 +17,7 @@ function LeadCard({ lead, getLeads }) {
   const [infoHolder, setInfo] = useState(lead);
   const [msg, setMsg] = useState({ text: "", color: "" });
   function saveChanges() {
+    console.log(infoHolder);
     axios
       .put("/api/insideSales", {
         id: lead._id,
@@ -156,21 +157,50 @@ function LeadCard({ lead, getLeads }) {
               <p className="text-gray-600 text-center font-bold text-sm">
                 DATA DE AQUISIÇÃO
               </p>
-              <p className="text-gray-600 text-center text-sm">
-                {lead.dataDeAquisicao
-                  ? dayjs(lead.dataDeAquisicao).format("DD/MM/YYYY")
-                  : "-"}
-              </p>
+              <input
+                type={"date"}
+                className="outline-none text-gray-600 text-center text-sm bg-transparent"
+                value={
+                  infoHolder.dataDeAquisicao
+                    ? dayjs(infoHolder.dataDeAquisicao)
+                        .add(4, "hour")
+                        .format("YYYY-MM-DD")
+                    : null
+                }
+                onChange={(e) =>
+                  setInfo({
+                    ...infoHolder,
+                    dataDeAquisicao: new Date(e.target.value).toISOString(),
+                  })
+                }
+              />
             </div>
             <div className="flex flex-col items-center">
               <p className="text-gray-600 text-center font-bold text-sm">
                 DATA DE ENVIO
               </p>
               <p className="text-gray-600 text-center text-sm">
-                {lead.dataDeEnvio
-                  ? dayjs(lead.dataDeEnvio).format("DD/MM/YYYY")
-                  : "-"}
+                {dayjs(infoHolder.dataDeEnvio)
+                  .add(4, "hour")
+                  .format("DD/MM/YYYY")}
               </p>
+              {/* <input
+                type={"date"}
+                className="outline-none text-gray-600 text-center text-sm bg-transparent"
+                value={
+                  infoHolder.dataDeEnvio
+                    ? dayjs(infoHolder.dataDeEnvio)
+                        .add(4, "hour")
+                        .format("YYYY-MM-DD")
+                    : null
+                }
+                onChange={(e) => {
+                  setInfo({
+                    ...infoHolder,
+                    dataDeEnvio: new Date(e.target.value).toISOString(),
+                  });
+                }}
+              /> */}
             </div>
 
             <div className="hidden lg:flex flex-col items-center">

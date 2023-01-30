@@ -252,8 +252,8 @@ export default function UsersControl() {
               </h1>
             </div>
             <>
-              {users.map((user) => (
-                <div className="grid grid-cols-5 h-[100px]">
+              {users.map((user, index) => (
+                <div key={index} className="grid grid-cols-5 h-[100px]">
                   <div className="flex items-center uppercase font-bold justify-center text-center py-1 text-xs text-gray-600 border-b border-r border-gray-200">
                     {user.nome}
                   </div>

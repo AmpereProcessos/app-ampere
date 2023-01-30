@@ -266,8 +266,8 @@ export default function UsersControl() {
                         style={{ color: "green", fontSize: "25px" }}
                       />
                     ) : (
-                      <BsCheckCircleFill
-                        style={{ color: "green", fontSize: "25px" }}
+                      <BsXCircleFill
+                        style={{ color: "red", fontSize: "25px" }}
                       />
                     )}
                   </div>

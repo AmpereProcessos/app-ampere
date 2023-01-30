@@ -66,6 +66,8 @@ function BandoDeDados({ data }) {
   // }
   function handleGetByFilters() {
     var matchObj;
+    var equipes = equipesTecnicas.map((equipe) => equipe.value);
+    console.log(equipes);
     if (filters.condicaoOeM == "TODOS") {
       matchObj = {
         cidade:
@@ -77,7 +79,9 @@ function BandoDeDados({ data }) {
             ? { $in: filters.vendedorFilter }
             : { $ne: null },
         "obra.equipeResp":
-          filters.equipeFilter.length > 0 ? { $in: filters.equipeFilter } : {},
+          filters.equipeFilter.length > 0
+            ? { $in: filters.equipeFilter }
+            : { $ne: "" },
         "sistema.qtdeModulos":
           filters.numModulos != 0 && filters.numModulos
             ? { $gte: filters.numModulos }

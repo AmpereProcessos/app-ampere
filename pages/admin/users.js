@@ -14,152 +14,136 @@ import axios from "axios";
 import { useRouter } from "next/router";
 let positions = Object.keys(acessAuth);
 export default function UsersControl() {
-  const { credentials, setCredentials } = useContext(AppContext);
-  const router = useRouter();
-  const [name, setName] = useState("");
-  const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
-  const [userPosition, setUserPosition] = useState();
-  const [userAcessibleRoutes, setUserRoutes] = useState();
-  const [additionalRoutes, setAdditionalRoutes] = useState();
-  const [userIsAdmin, setUserIsAdmin] = useState("N");
-  const [message, setMessage] = useState("");
-  const [passwordInputType, setPasswordInputType] = useState(false);
-  const [options, setOptions] = useState({
-    visualizacao: undefined,
-    vendedor: "NÃO DEFINIDO",
-    regional: "NÃO DEFINIDO",
-  });
-  function resetStates() {
-    setName("");
-    setLogin("");
-    setPassword("");
-    setUserPosition(positions[0]);
-    setUserRoutes(acessAuth[positions[0]].accessibleRoutes);
-    setAdditionalRoutes(undefined);
-    setUserIsAdmin("N");
-    setOptions({
-      visualizacao: undefined,
-      vendedor: "NÃO DEFINIDO",
-      regional: "NÃO DEFINIDO",
-    });
-  }
-  function checkInputs() {
-    try {
-      if (name.trim().length == 0) {
-        setMessage("Nome não válido.");
-        throw false;
-      }
-      if (login.trim().length == 0) {
-        setMessage("Login não válido.");
-        throw false;
-      }
-      if (password.trim().length == 0) {
-        setMessage("Senha não válida.");
-        throw false;
-      }
-      if (
-        options.visualizacao == "VENDEDOR" &&
-        options.vendedor == "NÃO DEFINIDO"
-      ) {
-        setMessage("Por favor, preencha o nome do vendedor.");
-        throw false;
-      }
-      if (
-        options.visualizacao == "REGIONAL" &&
-        options.regional == "NÃO DEFINIDO"
-      ) {
-        setMessage("Por favor, preencha a regional.");
-        throw false;
-      } else {
-        throw true;
-      }
-    } catch (result) {
-      return result;
-    }
-  }
-  function handleUserCreation() {
-    if (checkInputs()) {
-      let obj = {
-        nome: name,
-        email: login,
-        password: password,
-        accessibleRoutes: userAcessibleRoutes,
-        admin: userIsAdmin == "N" ? false : true,
-        visualizacao:
-          options.visualizacao && options.visualizacao != "NORMAL"
-            ? options.visualizacao
-            : undefined,
-        regional:
-          options.visualizacao == "REGIONAL" ? options.regional : undefined,
-        vendedor:
-          options.visualizacao == "VENDEDOR" ? options.vendedor : undefined,
-      };
-      axios.post("/api/auth/user", obj).then((res) => {
-        setMessage(res.data);
-        resetStates();
-      });
-    }
-  }
-  //handling events
-  function handlePositionChange(value) {
-    setUserPosition(value);
-    setUserRoutes(acessAuth[value].accessibleRoutes);
-  }
-  function removeRoute(index) {
-    let arr = userAcessibleRoutes;
-    arr.splice(index, 1);
-    setUserRoutes([...arr]);
-  }
-  function addRoute(index, route) {
-    let arr = userAcessibleRoutes;
-    arr.push(route);
-    setUserRoutes([...arr]);
-  }
-  // renders and re-render definers
+  const [users, setUsers] = useState();
+  // const { credentials, setCredentials } = useContext(AppContext);
+  // const router = useRouter();
+  // const [name, setName] = useState("");
+  // const [login, setLogin] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [userPosition, setUserPosition] = useState();
+  // const [userAcessibleRoutes, setUserRoutes] = useState();
+  // const [additionalRoutes, setAdditionalRoutes] = useState();
+  // const [userIsAdmin, setUserIsAdmin] = useState("N");
+  // const [message, setMessage] = useState("");
+  // const [passwordInputType, setPasswordInputType] = useState(false);
+  // const [options, setOptions] = useState({
+  //   visualizacao: undefined,
+  //   vendedor: "NÃO DEFINIDO",
+  //   regional: "NÃO DEFINIDO",
+  // });
+  // function resetStates() {
+  //   setName("");
+  //   setLogin("");
+  //   setPassword("");
+  //   setUserPosition(positions[0]);
+  //   setUserRoutes(acessAuth[positions[0]].accessibleRoutes);
+  //   setAdditionalRoutes(undefined);
+  //   setUserIsAdmin("N");
+  //   setOptions({
+  //     visualizacao: undefined,
+  //     vendedor: "NÃO DEFINIDO",
+  //     regional: "NÃO DEFINIDO",
+  //   });
+  // }
+  // function checkInputs() {
+  //   try {
+  //     if (name.trim().length == 0) {
+  //       setMessage("Nome não válido.");
+  //       throw false;
+  //     }
+  //     if (login.trim().length == 0) {
+  //       setMessage("Login não válido.");
+  //       throw false;
+  //     }
+  //     if (password.trim().length == 0) {
+  //       setMessage("Senha não válida.");
+  //       throw false;
+  //     }
+  //     if (
+  //       options.visualizacao == "VENDEDOR" &&
+  //       options.vendedor == "NÃO DEFINIDO"
+  //     ) {
+  //       setMessage("Por favor, preencha o nome do vendedor.");
+  //       throw false;
+  //     }
+  //     if (
+  //       options.visualizacao == "REGIONAL" &&
+  //       options.regional == "NÃO DEFINIDO"
+  //     ) {
+  //       setMessage("Por favor, preencha a regional.");
+  //       throw false;
+  //     } else {
+  //       throw true;
+  //     }
+  //   } catch (result) {
+  //     return result;
+  //   }
+  // }
+  // function handleUserCreation() {
+  //   if (checkInputs()) {
+  //     let obj = {
+  //       nome: name,
+  //       email: login,
+  //       password: password,
+  //       accessibleRoutes: userAcessibleRoutes,
+  //       admin: userIsAdmin == "N" ? false : true,
+  //       visualizacao:
+  //         options.visualizacao && options.visualizacao != "NORMAL"
+  //           ? options.visualizacao
+  //           : undefined,
+  //       regional:
+  //         options.visualizacao == "REGIONAL" ? options.regional : undefined,
+  //       vendedor:
+  //         options.visualizacao == "VENDEDOR" ? options.vendedor : undefined,
+  //     };
+  //     axios.post("/api/auth/user", obj).then((res) => {
+  //       setMessage(res.data);
+  //       resetStates();
+  //     });
+  //   }
+  // }
+  // //handling events
+  // function handlePositionChange(value) {
+  //   setUserPosition(value);
+  //   setUserRoutes(acessAuth[value].accessibleRoutes);
+  // }
+  // function removeRoute(index) {
+  //   let arr = userAcessibleRoutes;
+  //   arr.splice(index, 1);
+  //   setUserRoutes([...arr]);
+  // }
+  // function addRoute(index, route) {
+  //   let arr = userAcessibleRoutes;
+  //   arr.push(route);
+  //   setUserRoutes([...arr]);
+  // }
+  // // renders and re-render definers
+  // useEffect(() => {
+  //   if (!credentials.manager) {
+  //     router.push("/");
+  //   }
+  //   setUserPosition(positions[0]);
+  //   setUserRoutes(acessAuth[positions[0]].accessibleRoutes);
+  // }, []);
+  // useEffect(() => {
+  //   if (userAcessibleRoutes != undefined) {
+  //     let diff = routes.filter((x) => !userAcessibleRoutes.includes(x));
+  //     setAdditionalRoutes([...diff]);
+  //   }
+  // }, [userAcessibleRoutes]);
   useEffect(() => {
-    if (!credentials.manager) {
-      router.push("/");
-    }
-    setUserPosition(positions[0]);
-    setUserRoutes(acessAuth[positions[0]].accessibleRoutes);
+    axios.get("/api/auth/getUsers").then((res) => setUsers(res.data));
   }, []);
-  useEffect(() => {
-    if (userAcessibleRoutes != undefined) {
-      let diff = routes.filter((x) => !userAcessibleRoutes.includes(x));
-      setAdditionalRoutes([...diff]);
-    }
-  }, [userAcessibleRoutes]);
-
-  {
-    /*console.log(userAcessibleRoutes);
-  console.log("add", additionalRoutes);
-  console.log("position", acessAuth[userPosition]);
-  console.log({
-    nome: name,
-    login: login,
-    password: password,
-    accessibleRoutes: userAcessibleRoutes,
-    admin: userIsAdmin == "N" ? false : true,
-  });*/
-  }
-  console.log({
-    nome: name,
-    email: login,
-    password: password,
-    accessibleRoutes: userAcessibleRoutes,
-    admin: userIsAdmin == "N" ? false : true,
-    visualizacao:
-      options.visualizacao && options.visualizacao != "NORMAL"
-        ? options.visualizacao
-        : undefined,
-    regional: options.visualizacao == "REGIONAL" ? options.regional : undefined,
-    vendedor: options.visualizacao == "VENDEDOR" ? options.vendedor : undefined,
-  });
+  console.log(users);
   return (
-    <div className="p-6 grow bg-[#15599a]">
+    <div className="p-6 grow bg-[#fff]">
+      {/* <div className="flex flex-col">
+        <h1 className="text-center text-[#15599a] font-bold">
+          CRIAÇÃO DE USUÁRIOS
+        </h1>
+      </div>
       <div className="grid px-24 grid-cols-3 grid-rows-2 mt-20 gap-x-4">
-        <h1 className="text-center text-lg text-white font-bold uppercase col-span-3">
+        <h1 className="text-center text-lg text-[#15599a] font-bold uppercase col-span-3">
           Informações para autenticação
         </h1>
         <div className="flex gap-y-2 items-center flex-col">
@@ -360,6 +344,19 @@ export default function UsersControl() {
         >
           Criar novo usuário
         </button>
+      </div> */}
+      <div className="flex flex-col pb-2 border-b border-gray-200">
+        <h1 className="text-center text-[#15599a] font-bold text-xl">
+          CONTROLE DE USUÁRIOS
+        </h1>
+      </div>
+      <div className="flex flex-col w-full">
+        <div className="grid grid-cols-5">
+          <h1 className="p-2 bg-[#15599a] text-white font-bold">NOME</h1>
+          <h1 className="p-2 bg-[#15599a] text-white font-bold">EMAIL</h1>
+          <h1 className="p-2 bg-[#15599a] text-white font-bold">NOME</h1>
+          <h1 className="p-2 bg-[#15599a] text-white font-bold">NOME</h1>
+        </div>
       </div>
     </div>
   );

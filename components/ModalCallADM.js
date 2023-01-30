@@ -58,7 +58,7 @@ function ModalCallADM({ open, setModalIsOpen, info, getCalls }) {
       return "VALOR A COBRAR";
     }
   }
-  console.log(changes);
+  console.log(modalInfo);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -142,7 +142,9 @@ function ModalCallADM({ open, setModalIsOpen, info, getCalls }) {
                   {getText(modalInfo.demanda)}
                 </span>
                 <span className="grow text-center font-raleway">
-                  R${modalInfo.valor.toFixed(2).replace(".", ",")}
+                  {typeof modalInfo.valor == "number"
+                    ? `R$${modalInfo.valor.toFixed(2).replace(".", ",")}`
+                    : "VALOR NÃO DEFINIDO"}
                 </span>
               </div>
               <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">

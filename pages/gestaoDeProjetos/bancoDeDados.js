@@ -2,7 +2,11 @@ import React, { useState, useEffect, useContext } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalDB from "../../components/ModalDB";
 import Select from "react-select";
-import { cidadesAtendidas, vendedores } from "../../utils/constants";
+import {
+  cidadesAtendidas,
+  equipesTecnicas,
+  vendedores,
+} from "../../utils/constants";
 import axios from "axios";
 import SelectInput from "../../components/SelectInput";
 import dayjs from "dayjs";
@@ -31,6 +35,7 @@ function BandoDeDados({ data }) {
   const [filters, setFilters] = useState({
     cidadeFilter: [],
     vendedorFilter: [],
+    equipeFilter: [],
     entregaTecnicaFeita: false,
     condicaoOeM: "TODOS",
     numModulos: null,
@@ -71,6 +76,8 @@ function BandoDeDados({ data }) {
           filters.vendedorFilter.length > 0
             ? { $in: filters.vendedorFilter }
             : { $ne: null },
+        "obra.equipeResp":
+          filters.equipeFilter.length > 0 ? { $in: filters.equipeFilter } : {},
         "sistema.qtdeModulos":
           filters.numModulos != 0 && filters.numModulos
             ? { $gte: filters.numModulos }
@@ -348,6 +355,23 @@ function BandoDeDados({ data }) {
               setFilters({
                 ...filters,
                 vendedorFilter: e.map((x) => x.value),
+              })
+            }
+            closeMenuOnSelect={false}
+          />
+          <Select
+            isMulti
+            placeholder="EQUIPE DE MONTAGEM"
+            options={equipesTecnicas.map((equipe) => {
+              return {
+                label: equipe.label,
+                value: equipe.value,
+              };
+            })}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                equipeFilter: e.map((x) => x.value),
               })
             }
             closeMenuOnSelect={false}

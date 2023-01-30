@@ -284,7 +284,10 @@ export default function UsersControl() {
                   </div>
                   <div className="grid grid-cols-3 gap-2 px-2 items-center text-center py-1 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 text-xs text-gray-600 border-b border-r border-gray-200 uppercase">
                     {user.accessibleRoutes?.map((i) => (
-                      <p className="rounded bg-[#15599a] text-white p-1 font-bold text-xs">
+                      <p
+                        key={i}
+                        className="rounded bg-[#15599a] text-white p-1 font-bold text-xs"
+                      >
                         {i}
                       </p>
                     ))}

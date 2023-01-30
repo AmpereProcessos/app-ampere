@@ -2,6 +2,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
+import AnexoArquivo from "./AnexoArquivo";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -39,6 +40,22 @@ function ModalCallSuprimentos({ setModalIsOpen, info, getCalls }) {
       .then((res) => {
         setMessage({ text: "Alterações feitas", color: "text-green-500" });
         getCalls();
+      });
+  }
+  function addLinks(arr) {
+    setModalInfo({
+      ...modalInfo,
+      links: arr,
+    });
+    axios
+      .put("/api/calls/suprimentos/mainData", {
+        id: modalInfo._id,
+        mudancas: {
+          links: arr,
+        },
+      })
+      .then(() => {
+        setMessage({ text: "Link adicionado", color: "text-green-500" });
       });
   }
   function closeCall() {
@@ -198,6 +215,44 @@ function ModalCallSuprimentos({ setModalIsOpen, info, getCalls }) {
                   }}
                   className="h-[150px] w-full resize-none outline-none border border-gray-300  p-2 flex flex-col overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 text-center text-xs"
                 />
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-center text-[#15599a] my-2 font-bold">
+                  ADIÇÃO DE IMAGENS
+                </h1>
+                <AnexoArquivo
+                  id={modalInfo.idPai}
+                  prevLinks={
+                    modalInfo.links
+                      ? { chamadosSuprimentos: modalInfo.links }
+                      : {}
+                  }
+                  cliente={`${modalInfo.nomeDoContrato}-${modalInfo.codigoProjeto}`}
+                  categorias={[
+                    {
+                      label: "CHAMADOS DE SUPRIMENTOS",
+                      value: "links.chamadosSuprimentos",
+                    },
+                  ]}
+                  multiple={true}
+                  handleUpdates={(_, obj) => addLinks(obj)}
+                />
+                {modalInfo.links?.length > 0 && (
+                  <div className="flex flex-col">
+                    <h1 className="text-center font-bold">IMAGENS ANEXADAS</h1>
+                    <div className="flex flex-col items-center gap-1">
+                      {modalInfo.links.map((obj, index2) => (
+                        <a
+                          className="text-xs text-[#15599a] font-bold text-center"
+                          key={index2}
+                          href={obj.link}
+                        >
+                          {obj.title} ({obj.format})
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
               {message.text && (
                 <p className={`text-center ${message.color} text-xs italic`}>

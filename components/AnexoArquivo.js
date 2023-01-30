@@ -81,14 +81,8 @@ function AnexoArquivo({
       setNomeDoArquivo("");
       setCategoria("NÃO DEFINIDO");
       setImagem(null);
-      handleUpdates(id, {
-        title: nomeDoArquivo,
-        link: url,
-        category: categorias.filter((x) => x.value == categoria)[0].label,
-        format: fileTypes[imagem[0].contentType]
-          ? fileTypes[imagem[0].contentType].title
-          : "INDEFINIDO",
-      });
+      console.log(arr);
+      handleUpdates(id, arr);
       return;
     } catch (error) {
       console.log("ERRO", error);

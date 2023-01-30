@@ -1,140 +1,21 @@
-import { TiDelete } from "react-icons/ti";
-import { RiAddCircleFill } from "react-icons/ri";
-import { AiFillEyeInvisible } from "react-icons/ai";
-import RoutesCard from "../../components/RoutesCard";
-import { AppContext } from "../../context/AppContext";
-import {
-  acessAuth,
-  regionais,
-  routes,
-  vendedores,
-} from "../../utils/constants";
 import { useEffect, useState, useContext } from "react";
+import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 import axios from "axios";
 import { useRouter } from "next/router";
-let positions = Object.keys(acessAuth);
+import ModalNovoUsuario from "../../components/ModalNovoUsuario";
+import { AppContext } from "../../context/AppContext";
 export default function UsersControl() {
+  const router = useRouter();
+  const { credentials } = useContext(AppContext);
   const [users, setUsers] = useState();
-  // const { credentials, setCredentials } = useContext(AppContext);
-  // const router = useRouter();
-  // const [name, setName] = useState("");
-  // const [login, setLogin] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [userPosition, setUserPosition] = useState();
-  // const [userAcessibleRoutes, setUserRoutes] = useState();
-  // const [additionalRoutes, setAdditionalRoutes] = useState();
-  // const [userIsAdmin, setUserIsAdmin] = useState("N");
-  // const [message, setMessage] = useState("");
-  // const [passwordInputType, setPasswordInputType] = useState(false);
-  // const [options, setOptions] = useState({
-  //   visualizacao: undefined,
-  //   vendedor: "NÃO DEFINIDO",
-  //   regional: "NÃO DEFINIDO",
-  // });
-  // function resetStates() {
-  //   setName("");
-  //   setLogin("");
-  //   setPassword("");
-  //   setUserPosition(positions[0]);
-  //   setUserRoutes(acessAuth[positions[0]].accessibleRoutes);
-  //   setAdditionalRoutes(undefined);
-  //   setUserIsAdmin("N");
-  //   setOptions({
-  //     visualizacao: undefined,
-  //     vendedor: "NÃO DEFINIDO",
-  //     regional: "NÃO DEFINIDO",
-  //   });
-  // }
-  // function checkInputs() {
-  //   try {
-  //     if (name.trim().length == 0) {
-  //       setMessage("Nome não válido.");
-  //       throw false;
-  //     }
-  //     if (login.trim().length == 0) {
-  //       setMessage("Login não válido.");
-  //       throw false;
-  //     }
-  //     if (password.trim().length == 0) {
-  //       setMessage("Senha não válida.");
-  //       throw false;
-  //     }
-  //     if (
-  //       options.visualizacao == "VENDEDOR" &&
-  //       options.vendedor == "NÃO DEFINIDO"
-  //     ) {
-  //       setMessage("Por favor, preencha o nome do vendedor.");
-  //       throw false;
-  //     }
-  //     if (
-  //       options.visualizacao == "REGIONAL" &&
-  //       options.regional == "NÃO DEFINIDO"
-  //     ) {
-  //       setMessage("Por favor, preencha a regional.");
-  //       throw false;
-  //     } else {
-  //       throw true;
-  //     }
-  //   } catch (result) {
-  //     return result;
-  //   }
-  // }
-  // function handleUserCreation() {
-  //   if (checkInputs()) {
-  //     let obj = {
-  //       nome: name,
-  //       email: login,
-  //       password: password,
-  //       accessibleRoutes: userAcessibleRoutes,
-  //       admin: userIsAdmin == "N" ? false : true,
-  //       visualizacao:
-  //         options.visualizacao && options.visualizacao != "NORMAL"
-  //           ? options.visualizacao
-  //           : undefined,
-  //       regional:
-  //         options.visualizacao == "REGIONAL" ? options.regional : undefined,
-  //       vendedor:
-  //         options.visualizacao == "VENDEDOR" ? options.vendedor : undefined,
-  //     };
-  //     axios.post("/api/auth/user", obj).then((res) => {
-  //       setMessage(res.data);
-  //       resetStates();
-  //     });
-  //   }
-  // }
-  // //handling events
-  // function handlePositionChange(value) {
-  //   setUserPosition(value);
-  //   setUserRoutes(acessAuth[value].accessibleRoutes);
-  // }
-  // function removeRoute(index) {
-  //   let arr = userAcessibleRoutes;
-  //   arr.splice(index, 1);
-  //   setUserRoutes([...arr]);
-  // }
-  // function addRoute(index, route) {
-  //   let arr = userAcessibleRoutes;
-  //   arr.push(route);
-  //   setUserRoutes([...arr]);
-  // }
-  // // renders and re-render definers
-  // useEffect(() => {
-  //   if (!credentials.manager) {
-  //     router.push("/");
-  //   }
-  //   setUserPosition(positions[0]);
-  //   setUserRoutes(acessAuth[positions[0]].accessibleRoutes);
-  // }, []);
-  // useEffect(() => {
-  //   if (userAcessibleRoutes != undefined) {
-  //     let diff = routes.filter((x) => !userAcessibleRoutes.includes(x));
-  //     setAdditionalRoutes([...diff]);
-  //   }
-  // }, [userAcessibleRoutes]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   useEffect(() => {
-    axios.get("/api/auth/getUsers").then((res) => setUsers(res.data));
+    if (credentials.manager) {
+      axios.get("/api/auth/getUsers").then((res) => setUsers(res.data));
+    } else {
+      router.push("/");
+    }
   }, []);
-  console.log(users);
   return (
     <div className="p-6 grow bg-[#fff]">
       {/* <div className="flex flex-col">
@@ -350,13 +231,101 @@ export default function UsersControl() {
           CONTROLE DE USUÁRIOS
         </h1>
       </div>
-      <div className="flex flex-col w-full">
-        <div className="grid grid-cols-5">
-          <h1 className="p-2 bg-[#15599a] text-white font-bold">NOME</h1>
-          <h1 className="p-2 bg-[#15599a] text-white font-bold">EMAIL</h1>
-          <h1 className="p-2 bg-[#15599a] text-white font-bold">NOME</h1>
-          <h1 className="p-2 bg-[#15599a] text-white font-bold">NOME</h1>
+      <div className="flex flex-col w-full border border-gray-200">
+        {users?.length > 0 ? (
+          <>
+            <div className="grid grid-cols-5">
+              <h1 className="p-2 bg-[#15599a] text-center text-white font-bold border-r border-white">
+                NOME
+              </h1>
+              <h1 className="p-2 bg-[#15599a] text-center text-white font-bold border-r border-white">
+                EMAIL
+              </h1>
+              <h1 className="p-2 bg-[#15599a] text-center text-white font-bold border-r border-white">
+                MANAGER
+              </h1>
+              <h1 className="p-2 bg-[#15599a] text-center text-white font-bold border-r border-white">
+                CONTROLLER
+              </h1>
+              <h1 className="p-2 bg-[#15599a] text-center text-white font-bold">
+                ROTAS
+              </h1>
+            </div>
+            <>
+              {users.map((user) => (
+                <div className="grid grid-cols-5 h-[100px]">
+                  <div className="flex items-center uppercase font-bold justify-center text-center py-1 text-xs text-gray-600 border-b border-r border-gray-200">
+                    {user.nome}
+                  </div>
+                  <div className="flex items-center justify-center text-center py-1 text-xs text-gray-600 border-b border-r border-gray-200">
+                    {user.email}
+                  </div>
+                  <div className="flex items-center justify-center text-center py-1 text-xs text-gray-600 border-b border-r border-gray-200">
+                    {user.manager ? (
+                      <BsCheckCircleFill
+                        style={{ color: "green", fontSize: "25px" }}
+                      />
+                    ) : (
+                      <BsCheckCircleFill
+                        style={{ color: "green", fontSize: "25px" }}
+                      />
+                    )}
+                  </div>
+                  <div className="flex items-center justify-center text-center py-1 text-xs text-gray-600 border-b border-r border-gray-200">
+                    {user.controller ? (
+                      <BsCheckCircleFill
+                        style={{ color: "green", fontSize: "25px" }}
+                      />
+                    ) : (
+                      <BsXCircleFill
+                        style={{ color: "red", fontSize: "25px" }}
+                      />
+                    )}
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 px-2 items-center text-center py-1 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 text-xs text-gray-600 border-b border-r border-gray-200 uppercase">
+                    {user.accessibleRoutes?.map((i) => (
+                      <p className="rounded bg-[#15599a] text-white p-1 font-bold text-xs">
+                        {i}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </>
+          </>
+        ) : (
+          <div className="w-full flex items-center justify-center p-2">
+            <div role="status">
+              <svg
+                aria-hidden="true"
+                className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                viewBox="0 0 100 101"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                  fill="currentFill"
+                />
+              </svg>
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        )}
+
+        <div
+          onClick={() => setModalIsOpen(true)}
+          className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
+        >
+          <p className="uppercase font-bold text-sm">NOVO USUÁRIO</p>
         </div>
+        {modalIsOpen && (
+          <ModalNovoUsuario closeModal={() => setModalIsOpen(false)} />
+        )}
       </div>
     </div>
   );

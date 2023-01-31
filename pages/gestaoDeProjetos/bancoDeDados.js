@@ -231,76 +231,21 @@ function BandoDeDados({ data }) {
       setOpInProgress(false);
     });
   }
-  // function handleFilters() {
-  //   var newArr;
-  //   if (filters.cidadeFilter.length > 0) {
-  //     if (!newArr) newArr = projects;
-  //     newArr = newArr.filter((call) =>
-  //       filters.cidadeFilter.includes(call.cidade)
-  //     );
-  //   }
-  //   if (filters.entregaTecnicaFeita) {
-  //     if (!newArr) newArr = projects;
-  //     newArr = newArr.filter((call) => call.jornada.entregaTecnica == true);
-  //   }
-  //   if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-  //     if (!newArr) newArr = projects;
-  //     newArr = newArr.filter(
-  //       (call) =>
-  //         call[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-  //         call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-  //     );
-  //   }
-  //   if (filters.numModulos > 0) {
-  //     if (!newArr) newArr = projects;
-  //     newArr = newArr.filter(
-  //       (call) => Number(call.sistema.qtdeModulos) > Number(filters.numModulos)
-  //     );
-  //   }
-  //   if (filters.vendedorFilter.length > 0) {
-  //     if (!newArr) newArr = projects;
-  //     newArr = newArr.filter((call) =>
-  //       filters.vendedorFilter.includes(call.vendedor.nome)
-  //     );
-  //   }
-  //   if (filters.condicaoOeM != "TODOS") {
-  //     if (!newArr) newArr = projects;
-  //     if (filters.condicaoOeM == "O&M EM VENCIMENTO") {
-  //       newArr = newArr.filter(
-  //         (project) =>
-  //           project.medidor?.data &&
-  //           dayjs().diff(dayjs(project.medidor?.data), "days") > 350 &&
-  //           dayjs().diff(dayjs(project.medidor?.data), "days") <= 365
-  //       );
-  //     }
-  //     if (filters.condicaoOeM == "O&M VENCIDO") {
-  //       newArr = newArr.filter(
-  //         (project) =>
-  //           project.medidor?.data &&
-  //           dayjs().diff(dayjs(project.medidor?.data), "days") > 365
-  //       );
-  //     }
-  //   }
-  //   if (!newArr) setFilteredProjects(projects);
-  //   else {
-  //     setFilteredProjects(newArr);
-  //   }
-  // }
   function handleUpdates(id) {
     axios
       .get(`/api/projects/fetchDoc/${id}`)
       .then((res) => setModalProject(res.data[0]));
   }
-  useEffect(() => {
-    setCurrentPage(1);
-    getProjects(1);
-  }, []);
   function handleOpenModal(id) {
     axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
       setModalProject(res.data[0]);
       setModalIsOpen(true);
     });
   }
+  useEffect(() => {
+    setCurrentPage(1);
+    getProjects(1);
+  }, []);
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between gap-x-2 border-b border-gray-200 p-1">

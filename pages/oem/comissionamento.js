@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import Select from "react-select";
 import { AppContext } from "../../context/AppContext";
 import ComissionamentoPosObraCard from "../../components/ComissionamentoPosObraCard";
@@ -335,6 +336,13 @@ function Comissionamento() {
           <ComissionamentoPosObraCard key={project._id} project={project} />
         ))}
       </div>
+      <Link href={"/vendas/entregaTecnica"}>
+        <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+          <p className="uppercase font-bold text-sm">
+            ENTREGAS TÉCNICAS PRESENCIAIS
+          </p>
+        </a>
+      </Link>
     </div>
   );
 }

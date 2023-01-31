@@ -186,6 +186,7 @@ function ModalCallPPS({
     }, []); // Empty array ensures that effect is only run on mount and unmount
     return keyPressed;
   }
+  console.log(info);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -293,7 +294,9 @@ function ModalCallPPS({
                       ))}
                     </ul>
                   ) : (
-                    false
+                    <p className="text-center italic text-gray-600">
+                      SEM OBSERVAÇÕES...
+                    </p>
                   )}
                 </span>
               </div>

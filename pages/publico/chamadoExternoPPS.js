@@ -10,7 +10,7 @@ function ChamadoExternoPPS() {
     vendedor: "NÃO DEFINIDO",
     referenteAProjeto: "NÃO DEFINIDO",
     codigoDoProjeto: 0,
-    tipoDeSolicitacao: "NÃO DEFINIDO",
+    tipoDeSolicitacao: "NÃO DEFINIDO", // NÃO DEFINIDO
     nomeDoCliente: "",
     telefone: "",
     cidade: "NÃO DEFINIDO",
@@ -106,12 +106,20 @@ function ChamadoExternoPPS() {
                 dados.referenteAProjeto == "SIM"
                   ? [
                       {
-                        label: "PROPOSTA COMERCIAL",
-                        value: "PROPOSTA COMERCIAL",
+                        label: "PROPOSTA COMERCIAL (ON GRID)",
+                        value: "PROPOSTA COMERCIAL (ON GRID)",
+                      },
+                      {
+                        label: "PROPOSTA COMERCIAL (OFF GRID)",
+                        value: "PROPOSTA COMERCIAL (OFF GRID)",
                       },
                       {
                         label: "ANÁLISE DE CRÉDITO",
                         value: "ANÁLISE DE CRÉDITO",
+                      },
+                      {
+                        label: "DUVIDAS E AUXILIOS TÉCNICOS",
+                        value: "DUVIDAS E AUXILIOS TÉCNICOS",
                       },
                       {
                         label: "OUTROS",
@@ -124,8 +132,12 @@ function ChamadoExternoPPS() {
                     ]
                   : [
                       {
-                        label: "PROPOSTA COMERCIAL",
-                        value: "PROPOSTA COMERCIAL",
+                        label: "PROPOSTA COMERCIAL (ON GRID)",
+                        value: "PROPOSTA COMERCIAL (ON GRID)",
+                      },
+                      {
+                        label: "DÚVIDAS E AUXILIOS TÉCNICOS",
+                        value: "DÚVIDAS E AUXILIOS TÉCNICOS",
                       },
                       {
                         label: "OUTROS",

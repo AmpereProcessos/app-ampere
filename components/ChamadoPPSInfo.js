@@ -1126,8 +1126,8 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
                     LISTA
                   </h1>
                   {dados.equipamentos?.length > 0 ? (
-                    dados.equipamentos.map((item) => (
-                      <p className="text-gray-500 text-center">
+                    dados.equipamentos.map((item, index) => (
+                      <p key={index} className="text-gray-500 text-center">
                         ({item.qtde}) {item.nome} - {item.pot}W,{" "}
                         {item.horasDiarias} horas diárias{" "}
                       </p>

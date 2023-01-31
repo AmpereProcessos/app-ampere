@@ -86,8 +86,11 @@ function PPSModalCallInfo({ tipoDeSolicitacao, dados }) {
                     Wh DIÁRIO
                   </h1>
                 </div>
-                {dados.equipamentos.map((item) => (
-                  <div className="grid grid-cols-6 border border-t-0 border-gray-200">
+                {dados.equipamentos.map((item, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-6 border border-t-0 border-gray-200"
+                  >
                     <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">
                       {item.nome}
                     </h1>

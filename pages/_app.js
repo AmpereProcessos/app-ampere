@@ -46,12 +46,23 @@ function MyApp({ Component, pageProps }) {
       getNotificacoes(credentials._id);
     } */
     }
-    if (
-      router.pathname.includes("pdf") ||
-      router.pathname.includes("publico") ||
-      router.pathname.includes("auth")
-    )
+    function getWidth() {
+      return Math.max(
+        document.body.scrollWidth,
+        document.documentElement.scrollWidth,
+        document.body.offsetWidth,
+        document.documentElement.offsetWidth,
+        document.documentElement.clientWidth
+      );
+    }
+    if (getWidth() < 800) {
       setSidebarVisible(false);
+    }
+    // if (
+    //   router.pathname.includes("pdf") ||
+    //   router.pathname.includes("publico") ||
+    //   router.pathname.includes("auth")
+    // )
   }, [router.pathname]);
   return (
     <DndProvider backend={HTML5Backend}>

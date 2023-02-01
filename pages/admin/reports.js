@@ -450,6 +450,7 @@ function Acompanhamento() {
     var sumValorDoKit = 0;
     var sumCustoInsumos = 0;
     var sumPrevInsumos = 0;
+    var countCustoNotInformed = 0;
     for (let i = 0; i < filteredArr.length; i++) {
       let valorDoKit = !isNaN(filteredArr[i].compra?.valorDoKit)
         ? filteredArr[i].compra.valorDoKit
@@ -460,6 +461,10 @@ function Acompanhamento() {
       let custoInsumos = !isNaN(filteredArr[i].material?.efetivoCustos)
         ? filteredArr[i].material.efetivoCustos
         : 0;
+      // if (isNaN(filteredArr[i].material?.efetivoCustos)) {
+      //   countCustoNotInformed = countCustoNotInformed + 1;
+      //   console.log(filteredArr[i].material?.efetivoCustos);
+      // }
 
       sumValorDoKit = sumValorDoKit + valorDoKit;
       sumCustoInsumos = sumCustoInsumos + custoInsumos;
@@ -469,6 +474,7 @@ function Acompanhamento() {
       totalValorDoKit: sumValorDoKit,
       totalPrevCustos: sumPrevInsumos,
       totalEfetivoCustos: sumCustoInsumos,
+      // porcentagemCustoNaoPreenchido: countCustoNotInformed / filteredArr.length,
     };
   }
   useEffect(() => {
@@ -642,7 +648,7 @@ function Acompanhamento() {
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-5 gap-x-3">
+        <div className="grid grid-rows-5 grid-cols-1  lg:grid-rows-1 lg:grid-cols-5 gap-x-3">
           <div className="flex flex-col col-span- p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">Nº DE VENDAS</h1>
@@ -705,7 +711,7 @@ function Acompanhamento() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-x-3">
+        <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-x-3">
           <div className="flex flex-col col-span- p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">TOTAL PAGO EM KITS</h1>
@@ -739,12 +745,20 @@ function Acompanhamento() {
             <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
               R$ {getCustos().totalEfetivoCustos.toLocaleString("pt-BR")}
             </p>
-            <p>
-              TOTAL PREVISTO EM INSUMOS{" "}
-              <strong className="text-[#fead61]">
-                R$ {getCustos().totalPrevCustos.toLocaleString("pt-BR")}
-              </strong>
-            </p>
+            <div className="flex flex-col">
+              {/* <p>
+                PORCENTAGEM DE NÃO PREENCHIMENTO:{" "}
+                <strong>
+                  {(getCustos().porcentagemCustoNaoPreenchido * 100).toFixed()}%
+                </strong>
+              </p> */}
+              <p>
+                TOTAL PREVISTO EM INSUMOS{" "}
+                <strong className="text-[#fead61]">
+                  R$ {getCustos().totalPrevCustos.toLocaleString("pt-BR")}
+                </strong>
+              </p>
+            </div>
           </div>
         </div>
       </div>

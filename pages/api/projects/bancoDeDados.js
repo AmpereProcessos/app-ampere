@@ -59,6 +59,11 @@ export default async function handler(req, res) {
           },
         },
         {
+          $sort: {
+            qtde: 1,
+          },
+        },
+        {
           $limit: 500,
         },
       ])

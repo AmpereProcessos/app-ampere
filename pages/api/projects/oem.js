@@ -20,7 +20,7 @@ export default async function handler(req, res) {
               { tipoDeServico: "OPERAÇÃO E MANUTENÇÃO" },
             ],
             "oem.oemConcluido": { $ne: true },
-            "oem.plano": { $ne: null },
+            "oem.plano": { $nin: [null, "NÃO SE APLICA"] },
           },
         },
         {

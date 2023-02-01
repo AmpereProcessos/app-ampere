@@ -1,9 +1,8 @@
 import dayjs from "dayjs";
 import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-  // const collection = db.collection("dados");
-  // let arr = await collection
+  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  const collection = db.collection("dados");
   //   .aggregate([
   //     {
   //       $match: {
@@ -67,18 +66,16 @@ export default async function handler(req, res) {
   //     tipoEntregaTecnica: item.jornada.tipoEntregaTecnica,
   //   };
   // });
-  // let arr = await collection.updateMany(
-  //   {
-  //     "conferencias.usinaLigada.data": {
-  //       $lte: "2022-12-01T00:00:00.000Z",
-  //     },
-  //   },
-  //   {
-  //     $set: {
-  //       "conferencias.energiaInjetada.data": "2023-01-20T00:00:00.000Z",
-  //     },
-  //   }
-  // );
+  let arr = await collection.updateMany(
+    {
+      "contrato.comissaoVendedor": { $ne: null },
+    },
+    {
+      $set: {
+        "contrato.comissaoVendedor": null,
+      },
+    }
+  );
   // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
   // const collection = db.collection("dados");
   // let arr = await collection
@@ -96,7 +93,7 @@ export default async function handler(req, res) {
   //     },
   //   ])
   //   .toArray();
-  res.json("DESATIVADA");
+  res.json(arr);
 }
 /*
   let arr = await collection.updateMany(

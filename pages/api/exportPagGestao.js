@@ -210,7 +210,9 @@ export default async function handler(req, res) {
         prevCustos: obj.material.previsaoCustos
           ? obj.material.previsaoCustos
           : "-",
-        efetivoCustos: obj.efetivoCustos ? obj.efetivoCustos : "-",
+        efetivoCustos: obj.material.efetivoCustos
+          ? obj.material.efetivoCustos
+          : "-",
         manutencaoStatus: obj.manutencaoPreventiva.status
           ? obj.manutencaoPreventiva.status
           : "-",
@@ -226,7 +228,7 @@ export default async function handler(req, res) {
         dataNps: obj.jornada?.dataNps ? fixDate(obj.jornada.dataNps) : "-",
         codSVB: obj.codigoSVB ? obj.codigoSVB : "-",
         potenciaPico: obj.sistema.potPico ? obj.sistema.potPico : "-",
-        dataNascimento: obj.dataNascimento ? obj.dataNascimento : "-", // novas infos
+        dataNascimento: obj.dataNascimento ? fixDate(obj.dataNascimento) : "-", // novas infos
         email: obj.email ? obj.email : "-",
         logradouro: obj.logradouro ? obj.logradouro : "-",
         numeroResidencia: obj.numeroResidencia ? obj.numeroResidencia : "-",

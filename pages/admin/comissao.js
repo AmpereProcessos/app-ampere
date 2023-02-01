@@ -103,11 +103,11 @@ function Comissao() {
     return sum;
   }
   useEffect(() => {
-    if (credentials?.manager) {
+    if (credentials?.manager || credentials.visualizacao == "REGIONAL") {
       getProjects();
     }
   }, []);
-  if (credentials?.manager)
+  if (credentials?.manager || credentials.visualizacao == "REGIONAL")
     return (
       <div className="flex flex-col p-6 grow">
         <div className="flex flex-col gap-2 items-center py-2 border-b border-gray-200">

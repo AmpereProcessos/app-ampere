@@ -12,7 +12,7 @@ function PPSModalCallInfo({ tipoDeSolicitacao, dados }) {
         arr[i].qtde * arr[i].pot * arr[i].horasDiarias;
     }
     return {
-      totalPot: sumTotalPot,
+      totalPot: sumTotalPot / 1000,
       totalDailyConsumption: sumTotalDailyConsumption,
     };
   }

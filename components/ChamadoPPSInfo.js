@@ -516,6 +516,7 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
         }
       });
   }
+  console.log(dados);
   return (
     <div className="mt-12 w-full self-center lg:w-[75%] min-h-[275px] gap-2 flex flex-col items-center flex-wrap  border border-[#15599a] p-2 shadow-lg bg-[#fff]">
       {dados.tipoDeSolicitacao != "DÚVIDAS E AUXILIOS TÉCNICOS" ? (
@@ -1066,6 +1067,38 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
                 value={dados.localizacao}
                 handleChange={(value) =>
                   setDados({ ...dados, localizacao: value })
+                }
+              />
+              <SelectInput
+                label={"ESTRUTURA"}
+                editable={true}
+                value={
+                  dados.tipoDaEstrutura ? dados.tipoDaEstrutura : "NÃO DEFINIDO"
+                }
+                options={[
+                  {
+                    label: "TELHADO",
+                    value: "TELHADO",
+                  },
+                  {
+                    label: "CARPORT",
+                    value: "CARPORT",
+                  },
+                  {
+                    label: "SOLO",
+                    value: "SOLO",
+                  },
+                  {
+                    label: "ESTRUTURA PERSONALIZADA",
+                    value: "ESTRUTURA PERSONALIZADA",
+                  },
+                  {
+                    label: "NÃO DEFINIDO",
+                    value: "NÃO DEFINIDO",
+                  },
+                ]}
+                handleChange={(value) =>
+                  setDados({ ...dados, tipoDaEstrutura: value })
                 }
               />
               <div className="flex flex-col w-full mt-2">

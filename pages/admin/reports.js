@@ -417,6 +417,60 @@ function Acompanhamento() {
       vendas: filteredArr.length,
     };
   }
+  function getCustos() {
+    var filteredArr = info;
+    filteredArr = filteredArr.filter((x) => x.contrato.status == "ASSINADO");
+    if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter(
+        (x) =>
+          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
+          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      );
+    }
+    if (filters.vendedorFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((call) =>
+        filters.vendedorFilter.includes(call.vendedor.nome)
+      );
+    }
+    if (filters.cidadeFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((call) =>
+        filters.cidadeFilter.includes(call.cidade)
+      );
+    }
+
+    if (filters.regionalFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter(
+        (x) => x.regional == filters.regionalFilter
+      );
+    }
+    var sumValorDoKit = 0;
+    var sumCustoInsumos = 0;
+    var sumPrevInsumos = 0;
+    for (let i = 0; i < filteredArr.length; i++) {
+      let valorDoKit = !isNaN(filteredArr[i].compra?.valorDoKit)
+        ? filteredArr[i].compra.valorDoKit
+        : 0;
+      let prevInsumos = !isNaN(filteredArr[i].material?.previsaoCustos)
+        ? filteredArr[i].material.previsaoCustos
+        : 0;
+      let custoInsumos = !isNaN(filteredArr[i].material?.efetivoCustos)
+        ? filteredArr[i].material.efetivoCustos
+        : 0;
+
+      sumValorDoKit = sumValorDoKit + valorDoKit;
+      sumCustoInsumos = sumCustoInsumos + custoInsumos;
+      sumPrevInsumos = sumPrevInsumos + prevInsumos;
+    }
+    return {
+      totalValorDoKit: sumValorDoKit,
+      totalPrevCustos: sumPrevInsumos,
+      totalEfetivoCustos: sumCustoInsumos,
+    };
+  }
   useEffect(() => {
     if (credentials) {
       if (credentials.manager == true) {
@@ -426,7 +480,6 @@ function Acompanhamento() {
       }
     }
   }, []);
-  console.log(filters);
   if (credentials.manager == true)
     return (
       <div className="grow p-6 flex flex-col gap-2">
@@ -525,6 +578,7 @@ function Acompanhamento() {
                     value: "parecer.dataParecerDeAcesso",
                   },
                   { label: "ASS.CONTRATO", value: "contrato.dataAssinatura" },
+                  { label: "DATA DE PAGAMENTO", value: "compra.dataPagamento" },
                   { label: "NÃO DEFINIDO", value: null },
                 ]}
                 onChange={(e) =>
@@ -649,6 +703,48 @@ function Acompanhamento() {
                 />
               </div>
             </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-x-3">
+          <div className="flex flex-col col-span- p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex justify-between">
+              <h1 className="uppercase text-gray-600">TOTAL PAGO EM KITS</h1>
+            </div>
+            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
+              R$ {getCustos().totalValorDoKit.toLocaleString("pt-BR")}
+            </p>
+          </div>
+          <div className="flex flex-col col-span- p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex justify-between">
+              <h1 className="uppercase text-gray-600">
+                TOTAL GASTOS EM INSUMOS
+              </h1>
+              <h1
+                className={`font-bold ${
+                  getCustos().totalEfetivoCustos / getCustos().totalPrevCustos >
+                  1
+                    ? "text-red-500"
+                    : "text-green-500"
+                }`}
+              >
+                {(
+                  (getCustos().totalEfetivoCustos * 100) /
+                  getCustos().totalPrevCustos
+                )
+                  .toFixed(2)
+                  .replace(".", ",")}{" "}
+                %
+              </h1>
+            </div>
+            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
+              R$ {getCustos().totalEfetivoCustos.toLocaleString("pt-BR")}
+            </p>
+            <p>
+              TOTAL PREVISTO EM INSUMOS{" "}
+              <strong className="text-[#fead61]">
+                R$ {getCustos().totalPrevCustos.toLocaleString("pt-BR")}
+              </strong>
+            </p>
           </div>
         </div>
       </div>

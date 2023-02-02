@@ -1217,7 +1217,7 @@ export const suprimentoOption = {
     unidade: "UNIDADE",
   },
   CABO: {
-    tipo: ["SOLAR"],
+    tipo: ["SOLAR(VERMELHO)", "SOLAR(PRETO)"],
     unidade: "METRO",
   },
   "CONECTOR MC4": {

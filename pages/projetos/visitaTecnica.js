@@ -11,8 +11,9 @@ function VisitaTecnica({ credentials, setCredentials }) {
   const [forms, setForms] = useState([]);
   const [filteredForms, setFilteredForms] = useState([]);
   const [filters, setFilters] = useState({
-    statusChamado: [],
-    numModulos: "",
+    status: [],
+    numModules: "",
+    search: "",
   });
   const [modal, setModal] = useState({
     open: false,
@@ -54,15 +55,19 @@ function VisitaTecnica({ credentials, setCredentials }) {
           form[dateFilter.field] <= dateFilter.before
       );
     }
-    if (filters.statusChamado.length > 0) {
+    if (filters.status.length > 0) {
+      if (!newArr) newArr = forms;
+      newArr = newArr.filter((form) => filters.status.includes(form.status));
+    }
+    if (filters.search.trim().length > 0) {
       if (!newArr) newArr = forms;
       newArr = newArr.filter((form) =>
-        filters.statusChamado.includes(form.status)
+        form.nomeDoCliente.toUpperCase().includes(filters.search.toUpperCase())
       );
     }
-    if (filters.numModulos > 0) {
+    if (filters.numModules > 0) {
       if (!newArr) newArr = forms;
-      newArr = newArr.filter((form) => form.qtdeModulos > filters.numModulos);
+      newArr = newArr.filter((form) => form.qtdeModulos > filters.numModules);
     }
     if (!newArr) {
       setFilteredForms(forms);
@@ -147,17 +152,26 @@ function VisitaTecnica({ credentials, setCredentials }) {
             <p>VISITA IN LOCO</p>
           </div>
         </div>
-        <div className="flex items-center justify-center grow gap-2">
+        <div className="flex items-center justify-center flex-wrap grow gap-2">
           <div className="hidden lg:flex gap-x-2">
+            <input
+              type={"text"}
+              placeholder="Digite o nome do cliente..."
+              value={filters.search}
+              className="outline-none text-xs p-1.5 h-[36px] w-[300px] text-center rounded border border-gray-200 placeholder:italic"
+              onChange={(e) =>
+                setFilters({ ...filters, search: e.target.value })
+              }
+            />
             <input
               type="number"
               placeholder="NºModulos > que"
               className={
                 "outline-none text-xs p-1.5 h-[36px] text-center rounded border border-gray-200 placeholder:italic"
               }
-              value={filters.numModulos}
+              value={filters.numModules}
               onChange={(e) =>
-                setFilters({ ...filters, numModulos: Number(e.target.value) })
+                setFilters({ ...filters, numModules: Number(e.target.value) })
               }
             />
             <div className="flex flex-col w-fit items-center">
@@ -226,7 +240,7 @@ function VisitaTecnica({ credentials, setCredentials }) {
             onChange={(e) =>
               setFilters({
                 ...filters,
-                statusChamado: e.map((x) => x.value),
+                status: e.map((x) => x.value),
               })
             }
             options={[

@@ -589,6 +589,12 @@ function BandoDeDados({ data }) {
                   </p>
                 </div>
               </div>
+              <div className="flex items-center mt-2 justify-between">
+                <p className="text-xs text-gray-700">TIPO DE SERVIÇO</p>
+                <p className="text-xs text-gray-700 font-bold">
+                  {project.tipoDeServico ? project.tipoDeServico : "-"}
+                </p>
+              </div>
             </div>
           ))
         )}

@@ -84,17 +84,24 @@ function Comissao() {
     var sumEstrutura = 0;
     var sumInside = 0;
     for (let i = 0; i < filteredProjects.length; i++) {
-      var valueProjeto = !isNaN(filteredProjects[i].sistema.valorProjeto)
-        ? filteredProjects[i].sistema.valorProjeto
+      var comissao = filteredProjects[i].porcentagemComissao
+        ? filteredProjects[i].porcentagemComissao
         : 0;
-      var valuePadrao = !isNaN(filteredProjects[i].padrao.valor)
-        ? filteredProjects[i].padrao.valor
-        : 0;
-      var valueEstrutura = !isNaN(
-        filteredProjects[i].estruturaPersonalizada.valor
-      )
-        ? filteredProjects[i].estruturaPersonalizada.valor
-        : 0;
+      var valueProjeto =
+        !isNaN(filteredProjects[i].sistema.valorProjeto) &&
+        filteredProjects[i].sistema.valorProjeto != null
+          ? filteredProjects[i].sistema.valorProjeto
+          : 0;
+      var valuePadrao =
+        !isNaN(filteredProjects[i].padrao.valor) &&
+        filteredProjects[i].padrao.valor != null
+          ? filteredProjects[i].padrao.valor
+          : 0;
+      var valueEstrutura =
+        !isNaN(filteredProjects[i].estruturaPersonalizada.valor) &&
+        filteredProjects[i].estruturaPersonalizada.valor != null
+          ? filteredProjects[i].estruturaPersonalizada.valor
+          : 0;
 
       if (
         filteredProjects[i].insider != null ||
@@ -105,21 +112,17 @@ function Comissao() {
           (filteredProjects[i].porcentagemComissaoInsider / 100) *
             (valueProjeto + valuePadrao + valueEstrutura);
       }
-      sumProjeto =
-        sumProjeto +
-        (Number(valueProjeto) * filteredProjects[i].porcentagemComissao) / 100;
-      sumPadrao =
-        sumPadrao +
-        (Number(valuePadrao) * filteredProjects[i].porcentagemComissao) / 100;
-      sumEstrutura =
-        sumEstrutura +
-        (Number(valueEstrutura) * filteredProjects[i].porcentagemComissao) /
-          100;
+      sumProjeto = sumProjeto + (Number(valueProjeto) * comissao) / 100;
+      sumPadrao = sumPadrao + (Number(valuePadrao) * comissao) / 100;
+      sumEstrutura = sumEstrutura + (Number(valueEstrutura) * comissao) / 100;
     }
     sumProjeto = sumProjeto != undefined ? sumProjeto : 0;
     sumPadrao = sumPadrao != undefined ? sumPadrao : 0;
     sumEstrutura = sumEstrutura != undefined ? sumEstrutura : 0;
     sumInside = sumInside != undefined ? sumInside : 0;
+    console.log("VALOR PROJETO", sumProjeto);
+    console.log("VALOR PADRÃO", sumPadrao);
+    console.log("VALOR ESTRUTURA", sumEstrutura);
     return {
       ativoProjeto: sumProjeto.toFixed(2),
       ativoPadrao: sumPadrao.toFixed(2),

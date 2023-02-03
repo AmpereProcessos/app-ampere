@@ -1210,6 +1210,35 @@ function ModalProjetos({
                     }}
                   />
                   <DateInput
+                    label={"DATA DE PAGAMENTO"}
+                    editable={false}
+                    value={
+                      infoHolder.compra.dataPagamento != undefined &&
+                      infoHolder.compra.dataPagamento != "-"
+                        ? new Date(infoHolder.compra.dataPagamento)
+                            .toISOString()
+                            .slice(0, 10)
+                        : 0
+                    }
+                    handleChange={(value) => {
+                      setChanges({
+                        ...changes,
+                        "compra.dataPagamento": isNaN(value)
+                          ? new Date(value).toISOString()
+                          : null,
+                      });
+                      setInfo({
+                        ...infoHolder,
+                        compra: {
+                          ...infoHolder.compra,
+                          dataPagamento: isNaN(value)
+                            ? new Date(value).toISOString()
+                            : null,
+                        },
+                      });
+                    }}
+                  />
+                  <DateInput
                     label={"Previsão de entrega"}
                     editable={false}
                     value={

@@ -1199,6 +1199,7 @@ export const cidadesAtendidas = [
   "IRAÍ DE MINAS", // MG
   "CATALÃO", // GO
   "JUIZ DE FORA", // MG
+  "LIMEIRA DO OESTE", // MG
 ];
 export const suprimentoOption = {
   GRAMPO: {

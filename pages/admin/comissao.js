@@ -61,38 +61,71 @@ function Comissao() {
 
     link.click();
   }
+  // Functions used to get the total values
   function getTotalSold() {
     var sum = 0;
     for (let i = 0; i < filteredProjects.length; i++) {
       let projeto = !isNaN(filteredProjects[i].sistema?.valorProjeto)
         ? filteredProjects[i].sistema.valorProjeto
         : 0;
-      sum = sum + projeto;
+      let padrao = !isNaN(filteredProjects[i].padrao.valor)
+        ? filteredProjects[i].padrao.valor
+        : 0;
+      let estrutura = !isNaN(filteredProjects[i].estruturaPersonalizada.valor)
+        ? filteredProjects[i].estruturaPersonalizada.valor
+        : 0;
+      sum = sum + padrao + estrutura + projeto;
     }
     return sum;
   }
   function getTotalComission() {
-    var sum = 0;
+    var sumProjeto = 0;
+    var sumPadrao = 0;
+    var sumEstrutura = 0;
     var sumInside = 0;
     for (let i = 0; i < filteredProjects.length; i++) {
-      var com = !isNaN(filteredProjects[i].valorComissao)
-        ? filteredProjects[i].valorComissao
+      var valueProjeto = !isNaN(filteredProjects[i].sistema.valorProjeto)
+        ? filteredProjects[i].sistema.valorProjeto
         : 0;
+      var valuePadrao = !isNaN(filteredProjects[i].padrao.valor)
+        ? filteredProjects[i].padrao.valor
+        : 0;
+      var valueEstrutura = !isNaN(
+        filteredProjects[i].estruturaPersonalizada.valor
+      )
+        ? filteredProjects[i].estruturaPersonalizada.valor
+        : 0;
+
       if (
         filteredProjects[i].insider != null ||
         filteredProjects[i].insider != undefined
       ) {
         sumInside =
-          sumInside + 0.003 * filteredProjects[i].sistema.valorProjeto;
+          sumInside +
+          (filteredProjects[i].porcentagemComissaoInsider / 100) *
+            (valueProjeto + valuePadrao + valueEstrutura);
       }
-      sum = sum + Number(com);
+      sumProjeto =
+        sumProjeto +
+        (Number(valueProjeto) * filteredProjects[i].porcentagemComissao) / 100;
+      sumPadrao =
+        sumPadrao +
+        (Number(valuePadrao) * filteredProjects[i].porcentagemComissao) / 100;
+      sumEstrutura =
+        sumEstrutura +
+        (Number(valueEstrutura) * filteredProjects[i].porcentagemComissao) /
+          100;
     }
-    sum = sum != undefined ? sum : 0;
+    sumProjeto = sumProjeto != undefined ? sumProjeto : 0;
+    sumPadrao = sumPadrao != undefined ? sumPadrao : 0;
+    sumEstrutura = sumEstrutura != undefined ? sumEstrutura : 0;
     sumInside = sumInside != undefined ? sumInside : 0;
     return {
-      ativo: sum.toFixed(2),
+      ativoProjeto: sumProjeto.toFixed(2),
+      ativoPadrao: sumPadrao.toFixed(2),
+      ativoEstrutura: sumEstrutura.toFixed(2),
       inside: sumInside.toFixed(2),
-      total: (sum + sumInside).toFixed(2),
+      total: (sumProjeto + sumPadrao + sumEstrutura + sumInside).toFixed(2),
     };
   }
   function getTotalPeakPot() {
@@ -248,10 +281,35 @@ function Comissao() {
             </div>
             <div className="flex flex-col border-x border-gray-200 px-2">
               <h1 className="text-[#15599a] font-bold text-center">
-                COMISSÃO TOTAL ATIVO
+                COMISSÃO TOTAL ATIVO (PROJETO)
               </h1>
               <p className="text-gray-700 text-center text-xs">
-                R$ {Number(getTotalComission().ativo).toLocaleString("pt-br")}
+                R${" "}
+                {Number(getTotalComission().ativoProjeto).toLocaleString(
+                  "pt-br"
+                )}
+              </p>
+            </div>
+            <div className="flex flex-col border-x border-gray-200 px-2">
+              <h1 className="text-[#15599a] font-bold text-center">
+                COMISSÃO TOTAL ATIVO (PADRÃO)
+              </h1>
+              <p className="text-gray-700 text-center text-xs">
+                R${" "}
+                {Number(getTotalComission().ativoPadrao).toLocaleString(
+                  "pt-br"
+                )}
+              </p>
+            </div>
+            <div className="flex flex-col border-x border-gray-200 px-2">
+              <h1 className="text-[#15599a] font-bold text-center">
+                COMISSÃO TOTAL ATIVO (ESTRUTURA)
+              </h1>
+              <p className="text-gray-700 text-center text-xs">
+                R${" "}
+                {Number(getTotalComission().ativoEstrutura).toLocaleString(
+                  "pt-br"
+                )}
               </p>
             </div>
             <div className="flex flex-col border-x border-gray-200 px-2">

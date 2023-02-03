@@ -2,17 +2,19 @@ import { ObjectId } from "mongodb";
 import connectToDatabase from "../../../utils/connectDb";
 import { vendedores } from "../../../utils/constants";
 export default async function handler(req, res) {
-  function getComissao(vendedorNome) {
+  function getComissao(vendedorNome, insider) {
     let vendedorInfo = vendedores.filter((x) => x.nome == vendedorNome)[0];
     if (vendedorInfo != undefined) {
-      return {
-        pcAtivo: Number(vendedorInfo.comissaoAtivo),
-        pcInside: Number(vendedorInfo.comissaoInside),
-      };
+      if (insider) return { porcentagemComissao: vendedorInfo.comissaoInside };
+      else return { porcentagemComissao: vendedorInfo.comissaoAtivo };
+
+      // return {
+      //   pcAtivo: Number(vendedorInfo.comissaoAtivo),
+      //   pcInside: Number(vendedorInfo.comissaoInside),
+      // };
     } else {
       return {
-        pcAtivo: 0,
-        pcInside: 0,
+        porcentagemComissao: 0,
       };
     }
   }
@@ -44,6 +46,8 @@ export default async function handler(req, res) {
               "contrato.comissaoVendedor": 1,
               "sistema.potPico": 1,
               "sistema.valorProjeto": 1,
+              "padrao.valor": 1,
+              "estruturaPersonalizada.valor": 1,
               "compra.dataPagamento": 1,
               canalVenda: 1,
               insider: 1,
@@ -52,40 +56,85 @@ export default async function handler(req, res) {
         ])
         .toArray();
       arr = arr.map((x) => {
-        var valor;
-        var pc;
-        if (x.insider != undefined) {
-          valor = x.contrato.comissaoVendedor
-            ? (x.contrato.comissaoVendedor * Number(x.sistema.valorProjeto)) /
-              100
-            : (
-                (getComissao(x.vendedor.nome).pcInside *
-                  Number(x.sistema.valorProjeto)) /
-                100
-              ).toFixed(2);
-          pc = x.contrato.comissaoVendedor
-            ? x.contrato.comissaoVendedor
-            : getComissao(x.vendedor.nome).pcInside;
-        } else {
-          valor = x.contrato.comissaoVendedor
-            ? (x.contrato.comissaoVendedor * Number(x.sistema.valorProjeto)) /
-              100
-            : (
-                (getComissao(x.vendedor.nome).pcAtivo *
-                  Number(x.sistema.valorProjeto)) /
-                100
-              ).toFixed(2);
-          pc = x.contrato.comissaoVendedor
-            ? x.contrato.comissaoVendedor
-            : getComissao(x.vendedor.nome).pcAtivo;
-        }
-        if (valor == "NaN") {
-          valor = 0;
-        }
+        // var valor;
+        // var valorEstrutura;
+        // var valorPadrao;
+        // var pc;
+        // if (x.insider != undefined) {
+        //   valor = x.contrato.comissaoVendedor
+        //     ? (x.contrato.comissaoVendedor * Number(x.sistema.valorProjeto)) /
+        //       100
+        //     : (
+        //         (getComissao(x.vendedor.nome).pcAtivo *
+        //           Number(x.sistema.valorProjeto)) /
+        //         100
+        //       ).toFixed(2);
+        //   valorPadrao = x.contrato.comissaoVendedor
+        //     ? (x.contrato.comissaoVendedor * Number(x.padrao.valor)) / 100
+        //     : (
+        //         (getComissao(x.vendedor.nome).pcAtivo *
+        //           Number(x.padrao.valor)) /
+        //         100
+        //       ).toFixed(2);
+        //   valorEstrutura = x.contrato.comissaoVendedor
+        //     ? (x.contrato.comissaoVendedor *
+        //         Number(x.estruturaPersonalizada.valor)) /
+        //       100
+        //     : (
+        //         (getComissao(x.vendedor.nome).pcAtivo *
+        //           Number(x.estruturaPersonalizada.valor)) /
+        //         100
+        //       ).toFixed(2);
+        //   pc = x.contrato.comissaoVendedor
+        //     ? x.contrato.comissaoVendedor
+        //     : getComissao(x.vendedor.nome).pcInside;
+        // } else {
+        //   valor = x.contrato.comissaoVendedor
+        //     ? (x.contrato.comissaoVendedor * Number(x.sistema.valorProjeto)) /
+        //       100
+        //     : (
+        //         (getComissao(x.vendedor.nome).pcAtivo *
+        //           Number(x.sistema.valorProjeto)) /
+        //         100
+        //       ).toFixed(2);
+        //   valorPadrao = x.contrato.comissaoVendedor
+        //     ? (x.contrato.comissaoVendedor * Number(x.padrao.valor)) / 100
+        //     : (
+        //         (getComissao(x.vendedor.nome).pcAtivo *
+        //           Number(x.padrao.valor)) /
+        //         100
+        //       ).toFixed(2);
+        //   valorEstrutura = x.contrato.comissaoVendedor
+        //     ? (x.contrato.comissaoVendedor *
+        //         Number(x.estruturaPersonalizada.valor)) /
+        //       100
+        //     : (
+        //         (getComissao(x.vendedor.nome).pcAtivo *
+        //           Number(x.estruturaPersonalizada.valor)) /
+        //         100
+        //       ).toFixed(2);
+        //   pc = x.contrato.comissaoVendedor
+        //     ? x.contrato.comissaoVendedor
+        //     : getComissao(x.vendedor.nome).pcAtivo;
+        // }
+        // if (valor == "NaN") {
+        //   valor = 0;
+        // }
+        // if (valorEstrutura == "NaN") {
+        //   valorEstrutura = 0;
+        // }
+        // if (valorPadrao == "NaN") {
+        //   valorEstrutura = 0;
+        // }
         return {
           ...x,
-          porcentagemComissao: pc,
-          valorComissao: valor,
+          porcentagemComissao: x.contrato.comissaoVendedor
+            ? x.contrato.comissaoVendedor
+            : getComissao(x.vendedor.nome, x.insider).porcentagemComissao,
+          porcentagemComissaoInsider: 0.3,
+          // valorComissaoProjeto: Number(valor),
+          // valorComissaoPadrao: Number(valorPadrao),
+          // valorComissaoEstrutura: Number(valorEstrutura),
         };
       });
       res.json(arr);

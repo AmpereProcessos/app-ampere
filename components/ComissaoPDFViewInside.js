@@ -6,23 +6,47 @@ import whiteLogo from "../utils/whitelogoHD.png";
 function ComissaoPDFView({ projects }) {
   const printRef = useRef();
   function getTotalComission() {
-    var sum = 0;
+    var sumProjeto = 0;
+    var sumPadrao = 0;
+    var sumEstrutura = 0;
     var sumInside = 0;
     for (let i = 0; i < projects.length; i++) {
-      var com = !isNaN(projects[i].valorComissao)
-        ? projects[i].valorComissao
+      var valueProjeto = !isNaN(projects[i].sistema.valorProjeto)
+        ? projects[i].sistema.valorProjeto
         : 0;
+      var valuePadrao = !isNaN(projects[i].padrao.valor)
+        ? projects[i].padrao.valor
+        : 0;
+      var valueEstrutura = !isNaN(projects[i].estruturaPersonalizada.valor)
+        ? projects[i].estruturaPersonalizada.valor
+        : 0;
+
       if (projects[i].insider != null || projects[i].insider != undefined) {
-        sumInside = sumInside + 0.003 * projects[i].sistema.valorProjeto;
+        sumInside =
+          sumInside +
+          (projects[i].porcentagemComissaoInsider / 100) *
+            (valueProjeto + valuePadrao + valueEstrutura);
       }
-      sum = sum + Number(com);
+      sumProjeto =
+        sumProjeto +
+        (Number(valueProjeto) * projects[i].porcentagemComissao) / 100;
+      sumPadrao =
+        sumPadrao +
+        (Number(valuePadrao) * projects[i].porcentagemComissao) / 100;
+      sumEstrutura =
+        sumEstrutura +
+        (Number(valueEstrutura) * projects[i].porcentagemComissao) / 100;
     }
-    sum = sum != undefined ? sum : 0;
+    sumProjeto = sumProjeto != undefined ? sumProjeto : 0;
+    sumPadrao = sumPadrao != undefined ? sumPadrao : 0;
+    sumEstrutura = sumEstrutura != undefined ? sumEstrutura : 0;
     sumInside = sumInside != undefined ? sumInside : 0;
     return {
-      ativo: sum.toFixed(2),
+      ativoProjeto: sumProjeto.toFixed(2),
+      ativoPadrao: sumPadrao.toFixed(2),
+      ativoEstrutura: sumEstrutura.toFixed(2),
       inside: sumInside.toFixed(2),
-      total: (sum + sumInside).toFixed(2),
+      total: (sumProjeto + sumPadrao + sumEstrutura + sumInside).toFixed(2),
     };
   }
   const handleDownloadPdf = async () => {
@@ -60,15 +84,15 @@ function ComissaoPDFView({ projects }) {
         <h1 className="font-bold text-[#fead61] text-center my-4">
           RELATÓRIO DE COMISSÃO DE INSIDER
         </h1>
-        <div className="grid grid-cols-8 border border-gray-700 w-full">
-          <div className="col-span-7 flex items-center justify-center h-[35px] border-r border-gray-700 text-xs bg-[#fead61] text-white font-bold text-center p-1">
+        <div className="grid grid-cols-10 border border-gray-700 w-full">
+          <div className="col-span-9 flex items-center justify-center h-[35px] border-r border-gray-700 text-xs bg-[#fead61] text-white font-bold text-center p-1">
             VALOR TOTAL
           </div>
           <div className="col-span-1 flex items-center justify-center h-[35px] border-r border-gray-700 text-xxs text-gray-700 font-bold text-center p-1">
             R$ {getTotalComission().inside}
           </div>
         </div>
-        <div className="grid grid-cols-8 border border-gray-700 w-full">
+        <div className="grid grid-cols-10 border border-gray-700 w-full">
           <div className="bg-[#15599a] flex items-center h-[50px] justify-center border-r border-gray-700 text-xs text-white text-center font-bold p-1 col-span-2">
             NOME DO CLIENTE
           </div>
@@ -80,6 +104,12 @@ function ComissaoPDFView({ projects }) {
           </div>
           <div className="bg-[#15599a] flex items-center h-[50px] justify-center border-r border-gray-700 text-xs text-white text-center font-bold p-1 col-span-1">
             VALOR DO PROJETO
+          </div>
+          <div className="bg-[#15599a] flex items-center h-[50px] justify-center border-r border-gray-700 text-xs text-white text-center font-bold p-1 col-span-1">
+            VALOR DO PADRÃO
+          </div>
+          <div className="bg-[#15599a] flex items-center h-[50px] justify-center border-r border-gray-700 text-xs text-white text-center font-bold p-1 col-span-1">
+            VALOR DA ESTRUTURA
           </div>
           <div className="bg-[#15599a] flex items-center h-[50px] justify-center border-r border-gray-700 text-xs text-white text-center font-bold p-1 col-span-1">
             INSIDER
@@ -95,7 +125,7 @@ function ComissaoPDFView({ projects }) {
           {projects.map((project, index) => (
             <div
               key={index}
-              className="grid grid-cols-8 border border-t-0 border-gray-700 w-full"
+              className="grid grid-cols-10 border border-t-0 border-gray-700 w-full"
             >
               <div className="flex items-center justify-center h-[35px] border-r border-gray-700 text-xxs text-gray-700 col-span-2 font-bold text-center p-1">
                 {project.nomeDoContrato}
@@ -110,10 +140,22 @@ function ComissaoPDFView({ projects }) {
                 R$ {project.sistema.valorProjeto.toLocaleString("pt-br")}
               </div>
               <div className="flex items-center justify-center h-[35px] border-r border-gray-700 text-xxs text-gray-700 col-span-1 font-bold text-center p-1">
+                {project.padrao.valor
+                  ? project.padrao.valor.toLocaleString("pt-br")
+                  : "-"}
+              </div>
+              <div className="flex items-center justify-center h-[35px] border-r border-gray-700 text-xxs text-gray-700 col-span-1 font-bold text-center p-1">
+                {project.estruturaPersonalizada.valor
+                  ? project.estruturaPersonalizada.valor.toLocaleString("pt-br")
+                  : "-"}
+              </div>
+              <div className="flex items-center justify-center h-[35px] border-r border-gray-700 text-xxs text-gray-700 col-span-1 font-bold text-center p-1">
                 {project.insider ? project.insider : "N/A"}
               </div>
               <div className="flex items-center justify-center h-[35px] border-r border-gray-700 text-xxs text-gray-700 col-span-1 font-bold text-center p-1">
-                {project.insider ? "0,3" : "-"}
+                {project.porcentagemComissaoInsider
+                  ? project.porcentagemComissaoInsider
+                  : "-"}
               </div>
               <div className="flex items-center justify-center h-[35px] text-xxs text-gray-700 col-span-1 font-bold text-center p-1">
                 R${" "}

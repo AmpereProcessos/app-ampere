@@ -1200,6 +1200,7 @@ export const cidadesAtendidas = [
   "CATALÃO", // GO
   "JUIZ DE FORA", // MG
   "LIMEIRA DO OESTE", // MG
+  "SÃO FRANCISCO DE SALES", // MG
 ];
 export const suprimentoOption = {
   GRAMPO: {

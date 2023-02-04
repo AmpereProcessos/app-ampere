@@ -1536,6 +1536,10 @@ export const equipesTecnicas = [
     value: "EQUIPE 16 - JOÃO FILHO",
   },
   {
+    label: "EQUIPE 17 - MATHEUS E DIOGO",
+    value: "EQUIPE 17 - MATHEUS E DIOGO",
+  },
+  {
     label: "NÃO DEFINIDO",
     value: "NÃO DEFINIDO",
   },

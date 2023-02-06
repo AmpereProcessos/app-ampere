@@ -11,8 +11,8 @@ function Calls() {
         Tipos de chamados
       </h1>
       <div className="flex gap-4 mt-5 flex-wrap w-full">
-        {credentials.accessibleRoutes != undefined &&
-        credentials.accessibleRoutes.includes("PPS") ? (
+        {credentials.accessibleRoutes.includes("PPS") ||
+        credentials.visualizacao == "REGIONAL" ? (
           <Link href="/calls/chamadosPPS">
             <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
@@ -23,8 +23,9 @@ function Calls() {
         ) : (
           false
         )}
-        {credentials?.accessibleRoutes?.includes("O&M") ||
-        credentials?.accessibleRoutes?.includes("Pós-Venda") ? (
+        {(credentials?.accessibleRoutes?.includes("O&M") ||
+          credentials?.accessibleRoutes?.includes("Pós-Venda")) &&
+        credentials.visualizacao == undefined ? (
           <Link href="/calls/chamadosSuporte">
             <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
@@ -35,8 +36,8 @@ function Calls() {
         ) : (
           false
         )}
-        {credentials.accessibleRoutes != undefined &&
-        credentials.accessibleRoutes.includes("Projetos") ? (
+        {credentials.accessibleRoutes.includes("Projetos") &&
+        credentials.visualizacao == undefined ? (
           <Link href="/calls/chamadosProjetos">
             <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
@@ -47,8 +48,8 @@ function Calls() {
         ) : (
           false
         )}
-        {credentials.accessibleRoutes != undefined &&
-        credentials.accessibleRoutes.includes("ADM") ? (
+        {credentials.accessibleRoutes.includes("ADM") &&
+        credentials.visualizacao == undefined ? (
           <Link href="/calls/chamadosADM">
             <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
@@ -59,8 +60,8 @@ function Calls() {
         ) : (
           false
         )}
-        {credentials.accessibleRoutes != undefined &&
-        credentials.accessibleRoutes.includes("Suprimentos") ? (
+        {credentials.accessibleRoutes.includes("Suprimentos") &&
+        credentials.visualizacao == undefined ? (
           <Link href="/calls/chamadosSuprimentos">
             <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">

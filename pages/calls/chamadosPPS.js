@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ModalCallPPS from "../../components/ModalCallPPS";
 import { AiOutlineReload } from "react-icons/ai";
 import { MdDateRange } from "react-icons/md";
@@ -8,6 +8,7 @@ import Link from "next/link";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import dayjs from "dayjs";
+import { AppContext } from "../../context/AppContext";
 var dateFilterParam = new Date();
 dateFilterParam.setHours(0, 0, 0, 0);
 dateFilterParam.setDate(dateFilterParam.getDate() - 2);
@@ -30,13 +31,20 @@ const statusStyles = {
   },
 };
 
-function ChamadosPPS({ setCredentials, credentials }) {
+function ChamadosPPS() {
+  // Context and utils
+  const { credentials } = useContext(AppContext);
+  const router = useRouter();
+  // Data Holders
   const [inProgress, setInProgress] = useState([]);
   const [filteredInProgress, setFilteredInProgress] = useState([]);
   const [closedCalls, setClosedCalls] = useState([]);
+
   const [stats, setStats] = useState({});
+  // Modal handlers
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalCall, setModalCall] = useState({});
+  //Filters
   const [closedFilterDate, setClosedFilterDate] = useState({
     after: dateFilterParam,
     before: new Date(),
@@ -48,7 +56,7 @@ function ChamadosPPS({ setCredentials, credentials }) {
   const [searchFilter, setSearchFilter] = useState("");
   const [respFilter, setRespFilter] = useState([]);
   const [statusFilter, setStatusFilter] = useState([]);
-  const router = useRouter();
+  // Functions
   function getCalls() {
     axios.get("/api/calls/pps/mainData").then((res) => {
       setStats(res.data.stats);
@@ -92,15 +100,6 @@ function ChamadosPPS({ setCredentials, credentials }) {
       setFilteredInProgress(inProgress);
     }
   }
-  useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      getCalls();
-    } else {
-      router.push("/auth/authHome");
-    }
-  }, []);
   function filterClosedCallsByDate() {
     axios
       .post("/api/calls/pps/filteredByDate", {
@@ -148,6 +147,16 @@ function ChamadosPPS({ setCredentials, credentials }) {
     setModalCall(call);
     setModalIsOpen(true);
   }
+  useEffect(() => {
+    if (
+      credentials.accessibleRoutes.includes("PPS") ||
+      credentials.visualizacao == "REGIONAL"
+    ) {
+      getCalls();
+    } else {
+      router.push("/");
+    }
+  }, []);
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
       <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">

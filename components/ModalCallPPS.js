@@ -1,6 +1,7 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
+import { AppContext } from "../context/AppContext";
 import PPSModalCallInfo from "./PPSModalCallInfo";
 const MODAL_STYLES = {
   position: "fixed",
@@ -41,13 +42,11 @@ const statusStyles = {
     borderColor: "border-red-400",
   },
 };
-function ModalCallPPS({
-  open,
-  setModalIsOpen,
-  info,
-  updateModalInfo,
-  credentials,
-}) {
+function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
+  const { credentials } = useContext(AppContext);
+  const editor =
+    credentials.accessibleRoutes.includes("PPS") &&
+    credentials.visualizacao == undefined;
   var ultAlteracoes = {
     anotAlteracoes: {
       usuario: info.ultAlteracoes?.anotAlteracoes
@@ -303,6 +302,7 @@ function ModalCallPPS({
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center font-bold">RESPONSÁVEL</span>
                 <select
+                  disabled={!editor}
                   value={responsavel ? responsavel : info.responsavel}
                   onChange={(e) => setResponsavel(e.target.value)}
                   className="text-xs grow text-center outline-none mt-2 lg:mt-0"
@@ -326,12 +326,36 @@ function ModalCallPPS({
                 </span>
                 <textarea
                   value={notes}
+                  readOnly={!editor}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Digite aqui as anotações do chamado"
                   className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit grow"
                 />
               </div>
-              {info.dataDeConclusao ? (
+              {editor ? (
+                info.dataDeConclusao ? (
+                  <div className="text-center">
+                    <button
+                      onClick={reopenCall}
+                      className="p-3 font-raleway mt-4 hover:bg-[#f18701] hover:text-white font-bold rounded-lg bg-yellow-400"
+                    >
+                      REABRIR CHAMADO
+                    </button>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <button
+                      onClick={closedCall}
+                      className="p-3 font-raleway mt-4 hover:bg-[#06d6a0] hover:text-white font-bold rounded-lg bg-green-400"
+                    >
+                      FINALIZAR CHAMADO
+                    </button>
+                  </div>
+                )
+              ) : (
+                false
+              )}
+              {/* {info.dataDeConclusao ? (
                 <div className="text-center">
                   <button
                     onClick={reopenCall}
@@ -349,20 +373,22 @@ function ModalCallPPS({
                     FINALIZAR CHAMADO
                   </button>
                 </div>
-              )}
+              )} */}
               {message.text && (
                 <p className={`text-center ${message.color} mt-2 italic`}>
                   {message.text}
                 </p>
               )}
-              <div className="text-center">
-                <button
-                  onClick={saveProject}
-                  className="px-2 py-1 font-raleway mt-2 hover:bg-[#15599a] hover:text-white font-bold rounded-lg bg-blue-400"
-                >
-                  SALVAR
-                </button>
-              </div>
+              {editor && (
+                <div className="text-center">
+                  <button
+                    onClick={saveProject}
+                    className="px-2 py-1 font-raleway mt-2 hover:bg-[#15599a] hover:text-white font-bold rounded-lg bg-blue-400"
+                  >
+                    SALVAR
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

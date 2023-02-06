@@ -75,9 +75,24 @@ function Administracao() {
           call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
     }
-    if (!newArr) setFilteredProjects(projects);
-    else {
+    if (!newArr) {
+      setFilteredProjects(projects);
+      return projects;
+    } else {
       setFilteredProjects(newArr);
+      return newArr;
+    }
+  }
+  function handleSearchFilter(value) {
+    setFilters({ ...filters, pesquisaFilter: value });
+    if (value != "" || " ") {
+      let filtered = filterProjects();
+      let newArr = filtered.filter((call) =>
+        call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
+      );
+      setFilteredProjects(newArr);
+    } else {
+      setFilteredProjects(projects);
     }
   }
   useEffect(() => {
@@ -194,11 +209,10 @@ function Administracao() {
           <div className="flex flex-wrap justify-center gap-2">
             <input
               type="text"
-              className="outline-none p-2 h-[36px] w-[350px]"
+              placeholder="Digite aqui o nome do cliente..."
+              className="outline-none p-2 h-[36px] w-[350px] border border-gray-200"
               value={filters.pesquisaFilter}
-              onChange={(e) =>
-                setFilters({ ...filters, pesquisaFilter: e.target.value })
-              }
+              onChange={(e) => handleSearchFilter(e.target.value)}
             />
             <Select
               isMulti

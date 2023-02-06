@@ -65,64 +65,58 @@ function ModalADM({
     text: "",
     color: "",
   });
-  function validateChanges() {
-    if (
-      infoHolder.compra.statusLiberacao == "PAGO" &&
-      infoHolder.projeto.iniciar != "SIM"
-    ) {
-      return {
-        liberar: false,
-        message: "Por favor, preencha iniciar projeto.",
-      };
-    }
-    if (infoHolder.projeto.iniciar == "SIM") {
-      if (infoHolder.compra.previsaoEntrega == undefined) {
-        return {
-          liberar: false,
-          message: "Preencha previsão de entrega",
-        };
-      } else if (infoHolder.compra.dataPagamento == undefined) {
-        return {
-          liberar: false,
-          message: "Por favor, preencha a data de pagamento.",
-        };
-      } else if (infoHolder.compra.dataPedido == undefined) {
-        return {
-          liberar: false,
-          message: "Por favor, preencha a data do pedido.",
-        };
-      } else if (
-        infoHolder.compra.statusEntrega != "EM ROTA" &&
-        infoHolder.compra.statusEntrega != "ENTREGUE"
-      ) {
-        return {
-          liberar: false,
-          message: "Preencha status de entrega válido",
-        };
-      } else {
-        return { liberar: true, message: "OK" };
-      }
-    } else {
-      return { liberar: true, message: "OK" };
-    }
-  }
+  // function validateChanges() {
+  //   if (
+  //     infoHolder.compra.statusLiberacao == "PAGO" &&
+  //     infoHolder.projeto.iniciar != "SIM"
+  //   ) {
+  //     return {
+  //       liberar: false,
+  //       message: "Por favor, preencha iniciar projeto.",
+  //     };
+  //   }
+  //   if (infoHolder.projeto.iniciar == "SIM") {
+  //     if (infoHolder.compra.previsaoEntrega == undefined) {
+  //       return {
+  //         liberar: false,
+  //         message: "Preencha previsão de entrega",
+  //       };
+  //     } else if (infoHolder.compra.dataPagamento == undefined) {
+  //       return {
+  //         liberar: false,
+  //         message: "Por favor, preencha a data de pagamento.",
+  //       };
+  //     } else if (infoHolder.compra.dataPedido == undefined) {
+  //       return {
+  //         liberar: false,
+  //         message: "Por favor, preencha a data do pedido.",
+  //       };
+  //     } else if (
+  //       infoHolder.compra.statusEntrega != "EM ROTA" &&
+  //       infoHolder.compra.statusEntrega != "ENTREGUE"
+  //     ) {
+  //       return {
+  //         liberar: false,
+  //         message: "Preencha status de entrega válido",
+  //       };
+  //     } else {
+  //       return { liberar: true, message: "OK" };
+  //     }
+  //   } else {
+  //     return { liberar: true, message: "OK" };
+  //   }
+  // }
   function handleChanges() {
-    if (validateChanges().liberar) {
-      if (
-        infoHolder.contrato.status != "ASSINADO" &&
-        infoHolder.pagamento.status == "PAGO"
-      ) {
-        setMsg({ text: "Verifique as informações!", color: "text-red-400" });
-      } else {
-        axios
-          .post(`/api/projects/update/${project._id}`, changes)
-          .then((res) => {
-            setMsg({ text: "Alterações feitas !", color: "text-green-400" });
-            handleUpdates(project._id);
-          });
-      }
+    if (
+      infoHolder.contrato.status != "ASSINADO" &&
+      infoHolder.pagamento.status == "PAGO"
+    ) {
+      setMsg({ text: "Verifique as informações!", color: "text-red-400" });
     } else {
-      setMsg({ text: validateChanges().message, color: "text-red-400" });
+      axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
+        setMsg({ text: "Alterações feitas !", color: "text-green-400" });
+        handleUpdates(project._id);
+      });
     }
   }
   return (

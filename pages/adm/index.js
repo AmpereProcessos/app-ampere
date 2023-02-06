@@ -19,6 +19,7 @@ function Administracao() {
     equipResp: [],
     vistoriaFilter: [],
     dataSaidaDeObra: null,
+    pesquisaFilter: "",
   });
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -191,6 +192,14 @@ function Administracao() {
             />
           </div>
           <div className="flex flex-wrap justify-center gap-2">
+            <input
+              type="text"
+              className="outline-none p-2 h-[36px] w-[350px]"
+              value={filters.pesquisaFilter}
+              onChange={(e) =>
+                setFilters({ ...filters, pesquisaFilter: e.target.value })
+              }
+            />
             <Select
               isMulti
               placeholder="EQUIP.RESP"

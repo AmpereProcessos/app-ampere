@@ -44,6 +44,7 @@ export default async function handler(req, res) {
               vendedor: 1,
               "contrato.dataAssinatura": 1,
               "contrato.comissaoVendedor": 1,
+              "contrato.comissaoPaga": 1,
               "sistema.potPico": 1,
               "sistema.valorProjeto": 1,
               "padrao.valor": 1,

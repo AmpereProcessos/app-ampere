@@ -1,12 +1,21 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import React from "react";
-
+import { BsPatchCheckFill } from "react-icons/bs";
 function ComissaoGeralView({ projects, setProjects }) {
   function validateComissions() {
     axios
       .post("/api/projects/comissao", projects)
       .then((res) => alert(res.data));
+  }
+  function setAsPaid(id, index) {
+    axios
+      .post(`/api/projects/update/${id}`, { "contrato.comissaoPaga": true })
+      .then((res) => {
+        let arr = [...projects];
+        arr[index].contrato.comissaoPaga = true;
+        setProjects([...arr]);
+      });
   }
   return (
     <>
@@ -24,9 +33,24 @@ function ComissaoGeralView({ projects, setProjects }) {
             key={index}
             className="flex flex-col w-full p-2 rounded border border-gray-300"
           >
-            <h1 className="font-bold text-[#15599a] text-md col-span-2 text-center pb-2">
-              #{project.qtde} - {project.nomeDoContrato}
-            </h1>
+            <div className="flex items-center justify-between">
+              <h1 className="font-bold text-[#15599a] text-md col-span-2 text-center pb-2 self-center">
+                #{project.qtde} - {project.nomeDoContrato}
+              </h1>
+              {project.contrato.comissaoPaga ? (
+                <BsPatchCheckFill
+                  style={{ color: "rgb(34 197 94)", fontSize: "25px" }}
+                />
+              ) : (
+                <button
+                  onClick={() => setAsPaid(project._id, index)}
+                  className="p-1 font-bold rounded border border-green-500 text-green-500 hover:text-white hover:bg-green-500"
+                >
+                  PAGO?
+                </button>
+              )}
+            </div>
+
             <div className="flex items-center justify-between flex-wrap pb-1 border-b border-gray-200">
               <div className="flex flex-col items-center">
                 <p className="text-xs text-gray-700 font-bold">CÓDIGO SVB</p>

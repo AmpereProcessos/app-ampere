@@ -1300,6 +1300,10 @@ export const credores = [
     value: "SOL FÁCIL",
   },
   {
+    label: "SICRED",
+    value: "SICRED",
+  },
+  {
     label: "SICOOB ARACOOP",
     value: "SICOOB ARACOOP",
   },

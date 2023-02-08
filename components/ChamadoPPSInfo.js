@@ -208,14 +208,14 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
         }
       }
       if (dados.tipoDeSolicitacao == "ANÁLISE DE CRÉDITO") {
-        if (dados.cpf_cnpj || dados.cpf_cnpj.trim().length < 8) {
+        if (!dados.cpf_cnpj || dados.cpf_cnpj.trim().length < 8) {
           setMsg({
             text: "Por favor, preencha um CPF/CNPJ válido.",
             color: "text-red-500",
           });
           return false;
         }
-        if (dados.email || dados.email.trim().length < 8) {
+        if (!dados.email || dados.email.trim().length < 8) {
           setMsg({
             text: "Por favor, preencha um email válido.",
             color: "text-red-500",
@@ -244,7 +244,7 @@ function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
           return false;
         }
         if (
-          dados.enderecoDoCliente &&
+          !dados.enderecoDoCliente ||
           dados.enderecoDoCliente?.trim().length < 3
         ) {
           setMsg({

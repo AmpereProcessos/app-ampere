@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import TextInput from "./TextInput";
-import SelectInput from "./SelectInput";
-import NumberInput from "./NumberInput";
+import TextFloatingInput from "./TextFloatingInput";
+import NumberFloatingInput from "./NumberFloatingInput";
 import { MdOutlineAddCircle } from "react-icons/md";
 import { FiDelete } from "react-icons/fi";
+import SelectFoatingInput from "./SelectFloatingInput";
 function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
   const [message, setMessage] = useState("");
   const [dadosInversores, setDadosInvesores] = useState({
@@ -115,7 +115,7 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
         DADOS DO SISTEMA
       </span>
       <div className="flex justify-center my-2">
-        <SelectInput
+        <SelectFoatingInput
           label={"TOPOLOGIA"}
           editable={true}
           value={dados.topologia}
@@ -154,45 +154,49 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
           </p>
         </div>
 
-        <div className="flex gap-2 justify-around items-center flex-wrap">
-          {dados.topologia != "NÃO DEFINIDO" && (
-            <>
-              <TextInput
-                label={"MARCA DO INVERSOR/MICRO"}
-                editable={true}
-                value={dadosInversores.marca}
-                handleChange={(value) =>
-                  setDadosInvesores({
-                    ...dadosInversores,
-                    marca: value.toUpperCase(),
-                  })
-                }
-              />
-              <NumberInput
-                label={"QTDE INVERSOR/MICRO"}
-                editable={true}
-                value={dadosInversores.qtde}
-                handleChange={(value) =>
-                  setDadosInvesores({ ...dadosInversores, qtde: value })
-                }
-              />
-              <NumberInput
-                label={"POTÊNCIA INVERSOR/MICRO"}
-                unit={"W"}
-                editable={true}
-                value={dadosInversores.pot}
-                handleChange={(value) =>
-                  setDadosInvesores({ ...dadosInversores, pot: value })
-                }
-              />
-              <div
-                onClick={addInversor}
-                className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
-              >
-                <MdOutlineAddCircle style={{ fontSize: "15px" }} />
-              </div>
-            </>
-          )}
+        <div className="flex flex-col lg:grid lg:grid-cols-4 gap-x-2 gap-y-1 mt-3">
+          <div className="flex items-center justify-center">
+            <TextFloatingInput
+              label={"MARCA DO INVERSOR/MICRO"}
+              editable={true}
+              value={dadosInversores.marca}
+              handleChange={(value) =>
+                setDadosInvesores({
+                  ...dadosInversores,
+                  marca: value.toUpperCase(),
+                })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <NumberFloatingInput
+              label={"QTDE INVERSOR/MICRO"}
+              editable={true}
+              value={dadosInversores.qtde}
+              handleChange={(value) =>
+                setDadosInvesores({ ...dadosInversores, qtde: value })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <NumberFloatingInput
+              label={"POTÊNCIA INVERSOR/MICRO"}
+              unit={"W"}
+              editable={true}
+              value={dadosInversores.pot}
+              handleChange={(value) =>
+                setDadosInvesores({ ...dadosInversores, pot: value })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <div
+              onClick={addInversor}
+              className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
+            >
+              <MdOutlineAddCircle style={{ fontSize: "15px" }} />
+            </div>
+          </div>
         </div>
       </div>
       {arrInv.length > 0 && (
@@ -203,8 +207,8 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
           {arrInv.map((inv, index) => (
             <div key={index} className="flex justify-around items-center my-1">
               <p className="text-xs font-bold">{inv.marca}</p>
-              <p className="text-xs font-bold">{inv.qtde}</p>
-              <p className="text-xs font-bold">{inv.pot}</p>
+              <p className="text-xs font-bold">{inv.qtde} UN</p>
+              <p className="text-xs font-bold">{inv.pot} W</p>
               <button
                 onClick={() => {
                   let arr = arrInv;
@@ -234,7 +238,7 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
 
       {dados.topologia == "OTIMIZADOR" && (
         <div className="flex gap-2 justify-around flex-wrap mt-2">
-          <TextInput
+          <TextFloatingInput
             label={"MARCA DO OTIMIZADOR"}
             editable={true}
             value={dados.marcaOtimizador ? dados.marcaOtimizador : ""}
@@ -242,16 +246,16 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
               setDados({ ...dados, marcaOtimizador: value.toUpperCase() })
             }
           />
-          <NumberInput
-            label={"QTDE DO OTIMIZADOR"}
+          <NumberFloatingInput
+            label={"QTDE DE OTIMIZADORES"}
             editable={true}
             value={dados.qtdeOtimizador ? dados.qtdeOtimizador : null}
             handleChange={(value) =>
               setDados({ ...dados, qtdeOtimizador: Number(value) })
             }
           />
-          <NumberInput
-            label={"POTÊNCIA DO OTIMIZADOR"}
+          <NumberFloatingInput
+            label={"POTÊNCIA DO(S) OTIMIZADOR(ES"}
             unit={"W"}
             editable={true}
             value={dados.potOtimizador ? dados.potOtimizador : null}
@@ -273,37 +277,45 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
             Preencha as informações do módulos e clique em adicionar.
           </p>
         </div>
-        <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
-          <TextInput
-            label={"MARCA DOS MÓDULOS"}
-            editable={true}
-            value={dadosModulos.marca}
-            handleChange={(value) =>
-              setDadosModulos({ ...dadosModulos, marca: value.toUpperCase() })
-            }
-          />
-          <NumberInput
-            label={"Nº DE MÓDULOS"}
-            editable={true}
-            value={dadosModulos.qtde}
-            handleChange={(value) =>
-              setDadosModulos({ ...dadosModulos, qtde: Number(value) })
-            }
-          />
-          <NumberInput
-            label={"POTÊNCIA DOS MÓDULOS"}
-            unit={"W"}
-            editable={true}
-            value={dadosModulos.pot}
-            handleChange={(value) =>
-              setDadosModulos({ ...dadosModulos, pot: Number(value) })
-            }
-          />
-          <div
-            onClick={addModulos}
-            className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
-          >
-            <MdOutlineAddCircle style={{ fontSize: "15px" }} />
+        <div className="flex flex-col lg:grid lg:grid-cols-4 gap-x-2 gap-y-1 mt-3">
+          <div className="flex items-center justify-center">
+            <TextFloatingInput
+              label={"MARCA DOS MÓDULOS"}
+              editable={true}
+              value={dadosModulos.marca}
+              handleChange={(value) =>
+                setDadosModulos({ ...dadosModulos, marca: value.toUpperCase() })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <NumberFloatingInput
+              label={"Nº DE MÓDULOS"}
+              editable={true}
+              value={dadosModulos.qtde}
+              handleChange={(value) =>
+                setDadosModulos({ ...dadosModulos, qtde: Number(value) })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <NumberFloatingInput
+              label={"POTÊNCIA DOS MÓDULOS"}
+              unit={"W"}
+              editable={true}
+              value={dadosModulos.pot}
+              handleChange={(value) =>
+                setDadosModulos({ ...dadosModulos, pot: Number(value) })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <div
+              onClick={addModulos}
+              className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
+            >
+              <MdOutlineAddCircle style={{ fontSize: "15px" }} />
+            </div>
           </div>
         </div>
       </div>
@@ -314,32 +326,37 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
             MÓDULOS ADICIONADOS
           </h1>
           {arrModulos.map((inv, index) => (
-            <div key={index} className="flex justify-around items-center my-1">
-              <p className="text-xs font-bold">{inv.marca}</p>
-              <p className="text-xs font-bold">{inv.qtde}</p>
-              <p className="text-xs font-bold">{inv.pot}</p>
-              <button
-                onClick={() => {
-                  let arr = arrModulos;
-                  arr.splice(index, 1);
-                  let marcaArr = arrModulos.map((i) => i.marca);
-                  let qtdeArr = arrModulos.map((i) => i.qtde);
-                  let potArr = arrModulos.map((i) => i.pot);
-                  let joinedMarcaArr = marcaArr.join("/");
-                  let joinedQtdeArr = qtdeArr.join("/");
-                  let joinedPotArr = potArr.join("/");
-                  setDados({
-                    ...dados,
-                    marcaModulos: joinedMarcaArr,
-                    qtdeModulos: joinedQtdeArr,
-                    potModulos: joinedPotArr,
-                  });
-                  setArrModulos([...arr]);
-                }}
-                className="bg-red-500 p-1 rounded"
-              >
-                <FiDelete />
-              </button>
+            <div
+              key={index}
+              className="flex flex-col lg:grid lg:grid-cols-4 gap-x-2 gap-y-1 mt-3"
+            >
+              <p className="text-xs font-bold text-center">{inv.marca}</p>
+              <p className="text-xs font-bold text-center">{inv.qtde} UN</p>
+              <p className="text-xs font-bold text-center">{inv.pot} W</p>
+              <div className="flex items-center justify-center">
+                <button
+                  onClick={() => {
+                    let arr = arrModulos;
+                    arr.splice(index, 1);
+                    let marcaArr = arrModulos.map((i) => i.marca);
+                    let qtdeArr = arrModulos.map((i) => i.qtde);
+                    let potArr = arrModulos.map((i) => i.pot);
+                    let joinedMarcaArr = marcaArr.join("/");
+                    let joinedQtdeArr = qtdeArr.join("/");
+                    let joinedPotArr = potArr.join("/");
+                    setDados({
+                      ...dados,
+                      marcaModulos: joinedMarcaArr,
+                      qtdeModulos: joinedQtdeArr,
+                      potModulos: joinedPotArr,
+                    });
+                    setArrModulos([...arr]);
+                  }}
+                  className="bg-red-500 p-1 rounded"
+                >
+                  <FiDelete />
+                </button>
+              </div>
             </div>
           ))}
         </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import TextInput from "./TextInput";
-import SelectInput from "./SelectInput";
-import NumberInput from "./NumberInput";
+import TextFloatingInput from "./TextFloatingInput";
+import SelectFloatingInput from "./SelectFloatingInput";
+import NumberFloatingInput from "./NumberFloatingInput";
 import { FiDelete } from "react-icons/fi";
 function FormSolicitacaoNove({ dados, setDados, avancar, voltar }) {
   const [message, setMessage] = useState("");
@@ -44,7 +44,7 @@ function FormSolicitacaoNove({ dados, setDados, avancar, voltar }) {
         DISTRIBUIÇÃO DE CRÉDITOS
       </span>
       <div className="flex justify-center mt-2">
-        <SelectInput
+        <SelectFloatingInput
           label={"POSSUI DISTRIBUIÇÕES DE CRÉDITOS?"}
           value={dados.possuiDistribuicao}
           editable={true}
@@ -70,24 +70,18 @@ function FormSolicitacaoNove({ dados, setDados, avancar, voltar }) {
               ADICIONAR DISTRIBUIÇÃO:
             </h1>
             <div className="flex flex-col lg:flex-row items-center justify-around">
-              <div className="flex flex-col w-fit lg:max-w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  Nº DA INSTALAÇÃO
-                </span>
-                <input
-                  className={`text-xs w-full text-center text-gray-600 outline-none`}
-                  value={dadosDistribuicao.numInstalacao}
-                  placeholder={"INFORMAÇÃO A PREENCHER..."}
-                  onChange={(e) =>
-                    setDadosDistribuicao({
-                      ...dadosDistribuicao,
-                      numInstalacao: e.target.value,
-                    })
-                  }
-                  type="text"
-                />
-              </div>
-              <NumberInput
+              <TextFloatingInput
+                label={"Nº DA INSTALAÇÃO"}
+                editable={true}
+                value={dadosDistribuicao.numInstalacao}
+                handleChange={(value) =>
+                  setDadosDistribuicao({
+                    ...dadosDistribuicao,
+                    numInstalacao: value,
+                  })
+                }
+              />
+              <NumberFloatingInput
                 label={"% EXCEDENTE"}
                 editable={true}
                 value={dadosDistribuicao.excedente}

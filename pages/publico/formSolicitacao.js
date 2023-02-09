@@ -152,6 +152,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
     possuiDistribuicao: "NÃO",
     distribuicoes: [],
   });
+  console.log(dados);
   async function findCPF(field) {
     axios
       .get(
@@ -167,7 +168,6 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
         });
       });
   }
-  console.log(dados);
   return (
     <div className="p-6 bg-[#fff] min-h-[100vh] flex flex-col">
       <div className="flex self-center items-center h-[100px] w-[100px]">

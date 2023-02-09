@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import TextInput from "./TextInput";
-import SelectInput from "./SelectInput";
-import NumberInput from "./NumberInput";
+import SelectFloatingInput from "./SelectFloatingInput";
+import NumberFloatingInput from "./NumberFloatingInput";
 
 function FormSolicitacaoCinco({ avancar, setDados, dados, voltar }) {
   const [message, setMessage] = useState("");
@@ -14,6 +13,13 @@ function FormSolicitacaoCinco({ avancar, setDados, dados, voltar }) {
       setMessage(
         "Por favor, preencha sobre a necessidade de adequações ou construção de estrutura."
       );
+      return false;
+    }
+    if (
+      dados.estruturaAmpere == "SIM" &&
+      dados.responsavelEstrutura == "NÃO SE APLICA"
+    ) {
+      setMessage("Por favor, preencha o responsável pela estrutura.");
       return false;
     }
     if (
@@ -43,121 +49,138 @@ function FormSolicitacaoCinco({ avancar, setDados, dados, voltar }) {
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
         ESTRUTURA DE MONTAGEM
       </span>
-      <div className="flex gap-2 justify-around flex-wrap">
-        <SelectInput
-          label={"TIPO DA ESTRUTURA"}
-          editable={true}
-          options={[
-            {
-              label: "TELHADO",
-              value: "TELHADO",
-            },
-            {
-              label: "CARPORT",
-              value: "CARPORT",
-            },
-            {
-              label: "SOLO",
-              value: "SOLO",
-            },
-            {
-              label: "ESTRUTURA PERSONALIZADA",
-              value: "ESTRUTURA PERSONALIZADA",
-            },
-            {
-              label: "NÃO DEFINIDO",
-              value: "NÃO DEFINIDO",
-            },
-          ]}
-          value={dados.tipoEstrutura}
-          handleChange={(value) => setDados({ ...dados, tipoEstrutura: value })}
-        />
-        <SelectInput
-          label={
-            "SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"
-          }
-          editable={true}
-          options={[
-            {
-              label: "NÃO",
-              value: "NÃO",
-            },
-            {
-              label: "SIM",
-              value: "SIM",
-            },
-            {
-              label: "NÃO DEFINIDO",
-              value: "NÃO DEFINIDO",
-            },
-          ]}
-          value={dados.estruturaAmpere}
-          handleChange={(value) =>
-            setDados({ ...dados, estruturaAmpere: value })
-          }
-        />
-        <SelectInput
-          label={"RESPONSÁVEL PELA ESTRUTURA"}
-          editable={true}
-          options={[
-            {
-              label: "AMPERE",
-              value: "AMPERE",
-            },
-            {
-              label: "CLIENTE",
-              value: "CLIENTE",
-            },
-            {
-              label: "NÃO SE APLICA",
-              value: "NÃO SE APLICA",
-            },
-          ]}
-          value={dados.responsavelEstrutura}
-          handleChange={(value) =>
-            setDados({ ...dados, responsavelEstrutura: value })
-          }
-        />
+      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 py-2">
+        <div className="flex items-center justify-center">
+          <SelectFloatingInput
+            width={"450px"}
+            label={"TIPO DA ESTRUTURA"}
+            editable={true}
+            options={[
+              {
+                label: "TELHADO",
+                value: "TELHADO",
+              },
+              {
+                label: "CARPORT",
+                value: "CARPORT",
+              },
+              {
+                label: "SOLO",
+                value: "SOLO",
+              },
+              {
+                label: "ESTRUTURA PERSONALIZADA",
+                value: "ESTRUTURA PERSONALIZADA",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
+            value={dados.tipoEstrutura}
+            handleChange={(value) =>
+              setDados({ ...dados, tipoEstrutura: value })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <SelectFloatingInput
+            label={"ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"}
+            width={"450px"}
+            editable={true}
+            options={[
+              {
+                label: "NÃO",
+                value: "NÃO",
+              },
+              {
+                label: "SIM",
+                value: "SIM",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
+            value={dados.estruturaAmpere}
+            handleChange={(value) =>
+              setDados({ ...dados, estruturaAmpere: value })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <SelectFloatingInput
+            width={"450px"}
+            label={"RESPONSÁVEL PELA ESTRUTURA"}
+            editable={true}
+            options={[
+              {
+                label: "AMPERE",
+                value: "AMPERE",
+              },
+              {
+                label: "CLIENTE",
+                value: "CLIENTE",
+              },
+              {
+                label: "NÃO SE APLICA",
+                value: "NÃO SE APLICA",
+              },
+            ]}
+            value={dados.responsavelEstrutura}
+            handleChange={(value) =>
+              setDados({ ...dados, responsavelEstrutura: value })
+            }
+          />
+        </div>
+
         {dados.responsavelEstrutura != "NÃO SE APLICA" && (
           <>
-            <SelectInput
-              label={"FORMA DE PAGAMENTO"}
-              editable={true}
-              options={[
-                {
-                  label: "INCLUSO NO FINANCIAMENTO",
-                  value: "INCLUSO NO FINANCIAMENTO",
-                },
-                {
-                  label: "DIRETO PRO FORNECEDOR",
-                  value: "DIRETO PRO FORNECEDOR",
-                },
-                {
-                  label: "A VISTA PARA AMPÈRE",
-                  value: "A VISTA PARA AMPÈRE",
-                },
-                {
-                  label: "NÃO SE APLICA",
-                  value: "NÃO SE APLICA",
-                },
-                {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
-                },
-              ]}
-              value={dados.formaPagamentoEstrutura}
-              handleChange={(value) =>
-                setDados({ ...dados, formaPagamentoEstrutura: value })
-              }
-            />
-            <NumberInput
-              label={"VALOR DA ESTRUTURA"}
-              editable={true}
-              value={dados.valorEstrutura}
-              handleChange={(value) =>
-                setDados({ ...dados, valorEstrutura: Number(value) })
-              }
-            />
+            <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+              PAGAMENTO DA ESTRUTURA
+            </h1>
+            <div className="flex items-center justify-center col-span-3 gap-2 flex-wrap">
+              <SelectFloatingInput
+                width={"450px"}
+                label={"FORMA DE PAGAMENTO"}
+                editable={true}
+                options={[
+                  {
+                    label: "INCLUSO NO FINANCIAMENTO",
+                    value: "INCLUSO NO FINANCIAMENTO",
+                  },
+                  {
+                    label: "DIRETO PRO FORNECEDOR",
+                    value: "DIRETO PRO FORNECEDOR",
+                  },
+                  {
+                    label: "A VISTA PARA AMPÈRE",
+                    value: "A VISTA PARA AMPÈRE",
+                  },
+                  {
+                    label: "NÃO SE APLICA",
+                    value: "NÃO SE APLICA",
+                  },
+                  {
+                    label: "NÃO DEFINIDO",
+                    value: "NÃO DEFINIDO",
+                  },
+                ]}
+                value={dados.formaPagamentoEstrutura}
+                handleChange={(value) =>
+                  setDados({ ...dados, formaPagamentoEstrutura: value })
+                }
+              />
+              <NumberFloatingInput
+                width={"450px"}
+                label={"VALOR DA ESTRUTURA"}
+                editable={true}
+                value={dados.valorEstrutura}
+                handleChange={(value) =>
+                  setDados({ ...dados, valorEstrutura: Number(value) })
+                }
+              />
+            </div>
           </>
         )}
       </div>

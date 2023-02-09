@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import TextInput from "./TextInput";
-import SelectInput from "./SelectInput";
-import NumberInput from "./NumberInput";
+import TextFloatingInput from "./TextFloatingInput";
+import NumberFloatingInput from "./NumberFloatingInput";
 import { AiOutlineSearch } from "react-icons/ai";
 import { cidadesAtendidas, vendedores } from "../utils/constants";
 import axios from "axios";
+import SelectFoatingInput from "./SelectFloatingInput";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -123,206 +123,255 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
   return (
     <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-        DADOS PARA ENTRADA NA CEMIG
+        DADOS PARA ENTRADA NA CONCESSIONÁRIA
       </span>
-      <div className="flex gap-2 justify-around flex-wrap">
-        <TextInput
-          label={"NOME DO TITULAR DO PROJETO"}
-          value={dados.nomeTitularProjeto}
-          editable={true}
-          handleChange={(value) =>
-            setDados({
-              ...dados,
-              nomeTitularProjeto: value.toUpperCase(),
-            })
-          }
-        />
-        <SelectInput
-          label={"TIPO DO TITULAR"}
-          editable={true}
-          value={dados.tipoDoTitular}
-          handleChange={(value) => setDados({ ...dados, tipoDoTitular: value })}
-          options={[
-            {
-              label: "PESSOA FISICA",
-              value: "PESSOA FISICA",
-            },
-            {
-              label: "PESSOA JURIDICA",
-              value: "PESSOA JURIDICA",
-            },
-            {
-              label: "NÃO DEFINIDO",
-              value: "NÃO DEFINIDO",
-            },
-          ]}
-        />
-        <SelectInput
-          label={"TIPO DA LIGAÇÃO"}
-          editable={true}
-          value={dados.tipoDaLigacao}
-          handleChange={(value) => setDados({ ...dados, tipoDaLigacao: value })}
-          options={[
-            {
-              label: "NOVA",
-              value: "NOVA",
-            },
-            {
-              label: "EXISTENTE",
-              value: "EXISTENTE",
-            },
-            {
-              label: "NÃO DEFINIDO",
-              value: "NÃO DEFINIDO",
-            },
-          ]}
-        />
-        <SelectInput
-          label={"TIPO DA INSTALAÇÃO"}
-          editable={true}
-          value={dados.tipoDaInstalacao}
-          handleChange={(value) =>
-            setDados({ ...dados, tipoDaInstalacao: value })
-          }
-          options={[
-            {
-              label: "RURAL",
-              value: "RURAL",
-            },
-            {
-              label: "URBANO",
-              value: "URBANO",
-            },
-            {
-              label: "NÃO DEFINIDO",
-              value: "NÃO DEFINIDO",
-            },
-          ]}
-        />
-        <TextInput
-          editable={true}
-          label={"CEP INSTALAÇÃO"}
-          value={dados.cepInstalacao}
-          handleChange={(value) =>
-            setDados({ ...dados, cepInstalacao: formatCEP(value) })
-          }
-        />
-        <button
-          onClick={() => findCPF("enderecoInstalacao")}
-          className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-        >
-          <AiOutlineSearch />
-        </button>
-        <TextInput
-          label={"ENDEREÇO DE INSTALAÇÃO"}
-          editable={true}
-          value={dados.enderecoInstalacao}
-          handleChange={(value) =>
-            setDados({ ...dados, enderecoInstalacao: value.toUpperCase() })
-          }
-        />
-        <NumberInput
-          label={"Nº"}
-          editable={true}
-          value={dados.numeroResInstalacao}
-          handleChange={(value) =>
-            setDados({ ...dados, numeroResInstalacao: value })
-          }
-        />
-        <NumberInput
-          label={"Nº DA INSTALAÇÃO"}
-          editable={true}
-          value={dados.numeroInstalacao}
-          handleChange={(value) =>
-            setDados({ ...dados, numeroInstalacao: value })
-          }
-        />
-        <TextInput
-          label={"BAIRRO"}
-          editable={true}
-          value={dados.bairroInstalacao}
-          handleChange={(value) =>
-            setDados({ ...dados, bairroInstalacao: value.toUpperCase() })
-          }
-        />
-        <SelectInput
-          label={"CIDADE"}
-          editable={true}
-          value={dados.cidadeInstalacao}
-          options={[
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            ...cidadesAtendidas.map((cidade) => {
-              return { label: cidade, value: cidade };
-            }),
-          ]}
-          handleChange={(value) =>
-            setDados({ ...dados, cidadeInstalacao: value })
-          }
-        />
-        <TextInput
-          label={"UF"}
-          editable={true}
-          value={dados.ufInstalacao}
-          handleChange={(value) => setDados({ ...dados, ufInstalacao: value })}
-        />
-        <TextInput
-          label={"PONTO DE REFERÊNCIA"}
-          editable={true}
-          value={dados.pontoDeReferenciaInstalacao}
-          handleChange={(value) =>
-            setDados({ ...dados, pontoDeReferenciaInstalacao: value })
-          }
-        />
-        <TextInput
-          label={"LOGIN(CEMIG ATENDE)"}
-          editable={true}
-          normalCase={true}
-          value={dados.loginCemigAtende}
-          handleChange={(value) =>
-            setDados({ ...dados, loginCemigAtende: value })
-          }
-        />
-        <TextInput
-          label={"SENHA(CEMIG ATENDE)"}
-          normalCase={true}
-          editable={true}
-          value={dados.senhaCemigAtende}
-          handleChange={(value) =>
-            setDados({ ...dados, senhaCemigAtende: value })
-          }
-        />
-        <TextInput
-          label={"LATITUDE"}
-          value={dados.latitude}
-          editable={true}
-          handleChange={(value) => setDados({ ...dados, latitude: value })}
-        />
-        <TextInput
-          label={"LONGITUDE"}
-          editable={true}
-          value={dados.longitude}
-          handleChange={(value) => setDados({ ...dados, longitude: value })}
-        />
-        <NumberInput
-          label={"POTÊNIA PICO"}
-          editable={true}
-          value={dados.potPico}
-          handleChange={(value) =>
-            setDados({
-              ...dados,
-              potPico: Number(value),
-              geracaoPrevista: Number(value) * 126,
-            })
-          }
-        />
-        <NumberInput
-          label={"GERAÇÃO PREVISTA"}
-          editable={true}
-          value={dados.geracaoPrevista}
-          handleChange={(value) =>
-            setDados({ ...dados, geracaoPrevista: Number(value) })
-          }
-        />
+      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2">
+        <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+          INFORMAÇÕES DA INSTALAÇÃO DO CLIENTE
+        </h1>
+        <div className="flex items-center justify-center">
+          <TextFloatingInput
+            label={"NOME DO TITULAR DO PROJETO"}
+            value={dados.nomeTitularProjeto}
+            editable={true}
+            handleChange={(value) =>
+              setDados({
+                ...dados,
+                nomeTitularProjeto: value.toUpperCase(),
+              })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <SelectFoatingInput
+            label={"TIPO DO TITULAR"}
+            editable={true}
+            value={dados.tipoDoTitular}
+            handleChange={(value) =>
+              setDados({ ...dados, tipoDoTitular: value })
+            }
+            options={[
+              {
+                label: "PESSOA FISICA",
+                value: "PESSOA FISICA",
+              },
+              {
+                label: "PESSOA JURIDICA",
+                value: "PESSOA JURIDICA",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <SelectFoatingInput
+            label={"TIPO DA LIGAÇÃO"}
+            editable={true}
+            value={dados.tipoDaLigacao}
+            handleChange={(value) =>
+              setDados({ ...dados, tipoDaLigacao: value })
+            }
+            options={[
+              {
+                label: "NOVA",
+                value: "NOVA",
+              },
+              {
+                label: "EXISTENTE",
+                value: "EXISTENTE",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
+          />
+        </div>
+        <div className="flex items-center justify-center col-span-3">
+          <SelectFoatingInput
+            label={"TIPO DA INSTALAÇÃO"}
+            editable={true}
+            value={dados.tipoDaInstalacao}
+            handleChange={(value) =>
+              setDados({ ...dados, tipoDaInstalacao: value })
+            }
+            options={[
+              {
+                label: "RURAL",
+                value: "RURAL",
+              },
+              {
+                label: "URBANO",
+                value: "URBANO",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
+          />
+        </div>
+        <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+          ENDEREÇO DA INSTALAÇÃO
+        </h1>
+        <div className="flex items-center justify-center gap-x-2 flex-wrap">
+          <TextFloatingInput
+            editable={true}
+            label={"CEP INSTALAÇÃO"}
+            value={dados.cepInstalacao}
+            handleChange={(value) =>
+              setDados({ ...dados, cepInstalacao: formatCEP(value) })
+            }
+          />
+          <button
+            onClick={() => findCPF("enderecoInstalacao")}
+            className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
+          >
+            <AiOutlineSearch />
+          </button>
+        </div>
+        <div className="flex items-center justify-center">
+          <TextFloatingInput
+            label={"ENDEREÇO DE INSTALAÇÃO"}
+            editable={true}
+            value={dados.enderecoInstalacao}
+            handleChange={(value) =>
+              setDados({ ...dados, enderecoInstalacao: value.toUpperCase() })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <NumberFloatingInput
+            label={"Nº"}
+            editable={true}
+            value={dados.numeroResInstalacao}
+            handleChange={(value) =>
+              setDados({ ...dados, numeroResInstalacao: value })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <NumberFloatingInput
+            label={"Nº DA INSTALAÇÃO"}
+            editable={true}
+            value={dados.numeroInstalacao}
+            handleChange={(value) =>
+              setDados({ ...dados, numeroInstalacao: value })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <TextFloatingInput
+            label={"BAIRRO"}
+            editable={true}
+            value={dados.bairroInstalacao}
+            handleChange={(value) =>
+              setDados({ ...dados, bairroInstalacao: value.toUpperCase() })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <SelectFoatingInput
+            label={"CIDADE"}
+            editable={true}
+            value={dados.cidadeInstalacao}
+            options={[
+              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              ...cidadesAtendidas.map((cidade) => {
+                return { label: cidade, value: cidade };
+              }),
+            ]}
+            handleChange={(value) =>
+              setDados({ ...dados, cidadeInstalacao: value })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <TextFloatingInput
+            label={"UF"}
+            editable={true}
+            value={dados.ufInstalacao}
+            handleChange={(value) =>
+              setDados({ ...dados, ufInstalacao: value })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <TextFloatingInput
+            label={"PONTO DE REFERÊNCIA"}
+            editable={true}
+            value={dados.pontoDeReferenciaInstalacao}
+            handleChange={(value) =>
+              setDados({ ...dados, pontoDeReferenciaInstalacao: value })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center gap-2 flex-wrap col-span-3">
+          <TextFloatingInput
+            label={"LATITUDE"}
+            value={dados.latitude}
+            editable={true}
+            handleChange={(value) => setDados({ ...dados, latitude: value })}
+          />
+          <TextFloatingInput
+            label={"LONGITUDE"}
+            editable={true}
+            value={dados.longitude}
+            handleChange={(value) => setDados({ ...dados, longitude: value })}
+          />
+        </div>
+
+        <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+          INFORMAÇÕES DA CONTA DE CEMIG ATENDE
+        </h1>
+        <div className="flex items-center justify-center gap-2 flex-wrap col-span-3">
+          <TextFloatingInput
+            label={"LOGIN(CEMIG ATENDE)"}
+            editable={true}
+            normalCase={true}
+            value={dados.loginCemigAtende}
+            handleChange={(value) =>
+              setDados({ ...dados, loginCemigAtende: value })
+            }
+          />
+          <TextFloatingInput
+            label={"SENHA(CEMIG ATENDE)"}
+            normalCase={true}
+            editable={true}
+            value={dados.senhaCemigAtende}
+            handleChange={(value) =>
+              setDados({ ...dados, senhaCemigAtende: value })
+            }
+          />
+        </div>
+        <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+          DADOS DO SISTEMA
+        </h1>
+        <div className="flex items-center justify-center col-span-3 gap-2 flex-wrap">
+          <NumberFloatingInput
+            label={"POTÊNCIA PICO"}
+            editable={true}
+            value={dados.potPico}
+            handleChange={(value) =>
+              setDados({
+                ...dados,
+                potPico: Number(value),
+                geracaoPrevista: Number(value) * 126,
+              })
+            }
+          />
+          <NumberFloatingInput
+            label={"GERAÇÃO PREVISTA"}
+            editable={true}
+            value={dados.geracaoPrevista}
+            handleChange={(value) =>
+              setDados({ ...dados, geracaoPrevista: Number(value) })
+            }
+          />
+        </div>
       </div>
       {message && <p className="text-red-400 italic text-center">{message}</p>}
       <div className="flex w-full justify-center gap-2 flex-wrap mt-2">

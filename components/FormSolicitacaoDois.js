@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TextInput from "./TextInput";
+import TextFloatingInput from "./TextFloatingInput";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -50,7 +50,7 @@ function FormSolicitacaoDois({ dados, setDados, avancar, voltar }) {
         DADOS PARA CONTATO
       </span>
       <div className="flex gap-2 justify-around flex-wrap">
-        <TextInput
+        <TextFloatingInput
           label={"NOME DO CONTATO 1"}
           editable={true}
           value={dados.nomeContatoJornadaUm}
@@ -58,7 +58,7 @@ function FormSolicitacaoDois({ dados, setDados, avancar, voltar }) {
             setDados({ ...dados, nomeContatoJornadaUm: value.toUpperCase() })
           }
         />
-        <TextInput
+        <TextFloatingInput
           label={"TELEFONE DO CONTATO 1"}
           editable={true}
           value={dados.telefoneContatoUm}
@@ -66,7 +66,7 @@ function FormSolicitacaoDois({ dados, setDados, avancar, voltar }) {
             setDados({ ...dados, telefoneContatoUm: phoneMask(value) })
           }
         />
-        <TextInput
+        <TextFloatingInput
           label={"NOME DO CONTATO 2"}
           editable={true}
           value={dados.nomeContatoJornadaDois}
@@ -74,7 +74,7 @@ function FormSolicitacaoDois({ dados, setDados, avancar, voltar }) {
             setDados({ ...dados, nomeContatoJornadaDois: value.toUpperCase() })
           }
         />
-        <TextInput
+        <TextFloatingInput
           label={"TELEFONE DO CONTATO 2"}
           editable={true}
           value={dados.telefoneContatoDois}
@@ -97,7 +97,7 @@ function FormSolicitacaoDois({ dados, setDados, avancar, voltar }) {
                 cuidadosContatoJornada: e.target.value,
               })
             }
-            className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+            className="block p-2.5 w-full h-[80px] outline-none resize-none text-center text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
       </div>

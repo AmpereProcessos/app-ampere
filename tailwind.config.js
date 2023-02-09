@@ -15,6 +15,7 @@ module.exports = {
       },
     },
     fontFamily: {
+      arial: ["Arial"],
       raleway: ["Raleway", "sans-serif"],
       ralewayBlack: ["Raleway Black"],
     },

@@ -6,6 +6,7 @@ import NumberInput from "./NumberInput";
 import { AiOutlineSearch } from "react-icons/ai";
 import { cidadesAtendidas, vendedores } from "../utils/constants";
 import axios from "axios";
+import TextFloatingInput from "./TextFloatingInput";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -147,6 +148,14 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
         DADOS PARA CONTRATO
       </span>
       <div className="flex gap-2 justify-around flex-wrap">
+        {/* <TextFloatingInput
+          label={"NOME/RAZÃO"}
+          value={dados.nomeDoContrato}
+          editable={true}
+          handleChange={(value) =>
+            setDados({ ...dados, nomeDoContrato: value.toUpperCase() })
+          }
+        /> */}
         <TextInput
           label={"Nome/Razão Social"}
           value={dados.nomeDoContrato}

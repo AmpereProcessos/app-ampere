@@ -169,11 +169,11 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
   }
   console.log(dados);
   return (
-    <div className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
+    <div className="p-6 bg-[#fff] min-h-[100vh] flex flex-col">
       <div className="flex self-center items-center h-[100px] w-[100px]">
         <Image src={Logo} />
       </div>
-      <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
+      <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-2xl">
         Formulário de Solicitacão
       </h1>
       <div className="flex flex-col items-center gap-y-5">

@@ -5,7 +5,25 @@ function ComissionamentoCard({ info, credentials, getProjects }) {
   const [msg, setMsg] = useState("");
   const [changes, setChanges] = useState({});
   const editor = true;
+  async function notifyPosVenda() {
+    try {
+      let data = await axios.post("/api/notificacoes/1", {
+        destinatario: "6353ebc7ef4e1a367a87794b",
+        projetoReferencia: info.qtde,
+        nomeDoProjeto: info.nomeDoContrato,
+        remetente: "SISTEMA",
+        mensagem: `DOCUMENTO DE COMISSIONAMENTO DO CLIENTE FINALIZADO.`,
+      });
+      if (data) return;
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async function handleChanges() {
+    if (!info.comissionamento.projetos && changes["comissionamento.projetos"]) {
+      await notifyPosVenda();
+    }
     axios.post(`/api/projects/update/${info._id}`, changes).then((res) => {
       setMsg("Alterações concluidas");
       getProjects();
@@ -112,9 +130,16 @@ function ComissionamentoCard({ info, credentials, getProjects }) {
         {msg && <p className="mt-1 text-center text-green-400">{msg}</p>}
         <button
           onClick={handleChanges}
-          className="font-bold bg-[#15599a] w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+          className={`font-bold ${
+            !info.comissionamento.projetos &&
+            changes["comissionamento.projetos"]
+              ? "border border-green-500 text-green-500 hover:text-white hover:bg-green-500"
+              : "border border-[#15599a] text-[#15599a] hover:text-white hover:bg-[#15599a]"
+          }  p-2 rounded`}
         >
-          SALVAR
+          {!info.comissionamento.projetos && changes["comissionamento.projetos"]
+            ? "FINALIZAR"
+            : "SALVAR"}
         </button>
       </div>
     </div>

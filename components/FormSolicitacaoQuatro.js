@@ -114,7 +114,7 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
         DADOS DO SISTEMA
       </span>
-      <div className="flex justify-center my-2">
+      <div className="flex justify-center my-2 p-2">
         <SelectFoatingInput
           label={"TOPOLOGIA"}
           editable={true}
@@ -140,7 +140,7 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
           ]}
         />
       </div>
-      <div className="flex flex-col border-t border-gray-200 py-2">
+      <div className="flex flex-col border-t border-gray-200 p-2">
         <h1 className="text-center text-[#15599a] text-sm font-bold mt-2">
           ADICIONE MICRO/INVERSORES
         </h1>
@@ -237,7 +237,7 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
       )}
 
       {dados.topologia == "OTIMIZADOR" && (
-        <div className="flex gap-2 justify-around flex-wrap mt-2">
+        <div className="flex gap-2 justify-around flex-wrap mt-2 p-2">
           <TextFloatingInput
             label={"MARCA DO OTIMIZADOR"}
             editable={true}
@@ -265,7 +265,7 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
           />
         </div>
       )}
-      <div className="flex flex-col border-t border-gray-200 py-2">
+      <div className="flex flex-col border-t border-gray-200 p-2">
         <h1 className="text-center text-[#15599a] text-sm font-bold mt-2">
           ADICIONE MÓDULOS
         </h1>

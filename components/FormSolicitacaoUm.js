@@ -145,7 +145,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
         DADOS PARA CONTRATO
       </span>
-      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 justify-around flex-wrap">
+      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 justify-around flex-wrap p-2">
         <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
           SOBRE O CLIENTE
         </h1>

@@ -49,7 +49,7 @@ function FormSolicitacaoCinco({ avancar, setDados, dados, voltar }) {
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
         ESTRUTURA DE MONTAGEM
       </span>
-      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 py-2">
+      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 p-2">
         <div className="flex items-center justify-center">
           <SelectFloatingInput
             width={"450px"}

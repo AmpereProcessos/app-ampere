@@ -51,7 +51,7 @@ function FormSolicitacaoSeis({ avancar, setDados, dados, voltar }) {
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
         O&M E SEGURO
       </span>
-      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2">
+      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 p-2">
         <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
           O&M
         </h1>

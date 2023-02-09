@@ -4,7 +4,7 @@ function TextFloatingInput({ label, value, handleChange, width, editable }) {
   return (
     <div
       className={`flex flex-col relative items-center z-0 ${
-        width ? `w-[${width}]` : "w-[250px]"
+        width ? `w-full lg:w-[${width}]` : "w-full lg:w-[250px]"
       } mb-6 group`}
     >
       <input

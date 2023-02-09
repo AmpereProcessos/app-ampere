@@ -49,7 +49,7 @@ function FormSolicitacaoDois({ dados, setDados, avancar, voltar }) {
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
         DADOS PARA CONTATO
       </span>
-      <div className="flex gap-2 justify-around flex-wrap">
+      <div className="flex gap-2 justify-around flex-wrap p-2">
         <TextFloatingInput
           label={"NOME DO CONTATO 1"}
           editable={true}

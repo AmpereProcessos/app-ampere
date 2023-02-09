@@ -51,7 +51,7 @@ function formatCEP(cep) {
   return cep;
 }
 function FormularioSolicitacao({ cliente, links, formVisitaId }) {
-  const [estagio, setEstagio] = useState(0);
+  const [estagio, setEstagio] = useState(9);
   const [dados, setDados] = useState({
     nomeVendedor: "NÃO DEFINIDO",
     nomeDoProjeto: cliente ? cliente : null,
@@ -138,7 +138,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
     localEntrega: "NÃO DEFINIDO",
     entregaIgualCobranca: "NÃO",
     restricoesEntrega: "NÃO DEFINIDO",
-    valorContrato: null,
+    valorContrato: 0,
     origemRecurso: "NÃO DEFINIDO",
     numParcelas: 0,
     valorParcela: 0,

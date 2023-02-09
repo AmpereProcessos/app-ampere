@@ -112,7 +112,7 @@ function FormSolicitacaoOito({ dados, setDados, avancar, voltar }) {
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
         DADOS FINANCEIROS E NEGOCIAÇÃO
       </span>
-      <div className="flex justify-center mt-2">
+      <div className="flex justify-center mt-2 p-2">
         <SelectFloatingInput
           width={"450px"}
           label={"IDEM CONTRATO?"}
@@ -135,7 +135,7 @@ function FormSolicitacaoOito({ dados, setDados, avancar, voltar }) {
           }}
         />
       </div>
-      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 mt-2">
+      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 mt-2 p-2">
         <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
           DADOS DO PAGADOR
         </h1>
@@ -171,7 +171,7 @@ function FormSolicitacaoOito({ dados, setDados, avancar, voltar }) {
           />
         </div>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col p-2">
         <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
           SOBRE N.F
         </h1>
@@ -227,7 +227,7 @@ function FormSolicitacaoOito({ dados, setDados, avancar, voltar }) {
           )}
         </div>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col p-2">
         <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
           SOBRE A ENTREGA
         </h1>
@@ -317,7 +317,7 @@ function FormSolicitacaoOito({ dados, setDados, avancar, voltar }) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col p-2">
         <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
           SOBRE O PAGAMENTO
         </h1>

@@ -43,7 +43,7 @@ function FormSolicitacaoNove({ dados, setDados, avancar, voltar }) {
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
         DISTRIBUIÇÃO DE CRÉDITOS
       </span>
-      <div className="flex justify-center mt-2">
+      <div className="flex justify-center mt-2 p-2">
         <SelectFloatingInput
           label={"POSSUI DISTRIBUIÇÕES DE CRÉDITOS?"}
           value={dados.possuiDistribuicao}
@@ -65,7 +65,7 @@ function FormSolicitacaoNove({ dados, setDados, avancar, voltar }) {
       </div>
       {dados.possuiDistribuicao == "SIM" && (
         <>
-          <div className="flex flex-col gap-2 mt-2">
+          <div className="flex flex-col gap-2 mt-2 p-2">
             <h1 className="text-center font-bold font-raleway">
               ADICIONAR DISTRIBUIÇÃO:
             </h1>

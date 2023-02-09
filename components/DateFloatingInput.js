@@ -14,7 +14,7 @@ function DateFloatingInput({ value, handleChange, width, editable, label }) {
   }
   return (
     <div
-      className={`flex flex-col relative items-center z-0 ${
+      className={`flex flex-col relative font-mono items-center z-0 ${
         width ? `w-full lg:w-[${width}]` : "w-full lg:w-[250px]"
       } mb-6 group`}
     >

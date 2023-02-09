@@ -337,12 +337,8 @@ function ChamadosSuporte() {
                   label: "GABRIEL MARTINS",
                 },
                 {
-                  value: "LUCAS FERNANDES",
-                  label: "LUCAS FERNANDES",
-                },
-                {
-                  value: "LUIS EDUARDO",
-                  label: "LUIS EDUARDO",
+                  value: "MARCOS DIAS",
+                  label: "MARCOS DIAS",
                 },
                 {
                   value: "A DEFINIR",
@@ -526,12 +522,8 @@ function ChamadosSuporte() {
                     label: "GABRIEL MARTINS",
                   },
                   {
-                    value: "LUCAS FERNANDES",
-                    label: "LUCAS FERNANDES",
-                  },
-                  {
-                    value: "LUIS EDUARDO",
-                    label: "LUIS EDUARDO",
+                    value: "MARCOS DIAS",
+                    label: "MARCOS DIAS",
                   },
                   {
                     value: "A DEFINIR",

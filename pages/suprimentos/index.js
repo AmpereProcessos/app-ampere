@@ -4,11 +4,12 @@ import { useRouter } from "next/router";
 import Select from "react-select";
 import Link from "next/link";
 import { AiOutlineSearch } from "react-icons/ai";
-import { statusLiberacao } from "../../utils/constants";
+import { statusLiberacao, tiposDeServico } from "../../utils/constants";
 import ModalSuprimentos from "../../components/ModalSuprimentos";
 import dayjs from "dayjs";
 import dayjsBusinessDays from "dayjs-business-days";
 import { AppContext } from "../../context/AppContext";
+import TagTipoDeServico from "../../components/TagTipoDeServico";
 function Suprimentos() {
   const router = useRouter();
   const { credentials, setCredentials } = useContext(AppContext);
@@ -20,6 +21,7 @@ function Suprimentos() {
     paymentStatus: [],
     deliveryStatus: [],
     liberacaoStatus: [],
+    tipoDeServicoFilter: [],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -118,6 +120,12 @@ function Suprimentos() {
         filters.liberacaoStatus.includes(project.compra.statusLiberacao)
       );
     }
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((project) =>
+        filters.tipoDeServicoFilter.includes(project.tipoDeServico)
+      );
+    }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
@@ -186,6 +194,19 @@ function Suprimentos() {
             placeholder="Digite o nome do contrato"
             value={searchFilter}
             onChange={(e) => handleSearchFilter(e.target.value)}
+          />
+          <Select
+            isMulti
+            placeholder="TIPO DE SERVIÇO"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                tipoDeServicoFilter: e.map((x) => x.value),
+              })
+            }
+            options={tiposDeServico.map((tipo) => {
+              return { label: tipo.label, value: tipo.value };
+            })}
           />
           <Select
             isMulti
@@ -301,132 +322,146 @@ function Suprimentos() {
                     )
                   )
                 : "border border-gray-200"
-            } p-3 hover:bg-blue-100`}
+            } hover:bg-blue-100`}
           >
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
-              <p className="text-xs text-[#15599a]">#{project.qtde}</p>
-            </div>
-            <div className="grid grid-cols-2 mt-2">
-              <div className="flex flex-col items-start">
-                <span className="text-xxs">INFORMAÇÕES</span>
-                <p className="text-xxs font-bold text-gray-600 uppercase">
-                  {project.compra.informacoes
-                    ? project.compra.informacoes
-                    : "-"}
+            <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
+            <div className="flex flex-col p-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-700">
+                  {project.nomeDoContrato}
                 </p>
+                <p className="text-xs text-[#15599a]">#{project.qtde}</p>
               </div>
-              <div className="flex flex-col items-end">
-                <span className="text-xxs">LIBERACÃO DE CRÉDITO</span>
-                <p className="text-xs text-center text-gray-600">
-                  {project.compra.statusLiberacao
-                    ? project.compra.statusLiberacao
-                    : "-"}
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 items-center mt-1">
-              <div className="flex flex-col items-start">
-                <span className="text-xxs">FORNECEDOR</span>
-                <p className="text-xs text-yellow-500">
-                  {project.compra.fornecedor ? project.compra.fornecedor : "-"}
-                </p>
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="text-xxs">PREVISÃO ENTREGA</span>
-                {dayjs(new Date()).isBefore(
-                  dayjs(dayjs(project.compra.previsaoEntrega).add(22, "hour"))
-                ) ? (
-                  <p
-                    className={`text-xs ${
-                      dayjs(project.compra.previsaoEntrega).diff(
-                        new Date(),
-                        "day"
-                      ) < 7
-                        ? "text-red-500 font-bold"
-                        : "text-green-500 font-bold"
-                    } text-center`}
-                  >
-                    {project.compra.previsaoEntrega
-                      ? dayjs(
-                          new Date(project.compra.previsaoEntrega)
-                        ).isValid()
-                        ? dayjs(
-                            dayjs(project.compra.previsaoEntrega).add(4, "hour")
-                          ).format("DD/MM/YYYY")
-                        : "-"
+              <div className="grid grid-cols-2 mt-2">
+                <div className="flex flex-col items-start">
+                  <span className="text-xxs">INFORMAÇÕES</span>
+                  <p className="text-xxs font-bold text-gray-600 uppercase">
+                    {project.compra.informacoes
+                      ? project.compra.informacoes
                       : "-"}
                   </p>
-                ) : (
-                  <p className="text-red-500 font-bold text-xs lg:text-sm">
-                    PREV.VENCIDA
+                </div>
+                <div className="flex flex-col items-end">
+                  <span className="text-xxs">LIBERACÃO DE CRÉDITO</span>
+                  <p className="text-xs text-center text-gray-600">
+                    {project.compra.statusLiberacao
+                      ? project.compra.statusLiberacao
+                      : "-"}
                   </p>
-                )}
+                </div>
               </div>
-              <div className="flex flex-col items-end">
-                <span className="text-xxs">STATUS ENTREGA</span>
-                <p className="text-xs text-gray-600">
-                  {project.compra.statusEntrega
-                    ? project.compra.statusEntrega
+              <div className="grid grid-cols-3 items-center mt-1">
+                <div className="flex flex-col items-start">
+                  <span className="text-xxs">FORNECEDOR</span>
+                  <p className="text-xs text-yellow-500">
+                    {project.compra.fornecedor
+                      ? project.compra.fornecedor
+                      : "-"}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-xxs">PREVISÃO ENTREGA</span>
+                  {dayjs(new Date()).isBefore(
+                    dayjs(dayjs(project.compra.previsaoEntrega).add(22, "hour"))
+                  ) ? (
+                    <p
+                      className={`text-xs ${
+                        dayjs(project.compra.previsaoEntrega).diff(
+                          new Date(),
+                          "day"
+                        ) < 7
+                          ? "text-red-500 font-bold"
+                          : "text-green-500 font-bold"
+                      } text-center`}
+                    >
+                      {project.compra.previsaoEntrega
+                        ? dayjs(
+                            new Date(project.compra.previsaoEntrega)
+                          ).isValid()
+                          ? dayjs(
+                              dayjs(project.compra.previsaoEntrega).add(
+                                4,
+                                "hour"
+                              )
+                            ).format("DD/MM/YYYY")
+                          : "-"
+                        : "-"}
+                    </p>
+                  ) : (
+                    <p className="text-red-500 font-bold text-xs lg:text-sm">
+                      PREV.VENCIDA
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col items-end">
+                  <span className="text-xxs">STATUS ENTREGA</span>
+                  <p className="text-xs text-gray-600">
+                    {project.compra.statusEntrega
+                      ? project.compra.statusEntrega
+                      : "-"}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col items-center pt-1">
+                <span className="text-xxs">FATURAMENTO</span>
+                <p className="text-xs text-center text-gray-600 uppercase">
+                  {project.faturamento?.previsaoFaturamento
+                    ? project.faturamento?.previsaoFaturamento
                     : "-"}
                 </p>
               </div>
-            </div>
-            <div className="flex flex-col items-center pt-1">
-              <span className="text-xxs">FATURAMENTO</span>
-              <p className="text-xs text-center text-gray-600 uppercase">
-                {project.faturamento?.previsaoFaturamento
-                  ? project.faturamento?.previsaoFaturamento
-                  : "-"}
-              </p>
-            </div>
-            <div className="flex items-center justify-center">
-              <div>
-                <span className="text-xxs">DESDE LIBERAÇÃO ATÉ PEDIDO</span>
-                <p
-                  className={`text-xs uppercase ${
-                    project.compra.dataPedido ? "text-gray-600" : "text-red-500"
-                  } text-center`}
-                >
-                  {project.compra.dataPedido
-                    ? `${dayjs(
-                        dayjs(project.compra.dataPedido).add(22, "hour")
-                      ).businessDiff(dayjs(project.compra.dataLiberacao))} DIAS`
-                    : `${dayjs(new Date()).businessDiff(
-                        dayjs(project.compra.dataLiberacao)
-                      )} DIAS`}
-                </p>
+              <div className="flex items-center justify-center">
+                <div>
+                  <span className="text-xxs">DESDE LIBERAÇÃO ATÉ PEDIDO</span>
+                  <p
+                    className={`text-xs uppercase ${
+                      project.compra.dataPedido
+                        ? "text-gray-600"
+                        : "text-red-500"
+                    } text-center`}
+                  >
+                    {project.compra.dataPedido
+                      ? `${dayjs(
+                          dayjs(project.compra.dataPedido).add(22, "hour")
+                        ).businessDiff(
+                          dayjs(project.compra.dataLiberacao)
+                        )} DIAS`
+                      : `${dayjs(new Date()).businessDiff(
+                          dayjs(project.compra.dataLiberacao)
+                        )} DIAS`}
+                  </p>
+                </div>
               </div>
-            </div>
-            {project.compra.dataPagamento == undefined &&
-            project.compra.dataMaxPagamento != null &&
-            dayjs(new Date(project.compra.dataMaxPagamento)).isValid() ? (
-              dayjs(project.compra.dataMaxPagamento).isAfter(dayjs()) ? (
-                <p
-                  className={`text-center text-sm ${
-                    dayjs(project.compra.dataMaxPagamento).diff(
+              {project.compra.dataPagamento == undefined &&
+              project.compra.dataMaxPagamento != null &&
+              dayjs(new Date(project.compra.dataMaxPagamento)).isValid() ? (
+                dayjs(project.compra.dataMaxPagamento).isAfter(dayjs()) ? (
+                  <p
+                    className={`text-center text-sm ${
+                      dayjs(project.compra.dataMaxPagamento).diff(
+                        new Date(),
+                        "days"
+                      ) < 2
+                        ? "text-red-500"
+                        : "text-gray-600"
+                    } italic`}
+                  >
+                    DATA PAGAMENTO LIMITE EM:{" "}
+                    {dayjs(project.compra.dataMaxPagamento).diff(
                       new Date(),
-                      "days"
-                    ) < 2
-                      ? "text-red-500"
-                      : "text-gray-600"
-                  } italic`}
-                >
-                  DATA PAGAMENTO LIMITE EM:{" "}
-                  {dayjs(project.compra.dataMaxPagamento).diff(
-                    new Date(),
-                    "day"
-                  )}{" "}
-                  DIA(S)
-                </p>
+                      "day"
+                    )}{" "}
+                    DIA(S)
+                  </p>
+                ) : (
+                  <p className="text-center text-sm text-red-500 italic font-bold">
+                    PAGAMENTO ATRASADO
+                  </p>
+                )
               ) : (
-                <p className="text-center text-sm text-red-500 italic font-bold">
-                  PAGAMENTO ATRASADO
-                </p>
-              )
-            ) : (
-              false
-            )}
+                false
+              )}
+            </div>
           </div>
         ))}
       </div>

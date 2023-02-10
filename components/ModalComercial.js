@@ -169,6 +169,8 @@ function ModalComercial({
   //     getVisitaInfo(infoHolder.idVisitaTecnica);
   //   }
   // }, []);
+  console.log(changes);
+  console.log(infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -2313,6 +2315,209 @@ function ModalComercial({
                     }}
                   />
                 </div>
+                {infoHolder.tipoDeServico ==
+                  "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
+                  <>
+                    <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200 mt-2">
+                      <div
+                        className={`flex ${
+                          infoHolder.sistema.tipoControlador ==
+                            "INTEGRADO AO INVERSOR" && "col-span-4"
+                        } justify-center items-center w-full`}
+                      >
+                        <SelectInput
+                          label={"TIPO DO CONTROLADOR"}
+                          editable={true}
+                          value={
+                            infoHolder.sistema.tipoControlador
+                              ? infoHolder.sistema.tipoControlador
+                              : "NÃO DEFINIDO"
+                          }
+                          options={[
+                            {
+                              label: "INTEGRADO AO INVERSOR",
+                              value: "INTEGRADO AO INVERSOR",
+                            },
+                            {
+                              label: "COMPRO EM SEPARADO",
+                              value: "SEPARADO",
+                            },
+                            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                          ]}
+                          handleChange={(value) => {
+                            setChanges({
+                              ...changes,
+                              "sistema.tipoControlador": value,
+                            });
+                            setInfo({
+                              ...infoHolder,
+                              sistema: {
+                                ...infoHolder.sistema,
+                                tipoControlador: value,
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      {infoHolder.sistema.tipoControlador !=
+                        "INTEGRADO AO INVERSOR" && (
+                        <>
+                          <div className="flex justify-center items-center w-full">
+                            <TextInput
+                              label={"MARCA DO CONTROLADOR"}
+                              editable={true}
+                              value={infoHolder.sistema?.marcaControlador}
+                              handleChange={(value) => {
+                                setChanges({
+                                  ...changes,
+                                  "sistema.marcaControlador": value,
+                                });
+                                setInfo({
+                                  ...infoHolder,
+                                  sistema: {
+                                    ...infoHolder.sistema,
+                                    marcaControlador: value,
+                                  },
+                                });
+                              }}
+                            />
+                          </div>
+                          <div className="flex justify-center items-center w-full">
+                            <NumberInput
+                              label={"QTDE DE CONTROLADORES"}
+                              editable={true}
+                              value={infoHolder.sistema?.qtdeControlador}
+                              handleChange={(value) => {
+                                setChanges({
+                                  ...changes,
+                                  "sistema.qtdeControlador": Number(value),
+                                });
+                                setInfo({
+                                  ...infoHolder,
+                                  sistema: {
+                                    ...infoHolder.sistema,
+                                    qtdeControlador: Number(value),
+                                  },
+                                });
+                              }}
+                            />
+                          </div>
+                          <div className="flex justify-center items-center w-full">
+                            <NumberInput
+                              label={"CORRENTE DE CARGA (em A)"}
+                              editable={true}
+                              value={infoHolder.sistema.correnteControlador}
+                              handleChange={(value) => {
+                                setChanges({
+                                  ...changes,
+                                  "sistema.correnteControlador": Number(value),
+                                });
+                                setInfo({
+                                  ...infoHolder,
+                                  sistema: {
+                                    ...infoHolder.sistema,
+                                    correnteControlador: Number(value),
+                                  },
+                                });
+                              }}
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
+                    <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200">
+                      <div className="flex justify-center items-center w-full">
+                        <TextInput
+                          label={"MARCA DA BATERIA"}
+                          editable={true}
+                          value={infoHolder.sistema.marcaBateria}
+                          handleChange={(value) => {
+                            setChanges({
+                              ...changes,
+                              "sistema.marcaBateria": value,
+                            });
+                            setInfo({
+                              ...infoHolder,
+                              sistema: {
+                                ...infoHolder.sistema,
+                                marcaBateria: value,
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="flex justify-center items-center w-full">
+                        <NumberInput
+                          label={"QTDE DE BATERIAS"}
+                          editable={true}
+                          value={infoHolder.sistema.qtdeBateria}
+                          handleChange={(value) => {
+                            setChanges({
+                              ...changes,
+                              "sistema.qtdeBateria": Number(value),
+                            });
+                            setInfo({
+                              ...infoHolder,
+                              sistema: {
+                                ...infoHolder.sistema,
+                                qtdeBateria: Number(value),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="flex justify-center items-center w-full">
+                        <SelectInput
+                          label={"TIPO DA BATERIA"}
+                          editable={true}
+                          value={
+                            infoHolder.sistema.tipoBateria
+                              ? infoHolder.sistema.tipoBateria
+                              : "NÃO DEFINIDO"
+                          }
+                          options={[
+                            { label: "LÍTIO", value: "LÍTIO" },
+                            { label: "ESTACIONÁRIA", value: "ESTACIONÁRIA" },
+                            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                          ]}
+                          handleChange={(value) => {
+                            setChanges({
+                              ...changes,
+                              "sistema.tipoBateria": value,
+                            });
+                            setInfo({
+                              ...infoHolder,
+                              sistema: {
+                                ...infoHolder.sistema,
+                                tipoBateria: value,
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="flex justify-center items-center w-full">
+                        <NumberInput
+                          label={"CAPACIDADE (em Ah)"}
+                          editable={true}
+                          value={infoHolder.sistema.capacidadeBateria}
+                          handleChange={(value) => {
+                            setChanges({
+                              ...changes,
+                              "sistema.capacidadeBateria": Number(value),
+                            });
+                            setInfo({
+                              ...infoHolder,
+                              sistema: {
+                                ...infoHolder.sistema,
+                                capacidadeBateria: Number(value),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">

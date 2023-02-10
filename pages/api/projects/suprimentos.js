@@ -34,6 +34,7 @@ export default async function handler(req, res) {
             nomeDoContrato: 1,
             qtde: 1,
             compra: 1,
+            tipoDeServico: 1,
             "faturamento.previsaoFaturamento": 1,
             "sistema.potPico": 1,
             "pagamento.status": 1,

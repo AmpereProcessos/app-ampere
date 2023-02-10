@@ -370,6 +370,18 @@ function ModalFormSolicitacao({
         qtde: dados.qtdeInversor ? dados.qtdeInversor.toString() : "0",
         pot: dados.potInversor ? dados.potInversor.toString() : "0",
       }),
+      tipoControlador: dados.tipoControlador ? dados.tipoControlador : null,
+      marcaControlador: dados.marcaControlador ? dados.marcaControlador : null,
+      qtdeControlador: dados.qtdeControlador ? dados.qtdeControlador : null,
+      correnteControlador: dados.correnteControlador
+        ? dados.correnteControlador
+        : null,
+      tipoBateria: dados.tipoBateria ? dados.tipoBateria : null,
+      marcaBateria: dados.marcaBateria ? dados.marcaBateria : null,
+      qtdeBateria: dados.qtdeBateria ? dados.qtdeBateria : null,
+      capacidadeBateria: dados.capacidadeBateria
+        ? dados.capacidadeBateria
+        : null,
       valorProjeto: dados.valorContrato,
     },
     projeto: {
@@ -503,10 +515,10 @@ function ModalFormSolicitacao({
   async function sendEmail() {
     try {
       await axios.post("/api/email", {
-        emailTo: "amperecontasareceber@gmail.com", // amperecontasareceber@gmail.com
+        emailTo: "contasareceber@ampereenergias.com.br", // amperecontasareceber@gmail.com
         subject: "SOLICITAÇÃO DE CONTRATO",
-        message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Desde já agradeço, Volts.`,
-        copy: ["ampereenergiascomercial@gmail.com"],
+        message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Formulário disponível no link: https://app.ampereenergias.com.br/comercial/publicoFormulario/${dados._id} . Desde já agradeço, Volts.`,
+        copy: ["comercial@ampereenergias.com.br"],
       });
 
       setEmailMsg({ text: "Email enviado", color: "text-green-500" });
@@ -1650,35 +1662,31 @@ function ModalFormSolicitacao({
                     />
                   </div>
                   <div className="flex gap-2 justify-around flex-wrap">
-                    {dados.topologia != "NÃO DEFINIDO" && (
-                      <>
-                        <TextInput
-                          label={"MARCA DO INVERSOR/MICRO"}
-                          editable={editor}
-                          value={dados.marcaInversor}
-                          handleChange={(value) =>
-                            setDados({ ...dados, marcaInversor: value })
-                          }
-                        />
-                        <TextInput
-                          label={"QTDE INVERSOR/MICRO"}
-                          editable={editor}
-                          value={dados.qtdeInversor}
-                          handleChange={(value) =>
-                            setDados({ ...dados, qtdeInversor: value })
-                          }
-                        />
-                        <TextInput
-                          label={"POTÊNCIA INVERSOR/MICRO"}
-                          editable={editor}
-                          unit={"W"}
-                          value={dados.potInversor}
-                          handleChange={(value) =>
-                            setDados({ ...dados, potInversor: value })
-                          }
-                        />
-                      </>
-                    )}
+                    <TextInput
+                      label={"MARCA DO INVERSOR/MICRO"}
+                      editable={editor}
+                      value={dados.marcaInversor}
+                      handleChange={(value) =>
+                        setDados({ ...dados, marcaInversor: value })
+                      }
+                    />
+                    <TextInput
+                      label={"QTDE INVERSOR/MICRO"}
+                      editable={editor}
+                      value={dados.qtdeInversor}
+                      handleChange={(value) =>
+                        setDados({ ...dados, qtdeInversor: value })
+                      }
+                    />
+                    <TextInput
+                      label={"POTÊNCIA INVERSOR/MICRO"}
+                      editable={editor}
+                      unit={"W"}
+                      value={dados.potInversor}
+                      handleChange={(value) =>
+                        setDados({ ...dados, potInversor: value })
+                      }
+                    />
                   </div>
                   <div className="flex flex-col text-sm lg:text-base  items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -1764,6 +1772,133 @@ function ModalFormSolicitacao({
                       })}
                     </p>
                   </div>
+                  {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
+                    <>
+                      <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200 mt-2">
+                        <div className="flex justify-center items-center w-full">
+                          <TextInput
+                            label={"MARCA DO CONTROLADOR"}
+                            editable={true}
+                            value={dados.marcaControlador}
+                            handleChange={(value) =>
+                              setDados({
+                                ...dados,
+                                marcaControlador: value.toUpperCase(),
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="flex justify-center items-center w-full">
+                          <NumberInput
+                            label={"QTDE DE CONTROLADORES"}
+                            editable={true}
+                            value={dados.qtdeControlador}
+                            handleChange={(value) =>
+                              setDados({
+                                ...dados,
+                                qtdeControlador: Number(value),
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="flex justify-center items-center w-full">
+                          <SelectInput
+                            label={"TIPO DO CONTROLADOR"}
+                            editable={true}
+                            value={
+                              dados.tipoControlador
+                                ? dados.tipoControlador
+                                : "NÃO DEFINIDO"
+                            }
+                            options={[
+                              {
+                                label: "INTEGRADO AO INVERSOR",
+                                value: "INTEGRADO AO INVERSOR",
+                              },
+                              {
+                                label: "COMPRO EM SEPARADO",
+                                value: "SEPARADO",
+                              },
+                              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                            ]}
+                            handleChange={(value) =>
+                              setDados({ ...dados, tipoControlador: value })
+                            }
+                          />
+                        </div>
+                        <div className="flex justify-center items-center w-full">
+                          <NumberInput
+                            label={"CORRENTE DE CARGA (em A)"}
+                            editable={true}
+                            value={dados.correnteControlador}
+                            handleChange={(value) =>
+                              setDados({
+                                ...dados,
+                                correnteControlador: Number(value),
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200">
+                        <div className="flex justify-center items-center w-full">
+                          <TextInput
+                            label={"MARCA DA BATERIA"}
+                            editable={true}
+                            value={dados.marcaBateria}
+                            handleChange={(value) =>
+                              setDados({
+                                ...dados,
+                                marcaBateria: value.toUpperCase(),
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="flex justify-center items-center w-full">
+                          <NumberInput
+                            label={"QTDE DE BATERIAS"}
+                            editable={true}
+                            value={dados.qtdeBateria}
+                            handleChange={(value) =>
+                              setDados({ ...dados, qtdeBateria: Number(value) })
+                            }
+                          />
+                        </div>
+                        <div className="flex justify-center items-center w-full">
+                          <SelectInput
+                            label={"TIPO DA BATERIA"}
+                            editable={true}
+                            value={
+                              dados.tipoBateria
+                                ? dados.tipoBateria
+                                : "NÃO DEFINIDO"
+                            }
+                            options={[
+                              { label: "LÍTIO", value: "LÍTIO" },
+                              { label: "ESTACIONÁRIA", value: "ESTACIONÁRIA" },
+                              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                            ]}
+                            handleChange={(value) =>
+                              setDados({ ...dados, tipoBateria: value })
+                            }
+                          />
+                        </div>
+                        <div className="flex justify-center items-center w-full">
+                          <NumberInput
+                            label={"CAPACIDADE (em Ah)"}
+                            editable={true}
+                            value={dados.capacidadeBateria}
+                            handleChange={(value) =>
+                              setDados({
+                                ...dados,
+                                capacidadeBateria: Number(value),
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">

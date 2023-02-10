@@ -104,12 +104,6 @@ function Formulario({ info }) {
                   setDados({ ...dados, cep: formatCEP(value) })
                 }
               />
-              <button
-                onClick={() => findCPF("enderecoCobranca")}
-                className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-              >
-                <AiOutlineSearch />
-              </button>
               <SelectInput
                 label={"CIDADE"}
                 value={dados.cidade}
@@ -453,7 +447,9 @@ function Formulario({ info }) {
               />
               <SelectInput
                 label={"TIPO DA LIGAÇÃO"}
-                value={dados.tipoDaLigacao}
+                value={
+                  dados.tipoDaLigacao ? dados.tipoDaLigacao : "NÃO DEFINIDO"
+                }
                 handleChange={(value) =>
                   setDados({ ...dados, tipoDaLigacao: value })
                 }
@@ -465,6 +461,10 @@ function Formulario({ info }) {
                   {
                     label: "EXISTENTE",
                     value: "EXISTENTE",
+                  },
+                  {
+                    label: "NÃO DEFINIDO",
+                    value: "NÃO DEFINIDO",
                   },
                 ]}
               />
@@ -492,12 +492,6 @@ function Formulario({ info }) {
                   setDados({ ...dados, cepInstalacao: formatCEP(value) })
                 }
               />
-              <button
-                onClick={() => findCPF("enderecoInstalacao")}
-                className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-              >
-                <AiOutlineSearch />
-              </button>
               <TextInput
                 label={"ENDEREÇO DE INSTALAÇÃO"}
                 value={dados.enderecoInstalacao}
@@ -633,32 +627,28 @@ function Formulario({ info }) {
               />
             </div>
             <div className="flex gap-2 justify-around flex-wrap">
-              {dados.topologia != "NÃO DEFINIDO" && (
-                <>
-                  <TextInput
-                    label={"MARCA DO INVERSOR/MICRO"}
-                    value={dados.marcaInversor}
-                    handleChange={(value) =>
-                      setDados({ ...dados, marcaInversor: value })
-                    }
-                  />
-                  <TextInput
-                    label={"QTDE INVERSOR/MICRO"}
-                    value={dados.qtdeInversor}
-                    handleChange={(value) =>
-                      setDados({ ...dados, qtdeInversor: value })
-                    }
-                  />
-                  <TextInput
-                    label={"POTÊNCIA INVERSOR/MICRO"}
-                    unit={"W"}
-                    value={dados.potInversor}
-                    handleChange={(value) =>
-                      setDados({ ...dados, potInversor: value })
-                    }
-                  />
-                </>
-              )}
+              <TextInput
+                label={"MARCA DO INVERSOR/MICRO"}
+                value={dados.marcaInversor}
+                handleChange={(value) =>
+                  setDados({ ...dados, marcaInversor: value })
+                }
+              />
+              <TextInput
+                label={"QTDE INVERSOR/MICRO"}
+                value={dados.qtdeInversor}
+                handleChange={(value) =>
+                  setDados({ ...dados, qtdeInversor: value })
+                }
+              />
+              <TextInput
+                label={"POTÊNCIA INVERSOR/MICRO"}
+                unit={"W"}
+                value={dados.potInversor}
+                handleChange={(value) =>
+                  setDados({ ...dados, potInversor: value })
+                }
+              />
             </div>
             <div className="flex flex-col text-sm lg:text-base  items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -734,6 +724,131 @@ function Formulario({ info }) {
                 })}
               </p>
             </div>
+            {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
+              <>
+                <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200 mt-2">
+                  <div className="flex justify-center items-center w-full">
+                    <TextInput
+                      label={"MARCA DO CONTROLADOR"}
+                      editable={true}
+                      value={dados.marcaControlador}
+                      handleChange={(value) =>
+                        setDados({
+                          ...dados,
+                          marcaControlador: value.toUpperCase(),
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="flex justify-center items-center w-full">
+                    <NumberInput
+                      label={"QTDE DE CONTROLADORES"}
+                      editable={true}
+                      value={dados.qtdeControlador}
+                      handleChange={(value) =>
+                        setDados({
+                          ...dados,
+                          qtdeControlador: Number(value),
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="flex justify-center items-center w-full">
+                    <SelectInput
+                      label={"TIPO DO CONTROLADOR"}
+                      editable={true}
+                      value={
+                        dados.tipoControlador
+                          ? dados.tipoControlador
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        {
+                          label: "INTEGRADO AO INVERSOR",
+                          value: "INTEGRADO AO INVERSOR",
+                        },
+                        {
+                          label: "COMPRO EM SEPARADO",
+                          value: "SEPARADO",
+                        },
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, tipoControlador: value })
+                      }
+                    />
+                  </div>
+                  <div className="flex justify-center items-center w-full">
+                    <NumberInput
+                      label={"CORRENTE DE CARGA (em A)"}
+                      editable={true}
+                      value={dados.correnteControlador}
+                      handleChange={(value) =>
+                        setDados({
+                          ...dados,
+                          correnteControlador: Number(value),
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200">
+                  <div className="flex justify-center items-center w-full">
+                    <TextInput
+                      label={"MARCA DA BATERIA"}
+                      editable={true}
+                      value={dados.marcaBateria}
+                      handleChange={(value) =>
+                        setDados({
+                          ...dados,
+                          marcaBateria: value.toUpperCase(),
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="flex justify-center items-center w-full">
+                    <NumberInput
+                      label={"QTDE DE BATERIAS"}
+                      editable={true}
+                      value={dados.qtdeBateria}
+                      handleChange={(value) =>
+                        setDados({ ...dados, qtdeBateria: Number(value) })
+                      }
+                    />
+                  </div>
+                  <div className="flex justify-center items-center w-full">
+                    <SelectInput
+                      label={"TIPO DA BATERIA"}
+                      editable={true}
+                      value={
+                        dados.tipoBateria ? dados.tipoBateria : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "LÍTIO", value: "LÍTIO" },
+                        { label: "ESTACIONÁRIA", value: "ESTACIONÁRIA" },
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, tipoBateria: value })
+                      }
+                    />
+                  </div>
+                  <div className="flex justify-center items-center w-full">
+                    <NumberInput
+                      label={"CAPACIDADE (em Ah)"}
+                      editable={true}
+                      value={dados.capacidadeBateria}
+                      handleChange={(value) =>
+                        setDados({
+                          ...dados,
+                          capacidadeBateria: Number(value),
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
           <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
             <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -1468,26 +1583,53 @@ function Formulario({ info }) {
               />
               <SelectInput
                 label={"FORMA DE PAGAMENTO"}
-                options={[
-                  {
-                    label:
-                      "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
-                    value:
-                      "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
-                  },
-                  {
-                    label: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
-                    value: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
-                  },
-                  {
-                    label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
-                    value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
-                  },
-                  {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
-                  },
-                ]}
+                options={
+                  dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)"
+                    ? [
+                        {
+                          label:
+                            "70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO",
+                          value:
+                            "70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO",
+                        },
+                        {
+                          label:
+                            "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                          value:
+                            "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                        },
+                        {
+                          label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                          value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                        },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
+                        },
+                      ]
+                    : [
+                        {
+                          label:
+                            "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
+                          value:
+                            "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
+                        },
+                        {
+                          label:
+                            "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                          value:
+                            "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                        },
+                        {
+                          label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                          value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                        },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
+                        },
+                      ]
+                }
                 value={dados.formaDePagamento}
                 handleChange={(value) =>
                   setDados({ ...dados, formaDePagamento: value })

@@ -6,7 +6,12 @@ import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AppContext } from "../../context/AppContext";
 import ModalComercial from "../../components/ModalComercial";
-import { statusLiberacao, vendedores } from "../../utils/constants";
+import {
+  statusLiberacao,
+  tiposDeServico,
+  vendedores,
+} from "../../utils/constants";
+import TagTipoDeServico from "../../components/TagTipoDeServico";
 const statusStyles = {
   ASSINADO: {
     textColor: "text-green-500",
@@ -35,6 +40,7 @@ function Comercial({ users }) {
     contratoFilter: [],
     pagamentoFilter: [],
     vendedorFilter: [],
+    tipoDeServicoFilter: [],
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
@@ -90,6 +96,12 @@ function Comercial({ users }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((project) =>
         filters.vendedorFilter.includes(project.vendedor.nome)
+      );
+    }
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((project) =>
+        filters.tipoDeServicoFilter.includes(project.tipoDeServico)
       );
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
@@ -229,6 +241,19 @@ function Comercial({ users }) {
               placeholder="Digite o nome do contrato"
               value={searchFilter}
               onChange={(e) => handleSearchFilter(e.target.value)}
+            />
+            <Select
+              isMulti
+              placeholder="TIPO DE SERVIÇO"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  tipoDeServicoFilter: e.map((x) => x.value),
+                })
+              }
+              options={tiposDeServico.map((tipo) => {
+                return { label: tipo.label, value: tipo.value };
+              })}
             />
             <div className="hidden lg:flex gap-x-2">
               <div className="flex flex-col w-fit items-center">
@@ -374,57 +399,62 @@ function Comercial({ users }) {
               handleOpenModal(project._id);
             }}
             key={project._id}
-            className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+            className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 hover:bg-blue-100"
           >
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
-              <p className="text-xs text-[#15599a]">#{project.qtde}</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="hidden lg:flex lg:flex-col">
-                <span className="text-xxs">CONTRATO</span>
-                <p
-                  className={`text-xs ${
-                    statusStyles[project.contrato?.status]
-                      ? statusStyles[project.contrato.status].textColor
-                      : ""
-                  }`}
-                >
-                  {project.contrato?.status && project.contrato?.status}
+            <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
+            <div className="flex flex-col p-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-700">
+                  {project.nomeDoContrato}
                 </p>
+                <p className="text-xs text-[#15599a]">#{project.qtde}</p>
               </div>
-              <div>
-                <span className="text-xxs">VENDEDOR</span>
-                <p className="text-xs text-[#15599a]">
-                  {project.vendedor && project.vendedor.nome}
-                </p>
+              <div className="flex items-center justify-between">
+                <div className="hidden lg:flex lg:flex-col">
+                  <span className="text-xxs">CONTRATO</span>
+                  <p
+                    className={`text-xs ${
+                      statusStyles[project.contrato?.status]
+                        ? statusStyles[project.contrato.status].textColor
+                        : ""
+                    }`}
+                  >
+                    {project.contrato?.status && project.contrato?.status}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xxs">VENDEDOR</span>
+                  <p className="text-xs text-[#15599a]">
+                    {project.vendedor && project.vendedor.nome}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xxs">TIPO DE PAGAMENTO</span>
-                <p className="text-xs text-gray-600">
-                  {project.pagamento?.forma && project.pagamento.forma}
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-xxs">TIPO DE PAGAMENTO</span>
+                  <p className="text-xs text-gray-600">
+                    {project.pagamento?.forma && project.pagamento.forma}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xxs">PAGAMENTO</span>
+                  <p className="text-xs text-gray-600">
+                    {project.pagamento?.status ? project.pagamento.status : "-"}
+                  </p>
+                </div>
               </div>
-              <div>
-                <span className="text-xxs">PAGAMENTO</span>
-                <p className="text-xs text-gray-600">
-                  {project.pagamento?.status ? project.pagamento.status : "-"}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center justify-center">
-              <div>
-                <span className="text-xxs">DESDE ASS.CONTRATO</span>
-                <p className={`text-xs uppercase text-red-500 text-center`}>
-                  {project.contrato.dataAssinatura
-                    ? `${getDateDiff(
-                        new Date(),
-                        new Date(project.contrato.dataAssinatura)
-                      )} DIAS`
-                    : "-"}
-                </p>
+              <div className="flex items-center justify-center">
+                <div>
+                  <span className="text-xxs">DESDE ASS.CONTRATO</span>
+                  <p className={`text-xs uppercase text-red-500 text-center`}>
+                    {project.contrato.dataAssinatura
+                      ? `${getDateDiff(
+                          new Date(),
+                          new Date(project.contrato.dataAssinatura)
+                        )} DIAS`
+                      : "-"}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

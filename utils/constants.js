@@ -1334,6 +1334,10 @@ export const tiposDeServico = [
     value: "SISTEMA FOTOVOLTAICO",
   },
   {
+    label: "SISTEMA FOTOVOLTAICO (OFF GRID)",
+    value: "SISTEMA FOTOVOLTAICO (OFF GRID)",
+  },
+  {
     label: "OPERAÇÃO E MANUTENÇÃO",
     value: "OPERAÇÃO E MANUTENÇÃO",
   },

@@ -24,6 +24,8 @@ import VisualizacaoForm from "../../components/VisualizacaoForm";
 import FormSolicitacaoDez from "../../components/FormSolicitacaoDez";
 import connectToSolicitacoesDatabase from "../../utils/solicitacoesDb";
 import { ObjectId } from "mongodb";
+import SolicitacaoONGRID from "../../components/SolicitacaoONGRID";
+import SolicitacaoOFFGRID from "../../components/SolicitacaoOFFGRID";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -207,93 +209,118 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             options={tiposDeServico.map((tipo) => tipo)}
           />
         </div>
-        {estagio == 0 && (
-          <FormSolicitacaoUm
-            avancar={() => setEstagio(estagio + 1)}
-            dados={dados}
-            setDados={setDados}
+        {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO" && (
+          <SolicitacaoONGRID
+            nomeVendedor={dados.nomeVendedor}
+            telefoneVendedor={dados.telefoneVendedor}
+            cliente={cliente}
+            links={links}
+            formVisitaId={formVisitaId}
+            tipoDeServico={dados.tipoDeServico}
           />
         )}
-        {estagio == 1 && (
-          <FormSolicitacaoDois
-            voltar={() => setEstagio(estagio - 1)}
-            avancar={() => setEstagio(estagio + 1)}
-            dados={dados}
-            setDados={setDados}
-          />
-        )}
-        {estagio == 2 && (
-          <FormSolicitacaoTres
-            voltar={() => setEstagio(estagio - 1)}
-            avancar={() => setEstagio(estagio + 1)}
-            dados={dados}
-            setDados={setDados}
-          />
-        )}
-        {estagio == 3 && (
-          <FormSolicitacaoQuatro
-            voltar={() => setEstagio(estagio - 1)}
-            avancar={() => setEstagio(estagio + 1)}
-            dados={dados}
-            setDados={setDados}
-          />
-        )}
-        {estagio == 4 && (
-          <FormSolicitacaoCinco
-            voltar={() => setEstagio(estagio - 1)}
-            avancar={() => setEstagio(estagio + 1)}
-            dados={dados}
-            setDados={setDados}
-          />
-        )}
-        {estagio == 5 && (
-          <FormSolicitacaoSeis
-            voltar={() => setEstagio(estagio - 1)}
-            avancar={() => setEstagio(estagio + 1)}
-            dados={dados}
-            setDados={setDados}
-          />
-        )}
-        {estagio == 6 && (
-          <FormSolicitacaoSete
-            voltar={() => setEstagio(estagio - 1)}
-            avancar={() => setEstagio(estagio + 1)}
-            dados={dados}
-            setDados={setDados}
-          />
-        )}
-        {estagio == 7 && (
-          <FormSolicitacaoOito
-            voltar={() => setEstagio(estagio - 1)}
-            avancar={() => setEstagio(estagio + 1)}
-            dados={dados}
-            setDados={setDados}
-          />
-        )}
-        {estagio == 8 && (
-          <FormSolicitacaoNove
-            voltar={() => setEstagio(estagio - 1)}
-            avancar={() => setEstagio(estagio + 1)}
-            dados={dados}
-            setDados={setDados}
-          />
-        )}
-        {estagio == 9 && (
-          <FormSolicitacaoDez
-            dados={dados}
-            setDados={setDados}
-            avancar={() => setEstagio(estagio + 1)}
-            voltar={() => setEstagio(estagio - 1)}
-            prevLinks={links ? links : []}
-          />
-        )}
-        {estagio == 10 && (
-          <VisualizacaoForm
-            dados={dados}
-            setDados={setDados}
-            linksVisita={links ? links : undefined}
-            formVisitaId={formVisitaId ? formVisitaId : undefined}
-            voltar={() => setEstagio(estagio - 1)}
+        {dados.tipoDeServico != "SISTEMA FOTOVOLTAICO" &&
+          dados.tipoDeServico != "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
+            <>
+              {estagio == 0 && (
+                <FormSolicitacaoUm
+                  avancar={() => setEstagio(estagio + 1)}
+                  dados={dados}
+                  setDados={setDados}
+                />
+              )}
+              {estagio == 1 && (
+                <FormSolicitacaoDois
+                  voltar={() => setEstagio(estagio - 1)}
+                  avancar={() => setEstagio(estagio + 1)}
+                  dados={dados}
+                  setDados={setDados}
+                />
+              )}
+              {estagio == 2 && (
+                <FormSolicitacaoTres
+                  voltar={() => setEstagio(estagio - 1)}
+                  avancar={() => setEstagio(estagio + 1)}
+                  dados={dados}
+                  setDados={setDados}
+                />
+              )}
+              {estagio == 3 && (
+                <FormSolicitacaoQuatro
+                  voltar={() => setEstagio(estagio - 1)}
+                  avancar={() => setEstagio(estagio + 1)}
+                  dados={dados}
+                  setDados={setDados}
+                />
+              )}
+              {estagio == 4 && (
+                <FormSolicitacaoCinco
+                  voltar={() => setEstagio(estagio - 1)}
+                  avancar={() => setEstagio(estagio + 1)}
+                  dados={dados}
+                  setDados={setDados}
+                />
+              )}
+              {estagio == 5 && (
+                <FormSolicitacaoSeis
+                  voltar={() => setEstagio(estagio - 1)}
+                  avancar={() => setEstagio(estagio + 1)}
+                  dados={dados}
+                  setDados={setDados}
+                />
+              )}
+              {estagio == 6 && (
+                <FormSolicitacaoSete
+                  voltar={() => setEstagio(estagio - 1)}
+                  avancar={() => setEstagio(estagio + 1)}
+                  dados={dados}
+                  setDados={setDados}
+                />
+              )}
+              {estagio == 7 && (
+                <FormSolicitacaoOito
+                  voltar={() => setEstagio(estagio - 1)}
+                  avancar={() => setEstagio(estagio + 1)}
+                  dados={dados}
+                  setDados={setDados}
+                />
+              )}
+              {estagio == 8 && (
+                <FormSolicitacaoNove
+                  voltar={() => setEstagio(estagio - 1)}
+                  avancar={() => setEstagio(estagio + 1)}
+                  dados={dados}
+                  setDados={setDados}
+                />
+              )}
+              {estagio == 9 && (
+                <FormSolicitacaoDez
+                  dados={dados}
+                  setDados={setDados}
+                  avancar={() => setEstagio(estagio + 1)}
+                  voltar={() => setEstagio(estagio - 1)}
+                  prevLinks={links ? links : []}
+                />
+              )}
+              {estagio == 10 && (
+                <VisualizacaoForm
+                  dados={dados}
+                  setDados={setDados}
+                  linksVisita={links ? links : undefined}
+                  formVisitaId={formVisitaId ? formVisitaId : undefined}
+                  voltar={() => setEstagio(estagio - 1)}
+                />
+              )}
+            </>
+          )}
+        {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
+          <SolicitacaoOFFGRID
+            nomeVendedor={dados.nomeVendedor}
+            telefoneVendedor={dados.telefoneVendedor}
+            cliente={cliente}
+            links={links}
+            formVisitaId={formVisitaId}
+            tipoDeServico={dados.tipoDeServico}
           />
         )}
       </div>

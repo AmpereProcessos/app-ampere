@@ -14,6 +14,7 @@ import Link from "next/link";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
 import SelectInput from "../../components/SelectInput";
+import TagTipoDeServico from "../../components/TagTipoDeServico";
 const statusStyles = {
   REALIZADO: {
     textColor: "text-green-500",
@@ -560,76 +561,81 @@ function OeM({ users }) {
               handleOpenModal(project._id);
             }}
             key={project._id}
-            className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+            className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200  hover:bg-blue-100"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                {project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
-                  <GiPoliceBadge
-                    style={{
-                      fontSize: "20px",
-                      color: "#15599a",
-                    }}
-                  />
-                )}{" "}
-                <p className="text-xs text-gray-700">
-                  {project.nomeDoContrato}
-                </p>
-              </div>
+            <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
+            <div className="flex flex-col p-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
+                    <GiPoliceBadge
+                      style={{
+                        fontSize: "20px",
+                        color: "#15599a",
+                      }}
+                    />
+                  )}{" "}
+                  <p className="text-xs text-gray-700">
+                    {project.nomeDoContrato}
+                  </p>
+                </div>
 
-              <p className="text-xs text-[#15599a]">#{project.qtde}</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xxs">CIDADE</span>
-                <p className="text-xs text-gray-600 uppercase">
-                  {project.cidade ? project.cidade : "-"}
-                </p>
+                <p className="text-xs text-[#15599a]">#{project.qtde}</p>
               </div>
-              {checkOeMEnding(project.medidor.data).text && (
-                <span
-                  className={`text-xs ${
-                    checkOeMEnding(project.medidor.data).color
-                  } text-center font-bold`}
-                >
-                  {checkOeMEnding(project.medidor.data).text}
-                </span>
-              )}
-              <div>
-                <span className="text-xxs">TOPOLOGIA</span>
-                <p className="text-xs text-center text-gray-600">
-                  {project.projeto.topologia ? project.projeto.topologia : "-"}
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-xxs">CIDADE</span>
+                  <p className="text-xs text-gray-600 uppercase">
+                    {project.cidade ? project.cidade : "-"}
+                  </p>
+                </div>
+                {checkOeMEnding(project.medidor.data).text && (
+                  <span
+                    className={`text-xs ${
+                      checkOeMEnding(project.medidor.data).color
+                    } text-center font-bold`}
+                  >
+                    {checkOeMEnding(project.medidor.data).text}
+                  </span>
+                )}
+                <div>
+                  <span className="text-xxs">TOPOLOGIA</span>
+                  <p className="text-xs text-center text-gray-600">
+                    {project.projeto.topologia
+                      ? project.projeto.topologia
+                      : "-"}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xxs">EQUIPE OBRAS</span>
-                <p className="text-xs text-yellow-500">
-                  {project.obra.equipeResp ? project.obra.equipeResp : "-"}
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-xxs">EQUIPE OBRAS</span>
+                  <p className="text-xs text-yellow-500">
+                    {project.obra.equipeResp ? project.obra.equipeResp : "-"}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xxs">USINA LIGADA</span>
+                  <p
+                    className={`text-xs ${
+                      statusStyles[project.conferencias.usinaLigada.status]
+                        .textColor
+                    }`}
+                  >
+                    {project.conferencias.usinaLigada != undefined &&
+                    project.conferencias.usinaLigada.status != "-"
+                      ? project.conferencias.usinaLigada.status
+                      : "-"}
+                  </p>
+                </div>
               </div>
-              <div>
-                <span className="text-xxs">USINA LIGADA</span>
-                <p
-                  className={`text-xs ${
-                    statusStyles[project.conferencias.usinaLigada.status]
-                      .textColor
-                  }`}
-                >
-                  {project.conferencias.usinaLigada != undefined &&
-                  project.conferencias.usinaLigada.status != "-"
-                    ? project.conferencias.usinaLigada.status
-                    : "-"}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center justify-center">
-              <div className="flex flex-col items-center">
-                <span className="text-xxs text-center">PLANO O&M</span>
-                <p className="text-xs text-yellow-500 text-center">
-                  {project.oem?.plano ? project.oem.plano : "-"}
-                </p>
+              <div className="flex items-center justify-center">
+                <div className="flex flex-col items-center">
+                  <span className="text-xxs text-center">PLANO O&M</span>
+                  <p className="text-xs text-yellow-500 text-center">
+                    {project.oem?.plano ? project.oem.plano : "-"}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

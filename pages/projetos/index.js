@@ -10,8 +10,10 @@ import {
   projetistas,
   cidadesAtendidas,
   vendedores,
+  tiposDeServico,
 } from "../../utils/constants";
 import { AppContext } from "../../context/AppContext";
+import TagTipoDeServico from "../../components/TagTipoDeServico";
 function Projetos() {
   const router = useRouter();
   const { credentials, setCredentials } = useContext(AppContext);
@@ -23,6 +25,7 @@ function Projetos() {
     vistoriaFilter: [],
     projetistaFilter: [],
     distribuicaoFilter: [],
+    tipoDeServicoFilter: [],
     assinFaltando: false,
     desenhoFilter: false,
     parecerReprovado: false,
@@ -101,6 +104,12 @@ function Projetos() {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.projetistaFilter.includes(call.projeto.projetista.nome)
+      );
+    }
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.tipoDeServicoFilter.includes(call.tipoDeServico)
       );
     }
     if (filters.distribuicaoFilter.length > 0) {
@@ -265,6 +274,19 @@ function Projetos() {
               { value: "CANCELADO", label: "CANCELADO" },
               { value: undefined, label: "VAZIO" },
             ]}
+          />
+          <Select
+            isMulti
+            placeholder="TIPO DE SERVIÇO"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                tipoDeServicoFilter: e.map((x) => x.value),
+              })
+            }
+            options={tiposDeServico.map((tipo) => {
+              return { label: tipo.label, value: tipo.value };
+            })}
           />
           <Select
             isMulti
@@ -599,82 +621,87 @@ function Projetos() {
                     new Date()
                   )
                 : "border border-gray-200"
-            }  p-3 hover:bg-blue-100`}
+            }  hover:bg-blue-100`}
           >
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
-              <p className="text-xs text-[#15599a]">#{project.qtde}</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xxs">PARECER DE ACESSO</span>
-                <p className="text-xs text-gray-600">
-                  {project.parecer.statusDoParecerDeAcesso
-                    ? project.parecer.statusDoParecerDeAcesso
-                    : "-"}
+            <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
+            <div className="flex flex-col p-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-700">
+                  {project.nomeDoContrato}
                 </p>
+                <p className="text-xs text-[#15599a]">#{project.qtde}</p>
               </div>
-              <div className="text-end">
-                <span className="text-xxs text-end">VISTORIA</span>
-                <p className="text-xs text-center text-gray-600">
-                  {project.vistoria.status ? project.vistoria.status : "-"}
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-xxs">PARECER DE ACESSO</span>
+                  <p className="text-xs text-gray-600">
+                    {project.parecer.statusDoParecerDeAcesso
+                      ? project.parecer.statusDoParecerDeAcesso
+                      : "-"}
+                  </p>
+                </div>
+                <div className="text-end">
+                  <span className="text-xxs text-end">VISTORIA</span>
+                  <p className="text-xs text-center text-gray-600">
+                    {project.vistoria.status ? project.vistoria.status : "-"}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xxs">DIAGRAMA UNIFILAR</span>
-                <p
-                  className={`${
-                    project.projeto.diagramaUnifilar
-                      ? "text-yellow-500"
-                      : "text-red-400"
-                  } text-xs uppercase`}
-                >
-                  {project.projeto.diagramaUnifilar
-                    ? project.projeto.diagramaUnifilar
-                    : "PENDENTE"}
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-xxs">DIAGRAMA UNIFILAR</span>
+                  <p
+                    className={`${
+                      project.projeto.diagramaUnifilar
+                        ? "text-yellow-500"
+                        : "text-red-400"
+                    } text-xs uppercase`}
+                  >
+                    {project.projeto.diagramaUnifilar
+                      ? project.projeto.diagramaUnifilar
+                      : "PENDENTE"}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xxs text-center">
+                    {project.compra.statusEntrega == "ENTREGUE"
+                      ? "DATA DE ENTREGA"
+                      : "PREV. DE ENTREGA"}
+                  </span>
+                  <p className={`text-gray-600 text-xs uppercase text-center`}>
+                    {project.compra.statusEntrega == "ENTREGUE" &&
+                    project.compra.dataEntrega
+                      ? dayjs(project.compra.dataEntrega)
+                          .add(4, "h")
+                          .format("DD/MM/YYYY")
+                      : project.compra.previsaoEntrega
+                      ? dayjs(project.compra.previsaoEntrega)
+                          .add(4, "h")
+                          .format("DD/MM/YYYY")
+                      : "-"}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xxs">DESENHO DO TELHADO</span>
+                  <p className="text-xs text-gray-600 text-center">
+                    {project.projeto.desenhoTelhado
+                      ? project.projeto.desenhoTelhado
+                      : "-"}
+                  </p>
+                </div>
               </div>
-              <div>
-                <span className="text-xxs text-center">
-                  {project.compra.statusEntrega == "ENTREGUE"
-                    ? "DATA DE ENTREGA"
-                    : "PREV. DE ENTREGA"}
-                </span>
-                <p className={`text-gray-600 text-xs uppercase text-center`}>
-                  {project.compra.statusEntrega == "ENTREGUE" &&
-                  project.compra.dataEntrega
-                    ? dayjs(project.compra.dataEntrega)
-                        .add(4, "h")
-                        .format("DD/MM/YYYY")
-                    : project.compra.previsaoEntrega
-                    ? dayjs(project.compra.previsaoEntrega)
-                        .add(4, "h")
-                        .format("DD/MM/YYYY")
-                    : "-"}
-                </p>
-              </div>
-              <div>
-                <span className="text-xxs">DESENHO DO TELHADO</span>
-                <p className="text-xs text-gray-600 text-center">
-                  {project.projeto.desenhoTelhado
-                    ? project.projeto.desenhoTelhado
-                    : "-"}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center justify-center">
-              <div>
-                <span className="text-xxs">DESDE ASS.CONTRATO</span>
-                <p className={`text-xs uppercase text-red-500 text-center`}>
-                  {project.contrato.dataAssinatura
-                    ? `${getDateDiff(
-                        new Date(),
-                        new Date(project.contrato.dataAssinatura)
-                      )} DIAS`
-                    : "-"}
-                </p>
+              <div className="flex items-center justify-between">
+                <div className="w-full flex flex-col">
+                  <span className="text-xxs">DESDE ASS.CONTRATO</span>
+                  <p className={`text-xs uppercase text-red-500 text-start`}>
+                    {project.contrato.dataAssinatura
+                      ? `${getDateDiff(
+                          new Date(),
+                          new Date(project.contrato.dataAssinatura)
+                        )} DIAS`
+                      : "-"}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

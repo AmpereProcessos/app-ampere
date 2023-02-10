@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import ModalFormSolicitacao from "../../components/ModalFormSolicitacao";
 import { useRouter } from "next/router";
 import Select from "react-select";
-import { vendedores } from "../../utils/constants";
+import { tiposDeServico, vendedores } from "../../utils/constants";
 import { BsPatchCheckFill } from "react-icons/bs";
 function FormulariosSolicitacao({ credentials, setCredentials }) {
   const [solicitacoes, setSolicitacoes] = useState([]);
@@ -15,6 +15,7 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
     pendenteFilter: false,
     confeccaoFilter: false,
     vendedorFilter: [],
+    tipoDeServicoFilter: [],
   });
   const router = useRouter();
   function getFormularios() {
@@ -28,8 +29,7 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
     if (filters.pendenteFilter) {
       if (!newArr) newArr = solicitacoes;
       newArr = newArr.filter(
-        (solicitacao) =>
-          solicitacao.aprovacao == false || solicitacao.aprovacao == undefined
+        (solicitacao) => solicitacao.aprovacao == undefined
       );
     }
     if (filters.confeccaoFilter) {
@@ -43,6 +43,12 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
       if (!newArr) newArr = solicitacoes;
       newArr = newArr.filter((solicitacao) =>
         filters.vendedorFilter.includes(solicitacao.nomeVendedor)
+      );
+    }
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!newArr) newArr = solicitacoes;
+      newArr = newArr.filter((solicitacao) =>
+        filters.tipoDeServicoFilter.includes(solicitacao.tipoDeServico)
       );
     }
     if (filters.nomeDoContratoFilter.trim().length > 0) {
@@ -124,6 +130,19 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
               })
             }
           />
+          <Select
+            placeholder="TIPO DE SERVIÇO"
+            isMulti={true}
+            options={tiposDeServico.map((tipoDeServico) => {
+              return { label: tipoDeServico.label, value: tipoDeServico.value };
+            })}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                tipoDeServicoFilter: e.map((x) => x.value),
+              })
+            }
+          />
           <div
             onClick={() =>
               setFilters({
@@ -167,40 +186,39 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
             }}
             className={`flex flex-col ${getCardColor(
               solicitacao.aprovacao
-            )} w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
+            )} w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 hover:bg-blue-100`}
           >
-            <div className="flex justify-center">
-              <h1 className="text-xs text-[#15599a] font-bold">
-                {solicitacao.nomeDoContrato}
-              </h1>
-              {solicitacao.confeccionado && (
-                <BsPatchCheckFill
-                  style={{
-                    fontSize: "20px",
-                    color: "rgb(21 128 61)",
-                    marginLeft: "10px",
-                  }}
-                />
-              )}
+            <div className="bg-[#15599a] text-[#fead61] text-xs font-bold text-center rounded-br-md rounded-bl-md">
+              {solicitacao.tipoDeServico}
             </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xxs">VENDEDOR</span>
-                <p className="text-xs text-gray-600">
-                  {solicitacao.nomeVendedor && solicitacao.nomeVendedor}
-                </p>
+            <div className="flex flex-col p-2">
+              <div className="flex justify-center">
+                <h1 className="text-xs text-[#15599a] font-bold">
+                  {solicitacao.nomeDoContrato}
+                </h1>
+                {solicitacao.confeccionado && (
+                  <BsPatchCheckFill
+                    style={{
+                      fontSize: "20px",
+                      color: "rgb(21 128 61)",
+                      marginLeft: "10px",
+                    }}
+                  />
+                )}
               </div>
-              <div>
-                <span className="text-xxs">SERVIÇO</span>
-                <p className="text-xs text-gray-600 text-center">
-                  {solicitacao.tipoDeServico ? solicitacao.tipoDeServico : "-"}
-                </p>
-              </div>
-              <div>
-                <span className="text-xxs">CIDADE</span>
-                <p className="text-xs text-gray-600">
-                  {solicitacao.cidade ? solicitacao.cidade : "-"}
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-xxs">VENDEDOR</span>
+                  <p className="text-xs text-gray-600">
+                    {solicitacao.nomeVendedor && solicitacao.nomeVendedor}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xxs">CIDADE</span>
+                  <p className="text-xs text-gray-600">
+                    {solicitacao.cidade ? solicitacao.cidade : "-"}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

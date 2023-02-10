@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import FormSolicitacaoUm from "./FormSolicitacaoUm";
 import FormSolicitacaoDois from "./FormSolicitacaoDois";
-import FormSolicitacaoTres from "./FormSolicitacaoTres";
-import FormSolicitacaoQuatro from "./FormSolicitacaoQuatro";
+import FormSolicitacaoQuatroOFFGRID from "./FormSolicitacaoQuatroOFFGRID";
 import FormSolicitacaoCinco from "./FormSolicitacaoCinco";
-import FormSolicitacaoSeis from "./FormSolicitacaoSeis";
-import FormSolicitacaoSete from "./FormSolicitacaoSete";
 import FormSolicitacaoOito from "./FormSolicitacaoOito";
-import FormSolicitacaoNove from "./FormSolicitacaoNove";
 import FormSolicitacaoDez from "./FormSolicitacaoDez";
-import VisualizacaoForm from "./VisualizacaoForm";
-function SolicitacaoONGRID({
+import FormSolicitacaoTresOFFGRID from "./FormSolicitacaoTresOFFGRID";
+import VisualizacaoOFFGrid from "./VisualizacaoFormOFFGRID";
+function SolicitacaoOFFGRID({
   cliente,
   links,
   formVisitaId,
@@ -84,19 +81,19 @@ function SolicitacaoONGRID({
     responsavelEstrutura: "NÃO SE APLICA",
     formaPagamentoEstrutura: "NÃO DEFINIDO",
     valorEstrutura: null,
-    possuiOeM: "NÃO DEFINIDO",
-    planoOeM: "NÃO SE APLICA",
-    clienteSegurado: "NÃO DEFINIDO",
-    tempoSegurado: "NÃO SE APLICA",
-    formaPagamentoOeMOuSeguro: "NÃO SE APLICA",
-    valorOeMOuSeguro: null,
-    aumentoDeCarga: "NÃO DEFINIDO",
-    caixaConjugada: "NÃO DEFINIDO",
-    tipoDePadrao: "NÃO DEFINIDO",
-    aumentoDisjuntor: "NÃO",
-    respTrocaPadrao: "NÃO SE APLICA",
-    formaPagamentoPadrao: "NÃO HAVERA TROCA PADRÃO",
-    valorPadrao: null,
+    // possuiOeM: "NÃO DEFINIDO",
+    // planoOeM: "NÃO SE APLICA",
+    // clienteSegurado: "NÃO DEFINIDO",
+    // tempoSegurado: "NÃO SE APLICA",
+    // formaPagamentoOeMOuSeguro: "NÃO SE APLICA",
+    // valorOeMOuSeguro: null,
+    // aumentoDeCarga: "NÃO DEFINIDO",
+    // caixaConjugada: "NÃO DEFINIDO",
+    // tipoDePadrao: "NÃO DEFINIDO",
+    // aumentoDisjuntor: "NÃO",
+    // respTrocaPadrao: "NÃO SE APLICA",
+    // formaPagamentoPadrao: "NÃO HAVERA TROCA PADRÃO",
+    // valorPadrao: null,
     nomePagador: "",
     contatoPagador: "",
     necessidaInscricaoRural: "NÃO",
@@ -119,7 +116,7 @@ function SolicitacaoONGRID({
     possuiDistribuicao: "NÃO",
     distribuicoes: [],
   });
-  console.log("TO AQUI");
+  console.log("SOLICITAÇÃO OFF GRID");
   console.log(dados);
   return (
     <>
@@ -139,7 +136,7 @@ function SolicitacaoONGRID({
         />
       )}
       {estagio == 2 && (
-        <FormSolicitacaoTres
+        <FormSolicitacaoTresOFFGRID
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
           dados={dados}
@@ -147,7 +144,7 @@ function SolicitacaoONGRID({
         />
       )}
       {estagio == 3 && (
-        <FormSolicitacaoQuatro
+        <FormSolicitacaoQuatroOFFGRID
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
           dados={dados}
@@ -163,22 +160,6 @@ function SolicitacaoONGRID({
         />
       )}
       {estagio == 5 && (
-        <FormSolicitacaoSeis
-          voltar={() => setEstagio(estagio - 1)}
-          avancar={() => setEstagio(estagio + 1)}
-          dados={dados}
-          setDados={setDados}
-        />
-      )}
-      {estagio == 6 && (
-        <FormSolicitacaoSete
-          voltar={() => setEstagio(estagio - 1)}
-          avancar={() => setEstagio(estagio + 1)}
-          dados={dados}
-          setDados={setDados}
-        />
-      )}
-      {estagio == 7 && (
         <FormSolicitacaoOito
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
@@ -186,15 +167,7 @@ function SolicitacaoONGRID({
           setDados={setDados}
         />
       )}
-      {estagio == 8 && (
-        <FormSolicitacaoNove
-          voltar={() => setEstagio(estagio - 1)}
-          avancar={() => setEstagio(estagio + 1)}
-          dados={dados}
-          setDados={setDados}
-        />
-      )}
-      {estagio == 9 && (
+      {estagio == 6 && (
         <FormSolicitacaoDez
           dados={dados}
           setDados={setDados}
@@ -203,8 +176,8 @@ function SolicitacaoONGRID({
           prevLinks={links ? links : []}
         />
       )}
-      {estagio == 10 && (
-        <VisualizacaoForm
+      {estagio == 7 && (
+        <VisualizacaoOFFGrid
           dados={dados}
           setDados={setDados}
           linksVisita={links ? links : undefined}
@@ -216,4 +189,4 @@ function SolicitacaoONGRID({
   );
 }
 
-export default SolicitacaoONGRID;
+export default SolicitacaoOFFGRID;

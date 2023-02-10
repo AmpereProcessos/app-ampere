@@ -6,6 +6,7 @@ import NumberFloatingInput from "./NumberFloatingInput";
 import { AiOutlineSearch } from "react-icons/ai";
 import { cidadesAtendidas, vendedores } from "../utils/constants";
 import axios from "axios";
+import SelectFoatingInput from "./SelectFloatingInput";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -87,6 +88,25 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
       setMessage("Por favor, preencha uma data de nascimento.");
       return false;
     }
+    if (dados.estadoCivil == "NÃO DEFINIDO") {
+      setMessage("Por favor, preencha o estado civil do cliente.");
+      return false;
+    }
+    if (dados.email.trim().length < 5) {
+      setMessage("Por favor, preencha um email válido.");
+      return false;
+    }
+    if (dados.profissao.trim().length < 3) {
+      setMessage("Por favor, preencha uma profissão válida.");
+      return false;
+    }
+    if (
+      dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" &&
+      dados.tipoDoTitular == "NÃO DEFINIDO"
+    ) {
+      setMessage("Por favor, preencha o tipo do cliente.");
+      return false;
+    }
     if (dados.cidade == "NÃO DEFINIDO") {
       setMessage("Por favor, preencha uma cidade válida.");
       return false;
@@ -95,6 +115,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
       setMessage("Por favor, preencha um endereço de cobrança válido.");
       return false;
     }
+
     if (dados.numeroResCobranca == undefined || dados.numeroResCobranca == 0) {
       setMessage("Por favor, preencha um numéro de residência válido.");
       return false;
@@ -109,14 +130,6 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
       dados.codigoSVB.toString().trim().length > 4
     ) {
       setMessage("Por favor, preencha um código SVB válido.");
-      return false;
-    }
-    if (dados.email.trim().length < 5) {
-      setMessage("Por favor, preencha um email válido.");
-      return false;
-    }
-    if (dados.profissao.trim().length < 3) {
-      setMessage("Por favor, preencha uma profissão válida.");
       return false;
     }
     if (
@@ -276,6 +289,33 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
             }
           />
         </div>
+        {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
+          <div className="flex items-center justify-center col-span-3">
+            <SelectFoatingInput
+              label={"TIPO DO CLIENTE"}
+              width={"450px"}
+              editable={true}
+              value={dados.tipoDoTitular}
+              handleChange={(value) =>
+                setDados({ ...dados, tipoDoTitular: value })
+              }
+              options={[
+                {
+                  label: "PESSOA FISICA",
+                  value: "PESSOA FISICA",
+                },
+                {
+                  label: "PESSOA JURIDICA",
+                  value: "PESSOA JURIDICA",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+            />
+          </div>
+        )}
         <div className="flex items-center justify-center gap-2 col-span-3">
           <SelectFloatingInput
             width={"450px"}

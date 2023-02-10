@@ -30,23 +30,33 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
     : `formSolicitacao/${dados.nomeDoContrato}`;
   console.log(savingRef);
   function validateDocuments() {
-    if (!images.contaDeEnergia) {
+    if (
+      dados.tipoDeServico == "SISTEMA FOTOVOLTAICO" &&
+      !images.contaDeEnergia
+    ) {
       setImagesMsg({
-        text: "Por favor, adicione uma foto ou pdf da conta de energia",
+        text: "Por favor, adicione uma foto ou pdf da conta de energia.",
         color: "text-red-500",
       });
       return false;
     }
-    if (!images.laudo) {
+    if (dados.tipoDeServico == "SISTEMA FOTOVOLTAICO" && !images.laudo) {
       setImagesMsg({
-        text: "Por favor, adicione uma foto ou pdf do laudo técnico",
+        text: "Por favor, adicione uma foto ou pdf do laudo técnico.",
         color: "text-red-500",
       });
       return false;
     }
     if (!images.propostaComercial) {
       setImagesMsg({
-        text: "Por favor, adicione uma foto ou pdf da proposta comercial",
+        text: "Por favor, adicione uma foto ou pdf da proposta comercial.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.comprovanteEnderecoCorrespondente) {
+      setImagesMsg({
+        text: "Por favor, adicione uma foto ou pdf do endereço de correspondência.",
         color: "text-red-500",
       });
       return false;
@@ -54,21 +64,14 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
     if (dados.tipoDaInstalacao == "RURAL") {
       if (!images.car) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou PDF do CAR",
+          text: "Por favor, adicione uma foto ou PDF do CAR.",
           color: "text-red-500",
         });
         return false;
       }
       if (!images.matricula) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou pdf da matrícula da inscrição rural",
-          color: "text-red-500",
-        });
-        return false;
-      }
-      if (!images.comprovanteEnderecoCorrespondente) {
-        setImagesMsg({
-          text: "Por favor,adicione uma foto ou pdf do endereço de correspondência",
+          text: "Por favor, adicione uma foto ou pdf da matrícula da inscrição rural.",
           color: "text-red-500",
         });
         return false;
@@ -77,16 +80,19 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
     if (dados.tipoDaInstalacao == "URBANO") {
       if (!images.iptu) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou PDF do IPTU",
+          text: "Por favor, adicione uma foto ou PDF do IPTU.",
           color: "text-red-500",
         });
         return false;
       }
     }
-    if (dados.tipoDoTitular == "PESSOA FISICA") {
+    if (
+      dados.tipoDoTitular == "PESSOA FISICA" ||
+      dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)"
+    ) {
       if (!images.documentoComFoto) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto do documento com foto",
+          text: "Por favor, adicione uma foto do documento com foto.",
           color: "text-red-500",
         });
         return false;
@@ -95,28 +101,28 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
     if (dados.tipoDoTitular == "PESSOA JURIDICA") {
       if (!images.contratoSocial) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou pdf do contrato social",
+          text: "Por favor, adicione uma foto ou pdf do contrato social.",
           color: "text-red-500",
         });
         return false;
       }
       if (!images.cartaoCnpj) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou pdf do cartão CNPJ",
+          text: "Por favor, adicione uma foto ou pdf do cartão CNPJ.",
           color: "text-red-500",
         });
         return false;
       }
       if (!images.comprovanteEnderecoRepresentante) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou pdf do comprovante de endereço do representante legal",
+          text: "Por favor, adicione uma foto ou pdf do comprovante de endereço do representante legal.",
           color: "text-red-500",
         });
         return false;
       }
       if (!images.documentoComFotoSocios) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou pdf do documento com foto dos sócios",
+          text: "Por favor, adicione uma foto ou pdf do documento com foto dos sócios.",
           color: "text-red-500",
         });
         return false;
@@ -206,6 +212,28 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
               : "INDEFINIDO",
           });
         }
+        if (images.comprovanteEnderecoCorrespondente) {
+          var imageRef = ref(
+            storage,
+            `formSolicitacao/${
+              dados.nomeDoContrato
+            }/comprovanteEnderecoCorrespondente${(
+              Math.random() * 10000
+            ).toFixed(0)}`
+          );
+          let res = await uploadBytes(
+            imageRef,
+            images.comprovanteEnderecoCorrespondente
+          );
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          links.push({
+            title: "COMPROVANTE DE ENDEREÇO - CORRESPONDÊNCIA",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
+        }
         if (dados.tipoDaInstalacao == "RURAL") {
           if (images.car) {
             var imageRef = ref(
@@ -237,28 +265,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
                 : "INDEFINIDO",
             });
           }
-          if (images.comprovanteEnderecoCorrespondente) {
-            var imageRef = ref(
-              storage,
-              `formSolicitacao/${
-                dados.nomeDoContrato
-              }/comprovanteEnderecoCorrespondente${(
-                Math.random() * 10000
-              ).toFixed(0)}`
-            );
-            let res = await uploadBytes(
-              imageRef,
-              images.comprovanteEnderecoCorrespondente
-            );
-            let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-            links.push({
-              title: "COMPROVANTE DE ENDEREÇO - CORRESPONDÊNCIA",
-              link: url,
-              format: fileTypes[res.metadata.contentType]
-                ? fileTypes[res.metadata.contentType].title
-                : "INDEFINIDO",
-            });
-          }
         }
         if (dados.tipoDaInstalacao == "URBANO") {
           if (images.iptu) {
@@ -277,7 +283,10 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
             });
           }
         }
-        if (dados.tipoDoTitular == "PESSOA FISICA") {
+        if (
+          dados.tipoDoTitular == "PESSOA FISICA" ||
+          dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)"
+        ) {
           if (images.documentoComFoto) {
             var imageRef = ref(
               storage,
@@ -449,82 +458,88 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
       </span>
       <div className="flex flex-col gap-2 items-center">
         <div className="flex gap-2 justify-around flex-wrap mt-2">
-          <div className="w-fit flex flex-col items-center">
-            <label
-              className="ml-2 text-center text-[#15599a] font-bold"
-              htmlFor="contaDeEnergia"
-            >
-              CONTA DE ENERGIA
-            </label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-              <div className="absolute">
-                {images.contaDeEnergia ? (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
-                      {images.contaDeEnergia.name}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">
-                      Adicione o arquivo aqui...
-                    </span>
-                  </div>
-                )}
+          {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO" && (
+            <div className="w-fit flex flex-col items-center">
+              <label
+                className="ml-2 text-center text-[#15599a] font-bold"
+                htmlFor="contaDeEnergia"
+              >
+                CONTA DE ENERGIA
+              </label>
+              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                <div className="absolute">
+                  {images.contaDeEnergia ? (
+                    <div className="flex flex-col items-center">
+                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                      <span className="block text-gray-400 font-normal text-center">
+                        {images.contaDeEnergia.name}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center">
+                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                      <span className="block text-gray-400 font-normal">
+                        Adicione o arquivo aqui...
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <input
+                  onChange={(e) =>
+                    setImages({
+                      ...images,
+                      contaDeEnergia: e.target.files[0],
+                    })
+                  }
+                  className="h-full w-full opacity-0"
+                  type="file"
+                  accept=".png, .jpeg, .pdf"
+                />
               </div>
-              <input
-                onChange={(e) =>
-                  setImages({
-                    ...images,
-                    contaDeEnergia: e.target.files[0],
-                  })
-                }
-                className="h-full w-full opacity-0"
-                type="file"
-                accept=".png, .jpeg, .pdf"
-              />
             </div>
-          </div>
-          <div className="w-fit flex flex-col items-center">
-            <label
-              className="ml-2 text-center text-[#15599a] font-bold"
-              htmlFor="contaDeEnergia"
-            >
-              LAUDO COMERCIAL
-            </label>
-            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-              <div className="absolute">
-                {images.laudo ? (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
-                      {images.laudo.name}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">
-                      Adicione o arquivo aqui...
-                    </span>
-                  </div>
-                )}
+          )}
+
+          {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO" && (
+            <div className="w-fit flex flex-col items-center">
+              <label
+                className="ml-2 text-center text-[#15599a] font-bold"
+                htmlFor="contaDeEnergia"
+              >
+                LAUDO COMERCIAL
+              </label>
+              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                <div className="absolute">
+                  {images.laudo ? (
+                    <div className="flex flex-col items-center">
+                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                      <span className="block text-gray-400 font-normal text-center">
+                        {images.laudo.name}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center">
+                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                      <span className="block text-gray-400 font-normal">
+                        Adicione o arquivo aqui...
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <input
+                  onChange={(e) =>
+                    setImages({
+                      ...images,
+                      laudo: e.target.files[0],
+                    })
+                  }
+                  className="h-full w-full opacity-0"
+                  type="file"
+                  accept=".png, .jpeg, .pdf"
+                />
               </div>
-              <input
-                onChange={(e) =>
-                  setImages({
-                    ...images,
-                    laudo: e.target.files[0],
-                  })
-                }
-                className="h-full w-full opacity-0"
-                type="file"
-                accept=".png, .jpeg, .pdf"
-              />
             </div>
-          </div>
+          )}
+
           <div className="w-fit flex flex-col items-center">
             <label
               className="ml-2 text-center text-[#15599a] font-bold"
@@ -555,6 +570,44 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
                   setImages({
                     ...images,
                     propostaComercial: e.target.files[0],
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label
+              className="ml-2 text-center text-[#15599a] font-bold"
+              htmlFor="propostaComercial"
+            >
+              COMPROVANTE DE ENDEREÇO CORRESPONDENTE
+            </label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.comprovanteEnderecoCorrespondente ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.comprovanteEnderecoCorrespondente.name}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">
+                      Adicione o arquivo aqui
+                    </span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    comprovanteEnderecoCorrespondente: e.target.files[0],
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -641,44 +694,6 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
                   />
                 </div>
               </div>
-              <div className="w-fit flex flex-col items-center">
-                <label
-                  className="ml-2 text-center text-[#15599a] font-bold"
-                  htmlFor="propostaComercial"
-                >
-                  COMPROVANTE DE ENDEREÇO CORRESPONDENTE
-                </label>
-                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-                  <div className="absolute">
-                    {images.comprovanteEnderecoCorrespondente ? (
-                      <div className="flex flex-col items-center">
-                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">
-                          {images.comprovanteEnderecoCorrespondente.name}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center">
-                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">
-                          Adicione o arquivo aqui
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <input
-                    onChange={(e) =>
-                      setImages({
-                        ...images,
-                        comprovanteEnderecoCorrespondente: e.target.files[0],
-                      })
-                    }
-                    className="h-full w-full opacity-0"
-                    type="file"
-                    accept=".png, .jpeg, .pdf"
-                  />
-                </div>
-              </div>
             </>
           )}
           {dados.tipoDaInstalacao == "URBANO" && (
@@ -723,7 +738,8 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
               </div>
             </>
           )}
-          {dados.tipoDoTitular == "PESSOA FISICA" && (
+          {(dados.tipoDoTitular == "PESSOA FISICA" ||
+            dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)") && (
             <>
               <div className="w-fit flex flex-col items-center">
                 <label

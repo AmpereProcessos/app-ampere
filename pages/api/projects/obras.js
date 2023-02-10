@@ -21,6 +21,7 @@ export default async function handler(req, res) {
             nomeDoContrato: 1,
             cidade: 1,
             obra: 1,
+            tipoDeServico: 1,
             "compra.statusEntrega": 1,
             "compra.previsaoEntrega": 1,
             "compra.dataEntrega": 1,

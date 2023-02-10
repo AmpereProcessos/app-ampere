@@ -26,6 +26,7 @@ export default async function handler(req, res) {
             qtde: 1,
             nomeDoContrato: 1,
             cidade: 1,
+            tipoDeServico: 1,
             "vendedor.nome": 1,
             "parecer.statusDoParecerDeAcesso": 1,
             "parecer.dataParecerDeAcesso": 1,

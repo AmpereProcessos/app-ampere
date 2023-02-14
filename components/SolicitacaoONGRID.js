@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormSolicitacaoDadosContrato from "./FormSolicitacaoDadosContrato";
 import FormSolicitacaoDadosContato from "./FormSolicitacaoDadosContato";
 import FormSolicitacaoDadosConcessionaria from "./FormSolicitacaoDadosConcessionaria";
@@ -119,8 +119,15 @@ function SolicitacaoONGRID({
     possuiDistribuicao: "NÃO",
     distribuicoes: [],
   });
-  console.log("TO AQUI");
   console.log(dados);
+  useEffect(() => {
+    setDados({
+      ...dados,
+      nomeVendedor: nomeVendedor,
+      telefoneVendedor: telefoneVendedor,
+      tipoDeServico: tipoDeServico,
+    });
+  }, [nomeVendedor, telefoneVendedor, tipoDeServico]);
   return (
     <>
       {estagio == 0 && (

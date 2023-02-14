@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormSolicitacaoDadosContrato from "./FormSolicitacaoDadosContrato";
 import FormSolicitacaoDadosContato from "./FormSolicitacaoDadosContato";
 import FormSolicitacaoDadosConcessionaria from "./FormSolicitacaoDadosConcessionaria";
@@ -18,9 +18,10 @@ function SolicitacaoOutrosServicos({
   nomeVendedor,
   telefoneVendedor,
 }) {
+  console.log(nomeVendedor);
   const [estagio, setEstagio] = useState(0);
   const [dados, setDados] = useState({
-    nomeVendedor: nomeVendedor,
+    nomeVendedor: nomeVendedor ? nomeVendedor : "NÃO DEFINIDO",
     nomeDoProjeto: cliente ? cliente : null,
     telefoneVendedor: telefoneVendedor,
     tipoDeServico: tipoDeServico,
@@ -119,8 +120,14 @@ function SolicitacaoOutrosServicos({
     possuiDistribuicao: "NÃO",
     distribuicoes: [],
   });
-  console.log("TO AQUI");
-  console.log(dados);
+  useEffect(() => {
+    setDados({
+      ...dados,
+      nomeVendedor: nomeVendedor,
+      telefoneVendedor: telefoneVendedor,
+      tipoDeServico: tipoDeServico,
+    });
+  }, [nomeVendedor, telefoneVendedor, tipoDeServico]);
   return (
     <>
       {estagio == 0 && (

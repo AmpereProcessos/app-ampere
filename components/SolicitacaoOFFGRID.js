@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormSolicitacaoDadosContrato from "./FormSolicitacaoDadosContrato";
 import FormSolicitacaoDadosContato from "./FormSolicitacaoDadosContato";
 import FormSolicitacaoEquipamentosOFFGRID from "./FormSolicitacaoEquipamentosOFFGRID";
@@ -116,8 +116,15 @@ function SolicitacaoOFFGRID({
     possuiDistribuicao: "NÃO",
     distribuicoes: [],
   });
-  console.log("SOLICITAÇÃO OFF GRID");
   console.log(dados);
+  useEffect(() => {
+    setDados({
+      ...dados,
+      nomeVendedor: nomeVendedor,
+      telefoneVendedor: telefoneVendedor,
+      tipoDeServico: tipoDeServico,
+    });
+  }, [nomeVendedor, telefoneVendedor, tipoDeServico]);
   return (
     <>
       {estagio == 0 && (

@@ -1,8 +1,33 @@
 import dayjs from "dayjs";
-import connectToDatabase from "../../utils/callsDb";
+import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("suporte");
+  // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  // const collection = db.collection("dados");
+  // let clients = await collection
+  //   .aggregate([
+  //     {
+  //       $match: {
+  //         $and: [
+  //           { "obra.saida": { $gte: "2023-01-01T00:00:00.000Z" } },
+  //           { "obra.saida": { $lte: "2023-01-31T00:00:00.000Z" } },
+  //         ],
+  //       },
+  //     },
+  //     {
+  //       $project: {
+  //         nomeDoContrato: 1,
+  //         "obra.saida": 1,
+  //       },
+  //     },
+  //   ])
+  //   .toArray();
+
+  // clients = clients.map((x) => {
+  //   return {
+  //     "NOME DO CONTRATO": x.nomeDoContrato,
+  //     "SAIDA DE OBRA": dayjs(x.obra.saida).add(4, "hours").format("DD/MM/YYYY"),
+  //   };
+  // });
   //   .aggregate([
   //     {
   //       $match: {
@@ -66,16 +91,6 @@ export default async function handler(req, res) {
   //     tipoEntregaTecnica: item.jornada.tipoEntregaTecnica,
   //   };
   // });
-  let arr = await collection.updateMany(
-    {
-      responsavel: "LUIS EDUARDO",
-    },
-    {
-      $set: {
-        responsavel: "GABRIEL MARTINS",
-      },
-    }
-  );
   // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
   // const collection = db.collection("dados");
   // let arr = await collection
@@ -93,7 +108,7 @@ export default async function handler(req, res) {
   //     },
   //   ])
   //   .toArray();
-  res.json(arr);
+  res.json("DESATIVADA");
 }
 /*
   let arr = await collection.updateMany(

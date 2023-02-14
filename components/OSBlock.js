@@ -1,136 +1,132 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { AiFillSave } from "react-icons/ai";
-function OSBlock({ ordem, index, emAberto, categoria, info, setOs, os }) {
+import { TbExternalLink, TbCheckbox } from "react-icons/tb";
+import { FiEdit } from "react-icons/fi";
+import SelectFloatingInput from "./SelectFloatingInput";
+import TextFloatingInput from "./TextFloatingInput";
+import ModalBancoOS from "./ModalBancoOS";
+import dayjs from "dayjs";
+function OSBlock({
+  order,
+  clientName,
+  index,
+  open,
+  categories,
+  projectID,
+  getOSS,
+}) {
   const [msg, setMsg] = useState({
     text: "",
     color: "",
   });
-  const [osCategoria, setCategoria] = useState(ordem.categoria);
-  const [servicoExecutado, setServicoExecutado] = useState(
-    ordem.servicoExecutado
-  );
-  const [dataDeFechamento, setDataDeFechamento] = useState(
-    ordem.dataDeFechamento ? ordem.dataDeFechamento : null
-  );
-  function handleChange(id, index, fechamento) {
-    axios
-      .post(`/api/projects/update/${info._id}`, {
-        [`ordensDeServico.${index}.categoria`]: osCategoria,
-        [`ordensDeServico.${index}.servicoExecutado`]: servicoExecutado,
-        [`ordensDeServico.${index}.dataDeFechamento`]: dataDeFechamento,
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalInfo, setModalInfo] = useState();
+  console.log(index);
+  // Utils
+  function validateVisibility({ categories, open, closingDate }) {
+    if (open) {
+      if (closingDate == undefined) return "hidden";
+      else return "";
+    } else if (categories.length > 0) {
+      if (!categories.includes(order.categoria)) return "hidden";
+      else return "";
+    } else {
+      return "";
+    }
+  }
+  async function closeOS() {
+    let { data } = await axios
+      .post(`/api/projects/update/${projectID}`, {
+        [`ordensDeServico.${index}.dataDeFechamento`]: new Date().toISOString(),
       })
-      .then((res) =>
-        setMsg({ text: "Alterações feitas", color: "text-green-500" })
-      )
-      .catch((err) =>
-        setMsg({
-          text: "Ocorreu um erro, por favor tente novamente.",
-          color: "text-red-500",
-        })
-      );
+      .catch((err) => alert("Houve um erro na comunicação com o servidor."));
+    if (data) {
+      setMsg({ text: "Alterações feitas", color: "text-green-500" });
+      setTimeout(() => {
+        getOSS();
+      }, 1000);
+    }
+  }
+  function handleOpenModal(order) {
+    setModalInfo(order);
+    setModalIsOpen(true);
   }
   return (
-    <>
+    <div className="flex flex-col">
       <div
-        className={`grid ${
-          emAberto ? (ordem.dataDeFechamento != undefined ? "hidden" : "") : ""
-        } ${
-          !categoria.includes(ordem.categoria) ? "hidden" : ""
-        } items-center grid-cols-3 xl:grid-cols-14 border-b border-gray-200 pb-2`}
+        className={`grid items-center grid-cols-6  border-b border-gray-200 py-2 ${validateVisibility(
+          {
+            categories,
+            open,
+            closingDate: order.dataDeFechamento,
+          }
+        )}`}
       >
-        <div className="flex col-span-2 flex-col items-center">
-          <p className="text-xs uppercase text-gray-500">CATEGORIA DA OS</p>
-          <select
-            className="text-xs outline-none text-gray-600"
-            value={osCategoria}
-            onChange={(e) => setCategoria(e.target.value)}
-          >
-            <option value={"PADRÃO"}>PADRÃO</option>
-            <option value={"ESTRUTURA"}>ESTRUTURA</option>
-            <option value={"MONTAGEM"}>MONTAGEM</option>
-            <option value={"MANUTENÇÃO PREVENTIVA"}>
-              MANUTENÇÃO PREVENTIVA
-            </option>
-            <option value={"MANUTENÇÃO CORRETIVA"}>MANUTENÇÃO CORRETIVA</option>
-          </select>
-        </div>
-        <div className="hidden xl:flex col-span-2 flex-col items-center">
-          <p className="text-center text-xs uppercase text-gray-500">
-            SERVIÇO PARA EXECUÇÃO
-          </p>
-          <input
-            className={`text-xs w-full text-center uppercase text-gray-600 outline-none`}
-            value={servicoExecutado}
-            onChange={(e) => setServicoExecutado(e.target.value)}
-          />
-        </div>
-        <div className="flex-col col-span-2 items-center hidden xl:flex">
-          <p className="text-xs uppercase text-gray-500">REALIZAR COBRANÇA?</p>
-          <p className="text-xs uppercase">
-            {ordem.realizarCobranca ? "SIM" : "NÃO"}
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-gray-500 text-xs">EMISSOR</p>
+          <p className="text-gray-700 text-xs font-bold uppercase">
+            {order.usuarioEmissor}
           </p>
         </div>
-        <div className="flex-col col-span-2 items-center hidden xl:flex">
-          <p className="text-xs uppercase text-gray-500">VALOR DA COBRANÇA</p>
-          <p className="text-xs uppercase">R$ {ordem.valorCobranca}</p>
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-gray-500 text-xs">CATEGORIA</p>
+          <p className="text-gray-700 text-xs font-bold">{order.categoria}</p>
         </div>
-        <div className="flex-col col-span-2 items-center hidden xl:flex">
-          <p className="text-xs uppercase text-gray-500">EMISSOR DA OS</p>
-          <p className="text-center text-xs uppercase">
-            {ordem.usuarioEmissor}
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-gray-500 text-xs">SERVIÇO</p>
+          <p className="text-gray-700 text-xs font-bold">
+            {order.servicoExecutado}
           </p>
         </div>
-        <div className="hidden xl:flex flex-col col-span-2 items-center">
-          <p className="text-xs uppercase text-gray-500">DATA DE FECHAMENTO</p>
-
-          <input
-            type="date"
-            value={
-              dataDeFechamento
-                ? new Date(dataDeFechamento).toISOString().slice(0, 10)
-                : null
-            }
-            onChange={(e) => {
-              /*
-            setOs((prevState) => {
-              let temp = {
-                ...prevState,
-                ordensDeServico: [...prevState.ordensDeServico],
-              };
-              temp.ordensDeServico[index].dataDeFechamento = new Date(
-                e.target.value
-              ).toISOString();
-              return temp;
-            });
-            handleChange(os._id, index, new Date(e.target.value).toISOString());*/
-              setDataDeFechamento(new Date(e.target.value).toISOString());
-            }}
-            className="text-xxs font-bold outline-none bg-[#15599a] text-white p-1 rounded"
-          />
-        </div>
-        <div className="flex col-span-1 items-center justify-center">
-          <Link href={`/ordemDeServico/pdf/${info._id}?index=${index}`}>
-            <button className="p-1 bg-[#fead61] font-bold rounded w-fit">
-              VER
+        <div className="flex items-center justify-center">
+          <Link href={`/ordemDeServico/pdf/${projectID}?index=${index}`}>
+            <button className="p-1 rounded h-[30px] font-bold text-[#fead61] border border-[#fead61] hover:text-black hover:bg-[#fead61]">
+              <TbExternalLink />
             </button>
           </Link>
         </div>
-        <div className="hidden lg:flex col-span-1 items-center justify-center">
+        <div className="flex items-center justify-center">
+          {order.dataDeFechamento ? (
+            <div className="flex flex-col items-center justify-center">
+              <p className="text-gray-500 text-xs">DATA DE FECHAMENTO</p>
+              <p className="text-gray-700 text-xs font-bold">
+                {dayjs(order.dataDeFechamento)
+                  .add(4, "hour")
+                  .format("DD/MM/YYYY")}
+              </p>
+            </div>
+          ) : (
+            <button
+              onClick={closeOS}
+              className="p-1 rounded h-[30px] font-bold text-green-500 border border-green-500 hover:text-white hover:bg-green-500"
+            >
+              <TbCheckbox />
+            </button>
+          )}
+        </div>
+        <div className="flex flex-col items-center justify-center">
           <button
-            onClick={() => handleChange(null, index, null)}
-            className="flex text-xs gap-x-2 items-center bg-blue-400 hover:bg-[#15599a] hover:text-white font-bold p-1 rounded"
+            onClick={() => handleOpenModal(order)}
+            className="p-1 rounded h-[30px] font-bold text-[#15599a] border border-[#15599a] hover:text-white hover:bg-[#15599a]"
           >
-            SALVAR
-            <AiFillSave />
+            <FiEdit />
           </button>
         </div>
       </div>
       {msg.text && (
-        <p className={`text-center text-sm ${msg.color}`}>{msg.text}</p>
+        <p className={`text-center italic text-xs ${msg.color}`}>{msg.text}</p>
       )}
-    </>
+      {modalIsOpen && (
+        <ModalBancoOS
+          info={modalInfo}
+          index={index}
+          clientName={clientName}
+          projectID={projectID}
+          setModalIsOpen={() => setModalIsOpen(false)}
+        />
+      )}
+    </div>
   );
 }
 

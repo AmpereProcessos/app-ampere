@@ -1,11 +1,17 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import OSControlCard from "../../components/OSControlCard";
+import React, { useEffect, useState, useContext } from "react";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
 import Link from "next/link";
-function BancoDeOS({ credentials, setCredentials }) {
+import OSBlock from "../../components/OSBlock";
+import { AppContext } from "../../context/AppContext";
+
+var dateFilterParam = new Date();
+dateFilterParam.setMonth(dateFilterParam.getMonth() - 3);
+function BancoDeOS() {
+  const { credentials } = useContext(AppContext);
+
   const router = useRouter();
   const [oss, setOSs] = useState([]);
   const [filteredOss, setFilteredOss] = useState([]);
@@ -15,14 +21,18 @@ function BancoDeOS({ credentials, setCredentials }) {
     categoria: [],
   });
   const [dateFilter, setDateFilter] = useState({
-    after: null,
-    before: null,
+    after: new Date(dateFilterParam).toISOString(),
+    before: new Date().toISOString(),
   });
   function getOSS() {
-    axios.get("/api/ordensDeServico").then((res) => {
-      setOSs(res.data);
-      setFilteredOss(res.data);
-    });
+    axios
+      .get(
+        `/api/ordensDeServico?after=${dateFilter.after}&before=${dateFilter.before}`
+      )
+      .then((res) => {
+        setOSs(res.data);
+        setFilteredOss(res.data);
+      });
   }
   function filterOS() {
     var newArr;
@@ -48,42 +58,19 @@ function BancoDeOS({ credentials, setCredentials }) {
         (os) => os.ordensDeServico.dataDeFechamento == undefined
       );
     }
-    if (dateFilter.after != null && dateFilter.before != null) {
-      if (!newArr) newArr = oss;
-      newArr = newArr.filter((project) =>
-        project.ordensDeServico.some(
-          (os) =>
-            os.dataDeFechamento >= dateFilter.after &&
-            os.dataDeFechamento <= dateFilter.before
-        )
-      );
-    }
     if (!newArr) setFilteredOss(oss);
     else {
       setFilteredOss(newArr);
     }
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      if (!storedCredentials.controller) {
-        router.push("/");
-      } else {
-        getOSS();
-      }
+    if (credentials.controller) {
+      getOSS();
     } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      } else {
-        if (!credentials.controller) {
-          router.push("/");
-        } else {
-          getOSS();
-        }
-      }
+      router.push("/");
     }
   }, []);
+  console.log(filteredOss);
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between">
@@ -91,10 +78,10 @@ function BancoDeOS({ credentials, setCredentials }) {
           BANCO DE ORDENS DE SERVIÇO ({filteredOss.length})
         </h1>
         <div className="flex flex-col items-center justify-around gap-x-2">
-          <div className="hidden lg:flex gap-x-2">
+          <div className="flex gap-x-2 mb-2">
             <div className="flex flex-col w-fit items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">
-                Fechamento Depois de:
+              <span className="font-bold font-raleway text-center text-sm">
+                ABERTURA DEPOIS DE:
               </span>
               <input
                 className="text-xs w-full text-center uppercase text-gray-600 outline-none"
@@ -115,7 +102,7 @@ function BancoDeOS({ credentials, setCredentials }) {
             </div>
             <div className="flex flex-col w-fit items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
-                Fechamento Antes de:
+                ABERTURA ANTES DE:
               </span>
               <input
                 className="text-xs w-full text-center uppercase text-gray-600 outline-none"
@@ -134,6 +121,12 @@ function BancoDeOS({ credentials, setCredentials }) {
                 }
               />
             </div>
+            <button
+              onClick={getOSS}
+              className="p-1 rounded border border-[#15599a] text-[#15599a] font-bold hover:text-white hover:bg-[#15599a]"
+            >
+              BUSCAR
+            </button>
           </div>
           <div className="flex flex-wrap justify-center items-center gap-2">
             <Select
@@ -192,18 +185,52 @@ function BancoDeOS({ credentials, setCredentials }) {
         </div>
       </div>
       <div className="flex flex-col gap-y-4 mt-3 px-4">
-        {filteredOss.map((os) => (
-          <OSControlCard
-            key={os._id}
-            info={os}
-            categoria={filters.categoria}
-            emAberto={filters.emAberto}
-          />
+        {filteredOss.map((project, i) => (
+          <div
+            key={i}
+            className="flex flex-col p-2 border border-blue-300 rounded shadow-lg"
+          >
+            <div className="grid grid-cols-5 border-b border-gray-200 pb-2">
+              <h1 className="font-bold text-[#15599a] col-span-1 text-center">
+                {project.qtde} - {project.nomeDoContrato}
+              </h1>
+              <p className="font-raleway text-xs text-gray-500 col-span-1 text-center">
+                CIDADE: {project.cidade ? project.cidade : "-"}
+              </p>
+              <p className="hidden lg:block font-raleway text-xs text-gray-500 col-span-1 text-center">
+                LOGRADOURO: {project.logradouro ? project.logradouro : "-"}
+              </p>
+              <p className="hidden lg:block font-raleway text-xs text-gray-500 col-span-1 text-center">
+                BAIRRO: {project.bairro ? project.bairro : "-"}
+              </p>
+              <p className="hidden lg:block font-raleway text-xs text-gray-500 col-span-1 text-center">
+                Nº: {project.numeroResidencia ? project.numeroResidencia : "-"}
+              </p>
+            </div>
+            {project.ordensDeServico?.map((order, index) => (
+              <OSBlock
+                key={index}
+                getOSS={getOSS}
+                clientName={project.nomeDoContrato}
+                order={order}
+                index={index}
+                open={filters.emAberto}
+                categories={filters.categoria}
+                projectID={project._id}
+              />
+            ))}
+          </div>
+          // <BancodeOSsCard
+          //   key={project._id}
+          //   project={project}
+          //   categories={filters.categoria}
+          //   open={filters.emAberto}
+          // />
         ))}
       </div>
       <Link href={"/ordemDeServico/controleDeOS"}>
         <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-          <p className="uppercase font-bold text-sm">OSs EM ABERTO</p>
+          <p className="uppercase font-bold text-sm">DESIGNAÇÃO DE OSS</p>
         </a>
       </Link>
     </div>

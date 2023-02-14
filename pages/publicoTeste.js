@@ -4,9 +4,19 @@ import Link from "next/link";
 import Assinatura from "../utils/assinatura.jpg";
 import Logo from "../utils/whitelogo.png";
 import { FiCheck } from "react-icons/fi";
+import axios from "axios";
 function Teste() {
+  async function sendEmail() {
+    await axios.post("/api/email", {
+      emailTo: "lucasfernandes1101@hotmail.com", // amperecontasareceber@gmail.com
+      subject: "TESTE",
+      message: "TESTE EMAIL",
+    });
+    alert("FOI");
+  }
   return (
     <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
+      <div onClick={sendEmail}>ENVIAR EMAIL</div>
       <div className="grid grid-cols-5 w-full">
         <div className="col-span-2">
           <h1 className="text-xl font-bold text-[#15599b]">SEST SENAI</h1>

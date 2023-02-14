@@ -10,7 +10,7 @@ import FormSolicitacaoDadosPagamento from "./FormSolicitacaoDadosPagamento";
 import FormSolicitacaoDistribuicoesCredito from "./FormSolicitacaoDistribuicoesCredito";
 import FormSolicitacaoDocumentacaoONGRID from "./FormSolicitacaoDocumentacaoONGRID";
 import VisualizacaoForm from "./VisualizacaoForm";
-function SolicitacaoONGRID({
+function SolicitacaoOutrosServicos({
   cliente,
   links,
   formVisitaId,
@@ -216,4 +216,4 @@ function SolicitacaoONGRID({
   );
 }
 
-export default SolicitacaoONGRID;
+export default SolicitacaoOutrosServicos;

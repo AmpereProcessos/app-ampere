@@ -36,7 +36,7 @@ function formatCEP(cep) {
     .replace(/(-\d{3})\d+?$/, "$1");
   return cep;
 }
-function VisualizacaoOFFGrid({
+function VisualizacaoFormBombaSolar({
   dados,
   voltar,
   setDados,
@@ -58,6 +58,7 @@ function VisualizacaoOFFGrid({
     axios
       .post("/api/solicitacoes/contrato", {
         ...dados,
+        idVisitaTecnica: formVisitaId,
         linksVisita: linksVisita,
       })
       .then((res) => {
@@ -692,15 +693,15 @@ function VisualizacaoOFFGrid({
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
         <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          DADOS DO SISTEMA OFF GRID
+          DADOS DA BOMBA SOLAR
         </span>
         <div className="flex flex-col lg:grid lg:grid-cols-3 gap-x-2 gap-y-1 mt-3">
           <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
-            INVERSOR
+            DRIVER
           </h1>
           <div className="flex items-center justify-center">
             <TextFloatingInput
-              label={"MARCA DO INVERSOR"}
+              label={"MARCA DO DRIVER"}
               editable={true}
               value={dados.marcaInversor}
               handleChange={(value) =>
@@ -710,7 +711,7 @@ function VisualizacaoOFFGrid({
           </div>
           <div className="flex items-center justify-center">
             <TextFloatingInput
-              label={"QTDE INVERSOR"}
+              label={"QTDE DRIVER"}
               editable={true}
               value={dados.qtdeInversor}
               handleChange={(value) =>
@@ -720,7 +721,7 @@ function VisualizacaoOFFGrid({
           </div>
           <div className="flex items-center justify-center">
             <TextFloatingInput
-              label={"POTÊNCIA INVERSOR"}
+              label={"POTÊNCIA DRIVER (CV)"}
               unit={"W"}
               editable={true}
               value={dados.potInversor}
@@ -764,66 +765,6 @@ function VisualizacaoOFFGrid({
                 setDados({ ...dados, potModulos: value })
               }
             />
-          </div>
-        </div>
-        <div className="flex flex-col border-t border-gray-200 p-2">
-          <h1 className="text-[#fead61] text-center font-bold py-2">
-            CONTROLADORES
-          </h1>
-          <div className="flex flex-col lg:grid lg:grid-cols-4 items-center mt-2">
-            <div className="flex justify-center items-center w-full">
-              <TextFloatingInput
-                label={"MARCA DO CONTROLADOR"}
-                editable={true}
-                value={dados.marcaControlador}
-                handleChange={(value) =>
-                  setDados({
-                    ...dados,
-                    marcaControlador: value.toUpperCase(),
-                  })
-                }
-              />
-            </div>
-            <div className="flex justify-center items-center w-full">
-              <NumberFloatingInput
-                label={"QTDE DE CONTROLADORES"}
-                editable={true}
-                value={dados.qtdeControlador}
-                handleChange={(value) =>
-                  setDados({ ...dados, qtdeControlador: Number(value) })
-                }
-              />
-            </div>
-            <div className="flex justify-center items-center w-full">
-              <SelectFloatingInput
-                label={"TIPO DO CONTROLADOR"}
-                editable={true}
-                value={
-                  dados.tipoControlador ? dados.tipoControlador : "NÃO DEFINIDO"
-                }
-                options={[
-                  {
-                    label: "INTEGRADO AO INVERSOR",
-                    value: "INTEGRADO AO INVERSOR",
-                  },
-                  { label: "COMPRO EM SEPARADO", value: "SEPARADO" },
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                ]}
-                handleChange={(value) =>
-                  setDados({ ...dados, tipoControlador: value })
-                }
-              />
-            </div>
-            <div className="flex justify-center items-center w-full">
-              <NumberFloatingInput
-                label={"CORRENTE DE CARGA (em A)"}
-                editable={true}
-                value={dados.correnteControlador}
-                handleChange={(value) =>
-                  setDados({ ...dados, correnteControlador: Number(value) })
-                }
-              />
-            </div>
           </div>
         </div>
         <div className="flex flex-col border-t border-gray-200 p-2">
@@ -873,6 +814,43 @@ function VisualizacaoOFFGrid({
                 value={dados.capacidadeBateria}
                 handleChange={(value) =>
                   setDados({ ...dados, capacidadeBateria: Number(value) })
+                }
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col border-t border-gray-200 p-2">
+          <h1 className="text-center text-[#15599a] text-sm font-bold mt-2">
+            INFORMAÇÃO SOBRE A BOMBA
+          </h1>
+          <div className="flex flex-col lg:grid lg:grid-cols-3 items-center mt-2">
+            <div className="flex items-center justify-center">
+              <TextFloatingInput
+                label={"MARCA BOMBA"}
+                editable={true}
+                value={dados.marcaBomba}
+                handleChange={(value) =>
+                  setDados({ ...dados, marcaBomba: value.toUpperCase() })
+                }
+              />
+            </div>
+            <div className="flex items-center justify-center">
+              <NumberFloatingInput
+                label={"QTDE BOMBA"}
+                editable={true}
+                value={dados.qtdeBomba}
+                handleChange={(value) =>
+                  setDados({ ...dados, qtdeBomba: Number(value) })
+                }
+              />
+            </div>
+            <div className="flex items-center justify-center">
+              <NumberFloatingInput
+                label={"POTÊNCIA BOMBA (CV)"}
+                editable={true}
+                value={dados.potBomba}
+                handleChange={(value) =>
+                  setDados({ ...dados, potBomba: Number(value) })
                 }
               />
             </div>
@@ -1468,4 +1446,4 @@ function VisualizacaoOFFGrid({
   );
 }
 
-export default VisualizacaoOFFGrid;
+export default VisualizacaoFormBombaSolar;

@@ -3,7 +3,12 @@ import TextFloatingInput from "./TextFloatingInput";
 import SelectFloatingInput from "./SelectFloatingInput";
 import NumberFloatingInput from "./NumberFloatingInput";
 import { FiDelete } from "react-icons/fi";
-function FormSolicitacaoNove({ dados, setDados, avancar, voltar }) {
+function FormSolicitacaoDistribuicoesCredito({
+  dados,
+  setDados,
+  avancar,
+  voltar,
+}) {
   const [message, setMessage] = useState("");
   const [dadosDistribuicao, setDadosDistribuicao] = useState({
     numInstalacao: "",
@@ -146,4 +151,4 @@ function FormSolicitacaoNove({ dados, setDados, avancar, voltar }) {
   );
 }
 
-export default FormSolicitacaoNove;
+export default FormSolicitacaoDistribuicoesCredito;

@@ -4,7 +4,12 @@ import NumberFloatingInput from "./NumberFloatingInput";
 import { MdOutlineAddCircle } from "react-icons/md";
 import { FiDelete } from "react-icons/fi";
 import SelectFoatingInput from "./SelectFloatingInput";
-function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
+function FormSolicitacaoEquipamentosONGRID({
+  avancar,
+  setDados,
+  dados,
+  voltar,
+}) {
   const [message, setMessage] = useState("");
   const [dadosInversores, setDadosInvesores] = useState({
     marca: "",
@@ -381,4 +386,4 @@ function FormSolicitacaoQuatro({ avancar, setDados, dados, voltar }) {
   );
 }
 
-export default FormSolicitacaoQuatro;
+export default FormSolicitacaoEquipamentosONGRID;

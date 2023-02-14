@@ -11,7 +11,7 @@ function getServiceTypeTagColor(type) {
       combination: "bg-[#000066] text-white",
     },
     "OPERAÇÃO E MANUTENÇÃO": {
-      combination: "bg-[#c40089] text-white",
+      combination: "bg-[#8604c2] text-white",
     },
     "SUBESTAÇÃO DE ENERGIA": {
       combination: "bg-[#e6e6e6] text-[#15599a]",

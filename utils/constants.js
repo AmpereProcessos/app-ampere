@@ -1200,7 +1200,8 @@ export const cidadesAtendidas = [
   "CATALÃO", // GO
   "JUIZ DE FORA", // MG
   "LIMEIRA DO OESTE", // MG
-  "SÃO FRANCISCO DE SALES", // MG
+  "SÃO FRANCISCO DE SALES", // MG,
+  "BRASÍLIA", // DF
 ];
 export const suprimentoOption = {
   GRAMPO: {
@@ -1336,6 +1337,10 @@ export const tiposDeServico = [
   {
     label: "SISTEMA FOTOVOLTAICO (OFF GRID)",
     value: "SISTEMA FOTOVOLTAICO (OFF GRID)",
+  },
+  {
+    label: "BOMBA SOLAR",
+    value: "BOMBA SOLAR",
   },
   {
     label: "OPERAÇÃO E MANUTENÇÃO",

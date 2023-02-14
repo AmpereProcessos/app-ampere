@@ -26,7 +26,7 @@ function formatCEP(cep) {
     .replace(/(-\d{3})\d+?$/, "$1");
   return cep;
 }
-function FormSolicitacaoDois({ dados, setDados, avancar, voltar }) {
+function FormSolicitacaoDadosContato({ dados, setDados, avancar, voltar }) {
   const [message, setMessage] = useState("");
   function validarCamposObrigatorios() {
     if (dados.nomeContatoJornadaUm.trim().length < 6) {
@@ -120,4 +120,4 @@ function FormSolicitacaoDois({ dados, setDados, avancar, voltar }) {
   );
 }
 
-export default FormSolicitacaoDois;
+export default FormSolicitacaoDadosContato;

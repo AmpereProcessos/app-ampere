@@ -4,7 +4,12 @@ import NumberFloatingInput from "./NumberFloatingInput";
 import { MdOutlineAddCircle } from "react-icons/md";
 import { FiDelete } from "react-icons/fi";
 import SelectFoatingInput from "./SelectFloatingInput";
-function FormSolicitacaoQuatroOFFGRID({ dados, setDados, avancar, voltar }) {
+function FormSolicitacaoEquipamentosBombaSolar({
+  dados,
+  setDados,
+  avancar,
+  voltar,
+}) {
   const [message, setMessage] = useState("");
 
   const [dadosInversores, setDadosInvesores] = useState({
@@ -75,7 +80,7 @@ function FormSolicitacaoQuatroOFFGRID({ dados, setDados, avancar, voltar }) {
       dados.qtdeInversor.trim().length == 0 ||
       dados.potInversor.trim().length == 0
     ) {
-      setMessage("Por favor, adicione ao menos um inversor.");
+      setMessage("Por favor, adicione ao menos um driver.");
       return false;
     }
     if (
@@ -85,24 +90,6 @@ function FormSolicitacaoQuatroOFFGRID({ dados, setDados, avancar, voltar }) {
     ) {
       setMessage("Por favor, adicione ao menos um módulo.");
       return false;
-    }
-    if (!dados.tipoControlador || dados.tipoControlador == "NÃO DEFINIDO") {
-      setMessage("Por favor, preencha o tipo do controladores.");
-      return false;
-    }
-    if (dados.tipoControlador == "SEPARADO") {
-      if (dados.marcaControlador?.trim().length == 0) {
-        setMessage("Por favor, preencha a marca do controlador.");
-        return false;
-      }
-      if (!dados.qtdeControlador || dados.qtdeControlador == 0) {
-        setMessage("Por favor, preencha a quantidade de controladores.");
-        return false;
-      }
-      if (!dados.correnteControlador || dados.correnteControlador == 0) {
-        setMessage("Por favor, preencha a quantidade de controlador.");
-        return false;
-      }
     }
     if (dados.marcaBateria?.trim().length == 0) {
       setMessage("Por favor, preencha a marca da bateria.");
@@ -120,6 +107,22 @@ function FormSolicitacaoQuatroOFFGRID({ dados, setDados, avancar, voltar }) {
       setMessage("Por favor, preencha a capacidade da bateria.");
       return false;
     }
+    if (!dados.marcaBomba || dados.marcaBomba?.trim().length < 3) {
+      setMessage("Por favor, preencha uma marca de bomba válida.");
+      return false;
+    }
+    if (!dados.qtdeBomba || dados.qtdeBomba == 0) {
+      setMessage("Por favor, preencha um quantidade de bombas válida");
+      return false;
+    }
+    if (!dados.potBomba || dados.potBomba == 0) {
+      setMessage("Por favor, preencha uma potência de bomba válida.");
+      return fase;
+    }
+    if (!dados.tipoVenda || dados.tipoVenda == "NÃO DEFINIDO") {
+      setMessage("Por favor, preencha o tipo da venda.");
+      return false;
+    }
     setMessage("");
     return true;
   }
@@ -131,25 +134,24 @@ function FormSolicitacaoQuatroOFFGRID({ dados, setDados, avancar, voltar }) {
   return (
     <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-        DADOS DO SISTEMA OFF GRID
+        DADOS DA BOMBA SOLAR
       </span>
       <div className="flex flex-col border-t border-gray-200 p-2">
         <h1 className="text-center text-[#15599a] text-sm font-bold mt-2">
-          ADICIONE INVERSOR
+          ADICIONE DRIVERS
         </h1>
         <div className="flex flex-col mb-1 px-2">
           <p className="text-center italic text-xs">
-            Você agora pode adicionar inversores de potência e/ou marca
-            diferentes.
+            Você agora pode adicionar drivers de potência e/ou marca diferentes.
           </p>
           <p className="text-center italic text-xs text-[#fead61] font-bold">
-            Preencha as informações dos inversores e clique em adicionar.
+            Preencha as informações dos drivers e clique em adicionar.
           </p>
         </div>
         <div className="flex flex-col lg:grid lg:grid-cols-4 gap-x-2 gap-y-1 mt-3">
           <div className="flex items-center justify-center">
             <TextFloatingInput
-              label={"MARCA DO INVERSOR"}
+              label={"MARCA DO DRIVE"}
               editable={true}
               value={dadosInversores.marca}
               handleChange={(value) =>
@@ -162,7 +164,7 @@ function FormSolicitacaoQuatroOFFGRID({ dados, setDados, avancar, voltar }) {
           </div>
           <div className="flex items-center justify-center">
             <NumberFloatingInput
-              label={"QTDE INVERSOR"}
+              label={"QTDE DE DRIVES"}
               editable={true}
               value={dadosInversores.qtde}
               handleChange={(value) =>
@@ -172,7 +174,7 @@ function FormSolicitacaoQuatroOFFGRID({ dados, setDados, avancar, voltar }) {
           </div>
           <div className="flex items-center justify-center">
             <NumberFloatingInput
-              label={"POTÊNCIA INVERSOR"}
+              label={"POTÊNCIA DRIVE (CV)"}
               unit={"W"}
               editable={true}
               value={dadosInversores.pot}
@@ -199,13 +201,13 @@ function FormSolicitacaoQuatroOFFGRID({ dados, setDados, avancar, voltar }) {
       {arrInv.length > 0 && (
         <div className="flex flex-col mt-2 font-bold">
           <h1 className="text-center text-[#15599a] text-xs">
-            INVERSORES ADICIONADOS
+            DRIVERS ADICIONADOS
           </h1>
           {arrInv.map((inv, index) => (
             <div key={index} className="flex justify-around items-center my-1">
               <p className="text-xs font-bold">{inv.marca}</p>
               <p className="text-xs font-bold">{inv.qtde} UN</p>
-              <p className="text-xs font-bold">{inv.pot} W</p>
+              <p className="text-xs font-bold">{inv.pot} CV</p>
               <button
                 onClick={() => {
                   let arr = arrInv;
@@ -334,71 +336,7 @@ function FormSolicitacaoQuatroOFFGRID({ dados, setDados, avancar, voltar }) {
       )}
       <div className="flex flex-col border-t border-gray-200 p-2">
         <h1 className="text-center text-[#15599a] text-sm font-bold mt-2">
-          ADICIONE CONTROLADORES
-        </h1>
-        <div className="flex flex-col lg:grid lg:grid-cols-4 items-center mt-2">
-          <div className="flex justify-center items-center w-full">
-            <SelectFoatingInput
-              label={"TIPO DO CONTROLADOR"}
-              editable={true}
-              value={
-                dados.tipoControlador ? dados.tipoControlador : "NÃO DEFINIDO"
-              }
-              options={[
-                {
-                  label: "INTEGRADO AO INVERSOR",
-                  value: "INTEGRADO AO INVERSOR",
-                },
-                { label: "COMPRO EM SEPARADO", value: "SEPARADO" },
-                { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-              ]}
-              handleChange={(value) =>
-                setDados({ ...dados, tipoControlador: value })
-              }
-            />
-          </div>
-          {dados.tipoControlador == "SEPARADO" && (
-            <>
-              <div className="flex justify-center items-center w-full">
-                <TextFloatingInput
-                  label={"MARCA DO CONTROLADOR"}
-                  editable={true}
-                  value={dados.marcaControlador}
-                  handleChange={(value) =>
-                    setDados({
-                      ...dados,
-                      marcaControlador: value.toUpperCase(),
-                    })
-                  }
-                />
-              </div>
-              <div className="flex justify-center items-center w-full">
-                <NumberFloatingInput
-                  label={"QTDE DE CONTROLADORES"}
-                  editable={true}
-                  value={dados.qtdeControlador}
-                  handleChange={(value) =>
-                    setDados({ ...dados, qtdeControlador: Number(value) })
-                  }
-                />
-              </div>
-              <div className="flex justify-center items-center w-full">
-                <NumberFloatingInput
-                  label={"CORRENTE DE CARGA (em A)"}
-                  editable={true}
-                  value={dados.correnteControlador}
-                  handleChange={(value) =>
-                    setDados({ ...dados, correnteControlador: Number(value) })
-                  }
-                />
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-      <div className="flex flex-col border-t border-gray-200 p-2">
-        <h1 className="text-center text-[#15599a] text-sm font-bold mt-2">
-          ADICIONE BATERIAIS
+          BATERIAS
         </h1>
         <div className="flex flex-col lg:grid lg:grid-cols-4 items-center mt-2">
           <div className="flex justify-center items-center w-full">
@@ -448,6 +386,58 @@ function FormSolicitacaoQuatroOFFGRID({ dados, setDados, avancar, voltar }) {
           </div>
         </div>
       </div>
+      <div className="flex flex-col border-t border-gray-200 p-2">
+        <h1 className="text-center text-[#15599a] text-sm font-bold mt-2">
+          INFORMAÇÃO SOBRE A BOMBA
+        </h1>
+        <div className="flex flex-col lg:grid lg:grid-cols-3 items-center mt-2">
+          <div className="flex items-center justify-center">
+            <TextFloatingInput
+              label={"MARCA BOMBA"}
+              editable={true}
+              value={dados.marcaBomba}
+              handleChange={(value) =>
+                setDados({ ...dados, marcaBomba: value.toUpperCase() })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <NumberFloatingInput
+              label={"QTDE BOMBA"}
+              editable={true}
+              value={dados.qtdeBomba}
+              handleChange={(value) =>
+                setDados({ ...dados, qtdeBomba: Number(value) })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <NumberFloatingInput
+              label={"POTÊNCIA BOMBA"}
+              editable={true}
+              value={dados.potBomba}
+              handleChange={(value) =>
+                setDados({ ...dados, potBomba: Number(value) })
+              }
+            />
+          </div>
+        </div>
+      </div>
+      <h1 className="col-span-3 text-center font-bold text-[#fead61]">VENDA</h1>
+      <div className="flex items-center justify-center col-span-3 mt-2">
+        <SelectFoatingInput
+          label={"TIPO DE VENDA"}
+          editable={true}
+          value={dados.tipoVenda ? dados.tipoVenda : "NÃO DEFINIDO"}
+          handleChange={(value) => setDados({ ...dados, tipoVenda: value })}
+          options={[
+            { label: "SOMENTE MATERIAL", value: "SOMENTE MATERIAL" },
+            { label: "MATERIAL+INSTALAÇÃO", value: "MATERIAL+INSTALAÇÃO" },
+            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+          ]}
+        />
+      </div>
+
       {message && <p className="text-red-400 italic text-center">{message}</p>}
       <div className="flex w-full justify-center gap-2 flex-wrap mt-2">
         <button
@@ -467,4 +457,4 @@ function FormSolicitacaoQuatroOFFGRID({ dados, setDados, avancar, voltar }) {
   );
 }
 
-export default FormSolicitacaoQuatroOFFGRID;
+export default FormSolicitacaoEquipamentosBombaSolar;

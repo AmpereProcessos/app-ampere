@@ -4,7 +4,13 @@ import { fileTypes } from "../utils/constants";
 import { storage } from "../utils/firebase";
 import { AiOutlineCheck } from "react-icons/ai";
 import Image from "next/image";
-function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
+function FormSolicitacaoDocumentacaoONGRID({
+  dados,
+  setDados,
+  voltar,
+  avancar,
+  prevLinks,
+}) {
   const [images, setImages] = useState({});
   const [checks, setChecks] = useState({
     contaDeEnergiaCheck: false,
@@ -88,7 +94,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
     }
     if (
       dados.tipoDoTitular == "PESSOA FISICA" ||
-      dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)"
+      dados.tipoDeServico != "SISTEMA FOTOVOLTAICO"
     ) {
       if (!images.documentoComFoto) {
         setImagesMsg({
@@ -739,7 +745,7 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
             </>
           )}
           {(dados.tipoDoTitular == "PESSOA FISICA" ||
-            dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)") && (
+            dados.tipoDeServico != "SISTEMA FOTOVOLTAICO") && (
             <>
               <div className="w-fit flex flex-col items-center">
                 <label
@@ -1059,4 +1065,4 @@ function FormSolicitacaoDez({ dados, setDados, voltar, avancar, prevLinks }) {
   );
 }
 
-export default FormSolicitacaoDez;
+export default FormSolicitacaoDocumentacaoONGRID;

@@ -33,7 +33,7 @@ function formatCEP(cep) {
     .replace(/(-\d{3})\d+?$/, "$1");
   return cep;
 }
-function FormSolicitacaoUm({ dados, setDados, avancar }) {
+function FormSolicitacaoDadosContrato({ dados, setDados, avancar }) {
   const [message, setMessage] = useState("");
   async function findCPF(field) {
     axios
@@ -289,7 +289,7 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
             }
           />
         </div>
-        {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
+        {dados.tipoDeServico != "SISTEMA FOTOVOLTAICO" && (
           <div className="flex items-center justify-center col-span-3">
             <SelectFoatingInput
               label={"TIPO DO CLIENTE"}
@@ -338,7 +338,6 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
           />
           {dados.possuiDeficiencia == "SIM" && (
             <>
-              {" "}
               <TextFloatingInput
                 width={"450px"}
                 label={"SE SIM, QUAL ?"}
@@ -440,6 +439,9 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
             }
           />
         </div>
+        <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+          CONTRATO/VENDA
+        </h1>
         <div className="flex items-center justify-center">
           <SelectFloatingInput
             width={"450px"}
@@ -541,7 +543,6 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
             ]}
           />
         </div>
-
         {dados.canalVenda == "INDICAÇÃO DE AMIGO" && (
           <>
             <div className="flex items-center justify-center">
@@ -595,4 +596,4 @@ function FormSolicitacaoUm({ dados, setDados, avancar }) {
   );
 }
 
-export default FormSolicitacaoUm;
+export default FormSolicitacaoDadosContrato;

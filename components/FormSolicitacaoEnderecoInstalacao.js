@@ -12,7 +12,12 @@ function formatCEP(cep) {
     .replace(/(-\d{3})\d+?$/, "$1");
   return cep;
 }
-function FormSolicitacaoTresOFFGRID({ dados, setDados, avancar, voltar }) {
+function FormSolicitacaoEnderecoInstalacao({
+  dados,
+  setDados,
+  avancar,
+  voltar,
+}) {
   const [message, setMessage] = useState();
   async function findCPF(field) {
     axios
@@ -236,4 +241,4 @@ function FormSolicitacaoTresOFFGRID({ dados, setDados, avancar, voltar }) {
   );
 }
 
-export default FormSolicitacaoTresOFFGRID;
+export default FormSolicitacaoEnderecoInstalacao;

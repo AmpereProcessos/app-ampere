@@ -3,189 +3,244 @@ import Image from "next/image";
 import Link from "next/link";
 import Assinatura from "../utils/assinatura.jpg";
 import Logo from "../utils/whitelogo.png";
+import { FiCheck } from "react-icons/fi";
 function Teste() {
-  const defaultProps = {
-    center: {
-      lat: -18.970248641440634,
-      lng: -49.4608558887776,
-    },
-    zoom: 11,
-  };
-  var options = {
-    region: "155",
-    displayMode: "markers",
-    colorAxis: { colors: ["green", "blue"] },
-  };
-  const data = [
-    ["Country", "Population", "Area Percentage"],
-    ["France", 65700000, 50],
-    ["Germany", 81890000, 27],
-    ["Poland", 38540000, 23],
-  ];
   return (
-    <div className="w-[21cm] h-[29.7cm]  p-4 px-12">
-      <h1 className="text-center font-bold text-xl mb-6">ORDEM DE SERVIÇO</h1>
-      <div></div>
-      <div className="grid grid-cols-2">
-        <div className="flex justify-between items-center">
-          <Link href="/">
-            <div className="flex justify-center items-center">
-              <Image height="60px" width="60px" src={Logo} />
-            </div>
-          </Link>
-          <div className="pl-2">
-            <p className="text-center font-bold">
-              AMPÈRE ENERGENHARIA E CONSULTORIA ELÉTRICA - ME
-            </p>
-          </div>
+    <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
+      <div className="grid grid-cols-5 w-full">
+        <div className="col-span-2">
+          <h1 className="text-xl font-bold text-[#15599b]">SEST SENAI</h1>
+          <p className="text-xl font-bold">ITUIUTABA</p>
+          <p className="text-xl font-bold">{new Date().toLocaleDateString()}</p>
         </div>
-        <div className="flex flex-col justify-center gap-y-2 border border-black pl-2">
-          <div className="flex justify-between border-black border-b">
-            <p className="text-xs text-end pr-2">DATA DE ABERTURA</p>
-            <p className="text-xs text-center pr-2">
-              {new Date().toLocaleDateString()}
-            </p>
+        <Link href="/oem/propostas">
+          <div className="flex justify-center">
+            <Image
+              width="80px"
+              height="80px"
+              className="rounded-full cursor-pointer"
+              src={Logo}
+            />
           </div>
+        </Link>
+        <div className="col-span-2 place-self-end">
+          <h1 className="text-xl font-bold">Atendido por:</h1>
+          <p className="font-bold text-center">LEANDRO VIALI</p>
+          <p className="font-bold">(34) 9 9775-7001</p>
         </div>
       </div>
-      <div className="border border-black mt-4">
-        <h1 className="text-center my-2 font-bold">DADOS DO CLIENTE</h1>
-        <div className="grid grid-cols-2 gap-x-2 px-6 pb-2">
-          <div className="grid-rows-3">
-            <div className="grid grid-cols-4">
-              <p className="text-xs font-semibold uppercase">Nome:</p>
-              <p className="text-xs col-span-3 text-center border border-black">
-                Bruno Cavassani
-              </p>
-            </div>
-            <div className="grid grid-cols-4">
-              <p className="text-xs font-semibold uppercase">Endereço:</p>
-              <p className="text-xs col-span-3 text-center border border-black border-t-0">
-                Avenida 21
-              </p>
-            </div>
-            <div className="grid grid-cols-4">
-              <p className="text-xs font-semibold uppercase">Telefone:</p>
-              <p className="text-xs col-span-3 text-center border border-black border-t-0">
-                (34) 99067337
-              </p>
-            </div>
-          </div>
-          <div className="grid-rows-3">
-            <div className="grid grid-cols-4">
-              <p className="text-xs font-semibold uppercase">Bairro:</p>
-              <p className="text-xs col-span-3 text-center border border-black">
-                Novo Horizonte
-              </p>
-            </div>
-            <div className="grid grid-cols-4">
-              <p className="text-xs font-semibold uppercase">Número:</p>
-              <p className="text-xs col-span-3 text-center border border-black border-t-0">
-                78
-              </p>
-            </div>
-            <div className="grid grid-cols-4">
-              <p className="text-xs font-semibold uppercase">Cidade:</p>
-              <p className="text-xs col-span-3 text-center border border-black border-t-0">
-                Ituiutaba
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="border border-black mt-3">
-        <h1 className="text-center my-2 font-bold">DADOS DA INSTALAÇÃO</h1>
-        <div className="flex h-full items-center justify-center">
-          <div className="grid grid-cols-2 gap-x-2 px-6 pb-2">
-            <div className="grid grid-rows-4">
-              <div className="row-span-2 grid grid-cols-5">
-                <p className="text-xs text-center col-span-2 font-semibold uppercase">
-                  TIPO DA ESTRUTURA:
-                </p>
-                <p className="text-xs col-span-3 text-center border border-black">
-                  MADEIRA
-                </p>
-              </div>
-              <div className="row-span-2 grid grid-cols-5">
-                <p className="text-xs text-center col-span-2 font-semibold uppercase">
-                  TIPO DE TELHA:
-                </p>
-                <p className="text-xs text-center col-span-3 border border-black border-t-0">
-                  -
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-rows-4">
-              <div className="row-span-2 grid grid-cols-4 h-full items-center">
-                <p className="text-xs col-span-2 text-center font-semibold uppercase">
-                  NºMÓDULOS
-                </p>
-                <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black border-b-0">
-                  <div>-</div>
-                </div>
-              </div>
-              <div className="row-span-2 grid grid-cols-4 h-full items-center">
-                <p className="text-xs col-span-2 text-center font-semibold uppercase">
-                  TOPOLOGIA
-                </p>
-                <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black">
-                  <div>-</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="border border-black mt-3">
-        <h1 className="text-center  font-bold pt-1">OBSERVAÇÕES DA OS</h1>
-        <div className="flex flex-col justify-center min-h-[50px] items-center">
-          TRATAR GOTEIRA
-          <p className="my-2">
-            AVALIAR SITUAÇÃO E SE POSSÍVEL EXECUTAR PALIATIVO
-          </p>
-        </div>
-      </div>
-      <div className="border border-black mt-3 px-4 pb-4">
-        <h1 className="text-center font-bold py-2">
-          CONFERÊNCIA DOS CHECKLIST
+      <div className="mt-5 border-2 border-black">
+        <h1 className="text-xl w-full text-center bg-[#15599b] text-white font-semibold">
+          ESCOPO DO PROJETO
         </h1>
-        <div className="grid grid-cols-2 pb-2">
-          <div className="grid grid-rows-2">
-            {/**
-             *             <div className="flex gap-x-2">
-              <div className="w-4 h-4 border rounded-md border-black"></div>
-              <p className="text-xs">TROCA DO RAMAL FEITA ?</p>
-            </div>
-            <div className="flex gap-x-2 mt-2">
-              <div className="w-4 h-4 border rounded-md border-black"></div>
-              <p className="text-xs">RELIGAÇÃO DA ENERGIA FEITA ?</p>
-            </div>
-            */}
+        <div className="grid grid-cols-4 divide-x-2 divide-black">
+          <div className="flex flex-col items-center">
+            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
+              Qtd.Módulos - Potência
+            </p>
+            <p>380 - 335W</p>
           </div>
-          <div className="grid grid-rows-2">
-            <div className="flex mt-2 gap-x-2 items-center uppercase">
-              <p className="text-xs">Data execução:</p>
-              <p>____/____/_____</p>
+          <div className="flex flex-col items-center">
+            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
+              Potência kWp
+            </p>
+            <p>127,3 kWp</p>
+          </div>
+          <div className="flex flex-col items-center">
+            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
+              Eficiência atual
+            </p>
+            <p>-</p>
+          </div>
+          <div className="flex flex-col items-center border-r-2 border-black">
+            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
+              Estimativa de perda financeira anual
+            </p>
+            <p>-</p>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col mt-2">
+        <h1 className="w-full text-center text-xl text-[#15599b] font-semibold">
+          CONSEQUÊNCIAS DA FALTA DE MANUTENÇÃO
+        </h1>
+        <div className="flex justify-center">
+          <ul className="font-semibold">
+            <li>1. Perda de geração de energia e eficiência;</li>
+            <li>
+              2. Danificação e perda de vida útil dos modulos por criação de
+              pontos de aquecimento;
+            </li>
+            <li>3. Redução da vida útil dos equipamentos elétricos;</li>
+            <li>
+              4. Riscos de falhas elétricas e mecânicas, ocasionando
+              danificações e até possíveis incêndios;
+            </li>
+            <li>
+              5. Falta de monitoramento e consequentemente o sistema ficar
+              desconectado sem gerar energia;
+            </li>
+            <li>6. Perda da garantia de instalação do sistema fotovoltaico.</li>
+          </ul>
+        </div>
+      </div>
+      <div className="mt-2">
+        <h1 className="w-full bg-[#15599b] text-white font-bold text-center ">
+          SERVIÇOS DE OPERAÇÃO E MANUTENÇÃO
+        </h1>
+        <div className="flex flex-col">
+          <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full sm:px-6 lg:px-8">
+              <div className="overflow-hidden">
+                <table className="min-w-full border text-center">
+                  <thead className="border-b bg-white">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="text-sm font-medium text-[#15599a] px-6 py-2 border-r"
+                      >
+                        SERVIÇOS
+                      </th>
+                      <th
+                        scope="col"
+                        className="text-sm font-medium text-[#15599a] px-6 py-2"
+                      >
+                        PLANO SOL+
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b bg-white">
+                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                        MANUTENÇÃO ELÉTRICA INVERSORES + QUADROS ELÉTRICOS
+                      </td>
+                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap text-center">
+                        <div className="flex justify-center items-center">
+                          <p>2x</p>
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="border-b bg-white">
+                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                        REAPERTO CONEXÕES ELÉTRICAS
+                      </td>
+                      <td className="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap">
+                        <div className="flex justify-center items-center">
+                          <p>2x</p>
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="border-b bg-white">
+                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                        ANÁLISE E CONFERÊNCIA DE GRANDEZAS ELÉTRICAS DOS
+                        EQUIPAMENTOS ELÉTRICOS
+                      </td>
+                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
+                        <div className="flex justify-center items-center">
+                          <p>2x</p>
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="border-b bg-white">
+                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                        CONFIGURAÇÃO E INSTALAÇÃO DE APLICATIVO DE MONITORAMENTO
+                        DE GERAÇÃO DO INVERSOR
+                      </td>
+                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
+                        <div className="flex justify-center items-center">
+                          <p>2x</p>
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="border-b bg-white">
+                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                        LIMPEZA NOS MÓDULOS FOTOVOLTAICOS
+                      </td>
+                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
+                        <div className="flex justify-center items-center">
+                          <p>2x</p>
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="border-b bg-white">
+                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                        MONITORAMENTO DA GERAÇÃO DE ENERGIA POR 12 MESES C/
+                        RELATÓRIOS MENSAIS DE GERAÇÃO
+                      </td>
+                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                        <div className="flex justify-center">
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="border-b bg-white">
+                      <td className="px-2 py-1 text-sm font-medium text-gray-900 border-r">
+                        VALOR DO PLANO ANUAL
+                      </td>
+                      <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
+                        R$ 9218,04
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-        <div className="mt-1 grid gap-x-4 grid-cols-2">
-          <div className="flex flex-col">
-            <p className="text-xs text-start">Autorizado por:</p>
-            <div className="w-[150px] flex justify-center  items-centertext-center">
-              <Image src={Assinatura} />
-            </div>
+      </div>
+      <div>
+        <h1 className="w-full bg-[#15599b] text-white font-bold text-center">
+          ASSINATURA
+        </h1>
+        <div className="mt-10 flex justify-between">
+          <div className="w-[35%]">
             <hr className="border-t-2 border-black" />
-            <p className="text-xs text-center">
-              ASSINATURA DIRETOR DE ENGENHARIA
-            </p>
+            <p className="text-center">Cliente</p>
           </div>
-          <div className="flex flex-col">
-            <p className="text-xs text-start">Realizado por:</p>
-            <hr className="mt-12 border-t-2 border-black" />
-            <p className="text-xs text-center">
-              ASSINATURA TÉCNICO RESPONSÁVEL
-            </p>
+          <div className="w-[35%]">
+            <hr className="border-t-2 border-black" />
+            <p className="text-center">Ampère Energias</p>
           </div>
         </div>
       </div>

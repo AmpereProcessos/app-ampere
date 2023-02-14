@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TextInput from "./TextInput";
 import SelectFloatingInput from "./SelectFloatingInput";
 import NumberFloatingInput from "./NumberFloatingInput";
-function FormSolicitacaoSeis({ avancar, setDados, dados, voltar }) {
+function FormSolicitacaoOeMeSeguro({ avancar, setDados, dados, voltar }) {
   const [message, setMessage] = useState("");
 
   function validarCamposObrigatorios() {
@@ -236,4 +236,4 @@ function FormSolicitacaoSeis({ avancar, setDados, dados, voltar }) {
   );
 }
 
-export default FormSolicitacaoSeis;
+export default FormSolicitacaoOeMeSeguro;

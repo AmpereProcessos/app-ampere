@@ -214,16 +214,19 @@ function ModalFormSolicitacao({
   financeiroEditor,
   getFormularios,
 }) {
+  // Router
   const router = useRouter();
   const [dados, setDados] = useState(solicitacao);
+  // Messages
   const [msg, setMessage] = useState({ text: "", color: "" });
   const [creationMsg, setCreationMsg] = useState({ text: "", color: "" });
   const [emailMsg, setEmailMsg] = useState({ text: "", color: "" });
+
+  // Handling Distribuições
   const [dadosDistribuicao, setDadosDistribuicao] = useState({
     numInstalacao: "",
     excedente: null,
   });
-  const [idVisitaTecnica, setIdVisitaTecnica] = useState("");
   function adicionarDistribuicao() {
     setDados({
       ...dados,
@@ -237,6 +240,28 @@ function ModalFormSolicitacao({
     });
     setDadosDistribuicao({ numInstalacao: "", excedente: 0 });
   }
+  // Handling Visita Tecnica Vinculation
+  const [idVisitaTecnica, setIdVisitaTecnica] = useState("");
+  function vinculateVisitaTecnica() {
+    if (idVisitaTecnica.trim().length < 10) {
+      alert("Preencha um ID válido");
+    } else {
+      axios
+        .post(`/api/solicitacoes/getVisitaTecnica/${idVisitaTecnica}`, {
+          links: 1,
+        })
+        .then((res) => {
+          console.log("VISITA TECNICA", res.data);
+          setDados({
+            ...dados,
+            linksVisita: res.data.links,
+            idVisitaTecnica: idVisitaTecnica,
+          });
+        });
+    }
+  }
+
+  // Handling Alterations
   function saveChanges() {
     axios.put("/api/solicitacoes/contrato", dados).then((res) => {
       setMessage({ text: "Alterações feitas", color: "text-green-500" });
@@ -265,6 +290,93 @@ function ModalFormSolicitacao({
         );
     }
   }
+  // Utils
+  async function notifyCobrancas() {
+    try {
+      let data = await axios.post("/api/notificacoes/1", {
+        destinatario: "6353eb83ef4e1a367a877949",
+        remetente: "SISTEMA",
+        mensagem: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Desde já agradeço, Volts.`,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function sendEmail() {
+    try {
+      await axios.post("/api/email", {
+        emailTo: "contasareceber@ampereenergias.com.br", // amperecontasareceber@gmail.com
+        subject: "SOLICITAÇÃO DE CONTRATO",
+        message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Formulário disponível no link: https://app.ampereenergias.com.br/comercial/publicoFormulario/${dados._id} . Desde já agradeço, Volts.`,
+        copy: ["comercial@ampereenergias.com.br"],
+      });
+
+      setEmailMsg({ text: "Email enviado", color: "text-green-500" });
+    } catch (error) {
+      setEmailMsg({
+        text: `Houve um erro no envio do email - ${error}`,
+        color: "text-red-500",
+      });
+    }
+  }
+  function contractMade() {
+    axios
+      .put("/api/solicitacoes/contrato", {
+        _id: solicitacao._id,
+        confeccionado: true,
+      })
+      .then(() => {
+        getFormularios();
+        setDados({ ...dados, confeccionado: true });
+        setMessage({ text: "Atualização feita!", color: "text-green-500" });
+      })
+      .catch((err) =>
+        setMessage({
+          text: "Um erro ocorreu, tente novamente",
+          color: "text-red-500",
+        })
+      );
+  }
+  function getJoinedInfo({ marca, qtde, pot }) {
+    let splitMarca = marca.split("/");
+    let splitQtde = qtde.split("/");
+    let splitPot = pot.split("/");
+    let holder = [];
+    for (let i = 0; i < splitMarca.length; i++) {
+      let str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`;
+      holder.push(str);
+    }
+    return holder.join(" - ");
+  }
+  function getSummedValues({ qtde, pot }) {
+    let splitQtde = qtde.split("/");
+    let splitPot = pot.split("/");
+    let totalPot = 0;
+    for (let i = 0; i < splitQtde.length; i++) {
+      totalPot = totalPot + (splitQtde[i] * splitPot[i]) / 1000;
+    }
+    let summedModules = splitQtde.reduce(
+      (partialSum, a) => Number(partialSum) + Number(a),
+      0
+    );
+    return { totalPot, summedModules };
+  }
+  function getOeMInfo({ possuiOEM, plano }) {
+    if (possuiOEM == "SIM") {
+      if (plano == "MANUTENÇÃO SIMPLES" || plano == "MANUTENÇÃO SIMLES") {
+        return { duracao: 0, qtdeManutencoes: 1 };
+      } else if (plano == "PLANO SOL") {
+        return { duracao: 1, qtdeManutencoes: 1 };
+      } else if (plano == "PLANO SOL +") {
+        return { duracao: 1, qtdeManutencoes: 2 };
+      } else if (plano == "NÃO SE APLICA") {
+        return { duracao: 0, qtdeManutencoes: 0 };
+      }
+    } else {
+      return { duracao: 0, qtdeManutencoes: 0 };
+    }
+  }
+  // Handling Validations and Project Insert
   var insertObj = {
     nomeDoContrato: dados.nomeDoContrato.toUpperCase(),
     nomeDoProjeto: dados.nomeDoProjeto ? dados.nomeDoProjeto.toUpperCase() : "",
@@ -352,7 +464,7 @@ function ModalFormSolicitacao({
       numeroInstalacao: dados.numeroInstalacao,
       distCreditos: dados.possuiDistribuicao,
       qtdeDistCreditos:
-        dados.distribuicoes.length != 0 ? dados.distribuicoes.length : 0,
+        dados.distribuicoes?.length != 0 ? dados.distribuicoes?.length : 0,
     },
     sistema: {
       qtdeModulos: getSummedValues({
@@ -382,6 +494,9 @@ function ModalFormSolicitacao({
       capacidadeBateria: dados.capacidadeBateria
         ? dados.capacidadeBateria
         : null,
+      marcaBomba: dados.marcaBomba ? dados.marcaBomba : null,
+      qtdeBomba: dados.qtdeBomba ? dados.qtdeBomba : null,
+      potBomba: dados.potBomba ? dados.potBomba : null,
       valorProjeto: dados.valorContrato,
     },
     projeto: {
@@ -501,47 +616,6 @@ function ModalFormSolicitacao({
       visitaTecnica: dados.linksVisita ? dados.linksVisita : undefined,
     },
   };
-  async function notifyCobrancas() {
-    try {
-      let data = await axios.post("/api/notificacoes/1", {
-        destinatario: "6353eb83ef4e1a367a877949",
-        remetente: "SISTEMA",
-        mensagem: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Desde já agradeço, Volts.`,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async function sendEmail() {
-    try {
-      await axios.post("/api/email", {
-        emailTo: "contasareceber@ampereenergias.com.br", // amperecontasareceber@gmail.com
-        subject: "SOLICITAÇÃO DE CONTRATO",
-        message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Formulário disponível no link: https://app.ampereenergias.com.br/comercial/publicoFormulario/${dados._id} . Desde já agradeço, Volts.`,
-        copy: ["comercial@ampereenergias.com.br"],
-      });
-
-      setEmailMsg({ text: "Email enviado", color: "text-green-500" });
-    } catch (error) {
-      setEmailMsg({
-        text: `Houve um erro no envio do email - ${error}`,
-        color: "text-red-500",
-      });
-    }
-  }
-  async function addProject() {
-    await axios.put("/api/solicitacoes/contrato", {
-      _id: solicitacao._id,
-      aprovacao: true,
-      dataAprovacao: new Date().toISOString(),
-    });
-    sendEmail();
-    notifyCobrancas();
-    axios.post("/api/projects/add", insertObj).then((res) => {
-      setCreationMsg({ text: "Projeto adicionado!", color: "text-green-500" });
-    });
-    setDados({ ...dados, aprovacao: true });
-  }
   function validateDocuments() {
     if (!dados.contaDeEnergia) {
       setCreationMsg({
@@ -660,9 +734,18 @@ function ModalFormSolicitacao({
         return false;
       }
     }
+    if (
+      dados.tipoDeServico == "SISTEMA FOTOVOLTAICO" &&
+      dados.idVisitaTecnica?.trim().length < 20
+    ) {
+      setCreationMsg({
+        text: "Por favor, vincule um ID de Visita Técnica",
+        color: "text-red-500",
+      });
+      return false;
+    }
     return true;
   }
-  console.log(insertObj);
   function validateCreation() {
     var holder;
     Object.entries(insertObj).forEach((entry) => {
@@ -699,80 +782,21 @@ function ModalFormSolicitacao({
       }
     }
   }
-  function contractMade() {
-    axios
-      .put("/api/solicitacoes/contrato", {
-        _id: solicitacao._id,
-        confeccionado: true,
-      })
-      .then(() => {
-        getFormularios();
-        setDados({ ...dados, confeccionado: true });
-        setMessage({ text: "Atualização feita!", color: "text-green-500" });
-      })
-      .catch((err) =>
-        setMessage({
-          text: "Um erro ocorreu, tente novamente",
-          color: "text-red-500",
-        })
-      );
-  }
-  function getJoinedInfo({ marca, qtde, pot }) {
-    let splitMarca = marca.split("/");
-    let splitQtde = qtde.split("/");
-    let splitPot = pot.split("/");
-    let holder = [];
-    for (let i = 0; i < splitMarca.length; i++) {
-      let str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`;
-      holder.push(str);
-    }
-    return holder.join(" - ");
-  }
-  function getSummedValues({ qtde, pot }) {
-    let splitQtde = qtde.split("/");
-    let splitPot = pot.split("/");
-    let totalPot = 0;
-    for (let i = 0; i < splitQtde.length; i++) {
-      totalPot = totalPot + (splitQtde[i] * splitPot[i]) / 1000;
-    }
-    let summedModules = splitQtde.reduce(
-      (partialSum, a) => Number(partialSum) + Number(a),
-      0
-    );
-    return { totalPot, summedModules };
-  }
-  function getOeMInfo({ possuiOEM, plano }) {
-    if (possuiOEM == "SIM") {
-      if (plano == "MANUTENÇÃO SIMPLES" || plano == "MANUTENÇÃO SIMLES") {
-        return { duracao: 0, qtdeManutencoes: 1 };
-      } else if (plano == "PLANO SOL") {
-        return { duracao: 1, qtdeManutencoes: 1 };
-      } else if (plano == "PLANO SOL +") {
-        return { duracao: 1, qtdeManutencoes: 2 };
-      } else if (plano == "NÃO SE APLICA") {
-        return { duracao: 0, qtdeManutencoes: 0 };
-      }
-    } else {
-      return { duracao: 0, qtdeManutencoes: 0 };
-    }
-  }
-  function vinculateVisitaTecnica() {
-    if (idVisitaTecnica.trim().length < 10) {
-      alert("Preencha um ID válido");
-    } else {
-      axios
-        .post(`/api/solicitacoes/getVisitaTecnica/${idVisitaTecnica}`, {
-          links: 1,
-        })
-        .then((res) => {
-          console.log("VISITA TECNICA", res.data);
-          setDados({
-            ...dados,
-            linksVisita: res.data.links,
-            idVisitaTecnica: idVisitaTecnica,
-          });
-        });
-    }
+  async function addProject() {
+    await axios.put("/api/solicitacoes/contrato", {
+      _id: solicitacao._id,
+      aprovacao: true,
+      dataAprovacao: new Date().toISOString(),
+    });
+    sendEmail();
+    notifyCobrancas();
+    axios.post("/api/projects/add", insertObj).then((res) => {
+      setCreationMsg({
+        text: "Projeto adicionado!",
+        color: "text-green-500",
+      });
+    });
+    setDados({ ...dados, aprovacao: true });
   }
   console.log(dados);
   return (
@@ -1203,7 +1227,7 @@ function ModalFormSolicitacao({
                   </div>
                   <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
-                      OBS COMERCIAL
+                      OBSERVAÇÃO COMERCIAL
                     </span>
                     <textarea
                       readOnly={!editor}
@@ -1218,6 +1242,33 @@ function ModalFormSolicitacao({
                       className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                     />
                   </div>
+                  {["SISTEMA FOTOVOLTAICO (OFF GRID)", "BOMBA SOLAR"].includes(
+                    dados.tipoDeServico
+                  ) && (
+                    <div className="flex items-center justify-center mt-2">
+                      <SelectInput
+                        label={"TIPO DE VENDA"}
+                        value={
+                          dados.tipoVenda ? dados.tipoVenda : "NÃO DEFINIDO"
+                        }
+                        editable={true}
+                        handleChange={(value) =>
+                          setDados({ ...dados, tipoVenda: value })
+                        }
+                        options={[
+                          {
+                            label: "SOMENTE MATERIAL",
+                            value: "SOMENTE MATERIAL",
+                          },
+                          {
+                            label: "MATERIAL+INSTALAÇÃO",
+                            value: "MATERIAL+INSTALAÇÃO",
+                          },
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        ]}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -1256,6 +1307,7 @@ function ModalFormSolicitacao({
                     />
                     <TextInput
                       label={"LINK PASTA DO DRIVE"}
+                      normalCase={true}
                       editable={editor}
                       value={dados.linkDrive ? dados.linkDrive : ""}
                       handleChange={(value) => {
@@ -1610,7 +1662,18 @@ function ModalFormSolicitacao({
                     <NumberInput
                       label={"POTÊNIA PICO"}
                       editable={editor}
-                      value={dados.potPico}
+                      value={
+                        dados.potPico
+                          ? dados.potPico
+                          : getSummedValues({
+                              qtde: dados.qtdeModulos
+                                ? dados.qtdeModulos.toString()
+                                : "0",
+                              pot: dados.potModulos
+                                ? dados.potModulos.toString()
+                                : "0",
+                            }).totalPot
+                      }
                       handleChange={(value) =>
                         setDados({
                           ...dados,
@@ -1622,7 +1685,18 @@ function ModalFormSolicitacao({
                     <NumberInput
                       label={"GERAÇÃO PREVISTA"}
                       editable={editor}
-                      value={dados.geracaoPrevista}
+                      value={
+                        dados.geracaoPrevista
+                          ? dados.geracaoPrevista
+                          : getSummedValues({
+                              qtde: dados.qtdeModulos
+                                ? dados.qtdeModulos.toString()
+                                : "0",
+                              pot: dados.potModulos
+                                ? dados.potModulos.toString()
+                                : "0",
+                            }).totalPot * 126
+                      }
                       handleChange={(value) =>
                         setDados({ ...dados, geracaoPrevista: value })
                       }
@@ -1661,9 +1735,13 @@ function ModalFormSolicitacao({
                       ]}
                     />
                   </div>
-                  <div className="flex gap-2 justify-around flex-wrap">
+                  <div className="flex gap-2 justify-around flex-wrap mt-2 py-2 border-t border-gray-200">
                     <TextInput
-                      label={"MARCA DO INVERSOR/MICRO"}
+                      label={
+                        dados.tipoDeServico != "BOMBA SOLAR"
+                          ? "MARCA DO INVERSOR/MICRO"
+                          : " MARCA DO DRIVER"
+                      }
                       editable={editor}
                       value={dados.marcaInversor}
                       handleChange={(value) =>
@@ -1671,7 +1749,11 @@ function ModalFormSolicitacao({
                       }
                     />
                     <TextInput
-                      label={"QTDE INVERSOR/MICRO"}
+                      label={
+                        dados.tipoDeServico != "BOMBA SOLAR"
+                          ? "QTDE INVERSOR/MICRO"
+                          : "QTDE DRIVERS"
+                      }
                       editable={editor}
                       value={dados.qtdeInversor}
                       handleChange={(value) =>
@@ -1679,7 +1761,11 @@ function ModalFormSolicitacao({
                       }
                     />
                     <TextInput
-                      label={"POTÊNCIA INVERSOR/MICRO"}
+                      label={
+                        dados.tipoDeServico != "BOMBA SOLAR"
+                          ? "POTÊNCIA INVERSOR/MICRO"
+                          : "POTÊNCIA DRIVER"
+                      }
                       editable={editor}
                       unit={"W"}
                       value={dados.potInversor}
@@ -1690,7 +1776,9 @@ function ModalFormSolicitacao({
                   </div>
                   <div className="flex flex-col text-sm lg:text-base  items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
-                      INFORMAÇÃO MICRO/INVERSOR
+                      {dados.tipoDeServico != "BOMBA SOLAR"
+                        ? "INFORMAÇÃO MICRO/INVERSOR"
+                        : "INFORMAÇÃO DRIVERS"}
                     </span>
                     <p className="text-xs w-full text-center  text-gray-600 outline-none">
                       {getJoinedInfo({
@@ -1836,6 +1924,102 @@ function ModalFormSolicitacao({
                                 ...dados,
                                 correnteControlador: Number(value),
                               })
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200">
+                        <div className="flex justify-center items-center w-full">
+                          <TextInput
+                            label={"MARCA DA BATERIA"}
+                            editable={true}
+                            value={dados.marcaBateria}
+                            handleChange={(value) =>
+                              setDados({
+                                ...dados,
+                                marcaBateria: value.toUpperCase(),
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="flex justify-center items-center w-full">
+                          <NumberInput
+                            label={"QTDE DE BATERIAS"}
+                            editable={true}
+                            value={dados.qtdeBateria}
+                            handleChange={(value) =>
+                              setDados({ ...dados, qtdeBateria: Number(value) })
+                            }
+                          />
+                        </div>
+                        <div className="flex justify-center items-center w-full">
+                          <SelectInput
+                            label={"TIPO DA BATERIA"}
+                            editable={true}
+                            value={
+                              dados.tipoBateria
+                                ? dados.tipoBateria
+                                : "NÃO DEFINIDO"
+                            }
+                            options={[
+                              { label: "LÍTIO", value: "LÍTIO" },
+                              { label: "ESTACIONÁRIA", value: "ESTACIONÁRIA" },
+                              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                            ]}
+                            handleChange={(value) =>
+                              setDados({ ...dados, tipoBateria: value })
+                            }
+                          />
+                        </div>
+                        <div className="flex justify-center items-center w-full">
+                          <NumberInput
+                            label={"CAPACIDADE (em Ah)"}
+                            editable={true}
+                            value={dados.capacidadeBateria}
+                            handleChange={(value) =>
+                              setDados({
+                                ...dados,
+                                capacidadeBateria: Number(value),
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {dados.tipoDeServico == "BOMBA SOLAR" && (
+                    <>
+                      <div className="flex flex-col lg:grid lg:grid-cols-3 items-center mt-2 py-2 border-t border-gray-200">
+                        <div className="flex items-center justify-center">
+                          <TextInput
+                            label={"MARCA BOMBA"}
+                            editable={true}
+                            value={dados.marcaBomba}
+                            handleChange={(value) =>
+                              setDados({
+                                ...dados,
+                                marcaBomba: value.toUpperCase(),
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="flex items-center justify-center">
+                          <NumberInput
+                            label={"QTDE BOMBA"}
+                            editable={true}
+                            value={dados.qtdeBomba}
+                            handleChange={(value) =>
+                              setDados({ ...dados, qtdeBomba: Number(value) })
+                            }
+                          />
+                        </div>
+                        <div className="flex items-center justify-center">
+                          <NumberInput
+                            label={"POTÊNCIA BOMBA"}
+                            editable={true}
+                            value={dados.potBomba}
+                            handleChange={(value) =>
+                              setDados({ ...dados, potBomba: Number(value) })
                             }
                           />
                         </div>
@@ -2768,7 +2952,7 @@ function ModalFormSolicitacao({
                           </button>
                         </div>
                       </div>
-                      {dados.distribuicoes.length > 0 && (
+                      {dados.distribuicoes?.length > 0 && (
                         <div className="flex flex-col gap-2 mt-4">
                           {dados.distribuicoes.map((distribuicao, index) => (
                             <div

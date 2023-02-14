@@ -31,7 +31,12 @@ function formatCEP(cep) {
     .replace(/(-\d{3})\d+?$/, "$1");
   return cep;
 }
-function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
+function FormSolicitacaoDadosConcessionaria({
+  avancar,
+  setDados,
+  dados,
+  voltar,
+}) {
   const [message, setMessage] = useState("");
   async function findCPF(field) {
     axios
@@ -392,4 +397,4 @@ function FormSolicitacaoTres({ avancar, setDados, dados, voltar }) {
   );
 }
 
-export default FormSolicitacaoTres;
+export default FormSolicitacaoDadosConcessionaria;

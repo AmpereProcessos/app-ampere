@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import FormSolicitacaoDadosContrato from "./FormSolicitacaoDadosContrato";
 import FormSolicitacaoDadosContato from "./FormSolicitacaoDadosContato";
-import FormSolicitacaoDadosConcessionaria from "./FormSolicitacaoDadosConcessionaria";
-import FormSolicitacaoEquipamentosONGRID from "./FormSolicitacaoEquipamentosONGRID";
 import FormSolicitacaoDadosEstrutura from "./FormSolicitacaoDadosEstrutura";
-import FormSolicitacaoOeMeSeguro from "./FormSolicitacaoOeMeSeguro";
-import FormSolicitacaoDadosPadrao from "./FormSolicitacaoDadosPadrao";
 import FormSolicitacaoDadosPagamento from "./FormSolicitacaoDadosPagamento";
-import FormSolicitacaoDistribuicoesCredito from "./FormSolicitacaoDistribuicoesCredito";
 import FormSolicitacaoDocumentacaoONGRID from "./FormSolicitacaoDocumentacaoONGRID";
-import VisualizacaoForm from "./VisualizacaoForm";
-function SolicitacaoONGRID({
+import FormSolicitacaoEnderecoInstalacao from "./FormSolicitacaoEnderecoInstalacao";
+import FormSolicitacaoEquipamentosBombaSolar from "./FormSolicitacaoEquipamentosBombaSolar";
+import VisualizacaoFormBombaSolar from "./VisualizacaoFormBolhaSolar";
+function SolicitacaoBombaSolar({
   cliente,
   links,
   formVisitaId,
@@ -56,7 +53,7 @@ function SolicitacaoONGRID({
     cuidadosContatoJornada: "",
     nomeTitularProjeto: "",
     tipoDoTitular: "NÃO DEFINIDO",
-    tipoDaLigacao: "NÃO DEFINIDO",
+    // tipoDaLigacao: "NÃO DEFINIDO",
     tipoDaInstalacao: "NÃO DEFINIDO",
     cepInstalacao: "",
     enderecoInstalacao: "",
@@ -66,8 +63,8 @@ function SolicitacaoONGRID({
     cidadeInstalacao: "NÃO DEFINIDO",
     ufInstalacao: "",
     pontoDeReferenciaInstalacao: "",
-    loginCemigAtende: "",
-    senhaCemigAtende: "",
+    // loginCemigAtende: "",
+    // senhaCemigAtende: "",
     latitude: "",
     longitude: "",
     potPico: null,
@@ -84,19 +81,19 @@ function SolicitacaoONGRID({
     responsavelEstrutura: "NÃO SE APLICA",
     formaPagamentoEstrutura: "NÃO DEFINIDO",
     valorEstrutura: null,
-    possuiOeM: "NÃO DEFINIDO",
-    planoOeM: "NÃO SE APLICA",
-    clienteSegurado: "NÃO DEFINIDO",
-    tempoSegurado: "NÃO SE APLICA",
-    formaPagamentoOeMOuSeguro: "NÃO SE APLICA",
-    valorOeMOuSeguro: null,
-    aumentoDeCarga: "NÃO DEFINIDO",
-    caixaConjugada: "NÃO DEFINIDO",
-    tipoDePadrao: "NÃO DEFINIDO",
-    aumentoDisjuntor: "NÃO",
-    respTrocaPadrao: "NÃO SE APLICA",
-    formaPagamentoPadrao: "NÃO HAVERA TROCA PADRÃO",
-    valorPadrao: null,
+    // possuiOeM: "NÃO DEFINIDO",
+    // planoOeM: "NÃO SE APLICA",
+    // clienteSegurado: "NÃO DEFINIDO",
+    // tempoSegurado: "NÃO SE APLICA",
+    // formaPagamentoOeMOuSeguro: "NÃO SE APLICA",
+    // valorOeMOuSeguro: null,
+    // aumentoDeCarga: "NÃO DEFINIDO",
+    // caixaConjugada: "NÃO DEFINIDO",
+    // tipoDePadrao: "NÃO DEFINIDO",
+    // aumentoDisjuntor: "NÃO",
+    // respTrocaPadrao: "NÃO SE APLICA",
+    // formaPagamentoPadrao: "NÃO HAVERA TROCA PADRÃO",
+    // valorPadrao: null,
     nomePagador: "",
     contatoPagador: "",
     necessidaInscricaoRural: "NÃO",
@@ -116,10 +113,10 @@ function SolicitacaoONGRID({
     necessidadeCodigoFiname: "NÃO",
     formaDePagamento: "NÃO DEFINIDO",
     descricaoNegociacao: "",
-    possuiDistribuicao: "NÃO",
-    distribuicoes: [],
+    // possuiDistribuicao: "NÃO",
+    // distribuicoes: [],
   });
-  console.log("TO AQUI");
+  console.log("SOLICITAÇÃO BOMBA");
   console.log(dados);
   return (
     <>
@@ -139,7 +136,7 @@ function SolicitacaoONGRID({
         />
       )}
       {estagio == 2 && (
-        <FormSolicitacaoDadosConcessionaria
+        <FormSolicitacaoEnderecoInstalacao
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
           dados={dados}
@@ -147,7 +144,7 @@ function SolicitacaoONGRID({
         />
       )}
       {estagio == 3 && (
-        <FormSolicitacaoEquipamentosONGRID
+        <FormSolicitacaoEquipamentosBombaSolar
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
           dados={dados}
@@ -163,22 +160,6 @@ function SolicitacaoONGRID({
         />
       )}
       {estagio == 5 && (
-        <FormSolicitacaoOeMeSeguro
-          voltar={() => setEstagio(estagio - 1)}
-          avancar={() => setEstagio(estagio + 1)}
-          dados={dados}
-          setDados={setDados}
-        />
-      )}
-      {estagio == 6 && (
-        <FormSolicitacaoDadosPadrao
-          voltar={() => setEstagio(estagio - 1)}
-          avancar={() => setEstagio(estagio + 1)}
-          dados={dados}
-          setDados={setDados}
-        />
-      )}
-      {estagio == 7 && (
         <FormSolicitacaoDadosPagamento
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
@@ -186,15 +167,7 @@ function SolicitacaoONGRID({
           setDados={setDados}
         />
       )}
-      {estagio == 8 && (
-        <FormSolicitacaoDistribuicoesCredito
-          voltar={() => setEstagio(estagio - 1)}
-          avancar={() => setEstagio(estagio + 1)}
-          dados={dados}
-          setDados={setDados}
-        />
-      )}
-      {estagio == 9 && (
+      {estagio == 6 && (
         <FormSolicitacaoDocumentacaoONGRID
           dados={dados}
           setDados={setDados}
@@ -203,8 +176,8 @@ function SolicitacaoONGRID({
           prevLinks={links ? links : []}
         />
       )}
-      {estagio == 10 && (
-        <VisualizacaoForm
+      {estagio == 7 && (
+        <VisualizacaoFormBombaSolar
           dados={dados}
           setDados={setDados}
           linksVisita={links ? links : undefined}
@@ -216,4 +189,4 @@ function SolicitacaoONGRID({
   );
 }
 
-export default SolicitacaoONGRID;
+export default SolicitacaoBombaSolar;

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import FormSolicitacaoUm from "./FormSolicitacaoUm";
-import FormSolicitacaoDois from "./FormSolicitacaoDois";
-import FormSolicitacaoQuatroOFFGRID from "./FormSolicitacaoQuatroOFFGRID";
-import FormSolicitacaoCinco from "./FormSolicitacaoCinco";
-import FormSolicitacaoOito from "./FormSolicitacaoOito";
-import FormSolicitacaoDez from "./FormSolicitacaoDez";
-import FormSolicitacaoTresOFFGRID from "./FormSolicitacaoTresOFFGRID";
+import FormSolicitacaoDadosContrato from "./FormSolicitacaoDadosContrato";
+import FormSolicitacaoDadosContato from "./FormSolicitacaoDadosContato";
+import FormSolicitacaoEquipamentosOFFGRID from "./FormSolicitacaoEquipamentosOFFGRID";
+import FormSolicitacaoDadosEstrutura from "./FormSolicitacaoDadosEstrutura";
+import FormSolicitacaoDadosPagamento from "./FormSolicitacaoDadosPagamento";
+import FormSolicitacaoDocumentacaoONGRID from "./FormSolicitacaoDocumentacaoONGRID";
+import FormSolicitacaoEnderecoInstalacao from "./FormSolicitacaoEnderecoInstalacao";
 import VisualizacaoOFFGrid from "./VisualizacaoFormOFFGRID";
 function SolicitacaoOFFGRID({
   cliente,
@@ -121,14 +121,14 @@ function SolicitacaoOFFGRID({
   return (
     <>
       {estagio == 0 && (
-        <FormSolicitacaoUm
+        <FormSolicitacaoDadosContrato
           avancar={() => setEstagio(estagio + 1)}
           dados={dados}
           setDados={setDados}
         />
       )}
       {estagio == 1 && (
-        <FormSolicitacaoDois
+        <FormSolicitacaoDadosContato
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
           dados={dados}
@@ -136,7 +136,7 @@ function SolicitacaoOFFGRID({
         />
       )}
       {estagio == 2 && (
-        <FormSolicitacaoTresOFFGRID
+        <FormSolicitacaoEnderecoInstalacao
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
           dados={dados}
@@ -144,7 +144,7 @@ function SolicitacaoOFFGRID({
         />
       )}
       {estagio == 3 && (
-        <FormSolicitacaoQuatroOFFGRID
+        <FormSolicitacaoEquipamentosOFFGRID
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
           dados={dados}
@@ -152,7 +152,7 @@ function SolicitacaoOFFGRID({
         />
       )}
       {estagio == 4 && (
-        <FormSolicitacaoCinco
+        <FormSolicitacaoDadosEstrutura
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
           dados={dados}
@@ -160,7 +160,7 @@ function SolicitacaoOFFGRID({
         />
       )}
       {estagio == 5 && (
-        <FormSolicitacaoOito
+        <FormSolicitacaoDadosPagamento
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
           dados={dados}
@@ -168,7 +168,7 @@ function SolicitacaoOFFGRID({
         />
       )}
       {estagio == 6 && (
-        <FormSolicitacaoDez
+        <FormSolicitacaoDocumentacaoONGRID
           dados={dados}
           setDados={setDados}
           avancar={() => setEstagio(estagio + 1)}

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ModalFormSolicitacao from "../../components/ModalFormSolicitacao";
+import TagTipoDeServico from "../../components/TagTipoDeServico";
 import { useRouter } from "next/router";
 import Select from "react-select";
 import { tiposDeServico, vendedores } from "../../utils/constants";
@@ -188,11 +189,9 @@ function FormulariosSolicitacao({ credentials, setCredentials }) {
               solicitacao.aprovacao
             )} w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 hover:bg-blue-100`}
           >
-            <div className="bg-[#15599a] text-[#fead61] text-xs font-bold text-center rounded-br-md rounded-bl-md">
-              {solicitacao.tipoDeServico}
-            </div>
+            <TagTipoDeServico tipoDeServico={solicitacao.tipoDeServico} />
             <div className="flex flex-col p-2">
-              <div className="flex justify-center">
+              <div className="flex justify-between">
                 <h1 className="text-xs text-[#15599a] font-bold">
                   {solicitacao.nomeDoContrato}
                 </h1>

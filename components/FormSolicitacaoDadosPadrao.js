@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TextInput from "./TextInput";
 import SelectFloatingInput from "./SelectFloatingInput";
 import NumberFloatingInput from "./NumberFloatingInput";
-function FormSolicitacaoSete({ avancar, setDados, dados, voltar }) {
+function FormSolicitacaoDadosPadrao({ avancar, setDados, dados, voltar }) {
   const [message, setMessage] = useState("");
   function validarCamposObrigatorios() {
     if (dados.aumentoDeCarga == "NÃO DEFINIDO") {
@@ -276,4 +276,4 @@ function FormSolicitacaoSete({ avancar, setDados, dados, voltar }) {
   );
 }
 
-export default FormSolicitacaoSete;
+export default FormSolicitacaoDadosPadrao;

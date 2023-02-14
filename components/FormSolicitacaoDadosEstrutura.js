@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SelectFloatingInput from "./SelectFloatingInput";
 import NumberFloatingInput from "./NumberFloatingInput";
 
-function FormSolicitacaoCinco({ avancar, setDados, dados, voltar }) {
+function FormSolicitacaoDadosEstrutura({ avancar, setDados, dados, voltar }) {
   const [message, setMessage] = useState("");
   function validarCamposObrigatorios() {
     if (dados.tipoEstrutura == "NÃO DEFINIDO") {
@@ -203,4 +203,4 @@ function FormSolicitacaoCinco({ avancar, setDados, dados, voltar }) {
   );
 }
 
-export default FormSolicitacaoCinco;
+export default FormSolicitacaoDadosEstrutura;

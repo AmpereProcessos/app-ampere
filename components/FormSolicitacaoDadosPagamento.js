@@ -29,7 +29,7 @@ function formatCEP(cep) {
     .replace(/(-\d{3})\d+?$/, "$1");
   return cep;
 }
-function FormSolicitacaoOito({ dados, setDados, avancar, voltar }) {
+function FormSolicitacaoDadosPagamento({ dados, setDados, avancar, voltar }) {
   const [message, setMessage] = useState("");
   const [idemContrato, setIdemContrato] = useState("NÂO");
   function validarCamposObrigatorios() {
@@ -535,4 +535,4 @@ function FormSolicitacaoOito({ dados, setDados, avancar, voltar }) {
   );
 }
 
-export default FormSolicitacaoOito;
+export default FormSolicitacaoDadosPagamento;

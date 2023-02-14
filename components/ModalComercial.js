@@ -23,6 +23,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import NotificationCreationBlock from "./NotificationCreationBlock";
 import AnexoArquivo from "./AnexoArquivo";
+import InfoSistemaBlock from "./InfoSistemaBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -169,8 +170,8 @@ function ModalComercial({
   //     getVisitaInfo(infoHolder.idVisitaTecnica);
   //   }
   // }, []);
-  console.log(changes);
-  console.log(infoHolder);
+  console.log("changes", changes);
+  console.log("infoHolder", infoHolder);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -2121,7 +2122,7 @@ function ModalComercial({
                   )}
                 </div>
               </div>
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+              {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   SISTEMA
                 </span>
@@ -2518,7 +2519,14 @@ function ModalComercial({
                     </div>
                   </>
                 )}
-              </div>
+              </div> */}
+              <InfoSistemaBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+              />
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   PROJETO

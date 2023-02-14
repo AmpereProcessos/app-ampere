@@ -579,6 +579,18 @@ function Projetos() {
               options={[
                 { label: "DATA DE PAGAMENTO", value: "compra.dataPagamento" },
                 {
+                  label: "DATA ASS.CONTRATO",
+                  value: "contrato.dataAssinatura",
+                },
+                {
+                  label: "DATA ASS.DOCUMENTAÇÃO",
+                  value: "projeto.dataAssDocumentacao",
+                },
+                {
+                  label: "TROCA DO MEDIDOR",
+                  value: "medidor.data",
+                },
+                {
                   label: "APROVAÇÃO DO PARECER",
                   value: "parecer.dataParecerDeAcesso",
                 },
@@ -698,6 +710,28 @@ function Projetos() {
                       ? `${getDateDiff(
                           new Date(),
                           new Date(project.contrato.dataAssinatura)
+                        )} DIAS`
+                      : "-"}
+                  </p>
+                </div>
+                {project.parecer.statusDoParecerDeAcesso ==
+                  "PARECER DE ACESSO COM OBRAS" && (
+                  <div className="w-full flex flex-col">
+                    <span className="text-xxs text-center">DIAS DE OBRA</span>
+                    <p className={`text-xs uppercase text-red-500 text-center`}>
+                      {project.parecer.qtdeDiasObraDeRede
+                        ? `${project.parecer.qtdeDiasObraDeRede} DIAS`
+                        : "-"}
+                    </p>
+                  </div>
+                )}
+                <div className="w-full flex flex-col">
+                  <span className="text-xxs text-end">DESDE APROV.PARECER</span>
+                  <p className={`text-xs uppercase text-red-500 text-end`}>
+                    {project.parecer.dataParecerDeAcesso
+                      ? `${getDateDiff(
+                          new Date(),
+                          new Date(project.parecer.dataParecerDeAcesso)
                         )} DIAS`
                       : "-"}
                   </p>

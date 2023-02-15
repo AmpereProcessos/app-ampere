@@ -395,10 +395,10 @@ function Teste() {
                     <p className="hidden lg:block text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       TRANSFERIDO
                     </p>
-                    <p className="hidden lg:block text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
+                    <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       RECEBIDO
                     </p>
-                    <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
+                    <p className="hidden lg:block text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
                       COMPENSADO
                     </p>
                     <p className="text-xxs font-bold text-white bg-[#15599a] border-r border-white text-center p-1">
@@ -454,14 +454,14 @@ function Teste() {
                               .replace(".", ",")
                           : "-"}
                       </p>
-                      <p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+                      <p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
                         {item.recebimento != "0.0"
                           ? Number(item.recebimento)
                               .toFixed(2)
                               .replace(".", ",")
                           : "-"}
                       </p>
-                      <p className="text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
+                      <p className="hidden lg:block text-xxs font-bold text-gray-600 text-center border-r border-gray-200 p-1">
                         {item.compensacao != "0.0"
                           ? Number(item.compensacao)
                               .toFixed(2)

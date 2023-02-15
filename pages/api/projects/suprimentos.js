@@ -27,7 +27,6 @@ export default async function handler(req, res) {
             // },
             "contrato.status": "ASSINADO",
             "obra.statusDaObra": { $ne: "CONCLUIDA" },
-            "estruturaPersonalizada.aplicavel": "SIM",
           },
         },
         {

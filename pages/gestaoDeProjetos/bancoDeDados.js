@@ -393,6 +393,14 @@ function BandoDeDados({ data }) {
                   value: "contrato.dataAssinatura",
                 },
                 {
+                  label: "DATA DE ENTREGA",
+                  value: "compra.dataEntrega",
+                },
+                {
+                  label: "DATA DE PREV.ENTREGA",
+                  value: "compra.previsaoEntrega",
+                },
+                {
                   label: "DATA PAG.KIT",
                   value: "compra.dataPagamento",
                 },

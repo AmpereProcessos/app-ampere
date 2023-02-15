@@ -9,6 +9,13 @@ function FormSolicitacaoDadosEstrutura({ avancar, setDados, dados, voltar }) {
       setMessage("Por favor, preencha o tipo da estrutura");
       return false;
     }
+    if (
+      dados.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" &&
+      (!dados.materialEstrutura || dados.materialEstrutura == "NÃO DEFINIDO")
+    ) {
+      setMessage("Por favor, preencha sobre o material da estrutura.");
+      return false;
+    }
     if (dados.estruturaAmpere == "NÃO DEFINIDO") {
       setMessage(
         "Por favor, preencha sobre a necessidade de adequações ou construção de estrutura."
@@ -109,6 +116,24 @@ function FormSolicitacaoDadosEstrutura({ avancar, setDados, dados, voltar }) {
           />
         </div>
         <div className="flex items-center justify-center">
+          <SelectFloatingInput
+            label={"MATERIAL DA ESTRUTURA"}
+            width={"450px"}
+            editable={true}
+            options={[
+              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              { label: "MADEIRA", value: "MADEIRA" },
+              { label: "FERRO", value: "FERRO" },
+            ]}
+            value={
+              dados.materialEstrutura ? dados.materialEstrutura : "NÃO DEFINIDO"
+            }
+            handleChange={(value) =>
+              setDados({ ...dados, materialEstrutura: value })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center col-span-3">
           <SelectFloatingInput
             width={"450px"}
             label={"RESPONSÁVEL PELA ESTRUTURA"}

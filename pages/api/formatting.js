@@ -58,6 +58,7 @@ export default async function handler(req, res) {
       estruturaPersonalizada: {
         aplicavel: project.possuiestruturapersonalisada,
         tipo: project.tipoestrutura,
+        materialEstrutura: project.materialEstrutura,
         respPagamento: project.pagestruturapersonalizada,
         valor: project.valorestrutura,
         dataEntrega: project.dataentregaestrutura,

@@ -249,12 +249,14 @@ function ModalFormSolicitacao({
       axios
         .post(`/api/solicitacoes/getVisitaTecnica/${idVisitaTecnica}`, {
           links: 1,
+          tipoEstrutura: 1,
         })
         .then((res) => {
           console.log("VISITA TECNICA", res.data);
           setDados({
             ...dados,
             linksVisita: res.data.links,
+            materialEstrutura: res.data.tipoEstrutura,
             idVisitaTecnica: idVisitaTecnica,
           });
         });
@@ -2117,6 +2119,23 @@ function ModalFormSolicitacao({
                       value={dados.tipoEstrutura}
                       handleChange={(value) =>
                         setDados({ ...dados, tipoEstrutura: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"MATERIAL DA ESTRUTURA"}
+                      editable={editor}
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "MADEIRA", value: "MADEIRA" },
+                        { label: "FERRO", value: "FERRO" },
+                      ]}
+                      value={
+                        dados.materialEstrutura
+                          ? dados.materialEstrutura
+                          : "NÃO DEFINIDO"
+                      }
+                      handleChange={(value) =>
+                        setDados({ ...dados, materialEstrutura: value })
                       }
                     />
                     <SelectInput

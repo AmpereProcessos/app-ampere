@@ -653,7 +653,7 @@ function Obras() {
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-xxs">FIM DO PARECEM EM</span>
+                  <span className="text-xxs">FIM DO PARECER EM</span>
                   <p className="text-xs text-[#15599a] text-center uppercase">
                     {project.parecer.dataParecerDeAcesso
                       ? 120 -

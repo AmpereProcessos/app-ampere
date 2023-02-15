@@ -14,6 +14,7 @@ import SolicitacaoONGRID from "../../components/SolicitacaoONGRID";
 import SolicitacaoOFFGRID from "../../components/SolicitacaoOFFGRID";
 import SolicitacaoBombaSolar from "../../components/SolicitacaoBombaSolar";
 import SolicitacaoOutrosServicos from "../../components/SolicitacaoOutrosServicos";
+import SolicitacaoOeM from "../../components/SolicitacaoOeM";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -193,6 +194,16 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             tipoDeServico={info.tipoDeServico}
           />
         )}
+        {/* {info.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
+          <SolicitacaoOeM
+            nomeVendedor={info.nomeVendedor}
+            telefoneVendedor={info.telefoneVendedor}
+            cliente={cliente}
+            links={links}
+            formVisitaId={formVisitaId}
+            tipoDeServico={info.tipoDeServico}
+          />
+        )} */}
         {![
           "SISTEMA FOTOVOLTAICO",
           "SISTEMA FOTOVOLTAICO (OFF GRID)",

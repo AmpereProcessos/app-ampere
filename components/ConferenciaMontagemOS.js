@@ -450,7 +450,7 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
           [`ordensDeServico.${index}.conferencias.anotacoes`]:
             infoHolder.anotacoes,
           [`ordensDeServico.${index}.dataDeFechamento`]: new Date(),
-          [`links.manutencaoPreventiva`]: links,
+          [`links.montagem`]: links,
         });
         setMsg({
           text: "Ordem de serviço finalizada !",

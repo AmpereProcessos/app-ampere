@@ -131,13 +131,14 @@ function ComissionamentoCard({ info, credentials, getProjects }) {
         <button
           onClick={handleChanges}
           className={`font-bold ${
-            !info.comissionamento.projetos &&
+            !info.comissionamento?.projetos &&
             changes["comissionamento.projetos"]
               ? "border border-green-500 text-green-500 hover:text-white hover:bg-green-500"
               : "border border-[#15599a] text-[#15599a] hover:text-white hover:bg-[#15599a]"
           }  p-2 rounded`}
         >
-          {!info.comissionamento.projetos && changes["comissionamento.projetos"]
+          {!info.comissionamento?.projetos &&
+          changes["comissionamento.projetos"]
             ? "FINALIZAR"
             : "SALVAR"}
         </button>

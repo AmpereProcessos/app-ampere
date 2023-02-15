@@ -8,6 +8,8 @@ import FormSolicitacaoEnderecoInstalacao from "./FormSolicitacaoEnderecoInstalac
 import FormSolicitacaoEquipamentosONGRID from "./FormSolicitacaoEquipamentosONGRID";
 import VisualizacaoFormBombaSolar from "./VisualizacaoFormBolhaSolar";
 import FormSolicitacaoPagamentoOeM from "./FormSolicitacaoPagamentoOeM";
+import FormSolicitacaoDocumentacaoOeM from "./FormSolicitacaoDocumentacaoOeM";
+import VisualizacaoForm from "./VisualizacaoForm";
 function SolicitacaoOeM({
   cliente,
   links,
@@ -16,7 +18,7 @@ function SolicitacaoOeM({
   nomeVendedor,
   telefoneVendedor,
 }) {
-  const [estagio, setEstagio] = useState(4);
+  const [estagio, setEstagio] = useState(0);
   const [dados, setDados] = useState({
     nomeVendedor: nomeVendedor,
     nomeDoProjeto: cliente ? cliente : null,
@@ -82,8 +84,8 @@ function SolicitacaoOeM({
     responsavelEstrutura: "NÃO SE APLICA",
     formaPagamentoEstrutura: "NÃO DEFINIDO",
     valorEstrutura: null,
-    // possuiOeM: "NÃO DEFINIDO",
-    // planoOeM: "NÃO SE APLICA",
+    possuiOeM: "NÃO DEFINIDO",
+    planoOeM: "NÃO SE APLICA",
     // clienteSegurado: "NÃO DEFINIDO",
     // tempoSegurado: "NÃO SE APLICA",
     // formaPagamentoOeMOuSeguro: "NÃO SE APLICA",
@@ -167,8 +169,8 @@ function SolicitacaoOeM({
           setDados={setDados}
         />
       )}
-      {estagio == 6 && (
-        <FormSolicitacaoDocumentacaoONGRID
+      {estagio == 5 && (
+        <FormSolicitacaoDocumentacaoOeM
           dados={dados}
           setDados={setDados}
           avancar={() => setEstagio(estagio + 1)}
@@ -176,8 +178,8 @@ function SolicitacaoOeM({
           prevLinks={links ? links : []}
         />
       )}
-      {estagio == 7 && (
-        <VisualizacaoFormBombaSolar
+      {estagio == 6 && (
+        <VisualizacaoForm
           dados={dados}
           setDados={setDados}
           linksVisita={links ? links : undefined}

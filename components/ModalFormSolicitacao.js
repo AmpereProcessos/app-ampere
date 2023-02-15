@@ -2310,7 +2310,11 @@ function ModalFormSolicitacao({
                           value: "NÃO DEFINIDO",
                         },
                       ]}
-                      value={dados.clienteSegurado}
+                      value={
+                        dados.clienteSegurado
+                          ? dados.clienteSegurado
+                          : "NÃO DEFINIDO"
+                      }
                       handleChange={(value) =>
                         setDados({ ...dados, clienteSegurado: value })
                       }

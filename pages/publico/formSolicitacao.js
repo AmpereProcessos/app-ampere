@@ -194,7 +194,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             tipoDeServico={info.tipoDeServico}
           />
         )}
-        {/* {info.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
+        {info.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
           <SolicitacaoOeM
             nomeVendedor={info.nomeVendedor}
             telefoneVendedor={info.telefoneVendedor}
@@ -203,10 +203,11 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             formVisitaId={formVisitaId}
             tipoDeServico={info.tipoDeServico}
           />
-        )} */}
+        )}
         {![
           "SISTEMA FOTOVOLTAICO",
           "SISTEMA FOTOVOLTAICO (OFF GRID)",
+          "OPERAÇÃO E MANUTENÇÃO",
           "BOMBA SOLAR",
         ].includes(info.tipoDeServico) && (
           <SolicitacaoOutrosServicos

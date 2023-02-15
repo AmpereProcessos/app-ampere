@@ -1,7 +1,261 @@
 import React, { useState } from "react";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { fileTypes } from "../utils/constants";
+import { storage } from "../utils/firebase";
+function FormSolicitacaoDocumentacaoOeM({ dados, setDados, voltar, avancar }) {
+  const savingRef = dados.nomeDoProjeto
+    ? `clientes/${dados.nomeDoProjeto}`
+    : `formSolicitacao/${dados.nomeDoContrato}`;
 
-function FormSolicitacaoDocumentacaoOeM() {
   const [images, setImages] = useState({});
+  const [imagesMsg, setImagesMsg] = useState({
+    text: "",
+    color: "",
+  });
+  const [allChecked, setAllChecked] = useState(false);
+
+  function validateDocuments() {
+    if (!images.propostaComercial) {
+      setImagesMsg({
+        text: "Por favor, anexe o arquivo da proposta comercial.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.documentoComFoto) {
+      setImagesMsg({
+        text: "Por favor, anexe um documento com foto do cliente.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoDaInstalacao == "URBANO" && !images.iptu) {
+      setImagesMsg({
+        text: "Por favor, anexe o arquivo do IPTU.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoDaInstalacao == "RURAL" && !images.car) {
+      setImagesMsg({
+        text: "Por favor, anexe o arquivo do CAR.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoDaInstalacao == "RURAL" && !images.matricula) {
+      setImagesMsg({
+        text: "Por favor, anexe o arquivo da matricula.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoDoTitular == "PESSOA JURIDICA" && !images.contratoSocial) {
+      setImagesMsg({
+        text: "Por favor, anexe o contrato social.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (dados.tipoDoTitular == "PESSOA JURIDICA" && !images.cartaoCnpj) {
+      setImagesMsg({
+        text: "Por favor, anexe o cartão CNPJ.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (
+      dados.tipoDoTitular == "PESSOA JURIDICA" &&
+      !images.comprovanteEnderecoRepresentante
+    ) {
+      setImagesMsg({
+        text: "Por favor, anexe o comprovante de endereço do representante legal.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (
+      dados.tipoDoTitular == "PESSOA JURIDICA" &&
+      !images.documentoComFotoSocios
+    ) {
+      setImagesMsg({
+        text: "Por favor, anexe o documento com foto dos sócios (se necessário, junte-os em um único PDF).",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    setImagesMsg({ text: "", color: "" });
+    return true;
+  }
+  async function uploadDocs() {
+    if (validateDocuments()) {
+      var holder;
+      var links = [];
+      setImagesMsg({
+        text: "Processando...",
+        color: "text-[#15599a]",
+      });
+      try {
+        if (images.propostaComercial) {
+          var imageRef = ref(
+            storage,
+            `${savingRef}/propostaComercial${(Math.random() * 10000).toFixed(
+              0
+            )}`
+          );
+          let res = await uploadBytes(imageRef, images.propostaComercial);
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          links.push({
+            title: "PROPOSTA COMERCIAL",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
+        }
+        if (images.documentoComFoto) {
+          var imageRef = ref(
+            storage,
+            `${savingRef}/documentoComFoto${(Math.random() * 10000).toFixed(0)}`
+          );
+          let res = await uploadBytes(imageRef, images.documentoComFoto);
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          links.push({
+            title: "DOCUMENTO COM FOTO",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
+        }
+        if (images.iptu) {
+          var imageRef = ref(
+            storage,
+            `${savingRef}/iptu${(Math.random() * 10000).toFixed(0)}`
+          );
+          let res = await uploadBytes(imageRef, images.iptu);
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          links.push({
+            title: "IPTU",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
+        }
+        if (images.car) {
+          var imageRef = ref(
+            storage,
+            `${savingRef}/car${(Math.random() * 10000).toFixed(0)}`
+          );
+          let res = await uploadBytes(imageRef, images.car);
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          links.push({
+            title: "IPTU",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
+        }
+        if (images.matricula) {
+          var imageRef = ref(
+            storage,
+            `${savingRef}/matricula${(Math.random() * 10000).toFixed(0)}`
+          );
+          let res = await uploadBytes(imageRef, images.matricula);
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          links.push({
+            title: "IPTU",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
+        }
+        if (images.contratoSocial) {
+          var imageRef = ref(
+            storage,
+            `${savingRef}/contratoSocial${(Math.random() * 10000).toFixed(0)}`
+          );
+          let res = await uploadBytes(imageRef, images.contratoSocial);
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          links.push({
+            title: "CONTRATO SOCIAL",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
+        }
+        if (images.cartaoCnpj) {
+          var imageRef = ref(
+            storage,
+            `${savingRef}/cartaoCnpj${(Math.random() * 10000).toFixed(0)}`
+          );
+          let res = await uploadBytes(imageRef, images.cartaoCnpj);
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          links.push({
+            title: "CARTÃO CNPJ",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
+        }
+        if (images.comprovanteEnderecoRepresentante) {
+          var imageRef = ref(
+            storage,
+            `${savingRef}/comprovanteEnderecoRepresentante${(
+              Math.random() * 10000
+            ).toFixed(0)}`
+          );
+          let res = await uploadBytes(
+            imageRef,
+            images.comprovanteEnderecoRepresentante
+          );
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          links.push({
+            title: "COMPROVANTE DE ENDEREÇO DO REPRESENTANTE",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
+        }
+        if (images.documentoComFotoSocios) {
+          var imageRef = ref(
+            storage,
+            `${savingRef}/documentoComFotoSocios${(
+              Math.random() * 10000
+            ).toFixed(0)}`
+          );
+          let res = await uploadBytes(imageRef, images.documentoComFotoSocios);
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          links.push({
+            title: "DOCUMENTO COM FOTO DOS SÓCIOS",
+            link: url,
+            format: fileTypes[res.metadata.contentType]
+              ? fileTypes[res.metadata.contentType].title
+              : "INDEFINIDO",
+          });
+        }
+      } catch (error) {
+        holder == "ERRO";
+        setImagesMsg({
+          text: "Houve um erro no envio das imagens. Por favor, tente novamente.",
+          color: "text-green-500",
+        });
+      }
+      if (holder === undefined) {
+        setAllChecked(true);
+        setDados({ ...dados, links: links });
+        setImagesMsg({ text: "Imagens enviadas!", color: "text-green-500" });
+      }
+    }
+  }
+  console.log("DOC OEM", dados);
+  console.log(dados.tipoDaInstalacao);
   return (
     <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
@@ -361,6 +615,34 @@ function FormSolicitacaoDocumentacaoOeM() {
               </div>
             </div>
           </>
+        )}
+      </div>
+      {imagesMsg.text && (
+        <p className={`text-center italic ${imagesMsg.color}`}>
+          {imagesMsg.text}
+        </p>
+      )}
+      <div className="flex justify-center mt-2 gap-2">
+        <button
+          onClick={voltar}
+          className="bg-[#15599a] rounded p-2 font-bold text-white"
+        >
+          VOLTAR
+        </button>
+        {allChecked ? (
+          <button
+            onClick={avancar}
+            className="w-fit text-center p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold "
+          >
+            PRÓXIMA ETAPA
+          </button>
+        ) : (
+          <button
+            onClick={uploadDocs}
+            className="p-2 bg-[#fead61] hover:bg-[#15599a] hover:text-white rounded font-bold"
+          >
+            ENVIAR DOCUMENTOS
+          </button>
         )}
       </div>
     </div>

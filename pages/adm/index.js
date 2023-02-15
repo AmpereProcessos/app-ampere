@@ -3,10 +3,10 @@ import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
-import ModalADM from "../../components/ModalADM";
-import DateInput from "../../components/DateInput";
-import { equipesTecnicas, statusLiberacao } from "../../utils/constants";
 import Link from "next/link";
+import ModalADM from "../../components/ModalADM";
+import TagTipoDeServico from "../../components/TagTipoDeServico";
+import { equipesTecnicas, statusLiberacao } from "../../utils/constants";
 import { AppContext } from "../../context/AppContext";
 function Administracao() {
   const router = useRouter();
@@ -305,38 +305,43 @@ function Administracao() {
               handleOpenModal(project._id);
             }}
             key={project._id}
-            className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+            className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 hover:bg-blue-100"
           >
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
-              <p className="text-xs text-[#15599a]">#{project.qtde}</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="hidden lg:flex lg:flex-col">
-                <span className="text-xxs">CONTRATO</span>
-                <p className="text-xs text-yellow-500">
-                  {project.contrato?.status && project.contrato?.status}
+            <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
+            <div className="flex flex-col p-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-700">
+                  {project.nomeDoContrato}
                 </p>
+                <p className="text-xs text-[#15599a]">#{project.qtde}</p>
               </div>
-              <div>
-                <span className="text-xxs">VENDEDOR</span>
-                <p className="text-xs text-[#15599a]">
-                  {project.vendedor && project.vendedor.nome}
-                </p>
+              <div className="flex items-center justify-between">
+                <div className="hidden lg:flex lg:flex-col">
+                  <span className="text-xxs">CONTRATO</span>
+                  <p className="text-xs text-yellow-500">
+                    {project.contrato?.status && project.contrato?.status}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xxs">VENDEDOR</span>
+                  <p className="text-xs text-[#15599a]">
+                    {project.vendedor && project.vendedor.nome}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xxs">TIPO DE PAGAMENTO</span>
-                <p className="text-xs text-gray-600">
-                  {project.pagamento?.forma && project.pagamento.forma}
-                </p>
-              </div>
-              <div>
-                <span className="text-xxs">PAGAMENTO</span>
-                <p className="text-xs text-gray-600">
-                  {project.pagamento?.status ? project.pagamento.status : "-"}
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-xxs">TIPO DE PAGAMENTO</span>
+                  <p className="text-xs text-gray-600">
+                    {project.pagamento?.forma && project.pagamento.forma}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-xxs">PAGAMENTO</span>
+                  <p className="text-xs text-gray-600">
+                    {project.pagamento?.status ? project.pagamento.status : "-"}
+                  </p>
+                </div>
               </div>
             </div>
           </div>

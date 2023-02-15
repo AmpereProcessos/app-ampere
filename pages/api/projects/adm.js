@@ -7,6 +7,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
+            "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
             "obra.statusDaObra": "CONCLUIDA",
             "pagamento.cobrancaFeita": { $ne: true },
           },
@@ -16,6 +17,7 @@ export default async function handler(req, res) {
             _id: 1,
             qtde: 1,
             nomeDoContrato: 1,
+            tipoDeServico: 1,
             "vendedor.nome": 1,
             "pagamento.forma": 1,
             "pagamento.status": 1,

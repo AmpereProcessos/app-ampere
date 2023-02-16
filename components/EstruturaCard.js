@@ -26,13 +26,13 @@ function EstruturaCard({ project, credentials }) {
   }
   return (
     <div className="w-full p-2 border border-[#15599a] rounded">
-      <div className="flex flex-col lg:flex-row items-center gap-x-2 justify-between border-b border-gray-200 pb-2">
-        <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col lg:grid lg:grid-cols-10 items-center gap-x-2 justify-between border-b border-gray-200 pb-2">
+        <div className="flex flex-col justify-center items-center col-span-2">
           <strong className="text-[#15599a]">#{project.qtde} </strong>
           <p className="font-bold text-center">{project.nomeDoContrato}</p>
         </div>
-        <div className="flex flex-wrap gap-2 items-center grow justify-around">
-          <div className="flex flex-col items-center">
+        <div className="flex flex-wrap gap-2 items-center grow justify-around col-span-8">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">
               PAGAMENTO DO KIT
             </p>
@@ -40,15 +40,15 @@ function EstruturaCard({ project, credentials }) {
               {project.compra.statusLiberacao}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">CIDADE</p>
             <p className="text-xs uppercase text-gray-500">{project.cidade}</p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">BAIRRO</p>
             <p className="text-xs uppercase text-gray-500">{project.bairro}</p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">
               LOGRADOURO
             </p>
@@ -56,13 +56,13 @@ function EstruturaCard({ project, credentials }) {
               {project.logradouro}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">NÚMERO</p>
             <p className="text-xs uppercase text-gray-500">
               {project.numeroResidencia}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">
               STATUS DA ENTREGA
             </p>
@@ -72,7 +72,7 @@ function EstruturaCard({ project, credentials }) {
                 : "-"}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">
               {project.compra.statusEntrega == "ENTREGUE"
                 ? "DATA DE ENTREGA"
@@ -94,7 +94,7 @@ function EstruturaCard({ project, credentials }) {
                 : "-"}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">
               TIPO DA ESTRUTURA
             </p>
@@ -104,7 +104,7 @@ function EstruturaCard({ project, credentials }) {
                 : "-"}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">
               RESP.PAGAMENTO DA ESTRUTURA
             </p>
@@ -114,7 +114,7 @@ function EstruturaCard({ project, credentials }) {
                 : "-"}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">
               VALOR DA ESTRUTURA
             </p>
@@ -124,7 +124,7 @@ function EstruturaCard({ project, credentials }) {
                 : "-"}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">
               ENTREGA DA ESTRUTURA
             </p>
@@ -134,7 +134,7 @@ function EstruturaCard({ project, credentials }) {
                 : "-"}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">
               DATA DE ENTREGA DA ESTRUTURA
             </p>
@@ -146,7 +146,7 @@ function EstruturaCard({ project, credentials }) {
                 : "-"}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[200px]">
             <p className="text-sm uppercase text-[#15599a] font-bold">
               NºModulos
             </p>

@@ -123,10 +123,10 @@ export const fileTypes = {
     title: "WORD",
   },
   "image/png": {
-    title: "IMAGEM(PNG)",
+    title: "IMAGEM (.PNG)",
   },
   "image/jpeg": {
-    title: "IMAGEM(JPEG)",
+    title: "IMAGEM(.JPEG)",
   },
   "application/pdf": {
     title: "PDF",
@@ -136,6 +136,9 @@ export const fileTypes = {
   },
   "text/xml": {
     title: "XML",
+  },
+  "video/mp4": {
+    title: "MP4",
   },
 };
 export const vendedores = [

@@ -1,16 +1,19 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { AiOutlineSearch } from "react-icons/ai";
 import Select from "react-select";
+import { AppContext } from "../../context/AppContext";
 import EstruturaCard from "../../components/EstruturaCard";
-import { useRouter } from "next/router";
-function ControleEstruturas({ setCredentials, credentials }) {
+function ControleEstruturas() {
+  const { credentials } = useContext(AppContext);
   const router = useRouter();
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filters, setFilters] = useState({
     searchFilter: "",
     estruturaPersFilter: [],
+    entregaEstruturaFilter: [],
     liberacaoStatus: [],
     segmentoFilter: [],
     pendencia: false,
@@ -27,6 +30,14 @@ function ControleEstruturas({ setCredentials, credentials }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) =>
         filters.estruturaPersFilter.includes(call.estruturaPersonalizada.status)
+      );
+    }
+    if (filters.entregaEstruturaFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.entregaEstruturaFilter.includes(
+          call.estruturaPersonalizada.statusEntrega
+        )
       );
     }
     if (filters.liberacaoStatus.length > 0) {
@@ -71,24 +82,10 @@ function ControleEstruturas({ setCredentials, credentials }) {
     setFilteredProjects([...arr]);
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      if (!storedCredentials.accessibleRoutes.includes("Obras")) {
-        router.push("/");
-      } else {
-        getProjects();
-      }
+    if (credentials.accessibleRoutes.includes("Obras")) {
+      getProjects();
     } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      } else {
-        if (!credentials.accessibleRoutes.includes("Obras")) {
-          router.push("/");
-        } else {
-          getProjects();
-        }
-      }
+      router.push("/");
     }
   }, []);
   return (
@@ -179,6 +176,39 @@ function ControleEstruturas({ setCredentials, credentials }) {
               },
             ]}
           />
+          <Select
+            isMulti
+            placeholder="STATUS ENTREGA DA ESTRUTURA"
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                entregaEstruturaFilter: e.map((x) => x.value),
+              })
+            }
+            options={[
+              {
+                label: "AGUARDANDO COMPRA",
+                value: "AGUARDANDO COMPRA",
+              },
+              {
+                label: "EM ROTA",
+                value: "EM ROTA",
+              },
+              {
+                label: "ENTREGUE",
+                value: "ENTREGUE",
+              },
+              {
+                label: "CANCELADO",
+                value: "CANCELADO",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
+          />
+
           <Select
             isMulti
             placeholder="STATUS PAG. KIT"

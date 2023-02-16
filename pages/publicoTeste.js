@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Assinatura from "../utils/assinatura.jpg";
 import Logo from "../utils/whitelogo.png";
 import { FiCheck } from "react-icons/fi";
 import axios from "axios";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { fileTypes } from "../utils/constants";
+import { storage } from "../utils/firebase";
 function Teste() {
+  const [images, setImages] = useState({});
   async function sendEmail() {
     await axios.post("/api/email", {
       emailTo: "lucasfernandes1101@hotmail.com", // amperecontasareceber@gmail.com
@@ -14,9 +23,48 @@ function Teste() {
     });
     alert("FOI");
   }
+  async function send() {
+    var imageRef = ref(storage, `padraoMontado`);
+    let res = await uploadBytes(imageRef, images.padraoMontado);
+    let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+    console.log(res);
+  }
+  console.log(images);
   return (
     <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
-      <div onClick={sendEmail}>ENVIAR EMAIL</div>
+      <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+        <div className="absolute">
+          {images.videoTeste ? (
+            <div className="flex flex-col items-center">
+              <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+              <span className="block text-gray-400 font-normal text-center">
+                {images.videoTeste.name}
+              </span>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center">
+              <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+              <span className="block text-gray-400 font-normal">
+                Adicione o arquivo aqui...
+              </span>
+            </div>
+          )}
+        </div>
+        <input
+          onChange={(e) =>
+            setImages({
+              ...images,
+              videoTeste: e.target.files[0],
+            })
+          }
+          className="h-full w-full opacity-0"
+          type="file"
+          accept=".jpg"
+        />
+      </div>
+      <button onClick={send} className="bg-black text-white p-2 rounded">
+        ENVIAR
+      </button>
       <div className="grid grid-cols-5 w-full">
         <div className="col-span-2">
           <h1 className="text-xl font-bold text-[#15599b]">SEST SENAI</h1>

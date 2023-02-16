@@ -13,6 +13,9 @@ export default async function handler(req, res) {
         {
           $match: {
             tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
+            "compra.statusLiberacao": {
+              $nin: ["NÃO DEFINIDO", null, undefined],
+            },
             // "compra.statusEntrega": {
             //   $in: [
             //     "EM ROTA",

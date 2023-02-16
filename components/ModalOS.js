@@ -47,7 +47,7 @@ function ModalOS({ info, setModalIsOpen }) {
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
-            <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+            <div className="flex flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
               <h1 className="text-[#15599a] p-0 lg:pl-6 text-center font-bold">
                 {info.nomeDoContrato}
               </h1>
@@ -59,7 +59,7 @@ function ModalOS({ info, setModalIsOpen }) {
               </button>
             </div>
             <div className="flex flex-col gap-2 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 border-r border-gray-300 p-3">
-              <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+              <div className="grid grid-cols-3 items-center shadow-sm p-2">
                 <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   CATEGORIA
                 </h1>
@@ -67,7 +67,7 @@ function ModalOS({ info, setModalIsOpen }) {
                   {info.categoria}
                 </h1>
               </div>
-              <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+              <div className="grid grid-cols-3 items-center shadow-sm p-2">
                 <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   SERVIÇO
                 </h1>
@@ -75,7 +75,7 @@ function ModalOS({ info, setModalIsOpen }) {
                   {info.servicoExecutado}
                 </h1>
               </div>
-              <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+              <div className="grid grid-cols-3 items-center shadow-sm p-2">
                 <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   ABERTURA
                 </h1>
@@ -87,7 +87,7 @@ function ModalOS({ info, setModalIsOpen }) {
                     : "-"}
                 </h1>
               </div>
-              <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+              <div className="grid grid-cols-3 items-center shadow-sm p-2">
                 <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   CIDADE
                 </h1>
@@ -95,7 +95,7 @@ function ModalOS({ info, setModalIsOpen }) {
                   {info.cidade}
                 </h1>
               </div>
-              <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+              <div className="grid grid-cols-3 items-center shadow-sm p-2">
                 <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   BAIRRO
                 </h1>
@@ -103,7 +103,7 @@ function ModalOS({ info, setModalIsOpen }) {
                   {info.bairro}
                 </h1>
               </div>
-              <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+              <div className="grid grid-cols-3 items-center shadow-sm p-2">
                 <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   LOGRADOURO
                 </h1>
@@ -111,7 +111,7 @@ function ModalOS({ info, setModalIsOpen }) {
                   {info.logradouro}
                 </h1>
               </div>
-              <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+              <div className="grid grid-cols-3 items-center shadow-sm p-2">
                 <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   NÚMERO DA RESIDÊNCIA
                 </h1>
@@ -119,7 +119,7 @@ function ModalOS({ info, setModalIsOpen }) {
                   {info.numeroResidencia}
                 </h1>
               </div>
-              <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+              <div className="grid grid-cols-3 items-center shadow-sm p-2">
                 <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   TOPOLOGIA
                 </h1>
@@ -127,7 +127,7 @@ function ModalOS({ info, setModalIsOpen }) {
                   {info.topologia}
                 </h1>
               </div>
-              <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+              <div className="grid grid-cols-3 items-center shadow-sm p-2">
                 <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   QUANTIDADE DE MÓDULOS
                 </h1>
@@ -135,7 +135,7 @@ function ModalOS({ info, setModalIsOpen }) {
                   {info.qtdeModulos}
                 </h1>
               </div>
-              <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+              <div className="grid grid-cols-3 items-center shadow-sm p-2">
                 <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   POTÊNCIA DOS MÓDULOS
                 </h1>
@@ -145,7 +145,7 @@ function ModalOS({ info, setModalIsOpen }) {
               </div>
               {info.categoria == "MANUTENÇÃO PREVENTIVA" && (
                 <>
-                  <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+                  <div className="grid grid-cols-3 items-center shadow-sm p-2">
                     <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                       INVERSOR
                     </h1>
@@ -153,7 +153,7 @@ function ModalOS({ info, setModalIsOpen }) {
                       {info.inversor ? info.inversor : "-"}
                     </h1>
                   </div>
-                  <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+                  <div className="grid grid-cols-3 items-center shadow-sm p-2">
                     <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                       SENHA DO WI-FI
                     </h1>
@@ -161,7 +161,7 @@ function ModalOS({ info, setModalIsOpen }) {
                       {info.senhaDoWifi ? info.senhaDoWifi : "-"}
                     </h1>
                   </div>
-                  <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+                  <div className="grid grid-cols-3 items-center shadow-sm p-2">
                     <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                       PONTO DE ÁGUA
                     </h1>
@@ -169,7 +169,7 @@ function ModalOS({ info, setModalIsOpen }) {
                       {info.pontoDeAgua ? info.pontoDeAgua : "-"}
                     </h1>
                   </div>
-                  <div className="grid grid-cols-3 items-center border border-gray-200 p-2">
+                  <div className="grid grid-cols-3 items-center shadow-sm p-2">
                     <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                       CONFIGURAR ?
                     </h1>
@@ -180,7 +180,7 @@ function ModalOS({ info, setModalIsOpen }) {
                 </>
               )}
 
-              <div className="flex flex-col items-center border border-gray-200 p-2 ">
+              <div className="flex flex-col items-center shadow-sm p-2 ">
                 <h1 className="font-bold text-center md:text-start text-[#15599a] text-xs">
                   OBSERVAÇÕES DA OS
                 </h1>

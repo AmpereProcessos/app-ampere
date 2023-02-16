@@ -4,7 +4,10 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);
     const collection = db.collection("contrato");
-    let arr = await collection.insertOne({ ...req.body });
+    let arr = await collection.insertOne({
+      ...req.body,
+      dataSolicitacao: new Date().toISOString(),
+    });
     res.json(arr);
   } else if (req.method === "GET") {
     const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);

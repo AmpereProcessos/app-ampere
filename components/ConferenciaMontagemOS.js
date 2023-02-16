@@ -8,7 +8,7 @@ import EtapaMontagemMecanica from "./etapasConferenciaMontagem/EtapaMontagemMeca
 import EtapaLancamentoCabosConexoes from "./etapasConferenciaMontagem/EtapaLancamentoCabosConexoes";
 import EtapaFinalizacao from "./etapasConferenciaMontagem/EtapaFinalizacao";
 function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
-  const [stage, setStage] = useState(3);
+  const [stage, setStage] = useState(0);
 
   const [msg, setMsg] = useState({ text: "", color: "" });
   const cidadesGoias = [

@@ -301,10 +301,10 @@ function EtapaFinalizacao({ infoCliente, next, cliente, index }) {
           <strong className="text-[#15599a]">NOTECAM</strong>.)
         </h1>
       </div>
-      <ul class="space-y-4 text-gray-500 list-disc list-inside dark:text-gray-400 w-full lg:w-[50%] self-center">
+      <ul className="space-y-4 text-gray-500 list-disc list-inside dark:text-gray-400 w-full lg:w-[50%] self-center">
         <li>
           ANTES DE DESCER DO TELHADO
-          <ol class="pl-5 mt-2 space-y-1 list-decimal list-inside">
+          <ol className="pl-5 mt-2 space-y-1 list-decimal list-inside">
             <li>CONFERIR SE RETIROU TODA A SOBRA DE MATERIAIS</li>
             <li>
               ANTES DE DESCER DO TELHADO CONFERIR SE RETIROU TODAS AS
@@ -330,7 +330,7 @@ function EtapaFinalizacao({ infoCliente, next, cliente, index }) {
         </li>
         <li>
           LOCAL DOS INVERSORES
-          <ul class="pl-5 mt-2 space-y-1 list-decimal list-inside">
+          <ul className="pl-5 mt-2 space-y-1 list-decimal list-inside">
             <li>
               CONFERIR SE TODA A SOBRA DE MATERIAL FORAM RETIRADAS DO LOCAL DE
               MONTAGEM DOS INVERSORES
@@ -357,7 +357,7 @@ function EtapaFinalizacao({ infoCliente, next, cliente, index }) {
         </li>
         <li>
           CASA DO CLIENTE GERAL
-          <ul class="pl-5 mt-2 space-y-1 list-decimal list-inside">
+          <ul className="pl-5 mt-2 space-y-1 list-decimal list-inside">
             <li>
               CERTIFICAR-SE QUE TODOS OS LIXOS DE TODAS AS ETAPAS FORAM
               RETIRADOS E DESCARTADOS NOS SEUS DEVIDOS LUGARES

@@ -324,7 +324,7 @@ function EtapaFinalizacao({ infoCliente, next, cliente, index }) {
             <li>ANTES DE SAIR DA LAJE</li>
             <li>CONFERIR SE RETIROU TODA A SOBRA DE MATERIAIS</li>
             <li>CONFERIR SE RETIROU TODAS AS FERRAMENTAS</li>
-            <li>CONFERIR SE TODO O LIXO DA "AMPÉRE"' FOI RETIRADO</li>
+            <li>CONFERIR SE TODO O LIXO DA "AMPÉRE" FOI RETIRADO</li>
             <li>FAZER INSPEÇÃO VISUAL SE TUDO ESTA CORRETO</li>
           </ol>
         </li>

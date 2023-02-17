@@ -275,7 +275,7 @@ function EtapaTelhado({ infoCliente, next, cliente }) {
       let links = await uploadFiles();
       setMsg({ text: "Arquivos anexadas!", color: "text-green-500" });
       await updateUser(links);
-      setCookie(null, "OSClosingStage", `${infoCliente.id} - 1`, {
+      setCookie(null, "OSClosingStage", "1", {
         maxAge: 60 * 60 * 5,
       });
       next();
@@ -345,7 +345,7 @@ function EtapaTelhado({ infoCliente, next, cliente }) {
           onChange={(e) => setCheckRoofStage(e.target.checked)}
         />
       </div>
-      <h1 className="text-center  w-full text-[#15599a] font-bold mt-5">
+      <h1 className="text-center  w-full text-[#fead61] font-bold mt-5 text-lg">
         FOTOS/FILMAGENS
       </h1>
       <div className="flex flex-wrap justify-center gap-2">

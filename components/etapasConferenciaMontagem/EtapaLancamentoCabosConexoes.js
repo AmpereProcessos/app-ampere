@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
 import { setCookie } from "nookies";
@@ -121,7 +121,7 @@ function EtapaLancamentoCabosConexos({ infoCliente, next, cliente }) {
       setMsg({ text: "Processando...", color: "text-[#15599a]" });
       let links = await uploadFiles();
       await updateUser(links);
-      setCookie(null, "OSClosingStage", `${infoCliente.id} - 3`, {
+      setCookie(null, "OSClosingStage", "3", {
         maxAge: 60 * 60 * 5,
       });
       next();
@@ -208,7 +208,7 @@ function EtapaLancamentoCabosConexos({ infoCliente, next, cliente }) {
           onChange={(e) => setCheckCableLayingStage(e.target.checked)}
         />
       </div>
-      <h1 className="text-center  w-full text-[#15599a] font-bold mt-5">
+      <h1 className="text-center  w-full text-[#fead61] font-bold mt-5 text-lg">
         FOTOS/FILMAGENS
       </h1>
       <div className="flex flex-wrap justify-center gap-2">

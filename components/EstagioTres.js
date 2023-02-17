@@ -27,7 +27,10 @@ function EstagioTres({
             </div>
           </div>
           <div className="w-full">
-            <div className="flex-1 bg-white rounded-lg h-[47px]" />
+            <input
+              type={"text"}
+              className="flex-1 bg-white outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]"
+            />
           </div>
         </div>
         <div className="gap-1 flex flex-col justify-center items-center text-left w-[353px]">
@@ -39,7 +42,10 @@ function EstagioTres({
             </div>
           </div>
           <div className="w-full">
-            <div className="flex-1 bg-white rounded-lg h-[47px]" />
+            <input
+              type={"text"}
+              className="flex-1 bg-white outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]"
+            />
           </div>
         </div>
         <div className="gap-1 flex flex-col justify-center items-center text-left w-[353px]">
@@ -51,7 +57,10 @@ function EstagioTres({
             </div>
           </div>
           <div className="w-full">
-            <div className="flex-1 bg-white rounded-lg h-[47px]" />
+            <input
+              type={"text"}
+              className="flex-1 bg-white outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]"
+            />
           </div>
         </div>
         <div className="gap-1 text-center w-[353px]">

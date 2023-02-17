@@ -422,15 +422,16 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
   }
   useEffect(() => {
     let { OSClosingStage } = parseCookies(null);
+    console.log("STAGE", OSClosingStage);
     if (OSClosingStage) {
-      let stageFromString = OSClosingStage.split(" - ")[1];
-      let stage = Number(stageFromString) - 1;
+      let stage = Number(OSClosingStage);
       setStage(stage);
     }
   }, []);
+  console.log(stage);
   return (
     <div className="w-full flex flex-col items-center">
-      <h1 className="text-center font-bold text-[#15599a]">
+      <h1 className="text-center font-bold text-[#15599a] text-xl">
         CONFERÊNCIA DE FECHAMENTO DA OS
       </h1>
       {stage == 0 && (
@@ -467,7 +468,7 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
           {msg.text}
         </p>
       )}
-      {stage == 4 && (
+      {/* {stage == 4 && (
         <div className="my-2 flex items-center justify-center mt-6">
           <button
             onClick={closeOS}
@@ -476,7 +477,7 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
             PRÓXIMO
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
 import { setCookie } from "nookies";
@@ -151,7 +151,7 @@ function EtapaMontagemMecanica({ infoCliente, next, cliente }) {
       let links = await uploadFiles();
       setMsg({ text: "Arquivos anexados !", color: "text-green-500" });
       await updateUser(links);
-      setCookie(null, "OSClosingStage", `${infoCliente.id} - 2`, {
+      setCookie(null, "OSClosingStage", "2", {
         maxAge: 60 * 60 * 5,
       });
       next();
@@ -207,7 +207,7 @@ function EtapaMontagemMecanica({ infoCliente, next, cliente }) {
           onChange={(e) => setCheckMountStage(e.target.checked)}
         />
       </div>
-      <h1 className="text-center  w-full text-[#15599a] font-bold mt-5">
+      <h1 className="text-center  w-full text-[#fead61] font-bold mt-5 text-lg">
         FOTOS/FILMAGENS
       </h1>
       <div className="flex flex-wrap justify-center gap-2">

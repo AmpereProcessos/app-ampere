@@ -257,6 +257,8 @@ function EtapaFinalizacao({ infoCliente, next, cliente, index }) {
         {
           operation: {
             $set: {
+              [`ordensDeServico.${index}.dataDeFechamento`]:
+                new Date().toISOString(),
               [`ordensDeServico.${index}.conferencias.etapaTelhado`]: true,
               [`ordensDeServico.${index}.conferencias.etapaMontagemMecanica`]: true,
               [`ordensDeServico.${index}.conferencias.etapaCabeamento`]: true,

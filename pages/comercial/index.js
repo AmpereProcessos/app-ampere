@@ -484,6 +484,7 @@ function Comercial({ users }) {
               ? true
               : false
           }
+          modalIsOpen={modalIsOpen}
           setModalIsOpen={setModalIsOpen}
           credentials={credentials}
         />

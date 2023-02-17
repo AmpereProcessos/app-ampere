@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
 import { setCookie } from "nookies";
+import { BsFillSunFill } from "react-icons/bs";
 import { fileTypes } from "../../utils/constants";
 import { storage } from "../../utils/firebase";
 
@@ -121,15 +122,13 @@ function EtapaLancamentoCabosConexos({ infoCliente, next, cliente }) {
       setMsg({ text: "Processando...", color: "text-[#15599a]" });
       let links = await uploadFiles();
       await updateUser(links);
-      setCookie(null, "OSClosingStage", "3", {
-        maxAge: 60 * 60 * 5,
-      });
+      setCookie(null, "OSClosingStage", "4");
       next();
     }
   }
   return (
     <div className="w-full flex flex-col my-2">
-      <div className="flex flex-col bg-[#fead61] text-white items-center justify-between">
+      <div className="flex flex-col bg-[#fead61] text-white items-center justify-between p-2">
         <h1 className="text-center font-bold w-full">
           ETAPA LANÇAMENTO DOS CABOS CC E CA E SUAS CONEXÕES
         </h1>
@@ -138,68 +137,118 @@ function EtapaLancamentoCabosConexos({ infoCliente, next, cliente }) {
           <strong className="text-[#15599a]">NOTECAM</strong>.)
         </p>
       </div>
-      <ul className="text-center my-2 list-decimal list-inside py-2 border-y border-gray-200">
-        <li>
-          LANÇAMENTO DE CABOS, FIXAÇÃO DE ROLDANAS, ELETRODUTOS, MANGUEIRA
-          HIPERFLEX E ESTICAR O CABEAMENTO
-        </li>
-        <li>
-          APÓS CONCLUÍDO O LANÇAMENTO DOS CABOS, VEM A PARTE DE LIGAÇÃO DOS
-          EQUIPAMENTOS
-        </li>
-        <li>
-          FAZER INSPEÇÃO VISUAL DE TODAS AS CONEXÕES, CC, CA E PRINCIPALMENTE OS
-          TERRAS DO INVERSOR INTERNO E EXTERNA ,STRING E DPSs SE ESTÃO FEITAS
-        </li>
-        <li>FAZER CONFERENCIA DOS APERTOS DE TODOS OS BORNES DE CONEXÕES</li>
-        <li>
-          CONEXÃO CORRETA DOS CABOS DE CORRENTE ALTERNADA E DE CORRENTE CONTINUA
-          (CORES E CONECTORES)
-        </li>
-        <li>
-          CONEXÃO DOS CABOS DE CORRENTE ALTERNADA SEMPRE NA REDE MESTRE DO
-          PADRÃO
-        </li>
-        <li>
-          CONEXÃO DOS CABOS DE CORRENTE ALTERNADA SEMPRE COM CONECTORES CORRETOS
-          PARA CONEXÃO, CONECTORES DE PERFURAÇÃO OU BIMETÁLICO QUANDO HOUVER
-          NECESSIDADE
-        </li>
-        <li>
-          QUANDO USAR CONECTORES BIMETÁLICO PARA CONEXÃO COM A REDE, FAZER O
-          ISOLAMENTO CORRETO, 1° ETAPA PASSAR UMA CAMADA DE FITA DE BAIXA
-          TENSÃO, 2° ETAPA CAMADA DE FITA DE ALTA TENSÃO E POR ULTIMO 3° ETAPA
-          CAMADA DE FITA DE BAIXA TENSÃO
-        </li>
-        <li>
-          SEMPRE OBSERVAR SE OS CABOS NÃO SE DANIFICOU DURANTE O PROCESSO,
-          DANIFICOU FAZER A SUBSTITUIÇÃO
-        </li>
-        <li>
-          CONEXÕES DOS CABOS DE CORRENTE CONTINUA USAR CONECTORES MC4 E CHAVES
-          APROPRIADAS
-        </li>
-        <li>
-          FAZER INSPEÇÃO VISUAL SE TODAS AS CONEXÕES ESTÃO CORRETAS, SE ESTÃO
-          ISOLADAS CORRETAMENTE, E SE OS CONECTORES DE PERFURAÇÃO QUEBRARAM OS
-          PARAFUSOS E ISOLAR A PONTA DO CABO DE DERIVAÇÃO
-        </li>
-        <li>FAZER A CONEXÃO DO TERRA DOS TRILHO</li>
-        <li>
-          FAZER UMA INSPEÇÃO VISUAL DE TODO O PROCESSO COM A FINALIDADE DE
-          VERIFICAR SE TUDO ESTA CORRETO
-        </li>
-        <li>
-          DURANTE TODO PROCESSO DE MONTAGEM TANTO DOS MÓDULOS, LANÇAMENTO DE
-          CABOS OU MONTAGEM MECÂNICA, DEIXAR CEM PORCENTO AS FERRAMENTAS
-          ORGANIZADAS, NÃO DEIXAR FERRAMENTAS ESPALHAS POR TODA A CASA DO
-          CLIENTE, ISSO ACONTECE MUITO
-        </li>
-        <li>
-          AO FINAL DE TODO DIA DE OBRA FAZER LISTA DE MATERIAL PARA O DIA
-          SEGUINTE
-        </li>
-      </ul>
+      <div className="flex flex-col gap-y-2 items-center my-2 py-2 border-y border-gray-200">
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            LANÇAMENTO DE CABOS, FIXAÇÃO DE ROLDANAS, ELETRODUTOS, MANGUEIRA
+            HIPERFLEX E ESTICAR O CABEAMENTO
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            APÓS CONCLUÍDO O LANÇAMENTO DOS CABOS, VEM A PARTE DE LIGAÇÃO DOS
+            EQUIPAMENTOS
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FAZER INSPEÇÃO VISUAL DE TODAS AS CONEXÕES, CC, CA E PRINCIPALMENTE
+            OS TERRAS DO INVERSOR INTERNO E EXTERNA ,STRING E DPSs SE ESTÃO
+            FEITAS
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FAZER CONFERENCIA DOS APERTOS DE TODOS OS BORNES DE CONEXÕES
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            CONEXÃO CORRETA DOS CABOS DE CORRENTE ALTERNADA E DE CORRENTE
+            CONTINUA (CORES E CONECTORES)
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            CONEXÃO DOS CABOS DE CORRENTE ALTERNADA SEMPRE NA REDE MESTRE DO
+            PADRÃO
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            CONEXÃO DOS CABOS DE CORRENTE ALTERNADA SEMPRE COM CONECTORES
+            CORRETOS PARA CONEXÃO, CONECTORES DE PERFURAÇÃO OU BIMETÁLICO QUANDO
+            HOUVER NECESSIDADE
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            QUANDO USAR CONECTORES BIMETÁLICO PARA CONEXÃO COM A REDE, FAZER O
+            ISOLAMENTO CORRETO, 1° ETAPA PASSAR UMA CAMADA DE FITA DE BAIXA
+            TENSÃO, 2° ETAPA CAMADA DE FITA DE ALTA TENSÃO E POR ULTIMO 3° ETAPA
+            CAMADA DE FITA DE BAIXA TENSÃO
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            SEMPRE OBSERVAR SE OS CABOS NÃO SE DANIFICOU DURANTE O PROCESSO,
+            DANIFICOU FAZER A SUBSTITUIÇÃO
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            CONEXÕES DOS CABOS DE CORRENTE CONTINUA USAR CONECTORES MC4 E CHAVES
+            APROPRIADAS
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FAZER INSPEÇÃO VISUAL SE TODAS AS CONEXÕES ESTÃO CORRETAS, SE ESTÃO
+            ISOLADAS CORRETAMENTE, E SE OS CONECTORES DE PERFURAÇÃO QUEBRARAM OS
+            PARAFUSOS E ISOLAR A PONTA DO CABO DE DERIVAÇÃO
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FAZER A CONEXÃO DO TERRA DOS TRILHO
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FAZER UMA INSPEÇÃO VISUAL DE TODO O PROCESSO COM A FINALIDADE DE
+            VERIFICAR SE TUDO ESTA CORRETO
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            DURANTE TODO PROCESSO DE MONTAGEM TANTO DOS MÓDULOS, LANÇAMENTO DE
+            CABOS OU MONTAGEM MECÂNICA, DEIXAR CEM PORCENTO AS FERRAMENTAS
+            ORGANIZADAS, NÃO DEIXAR FERRAMENTAS ESPALHAS POR TODA A CASA DO
+            CLIENTE, ISSO ACONTECE MUITO
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            AO FINAL DE TODO DIA DE OBRA FAZER LISTA DE MATERIAL PARA O DIA
+            SEGUINTE
+          </p>
+        </div>
+      </div>
       <div className="flex items-center justify-center gap-2">
         <label className="font-bold">CONFERÊNCIAS FEITAS ?</label>
         <input

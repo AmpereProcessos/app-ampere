@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { BsFillSunFill } from "react-icons/bs";
+import { VscDebugBreakpointLog } from "react-icons/vsc";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
 import { destroyCookie, setCookie } from "nookies";
@@ -294,7 +296,7 @@ function EtapaFinalizacao({ infoCliente, next, cliente, index }) {
   }
   return (
     <div className="w-full flex flex-col my-2">
-      <div className="flex flex-col bg-[#fead61] text-white items-center justify-between py-1 rounded-sm">
+      <div className="flex flex-col bg-[#fead61] text-white items-center justify-between rounded-sm p-2">
         <h1 className="text-center font-bold w-full">
           ETAPA FINALIZAÇÃO DE OBRA
         </h1>
@@ -303,84 +305,176 @@ function EtapaFinalizacao({ infoCliente, next, cliente, index }) {
           <strong className="text-[#15599a]">NOTECAM</strong>.)
         </h1>
       </div>
-      <ul className="space-y-4 text-gray-500 list-disc list-inside dark:text-gray-400 w-full lg:w-[50%] self-center">
-        <li>
-          ANTES DE DESCER DO TELHADO
-          <ol className="pl-5 mt-2 space-y-1 list-decimal list-inside">
-            <li>CONFERIR SE RETIROU TODA A SOBRA DE MATERIAIS</li>
-            <li>
-              ANTES DE DESCER DO TELHADO CONFERIR SE RETIROU TODAS AS
-              FERRAMENTAS
-            </li>
-            <li>ANTES DE DESCER DO TELHADO CONFERIR SE RETIROU TODO O LIXO</li>
-            <li>
-              ANTES DE DESCER DO TELHADO RETIRAR TODAS AS TELHAS QUEBRADAS
-            </li>
-            <li>
-              ANTES DE DESCER DO TELHADO CONFERIR SE NÃO FICOU TELHAS ABERTAS
-            </li>
-            <li>
-              ANTES DE DESCER DO TELHADO FAZER INSPEÇÃO VISUAL SE TUDO ESTA
-              CORRETO
-            </li>
-            <li>ANTES DE SAIR DA LAJE</li>
-            <li>CONFERIR SE RETIROU TODA A SOBRA DE MATERIAIS</li>
-            <li>CONFERIR SE RETIROU TODAS AS FERRAMENTAS</li>
-            <li>CONFERIR SE TODO O LIXO DA AMPÉRE FOI RETIRADO</li>
-            <li>FAZER INSPEÇÃO VISUAL SE TUDO ESTA CORRETO</li>
-          </ol>
-        </li>
-        <li>
-          LOCAL DOS INVERSORES
-          <ul className="pl-5 mt-2 space-y-1 list-decimal list-inside">
-            <li>
-              CONFERIR SE TODA A SOBRA DE MATERIAL FORAM RETIRADAS DO LOCAL DE
-              MONTAGEM DOS INVERSORES
-            </li>
-            <li>
-              CONFERIR SE TODAS AS FERRAMENTAS FORAM RETIRADAS DO LOCAL DA
-              INSTALAÇÃO DOS INVERSORES
-            </li>
-            <li>
-              CONFERIR SE TODO O LIXO FOI RETIRADO DO LOCAL DA INSTALAÇÃO DOS
-              INVERSORES
-            </li>
-            <li>
-              NO TÉRMINO DA MONTAGEM DOS INVERSORES, LAVAR AS MÃOS E PANOS DE
-              LIMPEZA E REALIZAR A HIGIENIZAÇÃO DOS INVERSORES, QDG, STRING,
-              CANOS E CONDULETES
-            </li>
-            <li>
-              FAZER INSPEÇÃO VISUAL NO LOCAL DA MONTAGEM DOS INVERSORES SE ESTA
-              TUDO CORRETO, LEMBRE-SE QUE A MONTAGEM DOS INVERSORES SÃO A
-              VITRINE DA AMPÉRE
-            </li>
-          </ul>
-        </li>
-        <li>
-          CASA DO CLIENTE GERAL
-          <ul className="pl-5 mt-2 space-y-1 list-decimal list-inside">
-            <li>
-              CERTIFICAR-SE QUE TODOS OS LIXOS DE TODAS AS ETAPAS FORAM
-              RETIRADOS E DESCARTADOS NOS SEUS DEVIDOS LUGARES
-            </li>
-            <li>CONFERIR SE PLACA DE GERAÇÃO FOI INSTALADA</li>
-            <li>
-              ANTES DE SAIR DA CASA DO CLIENTE FAZER UMA ULTIMA INSPEÇÃO VISUAL
-              PRA VERIFICAR SE TUDO ESTÁ CORRETO
-            </li>
-            <li>
-              ANTES DE SAIR DA CASA DO CLIENTE PERGUNTAR SE ESTA TUDO CORRETO OU
-              SE PODEMOS FAZER MAIS ALGUMA COISA POR ELE
-            </li>
-            <li>
-              DESPEDIR-SE DO CLIENTE E FALAR PRA ELE QUE O ENGENHEIRO
-              RESPONSÁVEL VAI FAZER UMA INSPEÇÃO E CONFIGURAÇÕES E AJUSTES
-              FINAIS SE HOUVER NECESSIDADE
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <div className="flex flex-col gap-y-2 items-center my-2 py-2 border-y border-gray-200">
+        <div className="flex flex-col gap-y-2 w-full">
+          <div className="flex items-center self-center gap-2 font-bold">
+            <VscDebugBreakpointLog
+              style={{ color: "#15599a", fontSize: "25px" }}
+            />
+            <p className="text-gray-900">ANTES DE DESCER DO TELHADO</p>
+          </div>
+          <div className="flex flex-col items-center pl-5 mt-2">
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                CONFERIR SE RETIROU TODA A SOBRA DE MATERIAIS
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                ANTES DE DESCER DO TELHADO CONFERIR SE RETIROU TODAS AS
+                FERRAMENTAS
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                ANTES DE DESCER DO TELHADO CONFERIR SE RETIROU TODO O LIXO
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                ANTES DE DESCER DO TELHADO RETIRAR TODAS AS TELHAS QUEBRADAS
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                ANTES DE DESCER DO TELHADO CONFERIR SE NÃO FICOU TELHAS ABERTAS
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                ANTES DE DESCER DO TELHADO FAZER INSPEÇÃO VISUAL SE TUDO ESTA
+                CORRETO
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">ANTES DE SAIR DA LAJE</p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />{" "}
+              <p className="col-span-9 font-medium">
+                CONFERIR SE RETIROU TODA A SOBRA DE MATERIAIS
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                CONFERIR SE RETIROU TODAS AS FERRAMENTAS
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                CONFERIR SE TODO O LIXO DA AMPÉRE FOI RETIRADO
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                FAZER INSPEÇÃO VISUAL SE TUDO ESTA CORRETO
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-y-2 w-full">
+          <div className="flex items-center self-center gap-2 font-bold">
+            <VscDebugBreakpointLog
+              style={{ color: "#15599a", fontSize: "25px" }}
+            />
+            <p className="text-gray-900">LOCAL DOS INVERSORES</p>
+          </div>
+          <div className="flex flex-col items-center pl-5 mt-2">
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                CONFERIR SE TODA A SOBRA DE MATERIAL FORAM RETIRADAS DO LOCAL DE
+                MONTAGEM DOS INVERSORES
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                CONFERIR SE TODAS AS FERRAMENTAS FORAM RETIRADAS DO LOCAL DA
+                INSTALAÇÃO DOS INVERSORES
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                CONFERIR SE TODO O LIXO FOI RETIRADO DO LOCAL DA INSTALAÇÃO DOS
+                INVERSORES
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                NO TÉRMINO DA MONTAGEM DOS INVERSORES, LAVAR AS MÃOS E PANOS DE
+                LIMPEZA E REALIZAR A HIGIENIZAÇÃO DOS INVERSORES, QDG, STRING,
+                CANOS E CONDULETES
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                FAZER INSPEÇÃO VISUAL NO LOCAL DA MONTAGEM DOS INVERSORES SE
+                ESTA TUDO CORRETO, LEMBRE-SE QUE A MONTAGEM DOS INVERSORES SÃO A
+                VITRINE DA AMPÉRE
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-y-2 w-full">
+          <div className="flex items-center self-center gap-2 font-bold">
+            <VscDebugBreakpointLog
+              style={{ color: "#15599a", fontSize: "25px" }}
+            />
+            <p className="text-gray-900">CASA DO CLIENTE GERAL</p>
+          </div>
+          <div className="flex flex-col items-center pl-5 mt-2">
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                CERTIFICAR-SE QUE TODOS OS LIXOS DE TODAS AS ETAPAS FORAM
+                RETIRADOS E DESCARTADOS NOS SEUS DEVIDOS LUGARES
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                CONFERIR SE PLACA DE GERAÇÃO FOI INSTALADA
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                ANTES DE SAIR DA CASA DO CLIENTE FAZER UMA ULTIMA INSPEÇÃO
+                VISUAL PRA VERIFICAR SE TUDO ESTÁ CORRETO
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                ANTES DE SAIR DA CASA DO CLIENTE PERGUNTAR SE ESTA TUDO CORRETO
+                OU SE PODEMOS FAZER MAIS ALGUMA COISA POR ELE
+              </p>
+            </div>
+            <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+              <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+              <p className="col-span-9 font-medium">
+                DESPEDIR-SE DO CLIENTE E FALAR PRA ELE QUE O ENGENHEIRO
+                RESPONSÁVEL VAI FAZER UMA INSPEÇÃO E CONFIGURAÇÕES E AJUSTES
+                FINAIS SE HOUVER NECESSIDADE
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="flex items-center justify-center gap-2">
         <label className="font-bold">CONFERÊNCIAS FEITAS ?</label>
         <input

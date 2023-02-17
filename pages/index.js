@@ -226,7 +226,7 @@ function Home() {
     }
   }, []);
   if (credentials.visualizacao == "OBRAS") {
-    router.push("/ordemDeServico/controleDeOS");
+    router.push("/ordemDeServico/osDaEquipe");
     return <></>;
   } else
     return (
@@ -235,7 +235,7 @@ function Home() {
           <div className="flex items-center justify-center gap-2 mb-3">
             <button
               onClick={() => getDataByRegional("REGIONAL ITUIUTABA")}
-              className={`border border-gray-200 p-1 ${
+              className={`border border-gray-200 rounded-sm p-1 ${
                 regional == "REGIONAL ITUIUTABA" ? "bg-blue-100" : ""
               } hover:bg-blue-100 font-raleway font-bold text-sm`}
             >
@@ -243,7 +243,7 @@ function Home() {
             </button>
             <button
               onClick={() => getDataByRegional("REGIONAL UBERLÂNDIA")}
-              className={`border border-gray-200 p-1 ${
+              className={`border border-gray-200 rounded-sm p-1 ${
                 regional == "REGIONAL UBERLÂNDIA" ? "bg-blue-100" : ""
               } hover:bg-blue-100 font-raleway font-bold text-sm`}
             >
@@ -255,7 +255,7 @@ function Home() {
                 getStats(credentials);
                 getGraphDataByYear(2023, credentials);
               }}
-              className={`border border-gray-200 p-1 ${
+              className={`border border-gray-200 rounded-sm p-1 ${
                 regional == "GERAL" ? "bg-blue-100" : ""
               } hover:bg-blue-100 font-raleway font-bold text-sm`}
             >
@@ -398,7 +398,7 @@ function Home() {
                       getGraphDataByYear(2020, credentials);
                     }
                   }}
-                  className={`border cursor-pointer border-gray-200 ${
+                  className={`border cursor-pointer border-gray-200 hover:scale-105 duration-500 ease-in-out ${
                     selectedYear == 2020
                       ? "bg-blue-200 hover:bg-transparent"
                       : "hover:bg-blue-200 bg-transparent"
@@ -417,7 +417,7 @@ function Home() {
                       getGraphDataByYear(2021, credentials);
                     }
                   }}
-                  className={`border cursor-pointer border-gray-200 ${
+                  className={`border cursor-pointer border-gray-200 hover:scale-105 duration-500 ease-in-out ${
                     selectedYear == 2021
                       ? "bg-blue-200 hover:bg-transparent"
                       : "hover:bg-blue-200 bg-transparent"
@@ -436,7 +436,7 @@ function Home() {
                       getGraphDataByYear(2022, credentials);
                     }
                   }}
-                  className={`border cursor-pointer border-gray-200 ${
+                  className={`border cursor-pointer border-gray-200 hover:scale-105 duration-500 ease-in-out ${
                     selectedYear == 2022
                       ? "bg-blue-200 hover:bg-transparent"
                       : "hover:bg-blue-200 bg-transparent"
@@ -455,7 +455,7 @@ function Home() {
                       getGraphDataByYear(2023, credentials);
                     }
                   }}
-                  className={`border cursor-pointer border-gray-200 ${
+                  className={`border cursor-pointer border-gray-200 hover:scale-105 duration-500 ease-in-out ${
                     selectedYear == 2023
                       ? "bg-blue-200 hover:bg-transparent"
                       : "hover:bg-blue-200 bg-transparent"
@@ -466,12 +466,18 @@ function Home() {
               </div>
             </div>
             <ResponsiveContainer width="100%">
-              <LineChart
+              {/* <AreaChart
                 width={550}
                 height={300}
                 data={statsData.graphData}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
+                <defs>
+                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#15599a" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#15599a" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis
@@ -480,13 +486,39 @@ function Home() {
                 />
                 <Tooltip />
                 <Legend />
-                <Line
+                <Area
                   type="monotone"
                   dataKey="Total"
-                  strokeWidth={4}
+                  strokeWidth={"1"}
                   stroke="#15599a"
+                  fillOpacity={1}
+                  fill="#15599a"
                 />
-              </LineChart>
+              </AreaChart> */}
+              <AreaChart
+                width={550}
+                height={300}
+                data={statsData.graphData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <defs>
+                  <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#15599a" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#15599a" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip />
+                <Area
+                  type="monotone"
+                  dataKey="Total"
+                  stroke="#15599a"
+                  fillOpacity={1}
+                  fill="url(#colorTotal)"
+                />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
@@ -495,9 +527,9 @@ function Home() {
             <h1 className="text-gray-600 uppercase">ANIVERSARIANTES DO MÊS</h1>
             <button
               onClick={() => filterBirthday(!filters.birthdayToday)}
-              className="p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold"
+              className="p-2 rounded font-bold border border-[#fead61] text-[#fead61] hover:scale-105 duration-500 ease-in-out hover:text-black hover:bg-[#fead61]"
             >
-              Aniversariando hoje
+              ANIVERSARIANDO HOJE
             </button>
           </div>
           <div className="w-full grow flex flex-wrap justify-around gap-y-2 mt-2">

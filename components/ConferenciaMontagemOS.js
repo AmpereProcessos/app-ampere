@@ -7,6 +7,7 @@ import EtapaTelhado from "./etapasConferenciaMontagem/EtapaTelhado";
 import EtapaMontagemMecanica from "./etapasConferenciaMontagem/EtapaMontagemMecanica";
 import EtapaLancamentoCabosConexoes from "./etapasConferenciaMontagem/EtapaLancamentoCabosConexoes";
 import EtapaFinalizacao from "./etapasConferenciaMontagem/EtapaFinalizacao";
+import EtapaEntrada from "./etapasConferenciaMontagem/EtapaEntrada";
 function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
   const [stage, setStage] = useState(0);
 
@@ -435,27 +436,34 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
         CONFERÊNCIA DE FECHAMENTO DA OS
       </h1>
       {stage == 0 && (
-        <EtapaTelhado
+        <EtapaEntrada
           cliente={cliente}
           infoCliente={info}
           next={() => setStage((prev) => prev + 1)}
         />
       )}
       {stage == 1 && (
-        <EtapaMontagemMecanica
+        <EtapaTelhado
           cliente={cliente}
           infoCliente={info}
           next={() => setStage((prev) => prev + 1)}
         />
       )}
       {stage == 2 && (
-        <EtapaLancamentoCabosConexoes
+        <EtapaMontagemMecanica
           cliente={cliente}
           infoCliente={info}
           next={() => setStage((prev) => prev + 1)}
         />
       )}
       {stage == 3 && (
+        <EtapaLancamentoCabosConexoes
+          cliente={cliente}
+          infoCliente={info}
+          next={() => setStage((prev) => prev + 1)}
+        />
+      )}
+      {stage == 4 && (
         <EtapaFinalizacao
           cliente={cliente}
           index={index}

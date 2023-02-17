@@ -749,6 +749,7 @@ function Projetos() {
       {modalIsOpen && (
         <ModalProjetos
           credentials={credentials}
+          modalIsOpen={modalIsOpen}
           handleUpdates={handleUpdates}
           project={modalProject}
           editor={

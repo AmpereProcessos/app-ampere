@@ -715,6 +715,7 @@ function Obras() {
       {modalIsOpen && (
         <ModalObras
           credentials={credentials}
+          modalIsOpen={modalIsOpen}
           handleUpdates={handleUpdates}
           project={modalProject}
           editor={

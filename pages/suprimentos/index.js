@@ -475,6 +475,7 @@ function Suprimentos() {
       {modalIsOpen && (
         <ModalSuprimentos
           handleUpdates={handleUpdates}
+          modalIsOpen={modalIsOpen}
           project={modalProject}
           editor={
             credentials.accessibleRoutes.includes("Suprimentos") &&

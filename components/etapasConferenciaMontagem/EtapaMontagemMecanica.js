@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
 import { setCookie } from "nookies";
+import { BsFillSunFill } from "react-icons/bs";
 import { fileTypes } from "../../utils/constants";
 import { storage } from "../../utils/firebase";
 function EtapaMontagemMecanica({ infoCliente, next, cliente }) {
@@ -151,15 +152,13 @@ function EtapaMontagemMecanica({ infoCliente, next, cliente }) {
       let links = await uploadFiles();
       setMsg({ text: "Arquivos anexados !", color: "text-green-500" });
       await updateUser(links);
-      setCookie(null, "OSClosingStage", "2", {
-        maxAge: 60 * 60 * 5,
-      });
+      setCookie(null, "OSClosingStage", "3");
       next();
     } else return false;
   }
   return (
     <div className="w-full flex flex-col my-2">
-      <div className="flex flex-col bg-[#fead61] text-white items-center justify-between">
+      <div className="flex flex-col bg-[#fead61] text-white items-center justify-between p-2">
         <h1 className="text-center font-bold w-full">
           ETAPA MONTAGEM MECÂNICA E INVERSORES
         </h1>
@@ -168,37 +167,80 @@ function EtapaMontagemMecanica({ infoCliente, next, cliente }) {
           <strong className="text-[#15599a]">NOTECAM</strong>.)
         </p>
       </div>
-      <ul className="text-center my-2 list-decimal list-inside py-2 border-y border-gray-200">
-        <li>DETERMINAR O LOCAL JUNTO COM O CLIENTE</li>
-        <li>
-          ANTES DE COMEÇAR A MONTAGEM DOS INVERSORES FAZER INSPEÇÃO VISUAL PARA
-          EVITAR QUE OS EQUIPAMENTOS MOLHE OU PEGUE SOL
-        </li>
-        <li>
-          OBSERVAR SE TEM CANO DE AGUA PRÓXIMO OU REGISTRO DE AGUA, SE EXISTE
-          MONTAGEM E CANOS DE FIOS OU CABOS ELÉTRICOS TAMBÉM
-        </li>
-        <li>
-          FIXAÇÃO DO INVERSOR, STRING BOX E QUADRO DE DISTRIBUIÇÃO GERAL (QDG)
-        </li>
-        <li>SEGUIR O ESQUEMA DE MONTAGEM DO PROJETO</li>
-        <li>FIXAÇÃO DOS CONDULETES E ELETRODUTOS</li>
-        <li>
-          SEMPRE OBSERVAR SE OS ELETRODUTOS E CONDULETES, INVERSORES, STRING E
-          QDG ESTÃO FICANDO BEM FIXADOS
-        </li>
-        <li>SEMPRE UTILIZAR O NÍVEL DE MÃO</li>
-        <li>
-          CONCLUINDO A MONTAGEM FAZER INSPEÇÃO VISUAL DE TODA A MONTAGEM, PARA
-          GARANTIR QUE NÃO ESTEJA FALTANDO NADA, PRINCIPALMENTE PARAFUSO DE BOX
-          RETO E ADESIVOS DA AMPÉRE
-        </li>
-        <li>FIXAÇÃO DA PLACA DE AVISO DE GERAÇÃO DISTRIBUÍDA</li>
-        <li>
-          TIRAR UMA FOTO E MANDA-LÁ NO GRUPO DO WHATSAPP DA EQUIPE TÉCNICA,
-          RELATANDO A CONCLUSÃO DA SEGUNDA ETAPA
-        </li>
-      </ul>
+      <div className="flex flex-col gap-y-2 items-center my-2 py-2 border-y border-gray-200">
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            DETERMINAR O LOCAL JUNTO COM O CLIENTE
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            ANTES DE COMEÇAR A MONTAGEM DOS INVERSORES FAZER INSPEÇÃO VISUAL
+            PARA EVITAR QUE OS EQUIPAMENTOS MOLHE OU PEGUE SOL
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            OBSERVAR SE TEM CANO DE AGUA PRÓXIMO OU REGISTRO DE AGUA, SE EXISTE
+            MONTAGEM E CANOS DE FIOS OU CABOS ELÉTRICOS TAMBÉM
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FIXAÇÃO DO INVERSOR, STRING BOX E QUADRO DE DISTRIBUIÇÃO GERAL (QDG)
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            SEGUIR O ESQUEMA DE MONTAGEM DO PROJETO
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FIXAÇÃO DOS CONDULETES E ELETRODUTOS
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            SEMPRE OBSERVAR SE OS ELETRODUTOS E CONDULETES, INVERSORES, STRING E
+            QDG ESTÃO FICANDO BEM FIXADOS
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            SEMPRE UTILIZAR O NÍVEL DE MÃO
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            CONCLUINDO A MONTAGEM FAZER INSPEÇÃO VISUAL DE TODA A MONTAGEM, PARA
+            GARANTIR QUE NÃO ESTEJA FALTANDO NADA, PRINCIPALMENTE PARAFUSO DE
+            BOX RETO E ADESIVOS DA AMPÉRE
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FIXAÇÃO DA PLACA DE AVISO DE GERAÇÃO DISTRIBUÍDA
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            TIRAR UMA FOTO E MANDA-LÁ NO GRUPO DO WHATSAPP DA EQUIPE TÉCNICA,
+            RELATANDO A CONCLUSÃO DA SEGUNDA ETAPA
+          </p>
+        </div>
+      </div>
       <div className="flex items-center justify-center gap-2">
         <label className="font-bold">CONFERÊNCIAS FEITAS ?</label>
         <input

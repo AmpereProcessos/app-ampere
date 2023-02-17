@@ -52,7 +52,7 @@ function Sidebar() {
         <>
           <h2 className="text-xs text-gray-500">PRINCIPAL</h2>
           <Link href={"/ordemDeServico/controleDeOS"}>
-            <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+            <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
               <MdDesignServices
                 style={{ color: "#15599a", fontSize: "20px" }}
               />
@@ -65,7 +65,7 @@ function Sidebar() {
           <div>
             <h2 className="text-xs text-gray-500">PRINCIPAL</h2>
             <Link href="/">
-              <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+              <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                 <RiDashboardFill
                   style={{ color: "#15599a", fontSize: "20px" }}
                 />
@@ -78,7 +78,7 @@ function Sidebar() {
               <>
                 <h2 className="text-xs text-gray-500">GESTÃO DE PROJETOS</h2>
                 <Link href="/gestaoDeProjetos/emAndamento">
-                  <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                  <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                     <TbRecharging
                       style={{
                         color: "#15599a",
@@ -92,7 +92,7 @@ function Sidebar() {
             )}
             {credentials.vendedor == undefined && (
               <Link href="/gestaoDeProjetos/bancoDeDados">
-                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                   <FaDatabase
                     style={{
                       color: "#15599a",
@@ -107,7 +107,7 @@ function Sidebar() {
             credentials.accessibleRoutes?.includes("Obras") &&
             credentials.regional == undefined ? (
               <Link href="/calendario">
-                <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                   <BsFillCalendarEventFill
                     style={{ color: "#15599a", fontSize: "20px" }}
                   />
@@ -129,7 +129,7 @@ function Sidebar() {
                   credentials?.accessibleRoutes?.includes("PPS") ||
                   credentials?.accessibleRoutes?.includes("Marketing") ? (
                     <Link href="/comercial">
-                      <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <SiCashapp
                           style={{ color: "#15599a", fontSize: "20px" }}
                         />
@@ -146,7 +146,7 @@ function Sidebar() {
                   credentials?.accessibleRoutes?.includes("Suprimentos") ||
                   credentials.accessibleRoutes?.includes("Marketing") ? (
                     <Link href="/suprimentos">
-                      <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <FaShoppingCart
                           style={{ color: "#15599a", fontSize: "20px" }}
                         />
@@ -165,7 +165,7 @@ function Sidebar() {
                   credentials?.accessibleRoutes?.includes("Projetos") ||
                   credentials?.accessibleRoutes?.includes("Pós-Venda") ? (
                     <Link href="/projetos">
-                      <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <MdEngineering
                           style={{ color: "#15599a", fontSize: "20px" }}
                         />
@@ -182,7 +182,7 @@ function Sidebar() {
                   credentials?.accessibleRoutes?.includes("Obras") ||
                   credentials?.accessibleRoutes?.includes("Marketing") ? (
                     <Link href="/obras">
-                      <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <FaTools
                           style={{ color: "#15599a", fontSize: "20px" }}
                         />
@@ -198,7 +198,7 @@ function Sidebar() {
                 {credentials?.accessibleRoutes?.includes("O&M") ||
                 credentials?.accessibleRoutes?.includes("Pós-Venda") ? (
                   <Link href={"/oem/comissionamento"}>
-                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <ImCheckboxChecked
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
@@ -215,7 +215,7 @@ function Sidebar() {
                   credentials?.accessibleRoutes?.includes("Pós-Venda") ||
                   credentials?.accessibleRoutes?.includes("Marketing") ? (
                     <Link href="/posvenda">
-                      <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                      <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <BiSupport
                           style={{ color: "#15599a", fontSize: "20px" }}
                         />
@@ -233,7 +233,7 @@ function Sidebar() {
                   ? (credentials?.accessibleRoutes?.includes("ADM") ||
                       credentials?.accessibleRoutes?.includes("Marketing")) && (
                       <Link href="/adm">
-                        <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                        <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                           <BsFolderPlus
                             style={{ color: "#15599a", fontSize: "20px" }}
                           />
@@ -244,7 +244,7 @@ function Sidebar() {
                   : false}
                 {credentials.accessibleRoutes?.includes("InsideSales") && (
                   <Link href="/insideSales">
-                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <MdAddIcCall
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
@@ -258,7 +258,7 @@ function Sidebar() {
                 {credentials.visualizacao == undefined ||
                 credentials.visualizacao == "REGIONAL" ? (
                   <Link href="/calls">
-                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <FaTasks style={{ color: "#15599a", fontSize: "20px" }} />
                       <p className="pl-3 text-xs text-gray-600">Chamados</p>
                     </a>
@@ -269,7 +269,7 @@ function Sidebar() {
                 {(credentials.manager == true ||
                   credentials.visualizacao == "REGIONAL") && (
                   <Link href="/admin/comissao">
-                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <AiOutlinePercentage
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
@@ -279,7 +279,7 @@ function Sidebar() {
                 )}
                 {credentials.accessibleRoutes?.includes("Suprimentos") ? (
                   <Link href="/suprimentos/entregas">
-                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <TbTruckDelivery
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
@@ -292,7 +292,7 @@ function Sidebar() {
                 {credentials.controller != undefined &&
                 credentials.controller == true ? (
                   <Link href={"/ordemDeServico/bancoDeOS"}>
-                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <MdDesignServices
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
@@ -305,7 +305,7 @@ function Sidebar() {
                 {credentials.accessibleRoutes != undefined &&
                 credentials.accessibleRoutes?.includes("Almoxarifado") ? (
                   <Link href={"/almoxarifado"}>
-                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <FaBox style={{ color: "#15599a", fontSize: "20px" }} />
                       <p className="pl-3 text-xs text-gray-600">Almoxarifado</p>
                     </a>
@@ -317,7 +317,7 @@ function Sidebar() {
                 credentials.regional == undefined
                   ? credentials?.accessibleRoutes?.includes("ADM") && (
                       <Link href={"/adm/cobrancas"}>
-                        <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                        <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                           <MdOutlinePayments
                             style={{ color: "#15599a", fontSize: "20px" }}
                           />
@@ -332,7 +332,7 @@ function Sidebar() {
                 credentials.regional == undefined
                   ? credentials?.accessibleRoutes?.includes("Projetos") && (
                       <Link href={"/projetos/comissionamento"}>
-                        <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                        <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                           <VscWorkspaceTrusted
                             style={{ color: "#15599a", fontSize: "20px" }}
                           />
@@ -348,7 +348,7 @@ function Sidebar() {
                   ? (credentials?.accessibleRoutes?.includes("O&M") ||
                       credentials?.accessibleRoutes?.includes("Marketing")) && (
                       <Link href="/oem">
-                        <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                        <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                           <FaSolarPanel
                             style={{ color: "#15599a", fontSize: "20px" }}
                           />
@@ -361,7 +361,7 @@ function Sidebar() {
                 credentials.regional == undefined
                   ? credentials?.accessibleRoutes?.includes("Obras") && (
                       <Link href="/obras/gestaoDeObras">
-                        <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                        <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                           <MdOutlineBuildCircle
                             style={{ color: "#15599a", fontSize: "20px" }}
                           />
@@ -375,7 +375,7 @@ function Sidebar() {
                 {credentials.manager == true ||
                 credentials.visualizacao == "REGIONAL" ? (
                   <Link href="/admin/gestaoTimeVendas">
-                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <TbDashboard
                         style={{ color: "#15599a", fontSize: "20px" }}
                       />
@@ -391,7 +391,7 @@ function Sidebar() {
                 credentials.regional == undefined
                   ? credentials?.accessibleRoutes?.includes("Pós-Venda") && (
                       <Link href="/posvenda/nps">
-                        <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                        <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                           <MdSentimentSatisfiedAlt
                             style={{ color: "#15599a", fontSize: "20px" }}
                           />
@@ -409,7 +409,7 @@ function Sidebar() {
               <div className="mt-6">
                 <h2 className="text-xs text-gray-500">SETORES</h2>{" "}
                 <Link href="/insideSales">
-                  <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                  <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                     <MdAddIcCall
                       style={{ color: "#15599a", fontSize: "20px" }}
                     />
@@ -427,7 +427,7 @@ function Sidebar() {
               <div className="mt-6">
                 <h2 className="text-xs text-gray-500">ÁREA DO VENDEDOR</h2>
                 <Link href="/vendas">
-                  <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                  <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                     <ImFolderOpen
                       style={{
                         color: "#15599a",
@@ -441,7 +441,7 @@ function Sidebar() {
                   <Link
                     href={`/vendas/emProcesso/${credentials.visualizacao}?parametro=${credentials.vendedor}`}
                   >
-                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <TbRecharging
                         style={{
                           color: "#15599a",
@@ -454,7 +454,7 @@ function Sidebar() {
                 )}
                 {credentials.vendedor && (
                   <Link href={`/vendas/formularios`}>
-                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <AiOutlineForm
                         style={{
                           color: "#15599a",
@@ -467,7 +467,7 @@ function Sidebar() {
                 )}
                 {credentials.vendedor && (
                   <Link href={`/vendas/visitasTecnicas`}>
-                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <TbReportAnalytics
                         style={{
                           color: "#15599a",
@@ -482,7 +482,7 @@ function Sidebar() {
                 )}
                 {credentials.vendedor && (
                   <Link href={`/vendas/entregaTecnica`}>
-                    <a className="hover:bg-blue-100 py-2 pl-2 cursor-pointer flex items-center mt-2">
+                    <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                       <BsFillPatchCheckFill
                         style={{
                           color: "#15599a",

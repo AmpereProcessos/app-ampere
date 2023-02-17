@@ -80,25 +80,28 @@ function Header({ toggleSidebar }) {
           Seja bem vindo,{" "}
           <strong className="text-[#15599a]">{credentials?.nome}</strong> !
         </p>
-        <BiLogIn
-          onClick={logout}
-          style={{
-            fontSize: "25px",
-            marginLeft: "10px",
-            cursor: "pointer",
-            color: "#fead61",
-          }}
-        />
+        <div className="text-[#fead61] hover:text-orange-500 hover:scale-105 duration-500 ease-in-out">
+          <BiLogIn
+            onClick={logout}
+            style={{
+              fontSize: "25px",
+              marginLeft: "10px",
+              cursor: "pointer",
+              color: "#fead61",
+            }}
+          />
+        </div>
+
         <div
           onClick={() => setNotificationIsOpen(!notificationIsOpen)}
           className="flex cursor-pointer"
         >
           {unreadCount > 0 ? (
-            <div className="flex items-center w-[25px] h-[22px] ml-2">
+            <div className="flex items-center w-[25px] h-[22px] ml-2 hover:scale-105 duration-500 ease-in-out">
               <Image src={AlertVolts} />
             </div>
           ) : (
-            <div className="flex items-center w-[25px] h-[22px] ml-2">
+            <div className="flex items-center w-[25px] h-[22px] ml-2 hover:scale-105 duration-500 ease-in-out">
               <Image src={SleepVolts} />
             </div>
           )}

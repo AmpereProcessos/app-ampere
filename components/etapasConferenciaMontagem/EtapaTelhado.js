@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BsFillSunFill } from "react-icons/bs";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
 import { setCookie } from "nookies";
@@ -275,68 +276,105 @@ function EtapaTelhado({ infoCliente, next, cliente }) {
       let links = await uploadFiles();
       setMsg({ text: "Arquivos anexadas!", color: "text-green-500" });
       await updateUser(links);
-      setCookie(null, "OSClosingStage", "1", {
-        maxAge: 60 * 60 * 5,
-      });
+      setCookie(null, "OSClosingStage", "2");
       next();
     } else return;
   }
   console.log(infoCliente);
   return (
     <div className="w-full flex flex-col my-2">
-      <div className="flex flex-col bg-[#fead61] text-white items-center justify-between">
+      <div className="flex flex-col bg-[#fead61] text-white items-center justify-between p-2">
         <h1 className="text-center font-bold w-full">ETAPA TELHADO</h1>
         <p className="text-xs font-bold text-gray-600 italic">
           (OBS: TODAS AS FOTOS DEVEM SER TIRADAS ATRAVÉS DO APLICATIVO{" "}
           <strong className="text-[#15599a]">NOTECAM</strong>.)
         </p>
       </div>
-      <ul className="text-center my-2 list-decimal list-inside py-2 border-y border-gray-200">
-        <li>
-          FIXAÇÃO DOS SUPORTES COM APERTO DE TODOS OS PARAFUSOS E CONFERIR
-        </li>
-        <li>
-          FIXAÇÃO DOS TRILHOS COM APERTO DE TODOS OS PARAFUSOS E CONFERIR TELHAS
-          ALTAS E ONDAS BAIXAS
-        </li>
-        <li>
-          FIXAÇÃO DA MANTA ASFÁLTICA (PICHE) NAS SAÍDAS DOS GANCHOS, TELHAS
-          ALTAS E ONDAS BAIXAS
-        </li>
-        <li>
-          FAZER ATERRAMENTO DE TODOS OS TRILHOS E COLOCAR AS PONTAS DOS TERRAS
-          PRA DENTRO DA LAJE
-        </li>
-        <li>FIXAÇÃO DOS MICROS INVERSORES E ATERRAR OS MESMOS</li>
-        <li>
-          VERIFICAR SE TODAS AS CONEXÕES DE CORRENTE ALTERANADA DOS MICROS
-          ESTEJAM ESTANHADAS E ISOLADAS CORRETAMENTE
-        </li>
-        <li>
-          VERIFICAR SE OS TAPÕES FORAM COLOCADOS NO FINAL DOS MICROS INVERSORES
-        </li>
-        <li>
-          ANTES DA MONTAGEM DOS MÓDULOS FAZER INSPEÇÃO VISUAL SE ESTÁ TUDO
-          CORRETO E CONFERIR SE TEM TELHAS QUEBRADAS
-        </li>
-        <li>
-          DURANTE A FIXAÇÃO DOS MÓDULOS FAZER CONFERÊNCIA SE OS MÓDULOS ESTÃO
-          SENDO CONECTADOS CORRETAMENTE TANTO EM SÉRIE OU NOS MICROS
-        </li>
-        <li>
-          FURANTE A FIXAÇÃO DOS MÓDULOS FAZER OUTRA INSPEÇÃO VISUAL MÓDULO A
-          MÓDULO COM O INTUITO DE RETIRAR TELHAS QUEBRADAS
-        </li>
-        <li>
-          DURANTE TODA A MONTAGEM NO TELHADO LEVAR SACOLAS PARA IR ARMAZENANDO O
-          LIXO QUE APARECE DURANTE O PROCESSO. (LIXO EM RUFOS E CALHAS, LIXO EM
-          SAÍDAS DE ÁGUA, ABRAÇADEIRAS DESCARTADAS)
-        </li>
-        <li>
-          TIRAR UM FOTO E MANDA-LÁ NO GRUPO DO WHATSAPP DA EQUIPE TÉCNICA,
-          RELATANDO CONCLUSÃO DA PRIMEIRA ETAPA.
-        </li>
-      </ul>
+      <div className="flex flex-col gap-y-2 items-center my-2 py-2 border-y border-gray-200">
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FIXAÇÃO DOS SUPORTES COM APERTO DE TODOS OS PARAFUSOS E CONFERIR
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FIXAÇÃO DOS TRILHOS COM APERTO DE TODOS OS PARAFUSOS E CONFERIR
+            TELHAS ALTAS E ONDAS BAIXAS
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FIXAÇÃO DA MANTA ASFÁLTICA (PICHE) NAS SAÍDAS DOS GANCHOS, TELHAS
+            ALTAS E ONDAS BAIXAS
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FAZER ATERRAMENTO DE TODOS OS TRILHOS E COLOCAR AS PONTAS DOS TERRAS
+            PRA DENTRO DA LAJE
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FIXAÇÃO DOS MICROS INVERSORES E ATERRAR OS MESMOS
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            VERIFICAR SE TODAS AS CONEXÕES DE CORRENTE ALTERANADA DOS MICROS
+            ESTEJAM ESTANHADAS E ISOLADAS CORRETAMENTE
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            VERIFICAR SE OS TAPÕES FORAM COLOCADOS NO FINAL DOS MICROS
+            INVERSORES
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            ANTES DA MONTAGEM DOS MÓDULOS FAZER INSPEÇÃO VISUAL SE ESTÁ TUDO
+            CORRETO E CONFERIR SE TEM TELHAS QUEBRADAS
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            DURANTE A FIXAÇÃO DOS MÓDULOS FAZER CONFERÊNCIA SE OS MÓDULOS ESTÃO
+            SENDO CONECTADOS CORRETAMENTE TANTO EM SÉRIE OU NOS MICROS
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            FURANTE A FIXAÇÃO DOS MÓDULOS FAZER OUTRA INSPEÇÃO VISUAL MÓDULO A
+            MÓDULO COM O INTUITO DE RETIRAR TELHAS QUEBRADAS
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            DURANTE TODA A MONTAGEM NO TELHADO LEVAR SACOLAS PARA IR ARMAZENANDO
+            O LIXO QUE APARECE DURANTE O PROCESSO. (LIXO EM RUFOS E CALHAS, LIXO
+            EM SAÍDAS DE ÁGUA, ABRAÇADEIRAS DESCARTADAS)
+          </p>
+        </div>
+        <div className="grid grid-cols-10 gap-2 w-full lg:w-[60%]">
+          <BsFillSunFill style={{ color: "#fead61", fontSize: "25px" }} />
+          <p className="col-span-9 font-medium">
+            TIRAR UM FOTO E MANDA-LÁ NO GRUPO DO WHATSAPP DA EQUIPE TÉCNICA,
+            RELATANDO CONCLUSÃO DA PRIMEIRA ETAPA.
+          </p>
+        </div>
+      </div>
       <div className="flex items-center justify-center gap-2">
         <label className="font-bold">CONFERÊNCIAS FEITAS ?</label>
         <input

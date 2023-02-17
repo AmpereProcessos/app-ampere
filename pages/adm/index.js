@@ -360,6 +360,7 @@ function Administracao() {
         <ModalADM
           handleUpdates={handleUpdates}
           project={modalProject}
+          modalIsOpen={modalIsOpen}
           editor={
             credentials && credentials.accessibleRoutes.includes("ADM")
               ? true

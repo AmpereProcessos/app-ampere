@@ -78,34 +78,36 @@ function VisitaTecnica({ credentials, setCredentials }) {
     }
   }
   function getPendenceStatusBorder(tipoDeLaudo, currentTimeDiff, status) {
-    if (status != "CONCLUIDO") {
-      var matches = /\(([^)]+)\)/.exec(tipoDeLaudo)[1];
-      var expectedHours = matches.split(" ")[0];
-      if (Number(expectedHours) - Number(currentTimeDiff) <= 3) {
-        return "border-2 border-red-500";
-      } else if (Number(expectedHours) - Number(currentTimeDiff) <= 5) {
-        return "border-2 border-yellow-500";
-      } else {
-        return;
-      }
-    } else {
-      return;
-    }
+    // if (status != "CONCLUIDO") {
+    //   var matches = /\(([^)]+)\)/.exec(tipoDeLaudo)[1];
+    //   var expectedHours = matches.split(" ")[0];
+    //   if (Number(expectedHours) - Number(currentTimeDiff) <= 3) {
+    //     return "border-2 border-red-500";
+    //   } else if (Number(expectedHours) - Number(currentTimeDiff) <= 5) {
+    //     return "border-2 border-yellow-500";
+    //   } else {
+    //     return;
+    //   }
+    // } else {
+    //   return;
+    // }
+    return;
   }
   function getPendenceStatusText(tipoDeLaudo, currentTimeDiff, status) {
-    if (status != "CONCLUIDO") {
-      var matches = /\(([^)]+)\)/.exec(tipoDeLaudo)[1];
-      var expectedHours = matches.split(" ")[0];
-      if (Number(expectedHours) - Number(currentTimeDiff) <= 3) {
-        return "text-red-500";
-      } else if (Number(expectedHours) - Number(currentTimeDiff) <= 5) {
-        return "text-yellow-500";
-      } else {
-        return "text-gray-700";
-      }
-    } else {
-      return "text-gray-700";
-    }
+    // if (status != "CONCLUIDO") {
+    //   var matches = /\(([^)]+)\)/.exec(tipoDeLaudo)[1];
+    //   var expectedHours = matches.split(" ")[0];
+    //   if (Number(expectedHours) - Number(currentTimeDiff) <= 3) {
+    //     return "text-red-500";
+    //   } else if (Number(expectedHours) - Number(currentTimeDiff) <= 5) {
+    //     return "text-yellow-500";
+    //   } else {
+    //     return "text-gray-700";
+    //   }
+    // } else {
+    //   return "text-gray-700";
+    // }
+    return;
   }
   useEffect(() => {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));

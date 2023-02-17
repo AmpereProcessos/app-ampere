@@ -149,7 +149,7 @@ function EtapaLancamentoCabosConexos({ infoCliente, next, cliente }) {
         </li>
         <li>
           FAZER INSPEÇÃO VISUAL DE TODAS AS CONEXÕES, CC, CA E PRINCIPALMENTE OS
-          TERRAS DO INVERSOR INTERNO E EXTERNA ,STRING E DPS'S SE ESTÃO FEITAS
+          TERRAS DO INVERSOR INTERNO E EXTERNA ,STRING E DPSs SE ESTÃO FEITAS
         </li>
         <li>FAZER CONFERENCIA DOS APERTOS DE TODOS OS BORNES DE CONEXÕES</li>
         <li>

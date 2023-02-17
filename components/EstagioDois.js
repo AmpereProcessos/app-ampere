@@ -1,18 +1,10 @@
 import React, { useState } from "react";
-import InputMask from "react-input-mask";
 import Image from "next/image";
-import Logo from "../utils/whitelogo.png";
-import { cities } from "../utils/constants";
-import axios from "axios";
 import { useRouter } from "next/router";
-function EstagioDois({
-  setCurrentEstagio,
-  name,
-  email,
-  phone,
-  city,
-  valorFatura,
-}) {
+import LogoSemTexto from "../utils/logoBrancoSemTexto.png";
+import Logo from "../utils/logoBranco.png";
+
+function EstagioDois({ next }) {
   const router = useRouter();
   const [errMessage, setErrMessage] = useState({
     message: "",
@@ -72,115 +64,49 @@ function EstagioDois({
     }
   }
   return (
-    <div className="flex flex-col bg-[#fff] p-4 rounded">
-      <div className="flex w-full justify-center">
-        <div className="w-[80px] h-[80px]">
-          <Image src={Logo} />
-        </div>
-      </div>
-      <h1 className="text-center uppercase text-[#fead61] font-bold text-xl">
-        Calculadora Solar
-      </h1>
-      <div className="flex flex-col gap-y-2">
-        <h1 className="text-center mt-2 font-raleway font-bold">
-          Antes de simularmos um orçamento, precisamos de mais algumas
-          informações suas, por favor, preencha os campos abaixo...
-        </h1>
-        <div className="flex items-center w-full gap-x-2">
-          <span className="uppercase text-gray-600 font-bold">O seu nome</span>
-          <input
-            value={name.clientName}
-            onChange={(e) => name.setClientName(e.target.value)}
-            type="text"
-            className={`outline-none text-center p-2 border ${
-              errMessage.incorrectFields.includes("Nome")
-                ? "border-red-400"
-                : "border-gray-200"
-            }  grow`}
-          />
-        </div>
-        <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 gap-x-2">
-          <div className="flex items-center w-full gap-x-2">
-            <span className="uppercase text-gray-600 font-bold">
-              O seu email
-            </span>
+    <>
+      <div className="w-full flex-1 gap-3 flex flex-col justify-center items-center flex-grow self-stretch text-left font-normal text-[rgba(79,88,96,1)]">
+        <div className="gap-1 flex flex-col justify-center items-center w-[300px] lg:w-[350px]">
+          <div className="w-full flex items-start self-stretch">
+            <div>
+              <p className="m-0 w-[300px] lg:w-[350px] text-[15px] leading-[1.2]">
+                Selecione seu estado
+              </p>
+            </div>
+          </div>
+          <div className="w-full">
             <input
-              value={email.clientEmail}
-              onChange={(e) => email.setClientEmail(e.target.value)}
-              type="email"
-              placeholder="email@exemplo.com"
-              className={`outline-none text-center p-2 border ${
-                errMessage.incorrectFields.includes("Email")
-                  ? "border-red-400"
-                  : "border-gray-200"
-              }  grow`}
+              type={"text"}
+              className="flex-1 bg-white outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]"
             />
           </div>
-          <div className="flex items-center w-full gap-x-2">
-            <span className="uppercase text-gray-600 font-bold">
-              O seu telefone
-            </span>
-            <InputMask
-              type="text"
-              mask={cellPhoneMask}
-              maskChar=""
-              value={phone.clientPhone}
-              className={`outline-none text-center p-2 border ${
-                errMessage.incorrectFields.includes("Telefone")
-                  ? "border-red-400"
-                  : "border-gray-200"
-              }  grow`}
-              onBlur={(e) => {
-                if (e.target.value.length === 14) {
-                  setCellPhoneMask("(99) 9999-9999");
-                }
-              }}
-              onFocus={(e) => {
-                if (e.target.value.length === 14) {
-                  setCellPhoneMask("(99) 99999-9999");
-                }
-              }}
-              onChange={(e) => {
-                phone.setClientPhone(e.target.value);
-              }}
-            ></InputMask>
+        </div>
+        <div className="gap-1 flex flex-col justify-center items-center w-[300px] lg:w-[350px]">
+          <div className="w-full flex items-start self-stretch">
+            <div>
+              <p className="m-0 w-[300px] lg:w-[350px] text-[15px] leading-[1.2]">
+                Selecione sua cidade
+              </p>
+            </div>
+          </div>
+          <div className="w-full">
+            <input className="flex-1 bg-white outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]" />
           </div>
         </div>
-        <div className="flex items-center w-full gap-x-2">
-          <span className="uppercase text-gray-600 font-bold">Sua cidade</span>
-          <select
-            value={name.clientCity}
-            onChange={(e) => city.setClientCity(e.target.value)}
-            className="outline-none text-center p-2 border border-gray-200 grow"
-          >
-            {cities.map((city) => (
-              <option key={city.name} value={city.name}>
-                {city.name.toUpperCase()}
-              </option>
-            ))}
-          </select>
-        </div>
-        {errMessage.message && (
-          <p className="text-sm text-center text-red-600">
-            {errMessage.message}
-          </p>
-        )}
-        <div className="flex justify-around">
-          <button
-            className="bg-[#fead61] hover:bg-[#15599a] hover:text-white rounded px-3 py-2 uppercase font-bold"
-            onClick={() => setCurrentEstagio(1)}
-          >
-            Voltar
-          </button>
-          <button
-            className="bg-[#15599a] text-white hover:bg-[#fead61] hover:text-black rounded px-3 py-2 uppercase font-bold"
-            onClick={checkFields}
-          >
-            Prosseguir
-          </button>
+      </div>
+      <div className="w-full gap-4 flex flex-col justify-center items-center self-stretch text-white text-center font-black h-[100px]">
+        <div className="w-full">
+          <div className="flex-1 flex flex-col justify-center items-center flex-grow rounded-lg p-3 cursor-pointer bg-[rgba(21,89,154,1)] hover:bg-[rgba(254,173,97,1)] hover:text-black">
+            <p
+              onClick={() => next()}
+              className="w-full m-0 text-[19px] leading-[1.2] cursor-pointer"
+            >
+              Próximo
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

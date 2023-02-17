@@ -3,7 +3,8 @@ import { FaMoneyBillWaveAlt, FaSolarPanel, FaPiggyBank } from "react-icons/fa";
 import { WiSolarEclipse } from "react-icons/wi";
 import { ImPower } from "react-icons/im";
 import Image from "next/image";
-import Logo from "../utils/whitelogo.png";
+import LogoSemTexto from "../utils/logoBrancoSemTexto.png";
+import Logo from "../utils/logoBranco.png";
 import { IoIosResize } from "react-icons/io";
 function EstagioTres({
   setCurrentEstagio,
@@ -15,83 +16,63 @@ function EstagioTres({
   necessaryInvestiment,
 }) {
   return (
-    <div className="flex flex-col bg-[#fff] p-4 rounded">
-      <div className="flex justify-center">
-        <div className="w-[80px] h-[80px]">
-          <Image src={Logo} />
+    <>
+      <div className="w-full flex-1 gap-3 flex flex-col justify-center items-center flex-grow self-stretch font-normal text-[rgba(79,88,96,1)]">
+        <div className="gap-1 flex flex-col justify-center items-center text-left w-[353px]">
+          <div className="w-full flex items-start self-stretch">
+            <div>
+              <p className="m-0 w-[365px] text-[15px] leading-[1.2]">
+                Seu nome
+              </p>
+            </div>
+          </div>
+          <div className="w-full">
+            <div className="flex-1 bg-white rounded-lg h-[47px]" />
+          </div>
+        </div>
+        <div className="gap-1 flex flex-col justify-center items-center text-left w-[353px]">
+          <div className="w-full flex items-start self-stretch">
+            <div>
+              <p className="m-0 w-[365px] text-[15px] leading-[1.2]">
+                Seu melhor e-mail
+              </p>
+            </div>
+          </div>
+          <div className="w-full">
+            <div className="flex-1 bg-white rounded-lg h-[47px]" />
+          </div>
+        </div>
+        <div className="gap-1 flex flex-col justify-center items-center text-left w-[353px]">
+          <div className="w-full flex items-start self-stretch">
+            <div>
+              <p className="m-0 w-[365px] text-[15px] leading-[1.2]">
+                Telefone
+              </p>
+            </div>
+          </div>
+          <div className="w-full">
+            <div className="flex-1 bg-white rounded-lg h-[47px]" />
+          </div>
+        </div>
+        <div className="gap-1 text-center w-[353px]">
+          <div className="px-6 w-full h-10 flex flex-col justify-center items-center self-stretch">
+            <p className="w-full text-xs m-0 leading-[1.2]">
+              Fique tranquilo. Pedimos essas informações para desenvolver uma
+              simulação mais exata para você!
+            </p>
+          </div>
         </div>
       </div>
-
-      <h1 className="text-center uppercase text-[#fead61] font-bold text-xl">
-        Calculadora Solar
-      </h1>
-      <div className="grid grid-cols-2 grid-rows-3 gap-x-10 mt-5 gap-y-2">
-        <span className="flex flex-col justify-between items-center font-bold p-1 border border-gray-200">
-          <div className="flex flex-col items-center">
-            <p className="uppercase text-center text-gray-500">
-              Economia mensal esperada
+      <div className="w-full gap-4 flex flex-col justify-center items-center self-stretch text-white text-center font-black h-[100px]">
+        <div className="w-full">
+          <div className="flex-1 flex flex-col justify-center items-center flex-grow rounded-lg p-3 cursor-pointer bg-[rgba(21,89,154,1)] hover:bg-[rgba(254,173,97,1)] hover:text-black">
+            <p className="w-full m-0 text-[19px] leading-[1.2]">
+              Visualizar simulação
             </p>
-            <FaMoneyBillWaveAlt style={{ fontSize: "30px", color: "green" }} />
           </div>
-          <p className="bg-green-400 p-1 rounded-lg">R$ {necessaryEconomy}</p>
-        </span>
-        <span className="flex flex-col justify-between items-center font-bold p-1 border border-gray-200">
-          <div className="flex flex-col items-center">
-            <p className="uppercase text-center text-gray-500">
-              Geração mensal necessária
-            </p>
-            <WiSolarEclipse style={{ fontSize: "45px", color: "yellow" }} />
-          </div>
-          <p className="bg-yellow-300 p-1 rounded-lg">
-            {necessaryMonthlyEnergy.toFixed(2).replace(".", ",")}kWh
-          </p>
-        </span>
-        <span className="flex flex-col justify-between items-center font-bold p-1 border border-gray-200">
-          <div className="flex flex-col items-center">
-            <p className="uppercase text-center text-gray-500">
-              Potência do sistema
-            </p>
-            <ImPower style={{ fontSize: "30px", color: "blue" }} />
-          </div>
-
-          <p>{necessaryPeakPot.toFixed(2).replace(".", ",")} kWp</p>
-        </span>
-        <span className="flex flex-col justify-between items-center font-bold p-1 border border-gray-200">
-          <div className="flex flex-col items-center">
-            <p className="uppercase text-center text-gray-500">
-              Número de módulos
-            </p>
-            <FaSolarPanel style={{ fontSize: "30px", color: "orange" }} />
-          </div>
-          <p>{necessaryModules} módulos</p>
-        </span>
-        <span className="flex flex-col justify-between items-center font-bold p-1 border border-gray-200">
-          <div className="flex flex-col items-center">
-            <p className="uppercase text-center text-gray-500">Área mínima</p>
-            <IoIosResize style={{ fontSize: "30px", color: "red" }} />
-          </div>
-          <p>{necessaryArea} m²</p>
-        </span>
-        <span className="flex flex-col justify-between items-center font-bold p-1 border border-gray-200">
-          <div className="flex flex-col items-center">
-            <p className="uppercase text-center text-gray-500">
-              Investimento esperado
-            </p>
-            <FaPiggyBank style={{ fontSize: "30px", color: "green" }} />
-          </div>
-
-          <p>R${necessaryInvestiment.replace(".", ",")}</p>
-        </span>
+        </div>
       </div>
-      <div className="flex mt-4 justify-around">
-        <button
-          className="bg-[#fead61] hover:bg-[#15599a] hover:text-white rounded px-3 py-2 uppercase font-bold"
-          onClick={() => setCurrentEstagio(2)}
-        >
-          Voltar
-        </button>
-      </div>
-    </div>
+    </>
   );
 }
 

@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
+import { motion, AnimatePresence } from "framer-motion";
 import { AppContext } from "../../context/AppContext";
 import ModalComercial from "../../components/ModalComercial";
 import {
@@ -26,10 +28,13 @@ const statusStyles = {
 function Comercial({ users }) {
   const router = useRouter();
   const { credentials, setCredentials } = useContext(AppContext);
+
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
+
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
-  const [codFilter, setCodFilter] = useState(0);
+  const [codFilter, setCodFilter] = useState(null);
   const [dateFilter, setDateFilter] = useState({
     after: null,
     before: null,
@@ -209,188 +214,262 @@ function Comercial({ users }) {
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-        <div className="flex flex-wrap justify-center items-center gap-2">
-          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-raleway">
-            Projetos no estágio comercial
-          </p>
-          <p className="font-raleway font-bold text-[#fead61]">
-            ({filteredProjects.length})
-          </p>
-          {filteredProjects && (
-            <p className="font-raleway font-bold text-[#fead61]">
-              ({getListCumulativePeakPot()}kWp)
+        <div className="flex items-center justify-between w-full">
+          <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
+            <p className="font-bold uppercase text-center text-2xl text-[#15599a]">
+              Projetos no estágio comercial
             </p>
-          )}
-          {filteredProjects && (
             <p className="font-raleway font-bold text-[#fead61]">
-              (R${getListCumulativeValue().toLocaleString()})
+              ({filteredProjects.length})
             </p>
-          )}
-        </div>
-        <div className="flex flex-col w-full gap-y-2">
-          <div className="flex items-center justify-around gap-x-2">
-            <input
-              value={codFilter}
-              onChange={(e) => handleCodFilter(e.target.value)}
-              className="outline-none p-1.5 w-[100px] rounded border border-gray-200 placeholder:italic"
-              type="number"
-            />
-            <input
-              type={"text"}
-              className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
-              placeholder="Digite o nome do contrato"
-              value={searchFilter}
-              onChange={(e) => handleSearchFilter(e.target.value)}
-            />
-            <Select
-              isMulti
-              placeholder="TIPO DE SERVIÇO"
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  tipoDeServicoFilter: e.map((x) => x.value),
-                })
-              }
-              options={tiposDeServico.map((tipo) => {
-                return { label: tipo.label, value: tipo.value };
-              })}
-            />
-            <div className="hidden lg:flex gap-x-2">
-              <div className="flex flex-col w-fit items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  Depois de:
-                </span>
-                <input
-                  className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                  type="date"
-                  value={
-                    dateFilter.after &&
-                    new Date(dateFilter.after).toISOString().slice(0, 10)
-                  }
-                  onChange={(e) =>
-                    setDateFilter({
-                      ...dateFilter,
-                      after: isNaN(e.target.value)
-                        ? new Date(e.target.value).toISOString()
-                        : null,
-                    })
-                  }
-                />
-              </div>
-              <div className="flex flex-col w-fit items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  Antes de:
-                </span>
-                <input
-                  className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                  type="date"
-                  value={
-                    dateFilter.before &&
-                    new Date(dateFilter.before).toISOString().slice(0, 10)
-                  }
-                  onChange={(e) =>
-                    setDateFilter({
-                      ...dateFilter,
-                      before: isNaN(e.target.value)
-                        ? new Date(e.target.value).toISOString()
-                        : null,
-                    })
-                  }
-                />
-              </div>
-              <Select
-                isMulti={false}
-                placeholder={"CAMPO DE FILTRO"}
-                options={[
-                  {
-                    label: "DATA DA LIBERAÇÃO",
-                    value: "contrato.dataLiberacao",
-                  },
-                  {
-                    label: "DATA ASS.CONTRATO",
-                    value: "contrato.dataAssinatura",
-                  },
-                  {
-                    label: "DATA PAG.KIT",
-                    value: "compra.dataPagamento",
-                  },
-                  { label: "NÃO DEFINIDO", value: null },
-                ]}
-                onChange={(e) =>
-                  setDateFilter({
-                    ...dateFilter,
-                    field1: e.value != null ? e.value.split(".")[0] : null,
-                    field2: e.value != null ? e.value.split(".")[1] : null,
-                  })
-                }
+            {filteredProjects && (
+              <p className="font-raleway font-bold text-[#fead61]">
+                ({getListCumulativePeakPot()}kWp)
+              </p>
+            )}
+            {filteredProjects && (
+              <p className="font-raleway font-bold text-[#fead61]">
+                (R${getListCumulativeValue().toLocaleString()})
+              </p>
+            )}
+          </div>
+          {dropdownMenuVisible ? (
+            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <IoMdArrowDropupCircle
+                style={{ fontSize: "25px" }}
+                onClick={() => setDropdownMenuVisible(false)}
               />
             </div>
-          </div>
-          <div className="flex items-center justify-around gap-x-2">
-            <Select
-              isMulti
-              className="hidden lg:block"
-              placeholder="STATUS CONTRATO"
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  contratoFilter: e.map((x) => x.value),
-                })
-              }
-              options={[
-                {
-                  value: "AGUARDANDO SOLICITAÇÃO",
-                  label: "AGUARDANDO SOLICITAÇÃO",
-                },
-                {
-                  value: "SOLICITADO",
-                  label: "SOLICITADO",
-                },
-                {
-                  value: "NÃO ASSINADO",
-                  label: "NÃO ASSINADO",
-                },
-                {
-                  value: "ASSINADO",
-                  label: "ASSINADO",
-                },
-              ]}
-            />
-            <Select
-              isMulti
-              placeholder="VENDEDOR"
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  vendedorFilter: e.map((x) => x.value),
-                })
-              }
-              options={vendedores.map((vendedor) => {
-                return { label: vendedor.nome, value: vendedor.nome };
-              })}
-            />
-            <Select
-              isMulti
-              placeholder="STATUS DE LIBERAÇÃO"
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  pagamentoFilter: e.map((x) => x.value),
-                })
-              }
-              options={statusLiberacao.map((status) => {
-                return { label: status.label, value: status.value };
-              })}
-            />
-            <button
-              onClick={filterProjects}
-              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
-            >
-              <p>Filtrar</p>
-              <AiOutlineSearch />
-            </button>
-          </div>
+          ) : (
+            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <IoMdArrowDropdownCircle
+                style={{ fontSize: "25px" }}
+                onClick={() => setDropdownMenuVisible(true)}
+              />
+            </div>
+          )}
         </div>
+        <AnimatePresence>
+          {dropdownMenuVisible ? (
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0.6 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="flex flex-col w-full gap-y-2 mt-4"
+            >
+              <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                <input
+                  value={codFilter}
+                  placeholder="CÓDIGO SVB"
+                  onChange={(e) => handleCodFilter(e.target.value)}
+                  className="outline-none p-1.5 w-full lg:w-[150px] rounded border border-gray-200 placeholder:italic"
+                  type="number"
+                />
+                <input
+                  type={"text"}
+                  className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                  placeholder="DIGITE O NOME DO CONTRATO"
+                  value={searchFilter}
+                  onChange={(e) => handleSearchFilter(e.target.value)}
+                />
+                <div className="flex gap-x-2 w-full lg:w-fit">
+                  <div className="flex flex-col w-fit items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      Depois de:
+                    </span>
+                    <input
+                      className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                      type="date"
+                      value={
+                        dateFilter.after &&
+                        new Date(dateFilter.after).toISOString().slice(0, 10)
+                      }
+                      onChange={(e) =>
+                        setDateFilter({
+                          ...dateFilter,
+                          after: isNaN(e.target.value)
+                            ? new Date(e.target.value).toISOString()
+                            : null,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="flex flex-col w-fit items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">
+                      Antes de:
+                    </span>
+                    <input
+                      className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                      type="date"
+                      value={
+                        dateFilter.before &&
+                        new Date(dateFilter.before).toISOString().slice(0, 10)
+                      }
+                      onChange={(e) =>
+                        setDateFilter({
+                          ...dateFilter,
+                          before: isNaN(e.target.value)
+                            ? new Date(e.target.value).toISOString()
+                            : null,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti={false}
+                      placeholder={"CAMPO DE FILTRO"}
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      options={[
+                        {
+                          label: "DATA DA LIBERAÇÃO",
+                          value: "contrato.dataLiberacao",
+                        },
+                        {
+                          label: "DATA ASS.CONTRATO",
+                          value: "contrato.dataAssinatura",
+                        },
+                        {
+                          label: "DATA PAG.KIT",
+                          value: "compra.dataPagamento",
+                        },
+                        { label: "NÃO DEFINIDO", value: null },
+                      ]}
+                      onChange={(e) =>
+                        setDateFilter({
+                          ...dateFilter,
+                          field1:
+                            e.value != null ? e.value.split(".")[0] : null,
+                          field2:
+                            e.value != null ? e.value.split(".")[1] : null,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="w-full lg:w-[250px]">
+                  <Select
+                    isMulti
+                    placeholder="TIPO DE SERVIÇO"
+                    styles={{
+                      control: (base, state) => ({
+                        ...base,
+                        width: "100%",
+                        minHeight: "41px",
+                      }),
+                    }}
+                    onChange={(e) =>
+                      setFilters({
+                        ...filters,
+                        tipoDeServicoFilter: e.map((x) => x.value),
+                      })
+                    }
+                    options={tiposDeServico.map((tipo) => {
+                      return { label: tipo.label, value: tipo.value };
+                    })}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                <div className="w-full lg:w-[250px]">
+                  <Select
+                    isMulti
+                    placeholder="STATUS CONTRATO"
+                    styles={{
+                      control: (base, state) => ({
+                        ...base,
+                        width: "100%",
+                        minHeight: "41px",
+                      }),
+                    }}
+                    onChange={(e) =>
+                      setFilters({
+                        ...filters,
+                        contratoFilter: e.map((x) => x.value),
+                      })
+                    }
+                    options={[
+                      {
+                        value: "AGUARDANDO SOLICITAÇÃO",
+                        label: "AGUARDANDO SOLICITAÇÃO",
+                      },
+                      {
+                        value: "SOLICITADO",
+                        label: "SOLICITADO",
+                      },
+                      {
+                        value: "NÃO ASSINADO",
+                        label: "NÃO ASSINADO",
+                      },
+                      {
+                        value: "ASSINADO",
+                        label: "ASSINADO",
+                      },
+                    ]}
+                  />
+                </div>
+                <div className="w-full lg:w-[250px]">
+                  <Select
+                    isMulti
+                    placeholder="VENDEDOR"
+                    styles={{
+                      control: (base, state) => ({
+                        ...base,
+                        width: "100%",
+                        minHeight: "41px",
+                      }),
+                    }}
+                    onChange={(e) =>
+                      setFilters({
+                        ...filters,
+                        vendedorFilter: e.map((x) => x.value),
+                      })
+                    }
+                    options={vendedores.map((vendedor) => {
+                      return { label: vendedor.nome, value: vendedor.nome };
+                    })}
+                  />
+                </div>
+                <div className="w-full lg:w-[250px]">
+                  <Select
+                    isMulti
+                    placeholder="STATUS DE LIBERAÇÃO"
+                    styles={{
+                      control: (base, state) => ({
+                        ...base,
+                        width: "100%",
+                        minHeight: "41px",
+                      }),
+                    }}
+                    onChange={(e) =>
+                      setFilters({
+                        ...filters,
+                        pagamentoFilter: e.map((x) => x.value),
+                      })
+                    }
+                    options={statusLiberacao.map((status) => {
+                      return { label: status.label, value: status.value };
+                    })}
+                  />
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-x-2">
+                <button
+                  onClick={filterProjects}
+                  className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
+                >
+                  <p>Filtrar</p>
+                  <AiOutlineSearch />
+                </button>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
       <div className="flex  justify-around gap-3 mt-4 flex-wrap">
         {filteredProjects.map((project) => (
@@ -399,7 +478,7 @@ function Comercial({ users }) {
               handleOpenModal(project._id);
             }}
             key={project._id}
-            className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 hover:bg-blue-100"
+            className="w-full md:w-[350px] lg:w-[450px]  cursor-pointer border border-gray-200 hover:bg-blue-100"
           >
             <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
             <div className="flex flex-col p-2">

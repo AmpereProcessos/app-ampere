@@ -213,7 +213,7 @@ function Home() {
   }
   function getDataByRegional(value) {
     setRegional(value);
-    getGraphDataByYear(2022, { visualizacao: "REGIONAL", regional: value });
+    getGraphDataByYear(2023, { visualizacao: "REGIONAL", regional: value });
     getStats({ visualizacao: "REGIONAL", regional: value });
   }
   useEffect(() => {
@@ -221,7 +221,7 @@ function Home() {
       router.push("/auth/authHome");
     } else {
       getStats(credentials);
-      getGraphDataByYear(2022, credentials);
+      getGraphDataByYear(2023, credentials);
       getBirthDay(credentials);
     }
   }, []);
@@ -526,7 +526,7 @@ function Home() {
           </div>
         </div>
         <div className="flex mt-4 grow flex-col p-4  border border-gray-200 bg-[#fff] shadow-xl">
-          <div className="flex w-full items-center justify-between px-4">
+          <div className="flex w-full items-center justify-between">
             <h1 className="text-gray-600 uppercase">ANIVERSARIANTES DO MÊS</h1>
             <button
               onClick={() => filterBirthday(!filters.birthdayToday)}
@@ -535,7 +535,7 @@ function Home() {
               ANIVERSARIANDO HOJE
             </button>
           </div>
-          <div className="w-full grow flex flex-wrap justify-around gap-y-2 mt-2">
+          <div className="w-full grow flex flex-wrap justify-between gap-y-2 mt-2">
             {clientBirthday.filtered.length > 0 &&
               clientBirthday.filtered?.map((client, index) => (
                 <div

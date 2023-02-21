@@ -354,10 +354,27 @@ function Formulario({ info }) {
                 } bg-gray-200 resize-none p-2 outline-none border border-gray-600`}
               />
             </div>
+            <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                OBSERVAÇÃO COMERCIAL
+              </span>
+              <textarea
+                readOnly={true}
+                placeholder={"Observações comerciais aqui.."}
+                value={dados.obsComercial ? dados.obsComercial : ""}
+                onChange={(e) =>
+                  setDados({
+                    ...dados,
+                    obsComercial: e.target.value.toUpperCase(),
+                  })
+                }
+                className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+              />
+            </div>
           </div>
           <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
             <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              DADOS PARA CONTRATO
+              DADOS PARA CONTATO
             </span>
             <div className="flex gap-2 justify-around flex-wrap">
               <TextInput

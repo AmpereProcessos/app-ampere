@@ -224,8 +224,7 @@ function CreateModal({ setModalIsOpen, getCalls }) {
                 >
                   <option value={"A DEFINIR"}>A DEFINIR</option>
                   <option value={"GABRIEL MARTINS"}>GABRIEL MARTINS</option>
-                  <option value={"LUCAS FERNANDES"}>LUCAS FERNANDES</option>
-                  <option value={"LUIS EDUARDO"}>LUIS EDUARDO</option>
+                  <option value={"MARCOS DIAS"}>MARCOS DIAS</option>
                 </select>
               </div>
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">

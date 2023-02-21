@@ -508,7 +508,10 @@ function Home() {
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="name" />
-                <YAxis />
+                <YAxis
+                  dataKey={"Total"}
+                  domain={[0, statsData.maxGraphValue]}
+                />
                 <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip />
                 <Area

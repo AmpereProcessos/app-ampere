@@ -1,15 +1,25 @@
 import React, { useState } from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
 import EstagioDois from "../../../components/EstagioDois";
 import EstagioTres from "../../../components/EstagioTres";
 import EstagioUm from "../../../components/EstagioUm";
-import Image from "next/image";
 import Logo from "../../../utils/logoBranco.png";
 import LogoSemTexto from "../../../utils/logoBrancoSemTexto.png";
 function Calculadora() {
   const [estagio, setEstagio] = useState(1);
+  const [infoHolder, setInfoHolder] = useState({
+    valorFatura: null,
+    uf: "",
+    cidade: "",
+    nome: "",
+    email: "",
+    telefone: "",
+  });
+  console.log(infoHolder);
   return (
     <div
-      className={`bg-white inline-flex flex-col items-start overflow-clip font-['Raleway']`}
+      className={`bg-white inline-flex flex-col h-full items-start overflow-clip font-['Raleway']`}
     >
       <div className="w-full flex justify-center items-center self-stretch h-[82px] bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">
         <div className="w-11 h-[46px]">
@@ -18,13 +28,31 @@ function Calculadora() {
           </div>
         </div>
       </div>
-      <div className="px-3 w-full flex flex-col justify-center items-center self-stretch pt-[18px] pb-[12px] gap-[18px]">
-        <div className="px-6 py-1 w-full flex flex-col justify-center items-center self-stretch rounded-lg h-[500px] drop-shadow-lg bg-[rgba(245,245,245,1)]">
+      <div className="px-3 w-full flex flex-col grow justify-center items-center self-stretch pt-[18px] pb-[12px] gap-[18px]">
+        <div className="px-6 py-1 w-full flex flex-col justify-center items-center self-stretch rounded-lg lg:h-full drop-shadow-lg bg-[rgba(245,245,245,1)]">
           <div className="w-full text-white text-center h-[100px]">
             <div className="w-full flex-1 flex justify-center items-center flex-grow self-stretch">
               <div className="relative w-[300px] lg:w-[350px] h-[30.05px]">
-                <div className="absolute w-[154.7319793701172px] left-[3.38%] right-[50.23%] top-[42.5%] bottom-[45%] bg-[rgba(79,88,96,1)]" />
-                <div className="left-1/2 absolute w-[150px] right-[3.6%] top-[42.5%] bottom-[45%] bg-[rgba(79,88,96,1)]" />
+                {estagio > 1 ? (
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute w-[150px] left-[3.38%] right-[50.23%] top-[42.5%] bottom-[45%] bg-[rgba(21,89,154,1)]"
+                  />
+                ) : (
+                  <div className="absolute w-[150px] left-[3.38%] right-[50.23%] top-[42.5%] bottom-[45%] bg-[rgba(79,88,96,1)]" />
+                )}
+                {estagio > 2 ? (
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute w-[150px] left-1/2 right-[50.23%] top-[42.5%] bottom-[45%] bg-[rgba(21,89,154,1)]"
+                  />
+                ) : (
+                  <div className="left-1/2 absolute w-[150px] right-[3.6%] top-[42.5%] bottom-[45%] bg-[rgba(79,88,96,1)]" />
+                )}
                 <div className="inset-y-0 absolute left-0 font-black w-[30px] right-[90.99%]">
                   <div className="inset-0 absolute rounded-full w-[30px] bg-[rgba(21,89,154,1)]" />
                   <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">
@@ -32,30 +60,68 @@ function Calculadora() {
                   </p>
                 </div>
                 <div className="inset-y-0 absolute font-normal left-[45.5%] right-[45.5%] w-[30px]">
-                  <div className="inset-0 absolute rounded-full w-[30px] bg-[rgba(79,88,96,1)]" />
-                  <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">
-                    2
-                  </p>
+                  {estagio > 1 ? (
+                    <>
+                      <motion.div
+                        initial={{ opacity: 0.8 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="inset-0 absolute rounded-full w-[30px] bg-[rgba(21,89,154,1)]"
+                      />
+                      <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">
+                        2
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <div className="inset-0 absolute rounded-full w-[30px] bg-[rgba(79,88,96,1)]" />
+                      <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">
+                        2
+                      </p>
+                    </>
+                  )}
                 </div>
                 <div className="inset-y-0 absolute right-0 font-normal w-[30px] left-[90.99%]">
-                  <div className="inset-0 absolute rounded-full w-[30px] bg-[rgba(79,88,96,1)]" />
-                  <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">
-                    3
-                  </p>
+                  {estagio > 2 ? (
+                    <>
+                      <div className="inset-0 absolute rounded-full w-[30px] bg-[rgba(21,89,154,1)]" />
+                      <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">
+                        3
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <div className="inset-0 absolute rounded-full w-[30px] bg-[rgba(79,88,96,1)]" />
+                      <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">
+                        3
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
           </div>
           {estagio == 1 && (
-            <EstagioUm next={() => setEstagio((prev) => prev + 1)} />
+            <EstagioUm
+              infoHolder={infoHolder}
+              setInfoHolder={setInfoHolder}
+              next={() => setEstagio((prev) => prev + 1)}
+            />
           )}
           {estagio == 2 && (
             <EstagioDois
+              infoHolder={infoHolder}
+              setInfoHolder={setInfoHolder}
               previous={() => setEstagio((prev) => prev - 1)}
               next={() => setEstagio((prev) => prev + 1)}
             />
           )}
-          {estagio == 3 && <EstagioTres />}
+          {estagio == 3 && (
+            <EstagioTres
+              infoHolder={infoHolder}
+              setInfoHolder={setInfoHolder}
+            />
+          )}
         </div>
       </div>
       <div className="flex justify-center gap-3 px-10 w-full h-[100px] bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">

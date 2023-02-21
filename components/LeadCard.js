@@ -158,8 +158,8 @@ function LeadCard({ lead, getLeads }) {
         </div>
       </div>
       <div className="flex flex-col w-full pt-1">
-        <div className="flex justify-around w-full">
-          <div className="flex items-center gap-4">
+        <div className="grid lgrid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 w-full">
+          <div className="flex justify-center items-center gap-4">
             <div className="flex flex-col items-center">
               <p className="text-gray-600 text-center font-bold text-sm">
                 DATA DE AQUISIÇÃO
@@ -224,7 +224,7 @@ function LeadCard({ lead, getLeads }) {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex justify-center items-center gap-2">
             <SelectInput
               label={"VENDEDOR P/ENVIO"}
               editable={true}

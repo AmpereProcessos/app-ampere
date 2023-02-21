@@ -12,6 +12,7 @@ import { AppContext } from "../../context/AppContext";
 import ModalNovoLead from "../../components/ModalNovoLead";
 import LeadCard from "../../components/LeadCard";
 import { cidadesAtendidas, vendedores } from "../../utils/constants";
+import AnimatedTextAndIconButton from "../../components/AnimatedTextAndIconButton";
 
 var dateFilterParam = new Date();
 dateFilterParam.setMonth(dateFilterParam.getMonth() - 3);
@@ -173,7 +174,7 @@ function InsideSales() {
                 <span className="font-['Roboto'] text-xs h-[38px]">
                   ADQUIRIDOS ENTRE:
                 </span>
-                <div className="flex items-center flex-wrap gap-2">
+                <div className="flex items-center justify-center flex-wrap gap-2">
                   <input
                     value={dayjs(fetchDateFilter.after).format("YYYY-MM-DD")}
                     onChange={(e) =>
@@ -292,74 +293,113 @@ function InsideSales() {
                     />
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Select
-                    isMulti
-                    placeholder="CIDADE"
-                    onChange={(e) =>
-                      setFilters({
-                        ...filters,
-                        cidadeFilter: e.map((x) => x.value),
-                      })
-                    }
-                    options={cidadesAtendidas.map((cidade) => {
-                      return {
-                        label: cidade,
-                        value: cidade,
-                      };
-                    })}
-                  />
-                  <Select
-                    isMulti
-                    placeholder="VENDEDOR"
-                    onChange={(e) =>
-                      setFilters({
-                        ...filters,
-                        vendedorFilter: e.map((x) => x.value),
-                      })
-                    }
-                    options={vendedores.map((vendedor) => {
-                      return {
-                        label: vendedor.nome,
-                        value: vendedor.nome,
-                      };
-                    })}
-                  />
-                  <Select
-                    isMulti
-                    placeholder="CANAL"
-                    onChange={(e) =>
-                      setFilters({
-                        ...filters,
-                        canalFilter: e.map((x) => x.value),
-                      })
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "GOOGLE ADS", value: "GOOGLE ADS" },
-                      { label: "FACEBOOK ADS", value: "FACEBOOK ADS" },
-                      { label: "INDICAÇÃO", value: "INDICAÇÃO" },
-                      { label: "PASSIVO", value: "PASSIVO" },
-                      { label: "PROSPECÇÃO ATIVA", value: "PROSPECÇÃO ATIVA" },
-                    ]}
-                  />
-                  {credentials.accessibleRoutes.includes("PPS") ||
-                  credentials.accessibleRoutes.includes("Marketing") ? (
+                <div className="flex flex-col justify-start lg:justify-end lg:flex-row items-center flex-wrap gap-2 w-full">
+                  <div className="w-full lg:w-[200px]">
                     <Select
                       isMulti
-                      placeholder="INSIDER"
+                      placeholder="CIDADE"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                        }),
+                      }}
                       onChange={(e) =>
                         setFilters({
                           ...filters,
-                          insiderFilter: e.map((x) => x.value),
+                          cidadeFilter: e.map((x) => x.value),
                         })
                       }
-                      options={vendedores
-                        .filter((x) => x.qualificacao?.includes("INSIDE"))
-                        .map((vendedor) => {
-                          return { label: vendedor.nome, value: vendedor.nome };
-                        })}
+                      options={cidadesAtendidas.map((cidade) => {
+                        return {
+                          label: cidade,
+                          value: cidade,
+                        };
+                      })}
                     />
+                  </div>
+                  <div className="w-full lg:w-[200px]">
+                    <Select
+                      isMulti
+                      placeholder="VENDEDOR"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                        }),
+                      }}
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          vendedorFilter: e.map((x) => x.value),
+                        })
+                      }
+                      options={vendedores.map((vendedor) => {
+                        return {
+                          label: vendedor.nome,
+                          value: vendedor.nome,
+                        };
+                      })}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[200px]">
+                    <Select
+                      isMulti
+                      placeholder="CANAL"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                        }),
+                      }}
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          canalFilter: e.map((x) => x.value),
+                        })
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "GOOGLE ADS", value: "GOOGLE ADS" },
+                        { label: "FACEBOOK ADS", value: "FACEBOOK ADS" },
+                        { label: "INDICAÇÃO", value: "INDICAÇÃO" },
+                        { label: "PASSIVO", value: "PASSIVO" },
+                        {
+                          label: "PROSPECÇÃO ATIVA",
+                          value: "PROSPECÇÃO ATIVA",
+                        },
+                      ]}
+                    />
+                  </div>
+
+                  {credentials.accessibleRoutes.includes("PPS") ||
+                  credentials.accessibleRoutes.includes("Marketing") ? (
+                    <div className="w-full lg:w-[200px]">
+                      <Select
+                        isMulti
+                        placeholder="INSIDER"
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                          }),
+                        }}
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            insiderFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={vendedores
+                          .filter((x) => x.qualificacao?.includes("INSIDE"))
+                          .map((vendedor) => {
+                            return {
+                              label: vendedor.nome,
+                              value: vendedor.nome,
+                            };
+                          })}
+                      />
+                    </div>
                   ) : (
                     false
                   )}
@@ -368,7 +408,7 @@ function InsideSales() {
                   onClick={filterLeads}
                   className="flex bg-[#fead61] text-[#15599a] hover:bg-[#15599a] hover:text-white h-[36px] font-bold rounded px-2 items-center gap-x-2"
                 >
-                  <p>Filtrar</p>
+                  <p>FILTRAR</p>
                   <AiOutlineSearch />
                 </button>
               </div>
@@ -382,12 +422,20 @@ function InsideSales() {
           <LeadCard key={lead._id} lead={lead} getLeads={getLeads} />
         ))}
       </div>
-      <div
+      {/* <div
         onClick={() => setModalNovoLead(true)}
         className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
       >
         <p className="uppercase font-bold text-sm">NOVO LEAD</p>
-      </div>
+      </div> */}
+      <AnimatedTextAndIconButton>
+        <p
+          onClick={() => setModalNovoLead(true)}
+          className="uppercase font-bold text-sm h-full w-full text-center"
+        >
+          NOVO LEAD
+        </p>
+      </AnimatedTextAndIconButton>
       {modalNovoLead && (
         <ModalNovoLead setModalIsOpen={setModalNovoLead} getLeads={getLeads} />
       )}

@@ -12,7 +12,7 @@ function AnimatedTextAndIconButton({ pText, children, exec }) {
       onMouseEnter={() => setOpenNewUserButton(true)}
       onMouseLeave={() => setOpenNewUserButton(false)}
       className={`${
-        openNewUserButton ? "w-[200px] py-6 rounded-sm" : "p-6 rounded-full "
+        openNewUserButton ? "w-[200px] py-6 rounded-full" : "p-6 rounded-full "
       } flex justify-center items-center gap-2 fixed cursor-pointer ml-12  bottom-10 left-150 border border-[#15599a] bg-[#15599a] text-white`}
     >
       {openNewUserButton ? <>{children}</> : <BsPlusLg />}

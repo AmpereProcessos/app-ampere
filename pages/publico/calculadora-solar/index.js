@@ -6,12 +6,13 @@ import EstagioTres from "../../../components/EstagioTres";
 import EstagioUm from "../../../components/EstagioUm";
 import Logo from "../../../utils/logoBranco.png";
 import LogoSemTexto from "../../../utils/logoBrancoSemTexto.png";
+import estadosCidades from "../../../utils/estados_cidades.json";
 function Calculadora() {
   const [estagio, setEstagio] = useState(1);
   const [infoHolder, setInfoHolder] = useState({
     valorFatura: null,
-    uf: "",
-    cidade: "",
+    uf: estadosCidades[0].sigla,
+    cidade: estadosCidades[0].cidades[0],
     nome: "",
     email: "",
     telefone: "",

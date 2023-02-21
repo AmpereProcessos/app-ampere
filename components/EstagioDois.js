@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import LogoSemTexto from "../utils/logoBrancoSemTexto.png";
 import Logo from "../utils/logoBranco.png";
-
+import estadosCidades from "../utils/estados_cidades.json";
 function EstagioDois({ next, infoHolder, setInfoHolder }) {
   const [err, setErr] = useState({ field: null, text: "" });
   function validateFields() {
@@ -33,6 +33,7 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
       next();
     }
   }
+
   return (
     <div className="flex flex-col h-[600px] w-full">
       <div className="w-full flex-1 gap-3 flex flex-col justify-center items-center flex-grow self-stretch text-left font-normal text-[rgba(79,88,96,1)] h-[500px]">
@@ -46,21 +47,30 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
               </div>
             </div>
             <div className="w-full">
-              <input
+              <select
                 type={"text"}
                 value={infoHolder.uf}
-                onChange={(e) =>
+                onChange={(e) => {
                   setInfoHolder({
                     ...infoHolder,
                     uf: e.target.value.toUpperCase(),
-                  })
-                }
+                    cidade: estadosCidades.filter(
+                      (x) => x.sigla == e.target.value
+                    )[0],
+                  });
+                }}
                 className={`flex-1 ${
                   err.field == "UF"
                     ? "bg-red-200 border border-red-500"
                     : "bg-white"
                 }  outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]`}
-              />
+              >
+                {estadosCidades.map((x) => (
+                  <option value={x.sigla} key={x.sigla}>
+                    {x.nome}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="gap-1 flex flex-col justify-center items-center w-[300px] lg:w-[350px]">
@@ -72,7 +82,7 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
               </div>
             </div>
             <div className="w-full">
-              <input
+              <select
                 value={infoHolder.cidade}
                 onChange={(e) =>
                   setInfoHolder({
@@ -85,7 +95,19 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
                     ? "bg-red-200 border border-red-500"
                     : "bg-white"
                 } outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]`}
-              />
+              >
+                {infoHolder.uf ? (
+                  estadosCidades
+                    .filter((x) => x.sigla == infoHolder.uf)[0]
+                    .cidades.map((cidade, index) => (
+                      <option value={cidade} key={index}>
+                        {cidade}
+                      </option>
+                    ))
+                ) : (
+                  <option></option>
+                )}
+              </select>
             </div>
           </div>
         </div>

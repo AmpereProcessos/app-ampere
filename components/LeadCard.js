@@ -4,6 +4,7 @@ import { vendedores } from "../utils/constants";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 import { MdSend, MdSave } from "react-icons/md";
+import { BsPatchCheckFill } from "react-icons/bs";
 import axios from "axios";
 import NumberInput from "./NumberInput";
 function phoneMask(value) {
@@ -45,7 +46,13 @@ function LeadCard({ lead, getLeads }) {
       key={lead._id}
       className={`flex flex-col w-full border border-gray-200 p-3 hover:bg-blue-100 items-center`}
     >
-      <div className="grid grid-cols-1 lg:grid-cols-10 items-center border-b border-gray-200 pb-1 w-full">
+      <div className="relative grid grid-cols-1 lg:grid-cols-10 items-center border-b border-gray-200 pb-1 w-full">
+        {lead.contratoSolicitado && (
+          <div className="absolute -left-2 -top-2 text-green-600">
+            <BsPatchCheckFill style={{ fontSize: "20px" }} />
+          </div>
+        )}
+
         <p className="text-sm text-[#15599a] font-bold text-center">
           #{lead.codigoSVB} - {lead.nome?.toUpperCase()}
         </p>

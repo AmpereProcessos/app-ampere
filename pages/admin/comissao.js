@@ -228,7 +228,7 @@ function Comissao() {
               />
               <button
                 onClick={filterProjects}
-                className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+                className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-1 px-2 items-center gap-x-2"
               >
                 <p>Filtrar</p>
                 <AiOutlineSearch />

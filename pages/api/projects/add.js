@@ -11,8 +11,12 @@ export default async function handler(req, res) {
     const collectionIS = dbIS.collection("leads");
     // Buscando insider com códigoSVB na coleção de leads
     let cod = isNaN(req.body.codigoSVB) ? 0 : Number(req.body.codigoSVB);
-    let obj = await collectionIS.findOne({ codigoSVB: cod });
-    let insider = obj ? obj.responsavel : null;
+    let obj = await collectionIS.findOneAndUpdate(
+      { codigoSVB: cod },
+      { $set: { contratoSolicitado: true } },
+      { returnNewDocument: true }
+    );
+    let insider = obj ? obj?.value?.responsavel : null;
 
     // Pegando o último projeto adicionado na gestão de projetos
     let lastestInserted = await collection

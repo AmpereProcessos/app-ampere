@@ -4,6 +4,7 @@ import { AppContext } from "../../context/AppContext";
 import ModalNovoLead from "../../components/ModalNovoLead";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MdDateRange } from "react-icons/md";
+import { BsDownload } from "react-icons/bs";
 import Select from "react-select";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -33,6 +34,16 @@ function InsideSales() {
     before: null,
     field: null,
   });
+  function exportData() {
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+      JSON.stringify(filteredLeads)
+    )}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = "data.json";
+
+    link.click();
+  }
   function getLeads() {
     if (
       credentials.accessibleRoutes.includes("PPS") ||
@@ -123,7 +134,7 @@ function InsideSales() {
           ACOMPANHAMENTO DE OPORTUNIDADES ({filteredLeads.length})
         </h1>
 
-        <div className="flex gap-x-2 items-center justify-around">
+        <div className="flex gap-x-2 items-center justify-around flex-wrap gap-2">
           <p>Adquiridos entre:</p>
           <input
             value={dayjs(fetchDateFilter.after).format("YYYY-MM-DD")}
@@ -154,6 +165,13 @@ function InsideSales() {
           >
             <p className="mr-2 text-sm">BUSCAR LEADS</p>
             <MdDateRange />
+          </div>
+          <div
+            onClick={exportData}
+            className="flex cursor-pointer border border-[#15599a] text-[#15599a] hover:bg-[#15599a] hover:text-white items-center  font-bold p-2 rounded-lg transition duration-300 ease-in-out hover:scale-105"
+          >
+            <p className="mr-2 text-sm">BAIXAR DADOS</p>
+            <BsDownload />
           </div>
         </div>
 

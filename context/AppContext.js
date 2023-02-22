@@ -24,11 +24,9 @@ export function AppProvider({ children, pathname }) {
   function validateUserSession() {
     var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
     let maxSessionTime = storedCredentials?.maxSessionTime;
-    console.log("FUI CHAMADO", maxSessionTime);
     if (new Date(maxSessionTime) > new Date()) {
       return storedCredentials;
     } else {
-      console.log("FUI PELO ELSE");
       return false;
     }
   }
@@ -52,8 +50,10 @@ export function AppProvider({ children, pathname }) {
   }, []);
   useEffect(() => {
     let validSession = validateUserSession();
-    if (validSession && credentials) {
-      getNotificacoes(credentials._id);
+    if (validSession) {
+      if (credentials) {
+        getNotificacoes(credentials._id);
+      }
     } else {
       setCredentials(null);
       localStorage.removeItem("credentials");

@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Select from "react-select";
 import Link from "next/link";
 import { AiOutlineSearch } from "react-icons/ai";
+import { motion } from "framer-motion";
 import { statusLiberacao, tiposDeServico } from "../../utils/constants";
 import ModalSuprimentos from "../../components/ModalSuprimentos";
 import dayjs from "dayjs";
@@ -307,12 +308,15 @@ function Suprimentos() {
           </button>
         </div>
       </div>
-      <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-        {filteredProjects.map((project) => (
-          <div
+      <div className="flex justify-around gap-3 mt-4 flex-wrap">
+        {filteredProjects.map((project, index) => (
+          <motion.div
             onClick={() => {
               handleOpenModal(project._id);
             }}
+            initial={{ opacity: 0, translateX: -50, translateY: -35 }}
+            animate={{ opacity: 1, translateX: 50, translateY: 0 }}
+            transition={{ duration: 0.3, delay: 0.01 * index }}
             key={project._id}
             className={`w-[250px] lg:w-[450px] cursor-pointer ${
               project.compra.dataPedido == undefined
@@ -462,7 +466,7 @@ function Suprimentos() {
                 false
               )}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
       <Link href={"/obras/conferenciaMaterial"}>

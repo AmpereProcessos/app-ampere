@@ -4,6 +4,7 @@ import Link from "next/link";
 import axios from "axios";
 import dayjs from "dayjs";
 import Select from "react-select";
+import { motion } from "framer-motion";
 import { AiOutlineSearch } from "react-icons/ai";
 import ModalProjetos from "../../components/ModalProjetos";
 import {
@@ -618,13 +619,16 @@ function Projetos() {
           </button>
         </div>
       </div>
-      <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-        {filteredProjects.map((project) => (
-          <div
+      <div className="flex  justify-around gap-3 mt-4 flex-wrap">
+        {filteredProjects.map((project, index) => (
+          <motion.div
             onClick={() => {
               handleOpenModal(project._id);
             }}
             key={project._id}
+            initial={{ opacity: 0, translateX: -50, translateY: -35 }}
+            animate={{ opacity: 1, translateX: 50, translateY: 0 }}
+            transition={{ duration: 0.3, delay: 0.01 * index }}
             className={`w-[250px] lg:w-[450px] cursor-pointer ${
               project.parecer.dataParecerDeAcesso != undefined &&
               project.vistoria.status != "REALIZADA"
@@ -738,7 +742,7 @@ function Projetos() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
       <Link href={"/projetos/visitaTecnica"}>

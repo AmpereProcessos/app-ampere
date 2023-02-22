@@ -472,11 +472,14 @@ function Comercial({ users }) {
         </AnimatePresence>
       </div>
       <div className="flex  justify-around gap-3 mt-4 flex-wrap">
-        {filteredProjects.map((project) => (
-          <div
+        {filteredProjects.map((project, index) => (
+          <motion.div
             onClick={() => {
               handleOpenModal(project._id);
             }}
+            initial={{ opacity: 0, translateX: -50 }}
+            animate={{ opacity: 1, translateX: 50 }}
+            transition={{ duration: 0.3, delay: 0.01 * index }}
             key={project._id}
             className="w-full md:w-[350px] lg:w-[450px]  cursor-pointer border border-gray-200 hover:bg-blue-100"
           >
@@ -536,7 +539,7 @@ function Comercial({ users }) {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
       {credentials.regional == undefined && (

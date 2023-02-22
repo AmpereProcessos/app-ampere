@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import ModalDB from "../../components/ModalDB";
+import axios from "axios";
 import Select from "react-select";
+import { motion } from "framer-motion";
 import {
   cidadesAtendidas,
   equipesTecnicas,
   vendedores,
 } from "../../utils/constants";
-import axios from "axios";
+import ModalDB from "../../components/ModalDB";
 import SelectInput from "../../components/SelectInput";
-import dayjs from "dayjs";
 import { AppContext } from "../../context/AppContext";
 function BandoDeDados({ data }) {
   const { credentials, setCredentials } = useContext(AppContext);
@@ -569,11 +569,14 @@ function BandoDeDados({ data }) {
             <span className="sr-only">Loading...</span>
           </div>
         ) : (
-          filteredProjects.map((project) => (
-            <div
+          filteredProjects.map((project, index) => (
+            <motion.div
               onClick={() => {
                 handleOpenModal(project._id);
               }}
+              initial={{ opacity: 0, translateX: -50 }}
+              animate={{ opacity: 1, translateX: 50 }}
+              transition={{ duration: 0.3, delay: 0.01 * index }}
               key={project._id}
               className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
@@ -603,7 +606,7 @@ function BandoDeDados({ data }) {
                   {project.tipoDeServico ? project.tipoDeServico : "-"}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))
         )}
       </div>

@@ -4,10 +4,12 @@ import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import ModalADM from "../../components/ModalADM";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
 import { equipesTecnicas, statusLiberacao } from "../../utils/constants";
 import { AppContext } from "../../context/AppContext";
+import dayjs from "dayjs";
 function Administracao() {
   const router = useRouter();
   const { credentials, setCredentials } = useContext(AppContext);
@@ -299,8 +301,11 @@ function Administracao() {
         </div>
       </div>
       <div className="flex  justify-around gap-3 mt-4 flex-wrap">
-        {filteredProjects.map((project) => (
-          <div
+        {filteredProjects.map((project, index) => (
+          <motion.div
+            initial={{ opacity: 0, translateX: -50, translateY: -35 }}
+            animate={{ opacity: 1, translateX: 50, translateY: 0 }}
+            transition={{ duration: 0.3, delay: 0.01 * index }}
             onClick={() => {
               handleOpenModal(project._id);
             }}
@@ -316,14 +321,18 @@ function Administracao() {
                 <p className="text-xs text-[#15599a]">#{project.qtde}</p>
               </div>
               <div className="flex items-center justify-between">
-                <div className="hidden lg:flex lg:flex-col">
-                  <span className="text-xxs">CONTRATO</span>
+                <div className="flex flex-col">
+                  <span className="text-xxs">SAÍDA DE OBRA</span>
                   <p className="text-xs text-yellow-500">
-                    {project.contrato?.status && project.contrato?.status}
+                    {project.obra?.saida
+                      ? dayjs(project.obra.saida)
+                          .add(4, "hours")
+                          .format("DD/MM/YYYY")
+                      : "-"}
                   </p>
                 </div>
-                <div>
-                  <span className="text-xxs">VENDEDOR</span>
+                <div className="flex flex-col">
+                  <span className="text-xxs text-end">VENDEDOR</span>
                   <p className="text-xs text-[#15599a]">
                     {project.vendedor && project.vendedor.nome}
                   </p>
@@ -344,7 +353,7 @@ function Administracao() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
       {credentials.visualizacao == undefined && (

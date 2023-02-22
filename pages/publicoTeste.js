@@ -30,7 +30,12 @@ function Teste() {
     console.log(res);
   }
   console.log(images);
-  return (
+  return <></>;
+}
+
+export default Teste;
+{
+  /** 
     <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
       <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
         <div className="absolute">
@@ -302,8 +307,5 @@ function Teste() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>*/
 }
-
-export default Teste;

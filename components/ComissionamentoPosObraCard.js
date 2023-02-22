@@ -1,12 +1,13 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import React, { useContext, useState } from "react";
+import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
 import DateInput from "./DateInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 
-function ComissionamentoPosObraCard({ project }) {
+function ComissionamentoPosObraCard({ project, index }) {
   const { credentials } = useContext(AppContext);
   const [info, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
@@ -72,7 +73,10 @@ function ComissionamentoPosObraCard({ project }) {
     }
   }
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, translateY: -20 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{ duration: 0.3, delay: 0.01 * index }}
       className={`grid grid-rows-6 grid-cols-1 lg:grid-cols-10 lg:grid-rows-1 ${getBorderColor(
         dayjs().diff(info.medidor.data, "days")
       )} p-2`}
@@ -341,7 +345,7 @@ function ComissionamentoPosObraCard({ project }) {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

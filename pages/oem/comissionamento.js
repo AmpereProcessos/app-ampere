@@ -4,6 +4,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Select from "react-select";
+import { motion } from "framer-motion";
 import { AppContext } from "../../context/AppContext";
 import ComissionamentoPosObraCard from "../../components/ComissionamentoPosObraCard";
 import {
@@ -333,7 +334,11 @@ function Comissionamento() {
       </div>
       <div className="flex flex-col gap-2 mt-2">
         {filteredProjects?.map((project, index) => (
-          <ComissionamentoPosObraCard key={project._id} project={project} />
+          <ComissionamentoPosObraCard
+            key={project._id}
+            project={project}
+            index={index}
+          />
         ))}
       </div>
       <Link href={"/vendas/entregaTecnica"}>

@@ -17,9 +17,14 @@ function Auth() {
         setMessage(res.data.error);
       } else {
         if (res.data.credentials._id) {
+          let currentHour = new Date().getHours();
+          let fixedDateInMS = new Date().setHours(currentHour + 3);
           localStorage.setItem(
             "credentials",
-            JSON.stringify(res.data.credentials)
+            JSON.stringify({
+              ...res.data.credentials,
+              maxSessionTime: new Date(fixedDateInMS).toISOString(),
+            })
           );
           setCredentials(res.data.credentials);
           router.push("/");

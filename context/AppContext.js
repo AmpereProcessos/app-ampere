@@ -9,6 +9,8 @@ export function AppProvider({ children, pathname }) {
   const [users, setUsers] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [notificacoes, setNotificacoes] = useState([]);
+
+  // Fetch functions
   function getUsers() {
     axios.get("/api/auth/user").then((res) => {
       setUsers(res.data);
@@ -19,10 +21,22 @@ export function AppProvider({ children, pathname }) {
       .get(`/api/notificacoes/${id}`)
       .then((res) => setNotificacoes(res.data));
   }
+  function validateUserSession() {
+    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
+    let maxSessionTime = storedCredentials?.maxSessionTime;
+    console.log("FUI CHAMADO", maxSessionTime);
+    if (new Date(maxSessionTime) > new Date()) {
+      return storedCredentials;
+    } else {
+      console.log("FUI PELO ELSE");
+      return false;
+    }
+  }
+
   useEffect(() => {
     if (!credentials) {
-      var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-      if (storedCredentials != null) {
+      let storedCredentials = validateUserSession();
+      if (storedCredentials) {
         setCredentials(storedCredentials);
         getUsers();
         getNotificacoes(storedCredentials._id);
@@ -37,8 +51,13 @@ export function AppProvider({ children, pathname }) {
     setLoaded(true);
   }, []);
   useEffect(() => {
-    if (credentials) {
+    let validSession = validateUserSession();
+    if (validSession && credentials) {
       getNotificacoes(credentials._id);
+    } else {
+      setCredentials(null);
+      localStorage.removeItem("credentials");
+      router.push("/auth/authHome");
     }
   }, [router.pathname]);
   return (

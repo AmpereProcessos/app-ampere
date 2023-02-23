@@ -13,11 +13,13 @@ function Cotacoes() {
 
   async function getQuotations() {
     let response = await axios.get("/api/projects/cotacoes");
-    if (response.statusText == "OK") {
-      setQuotations(response.data);
-    } else {
-      alert("Houve um erro na conexão com o servidor.");
-    }
+    console.log(response);
+    setQuotations(response.data);
+    // if (response.statusText == "OK") {
+    //   setQuotations(response.data);
+    // } else {
+    //   alert("Houve um erro na conexão com o servidor.");
+    // }
   }
   useEffect(() => {
     if (

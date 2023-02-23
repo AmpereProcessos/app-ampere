@@ -4,7 +4,6 @@ import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 function CotacaoCard({ info }) {
   const [infoHolder, setInfoHolder] = useState(info);
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
-  console.log(info);
   return (
     <div className="flex flex-col w-full p-2 rounded border border-[#15599a]">
       <div className="flex items-center justify-between">

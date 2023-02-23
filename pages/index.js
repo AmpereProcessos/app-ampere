@@ -18,6 +18,7 @@ import {
   YAxis,
 } from "recharts";
 import { Fireworks } from "fireworks-js";
+import DashboardSkeleton from "../components/skeletons/DashboardSkeleton";
 const routes = [
   {
     title: "Projetos",
@@ -225,10 +226,11 @@ function Home() {
       getBirthDay(credentials);
     }
   }, []);
+  console.log(statsData);
   if (credentials.visualizacao == "OBRAS") {
     router.push("/ordemDeServico/osDaEquipe");
     return <></>;
-  } else
+  } else if (statsData.graphData.length > 0) {
     return (
       <div className="p-6 grow">
         {!credentials.visualizacao && (
@@ -553,6 +555,9 @@ function Home() {
         </div>
       </div>
     );
+  } else {
+    return <DashboardSkeleton />;
+  }
 }
 
 export default Home;

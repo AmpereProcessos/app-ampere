@@ -8,7 +8,7 @@ import SelectFloatingInput from "./SelectFloatingInput";
 import { fornecedores, suprimentoOption } from "../utils/constants";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
-function ModalNovaCotacao({ modalIsOpen, setModalIsOpen }) {
+function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
   const { credentials } = useContext(AppContext);
   console.log(credentials);
   const [quotationInfo, setQuotationInfo] = useState({
@@ -96,12 +96,13 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen }) {
         dataDeCotacao: new Date(),
         usuario: credentials.nome,
       });
-      if (response.statusText == "OK") {
+      if (response.data) {
         setInsertQuotationMsg({
           text: "Cotação adicionada !",
           color: "text-green-500",
         });
         resetQuotationInfo();
+        getQuotations();
         setTimeout(() => {
           setInsertQuotationMsg("");
         }, 2000);

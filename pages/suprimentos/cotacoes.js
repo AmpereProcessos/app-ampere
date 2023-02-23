@@ -74,6 +74,7 @@ function Cotacoes() {
       </div>
       {newQuotationModalOpen ? (
         <ModalNovaCotacao
+          getQuotations={getQuotations}
           modalIsOpen={newQuotationModalOpen}
           setModalIsOpen={setNewQuotationModalOpen}
         />

@@ -57,7 +57,8 @@ export function AppProvider({ children, pathname }) {
     } else {
       setCredentials(null);
       localStorage.removeItem("credentials");
-      router.push("/auth/authHome");
+      if (!window.location.pathname.includes("publico"))
+        router.push("/auth/authHome");
     }
   }, [router.pathname]);
   return (

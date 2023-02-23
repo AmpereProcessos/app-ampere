@@ -298,7 +298,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen }) {
                     </h1>
                   </div>
                   {quotationInfo.inversores.map((inverter, index) => (
-                    <div className="grid grid-cols-7 gap-2 pt-1">
+                    <div key={index} className="grid grid-cols-7 gap-2 pt-1">
                       <h1 className=" text-gray-700 col-span-2 text-center text-xs">
                         {inverter.marca}
                       </h1>
@@ -401,7 +401,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen }) {
                     </h1>
                   </div>
                   {quotationInfo.modulos.map((module, index) => (
-                    <div className="grid grid-cols-7 gap-2">
+                    <div key={index} className="grid grid-cols-7 gap-2">
                       <h1 className=" text-gray-700 col-span-2 text-center text-xs">
                         {module.marca}
                       </h1>
@@ -530,7 +530,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen }) {
                     </h1>
                   </div>
                   {quotationInfo.componentes.map((module, index) => (
-                    <div className="grid grid-cols-8 gap-2">
+                    <div key={index} className="grid grid-cols-8 gap-2">
                       <h1 className=" text-gray-700 col-span-2 text-center text-xs">
                         {module.insumo}
                       </h1>

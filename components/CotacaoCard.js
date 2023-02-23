@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 function CotacaoCard({ info }) {
@@ -8,6 +9,13 @@ function CotacaoCard({ info }) {
     <div className="flex flex-col w-full p-2 rounded border border-[#15599a]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
+          <h1 className="text-gray-500 font-bold text-md">
+            {infoHolder.dataDeCotacao
+              ? dayjs(infoHolder.dataDeCotacao)
+                  .add(4, "hours")
+                  .format("DD/MM/YYYY")
+              : null}
+          </h1>
           <h1 className="text-[#15599a] font-bold text-xl">
             {infoHolder.fornecedor}
           </h1>
@@ -38,7 +46,7 @@ function CotacaoCard({ info }) {
         </div>
       </div>
       {dropdownMenuVisible ? (
-        <div className="flex justify-around mt-2 border-t border-gray-200">
+        <div className="flex justify-around mt-2 border-t border-gray-200 pt-2">
           {infoHolder.modulos ? (
             <div className="flex flex-col">
               <h1 className="text-center text-[#15599a] font-bold">MÓDULOS</h1>

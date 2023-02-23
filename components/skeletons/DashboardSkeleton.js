@@ -4,8 +4,8 @@ function DashboardSkeleton() {
   return (
     <div className="p-6 grow">
       <div className="flex items-center justify-center gap-2 mb-3">
-        <button className="w-[60px] h-[31px] bg-gray-200 animate-pulse"></button>
-        <button className="w-[60px] h-[31px] bg-gray-200 animate-pulse"></button>
+        <button className="w-[170px] h-[31px] bg-gray-200 animate-pulse"></button>
+        <button className="w-[170px] h-[31px] bg-gray-200 animate-pulse"></button>
         <button className="w-[60px] h-[31px] bg-gray-200 animate-pulse"></button>
       </div>
       <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">

@@ -50,8 +50,8 @@ function CotacaoCard({ info }) {
           {infoHolder.modulos ? (
             <div className="flex flex-col">
               <h1 className="text-center text-[#15599a] font-bold">MÓDULOS</h1>
-              {infoHolder.modulos.map((modulo) => (
-                <h1 className="text-gray-500">
+              {infoHolder.modulos.map((modulo, index) => (
+                <h1 key={index} className="text-gray-500">
                   ({modulo.qtde}) {modulo.marca} - {modulo.modelo}
                 </h1>
               ))}
@@ -62,8 +62,8 @@ function CotacaoCard({ info }) {
               <h1 className="text-center text-[#15599a] font-bold">
                 INVERSORES
               </h1>
-              {infoHolder.inversores.map((inversor) => (
-                <h1 className="text-gray-500">
+              {infoHolder.inversores.map((inversor, index) => (
+                <h1 key={index} className="text-gray-500">
                   ({inversor.qtde}) {inversor.marca} - {inversor.modelo}
                 </h1>
               ))}
@@ -74,8 +74,8 @@ function CotacaoCard({ info }) {
               <h1 className="text-center text-[#15599a] font-bold">
                 INVERSORES
               </h1>
-              {infoHolder.componentes.map((componente) => (
-                <h1 className="text-gray-500">
+              {infoHolder.componentes.map((componente, index) => (
+                <h1 key={index} className="text-gray-500">
                   ({componente.qtde}) {componente.insumo} -{" "}
                   {`[ ${componente.tipo} ]`}
                 </h1>

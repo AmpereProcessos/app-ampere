@@ -657,6 +657,7 @@ function OeM({ users }) {
         <ModalOeM
           users={users}
           setModalIsOpen={setModalIsOpen}
+          modalIsOpen={modalIsOpen}
           project={modalProject}
           editor={credentials.accessibleRoutes.includes("O&M") ? true : false}
           credentials={credentials}

@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import AnexoArquivo from "./AnexoArquivo";
 import InfoSistemaBlock from "./InfoSistemaBlock";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
+import { useKey } from "../utils/hooks";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -62,6 +63,8 @@ function ModalSuprimentos({
   handleUpdates,
   credentials,
 }) {
+  useKey("Escape", () => setModalIsOpen(false));
+
   const [infoHolder, setInfo] = useState(project);
   const [infoVisita, setInfoVisita] = useState({});
   const [changes, setChanges] = useState({});

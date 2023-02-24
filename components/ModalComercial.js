@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useKey } from "../utils/hooks";
 import {
   cidadesAtendidas,
   vendedores,
@@ -94,6 +95,8 @@ function ModalComercial({
   handleUpdates,
   credentials,
 }) {
+  useKey("Escape", () => setModalIsOpen(false));
+
   const [infoHolder, setInfo] = useState(project);
   const [infoVisita, setInfoVisita] = useState({});
   const [changes, setChanges] = useState({});

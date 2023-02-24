@@ -12,6 +12,7 @@ import Link from "next/link";
 import OSCreationBlock from "./OSCreationBlock";
 import AnexoArquivo from "./AnexoArquivo";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
+import { useKey } from "../utils/hooks";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -55,6 +56,8 @@ function ModalProjetos({
   handleUpdates,
   credentials,
 }) {
+  useKey("Escape", () => setModalIsOpen(false));
+
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
   const [osInfo, setOsInfo] = useState({

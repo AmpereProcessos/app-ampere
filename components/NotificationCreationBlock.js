@@ -82,7 +82,7 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
 
           <div className="flex items-center justify-around flex-wrap gap-x-12 px-4 mt-4">
             <SelectFloatingInput
-              label="USUÁRIOS"
+              label="USUÁRIO"
               width={"fit"}
               editable={true}
               notDefinedOption={true}

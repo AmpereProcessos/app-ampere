@@ -120,7 +120,7 @@ function Sidebar({ sidebarVisible }) {
                   </a>
                 </Link>
               )}
-              {credentials.accessibleRoutes != undefined &&
+              {/* {credentials.accessibleRoutes != undefined &&
               credentials.accessibleRoutes?.includes("Obras") &&
               credentials.regional == undefined ? (
                 <Link href="/calendario">
@@ -135,7 +135,7 @@ function Sidebar({ sidebarVisible }) {
                 </Link>
               ) : (
                 false
-              )}
+              )} */}
             </div>
             {credentials.vendedor == undefined && (
               <>

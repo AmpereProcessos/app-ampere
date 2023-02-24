@@ -53,6 +53,7 @@ export function AppProvider({ children, pathname }) {
     if (validSession) {
       if (credentials) {
         getNotificacoes(credentials._id);
+        getUsers();
       }
     } else {
       setCredentials(null);

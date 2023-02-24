@@ -8,8 +8,11 @@ function SelectFoatingInput({
   editable,
   label,
   options,
+  notDefinedOption,
 }) {
   const [selectActive, setSelectActive] = useState(false);
+  console.log(options);
+  console.log(value);
   return (
     <div
       className={`flex flex-col relative items-center z-0 ${
@@ -29,6 +32,9 @@ function SelectFoatingInput({
               {option.label}
             </option>
           ))}
+        {notDefinedOption && (
+          <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+        )}
       </select>
 
       <label

@@ -392,7 +392,7 @@ function Administracao() {
                 handleOpenModal(project._id);
               }}
               key={project._id}
-              className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 hover:bg-blue-100"
+              className="w-full md:w-[350px] lg:w-[450px] cursor-pointer border border-gray-200 hover:bg-blue-100"
             >
               <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
               <div className="flex flex-col p-2">

@@ -405,7 +405,7 @@ function Suprimentos() {
               animate={{ opacity: 1, translateX: 0, translateY: 0 }}
               transition={{ duration: 0.3, delay: 0.01 * index }}
               key={project._id}
-              className={`w-[250px] lg:w-[450px] cursor-pointer ${
+              className={`w-full md:w-[350px] lg:w-[450px] cursor-pointer ${
                 project.compra.dataPedido == undefined
                   ? getBorderColor(
                       dayjs(new Date()).businessDiff(

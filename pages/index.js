@@ -276,7 +276,12 @@ function Home() {
               {installedData.length > 0 ? installedData[0]?.count : "-"} obras
             </p>
             <p className="text-center text-xs text-gray-600">
-              Último mês: <strong>{installedData[1]?.count} obras</strong>
+              Último mês:{" "}
+              <strong>
+                {installedData.length > 0 && installedData[1]?.count
+                  ? `${installedData[1]?.count} obras`
+                  : "N/A"}{" "}
+              </strong>
             </p>
           </div>
           <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
@@ -293,7 +298,11 @@ function Home() {
             </p>
             <p className="text-center text-xs text-gray-600">
               Último mês:{" "}
-              <strong>{installedData[1]?.total.toFixed(2)} kWp</strong>
+              <strong>
+                {installedData.length > 0 && installedData[1]?.total
+                  ? `${installedData[1]?.total.toFixed(2)} kWp`
+                  : "N/A"}{" "}
+              </strong>
             </p>
           </div>
           <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
@@ -304,13 +313,17 @@ function Home() {
             </div>
             <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
               {averageHomoData.length > 0
-                ? averageHomoData[0]?.homoPeakPot.toFixed(2)
+                ? averageHomoData[0]?.homoPeakPot?.toFixed(2)
                 : "-"}{" "}
               kWp
             </p>
             <p className="text-center text-xs text-gray-600">
               Último mês:{" "}
-              <strong>{averageHomoData[1]?.homoPeakPot.toFixed(2)} kWp</strong>
+              <strong>
+                {averageHomoData.length > 0 && averageHomoData[1]?.homoPeakPot
+                  ? `${averageHomoData[1]?.homoPeakPot?.toFixed(2)} kWp`
+                  : "N/A"}
+              </strong>
             </p>
           </div>
           <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
@@ -321,17 +334,15 @@ function Home() {
             </div>
             <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
               {averageBuyTime.length > 0
-                ? averageBuyTime[0].tempoMedio.toFixed(2)
+                ? `${averageBuyTime[0].tempoMedio?.toFixed(2)} dias`
                 : "-"}{" "}
-              dias
             </p>
             <p className="text-center text-xs text-gray-600">
               Último mês:{" "}
               <strong>
-                {averageBuyTime.length > 0
-                  ? averageBuyTime[1]?.tempoMedio.toFixed(2)
-                  : "-"}{" "}
-                dias
+                {averageBuyTime.length > 0 && averageBuyTime[1]?.tempoMedio
+                  ? `${averageBuyTime[1]?.tempoMedio?.toFixed(2)} dias`
+                  : "N/A"}{" "}
               </strong>
             </p>
           </div>
@@ -342,14 +353,17 @@ function Home() {
               </h1>
             </div>
             <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-              {averageHomoData.length > 0
-                ? averageHomoData[0]?.averageTime.toFixed(0)
-                : "-"}{" "}
-              dias
+              {averageHomoData.length > 0 && averageHomoData[0]?.averageTime
+                ? `${averageHomoData[0]?.averageTime?.toFixed(0)} dias`
+                : "N/A"}{" "}
             </p>
             <p className="text-center text-xs text-gray-600">
               Último mês:{" "}
-              <strong>{averageHomoData[1]?.averageTime.toFixed(0)} dias</strong>
+              <strong>
+                {averageHomoData.length > 1 && averageHomoData[1]?.averageTime
+                  ? `${averageHomoData[1]?.averageTime?.toFixed(0)} dias`
+                  : "N/A"}
+              </strong>
             </p>
           </div>
         </div>

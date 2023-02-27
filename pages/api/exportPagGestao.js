@@ -194,6 +194,7 @@ export default async function handler(req, res) {
         possuiEstrutura: obj.estruturaPersonalizada.aplicavel
           ? obj.estruturaPersonalizada.aplicavel
           : "-",
+        tipoEstrutura: obj.estruturaPersonalizada.tipo,
         statusEstrutura: obj.estruturaPersonalizada.status
           ? obj.estruturaPersonalizada.status
           : "-",

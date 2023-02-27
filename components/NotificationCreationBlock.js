@@ -87,14 +87,12 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
               editable={true}
               notDefinedOption={true}
               value={destinatarioNome ? destinatarioNome : `NÃO DEFINIDO`}
-              options={[...users, { _id: "", nome: "NÃO DEFINIDO" }].map(
-                (user) => {
-                  return {
-                    label: user.nome.toUpperCase(),
-                    value: `${user._id}/${user.nome}`,
-                  };
-                }
-              )}
+              options={users.map((user) => {
+                return {
+                  label: user.nome.toUpperCase(),
+                  value: `${user._id}/${user.nome}`,
+                };
+              })}
               handleChange={(value) => {
                 setDestinatarioNome(value);
                 setNotInfo({

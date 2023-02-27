@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { vendedores } from "../utils/constants";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
-import { MdSend, MdSave } from "react-icons/md";
+import { MdSend, MdSave, MdDelete } from "react-icons/md";
 import { BsPatchCheckFill } from "react-icons/bs";
 import axios from "axios";
 import NumberInput from "./NumberInput";
@@ -17,6 +17,8 @@ function phoneMask(value) {
 function LeadCard({ lead, getLeads }) {
   const [infoHolder, setInfo] = useState(lead);
   const [msg, setMsg] = useState({ text: "", color: "" });
+  const [deleteMenu, setDeleteMenu] = useState(false);
+
   function saveChanges() {
     console.log(infoHolder);
     axios
@@ -40,6 +42,15 @@ function LeadCard({ lead, getLeads }) {
           color: "text-red-500",
         })
       );
+  }
+  async function deleteLead() {
+    let response = await axios.delete(`/api/insideSales?id=${lead._id}`);
+    if (response.status == 200) {
+      return;
+      getLeads();
+    } else {
+      alert("Erro ao excluir lead.");
+    }
   }
   return (
     <div
@@ -68,6 +79,7 @@ function LeadCard({ lead, getLeads }) {
               { label: "DEVISSON LIMA", value: "DEVISSON LIMA" },
               { label: "LEANDRO VIALI", value: "LEANDRO VIALI" },
               { label: "MARIANA DE SOUZA", value: "MARIANA DE SOUZA" },
+              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
             ]}
             handleChange={(value) =>
               setInfo({ ...infoHolder, responsavel: value })
@@ -158,8 +170,9 @@ function LeadCard({ lead, getLeads }) {
         </div>
       </div>
       <div className="flex flex-col w-full pt-1">
-        <div className="grid lgrid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 w-full">
-          <div className="flex justify-center items-center gap-4">
+        <div className="grid grid-cols-1 grid-rows-2 lg:grid-cols-10 lg:grid-rows-1 w-full">
+          <div className="grid grid-cols-1"></div>
+          <div className="flex justify-center items-center col-span-4 gap-4">
             <div className="flex flex-col items-center">
               <p className="text-gray-600 text-center font-bold text-sm">
                 DATA DE AQUISIÇÃO
@@ -224,7 +237,7 @@ function LeadCard({ lead, getLeads }) {
               </p>
             </div>
           </div>
-          <div className="flex justify-center items-center gap-2">
+          <div className="flex justify-center items-center col-span-4 gap-2">
             <SelectInput
               label={"VENDEDOR P/ENVIO"}
               editable={true}
@@ -253,6 +266,35 @@ function LeadCard({ lead, getLeads }) {
                 <MdSend style={{ color: "white" }} />
               )}
             </button>
+          </div>
+          <div className="grid grid-cols-1 relative">
+            {deleteMenu ? (
+              <div className="flex flex-col items-center justify-center">
+                <div
+                  onClick={() => setDeleteMenu(false)}
+                  className="w-fit text-red-500 scale-110 cursor-pointer text-[20px]"
+                >
+                  <MdDelete />
+                </div>
+                <div className="w-fit rounded bg-[#fff] z-2 shadow-lg border border-gray-200 absolute top-8">
+                  <button
+                    onClick={deleteLead}
+                    className="text-gray-700 font-bold text-xs hover:bg-red-200 p-2"
+                  >
+                    EXCLUIR
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center">
+                <div
+                  onClick={() => setDeleteMenu(true)}
+                  className="w-fit text-red-500 opacity-40 hover:opacity-100 hover:text-red-500 hover:scale-110 duration-300 ease-in cursor-pointer text-[20px]"
+                >
+                  <MdDelete />
+                </div>
+              </div>
+            )}
           </div>
         </div>
         {msg && <p className={`text-center italic ${msg.color}`}>{msg.text}</p>}

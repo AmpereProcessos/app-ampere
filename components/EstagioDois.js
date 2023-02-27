@@ -35,9 +35,9 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
   }
 
   return (
-    <div className="flex flex-col h-[600px] w-full">
-      <div className="w-full flex-1 gap-3 flex flex-col justify-center items-center flex-grow self-stretch text-left font-normal text-[rgba(79,88,96,1)] h-[500px]">
-        <div className="flex flex-col h-[300px]">
+    <div className="flex flex-col h-[400px] w-full">
+      <div className="w-full flex-1 gap-3 flex flex-col justify-center items-center flex-grow self-stretch text-left font-normal text-[rgba(79,88,96,1)] h-[300px]">
+        <div className="flex flex-col h-[200px]">
           <div className="gap-1 flex flex-col justify-center items-center w-[300px] lg:w-[350px]">
             <div className="w-full flex items-start self-stretch">
               <div>

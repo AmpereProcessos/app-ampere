@@ -60,7 +60,11 @@ function Calculadora() {
                     1
                   </p>
                 </div>
-                <div className="inset-y-0 absolute font-normal left-[45.5%] right-[45.5%] w-[30px]">
+                <div
+                  className={`${
+                    estagio > 1 ? "font-black" : ""
+                  } inset-y-0 absolute font-normal left-[45.5%] right-[45.5%] w-[30px]`}
+                >
                   {estagio > 1 ? (
                     <>
                       <motion.div
@@ -82,7 +86,11 @@ function Calculadora() {
                     </>
                   )}
                 </div>
-                <div className="inset-y-0 absolute right-0 font-normal w-[30px] left-[90.99%]">
+                <div
+                  className={`${
+                    estagio > 2 ? "font-black" : ""
+                  } inset-y-0 absolute right-0 font-normal w-[30px] left-[90.99%]`}
+                >
                   {estagio > 2 ? (
                     <>
                       <div className="inset-0 absolute rounded-full w-[30px] bg-[rgba(21,89,154,1)]" />

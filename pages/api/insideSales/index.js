@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            responsavel: req.body.responsavel,
+            responsavel: { $in: [req.body.responsavel, "NÃO DEFINIDO"] },
             dataDeAquisicao: {
               $gte: after,
               $lt: before,
@@ -64,5 +64,18 @@ export default async function handler(req, res) {
       }
     );
     res.json("OK");
+  } else if (req.method === "DELETE") {
+    try {
+      const db = await connectToDatabase(process.env.DB_KEY).catch((err) => {
+        throw new Error("Erro ao se conectar com o servidor.");
+      });
+      const collection = db.collection("leads");
+      const id = req.query.id;
+      console.log(id);
+      var newObj = await collection.deleteOne({ _id: ObjectId(id) });
+      res.json(newObj);
+    } catch (error) {
+      res.status(500).send(error);
+    }
   }
 }

@@ -71,17 +71,13 @@ function Comissao() {
       let padrao = !isNaN(filteredProjects[i].padrao.valor)
         ? filteredProjects[i].padrao.valor
         : 0;
-      let estrutura = !isNaN(filteredProjects[i].estruturaPersonalizada.valor)
-        ? filteredProjects[i].estruturaPersonalizada.valor
-        : 0;
-      sum = sum + padrao + estrutura + projeto;
+      sum = sum + padrao + projeto;
     }
     return sum;
   }
   function getTotalComission() {
     var sumProjeto = 0;
     var sumPadrao = 0;
-    var sumEstrutura = 0;
     var sumInside = 0;
     for (let i = 0; i < filteredProjects.length; i++) {
       var comissao = filteredProjects[i].porcentagemComissao
@@ -97,11 +93,6 @@ function Comissao() {
         filteredProjects[i].padrao.valor != null
           ? filteredProjects[i].padrao.valor
           : 0;
-      var valueEstrutura =
-        !isNaN(filteredProjects[i].estruturaPersonalizada.valor) &&
-        filteredProjects[i].estruturaPersonalizada.valor != null
-          ? filteredProjects[i].estruturaPersonalizada.valor
-          : 0;
 
       if (
         filteredProjects[i].insider != null ||
@@ -110,25 +101,21 @@ function Comissao() {
         sumInside =
           sumInside +
           (filteredProjects[i].porcentagemComissaoInsider / 100) *
-            (valueProjeto + valuePadrao + valueEstrutura);
+            (valueProjeto + valuePadrao);
       }
       sumProjeto = sumProjeto + (Number(valueProjeto) * comissao) / 100;
       sumPadrao = sumPadrao + (Number(valuePadrao) * comissao) / 100;
-      sumEstrutura = sumEstrutura + (Number(valueEstrutura) * comissao) / 100;
     }
     sumProjeto = sumProjeto != undefined ? sumProjeto : 0;
     sumPadrao = sumPadrao != undefined ? sumPadrao : 0;
-    sumEstrutura = sumEstrutura != undefined ? sumEstrutura : 0;
     sumInside = sumInside != undefined ? sumInside : 0;
     console.log("VALOR PROJETO", sumProjeto);
     console.log("VALOR PADRÃO", sumPadrao);
-    console.log("VALOR ESTRUTURA", sumEstrutura);
     return {
       ativoProjeto: sumProjeto.toFixed(2),
       ativoPadrao: sumPadrao.toFixed(2),
-      ativoEstrutura: sumEstrutura.toFixed(2),
       inside: sumInside.toFixed(2),
-      total: (sumProjeto + sumPadrao + sumEstrutura + sumInside).toFixed(2),
+      total: (sumProjeto + sumPadrao + sumInside).toFixed(2),
     };
   }
   function getTotalPeakPot() {
@@ -300,17 +287,6 @@ function Comissao() {
               <p className="text-gray-700 text-center text-xs">
                 R${" "}
                 {Number(getTotalComission().ativoPadrao).toLocaleString(
-                  "pt-br"
-                )}
-              </p>
-            </div>
-            <div className="flex flex-col border-x border-gray-200 px-2">
-              <h1 className="text-[#15599a] font-bold text-center">
-                COMISSÃO TOTAL ATIVO (ESTRUTURA)
-              </h1>
-              <p className="text-gray-700 text-center text-xs">
-                R${" "}
-                {Number(getTotalComission().ativoEstrutura).toLocaleString(
                   "pt-br"
                 )}
               </p>

@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { BsPlusLg } from "react-icons/bs";
 function AnimatedTextAndIconButton({ pText, children, exec }) {
   const [openNewUserButton, setOpenNewUserButton] = useState(false);
-  console.log(children);
   return (
     <motion.div
       layout

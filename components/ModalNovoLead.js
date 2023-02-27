@@ -131,6 +131,8 @@ function NovoLead({ setModalIsOpen, getLeads }) {
           });
           setInProgress(false);
         });
+    } else {
+      setInProgress(false);
     }
   }
   console.log(info);

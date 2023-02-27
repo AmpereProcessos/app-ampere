@@ -224,15 +224,17 @@ function ComissaoGeralView({ projects, setProjects }) {
                 </div>
                 <div className="flex flex-col items-center">
                   <p className="text-sm font-bold text-gray-700 text-center">
-                    VALOR (ESTRUTURA)
+                    VALOR TOTAL
                   </p>
                   <p className="text-xs  text-gray-600 p-2 text-center">
                     R$
-                    {project.estruturaPersonalizada.valor
+                    {project.padrao.valor || project.sistema.valorProjeto
                       ? (
-                          (project.estruturaPersonalizada.valor *
+                          (project.sistema.valorProjeto *
                             project.porcentagemComissao) /
-                          100
+                            100 +
+                          (project.padrao.valor * project.porcentagemComissao) /
+                            100
                         ).toFixed(2)
                       : 0}
                   </p>

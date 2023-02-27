@@ -21,8 +21,8 @@ function EstagioUm({ next, infoHolder, setInfoHolder }) {
     }
   }
   return (
-    <div className="flex flex-col h-[600px] w-full">
-      <div className="flex flex-col items-center text-center h-[500px]">
+    <div className="flex flex-col h-[400px] w-full">
+      <div className="flex flex-col items-center text-center h-[300px]">
         <div className="flex flex-col justify-center items-center w-[300px] lg:w-[350px] h-[146px]">
           <div className="w-full leading-none relative">
             <p className="font-normal inline m-0 text-[19px] leading-[1.2] text-[rgba(79,88,96,1)]">

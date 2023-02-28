@@ -25,7 +25,7 @@ export default function Result(props) {
             </strong>
             , totalizando uma geração mensal de{" "}
             <strong className="text-[#15599a] font-bold">
-              {(props.potPico * 127).toFixed(2)} kWh.
+              {(props.potPico * 127).toFixed(2).replace(".", ",")} kWh.
             </strong>
           </p>
         </div>
@@ -41,7 +41,9 @@ export default function Result(props) {
                 Com isso você irá economizar por ano:
               </p>
               <p className=" font-black m-0 text-[23px] leading-[1.2]">
-                {props.economiaAnual ? `R$ ${props.economiaAnual}` : "-"}
+                {props.economiaAnual
+                  ? `R$ ${props.economiaAnual.toFixed(2).replace(".", ",")}`
+                  : "-"}
               </p>
             </div>
           </div>
@@ -120,7 +122,9 @@ export default function Result(props) {
                 </p>
                 <p className="w-full font-black m-0 text-[23px] leading-[1.2]">
                   {props.parcelaFinanciamento
-                    ? `R$ ${props.parcelaFinanciamento}`
+                    ? `R$ ${props.parcelaFinanciamento
+                        .toFixed(2)
+                        .replace(".", ",")}`
                     : "-"}
                 </p>
               </div>
@@ -134,7 +138,9 @@ export default function Result(props) {
                   de:
                 </p>
                 <p className="w-full font-black m-0 text-[23px] leading-[1.2]">
-                  {props.parcelaCartao ? `R$ ${props.parcelaCartao}` : "-"}
+                  {props.parcelaCartao
+                    ? `R$ ${props.parcelaCartao.toFixed(2).replace(".", ",")}`
+                    : "-"}
                 </p>
               </div>
             </div>
@@ -198,10 +204,17 @@ export async function getServerSideProps({ query }) {
   let os = await collection.findOne({
     _id: ObjectId(id),
   });
+
+  function getInstallmentsValue(financedValue, rate, monthNumber) {
+    let numerator = financedValue * rate;
+    let denominator = 1 - Math.pow(1 + rate, -monthNumber);
+    return Number((numerator / denominator).toFixed(2));
+  }
+
   let info = JSON.parse(JSON.stringify(os));
   let nome = info.nome;
   let consumo = info.consumo;
-  let energiaNecessaria = consumo / 0.75; // onde 0.75 é o valor em R$ do kWh
+  let energiaNecessaria = Number((consumo / 0.75).toFixed(2)); // onde 0.75 é o valor em R$ do kWh
   let numModulos = Math.ceil((energiaNecessaria * 1000) / (127 * 550)); // onde 127 é a média do fator de geração da região
   let potPico = (numModulos * 550) / 1000;
   let economiaAnual = Number((potPico * 127 * 12 * 0.75).toFixed(2));
@@ -211,9 +224,10 @@ export async function getServerSideProps({ query }) {
   let mesesCompletosPayback = Math.ceil(
     ((valorInvestido % economiaAnual) / economiaAnual) * 12
   );
-  let parcelaFinanciamento = Number(
-    ((valorInvestido * Math.pow(1.02, 60)) / 60).toFixed(2)
-  );
+  let parcelaFinanciamento = getInstallmentsValue(valorInvestido, 0.02, 60);
+
+  // ajustar https://www3.bcb.gov.br/CALCIDADAO/publico/exibirMetodologiaFinanciamentoPrestacoesFixas.do?method=exibirMetodologiaFinanciamentoPrestacoesFixas
+
   let parcelaCartao = Number(((valorInvestido * 1.15) / 12).toFixed(2));
   // Pass data to the page via props
   return {

@@ -15,8 +15,18 @@ function EntregaTecnicaPresencialCard({ info }) {
       return { borderColor: "border border-[#15599a]" };
     }
   }
-  function saveChanges() {
-    axios.post(`/api/projects/update/${info._id}`, changes);
+  async function saveChanges() {
+    axios
+      .post(`/api/projects/update/${info._id}`, changes)
+      .then((res) =>
+        setMessage({ text: "Alteração feitas!", color: "text-green-500" })
+      )
+      .catch((err) =>
+        setMessage({
+          text: "Houve um erro na efetiviação da alteração, por favor tente novamente.",
+          color: "text-red-500",
+        })
+      );
   }
   return (
     <div

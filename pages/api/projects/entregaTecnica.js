@@ -17,8 +17,9 @@ export default async function handler(req, res) {
           {
             $match: {
               "vendedor.nome": vendedorMatch,
-              "jornada.dataEntregaTecnicaRemota": { $ne: null },
-              "jornada.entregaTecnicaPresencial": { $ne: true },
+              "jornada.entregaTecnica": { $ne: null },
+              "jornada.dataEntregaTecnicaRemota": { $ne: true },
+              "medidor.data": { $gte: "2023-01-01T00:00:00.000Z" },
             },
           },
           {

@@ -6,10 +6,10 @@ function EntregaTecnicaPresencialCard({ info }) {
   const [changes, setChanges] = useState({});
   const [message, setMessage] = useState({ text: "", color: "" });
   console.log(changes);
-  function getBorderColor(dataEntregaTecnicaRemota) {
-    if (dayjs().diff(new Date(dataEntregaTecnicaRemota), "days") > 40) {
+  function getBorderColor(trocaMedidor) {
+    if (dayjs().diff(new Date(trocaMedidor), "days") > 40) {
       return { borderColor: "border-2 border-red-500" };
-    } else if (dayjs(dataEntregaTecnicaRemota).diff(new Date(), "days") > 30) {
+    } else if (dayjs(trocaMedidor).diff(new Date(), "days") > 30) {
       return { borderColor: "border-2 border-orange-500" };
     } else {
       return { borderColor: "border border-[#15599a]" };
@@ -21,14 +21,14 @@ function EntregaTecnicaPresencialCard({ info }) {
   return (
     <div
       className={`w-full flex flex-col p-4 ${
-        getBorderColor(info.jornada.dataEntregaTecnicaRemota).borderColor
+        getBorderColor(info.medidor.data).borderColor
       }`}
     >
       <div className="flex items-center justify-center lg:justify-between gap-2 flex-wrap">
         <h1 className="text-center text-[#15599a] font-bold">
           #{info.qtde} - {info.nomeDoContrato}
         </h1>
-        <div className="flex justify-center gap-x-4 gap-y-2 flex-wrap">
+        <div className="flex justify-end gap-x-4 gap-y-2 flex-wrap">
           <div className="flex flex-col items-center">
             <h1 className="text-center text-gray-700 font-bold">
               DIAS DESDE TROCA DO MEDIDOR
@@ -76,8 +76,6 @@ function EntregaTecnicaPresencialCard({ info }) {
               </label>
             </div>
           </div>
-        </div>
-        <div className="flex items-center justify-center">
           <button
             onClick={saveChanges}
             className="flex items-center rounded gap-2 p-2 font-bold border border-[#15599a] text-[#15599a] hover:text-white hover:bg-[#15599a]"

@@ -325,6 +325,10 @@ function ComissionamentoPosObraCard({ project, index }) {
                   setChanges({
                     ...changes,
                     "jornada.entregaTecnica": e.target.checked,
+                    "jornada.dataEntregaTecnicaRemota":
+                      e.target.checked == true
+                        ? new Date().toISOString()
+                        : null,
                   });
                   setInfo({
                     ...info,

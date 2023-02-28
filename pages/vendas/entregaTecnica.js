@@ -1,11 +1,20 @@
 import axios from "axios";
+import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
+import { TbToggleLeft, TbToggleRight } from "react-icons/tb";
+import { AiOutlineSearch } from "react-icons/ai";
 import EntregaTecnicaPresencialCard from "../../components/EntregaTecnicaPresencialCard";
 import { AppContext } from "../../context/AppContext";
 
 function EntregaTecnica() {
   const { credentials } = useContext(AppContext);
+
   const [projects, setProjects] = useState();
+  const [filteredProjects, setFilteredProjects] = useState();
+
+  const [filters, setFilters] = useState({
+    overdue: false,
+  });
   async function getProjects() {
     try {
       if (credentials.visualizacao == "VENDEDOR") {
@@ -17,9 +26,28 @@ function EntregaTecnica() {
       }
 
       setProjects(data);
+      setFilteredProjects(data);
+      return;
     } catch (error) {
       console.log(error);
       alert("Erro na comunicação com o servidor");
+      return;
+    }
+  }
+  function filterProjects() {
+    var newArr;
+    if (filters.overdue) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (project) => dayjs().diff(new Date(project.medidor.data), "days") > 40
+      );
+    }
+    if (!newArr) {
+      setFilteredProjects(projects);
+      return projects;
+    } else {
+      setFilteredProjects(newArr);
+      return newArr;
     }
   }
   useEffect(() => {
@@ -29,12 +57,41 @@ function EntregaTecnica() {
     <div className="p-6 grow">
       <div className="pb-2 border-b border-gray-200 flex flex-col">
         <h1 className="text-center text-[#15599a] text-xl font-bold">
-          ENTREGAS TÉCNICAS PENDENTES
+          ENTREGAS TÉCNICAS PENDENTES ({projects?.length})
         </h1>
+        <div className="w-full flex items-center justify-center gap-2">
+          <button
+            onClick={() => {
+              setFilters((prevState) => {
+                return { ...prevState, overdue: !prevState.overdue };
+              });
+            }}
+            className={`flex items-center gap-2 rounded text-white p-2 h-[36px] font-bold shadow-md ${
+              filters.overdue ? "bg-red-500" : "bg-[#15599a]"
+            }`}
+          >
+            {filters.overdue ? (
+              <>
+                <p>PENDENTES</p> <TbToggleRight style={{ fontSize: "25px" }} />
+              </>
+            ) : (
+              <>
+                <p>EM ABERTO</p> <TbToggleLeft style={{ fontSize: "25px" }} />
+              </>
+            )}
+          </button>
+          <button
+            onClick={filterProjects}
+            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
+          >
+            <p>Filtrar</p>
+            <AiOutlineSearch />
+          </button>
+        </div>
       </div>
       <div className="flex flex-col items-center justify-center w-full mt-4 gap-2">
-        {projects ? (
-          projects.map((project) => (
+        {filteredProjects ? (
+          filteredProjects.map((project) => (
             <EntregaTecnicaPresencialCard key={project._id} info={project} />
           ))
         ) : (

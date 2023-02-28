@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SelectInput from "./SelectInput";
+import SelectFloatingInput from "./SelectFloatingInput";
 
 function FormVisitaTecnicaDesenho({
   dados,
@@ -58,10 +58,11 @@ function FormVisitaTecnicaDesenho({
           type="text"
         />
       </div>
-      <div className="flex items-center justify-center mt-2">
-        <SelectInput
+      <div className="flex items-center justify-center mt-4">
+        <SelectFloatingInput
           label="TIPO DE DESENHO"
           editable={true}
+          width={"450px"}
           value={dados.tipoDesenho ? dados.tipoDesenho : "NÃO DEFINIDO"}
           options={[
             { label: "SOLAR EDGE DESIGN", value: "SOLAR EDGE DESIGN" },

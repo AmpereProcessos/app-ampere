@@ -1440,131 +1440,140 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   CAMPOS ADICIONAIS P/OBRAS
                 </span>
-                <div className="w-full flex items-center justify-center gap-2 flex-wrap">
-                  <SelectInput
-                    label={"ESPAÇO NO QGBT"}
-                    editable={true}
-                    value={dados.espacoQGBT ? dados.espacoQGBT : "NÃO DEFINIDO"}
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "NÃO", value: "NÃO" },
-                      { label: "SIM", value: "SIM" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, espacoQGBT: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"ADAPTAÇÃO NO QGBT"}
-                    editable={true}
-                    value={
-                      dados.adaptacaoQGBT ? dados.adaptacaoQGBT : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "CORTE", value: "CORTE" },
-                      { label: "TRILHO", value: "TRILHO" },
-                      { label: "CORTE E TRILHO", value: "CORTE E TRILHO" },
-                      { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
-                      { label: "NÃO", value: "NÃO" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, adaptacaoQGBT: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"AVALIAR TELHADO"}
-                    editable={true}
-                    value={
-                      dados.avaliarTelhado
-                        ? dados.avaliarTelhado
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "NÃO", value: "NÃO" },
-                      { label: "SIM", value: "SIM" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, avaliarTelhado: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"DPS NO QGBT"}
-                    editable={true}
-                    value={dados.dpsQGBT ? dados.dpsQGBT : "NÃO DEFINIDO"}
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "NÃO", value: "NÃO" },
-                      { label: "SIM", value: "SIM" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, dpsQGBT: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"INFRA PARA LANÇAMENTOS DE CABOS"}
-                    editable={true}
-                    value={dados.infraCabos ? dados.infraCabos : "NÃO DEFINIDO"}
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "KIT NORMAL", value: "KIT NORMAL" },
-                      { label: "KIT+MANGUEIRA", value: "KIT+MANGUEIRA" },
-                      { label: "PERSONALIZADO", value: "PERSONALIZADO" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, infraCabos: value })
-                    }
-                  />
-                  <TextInput
-                    label={"DISTÂNCIA ITBA À ZONA RURAL"}
-                    editable={true}
-                    value={dados.distanciaItbaRural}
-                    handleChange={(value) =>
-                      setDados({ ...dados, distanciaItbaRural: value })
-                    }
-                  />
-                  <TextInput
-                    label={"DISTÂNCIA DO SISTEMA AO INVERSOR"}
-                    editable={true}
-                    value={dados.distanciaSistemaInversor}
-                    handleChange={(value) =>
-                      setDados({ ...dados, distanciaSistemaInversor: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"REALIMENTAR A FAZENDA ?"}
-                    editable={true}
-                    value={
-                      dados.realimentar ? dados.realimentar : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "NÃO", value: "NÃO" },
-                      { label: "SIM", value: "SIM" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, realimentar: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"TEM ESTUDO DE CASO?"}
-                    editable={true}
-                    value={
-                      dados.temEstudoDeCaso
-                        ? dados.temEstudoDeCaso
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "NÃO", value: "NÃO" },
-                      { label: "SIM", value: "SIM" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, temEstudoDeCaso: value })
-                    }
-                  />
-                </div>
+                {dados.tipoDeSolicitacao != "ORÇAMENTAÇÃO" && (
+                  <div className="w-full flex items-center justify-center gap-2 flex-wrap">
+                    <SelectInput
+                      label={"ESPAÇO NO QGBT"}
+                      editable={true}
+                      value={
+                        dados.espacoQGBT ? dados.espacoQGBT : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "NÃO", value: "NÃO" },
+                        { label: "SIM", value: "SIM" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, espacoQGBT: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"ADAPTAÇÃO NO QGBT"}
+                      editable={true}
+                      value={
+                        dados.adaptacaoQGBT
+                          ? dados.adaptacaoQGBT
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "CORTE", value: "CORTE" },
+                        { label: "TRILHO", value: "TRILHO" },
+                        { label: "CORTE E TRILHO", value: "CORTE E TRILHO" },
+                        { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
+                        { label: "NÃO", value: "NÃO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, adaptacaoQGBT: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"AVALIAR TELHADO"}
+                      editable={true}
+                      value={
+                        dados.avaliarTelhado
+                          ? dados.avaliarTelhado
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "NÃO", value: "NÃO" },
+                        { label: "SIM", value: "SIM" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, avaliarTelhado: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"DPS NO QGBT"}
+                      editable={true}
+                      value={dados.dpsQGBT ? dados.dpsQGBT : "NÃO DEFINIDO"}
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "NÃO", value: "NÃO" },
+                        { label: "SIM", value: "SIM" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, dpsQGBT: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"INFRA PARA LANÇAMENTOS DE CABOS"}
+                      editable={true}
+                      value={
+                        dados.infraCabos ? dados.infraCabos : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "KIT NORMAL", value: "KIT NORMAL" },
+                        { label: "KIT+MANGUEIRA", value: "KIT+MANGUEIRA" },
+                        { label: "PERSONALIZADO", value: "PERSONALIZADO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, infraCabos: value })
+                      }
+                    />
+                    <TextInput
+                      label={"DISTÂNCIA ITBA À ZONA RURAL"}
+                      editable={true}
+                      value={dados.distanciaItbaRural}
+                      handleChange={(value) =>
+                        setDados({ ...dados, distanciaItbaRural: value })
+                      }
+                    />
+                    <TextInput
+                      label={"DISTÂNCIA DO SISTEMA AO INVERSOR"}
+                      editable={true}
+                      value={dados.distanciaSistemaInversor}
+                      handleChange={(value) =>
+                        setDados({ ...dados, distanciaSistemaInversor: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"REALIMENTAR A FAZENDA ?"}
+                      editable={true}
+                      value={
+                        dados.realimentar ? dados.realimentar : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "NÃO", value: "NÃO" },
+                        { label: "SIM", value: "SIM" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, realimentar: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"TEM ESTUDO DE CASO?"}
+                      editable={true}
+                      value={
+                        dados.temEstudoDeCaso
+                          ? dados.temEstudoDeCaso
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "NÃO", value: "NÃO" },
+                        { label: "SIM", value: "SIM" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, temEstudoDeCaso: value })
+                      }
+                    />
+                  </div>
+                )}
+
                 <div className="flex flex-col w-full self-center mt-2 items-center">
                   <span className="uppercase font-bold font-raleway text-center text-sm">
                     OBSERVAÇÕES P/OBRAS
@@ -1710,205 +1719,210 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   CAMPOS ADICIONAIS P/PROJETOS
                 </span>
-                <div className="flex items-center justify-around flex-wrap">
-                  <SelectInput
-                    label={"CONCESSIONÁRIA"}
-                    editable={true}
-                    value={
-                      dados.concessionaria
-                        ? dados.concessionaria
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "CEMIG", value: "CEMIG" },
-                      { label: "ENEL", value: "ENEL" },
-                      { label: "CELG", value: "CELG" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, concessionaria: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"TIPO DE PROJETO"}
-                    editable={true}
-                    value={
-                      dados.tipoProjeto ? dados.tipoProjeto : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "MINI GERAÇÃO", value: "MINI GERAÇÃO" },
-                      { label: "MICRO GERAÇÃO", value: "MICRO GERAÇÃO" },
-                      { label: "REDE MÉDIA", value: "REDE MÉDIA" },
-                      { label: "REDE BAIXA", value: "REDE BAIXA" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, tipoProjeto: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"MODELO DA CAIXA"}
-                    editable={true}
-                    value={
-                      dados.modeloCaixa ? dados.modeloCaixa : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "CM-1", value: "CM-1" },
-                      { label: "CM-2", value: "CM-2" },
-                      { label: "CM-3", value: "CM-3" },
-                      { label: "CM-4", value: "CM-4" },
-                      { label: "CM-8", value: "CM-8" },
-                      { label: "CM-9", value: "CM-9" },
-                      { label: "CM-13", value: "CM-13" },
-                      { label: "CM-14", value: "CM-14" },
-                      { label: "CM-18", value: "CM-18" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, modeloCaixa: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"PENDÊNCIAS"}
-                    editable={true}
-                    value={
-                      dados.pendenciasProjetos
-                        ? dados.pendenciasProjetos
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      {
-                        label: "AMPERAGEM DISJUNTOR",
-                        value: "AMPERAGEM DISJUNTOR",
-                      },
-                      { label: "Nº MEDIDOR", value: "Nº MEDIDOR" },
-                      { label: "CAIXA CONJUGADA", value: "CAIXA CONJUGADA" },
-                      { label: "SEM PENDÊNCIA", value: "SEM PENDÊNCIA" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, pendenciasProjetos: value })
-                    }
-                  />
-                  <TextInput
-                    label={"NÚMERO POSTE DE DERIVAÇÃO(GOIÁS)"}
-                    editable={true}
-                    value={dados.numeroPosteDerivacao}
-                    handleChange={(value) =>
-                      setDados({ ...dados, numeroPosteDerivacao: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"POTÊNCIA DO FUSÍVEL"}
-                    editable={true}
-                    value={dados.potFusivel}
-                    handleChange={(value) =>
-                      setDados({ ...dados, potFusivel: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"SE AUMENTO, NOVO TIPO DE LIGAÇÃO DO PADRÃO"}
-                    editable={true}
-                    value={
-                      dados.novaLigacaoPadrao
-                        ? dados.novaLigacaoPadrao
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "MONOFÁSICO", value: "MONOFÁSICO" },
-                      { label: "BIFÁSICO", value: "BIFÁSICO" },
-                      { label: "TRIFÁSICO", value: "TRIFÁSICO" },
-                      { label: "NÃO TEM AUMENTO", value: "NÃO TEM AUMENTO" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, novaLigacaoPadrao: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"SE AUMENTO, NOVA AMPERAGEM"}
-                    editable={true}
-                    value={
-                      dados.novaAmperagem ? dados.novaAmperagem : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "40A", value: "40A" },
-                      { label: "63A", value: "63A" },
-                      { label: "80A", value: "80A" },
-                      { label: "100A", value: "100A" },
-                      { label: "125A", value: "125A" },
-                      { label: "150A", value: "150A" },
-                      { label: "200A", value: "200A" },
-                      { label: "NÃO TEM AUMENTO", value: "NÃO TEM AUMENTO" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, novaAmperagem: value })
-                    }
-                  />
-                  <SelectInput
-                    label="FOTOS DO DRONE"
-                    editable={true}
-                    value={
-                      dados.fotoDroneDesenho
-                        ? dados.fotoDroneDesenho
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "NÃO", value: "NÃO" },
-                      { label: "SIM", value: "SIM" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, fotoDroneDesenho: value })
-                    }
-                  />
-                  <SelectInput
-                    label="FOTO CLARA DA FAIXADA"
-                    editable={true}
-                    value={
-                      dados.fotoFaixada ? dados.fotoFaixada : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "NÃO", value: "NÃO" },
-                      { label: "SIM", value: "SIM" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, fotoFaixada: value })
-                    }
-                  />
-                  <SelectInput
-                    label="MEDIDAS DO LOCAL"
-                    editable={true}
-                    value={
-                      dados.medidasLocal ? dados.medidasLocal : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "NÃO", value: "NÃO" },
-                      { label: "SIM", value: "SIM" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, medidasLocal: value })
-                    }
-                  />
-                  <SelectInput
-                    label="GOOGLE EARTH"
-                    editable={true}
-                    value={
-                      dados.googleEarth ? dados.googleEarth : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "NÃO", value: "NÃO" },
-                      { label: "SIM", value: "SIM" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, googleEarth: value })
-                    }
-                  />
-                </div>
+                {dados.tipoDeSolicitacao != "ORÇAMENTAÇÃO" && (
+                  <div className="flex items-center justify-around flex-wrap">
+                    <SelectInput
+                      label={"CONCESSIONÁRIA"}
+                      editable={true}
+                      value={
+                        dados.concessionaria
+                          ? dados.concessionaria
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "CEMIG", value: "CEMIG" },
+                        { label: "ENEL", value: "ENEL" },
+                        { label: "CELG", value: "CELG" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, concessionaria: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"TIPO DE PROJETO"}
+                      editable={true}
+                      value={
+                        dados.tipoProjeto ? dados.tipoProjeto : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "MINI GERAÇÃO", value: "MINI GERAÇÃO" },
+                        { label: "MICRO GERAÇÃO", value: "MICRO GERAÇÃO" },
+                        { label: "REDE MÉDIA", value: "REDE MÉDIA" },
+                        { label: "REDE BAIXA", value: "REDE BAIXA" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, tipoProjeto: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"MODELO DA CAIXA"}
+                      editable={true}
+                      value={
+                        dados.modeloCaixa ? dados.modeloCaixa : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "CM-1", value: "CM-1" },
+                        { label: "CM-2", value: "CM-2" },
+                        { label: "CM-3", value: "CM-3" },
+                        { label: "CM-4", value: "CM-4" },
+                        { label: "CM-8", value: "CM-8" },
+                        { label: "CM-9", value: "CM-9" },
+                        { label: "CM-13", value: "CM-13" },
+                        { label: "CM-14", value: "CM-14" },
+                        { label: "CM-18", value: "CM-18" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, modeloCaixa: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"PENDÊNCIAS"}
+                      editable={true}
+                      value={
+                        dados.pendenciasProjetos
+                          ? dados.pendenciasProjetos
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        {
+                          label: "AMPERAGEM DISJUNTOR",
+                          value: "AMPERAGEM DISJUNTOR",
+                        },
+                        { label: "Nº MEDIDOR", value: "Nº MEDIDOR" },
+                        { label: "CAIXA CONJUGADA", value: "CAIXA CONJUGADA" },
+                        { label: "SEM PENDÊNCIA", value: "SEM PENDÊNCIA" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, pendenciasProjetos: value })
+                      }
+                    />
+                    <TextInput
+                      label={"NÚMERO POSTE DE DERIVAÇÃO(GOIÁS)"}
+                      editable={true}
+                      value={dados.numeroPosteDerivacao}
+                      handleChange={(value) =>
+                        setDados({ ...dados, numeroPosteDerivacao: value })
+                      }
+                    />
+                    <NumberInput
+                      label={"POTÊNCIA DO FUSÍVEL"}
+                      editable={true}
+                      value={dados.potFusivel}
+                      handleChange={(value) =>
+                        setDados({ ...dados, potFusivel: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"SE AUMENTO, NOVO TIPO DE LIGAÇÃO DO PADRÃO"}
+                      editable={true}
+                      value={
+                        dados.novaLigacaoPadrao
+                          ? dados.novaLigacaoPadrao
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "MONOFÁSICO", value: "MONOFÁSICO" },
+                        { label: "BIFÁSICO", value: "BIFÁSICO" },
+                        { label: "TRIFÁSICO", value: "TRIFÁSICO" },
+                        { label: "NÃO TEM AUMENTO", value: "NÃO TEM AUMENTO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, novaLigacaoPadrao: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"SE AUMENTO, NOVA AMPERAGEM"}
+                      editable={true}
+                      value={
+                        dados.novaAmperagem
+                          ? dados.novaAmperagem
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "40A", value: "40A" },
+                        { label: "63A", value: "63A" },
+                        { label: "80A", value: "80A" },
+                        { label: "100A", value: "100A" },
+                        { label: "125A", value: "125A" },
+                        { label: "150A", value: "150A" },
+                        { label: "200A", value: "200A" },
+                        { label: "NÃO TEM AUMENTO", value: "NÃO TEM AUMENTO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, novaAmperagem: value })
+                      }
+                    />
+                    <SelectInput
+                      label="FOTOS DO DRONE"
+                      editable={true}
+                      value={
+                        dados.fotoDroneDesenho
+                          ? dados.fotoDroneDesenho
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "NÃO", value: "NÃO" },
+                        { label: "SIM", value: "SIM" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, fotoDroneDesenho: value })
+                      }
+                    />
+                    <SelectInput
+                      label="FOTO CLARA DA FAIXADA"
+                      editable={true}
+                      value={
+                        dados.fotoFaixada ? dados.fotoFaixada : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "NÃO", value: "NÃO" },
+                        { label: "SIM", value: "SIM" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, fotoFaixada: value })
+                      }
+                    />
+                    <SelectInput
+                      label="MEDIDAS DO LOCAL"
+                      editable={true}
+                      value={
+                        dados.medidasLocal ? dados.medidasLocal : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "NÃO", value: "NÃO" },
+                        { label: "SIM", value: "SIM" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, medidasLocal: value })
+                      }
+                    />
+                    <SelectInput
+                      label="GOOGLE EARTH"
+                      editable={true}
+                      value={
+                        dados.googleEarth ? dados.googleEarth : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "NÃO", value: "NÃO" },
+                        { label: "SIM", value: "SIM" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, googleEarth: value })
+                      }
+                    />
+                  </div>
+                )}
+
                 <div className="flex flex-col w-full self-center mt-2 items-center">
                   <span className="uppercase font-bold font-raleway text-center text-sm">
                     OBSERVAÇÕES P/PROJETOS
@@ -2011,116 +2025,125 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   RESPOSTA VISITA TÉCNICA
                 </span>
-                <div className="flex flex-wrap justify-around gap-2">
-                  <SelectInput
-                    label={"PADRÃO"}
-                    editable={true}
-                    value={
-                      dados.respostaPadrao
-                        ? dados.respostaPadrao
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "APTO", value: "APTO" },
-                      { label: "REFORMA", value: "REFORMA" },
-                      { label: "TROCAR PADRÃO", value: "TROCAR PADRÃO" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, respostaPadrao: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"ESPAÇO PARA PROJETO"}
-                    editable={true}
-                    value={
-                      dados.respostaEspacoProjeto
-                        ? dados.respostaEspacoProjeto
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "SIM", value: "SIM" },
-                      { label: "NÃO", value: "NÃO" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, respostaEspacoProjeto: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"ESTRUTURA DE INCLINAÇÃO"}
-                    editable={true}
-                    value={
-                      dados.respostaEstruturaInclinacao
-                        ? dados.respostaEstruturaInclinacao
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "SIM", value: "SIM" },
-                      { label: "NÃO", value: "NÃO" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, respostaEstruturaInclinacao: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"POSSUI SOMBRA ?"}
-                    editable={true}
-                    value={
-                      dados.respostaPossuiSombra
-                        ? dados.respostaPossuiSombra
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "SIM", value: "SIM" },
-                      { label: "NÃO", value: "NÃO" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, respostaPossuiSombra: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"MADERAMENTO"}
-                    editable={true}
-                    value={
-                      dados.respostaMaderamento
-                        ? dados.respostaMaderamento
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "APTO", value: "APTO" },
-                      { label: "CONDENADO", value: "CONDENADO" },
-                      { label: "REFORÇAR", value: "REFORÇAR" },
-                      {
-                        label: "AVALIAR NA MONTAGEM",
-                        value: "AVALIAR NA MONTAGEM",
-                      },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, respostaMaderamento: value })
-                    }
-                  />
-                  <SelectInput
-                    label={"NECESSÁRIO EXPLICAÇÃO DETALHADA"}
-                    editable={true}
-                    value={
-                      dados.respostaExplicacaoDetalhada
-                        ? dados.respostaExplicacaoDetalhada
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "SIM", value: "SIM" },
-                      { label: "NÃO", value: "NÃO" },
-                    ]}
-                    handleChange={(value) =>
-                      setDados({ ...dados, respostaExplicacaoDetalhada: value })
-                    }
-                  />
-                </div>
+                {dados.tipoDeSolicitacao != "ORÇAMENTAÇÃO" && (
+                  <div className="flex flex-wrap justify-around gap-2">
+                    <SelectInput
+                      label={"PADRÃO"}
+                      editable={true}
+                      value={
+                        dados.respostaPadrao
+                          ? dados.respostaPadrao
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "APTO", value: "APTO" },
+                        { label: "REFORMA", value: "REFORMA" },
+                        { label: "TROCAR PADRÃO", value: "TROCAR PADRÃO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, respostaPadrao: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"ESPAÇO PARA PROJETO"}
+                      editable={true}
+                      value={
+                        dados.respostaEspacoProjeto
+                          ? dados.respostaEspacoProjeto
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "SIM", value: "SIM" },
+                        { label: "NÃO", value: "NÃO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, respostaEspacoProjeto: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"ESTRUTURA DE INCLINAÇÃO"}
+                      editable={true}
+                      value={
+                        dados.respostaEstruturaInclinacao
+                          ? dados.respostaEstruturaInclinacao
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "SIM", value: "SIM" },
+                        { label: "NÃO", value: "NÃO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({
+                          ...dados,
+                          respostaEstruturaInclinacao: value,
+                        })
+                      }
+                    />
+                    <SelectInput
+                      label={"POSSUI SOMBRA ?"}
+                      editable={true}
+                      value={
+                        dados.respostaPossuiSombra
+                          ? dados.respostaPossuiSombra
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "SIM", value: "SIM" },
+                        { label: "NÃO", value: "NÃO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, respostaPossuiSombra: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"MADERAMENTO"}
+                      editable={true}
+                      value={
+                        dados.respostaMaderamento
+                          ? dados.respostaMaderamento
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "APTO", value: "APTO" },
+                        { label: "CONDENADO", value: "CONDENADO" },
+                        { label: "REFORÇAR", value: "REFORÇAR" },
+                        {
+                          label: "AVALIAR NA MONTAGEM",
+                          value: "AVALIAR NA MONTAGEM",
+                        },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({ ...dados, respostaMaderamento: value })
+                      }
+                    />
+                    <SelectInput
+                      label={"NECESSÁRIO EXPLICAÇÃO DETALHADA"}
+                      editable={true}
+                      value={
+                        dados.respostaExplicacaoDetalhada
+                          ? dados.respostaExplicacaoDetalhada
+                          : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "SIM", value: "SIM" },
+                        { label: "NÃO", value: "NÃO" },
+                      ]}
+                      handleChange={(value) =>
+                        setDados({
+                          ...dados,
+                          respostaExplicacaoDetalhada: value,
+                        })
+                      }
+                    />
+                  </div>
+                )}
+
                 <div className="flex flex-col w-full self-center mt-2 items-center">
                   <span className="uppercase font-bold font-raleway text-center text-sm">
                     CONCLUSÃO
@@ -2260,230 +2283,243 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-center">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                ESTUDO DE GERAÇÃO - DESVIO AZIMUTAL
-              </span>
-              <div className="grid grid-cols-2 grid-rows-4">
-                <div className="grid grid-cols-3 items-center">
-                  <p className="text-center font-bold text-gray-700">NORTE</p>
-                  <input
-                    className="outline-none p-2 text-center font-bold text-gray-700"
-                    type={"number"}
-                    value={dados.modNorte}
-                    onChange={(e) =>
-                      setDados({ ...dados, modNorte: Number(e.target.value) })
-                    }
-                  />
-                  <p className="text-center font-bold text-gray-700">
-                    {dados.modNorte && fatorDeGeracaoPorOrientacao[dados.cidade]
-                      ? (
-                          (Number(
-                            fatorDeGeracaoPorOrientacao[dados.cidade]["NORTE"]
-                          ) *
-                            dados.modNorte *
-                            dados.potModulos) /
-                          1000
-                        ).toFixed(2)
-                      : false}{" "}
-                    kWh
-                  </p>
-                </div>
-                <div className="grid grid-cols-3 items-center">
-                  <p className="text-center font-bold text-gray-700">
-                    NORDESTE
-                  </p>
-                  <input
-                    className="outline-none p-2 text-center font-bold text-gray-700"
-                    type={"number"}
-                    value={dados.modNordeste}
-                    onChange={(e) =>
-                      setDados({
-                        ...dados,
-                        modNordeste: Number(e.target.value),
-                      })
-                    }
-                  />
-                  <p className="text-center font-bold text-gray-700">
-                    {dados.modNordeste &&
-                    fatorDeGeracaoPorOrientacao[dados.cidade]
-                      ? (
-                          (Number(
-                            fatorDeGeracaoPorOrientacao[dados.cidade][
-                              "NORDESTE"
-                            ]
-                          ) *
-                            dados.modNordeste *
-                            dados.potModulos) /
-                          1000
-                        ).toFixed(2)
-                      : false}{" "}
-                    kWh
-                  </p>
-                </div>
-                <div className="grid grid-cols-3 items-center">
-                  <p className="text-center font-bold text-gray-700">LESTE</p>
-                  <input
-                    className="outline-none p-2 text-center font-bold text-gray-700"
-                    type={"number"}
-                    value={dados.modLeste}
-                    onChange={(e) =>
-                      setDados({ ...dados, modLeste: Number(e.target.value) })
-                    }
-                  />
-                  <p className="text-center font-bold text-gray-700">
-                    {dados.modLeste && fatorDeGeracaoPorOrientacao[dados.cidade]
-                      ? (
-                          (Number(
-                            fatorDeGeracaoPorOrientacao[dados.cidade]["LESTE"]
-                          ) *
-                            dados.modLeste *
-                            dados.potModulos) /
-                          1000
-                        ).toFixed(2)
-                      : false}{" "}
-                    kWh
-                  </p>
-                </div>
-                <div className="grid grid-cols-3 items-center">
-                  <p className="text-center font-bold text-gray-700">SUDESTE</p>
-                  <input
-                    className="outline-none p-2 text-center font-bold text-gray-700"
-                    type={"number"}
-                    value={dados.modSudeste}
-                    onChange={(e) =>
-                      setDados({ ...dados, modSudeste: Number(e.target.value) })
-                    }
-                  />
-                  <p className="text-center font-bold text-gray-700">
-                    {dados.modSudeste &&
-                    fatorDeGeracaoPorOrientacao[dados.cidade]
-                      ? (
-                          (Number(
-                            fatorDeGeracaoPorOrientacao[dados.cidade]["SUDESTE"]
-                          ) *
-                            dados.modSudeste *
-                            dados.potModulos) /
-                          1000
-                        ).toFixed(2)
-                      : false}{" "}
-                    kWh
-                  </p>
-                </div>
-                <div className="grid grid-cols-3 items-center">
-                  <p className="text-center font-bold text-gray-700">SUL</p>
-                  <input
-                    className="outline-none p-2 text-center font-bold text-gray-700"
-                    type={"number"}
-                    value={dados.modSul}
-                    onChange={(e) =>
-                      setDados({ ...dados, modSul: Number(e.target.value) })
-                    }
-                  />
-                  <p className="text-center font-bold text-gray-700">
-                    {dados.modSul && fatorDeGeracaoPorOrientacao[dados.cidade]
-                      ? (
-                          (Number(
-                            fatorDeGeracaoPorOrientacao[dados.cidade]["SUL"]
-                          ) *
-                            dados.modSul *
-                            dados.potModulos) /
-                          1000
-                        ).toFixed(2)
-                      : false}{" "}
-                    kWh
-                  </p>
-                </div>
-                <div className="grid grid-cols-3 items-center">
-                  <p className="text-center font-bold text-gray-700">
-                    SUDOESTE
-                  </p>
-                  <input
-                    className="outline-none p-2 text-center font-bold text-gray-700"
-                    type={"number"}
-                    value={dados.modSudoeste}
-                    onChange={(e) =>
-                      setDados({
-                        ...dados,
-                        modSudoeste: Number(e.target.value),
-                      })
-                    }
-                  />
-                  <p className="text-center font-bold text-gray-700">
-                    {dados.modSudoeste &&
-                    fatorDeGeracaoPorOrientacao[dados.cidade]
-                      ? (
-                          (Number(
-                            fatorDeGeracaoPorOrientacao[dados.cidade][
-                              "SUDOESTE"
-                            ]
-                          ) *
-                            dados.modSudoeste *
-                            dados.potModulos) /
-                          1000
-                        ).toFixed(2)
-                      : false}{" "}
-                    kWh
-                  </p>
-                </div>
-                <div className="grid grid-cols-3 items-center">
-                  <p className="text-center font-bold text-gray-700">OESTE</p>
-                  <input
-                    className="outline-none p-2 text-center font-bold text-gray-700"
-                    type={"number"}
-                    value={dados.modOeste}
-                    onChange={(e) =>
-                      setDados({ ...dados, modOeste: Number(e.target.value) })
-                    }
-                  />
-                  <p className="text-center font-bold text-gray-700">
-                    {dados.modOeste && fatorDeGeracaoPorOrientacao[dados.cidade]
-                      ? (
-                          (Number(
-                            fatorDeGeracaoPorOrientacao[dados.cidade]["OESTE"]
-                          ) *
-                            dados.modOeste *
-                            dados.potModulos) /
-                          1000
-                        ).toFixed(2)
-                      : false}{" "}
-                    kWh
-                  </p>
-                </div>
-                <div className="grid grid-cols-3 items-center">
-                  <p className="text-center font-bold text-gray-700">
-                    NOROESTE
-                  </p>
-                  <input
-                    className="outline-none p-2 text-center font-bold text-gray-700"
-                    type={"number"}
-                    value={dados.modNoroeste}
-                    onChange={(e) =>
-                      setDados({
-                        ...dados,
-                        modNoroeste: Number(e.target.value),
-                      })
-                    }
-                  />
-                  <p className="text-center font-bold text-gray-700">
-                    {dados.modNoroeste &&
-                    fatorDeGeracaoPorOrientacao[dados.cidade]
-                      ? (
-                          (Number(
-                            fatorDeGeracaoPorOrientacao[dados.cidade][
-                              "NOROESTE"
-                            ]
-                          ) *
-                            dados.modNoroeste *
-                            dados.potModulos) /
-                          1000
-                        ).toFixed(2)
-                      : false}{" "}
-                    kWh
-                  </p>
+            {dados.tipoDeSolicitacao != "ORÇAMENTAÇÃO" && (
+              <div className="flex flex-col items-center">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  ESTUDO DE GERAÇÃO - DESVIO AZIMUTAL
+                </span>
+                <div className="grid grid-cols-2 grid-rows-4">
+                  <div className="grid grid-cols-3 items-center">
+                    <p className="text-center font-bold text-gray-700">NORTE</p>
+                    <input
+                      className="outline-none p-2 text-center font-bold text-gray-700"
+                      type={"number"}
+                      value={dados.modNorte}
+                      onChange={(e) =>
+                        setDados({ ...dados, modNorte: Number(e.target.value) })
+                      }
+                    />
+                    <p className="text-center font-bold text-gray-700">
+                      {dados.modNorte &&
+                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                        ? (
+                            (Number(
+                              fatorDeGeracaoPorOrientacao[dados.cidade]["NORTE"]
+                            ) *
+                              dados.modNorte *
+                              dados.potModulos) /
+                            1000
+                          ).toFixed(2)
+                        : false}{" "}
+                      kWh
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-3 items-center">
+                    <p className="text-center font-bold text-gray-700">
+                      NORDESTE
+                    </p>
+                    <input
+                      className="outline-none p-2 text-center font-bold text-gray-700"
+                      type={"number"}
+                      value={dados.modNordeste}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          modNordeste: Number(e.target.value),
+                        })
+                      }
+                    />
+                    <p className="text-center font-bold text-gray-700">
+                      {dados.modNordeste &&
+                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                        ? (
+                            (Number(
+                              fatorDeGeracaoPorOrientacao[dados.cidade][
+                                "NORDESTE"
+                              ]
+                            ) *
+                              dados.modNordeste *
+                              dados.potModulos) /
+                            1000
+                          ).toFixed(2)
+                        : false}{" "}
+                      kWh
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-3 items-center">
+                    <p className="text-center font-bold text-gray-700">LESTE</p>
+                    <input
+                      className="outline-none p-2 text-center font-bold text-gray-700"
+                      type={"number"}
+                      value={dados.modLeste}
+                      onChange={(e) =>
+                        setDados({ ...dados, modLeste: Number(e.target.value) })
+                      }
+                    />
+                    <p className="text-center font-bold text-gray-700">
+                      {dados.modLeste &&
+                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                        ? (
+                            (Number(
+                              fatorDeGeracaoPorOrientacao[dados.cidade]["LESTE"]
+                            ) *
+                              dados.modLeste *
+                              dados.potModulos) /
+                            1000
+                          ).toFixed(2)
+                        : false}{" "}
+                      kWh
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-3 items-center">
+                    <p className="text-center font-bold text-gray-700">
+                      SUDESTE
+                    </p>
+                    <input
+                      className="outline-none p-2 text-center font-bold text-gray-700"
+                      type={"number"}
+                      value={dados.modSudeste}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          modSudeste: Number(e.target.value),
+                        })
+                      }
+                    />
+                    <p className="text-center font-bold text-gray-700">
+                      {dados.modSudeste &&
+                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                        ? (
+                            (Number(
+                              fatorDeGeracaoPorOrientacao[dados.cidade][
+                                "SUDESTE"
+                              ]
+                            ) *
+                              dados.modSudeste *
+                              dados.potModulos) /
+                            1000
+                          ).toFixed(2)
+                        : false}{" "}
+                      kWh
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-3 items-center">
+                    <p className="text-center font-bold text-gray-700">SUL</p>
+                    <input
+                      className="outline-none p-2 text-center font-bold text-gray-700"
+                      type={"number"}
+                      value={dados.modSul}
+                      onChange={(e) =>
+                        setDados({ ...dados, modSul: Number(e.target.value) })
+                      }
+                    />
+                    <p className="text-center font-bold text-gray-700">
+                      {dados.modSul && fatorDeGeracaoPorOrientacao[dados.cidade]
+                        ? (
+                            (Number(
+                              fatorDeGeracaoPorOrientacao[dados.cidade]["SUL"]
+                            ) *
+                              dados.modSul *
+                              dados.potModulos) /
+                            1000
+                          ).toFixed(2)
+                        : false}{" "}
+                      kWh
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-3 items-center">
+                    <p className="text-center font-bold text-gray-700">
+                      SUDOESTE
+                    </p>
+                    <input
+                      className="outline-none p-2 text-center font-bold text-gray-700"
+                      type={"number"}
+                      value={dados.modSudoeste}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          modSudoeste: Number(e.target.value),
+                        })
+                      }
+                    />
+                    <p className="text-center font-bold text-gray-700">
+                      {dados.modSudoeste &&
+                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                        ? (
+                            (Number(
+                              fatorDeGeracaoPorOrientacao[dados.cidade][
+                                "SUDOESTE"
+                              ]
+                            ) *
+                              dados.modSudoeste *
+                              dados.potModulos) /
+                            1000
+                          ).toFixed(2)
+                        : false}{" "}
+                      kWh
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-3 items-center">
+                    <p className="text-center font-bold text-gray-700">OESTE</p>
+                    <input
+                      className="outline-none p-2 text-center font-bold text-gray-700"
+                      type={"number"}
+                      value={dados.modOeste}
+                      onChange={(e) =>
+                        setDados({ ...dados, modOeste: Number(e.target.value) })
+                      }
+                    />
+                    <p className="text-center font-bold text-gray-700">
+                      {dados.modOeste &&
+                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                        ? (
+                            (Number(
+                              fatorDeGeracaoPorOrientacao[dados.cidade]["OESTE"]
+                            ) *
+                              dados.modOeste *
+                              dados.potModulos) /
+                            1000
+                          ).toFixed(2)
+                        : false}{" "}
+                      kWh
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-3 items-center">
+                    <p className="text-center font-bold text-gray-700">
+                      NOROESTE
+                    </p>
+                    <input
+                      className="outline-none p-2 text-center font-bold text-gray-700"
+                      type={"number"}
+                      value={dados.modNoroeste}
+                      onChange={(e) =>
+                        setDados({
+                          ...dados,
+                          modNoroeste: Number(e.target.value),
+                        })
+                      }
+                    />
+                    <p className="text-center font-bold text-gray-700">
+                      {dados.modNoroeste &&
+                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                        ? (
+                            (Number(
+                              fatorDeGeracaoPorOrientacao[dados.cidade][
+                                "NOROESTE"
+                              ]
+                            ) *
+                              dados.modNoroeste *
+                              dados.potModulos) /
+                            1000
+                          ).toFixed(2)
+                        : false}{" "}
+                      kWh
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
             <div className="w-full flex flex-col items-center justify-center gap-2 border border-[#15599a] p-4 shadow-lg bg-[#fff]">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 IMAGEM PARA VISUALIZAÇÃO DO PROJETO

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import NumberInput from "./NumberInput";
-import SelectInput from "./SelectInput";
-import TextInput from "./TextInput";
+import NumberFloatingInput from "./NumberFloatingInput";
+import SelectFloatingInput from "./SelectFloatingInput";
+import TextFloatingInput from "./TextFloatingInput";
 
 function FormVisitaTecnicaDois({
   dados,
@@ -93,9 +93,10 @@ function FormVisitaTecnicaDois({
         PADRÃO
       </span>
       <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
-        <SelectInput
+        <SelectFloatingInput
           label={"AMPERAGEM"}
           editable={true}
+          width={"450px"}
           value={dados.amperagem}
           options={[
             { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -111,9 +112,10 @@ function FormVisitaTecnicaDois({
           ]}
           handleChange={(value) => setDados({ ...dados, amperagem: value })}
         />
-        <SelectInput
+        <SelectFloatingInput
           label={"TIPO DO DISJUNTOR"}
           editable={true}
+          width={"450px"}
           value={dados.tipoDisjuntor}
           options={[
             { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -124,24 +126,27 @@ function FormVisitaTecnicaDois({
           ]}
           handleChange={(value) => setDados({ ...dados, tipoDisjuntor: value })}
         />
-        <TextInput
+        <TextFloatingInput
           label={"NÚMERO DO MEDIDOR"}
           editable={true}
+          width={"450px"}
           value={dados.numeroMedidor}
           handleChange={(value) => setDados({ ...dados, numeroMedidor: value })}
         />
-        <TextInput
+        <TextFloatingInput
           label={"PARA PADRÕES CONJUGADOS"}
           placeholder="ESCREVA: CAIXA 1 - APD1111111 - 40A MONOFÁSICO/ CAIXA 2 - APD222222 - 60A BIFÁSICO ..."
           editable={true}
+          width={"450px"}
           value={dados.infoPadraoConjugado}
           handleChange={(value) =>
             setDados({ ...dados, infoPadraoConjugado: value.toUpperCase() })
           }
         />
-        <SelectInput
+        <SelectFloatingInput
           label={"RAMAL DE ENTRADA"}
           editable={true}
+          width={"450px"}
           value={dados.ramalEntrada}
           options={[
             { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -150,9 +155,10 @@ function FormVisitaTecnicaDois({
           ]}
           handleChange={(value) => setDados({ ...dados, ramalEntrada: value })}
         />
-        <SelectInput
+        <SelectFloatingInput
           label={"RAMAL DE SAÍDA"}
           editable={true}
+          width={"450px"}
           value={dados.ramalSaida}
           options={[
             { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -161,9 +167,10 @@ function FormVisitaTecnicaDois({
           ]}
           handleChange={(value) => setDados({ ...dados, ramalSaida: value })}
         />
-        <SelectInput
+        <SelectFloatingInput
           label={"EM RELAÇÃO A CASA DO CLIENTE, O PADRÃO ESTÁ:"}
           editable={true}
+          width={"450px"}
           value={dados.tipoPadrao}
           options={[
             { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -178,9 +185,10 @@ function FormVisitaTecnicaDois({
           ]}
           handleChange={(value) => setDados({ ...dados, tipoPadrao: value })}
         />
-        <NumberInput
+        <NumberFloatingInput
           label={"NÚMERO DO POSTE (SOMENTE P/GOIÁS)"}
           editable={true}
+          width={"450px"}
           value={dados.numeroPoste ? dados.numeroPoste : ""}
           handleChange={(value) =>
             setDados({ ...dados, numeroPoste: Number(value) })

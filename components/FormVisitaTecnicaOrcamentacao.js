@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SelectInput from "./SelectInput";
+import SelectFloatingInput from "./SelectFloatingInput";
 
 function FormVisitaTecnicaOrcamentacao({
   dados,
@@ -34,10 +34,11 @@ function FormVisitaTecnicaOrcamentacao({
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
         ORÇAMENTAÇÃO
       </span>
-      <div className="flex gap-2 justify-around flex-wrap mt-2">
-        <SelectInput
+      <div className="flex gap-2 justify-around flex-wrap mt-4">
+        <SelectFloatingInput
           label={"TIPO DE ORÇAMENTAÇÃO"}
           editable={true}
+          width={"450px"}
           value={
             dados.tipoOrcamentacao ? dados.tipoOrcamentacao : "NÃO DEFINIDO"
           }
@@ -78,7 +79,7 @@ function FormVisitaTecnicaOrcamentacao({
           type="text"
         />
       </div>
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex items-center justify-center gap-2 mt-4">
         <div className="w-fit flex flex-col items-center">
           <label
             className="ml-2 text-center text-[#15599a] font-bold"

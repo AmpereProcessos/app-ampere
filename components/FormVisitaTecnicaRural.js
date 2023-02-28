@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import NumberInput from "./NumberInput";
-import SelectInput from "./SelectInput";
-import TextInput from "./TextInput";
+import NumberFloatingInput from "./NumberFloatingInput";
+import SelectFloatingInput from "./SelectFloatingInput";
+import TextFloatingInput from "./TextFloatingInput";
 
 function FormVisitaTecnicaRural({
   dados,
@@ -385,10 +385,11 @@ function FormVisitaTecnicaRural({
             </div>
           </div>
         </div>
-        <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
-          <SelectInput
+        <div className="flex gap-2 items-center justify-around flex-wrap mt-4">
+          <SelectFloatingInput
             label={"DISJUNTOR DO PADRÃO"}
             editable={true}
+            width={"450px"}
             value={dados.tipoDisjuntor}
             options={[
               { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -399,9 +400,10 @@ function FormVisitaTecnicaRural({
               setDados({ ...dados, tipoDisjuntor: value })
             }
           />
-          <SelectInput
+          <SelectFloatingInput
             label={"AMPERAGEM"}
             editable={true}
+            width={"450px"}
             value={dados.amperagem}
             options={[
               { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -424,9 +426,10 @@ function FormVisitaTecnicaRural({
             ]}
             handleChange={(value) => setDados({ ...dados, amperagem: value })}
           />
-          <TextInput
+          <TextFloatingInput
             label={"NÚMERO DO MEDIDOR"}
             editable={true}
+            width={"450px"}
             value={dados.numeroMedidor}
             handleChange={(value) =>
               setDados({ ...dados, numeroMedidor: value })
@@ -439,9 +442,10 @@ function FormVisitaTecnicaRural({
           TRANSFORMADOR
         </span>
         <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
-          <SelectInput
+          <SelectFloatingInput
             label={"PADRÃO E TRANSFORMADOR ACOPLADOS"}
             editable={true}
+            width={"450px"}
             value={
               dados.padraoTrafoAcoplados
                 ? dados.padraoTrafoAcoplados
@@ -456,10 +460,11 @@ function FormVisitaTecnicaRural({
               setDados({ ...dados, padraoTrafoAcoplados: value })
             }
           />
-          <NumberInput
+          <NumberFloatingInput
             label={"POTÊNCIA DO TRANSFORMADOR"}
             unit={"kVA"}
             editable={true}
+            width={"450px"}
             value={dados.potTrafo ? dados.potTrafo : ""}
             handleChange={(value) =>
               setDados({ ...dados, potTrafo: Number(value) })
@@ -734,9 +739,10 @@ function FormVisitaTecnicaRural({
           </div>
         </div>
         <div className="flex gap-2 items-center justify-around flex-wrap mt-4">
-          <SelectInput
+          <SelectFloatingInput
             label={"TIPO DE ESTRUTURA - MONTAGEM DOS MÓDULOS"}
             editable={true}
+            width={"450px"}
             value={dados.estruturaMontagem}
             options={[
               { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -752,17 +758,19 @@ function FormVisitaTecnicaRural({
               setDados({ ...dados, estruturaMontagem: value })
             }
           />
-          <TextInput
+          <TextFloatingInput
             label={"ORIENTAÇÃO DA MONTAGEM DOS MÓDULOS"}
             editable={true}
+            width={"450px"}
             value={dados.orientacaoEstrutura}
             handleChange={(value) =>
               setDados({ ...dados, orientacaoEstrutura: value.toUpperCase() })
             }
           />
-          <SelectInput
+          <SelectFloatingInput
             label={"TIPO DA ESTRUTURA"}
             editable={true}
+            width={"450px"}
             value={dados.tipoEstrutura}
             options={[
               { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -774,9 +782,10 @@ function FormVisitaTecnicaRural({
               setDados({ ...dados, tipoEstrutura: value })
             }
           />
-          <SelectInput
+          <SelectFloatingInput
             label={"TIPO DA TELHA"}
             editable={true}
+            width={"450px"}
             value={dados.tipoTelha}
             options={[
               { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -792,9 +801,10 @@ function FormVisitaTecnicaRural({
             ]}
             handleChange={(value) => setDados({ ...dados, tipoTelha: value })}
           />
-          <SelectInput
+          <SelectFloatingInput
             label={"CLIENTE POSSUI TELHAS RESERVAS"}
             editable={true}
+            width={"450px"}
             value={dados.telhasReservas}
             options={[
               { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -806,9 +816,10 @@ function FormVisitaTecnicaRural({
               setDados({ ...dados, telhasReservas: value })
             }
           />
-          <TextInput
+          <TextFloatingInput
             label={"LOCAL DE MONTAGEM DO INVERSOR"}
             editable={true}
+            width={"450px"}
             value={dados.localInstalacaoInversor}
             handleChange={(value) =>
               setDados({
@@ -817,9 +828,10 @@ function FormVisitaTecnicaRural({
               })
             }
           />
-          <TextInput
+          <TextFloatingInput
             label={"DISTÂNCIA DOS MÓDULOS ATÉ OS INVERSORES"}
             editable={true}
+            width={"450px"}
             value={
               dados.distanciaModulosInversores
                 ? dados.distanciaModulosInversores
@@ -829,25 +841,28 @@ function FormVisitaTecnicaRural({
               setDados({ ...dados, distanciaModulosInversores: value })
             }
           />
-          <TextInput
+          <TextFloatingInput
             label={"DISTÂNCIA DOS INVERSORES ATÉ O PADRÃO"}
             editable={true}
+            width={"450px"}
             value={dados.distanciaInversorPadrao}
             handleChange={(value) =>
               setDados({ ...dados, distanciaInversorPadrao: value })
             }
           />
-          <TextInput
+          <TextFloatingInput
             label={"DISTÂNCIA MÉDIA DO INVERSOR ATÉ O ROTEADOR"}
             editable={true}
+            width={"450px"}
             value={dados.distanciaInversorRoteador}
             handleChange={(value) =>
               setDados({ ...dados, distanciaInversorRoteador: value })
             }
           />
-          <SelectInput
+          <SelectFloatingInput
             label={"TIPO DE PAREDE PARA FIXAÇÃO DOS INVERSORES"}
             editable={true}
+            width={"450px"}
             value={
               dados.tipoFixacaoInversores
                 ? dados.tipoFixacaoInversores
@@ -867,9 +882,10 @@ function FormVisitaTecnicaRural({
               setDados({ ...dados, tipoFixacaoInversores: value })
             }
           />
-          <TextInput
+          <TextFloatingInput
             label={"LINK PARA FOTOS DO DRONE"}
             editable={true}
+            width={"450px"}
             value={dados.fotosDrone}
             handleChange={(value) =>
               setDados({ ...dados, fotosDrone: value.toUpperCase() })
@@ -1007,9 +1023,10 @@ function FormVisitaTecnicaRural({
           SERVIÇOS ADICIONAIS
         </span>
         <div className="flex gap-2 items-center justify-around flex-wrap mt-4">
-          <SelectInput
+          <SelectFloatingInput
             label={"CASA DE MÁQUINAS"}
             editable={true}
+            width={"450px"}
             value={dados.casaDeMaquinas ? dados.casaDeMaquinas : "NÃO DEFINIDO"}
             options={[
               { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1027,9 +1044,10 @@ function FormVisitaTecnicaRural({
               setDados({ ...dados, casaDeMaquinas: value })
             }
           />
-          <SelectInput
+          <SelectFloatingInput
             label={"ALAMBRADO"}
             editable={true}
+            width={"450px"}
             value={dados.alambrado ? dados.alambrado : "NÃO DEFINIDO"}
             options={[
               { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1045,9 +1063,10 @@ function FormVisitaTecnicaRural({
             ]}
             handleChange={(value) => setDados({ ...dados, alambrado: value })}
           />
-          <SelectInput
+          <SelectFloatingInput
             label={"BRITAGEM"}
             editable={true}
+            width={"450px"}
             value={dados.britagem ? dados.britagem : "NÃO DEFINIDO"}
             options={[
               { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1063,9 +1082,10 @@ function FormVisitaTecnicaRural({
             ]}
             handleChange={(value) => setDados({ ...dados, britagem: value })}
           />
-          <SelectInput
+          <SelectFloatingInput
             label={"CONSTRUÇÃO DE BARRACÃO"}
             editable={true}
+            width={"450px"}
             value={
               dados.construcaoBarracao
                 ? dados.construcaoBarracao
@@ -1087,9 +1107,10 @@ function FormVisitaTecnicaRural({
               setDados({ ...dados, construcaoBarracao: value })
             }
           />
-          <SelectInput
+          <SelectFloatingInput
             label={"INSTALAÇÃO DE ROTEADOR"}
             editable={true}
+            width={"450px"}
             value={
               dados.instalacaoRoteador
                 ? dados.instalacaoRoteador
@@ -1111,9 +1132,10 @@ function FormVisitaTecnicaRural({
               setDados({ ...dados, instalacaoRoteador: value })
             }
           />
-          <SelectInput
+          <SelectFloatingInput
             label={"REDE PARA RELIGAÇÃO DA FAZENDA"}
             editable={true}
+            width={"450px"}
             value={dados.redeReligacao ? dados.redeReligacao : "NÃO DEFINIDO"}
             options={[
               { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -1131,9 +1153,10 @@ function FormVisitaTecnicaRural({
               setDados({ ...dados, redeReligacao: value })
             }
           />
-          <SelectInput
+          <SelectFloatingInput
             label={"LIMPEZA DO LOCAL DA USINA DE SOLO"}
             editable={true}
+            width={"450px"}
             value={
               dados.limpezaLocalUsinaSolo
                 ? dados.limpezaLocalUsinaSolo
@@ -1155,9 +1178,10 @@ function FormVisitaTecnicaRural({
               setDados({ ...dados, limpezaLocalUsinaSolo: value })
             }
           />
-          <SelectInput
+          <SelectFloatingInput
             label={"TERRAPLANAGEM PARA USINA DE SOLO"}
             editable={true}
+            width={"450px"}
             value={
               dados.terraplanagemUsinaSolo
                 ? dados.terraplanagemUsinaSolo

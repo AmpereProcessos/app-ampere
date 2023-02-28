@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { cidadesAtendidas } from "../utils/constants";
-import NumberInput from "./NumberInput";
-import SelectInput from "./SelectInput";
-import TextInput from "./TextInput";
+import NumberFloatingInput from "./NumberFloatingInput";
+import SelectFloatingInput from "./SelectFloatingInput";
+import TextFloatingInput from "./TextFloatingInput";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
 function FormVisitaTecnicaUm({
@@ -114,55 +114,58 @@ function FormVisitaTecnicaUm({
       });
       return false;
     }
-    if (dados.tipoInversor == "NÃO DEFINIDO") {
-      setMsg({
-        text: "Por favor, preencha o tipo do inversor.",
-        color: "text-red-500",
-      });
-      return false;
+    if (dados.tipoDeSolicitacao != "ORÇAMENTAÇÃO") {
+      if (dados.tipoInversor == "NÃO DEFINIDO") {
+        setMsg({
+          text: "Por favor, preencha o tipo do inversor.",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!dados.qtdeInversor) {
+        setMsg({
+          text: "Por favor, preencha a quantidade de inversor(es).",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!dados.potInversor) {
+        setMsg({
+          text: "Por favor, preencha a potência do(s) inversor(es).",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (dados.marcaInversor.trim().length < 2) {
+        setMsg({
+          text: "Por favor, preencha a marca do(s) inversor(es).",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!dados.qtdeModulos) {
+        setMsg({
+          text: "Por favor, preencha a quantidade de módulos.",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (!dados.potModulos) {
+        setMsg({
+          text: "Por favor, preencha a potência dos módulos.",
+          color: "text-red-500",
+        });
+        return false;
+      }
+      if (dados.marcaModulos.trim() < 2) {
+        setMsg({
+          text: "Por favor, preencha a marca dos módulos.",
+          color: "text-red-500",
+        });
+        return false;
+      }
     }
-    if (!dados.qtdeInversor) {
-      setMsg({
-        text: "Por favor, preencha a quantidade de inversor(es).",
-        color: "text-red-500",
-      });
-      return false;
-    }
-    if (!dados.potInversor) {
-      setMsg({
-        text: "Por favor, preencha a potência do(s) inversor(es).",
-        color: "text-red-500",
-      });
-      return false;
-    }
-    if (dados.marcaInversor.trim().length < 2) {
-      setMsg({
-        text: "Por favor, preencha a marca do(s) inversor(es).",
-        color: "text-red-500",
-      });
-      return false;
-    }
-    if (!dados.qtdeModulos) {
-      setMsg({
-        text: "Por favor, preencha a quantidade de módulos.",
-        color: "text-red-500",
-      });
-      return false;
-    }
-    if (!dados.potModulos) {
-      setMsg({
-        text: "Por favor, preencha a potência dos módulos.",
-        color: "text-red-500",
-      });
-      return false;
-    }
-    if (dados.marcaModulos.trim() < 2) {
-      setMsg({
-        text: "Por favor, preencha a marca dos módulos.",
-        color: "text-red-500",
-      });
-      return false;
-    }
+
     if (dados.tipoDeLaudo == "NÃO DEFINIDO") {
       setMsg({
         text: "Por favor, preencha o tipo de laudo a ser requisitado",
@@ -196,37 +199,49 @@ function FormVisitaTecnicaUm({
   console.log(dados);
   return (
     <div className="w-full flex flex-col border border-[#15599a] p-4 shadow-lg bg-[#fff]">
-      <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-        INFORMAÇÕES INICIAIS
-      </span>
+      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 justify-around flex-wrap p-2">
+        <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+          SOBRE O CLIENTE
+        </h1>
+        <div className="flex items-center justify-center">
+          <TextFloatingInput
+            label={"NOME DO CLIENTE"}
+            editable={true}
+            width={"450px"}
+            value={dados.nomeDoCliente}
+            handleChange={(value) =>
+              setDados({ ...dados, nomeDoCliente: value.toUpperCase() })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <TextFloatingInput
+            label={"TELEFONE DO CLIENTE"}
+            editable={true}
+            width={"450px"}
+            value={dados.telefoneDoCliente}
+            handleChange={(value) =>
+              setDados({ ...dados, telefoneDoCliente: formatPhone(value) })
+            }
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <NumberFloatingInput
+            label={"Nº DO PROJETO SVB"}
+            editable={true}
+            width={"450px"}
+            value={dados.codigoSVB ? dados.codigoSVB : ""}
+            handleChange={(value) =>
+              setDados({ ...dados, codigoSVB: Number(value) })
+            }
+          />
+        </div>
+      </div>
       <div className="flex gap-2 justify-around flex-wrap mt-2">
-        <TextInput
-          label={"NOME DO CLIENTE"}
-          editable={true}
-          value={dados.nomeDoCliente}
-          handleChange={(value) =>
-            setDados({ ...dados, nomeDoCliente: value.toUpperCase() })
-          }
-        />
-        <TextInput
-          label={"TELEFONE DO CLIENTE"}
-          editable={true}
-          value={dados.telefoneDoCliente}
-          handleChange={(value) =>
-            setDados({ ...dados, telefoneDoCliente: formatPhone(value) })
-          }
-        />
-        <NumberInput
-          label={"Nº DO PROJETO SVB"}
-          editable={true}
-          value={dados.codigoSVB ? dados.codigoSVB : ""}
-          handleChange={(value) =>
-            setDados({ ...dados, codigoSVB: Number(value) })
-          }
-        />
-        <SelectInput
+        <SelectFloatingInput
           label={"CIDADE"}
           editable={true}
+          width={"450px"}
           value={dados.cidade}
           options={[
             { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -236,9 +251,10 @@ function FormVisitaTecnicaUm({
           ]}
           handleChange={(value) => setDados({ ...dados, cidade: value })}
         />
-        <TextInput
+        <TextFloatingInput
           label={"CEP"}
           editable={true}
+          width={"450px"}
           value={dados.cep}
           handleChange={(value) =>
             setDados({ ...dados, cep: formatCEP(value) })
@@ -250,111 +266,142 @@ function FormVisitaTecnicaUm({
         >
           <AiOutlineSearch />
         </button>
-        <TextInput
+        <TextFloatingInput
           label={"BAIRRO"}
           editable={true}
+          width={"450px"}
           value={dados.bairro}
           handleChange={(value) =>
             setDados({ ...dados, bairro: value.toUpperCase() })
           }
         />
-        <TextInput
+        <TextFloatingInput
           label={"LOGRADOURO"}
           editable={true}
+          width={"450px"}
           value={dados.logradouro}
           handleChange={(value) =>
             setDados({ ...dados, logradouro: value.toUpperCase() })
           }
         />
-        <NumberInput
+        <NumberFloatingInput
           label={"N°RESIDÊNCIA"}
           editable={true}
+          width={"450px"}
           value={dados.numeroResidencia}
           handleChange={(value) =>
             setDados({ ...dados, numeroResidencia: Number(value) })
           }
         />
       </div>
-      <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-        EQUIPAMENTO
-      </span>
-      <div className="flex gap-2 justify-around flex-wrap mt-2">
-        <SelectInput
-          label={"TIPO DE INVERSOR"}
-          editable={true}
-          value={dados.tipoInversor}
-          options={[
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            { label: "MICRO-INVERSOR", value: "MICRO-INVERSOR" },
-            { label: "INVERSOR", value: "INVERSOR" },
-          ]}
-          handleChange={(value) => setDados({ ...dados, tipoInversor: value })}
-        />
-        <NumberInput
-          label={"QTDE DE INVERSORES"}
-          editable={true}
-          value={dados.qtdeInversor}
-          handleChange={(value) =>
-            setDados({ ...dados, qtdeInversor: Number(value) })
-          }
-        />
-        <NumberInput
-          label={"POTÊNCIA DO INVERSOR"}
-          editable={true}
-          unit={"W"}
-          value={dados.potInversor}
-          handleChange={(value) =>
-            setDados({ ...dados, potInversor: Number(value) })
-          }
-        />
-        <TextInput
-          label={"MARCA DO INVERSOR"}
-          editable={true}
-          value={dados.marcaInversor}
-          handleChange={(value) =>
-            setDados({ ...dados, marcaInversor: value.toUpperCase() })
-          }
-        />
-        <NumberInput
-          label={"QTDE DE MODULOS"}
-          editable={true}
-          value={dados.qtdeModulos}
-          handleChange={(value) =>
-            setDados({ ...dados, qtdeModulos: Number(value) })
-          }
-        />
-        <NumberInput
-          label={"POTÊNCIA DOS MÓDULOS"}
-          editable={true}
-          value={dados.potModulos}
-          handleChange={(value) =>
-            setDados({ ...dados, potModulos: Number(value) })
-          }
-        />
-        <TextInput
-          label={"MARCA DOS MÓDULOS"}
-          editable={true}
-          value={dados.marcaModulos}
-          handleChange={(value) =>
-            setDados({ ...dados, marcaModulos: value.toUpperCase() })
-          }
-        />
-        <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-          <span className="uppercase font-bold font-raleway text-center text-sm">
-            OBSERVAÇÕES PARA VISITA
-          </span>
-          <textarea
-            placeholder={"Descrição aqui.."}
-            value={dados.obsVisita}
-            onChange={(e) => setDados({ ...dados, obsVisita: e.target.value })}
-            className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-          />
+      <div className="flex flex-col mt-2">
+        <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+          EQUIPAMENTO
+        </h1>
+        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 justify-around flex-wrap p-2">
+          <div className="flex items-center justify-center">
+            <SelectFloatingInput
+              label={"TIPO DE INVERSOR"}
+              editable={true}
+              width={"450px"}
+              value={dados.tipoInversor}
+              options={[
+                { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                { label: "MICRO-INVERSOR", value: "MICRO-INVERSOR" },
+                { label: "INVERSOR", value: "INVERSOR" },
+              ]}
+              handleChange={(value) =>
+                setDados({ ...dados, tipoInversor: value })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <NumberFloatingInput
+              label={"QTDE DE INVERSORES"}
+              editable={true}
+              width={"450px"}
+              value={dados.qtdeInversor}
+              handleChange={(value) =>
+                setDados({ ...dados, qtdeInversor: Number(value) })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <NumberFloatingInput
+              label={"POTÊNCIA DO INVERSOR"}
+              editable={true}
+              width={"450px"}
+              unit={"W"}
+              value={dados.potInversor}
+              handleChange={(value) =>
+                setDados({ ...dados, potInversor: Number(value) })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center col-span-3">
+            <TextFloatingInput
+              label={"MARCA DO INVERSOR"}
+              editable={true}
+              width={"450px"}
+              value={dados.marcaInversor}
+              handleChange={(value) =>
+                setDados({ ...dados, marcaInversor: value.toUpperCase() })
+              }
+            />
+          </div>
+        </div>
+        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 justify-around flex-wrap p-2">
+          <div className="flex items-center justify-center">
+            <NumberFloatingInput
+              label={"QTDE DE MODULOS"}
+              editable={true}
+              width={"450px"}
+              value={dados.qtdeModulos}
+              handleChange={(value) =>
+                setDados({ ...dados, qtdeModulos: Number(value) })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <NumberFloatingInput
+              label={"POTÊNCIA DOS MÓDULOS"}
+              editable={true}
+              width={"450px"}
+              value={dados.potModulos}
+              handleChange={(value) =>
+                setDados({ ...dados, potModulos: Number(value) })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <TextFloatingInput
+              label={"MARCA DOS MÓDULOS"}
+              editable={true}
+              width={"450px"}
+              value={dados.marcaModulos}
+              handleChange={(value) =>
+                setDados({ ...dados, marcaModulos: value.toUpperCase() })
+              }
+            />
+          </div>
         </div>
       </div>
-      <div className="flex gap-2 justify-around flex-wrap mt-2">
-        <SelectInput
+      <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
+        <span className="uppercase font-bold font-raleway text-center text-sm">
+          OBSERVAÇÕES PARA VISITA
+        </span>
+        <textarea
+          placeholder={"Descrição aqui.."}
+          value={dados.obsVisita}
+          onChange={(e) => setDados({ ...dados, obsVisita: e.target.value })}
+          className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+        />
+      </div>
+      <div className="flex gap-2 justify-around flex-wrap mt-4">
+        <SelectFloatingInput
           label={"TIPO DE LAUDO"}
           editable={true}
+          width={"450px"}
           value={dados.tipoDeLaudo}
           options={[
             { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
@@ -373,9 +420,10 @@ function FormVisitaTecnicaUm({
           ]}
           handleChange={(value) => setDados({ ...dados, tipoDeLaudo: value })}
         />
-        <SelectInput
+        <SelectFloatingInput
           label={"TIPO DE SOLICITAÇÃO"}
           editable={true}
+          width={"450px"}
           value={dados.tipoDeSolicitacao}
           options={[
             { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },

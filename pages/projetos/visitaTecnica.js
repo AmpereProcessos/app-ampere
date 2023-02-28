@@ -274,62 +274,71 @@ function VisitaTecnica({ credentials, setCredentials }) {
               form.tipoDeLaudo,
               dayjs().diff(dayjs(form.dataDeAbertura), "hours"),
               form.status
-            )} lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
+            )} lg:w-[450px]  cursor-pointer border border-gray-200 hover:bg-blue-100 flex flex-col`}
           >
-            <div className="flex justify-center">
-              <h1 className="text-xs text-[#15599a] font-bold">
-                {form.nomeDoCliente}
-              </h1>
-              {form.solicitacaoContrato && (
-                <BsPatchCheckFill
-                  style={{
-                    fontSize: "20px",
-                    color: "rgb(21 128 61)",
-                    marginLeft: "10px",
-                  }}
-                />
-              )}
+            <div
+              className={`bg-[#15599a] text-[#fead61] text-xs font-bold text-center rounded-br-lg rounded-bl-lg`}
+            >
+              {form.tipoDeSolicitacao ? form.tipoDeSolicitacao : "NÃO DEFINIDO"}
             </div>
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col items-center">
-                <p className="text-xxs text-gray-700">CIDADE</p>
-                <p className="text-xs text-gray-700 font-bold">{form.cidade}</p>
+            <div className="flex flex-col p-3">
+              <div className="flex justify-center">
+                <h1 className="text-xs text-[#15599a] font-bold">
+                  {form.nomeDoCliente}
+                </h1>
+                {form.solicitacaoContrato && (
+                  <BsPatchCheckFill
+                    style={{
+                      fontSize: "20px",
+                      color: "rgb(21 128 61)",
+                      marginLeft: "10px",
+                    }}
+                  />
+                )}
               </div>
-              <div className="flex flex-col items-center">
-                <p className="text-xxs text-gray-700">VENDEDOR</p>
-                <p className="text-xs text-gray-700 font-bold">
-                  {form.nomeVendedor}
-                </p>
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col items-center">
+                  <p className="text-xxs text-gray-700">CIDADE</p>
+                  <p className="text-xs text-gray-700 font-bold">
+                    {form.cidade}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="text-xxs text-gray-700">VENDEDOR</p>
+                  <p className="text-xs text-gray-700 font-bold">
+                    {form.nomeVendedor}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col items-center">
-                <p className="text-xxs text-gray-700">TIPO DE LAUDO</p>
-                <p className="text-xs text-gray-700 font-bold">
-                  {form.tipoDeLaudo}
-                </p>
-              </div>
-              <div
-                className={`flex flex-col ${getPendenceStatusText(
-                  form.tipoDeLaudo,
-                  dayjs().diff(dayjs(form.dataDeAbertura), "hours"),
-                  form.status
-                )} items-center mt-2`}
-              >
-                <p className="text-xxs">
-                  {form.dataDeConclusao
-                    ? "TEMPO ATÉ CONCLUSÃO"
-                    : "TEMPO DESDE ABERTURA"}
-                </p>
-                <p className="text-xs font-bold">
-                  {form.dataDeConclusao
-                    ? dayjs(form.dataDeConclusao).diff(
-                        dayjs(form.dataDeAbertura),
-                        "hours"
-                      )
-                    : dayjs().diff(dayjs(form.dataDeAbertura), "hours")}{" "}
-                  HORAS
-                </p>
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col items-center">
+                  <p className="text-xxs text-gray-700">TIPO DE LAUDO</p>
+                  <p className="text-xs text-gray-700 font-bold">
+                    {form.tipoDeLaudo}
+                  </p>
+                </div>
+                <div
+                  className={`flex flex-col ${getPendenceStatusText(
+                    form.tipoDeLaudo,
+                    dayjs().diff(dayjs(form.dataDeAbertura), "hours"),
+                    form.status
+                  )} items-center mt-2`}
+                >
+                  <p className="text-xxs">
+                    {form.dataDeConclusao
+                      ? "TEMPO ATÉ CONCLUSÃO"
+                      : "TEMPO DESDE ABERTURA"}
+                  </p>
+                  <p className="text-xs font-bold">
+                    {form.dataDeConclusao
+                      ? dayjs(form.dataDeConclusao).diff(
+                          dayjs(form.dataDeAbertura),
+                          "hours"
+                        )
+                      : dayjs().diff(dayjs(form.dataDeAbertura), "hours")}{" "}
+                    HORAS
+                  </p>
+                </div>
               </div>
             </div>
           </div>

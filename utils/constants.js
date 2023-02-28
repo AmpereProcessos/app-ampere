@@ -1478,6 +1478,10 @@ export const fornecedores = [
     value: "SOLAR INOVE",
   },
   {
+    label: "DICOMP",
+    value: "DICOMP",
+  },
+  {
     label: "BYD",
     value: "BYD",
   },

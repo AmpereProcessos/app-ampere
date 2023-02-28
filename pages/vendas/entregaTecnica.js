@@ -57,7 +57,7 @@ function EntregaTecnica() {
     <div className="p-6 grow">
       <div className="pb-2 border-b border-gray-200 flex flex-col">
         <h1 className="text-center text-[#15599a] text-xl font-bold">
-          ENTREGAS TÉCNICAS PENDENTES ({projects?.length})
+          ENTREGAS TÉCNICAS PENDENTES ({filteredProjects?.length})
         </h1>
         <div className="w-full flex items-center justify-center gap-2">
           <button

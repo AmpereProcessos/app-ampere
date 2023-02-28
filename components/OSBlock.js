@@ -24,9 +24,9 @@ function OSBlock({
   const [modalInfo, setModalInfo] = useState();
   console.log(index);
   // Utils
-  function validateVisibility({ categories, open, closingDate }) {
-    if (open) {
-      if (closingDate == undefined) return "hidden";
+  function validateVisibility({ categories, openOnly, closingDate }) {
+    if (openOnly) {
+      if (closingDate != undefined) return "hidden";
       else return "";
     } else if (categories.length > 0) {
       if (!categories.includes(order.categoria)) return "hidden";

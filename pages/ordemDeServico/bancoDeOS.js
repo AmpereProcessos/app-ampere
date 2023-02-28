@@ -10,11 +10,14 @@ import { AppContext } from "../../context/AppContext";
 var dateFilterParam = new Date();
 dateFilterParam.setMonth(dateFilterParam.getMonth() - 3);
 function BancoDeOS() {
+  // Context
   const { credentials } = useContext(AppContext);
-
+  // Utils
   const router = useRouter();
+  // Projects array holder
   const [oss, setOSs] = useState([]);
   const [filteredOss, setFilteredOss] = useState([]);
+  //Filters
   const [filters, setFilters] = useState({
     nomeDoContratoFilter: "",
     emAberto: false,
@@ -24,6 +27,8 @@ function BancoDeOS() {
     after: new Date(dateFilterParam).toISOString(),
     before: new Date().toISOString(),
   });
+
+  // Fetch data function
   function getOSS() {
     axios
       .get(
@@ -34,6 +39,7 @@ function BancoDeOS() {
         setFilteredOss(res.data);
       });
   }
+  // Filtering function based user filters
   function filterOS() {
     var newArr;
     if (filters.nomeDoContratoFilter.trim().length > 0) {
@@ -54,8 +60,8 @@ function BancoDeOS() {
     }
     if (filters.emAberto) {
       if (!newArr) newArr = oss;
-      newArr = newArr.filter(
-        (os) => os.ordensDeServico.dataDeFechamento == undefined
+      newArr = newArr.filter((item) =>
+        item.ordensDeServico.some((os) => os.dataDeFechamento == undefined)
       );
     }
     if (!newArr) setFilteredOss(oss);

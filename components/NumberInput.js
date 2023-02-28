@@ -30,6 +30,8 @@ function NumberInput({
           </p>
         )}
         <input
+          id={label}
+          name={label}
           className="text-xs w-fit text-center uppercase text-gray-600 outline-none bg-transparent"
           type="number"
           readOnly={!editable}

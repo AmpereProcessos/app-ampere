@@ -11,6 +11,7 @@ import {
   cidadesAtendidas,
   equipesTecnicas,
   statusLiberacao,
+  statusObra,
   tiposDeServico,
 } from "../../utils/constants";
 import dayjs from "dayjs";
@@ -510,24 +511,7 @@ function Obras() {
                           obraStatusFilter: e.map((x) => x.value),
                         })
                       }
-                      options={[
-                        {
-                          value: "EM ANDAMENTO",
-                          label: "EM ANDAMENTO",
-                        },
-                        {
-                          value: "PAUSADA",
-                          label: "PAUSADA",
-                        },
-                        {
-                          value: "AGENDADA",
-                          label: "AGENDADA",
-                        },
-                        {
-                          value: "AGUARDANDO AGENDAMENTO",
-                          label: "AGUARDANDO AGENDAMENTO",
-                        },
-                      ]}
+                      options={statusObra.map((status) => status)}
                     />
                   </div>
                   <div className="w-full lg:w-[250px]">

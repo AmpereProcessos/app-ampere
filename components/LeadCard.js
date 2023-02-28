@@ -6,6 +6,7 @@ import TextInput from "./TextInput";
 import { MdSend, MdSave, MdDelete } from "react-icons/md";
 import { BsPatchCheckFill } from "react-icons/bs";
 import axios from "axios";
+import NumberFloatingInput from "./NumberFloatingInput";
 import NumberInput from "./NumberInput";
 function phoneMask(value) {
   if (!value) return "";
@@ -46,8 +47,8 @@ function LeadCard({ lead, getLeads }) {
   async function deleteLead() {
     let response = await axios.delete(`/api/insideSales?id=${lead._id}`);
     if (response.status == 200) {
-      return;
       getLeads();
+      return;
     } else {
       alert("Erro ao excluir lead.");
     }
@@ -171,7 +172,18 @@ function LeadCard({ lead, getLeads }) {
       </div>
       <div className="flex flex-col w-full pt-1">
         <div className="grid grid-cols-1 grid-rows-2 lg:grid-cols-10 lg:grid-rows-1 w-full">
-          <div className="grid grid-cols-1"></div>
+          <div className="grid grid-cols-1">
+            <NumberInput
+              label={"CÓDIGO"}
+              labelColor={"text-gray-600"}
+              editable={true}
+              widthFit={true}
+              value={infoHolder.codigoSVB}
+              handleChange={(value) =>
+                setInfo({ ...infoHolder, codigoSVB: Number(value) })
+              }
+            />
+          </div>
           <div className="flex justify-center items-center col-span-4 gap-4">
             <div className="flex flex-col items-center">
               <p className="text-gray-600 text-center font-bold text-sm">

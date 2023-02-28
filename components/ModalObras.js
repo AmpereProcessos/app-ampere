@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   equipesTecnicas,
+  statusObra,
   tiposDeEstruturas,
   vendedores,
 } from "../utils/constants";
@@ -715,36 +716,7 @@ function ModalObras({
                       : "NÃO DEFINIDO"
                   }
                   editable={editor}
-                  options={[
-                    {
-                      label: "AGENDADA",
-                      value: "AGENDADA",
-                    },
-                    {
-                      label: "AGUARDANDO AGENDAMENTO",
-                      value: "AGUARDANDO AGENDAMENTO",
-                    },
-                    {
-                      label: "CONCLUIDA",
-                      value: "CONCLUIDA",
-                    },
-                    {
-                      label: "EM ANDAMENTO",
-                      value: "EM ANDAMENTO",
-                    },
-                    {
-                      label: "OBRA CANCELADA",
-                      value: "OBRA CANCELADA",
-                    },
-                    {
-                      label: "CASA EM CONSTRUÇÃO",
-                      value: "CASA EM CONSTRUÇÃO",
-                    },
-                    {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
-                    },
-                  ]}
+                  options={statusObra.map((status) => status)}
                   handleChange={(value) => {
                     setChanges({
                       ...changes,

@@ -16,7 +16,7 @@ export default function Result(props) {
         </div>
       </div>
       <div className="px-4 py-12 w-full gap-6 flex flex-col justify-center items-center self-stretch">
-        <div className="w-full text-center leading-none relative">
+        <div className="flex flex-col gap-4 w-full text-center leading-none relative">
           <p className="text-xl inline m-0 leading-[1.2] text-gray-600">
             <strong className="text-[#15599a] font-bold">{props.nome}</strong>,
             fizemos uma simulação rápida, e nela constou que você precisará de{" "}
@@ -28,10 +28,27 @@ export default function Result(props) {
               {(props.potPico * 127).toFixed(2).replace(".", ",")} kWh.
             </strong>
           </p>
+          <p className="text-xl inline m-0 leading-[1.2] text-gray-600">
+            O investimento é de{" "}
+            <strong className="text-[#15599a] font-bold">
+              {props.valorInvestido
+                ? `${props.valorInvestido.toLocaleString("pt-br", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}`
+                : ""}
+              !
+            </strong>
+          </p>
         </div>
         <div className="w-full text-center font-normal text-[rgba(79,88,96,1)]">
           <p className="w-full text-xs m-0 leading-[1.2]">
             Você conseguirá ver as formas de pagamento logo abaixo*
+          </p>
+          <p className="w-full text-xs m-0 leading-[1.2] mt-4">
+            *Todos os valores apresentados nessa simulação são estimativas,
+            podendo, desse modo, variar de acordo com condições externas. Para
+            valores reais, consultar com especialistas.*
           </p>
         </div>
         <div className="w-full gap-6 flex items-start justify-center self-stretch text-center text-white">
@@ -42,7 +59,10 @@ export default function Result(props) {
               </p>
               <p className=" font-black m-0 text-[23px] leading-[1.2]">
                 {props.economiaAnual
-                  ? `R$ ${props.economiaAnual.toFixed(2).replace(".", ",")}`
+                  ? `${props.economiaAnual.toLocaleString("pt-br", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}`
                   : "-"}
               </p>
             </div>
@@ -122,9 +142,10 @@ export default function Result(props) {
                 </p>
                 <p className="w-full font-black m-0 text-[23px] leading-[1.2]">
                   {props.parcelaFinanciamento
-                    ? `R$ ${props.parcelaFinanciamento
-                        .toFixed(2)
-                        .replace(".", ",")}`
+                    ? `${props.parcelaFinanciamento.toLocaleString("pt-br", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}`
                     : "-"}
                 </p>
               </div>
@@ -139,7 +160,10 @@ export default function Result(props) {
                 </p>
                 <p className="w-full font-black m-0 text-[23px] leading-[1.2]">
                   {props.parcelaCartao
-                    ? `R$ ${props.parcelaCartao.toFixed(2).replace(".", ",")}`
+                    ? `${props.parcelaCartao.toLocaleString("pt-br", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}`
                     : "-"}
                 </p>
               </div>
@@ -219,8 +243,10 @@ export async function getServerSideProps({ query }) {
   let potPico = (numModulos * 550) / 1000;
   let economiaAnual = Number((potPico * 127 * 12 * 0.75).toFixed(2));
   let valorInvestido = potPico * 4000; // onde 4 é o valor em R$ do kWp
-  let anosCompletosPayback =
-    (valorInvestido - (valorInvestido % economiaAnual)) / economiaAnual;
+  let anosCompletosPayback = (
+    (valorInvestido - (valorInvestido % economiaAnual)) /
+    economiaAnual
+  ).toFixed(0);
   let mesesCompletosPayback = Math.ceil(
     ((valorInvestido % economiaAnual) / economiaAnual) * 12
   );

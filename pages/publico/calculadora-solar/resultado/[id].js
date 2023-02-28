@@ -128,7 +128,7 @@ export default function Result(props) {
         <div className="w-full text-center text-white">
           <div className="w-full leading-none relative">
             <p className="font-normal inline m-0 text-[23px] leading-[1.2]">
-              Felipe, vamos agora falar sobre as{" "}
+              {props.nome}, vamos agora falar sobre as{" "}
               <strong className="font-bold">formas de pagamento</strong> ?
             </p>
           </div>
@@ -190,10 +190,13 @@ export default function Result(props) {
           </div>
         </div>
         <div className="w-full gap-4 flex flex-col justify-center items-center self-stretch text-center text-white font-black">
-          <div className="flex items-center hover:bg-green-600 hover:scale-110 duration-300 ease-in-out bg-green-500 font-bold cursor-pointer text-white p-2 px-4 rounded gap-2">
+          <a
+            href={"https://linktr.ee/ampereenergias"}
+            className="flex items-center hover:bg-green-600 hover:scale-110 duration-300 ease-in-out bg-green-500 font-bold cursor-pointer text-white p-2 px-4 rounded gap-2"
+          >
             <FaWhatsapp style={{ fontSize: "25px" }} />
             <p>Falar com especialista</p>
-          </div>
+          </a>
         </div>
       </div>
       <div className="flex justify-center gap-3 px-10 w-full h-[100px] bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">

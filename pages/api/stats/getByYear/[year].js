@@ -10,7 +10,9 @@ export default async function handler(req, res) {
           $match: {
             "contrato.status": "ASSINADO",
             "contrato.dataAssinatura": { $ne: "-" },
-            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
+            tipoDeServico: {
+              $nin: ["OPERAÇÃO E MANUTENÇÃO", "MONTAGEM E DESMONTAGEM"],
+            },
           },
         },
         {
@@ -59,6 +61,7 @@ export default async function handler(req, res) {
     const collection = db.collection("dados");
     var queryKey;
     var queryValue;
+    console.log(queryKey, queryValue);
     if (req.body.filtrarPor == "REGIONAL") {
       queryKey = "regional";
       queryValue = req.body.parametro;
@@ -76,6 +79,9 @@ export default async function handler(req, res) {
             [`${queryKey}`]: queryValue,
             "contrato.status": "ASSINADO",
             "contrato.dataAssinatura": { $ne: "-" },
+            tipoDeServico: {
+              $nin: ["OPERAÇÃO E MANUTENÇÃO", "MONTAGEM E DESMONTAGEM"],
+            },
           },
         },
         {

@@ -4,20 +4,8 @@ import { VscDebugBreakpointLog } from "react-icons/vsc";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
 import { destroyCookie, setCookie } from "nookies";
-import { fileTypes } from "../../utils/constants";
+import { fileTypes, cidadesGoias } from "../../utils/constants";
 import { storage } from "../../utils/firebase";
-
-const cidadesGoias = [
-  "CALDAS NOVAS", // GO
-  "PORTEIRÃO", // GO
-  "SÃO SIMÃO", // GO
-  "INACIOLÂNDIA", // GO
-  "TRINDADE", // GO
-  "ITUMBIARA", // GO
-  "QUIRINÓPOLIS", // GO
-  "PARANAIGUARA", // GO
-  "CATALÃO", // GO
-];
 
 function EtapaFinalizacao({ infoCliente, next, cliente, index }) {
   const [checkFinishingStage, setCheckFinishingStage] = useState(false);

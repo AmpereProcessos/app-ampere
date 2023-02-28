@@ -1205,6 +1205,19 @@ export const cidadesAtendidas = [
   "LIMEIRA DO OESTE", // MG
   "SÃO FRANCISCO DE SALES", // MG,
   "BRASÍLIA", // DF
+  "CAÇU", // GO
+];
+export const cidadesGoias = [
+  "CALDAS NOVAS", // GO
+  "PORTEIRÃO", // GO
+  "SÃO SIMÃO", // GO
+  "INACIOLÂNDIA", // GO
+  "TRINDADE", // GO
+  "ITUMBIARA", // GO
+  "QUIRINÓPOLIS", // GO
+  "PARANAIGUARA", // GO
+  "CATALÃO", // GO
+  "CAÇU",
 ];
 export const suprimentoOption = {
   GRAMPO: {

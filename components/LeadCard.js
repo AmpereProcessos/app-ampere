@@ -136,6 +136,10 @@ function LeadCard({ lead, getLeads }) {
             value={infoHolder.canal}
             options={[
               { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              {
+                label: "CALCULADORA SOLAR",
+                value: "CALCULADORA SOLAR",
+              },
               { label: "GOOGLE ADS", value: "GOOGLE ADS" },
               { label: "FACEBOOK ADS", value: "FACEBOOK ADS" },
               { label: "INDICAÇÃO", value: "INDICAÇÃO" },

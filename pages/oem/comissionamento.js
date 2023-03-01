@@ -8,6 +8,7 @@ import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import { AppContext } from "../../context/AppContext";
 import ComissionamentoPosObraCard from "../../components/ComissionamentoPosObraCard";
+import ComissionamentoPosObraSkeleton from "../../components/skeletons/ComissionamentoPosObraSkeleton";
 import {
   cidadesAtendidas,
   equipesTecnicas,
@@ -20,8 +21,8 @@ function Comissionamento() {
 
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
 
-  const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [projects, setProjects] = useState();
+  const [filteredProjects, setFilteredProjects] = useState();
   const [filters, setFilters] = useState({
     search: "",
     city: [],
@@ -142,96 +143,126 @@ function Comissionamento() {
     }
   }, []);
   console.log(filteredProjects);
-  return (
-    <div className="p-6 grow flex flex-col">
-      <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-            <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">
-              COMISSIONAMENTO PÓS-OBRA
-            </p>
-            <p className="font-bold text-[#fead61]">
-              ({filteredProjects.length})
-            </p>
-          </div>
+  if (filteredProjects) {
+    return (
+      <div className="p-6 grow flex flex-col">
+        <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
+              <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">
+                COMISSIONAMENTO PÓS-OBRA
+              </p>
+              <p className="font-bold text-[#fead61]">
+                ({filteredProjects.length})
+              </p>
+            </div>
 
-          {dropdownMenuVisible ? (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-              <IoMdArrowDropupCircle
-                style={{ fontSize: "25px" }}
-                onClick={() => setDropdownMenuVisible(false)}
-              />
-            </div>
-          ) : (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-              <IoMdArrowDropdownCircle
-                style={{ fontSize: "25px" }}
-                onClick={() => setDropdownMenuVisible(true)}
-              />
-            </div>
-          )}
-        </div>
-        <AnimatePresence>
-          {dropdownMenuVisible ? (
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0.6 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="flex flex-col w-full gap-y-2 mt-4"
-            >
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                <input
-                  className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
-                  placeholder="DIGITE O NOME DO CONTRATO"
-                  value={filters.search}
-                  onChange={(e) => handleSearchFilter(e.target.value)}
+            {dropdownMenuVisible ? (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropupCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setDropdownMenuVisible(false)}
                 />
-                <div className="flex gap-x-2">
-                  <div className="flex flex-col w-fit items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      Depois de:
-                    </span>
-                    <input
-                      className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                      type="date"
-                      value={
-                        dateFilter.after &&
-                        new Date(dateFilter.after).toISOString().slice(0, 10)
-                      }
-                      onChange={(e) =>
-                        setDateFilter({
-                          ...dateFilter,
-                          after: isNaN(e.target.value)
-                            ? new Date(e.target.value).toISOString()
-                            : null,
-                        })
-                      }
-                    />
+              </div>
+            ) : (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropdownCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setDropdownMenuVisible(true)}
+                />
+              </div>
+            )}
+          </div>
+          <AnimatePresence>
+            {dropdownMenuVisible ? (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.6 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="flex flex-col w-full gap-y-2 mt-4"
+              >
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <input
+                    className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                    placeholder="DIGITE O NOME DO CONTRATO"
+                    value={filters.search}
+                    onChange={(e) => handleSearchFilter(e.target.value)}
+                  />
+                  <div className="flex gap-x-2">
+                    <div className="flex flex-col w-fit items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        Depois de:
+                      </span>
+                      <input
+                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                        type="date"
+                        value={
+                          dateFilter.after &&
+                          new Date(dateFilter.after).toISOString().slice(0, 10)
+                        }
+                        onChange={(e) =>
+                          setDateFilter({
+                            ...dateFilter,
+                            after: isNaN(e.target.value)
+                              ? new Date(e.target.value).toISOString()
+                              : null,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col w-fit items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        Antes de:
+                      </span>
+                      <input
+                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                        type="date"
+                        value={
+                          dateFilter.before &&
+                          new Date(dateFilter.before).toISOString().slice(0, 10)
+                        }
+                        onChange={(e) =>
+                          setDateFilter({
+                            ...dateFilter,
+                            before: isNaN(e.target.value)
+                              ? new Date(e.target.value).toISOString()
+                              : null,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti={false}
+                        placeholder={"CAMPO DE FILTRO"}
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        options={[
+                          { label: "SAÍDA DE OBRA", value: "obra.saida" },
+                          { label: "TROCA DO MEDIDOR", value: "medidor.data" },
+                          { label: "NÃO DEFINIDO", value: null },
+                        ]}
+                        onChange={(e) =>
+                          setDateFilter({
+                            ...dateFilter,
+                            field1:
+                              e.value != null ? e.value.split(".")[0] : null,
+                            field2:
+                              e.value != null ? e.value.split(".")[1] : null,
+                          })
+                        }
+                      />
+                    </div>
                   </div>
-                  <div className="flex flex-col w-fit items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      Antes de:
-                    </span>
-                    <input
-                      className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                      type="date"
-                      value={
-                        dateFilter.before &&
-                        new Date(dateFilter.before).toISOString().slice(0, 10)
-                      }
-                      onChange={(e) =>
-                        setDateFilter({
-                          ...dateFilter,
-                          before: isNaN(e.target.value)
-                            ? new Date(e.target.value).toISOString()
-                            : null,
-                        })
-                      }
-                    />
-                  </div>
+                </div>
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
                   <div className="w-full lg:w-[250px]">
                     <Select
-                      isMulti={false}
-                      placeholder={"CAMPO DE FILTRO"}
+                      isMulti
                       styles={{
                         control: (base, state) => ({
                           ...base,
@@ -239,226 +270,200 @@ function Comissionamento() {
                           minHeight: "41px",
                         }),
                       }}
-                      options={[
-                        { label: "SAÍDA DE OBRA", value: "obra.saida" },
-                        { label: "TROCA DO MEDIDOR", value: "medidor.data" },
-                        { label: "NÃO DEFINIDO", value: null },
-                      ]}
+                      placeholder="USINA LIGADA"
                       onChange={(e) =>
-                        setDateFilter({
-                          ...dateFilter,
-                          field1:
-                            e.value != null ? e.value.split(".")[0] : null,
-                          field2:
-                            e.value != null ? e.value.split(".")[1] : null,
+                        setFilters({
+                          ...filters,
+                          plantPowered: e.map((x) => x.value),
                         })
                       }
+                      options={[
+                        { label: "NÃO REALIZADO", value: "NÃO REALIZADO" },
+                        { label: "REALIZADO", value: "REALIZADO" },
+                      ]}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      placeholder="EQUIP.RESP"
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          respTeam: e.map((x) => x.value),
+                        })
+                      }
+                      options={equipesTecnicas.map((equipe) => equipe)}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      placeholder="VENDEDOR"
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          seller: e.map((x) => x.value),
+                        })
+                      }
+                      options={vendedores.map((vendedor) => {
+                        return { label: vendedor.nome, value: vendedor.nome };
+                      })}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      placeholder="CIDADE"
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          city: e.map((x) => x.value),
+                        })
+                      }
+                      options={cidadesAtendidas.map((cidade) => {
+                        return {
+                          label: cidade,
+                          value: cidade,
+                        };
+                      })}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      placeholder="TIPO DA ENTREGA"
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          technicalDeliveryType: e.map((x) => x.value),
+                        })
+                      }
+                      options={[
+                        {
+                          label: "PRESENCIAL",
+                          value: "PRESENCIAL",
+                        },
+                        {
+                          label: "REMOTO",
+                          value: "REMOTO",
+                        },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
+                        },
+                      ]}
                     />
                   </div>
                 </div>
-              </div>
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                <div className="w-full lg:w-[250px]">
-                  <Select
-                    isMulti
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        width: "100%",
-                        minHeight: "41px",
-                      }),
-                    }}
-                    placeholder="USINA LIGADA"
-                    onChange={(e) =>
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <div
+                    onClick={() =>
                       setFilters({
                         ...filters,
-                        plantPowered: e.map((x) => x.value),
+                        appPending: !filters.appPending,
                       })
                     }
-                    options={[
-                      { label: "NÃO REALIZADO", value: "NÃO REALIZADO" },
-                      { label: "REALIZADO", value: "REALIZADO" },
-                    ]}
-                  />
-                </div>
-                <div className="w-full lg:w-[250px]">
-                  <Select
-                    isMulti
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        width: "100%",
-                        minHeight: "41px",
-                      }),
-                    }}
-                    placeholder="EQUIP.RESP"
-                    onChange={(e) =>
+                    className={`${
+                      filters.appPending ? "bg-[#15599a]" : "bg-blue-300"
+                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  >
+                    APP PENDENTE
+                  </div>
+                  <div
+                    onClick={() =>
                       setFilters({
                         ...filters,
-                        respTeam: e.map((x) => x.value),
+                        injectedEnergyPending: !filters.injectedEnergyPending,
                       })
                     }
-                    options={equipesTecnicas.map((equipe) => equipe)}
-                  />
-                </div>
-                <div className="w-full lg:w-[250px]">
-                  <Select
-                    isMulti
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        width: "100%",
-                        minHeight: "41px",
-                      }),
-                    }}
-                    placeholder="VENDEDOR"
-                    onChange={(e) =>
+                    className={`${
+                      filters.injectedEnergyPending
+                        ? "bg-[#15599a]"
+                        : "bg-blue-300"
+                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  >
+                    ENERGIA INJETADA PENDENTE
+                  </div>
+                  <div
+                    onClick={() =>
                       setFilters({
                         ...filters,
-                        seller: e.map((x) => x.value),
+                        technicalDeliveryPending:
+                          !filters.technicalDeliveryPending,
                       })
                     }
-                    options={vendedores.map((vendedor) => {
-                      return { label: vendedor.nome, value: vendedor.nome };
-                    })}
-                  />
+                    className={`${
+                      filters.technicalDeliveryPending
+                        ? "bg-[#15599a]"
+                        : "bg-blue-300"
+                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  >
+                    ENTREGA TÉCNICA PENDENTE
+                  </div>
                 </div>
-                <div className="w-full lg:w-[250px]">
-                  <Select
-                    isMulti
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        width: "100%",
-                        minHeight: "41px",
-                      }),
-                    }}
-                    placeholder="CIDADE"
-                    onChange={(e) =>
-                      setFilters({
-                        ...filters,
-                        city: e.map((x) => x.value),
-                      })
-                    }
-                    options={cidadesAtendidas.map((cidade) => {
-                      return {
-                        label: cidade,
-                        value: cidade,
-                      };
-                    })}
-                  />
+                <div className="flex items-center justify-end gap-x-2">
+                  <button
+                    onClick={filterProjects}
+                    className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
+                  >
+                    <p>Filtrar</p>
+                    <AiOutlineSearch />
+                  </button>
                 </div>
-                <div className="w-full lg:w-[250px]">
-                  <Select
-                    isMulti
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        width: "100%",
-                        minHeight: "41px",
-                      }),
-                    }}
-                    placeholder="TIPO DA ENTREGA"
-                    onChange={(e) =>
-                      setFilters({
-                        ...filters,
-                        technicalDeliveryType: e.map((x) => x.value),
-                      })
-                    }
-                    options={[
-                      {
-                        label: "PRESENCIAL",
-                        value: "PRESENCIAL",
-                      },
-                      {
-                        label: "REMOTO",
-                        value: "REMOTO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                <div
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      appPending: !filters.appPending,
-                    })
-                  }
-                  className={`${
-                    filters.appPending ? "bg-[#15599a]" : "bg-blue-300"
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                >
-                  APP PENDENTE
-                </div>
-                <div
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      injectedEnergyPending: !filters.injectedEnergyPending,
-                    })
-                  }
-                  className={`${
-                    filters.injectedEnergyPending
-                      ? "bg-[#15599a]"
-                      : "bg-blue-300"
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                >
-                  ENERGIA INJETADA PENDENTE
-                </div>
-                <div
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      technicalDeliveryPending:
-                        !filters.technicalDeliveryPending,
-                    })
-                  }
-                  className={`${
-                    filters.technicalDeliveryPending
-                      ? "bg-[#15599a]"
-                      : "bg-blue-300"
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                >
-                  ENTREGA TÉCNICA PENDENTE
-                </div>
-              </div>
-              <div className="flex items-center justify-end gap-x-2">
-                <button
-                  onClick={filterProjects}
-                  className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
-                >
-                  <p>Filtrar</p>
-                  <AiOutlineSearch />
-                </button>
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </div>
+        <div className="flex flex-col gap-2 mt-2">
+          {filteredProjects?.map((project, index) => (
+            <ComissionamentoPosObraCard
+              key={project._id}
+              project={project}
+              index={index}
+            />
+          ))}
+        </div>
+        <Link href={"/vendas/entregaTecnica"}>
+          <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+            <p className="uppercase font-bold text-sm">
+              ENTREGAS TÉCNICAS PRESENCIAIS
+            </p>
+          </a>
+        </Link>
       </div>
-      <div className="flex flex-col gap-2 mt-2">
-        {filteredProjects?.map((project, index) => (
-          <ComissionamentoPosObraCard
-            key={project._id}
-            project={project}
-            index={index}
-          />
-        ))}
-      </div>
-      <Link href={"/vendas/entregaTecnica"}>
-        <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-          <p className="uppercase font-bold text-sm">
-            ENTREGAS TÉCNICAS PRESENCIAIS
-          </p>
-        </a>
-      </Link>
-    </div>
-  );
+    );
+  } else {
+    return <ComissionamentoPosObraSkeleton />;
+  }
 }
 
 export default Comissionamento;

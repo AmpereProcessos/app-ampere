@@ -2,13 +2,16 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import ModalCallPPS from "../../components/ModalCallPPS";
-import { AiOutlineReload } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineReload } from "react-icons/ai";
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { MdDateRange } from "react-icons/md";
 import Link from "next/link";
 import Select from "react-select";
-import { AiOutlineSearch } from "react-icons/ai";
 import dayjs from "dayjs";
 import { AppContext } from "../../context/AppContext";
+import { AnimatePresence, motion } from "framer-motion";
+import FetchDataButton from "../../components/utils/FetchDataButton";
+import FilterButton from "../../components/utils/FilterButton";
 var dateFilterParam = new Date();
 dateFilterParam.setHours(0, 0, 0, 0);
 dateFilterParam.setDate(dateFilterParam.getDate() - 2);
@@ -35,6 +38,12 @@ function ChamadosPPS() {
   // Context and utils
   const { credentials } = useContext(AppContext);
   const router = useRouter();
+
+  const [openCallsDropdownMenuVisible, setOpenCallsDropdownMenuVisible] =
+    useState(false);
+  const [closedCallsDropdownMenuVisible, setClosedCallsDropdownMenuVisible] =
+    useState(false);
+
   // Data Holders
   const [inProgress, setInProgress] = useState([]);
   const [filteredInProgress, setFilteredInProgress] = useState([]);
@@ -159,96 +168,142 @@ function ChamadosPPS() {
   }, []);
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
-      <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="flex gap-x-2">
-          <p>CHAMADOS ABERTOS</p>
-        </div>
-        <div
-          onClick={getCalls}
-          className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg"
-        >
-          <p className="mr-2 text-sm">Atualizar</p>
-          <AiOutlineReload />
-        </div>
-        <Link href="/calls/ppsReport">
-          <button className="bg-[#15599a] font-bold text-white hover:text-black hover:bg-[#fead61] p-2 rounded-lg">
-            Relátorio
-          </button>
-        </Link>
+      <div className="flex items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
+        <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">
+          CHAMADOS DE SUPORTE AO VENDEDOR
+        </p>
+        <FetchDataButton
+          text={"ATUALIZAR"}
+          icon={<AiOutlineReload />}
+          handleClick={getCalls}
+        />
       </div>
-      <div className="w-full border flex flex-col h-[720px] lg:h-[550px]  border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="flex h-[10%] flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
-          <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
-            Chamados abertos ({inProgress.length})
-          </h1>
-          <div className="flex flex-wrap items-center gap-2">
-            <input
-              type="text"
-              value={searchFilter}
-              onChange={(e) => handleSearchFilter(e.target.value)}
-              className="outline-none border border-gray-200 px-2 py-1"
-            />
-            <Select
-              isMulti
-              placeholder="STATUS DO CHAMADOS"
-              onChange={(e) =>
-                setFilters({ ...filters, statusFilter: e.map((x) => x.value) })
-              }
-              options={[
-                {
-                  value: "PENDENTE",
-                  label: "PENDENTE",
-                },
-                {
-                  value: "EM ANDAMENTO",
-                  label: "EM ANDAMENTO",
-                },
-              ]}
-            />
-            <Select
-              isMulti
-              placeholder="RESPONSÁVEL"
-              onChange={(e) =>
-                setFilters({ ...filters, respFilter: e.map((x) => x.value) })
-              }
-              options={[
-                {
-                  value: "ADRIANO",
-                  label: "ADRIANO",
-                },
-                {
-                  value: "ARTHUR",
-                  label: "ARTHUR",
-                },
-                {
-                  value: "NATHAN",
-                  label: "NATHAN",
-                },
-                {
-                  value: "MATHEUS",
-                  label: "MATHEUS",
-                },
-                {
-                  value: "A DEFINIR",
-                  label: "A DEFINIR",
-                },
-              ]}
-            />
-            <button
-              onClick={filterOpenCalls}
-              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 py-1 items-center gap-x-2"
-            >
-              <p>Filtrar</p>
-              <AiOutlineSearch />
-            </button>
+      <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
+              <p className="text-center uppercase text-[#15599a] font-bold text-xl">
+                Chamados abertos
+              </p>
+              <p className="font-bold text-[#fead61]">({inProgress.length})</p>
+            </div>
+            {openCallsDropdownMenuVisible ? (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropupCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setOpenCallsDropdownMenuVisible(false)}
+                />
+              </div>
+            ) : (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropdownCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setOpenCallsDropdownMenuVisible(true)}
+                />
+              </div>
+            )}
           </div>
+          <AnimatePresence>
+            {openCallsDropdownMenuVisible ? (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.6 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="flex flex-col w-full gap-y-2 mt-4"
+              >
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <input
+                    type="text"
+                    value={searchFilter}
+                    onChange={(e) => handleSearchFilter(e.target.value)}
+                    className="outline-none p-1.5  w-full lg:w-[350px] h-[41px] rounded border border-gray-200 placeholder:italic"
+                    placeholder="DIGITE O NOME DO VENDEDOR"
+                  />
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      placeholder="STATUS DO CHAMADOS"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          statusFilter: e.map((x) => x.value),
+                        })
+                      }
+                      options={[
+                        {
+                          value: "PENDENTE",
+                          label: "PENDENTE",
+                        },
+                        {
+                          value: "EM ANDAMENTO",
+                          label: "EM ANDAMENTO",
+                        },
+                      ]}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      placeholder="RESPONSÁVEL"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          respFilter: e.map((x) => x.value),
+                        })
+                      }
+                      options={[
+                        {
+                          value: "ADRIANO",
+                          label: "ADRIANO",
+                        },
+                        {
+                          value: "ARTHUR",
+                          label: "ARTHUR",
+                        },
+                        {
+                          value: "NATHAN",
+                          label: "NATHAN",
+                        },
+                        {
+                          value: "MATHEUS",
+                          label: "MATHEUS",
+                        },
+                        {
+                          value: "A DEFINIR",
+                          label: "A DEFINIR",
+                        },
+                      ]}
+                    />
+                  </div>
+                  <FilterButton
+                    text={"FILTRAR"}
+                    icon={<AiOutlineSearch />}
+                    handleClick={filterOpenCalls}
+                  />
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
-        <div className="flex h-[90%] justify-around pb-2 overflow-y-auto overscroll-y-auto gap-3 mt-4 flex-wrap">
+        <div className="flex grow overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
           {filteredInProgress.map((call) => (
             <div
               key={call._id}
               onClick={() => handleOpenModal(call)}
-              className="w-[450px] h-[240px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+              className="w-full lg:w-[450px] max-h-[240px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
               <div className="flex justify-between items-center w-full">
                 <h1 className="text-xs text-center">{call.vendedor}</h1>
@@ -295,54 +350,87 @@ function ChamadosPPS() {
           ))}
         </div>
       </div>
-      <div className="w-full border max-h-[750px] lg:max-h-[450px] border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="flex flex-col gap-y-2 lg:gap-y-0 lg:flex-row items-center justify-around">
-          <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
-            CHAMADOS FINALIZADOS
-          </h1>
-          <p>{closedCalls.length} resolvidos no período</p>
-          <div className="flex flex-wrap gap-x-2 items-center">
-            <p>Entre:</p>
-            <input
-              value={new Date(closedFilterDate.after)
-                .toISOString()
-                .slice(0, 10)}
-              onChange={(e) =>
-                setClosedFilterDate({
-                  ...closedFilterDate,
-                  after: new Date(e.target.value),
-                })
-              }
-              type="date"
-              className="border border-gray-200 outline-none p-2"
-            />
-            <p>&</p>
-            <input
-              value={dayjs(closedFilterDate.before).format("YYYY-MM-DD")}
-              onChange={(e) =>
-                setClosedFilterDate({
-                  ...closedFilterDate,
-                  before: new Date(dayjs(e.target.value).add(22, "hours")),
-                })
-              }
-              type="date"
-              className="border border-gray-200 outline-none p-2"
-            />
+      <div className="flex flex-col w-full border h-[1200px] lg:h-[500px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
+              <p className="text-center text-[#15599a] font-bold text-xl">
+                CHAMADOS FINALIZADOS
+              </p>
+              <p className="font-bold text-[#fead61]">({inProgress.length})</p>
+            </div>
+            {closedCallsDropdownMenuVisible ? (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropupCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setClosedCallsDropdownMenuVisible(false)}
+                />
+              </div>
+            ) : (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropdownCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setClosedCallsDropdownMenuVisible(true)}
+                />
+              </div>
+            )}
           </div>
-          <div
-            onClick={filterClosedCallsByDate}
-            className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg"
-          >
-            <p className="mr-2 text-sm">Filtrar</p>
-            <MdDateRange />
-          </div>
+          <AnimatePresence>
+            {closedCallsDropdownMenuVisible ? (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.6 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="flex flex-col w-full gap-y-2 mt-4"
+              >
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <div className="flex flex-wrap gap-x-2 items-center">
+                    <p>Entre:</p>
+                    <input
+                      value={new Date(closedFilterDate.after)
+                        .toISOString()
+                        .slice(0, 10)}
+                      onChange={(e) =>
+                        setClosedFilterDate({
+                          ...closedFilterDate,
+                          after: new Date(e.target.value),
+                        })
+                      }
+                      type="date"
+                      className="border border-gray-200 outline-none p-2"
+                    />
+                    <p>&</p>
+                    <input
+                      value={dayjs(closedFilterDate.before).format(
+                        "YYYY-MM-DD"
+                      )}
+                      onChange={(e) =>
+                        setClosedFilterDate({
+                          ...closedFilterDate,
+                          before: new Date(
+                            dayjs(e.target.value).add(22, "hours")
+                          ),
+                        })
+                      }
+                      type="date"
+                      className="border border-gray-200 outline-none p-2"
+                    />
+                  </div>
+                  <FetchDataButton
+                    handleClick={filterClosedCallsByDate}
+                    text={"BUSCAR"}
+                    icon={<MdDateRange />}
+                  />
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
-        <div className="flex mt-2 max-h-[500px] lg:max-h-[350px] overflow-y-auto overscroll-y-auto flex-wrap gap-2 justify-around">
+        <div className="flex grow overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
           {closedCalls.map((call) => (
             <div
               key={call._id}
               onClick={() => handleOpenModal(call)}
-              className="w-[300px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+              className="w-full max-h-[100px] lg:w-[300px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
             >
               <div className="flex justify-between items-center w-full">
                 <h1>{call.vendedor}</h1>

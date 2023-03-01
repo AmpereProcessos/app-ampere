@@ -7,9 +7,12 @@ function Calls() {
   const router = useRouter();
   return (
     <div className="flex flex-col bg-gray-100 grow p-6 w-full">
-      <h1 className="text-center text-[#15599a] text-xl font-bold uppercase font-ralewayBlack">
-        Tipos de chamados
-      </h1>
+      <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
+        <h1 className="text-center text-[#15599a] text-xl font-bold uppercase font-['Roboto']">
+          Tipos de chamados
+        </h1>
+      </div>
+
       <div className="flex gap-4 mt-5 flex-wrap w-full">
         {credentials.accessibleRoutes.includes("PPS") ||
         credentials.visualizacao == "REGIONAL" ? (

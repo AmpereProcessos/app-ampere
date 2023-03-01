@@ -696,6 +696,7 @@ function ChamadosProjetos() {
       </Link>
       {modalIsOpen && (
         <ModalCallProjetos
+          modalIsOpen={modalIsOpen}
           credentials={credentials}
           setModalIsOpen={setModalIsOpen}
           info={modalCall}

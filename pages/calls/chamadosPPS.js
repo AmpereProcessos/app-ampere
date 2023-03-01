@@ -178,6 +178,7 @@ function ChamadosPPS() {
           handleClick={getCalls}
         />
       </div>
+      {/* Abertos */}
       <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
           <div className="flex items-center justify-between w-full">
@@ -185,7 +186,9 @@ function ChamadosPPS() {
               <p className="text-center uppercase text-[#15599a] font-bold text-xl">
                 Chamados abertos
               </p>
-              <p className="font-bold text-[#fead61]">({inProgress.length})</p>
+              <p className="font-bold text-[#fead61]">
+                ({filteredInProgress.length})
+              </p>
             </div>
             {openCallsDropdownMenuVisible ? (
               <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
@@ -350,6 +353,7 @@ function ChamadosPPS() {
           ))}
         </div>
       </div>
+      {/* Fechados */}
       <div className="flex flex-col w-full border h-[1200px] lg:h-[500px] border-gray-200 bg-[#fff] shadow-xl p-4">
         <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
           <div className="flex items-center justify-between w-full">
@@ -357,7 +361,7 @@ function ChamadosPPS() {
               <p className="text-center text-[#15599a] font-bold text-xl">
                 CHAMADOS FINALIZADOS
               </p>
-              <p className="font-bold text-[#fead61]">({inProgress.length})</p>
+              <p className="font-bold text-[#fead61]">({closedCalls.length})</p>
             </div>
             {closedCallsDropdownMenuVisible ? (
               <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
@@ -456,6 +460,7 @@ function ChamadosPPS() {
       </Link>
       {modalIsOpen && (
         <ModalCallPPS
+          modalIsOpen={modalIsOpen}
           credentials={credentials}
           updateModalInfo={updateModalInfo}
           info={modalCall}

@@ -13,6 +13,7 @@ import dayjsBusinessDays from "dayjs-business-days";
 import { AppContext } from "../../context/AppContext";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
 import SuprimentosSkeleton from "../../components/skeletons/SuprimentosSkeleton";
+import FilterButton from "../../components/utils/FilterButton";
 function Suprimentos() {
   const router = useRouter();
   const { credentials, setCredentials } = useContext(AppContext);
@@ -383,13 +384,11 @@ function Suprimentos() {
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2 justify-end items-center">
-                  <button
-                    onClick={filterProjects}
-                    className="flex bg-[#fead61] hover:text-white h-[36px] hover:bg-[#15599a] font-bold rounded px-2 items-center gap-x-2"
-                  >
-                    <p>Filtrar</p>
-                    <AiOutlineSearch />
-                  </button>
+                  <FilterButton
+                    text={"FILTRAR"}
+                    icon={<AiOutlineSearch />}
+                    handleClick={filterProjects}
+                  />
                 </div>
               </motion.div>
             ) : null}

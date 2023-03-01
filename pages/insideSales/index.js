@@ -13,6 +13,8 @@ import ModalNovoLead from "../../components/ModalNovoLead";
 import LeadCard from "../../components/LeadCard";
 import { cidadesAtendidas, vendedores } from "../../utils/constants";
 import AnimatedTextAndIconButton from "../../components/AnimatedTextAndIconButton";
+import FilterButton from "../../components/utils/FilterButton";
+import FetchDataButton from "../../components/utils/FetchDataButton";
 
 var dateFilterParam = new Date();
 dateFilterParam.setMonth(dateFilterParam.getMonth() - 3);
@@ -200,13 +202,11 @@ function InsideSales() {
                   />
                 </div>
                 <div className="flex items-center justify-between gap-2">
-                  <div
-                    onClick={getLeads}
-                    className="flex cursor-pointer bg-[#fead61] text-[#15599a] hover:bg-[#15599a] hover:text-white items-center  font-bold p-2 rounded-lg transition duration-300 ease-in-out hover:scale-105"
-                  >
-                    <p className="mr-2 text-sm">BUSCAR LEADS</p>
-                    <MdDateRange />
-                  </div>
+                  <FetchDataButton
+                    text={"BUSCAR"}
+                    icon={<MdDateRange />}
+                    handleClick={getLeads}
+                  />
                   <div
                     onClick={exportData}
                     className="flex cursor-pointer text-[#15599a] items-center  font-bold p-2 rounded-lg transition duration-300 ease-in-out hover:scale-105"
@@ -408,13 +408,11 @@ function InsideSales() {
                     false
                   )}
                 </div>
-                <button
-                  onClick={filterLeads}
-                  className="flex bg-[#fead61] text-[#15599a] hover:bg-[#15599a] hover:text-white h-[36px] font-bold rounded px-2 items-center gap-x-2"
-                >
-                  <p>FILTRAR</p>
-                  <AiOutlineSearch />
-                </button>
+                <FilterButton
+                  text={"FILTRAR"}
+                  icon={<AiOutlineSearch />}
+                  handleClick={filterLeads}
+                />
               </div>
             </motion.div>
           ) : null}

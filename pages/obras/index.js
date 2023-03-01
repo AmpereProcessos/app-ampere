@@ -17,6 +17,7 @@ import {
 import dayjs from "dayjs";
 import { AppContext } from "../../context/AppContext";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
+import FilterButton from "../../components/utils/FilterButton";
 function Obras() {
   const router = useRouter();
   const { credentials, setCredentials } = useContext(AppContext);
@@ -677,13 +678,11 @@ function Obras() {
                   </div>
                 </div>
                 <div className="flex items-center justify-end gap-x-2">
-                  <button
-                    onClick={filterProjects}
-                    className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
-                  >
-                    <p>Filtrar</p>
-                    <AiOutlineSearch />
-                  </button>
+                  <FilterButton
+                    text={"FILTRAR"}
+                    icon={<AiOutlineSearch />}
+                    handleClick={filterProjects}
+                  />
                 </div>
               </motion.div>
             ) : null}

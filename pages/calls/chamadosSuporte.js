@@ -737,6 +737,7 @@ function ChamadosSuporte() {
       )}
       {modalIsOpen && (
         <ModalCallSuporte
+          modalIsOpen={modalIsOpen}
           credentials={credentials}
           updateModalInfo={updateModalInfo}
           setModalIsOpen={setModalIsOpen}

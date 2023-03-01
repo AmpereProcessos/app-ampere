@@ -14,6 +14,7 @@ import {
   vendedores,
 } from "../../utils/constants";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
+import FilterButton from "../../components/utils/FilterButton";
 import ComercialSkeleton from "../../components/skeletons/ComercialSkeleton";
 const statusStyles = {
   ASSINADO: {
@@ -461,13 +462,11 @@ function Comercial({ users }) {
                   </div>
                 </div>
                 <div className="flex items-center justify-end gap-x-2">
-                  <button
-                    onClick={filterProjects}
-                    className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
-                  >
-                    <p>Filtrar</p>
-                    <AiOutlineSearch />
-                  </button>
+                  <FilterButton
+                    text={"FILTRAR"}
+                    icon={<AiOutlineSearch />}
+                    handleClick={filterProjects}
+                  />
                 </div>
               </motion.div>
             ) : null}

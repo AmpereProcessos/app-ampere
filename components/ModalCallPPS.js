@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 import { AppContext } from "../context/AppContext";
 import PPSModalCallInfo from "./PPSModalCallInfo";
+import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -42,7 +43,13 @@ const statusStyles = {
     borderColor: "border-red-400",
   },
 };
-function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
+function ModalCallPPS({
+  open,
+  setModalIsOpen,
+  info,
+  updateModalInfo,
+  modalIsOpen,
+}) {
   const { credentials } = useContext(AppContext);
   const editor =
     credentials.accessibleRoutes.includes("PPS") &&
@@ -188,174 +195,177 @@ function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
   console.log(info);
   return (
     <>
-      <div style={OVERLAY_STYLES}>
-        <div style={MODAL_STYLES}>
-          <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <div className="flex flex-col">
-                <h1 className="text-[#15599a] pl-6  font-bold">
-                  {info.tipoDeSolicitacao}
-                </h1>
-                <p className="text-gray-500 text-center text-xs">#{info._id}</p>
-              </div>
-              <button>
-                <VscChromeClose
-                  onClick={() => {
-                    setMessage({ text: "", color: "" });
-                    setModalIsOpen(false);
-                  }}
-                  style={{ color: "red" }}
-                />
-              </button>
+      <AnimatedModalWrapper
+        modalIsOpen={modalIsOpen}
+        width={"40%"}
+        height={"87%"}
+      >
+        <div className="flex flex-col h-full">
+          <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+            <div className="flex flex-col">
+              <h1 className="text-[#15599a] pl-6  font-bold">
+                {info.tipoDeSolicitacao}
+              </h1>
+              <p className="text-gray-500 text-center text-xs">#{info._id}</p>
             </div>
-            <div className="overflow-y-auto">
-              <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="font-bold font-raleway">STATUS</span>
-                <div className="flex gap-x-2 justify-center grow">
-                  {info.status == "PENDENTE" ? (
-                    <>
-                      <p
-                        onClick={() => setSelectedStatus("PENDENTE")}
-                        className={`${
-                          selectedStatus != "PENDENTE" && "opacity-30"
-                        } text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg ${
-                          info && statusStyles[info?.status].textColor
-                        } ${info && statusStyles[info.status].borderColor}`}
-                      >
-                        {info?.status}
-                      </p>
-                      <p
-                        onClick={() => setSelectedStatus("EM ANDAMENTO")}
-                        className={`${
-                          selectedStatus != "EM ANDAMENTO" && "opacity-30"
-                        } text-xs font-bold border p-3 w-fit hover:opacity-100 cursor-pointer text-center rounded-lg ${
-                          statusStyles["EM ANDAMENTO"].textColor
-                        } ${statusStyles["EM ANDAMENTO"].borderColor}`}
-                      >
-                        EM ANDAMENTO
-                      </p>
-                    </>
-                  ) : (
+            <button>
+              <VscChromeClose
+                onClick={() => {
+                  setMessage({ text: "", color: "" });
+                  setModalIsOpen(false);
+                }}
+                style={{ color: "red" }}
+              />
+            </button>
+          </div>
+          <div className="overflow-y-auto">
+            <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+              <span className="font-bold font-raleway">STATUS</span>
+              <div className="flex gap-x-2 justify-center grow">
+                {info.status == "PENDENTE" ? (
+                  <>
                     <p
-                      className={`text-xs font-bold border p-3 w-fit hover:opacity-100 text-center rounded-lg ${
-                        statusStyles[info.status].textColor
-                      } ${statusStyles[info.status].borderColor}`}
+                      onClick={() => setSelectedStatus("PENDENTE")}
+                      className={`${
+                        selectedStatus != "PENDENTE" && "opacity-30"
+                      } text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg ${
+                        info && statusStyles[info?.status].textColor
+                      } ${info && statusStyles[info.status].borderColor}`}
                     >
-                      {info.status}
+                      {info?.status}
                     </p>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center font-bold font-raleway">
-                  VENDEDOR
-                </span>
-                <span className="grow text-center font-raleway">
-                  {info.vendedor}
-                </span>
-              </div>
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center font-bold font-raleway">
-                  CÓDIGO SOLAR MARKET (SVB)
-                </span>
-                <span className="grow text-center font-raleway">
-                  {info.codigoDoProjeto}
-                </span>
-              </div>
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center font-bold font-raleway">
-                  ABERTURA
-                </span>
-                <span className="grow text-center font-raleway">
-                  {new Date(info.carimboDataHora).toLocaleString()}
-                </span>
-              </div>
-              {info.dataDeConclusao && (
-                <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                  <span className="text-center font-bold font-raleway">
-                    FECHAMENTO
-                  </span>
-                  <span className="grow text-center font-raleway">
-                    {new Date(info.dataDeConclusao).toLocaleString()}
-                  </span>
-                </div>
-              )}
-
-              <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="font-bold text-center font-raleway">
-                  OBSERVAÇÕES
-                </span>
-                <span className="grow text-center font-raleway text-sm bg-gray-100 p-4 italic">
-                  {info.observacoes ? (
-                    <ul className="text-xs font-bold text-center list-none">
-                      {info.observacoes.split("/").map((string, index) => (
-                        <li key={index}>{string}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-center italic text-gray-600">
-                      SEM OBSERVAÇÕES...
-                    </p>
-                  )}
-                </span>
-              </div>
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center font-bold">RESPONSÁVEL</span>
-                <select
-                  disabled={!editor}
-                  value={responsavel ? responsavel : info.responsavel}
-                  onChange={(e) => setResponsavel(e.target.value)}
-                  className="text-xs grow text-center outline-none mt-2 lg:mt-0"
-                >
-                  <option value={"A DEFINIR"}>A DEFINIR</option>
-                  <option value={"ARTHUR"}>ARTHUR</option>
-                  <option value={"NATHAN"}>NATHAN</option>
-                  <option value={"ADRIANO"}>ADRIANO</option>
-                  <option value={"MATHEUS"}>MATHEUS</option>
-                </select>
-              </div>
-              {info.demanda == "EXTERNA" && (
-                <PPSModalCallInfo
-                  tipoDeSolicitacao={info.tipoDeSolicitacao}
-                  dados={info}
-                />
-              )}
-              <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="font-bold text-center font-raleway">
-                  ANOTAÇÕES
-                </span>
-                <textarea
-                  value={notes}
-                  readOnly={!editor}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Digite aqui as anotações do chamado"
-                  className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit grow"
-                />
-              </div>
-              {editor ? (
-                info.dataDeConclusao ? (
-                  <div className="text-center">
-                    <button
-                      onClick={reopenCall}
-                      className="p-3 font-raleway mt-4 hover:bg-[#f18701] hover:text-white font-bold rounded-lg bg-yellow-400"
+                    <p
+                      onClick={() => setSelectedStatus("EM ANDAMENTO")}
+                      className={`${
+                        selectedStatus != "EM ANDAMENTO" && "opacity-30"
+                      } text-xs font-bold border p-3 w-fit hover:opacity-100 cursor-pointer text-center rounded-lg ${
+                        statusStyles["EM ANDAMENTO"].textColor
+                      } ${statusStyles["EM ANDAMENTO"].borderColor}`}
                     >
-                      REABRIR CHAMADO
-                    </button>
-                  </div>
+                      EM ANDAMENTO
+                    </p>
+                  </>
                 ) : (
-                  <div className="text-center">
-                    <button
-                      onClick={closedCall}
-                      className="p-3 font-raleway mt-4 hover:bg-[#06d6a0] hover:text-white font-bold rounded-lg bg-green-400"
-                    >
-                      FINALIZAR CHAMADO
-                    </button>
-                  </div>
-                )
+                  <p
+                    className={`text-xs font-bold border p-3 w-fit hover:opacity-100 text-center rounded-lg ${
+                      statusStyles[info.status].textColor
+                    } ${statusStyles[info.status].borderColor}`}
+                  >
+                    {info.status}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+              <span className="text-center font-bold font-raleway">
+                VENDEDOR
+              </span>
+              <span className="grow text-center font-raleway">
+                {info.vendedor}
+              </span>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+              <span className="text-center font-bold font-raleway">
+                CÓDIGO SOLAR MARKET (SVB)
+              </span>
+              <span className="grow text-center font-raleway">
+                {info.codigoDoProjeto}
+              </span>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+              <span className="text-center font-bold font-raleway">
+                ABERTURA
+              </span>
+              <span className="grow text-center font-raleway">
+                {new Date(info.carimboDataHora).toLocaleString()}
+              </span>
+            </div>
+            {info.dataDeConclusao && (
+              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center font-bold font-raleway">
+                  FECHAMENTO
+                </span>
+                <span className="grow text-center font-raleway">
+                  {new Date(info.dataDeConclusao).toLocaleString()}
+                </span>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
+              <span className="font-bold text-center font-raleway">
+                OBSERVAÇÕES
+              </span>
+              <span className="grow text-center font-raleway text-sm bg-gray-100 p-4 italic">
+                {info.observacoes ? (
+                  <ul className="text-xs font-bold text-center list-none">
+                    {info.observacoes.split("/").map((string, index) => (
+                      <li key={index}>{string}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-center italic text-gray-600">
+                    SEM OBSERVAÇÕES...
+                  </p>
+                )}
+              </span>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+              <span className="text-center font-bold">RESPONSÁVEL</span>
+              <select
+                disabled={!editor}
+                value={responsavel ? responsavel : info.responsavel}
+                onChange={(e) => setResponsavel(e.target.value)}
+                className="text-xs grow text-center outline-none mt-2 lg:mt-0"
+              >
+                <option value={"A DEFINIR"}>A DEFINIR</option>
+                <option value={"ARTHUR"}>ARTHUR</option>
+                <option value={"NATHAN"}>NATHAN</option>
+                <option value={"ADRIANO"}>ADRIANO</option>
+                <option value={"MATHEUS"}>MATHEUS</option>
+              </select>
+            </div>
+            {info.demanda == "EXTERNA" && (
+              <PPSModalCallInfo
+                tipoDeSolicitacao={info.tipoDeSolicitacao}
+                dados={info}
+              />
+            )}
+            <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
+              <span className="font-bold text-center font-raleway">
+                ANOTAÇÕES
+              </span>
+              <textarea
+                value={notes}
+                readOnly={!editor}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Digite aqui as anotações do chamado"
+                className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit grow"
+              />
+            </div>
+            {editor ? (
+              info.dataDeConclusao ? (
+                <div className="text-center">
+                  <button
+                    onClick={reopenCall}
+                    className="p-3 font-raleway mt-4 hover:bg-[#f18701] hover:text-white font-bold rounded-lg bg-yellow-400"
+                  >
+                    REABRIR CHAMADO
+                  </button>
+                </div>
               ) : (
-                false
-              )}
-              {/* {info.dataDeConclusao ? (
+                <div className="text-center">
+                  <button
+                    onClick={closedCall}
+                    className="p-3 font-raleway mt-4 hover:bg-[#06d6a0] hover:text-white font-bold rounded-lg bg-green-400"
+                  >
+                    FINALIZAR CHAMADO
+                  </button>
+                </div>
+              )
+            ) : (
+              false
+            )}
+            {/* {info.dataDeConclusao ? (
                 <div className="text-center">
                   <button
                     onClick={reopenCall}
@@ -374,25 +384,24 @@ function ModalCallPPS({ open, setModalIsOpen, info, updateModalInfo }) {
                   </button>
                 </div>
               )} */}
-              {message.text && (
-                <p className={`text-center ${message.color} mt-2 italic`}>
-                  {message.text}
-                </p>
-              )}
-              {editor && (
-                <div className="text-center">
-                  <button
-                    onClick={saveProject}
-                    className="px-2 py-1 font-raleway mt-2 hover:bg-[#15599a] hover:text-white font-bold rounded-lg bg-blue-400"
-                  >
-                    SALVAR
-                  </button>
-                </div>
-              )}
-            </div>
+            {message.text && (
+              <p className={`text-center ${message.color} mt-2 italic`}>
+                {message.text}
+              </p>
+            )}
+            {editor && (
+              <div className="text-center">
+                <button
+                  onClick={saveProject}
+                  className="px-2 py-1 font-raleway mt-2 hover:bg-[#15599a] hover:text-white font-bold rounded-lg bg-blue-400"
+                >
+                  SALVAR
+                </button>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      </AnimatedModalWrapper>
     </>
   );
 }

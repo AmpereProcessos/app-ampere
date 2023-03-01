@@ -57,7 +57,7 @@ function DashboardSkeleton() {
       </div>
       <div className="grid grid-rows-2 grid-cols-1 gap-y-2 mt-4 lg:grid-cols-10 lg:grid-rows-1 lg:gap-x-3">
         <div className="flex flex-col p-4 h-[400px] border border-gray-200 bg-[#fff] shadow-xl col-span-2">
-          <div className="w-[234px] h-[30px] bg-gray-200 animate-pulse"></div>
+          <div className="w-[150px] h-[30px] bg-gray-200 animate-pulse"></div>
           <div className="flex grow items-center justify-center">
             <div className="w-[150px] h-[150px] rounded-full bg-gray-200 animate-pulse"></div>
           </div>

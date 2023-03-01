@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     );
     const collection = db.collection("projetos");
     const collection2 = projectsDb.collection("dados");
-    let chamadosAbertos = await collection
+    let openCalls = await collection
       .aggregate([
         { $match: { status: { $ne: "FINALIZADO" } } },
         {
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    let chamadosFechados = await collection
+    let closedCalls = await collection
       .aggregate([
         {
           $match: {
@@ -182,8 +182,8 @@ export default async function handler(req, res) {
             x.comissionamento?.suprimentos == true
         ).length,
       },
-      chamadosAbertos: chamadosAbertos,
-      chamadosFechados: chamadosFechados,
+      openCalls: openCalls,
+      closedCalls: closedCalls,
     });
   } else if (req.method === "POST") {
     let date = new Date().toJSON();

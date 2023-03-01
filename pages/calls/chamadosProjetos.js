@@ -1,15 +1,18 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { AiOutlineReload, AiOutlineSearch } from "react-icons/ai";
-import { MdDateRange } from "react-icons/md";
-import ModalCallProjetos from "../../components/ModalCallProjetos";
-import Select from "react-select";
-import { projetistas, projetosSolicitations } from "../../utils/constants";
+import React, { useEffect, useState, useContext } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
-import { useContext } from "react";
+import Select from "react-select";
+import { AiOutlineReload, AiOutlineSearch } from "react-icons/ai";
+import { MdDateRange } from "react-icons/md";
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
+import { projetistas, projetosSolicitations } from "../../utils/constants";
 import { AppContext } from "../../context/AppContext";
+import ModalCallProjetos from "../../components/ModalCallProjetos";
+import FetchDataButton from "../../components/utils/FetchDataButton";
+import FilterButton from "../../components/utils/FilterButton";
 var dateFilterParam = new Date();
 dateFilterParam.setHours(0, 0, 0, 0);
 dateFilterParam.setMonth(dateFilterParam.getMonth() - 2);
@@ -31,6 +34,12 @@ function ChamadosProjetos() {
   // Utils
   const { credentials, setCredentials } = useContext(AppContext);
   const router = useRouter();
+
+  const [openCallsDropdownMenuVisible, setOpenCallsDropdownMenuVisible] =
+    useState(false);
+  const [closedCallsDropdownMenuVisible, setClosedCallsDropdownMenuVisible] =
+    useState(false);
+
   const [stats, setStats] = useState({
     assinatura: {
       confeccionar: 0,
@@ -51,10 +60,10 @@ function ChamadosProjetos() {
     },
   });
   // Data holders/states
-  const [chamadosAbertos, setChamadosAbertos] = useState([]);
-  const [abertosFiltrados, setAbertosFiltrados] = useState([]);
-  const [chamadosFechados, setChamadosFechados] = useState([]);
-  const [fechadosFiltrados, setFechadosFiltrados] = useState([]);
+  const [openCalls, setOpenCalls] = useState();
+  const [filteredOpenCalls, setFilteredOpenCalls] = useState();
+  const [closedCalls, setClosedCalls] = useState();
+  const [filteredClosedCalls, setFilteredClosedCalls] = useState();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalCall, setModalCall] = useState({});
   // Filters
@@ -62,16 +71,16 @@ function ChamadosProjetos() {
     after: dateFilterParam,
     before: new Date(),
   });
-  const [abertosFilters, setAbertosFilters] = useState({
-    responsavelFilter: [],
-    statusChamadoFilter: [],
-    tipoSolicitacaoFilter: [],
-    procurarFilter: "",
+  const [openCallsFilters, setOpenCallsFilters] = useState({
+    resp: [],
+    callStatus: [],
+    solicitationType: [],
+    search: "",
   });
-  const [fechadosFilter, setFechadosFilter] = useState({
-    procurarFilter: "",
-    tipoSolicitacaoFilter: [],
-    responsavelFilter: [],
+  const [closedCallsFilters, setClosedCallsFilters] = useState({
+    search: "",
+    solicitationType: [],
+    resp: [],
   });
   // Functions
   function getCalls() {
@@ -85,15 +94,15 @@ function ChamadosProjetos() {
           assinatura: res.data.assinatura,
           parecer: res.data.parecer,
           comissionamento: res.data.comissionamento,
-          distribuicoes: res.data.chamadosAbertos.filter(
+          distribuicoes: res.data.openCalls.filter(
             (x) => x.tipoDoChamado == "DISTRIBUIÇÃO DE CRÉDITO"
           ).length,
           vistoria: res.data.vistoria,
         });
-        setChamadosAbertos(res.data.chamadosAbertos);
-        setAbertosFiltrados(res.data.chamadosAbertos);
-        setChamadosFechados(res.data.chamadosFechados);
-        setFechadosFiltrados(res.data.chamadosFechados);
+        setOpenCalls(res.data.openCalls);
+        setFilteredOpenCalls(res.data.openCalls);
+        setClosedCalls(res.data.closedCalls);
+        setFilteredClosedCalls(res.data.closedCalls);
       });
   }
   function handleOpenModal(id) {
@@ -102,67 +111,85 @@ function ChamadosProjetos() {
       setModalIsOpen(true);
     });
   }
-  function filterChamadosAbertos() {
+  function filterOpenCalls() {
     var newArr;
-    if (abertosFilters.responsavelFilter.length > 0) {
-      if (!newArr) newArr = chamadosAbertos;
+    if (openCallsFilters.resp.length > 0) {
+      if (!newArr) newArr = openCalls;
       newArr = newArr.filter((call) =>
-        abertosFilters.responsavelFilter.includes(call.responsavel)
+        openCallsFilters.resp.includes(call.responsavel)
       );
     }
-    if (abertosFilters.statusChamadoFilter.length > 0) {
-      if (!newArr) newArr = chamadosAbertos;
+    if (openCallsFilters.callStatus.length > 0) {
+      if (!newArr) newArr = openCalls;
       newArr = newArr.filter((call) =>
-        abertosFilters.statusChamadoFilter.includes(call.status)
+        openCallsFilters.callStatus.includes(call.status)
       );
     }
-    if (abertosFilters.tipoSolicitacaoFilter.length > 0) {
-      if (!newArr) newArr = chamadosAbertos;
+    if (openCallsFilters.solicitationType.length > 0) {
+      if (!newArr) newArr = openCalls;
       newArr = newArr.filter((call) =>
-        abertosFilters.tipoSolicitacaoFilter.includes(call.tipoDoChamado)
+        openCallsFilters.solicitationType.includes(call.tipoDoChamado)
       );
     }
-    if (abertosFilters.procurarFilter.length > 0) {
-      if (!newArr) newArr = chamadosAbertos;
-      newArr = newArr.filter((call) =>
-        call.projeto
-          .toUpperCase()
-          .includes(abertosFilters.procurarFilter.toUpperCase())
-      );
-    }
-    if (!newArr) setAbertosFiltrados(chamadosAbertos);
-    else {
-      setAbertosFiltrados(newArr);
+    if (!newArr) {
+      setFilteredOpenCalls(openCalls);
+      return openCalls;
+    } else {
+      setFilteredOpenCalls(newArr);
+      return newArr;
     }
   }
-  function filterChamadosFechados() {
+  function filterClosedCalls() {
     var newArr;
-    if (fechadosFilter.responsavelFilter.length > 0) {
-      if (!newArr) newArr = chamadosFechados;
+    if (closedCallsFilters.resp.length > 0) {
+      if (!newArr) newArr = closedCalls;
       newArr = newArr.filter((call) =>
-        fechadosFilter.responsavelFilter.includes(call.responsavel)
+        closedCallsFilters.resp.includes(call.responsavel)
       );
     }
-    if (fechadosFilter.tipoSolicitacaoFilter.length > 0) {
-      if (!newArr) newArr = chamadosFechados;
+    if (closedCallsFilters.solicitationType.length > 0) {
+      if (!newArr) newArr = closedCalls;
       newArr = newArr.filter((call) =>
-        fechadosFilter.tipoSolicitacaoFilter.includes(call.tipoDoChamado)
+        closedCallsFilters.solicitationType.includes(call.tipoDoChamado)
       );
     }
-    if (fechadosFilter.procurarFilter.length > 0) {
-      if (!newArr) newArr = chamadosFechados;
-      newArr = newArr.filter((call) =>
-        call.projeto
-          .toUpperCase()
-          .includes(fechadosFilter.procurarFilter.toUpperCase())
-      );
-    }
-    if (!newArr) setFechadosFiltrados(chamadosFechados);
-    else {
-      setFechadosFiltrados(newArr);
+    if (!newArr) {
+      setFilteredClosedCalls(closedCalls);
+      return closedCalls;
+    } else {
+      setFilteredClosedCalls(newArr);
+      return newArr;
     }
   }
-  function getChamadosFechadosPorData() {
+  function handleSearchInOpenCalls(value) {
+    setOpenCallsFilters({ ...openCallsFilters, search: value });
+    let filtered = filterOpenCalls();
+    if (value.trim().length > 1) {
+      let newArr = [...filtered].filter((call) =>
+        call.projeto
+          .toUpperCase()
+          .includes(openCallsFilters.search.toUpperCase())
+      );
+      setFilteredOpenCalls(newArr);
+    } else {
+      setFilteredOpenCalls([...filtered]);
+    }
+  }
+  function handleSearchInClosedCalls(value) {
+    setClosedCallsFilters({ ...closedCallsFilters, search: value });
+    let filtered = filterClosedCalls();
+    if (value.trim().length > 1) {
+      let newArr = [...filtered].filter((call) =>
+        call.projeto
+          .toUpperCase()
+          .includes(closedCallsFilters.search.toUpperCase())
+      );
+      setFilteredClosedCalls(newArr);
+    } else {
+      setFilteredClosedCalls([...filtered]);
+    }
+  }
+  function getClosedCallsByDate() {
     axios
       .post("/api/calls/projetos/filteredByDate", {
         date: {
@@ -171,8 +198,8 @@ function ChamadosProjetos() {
         },
       })
       .then((res) => {
-        setFechadosFiltrados(res.data);
-        setChamadosFechados(res.data);
+        setFilteredClosedCalls(res.data);
+        setClosedCalls(res.data);
       });
   }
   useEffect(() => {
@@ -185,17 +212,15 @@ function ChamadosProjetos() {
   console.log(stats);
   return (
     <div className="flex flex-col gap-y-2 grow p-6">
-      <div className="flex items-center justify-around w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="flex items-center justify-around gap-x-2">
-          <p>CHAMADOS DE PROJETOS</p>
-        </div>
-        <div
-          onClick={getCalls}
-          className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg"
-        >
-          <p className="mr-2 text-sm">Atualizar</p>
-          <AiOutlineReload />
-        </div>
+      <div className="flex items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
+        <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">
+          CHAMADOS DE PROJETOS
+        </p>
+        <FetchDataButton
+          text={"ATUALIZAR"}
+          icon={<AiOutlineReload />}
+          handleClick={getCalls}
+        />
       </div>
       <div className="grid grid-rows-5 grid-cols-1  lg:grid-cols-5 lg:grid-rows-1 gap-3">
         <div className="flex flex-col p-4 h-[150px] border border-gray-200 bg-[#fff] shadow-xl">
@@ -250,7 +275,7 @@ function ChamadosProjetos() {
           <p className="text-center text-gray-600">
             TOTAL:{" "}
             <strong className="text-red-500">
-              {chamadosAbertos && chamadosAbertos.length}
+              {openCalls && openCalls.length}
             </strong>
           </p>
         </div>
@@ -270,93 +295,150 @@ function ChamadosProjetos() {
         </div>
       </div>
       {/* Abertos */}
-      <div className="flex flex-col bg-[#fff] border border-gray-200 shadow-lg">
-        <div className="flex flex-col gap-y-2 items-center p-2 border-b border-gray-200">
-          <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
-            Chamados abertos ({abertosFiltrados.length})
-          </h1>
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <input
-              type="text"
-              value={abertosFilters.procurarFilter}
-              onChange={(e) =>
-                setAbertosFilters({
-                  ...abertosFilters,
-                  procurarFilter: e.target.value,
-                })
-              }
-              placeholder={"Digite o nome do projeto..."}
-              className="outline-none h-[37px] text-gray-700 border border-gray-200 px-2 py-1.5 rounded-md"
-            />
-            <Select
-              isMulti
-              placeholder="RESPONSÁVEL"
-              onChange={(e) =>
-                setAbertosFilters({
-                  ...abertosFilters,
-                  responsavelFilter: e.map((x) => x.value),
-                })
-              }
-              options={projetistas.map((projetista) => {
-                return { label: projetista.label, value: projetista.nome };
-              })}
-            />
-            <Select
-              isMulti
-              placeholder="STATUS DO CHAMADO"
-              onChange={(e) =>
-                setAbertosFilters({
-                  ...abertosFilters,
-                  statusChamadoFilter: e.map((x) => x.value),
-                })
-              }
-              options={[
-                {
-                  value: "AGUARDANDO CONCESSIONÁRIA",
-                  label: "AGUARDANDO CONCESSIONÁRIA",
-                },
-                {
-                  value: "EM ANDAMENTO",
-                  label: "EM ANDAMENTO",
-                },
-                {
-                  value: undefined,
-                  label: "NÃO DEFINIDO",
-                },
-              ]}
-            />
-            <Select
-              isMulti
-              placeholder="TIPO DO CHAMADO"
-              onChange={(e) =>
-                setAbertosFilters({
-                  ...abertosFilters,
-                  tipoSolicitacaoFilter: e.map((x) => x.value),
-                })
-              }
-              options={projetosSolicitations.map((solicitacao) => {
-                return {
-                  label: solicitacao,
-                  value: solicitacao,
-                };
-              })}
-            />
-            <button
-              onClick={filterChamadosAbertos}
-              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded px-2 py-1.5 items-center gap-x-2"
-            >
-              <p>Filtrar</p>
-              <AiOutlineSearch />
-            </button>
+      <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
+              <p className="text-center uppercase text-[#15599a] font-bold text-xl">
+                Chamados abertos
+              </p>
+              <p className="font-bold text-[#fead61]">
+                ({filteredOpenCalls?.length})
+              </p>
+            </div>
+            {openCallsDropdownMenuVisible ? (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropupCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setOpenCallsDropdownMenuVisible(false)}
+                />
+              </div>
+            ) : (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropdownCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setOpenCallsDropdownMenuVisible(true)}
+                />
+              </div>
+            )}
           </div>
+          <AnimatePresence>
+            {openCallsDropdownMenuVisible ? (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.6 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="flex flex-col w-full gap-y-2 mt-4"
+              >
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <input
+                    type="text"
+                    value={openCallsFilters.search}
+                    onChange={(e) => handleSearchInOpenCalls(e.target.value)}
+                    className="outline-none p-1.5  w-full lg:w-[350px] h-[41px] rounded border border-gray-200 placeholder:italic"
+                    placeholder="DIGITE O NOME DO PROJETO"
+                  />
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      placeholder="RESPONSÁVEL"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      onChange={(e) =>
+                        setOpenCallsFilters({
+                          ...openCallsFilters,
+                          resp: e.map((x) => x.value),
+                        })
+                      }
+                      options={projetistas.map((projetista) => {
+                        return {
+                          label: projetista.label,
+                          value: projetista.nome,
+                        };
+                      })}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      placeholder="STATUS DO CHAMADO"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      onChange={(e) =>
+                        setOpenCallsFilters({
+                          ...openCallsFilters,
+                          callStatus: e.map((x) => x.value),
+                        })
+                      }
+                      options={[
+                        {
+                          value: "AGUARDANDO CONCESSIONÁRIA",
+                          label: "AGUARDANDO CONCESSIONÁRIA",
+                        },
+                        {
+                          value: "EM ANDAMENTO",
+                          label: "EM ANDAMENTO",
+                        },
+                        {
+                          value: undefined,
+                          label: "NÃO DEFINIDO",
+                        },
+                      ]}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      placeholder="TIPO DO CHAMADO"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      onChange={(e) =>
+                        setOpenCallsFilters({
+                          ...openCallsFilters,
+                          solicitationType: e.map((x) => x.value),
+                        })
+                      }
+                      options={projetosSolicitations.map((solicitacao) => {
+                        return {
+                          label: solicitacao,
+                          value: solicitacao,
+                        };
+                      })}
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center justify-end gap-x-2">
+                  <FilterButton
+                    text={"FILTRAR"}
+                    icon={<AiOutlineSearch />}
+                    handleClick={filterOpenCalls}
+                  />
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
-        <div className="flex max-h-[500px] lg:max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around py-2">
-          {abertosFiltrados.length > 0 ? (
-            abertosFiltrados.map((call) => (
+        <div className="flex grow overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
+          {filteredOpenCalls ? (
+            filteredOpenCalls.map((call) => (
               <div
                 onClick={() => handleOpenModal(call._id)}
                 key={call._id}
-                className="w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+                className="w-full lg:w-[420px] min-h-[120px] max-h-[150px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
               >
                 <div className="grid grid-cols-5 justify-between items-center w-full">
                   <h1 className="col-span-3 uppercase text-sm">
@@ -412,104 +494,147 @@ function ChamadosProjetos() {
         </div>
       </div>
       {/* Fechados */}
-      <div className="flex flex-col bg-[#fff] border border-gray-200 shadow-lg">
-        <div className="flex flex-col items-center gap-2 p-2 border-b border-gray-200">
-          <div className="flex items-center gap-3">
-            <h1 className="col-span-1 text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
-              CHAMADOS FINALIZADOS ({fechadosFiltrados.length})
-            </h1>
-            <div className="flex gap-x-2 items-center justify-around">
-              <p>Entre:</p>
-              <input
-                value={dayjs(closedFilterDate.after).format("YYYY-MM-DD")}
-                onChange={(e) =>
-                  setClosedFilterDate({
-                    ...closedFilterDate,
-                    after: e.target.value,
-                  })
-                }
-                type="date"
-                className="border border-gray-200 outline-none p-2"
-              />
-              <p>&</p>
-              <input
-                value={dayjs(closedFilterDate.before).format("YYYY-MM-DD")}
-                onChange={(e) =>
-                  setClosedFilterDate({
-                    ...closedFilterDate,
-                    before: e.target.value,
-                  })
-                }
-                type="date"
-                className="border border-gray-200 outline-none p-2"
-              />
-              <div
-                onClick={getChamadosFechadosPorData}
-                className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg"
-              >
-                <p className="mr-2 text-sm">BUSCAR CHAMADOS</p>
-                <MdDateRange />
-              </div>
+      <div className="flex flex-col w-full border h-[1200px] lg:h-[500px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
+              <p className="text-center text-[#15599a] font-bold text-xl">
+                CHAMADOS FINALIZADOS
+              </p>
+              <p className="font-bold text-[#fead61]">
+                ({filteredClosedCalls?.length})
+              </p>
             </div>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <div className="flex gap-x-2 items-center">
-              <input
-                value={fechadosFilter.procurarFilter}
-                onChange={(e) =>
-                  setFechadosFilter({
-                    ...fechadosFilter,
-                    procurarFilter: e.target.value,
-                  })
-                }
-                placeholder="Digite o nome do cliente/usina..."
-                className="outline-none text-gray-700 border border-gray-200 px-2 py-1.5 rounded-md w-[280px]"
-              />
-              <Select
-                isMulti
-                placeholder="TIPO DE CHAMADO"
-                onChange={(e) =>
-                  setFechadosFilter({
-                    ...fechadosFilter,
-                    tipoSolicitacaoFilter: e.map((x) => x.value),
-                  })
-                }
-                options={projetosSolicitations.map((solicitacao) => {
-                  return {
-                    label: solicitacao,
-                    value: solicitacao,
-                  };
-                })}
-              />
-              <Select
-                isMulti
-                placeholder="RESPONSÁVEL"
-                onChange={(e) =>
-                  setFechadosFilter({
-                    ...fechadosFilter,
-                    responsavelFilter: e.map((x) => x.value),
-                  })
-                }
-                options={projetistas.map((projetista) => {
-                  return { label: projetista.label, value: projetista.nome };
-                })}
-              />
-              <div
-                onClick={filterChamadosFechados}
-                className="flex cursor-pointer hover:bg-orange-500 items-center bg-[#fead61] font-bold p-2 rounded-lg"
-              >
-                <p className="mr-2 text-sm">Filtrar</p>
+            {closedCallsDropdownMenuVisible ? (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropupCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setClosedCallsDropdownMenuVisible(false)}
+                />
               </div>
-            </div>
+            ) : (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropdownCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setClosedCallsDropdownMenuVisible(true)}
+                />
+              </div>
+            )}
           </div>
+          <AnimatePresence>
+            {closedCallsDropdownMenuVisible ? (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.6 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="flex flex-col w-full gap-y-2 mt-4"
+              >
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <p>Entre:</p>
+                  <input
+                    value={dayjs(closedFilterDate.after).format("YYYY-MM-DD")}
+                    onChange={(e) =>
+                      setClosedFilterDate({
+                        ...closedFilterDate,
+                        after: e.target.value,
+                      })
+                    }
+                    type="date"
+                    className="border border-gray-200 outline-none p-2"
+                  />
+                  <p>&</p>
+                  <input
+                    value={dayjs(closedFilterDate.before).format("YYYY-MM-DD")}
+                    onChange={(e) =>
+                      setClosedFilterDate({
+                        ...closedFilterDate,
+                        before: e.target.value,
+                      })
+                    }
+                    type="date"
+                    className="border border-gray-200 outline-none p-2"
+                  />
+                  <FetchDataButton
+                    text={"BUSCAR"}
+                    icon={<MdDateRange />}
+                    handleClick={getClosedCallsByDate}
+                  />
+                </div>
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <input
+                    value={closedCallsFilters.search}
+                    onChange={(e) => handleSearchInClosedCalls(e.target.value)}
+                    className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                    placeholder="DIGITE O NOME DO PROJETO"
+                  />
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      placeholder="TIPO DE CHAMADO"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      onChange={(e) =>
+                        setClosedCallsFilters({
+                          ...closedCallsFilters,
+                          solicitationType: e.map((x) => x.value),
+                        })
+                      }
+                      options={projetosSolicitations.map((solicitacao) => {
+                        return {
+                          label: solicitacao,
+                          value: solicitacao,
+                        };
+                      })}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      placeholder="RESPONSÁVEL"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      onChange={(e) =>
+                        setClosedCallsFilters({
+                          ...closedCallsFilters,
+                          resp: e.map((x) => x.value),
+                        })
+                      }
+                      options={projetistas.map((projetista) => {
+                        return {
+                          label: projetista.label,
+                          value: projetista.nome,
+                        };
+                      })}
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center justify-end gap-x-2">
+                  <FilterButton
+                    text={"FILTRAR"}
+                    icon={<AiOutlineSearch />}
+                    handleClick={filterClosedCalls}
+                  />
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
-        <div className="flex max-h-[500px] lg:max-h-[350px] overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around py-2">
-          {fechadosFiltrados.length > 0 ? (
-            fechadosFiltrados.map((call) => (
+        <div className="flex grow overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
+          {filteredClosedCalls ? (
+            filteredClosedCalls.map((call) => (
               <div
                 onClick={() => handleOpenModal(call._id)}
                 key={call._id}
-                className="flex flex-col w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+                className="flex flex-col min-h-[120px] max-h-[150px] w-full lg:w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
               >
                 <div className="grid grid-cols-3 gap-x-2 items-center w-full">
                   <h1 className="uppercase text-sm col-span-2">

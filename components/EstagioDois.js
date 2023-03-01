@@ -4,17 +4,18 @@ import { useRouter } from "next/router";
 import LogoSemTexto from "../utils/logoBrancoSemTexto.png";
 import Logo from "../utils/logoBranco.png";
 import estadosCidades from "../utils/estados_cidades.json";
+import Select from "react-select";
 function EstagioDois({ next, infoHolder, setInfoHolder }) {
   const [err, setErr] = useState({ field: null, text: "" });
   function validateFields() {
-    if (infoHolder.uf?.trim().length < 2) {
+    if (!infoHolder.uf) {
       setErr({
         field: "UF",
         text: "Oops, o Estado preenchido é inválido. Por favor, preencha um Estado ou UF válido.",
       });
       return false;
     }
-    if (infoHolder.cidade?.trim().length < 4) {
+    if (!infoHolder.cidade) {
       setErr({
         field: "CIDADE",
         text: "Oops, a cidade preenchida é inválida. Por favor, preencha uma cidade válida.",
@@ -33,7 +34,6 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
       next();
     }
   }
-
   return (
     <div className="flex flex-col h-[400px] w-full">
       <div className="w-full flex-1 gap-3 flex flex-col justify-center items-center flex-grow self-stretch text-left font-normal text-[rgba(79,88,96,1)] h-[300px]">
@@ -47,7 +47,22 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
               </div>
             </div>
             <div className="w-full">
-              <select
+              <Select
+                placeholder="ESTADO"
+                styles={{
+                  control: (base, state) => ({
+                    ...base,
+                    borderColor: err.field == "UF" ? "red" : "gray",
+                  }),
+                }}
+                options={estadosCidades.map((item) => {
+                  return { label: item.nome, value: item.sigla };
+                })}
+                onChange={(item) =>
+                  setInfoHolder({ ...infoHolder, uf: item.value })
+                }
+              />
+              {/* <select
                 type={"text"}
                 value={infoHolder.uf}
                 onChange={(e) => {
@@ -70,7 +85,7 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
                     {x.nome}
                   </option>
                 ))}
-              </select>
+              </select> */}
             </div>
           </div>
           <div className="gap-1 flex flex-col justify-center items-center w-[300px] lg:w-[350px]">
@@ -82,7 +97,27 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
               </div>
             </div>
             <div className="w-full">
-              <select
+              <Select
+                placeholder="CIDADE"
+                styles={{
+                  control: (base, state) => ({
+                    ...base,
+                    borderColor: err.field == "CIDADE" ? "red" : "gray",
+                  }),
+                }}
+                options={
+                  infoHolder.uf &&
+                  estadosCidades
+                    .filter((x) => x.sigla == infoHolder.uf)[0]
+                    .cidades.map((cidade, index) => {
+                      return { label: cidade, value: cidade };
+                    })
+                }
+                onChange={(item) =>
+                  setInfoHolder({ ...infoHolder, cidade: item.value })
+                }
+              />
+              {/* <select
                 value={infoHolder.cidade}
                 onChange={(e) =>
                   setInfoHolder({
@@ -107,7 +142,7 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
                 ) : (
                   <option></option>
                 )}
-              </select>
+              </select> */}
             </div>
           </div>
         </div>

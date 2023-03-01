@@ -97,47 +97,57 @@ function Comissionamento({ credentials, setCredentials }) {
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-        <div className="flex items-center gap-x-2">
-          <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
-            Comissionamento
-          </p>
-          {filteredProjects && <p>({filteredProjects.length})</p>}
+        <div className="flex items-center justify-between w-full">
+          <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
+            <p className="font-bold uppercase text-2xl text-[#15599a]">
+              Comissionamento
+            </p>
+            {filteredProjects && (
+              <p className="font-bold text-[#fead61]">
+                ({filteredProjects.length})
+              </p>
+            )}
+          </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2 pl-4">
-          <input
-            type={"text"}
-            className="outline-none p-1.5 w-[250px] rounded border border-gray-200 placeholder:italic"
-            placeholder="Digite o nome do contrato"
-            value={searchFilter}
-            onChange={(e) => handleSearchFilter(e.target.value)}
-          />
-          <div
-            onClick={() =>
-              filterPendenciaComercial(!filters.pendenciaComercial)
-            }
-            className={`${
-              filters.pendenciaComercial ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-          >
-            PENDENCIA COMERCIAL
-          </div>
-          <div
-            onClick={() =>
-              filterPendenciaSuprimentos(!filters.pendenciaSuprimentos)
-            }
-            className={`${
-              filters.pendenciaSuprimentos ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-          >
-            PENDENCIA SUPRIMENTOS
-          </div>
-          <div
-            onClick={() => filterPendenciaProjetos(!filters.pendenciaProjetos)}
-            className={`${
-              filters.pendenciaProjetos ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-          >
-            PENDENCIA PROJETOS
+        <div className="flex flex-col w-full gap-y-2 mt-4">
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+            <input
+              type={"text"}
+              className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+              placeholder="DIGITE O NOME DO CONTRATO"
+              value={searchFilter}
+              onChange={(e) => handleSearchFilter(e.target.value)}
+            />
+            <div
+              onClick={() =>
+                filterPendenciaComercial(!filters.pendenciaComercial)
+              }
+              className={`${
+                filters.pendenciaComercial ? "bg-[#15599a]" : "bg-blue-300"
+              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            >
+              PENDENCIA COMERCIAL
+            </div>
+            <div
+              onClick={() =>
+                filterPendenciaSuprimentos(!filters.pendenciaSuprimentos)
+              }
+              className={`${
+                filters.pendenciaSuprimentos ? "bg-[#15599a]" : "bg-blue-300"
+              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            >
+              PENDENCIA SUPRIMENTOS
+            </div>
+            <div
+              onClick={() =>
+                filterPendenciaProjetos(!filters.pendenciaProjetos)
+              }
+              className={`${
+                filters.pendenciaProjetos ? "bg-[#15599a]" : "bg-blue-300"
+              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            >
+              PENDENCIA PROJETOS
+            </div>
           </div>
         </div>
       </div>

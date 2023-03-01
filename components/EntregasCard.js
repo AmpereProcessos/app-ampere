@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
+import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
-function EntregasCard({ project }) {
+function EntregasCard({ project, index }) {
   const { credentials } = useContext(AppContext);
   const [prevEntrega, setPrevEntrega] = useState(
     project.compra.previsaoEntrega
@@ -38,13 +39,23 @@ function EntregasCard({ project }) {
     }
   }
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, translateY: -20 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{ duration: 0.3, delay: 0.01 * index }}
+      className="flex flex-col w-full"
+    >
       <div className="grid grid-cols-6 lg:grid-cols-10 gap-2 p-1 border border-gray-200 items-center">
         <p className="text-[#15599a] font-bold col-span-2 text-center">
           #{project.qtde} - {project.nomeDoContrato}
-          {project.compra.fornecedor
-            ? ` - (${project.compra.fornecedor})`
-            : false}
+          {project.compra.fornecedor ? (
+            <strong className="text-[#fead61] font-semibold">
+              {" "}
+              - ({project.compra.fornecedor})
+            </strong>
+          ) : (
+            false
+          )}
         </p>
         <div className="flex flex-col items-center col-span-1">
           <p className="text-gray-600 text-xs">NºMÓDULOS</p>
@@ -128,7 +139,7 @@ function EntregasCard({ project }) {
       {msg.text && (
         <p className={`text-center italic ${msg.color}`}>{msg.text}</p>
       )}
-    </>
+    </motion.div>
   );
 }
 

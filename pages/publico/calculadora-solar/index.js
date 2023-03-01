@@ -11,8 +11,8 @@ function Calculadora() {
   const [estagio, setEstagio] = useState(1);
   const [infoHolder, setInfoHolder] = useState({
     valorFatura: null,
-    uf: estadosCidades[0].sigla,
-    cidade: estadosCidades[0].cidades[0],
+    uf: null,
+    cidade: null,
     nome: "",
     email: "",
     telefone: "",

@@ -14,7 +14,7 @@ function Calls() {
         {credentials.accessibleRoutes.includes("PPS") ||
         credentials.visualizacao == "REGIONAL" ? (
           <Link href="/calls/chamadosPPS">
-            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
                 Chamados Suporte PPS
               </h1>
@@ -27,7 +27,7 @@ function Calls() {
           credentials?.accessibleRoutes?.includes("Pós-Venda")) &&
         credentials.visualizacao == undefined ? (
           <Link href="/calls/chamadosSuporte">
-            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
                 Chamados Suporte
               </h1>
@@ -39,7 +39,7 @@ function Calls() {
         {credentials.accessibleRoutes.includes("Projetos") &&
         credentials.visualizacao == undefined ? (
           <Link href="/calls/chamadosProjetos">
-            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
                 Chamados Projetos
               </h1>
@@ -51,7 +51,7 @@ function Calls() {
         {credentials.accessibleRoutes.includes("ADM") &&
         credentials.visualizacao == undefined ? (
           <Link href="/calls/chamadosADM">
-            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
                 Chamados ADM
               </h1>
@@ -63,7 +63,7 @@ function Calls() {
         {credentials.accessibleRoutes.includes("Suprimentos") &&
         credentials.visualizacao == undefined ? (
           <Link href="/calls/chamadosSuprimentos">
-            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[300px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="flex flex-col justify-center cursor-pointer grow w-full lg:w-[600px] p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <h1 className="text-center uppercase font-raleway">
                 Chamados Suprimentos
               </h1>

@@ -128,7 +128,7 @@ function Comercial({ users }) {
   }
   function handleSearchFilter(value) {
     setSearchFilter(value);
-    if (value != "" || " ") {
+    if (value != "" || value != " ") {
       let filtered = filterProjects();
       let newArr = filtered.filter((call) =>
         call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
@@ -221,16 +221,16 @@ function Comercial({ users }) {
               <p className="font-bold uppercase text-center text-2xl text-[#15599a]">
                 Projetos no estágio comercial
               </p>
-              <p className="font-raleway font-bold text-[#fead61]">
+              <p className="font-bold text-[#fead61]">
                 ({filteredProjects.length})
               </p>
               {filteredProjects && (
-                <p className="font-raleway font-bold text-[#fead61]">
+                <p className="font-bold text-[#fead61]">
                   ({getListCumulativePeakPot()}kWp)
                 </p>
               )}
               {filteredProjects && (
-                <p className="font-raleway font-bold text-[#fead61]">
+                <p className="font-bold text-[#fead61]">
                   (R${getListCumulativeValue().toLocaleString()})
                 </p>
               )}

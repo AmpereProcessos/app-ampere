@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import EstagioDois from "../../../components/EstagioDois";
 import EstagioTres from "../../../components/EstagioTres";
 import EstagioUm from "../../../components/EstagioUm";
-import Pixel from "../../../components/Pixel";
 import Logo from "../../../utils/logoBranco.png";
 import LogoSemTexto from "../../../utils/logoBrancoSemTexto.png";
 import estadosCidades from "../../../utils/estados_cidades.json";

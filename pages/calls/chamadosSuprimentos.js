@@ -494,6 +494,7 @@ function ChamadosSuprimentos() {
       {modalIsOpen && (
         <ModalCallSuprimentos
           info={modalCall}
+          modalIsOpen={modalIsOpen}
           setModalIsOpen={() => setModalIsOpen(false)}
           getCalls={getCalls}
         />

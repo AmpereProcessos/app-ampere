@@ -22,10 +22,12 @@ function Acompanhamento() {
     vendedorFilter: [],
     cidadeFilter: [],
     regionalFilter: "GERAL",
+    tipoVendaFilter: "GERAL",
   });
   function getInfo() {
     axios.get("/api/report").then((res) => setInfo(res.data));
   }
+  console.log(info);
   function getPotenciaVendida() {
     var filteredArr = info;
     filteredArr = filteredArr.filter((x) => x.contrato.status == "ASSINADO");
@@ -36,6 +38,15 @@ function Acompanhamento() {
           x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
           x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
+    }
+    if (filters.tipoVendaFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
+        filteredArr = filteredArr.filter((item) => !item.insider);
+      }
+      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
+        filteredArr = filteredArr.filter((item) => item.insider != null);
+      }
     }
     if (filters.vendedorFilter.length > 0) {
       if (!filteredArr) filteredArr = info;
@@ -80,6 +91,15 @@ function Acompanhamento() {
           x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
     }
+    if (filters.tipoVendaFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
+        filteredArr = filteredArr.filter((item) => !item.insider);
+      }
+      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
+        filteredArr = filteredArr.filter((item) => item.insider != null);
+      }
+    }
     if (filters.vendedorFilter.length > 0) {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter((call) =>
@@ -120,6 +140,15 @@ function Acompanhamento() {
           x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
           x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
+    }
+    if (filters.tipoVendaFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
+        filteredArr = filteredArr.filter((item) => !item.insider);
+      }
+      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
+        filteredArr = filteredArr.filter((item) => item.insider != null);
+      }
     }
     if (filters.vendedorFilter.length > 0) {
       if (!filteredArr) filteredArr = info;
@@ -163,6 +192,15 @@ function Acompanhamento() {
       );
       console.log("pós filtro de data", filteredArr);
     }
+    if (filters.tipoVendaFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
+        filteredArr = filteredArr.filter((item) => !item.insider);
+      }
+      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
+        filteredArr = filteredArr.filter((item) => item.insider != null);
+      }
+    }
     if (filters.vendedorFilter.length > 0) {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter((call) =>
@@ -198,6 +236,15 @@ function Acompanhamento() {
           x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
           x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
+    }
+    if (filters.tipoVendaFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
+        filteredArr = filteredArr.filter((item) => !item.insider);
+      }
+      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
+        filteredArr = filteredArr.filter((item) => item.insider != null);
+      }
     }
     if (filters.vendedorFilter.length > 0) {
       if (!filteredArr) filteredArr = info;
@@ -295,6 +342,15 @@ function Acompanhamento() {
           x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
     }
+    if (filters.tipoVendaFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
+        filteredArr = filteredArr.filter((item) => !item.insider);
+      }
+      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
+        filteredArr = filteredArr.filter((item) => item.insider != null);
+      }
+    }
     if (filters.vendedorFilter.length > 0) {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter((call) =>
@@ -338,6 +394,15 @@ function Acompanhamento() {
           x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
     }
+    if (filters.tipoVendaFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
+        filteredArr = filteredArr.filter((item) => !item.insider);
+      }
+      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
+        filteredArr = filteredArr.filter((item) => item.insider != null);
+      }
+    }
     if (filters.vendedorFilter.length > 0) {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter((call) =>
@@ -377,6 +442,15 @@ function Acompanhamento() {
           x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
           x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
+    }
+    if (filters.tipoVendaFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
+        filteredArr = filteredArr.filter((item) => !item.insider);
+      }
+      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
+        filteredArr = filteredArr.filter((item) => item.insider != null);
+      }
     }
     if (filters.vendedorFilter.length > 0) {
       if (!filteredArr) filteredArr = info;
@@ -427,6 +501,15 @@ function Acompanhamento() {
           x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
           x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
+    }
+    if (filters.tipoVendaFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
+        filteredArr = filteredArr.filter((item) => !item.insider);
+      }
+      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
+        filteredArr = filteredArr.filter((item) => item.insider != null);
+      }
     }
     if (filters.vendedorFilter.length > 0) {
       if (!filteredArr) filteredArr = info;
@@ -530,6 +613,17 @@ function Acompanhamento() {
               <option value={"GERAL"}>GERAL</option>
               <option value={"REGIONAL ITUIUTABA"}>REGIONAL ITUIUTABA</option>
               <option value={"REGIONAL UBERLÂNDIA"}>REGIONAL UBERLÂNDIA</option>
+            </select>
+            <select
+              value={filters.tipoVendaFilter}
+              onChange={(e) =>
+                setFilters({ ...filters, tipoVendaFilter: e.target.value })
+              }
+              className="outline-none h-[36px] p-2 rounded-sm border border-gray-200 text-gray-600 font-semibold text-center"
+            >
+              <option value={"GERAL"}>VENDAS GERAIS</option>
+              <option value={"SOMENTE VENDEDOR"}>SOMENTE VENDEDOR</option>
+              <option value={"ATRAVÉS DE INSIDE"}>ATRAVÉS DE INSIDE</option>
             </select>
             <div className="hidden lg:flex gap-x-2">
               <div className="flex flex-col w-fit items-center">

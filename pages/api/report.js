@@ -31,6 +31,7 @@ export default async function handler(req, res) {
             "parecer.dataParecerDeAcesso": 1,
             "parecer.statusDoParecerDeAcesso": 1,
             "projeto.dataAssDocumentacao": 1,
+            insider: 1,
             regional: 1,
             nps: 1,
           },

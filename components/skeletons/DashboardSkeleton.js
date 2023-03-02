@@ -16,7 +16,7 @@ function DashboardSkeleton() {
           <div className="grow flex items-center justify-center">
             <p className="w-[50px] h-[24px] bg-gray-200 animate-pulse"></p>
           </div>
-          <p className="w-[236px] h-[24px] bg-gray-200 animate-pulse"></p>
+          <p className="w-[205px] h-[24px] bg-gray-200 animate-pulse"></p>
         </div>
         <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
@@ -25,7 +25,7 @@ function DashboardSkeleton() {
           <div className="grow flex items-center justify-center">
             <p className="w-[50px] h-[24px] bg-gray-200 animate-pulse"></p>
           </div>
-          <p className="w-[236px] h-[24px] bg-gray-200 animate-pulse"></p>
+          <p className="w-[205px] h-[24px] bg-gray-200 animate-pulse"></p>
         </div>
         <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
@@ -34,7 +34,7 @@ function DashboardSkeleton() {
           <div className="grow flex items-center justify-center">
             <p className="w-[50px] h-[24px] bg-gray-200 animate-pulse"></p>
           </div>
-          <p className="w-[236px] h-[24px] bg-gray-200 animate-pulse"></p>
+          <p className="w-[205px] h-[24px] bg-gray-200 animate-pulse"></p>
         </div>
         <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
@@ -43,7 +43,7 @@ function DashboardSkeleton() {
           <div className="grow flex items-center justify-center">
             <p className="w-[50px] h-[24px] bg-gray-200 animate-pulse"></p>
           </div>
-          <p className="w-[236px] h-[24px] bg-gray-200 animate-pulse"></p>
+          <p className="w-[205px] h-[24px] bg-gray-200 animate-pulse"></p>
         </div>
         <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
           <div className="flex justify-between">
@@ -52,7 +52,7 @@ function DashboardSkeleton() {
           <div className="grow flex items-center justify-center">
             <p className="w-[50px] h-[24px] bg-gray-200 animate-pulse"></p>
           </div>
-          <p className="w-[236px] h-[24px] bg-gray-200 animate-pulse"></p>
+          <p className="w-[205px] h-[24px] bg-gray-200 animate-pulse"></p>
         </div>
       </div>
       <div className="grid grid-rows-2 grid-cols-1 gap-y-2 mt-4 lg:grid-cols-10 lg:grid-rows-1 lg:gap-x-3">

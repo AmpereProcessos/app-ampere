@@ -430,7 +430,7 @@ function ChamadosSuporte() {
             ) : null}
           </AnimatePresence>
         </div>
-        <div className="flex grow overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
+        <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
           {filteredInProgress.map((call) => (
             <div
               onClick={() => handleOpenModal(call._id)}
@@ -671,7 +671,7 @@ function ChamadosSuporte() {
             ) : null}
           </AnimatePresence>
         </div>
-        <div className="flex grow overflow-y-auto overscroll-y-auto mt-2 flex-wrap gap-2 justify-around">
+        <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
           {filteredClosedCalls.map((call) => (
             <div
               onClick={() => handleOpenModal(call._id)}

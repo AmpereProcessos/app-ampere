@@ -10,6 +10,7 @@ import Sidebar from "../components/Sidebar";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { AppContext, AppProvider } from "../context/AppContext";
+import Pixel from "../components/Pixel";
 function MyApp({ Component, pageProps }) {
   const [credentials, setCredentials] = useState({});
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -68,6 +69,7 @@ function MyApp({ Component, pageProps }) {
   }, [router.pathname]);
   return (
     <DndProvider backend={HTML5Backend}>
+      <Pixel />
       <title>Sistema - Ampère Energias</title>
       <AppProvider>
         <div className="flex flex-col bg-[#fff] w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">

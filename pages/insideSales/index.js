@@ -142,6 +142,7 @@ function InsideSales() {
       router.push("/");
     }
   }, []);
+  console.log(fetchDateFilter);
   return (
     <div className="flex flex-col grow p-6">
       <div className="flex flex-col pb-2 border-b border-gray-200">
@@ -178,11 +179,16 @@ function InsideSales() {
                 </span>
                 <div className="flex items-center justify-center flex-wrap gap-2">
                   <input
-                    value={dayjs(fetchDateFilter.after).format("YYYY-MM-DD")}
+                    value={dayjs(fetchDateFilter.after)
+                      .add(4, "hours")
+                      .format("YYYY-MM-DD")}
                     onChange={(e) =>
                       setFetchDateFilter({
                         ...fetchDateFilter,
-                        after: e.target.value,
+                        after:
+                          dayjs(e.target.value).$d != "Invalid Date"
+                            ? new Date(e.target.value).toISOString()
+                            : dateFilterParam,
                       })
                     }
                     type="date"
@@ -194,7 +200,12 @@ function InsideSales() {
                     onChange={(e) =>
                       setFetchDateFilter({
                         ...fetchDateFilter,
-                        before: e.target.value,
+                        before:
+                          dayjs(e.target.value).$d != "Invalid Date"
+                            ? dayjs(e.target.value)
+                                .add("20", "hour")
+                                .toISOString()
+                            : new Date().toISOString(),
                       })
                     }
                     type="date"

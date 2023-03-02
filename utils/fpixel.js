@@ -1,5 +1,4 @@
 export const FB_PIXEL_ID = process.env.PIXEL_ID;
-console.log("FBPIXEL", FB_PIXEL_ID);
 
 export const pageview = () => {
   window.fbq("track", "PageView");

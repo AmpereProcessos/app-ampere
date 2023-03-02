@@ -2,8 +2,15 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
+import { AiOutlineReload, AiOutlineSearch } from "react-icons/ai";
 import ModalCallSuprimentos from "../../components/ModalCallSuprimentos";
+import FetchDataButton from "../../components/utils/FetchDataButton";
 import { AppContext } from "../../context/AppContext";
+import { AnimatePresence, motion } from "framer-motion";
+import Select from "react-select";
+import { fornecedores } from "../../utils/constants";
+import FilterButton from "../../components/utils/FilterButton";
 
 const statusStyles = {
   ABERTO: {
@@ -18,69 +25,220 @@ const statusStyles = {
 function ChamadosSuprimentos() {
   const router = useRouter();
   const { credentials } = useContext(AppContext);
+
+  //DropDowns
+  const [openCallsDropdownMenuVisible, setOpenCallsDropdownMenuVisible] =
+    useState(false);
+  const [closedCallsDropdownMenuVisible, setClosedCallsDropdownMenuVisible] =
+    useState(false);
+
   // Data
-  const [modalAberta, setModalAberta] = useState(false);
-  const [modalChamado, setModalChamado] = useState({});
-  const [chamadosAbertos, setChamadosAbertos] = useState({
-    geral: undefined,
-    filtrados: undefined,
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalCall, setModalCall] = useState({});
+
+  const [openCalls, setOpenCalls] = useState({
+    general: undefined,
+    filtered: undefined,
   });
-  const [chamadosFechados, setChamadosFechados] = useState({
-    geral: undefined,
-    filtrados: undefined,
+  const [openCallsFilters, setOpenCallsFilters] = useState({
+    search: "",
+    supplier: [],
   });
+
+  const [closedCalls, setClosedCalls] = useState({
+    general: undefined,
+    filtered: undefined,
+  });
+  const [closedCallsFilters, setClosedCallsFilters] = useState({
+    search: "",
+    supplier: [],
+  });
+
   // Fetch Functions
-  function getChamados() {
+  function getCalls() {
     axios.get("/api/calls/suprimentos/mainData").then((res) => {
-      setChamadosAbertos({
-        geral: res.data.abertos,
-        filtrados: res.data.abertos,
+      setOpenCalls({
+        general: res.data.abertos,
+        filtered: res.data.abertos,
       });
-      setChamadosFechados({
-        geral: res.data.fechados,
-        filtrados: res.data.fechados,
+      setClosedCalls({
+        general: res.data.fechados,
+        filtered: res.data.fechados,
       });
     });
   }
+  function filterOpenCalls() {
+    var newArr;
+    if (openCallsFilters.supplier.length > 0) {
+      if (!newArr) newArr = openCalls.general;
+      newArr = newArr.filter((call) =>
+        openCallsFilters.supplier.includes(call.fornecedor)
+      );
+    }
+
+    if (!newArr) {
+      setOpenCalls({ ...openCalls, filtered: openCalls.general });
+      return openCalls.general;
+    } else {
+      setOpenCalls({ ...openCalls, filtered: newArr });
+      return newArr;
+    }
+  }
+  function filterClosedCalls() {
+    var newArr;
+    if (closedCallsFilters.supplier.length > 0) {
+      if (!newArr) newArr = closedCalls.general;
+      newArr = newArr.filter((call) =>
+        closedCallsFilters.supplier.includes(call.fornecedor)
+      );
+    }
+
+    if (!newArr) {
+      setClosedCalls({ ...closedCalls, filtered: closedCalls.general });
+      return closedCalls.general;
+    } else {
+      setClosedCalls({ ...closedCalls, filtered: newArr });
+      return newArr;
+    }
+  }
+
+  function handleOpenCallsSearchFilter(value) {
+    setOpenCallsFilters({ ...openCallsFilters, search: value });
+    var filtered = filterOpenCalls();
+    if (value.trim().length > 0) {
+      var newArr = [...filtered].filter((call) =>
+        call.nomeDoContrato
+          .toUpperCase()
+          .includes(openCallsFilters.search.toUpperCase())
+      );
+      setOpenCalls({ ...openCalls, filtered: newArr });
+    } else {
+      setOpenCalls({ ...openCalls, filtered: filtered });
+    }
+  }
+  function handleClosedCallsSearchFilter(value) {
+    setClosedCallsFilters({ ...closedCallsFilters, search: value });
+    var filtered = filterClosedCalls();
+    if (value.trim().length > 0) {
+      var newArr = [...filtered].filter((call) =>
+        call.nomeDoContrato
+          .toUpperCase()
+          .includes(closedCallsFilters.search.toUpperCase())
+      );
+      setClosedCalls({ ...closedCalls, filtered: newArr });
+    } else {
+      setClosedCalls({ ...closedCalls, filtered: filtered });
+    }
+  }
   // Utils functions
-  function handleAbrirModal(info) {
-    setModalChamado(info);
-    setModalAberta(true);
+  function handleOpenModal(info) {
+    setModalCall(info);
+    setModalIsOpen(true);
   }
   useEffect(() => {
     if (credentials.accessibleRoutes.includes("Suprimentos")) {
-      getChamados();
+      getCalls();
     } else {
       router.push("/");
     }
   }, []);
-  console.log(chamadosAbertos);
+  console.log(openCalls);
   return (
     <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
-      <div className="flex gap-2 items-center justify-center shadow-lg border border-gray-200 p-3 bg-[#fff]">
-        <h1 className="text-center font-bold text-[#15599a] text-xl">
-          CHAMADOS DE SUPRIMENTOS
-        </h1>
-        <button
-          onClick={getChamados}
-          className="border border-[#fead61] text-[#fead61] hover:text-black hover:bg-[#fead61] font-bold p-2 rounded"
-        >
-          BUSCAR CHAMADOS
-        </button>
+      <div className="flex items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
+        <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">
+          CHAMADOS DE SUPORTE AO VENDEDOR
+        </p>
+        <FetchDataButton
+          text={"ATUALIZAR"}
+          icon={<AiOutlineReload />}
+          handleClick={getCalls}
+        />
       </div>
-      <div className="flex flex-col bg-[#fff] border border-gray-200 shadow-lg">
-        <div className="flex flex-col items-center border-b border-gray-200 pb-2">
-          <h1 className="text-center text-[#15599a] font-bold text-lg py-2">
-            CHAMADOS ABERTOS
-          </h1>
+      {/**Abertos */}
+      <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
+              <p className="text-center uppercase text-[#15599a] font-bold text-xl">
+                CHAMADOS ABERTOS
+              </p>
+              <p className="font-bold text-[#fead61]">
+                ({openCalls.filtered?.length})
+              </p>
+            </div>
+            {openCallsDropdownMenuVisible ? (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropupCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setOpenCallsDropdownMenuVisible(false)}
+                />
+              </div>
+            ) : (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropdownCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setOpenCallsDropdownMenuVisible(true)}
+                />
+              </div>
+            )}
+          </div>
+          <AnimatePresence>
+            {openCallsDropdownMenuVisible ? (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.6 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="flex flex-col w-full gap-y-2 mt-4"
+              >
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <input
+                    type="text"
+                    value={openCallsFilters.search}
+                    onChange={(e) =>
+                      handleOpenCallsSearchFilter(e.target.value)
+                    }
+                    className="outline-none p-1.5  w-full lg:w-[350px] h-[41px] rounded border border-gray-200 placeholder:italic"
+                    placeholder="DIGITE O NOME DO CONTRATO"
+                  />
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      placeholder="FORNECEDORES"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      onChange={(e) =>
+                        setOpenCallsFilters({
+                          ...openCallsFilters,
+                          supplier: e.map((x) => x.value),
+                        })
+                      }
+                      options={fornecedores.map((supplier) => supplier)}
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center justify-end">
+                  <FilterButton
+                    text={"FILTRAR"}
+                    icon={<AiOutlineSearch />}
+                    handleClick={filterOpenCalls}
+                  />
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
-        <div className="flex justify-around flex-wrap gap-2 w-full h-[600px] p-4 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          {chamadosAbertos.filtrados ? (
-            chamadosAbertos.filtrados?.length > 0 ? (
-              chamadosAbertos.filtrados.map((chamado) => (
+        <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
+          {openCalls.filtered ? (
+            openCalls.filtered?.length > 0 ? (
+              openCalls.filtered.map((chamado) => (
                 <div
                   key={chamado._id}
-                  onClick={() => handleAbrirModal(chamado)}
+                  onClick={() => handleOpenModal(chamado)}
                   className={`w-[420px] h-[200px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
                 >
                   <div className="flex justify-between gap-3 items-center w-full">
@@ -172,18 +330,89 @@ function ChamadosSuprimentos() {
           )}
         </div>
       </div>
-      <div className="flex flex-col mt-4 bg-[#fff] border border-gray-200 shadow-lg">
-        <div className="flex flex-col items-center border-b border-gray-200 pb-2">
-          <h1 className="text-center text-[#15599a] font-bold text-lg py-2">
-            CHAMADOS FECHADOS
-          </h1>
+      {/**Fechados */}
+      <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
+              <p className="text-center uppercase text-[#15599a] font-bold text-xl">
+                CHAMADOS FINALIZADOS
+              </p>
+              <p className="font-bold text-[#fead61]">
+                ({closedCalls.filtered?.length})
+              </p>
+            </div>
+            {closedCallsDropdownMenuVisible ? (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropupCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setClosedCallsDropdownMenuVisible(false)}
+                />
+              </div>
+            ) : (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropdownCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setClosedCallsDropdownMenuVisible(true)}
+                />
+              </div>
+            )}
+          </div>
+          <AnimatePresence>
+            {closedCallsDropdownMenuVisible ? (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.6 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="flex flex-col w-full gap-y-2 mt-4"
+              >
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <input
+                    type="text"
+                    value={closedCallsFilters.search}
+                    onChange={(e) =>
+                      handleClosedCallsSearchFilter(e.target.value)
+                    }
+                    className="outline-none p-1.5  w-full lg:w-[350px] h-[41px] rounded border border-gray-200 placeholder:italic"
+                    placeholder="DIGITE O NOME DO CONTRATO"
+                  />
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      placeholder="FORNECEDORES"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      onChange={(e) =>
+                        setClosedCallsFilters({
+                          ...closedCallsFilters,
+                          supplier: e.map((x) => x.value),
+                        })
+                      }
+                      options={fornecedores.map((supplier) => supplier)}
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center justify-end">
+                  <FilterButton
+                    text={"FILTRAR"}
+                    icon={<AiOutlineSearch />}
+                    handleClick={filterClosedCalls}
+                  />
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
         <div className="flex justify-around flex-wrap gap-2 w-full h-[600px] p-4 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          {chamadosFechados.filtrados ? (
-            chamadosFechados.filtrados?.length > 0 ? (
-              chamadosFechados.filtrados.map((chamado) => (
+          {closedCalls.filtered ? (
+            closedCalls.filtered?.length > 0 ? (
+              closedCalls.filtered.map((chamado) => (
                 <div
-                  onClick={() => handleAbrirModal(chamado)}
+                  onClick={() => handleOpenModal(chamado)}
                   key={chamado._id}
                   className={`w-[420px] h-[200px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
                 >
@@ -262,11 +491,11 @@ function ChamadosSuprimentos() {
           )}
         </div>
       </div>
-      {modalAberta && (
+      {modalIsOpen && (
         <ModalCallSuprimentos
-          info={modalChamado}
-          setModalIsOpen={() => setModalAberta(false)}
-          getCalls={getChamados}
+          info={modalCall}
+          setModalIsOpen={() => setModalIsOpen(false)}
+          getCalls={getCalls}
         />
       )}
     </div>

@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import * as fbq from "../../../utils/fpixel";
-function FACEBOOK_PIXEL_1() {
-  useEffect(() => {
-    console.log("UEPA");
-    fbq.pageview();
-  }, []);
-  console.log("UEPA");
+function FacebookPixel() {
   return (
-    <React.Fragment>
+    <>
+      <meta
+        name="facebook-domain-verification"
+        content="0hufc7839y66urgaxa8ahifp1xpos2"
+      />
       <script
         dangerouslySetInnerHTML={{
           __html: `!function(f,b,e,v,n,t,s)
@@ -27,7 +26,7 @@ function FACEBOOK_PIXEL_1() {
       src="https://www.facebook.com/tr?id=${fbq.FB_PIXEL_ID}&ev=PageView&noscript=1" />`,
         }}
       />
-    </React.Fragment>
+    </>
   );
 }
-export default FACEBOOK_PIXEL_1;
+export default FacebookPixel;

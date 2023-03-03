@@ -569,7 +569,7 @@ function Acompanhamento() {
     if (session?.user.manager == true) {
       getInfo();
     } else {
-      if (session.user) return router.push("/");
+      if (session?.user) return router.push("/");
     }
   }, [session]);
   if (session.user?.manager == true)

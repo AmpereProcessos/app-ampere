@@ -565,6 +565,7 @@ function Acompanhamento() {
       // porcentagemCustoNaoPreenchido: countCustoNotInformed / filteredArr.length,
     };
   }
+  console.log("teste");
   useEffect(() => {
     if (session?.user.manager == true) {
       getInfo();

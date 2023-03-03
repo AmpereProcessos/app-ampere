@@ -17,10 +17,13 @@ import NotificationModal from "./NotificationModal";
 
 import { signOut, useSession } from "next-auth/react";
 import { AppContext } from "../context/AppContext";
+import ConfigDropDown from "./ConfigDropDown";
 function Header({ toggleSidebar }) {
   const { notificacoes } = useContext(AppContext);
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  const [configDropDown, setConfigDropDown] = useState(false);
   const [notificationIsOpen, setNotificationIsOpen] = useState(false);
   let unreadArr = notificacoes
     ? notificacoes.filter((x) => x.lido == false)
@@ -57,7 +60,7 @@ function Header({ toggleSidebar }) {
     return null;
   if (status == "loading" || status == "unauthenticated") return null;
   return (
-    <div className="w-full sticky z-[1] top-0 bg-[#fff] grid grid-cols-3 items-center px-12 h-[70px] border-b border-gray-200">
+    <div className="w-full sticky z-[1] top-0 bg-[#fff] grid grid-cols-3 items-center px-3 lg:px-12 h-[70px] border-b border-gray-200">
       <div className="flex items-center gap-x-2">
         <FaBars
           onClick={toggleSidebar}
@@ -90,10 +93,16 @@ function Header({ toggleSidebar }) {
               title="CONFIGURAÇÕES"
               fill={true}
               layout={"fill"}
+              onClick={() => setConfigDropDown((prev) => !prev)}
             />
           </div>
         )}
-
+        {configDropDown && (
+          <ConfigDropDown
+            closeConfigDropDown={() => setConfigDropDown(false)}
+            setNotificationIsOpen={setNotificationIsOpen}
+          />
+        )}
         <div className="text-[#fead61] hover:text-orange-500 hover:scale-105 duration-500 ease-in-out">
           <BiLogIn
             onClick={logout}
@@ -108,14 +117,14 @@ function Header({ toggleSidebar }) {
 
         <div
           onClick={() => setNotificationIsOpen(!notificationIsOpen)}
-          className="flex cursor-pointer"
+          className="hidden:flex cursor-pointer"
         >
           {unreadCount > 0 ? (
-            <div className="flex items-center w-[25px] h-[22px] ml-2 hover:scale-105 duration-500 ease-in-out">
+            <div className="hidden lg:flex items-center w-[25px] h-[22px] ml-2 hover:scale-105 duration-500 ease-in-out">
               <Image src={AlertVolts} />
             </div>
           ) : (
-            <div className="flex items-center w-[25px] h-[22px] ml-2 hover:scale-105 duration-500 ease-in-out">
+            <div className="hidden lg:flex items-center w-[25px] h-[22px] ml-2 hover:scale-105 duration-500 ease-in-out">
               <Image src={SleepVolts} />
             </div>
           )}
@@ -126,19 +135,23 @@ function Header({ toggleSidebar }) {
           )}
         </div>
         {session?.user.manager && (
-          <Link href="/admin/relatorioAdministrativo">
-            <TbPresentationAnalytics
-              style={{
-                fontSize: "25px",
-                marginLeft: "10px",
-                cursor: "pointer",
-                color: "#fead61",
-              }}
-            />
-          </Link>
+          <div className="hidden lg:block">
+            <Link href="/admin/relatorioAdministrativo">
+              <TbPresentationAnalytics
+                style={{
+                  fontSize: "25px",
+                  marginLeft: "10px",
+                  cursor: "pointer",
+                  color: "#fead61",
+                }}
+              />
+            </Link>
+          </div>
         )}
       </div>
-      {notificationIsOpen && <NotificationModal />}
+      {notificationIsOpen && (
+        <NotificationModal setNotificationIsOpen={setNotificationIsOpen} />
+      )}
     </div>
   );
 }

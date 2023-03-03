@@ -45,7 +45,7 @@ function ControleAlmoxarifado({
         novoPreco: novoPreco ? novoPreco : info.preco,
         infoAlt: {
           valorAnterior: info.qtde,
-          respAlteracao: credentials.nome,
+          respAlteracao: credentials?.name,
         },
       })
       .then((res) => {
@@ -58,7 +58,7 @@ function ControleAlmoxarifado({
     novaQtde: novaQuantidade,
     infoAlt: {
       valorAnterior: info.qtde,
-      respAlteracao: credentials.nome,
+      respAlteracao: credentials?.name,
     },
   });*/
   return (

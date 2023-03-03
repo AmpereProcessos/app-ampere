@@ -1,11 +1,18 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MaterialCard from "../../components/MaterialCard";
 import { useRouter } from "next/router";
-import { AppContext } from "../../context/AppContext";
+import { useSession } from "next-auth/react";
+import LoadingPage from "../../components/utils/LoadingPage";
 function ConferenciaMaterial() {
-  const { credentials, setCredentials } = useContext(AppContext);
   const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/auth/authHome");
+    },
+  });
+
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   function getProjects() {
@@ -16,29 +23,34 @@ function ConferenciaMaterial() {
   }
   useEffect(() => {
     if (
-      !credentials.accessibleRoutes.includes("Obras") &&
-      !credentials.accessibleRoutes.includes("Almoxarifado") &&
-      !credentials.accessibleRoutes.includes("Suprimentos")
+      session?.user.accessibleRoutes.includes("Obras") ||
+      session?.user.accessibleRoutes.includes("Marketing")
     ) {
-      router.push("/");
+      getProjects(session.user);
     } else {
-      getProjects();
+      if (session?.user) {
+        router.push("/");
+      }
     }
-  }, []);
-  return (
-    <div className="p-6 grow bg-[#fff]">
-      <div className="flex w-full items-center border-b border-gray-200 mb-2">
-        <h1 className="text-[#fead61] font-bold text-xl pb-2">
-          CONFERÊNCIA DE MATERIAL
-        </h1>
+  }, [session]);
+
+  if (status == "loading") return <LoadingPage />;
+  if (status == "authenticated") {
+    return (
+      <div className="p-6 grow bg-[#fff]">
+        <div className="flex w-full items-center border-b border-gray-200 mb-2">
+          <h1 className="text-[#fead61] font-bold text-xl pb-2">
+            CONFERÊNCIA DE MATERIAL
+          </h1>
+        </div>
+        <div className="flex gap-y-2 flex-col w-full flex-wrap">
+          {filteredProjects.map((project) => (
+            <MaterialCard key={project._id} project={project} />
+          ))}
+        </div>
       </div>
-      <div className="flex gap-y-2 flex-col w-full flex-wrap">
-        {filteredProjects.map((project) => (
-          <MaterialCard key={project._id} project={project} />
-        ))}
-      </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default ConferenciaMaterial;

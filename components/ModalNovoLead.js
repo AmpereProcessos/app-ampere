@@ -114,9 +114,9 @@ function NovoLead({ setModalIsOpen, getLeads }) {
         .post("/api/insideSales/newLead", {
           ...info,
           dataDeEnvio: new Date().toISOString(),
-          responsavel: credentials.vendedor
-            ? credentials.vendedor
-            : credentials.nome,
+          responsavel: credentials?.vendedor
+            ? credentials?.vendedor
+            : credentials?.name,
         })
         .then((res) => {
           setMsg({ text: "Lead adicionado!", color: "text-green-500" });

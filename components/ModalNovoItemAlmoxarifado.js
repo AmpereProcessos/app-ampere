@@ -69,7 +69,7 @@ function Novoitem({ setModalAberta }) {
     novaQtde: quantidade,
     infoAlt: {
       valorAnterior: info.qtde,
-      respAlteracao: credentials.nome,
+      respAlteracao: credentials?.name,
     },
   });*/
   return (

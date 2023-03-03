@@ -52,8 +52,8 @@ function ModalCallPPS({
 }) {
   const { credentials } = useContext(AppContext);
   const editor =
-    credentials.accessibleRoutes.includes("PPS") &&
-    credentials.visualizacao == undefined;
+    credentials?.accessibleRoutes.includes("PPS") &&
+    credentials?.visualizacao == undefined;
   var ultAlteracoes = {
     anotAlteracoes: {
       usuario: info.ultAlteracoes?.anotAlteracoes
@@ -98,13 +98,13 @@ function ModalCallPPS({
   // Functions
   function saveProject() {
     if (info.status != selectedStatus) {
-      ultAlteracoes.statusAlteracoes.usuario = credentials._id;
+      ultAlteracoes.statusAlteracoes.usuario = credentials?.id;
       ultAlteracoes.statusAlteracoes.antes = info.status;
       ultAlteracoes.statusAlteracoes.depois = selectedStatus;
       ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
     }
     if (info.anotacoes != notes) {
-      ultAlteracoes.anotAlteracoes.usuario = credentials._id;
+      ultAlteracoes.anotAlteracoes.usuario = credentials?.id;
       ultAlteracoes.anotAlteracoes.antes = info.anotacoes;
       ultAlteracoes.anotAlteracoes.depois = notes;
       ultAlteracoes.anotAlteracoes.data = new Date().toJSON();
@@ -124,7 +124,7 @@ function ModalCallPPS({
   }
   function closedCall() {
     if (info.status != "REALIZADO") {
-      ultAlteracoes.statusAlteracoes.usuario = credentials._id;
+      ultAlteracoes.statusAlteracoes.usuario = credentials?.id;
       ultAlteracoes.statusAlteracoes.antes = info.status;
       ultAlteracoes.statusAlteracoes.depois = "REALIZADO";
       ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
@@ -150,7 +150,7 @@ function ModalCallPPS({
   }
   function reopenCall() {
     if (info.status != "PENDENTE") {
-      ultAlteracoes.statusAlteracoes.usuario = credentials._id;
+      ultAlteracoes.statusAlteracoes.usuario = credentials?.id;
       ultAlteracoes.statusAlteracoes.antes = info.status;
       ultAlteracoes.statusAlteracoes.depois = "PENDENTE";
       ultAlteracoes.statusAlteracoes.data = new Date().toJSON();

@@ -4,23 +4,21 @@ import ProjectList from "../../components/ProjectList";
 import ProjectModal from "../../components/ProjectModal";
 import { FaUser } from "react-icons/fa";
 import connectToDatabase from "../../utils/projectsDb";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 function InProgress({ setCredentials, credentials, assContrato, data }) {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/auth/authHome");
+    },
+  });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedProjects, setProjects] = useState({
     estagio: "ASSINATURA DO CONTRATO",
     projetos: data.assContrato,
   });
-  console.log(data);
-  useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-    } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      }
-    }
-  }, []);
   return (
     <>
       <div className="flex bg-gray-100 grow p-6 w-full">

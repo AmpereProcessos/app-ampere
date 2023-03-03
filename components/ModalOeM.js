@@ -88,7 +88,7 @@ function ModalOeM({
   });
   function handleOSCreation() {
     var arr;
-    if (!credentials.controller) {
+    if (!credentials?.controller) {
       setOsMsg({
         text: "Usuário não autorizado para geração de OSs.",
         color: "text-red-500",
@@ -107,7 +107,7 @@ function ModalOeM({
         ) {
           infoHolder.ordensDeServico.push({
             ...osInfo,
-            usuarioEmissor: credentials.nome,
+            usuarioEmissor: credentials?.name,
             index: infoHolder.ordensDeServico?.length,
             cobrancaRealizada: false,
           });
@@ -116,7 +116,7 @@ function ModalOeM({
           arr = [
             {
               ...osInfo,
-              usuarioEmissor: credentials.nome,
+              usuarioEmissor: credentials?.name,
               index: 0,
               cobrancaRealizada: false,
             },

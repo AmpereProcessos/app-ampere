@@ -45,7 +45,7 @@ function InfoSistemaBlock({
             });
           }}
         />
-        {credentials.visualizacao == undefined && (
+        {credentials?.visualizacao == undefined && (
           <NumberInput
             tag={"R$"}
             label={"VALOR DO PROJETO"}

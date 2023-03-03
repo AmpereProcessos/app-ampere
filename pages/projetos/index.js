@@ -18,9 +18,16 @@ import {
 import { AppContext } from "../../context/AppContext";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
 import FilterButton from "../../components/utils/FilterButton";
+import { useSession } from "next-auth/react";
+import LoadingPage from "../../components/utils/LoadingPage";
 function Projetos() {
   const router = useRouter();
-  const { credentials, setCredentials } = useContext(AppContext);
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/auth/authHome");
+    },
+  });
 
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
 
@@ -233,109 +240,166 @@ function Projetos() {
   }
   useEffect(() => {
     if (
-      !credentials.accessibleRoutes.includes("Projetos") &&
-      !credentials.accessibleRoutes.includes("Pós-Venda")
+      session?.user.accessibleRoutes.includes(
+        "Projetos" || session?.user.accessibleRoutes.includes("Pós-Venda")
+      )
     ) {
-      router.push("/");
+      getProjects(session.user);
     } else {
-      getProjects(credentials);
+      if (session?.user) return router.push("/");
     }
-  }, []);
-  if (filteredProjects) {
-    return (
-      <div className="p-6 grow">
-        <div className="flex flex-col justify-between items-center  gap-2 border-b border-gray-200 p-1">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-2 font-['Roboto']">
-              <p className="font-bold uppercase text-2xl text-[#15599a] text-center">
-                Projetos no estágio de engenharia
-              </p>
-              <p className="font-bold text-[#fead61]">
-                ({filteredProjects.length})
-              </p>
-              {filteredProjects && (
-                <p className="font-bold text-[#fead61]">
-                  ({getListCumulativePeakPot()}kWp)
+  }, [session]);
+  if (status == "loading") return <LoadingPage />;
+  if (status == "authenticated") {
+    if (filteredProjects) {
+      return (
+        <div className="p-6 grow">
+          <div className="flex flex-col justify-between items-center  gap-2 border-b border-gray-200 p-1">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-2 font-['Roboto']">
+                <p className="font-bold uppercase text-2xl text-[#15599a] text-center">
+                  Projetos no estágio de engenharia
                 </p>
+                <p className="font-bold text-[#fead61]">
+                  ({filteredProjects.length})
+                </p>
+                {filteredProjects && (
+                  <p className="font-bold text-[#fead61]">
+                    ({getListCumulativePeakPot()}kWp)
+                  </p>
+                )}
+              </div>
+              {dropdownMenuVisible ? (
+                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                  <IoMdArrowDropupCircle
+                    style={{ fontSize: "25px" }}
+                    onClick={() => setDropdownMenuVisible(false)}
+                  />
+                </div>
+              ) : (
+                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                  <IoMdArrowDropdownCircle
+                    style={{ fontSize: "25px" }}
+                    onClick={() => setDropdownMenuVisible(true)}
+                  />
+                </div>
               )}
             </div>
-            {dropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                <IoMdArrowDropupCircle
-                  style={{ fontSize: "25px" }}
-                  onClick={() => setDropdownMenuVisible(false)}
-                />
-              </div>
-            ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                <IoMdArrowDropdownCircle
-                  style={{ fontSize: "25px" }}
-                  onClick={() => setDropdownMenuVisible(true)}
-                />
-              </div>
-            )}
-          </div>
-          <AnimatePresence>
-            {dropdownMenuVisible ? (
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0.6 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="flex flex-col w-full gap-y-2 mt-4"
-              >
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
-                  <input
-                    className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
-                    placeholder="DIGITE O NOME DO CONTRATO"
-                    value={searchFilter}
-                    onChange={(e) => handleSearchFilter(e.target.value)}
-                  />
-                  <div className="flex gap-x-2">
-                    <div className="flex flex-col w-fit items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        Depois de:
-                      </span>
-                      <input
-                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                        type="date"
-                        value={
-                          dateFilter.after &&
-                          new Date(dateFilter.after).toISOString().slice(0, 10)
-                        }
-                        onChange={(e) =>
-                          setDateFilter({
-                            ...dateFilter,
-                            after: isNaN(e.target.value)
-                              ? new Date(e.target.value).toISOString()
-                              : null,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="flex flex-col w-fit items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        Antes de:
-                      </span>
-                      <input
-                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                        type="date"
-                        value={
-                          dateFilter.before &&
-                          new Date(dateFilter.before).toISOString().slice(0, 10)
-                        }
-                        onChange={(e) =>
-                          setDateFilter({
-                            ...dateFilter,
-                            before: isNaN(e.target.value)
-                              ? new Date(e.target.value).toISOString()
-                              : null,
-                          })
-                        }
-                      />
+            <AnimatePresence>
+              {dropdownMenuVisible ? (
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0.6 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="flex flex-col w-full gap-y-2 mt-4"
+                >
+                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                    <input
+                      className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                      placeholder="DIGITE O NOME DO CONTRATO"
+                      value={searchFilter}
+                      onChange={(e) => handleSearchFilter(e.target.value)}
+                    />
+                    <div className="flex gap-x-2">
+                      <div className="flex flex-col w-fit items-center">
+                        <span className="uppercase font-bold font-raleway text-center text-sm">
+                          Depois de:
+                        </span>
+                        <input
+                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                          type="date"
+                          value={
+                            dateFilter.after &&
+                            new Date(dateFilter.after)
+                              .toISOString()
+                              .slice(0, 10)
+                          }
+                          onChange={(e) =>
+                            setDateFilter({
+                              ...dateFilter,
+                              after: isNaN(e.target.value)
+                                ? new Date(e.target.value).toISOString()
+                                : null,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex flex-col w-fit items-center">
+                        <span className="uppercase font-bold font-raleway text-center text-sm">
+                          Antes de:
+                        </span>
+                        <input
+                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                          type="date"
+                          value={
+                            dateFilter.before &&
+                            new Date(dateFilter.before)
+                              .toISOString()
+                              .slice(0, 10)
+                          }
+                          onChange={(e) =>
+                            setDateFilter({
+                              ...dateFilter,
+                              before: isNaN(e.target.value)
+                                ? new Date(e.target.value).toISOString()
+                                : null,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="w-full lg:w-[250px]">
+                        <Select
+                          isMulti={false}
+                          placeholder={"CAMPO DE FILTRO"}
+                          styles={{
+                            control: (base, state) => ({
+                              ...base,
+                              width: "100%",
+                              minHeight: "41px",
+                            }),
+                          }}
+                          options={[
+                            {
+                              label: "DATA DE PAGAMENTO",
+                              value: "compra.dataPagamento",
+                            },
+                            {
+                              label: "DATA ASS.CONTRATO",
+                              value: "contrato.dataAssinatura",
+                            },
+                            {
+                              label: "DATA ASS.DOCUMENTAÇÃO",
+                              value: "projeto.dataAssDocumentacao",
+                            },
+                            {
+                              label: "TROCA DO MEDIDOR",
+                              value: "medidor.data",
+                            },
+                            {
+                              label: "APROVAÇÃO DO PARECER",
+                              value: "parecer.dataParecerDeAcesso",
+                            },
+                            {
+                              label: "PEDIDO DA VISTORIA",
+                              value: "vistoria.dataPedido",
+                            },
+                            { label: "NÃO DEFINIDO", value: null },
+                          ]}
+                          onChange={(e) =>
+                            setDateFilter({
+                              ...dateFilter,
+                              field1:
+                                e.value != null ? e.value.split(".")[0] : null,
+                              field2:
+                                e.value != null ? e.value.split(".")[1] : null,
+                            })
+                          }
+                        />
+                      </div>
                     </div>
                     <div className="w-full lg:w-[250px]">
                       <Select
-                        isMulti={false}
-                        placeholder={"CAMPO DE FILTRO"}
+                        isMulti
+                        placeholder="TIPO DE SERVIÇO"
                         styles={{
                           control: (base, state) => ({
                             ...base,
@@ -343,580 +407,541 @@ function Projetos() {
                             minHeight: "41px",
                           }),
                         }}
-                        options={[
-                          {
-                            label: "DATA DE PAGAMENTO",
-                            value: "compra.dataPagamento",
-                          },
-                          {
-                            label: "DATA ASS.CONTRATO",
-                            value: "contrato.dataAssinatura",
-                          },
-                          {
-                            label: "DATA ASS.DOCUMENTAÇÃO",
-                            value: "projeto.dataAssDocumentacao",
-                          },
-                          {
-                            label: "TROCA DO MEDIDOR",
-                            value: "medidor.data",
-                          },
-                          {
-                            label: "APROVAÇÃO DO PARECER",
-                            value: "parecer.dataParecerDeAcesso",
-                          },
-                          {
-                            label: "PEDIDO DA VISTORIA",
-                            value: "vistoria.dataPedido",
-                          },
-                          { label: "NÃO DEFINIDO", value: null },
-                        ]}
                         onChange={(e) =>
-                          setDateFilter({
-                            ...dateFilter,
-                            field1:
-                              e.value != null ? e.value.split(".")[0] : null,
-                            field2:
-                              e.value != null ? e.value.split(".")[1] : null,
+                          setFilters({
+                            ...filters,
+                            tipoDeServicoFilter: e.map((x) => x.value),
                           })
                         }
+                        options={tiposDeServico.map((tipo) => {
+                          return { label: tipo.label, value: tipo.value };
+                        })}
                       />
                     </div>
                   </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      placeholder="TIPO DE SERVIÇO"
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      onChange={(e) =>
+                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        placeholder="STATUS DA ENTREGA"
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            entregaStatusFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={[
+                          { value: "EM ROTA", label: "EM ROTA" },
+                          {
+                            value: "AGUARDANDO COMPRA",
+                            label: "AGUARDANDO COMPRA",
+                          },
+                          { value: "ENTREGUE", label: "ENTREGUE" },
+                          { value: "NÃO DEFINIDO", label: "NÃO DEFINIDO" },
+                          { value: "CANCELADO", label: "CANCELADO" },
+                          { value: undefined, label: "VAZIO" },
+                        ]}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        placeholder="STATUS DO PARECER"
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            parecerFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={[
+                          {
+                            label: "AGUARDANDO ASSINATURA",
+                            value: "AGUARDANDO ASSINATURA",
+                          },
+                          {
+                            label: "AGUARDANDO AUMENTO DE CARGA",
+                            value: "AGUARDANDO AUMENTO DE CARGA",
+                          },
+                          {
+                            label: "INICIAR PROJETO",
+                            value: "INICIAR PROJETO",
+                          },
+                          {
+                            label: "SOLICITAR TROCA DE TITULARIDADE",
+                            value: "SOLICITAR TROCA DE TITULARIDADE",
+                          },
+                          {
+                            label: "AGUARDANDO FATURAMENTO ART",
+                            value: "AGUARDANDO FATURAMENTO ART",
+                          },
+                          {
+                            label: "AGUARDANDO FORMULÁRIOS",
+                            value: "AGUARDANDO FORMULÁRIOS",
+                          },
+                          {
+                            label: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
+                            value: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
+                          },
+                          {
+                            label: "AGUARDANDO TROCA DE TITULARIDADE",
+                            value: "AGUARDANDO TROCA DE TITULARIDADE",
+                          },
+                          {
+                            label: "AUMENTO DE CARGA",
+                            value: "AUMENTO DE CARGA",
+                          },
+                          {
+                            label: "CANCELADO",
+                            value: "CANCELADO",
+                          },
+                          {
+                            label: "PARECER DE ACESSO APROVADO",
+                            value: "PARECER DE ACESSO APROVADO",
+                          },
+                          {
+                            label: "PENDENCIAS",
+                            value: "PENDENCIAS",
+                          },
+                          {
+                            label: "SOLICITAR ACESSO",
+                            value: "SOLICITAR ACESSO",
+                          },
+                          {
+                            label: "SOLICITAR AUMENTO DE CARGA",
+                            value: "SOLICITAR AUMENTO DE CARGA",
+                          },
+                          {
+                            label: "PARECER DE ACESSO COM OBRAS",
+                            value: "PARECER DE ACESSO COM OBRAS",
+                          },
+                          {
+                            label: "NÃO DEFINIDO",
+                            value: "NÃO DEFINIDO",
+                          },
+                        ]}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        placeholder="STATUS DA OBRA"
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            obraStatusFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={[
+                          {
+                            label: "AGENDADA",
+                            value: "AGENDADA",
+                          },
+                          {
+                            label: "AGUARDANDO AGENDAMENTO",
+                            value: "AGUARDANDO AGENDAMENTO",
+                          },
+                          {
+                            label: "CONCLUIDA",
+                            value: "CONCLUIDA",
+                          },
+                          {
+                            label: "EM ANDAMENTO",
+                            value: "EM ANDAMENTO",
+                          },
+                          {
+                            label: "OBRA CANCELADA",
+                            value: "OBRA CANCELADA",
+                          },
+                          {
+                            label: "NÃO DEFINIDO",
+                            value: "NÃO DEFINIDO",
+                          },
+                        ]}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        placeholder="STATUS DA VISTORIA"
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            vistoriaFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={[
+                          { label: "REALIZADA", value: "REALIZADA" },
+                          {
+                            label: "AGUARDANDO OBRA DE REDE",
+                            value: "AGUARDANDO OBRA DE REDE",
+                          },
+                          {
+                            label: "AGUARDANDO CONCESSIONARIA",
+                            value: "AGUARDANDO CONCESSIONARIA",
+                          },
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        ]}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        placeholder="PROJETISTA"
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            projetistaFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={projetistas.map((projetista) => {
+                          return {
+                            label: projetista.label,
+                            value: projetista.nome,
+                          };
+                        })}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        placeholder="CIDADE"
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            cidadeFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={cidadesAtendidas.map((cidade) => {
+                          return {
+                            label: cidade,
+                            value: cidade,
+                          };
+                        })}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        placeholder="VENDEDOR"
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            vendedorFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={vendedores.map((vendedor) => {
+                          return {
+                            label: vendedor.nome,
+                            value: vendedor.nome,
+                          };
+                        })}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        placeholder="DIST. CRÉDITOS"
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            distribuicaoFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={[
+                          { label: "SIM", value: "SIM" },
+                          { label: "NÃO", value: "NÃO" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                    <div
+                      onClick={() =>
                         setFilters({
                           ...filters,
-                          tipoDeServicoFilter: e.map((x) => x.value),
+                          desenhoFilter: !filters.desenhoFilter,
                         })
                       }
-                      options={tiposDeServico.map((tipo) => {
-                        return { label: tipo.label, value: tipo.value };
-                      })}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      placeholder="STATUS DA ENTREGA"
-                      onChange={(e) =>
-                        setFilters({
-                          ...filters,
-                          entregaStatusFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={[
-                        { value: "EM ROTA", label: "EM ROTA" },
-                        {
-                          value: "AGUARDANDO COMPRA",
-                          label: "AGUARDANDO COMPRA",
-                        },
-                        { value: "ENTREGUE", label: "ENTREGUE" },
-                        { value: "NÃO DEFINIDO", label: "NÃO DEFINIDO" },
-                        { value: "CANCELADO", label: "CANCELADO" },
-                        { value: undefined, label: "VAZIO" },
-                      ]}
-                    />
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      placeholder="STATUS DO PARECER"
-                      onChange={(e) =>
-                        setFilters({
-                          ...filters,
-                          parecerFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={[
-                        {
-                          label: "AGUARDANDO ASSINATURA",
-                          value: "AGUARDANDO ASSINATURA",
-                        },
-                        {
-                          label: "AGUARDANDO AUMENTO DE CARGA",
-                          value: "AGUARDANDO AUMENTO DE CARGA",
-                        },
-                        {
-                          label: "INICIAR PROJETO",
-                          value: "INICIAR PROJETO",
-                        },
-                        {
-                          label: "SOLICITAR TROCA DE TITULARIDADE",
-                          value: "SOLICITAR TROCA DE TITULARIDADE",
-                        },
-                        {
-                          label: "AGUARDANDO FATURAMENTO ART",
-                          value: "AGUARDANDO FATURAMENTO ART",
-                        },
-                        {
-                          label: "AGUARDANDO FORMULÁRIOS",
-                          value: "AGUARDANDO FORMULÁRIOS",
-                        },
-                        {
-                          label: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
-                          value: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
-                        },
-                        {
-                          label: "AGUARDANDO TROCA DE TITULARIDADE",
-                          value: "AGUARDANDO TROCA DE TITULARIDADE",
-                        },
-                        {
-                          label: "AUMENTO DE CARGA",
-                          value: "AUMENTO DE CARGA",
-                        },
-                        {
-                          label: "CANCELADO",
-                          value: "CANCELADO",
-                        },
-                        {
-                          label: "PARECER DE ACESSO APROVADO",
-                          value: "PARECER DE ACESSO APROVADO",
-                        },
-                        {
-                          label: "PENDENCIAS",
-                          value: "PENDENCIAS",
-                        },
-                        {
-                          label: "SOLICITAR ACESSO",
-                          value: "SOLICITAR ACESSO",
-                        },
-                        {
-                          label: "SOLICITAR AUMENTO DE CARGA",
-                          value: "SOLICITAR AUMENTO DE CARGA",
-                        },
-                        {
-                          label: "PARECER DE ACESSO COM OBRAS",
-                          value: "PARECER DE ACESSO COM OBRAS",
-                        },
-                        {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
-                        },
-                      ]}
-                    />
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      placeholder="STATUS DA OBRA"
-                      onChange={(e) =>
-                        setFilters({
-                          ...filters,
-                          obraStatusFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={[
-                        {
-                          label: "AGENDADA",
-                          value: "AGENDADA",
-                        },
-                        {
-                          label: "AGUARDANDO AGENDAMENTO",
-                          value: "AGUARDANDO AGENDAMENTO",
-                        },
-                        {
-                          label: "CONCLUIDA",
-                          value: "CONCLUIDA",
-                        },
-                        {
-                          label: "EM ANDAMENTO",
-                          value: "EM ANDAMENTO",
-                        },
-                        {
-                          label: "OBRA CANCELADA",
-                          value: "OBRA CANCELADA",
-                        },
-                        {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
-                        },
-                      ]}
-                    />
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      placeholder="STATUS DA VISTORIA"
-                      onChange={(e) =>
-                        setFilters({
-                          ...filters,
-                          vistoriaFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={[
-                        { label: "REALIZADA", value: "REALIZADA" },
-                        {
-                          label: "AGUARDANDO OBRA DE REDE",
-                          value: "AGUARDANDO OBRA DE REDE",
-                        },
-                        {
-                          label: "AGUARDANDO CONCESSIONARIA",
-                          value: "AGUARDANDO CONCESSIONARIA",
-                        },
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      ]}
-                    />
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      placeholder="PROJETISTA"
-                      onChange={(e) =>
-                        setFilters({
-                          ...filters,
-                          projetistaFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={projetistas.map((projetista) => {
-                        return {
-                          label: projetista.label,
-                          value: projetista.nome,
-                        };
-                      })}
-                    />
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      placeholder="CIDADE"
-                      onChange={(e) =>
-                        setFilters({
-                          ...filters,
-                          cidadeFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={cidadesAtendidas.map((cidade) => {
-                        return {
-                          label: cidade,
-                          value: cidade,
-                        };
-                      })}
-                    />
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      placeholder="VENDEDOR"
-                      onChange={(e) =>
-                        setFilters({
-                          ...filters,
-                          vendedorFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={vendedores.map((vendedor) => {
-                        return {
-                          label: vendedor.nome,
-                          value: vendedor.nome,
-                        };
-                      })}
-                    />
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      placeholder="DIST. CRÉDITOS"
-                      onChange={(e) =>
-                        setFilters({
-                          ...filters,
-                          distribuicaoFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={[
-                        { label: "SIM", value: "SIM" },
-                        { label: "NÃO", value: "NÃO" },
-                      ]}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
-                  <div
-                    onClick={() =>
-                      setFilters({
-                        ...filters,
-                        desenhoFilter: !filters.desenhoFilter,
-                      })
-                    }
-                    className={`${
-                      filters.desenhoFilter ? "bg-[#15599a]" : "bg-blue-300"
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                  >
-                    DESENHO PENDENTE
-                  </div>
-                  <div
-                    onClick={() =>
-                      setFilters({
-                        ...filters,
-                        assinFaltando: !filters.assinFaltando,
-                      })
-                    }
-                    className={`${
-                      filters.assinFaltando ? "bg-[#15599a]" : "bg-blue-300"
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                  >
-                    FALTANDO ASSINATURA
-                  </div>
-                  <div
-                    onClick={() =>
-                      setFilters({
-                        ...filters,
-                        parecerReprovado: !filters.parecerReprovado,
-                      })
-                    }
-                    className={`${
-                      filters.parecerReprovado ? "bg-[#15599a]" : "bg-blue-300"
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                  >
-                    PARECER REPROVADO
-                  </div>
-                  <div
-                    onClick={() =>
-                      setFilters({
-                        ...filters,
-                        vistoriaReprovada: !filters.vistoriaReprovada,
-                      })
-                    }
-                    className={`${
-                      filters.vistoriaReprovada ? "bg-[#15599a]" : "bg-blue-300"
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                  >
-                    VISTORIA REPROVADA
-                  </div>
-                </div>
-                <div className="flex items-center justify-end gap-x-2">
-                  <FilterButton
-                    text={"FILTRAR"}
-                    icon={<AiOutlineSearch />}
-                    handleClick={filterProjects}
-                  />
-                </div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
-        </div>
-        <div className="flex  justify-around gap-3 mt-4 flex-wrap">
-          {filteredProjects.map((project, index) => (
-            <motion.div
-              onClick={() => {
-                handleOpenModal(project._id);
-              }}
-              key={project._id}
-              initial={{ opacity: 0, translateX: -50, translateY: -35 }}
-              animate={{ opacity: 1, translateX: 0, translateY: 0 }}
-              transition={{ duration: 0.3, delay: 0.01 * index }}
-              className={`w-full md:w-[350px] lg:w-[450px] cursor-pointer ${
-                project.parecer.dataParecerDeAcesso != undefined &&
-                project.vistoria.status != "REALIZADA"
-                  ? getBorderColorByParecer(
-                      new Date(project.parecer.dataParecerDeAcesso),
-                      new Date()
-                    )
-                  : "border border-gray-200"
-              }  hover:bg-blue-100`}
-            >
-              <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
-              <div className="flex flex-col p-2">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs text-gray-700">
-                    {project.nomeDoContrato}
-                  </p>
-                  <p className="text-xs text-[#15599a]">#{project.qtde}</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-xxs">PARECER DE ACESSO</span>
-                    <p className="text-xs text-gray-600">
-                      {project.parecer.statusDoParecerDeAcesso
-                        ? project.parecer.statusDoParecerDeAcesso
-                        : "-"}
-                    </p>
-                  </div>
-                  <div className="text-end">
-                    <span className="text-xxs text-end">VISTORIA</span>
-                    <p className="text-xs text-center text-gray-600">
-                      {project.vistoria.status ? project.vistoria.status : "-"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-xxs">DIAGRAMA UNIFILAR</span>
-                    <p
                       className={`${
-                        project.projeto.diagramaUnifilar
-                          ? "text-yellow-500"
-                          : "text-red-400"
-                      } text-xs uppercase`}
+                        filters.desenhoFilter ? "bg-[#15599a]" : "bg-blue-300"
+                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
                     >
-                      {project.projeto.diagramaUnifilar
-                        ? project.projeto.diagramaUnifilar
-                        : "PENDENTE"}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-xxs text-center">
-                      {project.compra.statusEntrega == "ENTREGUE"
-                        ? "DATA DE ENTREGA"
-                        : "PREV. DE ENTREGA"}
-                    </span>
-                    <p
-                      className={`text-gray-600 text-xs uppercase text-center`}
+                      DESENHO PENDENTE
+                    </div>
+                    <div
+                      onClick={() =>
+                        setFilters({
+                          ...filters,
+                          assinFaltando: !filters.assinFaltando,
+                        })
+                      }
+                      className={`${
+                        filters.assinFaltando ? "bg-[#15599a]" : "bg-blue-300"
+                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
                     >
-                      {project.compra.statusEntrega == "ENTREGUE" &&
-                      project.compra.dataEntrega
-                        ? dayjs(project.compra.dataEntrega)
-                            .add(4, "h")
-                            .format("DD/MM/YYYY")
-                        : project.compra.previsaoEntrega
-                        ? dayjs(project.compra.previsaoEntrega)
-                            .add(4, "h")
-                            .format("DD/MM/YYYY")
-                        : "-"}
-                    </p>
+                      FALTANDO ASSINATURA
+                    </div>
+                    <div
+                      onClick={() =>
+                        setFilters({
+                          ...filters,
+                          parecerReprovado: !filters.parecerReprovado,
+                        })
+                      }
+                      className={`${
+                        filters.parecerReprovado
+                          ? "bg-[#15599a]"
+                          : "bg-blue-300"
+                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    >
+                      PARECER REPROVADO
+                    </div>
+                    <div
+                      onClick={() =>
+                        setFilters({
+                          ...filters,
+                          vistoriaReprovada: !filters.vistoriaReprovada,
+                        })
+                      }
+                      className={`${
+                        filters.vistoriaReprovada
+                          ? "bg-[#15599a]"
+                          : "bg-blue-300"
+                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    >
+                      VISTORIA REPROVADA
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-xxs">DESENHO DO TELHADO</span>
-                    <p className="text-xs text-gray-600 text-center">
-                      {project.projeto.desenhoTelhado
-                        ? project.projeto.desenhoTelhado
-                        : "-"}
-                    </p>
+                  <div className="flex items-center justify-end gap-x-2">
+                    <FilterButton
+                      text={"FILTRAR"}
+                      icon={<AiOutlineSearch />}
+                      handleClick={filterProjects}
+                    />
                   </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="w-full flex flex-col">
-                    <span className="text-xxs">DESDE ASS.CONTRATO</span>
-                    <p className={`text-xs uppercase text-red-500 text-start`}>
-                      {project.contrato.dataAssinatura
-                        ? `${getDateDiff(
-                            new Date(),
-                            new Date(project.contrato.dataAssinatura)
-                          )} DIAS`
-                        : "-"}
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </div>
+          <div className="flex  justify-around gap-3 mt-4 flex-wrap">
+            {filteredProjects.map((project, index) => (
+              <motion.div
+                onClick={() => {
+                  handleOpenModal(project._id);
+                }}
+                key={project._id}
+                initial={{ opacity: 0, translateX: -50, translateY: -35 }}
+                animate={{ opacity: 1, translateX: 0, translateY: 0 }}
+                transition={{ duration: 0.3, delay: 0.01 * index }}
+                className={`w-full md:w-[350px] lg:w-[450px] cursor-pointer ${
+                  project.parecer.dataParecerDeAcesso != undefined &&
+                  project.vistoria.status != "REALIZADA"
+                    ? getBorderColorByParecer(
+                        new Date(project.parecer.dataParecerDeAcesso),
+                        new Date()
+                      )
+                    : "border border-gray-200"
+                }  hover:bg-blue-100`}
+              >
+                <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
+                <div className="flex flex-col p-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-gray-700">
+                      {project.nomeDoContrato}
                     </p>
+                    <p className="text-xs text-[#15599a]">#{project.qtde}</p>
                   </div>
-                  {project.parecer.statusDoParecerDeAcesso ==
-                    "PARECER DE ACESSO COM OBRAS" && (
-                    <div className="w-full flex flex-col">
-                      <span className="text-xxs text-center">DIAS DE OBRA</span>
-                      <p
-                        className={`text-xs uppercase text-red-500 text-center`}
-                      >
-                        {project.parecer.qtdeDiasObraDeRede
-                          ? `${project.parecer.qtdeDiasObraDeRede} DIAS`
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xxs">PARECER DE ACESSO</span>
+                      <p className="text-xs text-gray-600">
+                        {project.parecer.statusDoParecerDeAcesso
+                          ? project.parecer.statusDoParecerDeAcesso
                           : "-"}
                       </p>
                     </div>
-                  )}
-                  <div className="w-full flex flex-col">
-                    <span className="text-xxs text-end">
-                      DESDE APROV.PARECER
-                    </span>
-                    <p className={`text-xs uppercase text-red-500 text-end`}>
-                      {project.parecer.dataParecerDeAcesso
-                        ? `${getDateDiff(
-                            new Date(),
-                            new Date(project.parecer.dataParecerDeAcesso)
-                          )} DIAS`
-                        : "-"}
-                    </p>
+                    <div className="text-end">
+                      <span className="text-xxs text-end">VISTORIA</span>
+                      <p className="text-xs text-center text-gray-600">
+                        {project.vistoria.status
+                          ? project.vistoria.status
+                          : "-"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xxs">DIAGRAMA UNIFILAR</span>
+                      <p
+                        className={`${
+                          project.projeto.diagramaUnifilar
+                            ? "text-yellow-500"
+                            : "text-red-400"
+                        } text-xs uppercase`}
+                      >
+                        {project.projeto.diagramaUnifilar
+                          ? project.projeto.diagramaUnifilar
+                          : "PENDENTE"}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-xxs text-center">
+                        {project.compra.statusEntrega == "ENTREGUE"
+                          ? "DATA DE ENTREGA"
+                          : "PREV. DE ENTREGA"}
+                      </span>
+                      <p
+                        className={`text-gray-600 text-xs uppercase text-center`}
+                      >
+                        {project.compra.statusEntrega == "ENTREGUE" &&
+                        project.compra.dataEntrega
+                          ? dayjs(project.compra.dataEntrega)
+                              .add(4, "h")
+                              .format("DD/MM/YYYY")
+                          : project.compra.previsaoEntrega
+                          ? dayjs(project.compra.previsaoEntrega)
+                              .add(4, "h")
+                              .format("DD/MM/YYYY")
+                          : "-"}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-xxs">DESENHO DO TELHADO</span>
+                      <p className="text-xs text-gray-600 text-center">
+                        {project.projeto.desenhoTelhado
+                          ? project.projeto.desenhoTelhado
+                          : "-"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="w-full flex flex-col">
+                      <span className="text-xxs">DESDE ASS.CONTRATO</span>
+                      <p
+                        className={`text-xs uppercase text-red-500 text-start`}
+                      >
+                        {project.contrato.dataAssinatura
+                          ? `${getDateDiff(
+                              new Date(),
+                              new Date(project.contrato.dataAssinatura)
+                            )} DIAS`
+                          : "-"}
+                      </p>
+                    </div>
+                    {project.parecer.statusDoParecerDeAcesso ==
+                      "PARECER DE ACESSO COM OBRAS" && (
+                      <div className="w-full flex flex-col">
+                        <span className="text-xxs text-center">
+                          DIAS DE OBRA
+                        </span>
+                        <p
+                          className={`text-xs uppercase text-red-500 text-center`}
+                        >
+                          {project.parecer.qtdeDiasObraDeRede
+                            ? `${project.parecer.qtdeDiasObraDeRede} DIAS`
+                            : "-"}
+                        </p>
+                      </div>
+                    )}
+                    <div className="w-full flex flex-col">
+                      <span className="text-xxs text-end">
+                        DESDE APROV.PARECER
+                      </span>
+                      <p className={`text-xs uppercase text-red-500 text-end`}>
+                        {project.parecer.dataParecerDeAcesso
+                          ? `${getDateDiff(
+                              new Date(),
+                              new Date(project.parecer.dataParecerDeAcesso)
+                            )} DIAS`
+                          : "-"}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
+          <Link href={"/projetos/visitaTecnica"}>
+            <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+              <p className="uppercase font-bold text-sm">Visitas técnicas</p>
+            </a>
+          </Link>
+          {modalIsOpen && (
+            <ModalProjetos
+              credentials={session?.user}
+              modalIsOpen={modalIsOpen}
+              handleUpdates={handleUpdates}
+              project={modalProject}
+              editor={
+                session?.user?.accessibleRoutes.includes("Projetos") &&
+                session?.user?.regional == undefined
+                  ? true
+                  : false
+              }
+              setModalIsOpen={setModalIsOpen}
+            />
+          )}
         </div>
-        <Link href={"/projetos/visitaTecnica"}>
-          <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-            <p className="uppercase font-bold text-sm">Visitas técnicas</p>
-          </a>
-        </Link>
-        {modalIsOpen && (
-          <ModalProjetos
-            credentials={credentials}
-            modalIsOpen={modalIsOpen}
-            handleUpdates={handleUpdates}
-            project={modalProject}
-            editor={
-              credentials.accessibleRoutes.includes("Projetos") &&
-              credentials.regional == undefined
-                ? true
-                : false
-            }
-            setModalIsOpen={setModalIsOpen}
-          />
-        )}
-      </div>
-    );
-  } else {
-    return <ProjetosSkeleton />;
+      );
+    } else {
+      return <ProjetosSkeleton />;
+    }
   }
 }
 

@@ -907,7 +907,7 @@ function ModalComercial({
                     });
                   }}
                 />
-                {credentials.visualizacao == undefined && (
+                {credentials?.visualizacao == undefined && (
                   <NumberInput
                     tag={"R$"}
                     label={"Valor do padrão"}
@@ -1225,7 +1225,7 @@ function ModalComercial({
                     });
                   }}
                 />
-                {credentials.visualizacao == undefined && (
+                {credentials?.visualizacao == undefined && (
                   <NumberInput
                     tag={"R$"}
                     label={"Valor da estrutura"}
@@ -1871,7 +1871,7 @@ function ModalComercial({
                     });
                   }}
                 />
-                {credentials.visualizacao == undefined && (
+                {credentials?.visualizacao == undefined && (
                   <NumberInput
                     tag={"R$"}
                     label={"VALOR DO KIT"}
@@ -2285,7 +2285,7 @@ function ModalComercial({
                       });
                     }}
                   />
-                  {credentials.visualizacao == undefined && (
+                  {credentials?.visualizacao == undefined && (
                     <NumberInput
                       tag={"R$"}
                       label={"VALOR DO PROJETO"}
@@ -3311,7 +3311,7 @@ function ModalComercial({
                     });
                   }}
                 />
-                {credentials.visualizacao == undefined && (
+                {credentials?.visualizacao == undefined && (
                   <>
                     {" "}
                     <NumberInput

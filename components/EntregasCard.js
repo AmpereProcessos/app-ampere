@@ -14,8 +14,8 @@ function EntregasCard({ project, index }) {
   });
   async function handleChanges() {
     if (
-      credentials.visualizacao == "REGIONAL" ||
-      credentials.visualizacao == "VENDEDOR"
+      credentials?.visualizacao == "REGIONAL" ||
+      credentials?.visualizacao == "VENDEDOR"
     ) {
       setMsg({
         text: "Seu usuário não tem permisssão de alteração nesse área.",

@@ -35,6 +35,7 @@ const style = {
 };
 import { useRouter } from "next/router";
 import { AppContext } from "../context/AppContext";
+import { useSession } from "next-auth/react";
 
 const sidebar = {
   hidden: {
@@ -48,6 +49,7 @@ const sidebar = {
 };
 
 function Sidebar({ sidebarVisible }) {
+  const { data: session, status } = useSession();
   const { credentials } = useContext(AppContext);
   const router = useRouter();
   if (
@@ -56,6 +58,7 @@ function Sidebar({ sidebarVisible }) {
     router.pathname.includes("auth")
   )
     return null;
+  if (status == "loading" || status == "unauthenticated") return null;
   return (
     <AnimatePresence>
       <motion.div
@@ -65,7 +68,7 @@ function Sidebar({ sidebarVisible }) {
         style={{ maxHeight: "calc(100vh - 70px)" }}
         className="flex py-4 px-2 flex-col bg-[#fff] sticky top-[70px] w-full md:w-[250px] overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 border-r border-gray-300"
       >
-        {credentials.visualizacao == "OBRAS" ? (
+        {credentials?.visualizacao == "OBRAS" ? (
           <>
             <h2 className="text-xs text-gray-500">PRINCIPAL</h2>
             <Link href={"/ordemDeServico/controleDeOS"}>
@@ -91,7 +94,7 @@ function Sidebar({ sidebarVisible }) {
               </Link>
             </div>
             <div className="mt-6">
-              {credentials.visualizacao == undefined && (
+              {credentials?.visualizacao == undefined && (
                 <>
                   <h2 className="text-xs text-gray-500">GESTÃO DE PROJETOS</h2>
                   <Link href="/gestaoDeProjetos/emAndamento">
@@ -107,7 +110,7 @@ function Sidebar({ sidebarVisible }) {
                   </Link>
                 </>
               )}
-              {credentials.vendedor == undefined && (
+              {credentials?.vendedor == undefined && (
                 <Link href="/gestaoDeProjetos/bancoDeDados">
                   <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                     <FaDatabase
@@ -120,9 +123,9 @@ function Sidebar({ sidebarVisible }) {
                   </a>
                 </Link>
               )}
-              {/* {credentials.accessibleRoutes != undefined &&
-              credentials.accessibleRoutes?.includes("Obras") &&
-              credentials.regional == undefined ? (
+              {/* {credentials?.accessibleRoutes != undefined &&
+              credentials?.accessibleRoutes?.includes("Obras") &&
+              credentials?.regional == undefined ? (
                 <Link href="/calendario">
                   <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                     <BsFillCalendarEventFill
@@ -137,12 +140,12 @@ function Sidebar({ sidebarVisible }) {
                 false
               )} */}
             </div>
-            {credentials.vendedor == undefined && (
+            {credentials?.vendedor == undefined && (
               <>
                 {" "}
                 <div className="mt-6">
                   <h2 className="text-xs text-gray-500">SETORES</h2>
-                  {credentials.accessibleRoutes != undefined ? (
+                  {credentials?.accessibleRoutes != undefined ? (
                     credentials?.accessibleRoutes?.includes("PPS") ||
                     credentials?.accessibleRoutes?.includes("Marketing") ? (
                       <Link href="/comercial">
@@ -161,9 +164,9 @@ function Sidebar({ sidebarVisible }) {
                   ) : (
                     false
                   )}
-                  {credentials.accessibleRoutes != undefined ? (
+                  {credentials?.accessibleRoutes != undefined ? (
                     credentials?.accessibleRoutes?.includes("Suprimentos") ||
-                    credentials.accessibleRoutes?.includes("Marketing") ? (
+                    credentials?.accessibleRoutes?.includes("Marketing") ? (
                       <Link href="/suprimentos">
                         <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                           <FaShoppingCart
@@ -180,7 +183,7 @@ function Sidebar({ sidebarVisible }) {
                   ) : (
                     false
                   )}
-                  {credentials.accessibleRoutes != undefined ? (
+                  {credentials?.accessibleRoutes != undefined ? (
                     credentials?.accessibleRoutes?.includes("Projetos") ||
                     credentials?.accessibleRoutes?.includes("Pós-Venda") ? (
                       <Link href="/projetos">
@@ -197,7 +200,7 @@ function Sidebar({ sidebarVisible }) {
                   ) : (
                     false
                   )}
-                  {credentials.accessibleRoutes != undefined ? (
+                  {credentials?.accessibleRoutes != undefined ? (
                     credentials?.accessibleRoutes?.includes("Obras") ||
                     credentials?.accessibleRoutes?.includes("Marketing") ? (
                       <Link href="/obras">
@@ -229,8 +232,8 @@ function Sidebar({ sidebarVisible }) {
                   ) : (
                     false
                   )}
-                  {credentials.accessibleRoutes != undefined &&
-                  credentials.visualizacao == undefined ? (
+                  {credentials?.accessibleRoutes != undefined &&
+                  credentials?.visualizacao == undefined ? (
                     credentials?.accessibleRoutes?.includes("Pós-Venda") ||
                     credentials?.accessibleRoutes?.includes("Marketing") ? (
                       <Link href="/posvenda">
@@ -249,8 +252,8 @@ function Sidebar({ sidebarVisible }) {
                   ) : (
                     false
                   )}
-                  {credentials.accessibleRoutes != undefined &&
-                  credentials.regional == undefined
+                  {credentials?.accessibleRoutes != undefined &&
+                  credentials?.regional == undefined
                     ? (credentials?.accessibleRoutes?.includes("ADM") ||
                         credentials?.accessibleRoutes?.includes(
                           "Marketing"
@@ -265,7 +268,7 @@ function Sidebar({ sidebarVisible }) {
                         </Link>
                       )
                     : false}
-                  {credentials.accessibleRoutes?.includes("InsideSales") && (
+                  {credentials?.accessibleRoutes?.includes("InsideSales") && (
                     <Link href="/insideSales">
                       <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <MdAddIcCall
@@ -280,8 +283,8 @@ function Sidebar({ sidebarVisible }) {
                 </div>
                 <div className="mt-6">
                   <h2 className="text-xs text-gray-500">OUTROS</h2>
-                  {credentials.visualizacao == undefined ||
-                  credentials.visualizacao == "REGIONAL" ? (
+                  {credentials?.visualizacao == undefined ||
+                  credentials?.visualizacao == "REGIONAL" ? (
                     <Link href="/calls">
                       <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <FaTasks
@@ -293,8 +296,8 @@ function Sidebar({ sidebarVisible }) {
                   ) : (
                     false
                   )}
-                  {(credentials.manager == true ||
-                    credentials.visualizacao == "REGIONAL") && (
+                  {(credentials?.manager == true ||
+                    credentials?.visualizacao == "REGIONAL") && (
                     <Link href="/admin/comissao">
                       <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <AiOutlinePercentage
@@ -304,7 +307,7 @@ function Sidebar({ sidebarVisible }) {
                       </a>
                     </Link>
                   )}
-                  {credentials.accessibleRoutes?.includes("Suprimentos") ? (
+                  {credentials?.accessibleRoutes?.includes("Suprimentos") ? (
                     <Link href="/suprimentos/entregas">
                       <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <TbTruckDelivery
@@ -316,8 +319,8 @@ function Sidebar({ sidebarVisible }) {
                   ) : (
                     false
                   )}
-                  {credentials.controller != undefined &&
-                  credentials.controller == true ? (
+                  {credentials?.controller != undefined &&
+                  credentials?.controller == true ? (
                     <Link href={"/ordemDeServico/bancoDeOS"}>
                       <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <MdDesignServices
@@ -331,8 +334,8 @@ function Sidebar({ sidebarVisible }) {
                   ) : (
                     false
                   )}
-                  {credentials.accessibleRoutes != undefined &&
-                  credentials.accessibleRoutes?.includes("Almoxarifado") ? (
+                  {credentials?.accessibleRoutes != undefined &&
+                  credentials?.accessibleRoutes?.includes("Almoxarifado") ? (
                     <Link href={"/almoxarifado"}>
                       <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <FaBox style={{ color: "#15599a", fontSize: "20px" }} />
@@ -344,8 +347,8 @@ function Sidebar({ sidebarVisible }) {
                   ) : (
                     false
                   )}
-                  {credentials.accessibleRoutes != undefined &&
-                  credentials.regional == undefined
+                  {credentials?.accessibleRoutes != undefined &&
+                  credentials?.regional == undefined
                     ? credentials?.accessibleRoutes?.includes("ADM") && (
                         <Link href={"/adm/cobrancas"}>
                           <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -359,8 +362,8 @@ function Sidebar({ sidebarVisible }) {
                         </Link>
                       )
                     : false}
-                  {credentials.accessibleRoutes != undefined &&
-                  credentials.regional == undefined
+                  {credentials?.accessibleRoutes != undefined &&
+                  credentials?.regional == undefined
                     ? credentials?.accessibleRoutes?.includes("Projetos") && (
                         <Link href={"/projetos/comissionamento"}>
                           <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -374,8 +377,8 @@ function Sidebar({ sidebarVisible }) {
                         </Link>
                       )
                     : false}
-                  {credentials.accessibleRoutes != undefined &&
-                  credentials.regional == undefined
+                  {credentials?.accessibleRoutes != undefined &&
+                  credentials?.regional == undefined
                     ? (credentials?.accessibleRoutes?.includes("O&M") ||
                         credentials?.accessibleRoutes?.includes(
                           "Marketing"
@@ -390,8 +393,8 @@ function Sidebar({ sidebarVisible }) {
                         </Link>
                       )
                     : false}
-                  {credentials.accessibleRoutes != undefined &&
-                  credentials.regional == undefined
+                  {credentials?.accessibleRoutes != undefined &&
+                  credentials?.regional == undefined
                     ? credentials?.accessibleRoutes?.includes("Obras") && (
                         <Link href="/obras/gestaoDeObras">
                           <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -405,8 +408,8 @@ function Sidebar({ sidebarVisible }) {
                         </Link>
                       )
                     : false}
-                  {credentials.manager == true ||
-                  credentials.visualizacao == "REGIONAL" ? (
+                  {credentials?.manager == true ||
+                  credentials?.visualizacao == "REGIONAL" ? (
                     <Link href="/admin/gestaoTimeVendas">
                       <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <TbDashboard
@@ -420,8 +423,8 @@ function Sidebar({ sidebarVisible }) {
                   ) : (
                     false
                   )}
-                  {credentials.accessibleRoutes != undefined &&
-                  credentials.regional == undefined
+                  {credentials?.accessibleRoutes != undefined &&
+                  credentials?.regional == undefined
                     ? credentials?.accessibleRoutes?.includes("Pós-Venda") && (
                         <Link href="/posvenda/nps">
                           <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
@@ -436,8 +439,8 @@ function Sidebar({ sidebarVisible }) {
                 </div>
               </>
             )}
-            {credentials.vendedor != undefined &&
-            credentials.accessibleRoutes?.includes("InsideSales") ? (
+            {credentials?.vendedor != undefined &&
+            credentials?.accessibleRoutes?.includes("InsideSales") ? (
               <>
                 <div className="mt-6">
                   <h2 className="text-xs text-gray-500">SETORES</h2>{" "}
@@ -454,9 +457,9 @@ function Sidebar({ sidebarVisible }) {
             ) : (
               false
             )}
-            {credentials.accessibleRoutes != undefined &&
+            {credentials?.accessibleRoutes != undefined &&
               credentials?.accessibleRoutes?.includes("Vendas") &&
-              credentials.vendedor && (
+              credentials?.vendedor && (
                 <div className="mt-6">
                   <h2 className="text-xs text-gray-500">ÁREA DO VENDEDOR</h2>
                   <Link href="/vendas">
@@ -470,9 +473,9 @@ function Sidebar({ sidebarVisible }) {
                       <p className="pl-3 text-xs text-gray-600">Projetos</p>
                     </a>
                   </Link>
-                  {credentials.vendedor && (
+                  {credentials?.vendedor && (
                     <Link
-                      href={`/vendas/emProcesso/${credentials.visualizacao}?parametro=${credentials.vendedor}`}
+                      href={`/vendas/emProcesso/${credentials?.visualizacao}?parametro=${credentials?.vendedor}`}
                     >
                       <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <TbRecharging
@@ -487,7 +490,7 @@ function Sidebar({ sidebarVisible }) {
                       </a>
                     </Link>
                   )}
-                  {credentials.vendedor && (
+                  {credentials?.vendedor && (
                     <Link href={`/vendas/formularios`}>
                       <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <AiOutlineForm
@@ -502,7 +505,7 @@ function Sidebar({ sidebarVisible }) {
                       </a>
                     </Link>
                   )}
-                  {credentials.vendedor && (
+                  {credentials?.vendedor && (
                     <Link href={`/vendas/visitasTecnicas`}>
                       <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <TbReportAnalytics
@@ -517,7 +520,7 @@ function Sidebar({ sidebarVisible }) {
                       </a>
                     </Link>
                   )}
-                  {credentials.vendedor && (
+                  {credentials?.vendedor && (
                     <Link href={`/vendas/entregaTecnica`}>
                       <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <BsFillPatchCheckFill

@@ -94,7 +94,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
       let response = await axios.post("/api/projects/cotacoes", {
         ...quotationInfo,
         dataDeCotacao: new Date(),
-        usuario: credentials.nome,
+        usuario: credentials?.name,
       });
       if (response.data) {
         setInsertQuotationMsg({

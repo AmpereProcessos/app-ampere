@@ -20,6 +20,8 @@ import dayjs from "dayjs";
 import FetchDataButton from "../../components/utils/FetchDataButton";
 import { AnimatePresence, motion } from "framer-motion";
 import FilterButton from "../../components/utils/FilterButton";
+import { useSession } from "next-auth/react";
+import LoadingPage from "../../components/utils/LoadingPage";
 
 const statusStyles = {
   ABERTO: {
@@ -42,9 +44,13 @@ const statusStyles = {
 var dateFilterParam = new Date();
 dateFilterParam.setDate(dateFilterParam.getDate() - 2);
 function ChamadosSuporte() {
-  const { credentials, setCredentials } = useContext(AppContext);
   const router = useRouter();
-
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/auth/authHome");
+    },
+  });
   const [openCallsDropdownMenuVisible, setOpenCallsDropdownMenuVisible] =
     useState(false);
   const [closedCallsDropdownMenuVisible, setClosedCallsDropdownMenuVisible] =
@@ -248,504 +254,515 @@ function ChamadosSuporte() {
   }
   useEffect(() => {
     if (
-      credentials.accessibleRoutes?.includes("O&M") ||
-      credentials.accessibleRoutes.includes("Pós-Venda")
+      session?.user.accessibleRoutes.includes("O&M") ||
+      session?.user.accessibleRoutes.includes("Pós-Venda")
     ) {
       getCalls();
     } else {
-      router.push("/");
+      if (session?.user) return router.push("/");
     }
-  }, []);
-  return (
-    <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
-      <div className="flex items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
-        <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">
-          CHAMADOS DE SUPORTE TÉCNICO
-        </p>
-        <FetchDataButton
-          text={"ATUALIZAR"}
-          icon={<AiOutlineReload />}
-          handleClick={getCalls}
-        />
-      </div>
-      <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-              <p className="text-center uppercase text-[#15599a] font-bold text-xl">
-                Chamados abertos
-              </p>
-              <p className="font-bold text-[#fead61]">
-                ({filteredInProgress.length})
-              </p>
-            </div>
-            {openCallsDropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                <IoMdArrowDropupCircle
-                  style={{ fontSize: "25px" }}
-                  onClick={() => setOpenCallsDropdownMenuVisible(false)}
-                />
-              </div>
-            ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                <IoMdArrowDropdownCircle
-                  style={{ fontSize: "25px" }}
-                  onClick={() => setOpenCallsDropdownMenuVisible(true)}
-                />
-              </div>
-            )}
-          </div>
-          <AnimatePresence>
-            {openCallsDropdownMenuVisible ? (
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0.6 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="flex flex-col w-full gap-y-2 mt-4"
-              >
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                  <input
-                    type="text"
-                    className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
-                    placeholder="DIGITE O NOME DO CLIENTE/USINA"
-                    value={inProgressCallsFilters.searchFilter}
-                    onChange={(e) =>
-                      handleInProgressCallsSearchFilter(e.target.value)
-                    }
-                  />
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      placeholder="TIPO DE CHAMADO"
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      onChange={(e) =>
-                        setInProgressCallsFilters({
-                          ...inProgressCallsFilters,
-                          typeFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={tiposChamadosSuporte.map((chamado) => {
-                        return { value: chamado.tipo, label: chamado.tipo };
-                      })}
-                    />
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      placeholder="CIDADE"
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      onChange={(e) =>
-                        setInProgressCallsFilters({
-                          ...inProgressCallsFilters,
-                          cityFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={cidadesAtendidas.map((cidade) => {
-                        return { value: cidade, label: cidade };
-                      })}
-                    />
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      placeholder="STATUS DO CHAMADOS"
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      onChange={(e) =>
-                        setInProgressCallsFilters({
-                          ...inProgressCallsFilters,
-                          statusFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={[
-                        {
-                          value: "ABERTO",
-                          label: "ABERTO",
-                        },
-                        {
-                          value: "EM ANDAMENTO",
-                          label: "EM ANDAMENTO",
-                        },
-                      ]}
-                    />
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      placeholder="RESPONSÁVEL"
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      onChange={(e) =>
-                        setInProgressCallsFilters({
-                          ...inProgressCallsFilters,
-                          respFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={[
-                        {
-                          value: "GABRIEL MARTINS",
-                          label: "GABRIEL MARTINS",
-                        },
-                        {
-                          value: "MARCOS DIAS",
-                          label: "MARCOS DIAS",
-                        },
-                        {
-                          value: "A DEFINIR",
-                          label: "A DEFINIR",
-                        },
-                      ]}
-                    />
-                  </div>
-                </div>
-                <div className="flex items-center justify-end">
-                  <FilterButton
-                    text={"FILTRAR"}
-                    icon={<AiOutlineSearch />}
-                    handleClick={filterInProgressCalls}
-                  />
-                </div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
+  }, [session]);
+  if (status == "loading") return <LoadingPage />;
+  if (status == "authenticated") {
+    return (
+      <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
+        <div className="flex items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
+          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">
+            CHAMADOS DE SUPORTE TÉCNICO
+          </p>
+          <FetchDataButton
+            text={"ATUALIZAR"}
+            icon={<AiOutlineReload />}
+            handleClick={getCalls}
+          />
         </div>
-        <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
-          {filteredInProgress.map((call) => (
-            <div
-              onClick={() => handleOpenModal(call._id)}
-              key={call._id}
-              className={`w-[420px] max-h-[200px] cursor-pointer border ${getDeadlineStatus(
-                call.tipoChamado,
-                call.plano,
-                call.oemConcluido,
-                call.abertura,
-                call.statusChamado
-              )} p-3 hover:bg-blue-100`}
-            >
-              <div className="flex justify-between gap-3 items-center w-full">
-                <h1 className="uppercase text-sm">
-                  {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
-                </h1>
-                {call.cidade && (
-                  <p className="text-xs uppercase text-gray-700">
-                    {call.cidade}
-                  </p>
-                )}
-                <p
-                  className={`text-xs text-center font-bold border p-1 rounded-lg ${
-                    statusStyles[call.statusChamado].textColor
-                  } ${statusStyles[call.statusChamado].borderColor}`}
-                >
-                  {call.statusChamado}
+        <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
+          <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
+                <p className="text-center uppercase text-[#15599a] font-bold text-xl">
+                  Chamados abertos
+                </p>
+                <p className="font-bold text-[#fead61]">
+                  ({filteredInProgress.length})
                 </p>
               </div>
-              <div className="flex justify-between mt-2 items-center w-full">
-                <p className="text-xs text-gray-500 uppercase">Responsável:</p>
-                <p className="text-xs text-gray-500">{call.responsavel}</p>
-              </div>
-              <div className="hidden lg:flex justify-between mt-2 items-center w-full">
-                <p className="text-xs text-gray-500 uppercase">DEMANDA</p>
-                <p
-                  className={`text-xs ${
-                    call.demanda == "EXTERNA" ? "text-red-500" : "text-gray-500"
-                  }`}
-                >
-                  {call.demanda ? call.demanda : "-"}
-                </p>
-              </div>
-              <div className="flex justify-between mt-2 items-center w-full">
-                <p className="text-xs text-gray-500 uppercase">
-                  Tipo de chamado:
-                </p>
-                <p className="text-xs text-gray-500">{call.tipoChamado}</p>
-              </div>
-              <div className="flex justify-between mt-2 items-center w-full">
-                <p className="text-xs text-gray-500 uppercase">ABERTURA</p>
-                <p className="text-xxs text-gray-500 uppercase">
-                  {dayjs().diff(dayjs(call.abertura), "hours")} horas em aberto
-                </p>
-                <p className="text-xs text-gray-500">
-                  {new Date(call.abertura).toLocaleString()}
-                </p>
-              </div>
-              {call.tipoChamado.includes("GARANTIA") &&
-              call.statusGarantia != "IDENTIFICAÇÃO E TESTES" &&
-              (!call.ultAtualizacaoCliente ||
-                dayjs().diff(dayjs(call.ultAtualizacaoCliente), "days") >=
-                  7) ? (
-                <p className="text-center font-bold text-red-500">
-                  ATUALIZAR CLIENTE
-                </p>
+              {openCallsDropdownMenuVisible ? (
+                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                  <IoMdArrowDropupCircle
+                    style={{ fontSize: "25px" }}
+                    onClick={() => setOpenCallsDropdownMenuVisible(false)}
+                  />
+                </div>
               ) : (
-                false
+                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                  <IoMdArrowDropdownCircle
+                    style={{ fontSize: "25px" }}
+                    onClick={() => setOpenCallsDropdownMenuVisible(true)}
+                  />
+                </div>
               )}
             </div>
-          ))}
-        </div>
-      </div>
-      <div className="flex flex-col w-full border h-[1200px] lg:h-[500px] border-gray-200 bg-[#fff] shadow-xl p-4">
-        <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-              <p className="text-center uppercase text-[#15599a] font-bold text-xl">
-                CHAMADOS FINALIZADOS
-              </p>
-              <p className="font-bold text-[#fead61]">
-                ({filteredClosedCalls.length})
-              </p>
-            </div>
-            {closedCallsDropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                <IoMdArrowDropupCircle
-                  style={{ fontSize: "25px" }}
-                  onClick={() => setClosedCallsDropdownMenuVisible(false)}
-                />
-              </div>
-            ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                <IoMdArrowDropdownCircle
-                  style={{ fontSize: "25px" }}
-                  onClick={() => setClosedCallsDropdownMenuVisible(true)}
-                />
-              </div>
-            )}
+            <AnimatePresence>
+              {openCallsDropdownMenuVisible ? (
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0.6 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="flex flex-col w-full gap-y-2 mt-4"
+                >
+                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                    <input
+                      type="text"
+                      className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                      placeholder="DIGITE O NOME DO CLIENTE/USINA"
+                      value={inProgressCallsFilters.searchFilter}
+                      onChange={(e) =>
+                        handleInProgressCallsSearchFilter(e.target.value)
+                      }
+                    />
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        placeholder="TIPO DE CHAMADO"
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        onChange={(e) =>
+                          setInProgressCallsFilters({
+                            ...inProgressCallsFilters,
+                            typeFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={tiposChamadosSuporte.map((chamado) => {
+                          return { value: chamado.tipo, label: chamado.tipo };
+                        })}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        placeholder="CIDADE"
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        onChange={(e) =>
+                          setInProgressCallsFilters({
+                            ...inProgressCallsFilters,
+                            cityFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={cidadesAtendidas.map((cidade) => {
+                          return { value: cidade, label: cidade };
+                        })}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        placeholder="STATUS DO CHAMADOS"
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        onChange={(e) =>
+                          setInProgressCallsFilters({
+                            ...inProgressCallsFilters,
+                            statusFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={[
+                          {
+                            value: "ABERTO",
+                            label: "ABERTO",
+                          },
+                          {
+                            value: "EM ANDAMENTO",
+                            label: "EM ANDAMENTO",
+                          },
+                        ]}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        placeholder="RESPONSÁVEL"
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        onChange={(e) =>
+                          setInProgressCallsFilters({
+                            ...inProgressCallsFilters,
+                            respFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={[
+                          {
+                            value: "GABRIEL MARTINS",
+                            label: "GABRIEL MARTINS",
+                          },
+                          {
+                            value: "MARCOS DIAS",
+                            label: "MARCOS DIAS",
+                          },
+                          {
+                            value: "A DEFINIR",
+                            label: "A DEFINIR",
+                          },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-end">
+                    <FilterButton
+                      text={"FILTRAR"}
+                      icon={<AiOutlineSearch />}
+                      handleClick={filterInProgressCalls}
+                    />
+                  </div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
           </div>
-          <AnimatePresence>
-            {closedCallsDropdownMenuVisible ? (
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0.6 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="flex flex-col w-full gap-y-2 mt-4"
+          <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
+            {filteredInProgress.map((call) => (
+              <div
+                onClick={() => handleOpenModal(call._id)}
+                key={call._id}
+                className={`w-[420px] max-h-[200px] cursor-pointer border ${getDeadlineStatus(
+                  call.tipoChamado,
+                  call.plano,
+                  call.oemConcluido,
+                  call.abertura,
+                  call.statusChamado
+                )} p-3 hover:bg-blue-100`}
               >
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                  <p>Entre:</p>
-                  <input
-                    value={dayjs(closedCallsFilters.afterDateFilter).format(
-                      "YYYY-MM-DD"
-                    )}
-                    onChange={(e) =>
-                      setClosedCallsFilters({
-                        ...closedCallsFilters,
-                        afterDateFilter: e.target.value,
-                      })
-                    }
-                    type="date"
-                    className="border border-gray-200 outline-none p-2"
-                  />
-                  <p>&</p>
-                  <input
-                    value={dayjs(closedCallsFilters.beforeDateFilter).format(
-                      "YYYY-MM-DD"
-                    )}
-                    onChange={(e) =>
-                      setClosedCallsFilters({
-                        ...closedCallsFilters,
-                        beforeDateFilter: e.target.value,
-                      })
-                    }
-                    type="date"
-                    className="border border-gray-200 outline-none p-2"
-                  />
-                  <FetchDataButton
-                    handleClick={getClosedCallsByDate}
-                    text={"BUSCAR"}
-                    icon={<MdDateRange />}
-                  />
+                <div className="flex justify-between gap-3 items-center w-full">
+                  <h1 className="uppercase text-sm">
+                    {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
+                  </h1>
+                  {call.cidade && (
+                    <p className="text-xs uppercase text-gray-700">
+                      {call.cidade}
+                    </p>
+                  )}
+                  <p
+                    className={`text-xs text-center font-bold border p-1 rounded-lg ${
+                      statusStyles[call.statusChamado].textColor
+                    } ${statusStyles[call.statusChamado].borderColor}`}
+                  >
+                    {call.statusChamado}
+                  </p>
                 </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                  <input
-                    value={closedCallsFilters.searchFilter}
-                    onChange={(e) =>
-                      handleClosedCallsSearchFilter(e.target.value)
-                    }
-                    placeholder="DIGITE O NOME DO CLIENTE/USINA"
-                    className="outline-none p-1.5  w-full lg:w-[350px] h-[41px] rounded border border-gray-200 placeholder:italic"
-                  />
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      placeholder="TIPO DE CHAMADO"
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      onChange={(e) =>
-                        setClosedCallsFilters({
-                          ...closedCallsFilters,
-                          typeFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={tiposChamadosSuporte.map((chamado) => {
-                        return { value: chamado.tipo, label: chamado.tipo };
-                      })}
-                    />
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      placeholder="CIDADE"
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      onChange={(e) =>
-                        setClosedCallsFilters({
-                          ...closedCallsFilters,
-                          cityFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={cidadesAtendidas.map((cidade) => {
-                        return { value: cidade, label: cidade };
-                      })}
-                    />
-                  </div>
-                  <div className="w-full lg:w-[250px]">
-                    <Select
-                      isMulti
-                      placeholder="RESPONSÁVEL"
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          width: "100%",
-                          minHeight: "41px",
-                        }),
-                      }}
-                      onChange={(e) =>
-                        setClosedCallsFilters({
-                          ...closedCallsFilters,
-                          respFilter: e.map((x) => x.value),
-                        })
-                      }
-                      options={[
-                        {
-                          value: "GABRIEL MARTINS",
-                          label: "GABRIEL MARTINS",
-                        },
-                        {
-                          value: "MARCOS DIAS",
-                          label: "MARCOS DIAS",
-                        },
-                        {
-                          value: "A DEFINIR",
-                          label: "A DEFINIR",
-                        },
-                      ]}
-                    />
-                  </div>
+                <div className="flex justify-between mt-2 items-center w-full">
+                  <p className="text-xs text-gray-500 uppercase">
+                    Responsável:
+                  </p>
+                  <p className="text-xs text-gray-500">{call.responsavel}</p>
                 </div>
-                <div className="flex items-center justify-end gap-x-2">
-                  <FilterButton
-                    text={"FILTRAR"}
-                    icon={<AiOutlineSearch />}
-                    handleClick={filterClosedCalls}
-                  />
+                <div className="hidden lg:flex justify-between mt-2 items-center w-full">
+                  <p className="text-xs text-gray-500 uppercase">DEMANDA</p>
+                  <p
+                    className={`text-xs ${
+                      call.demanda == "EXTERNA"
+                        ? "text-red-500"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {call.demanda ? call.demanda : "-"}
+                  </p>
                 </div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
-        </div>
-        <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
-          {filteredClosedCalls.map((call) => (
-            <div
-              onClick={() => handleOpenModal(call._id)}
-              key={call._id}
-              className="w-[370px] max-h-[180px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
-            >
-              <div className="flex justify-between items-center w-full gap-2">
-                {call.feedbackValor != undefined && call.feedbackValor != "" ? (
-                  <BsFillPatchCheckFill
-                    style={{
-                      fontSize: "20px",
-                      color: "rgb(21 128 61)",
-                      marginLeft: "3px",
-                    }}
-                  />
+                <div className="flex justify-between mt-2 items-center w-full">
+                  <p className="text-xs text-gray-500 uppercase">
+                    Tipo de chamado:
+                  </p>
+                  <p className="text-xs text-gray-500">{call.tipoChamado}</p>
+                </div>
+                <div className="flex justify-between mt-2 items-center w-full">
+                  <p className="text-xs text-gray-500 uppercase">ABERTURA</p>
+                  <p className="text-xxs text-gray-500 uppercase">
+                    {dayjs().diff(dayjs(call.abertura), "hours")} horas em
+                    aberto
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {new Date(call.abertura).toLocaleString()}
+                  </p>
+                </div>
+                {call.tipoChamado.includes("GARANTIA") &&
+                call.statusGarantia != "IDENTIFICAÇÃO E TESTES" &&
+                (!call.ultAtualizacaoCliente ||
+                  dayjs().diff(dayjs(call.ultAtualizacaoCliente), "days") >=
+                    7) ? (
+                  <p className="text-center font-bold text-red-500">
+                    ATUALIZAR CLIENTE
+                  </p>
                 ) : (
                   false
                 )}
-                <h1 className="uppercase text-sm">
-                  {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
-                </h1>
-                {call.cidade && (
-                  <p className="text-xs uppercase text-gray-700">
-                    {call.cidade}
-                  </p>
-                )}
-                <p
-                  className={`text-xs font-bold border p-1 rounded-lg ${
-                    statusStyles[call.statusChamado].textColor
-                  } ${statusStyles[call.statusChamado].borderColor}`}
-                >
-                  {call.statusChamado}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col w-full border h-[1200px] lg:h-[500px] border-gray-200 bg-[#fff] shadow-xl p-4">
+          <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
+                <p className="text-center uppercase text-[#15599a] font-bold text-xl">
+                  CHAMADOS FINALIZADOS
+                </p>
+                <p className="font-bold text-[#fead61]">
+                  ({filteredClosedCalls.length})
                 </p>
               </div>
-              <div className="flex justify-between mt-2 items-center w-full">
-                <p className="text-xs text-gray-500 uppercase">Responsável:</p>
-                <p className="text-xs text-gray-500">{call.responsavel}</p>
-              </div>
-              {call.demanda && (
-                <div className="hidden lg:flex justify-between mt-2 items-center w-full">
-                  <p className="text-xs text-gray-500 uppercase">DEMANDA</p>
-                  <p className="text-xs text-gray-500">{call.demanda}</p>
+              {closedCallsDropdownMenuVisible ? (
+                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                  <IoMdArrowDropupCircle
+                    style={{ fontSize: "25px" }}
+                    onClick={() => setClosedCallsDropdownMenuVisible(false)}
+                  />
+                </div>
+              ) : (
+                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                  <IoMdArrowDropdownCircle
+                    style={{ fontSize: "25px" }}
+                    onClick={() => setClosedCallsDropdownMenuVisible(true)}
+                  />
                 </div>
               )}
-              <div className="flex justify-between mt-2 items-center w-full">
-                <p className="text-xs text-gray-500 uppercase">
-                  Tipo de chamado:
-                </p>
-                <p className="text-xs text-gray-500">{call.tipoChamado}</p>
-              </div>
             </div>
-          ))}
+            <AnimatePresence>
+              {closedCallsDropdownMenuVisible ? (
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0.6 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="flex flex-col w-full gap-y-2 mt-4"
+                >
+                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                    <p>Entre:</p>
+                    <input
+                      value={dayjs(closedCallsFilters.afterDateFilter).format(
+                        "YYYY-MM-DD"
+                      )}
+                      onChange={(e) =>
+                        setClosedCallsFilters({
+                          ...closedCallsFilters,
+                          afterDateFilter: e.target.value,
+                        })
+                      }
+                      type="date"
+                      className="border border-gray-200 outline-none p-2"
+                    />
+                    <p>&</p>
+                    <input
+                      value={dayjs(closedCallsFilters.beforeDateFilter).format(
+                        "YYYY-MM-DD"
+                      )}
+                      onChange={(e) =>
+                        setClosedCallsFilters({
+                          ...closedCallsFilters,
+                          beforeDateFilter: e.target.value,
+                        })
+                      }
+                      type="date"
+                      className="border border-gray-200 outline-none p-2"
+                    />
+                    <FetchDataButton
+                      handleClick={getClosedCallsByDate}
+                      text={"BUSCAR"}
+                      icon={<MdDateRange />}
+                    />
+                  </div>
+                  <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                    <input
+                      value={closedCallsFilters.searchFilter}
+                      onChange={(e) =>
+                        handleClosedCallsSearchFilter(e.target.value)
+                      }
+                      placeholder="DIGITE O NOME DO CLIENTE/USINA"
+                      className="outline-none p-1.5  w-full lg:w-[350px] h-[41px] rounded border border-gray-200 placeholder:italic"
+                    />
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        placeholder="TIPO DE CHAMADO"
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        onChange={(e) =>
+                          setClosedCallsFilters({
+                            ...closedCallsFilters,
+                            typeFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={tiposChamadosSuporte.map((chamado) => {
+                          return { value: chamado.tipo, label: chamado.tipo };
+                        })}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        placeholder="CIDADE"
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        onChange={(e) =>
+                          setClosedCallsFilters({
+                            ...closedCallsFilters,
+                            cityFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={cidadesAtendidas.map((cidade) => {
+                          return { value: cidade, label: cidade };
+                        })}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        placeholder="RESPONSÁVEL"
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        onChange={(e) =>
+                          setClosedCallsFilters({
+                            ...closedCallsFilters,
+                            respFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={[
+                          {
+                            value: "GABRIEL MARTINS",
+                            label: "GABRIEL MARTINS",
+                          },
+                          {
+                            value: "MARCOS DIAS",
+                            label: "MARCOS DIAS",
+                          },
+                          {
+                            value: "A DEFINIR",
+                            label: "A DEFINIR",
+                          },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-end gap-x-2">
+                    <FilterButton
+                      text={"FILTRAR"}
+                      icon={<AiOutlineSearch />}
+                      handleClick={filterClosedCalls}
+                    />
+                  </div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </div>
+          <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
+            {filteredClosedCalls.map((call) => (
+              <div
+                onClick={() => handleOpenModal(call._id)}
+                key={call._id}
+                className="w-[370px] max-h-[180px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+              >
+                <div className="flex justify-between items-center w-full gap-2">
+                  {call.feedbackValor != undefined &&
+                  call.feedbackValor != "" ? (
+                    <BsFillPatchCheckFill
+                      style={{
+                        fontSize: "20px",
+                        color: "rgb(21 128 61)",
+                        marginLeft: "3px",
+                      }}
+                    />
+                  ) : (
+                    false
+                  )}
+                  <h1 className="uppercase text-sm">
+                    {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
+                  </h1>
+                  {call.cidade && (
+                    <p className="text-xs uppercase text-gray-700">
+                      {call.cidade}
+                    </p>
+                  )}
+                  <p
+                    className={`text-xs font-bold border p-1 rounded-lg ${
+                      statusStyles[call.statusChamado].textColor
+                    } ${statusStyles[call.statusChamado].borderColor}`}
+                  >
+                    {call.statusChamado}
+                  </p>
+                </div>
+                <div className="flex justify-between mt-2 items-center w-full">
+                  <p className="text-xs text-gray-500 uppercase">
+                    Responsável:
+                  </p>
+                  <p className="text-xs text-gray-500">{call.responsavel}</p>
+                </div>
+                {call.demanda && (
+                  <div className="hidden lg:flex justify-between mt-2 items-center w-full">
+                    <p className="text-xs text-gray-500 uppercase">DEMANDA</p>
+                    <p className="text-xs text-gray-500">{call.demanda}</p>
+                  </div>
+                )}
+                <div className="flex justify-between mt-2 items-center w-full">
+                  <p className="text-xs text-gray-500 uppercase">
+                    Tipo de chamado:
+                  </p>
+                  <p className="text-xs text-gray-500">{call.tipoChamado}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+        <div
+          onClick={() => setCreationModal(true)}
+          className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
+        >
+          <p className="uppercase font-bold text-sm">Novo chamado</p>
+        </div>
+        {creationModal && (
+          <CreateModal getCalls={getCalls} setModalIsOpen={setCreationModal} />
+        )}
+        {modalIsOpen && (
+          <ModalCallSuporte
+            modalIsOpen={modalIsOpen}
+            credentials={session?.user}
+            updateModalInfo={updateModalInfo}
+            setModalIsOpen={setModalIsOpen}
+            info={modalCall}
+          />
+        )}
       </div>
-      <div
-        onClick={() => setCreationModal(true)}
-        className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
-      >
-        <p className="uppercase font-bold text-sm">Novo chamado</p>
-      </div>
-      {creationModal && (
-        <CreateModal getCalls={getCalls} setModalIsOpen={setCreationModal} />
-      )}
-      {modalIsOpen && (
-        <ModalCallSuporte
-          modalIsOpen={modalIsOpen}
-          credentials={credentials}
-          updateModalInfo={updateModalInfo}
-          setModalIsOpen={setModalIsOpen}
-          info={modalCall}
-        />
-      )}
-    </div>
-  );
+    );
+  }
 }
 
 export default ChamadosSuporte;

@@ -3,14 +3,22 @@ import React, { useEffect, useState } from "react";
 import OSCard from "../../components/OSCard";
 import { useRouter } from "next/router";
 import { AiOutlineSearch } from "react-icons/ai";
-function Cobrancas({ credentials, setCredentials }) {
+import { useSession } from "next-auth/react";
+function Cobrancas() {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/auth/authHome");
+    },
+  });
+
   const [oss, setOss] = useState([]);
   const [filteredOSS, setFilteredOSS] = useState([]);
   const [dateFilter, setDateFilter] = useState({
     after: null,
     before: null,
   });
-  const router = useRouter();
   function getOSsToReceive() {
     axios.get("/api/ordensDeServico/realizarCobranca").then((res) => {
       setFilteredOSS(res.data);
@@ -35,26 +43,10 @@ function Cobrancas({ credentials, setCredentials }) {
     }
   }
   useEffect(() => {
-    var storedCredentials = JSON.parse(localStorage.getItem("credentials"));
-    if (storedCredentials) {
-      setCredentials(storedCredentials);
-      if (storedCredentials.accessibleRoutes.includes("ADM")) {
-        getOSsToReceive();
-      } else {
-        router.push("/");
-      }
-    } else {
-      if (!credentials.nome) {
-        router.push("/auth/authHome");
-      } else {
-        if (credentials.accessibleRoutes.includes("ADM")) {
-          getOSsToReceive();
-        } else {
-          router.push("/");
-        }
-      }
+    if (session?.user.accessibleRoutes.includes("ADM")) {
+      getOSsToReceive();
     }
-  }, []);
+  }, [session]);
   console.log(oss);
   return (
     <div className="p-6 grow">

@@ -93,8 +93,8 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                 {msg.text && (
                   <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
                 )}
-                {(credentials.accessibleRoutes.includes("O&M") ||
-                  credentials.accessibleRoutes.includes("Obras") ||
+                {(credentials?.accessibleRoutes.includes("O&M") ||
+                  credentials?.accessibleRoutes.includes("Obras") ||
                   editor) && (
                   <button
                     onClick={handleChanges}
@@ -2928,16 +2928,16 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   </div>
                 </div>
               </div>
-              {credentials.accessibleRoutes.includes("O&M") ||
-              credentials.accessibleRoutes.includes("Obras") ? (
+              {credentials?.accessibleRoutes.includes("O&M") ||
+              credentials?.accessibleRoutes.includes("Obras") ? (
                 <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                     ORDENS DE SERVIÇO
                   </span>
                   <OSCreationBlock
                     editor={
-                      credentials.accessibleRoutes.includes("O&M") ||
-                      credentials.accessibleRoutes.includes("Obras")
+                      credentials?.accessibleRoutes.includes("O&M") ||
+                      credentials?.accessibleRoutes.includes("Obras")
                     }
                     qtde={project.qtde}
                     nomeDoContrato={project.nomeDoContrato}
@@ -3334,8 +3334,8 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <DateInput
                     label={"Usina Ligada"}
                     editable={
-                      credentials.accessibleRoutes.includes("O&M") ||
-                      credentials.accessibleRoutes.includes("Obras")
+                      credentials?.accessibleRoutes.includes("O&M") ||
+                      credentials?.accessibleRoutes.includes("Obras")
                     }
                     value={
                       infoHolder.conferencias.usinaLigada.data != undefined &&
@@ -3369,8 +3369,8 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <DateInput
                     label={"Monitoramento feito"}
                     editable={
-                      credentials.accessibleRoutes.includes("O&M") ||
-                      credentials.accessibleRoutes.includes("Obras")
+                      credentials?.accessibleRoutes.includes("O&M") ||
+                      credentials?.accessibleRoutes.includes("Obras")
                     }
                     value={
                       infoHolder.conferencias.monitoramentoFeito.data !=
@@ -3407,8 +3407,8 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <DateInput
                     label={"Data APP no celular"}
                     editable={
-                      credentials.accessibleRoutes.includes("O&M") ||
-                      credentials.accessibleRoutes.includes("Obras")
+                      credentials?.accessibleRoutes.includes("O&M") ||
+                      credentials?.accessibleRoutes.includes("Obras")
                     }
                     value={
                       infoHolder.app.data != undefined &&
@@ -3436,8 +3436,8 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <DateInput
                     label={"Energia Injetada"}
                     editable={
-                      credentials.accessibleRoutes.includes("O&M") ||
-                      credentials.accessibleRoutes.includes("Obras")
+                      credentials?.accessibleRoutes.includes("O&M") ||
+                      credentials?.accessibleRoutes.includes("Obras")
                     }
                     value={
                       infoHolder.conferencias.energiaInjetada.data !=
@@ -3474,8 +3474,8 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     value={infoHolder.app.login ? infoHolder.app.login : ""}
                     normalCase={true}
                     editable={
-                      credentials.accessibleRoutes.includes("O&M") ||
-                      credentials.accessibleRoutes.includes("Obras")
+                      credentials?.accessibleRoutes.includes("O&M") ||
+                      credentials?.accessibleRoutes.includes("Obras")
                     }
                     handleChange={(value) => {
                       setChanges({
@@ -3494,8 +3494,8 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <TextInput
                     label={"SENHA NO APP"}
                     editable={
-                      credentials.accessibleRoutes.includes("O&M") ||
-                      credentials.accessibleRoutes.includes("Obras")
+                      credentials?.accessibleRoutes.includes("O&M") ||
+                      credentials?.accessibleRoutes.includes("Obras")
                     }
                     value={infoHolder.app.senha}
                     normalCase={true}
@@ -3516,8 +3516,8 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <DateInput
                     label={"RELATÓRIO 1"}
                     editable={
-                      credentials.accessibleRoutes.includes("O&M") ||
-                      credentials.accessibleRoutes.includes("Obras")
+                      credentials?.accessibleRoutes.includes("O&M") ||
+                      credentials?.accessibleRoutes.includes("Obras")
                     }
                     value={
                       infoHolder.relatorios.envioUm.data != undefined &&
@@ -3550,8 +3550,8 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <DateInput
                     label={"RELATÓRIO 2"}
                     editable={
-                      credentials.accessibleRoutes.includes("O&M") ||
-                      credentials.accessibleRoutes.includes("Obras")
+                      credentials?.accessibleRoutes.includes("O&M") ||
+                      credentials?.accessibleRoutes.includes("Obras")
                     }
                     value={
                       infoHolder.relatorios.envioDois.data != undefined &&
@@ -3584,8 +3584,8 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <DateInput
                     label={"RELATÓRIO 3"}
                     editable={
-                      credentials.accessibleRoutes.includes("O&M") ||
-                      credentials.accessibleRoutes.includes("Obras")
+                      credentials?.accessibleRoutes.includes("O&M") ||
+                      credentials?.accessibleRoutes.includes("Obras")
                     }
                     value={
                       infoHolder.relatorios.envioTres.data != undefined &&
@@ -3618,8 +3618,8 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <DateInput
                     label={"RELATÓRIO 4"}
                     editable={
-                      credentials.accessibleRoutes.includes("O&M") ||
-                      credentials.accessibleRoutes.includes("Obras")
+                      credentials?.accessibleRoutes.includes("O&M") ||
+                      credentials?.accessibleRoutes.includes("Obras")
                     }
                     value={
                       infoHolder.relatorios.envioQuatro.data != undefined &&
@@ -3652,8 +3652,8 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <DateInput
                     label={"MANUTENÇÃO PREVENTIVA"}
                     editable={
-                      credentials.accessibleRoutes.includes("O&M") ||
-                      credentials.accessibleRoutes.includes("Obras")
+                      credentials?.accessibleRoutes.includes("O&M") ||
+                      credentials?.accessibleRoutes.includes("Obras")
                     }
                     value={
                       infoHolder.manutencaoPreventiva.data != undefined &&

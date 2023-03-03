@@ -116,12 +116,12 @@ function ModalProjetos({
       ) {
         infoHolder.ordensDeServico.push({
           ...osInfo,
-          usuarioEmissor: credentials.nome,
+          usuarioEmissor: credentials?.name,
           index: infoHolder.ordensDeServico?.length,
         });
         arr = infoHolder.ordensDeServico;
       } else {
-        arr = [{ ...osInfo, usuarioEmissor: credentials.nome, index: 0 }];
+        arr = [{ ...osInfo, usuarioEmissor: credentials?.name, index: 0 }];
       }
       axios
         .post("/api/ordensDeServico", { id: project._id, arr: arr })

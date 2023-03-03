@@ -792,7 +792,7 @@ function ModalSuprimentos({
                       });
                     }}
                   />
-                  {credentials.visualizacao == undefined && (
+                  {credentials?.visualizacao == undefined && (
                     <NumberInput
                       tag={"R$"}
                       label={"VALOR DO PROJETO"}
@@ -1119,7 +1119,7 @@ function ModalSuprimentos({
                     });
                   }}
                 />
-                {credentials.visualizacao == undefined && (
+                {credentials?.visualizacao == undefined && (
                   <NumberInput
                     tag={"R$"}
                     label={"VALOR DO KIT"}

@@ -6,9 +6,16 @@ import Select from "react-select";
 import { AiOutlineSearch } from "react-icons/ai";
 import { cidadesAtendidas, vendedores } from "../../utils/constants";
 import { AppContext } from "../../context/AppContext";
+import { useSession } from "next-auth/react";
+import LoadingPage from "../../components/utils/LoadingPage";
 function Posvenda() {
   const router = useRouter();
-  const { credentials, setCredentials } = useContext(AppContext);
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/auth/authHome");
+    },
+  });
   const [stats, setStats] = useState({
     assinatura: {
       confeccionar: 0,
@@ -154,252 +161,258 @@ function Posvenda() {
   }
   useEffect(() => {
     if (
-      !credentials.accessibleRoutes.includes("Marketing") &&
-      !credentials.accessibleRoutes.includes("Pós-Venda")
+      session?.user.accessibleRoutes.includes("Pós-Venda") ||
+      session?.user.accessibleRoutes.includes("Marketing")
     ) {
-      router.push("/");
-    } else {
       getProjects();
+    } else {
+      if (session?.user) return router.push("/");
     }
-  }, []);
-  return (
-    <div className="p-6 grow">
-      <div className="flex flex-col gap-y-2 items-center justify-center border-b border-gray-200 p-1">
-        <div className="flex items-center gap-x-2">
-          <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
-            Projetos em jornada
-          </p>
-          <p className="font-raleway font-bold text-[#fead61]">
-            ({filteredProjects.length})
-          </p>
-        </div>
-        <div className="flex items-center w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
-          <div className="flex items-center justify-between px-12 w-full">
-            <p className="font-bold text-[#15599a]">
-              DOCUMENTAÇÕES A CONFECCIONAR: {stats.assinatura.confeccionar}
+  }, [session]);
+  if (status == "loading") return <LoadingPage />;
+  if (status == "authenticated") {
+    return (
+      <div className="p-6 grow">
+        <div className="flex flex-col gap-y-2 items-center justify-center border-b border-gray-200 p-1">
+          <div className="flex items-center gap-x-2">
+            <p className="font-bold uppercase text-2xl text-[#15599a] font-raleway">
+              Projetos em jornada
             </p>
-            <p className="font-bold text-[#15599a]">
-              DOCUMENTAÇÕES PARA ASSINAR: {stats.assinatura.paraAssinar}
+            <p className="font-raleway font-bold text-[#fead61]">
+              ({filteredProjects.length})
             </p>
           </div>
-        </div>
-        <div className="flex flex-wrap justify-center gap-2 items-center">
-          <button
-            onClick={() => setCardMode(!cardMode)}
-            className="font-bold bg-[#15599a] w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
-          >
-            {cardMode ? "MODO CARD" : "MODO LISTA"}
-          </button>
-          <button
-            onClick={() => filterByNoRecentContact(!filters.noContactFilter)}
-            className="font-bold bg-[#15599a] w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
-          >
-            SEM CONTATO RECENTE
-          </button>
-          <button
-            onClick={ordenate}
-            className="font-bold bg-[#15599a] w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
-          >
-            ORDENAR
-          </button>
-        </div>
-        <div className="flex flex-wrap justify-center gap-2 items-center">
-          <Select
-            isMulti
-            placeholder="CIDADE"
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                cidadeFilter: e.map((x) => x.value),
-              })
-            }
-            options={cidadesAtendidas.map((cidade) => {
-              return {
-                label: cidade,
-                value: cidade,
-              };
-            })}
-          />
-          <Select
-            isMulti
-            placeholder="VENDEDOR"
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                vendedorFilter: e.map((x) => x.value),
-              })
-            }
-            options={vendedores.map((vendedor) => {
-              return {
-                label: vendedor.nome,
-                value: vendedor.nome,
-              };
-            })}
-          />
-          <Select
-            isMulti
-            className="hidden lg:block"
-            placeholder="STATUS CONTRATO"
-            onChange={(e) =>
-              setFilters({
-                ...filters,
-                contratoFilter: e.map((x) => x.value),
-              })
-            }
-            options={[
-              {
-                value: "AGUARDANDO SOLICITAÇÃO",
-                label: "AGUARDANDO SOLICITAÇÃO",
-              },
-              {
-                value: "NÃO ASSINADO",
-                label: "NÃO ASSINADO",
-              },
-              {
-                value: "ASSINADO",
-                label: "ASSINADO",
-              },
-            ]}
-          />
-          <input
-            type="number"
-            placeholder="NºModulos"
-            className={
-              "outline-none p-1.5 text-center rounded border border-gray-200 placeholder:italic"
-            }
-            value={filters.numModulos}
-            onChange={(e) =>
-              setFilters({ ...filters, numModulos: Number(e.target.value) })
-            }
-          />
-          <div
-            onClick={() =>
-              setFilters({
-                ...filters,
-                entregaTecnicaPendente: !filters.entregaTecnicaPendente,
-              })
-            }
-            className={`${
-              filters.entregaTecnicaPendente ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-          >
-            ENTREGA TÉCNICA PENDENTE
-          </div>
-          <input
-            className="outline-none p-1.5 w-[300px] rounded border border-gray-200 placeholder:italic"
-            placeholder="Digite o nome do contrato"
-            value={searchFilter}
-            onChange={(e) => handleSearchFilter(e.target.value)}
-          />
-          <div
-            onClick={() =>
-              setFilters({ ...filters, assinFaltando: !filters.assinFaltando })
-            }
-            className={`${
-              filters.assinFaltando ? "bg-[#15599a]" : "bg-blue-300"
-            } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-          >
-            ASSINATURA PENDENTE
-          </div>
-          <div className="hidden lg:flex gap-x-2">
-            <div className="flex flex-col w-fit items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">
-                Depois de:
-              </span>
-              <input
-                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                type="date"
-                value={
-                  dateFilter.after &&
-                  new Date(dateFilter.after).toISOString().slice(0, 10)
-                }
-                onChange={(e) =>
-                  setDateFilter({
-                    ...dateFilter,
-                    after: isNaN(e.target.value)
-                      ? new Date(e.target.value).toISOString()
-                      : null,
-                  })
-                }
-              />
+          <div className="flex items-center w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
+            <div className="flex items-center justify-between px-12 w-full">
+              <p className="font-bold text-[#15599a]">
+                DOCUMENTAÇÕES A CONFECCIONAR: {stats.assinatura.confeccionar}
+              </p>
+              <p className="font-bold text-[#15599a]">
+                DOCUMENTAÇÕES PARA ASSINAR: {stats.assinatura.paraAssinar}
+              </p>
             </div>
-            <div className="flex flex-col w-fit items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">
-                Antes de:
-              </span>
-              <input
-                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                type="date"
-                value={
-                  dateFilter.before &&
-                  new Date(dateFilter.before).toISOString().slice(0, 10)
-                }
-                onChange={(e) =>
-                  setDateFilter({
-                    ...dateFilter,
-                    before: isNaN(e.target.value)
-                      ? new Date(e.target.value).toISOString()
-                      : null,
-                  })
-                }
-              />
-            </div>
+          </div>
+          <div className="flex flex-wrap justify-center gap-2 items-center">
+            <button
+              onClick={() => setCardMode(!cardMode)}
+              className="font-bold bg-[#15599a] w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+            >
+              {cardMode ? "MODO CARD" : "MODO LISTA"}
+            </button>
+            <button
+              onClick={() => filterByNoRecentContact(!filters.noContactFilter)}
+              className="font-bold bg-[#15599a] w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+            >
+              SEM CONTATO RECENTE
+            </button>
+            <button
+              onClick={ordenate}
+              className="font-bold bg-[#15599a] w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+            >
+              ORDENAR
+            </button>
+          </div>
+          <div className="flex flex-wrap justify-center gap-2 items-center">
             <Select
-              isMulti={false}
-              placeholder={"CAMPO DE FILTRO"}
-              options={[
-                { label: "SAÍDA DE OBRA", value: "obra.saida" },
-                { label: "TROCA DO MEDIDOR", value: "medidor.data" },
-                {
-                  label: "DATA ASS.CONTRATO",
-                  value: "contrato.dataAssinatura",
-                },
-                {
-                  label: "DATA LIB.DOCUMENTAÇÃO",
-                  value: "projeto.dataLiberacaoDocumentacao",
-                },
-                {
-                  label: "PREVISÃO DE ENTREGA",
-                  value: "compra.previsaoEntrega",
-                },
-                { label: "NÃO DEFINIDO", value: null },
-              ]}
+              isMulti
+              placeholder="CIDADE"
               onChange={(e) =>
-                setDateFilter({
-                  ...dateFilter,
-                  field1: e.value != null ? e.value.split(".")[0] : null,
-                  field2: e.value != null ? e.value.split(".")[1] : null,
+                setFilters({
+                  ...filters,
+                  cidadeFilter: e.map((x) => x.value),
                 })
               }
+              options={cidadesAtendidas.map((cidade) => {
+                return {
+                  label: cidade,
+                  value: cidade,
+                };
+              })}
             />
+            <Select
+              isMulti
+              placeholder="VENDEDOR"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  vendedorFilter: e.map((x) => x.value),
+                })
+              }
+              options={vendedores.map((vendedor) => {
+                return {
+                  label: vendedor.nome,
+                  value: vendedor.nome,
+                };
+              })}
+            />
+            <Select
+              isMulti
+              className="hidden lg:block"
+              placeholder="STATUS CONTRATO"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  contratoFilter: e.map((x) => x.value),
+                })
+              }
+              options={[
+                {
+                  value: "AGUARDANDO SOLICITAÇÃO",
+                  label: "AGUARDANDO SOLICITAÇÃO",
+                },
+                {
+                  value: "NÃO ASSINADO",
+                  label: "NÃO ASSINADO",
+                },
+                {
+                  value: "ASSINADO",
+                  label: "ASSINADO",
+                },
+              ]}
+            />
+            <input
+              type="number"
+              placeholder="NºModulos"
+              className={
+                "outline-none p-1.5 text-center rounded border border-gray-200 placeholder:italic"
+              }
+              value={filters.numModulos}
+              onChange={(e) =>
+                setFilters({ ...filters, numModulos: Number(e.target.value) })
+              }
+            />
+            <div
+              onClick={() =>
+                setFilters({
+                  ...filters,
+                  entregaTecnicaPendente: !filters.entregaTecnicaPendente,
+                })
+              }
+              className={`${
+                filters.entregaTecnicaPendente ? "bg-[#15599a]" : "bg-blue-300"
+              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            >
+              ENTREGA TÉCNICA PENDENTE
+            </div>
+            <input
+              className="outline-none p-1.5 w-[300px] rounded border border-gray-200 placeholder:italic"
+              placeholder="Digite o nome do contrato"
+              value={searchFilter}
+              onChange={(e) => handleSearchFilter(e.target.value)}
+            />
+            <div
+              onClick={() =>
+                setFilters({
+                  ...filters,
+                  assinFaltando: !filters.assinFaltando,
+                })
+              }
+              className={`${
+                filters.assinFaltando ? "bg-[#15599a]" : "bg-blue-300"
+              } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            >
+              ASSINATURA PENDENTE
+            </div>
+            <div className="hidden lg:flex gap-x-2">
+              <div className="flex flex-col w-fit items-center">
+                <span className="uppercase font-bold font-raleway text-center text-sm">
+                  Depois de:
+                </span>
+                <input
+                  className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                  type="date"
+                  value={
+                    dateFilter.after &&
+                    new Date(dateFilter.after).toISOString().slice(0, 10)
+                  }
+                  onChange={(e) =>
+                    setDateFilter({
+                      ...dateFilter,
+                      after: isNaN(e.target.value)
+                        ? new Date(e.target.value).toISOString()
+                        : null,
+                    })
+                  }
+                />
+              </div>
+              <div className="flex flex-col w-fit items-center">
+                <span className="uppercase font-bold font-raleway text-center text-sm">
+                  Antes de:
+                </span>
+                <input
+                  className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                  type="date"
+                  value={
+                    dateFilter.before &&
+                    new Date(dateFilter.before).toISOString().slice(0, 10)
+                  }
+                  onChange={(e) =>
+                    setDateFilter({
+                      ...dateFilter,
+                      before: isNaN(e.target.value)
+                        ? new Date(e.target.value).toISOString()
+                        : null,
+                    })
+                  }
+                />
+              </div>
+              <Select
+                isMulti={false}
+                placeholder={"CAMPO DE FILTRO"}
+                options={[
+                  { label: "SAÍDA DE OBRA", value: "obra.saida" },
+                  { label: "TROCA DO MEDIDOR", value: "medidor.data" },
+                  {
+                    label: "DATA ASS.CONTRATO",
+                    value: "contrato.dataAssinatura",
+                  },
+                  {
+                    label: "DATA LIB.DOCUMENTAÇÃO",
+                    value: "projeto.dataLiberacaoDocumentacao",
+                  },
+                  {
+                    label: "PREVISÃO DE ENTREGA",
+                    value: "compra.previsaoEntrega",
+                  },
+                  { label: "NÃO DEFINIDO", value: null },
+                ]}
+                onChange={(e) =>
+                  setDateFilter({
+                    ...dateFilter,
+                    field1: e.value != null ? e.value.split(".")[0] : null,
+                    field2: e.value != null ? e.value.split(".")[1] : null,
+                  })
+                }
+              />
+            </div>
+            <button
+              onClick={filterProjects}
+              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
+            >
+              <p>Filtrar</p>
+              <AiOutlineSearch />
+            </button>
           </div>
-          <button
-            onClick={filterProjects}
-            className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
-          >
-            <p>Filtrar</p>
-            <AiOutlineSearch />
-          </button>
+        </div>
+        <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
+          {filteredProjects.map((project, index) => (
+            <PosVendaCard
+              getUpdates={getProjects}
+              editor={
+                session?.user?.accessibleRoutes.includes("Pós-Venda") &&
+                session?.user?.visualizacao == undefined
+                  ? true
+                  : false
+              }
+              key={project._id}
+              project={project}
+              cardMode={cardMode}
+            />
+          ))}
         </div>
       </div>
-      <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-        {filteredProjects.map((project, index) => (
-          <PosVendaCard
-            getUpdates={getProjects}
-            editor={
-              credentials?.accessibleRoutes.includes("Pós-Venda") &&
-              credentials.visualizacao == undefined
-                ? true
-                : false
-            }
-            key={project._id}
-            project={project}
-            cardMode={cardMode}
-          />
-        ))}
-      </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default Posvenda;

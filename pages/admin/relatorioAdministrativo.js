@@ -1,16 +1,21 @@
 import axios from "axios";
 import dayjs from "dayjs";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import Select from "react-select";
-import { AppContext } from "../../context/AppContext";
 import { cidadesAtendidas, vendedores } from "../../utils/constants";
 
 function Acompanhamento() {
   const router = useRouter();
-  const { credentials, setCredentials } = useContext(AppContext);
-  console.log(credentials);
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/auth/authHome");
+    },
+  });
+
   const [info, setInfo] = useState([]);
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -561,15 +566,13 @@ function Acompanhamento() {
     };
   }
   useEffect(() => {
-    if (credentials) {
-      if (credentials.manager == true) {
-        getInfo();
-      } else {
-        router.push("/");
-      }
+    if (session?.user.manager == true) {
+      getInfo();
+    } else {
+      if (session.user) return router.push("/");
     }
-  }, []);
-  if (credentials.manager == true)
+  }, [session]);
+  if (session.user?.manager == true)
     return (
       <div className="grow p-6 flex flex-col gap-2">
         <div className="flex flex-col items-center border-b border-gray-200 py-2">

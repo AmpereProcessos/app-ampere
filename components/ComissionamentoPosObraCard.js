@@ -14,8 +14,8 @@ function ComissionamentoPosObraCard({ project, index }) {
   const [msg, setMsg] = useState({ text: "", color: "" });
   function handleChanges() {
     if (
-      credentials.visualizacao == "REGIONAL" ||
-      credentials.visualizacao == "VENDEDOR"
+      credentials?.visualizacao == "REGIONAL" ||
+      credentials?.visualizacao == "VENDEDOR"
     ) {
       setMsg({
         text: "Seu usuário não tem permissão de alteração nessa área.",

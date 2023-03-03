@@ -37,7 +37,7 @@ function OSCreationBlock({
   });
   async function handleOSCreation() {
     var arr;
-    if (!credentials.controller) {
+    if (!credentials?.controller) {
       setOsMsg({
         text: "Usuário não autorizado para geração de OSs.",
         color: "text-red-500",
@@ -47,7 +47,7 @@ function OSCreationBlock({
         if (ordensDeServico != undefined && ordensDeServico?.length > 0) {
           ordensDeServico.push({
             ...osInfo,
-            usuarioEmissor: credentials.nome,
+            usuarioEmissor: credentials?.name,
             index: ordensDeServico?.length,
             cobrancaRealizada: false,
           });
@@ -56,7 +56,7 @@ function OSCreationBlock({
           arr = [
             {
               ...osInfo,
-              usuarioEmissor: credentials.nome,
+              usuarioEmissor: credentials?.name,
               index: 0,
               cobrancaRealizada: false,
             },
@@ -67,7 +67,7 @@ function OSCreationBlock({
           await axios.post("/api/calls/adm/mainData", {
             codigoProjeto: qtde,
             nomeCliente: nomeDoContrato,
-            usuarioEmissor: credentials.nome,
+            usuarioEmissor: credentials?.name,
             demanda: "COBRANÇA",
             valor: osInfo.valorCobranca,
             servico: `${osInfo.categoria} - ${osInfo.servicoExecutado}`,
@@ -77,7 +77,7 @@ function OSCreationBlock({
           await axios.post("/api/calls/adm/mainData", {
             codigoProjeto: qtde,
             nomeCliente: nomeDoContrato,
-            usuarioEmissor: credentials.nome,
+            usuarioEmissor: credentials?.name,
             demanda: "PAGAMENTO",
             nomeRecebedor: osInfo.nomeTerceiro,
             valor: osInfo.valorPagamentoTerceiro,
@@ -102,7 +102,7 @@ function OSCreationBlock({
           });
           // handleUpdates({
           //   ...osInfo,
-          //   usuarioEmissor: credentials.nome,
+          //   usuarioEmissor: credentials?.name,
           //   index: ordensDeServico?.length,
           //   cobrancaRealizada: false,
           // });

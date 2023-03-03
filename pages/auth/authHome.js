@@ -2,35 +2,67 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import EmptyLogo from "../../utils/empty-logo.png";
-import axios from "axios";
-import { useContext } from "react";
-import { AppContext } from "../../context/AppContext";
+import { signIn } from "next-auth/react";
 function Auth() {
-  const { setCredentials, credentials } = useContext(AppContext);
   const router = useRouter();
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  function handleLogin() {
-    axios.post("/api/auth/login", { email: user, password }).then((res) => {
-      if (res.data.error) {
-        setMessage(res.data.error);
-      } else {
-        if (res.data.credentials._id) {
-          let currentHour = new Date().getHours();
-          let fixedDateInMS = new Date().setHours(currentHour + 3);
-          localStorage.setItem(
-            "credentials",
-            JSON.stringify({
-              ...res.data.credentials,
-              maxSessionTime: new Date(fixedDateInMS).toISOString(),
-            })
-          );
-          setCredentials(res.data.credentials);
+  const [message, setMessage] = useState({ text: "", color: "" });
+  // function handleLogin() {
+  //   axios.post("/api/auth/login", { email: user, password }).then((res) => {
+  //     if (res.data.error) {
+  //       setMessage(res.data.error);
+  //     } else {
+  //       if (res.data.credentials?.id) {
+  //         let currentHour = new Date().getHours();
+  //         let fixedDateInMS = new Date().setHours(currentHour + 3);
+  //         localStorage.setItem(
+  //           "credentials",
+  //           JSON.stringify({
+  //             ...res.data.credentials,
+  //             maxSessionTime: new Date(fixedDateInMS).toISOString(),
+  //           })
+  //         );
+  //         setCredentials(res.data.credentials);
+  //         router.push("/");
+  //       }
+  //     }
+  //   });
+  // }
+  async function handleSignIn(e) {
+    e.preventDefault();
+    if (user.trim().length == 0) {
+      setMessage({
+        text: "Por favor, preencha um email válido",
+        color: "text-red-500",
+      });
+      return;
+    } else if (password.trim().length == 0) {
+      setMessage({
+        text: "Por favor, preencha uma senha válida",
+        color: "text-red-500",
+      });
+      return;
+    } else {
+      setMessage({
+        text: "Aguarde um segundo enquanto validamos suas credenciais.",
+        color: "text-[#15599a]",
+      });
+      let res = await signIn("credentials", {
+        email: user,
+        password: password,
+        redirect: false,
+      });
+      if (res.status == 200) {
+        setMessage({ text: "Redirecionando...", color: "text-green-500" });
+        setTimeout(async () => {
           router.push("/");
-        }
+        }, 500);
+      } else {
+        console.log(res);
+        setMessage({ text: res.error, color: "text-red-500" });
       }
-    });
+    }
   }
   return (
     <section className="h-screen">
@@ -59,19 +91,21 @@ function Auth() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <div className="text-center lg:text-left">
+              <div className="flex items-center justify-start gap-2">
                 <button
                   type="button"
                   className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-                  onClick={handleLogin}
+                  onClick={handleSignIn}
                 >
                   Login
                 </button>
+                {message.text ? (
+                  <p className={`text-lg text-center ${message.color}`}>
+                    {message.text}
+                  </p>
+                ) : null}
               </div>
             </form>
-            <div className="text-lg text-center text-red-500">
-              {message && message}
-            </div>
           </div>
         </div>
       </div>

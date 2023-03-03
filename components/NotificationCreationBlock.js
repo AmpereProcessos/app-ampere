@@ -13,8 +13,8 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
 
   const [notInfo, setNotInfo] = useState({
     destinatario: null,
-    remetente: credentials.nome,
-    remetenteId: credentials._id,
+    remetente: credentials?.name,
+    remetenteId: credentials?.id,
     mensagem: "",
     projetoReferencia: codProjeto,
     nomeDoProjeto: nomeDoProjeto,
@@ -30,7 +30,7 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
           setDestinatarioNome("NÃO DEFINIDO");
           setNotInfo({
             destinatario: null,
-            remetente: credentials.nome,
+            remetente: credentials?.name,
             mensagem: "",
             projetoReferencia: codProjeto,
           });

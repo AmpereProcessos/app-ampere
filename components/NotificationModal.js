@@ -29,8 +29,8 @@ function NotificationModal() {
   const [not, setNot] = useState(notificacoes);
   const [info, setInfo] = useState({
     destinatario: null,
-    remetente: credentials.nome,
-    remetenteId: credentials._id,
+    remetente: credentials?.name,
+    remetenteId: credentials?.id,
     mensagem: "",
     projetoReferencia: null,
     nomeDoProjeto: null,
@@ -45,8 +45,8 @@ function NotificationModal() {
           setTimeout(() => {
             setInfo({
               destinatario: null,
-              remetente: credentials.nome,
-              remetenteId: credentials._id,
+              remetente: credentials?.name,
+              remetenteId: credentials?.id,
               mensagem: "",
               projetoReferencia: null,
               nomeDoProjeto: null,
@@ -71,14 +71,14 @@ function NotificationModal() {
       .put("/api/notificacoes/1", {
         id: id,
       })
-      .then((res) => getNotificacoes(credentials._id));
+      .then((res) => getNotificacoes(credentials?.id));
   }
   function setAsRead(id, index) {
     let arr = [...not];
     arr[index].lido = true;
     setNot([...arr]);
     updateNotifications(id);
-    getNotificacoes(credentials._id);
+    getNotificacoes(credentials?.id);
   }
   console.log(info);
   return (
@@ -148,8 +148,8 @@ function NotificationModal() {
                       onClick={() =>
                         setInfo({
                           destinatario: notificacao.remetenteId,
-                          remetente: credentials.nome,
-                          remetenteId: credentials._id,
+                          remetente: credentials?.name,
+                          remetenteId: credentials?.id,
                           projetoReferencia: notificacao.projetoReferencia,
                           nomeDoProjeto: notificacao.nomeDoProjeto,
                         })

@@ -12,11 +12,12 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { GiPoliceBadge } from "react-icons/gi";
 import ModalOeM from "../../components/ModalOeM";
 import Link from "next/link";
-import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
 import SelectInput from "../../components/SelectInput";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSession } from "next-auth/react";
+import LoadingPage from "../../components/utils/LoadingPage";
 const statusStyles = {
   REALIZADO: {
     textColor: "text-green-500",
@@ -27,7 +28,12 @@ const statusStyles = {
 };
 function OeM({ users }) {
   const router = useRouter();
-  const { credentials, setCredentials } = useContext(AppContext);
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/auth/authHome");
+    },
+  });
 
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
 
@@ -263,118 +269,154 @@ function OeM({ users }) {
   }
   useEffect(() => {
     if (
-      !credentials.accessibleRoutes.includes("O&M") &&
-      !credentials.accessibleRoutes.includes("Marketing")
+      session?.user.accessibleRoutes.includes("O&M") ||
+      session?.user.accessibleRoutes.includes("Marketing")
     ) {
-      router.push("/");
+      getProjects(session.user);
     } else {
-      getProjects(credentials);
+      if (session?.user) return router.push("/");
     }
-  }, []);
-  return (
-    <div className="p-6 grow">
-      <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-2 font-['Roboto']">
-            <p className="font-bold uppercase text-2xl text-[#15599a] text-center">
-              Projetos no estágio de O&M
-            </p>
-            <p className="font-bold text-[#fead61]">
-              ({filteredProjects.length})
-            </p>
-            {filteredProjects && (
-              <p className="font-bold text-[#fead61]">
-                ({getListCumulativeModules().replace(".", ",")} módulos)
+  }, [session]);
+
+  if (status == "loading") return <LoadingPage />;
+  if (status == "authenticated") {
+    return (
+      <div className="p-6 grow">
+        <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-2 font-['Roboto']">
+              <p className="font-bold uppercase text-2xl text-[#15599a] text-center">
+                Projetos no estágio de O&M
               </p>
+              <p className="font-bold text-[#fead61]">
+                ({filteredProjects.length})
+              </p>
+              {filteredProjects && (
+                <p className="font-bold text-[#fead61]">
+                  ({getListCumulativeModules().replace(".", ",")} módulos)
+                </p>
+              )}
+            </div>
+            {dropdownMenuVisible ? (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropupCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setDropdownMenuVisible(false)}
+                />
+              </div>
+            ) : (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropdownCircle
+                  style={{ fontSize: "25px" }}
+                  onClick={() => setDropdownMenuVisible(true)}
+                />
+              </div>
             )}
           </div>
-          {dropdownMenuVisible ? (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-              <IoMdArrowDropupCircle
-                style={{ fontSize: "25px" }}
-                onClick={() => setDropdownMenuVisible(false)}
-              />
-            </div>
-          ) : (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-              <IoMdArrowDropdownCircle
-                style={{ fontSize: "25px" }}
-                onClick={() => setDropdownMenuVisible(true)}
-              />
-            </div>
-          )}
-        </div>
-        <AnimatePresence>
-          {dropdownMenuVisible ? (
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0.6 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="flex flex-col w-full gap-y-2 mt-4"
-            >
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                <input
-                  className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
-                  placeholder="DIGITE O NOME DO CONTRATO"
-                  value={searchFilter}
-                  onChange={(e) => handleSearchFilter(e.target.value)}
-                />
-                <input
-                  type="number"
-                  placeholder="> NºMÓDULOS"
-                  className="outline-none p-1.5 w-full lg:w-[150px] rounded border border-gray-200 placeholder:italic"
-                  value={filters.numModulos}
-                  onChange={(e) =>
-                    setFilters({
-                      ...filters,
-                      numModulos: Number(e.target.value),
-                    })
-                  }
-                />
-                <div className="flex gap-x-2 flex-wrap justify-center">
-                  <div className="flex flex-col w-fit items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      Depois de:
-                    </span>
-                    <input
-                      className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                      type="date"
-                      value={
-                        dateFilter.after &&
-                        new Date(dateFilter.after).toISOString().slice(0, 10)
-                      }
-                      onChange={(e) =>
-                        setDateFilter({
-                          ...dateFilter,
-                          after: isNaN(e.target.value)
-                            ? new Date(e.target.value).toISOString()
-                            : null,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="flex flex-col w-fit items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      Antes de:
-                    </span>
-                    <input
-                      className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                      type="date"
-                      value={
-                        dateFilter.before &&
-                        new Date(dateFilter.before).toISOString().slice(0, 10)
-                      }
-                      onChange={(e) =>
-                        setDateFilter({
-                          ...dateFilter,
-                          before: isNaN(e.target.value)
-                            ? new Date(e.target.value).toISOString()
-                            : null,
-                        })
-                      }
-                    />
+          <AnimatePresence>
+            {dropdownMenuVisible ? (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0.6 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="flex flex-col w-full gap-y-2 mt-4"
+              >
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <input
+                    className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                    placeholder="DIGITE O NOME DO CONTRATO"
+                    value={searchFilter}
+                    onChange={(e) => handleSearchFilter(e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    placeholder="> NºMÓDULOS"
+                    className="outline-none p-1.5 w-full lg:w-[150px] rounded border border-gray-200 placeholder:italic"
+                    value={filters.numModulos}
+                    onChange={(e) =>
+                      setFilters({
+                        ...filters,
+                        numModulos: Number(e.target.value),
+                      })
+                    }
+                  />
+                  <div className="flex gap-x-2 flex-wrap justify-center">
+                    <div className="flex flex-col w-fit items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        Depois de:
+                      </span>
+                      <input
+                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                        type="date"
+                        value={
+                          dateFilter.after &&
+                          new Date(dateFilter.after).toISOString().slice(0, 10)
+                        }
+                        onChange={(e) =>
+                          setDateFilter({
+                            ...dateFilter,
+                            after: isNaN(e.target.value)
+                              ? new Date(e.target.value).toISOString()
+                              : null,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col w-fit items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        Antes de:
+                      </span>
+                      <input
+                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                        type="date"
+                        value={
+                          dateFilter.before &&
+                          new Date(dateFilter.before).toISOString().slice(0, 10)
+                        }
+                        onChange={(e) =>
+                          setDateFilter({
+                            ...dateFilter,
+                            before: isNaN(e.target.value)
+                              ? new Date(e.target.value).toISOString()
+                              : null,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti={false}
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        placeholder={"CAMPO DE FILTRO"}
+                        options={[
+                          { label: "SAÍDA DE OBRA", value: "obra.saida" },
+                          { label: "TROCA DO MEDIDOR", value: "medidor.data" },
+                          {
+                            label: "DATA MANUTENÇÃO",
+                            value: "manutencaoPreventiva.data",
+                          },
+                          { label: "NÃO DEFINIDO", value: null },
+                        ]}
+                        onChange={(e) =>
+                          setDateFilter({
+                            ...dateFilter,
+                            field1:
+                              e.value != null ? e.value.split(".")[0] : null,
+                            field2:
+                              e.value != null ? e.value.split(".")[1] : null,
+                          })
+                        }
+                      />
+                    </div>
                   </div>
                   <div className="w-full lg:w-[250px]">
                     <Select
+                      placeholder={"CONDIÇÃO DO O&M"}
                       isMulti={false}
                       styles={{
                         control: (base, state) => ({
@@ -383,391 +425,365 @@ function OeM({ users }) {
                           minHeight: "41px",
                         }),
                       }}
-                      placeholder={"CAMPO DE FILTRO"}
+                      value={filters.condicaoOeM}
                       options={[
-                        { label: "SAÍDA DE OBRA", value: "obra.saida" },
-                        { label: "TROCA DO MEDIDOR", value: "medidor.data" },
+                        { label: "TODOS", value: "TODOS" },
                         {
-                          label: "DATA MANUTENÇÃO",
-                          value: "manutencaoPreventiva.data",
+                          label: "O&M EM VENCIMENTO",
+                          value: "O&M EM VENCIMENTO",
                         },
-                        { label: "NÃO DEFINIDO", value: null },
+                        { label: "O&M VENCIDO", value: "O&M VENCIDO" },
                       ]}
-                      onChange={(e) =>
-                        setDateFilter({
-                          ...dateFilter,
-                          field1:
-                            e.value != null ? e.value.split(".")[0] : null,
-                          field2:
-                            e.value != null ? e.value.split(".")[1] : null,
-                        })
+                      onChange={(item) =>
+                        setFilters({ ...filters, condicaoOeM: item.value })
                       }
                     />
                   </div>
                 </div>
-                <div className="w-full lg:w-[250px]">
-                  <Select
-                    placeholder={"CONDIÇÃO DO O&M"}
-                    isMulti={false}
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        width: "100%",
-                        minHeight: "41px",
-                      }),
-                    }}
-                    value={filters.condicaoOeM}
-                    options={[
-                      { label: "TODOS", value: "TODOS" },
-                      {
-                        label: "O&M EM VENCIMENTO",
-                        value: "O&M EM VENCIMENTO",
-                      },
-                      { label: "O&M VENCIDO", value: "O&M VENCIDO" },
-                    ]}
-                    onChange={(item) =>
-                      setFilters({ ...filters, condicaoOeM: item.value })
-                    }
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                <div className="w-full lg:w-[250px]">
-                  <Select
-                    isMulti
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        width: "100%",
-                        minHeight: "41px",
-                      }),
-                    }}
-                    placeholder="PLANO DE O&M"
-                    onChange={(e) =>
-                      setFilters({
-                        ...filters,
-                        planoOeM: e.map((x) => x.value),
-                      })
-                    }
-                    options={[
-                      ...oemPlans.map((plano) => plano),
-                      { label: "NÃO DEFINIDO", value: undefined },
-                    ]}
-                  />
-                </div>
-                <div className="w-full lg:w-[250px]">
-                  <Select
-                    isMulti
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        width: "100%",
-                        minHeight: "41px",
-                      }),
-                    }}
-                    placeholder="STATUS DA OBRA"
-                    onChange={(e) =>
-                      setFilters({
-                        ...filters,
-                        obraStatusFilter: e.map((x) => x.value),
-                      })
-                    }
-                    options={[
-                      {
-                        value: "EM ANDAMENTO",
-                        label: "EM ANDAMENTO",
-                      },
-                      {
-                        value: "PAUSADA",
-                        label: "PAUSADA",
-                      },
-                      {
-                        value: "AGENDADA",
-                        label: "AGENDADA",
-                      },
-                      {
-                        value: "AGUARDANDO AGENDAMENTO",
-                        label: "AGUARDANDO AGENDAMENTO",
-                      },
-                    ]}
-                  />
-                </div>
-                <div className="w-full lg:w-[250px]">
-                  <Select
-                    isMulti
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        width: "100%",
-                        minHeight: "41px",
-                      }),
-                    }}
-                    placeholder="USINA LIGADA"
-                    onChange={(e) =>
-                      setFilters({
-                        ...filters,
-                        usinaLigadaFilter: e.map((x) => x.value),
-                      })
-                    }
-                    options={[
-                      { label: "NÃO REALIZADO", value: "NÃO REALIZADO" },
-                      { label: "REALIZADO", value: "REALIZADO" },
-                    ]}
-                  />
-                </div>
-                <div className="w-full lg:w-[250px]">
-                  <Select
-                    isMulti
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        width: "100%",
-                        minHeight: "41px",
-                      }),
-                    }}
-                    placeholder="EQUIP.RESP"
-                    onChange={(e) =>
-                      setFilters({
-                        ...filters,
-                        equipResp: e.map((x) => x.value),
-                      })
-                    }
-                    options={equipesTecnicas.map((equipe) => equipe)}
-                  />
-                </div>
-                <div className="w-full lg:w-[250px]">
-                  <Select
-                    isMulti
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        width: "100%",
-                        minHeight: "41px",
-                      }),
-                    }}
-                    placeholder="CIDADE"
-                    onChange={(e) =>
-                      setFilters({
-                        ...filters,
-                        cidadeFilter: e.map((x) => x.value),
-                      })
-                    }
-                    options={cidadesAtendidas.map((cidade) => {
-                      return {
-                        label: cidade,
-                        value: cidade,
-                      };
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-                <div
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      clienteOeM: !filters.clienteOeM,
-                    })
-                  }
-                  className={`${
-                    filters.clienteOeM ? "bg-[#15599a]" : "bg-blue-300"
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                >
-                  CLIENTES O&M
-                </div>
-                <div
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      appPendente: !filters.appPendente,
-                    })
-                  }
-                  className={`${
-                    filters.appPendente ? "bg-[#15599a]" : "bg-blue-300"
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                >
-                  APP PENDENTE
-                </div>
-                <div
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      ordenarAlfabeticamente: !filters.ordenarAlfabeticamente,
-                    })
-                  }
-                  className={`${
-                    filters.ordenarAlfabeticamente
-                      ? "bg-[#15599a]"
-                      : "bg-blue-300"
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                >
-                  ORDENAR ALFABETICAMENTE
-                </div>
-                <div
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      manutencaoPendente: !filters.manutencaoPendente,
-                    })
-                  }
-                  className={`${
-                    filters.manutencaoPendente ? "bg-[#15599a]" : "bg-blue-300"
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                >
-                  MANUTENÇÃO PENDENTE
-                </div>
-                <div
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      manutencaoAtrasada: !filters.manutencaoAtrasada,
-                    })
-                  }
-                  className={`${
-                    filters.manutencaoAtrasada ? "bg-[#15599a]" : "bg-blue-300"
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                >
-                  MANUTENÇÃO ATRASADA
-                </div>
-                <div
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      limparAteDezembro: !filters.limparAteDezembro,
-                    })
-                  }
-                  className={`${
-                    filters.limparAteDezembro ? "bg-[#15599a]" : "bg-blue-300"
-                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                >
-                  LIMPAR ATÉ DEZEMBRO
-                </div>
-              </div>
-              <div className="flex items-center justify-end gap-x-2">
-                <button
-                  onClick={filterProjects}
-                  className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
-                >
-                  <p>Filtrar</p>
-                  <AiOutlineSearch />
-                </button>
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-      </div>
-      <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-        {filteredProjects.map((project) => (
-          <div
-            onClick={() => {
-              handleOpenModal(project._id);
-            }}
-            key={project._id}
-            className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200  hover:bg-blue-100"
-          >
-            <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
-            <div className="flex flex-col p-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  {project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
-                    <GiPoliceBadge
-                      style={{
-                        fontSize: "20px",
-                        color: "#15599a",
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
                       }}
+                      placeholder="PLANO DE O&M"
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          planoOeM: e.map((x) => x.value),
+                        })
+                      }
+                      options={[
+                        ...oemPlans.map((plano) => plano),
+                        { label: "NÃO DEFINIDO", value: undefined },
+                      ]}
                     />
-                  )}{" "}
-                  <p className="text-xs text-gray-700">
-                    {project.nomeDoContrato}
-                  </p>
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      placeholder="STATUS DA OBRA"
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          obraStatusFilter: e.map((x) => x.value),
+                        })
+                      }
+                      options={[
+                        {
+                          value: "EM ANDAMENTO",
+                          label: "EM ANDAMENTO",
+                        },
+                        {
+                          value: "PAUSADA",
+                          label: "PAUSADA",
+                        },
+                        {
+                          value: "AGENDADA",
+                          label: "AGENDADA",
+                        },
+                        {
+                          value: "AGUARDANDO AGENDAMENTO",
+                          label: "AGUARDANDO AGENDAMENTO",
+                        },
+                      ]}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      placeholder="USINA LIGADA"
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          usinaLigadaFilter: e.map((x) => x.value),
+                        })
+                      }
+                      options={[
+                        { label: "NÃO REALIZADO", value: "NÃO REALIZADO" },
+                        { label: "REALIZADO", value: "REALIZADO" },
+                      ]}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      placeholder="EQUIP.RESP"
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          equipResp: e.map((x) => x.value),
+                        })
+                      }
+                      options={equipesTecnicas.map((equipe) => equipe)}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      placeholder="CIDADE"
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          cidadeFilter: e.map((x) => x.value),
+                        })
+                      }
+                      options={cidadesAtendidas.map((cidade) => {
+                        return {
+                          label: cidade,
+                          value: cidade,
+                        };
+                      })}
+                    />
+                  </div>
                 </div>
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <div
+                    onClick={() =>
+                      setFilters({
+                        ...filters,
+                        clienteOeM: !filters.clienteOeM,
+                      })
+                    }
+                    className={`${
+                      filters.clienteOeM ? "bg-[#15599a]" : "bg-blue-300"
+                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  >
+                    CLIENTES O&M
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters({
+                        ...filters,
+                        appPendente: !filters.appPendente,
+                      })
+                    }
+                    className={`${
+                      filters.appPendente ? "bg-[#15599a]" : "bg-blue-300"
+                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  >
+                    APP PENDENTE
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters({
+                        ...filters,
+                        ordenarAlfabeticamente: !filters.ordenarAlfabeticamente,
+                      })
+                    }
+                    className={`${
+                      filters.ordenarAlfabeticamente
+                        ? "bg-[#15599a]"
+                        : "bg-blue-300"
+                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  >
+                    ORDENAR ALFABETICAMENTE
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters({
+                        ...filters,
+                        manutencaoPendente: !filters.manutencaoPendente,
+                      })
+                    }
+                    className={`${
+                      filters.manutencaoPendente
+                        ? "bg-[#15599a]"
+                        : "bg-blue-300"
+                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  >
+                    MANUTENÇÃO PENDENTE
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters({
+                        ...filters,
+                        manutencaoAtrasada: !filters.manutencaoAtrasada,
+                      })
+                    }
+                    className={`${
+                      filters.manutencaoAtrasada
+                        ? "bg-[#15599a]"
+                        : "bg-blue-300"
+                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  >
+                    MANUTENÇÃO ATRASADA
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters({
+                        ...filters,
+                        limparAteDezembro: !filters.limparAteDezembro,
+                      })
+                    }
+                    className={`${
+                      filters.limparAteDezembro ? "bg-[#15599a]" : "bg-blue-300"
+                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  >
+                    LIMPAR ATÉ DEZEMBRO
+                  </div>
+                </div>
+                <div className="flex items-center justify-end gap-x-2">
+                  <button
+                    onClick={filterProjects}
+                    className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
+                  >
+                    <p>Filtrar</p>
+                    <AiOutlineSearch />
+                  </button>
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </div>
+        <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
+          {filteredProjects.map((project) => (
+            <div
+              onClick={() => {
+                handleOpenModal(project._id);
+              }}
+              key={project._id}
+              className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200  hover:bg-blue-100"
+            >
+              <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
+              <div className="flex flex-col p-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
+                      <GiPoliceBadge
+                        style={{
+                          fontSize: "20px",
+                          color: "#15599a",
+                        }}
+                      />
+                    )}{" "}
+                    <p className="text-xs text-gray-700">
+                      {project.nomeDoContrato}
+                    </p>
+                  </div>
 
-                <p className="text-xs text-[#15599a]">#{project.qtde}</p>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="text-xxs">CIDADE</span>
-                  <p className="text-xs text-gray-600 uppercase">
-                    {project.cidade ? project.cidade : "-"}
-                  </p>
+                  <p className="text-xs text-[#15599a]">#{project.qtde}</p>
                 </div>
-                {checkOeMEnding(project.medidor.data).text && (
-                  <span
-                    className={`text-xs ${
-                      checkOeMEnding(project.medidor.data).color
-                    } text-center font-bold`}
-                  >
-                    {checkOeMEnding(project.medidor.data).text}
-                  </span>
-                )}
-                <div>
-                  <span className="text-xxs">TOPOLOGIA</span>
-                  <p className="text-xs text-center text-gray-600">
-                    {project.projeto.topologia
-                      ? project.projeto.topologia
-                      : "-"}
-                  </p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xxs">CIDADE</span>
+                    <p className="text-xs text-gray-600 uppercase">
+                      {project.cidade ? project.cidade : "-"}
+                    </p>
+                  </div>
+                  {checkOeMEnding(project.medidor.data).text && (
+                    <span
+                      className={`text-xs ${
+                        checkOeMEnding(project.medidor.data).color
+                      } text-center font-bold`}
+                    >
+                      {checkOeMEnding(project.medidor.data).text}
+                    </span>
+                  )}
+                  <div>
+                    <span className="text-xxs">TOPOLOGIA</span>
+                    <p className="text-xs text-center text-gray-600">
+                      {project.projeto.topologia
+                        ? project.projeto.topologia
+                        : "-"}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="text-xxs">EQUIPE OBRAS</span>
-                  <p className="text-xs text-yellow-500">
-                    {project.obra.equipeResp ? project.obra.equipeResp : "-"}
-                  </p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xxs">EQUIPE OBRAS</span>
+                    <p className="text-xs text-yellow-500">
+                      {project.obra.equipeResp ? project.obra.equipeResp : "-"}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-xxs">USINA LIGADA</span>
+                    <p
+                      className={`text-xs ${
+                        statusStyles[project.conferencias.usinaLigada.status]
+                          .textColor
+                      }`}
+                    >
+                      {project.conferencias.usinaLigada != undefined &&
+                      project.conferencias.usinaLigada.status != "-"
+                        ? project.conferencias.usinaLigada.status
+                        : "-"}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-xxs">USINA LIGADA</span>
-                  <p
-                    className={`text-xs ${
-                      statusStyles[project.conferencias.usinaLigada.status]
-                        .textColor
-                    }`}
-                  >
-                    {project.conferencias.usinaLigada != undefined &&
-                    project.conferencias.usinaLigada.status != "-"
-                      ? project.conferencias.usinaLigada.status
-                      : "-"}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center justify-center">
-                <div className="flex flex-col items-center">
-                  <span className="text-xxs text-center">PLANO O&M</span>
-                  <p className="text-xs text-yellow-500 text-center">
-                    {project.oem?.plano ? project.oem.plano : "-"}
-                  </p>
+                <div className="flex items-center justify-center">
+                  <div className="flex flex-col items-center">
+                    <span className="text-xxs text-center">PLANO O&M</span>
+                    <p className="text-xs text-yellow-500 text-center">
+                      {project.oem?.plano ? project.oem.plano : "-"}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        <Link href={"/oem/propostas"}>
+          <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+            <p className="uppercase font-bold text-sm">Propostas</p>
+          </a>
+        </Link>
+        <Link href={"/oem/baixaPerformance"}>
+          <a className="fixed ml-36 bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+            <p className="uppercase font-bold text-sm">
+              ACOMPANHAMENTO DE PERFORMANCE
+            </p>
+          </a>
+        </Link>
+        {modalIsOpen && (
+          <ModalOeM
+            users={users}
+            setModalIsOpen={setModalIsOpen}
+            modalIsOpen={modalIsOpen}
+            project={modalProject}
+            editor={
+              session?.user?.accessibleRoutes.includes("O&M") ? true : false
+            }
+            credentials={session?.user}
+            handleUpdates={handleUpdates}
+          />
+        )}
       </div>
-      <Link href={"/oem/propostas"}>
-        <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-          <p className="uppercase font-bold text-sm">Propostas</p>
-        </a>
-      </Link>
-      <Link href={"/oem/baixaPerformance"}>
-        <a className="fixed ml-36 bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-          <p className="uppercase font-bold text-sm">
-            ACOMPANHAMENTO DE PERFORMANCE
-          </p>
-        </a>
-      </Link>
-      {modalIsOpen && (
-        <ModalOeM
-          users={users}
-          setModalIsOpen={setModalIsOpen}
-          modalIsOpen={modalIsOpen}
-          project={modalProject}
-          editor={credentials.accessibleRoutes.includes("O&M") ? true : false}
-          credentials={credentials}
-          handleUpdates={handleUpdates}
-        />
-      )}
-    </div>
-  );
+    );
+  }
 }
 
 export default OeM;

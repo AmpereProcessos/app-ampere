@@ -89,13 +89,13 @@ function ModalCallSuporte({
   const [message, setMessage] = useState({ text: "", color: "" });
   function saveCallChanges() {
     if (info.statusChamado != infoHolder.statusChamado) {
-      ultAlteracoes.statusAlteracoes.usuario = credentials._id;
+      ultAlteracoes.statusAlteracoes.usuario = credentials?.id;
       ultAlteracoes.statusAlteracoes.antes = info.statusChamado;
       ultAlteracoes.statusAlteracoes.depois = infoHolder.statusChamado;
       ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
     }
     if (info.anotacoes != infoHolder.anotacoes) {
-      ultAlteracoes.anotAlteracoes.usuario = credentials._id;
+      ultAlteracoes.anotAlteracoes.usuario = credentials?.id;
       ultAlteracoes.anotAlteracoes.antes = info.anotacoes;
       ultAlteracoes.anotAlteracoes.depois = infoHolder.anotacoes;
       ultAlteracoes.anotAlteracoes.data = new Date().toJSON();
@@ -113,7 +113,7 @@ function ModalCallSuporte({
   function closeCall() {
     if (info.anotacoes?.trim().length > 0) {
       if (info.statusChamado != "RESOLVIDO") {
-        ultAlteracoes.statusAlteracoes.usuario = credentials._id;
+        ultAlteracoes.statusAlteracoes.usuario = credentials?.id;
         ultAlteracoes.statusAlteracoes.antes = info.statusChamado;
         ultAlteracoes.statusAlteracoes.depois = "RESOLVIDO";
         ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
@@ -137,7 +137,7 @@ function ModalCallSuporte({
   }
   function reopenCall() {
     if (info.statusChamado != "ABERTO") {
-      ultAlteracoes.statusAlteracoes.usuario = credentials._id;
+      ultAlteracoes.statusAlteracoes.usuario = credentials?.id;
       ultAlteracoes.statusAlteracoes.antes = info.statusChamado;
       ultAlteracoes.statusAlteracoes.depois = "ABERTO";
       ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
@@ -212,7 +212,7 @@ function ModalCallSuporte({
                 )} horas em aberto`}
           </p>
           <div className="overflow-y-auto">
-            {credentials.accessibleRoutes.includes("Pós-Venda") &&
+            {credentials?.accessibleRoutes.includes("Pós-Venda") &&
             info.fechamento ? (
               <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center font-bold font-raleway">

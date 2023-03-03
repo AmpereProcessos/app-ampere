@@ -32,5 +32,17 @@ export default async function handler(req, res) {
       ])
       .toArray();
     res.json(users);
+  } else if (req.method === "PUT") {
+    const db = await connectToDatabase(process.env.DB_KEY);
+    const collection = db.collection("users");
+    const id = req.body.id;
+    const changes = req.body.changes;
+    delete changes._id;
+    console.log(id, changes);
+    let item = await collection.updateOne(
+      { _id: ObjectId(id) },
+      { $set: { ...changes } }
+    );
+    res.json("Informações do usuário alteradas.");
   }
 }

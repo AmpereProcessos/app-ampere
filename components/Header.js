@@ -14,10 +14,12 @@ import {
 } from "react-icons/md";
 import axios from "axios";
 import NotificationModal from "./NotificationModal";
+
+import { signOut, useSession } from "next-auth/react";
 import { AppContext } from "../context/AppContext";
 function Header({ toggleSidebar }) {
-  const { setCredentials, credentials, notificacoes, getNotificacoes } =
-    useContext(AppContext);
+  const { notificacoes } = useContext(AppContext);
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [notificationIsOpen, setNotificationIsOpen] = useState(false);
   let unreadArr = notificacoes
@@ -32,16 +34,14 @@ function Header({ toggleSidebar }) {
   }, []);*/
   }
   function logout() {
-    setCredentials(null);
-    localStorage.removeItem("credentials");
-    router.push("/auth/authHome");
+    signOut();
   }
   function updateNotifications(id) {
     axios
       .put("/api/notificacoes/1", {
         id: id,
       })
-      .then((res) => getNotificacoes(credentials._id));
+      .then((res) => getNotificacoes(session.user.id));
   }
   useEffect(() => {
     let unreadArr = notificacoes
@@ -55,6 +55,7 @@ function Header({ toggleSidebar }) {
     router.pathname.includes("auth")
   )
     return null;
+  if (status == "loading" || status == "unauthenticated") return null;
   return (
     <div className="w-full sticky z-[1] top-0 bg-[#fff] grid grid-cols-3 items-center px-12 h-[70px] border-b border-gray-200">
       <div className="flex items-center gap-x-2">
@@ -78,8 +79,21 @@ function Header({ toggleSidebar }) {
       <div className="flex justify-end items-center">
         <p className="hidden lg:block">
           Seja bem vindo,{" "}
-          <strong className="text-[#15599a]">{credentials?.nome}</strong> !
+          <strong className="text-[#15599a]">{session?.user.name}</strong> !
         </p>
+        {session.user.image && (
+          <div className="relative w-[40px] h-[40px] ml-2">
+            <Image
+              style={{ borderRadius: "100%", cursor: "pointer" }}
+              src={session.user.image}
+              alt="USUÁRIO"
+              title="CONFIGURAÇÕES"
+              fill={true}
+              layout={"fill"}
+            />
+          </div>
+        )}
+
         <div className="text-[#fead61] hover:text-orange-500 hover:scale-105 duration-500 ease-in-out">
           <BiLogIn
             onClick={logout}
@@ -111,8 +125,8 @@ function Header({ toggleSidebar }) {
             </p>
           )}
         </div>
-        {credentials.manager && (
-          <Link href="/admin/reports">
+        {session?.user.manager && (
+          <Link href="/admin/relatorioAdministrativo">
             <TbPresentationAnalytics
               style={{
                 fontSize: "25px",
@@ -130,18 +144,3 @@ function Header({ toggleSidebar }) {
 }
 
 export default Header;
-{
-  /*
-        {credentials.manager && (
-          <Link href="/admin/users">
-            <MdAdminPanelSettings
-              style={{
-                fontSize: "25px",
-                marginLeft: "10px",
-                cursor: "pointer",
-                color: "#fead61",
-              }}
-            />
-          </Link>
-        )} */
-}

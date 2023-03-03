@@ -439,7 +439,7 @@ function Acompanhamento() {
   }
   function getTotalVendido() {
     var filteredArr = info;
-    filteredArr = filteredArr.filter((x) => x.contrato.status == "ASSINADO");
+    filteredArr = filteredArr.filter((x) => x.contrato?.status == "ASSINADO");
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter(
@@ -572,7 +572,7 @@ function Acompanhamento() {
       if (session?.user) return router.push("/");
     }
   }, [session]);
-  if (session.user?.manager == true)
+  if (session?.user?.manager == true)
     return (
       <div className="grow p-6 flex flex-col gap-2">
         <div className="flex flex-col items-center border-b border-gray-200 py-2">

@@ -148,7 +148,7 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                 required
               />
               <label
-                for="name"
+                htmlFor="name"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 NOME
@@ -166,7 +166,7 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                 required
               />
               <label
-                for="floating_email"
+                htmlFor="floating_email"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 EMAIL
@@ -184,7 +184,7 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                 required
               />
               <label
-                for="password"
+                htmlFor="password"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 SENHA
@@ -203,7 +203,7 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                 placeholder=" "
               />
               <label
-                for="cpf"
+                htmlFor="cpf"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 CPF
@@ -220,7 +220,7 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                 placeholder=" "
               />
               <label
-                for="rg"
+                htmlFor="rg"
                 className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 RG
@@ -276,7 +276,7 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
               <button
                 onClick={saveChanges}
                 type="button"
-                class="mt-4 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800  font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800"
+                className="mt-4 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800  font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800"
               >
                 SALVAR ALTERAÇÕES
               </button>

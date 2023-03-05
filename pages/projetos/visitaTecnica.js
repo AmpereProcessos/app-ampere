@@ -122,7 +122,9 @@ function VisitaTecnica() {
     if (session?.user.accessibleRoutes.includes("Projetos")) {
       getProjects(session?.user);
     } else {
-      if (session?.user) return router.push("/");
+      if (session?.user) {
+        router.push("/");
+      }
     }
   }, [session]);
   if (status == "loading") return <LoadingPage />;

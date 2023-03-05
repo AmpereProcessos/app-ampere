@@ -24,7 +24,9 @@ function SvpControl() {
     if (session?.user.accessibleRoutes.includes("O&M")) {
       getProjects();
     } else {
-      if (session?.user) return router.push("/");
+      if (session?.user) {
+        router.push("/");
+      }
     }
   }, [session]);
   if (status == "loading") return <LoadingPage />;

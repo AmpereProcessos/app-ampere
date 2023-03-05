@@ -47,7 +47,9 @@ function FormulariosVendedor() {
     if (session?.user.accessibleRoutes.includes("Vendas")) {
       getProjects(session.user);
     } else {
-      if (session?.user) return router.push("/");
+      if (session?.user) {
+        router.push("/");
+      }
     }
   }, [session]);
   console.log(modalSolicitacao);

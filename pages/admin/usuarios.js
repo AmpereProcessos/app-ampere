@@ -31,7 +31,9 @@ export default function UsersControl() {
     if (session?.user.manager == true) {
       getUsers();
     } else {
-      if (session?.user) return router.push("/");
+      if (session?.user) {
+        router.push("/");
+      }
     }
   }, [session]);
   return (

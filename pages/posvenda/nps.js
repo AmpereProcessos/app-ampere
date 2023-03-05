@@ -90,7 +90,9 @@ function NPS() {
     if (session?.user.accessibleRoutes) {
       getProjects();
     } else {
-      if (session?.user) return router.push("/");
+      if (session?.user) {
+        router.push("/");
+      }
     }
   }, [session]);
   if (status == "loading") return <LoadingPage />;

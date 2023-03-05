@@ -125,7 +125,9 @@ function BaixaPerformance() {
     if (session?.user.accessibleRoutes.includes("O&M")) {
       getMonitoramentoBook();
     } else {
-      if (session?.user) return router.push("/");
+      if (session?.user) {
+        router.push("/");
+      }
     }
   }, [session]);
   console.log(badPerformers);

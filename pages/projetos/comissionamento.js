@@ -88,7 +88,9 @@ function Comissionamento() {
     if (session?.user.accessibleRoutes.includes("Projetos")) {
       getProjects();
     } else {
-      if (session?.user) return router.push("/");
+      if (session?.user) {
+        router.push("/");
+      }
     }
   }, [session]);
 

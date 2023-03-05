@@ -145,7 +145,9 @@ function ChamadosSuprimentos() {
     if (session?.user.accessibleRoutes.includes("Suprimentos")) {
       getCalls();
     } else {
-      if (session?.user) return router.push("/");
+      if (session?.user) {
+        router.push("/");
+      }
     }
   }, [session]);
   if (status == "loading") return <LoadingPage />;

@@ -212,7 +212,9 @@ function ChamadosProjetos() {
       getCalls();
     } else {
       if (session?.user) {
-        return router.push("/");
+        {
+          router.push("/");
+        }
       }
     }
   }, [session]);

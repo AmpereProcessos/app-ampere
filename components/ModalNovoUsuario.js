@@ -183,6 +183,18 @@ function ModalNovoUsuario({ closeModal }) {
               />
             </div>
             <div className="flex flex-col items-center w-full py-4 border border-gray-200">
+              <h1 className="text-center font-bold">CARGO</h1>
+              <input
+                type={"text"}
+                value={userInfo.role}
+                className="outline-none text-center text-xs text-gray-600 w-full p-2"
+                placeholder="Digite aqui o cargo do usuário.."
+                onChange={(e) =>
+                  setUserInfo({ ...userInfo, role: e.target.value })
+                }
+              />
+            </div>
+            <div className="flex flex-col items-center w-full py-4 border border-gray-200">
               <h1 className="text-center font-bold">DATA DE NASCIMENTO</h1>
               <input
                 type={"date"}

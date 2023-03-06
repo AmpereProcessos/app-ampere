@@ -88,9 +88,8 @@ function CardControleUsuarios({ userInfo, admin, openModal }) {
         <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
           {userInfo.nome}
         </h5>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
-          {userInfo.email}
-        </span>
+        <h5 className="text-sm text-blue-500 font-bold">{userInfo.role}</h5>
+        <span className="text-sm text-gray-500">{userInfo.email}</span>
       </div>
     </div>
   );

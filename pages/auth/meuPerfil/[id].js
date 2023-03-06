@@ -4,6 +4,9 @@ import React, { useEffect, useState } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { FaUser } from "react-icons/fa";
+import { BsCheck, BsCheckAll } from "react-icons/bs";
+import { MdEmail } from "react-icons/md";
+import { IoIosSend } from "react-icons/io";
 import { storage } from "../../../utils/firebase";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -20,13 +23,23 @@ function MeuPerfil({ error, info }) {
       router.push("/auth/authHome");
     },
   });
-  const [msg, setMsg] = useState({ text: "", color: "" });
+
+  const [not, setNot] = useState();
+  const [notifyInfo, setNotifyInfo] = useState({
+    destinatario: null,
+    remetente: session?.user?.name,
+    remetenteId: session?.user?.id,
+    mensagem: "",
+    projetoReferencia: null,
+    nomeDoProjeto: null,
+  });
+  const [notifyMsg, setNotifyMsg] = useState({ text: "", color: "" });
 
   const [infoHolder, setInfo] = useState(info);
-  const [not, setNot] = useState();
-
   const [newImage, setNewImage] = useState();
+  const [msg, setMsg] = useState({ text: "", color: "" });
 
+  // Regarding Image
   async function uploadImage() {
     var splitNome = info.nome.toLowerCase().split(" ");
     var fixedNome = splitNome.join("_");
@@ -57,9 +70,58 @@ function MeuPerfil({ error, info }) {
         })
       );
   }
+  // Regarding Notifications
   function getNotificacoes(id) {
     axios.get(`/api/notificacoes/${id}`).then((res) => setNot(res.data));
   }
+  function notify() {
+    if (notifyInfo.mensagem?.trim().length > 0) {
+      axios
+        .post("/api/notificacoes/1", notifyInfo)
+        .then((res) => {
+          setNotifyMsg({
+            text: "Mensagem enviada!",
+            color: "text-green-500",
+          });
+          setTimeout(() => {
+            setNotifyInfo({
+              destinatario: null,
+              remetente: session?.user?.name,
+              remetenteId: session?.user?.id,
+              mensagem: "",
+              projetoReferencia: null,
+              nomeDoProjeto: null,
+            });
+          }, 2800);
+        })
+        .catch((err) =>
+          setNotifyMsg({
+            text: "Houve um erro no envio.",
+            color: "text-red-500",
+          })
+        );
+    } else {
+      setNotifyMsg({
+        text: "Por favor, preencha uma mensagem válida.",
+        color: "text-red-500",
+      });
+    }
+  }
+  function updateNotifications(id) {
+    axios
+      .put("/api/notificacoes/1", {
+        id: id,
+      })
+      .then((res) => getNotificacoes(session?.user?.id));
+  }
+  function setAsRead(id, index) {
+    let arr = [...not];
+    arr[index].lido = true;
+    setNot([...arr]);
+    updateNotifications(id);
+    getNotificacoes(session?.user?.id);
+  }
+
   useEffect(() => {
     // create the preview
     if (newImage) {
@@ -75,7 +137,7 @@ function MeuPerfil({ error, info }) {
       getNotificacoes(info._id);
     }
   }, [session]);
-  console.log(info);
+
   if (error) {
     return (
       <div className="flex flex-col grow items-center justify-center">
@@ -156,48 +218,56 @@ function MeuPerfil({ error, info }) {
               INFORMAÇÕES DO USUÁRIO
             </h1>
             <div className="flex flex-col grow gap-4 pt-2">
-              <div className="grid grid-cols-10 gap-2 py-2 items-center w-full border-b border-gray-200">
-                <p className="col-span-3 font-bold text-gray-700">NOME:</p>
-                <p className="col-span-7 text-start text-gray-500">
+              <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-10 lg:grid-rows-1 gap-2 py-2 items-center w-full border-b border-gray-200">
+                <p className="col-span-1 lg:col-span-3 font-bold text-gray-700 text-sm lg:text-md text-center lg:text-start">
+                  NOME:
+                </p>
+                <p className="lg:col-span-7 text-center lg:text-start text-gray-500">
                   {info.nome}
                 </p>
               </div>
-              <div className="grid grid-cols-10 gap-2 py-2 items-center w-full border-b border-gray-200">
-                <p className="col-span-3 font-bold text-gray-700">EMAIL:</p>
-                <p className="col-span-7 text-start text-gray-500">
+              <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-10 lg:grid-rows-1 gap-2 py-2 items-center w-full border-b border-gray-200">
+                <p className="col-span-1 lg:col-span-3 font-bold text-gray-700 text-sm lg:text-md text-center lg:text-start">
+                  EMAIL:
+                </p>
+                <p className="lg:col-span-7 text-center lg:text-start text-gray-500">
                   {info.email}
                 </p>
               </div>
-              <div className="grid grid-cols-10 gap-2 py-2 items-center w-full border-b border-gray-200">
-                <p className="col-span-3 font-bold text-gray-700">
+              <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-10 lg:grid-rows-1 gap-2 py-2 items-center w-full border-b border-gray-200">
+                <p className="col-span-1 lg:col-span-3 font-bold text-gray-700 text-sm lg:text-md text-center lg:text-start">
                   AVATAR DISPONÍVEL EM:
                 </p>
                 <a
                   href={info.avatar_url}
-                  className="col-span-7 text-start text-gray-500 hover:text-blue-300 cursor-pointer break-words"
+                  className="lg:col-span-7 text-center lg:text-start text-gray-500 hover:text-blue-300 cursor-pointer break-words"
                 >
                   {info.avatar_url ? info.avatar_url : "-"}
                 </a>
               </div>
-              <div className="grid grid-cols-10 gap-2 py-2 items-center w-full border-b border-gray-200">
-                <p className="col-span-3 font-bold text-gray-700">
+              <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-10 lg:grid-rows-1 gap-2 py-2 items-center w-full border-b border-gray-200">
+                <p className="col-span-1 lg:col-span-3 font-bold text-gray-700 text-sm lg:text-md text-center lg:text-start">
                   DATA DE NASCIMENTO:
                 </p>
-                <p className="col-span-7 text-start text-gray-500">
+                <p className="lg:col-span-7 text-center lg:text-start text-gray-500">
                   {info.birthday
                     ? dayjs(info.birthday).add(4, "hours").format("DD/MM/YYYY")
                     : "-"}
                 </p>
               </div>
-              <div className="grid grid-cols-10 gap-2 py-2 items-center w-full border-b border-gray-200">
-                <p className="col-span-3 font-bold text-gray-700">RG</p>
-                <p className="col-span-7 text-start text-gray-500">
+              <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-10 lg:grid-rows-1 gap-2 py-2 items-center w-full border-b border-gray-200">
+                <p className="col-span-1 lg:col-span-3 font-bold text-gray-700 text-sm lg:text-md text-center lg:text-start">
+                  RG
+                </p>
+                <p className="lg:col-span-7 text-center lg:text-start text-gray-500">
                   {info.rg ? info.rg : "AINDA NÃO DEFINIDO"}
                 </p>
               </div>
-              <div className="grid grid-cols-10 gap-2 py-2 items-center w-full border-b border-gray-200">
-                <p className="col-span-3 font-bold text-gray-700">CPF</p>
-                <p className="col-span-7 text-start text-gray-500">
+              <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-10 lg:grid-rows-1 gap-2 py-2 items-center w-full border-b border-gray-200">
+                <p className="col-span-1 lg:col-span-3 font-bold text-gray-700 text-sm lg:text-md text-center lg:text-start">
+                  CPF
+                </p>
+                <p className="lg:col-span-7 text-center lg:text-start text-gray-500">
                   {info.cpf ? info.cpf : "AINDA NÃO DEFINIDO"}
                 </p>
               </div>
@@ -224,6 +294,36 @@ function MeuPerfil({ error, info }) {
             <h1 className="text-xl text-center font-bold text-[#15599a] border-b border-[#15599a] pb-2">
               NOTIFICAÇÕES
             </h1>
+            {notifyInfo.destinatario && (
+              <div className="flex flex-col items-center my-2 w-full">
+                <h1 className="text-xs text-[#15599a] text-center italic">
+                  Informações para resposta sobre o projeto:{" "}
+                  <strong>{notifyInfo.projetoReferencia}</strong>
+                </h1>
+                <div className="flex flex-col w-full">
+                  <input
+                    type={"text"}
+                    className="outline-none text-center text-xs text-gray-600 w-full"
+                    placeholder="Digite aqui a mensagem a ser enviada..."
+                    value={notifyInfo.mensagem}
+                    onChange={(e) =>
+                      setNotifyInfo({ ...notifyInfo, mensagem: e.target.value })
+                    }
+                  />
+                </div>
+                {notifyMsg && (
+                  <p className={`text-center text-xs my-1 ${notifyMsg.color}`}>
+                    {notifyMsg.text}
+                  </p>
+                )}
+                <button
+                  onClick={notify}
+                  className="bg-blue-200 hover:text-white hover:bg-blue-600 p-1 rounded-lg mt-2"
+                >
+                  <IoIosSend style={{ fontSize: "15px" }} />
+                </button>
+              </div>
+            )}
             <div className="flex flex-col grow max-w-full overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               {not ? (
                 not.length > 0 ? (
@@ -252,45 +352,46 @@ function MeuPerfil({ error, info }) {
                       <p className="text-xs text-gray-500 font-raleway text-center">
                         {notificacao.mensagem}
                       </p>
-                      {/* <div className="flex items-center justify-end pr-4 gap-2">
-                      {notificacao.remetenteId && (
-                        <button
-                          onClick={() =>
-                            setInfo({
-                              destinatario: notificacao.remetenteId,
-                              remetente: credentials?.name,
-                              remetenteId: credentials?.id,
-                              projetoReferencia: notificacao.projetoReferencia,
-                              nomeDoProjeto: notificacao.nomeDoProjeto,
-                            })
-                          }
-                          className="outline-none transition duration-300 ease-in-out hover:scale-125"
-                        >
-                          <MdEmail
-                            style={{ fontSize: "20px", color: "#15599a" }}
-                          />{" "}
-                        </button>
-                      )}
+                      <div className="flex items-center justify-end pr-4 gap-2">
+                        {notificacao.remetenteId && (
+                          <button
+                            onClick={() =>
+                              setNotifyInfo({
+                                destinatario: notificacao.remetenteId,
+                                remetente: session?.user?.name,
+                                remetenteId: session?.user?.id,
+                                projetoReferencia:
+                                  notificacao.projetoReferencia,
+                                nomeDoProjeto: notificacao.nomeDoProjeto,
+                              })
+                            }
+                            className="outline-none transition duration-300 ease-in-out hover:scale-125"
+                          >
+                            <MdEmail
+                              style={{ fontSize: "20px", color: "#15599a" }}
+                            />{" "}
+                          </button>
+                        )}
 
-                      {notificacao.lido ? (
-                        <BsCheckAll
-                          style={{ fontSize: "20px", color: "green" }}
-                        />
-                      ) : (
-                        <button
-                          onClick={() => setAsRead(notificacao._id, index)}
-                          className="outline-none transition duration-300 ease-in-out hover:scale-150"
-                        >
-                          <BsCheck
-                            style={{
-                              fontSize: "20px",
-                              color: "gray",
-                              cursor: "pointer",
-                            }}
+                        {notificacao.lido ? (
+                          <BsCheckAll
+                            style={{ fontSize: "20px", color: "green" }}
                           />
-                        </button>
-                      )}
-                    </div> */}
+                        ) : (
+                          <button
+                            onClick={() => setAsRead(notificacao._id, index)}
+                            className="outline-none transition duration-300 ease-in-out hover:scale-150"
+                          >
+                            <BsCheck
+                              style={{
+                                fontSize: "20px",
+                                color: "gray",
+                                cursor: "pointer",
+                              }}
+                            />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   ))
                 ) : (

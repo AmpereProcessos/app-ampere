@@ -1,18 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { VscChromeClose } from "react-icons/vsc";
 import { storage } from "../utils/firebase";
 import { BsCheckLg } from "react-icons/bs";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
+import { routes, vendedores } from "../utils/constants";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
   left: "50%",
   transform: "translate(-50%,-50%)",
   backgroundColor: "#fff",
-  width: "30%",
-  height: "50%",
+  minWidth: "40%",
+  height: "87%",
   borderRadius: "5px",
   padding: "10px",
   zIndex: 1000,
@@ -73,10 +74,31 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
         })
       );
   }
+  function addRoute(rota) {
+    let arr = info.accessibleRoutes;
+    arr.push(rota);
+    setInfo({ ...info, accessibleRoutes: [...arr] });
+  }
+  function removeRoute(index) {
+    let arr = info.accessibleRoutes;
+    arr.splice(index, 1);
+    setInfo({ ...info, accessibleRoutes: arr });
+  }
+  useEffect(() => {
+    // create the preview
+    if (image) {
+      const objectUrl = URL.createObjectURL(image);
+      setInfo({ ...info, avatar_url: objectUrl });
 
+      // free memory when ever this component is unmounted
+      return () => URL.revokeObjectURL(objectUrl);
+    }
+  }, [image]);
+  console.log(info);
+  console.log("IMAGE", image);
   return (
     <div style={OVERLAY_STYLES}>
-      <div style={MODAL_STYLES}>
+      <div className="w-[90%] lg:w-[40%]" style={MODAL_STYLES}>
         <div className="flex flex-col h-full">
           <div className="flex w-full justify-between pb-2 border-b border-gray-200">
             <h1 className="text-center font-bold text-[#15599a] self-start">
@@ -95,7 +117,7 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
           </div>
           <div className="flex flex-col gap-2 py-4 px-3 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             <div className="flex items-center  justify-center h-[200px]">
-              {info.avatar_url ? (
+              {!image && info.avatar_url ? (
                 <div className="mb-3 rounded-full relative w-[120px] h-[120px] cursor-pointer">
                   <Image
                     src={info.avatar_url}
@@ -113,6 +135,27 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                     onChange={(e) => setImage(e.target.files[0])}
                     className="h-full w-full opacity-0"
                     type="file"
+                  />
+                </div>
+              ) : image ? (
+                <div className="mb-3 rounded-full relative w-[120px] h-[120px] cursor-pointer">
+                  <Image
+                    src={info.avatar_url}
+                    // width={96}
+                    // height={96}
+                    fill={true}
+                    layout={"fill"}
+                    style={{
+                      borderRadius: "100%",
+                      objectFit: "cover",
+                      position: "absolute",
+                    }}
+                  />
+                  <input
+                    onChange={(e) => setImage(e.target.files[0])}
+                    className="h-full w-full opacity-0"
+                    type="file"
+                    accept="image/png, image/jpeg"
                   />
                 </div>
               ) : (
@@ -267,6 +310,166 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                 type={"date"}
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               />
+            </div>
+            <div className="flex flex-col items-center w-full py-4 border border-gray-200">
+              <h1 className="text-center font-bold">ROTAS DISPONÍVEIS</h1>
+              <div className="min-h-[60px] grid grid-cols-2 lg:grid-cols-3 gap-2 mt-2 w-full px-2">
+                {info.accessibleRoutes?.length > 0 ? (
+                  info.accessibleRoutes.map((rota, index) => (
+                    <button
+                      key={index}
+                      onClick={() => removeRoute(index)}
+                      className="p-2 uppercase text-center cursor-pointer h-fit rounded border border-green-500 text-green-500 font-bold hover:text-red-500 hover:border-red-500 w-full"
+                    >
+                      {rota}
+                    </button>
+                  ))
+                ) : (
+                  <p className="col-span-4 text-center italic text-gray-600">
+                    SEM ROTAS ADICIONADAS...
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-col items-center w-full py-4 border border-gray-200">
+              <h1 className="text-center font-bold">ADIÇÃO DE ROTAS</h1>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 mt-2 w-full px-2">
+                {routes
+                  .filter((x) => !info.accessibleRoutes.includes(x))
+                  .map((rota, index) => (
+                    <button
+                      key={index}
+                      onClick={() => addRoute(rota)}
+                      className="p-2 text-xs lg:text-base uppercase rounded border border-green-500 text-green-500 font-bold hover:text-white hover:bg-green-500 w-full"
+                    >
+                      {rota}
+                    </button>
+                  ))}
+              </div>
+            </div>
+            <div className="flex flex-col items-center w-full py-4 border border-gray-200">
+              <h1 className="text-center font-bold">TIPO DE VISUALIZAÇÃO</h1>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-2 w-full px-2 mt-2">
+                <button
+                  onClick={() =>
+                    setInfo({
+                      ...info,
+                      visualizacao: undefined,
+                      vendedor: undefined,
+                      regional: undefined,
+                    })
+                  }
+                  className={`${
+                    info.visualizacao ? "opacity-30" : ""
+                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
+                >
+                  GERAL
+                </button>
+                <button
+                  onClick={() =>
+                    setInfo({
+                      ...info,
+                      visualizacao: "VENDEDOR",
+                      regional: undefined,
+                    })
+                  }
+                  className={`${
+                    info.visualizacao == "VENDEDOR" ? "" : "opacity-30"
+                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
+                >
+                  VENDEDOR
+                </button>
+                <button
+                  onClick={() =>
+                    setInfo({
+                      ...info,
+                      visualizacao: "REGIONAL",
+                      vendedor: undefined,
+                    })
+                  }
+                  className={`${
+                    info.visualizacao == "REGIONAL" ? "" : "opacity-30"
+                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
+                >
+                  REGIONAL
+                </button>
+                <button
+                  onClick={() =>
+                    setInfo({
+                      ...info,
+                      visualizacao: "INSIDE",
+                      regional: undefined,
+                    })
+                  }
+                  className={`${
+                    info.visualizacao == "INSIDE" ? "" : "opacity-30"
+                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
+                >
+                  INSIDE
+                </button>
+              </div>
+              {info.visualizacao == "VENDEDOR" && (
+                <div className="flex flex-col justify-center items-center w-full mt-2">
+                  <h1 className="text-center font-bold">VENDEDOR</h1>
+                  <select
+                    value={info.vendedor ? info.vendedor : "NÃO DEFINIDO"}
+                    onChange={(e) =>
+                      setInfo({ ...info, vendedor: e.target.value })
+                    }
+                    className="p-2 outline-none text-gray-600"
+                  >
+                    {vendedores.map((vendedor) => (
+                      <option key={vendedor.nome} value={vendedor.nome}>
+                        {vendedor.nome}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              {info.visualizacao == "INSIDE" && (
+                <div className="flex flex-col justify-center items-center w-full mt-2">
+                  <h1 className="text-center font-bold">INSIDER</h1>
+                  <select
+                    value={info.vendedor ? info.vendedor : "NÃO DEFINIDO"}
+                    onChange={(e) =>
+                      setInfo({ ...info, vendedor: e.target.value })
+                    }
+                    className="p-2 outline-none text-gray-600"
+                  >
+                    {vendedores
+                      .filter(
+                        (x) =>
+                          x.qualificacao?.includes("INSIDE") ||
+                          x.nome == "NÃO DEFINIDO"
+                      )
+                      .map((vendedor) => (
+                        <option key={vendedor.nome} value={vendedor.nome}>
+                          {vendedor.nome}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
+              {info.visualizacao == "REGIONAL" && (
+                <div className="flex flex-col justify-center items-center w-full mt-2">
+                  <h1 className="text-center font-bold">REGIONAL</h1>
+                  <select
+                    value={info.regional ? info.regional : "NÃO DEFINIDO"}
+                    onChange={(e) =>
+                      setInfo({ ...info, regional: e.target.value })
+                    }
+                    className="p-2 outline-none text-gray-600"
+                  >
+                    <option value={"REGIONAL ITUIUTABA"}>
+                      REGIONAL ITUIUTABA
+                    </option>
+                    <option value={"REGIONAL UBERLÂNDIA"}>
+                      REGIONAL UBERLÂNDIA
+                    </option>
+                    <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+                  </select>
+                </div>
+              )}
             </div>
             {msg.text ? (
               <p className={`text-center text-xs italic ${msg.color}`}>

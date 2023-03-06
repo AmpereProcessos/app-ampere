@@ -24,6 +24,20 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
+
+function formatCPF(value) {
+  const cnpjCpf = value.replace(/\D/g, "");
+
+  if (cnpjCpf.length === 11) {
+    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+  }
+
+  // return cnpjCpf.replace(
+  //   /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
+  //   "$1.$2.$3/$4-$5"
+  // );
+}
+
 function ModalNovoUsuario({ closeModal }) {
   const [userInfo, setUserInfo] = useState({
     nome: "",
@@ -93,7 +107,7 @@ function ModalNovoUsuario({ closeModal }) {
   }
   return (
     <div style={OVERLAY_STYLES}>
-      <div style={MODAL_STYLES}>
+      <div className="w-[90%] lg:w-[40%]" style={MODAL_STYLES}>
         <div className="flex flex-col h-full">
           <div className="flex justify-between pb-2 border-b border-gray-200">
             <h1 className="font-bold text-[#15599a]">NOVO USUÁRIO</h1>
@@ -145,14 +159,78 @@ function ModalNovoUsuario({ closeModal }) {
               />
             </div>
             <div className="flex flex-col items-center w-full py-4 border border-gray-200">
+              <h1 className="text-center font-bold">CPF</h1>
+              <input
+                type={"text"}
+                value={userInfo.cpf}
+                className="outline-none text-center text-xs text-gray-600 w-full p-2"
+                placeholder="Digite aqui o CPF do usuário.."
+                onChange={(e) =>
+                  setUserInfo({ ...userInfo, cpf: formatCPF(e.target.value) })
+                }
+              />
+            </div>
+            <div className="flex flex-col items-center w-full py-4 border border-gray-200">
+              <h1 className="text-center font-bold">RG</h1>
+              <input
+                type={"text"}
+                value={userInfo.rg}
+                className="outline-none text-center text-xs text-gray-600 w-full p-2"
+                placeholder="Digite aqui o RG do usuário.."
+                onChange={(e) =>
+                  setUserInfo({ ...userInfo, rg: e.target.value })
+                }
+              />
+            </div>
+            <div className="flex flex-col items-center w-full py-4 border border-gray-200">
+              <h1 className="text-center font-bold">DATA DE NASCIMENTO</h1>
+              <input
+                type={"date"}
+                value={
+                  userInfo.birthday
+                    ? new Date(userInfo.birthday).toISOString().slice(0, 10)
+                    : 0
+                }
+                className="outline-none text-center text-xs text-gray-600 w-full p-2"
+                onChange={(e) =>
+                  setUserInfo({
+                    ...userInfo,
+                    birthday: e.target.value
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <div className="flex flex-col items-center w-full py-4 border border-gray-200">
+              <h1 className="text-center font-bold">DATA DE ADMISSÃO</h1>
+              <input
+                type={"date"}
+                value={
+                  userInfo.admission
+                    ? new Date(userInfo.admission).toISOString().slice(0, 10)
+                    : 0
+                }
+                className="outline-none text-center text-xs text-gray-600 w-full p-2"
+                onChange={(e) =>
+                  setUserInfo({
+                    ...userInfo,
+                    admission: e.target.value
+                      ? new Date(e.target.value).toISOString()
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <div className="flex flex-col items-center w-full py-4 border border-gray-200">
               <h1 className="text-center font-bold">ROTAS DISPONÍVEIS</h1>
-              <div className="min-h-[60px] grid grid-cols-4 gap-2 mt-2">
+              <div className="min-h-[60px] grid grid-cols-2 lg:grid-cols-3 gap-2 mt-2 w-full px-2">
                 {userInfo.accessibleRoutes?.length > 0 ? (
                   userInfo.accessibleRoutes.map((rota, index) => (
                     <button
                       key={index}
                       onClick={() => removeRoute(index)}
-                      className="p-2 text-center cursor-pointer h-fit rounded border border-green-500 text-green-500 font-bold hover:text-red-500 hover:border-red-500"
+                      className="p-2 text-center cursor-pointer h-fit rounded border border-green-500 text-green-500 font-bold hover:text-red-500 hover:border-red-500 w-full"
                     >
                       {rota}
                     </button>
@@ -166,14 +244,14 @@ function ModalNovoUsuario({ closeModal }) {
             </div>
             <div className="flex flex-col items-center w-full py-4 border border-gray-200">
               <h1 className="text-center font-bold">ADIÇÃO DE ROTAS</h1>
-              <div className="grid grid-cols-4 gap-2 mt-2">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 mt-2 w-full px-2">
                 {routes
                   .filter((x) => !userInfo.accessibleRoutes.includes(x))
                   .map((rota, index) => (
                     <button
                       key={index}
                       onClick={() => addRoute(rota)}
-                      className="p-2 rounded border border-green-500 text-green-500 font-bold hover:text-white hover:bg-green-500"
+                      className="p-2 text-xs lg:text-base uppercase rounded border border-green-500 text-green-500 font-bold hover:text-white hover:bg-green-500"
                     >
                       {rota}
                     </button>
@@ -182,7 +260,7 @@ function ModalNovoUsuario({ closeModal }) {
             </div>
             <div className="flex flex-col items-center w-full py-4 border border-gray-200">
               <h1 className="text-center font-bold">TIPO DE VISUALIZAÇÃO</h1>
-              <div className="flex justify-around w-full mt-4">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-2 w-full px-2 mt-2">
                 <button
                   onClick={() =>
                     setUserInfo({
@@ -194,7 +272,7 @@ function ModalNovoUsuario({ closeModal }) {
                   }
                   className={`${
                     userInfo.visualizacao ? "opacity-30" : ""
-                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded`}
+                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
                 >
                   GERAL
                 </button>
@@ -208,7 +286,7 @@ function ModalNovoUsuario({ closeModal }) {
                   }
                   className={`${
                     userInfo.visualizacao == "VENDEDOR" ? "" : "opacity-30"
-                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded`}
+                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
                 >
                   VENDEDOR
                 </button>
@@ -222,7 +300,7 @@ function ModalNovoUsuario({ closeModal }) {
                   }
                   className={`${
                     userInfo.visualizacao == "REGIONAL" ? "" : "opacity-30"
-                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded`}
+                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
                 >
                   REGIONAL
                 </button>
@@ -236,7 +314,7 @@ function ModalNovoUsuario({ closeModal }) {
                   }
                   className={`${
                     userInfo.visualizacao == "INSIDE" ? "" : "opacity-30"
-                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded`}
+                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
                 >
                   INSIDE
                 </button>

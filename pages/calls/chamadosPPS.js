@@ -52,9 +52,9 @@ function ChamadosPPS() {
     useState(false);
 
   // Data Holders
-  const [inProgress, setInProgress] = useState([]);
-  const [filteredInProgress, setFilteredInProgress] = useState([]);
-  const [closedCalls, setClosedCalls] = useState([]);
+  const [inProgress, setInProgress] = useState();
+  const [filteredInProgress, setFilteredInProgress] = useState();
+  const [closedCalls, setClosedCalls] = useState();
 
   const [stats, setStats] = useState({});
   // Modal handlers
@@ -165,7 +165,9 @@ function ChamadosPPS() {
   }
   useEffect(() => {
     if (session?.user.accessibleRoutes.includes("PPS")) {
-      getCalls();
+      if (!inProgress) {
+        getCalls();
+      }
     } else {
       if (session?.user) {
         router.push("/");
@@ -195,7 +197,7 @@ function ChamadosPPS() {
                   Chamados abertos
                 </p>
                 <p className="font-bold text-[#fead61]">
-                  ({filteredInProgress.length})
+                  ({filteredInProgress?.length})
                 </p>
               </div>
               {openCallsDropdownMenuVisible ? (
@@ -310,55 +312,59 @@ function ChamadosPPS() {
             </AnimatePresence>
           </div>
           <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
-            {filteredInProgress.map((call) => (
-              <div
-                key={call._id}
-                onClick={() => handleOpenModal(call)}
-                className="w-full lg:w-[450px] max-h-[240px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
-              >
-                <div className="flex justify-between items-center w-full">
-                  <h1 className="text-xs text-center">{call.vendedor}</h1>
-                  <p className="text-xs text-center">
-                    {call.codigoDoProjeto} SVB
-                  </p>
-                  <p
-                    className={`text-xs font-bold border p-1 text-center rounded-lg ${
-                      statusStyles[call.status].textColor
-                    } ${statusStyles[call.status].borderColor}`}
-                  >
-                    {call.status}
-                  </p>
+            {filteredInProgress ? (
+              filteredInProgress.map((call) => (
+                <div
+                  key={call._id}
+                  onClick={() => handleOpenModal(call)}
+                  className="w-full lg:w-[450px] max-h-[240px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+                >
+                  <div className="flex justify-between items-center w-full">
+                    <h1 className="text-xs text-center">{call.vendedor}</h1>
+                    <p className="text-xs text-center">
+                      {call.codigoDoProjeto} SVB
+                    </p>
+                    <p
+                      className={`text-xs font-bold border p-1 text-center rounded-lg ${
+                        statusStyles[call.status].textColor
+                      } ${statusStyles[call.status].borderColor}`}
+                    >
+                      {call.status}
+                    </p>
+                  </div>
+                  <div className="text-xs mt-2 text-center text-gray-500">
+                    <p>TIPO DE SOLITAÇÃO : {call.tipoDeSolicitacao}</p>
+                  </div>
+                  <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
+                    <p>Observações:</p>
+                    <p>
+                      {call.observacoes
+                        ? call.observacoes.trim().length > 160
+                          ? `${call.observacoes.substring(0, 160)}...`
+                          : call.observacoes
+                        : "-"}
+                    </p>
+                  </div>
+                  <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
+                    <p>Responsável:</p>
+                    <p>{call.responsavel && call.responsavel}</p>
+                  </div>
+                  <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
+                    <p
+                      className={`${
+                        call.demanda == "EXTERNA"
+                          ? "text-[#fead61]"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      {call.demanda == "EXTERNA" && "DEMANDA EXTERNA"}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-xs mt-2 text-center text-gray-500">
-                  <p>TIPO DE SOLITAÇÃO : {call.tipoDeSolicitacao}</p>
-                </div>
-                <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
-                  <p>Observações:</p>
-                  <p>
-                    {call.observacoes
-                      ? call.observacoes.trim().length > 160
-                        ? `${call.observacoes.substring(0, 160)}...`
-                        : call.observacoes
-                      : "-"}
-                  </p>
-                </div>
-                <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
-                  <p>Responsável:</p>
-                  <p>{call.responsavel && call.responsavel}</p>
-                </div>
-                <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
-                  <p
-                    className={`${
-                      call.demanda == "EXTERNA"
-                        ? "text-[#fead61]"
-                        : "text-gray-600"
-                    }`}
-                  >
-                    {call.demanda == "EXTERNA" && "DEMANDA EXTERNA"}
-                  </p>
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <LoadingPage />
+            )}
           </div>
         </div>
         {/* Fechados */}
@@ -370,7 +376,7 @@ function ChamadosPPS() {
                   CHAMADOS FINALIZADOS
                 </p>
                 <p className="font-bold text-[#fead61]">
-                  ({closedCalls.length})
+                  ({closedCalls?.length})
                 </p>
               </div>
               {closedCallsDropdownMenuVisible ? (
@@ -440,27 +446,31 @@ function ChamadosPPS() {
             </AnimatePresence>
           </div>
           <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
-            {closedCalls.map((call) => (
-              <div
-                key={call._id}
-                onClick={() => handleOpenModal(call)}
-                className="w-full max-h-[100px] lg:w-[300px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
-              >
-                <div className="flex justify-between items-center w-full">
-                  <h1>{call.vendedor}</h1>
-                  <p
-                    className={`text-xs font-bold border p-1 rounded-lg ${
-                      statusStyles[call.status].textColor
-                    } ${statusStyles[call.status].borderColor}`}
-                  >
-                    {call.status}
-                  </p>
+            {closedCalls ? (
+              closedCalls.map((call) => (
+                <div
+                  key={call._id}
+                  onClick={() => handleOpenModal(call)}
+                  className="w-full max-h-[100px] lg:w-[300px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+                >
+                  <div className="flex justify-between items-center w-full">
+                    <h1>{call.vendedor}</h1>
+                    <p
+                      className={`text-xs font-bold border p-1 rounded-lg ${
+                        statusStyles[call.status].textColor
+                      } ${statusStyles[call.status].borderColor}`}
+                    >
+                      {call.status}
+                    </p>
+                  </div>
+                  <div className="text-xs mt-2 text-gray-500">
+                    <p>TIPO DE SOLICITAÇÃO : {call.tipoDeSolicitacao}</p>
+                  </div>
                 </div>
-                <div className="text-xs mt-2 text-gray-500">
-                  <p>TIPO DE SOLICITAÇÃO : {call.tipoDeSolicitacao}</p>
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <LoadingPage />
+            )}
           </div>
         </div>
         <Link href="/publico/chamadoExternoPPS">

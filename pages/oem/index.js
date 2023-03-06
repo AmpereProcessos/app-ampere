@@ -37,8 +37,8 @@ function OeM({ users }) {
 
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
 
-  const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [projects, setProjects] = useState();
+  const [filteredProjects, setFilteredProjects] = useState();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [opInProgress, setOpInProgress] = useState(false);
   const [filters, setFilters] = useState({
@@ -272,7 +272,9 @@ function OeM({ users }) {
       session?.user.accessibleRoutes.includes("O&M") ||
       session?.user.accessibleRoutes.includes("Marketing")
     ) {
-      getProjects(session.user);
+      if (!projects) {
+        getProjects(session.user);
+      }
     } else {
       if (session?.user) {
         router.push("/");
@@ -291,7 +293,7 @@ function OeM({ users }) {
                 Projetos no estágio de O&M
               </p>
               <p className="font-bold text-[#fead61]">
-                ({filteredProjects.length})
+                ({filteredProjects?.length})
               </p>
               {filteredProjects && (
                 <p className="font-bold text-[#fead61]">
@@ -672,91 +674,97 @@ function OeM({ users }) {
           </AnimatePresence>
         </div>
         <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-          {filteredProjects.map((project) => (
-            <div
-              onClick={() => {
-                handleOpenModal(project._id);
-              }}
-              key={project._id}
-              className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200  hover:bg-blue-100"
-            >
-              <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
-              <div className="flex flex-col p-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
-                      <GiPoliceBadge
-                        style={{
-                          fontSize: "20px",
-                          color: "#15599a",
-                        }}
-                      />
-                    )}{" "}
-                    <p className="text-xs text-gray-700">
-                      {project.nomeDoContrato}
-                    </p>
-                  </div>
+          {filteredProjects ? (
+            filteredProjects.map((project) => (
+              <div
+                onClick={() => {
+                  handleOpenModal(project._id);
+                }}
+                key={project._id}
+                className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200  hover:bg-blue-100"
+              >
+                <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
+                <div className="flex flex-col p-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
+                        <GiPoliceBadge
+                          style={{
+                            fontSize: "20px",
+                            color: "#15599a",
+                          }}
+                        />
+                      )}{" "}
+                      <p className="text-xs text-gray-700">
+                        {project.nomeDoContrato}
+                      </p>
+                    </div>
 
-                  <p className="text-xs text-[#15599a]">#{project.qtde}</p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-xxs">CIDADE</span>
-                    <p className="text-xs text-gray-600 uppercase">
-                      {project.cidade ? project.cidade : "-"}
-                    </p>
+                    <p className="text-xs text-[#15599a]">#{project.qtde}</p>
                   </div>
-                  {checkOeMEnding(project.medidor.data).text && (
-                    <span
-                      className={`text-xs ${
-                        checkOeMEnding(project.medidor.data).color
-                      } text-center font-bold`}
-                    >
-                      {checkOeMEnding(project.medidor.data).text}
-                    </span>
-                  )}
-                  <div>
-                    <span className="text-xxs">TOPOLOGIA</span>
-                    <p className="text-xs text-center text-gray-600">
-                      {project.projeto.topologia
-                        ? project.projeto.topologia
-                        : "-"}
-                    </p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xxs">CIDADE</span>
+                      <p className="text-xs text-gray-600 uppercase">
+                        {project.cidade ? project.cidade : "-"}
+                      </p>
+                    </div>
+                    {checkOeMEnding(project.medidor.data).text && (
+                      <span
+                        className={`text-xs ${
+                          checkOeMEnding(project.medidor.data).color
+                        } text-center font-bold`}
+                      >
+                        {checkOeMEnding(project.medidor.data).text}
+                      </span>
+                    )}
+                    <div>
+                      <span className="text-xxs">TOPOLOGIA</span>
+                      <p className="text-xs text-center text-gray-600">
+                        {project.projeto.topologia
+                          ? project.projeto.topologia
+                          : "-"}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-xxs">EQUIPE OBRAS</span>
-                    <p className="text-xs text-yellow-500">
-                      {project.obra.equipeResp ? project.obra.equipeResp : "-"}
-                    </p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xxs">EQUIPE OBRAS</span>
+                      <p className="text-xs text-yellow-500">
+                        {project.obra.equipeResp
+                          ? project.obra.equipeResp
+                          : "-"}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-xxs">USINA LIGADA</span>
+                      <p
+                        className={`text-xs ${
+                          statusStyles[project.conferencias.usinaLigada.status]
+                            .textColor
+                        }`}
+                      >
+                        {project.conferencias.usinaLigada != undefined &&
+                        project.conferencias.usinaLigada.status != "-"
+                          ? project.conferencias.usinaLigada.status
+                          : "-"}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-xxs">USINA LIGADA</span>
-                    <p
-                      className={`text-xs ${
-                        statusStyles[project.conferencias.usinaLigada.status]
-                          .textColor
-                      }`}
-                    >
-                      {project.conferencias.usinaLigada != undefined &&
-                      project.conferencias.usinaLigada.status != "-"
-                        ? project.conferencias.usinaLigada.status
-                        : "-"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-center">
-                  <div className="flex flex-col items-center">
-                    <span className="text-xxs text-center">PLANO O&M</span>
-                    <p className="text-xs text-yellow-500 text-center">
-                      {project.oem?.plano ? project.oem.plano : "-"}
-                    </p>
+                  <div className="flex items-center justify-center">
+                    <div className="flex flex-col items-center">
+                      <span className="text-xxs text-center">PLANO O&M</span>
+                      <p className="text-xs text-yellow-500 text-center">
+                        {project.oem?.plano ? project.oem.plano : "-"}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <LoadingPage />
+          )}
         </div>
         <Link href={"/oem/propostas"}>
           <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">

@@ -209,7 +209,9 @@ function ChamadosProjetos() {
   }
   useEffect(() => {
     if (session?.user.accessibleRoutes.includes("Projetos")) {
-      getCalls();
+      if (!openCalls) {
+        getCalls();
+      }
     } else {
       if (session?.user) {
         {

@@ -127,7 +127,9 @@ function Administracao() {
       session?.user.accessibleRoutes.includes("ADM") ||
       session?.user.accessibleRoutes.includes("Marketing")
     ) {
-      getProjects();
+      if (!projects) {
+        getProjects();
+      }
     }
   }, [session]);
 

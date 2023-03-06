@@ -240,11 +240,12 @@ function Projetos() {
   }
   useEffect(() => {
     if (
-      session?.user.accessibleRoutes.includes(
-        "Projetos" || session?.user.accessibleRoutes.includes("Pós-Venda")
-      )
+      session?.user.accessibleRoutes.includes("Projetos") ||
+      session?.user.accessibleRoutes.includes("Pós-Venda")
     ) {
-      getProjects(session.user);
+      if (!projects) {
+        getProjects(session.user);
+      }
     } else {
       if (session?.user) {
         router.push("/");

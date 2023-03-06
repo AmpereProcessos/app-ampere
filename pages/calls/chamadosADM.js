@@ -50,8 +50,8 @@ function ChamadosADM() {
   const [closedCallsDropdownMenuVisible, setClosedCallsDropdownMenuVisible] =
     useState(false);
 
-  const [inProgress, setInProgress] = useState([]);
-  const [filteredInProgress, setFilteredInProgress] = useState([]);
+  const [inProgress, setInProgress] = useState();
+  const [filteredInProgress, setFilteredInProgress] = useState();
   const [inProgressFilters, setInProgressFilters] = useState({
     search: "",
     type: [],
@@ -61,8 +61,8 @@ function ChamadosADM() {
     before: null,
   });
 
-  const [closedCalls, setClosedCalls] = useState([]);
-  const [filteredClosedCalls, setFilteredClosedCalls] = useState([]);
+  const [closedCalls, setClosedCalls] = useState();
+  const [filteredClosedCalls, setFilteredClosedCalls] = useState();
   const [closedFilters, setClosedFilters] = useState({
     search: "",
     type: [],
@@ -179,7 +179,9 @@ function ChamadosADM() {
   }
   useEffect(() => {
     if (session?.user.accessibleRoutes.includes("ADM")) {
-      getCalls();
+      if (!inProgress) {
+        getCalls();
+      }
     } else {
       if (session?.user) {
         router.push("/");
@@ -209,7 +211,7 @@ function ChamadosADM() {
                   Chamados abertos
                 </p>
                 <p className="font-bold text-[#fead61]">
-                  ({filteredInProgress.length})
+                  ({filteredInProgress?.length})
                 </p>
               </div>
               {openCallsDropdownMenuVisible ? (
@@ -335,45 +337,53 @@ function ChamadosADM() {
             </AnimatePresence>
           </div>
           <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
-            {filteredInProgress.map((call) => (
-              <div
-                onClick={() => handleOpenModal(call)}
-                key={call._id}
-                className="w-[420px] min-h-[120px] max-h-[150px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
-              >
-                <div className="flex justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <TbCash
-                      style={{
-                        color: getDemandColor(call.demanda).iconColor,
-                        fontSize: "25px",
-                      }}
-                    />
-                    <h1 className={`${getDemandColor(call.demanda).paragraph}`}>
-                      {call.demanda}
+            {filteredInProgress ? (
+              filteredInProgress.map((call) => (
+                <div
+                  onClick={() => handleOpenModal(call)}
+                  key={call._id}
+                  className="w-[420px] min-h-[120px] max-h-[150px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+                >
+                  <div className="flex justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <TbCash
+                        style={{
+                          color: getDemandColor(call.demanda).iconColor,
+                          fontSize: "25px",
+                        }}
+                      />
+                      <h1
+                        className={`${getDemandColor(call.demanda).paragraph}`}
+                      >
+                        {call.demanda}
+                      </h1>
+                    </div>
+                    <p
+                      className={`text-xs font-bold border p-1 rounded-lg ${
+                        statusStyles[call.status].textColor
+                      } ${statusStyles[call.status].borderColor}`}
+                    >
+                      {call.status}
+                    </p>
+                  </div>
+                  <div className="flex justify-between">
+                    <h1 className="text-gray-600 text-xs">
+                      {call.nomeCliente}
+                    </h1>
+                    <p className="text-[#15599a] font-bold text-xs">
+                      #{call.codigoProjeto}
+                    </p>
+                  </div>
+                  <div className="flex justify-center">
+                    <h1 className="text-gray-600 text-xs text-center">
+                      {call.servico}
                     </h1>
                   </div>
-                  <p
-                    className={`text-xs font-bold border p-1 rounded-lg ${
-                      statusStyles[call.status].textColor
-                    } ${statusStyles[call.status].borderColor}`}
-                  >
-                    {call.status}
-                  </p>
                 </div>
-                <div className="flex justify-between">
-                  <h1 className="text-gray-600 text-xs">{call.nomeCliente}</h1>
-                  <p className="text-[#15599a] font-bold text-xs">
-                    #{call.codigoProjeto}
-                  </p>
-                </div>
-                <div className="flex justify-center">
-                  <h1 className="text-gray-600 text-xs text-center">
-                    {call.servico}
-                  </h1>
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <LoadingPage />
+            )}
           </div>
         </div>
         {/** Fechados */}
@@ -385,7 +395,7 @@ function ChamadosADM() {
                   CHAMADOS FINALIZADOS
                 </p>
                 <p className="font-bold text-[#fead61]">
-                  ({filteredClosedCalls.length})
+                  ({filteredClosedCalls?.length})
                 </p>
               </div>
               {closedCallsDropdownMenuVisible ? (
@@ -511,45 +521,53 @@ function ChamadosADM() {
             </AnimatePresence>
           </div>
           <div className="flex grow overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
-            {filteredClosedCalls.map((call) => (
-              <div
-                onClick={() => handleOpenModal(call)}
-                key={call._id}
-                className="w-full lg:w-[420px] h-[100px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
-              >
-                <div className="flex justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <TbCash
-                      style={{
-                        color: getDemandColor(call.demanda).iconColor,
-                        fontSize: "25px",
-                      }}
-                    />
-                    <h1 className={`${getDemandColor(call.demanda).paragraph}`}>
-                      {call.demanda}
+            {filteredClosedCalls ? (
+              filteredClosedCalls.map((call) => (
+                <div
+                  onClick={() => handleOpenModal(call)}
+                  key={call._id}
+                  className="w-full lg:w-[420px] h-[100px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+                >
+                  <div className="flex justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <TbCash
+                        style={{
+                          color: getDemandColor(call.demanda).iconColor,
+                          fontSize: "25px",
+                        }}
+                      />
+                      <h1
+                        className={`${getDemandColor(call.demanda).paragraph}`}
+                      >
+                        {call.demanda}
+                      </h1>
+                    </div>
+                    <p
+                      className={`text-xs font-bold border p-1 rounded-lg ${
+                        statusStyles[call.status].textColor
+                      } ${statusStyles[call.status].borderColor}`}
+                    >
+                      {call.status}
+                    </p>
+                  </div>
+                  <div className="flex justify-between">
+                    <h1 className="text-gray-600 text-xs">
+                      {call.nomeCliente}
+                    </h1>
+                    <p className="text-[#15599a] font-bold text-xs">
+                      #{call.codigoProjeto}
+                    </p>
+                  </div>
+                  <div className="flex justify-center">
+                    <h1 className="text-gray-600 text-xs text-center">
+                      {call.servico}
                     </h1>
                   </div>
-                  <p
-                    className={`text-xs font-bold border p-1 rounded-lg ${
-                      statusStyles[call.status].textColor
-                    } ${statusStyles[call.status].borderColor}`}
-                  >
-                    {call.status}
-                  </p>
                 </div>
-                <div className="flex justify-between">
-                  <h1 className="text-gray-600 text-xs">{call.nomeCliente}</h1>
-                  <p className="text-[#15599a] font-bold text-xs">
-                    #{call.codigoProjeto}
-                  </p>
-                </div>
-                <div className="flex justify-center">
-                  <h1 className="text-gray-600 text-xs text-center">
-                    {call.servico}
-                  </h1>
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <LoadingPage />
+            )}
           </div>
         </div>
         {modalIsOpen && (

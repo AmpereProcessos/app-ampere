@@ -144,7 +144,9 @@ function Comissionamento() {
       session?.user.accessibleRoutes.includes("O&M") ||
       session?.user.accessibleRoutes.includes("Pós-Venda")
     ) {
-      getProjects();
+      if (!projects) {
+        getProjects();
+      }
     } else {
       if (session?.user) {
         router.push("/");

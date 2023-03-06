@@ -259,7 +259,9 @@ function Obras() {
       session?.user.accessibleRoutes.includes("Obras") ||
       session?.user.accessibleRoutes.includes("Marketing")
     ) {
-      getProjects(session.user);
+      if (!projects) {
+        getProjects(session.user);
+      }
     } else {
       if (session?.user) {
         router.push("/");

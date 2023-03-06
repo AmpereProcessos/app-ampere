@@ -143,7 +143,9 @@ function ChamadosSuprimentos() {
   }
   useEffect(() => {
     if (session?.user.accessibleRoutes.includes("Suprimentos")) {
-      getCalls();
+      if (!openCalls.general) {
+        getCalls();
+      }
     } else {
       if (session?.user) {
         router.push("/");

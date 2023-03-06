@@ -117,21 +117,21 @@ function Header({ toggleSidebar }) {
 
         <div
           onClick={() => setNotificationIsOpen(!notificationIsOpen)}
-          className="hidden:flex cursor-pointer"
+          className="hidden:flex cursor-pointer items-center"
         >
           {unreadCount > 0 ? (
-            <div className="hidden lg:flex items-center w-[25px] h-[22px] ml-2 hover:scale-105 duration-500 ease-in-out">
-              <Image src={AlertVolts} />
+            <div className="flex items-center justify-center">
+              <div className="hidden lg:flex items-center w-[25px] h-[22px] ml-2 hover:scale-105 duration-500 ease-in-out">
+                <Image src={AlertVolts} />
+              </div>
+              <p className="hidden lg:flex mb-2 items-center justify-center bg-red-500 rounded-full font-bold w-[20px] h-[20px] text-xs text-center">
+                {unreadCount}
+              </p>
             </div>
           ) : (
             <div className="hidden lg:flex items-center w-[25px] h-[22px] ml-2 hover:scale-105 duration-500 ease-in-out">
               <Image src={SleepVolts} />
             </div>
-          )}
-          {unreadCount > 0 && (
-            <p className="bg-red-500 rounded-full font-bold w-[20px] h-[20px] text-xs text-center">
-              {unreadCount}
-            </p>
           )}
         </div>
         {session?.user.manager && (

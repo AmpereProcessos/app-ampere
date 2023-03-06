@@ -220,7 +220,9 @@ function Comercial({ users }) {
       session?.user.accessibleRoutes.includes("PPS") ||
       session?.user.accessibleRoutes.includes("Marketing")
     ) {
-      getProjects(session.user);
+      if (!projects) {
+        getProjects(session.user);
+      }
     } else {
       if (session?.user) {
         router.push("/");
@@ -239,7 +241,7 @@ function Comercial({ users }) {
                   Projetos no estágio comercial
                 </p>
                 <p className="font-bold text-[#fead61]">
-                  ({filteredProjects.length})
+                  ({filteredProjects?.length})
                 </p>
                 {filteredProjects && (
                   <p className="font-bold text-[#fead61]">

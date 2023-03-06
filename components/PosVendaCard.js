@@ -613,7 +613,7 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
         </div>
       ) : (
         <div
-          className={`flex flex-col lg:flex-row justify-between w-1/2 ${
+          className={`flex items-center flex-col lg:flex-row justify-between w-1/2 ${
             project.jornada?.dataUltimoContato
               ? getDateDiff(
                   new Date(),
@@ -622,7 +622,7 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
                 ? "border-4 border-red-400"
                 : "border border-gray-300"
               : "border-4 border-red-400"
-          } hover:bg-blue-100 px-2`}
+          } hover:bg-blue-100 p-2`}
         >
           <p className="text-center font-bold">{project.nomeDoContrato}</p>
           <p

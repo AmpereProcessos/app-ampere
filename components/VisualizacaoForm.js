@@ -1080,7 +1080,7 @@ function VisualizacaoForm({
               }
             />
             <NumberInput
-              label={"VALOR O&M+SEGURO"}
+              label={"VALOR O&M+SEGURO (se não incluso)"}
               editable={true}
               value={dados.valorOeMOuSeguro}
               handleChange={(value) =>

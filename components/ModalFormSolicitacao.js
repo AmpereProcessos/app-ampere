@@ -550,6 +550,7 @@ function ModalFormSolicitacao({
       }).qtdeManutencoes,
       diagnostico: undefined,
       plano: dados.planoOeM,
+      valor: isNaN(Number(dados.valor)) ? 0 : Number(dados.valor),
     },
     obra: {
       laudo: dados.laudo ? dados.laudo : "NÃO DEFINIDO",
@@ -2405,7 +2406,7 @@ function ModalFormSolicitacao({
                         }
                       />
                       <NumberInput
-                        label={"VALOR O&M+SEGURO"}
+                        label={"VALOR O&M+SEGURO (se não incluso)"}
                         editable={editor}
                         value={dados.valorOeMOuSeguro}
                         handleChange={(value) =>

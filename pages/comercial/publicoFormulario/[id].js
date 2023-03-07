@@ -1145,7 +1145,7 @@ function Formulario({ info }) {
                   }
                 />
                 <NumberInput
-                  label={"VALOR O&M+SEGURO"}
+                  label={"VALOR O&M+SEGURO (se não incluso)"}
                   value={dados.valorOeMOuSeguro}
                   handleChange={(value) =>
                     setDados({

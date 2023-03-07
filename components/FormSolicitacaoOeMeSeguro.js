@@ -31,13 +31,6 @@ function FormSolicitacaoOeMeSeguro({ avancar, setDados, dados, voltar }) {
       setMessage("Por favor, preencha uma opção válida de forma de pagamento");
       return false;
     }
-    if (
-      (dados.possuiOeM == "SIM" || dados.clienteSegurado == "SIM") &&
-      dados.valorOeMOuSeguro == null
-    ) {
-      setMessage("Por favor, preencha o valor do O&M+Seguro");
-      return false;
-    }
     setMessage("");
     return true;
   }
@@ -206,7 +199,7 @@ function FormSolicitacaoOeMeSeguro({ avancar, setDados, dados, voltar }) {
                 }
               />
               <NumberFloatingInput
-                label={"VALOR O&M+SEGURO"}
+                label={"VALOR O&M+SEGURO (se não incluso)"}
                 editable={true}
                 value={dados.valorOeMOuSeguro}
                 handleChange={(value) =>

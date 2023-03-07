@@ -1098,7 +1098,7 @@ function ModalSolicitacaoVendas({
                     }
                   />
                   <NumberInput
-                    label={"VALOR O&M+SEGURO"}
+                    label={"VALOR O&M+SEGURO (se não incluso)"}
                     editable={editable}
                     value={dados.valorOeMOuSeguro}
                     handleChange={(value) =>

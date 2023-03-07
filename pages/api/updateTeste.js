@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
 import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-  // const collection = db.collection("dados");
+  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  const collection = db.collection("dados");
   // let clients = await collection
   //   .aggregate([
   //     {
@@ -108,7 +108,17 @@ export default async function handler(req, res) {
   //     },
   //   ])
   //   .toArray();
-  res.json("DESATIVADA");
+  let arr = await collection.updateMany(
+    {
+      "estruturaPersonalizada.respPagamento": "NÃO SE APLICA",
+    },
+    {
+      $set: {
+        "estruturaPersonalizada.respPagamento": "NÃO SE APLICA",
+      },
+    }
+  );
+  res.json(arr);
 }
 /*
   let arr = await collection.updateMany(

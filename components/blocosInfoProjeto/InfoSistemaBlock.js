@@ -1,14 +1,15 @@
 import React, { useContext } from "react";
-import TextInput from "./TextInput";
-import NumberInput from "./NumberInput";
-import SelectInput from "./SelectInput";
-import { AppContext } from "../context/AppContext";
+import TextInput from "../TextInput";
+import NumberInput from "../NumberInput";
+import SelectInput from "../SelectInput";
+import { AppContext } from "../../context/AppContext";
 function InfoSistemaBlock({
   editor,
   infoHolder,
   setInfo,
   changes,
   setChanges,
+  showPaymentInfo = false,
 }) {
   const { credentials } = useContext(AppContext);
   return (
@@ -45,7 +46,7 @@ function InfoSistemaBlock({
             });
           }}
         />
-        {credentials?.visualizacao == undefined && (
+        {showPaymentInfo && (
           <NumberInput
             tag={"R$"}
             label={"VALOR DO PROJETO"}
@@ -71,6 +72,7 @@ function InfoSistemaBlock({
             }}
           />
         )}
+
         <SelectInput
           label={"INICIAR PROJETO"}
           value={

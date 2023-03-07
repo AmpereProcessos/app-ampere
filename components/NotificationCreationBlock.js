@@ -63,7 +63,6 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
     }
     return true;
   }
-  console.log(users);
   return (
     <>
       {notifyMenuVisible ? (

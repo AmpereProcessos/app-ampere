@@ -18,6 +18,9 @@ import OSCreationBlock from "./OSCreationBlock";
 import AnexoArquivo from "./AnexoArquivo";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import { useKey } from "../utils/hooks";
+import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
+import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
+import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -1227,7 +1230,15 @@ function ModalObras({
                   </div>
                 )}
             </div>
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+            <InfoSistemaBlock
+              editor={true}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              showPaymentInfo={false}
+            />
+            {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 SISTEMA
               </span>
@@ -1395,7 +1406,7 @@ function ModalObras({
                   }}
                 />
               </div>
-            </div>
+            </div> */}
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 VISITA TÉCNICA
@@ -1641,436 +1652,34 @@ function ModalObras({
                 </div>
               )}
             </div>
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                PADRÃO
-              </span>
-              <div className="flex gap-2 w-full justify-center flex-wrap pb-2">
-                <SelectInput
-                  label={"AUMENTO DE CARGA"}
-                  value={
-                    infoHolder.projeto.aumentoDeCarga
-                      ? infoHolder.projeto.aumentoDeCarga
-                      : "NÃO DEFINIDO"
-                  }
-                  options={[
-                    { label: "SIM", value: "SIM" },
-                    { label: "NÃO", value: "NÃO" },
-                    { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "projeto.aumentoDeCarga": value,
-                      "projeto.acStatus":
-                        value == "SIM" && infoHolder.acStatus != "REALIZADO"
-                          ? "PENDÊNCIA"
-                          : undefined,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      projeto: {
-                        ...infoHolder.projeto,
-                        aumentoDeCarga: value,
-                        acStatus:
-                          value == "SIM" && infoHolder.acStatus != "REALIZADO"
-                            ? "PENDÊNCIA"
-                            : undefined,
-                      },
-                    });
-                  }}
-                />
-                {infoHolder.projeto.aumentoDeCarga == "SIM" && (
-                  <SelectInput
-                    label={"STATUS AUMENTO DE CARGA"}
-                    editable={editor}
-                    value={
-                      infoHolder.projeto.acStatus
-                        ? infoHolder.projeto.acStatus
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      {
-                        label: "PENDÊNCIA",
-                        value: "PENDÊNCIA",
-                      },
-                      {
-                        label: "REALIZADO",
-                        value: "REALIZADO",
-                      },
-                      {
-                        label: "SOLICITADO COM G.D",
-                        value: "SOLICITADO COM G.D",
-                      },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "projeto.acStatus": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        projeto: {
-                          ...infoHolder.projeto,
-                          acStatus: value,
-                        },
-                      });
-                    }}
-                  />
-                )}
-                <SelectInput
-                  label={"PAGAMENTO DO PADRÃO"}
-                  editable={false}
-                  value={
-                    infoHolder.padrao?.respPagamento ==
-                      "NÃO HAVERA TROCA DE PADRÃO" ||
-                    infoHolder.padrao?.respPagamento == undefined
-                      ? "NÃO HAVERA TROCA PADRÃO"
-                      : infoHolder.padrao?.respPagamento
-                  }
-                  options={[
-                    {
-                      label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                      value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                    },
-                    {
-                      label: "CLIENTE PAGAR POR FORA",
-                      value: "CLIENTE PAGAR POR FORA",
-                    },
-                    {
-                      label: "INCLUSO NO CONTRATO",
-                      value: "INCLUSO NO CONTRATO",
-                    },
-                    {
-                      label: "NÃO HAVERA TROCA PADRÃO",
-                      value: "NÃO HAVERA TROCA PADRÃO",
-                    },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "padrao.respPagamento": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      padrao: { ...infoHolder.padrao, respPagamento: value },
-                    });
-                  }}
-                />
-                <NumberInput
-                  tag={"R$"}
-                  label={"Valor do padrão"}
-                  editable={false}
-                  value={infoHolder.padrao.valor ? infoHolder.padrao.valor : 0}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "padrao.valor": Number(value),
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      padrao: { ...infoHolder.padrao, valor: Number(value) },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
-                  editable={false}
-                  value={
-                    infoHolder.padrao?.respInstalacao
-                      ? infoHolder.padrao?.respInstalacao
-                      : "NÃO SE APLICA"
-                  }
-                  options={[
-                    { label: "AMPERE", value: "AMPERE" },
-                    { label: "CLIENTE", value: "CLIENTE" },
-                    { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "padrao.respInstalacao": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      padrao: { ...infoHolder.padrao, respInstalacao: value },
-                    });
-                  }}
-                />
-                <TextInput
-                  label={"Amperagem"}
-                  editable={editor}
-                  value={
-                    infoHolder.visitaTecnica?.amperagem
-                      ? infoHolder.visitaTecnica.amperagem
-                      : ""
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "visitaTecnica.amperagem": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      visitaTecnica: {
-                        ...infoHolder.visitaTecnica,
-                        amperagem: value,
-                      },
-                    });
-                  }}
-                />
-              </div>
-              <div className="flex gap-2 justify-center flex-wrap pt-2 border-t border-gray-200">
-                <SelectInput
-                  label={"TIPO DO PADRÃO"}
-                  editable={editor}
-                  value={
-                    infoHolder.padrao.tipo != undefined
-                      ? infoHolder.padrao.tipo
-                      : "N/A"
-                  }
-                  options={[
-                    {
-                      label: "CONTRA A REDE",
-                      value: "CONTRA A REDE",
-                    },
-                    {
-                      label: "A FAVOR DA REDE",
-                      value: "A FAVOR DA REDE",
-                    },
-                    {
-                      label: "CONSTRUIR",
-                      value: "CONSTRUIR",
-                    },
-                    {
-                      label: "SUBESTAÇÃO",
-                      value: "SUBESTAÇÃO",
-                    },
-                    {
-                      label: "REFORMA DE PADRÃO",
-                      value: "REFORMA DE PADRÃO",
-                    },
-                    {
-                      label: "N/A",
-                      value: "N/A",
-                    },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "padrao.tipo": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      padrao: { ...infoHolder.padrao, tipo: value },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"TIPO DE ENTRADA"}
-                  value={
-                    infoHolder.padrao.tipoEntrada
-                      ? infoHolder.padrao.tipoEntrada
-                      : "NÃO DEFINIDO"
-                  }
-                  editable={editor}
-                  options={[
-                    {
-                      label: "AÉREA",
-                      value: "AÉREA",
-                    },
-                    {
-                      label: "SUBTERRÂNEO",
-                      value: "SUBTERRÂNEO",
-                    },
-                    {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
-                    },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({ ...changes, "padrao.tipoEntrada": value });
-                    setInfo({
-                      ...infoHolder,
-                      padrao: {
-                        ...infoHolder.padrao,
-                        tipoEntrada: value,
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"Saída do cliente"}
-                  editable={editor}
-                  value={
-                    infoHolder.visitaTecnica.saidaDoCliente
-                      ? infoHolder.visitaTecnica.saidaDoCliente
-                      : "N/A"
-                  }
-                  options={[
-                    { label: "SUBTERRANEO", value: "SUBTERRANEO" },
-                    { label: "AEREO", value: "AEREO" },
-                    { label: "N/A", value: "N/A" },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "visitaTecnica.saidaDoCliente": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      visitaTecnica: {
-                        ...infoHolder.visitaTecnica,
-                        saidaDoCliente: value,
-                      },
-                    });
-                  }}
-                />
-              </div>
-            </div>
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                ESTRUTURA PERSONALIZADA
-              </span>
-              <div className="flex gap-2 justify-center flex-wrap">
-                <div>
-                  <input
-                    disabled={true}
-                    checked={
-                      infoHolder.estruturaPersonalizada?.aplicavel === "SIM"
-                        ? true
-                        : false
-                    }
-                    onChange={(e) => {
-                      setChanges({
-                        ...changes,
-                        "estruturaPersonalizada.aplicavel": e.target.checked
-                          ? "SIM"
-                          : "NÃO",
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          aplicavel: e.target.checked ? "SIM" : "NÃO",
-                        },
-                      });
-                    }}
-                    type="checkbox"
-                    name="visitaTecnica"
-                    id="visitaTecnica"
-                  />
-                  <label className="ml-2" htmlFor="visitaTecnica">
-                    APLICÁVEL ?
-                  </label>
-                </div>
-                <SelectInput
-                  label={"Tipo da estrutura"}
-                  editable={false}
-                  value={
-                    infoHolder.estruturaPersonalizada?.tipo
-                      ? infoHolder.estruturaPersonalizada?.tipo
-                      : "N/A"
-                  }
-                  options={tiposDeEstruturas.map((tipo) => tipo)}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "estruturaPersonalizada.tipo": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      estruturaPersonalizada: {
-                        ...infoHolder.estruturaPersonalizada,
-                        tipo: value,
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"PAGAMENTO DA ESTRUTURA"}
-                  editable={false}
-                  value={
-                    infoHolder.estruturaPersonalizada?.respPagamento
-                      ? infoHolder.estruturaPersonalizada?.respPagamento
-                      : "NÃ SE APLICA"
-                  }
-                  options={[
-                    { label: "AMPERE", value: "AMPERE" },
-                    { label: "CLIENTE", value: "CLIENTE" },
-                    { label: "NÃO SE APLICA", value: "NÃ SE APLICA" },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "estruturaPersonalizada.respPagamento": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      estruturaPersonalizada: {
-                        ...infoHolder.estruturaPersonalizada,
-                        respPagamento: value,
-                      },
-                    });
-                  }}
-                />
-                <NumberInput
-                  tag={"R$"}
-                  label={"Valor da estrutura"}
-                  editable={false}
-                  value={
-                    infoHolder.estruturaPersonalizada?.valor == "-" ||
-                    infoHolder.estruturaPersonalizada?.valor == undefined
-                      ? 0
-                      : infoHolder.estruturaPersonalizada?.valor
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "estruturaPersonalizada.valor": Number(value),
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      estruturaPersonalizada: {
-                        ...infoHolder.estruturaPersonalizada,
-                        valor: Number(value),
-                      },
-                    });
-                  }}
-                />
-                {infoHolder.estruturaPersonalizada.aplicavel == "SIM" && (
-                  <SelectInput
-                    label={"STATUS da estrutura personalizada"}
-                    editable={editor}
-                    value={
-                      infoHolder.estruturaPersonalizada.aplicavel
-                        ? infoHolder.estruturaPersonalizada.status
-                          ? infoHolder.estruturaPersonalizada.status
-                          : "N/A"
-                        : "N/A"
-                    }
-                    options={[
-                      { label: "PRONTA", value: "PRONTA" },
-                      { label: "PENDÊNCIA", value: "PENDÊNCIA" },
-                      { label: "N/A", value: "N/A" },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "estruturaPersonalizada.status": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          status: value,
-                        },
-                      });
-                    }}
-                  />
-                )}
-              </div>
-            </div>
+            {![
+              "OPERAÇÃO E MANUTENÇÃO",
+              "BOMBA SOLAR",
+              "SISTEMA FOTOVOLTAICO (OFF GRID)",
+            ].includes(infoHolder.tipoDeServico) && (
+              <InfoPadraoBlock
+                comercialEdition={false}
+                technicalEdition={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                setChanges={setChanges}
+                showPaymentInfo={true}
+              />
+            )}
+            {![
+              "TROCA DE PADRÃO",
+              "REFORMA DE PADRÃO",
+              "SUBESTAÇÃO DE ENERGIA",
+            ].includes(infoHolder.tipoDeServico) && (
+              <InfoEstruturaBlock
+                comercialEdition={false}
+                technicalEdition={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                setChanges={setChanges}
+                showPaymentInfo={true}
+              />
+            )}
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 MATERIAL

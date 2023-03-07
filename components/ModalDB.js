@@ -784,12 +784,12 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                     value={
                       infoHolder.estruturaPersonalizada?.respPagamento
                         ? infoHolder.estruturaPersonalizada?.respPagamento
-                        : "NÃ SE APLICA"
+                        : "NÃO SE APLICA"
                     }
                     options={[
                       { label: "AMPERE", value: "AMPERE" },
                       { label: "CLIENTE", value: "CLIENTE" },
-                      { label: "NÃO SE APLICA", value: "NÃ SE APLICA" },
+                      { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
                     ]}
                     handleChange={(value) => {
                       setChanges({

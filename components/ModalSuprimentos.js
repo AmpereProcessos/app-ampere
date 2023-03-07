@@ -16,9 +16,10 @@ import NotificationCreationBlock from "./NotificationCreationBlock";
 import NumberInput from "./NumberInput";
 import dayjs from "dayjs";
 import AnexoArquivo from "./AnexoArquivo";
-import InfoSistemaBlock from "./InfoSistemaBlock";
+import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import { useKey } from "../utils/hooks";
+import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -655,256 +656,22 @@ function ModalSuprimentos({
               changes={changes}
               setChanges={setChanges}
             />
-            {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  SISTEMA
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <NumberInput
-                    label={"NÚMERO DE MÓDULOS"}
-                    editable={editor}
-                    value={
-                      infoHolder.sistema?.qtdeModulos != undefined &&
-                      infoHolder.sistema?.qtdeModulos != "-"
-                        ? infoHolder.sistema?.qtdeModulos
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "sistema.qtdeModulos": Number(value),
-                        "sistema.potPico":
-                          Number(infoHolder.sistema?.potModulos * value) / 1000,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          qtdeModulos: Number(value),
-                          potPico:
-                            Number(infoHolder.sistema?.potModulos * value) /
-                            1000,
-                        },
-                      });
-                    }}
-                  />
-                  <TextInput
-                    unit={"W"}
-                    label={"POTÊNCIA DOS MÓDULOS"}
-                    editable={editor}
-                    value={
-                      infoHolder.sistema?.potModulos != undefined &&
-                      infoHolder.sistema?.potModulos != "-"
-                        ? infoHolder.sistema?.potModulos
-                        : ""
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "sistema.potModulos": value,
-                        "sistema.potPico":
-                          Number(value * infoHolder.sistema?.qtdeModulos) /
-                          1000,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          potModulos: value,
-                          potPico:
-                            Number(value * infoHolder.sistema?.qtdeModulos) /
-                            1000,
-                        },
-                      });
-                    }}
-                  />
-                  <NumberInput
-                    unit={"kWp"}
-                    label={"POTÊNCIA PICO"}
-                    editable={editor}
-                    value={
-                      infoHolder.sistema?.potPico != undefined &&
-                      infoHolder.sistema?.potPico != "-"
-                        ? infoHolder.sistema?.potPico
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "sistema.potPico": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          potPico: Number(value),
-                        },
-                      });
-                    }}
-                  />
-                  <SelectInput
-                    label={"TOPOLOGIA"}
-                    value={
-                      infoHolder.sistema?.topologia
-                        ? infoHolder.sistema?.topologia
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      { label: "INVERSOR", value: "INVERSOR" },
-                      { label: "MICRO", value: "MICRO" },
-                      { label: "OUTROS SERV.", value: "OUTROS SERV." },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "sistema.topologia": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          topologia: value,
-                        },
-                      });
-                    }}
-                  />
-                  <TextInput
-                    label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
-                    editable={editor}
-                    value={
-                      infoHolder.sistema?.inversor
-                        ? infoHolder.sistema?.inversor
-                        : ""
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "sistema.inversor": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        sistema: {
-                          ...infoHolder.sistema,
-                          inversor: value,
-                        },
-                      });
-                    }}
-                  />
-                  {credentials?.visualizacao == undefined && (
-                    <NumberInput
-                      tag={"R$"}
-                      label={"VALOR DO PROJETO"}
-                      editable={editor}
-                      value={
-                        infoHolder.sistema?.valorProjeto != undefined &&
-                        infoHolder.sistema?.valorProjeto != "-"
-                          ? infoHolder.sistema?.valorProjeto
-                          : 0
-                      }
-                      handleChange={(value) => {
-                        setChanges({
-                          ...changes,
-                          "sistema.valorProjeto": Number(value),
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          sistema: {
-                            ...infoHolder.sistema,
-                            valorProjeto: Number(value),
-                          },
-                        });
-                      }}
-                    />
-                  )}
-                </div>
-              </div> */}
-            {infoHolder.estruturaPersonalizada.aplicavel == "SIM" && (
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                  ESTRUTURA PERSONALIZADA
-                </span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <SelectInput
-                    label={"STATUS DA ENTREGA DA ESTRUTURA"}
-                    editable={editor}
-                    value={
-                      infoHolder.estruturaPersonalizada.statusEntrega
-                        ? infoHolder.estruturaPersonalizada?.statusEntrega
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      {
-                        label: "AGUARDANDO COMPRA",
-                        value: "AGUARDANDO COMPRA",
-                      },
-                      {
-                        label: "EM ROTA",
-                        value: "EM ROTA",
-                      },
-                      {
-                        label: "ENTREGUE",
-                        value: "ENTREGUE",
-                      },
-                      {
-                        label: "CANCELADO",
-                        value: "CANCELADO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "estruturaPersonalizada.statusEntrega": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          statusEntrega: value,
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label={"DATA DE ENTREGA DA ESTRUTURA"}
-                    editable={editor}
-                    value={
-                      infoHolder.estruturaPersonalizada?.dataEntrega !=
-                        undefined &&
-                      infoHolder.estruturaPersonalizada.dataEntrega != "-"
-                        ? new Date(
-                            infoHolder.estruturaPersonalizada.dataEntrega
-                          )
-                            .toISOString()
-                            .slice(0, 10)
-                        : null
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "estruturaPersonalizada.dataEntrega": isNaN(value)
-                          ? new Date(value).toISOString()
-                          : null,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        estruturaPersonalizada: {
-                          ...infoHolder.estruturaPersonalizada,
-                          dataEntrega: isNaN(value)
-                            ? new Date(value).toISOString()
-                            : null,
-                        },
-                      });
-                    }}
-                  />
-                </div>
-              </div>
-            )}
+            {![
+              "TROCA DE PADRÃO",
+              "REFORMA DE PADRÃO",
+              "SUBESTAÇÃO DE ENERGIA",
+            ].includes(infoHolder.tipoDeServico) &&
+              infoHolder.estruturaPersonalizada.aplicavel == "SIM" && (
+                <InfoEstruturaBlock
+                  comercialEdition={true}
+                  technicalEdition={false}
+                  infoHolder={infoHolder}
+                  setInfo={setInfo}
+                  setChanges={setChanges}
+                  showPaymentInfo={false}
+                  project={project}
+                />
+              )}
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 Informações da compra

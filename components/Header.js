@@ -8,6 +8,7 @@ import AlertVolts from "../utils/alertVolts-svg.svg";
 import SleepVolts from "../utils/sleepVolts-svg.svg";
 import { BiLogIn } from "react-icons/bi";
 import { TbPresentationAnalytics } from "react-icons/tb";
+import { FaUser } from "react-icons/fa";
 import {
   MdNotificationsNone,
   MdOutlineNotificationsActive,
@@ -84,7 +85,7 @@ function Header({ toggleSidebar }) {
           Seja bem vindo,{" "}
           <strong className="text-[#15599a]">{session?.user.name}</strong> !
         </p>
-        {session.user.image && (
+        {session.user.image ? (
           <div className="relative w-[40px] h-[40px] ml-2">
             <Image
               style={{ borderRadius: "100%", cursor: "pointer" }}
@@ -94,6 +95,15 @@ function Header({ toggleSidebar }) {
               fill={true}
               layout={"fill"}
               onClick={() => setConfigDropDown((prev) => !prev)}
+            />
+          </div>
+        ) : (
+          <div className="ml-2 rounded-full relative w-[40px] h-[40px] bg-gray-600 flex items-center justify-center cursor-pointer">
+            <FaUser
+              alt="USUÁRIO"
+              title="CONFIGURAÇÕES"
+              onClick={() => setConfigDropDown((prev) => !prev)}
+              style={{ color: "white", fontSize: "15px" }}
             />
           </div>
         )}

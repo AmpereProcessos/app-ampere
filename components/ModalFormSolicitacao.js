@@ -470,17 +470,19 @@ function ModalFormSolicitacao({
     },
     sistema: {
       qtdeModulos: getSummedValues({
-        qtde: dados.qtdeModulos ? dados.qtdeModulos.toString() : "0",
-        pot: dados.potModulos ? dados.potModulos.toString() : "0",
+        qtde: dados.qtdeModulos ? dados.qtdeModulos?.toString() : "0",
+        pot: dados.potModulos ? dados.potModulos?.toString() : "0",
       }).summedModules,
       potModulos: dados.potModulos,
       potPico: getSummedValues({
-        qtde: dados.qtdeModulos ? dados.qtdeModulos.toString() : "0",
-        pot: dados.potModulos ? dados.potModulos.toString() : "0",
+        qtde: dados.qtdeModulos ? dados.qtdeModulos?.toString() : "0",
+        pot: dados.potModulos ? dados.potModulos?.toString() : "0",
       }).totalPot,
       topologia: dados.topologia,
       inversor: getJoinedInfo({
-        marca: dados.marcaInversor.toString().toUpperCase(),
+        marca: dados.marcaInversor
+          ? dados.marcaInversor?.toString().toUpperCase()
+          : "",
         qtde: dados.qtdeInversor ? dados.qtdeInversor.toString() : "0",
         pot: dados.potInversor ? dados.potInversor.toString() : "0",
       }),
@@ -1784,9 +1786,15 @@ function ModalFormSolicitacao({
                     </span>
                     <p className="text-xs w-full text-center  text-gray-600 outline-none">
                       {getJoinedInfo({
-                        marca: dados.marcaInversor.toString().toUpperCase(),
-                        qtde: dados.qtdeInversor.toString(),
-                        pot: dados.potInversor.toString(),
+                        marca: dados.marcaInversor
+                          ? dados.marcaInversor?.toString().toUpperCase()
+                          : "",
+                        qtde: dados.qtdeInversor
+                          ? dados.qtdeInversor?.toString()
+                          : "",
+                        pot: dados.potInversor
+                          ? dados.potInversor?.toString()
+                          : "",
                       })}
                     </p>
                   </div>
@@ -1856,9 +1864,15 @@ function ModalFormSolicitacao({
                     </span>
                     <p className="text-xs w-full text-center  text-gray-600 outline-none">
                       {getJoinedInfo({
-                        marca: dados.marcaModulos.toString().toUpperCase(),
-                        qtde: dados.qtdeModulos.toString(),
-                        pot: dados.potModulos.toString(),
+                        marca: dados.marcaModulos
+                          ? dados.marcaModulos.toString().toUpperCase()
+                          : "",
+                        qtde: dados.qtdeModulos
+                          ? dados.qtdeModulos.toString()
+                          : "",
+                        pot: dados.potModulos
+                          ? dados.potModulos.toString()
+                          : "",
                       })}
                     </p>
                   </div>

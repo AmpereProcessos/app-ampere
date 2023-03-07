@@ -162,39 +162,65 @@ function MeuPerfil({ error, info }) {
             <div className="flex flex-col items-center">
               <div className="mb-3 rounded-full relative w-[150px] h-[150px]">
                 {!newImage && info.avatar_url ? (
-                  <Image
-                    src={infoHolder.avatar_url}
-                    // width={96}
-                    // height={96}
-                    fill={true}
-                    layout={"fill"}
-                    style={{ borderRadius: "100%" }}
-                  />
+                  <>
+                    <Image
+                      src={infoHolder.avatar_url}
+                      // width={96}
+                      // height={96}
+                      fill={true}
+                      layout={"fill"}
+                      style={{ borderRadius: "100%" }}
+                    />
+                    <div className="flex items-center justify-center rounded-full w-[150px] h-[150px] absolute opacity-0 hover:opacity-60 bg-gray-400">
+                      <input
+                        onChange={(e) => setNewImage(e.target.files[0])}
+                        className="h-full w-full opacity-0"
+                        type="file"
+                        accept="image/png, image/jpeg"
+                      />
+                      <p className="absolute text-white font-bold translate-x-[-10%] translate-y-[-10%]">
+                        Editar
+                      </p>
+                    </div>
+                  </>
                 ) : newImage ? (
-                  <Image
-                    src={infoHolder.avatar_url}
-                    // width={96}
-                    // height={96}
-                    fill={true}
-                    layout={"fill"}
-                    style={{ borderRadius: "100%" }}
-                  />
+                  <>
+                    <Image
+                      src={infoHolder.avatar_url}
+                      // width={96}
+                      // height={96}
+                      fill={true}
+                      layout={"fill"}
+                      style={{ borderRadius: "100%" }}
+                    />
+                    <div className="flex items-center justify-center rounded-full w-[150px] h-[150px] absolute opacity-0 hover:opacity-60 bg-gray-400">
+                      <input
+                        onChange={(e) => setNewImage(e.target.files[0])}
+                        className="h-full w-full opacity-0"
+                        type="file"
+                        accept="image/png, image/jpeg"
+                      />
+                      <p className="absolute text-white font-bold translate-x-[-10%] translate-y-[-10%]">
+                        Editar
+                      </p>
+                    </div>
+                  </>
                 ) : (
-                  <div className="mb-3 rounded-full relative w-[150px] h-[150px] bg-gray-600 flex items-center justify-center">
+                  <div className="relative flex items-center justify-center rounded-full w-[150px] h-[150px] bg-gray-600">
                     <FaUser style={{ color: "white", fontSize: "35px" }} />
+                    <div className="flex items-center justify-center rounded-full w-[150px] h-[150px] absolute opacity-0 hover:opacity-60 bg-gray-400">
+                      <input
+                        onChange={(e) => setNewImage(e.target.files[0])}
+                        className="h-full w-full opacity-0"
+                        type="file"
+                        accept="image/png, image/jpeg"
+                      />
+                      <p className="absolute text-white font-bold translate-x-[-10%] translate-y-[-10%]">
+                        Editar
+                      </p>
+                    </div>
                   </div>
                 )}
-                <div className="flex items-center justify-center rounded-full w-[150px] h-[150px] absolute opacity-0 hover:opacity-60 bg-gray-400">
-                  <input
-                    onChange={(e) => setNewImage(e.target.files[0])}
-                    className="h-full w-full opacity-0"
-                    type="file"
-                    accept="image/png, image/jpeg"
-                  />
-                  <p className="absolute text-white font-bold translate-x-[-10%] translate-y-[-10%]">
-                    Editar
-                  </p>
-                </div>
               </div>
               <h1 className="text-gray-700 font-bold text-2xl">{info.nome}</h1>
               <h1 className="text-gray-500 font-bold text-sm">{info.role}</h1>

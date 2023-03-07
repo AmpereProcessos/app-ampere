@@ -612,261 +612,268 @@ function Formulario({ info }) {
               />
             </div>
           </div>
-          <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              DADOS DO SISTEMA
-            </span>
-            <div className="flex justify-center">
-              <SelectInput
-                label={"TOPOLOGIA"}
-                value={dados.topologia}
-                handleChange={(value) =>
-                  setDados({ ...dados, topologia: value })
-                }
-                options={[
-                  {
-                    label: "MICRO-INVERSOR",
-                    value: "MICRO",
-                  },
-                  {
-                    label: "INVERSOR",
-                    value: "INVERSOR",
-                  },
-                  {
-                    label: "OTIMIZADOR",
-                    value: "OTIMIZADOR",
-                  },
-                  {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
-                  },
-                ]}
-              />
-            </div>
-            <div className="flex gap-2 justify-around flex-wrap">
-              <TextInput
-                label={"MARCA DO INVERSOR/MICRO"}
-                value={dados.marcaInversor}
-                handleChange={(value) =>
-                  setDados({ ...dados, marcaInversor: value })
-                }
-              />
-              <TextInput
-                label={"QTDE INVERSOR/MICRO"}
-                value={dados.qtdeInversor}
-                handleChange={(value) =>
-                  setDados({ ...dados, qtdeInversor: value })
-                }
-              />
-              <TextInput
-                label={"POTÊNCIA INVERSOR/MICRO"}
-                unit={"W"}
-                value={dados.potInversor}
-                handleChange={(value) =>
-                  setDados({ ...dados, potInversor: value })
-                }
-              />
-            </div>
-            <div className="flex flex-col text-sm lg:text-base  items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">
-                INFORMAÇÃO MICRO/INVERSOR
+          {![
+            "TROCA DE PADRÃO",
+            "REFORMA DE PADRÃO",
+            "SUBESTAÇÃO DE ENERGIA",
+          ].includes(dados.tipoDeServico) && (
+            <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                DADOS DO SISTEMA
               </span>
-              <p className="text-xs w-full text-center  text-gray-600 outline-none">
-                {getJoinedInfo({
-                  marca: dados.marcaInversor.toString().toUpperCase(),
-                  qtde: dados.qtdeInversor.toString(),
-                  pot: dados.potInversor.toString(),
-                })}
-              </p>
-            </div>
-            {dados.topologia == "OTIMIZADOR" && (
-              <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <div className="flex justify-center">
+                <SelectInput
+                  label={"TOPOLOGIA"}
+                  value={dados.topologia}
+                  handleChange={(value) =>
+                    setDados({ ...dados, topologia: value })
+                  }
+                  options={[
+                    {
+                      label: "MICRO-INVERSOR",
+                      value: "MICRO",
+                    },
+                    {
+                      label: "INVERSOR",
+                      value: "INVERSOR",
+                    },
+                    {
+                      label: "OTIMIZADOR",
+                      value: "OTIMIZADOR",
+                    },
+                    {
+                      label: "NÃO DEFINIDO",
+                      value: "NÃO DEFINIDO",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="flex gap-2 justify-around flex-wrap">
                 <TextInput
-                  label={"MARCA DO OTIMIZADOR"}
-                  value={dados.marcaOtimizador ? dados.marcaOtimizador : ""}
+                  label={"MARCA DO INVERSOR/MICRO"}
+                  value={dados.marcaInversor}
                   handleChange={(value) =>
-                    setDados({ ...dados, marcaOtimizador: value })
+                    setDados({ ...dados, marcaInversor: value })
                   }
                 />
-                <NumberInput
-                  label={"QTDE DO OTIMIZADOR"}
-                  value={dados.qtdeOtimizador ? dados.qtdeOtimizador : null}
+                <TextInput
+                  label={"QTDE INVERSOR/MICRO"}
+                  value={dados.qtdeInversor}
                   handleChange={(value) =>
-                    setDados({ ...dados, qtdeOtimizador: Number(value) })
+                    setDados({ ...dados, qtdeInversor: value })
                   }
                 />
-                <NumberInput
-                  label={"POTÊNCIA DO OTIMIZADOR"}
+                <TextInput
+                  label={"POTÊNCIA INVERSOR/MICRO"}
                   unit={"W"}
-                  value={dados.potOtimizador ? dados.potOtimizador : null}
+                  value={dados.potInversor}
                   handleChange={(value) =>
-                    setDados({ ...dados, potOtimizador: Number(value) })
+                    setDados({ ...dados, potInversor: value })
                   }
                 />
               </div>
-            )}
-            <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
-              <TextInput
-                label={"MARCA DOS MÓDULOS"}
-                value={dados.marcaModulos}
-                handleChange={(value) =>
-                  setDados({ ...dados, marcaModulos: value })
-                }
-              />
-              <TextInput
-                label={"Nº DE MÓDULOS"}
-                value={dados.qtdeModulos}
-                handleChange={(value) =>
-                  setDados({ ...dados, qtdeModulos: value })
-                }
-              />
-              <TextInput
-                label={"POTÊNCIA DOS MÓDULOS"}
-                unit={"W"}
-                value={dados.potModulos}
-                handleChange={(value) =>
-                  setDados({ ...dados, potModulos: value })
-                }
-              />
-            </div>
-            <div className="flex flex-col text-sm lg:text-base  items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">
-                INFORMAÇÃO MÓDULOS
-              </span>
-              <p className="text-xs w-full text-center  text-gray-600 outline-none">
-                {getJoinedInfo({
-                  marca: dados.marcaModulos.toString().toUpperCase(),
-                  qtde: dados.qtdeModulos.toString(),
-                  pot: dados.potModulos.toString(),
-                })}
-              </p>
-            </div>
-            {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
-              <>
-                <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200 mt-2">
-                  <div className="flex justify-center items-center w-full">
-                    <TextInput
-                      label={"MARCA DO CONTROLADOR"}
-                      editable={true}
-                      value={dados.marcaControlador}
-                      handleChange={(value) =>
-                        setDados({
-                          ...dados,
-                          marcaControlador: value.toUpperCase(),
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="flex justify-center items-center w-full">
-                    <NumberInput
-                      label={"QTDE DE CONTROLADORES"}
-                      editable={true}
-                      value={dados.qtdeControlador}
-                      handleChange={(value) =>
-                        setDados({
-                          ...dados,
-                          qtdeControlador: Number(value),
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="flex justify-center items-center w-full">
-                    <SelectInput
-                      label={"TIPO DO CONTROLADOR"}
-                      editable={true}
-                      value={
-                        dados.tipoControlador
-                          ? dados.tipoControlador
-                          : "NÃO DEFINIDO"
-                      }
-                      options={[
-                        {
-                          label: "INTEGRADO AO INVERSOR",
-                          value: "INTEGRADO AO INVERSOR",
-                        },
-                        {
-                          label: "COMPRO EM SEPARADO",
-                          value: "SEPARADO",
-                        },
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, tipoControlador: value })
-                      }
-                    />
-                  </div>
-                  <div className="flex justify-center items-center w-full">
-                    <NumberInput
-                      label={"CORRENTE DE CARGA (em A)"}
-                      editable={true}
-                      value={dados.correnteControlador}
-                      handleChange={(value) =>
-                        setDados({
-                          ...dados,
-                          correnteControlador: Number(value),
-                        })
-                      }
-                    />
-                  </div>
+              <div className="flex flex-col text-sm lg:text-base  items-center">
+                <span className="uppercase font-bold font-raleway text-center text-sm">
+                  INFORMAÇÃO MICRO/INVERSOR
+                </span>
+                <p className="text-xs w-full text-center  text-gray-600 outline-none">
+                  {getJoinedInfo({
+                    marca: dados.marcaInversor.toString().toUpperCase(),
+                    qtde: dados.qtdeInversor.toString(),
+                    pot: dados.potInversor.toString(),
+                  })}
+                </p>
+              </div>
+              {dados.topologia == "OTIMIZADOR" && (
+                <div className="flex gap-2 justify-around flex-wrap mt-2">
+                  <TextInput
+                    label={"MARCA DO OTIMIZADOR"}
+                    value={dados.marcaOtimizador ? dados.marcaOtimizador : ""}
+                    handleChange={(value) =>
+                      setDados({ ...dados, marcaOtimizador: value })
+                    }
+                  />
+                  <NumberInput
+                    label={"QTDE DO OTIMIZADOR"}
+                    value={dados.qtdeOtimizador ? dados.qtdeOtimizador : null}
+                    handleChange={(value) =>
+                      setDados({ ...dados, qtdeOtimizador: Number(value) })
+                    }
+                  />
+                  <NumberInput
+                    label={"POTÊNCIA DO OTIMIZADOR"}
+                    unit={"W"}
+                    value={dados.potOtimizador ? dados.potOtimizador : null}
+                    handleChange={(value) =>
+                      setDados({ ...dados, potOtimizador: Number(value) })
+                    }
+                  />
                 </div>
-                <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200">
-                  <div className="flex justify-center items-center w-full">
-                    <TextInput
-                      label={"MARCA DA BATERIA"}
-                      editable={true}
-                      value={dados.marcaBateria}
-                      handleChange={(value) =>
-                        setDados({
-                          ...dados,
-                          marcaBateria: value.toUpperCase(),
-                        })
-                      }
-                    />
+              )}
+              <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
+                <TextInput
+                  label={"MARCA DOS MÓDULOS"}
+                  value={dados.marcaModulos}
+                  handleChange={(value) =>
+                    setDados({ ...dados, marcaModulos: value })
+                  }
+                />
+                <TextInput
+                  label={"Nº DE MÓDULOS"}
+                  value={dados.qtdeModulos}
+                  handleChange={(value) =>
+                    setDados({ ...dados, qtdeModulos: value })
+                  }
+                />
+                <TextInput
+                  label={"POTÊNCIA DOS MÓDULOS"}
+                  unit={"W"}
+                  value={dados.potModulos}
+                  handleChange={(value) =>
+                    setDados({ ...dados, potModulos: value })
+                  }
+                />
+              </div>
+              <div className="flex flex-col text-sm lg:text-base  items-center">
+                <span className="uppercase font-bold font-raleway text-center text-sm">
+                  INFORMAÇÃO MÓDULOS
+                </span>
+                <p className="text-xs w-full text-center  text-gray-600 outline-none">
+                  {getJoinedInfo({
+                    marca: dados.marcaModulos.toString().toUpperCase(),
+                    qtde: dados.qtdeModulos.toString(),
+                    pot: dados.potModulos.toString(),
+                  })}
+                </p>
+              </div>
+              {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
+                <>
+                  <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200 mt-2">
+                    <div className="flex justify-center items-center w-full">
+                      <TextInput
+                        label={"MARCA DO CONTROLADOR"}
+                        editable={true}
+                        value={dados.marcaControlador}
+                        handleChange={(value) =>
+                          setDados({
+                            ...dados,
+                            marcaControlador: value.toUpperCase(),
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="flex justify-center items-center w-full">
+                      <NumberInput
+                        label={"QTDE DE CONTROLADORES"}
+                        editable={true}
+                        value={dados.qtdeControlador}
+                        handleChange={(value) =>
+                          setDados({
+                            ...dados,
+                            qtdeControlador: Number(value),
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="flex justify-center items-center w-full">
+                      <SelectInput
+                        label={"TIPO DO CONTROLADOR"}
+                        editable={true}
+                        value={
+                          dados.tipoControlador
+                            ? dados.tipoControlador
+                            : "NÃO DEFINIDO"
+                        }
+                        options={[
+                          {
+                            label: "INTEGRADO AO INVERSOR",
+                            value: "INTEGRADO AO INVERSOR",
+                          },
+                          {
+                            label: "COMPRO EM SEPARADO",
+                            value: "SEPARADO",
+                          },
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        ]}
+                        handleChange={(value) =>
+                          setDados({ ...dados, tipoControlador: value })
+                        }
+                      />
+                    </div>
+                    <div className="flex justify-center items-center w-full">
+                      <NumberInput
+                        label={"CORRENTE DE CARGA (em A)"}
+                        editable={true}
+                        value={dados.correnteControlador}
+                        handleChange={(value) =>
+                          setDados({
+                            ...dados,
+                            correnteControlador: Number(value),
+                          })
+                        }
+                      />
+                    </div>
                   </div>
-                  <div className="flex justify-center items-center w-full">
-                    <NumberInput
-                      label={"QTDE DE BATERIAS"}
-                      editable={true}
-                      value={dados.qtdeBateria}
-                      handleChange={(value) =>
-                        setDados({ ...dados, qtdeBateria: Number(value) })
-                      }
-                    />
+                  <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200">
+                    <div className="flex justify-center items-center w-full">
+                      <TextInput
+                        label={"MARCA DA BATERIA"}
+                        editable={true}
+                        value={dados.marcaBateria}
+                        handleChange={(value) =>
+                          setDados({
+                            ...dados,
+                            marcaBateria: value.toUpperCase(),
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="flex justify-center items-center w-full">
+                      <NumberInput
+                        label={"QTDE DE BATERIAS"}
+                        editable={true}
+                        value={dados.qtdeBateria}
+                        handleChange={(value) =>
+                          setDados({ ...dados, qtdeBateria: Number(value) })
+                        }
+                      />
+                    </div>
+                    <div className="flex justify-center items-center w-full">
+                      <SelectInput
+                        label={"TIPO DA BATERIA"}
+                        editable={true}
+                        value={
+                          dados.tipoBateria ? dados.tipoBateria : "NÃO DEFINIDO"
+                        }
+                        options={[
+                          { label: "LÍTIO", value: "LÍTIO" },
+                          { label: "ESTACIONÁRIA", value: "ESTACIONÁRIA" },
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        ]}
+                        handleChange={(value) =>
+                          setDados({ ...dados, tipoBateria: value })
+                        }
+                      />
+                    </div>
+                    <div className="flex justify-center items-center w-full">
+                      <NumberInput
+                        label={"CAPACIDADE (em Ah)"}
+                        editable={true}
+                        value={dados.capacidadeBateria}
+                        handleChange={(value) =>
+                          setDados({
+                            ...dados,
+                            capacidadeBateria: Number(value),
+                          })
+                        }
+                      />
+                    </div>
                   </div>
-                  <div className="flex justify-center items-center w-full">
-                    <SelectInput
-                      label={"TIPO DA BATERIA"}
-                      editable={true}
-                      value={
-                        dados.tipoBateria ? dados.tipoBateria : "NÃO DEFINIDO"
-                      }
-                      options={[
-                        { label: "LÍTIO", value: "LÍTIO" },
-                        { label: "ESTACIONÁRIA", value: "ESTACIONÁRIA" },
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, tipoBateria: value })
-                      }
-                    />
-                  </div>
-                  <div className="flex justify-center items-center w-full">
-                    <NumberInput
-                      label={"CAPACIDADE (em Ah)"}
-                      editable={true}
-                      value={dados.capacidadeBateria}
-                      handleChange={(value) =>
-                        setDados({
-                          ...dados,
-                          capacidadeBateria: Number(value),
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+                </>
+              )}
+            </div>
+          )}
+
           <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
             <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
               ESTRUTURA DE MONTAGEM

@@ -583,6 +583,17 @@ function FormSolicitacaoDadosContrato({ dados, setDados, avancar }) {
           className="block p-2.5 w-full h-[80px] outline-none resize-none text-center text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
       </div>
+      <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
+        <span className="uppercase font-bold font-raleway text-center text-sm">
+          OBSERVAÇÃO ADICIONAL ACERCA DO SERVIÇO PRESTADO
+        </span>
+        <textarea
+          placeholder={"Descrição aqui.."}
+          value={dados.obsComercial}
+          onChange={(e) => setDados({ ...dados, obsComercial: e.target.value })}
+          className="block p-2.5 w-full h-[80px] outline-none resize-none text-center text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+      </div>
       {message && <p className="text-red-400 italic text-center">{message}</p>}
       <div className="flex w-full justify-center mt-2">
         <button

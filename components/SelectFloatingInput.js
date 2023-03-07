@@ -11,8 +11,6 @@ function SelectFoatingInput({
   notDefinedOption,
 }) {
   const [selectActive, setSelectActive] = useState(false);
-  console.log(options);
-  console.log(value);
   return (
     <div
       className={`flex flex-col relative items-center z-0 ${

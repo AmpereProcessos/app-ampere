@@ -15,6 +15,8 @@ import SolicitacaoOFFGRID from "../../components/SolicitacaoOFFGRID";
 import SolicitacaoBombaSolar from "../../components/SolicitacaoBombaSolar";
 import SolicitacaoOutrosServicos from "../../components/SolicitacaoOutrosServicos";
 import SolicitacaoOeM from "../../components/SolicitacaoOeM";
+import SolicitacaoManutencao from "../../components/SolicitacaoManutencao";
+import SolicitacaoAlteracaoPadrao from "../../components/SolicitacaoAlteracaoPadrao";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -204,11 +206,41 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             tipoDeServico={info.tipoDeServico}
           />
         )}
+        {info.tipoDeServico == "MANUTENÇÃO PREVENTIVA" ||
+        info.tipoDeServico == "MANUTENÇÃO CORRETIVA" ? (
+          <SolicitacaoManutencao
+            nomeVendedor={info.nomeVendedor}
+            telefoneVendedor={info.telefoneVendedor}
+            cliente={cliente}
+            links={links}
+            formVisitaId={formVisitaId}
+            tipoDeServico={info.tipoDeServico}
+          />
+        ) : null}
+        {[
+          "TROCA DE PADRÃO",
+          "REFORMA DE PADRÃO",
+          "SUBESTAÇÃO DE ENERGIA",
+        ].includes(info.tipoDeServico) && (
+          <SolicitacaoAlteracaoPadrao
+            nomeVendedor={info.nomeVendedor}
+            telefoneVendedor={info.telefoneVendedor}
+            cliente={cliente}
+            links={links}
+            formVisitaId={formVisitaId}
+            tipoDeServico={info.tipoDeServico}
+          />
+        )}
         {![
           "SISTEMA FOTOVOLTAICO",
           "SISTEMA FOTOVOLTAICO (OFF GRID)",
           "OPERAÇÃO E MANUTENÇÃO",
           "BOMBA SOLAR",
+          "MANUTENÇÃO PREVENTIVA",
+          "MANUTENÇÃO CORRETIVA",
+          "TROCA DE PADRÃO",
+          "REFORMA DE PADRÃO",
+          "SUBESTAÇÃO DE ENERGIA",
         ].includes(info.tipoDeServico) && (
           <SolicitacaoOutrosServicos
             nomeVendedor={info.nomeVendedor}

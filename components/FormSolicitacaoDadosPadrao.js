@@ -9,7 +9,10 @@ function FormSolicitacaoDadosPadrao({ avancar, setDados, dados, voltar }) {
       setMessage("Por favor, preencha se há aumento de carga.");
       return false;
     }
-    if (dados.aumentoDeCarga == "SIM") {
+    if (
+      dados.aumentoDeCarga == "SIM" ||
+      dados.tipoDeServico != "SISTEMA FOTOVOLTAICO"
+    ) {
       if (dados.caixaConjugada == "NÃO DEFINIDO") {
         setMessage("Por favor, preencha se há caixa conjugada.");
         return false;
@@ -50,7 +53,7 @@ function FormSolicitacaoDadosPadrao({ avancar, setDados, dados, voltar }) {
       <div className="flex justify-center mt-2 p-2">
         <SelectFloatingInput
           width={"450px"}
-          label={"HAVERÁ TROCA DE PADRÃO?"}
+          label={"HAVERÁ TROCA DE PADRÃO/AUMENTO DE CARGA?"}
           editable={true}
           options={[
             {
@@ -72,7 +75,8 @@ function FormSolicitacaoDadosPadrao({ avancar, setDados, dados, voltar }) {
           }
         />
       </div>
-      {dados.aumentoDeCarga == "SIM" && (
+      {(dados.aumentoDeCarga == "SIM" ||
+        dados.tipoDeServico != "SISTEMA FOTOVOLTAICO") && (
         <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 p-2">
           <div className="flex items-center justify-center">
             <SelectFloatingInput

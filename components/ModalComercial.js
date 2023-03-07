@@ -25,10 +25,11 @@ import axios from "axios";
 import dayjs from "dayjs";
 import NotificationCreationBlock from "./NotificationCreationBlock";
 import AnexoArquivo from "./AnexoArquivo";
-import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
+import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
 import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
 import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
+import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -1240,329 +1241,17 @@ function ModalComercial({
                 />
               </div>
             </div>
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                Informações da compra
-              </span>
-              <div className="flex gap-2 justify-center flex-wrap">
-                <SelectInput
-                  label={"STATUS DA LIBERAÇÃO"}
-                  editable={editor}
-                  value={
-                    infoHolder.compra?.statusLiberacao
-                      ? infoHolder.compra?.statusLiberacao
-                      : "NÃO DEFINIDO"
-                  }
-                  options={statusLiberacao.map((status) => {
-                    return { label: status.label, value: status.value };
-                  })}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "compra.statusLiberacao": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      compra: {
-                        ...infoHolder.compra,
-                        statusLiberacao: value,
-                      },
-                    });
-                  }}
-                />
-                <DateInput
-                  label={"Data de liberação p/ compra"}
-                  editable={editor}
-                  value={
-                    infoHolder.compra?.dataLiberacao != undefined &&
-                    infoHolder.compra?.dataLiberacao != "-"
-                      ? new Date(infoHolder.compra.dataLiberacao)
-                          .toISOString()
-                          .slice(0, 10)
-                      : 0
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "compra.dataLiberacao": dayjs(value).isValid()
-                        ? new Date(value).toISOString()
-                        : null,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      compra: {
-                        ...infoHolder.compra,
-                        dataLiberacao: dayjs(value).isValid()
-                          ? new Date(value).toISOString()
-                          : null,
-                      },
-                    });
-                  }}
-                />
-                <DateInput
-                  label={"Data do pagamento"}
-                  editable={editor}
-                  value={
-                    infoHolder.compra?.dataPagamento != undefined &&
-                    infoHolder.compra?.dataPagamento != "-"
-                      ? new Date(infoHolder.compra?.dataPagamento)
-                          .toISOString()
-                          .slice(0, 10)
-                      : 0
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "compra.dataPagamento": dayjs(value).isValid()
-                        ? new Date(value).toISOString()
-                        : null,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      compra: {
-                        ...infoHolder.compra,
-                        dataPagamento: dayjs(value).isValid()
-                          ? new Date(value).toISOString()
-                          : null,
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"Fornecedor"}
-                  editable={editor}
-                  value={
-                    infoHolder.compra?.fornecedor != undefined &&
-                    infoHolder.compra.fornecedor != "-"
-                      ? infoHolder.compra.fornecedor
-                      : "NÃO DEFINIDO"
-                  }
-                  options={fornecedores.map((fornecedor) => fornecedor)}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "compra.fornecedor": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      compra: {
-                        ...infoHolder.compra,
-                        fornecedor: value,
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"TIPO DO KIT"}
-                  value={
-                    infoHolder.compra?.tipoDoKit != undefined &&
-                    infoHolder.compra.tipoDoKit != "-"
-                      ? infoHolder.compra.tipoDoKit
-                      : "NÃO DEFINIDO"
-                  }
-                  editable={editor}
-                  options={[
-                    {
-                      label: "NORMAL",
-                      value: "NORMAL",
-                    },
-                    {
-                      label: "PROMO",
-                      value: "PROMO",
-                    },
-                    {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
-                    },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "compra.tipoDoKit": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      compra: {
-                        ...infoHolder.compra,
-                        tipoDoKit: value,
-                      },
-                    });
-                  }}
-                />
-                {credentials?.visualizacao == undefined && (
-                  <NumberInput
-                    tag={"R$"}
-                    label={"VALOR DO KIT"}
-                    editable={editor}
-                    value={
-                      infoHolder.compra?.valorDoKit != undefined &&
-                      infoHolder.compra?.valorDoKit != "-"
-                        ? infoHolder.compra?.valorDoKit
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "compra.valorDoKit": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        compra: {
-                          ...infoHolder.compra,
-                          valorDoKit: Number(value),
-                        },
-                      });
-                    }}
-                  />
-                )}
-                <SelectInput
-                  label={"LOCAL DE ENTREGA"}
-                  value={
-                    infoHolder.compra?.localEntrega != undefined &&
-                    infoHolder.compra?.localEntrega != "-"
-                      ? infoHolder.compra?.localEntrega
-                      : "NÃO DEFINIDO"
-                  }
-                  editable={editor}
-                  options={localEntregaOptions.map((local) => {
-                    return { label: local.label, value: local.value };
-                  })}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "compra.localEntrega": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      compra: {
-                        ...infoHolder.compra,
-                        localEntrega: value,
-                      },
-                    });
-                  }}
-                />
-                <TextInput
-                  label={"INFORMAÇÕES"}
-                  value={
-                    infoHolder.compra?.informacoes
-                      ? infoHolder.compra?.informacoes
-                      : ""
-                  }
-                  editable={editor}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "compra.informacoes": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      compra: {
-                        ...infoHolder.compra,
-                        informacoes: value,
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"STATUS DA ENTREGA"}
-                  editable={editor}
-                  value={
-                    infoHolder.compra?.statusEntrega
-                      ? infoHolder.compra?.statusEntrega
-                      : "NÃO DEFINIDO"
-                  }
-                  options={[
-                    {
-                      label: "AGUARDANDO COMPRA",
-                      value: "AGUARDANDO COMPRA",
-                    },
-                    {
-                      label: "ENTREGUE",
-                      value: "ENTREGUE",
-                    },
-                    {
-                      label: "CANCELADO",
-                      value: "CANCELADO",
-                    },
-                    {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
-                    },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "compra.statusEntrega": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      compra: {
-                        ...infoHolder.compra,
-                        statusEntrega: value,
-                      },
-                    });
-                  }}
-                />
-                <div className="w-full flex flex-col mx-2 lg:mx-0 lg:flex-row items-center justify-center gap-4">
-                  <div className="flex flex-col w-full lg:w-[450px] self-center mt-2 items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      INFORMAÇÕES DO KIT
-                    </span>
-                    <textarea
-                      readOnly={!editor}
-                      value={
-                        infoHolder.compra?.kitInfo
-                          ? infoHolder.compra?.kitInfo
-                          : ""
-                      }
-                      placeholder={"Observações do material aqui..."}
-                      onChange={(e) => {
-                        setChanges({
-                          ...changes,
-                          "compra.kitInfo": e.target.value,
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          compra: {
-                            ...infoHolder.compra,
-                            kitInfo: e.target.value,
-                          },
-                        });
-                      }}
-                      className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                    />
-                  </div>
-                  <div className="flex flex-col w-full lg:w-[450px] self-center mt-2 items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      MATERIAL FALTANTE
-                    </span>
-                    <textarea
-                      readOnly={!editor}
-                      value={
-                        infoHolder.material?.materialFaltante
-                          ? infoHolder.material?.materialFaltante
-                          : ""
-                      }
-                      placeholder={"Observações do material aqui..."}
-                      onChange={(e) => {
-                        setChanges({
-                          ...changes,
-                          "material.materialFaltante": e.target.value,
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          material: {
-                            ...infoHolder.material,
-                            materialFaltante: e.target.value,
-                          },
-                        });
-                      }}
-                      className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            {infoHolder.tipoDeServico != "MONTAGEM E DESMONTAGEM" && (
+              <InfoCompraBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                showDeliveryInfoOnly={false}
+                showMonetaryValues={true}
+              />
+            )}
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 DADOS INSTALAÇÃO CEMIG
@@ -2064,13 +1753,21 @@ function ModalComercial({
                   </>
                 )}
               </div> */}
-            <InfoSistemaBlock
-              editor={true}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-            />
+            {![
+              "TROCA DE PADRÃO",
+              "REFORMA DE PADRÃO",
+              "SUBESTAÇÃO DE ENERGIA",
+            ].includes(infoHolder.tipoDeServico) && (
+              <InfoSistemaBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                showPaymentInfo={true}
+              />
+            )}
+
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 PROJETO

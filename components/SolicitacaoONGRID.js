@@ -103,7 +103,7 @@ function SolicitacaoONGRID({
     inscriçãoRural: "",
     cpf_cnpjNF: "",
     localEntrega: "NÃO DEFINIDO",
-    entregaIgualCobranca: "NÃO",
+    entregaIgualCobranca: "NÃO DEFINIDO",
     restricoesEntrega: "NÃO DEFINIDO",
     valorContrato: null,
     origemRecurso: "NÃO DEFINIDO",

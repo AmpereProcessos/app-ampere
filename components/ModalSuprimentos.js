@@ -20,6 +20,7 @@ import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import { useKey } from "../utils/hooks";
 import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
+import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -672,6 +673,17 @@ function ModalSuprimentos({
                   project={project}
                 />
               )}
+            {infoHolder.tipoDeServico != "MONTAGEM E DESMONTAGEM" && (
+              <InfoCompraBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                showDeliveryInfoOnly={false}
+                showMonetaryValues={true}
+              />
+            )}
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 Informações da compra

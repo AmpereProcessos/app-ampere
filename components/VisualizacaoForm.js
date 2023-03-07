@@ -1364,6 +1364,10 @@ function VisualizacaoForm({
                 value:
                   "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
               },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
             ]}
             value={dados.localEntrega}
             handleChange={(value) =>
@@ -1385,6 +1389,10 @@ function VisualizacaoForm({
               {
                 label: "NÃO",
                 value: "NÃO",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
               },
             ]}
           />

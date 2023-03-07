@@ -45,6 +45,16 @@ function FormSolicitacaoDadosPagamento({ dados, setDados, avancar, voltar }) {
       setMessage("Por favor, preencha um CPF/CPNJ válido para NF");
       return false;
     }
+    if (dados.localEntrega == "NÃO DEFINIDO") {
+      setMessage("Por favor, preencha o local de entrega.");
+      return false;
+    }
+    if (dados.entregaIgualCobranca == "NÃO DEFINIDO") {
+      setMessage(
+        "Por favor, preencha se o endereço de entrega é igual ao de cobrança."
+      );
+      return false;
+    }
     if (dados.restricoesEntrega == "NÃO DEFINIDO") {
       setMessage("Por favor, preencha as restrições para entrega.");
       return false;
@@ -253,6 +263,10 @@ function FormSolicitacaoDadosPagamento({ dados, setDados, avancar, voltar }) {
                   value:
                     "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
                 },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
               ]}
               editable={true}
               value={dados.localEntrega}
@@ -278,6 +292,10 @@ function FormSolicitacaoDadosPagamento({ dados, setDados, avancar, voltar }) {
                 {
                   label: "NÃO",
                   value: "NÃO",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
                 },
               ]}
             />

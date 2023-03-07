@@ -1487,7 +1487,7 @@ function ModalFormSolicitacao({
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    DADOS PARA ENTRADA NA CEMIG
+                    DADOS DA CONCESSIONÁRIA
                   </span>
                   <div className="flex gap-2 justify-around flex-wrap">
                     <TextInput
@@ -2418,39 +2418,19 @@ function ModalFormSolicitacao({
                     </div>
                   )}
                 </div>
-                <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    AUMENTO DE CARGA
-                  </span>
-                  <div className="flex justify-center">
-                    <SelectInput
-                      label={"HAVERÁ TROCA DE PADRÃO?"}
-                      editable={editor}
-                      options={[
-                        {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
-                        },
-                        {
-                          label: "NÃO",
-                          value: "NÃO",
-                        },
-                        {
-                          label: "SIM",
-                          value: "SIM",
-                        },
-                      ]}
-                      value={dados.aumentoDeCarga}
-                      handleChange={(value) =>
-                        setDados({ ...dados, aumentoDeCarga: value })
-                      }
-                    />
-                  </div>
-                  {dados.aumentoDeCarga == "SIM" && (
-                    <div className="flex gap-2 justify-around flex-wrap mt-2">
+                {![
+                  "OPERAÇÃO E MANUTENÇÃO",
+                  "BOMBA SOLAR",
+                  "SISTEMA FOTOVOLTAICO (OFF GRID)",
+                ].includes(dados.tipoDeServico) && (
+                  <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                      AUMENTO DE CARGA
+                    </span>
+                    <div className="flex justify-center">
                       <SelectInput
-                        label={"CAIXA CONJUGADA?"}
-                        editable={true}
+                        label={"HAVERÁ TROCA DE PADRÃO?"}
+                        editable={editor}
                         options={[
                           {
                             label: "NÃO DEFINIDO",
@@ -2465,154 +2445,181 @@ function ModalFormSolicitacao({
                             value: "SIM",
                           },
                         ]}
-                        value={dados.caixaConjugada}
+                        value={dados.aumentoDeCarga}
                         handleChange={(value) =>
-                          setDados({ ...dados, caixaConjugada: value })
-                        }
-                      />
-                      <SelectInput
-                        editable={editor}
-                        label={"TIPO DO PADRÃO"}
-                        value={dados.tipoDePadrao}
-                        handleChange={(value) =>
-                          setDados({ ...dados, tipoDePadrao: value })
-                        }
-                        options={[
-                          {
-                            label: "MONO 40A",
-                            value: "MONO 40A",
-                          },
-                          {
-                            label: "MONO 63A",
-                            value: "MONO 63A",
-                          },
-                          {
-                            label: "BIFASICO 63A",
-                            value: "BIFASICO 63A",
-                          },
-                          {
-                            label: "BIFASICO 100A",
-                            value: "BIFASICO 100A",
-                          },
-                          {
-                            label: "BIFASICO 125A",
-                            value: "BIFASICO 125A",
-                          },
-                          {
-                            label: "BIFASICO 150A",
-                            value: "BIFASICO 150A",
-                          },
-                          {
-                            label: "BIFASICO 200A",
-                            value: "BIFASICO 200A",
-                          },
-                          {
-                            label: "TRIFASICO 63A",
-                            value: "TRIFASICO 63A",
-                          },
-                          {
-                            label: "TRIFASICO 100A",
-                            value: "TRIFASICO 100A",
-                          },
-                          {
-                            label: "TRIFASICO 125A",
-                            value: "TRIFASICO 125A",
-                          },
-                          {
-                            label: "TRIFASICO 150A",
-                            value: "TRIFASICO 150A",
-                          },
-                          {
-                            label: "TRIFASICO 200A",
-                            value: "TRIFASICO 200A",
-                          },
-                          {
-                            label: "NÃO DEFINIDO",
-                            value: "NÃO DEFINIDO",
-                          },
-                        ]}
-                      />
-                      <SelectInput
-                        editable={editor}
-                        label={"HAVERÁ AUMENTO DO DISJUNTOR?"}
-                        value={dados.aumentoDisjuntor}
-                        handleChange={(value) =>
-                          setDados({ ...dados, aumentoDisjuntor: value })
-                        }
-                        options={[
-                          {
-                            label: "SIM",
-                            value: "SIM",
-                          },
-                          {
-                            label: "NÃO",
-                            value: "NÃO",
-                          },
-                        ]}
-                      />
-                      <SelectInput
-                        label={"RESPONSÁVEL PELA TROCA"}
-                        editable={editor}
-                        value={dados.respTrocaPadrao}
-                        handleChange={(value) =>
-                          setDados({ ...dados, respTrocaPadrao: value })
-                        }
-                        options={[
-                          {
-                            label: "AMPERE",
-                            value: "AMPERE",
-                          },
-                          {
-                            label: "CLIENTE",
-                            value: "CLIENTE",
-                          },
-                          {
-                            label: "NÃO SE APLICA",
-                            value: "NÃO SE APLICA",
-                          },
-                        ]}
-                      />
-                      <SelectInput
-                        label={"PAGAMENTO DO PADRÃO"}
-                        editable={editor}
-                        value={
-                          dados.formaPagamentoPadrao
-                            ? dados.formaPagamentoPadrao
-                            : "NÃO HAVERA TROCA PADRÃO"
-                        }
-                        options={[
-                          {
-                            label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                            value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                          },
-                          {
-                            label: "CLIENTE PAGAR POR FORA",
-                            value: "CLIENTE PAGAR POR FORA",
-                          },
-                          {
-                            label: "INCLUSO NO CONTRATO",
-                            value: "INCLUSO NO CONTRATO",
-                          },
-                          {
-                            label: "NÃO HAVERA TROCA PADRÃO",
-                            value: "NÃO HAVERA TROCA PADRÃO",
-                          },
-                        ]}
-                        handleChange={(value) => {
-                          setDados({ ...dados, formaPagamentoPadrao: value });
-                        }}
-                      />
-                      <NumberInput
-                        label={"VALOR DO PADRÃO"}
-                        editable={editor}
-                        value={dados.valorPadrao}
-                        handleChange={(value) =>
-                          setDados({ ...dados, valorPadrao: Number(value) })
+                          setDados({ ...dados, aumentoDeCarga: value })
                         }
                       />
                     </div>
-                  )}
-                </div>
+                    {dados.aumentoDeCarga == "SIM" && (
+                      <div className="flex gap-2 justify-around flex-wrap mt-2">
+                        <SelectInput
+                          label={"CAIXA CONJUGADA?"}
+                          editable={true}
+                          options={[
+                            {
+                              label: "NÃO DEFINIDO",
+                              value: "NÃO DEFINIDO",
+                            },
+                            {
+                              label: "NÃO",
+                              value: "NÃO",
+                            },
+                            {
+                              label: "SIM",
+                              value: "SIM",
+                            },
+                          ]}
+                          value={dados.caixaConjugada}
+                          handleChange={(value) =>
+                            setDados({ ...dados, caixaConjugada: value })
+                          }
+                        />
+                        <SelectInput
+                          editable={editor}
+                          label={"TIPO DO PADRÃO"}
+                          value={dados.tipoDePadrao}
+                          handleChange={(value) =>
+                            setDados({ ...dados, tipoDePadrao: value })
+                          }
+                          options={[
+                            {
+                              label: "MONO 40A",
+                              value: "MONO 40A",
+                            },
+                            {
+                              label: "MONO 63A",
+                              value: "MONO 63A",
+                            },
+                            {
+                              label: "BIFASICO 63A",
+                              value: "BIFASICO 63A",
+                            },
+                            {
+                              label: "BIFASICO 100A",
+                              value: "BIFASICO 100A",
+                            },
+                            {
+                              label: "BIFASICO 125A",
+                              value: "BIFASICO 125A",
+                            },
+                            {
+                              label: "BIFASICO 150A",
+                              value: "BIFASICO 150A",
+                            },
+                            {
+                              label: "BIFASICO 200A",
+                              value: "BIFASICO 200A",
+                            },
+                            {
+                              label: "TRIFASICO 63A",
+                              value: "TRIFASICO 63A",
+                            },
+                            {
+                              label: "TRIFASICO 100A",
+                              value: "TRIFASICO 100A",
+                            },
+                            {
+                              label: "TRIFASICO 125A",
+                              value: "TRIFASICO 125A",
+                            },
+                            {
+                              label: "TRIFASICO 150A",
+                              value: "TRIFASICO 150A",
+                            },
+                            {
+                              label: "TRIFASICO 200A",
+                              value: "TRIFASICO 200A",
+                            },
+                            {
+                              label: "NÃO DEFINIDO",
+                              value: "NÃO DEFINIDO",
+                            },
+                          ]}
+                        />
+                        <SelectInput
+                          editable={editor}
+                          label={"HAVERÁ AUMENTO DO DISJUNTOR?"}
+                          value={dados.aumentoDisjuntor}
+                          handleChange={(value) =>
+                            setDados({ ...dados, aumentoDisjuntor: value })
+                          }
+                          options={[
+                            {
+                              label: "SIM",
+                              value: "SIM",
+                            },
+                            {
+                              label: "NÃO",
+                              value: "NÃO",
+                            },
+                          ]}
+                        />
+                        <SelectInput
+                          label={"RESPONSÁVEL PELA TROCA"}
+                          editable={editor}
+                          value={dados.respTrocaPadrao}
+                          handleChange={(value) =>
+                            setDados({ ...dados, respTrocaPadrao: value })
+                          }
+                          options={[
+                            {
+                              label: "AMPERE",
+                              value: "AMPERE",
+                            },
+                            {
+                              label: "CLIENTE",
+                              value: "CLIENTE",
+                            },
+                            {
+                              label: "NÃO SE APLICA",
+                              value: "NÃO SE APLICA",
+                            },
+                          ]}
+                        />
+                        <SelectInput
+                          label={"PAGAMENTO DO PADRÃO"}
+                          editable={editor}
+                          value={
+                            dados.formaPagamentoPadrao
+                              ? dados.formaPagamentoPadrao
+                              : "NÃO HAVERA TROCA PADRÃO"
+                          }
+                          options={[
+                            {
+                              label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                              value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                            },
+                            {
+                              label: "CLIENTE PAGAR POR FORA",
+                              value: "CLIENTE PAGAR POR FORA",
+                            },
+                            {
+                              label: "INCLUSO NO CONTRATO",
+                              value: "INCLUSO NO CONTRATO",
+                            },
+                            {
+                              label: "NÃO HAVERA TROCA PADRÃO",
+                              value: "NÃO HAVERA TROCA PADRÃO",
+                            },
+                          ]}
+                          handleChange={(value) => {
+                            setDados({ ...dados, formaPagamentoPadrao: value });
+                          }}
+                        />
+                        <NumberInput
+                          label={"VALOR DO PADRÃO"}
+                          editable={editor}
+                          value={dados.valorPadrao}
+                          handleChange={(value) =>
+                            setDados({ ...dados, valorPadrao: Number(value) })
+                          }
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                     DADOS FINANCEIROS E NEGOCIAÇÃO
@@ -2694,6 +2701,10 @@ function ModalFormSolicitacao({
                           value:
                             "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
                         },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
+                        },
                       ]}
                       value={dados.localEntrega}
                       handleChange={(value) =>
@@ -2715,6 +2726,10 @@ function ModalFormSolicitacao({
                         {
                           label: "NÃO",
                           value: "NÃO",
+                        },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
                         },
                       ]}
                     />

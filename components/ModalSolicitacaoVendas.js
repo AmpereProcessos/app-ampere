@@ -1362,6 +1362,10 @@ function ModalSolicitacaoVendas({
                       value:
                         "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
                     },
+                    {
+                      label: "NÃO DEFINIDO",
+                      value: "NÃO DEFINIDO",
+                    },
                   ]}
                   value={dados.localEntrega}
                   handleChange={(value) =>
@@ -1383,6 +1387,10 @@ function ModalSolicitacaoVendas({
                     {
                       label: "NÃO",
                       value: "NÃO",
+                    },
+                    {
+                      label: "NÃO DEFINIDO",
+                      value: "NÃO DEFINIDO",
                     },
                   ]}
                 />

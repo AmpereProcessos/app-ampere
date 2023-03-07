@@ -5,7 +5,11 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import Select from "react-select";
-import { cidadesAtendidas, vendedores } from "../../utils/constants";
+import {
+  cidadesAtendidas,
+  tiposDeServico,
+  vendedores,
+} from "../../utils/constants";
 
 function Acompanhamento() {
   const router = useRouter();
@@ -26,6 +30,7 @@ function Acompanhamento() {
   const [filters, setFilters] = useState({
     vendedorFilter: [],
     cidadeFilter: [],
+    tipoDeServicoFilter: [],
     regionalFilter: "GERAL",
     tipoVendaFilter: "GERAL",
   });
@@ -63,6 +68,12 @@ function Acompanhamento() {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter((call) =>
         filters.cidadeFilter.includes(call.cidade)
+      );
+    }
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((item) =>
+        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
       );
     }
     if (filters.regionalFilter != "GERAL") {
@@ -117,7 +128,12 @@ function Acompanhamento() {
         filters.cidadeFilter.includes(call.cidade)
       );
     }
-
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((item) =>
+        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
+      );
+    }
     if (filters.regionalFilter != "GERAL") {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter(
@@ -167,7 +183,12 @@ function Acompanhamento() {
         filters.cidadeFilter.includes(call.cidade)
       );
     }
-
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((item) =>
+        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
+      );
+    }
     if (filters.regionalFilter != "GERAL") {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter(
@@ -218,7 +239,12 @@ function Acompanhamento() {
         filters.cidadeFilter.includes(call.cidade)
       );
     }
-
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((item) =>
+        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
+      );
+    }
     if (filters.regionalFilter != "GERAL") {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter(
@@ -263,7 +289,12 @@ function Acompanhamento() {
         filters.cidadeFilter.includes(call.cidade)
       );
     }
-
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((item) =>
+        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
+      );
+    }
     if (filters.regionalFilter != "GERAL") {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter(
@@ -368,7 +399,12 @@ function Acompanhamento() {
         filters.cidadeFilter.includes(call.cidade)
       );
     }
-
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((item) =>
+        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
+      );
+    }
     if (filters.regionalFilter != "GERAL") {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter(
@@ -420,7 +456,12 @@ function Acompanhamento() {
         filters.cidadeFilter.includes(call.cidade)
       );
     }
-
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((item) =>
+        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
+      );
+    }
     if (filters.regionalFilter != "GERAL") {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter(
@@ -469,7 +510,12 @@ function Acompanhamento() {
         filters.cidadeFilter.includes(call.cidade)
       );
     }
-
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((item) =>
+        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
+      );
+    }
     if (filters.regionalFilter != "GERAL") {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter(
@@ -487,12 +533,19 @@ function Acompanhamento() {
       let estrutura = !isNaN(filteredArr[i].estruturaPersonalizada?.valor)
         ? filteredArr[i].estruturaPersonalizada.valor
         : 0;
+      let oem = !isNaN(filteredArr[i].oem?.valor)
+        ? filteredArr[i].oem.valor
+        : 0;
       totalSum =
-        Number(totalSum) + Number(projeto) + Number(padrao) + Number(estrutura);
+        Number(totalSum) +
+        Number(projeto) +
+        Number(padrao) +
+        Number(estrutura) +
+        Number(oem);
     }
     return {
       total: totalSum,
-      ticketMedio: totalSum / filteredArr.length,
+      ticketMedio: Number((totalSum / filteredArr.length).toFixed(2)),
       vendas: filteredArr.length,
     };
   }
@@ -528,7 +581,12 @@ function Acompanhamento() {
         filters.cidadeFilter.includes(call.cidade)
       );
     }
-
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((item) =>
+        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
+      );
+    }
     if (filters.regionalFilter != "GERAL") {
       if (!filteredArr) filteredArr = info;
       filteredArr = filteredArr.filter(
@@ -608,6 +666,17 @@ function Acompanhamento() {
               options={cidadesAtendidas.map((cidade) => {
                 return { label: cidade, value: cidade };
               })}
+            />
+            <Select
+              isMulti
+              placeholder="TIPO DE SERVIÇO"
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  tipoDeServicoFilter: e.map((x) => x.value),
+                })
+              }
+              options={tiposDeServico.map((tipo) => tipo)}
             />
             <select
               value={filters.regionalFilter}

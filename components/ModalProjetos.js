@@ -15,6 +15,7 @@ import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import { useKey } from "../utils/hooks";
 import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
 import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
+import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -780,144 +781,17 @@ function ModalProjetos({
               setChanges={setChanges}
               showPaymentInfo={true}
             />
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                INFORMAÇÕES DA COMPRA
-              </span>
-              <div className="flex gap-2 justify-center flex-wrap">
-                <DateInput
-                  label={"DATA DE PAGAMENTO"}
-                  editable={false}
-                  value={
-                    infoHolder.compra.dataPagamento != undefined &&
-                    infoHolder.compra.dataPagamento != "-"
-                      ? new Date(infoHolder.compra.dataPagamento)
-                          .toISOString()
-                          .slice(0, 10)
-                      : 0
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "compra.dataPagamento": isNaN(value)
-                        ? new Date(value).toISOString()
-                        : null,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      compra: {
-                        ...infoHolder.compra,
-                        dataPagamento: isNaN(value)
-                          ? new Date(value).toISOString()
-                          : null,
-                      },
-                    });
-                  }}
-                />
-                <DateInput
-                  label={"Previsão de entrega"}
-                  editable={false}
-                  value={
-                    infoHolder.compra.previsaoEntrega != undefined &&
-                    infoHolder.compra.previsaoEntrega != "-"
-                      ? new Date(infoHolder.compra.previsaoEntrega)
-                          .toISOString()
-                          .slice(0, 10)
-                      : 0
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "compra.previsaoEntrega": isNaN(value)
-                        ? new Date(value).toISOString()
-                        : null,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      compra: {
-                        ...infoHolder.compra,
-                        previsaoEntrega: isNaN(value)
-                          ? new Date(value).toISOString()
-                          : null,
-                      },
-                    });
-                  }}
-                />
-                <DateInput
-                  label={"Data de entrega"}
-                  editable={false}
-                  value={
-                    infoHolder.compra.dataEntrega != undefined &&
-                    infoHolder.compra.dataEntrega != "-"
-                      ? new Date(infoHolder.compra.dataEntrega)
-                          .toISOString()
-                          .slice(0, 10)
-                      : 0
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "compra.dataEntrega": isNaN(value)
-                        ? new Date(value).toISOString()
-                        : null,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      compra: {
-                        ...infoHolder.compra,
-                        dataEntrega: isNaN(value)
-                          ? new Date(value).toISOString()
-                          : null,
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"STATUS DA ENTREGA"}
-                  editable={false}
-                  value={
-                    infoHolder.compra?.statusEntrega
-                      ? infoHolder.compra?.statusEntrega
-                      : "NÃO DEFINIDO"
-                  }
-                  options={[
-                    {
-                      label: "AGUARDANDO COMPRA",
-                      value: "AGUARDANDO COMPRA",
-                    },
-                    {
-                      label: "EM ROTA",
-                      value: "EM ROTA",
-                    },
-                    {
-                      label: "ENTREGUE",
-                      value: "ENTREGUE",
-                    },
-                    {
-                      label: "CANCELADO",
-                      value: "CANCELADO",
-                    },
-                    {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
-                    },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "compra.statusEntrega": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      compra: {
-                        ...infoHolder.compra,
-                        statusEntrega: value,
-                      },
-                    });
-                  }}
-                />
-              </div>
-            </div>
+            {infoHolder.tipoDeServico != "MONTAGEM E DESMONTAGEM" && (
+              <InfoCompraBlock
+                editor={false}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                showDeliveryInfoOnly={true}
+                showMonetaryValues={false}
+              />
+            )}
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 PROJETO

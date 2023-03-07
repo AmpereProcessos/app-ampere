@@ -8,7 +8,6 @@ export default async function handler(req, res) {
         {
           $match: {
             "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
-            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
           },
         },
         {
@@ -16,6 +15,7 @@ export default async function handler(req, res) {
             "contrato.status": 1,
             "vendedor.nome": 1,
             cidade: 1,
+            tipoDeServico: 1,
             "sistema.potPico": 1,
             "sistema.valorProjeto": 1,
             "padrao.valor": 1,
@@ -31,6 +31,7 @@ export default async function handler(req, res) {
             "parecer.dataParecerDeAcesso": 1,
             "parecer.statusDoParecerDeAcesso": 1,
             "projeto.dataAssDocumentacao": 1,
+            "oem.valor": 1,
             insider: 1,
             regional: 1,
             nps: 1,

@@ -1161,6 +1161,10 @@ function VisualizacaoOFFGrid({
                     value:
                       "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
                   },
+                  {
+                    label: "NÃO DEFINIDO",
+                    value: "NÃO DEFINIDO",
+                  },
                 ]}
                 editable={true}
                 value={dados.localEntrega}
@@ -1186,6 +1190,10 @@ function VisualizacaoOFFGrid({
                   {
                     label: "NÃO",
                     value: "NÃO",
+                  },
+                  {
+                    label: "NÃO DEFINIDO",
+                    value: "NÃO DEFINIDO",
                   },
                 ]}
               />

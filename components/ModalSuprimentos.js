@@ -23,6 +23,7 @@ import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
 import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
 import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
 import InfoClienteBlock from "./blocosInfoProjeto/InfoClienteBlock";
+import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -282,6 +283,13 @@ function ModalSuprimentos({
                 showMonetaryValues={true}
               />
             )}
+            <InfoPagamentoBlock
+              editor={true}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+            />
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 PAGAMENTO

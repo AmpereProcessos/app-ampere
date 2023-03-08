@@ -251,8 +251,10 @@ function BandoDeDados({ data }) {
   }
   useEffect(() => {
     if (session?.user) {
-      setCurrentPage(1);
-      getProjects(1);
+      if (!projects) {
+        setCurrentPage(1);
+        getProjects(1);
+      }
     }
   }, [session]);
   if (status == "loading") return <LoadingPage />;

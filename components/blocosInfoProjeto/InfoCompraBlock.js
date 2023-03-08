@@ -8,6 +8,7 @@ import TextInput from "../TextInput";
 
 function InfoCompraBlock({
   editor,
+  comercialEditionOnly,
   infoHolder,
   setInfo,
   changes,
@@ -55,7 +56,7 @@ function InfoCompraBlock({
           />
           <DateInput
             label={"Data de liberação p/ compra"}
-            editable={false}
+            editable={comercialEditionOnly}
             value={
               infoHolder.compra?.dataLiberacao != undefined &&
               infoHolder.compra.dataLiberacao != "-"

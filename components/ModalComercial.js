@@ -33,6 +33,8 @@ import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
 import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
 import InfoContratoBlock from "./blocosInfoProjeto/InfoContratoBlock";
 import InfoClienteBlock from "./blocosInfoProjeto/InfoClienteBlock";
+import InfoDadosConcessionariaBlock from "./blocosInfoProjeto/InfoDadosConcessionariaBlock";
+import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -290,225 +292,17 @@ function ModalComercial({
               minimalInfo={false}
               showPaymentInfo={true}
             />
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                PAGAMENTO
-              </span>
-              <div className="flex gap-2 justify-center flex-wrap">
-                {/*<SelectInput
-                    label={"STATUS PAGAMENTO"}
-                    value={
-                      infoHolder.pagamento?.status
-                        ? infoHolder.pagamento?.status
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={[
-                      {
-                        label: "AGUARDANDO PAGAMENTO",
-                        value: "AGUARDANDO PAGAMENTO",
-                      },
-                      {
-                        label: "PAGO",
-                        value: "PAGO",
-                      },
-                      {
-                        label: "RESCISÃO",
-                        value: "RESCISÃO",
-                      },
-                      {
-                        label: "NÃO DEFINIDO",
-                        value: "NÃO DEFINIDO",
-                      },
-                    ]}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "pagamento.status": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          status: value,
-                        },
-                      });
-                    }}
-                  />*/}
-                <SelectInput
-                  label={"FORMA DE PAGAMENTO"}
-                  value={
-                    infoHolder.pagamento?.forma
-                      ? infoHolder.pagamento?.forma
-                      : "NÃO DEFINIDO"
-                  }
-                  editable={editor}
-                  options={[
-                    {
-                      label: "CAPITAL PROPRIO",
-                      value: "CAPITAL PROPRIO",
-                    },
-                    {
-                      label: "FINANCIAMENTO",
-                      value: "FINANCIAMENTO",
-                    },
-                    {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
-                    },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "pagamento.forma": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      pagamento: {
-                        ...infoHolder.pagamento,
-                        forma: value,
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"EMPRESA A FATURAR"}
-                  value={
-                    infoHolder.faturamento?.empresaFaturamento != undefined &&
-                    infoHolder.faturamento?.empresaFaturamento != "-"
-                      ? infoHolder.faturamento?.empresaFaturamento
-                      : "NÃO DEFINIDO"
-                  }
-                  editable={editor}
-                  options={[
-                    {
-                      label: "AMPERE ENERGIAS",
-                      value: "AMPERE ENERGIAS",
-                    },
-                    {
-                      label: "ANALISE DO FINANCEIRO",
-                      value: "ANALISE DO FINANCEIRO",
-                    },
-                    {
-                      label: "IZAIRA SERVIÇOS",
-                      value: "IZAIRA SERVIÇOS",
-                    },
-                    { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "faturamento.empresaFaturamento": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      faturamento: {
-                        ...infoHolder.faturamento,
-                        empresaFaturamento: value,
-                      },
-                    });
-                  }}
-                />
-                <TextInput
-                  label={"Informações faturamento"}
-                  editable={editor}
-                  value={
-                    infoHolder.faturamento?.previsaoFaturamento
-                      ? infoHolder.faturamento?.previsaoFaturamento
-                      : ""
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "faturamento.previsaoFaturamento": value.toUpperCase(),
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      faturamento: {
-                        ...infoHolder.faturamento,
-                        previsaoFaturamento: value.toUpperCase(),
-                      },
-                    });
-                  }}
-                />
-                {infoHolder.pagamento?.forma == "FINANCIAMENTO" && (
-                  <SelectInput
-                    label={"CREDOR"}
-                    value={
-                      infoHolder.pagamento?.credor != undefined &&
-                      infoHolder.pagamento?.credor != "-----" &&
-                      infoHolder.pagamento?.credor != "QUAL CREDOR?"
-                        ? infoHolder.pagamento.credor
-                        : "NÃO DEFINIDO"
-                    }
-                    editable={editor}
-                    options={credores.map((credor) => {
-                      return { label: credor.label, value: credor.value };
-                    })}
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "pagamento.credor": value,
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        pagamento: {
-                          ...infoHolder.pagamento,
-                          credor: value,
-                        },
-                      });
-                    }}
-                  />
-                )}
-                <TextInput
-                  label={"Pagador"}
-                  editable={editor}
-                  value={
-                    infoHolder.pagamento?.pagador
-                      ? infoHolder.pagamento?.pagador
-                      : ""
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "pagamento.pagador": value.toUpperCase(),
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      pagamento: {
-                        ...infoHolder.pagamento,
-                        pagador: value.toUpperCase(),
-                      },
-                    });
-                  }}
-                />
-                <TextInput
-                  label={"Contato pagador"}
-                  editable={editor}
-                  value={
-                    infoHolder.pagamento?.contatoPagador
-                      ? infoHolder.pagamento?.contatoPagador
-                      : ""
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "pagamento.contatoPagador": value.toUpperCase(),
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      pagamento: {
-                        ...infoHolder.pagamento,
-                        contatoPagador: value.toUpperCase(),
-                      },
-                    });
-                  }}
-                />
-              </div>
-            </div>
+            <InfoPagamentoBlock
+              editor={true}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+            />
             {infoHolder.tipoDeServico != "MONTAGEM E DESMONTAGEM" && (
               <InfoCompraBlock
                 editor={true}
+                comercialEditionOnly={true}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
                 changes={changes}
@@ -517,109 +311,17 @@ function ModalComercial({
                 showMonetaryValues={true}
               />
             )}
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                DADOS INSTALAÇÃO CEMIG
-              </span>
-              <div className="flex gap-2 justify-center flex-wrap">
-                <TextInput
-                  label={"Titular do projeto"}
-                  editable={editor}
-                  value={
-                    infoHolder.dadosCemig?.titularProjeto
-                      ? infoHolder.dadosCemig?.titularProjeto
-                      : ""
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "dadosCemig.titularProjeto": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      dadosCemig: {
-                        ...infoHolder.dadosCemig,
-                        titularProjeto: value,
-                      },
-                    });
-                  }}
-                />
-                <TextInput
-                  label={"Número da instalação"}
-                  value={
-                    infoHolder.dadosCemig?.numeroInstalacao
-                      ? infoHolder.dadosCemig?.numeroInstalacao
-                      : ""
-                  }
-                  editable={editor}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "dadosCemig.numeroInstalacao": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      dadosCemig: {
-                        ...infoHolder.dadosCemig,
-                        numeroInstalacao: value,
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"DISTRIBUIÇÃO DE CRÉDITOS"}
-                  value={
-                    infoHolder.dadosCemig?.distCreditos
-                      ? infoHolder.dadosCemig?.distCreditos
-                      : "NÃO DEFINIDO"
-                  }
-                  editable={editor}
-                  options={[
-                    { label: "SIM", value: "SIM" },
-                    { label: "NÃO", value: "NÃO" },
-                    { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "dadosCemig.distCreditos": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      dadosCemig: {
-                        ...infoHolder.dadosCemig,
-                        distCreditos: value,
-                      },
-                    });
-                  }}
-                />
-                {infoHolder.dadosCemig?.distCreditos == "SIM" && (
-                  <NumberInput
-                    label={"QTDE DE DISTRIBUIÇÕES"}
-                    editable={editor}
-                    value={
-                      infoHolder.dadosCemig?.qtdeDistCreditos != undefined &&
-                      infoHolder.dadosCemig?.qtdeDistCreditos != "-"
-                        ? infoHolder.dadosCemig?.qtdeDistCreditos
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "dadosCemig.qtdeDistCreditos": Number(value),
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        dadosCemig: {
-                          ...infoHolder.dadosCemig,
-                          qtdeDistCreditos: Number(value),
-                        },
-                      });
-                    }}
-                  />
-                )}
-              </div>
-            </div>
+            {!["BOMBA SOLAR", "SISTEMA FOTOVOLTAICO (OFF GRID)"].includes(
+              infoHolder.tipoDeServico
+            ) && (
+              <InfoDadosConcessionariaBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+              />
+            )}
             {![
               "TROCA DE PADRÃO",
               "REFORMA DE PADRÃO",
@@ -634,7 +336,6 @@ function ModalComercial({
                 showPaymentInfo={true}
               />
             )}
-
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 PROJETO

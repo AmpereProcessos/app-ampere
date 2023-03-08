@@ -410,7 +410,6 @@ function InfoClienteBlock({
         />
         <div>
           <input
-            disabled={!editor}
             checked={infoHolder.possuiaGD ? true : false}
             onChange={(e) => {
               setChanges({

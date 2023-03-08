@@ -20,7 +20,7 @@ function done(value) {
   }
 }
 export default async function handler(req, res) {
-  const newArr = projects.map((project) => {
+  const newArr = [].map((project) => {
     return {
       qtde: project.qtde,
       nomeDoContrato: project.nomedocontrato,

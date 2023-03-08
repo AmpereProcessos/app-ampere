@@ -1662,6 +1662,7 @@ function ModalObras({
                 technicalEdition={true}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
+                changes={changes}
                 setChanges={setChanges}
                 showPaymentInfo={true}
               />
@@ -1676,6 +1677,7 @@ function ModalObras({
                 technicalEdition={true}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
+                changes={changes}
                 setChanges={setChanges}
                 showPaymentInfo={true}
               />

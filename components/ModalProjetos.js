@@ -769,6 +769,7 @@ function ModalProjetos({
                 technicalEdition={true}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
+                changes={changes}
                 setChanges={setChanges}
                 showPaymentInfo={false}
               />

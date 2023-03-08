@@ -24,7 +24,8 @@ function ConferenciaMaterial() {
   useEffect(() => {
     if (
       session?.user.accessibleRoutes.includes("Obras") ||
-      session?.user.accessibleRoutes.includes("Marketing")
+      session?.user.accessibleRoutes.includes("Marketing") ||
+      session?.user.accessibleRoutes.includes("Suprimentos")
     ) {
       getProjects(session.user);
     } else {

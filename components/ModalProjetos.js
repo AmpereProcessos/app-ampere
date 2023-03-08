@@ -16,6 +16,7 @@ import { useKey } from "../utils/hooks";
 import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
 import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
 import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
+import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -677,7 +678,14 @@ function ModalProjetos({
                 </div>
               </div>
             </div>
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+            <InfoVisitaTecnicaBlock
+              editor={true}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+            />
+            {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 VISITA TÉCNICA
               </span>
@@ -758,7 +766,7 @@ function ModalProjetos({
                   }}
                 />
               </div>
-            </div>
+            </div> */}
             {![
               "OPERAÇÃO E MANUTENÇÃO",
               "BOMBA SOLAR",

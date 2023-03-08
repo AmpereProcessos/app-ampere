@@ -193,7 +193,6 @@ function ModalComercial({
         }
       });
   }
-
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>

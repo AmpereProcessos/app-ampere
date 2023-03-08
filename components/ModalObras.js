@@ -21,6 +21,7 @@ import { useKey } from "../utils/hooks";
 import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
 import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
 import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
+import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -1238,176 +1239,14 @@ function ModalObras({
               setChanges={setChanges}
               showPaymentInfo={false}
             />
+            <InfoVisitaTecnicaBlock
+              editor={true}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+            />
             {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                SISTEMA
-              </span>
-              <div className="flex gap-2 justify-center flex-wrap">
-                <NumberInput
-                  label={"NÚMERO DE MÓDULOS"}
-                  editable={false}
-                  value={
-                    infoHolder.sistema?.qtdeModulos != undefined &&
-                    infoHolder.sistema?.qtdeModulos != "-"
-                      ? infoHolder.sistema?.qtdeModulos
-                      : 0
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "sistema.qtdeModulos": Number(value),
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      sistema: {
-                        ...infoHolder.sistema,
-                        qtdeModulos: Number(value),
-                      },
-                    });
-                  }}
-                />
-                <TextInput
-                  unit={"W"}
-                  label={"POTÊNCIA DOS MÓDULOS"}
-                  editable={editor}
-                  value={
-                    infoHolder.sistema?.potModulos != undefined &&
-                    infoHolder.sistema?.potModulos != "-"
-                      ? infoHolder.sistema?.potModulos
-                      : ""
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "sistema.potModulos": value,
-                      "sistema.potPico":
-                        Number(value * infoHolder.sistema?.qtdeModulos) / 1000,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      sistema: {
-                        ...infoHolder.sistema,
-                        potModulos: value,
-                        potPico:
-                          Number(value * infoHolder.sistema?.qtdeModulos) /
-                          1000,
-                      },
-                    });
-                  }}
-                />
-                <NumberInput
-                  unit={"kWp"}
-                  label={"POTÊNCIA PICO"}
-                  editable={false}
-                  value={
-                    infoHolder.sistema?.potPico != undefined &&
-                    infoHolder.sistema?.potPico != "-"
-                      ? infoHolder.sistema?.potPico
-                      : 0
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "sistema.potPico": Number(value),
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      sistema: {
-                        ...infoHolder.sistema,
-                        potPico: Number(value),
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"TOPOLOGIA"}
-                  value={
-                    infoHolder.sistema?.topologia
-                      ? infoHolder.sistema?.topologia
-                      : "NÃO DEFINIDO"
-                  }
-                  editable={false}
-                  options={[
-                    { label: "INVERSOR", value: "INVERSOR" },
-                    { label: "MICRO", value: "MICRO" },
-                    { label: "OUTROS SERV.", value: "OUTROS SERV." },
-                    { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "sistema.topologia": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      sistema: {
-                        ...infoHolder.sistema,
-                        topologia: value,
-                      },
-                    });
-                  }}
-                />
-                <TextInput
-                  label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
-                  editable={false}
-                  value={
-                    infoHolder.sistema?.inversor
-                      ? infoHolder.sistema?.inversor
-                      : ""
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      sistema: {
-                        ...infoHolder.sistema,
-                        inversor: value,
-                      },
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      sistema: {
-                        ...infoHolder.sistema,
-                        inversor: value,
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"INICIAR PROJETO"}
-                  value={
-                    infoHolder.projeto?.iniciar
-                      ? infoHolder.projeto?.iniciar
-                      : "NÃO DEFINIDO"
-                  }
-                  editable={false}
-                  options={[
-                    { label: "SIM", value: "SIM" },
-                    {
-                      label: "CONTRATO CANCELADO",
-                      value: "CONTRATO CANCELADO",
-                    },
-                    { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      projeto: {
-                        ...infoHolder.projeto,
-                        iniciar: value,
-                      },
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      projeto: {
-                        ...infoHolder.projeto,
-                        iniciar: value,
-                      },
-                    });
-                  }}
-                />
-              </div>
-            </div> */}
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 VISITA TÉCNICA
               </span>
@@ -1488,170 +1327,180 @@ function ModalObras({
                   }}
                 />
               </div>
-              {Object.keys(infoVisita).length > 0 && (
-                <div className="flex flex-col items-center pt-2 mt-2 border-t border-gray-200">
-                  <div className="w-full flex items-center justify-center gap-2 flex-wrap">
-                    <SelectInput
-                      label={"ESPAÇO NO QGBT"}
-                      editable={false}
-                      value={
-                        infoVisita.espacoQGBT
-                          ? infoVisita.espacoQGBT
-                          : "NÃO DEFINIDO"
-                      }
-                      options={[
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                        { label: "NÃO", value: "NÃO" },
-                        { label: "SIM", value: "SIM" },
-                      ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, espacoQGBT: value })
-                      }
-                    />
-                    <SelectInput
-                      label={"ADAPTAÇÃO NO QGBT"}
-                      editable={false}
-                      value={
-                        infoVisita.adaptacaoQGBT
-                          ? infoVisita.adaptacaoQGBT
-                          : "NÃO DEFINIDO"
-                      }
-                      options={[
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                        { label: "CORTE", value: "CORTE" },
-                        { label: "TRILHO", value: "TRILHO" },
-                        { label: "CORTE E TRILHO", value: "CORTE E TRILHO" },
-                        { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
-                        { label: "NÃO", value: "NÃO" },
-                      ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, adaptacaoQGBT: value })
-                      }
-                    />
-                    <SelectInput
-                      label={"AVALIAR TELHADO"}
-                      editable={false}
-                      value={
-                        infoVisita.avaliarTelhado
-                          ? infoVisita.avaliarTelhado
-                          : "NÃO DEFINIDO"
-                      }
-                      options={[
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                        { label: "NÃO", value: "NÃO" },
-                        { label: "SIM", value: "SIM" },
-                      ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, avaliarTelhado: value })
-                      }
-                    />
-                    <SelectInput
-                      label={"DPS NO QGBT"}
-                      editable={false}
-                      value={
-                        infoVisita.dpsQGBT ? infoVisita.dpsQGBT : "NÃO DEFINIDO"
-                      }
-                      options={[
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                        { label: "NÃO", value: "NÃO" },
-                        { label: "SIM", value: "SIM" },
-                      ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, dpsQGBT: value })
-                      }
-                    />
-                    <SelectInput
-                      label={"INFRA PARA LANÇAMENTOS DE CABOS"}
-                      editable={false}
-                      value={
-                        infoVisita.infraCabos
-                          ? infoVisita.infraCabos
-                          : "NÃO DEFINIDO"
-                      }
-                      options={[
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                        { label: "KIT NORMAL", value: "KIT NORMAL" },
-                        { label: "KIT+MANGUEIRA", value: "KIT+MANGUEIRA" },
-                        { label: "PERSONALIZADO", value: "PERSONALIZADO" },
-                      ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, infraCabos: value })
-                      }
-                    />
-                    <TextInput
-                      label={"DISTÂNCIA ITBA À ZONA RURAL"}
-                      editable={false}
-                      value={infoVisita.distanciaItbaRural}
-                      handleChange={(value) =>
-                        setDados({ ...dados, distanciaItbaRural: value })
-                      }
-                    />
-                    <TextInput
-                      label={"DISTÂNCIA DO SISTEMA AO INVERSOR"}
-                      editable={false}
-                      value={infoVisita.distanciaSistemaInversor}
-                      handleChange={(value) =>
-                        setDados({
-                          ...dados,
-                          distanciaSistemaInversor: value,
-                        })
-                      }
-                    />
-                    <SelectInput
-                      label={"REALIMENTAR A FAZENDA ?"}
-                      editable={false}
-                      value={
-                        infoVisita.realimentar
-                          ? infoVisita.realimentar
-                          : "NÃO DEFINIDO"
-                      }
-                      options={[
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                        { label: "NÃO", value: "NÃO" },
-                        { label: "SIM", value: "SIM" },
-                      ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, realimentar: value })
-                      }
-                    />
-                    <SelectInput
-                      label={"TEM ESTUDO DE CASO?"}
-                      editable={false}
-                      value={
-                        infoVisita.temEstudoDeCaso
-                          ? infoVisita.temEstudoDeCaso
-                          : "NÃO DEFINIDO"
-                      }
-                      options={[
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                        { label: "NÃO", value: "NÃO" },
-                        { label: "SIM", value: "SIM" },
-                      ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, temEstudoDeCaso: value })
-                      }
-                    />
-                  </div>
-                  <div className="flex flex-col w-full self-center mt-2 items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      OBSERVAÇÕES P/OBRAS
-                    </span>
-                    <textarea
-                      value={infoVisita.obsObras}
-                      readOnly={true}
-                      placeholder={"Observações da obra aqui..."}
-                      onChange={(e) => {
-                        setDados({
-                          ...dados,
-                          obsObras: e.target.value.toUpperCase(),
-                        });
-                      }}
-                      className="w-full text-center h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                    />
+            </div> */}
+            {Object.keys(infoVisita).length > 0 && (
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                  INFORMAÇÕES DO FORMULÁRIO DA VISITA
+                </span>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  <div className="flex flex-col items-center pt-2 mt-2">
+                    <div className="w-full flex items-center justify-center gap-2 flex-wrap">
+                      <SelectInput
+                        label={"ESPAÇO NO QGBT"}
+                        editable={false}
+                        value={
+                          infoVisita.espacoQGBT
+                            ? infoVisita.espacoQGBT
+                            : "NÃO DEFINIDO"
+                        }
+                        options={[
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                          { label: "NÃO", value: "NÃO" },
+                          { label: "SIM", value: "SIM" },
+                        ]}
+                        handleChange={(value) =>
+                          setDados({ ...dados, espacoQGBT: value })
+                        }
+                      />
+                      <SelectInput
+                        label={"ADAPTAÇÃO NO QGBT"}
+                        editable={false}
+                        value={
+                          infoVisita.adaptacaoQGBT
+                            ? infoVisita.adaptacaoQGBT
+                            : "NÃO DEFINIDO"
+                        }
+                        options={[
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                          { label: "CORTE", value: "CORTE" },
+                          { label: "TRILHO", value: "TRILHO" },
+                          { label: "CORTE E TRILHO", value: "CORTE E TRILHO" },
+                          { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
+                          { label: "NÃO", value: "NÃO" },
+                        ]}
+                        handleChange={(value) =>
+                          setDados({ ...dados, adaptacaoQGBT: value })
+                        }
+                      />
+                      <SelectInput
+                        label={"AVALIAR TELHADO"}
+                        editable={false}
+                        value={
+                          infoVisita.avaliarTelhado
+                            ? infoVisita.avaliarTelhado
+                            : "NÃO DEFINIDO"
+                        }
+                        options={[
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                          { label: "NÃO", value: "NÃO" },
+                          { label: "SIM", value: "SIM" },
+                        ]}
+                        handleChange={(value) =>
+                          setDados({ ...dados, avaliarTelhado: value })
+                        }
+                      />
+                      <SelectInput
+                        label={"DPS NO QGBT"}
+                        editable={false}
+                        value={
+                          infoVisita.dpsQGBT
+                            ? infoVisita.dpsQGBT
+                            : "NÃO DEFINIDO"
+                        }
+                        options={[
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                          { label: "NÃO", value: "NÃO" },
+                          { label: "SIM", value: "SIM" },
+                        ]}
+                        handleChange={(value) =>
+                          setDados({ ...dados, dpsQGBT: value })
+                        }
+                      />
+                      <SelectInput
+                        label={"INFRA PARA LANÇAMENTOS DE CABOS"}
+                        editable={false}
+                        value={
+                          infoVisita.infraCabos
+                            ? infoVisita.infraCabos
+                            : "NÃO DEFINIDO"
+                        }
+                        options={[
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                          { label: "KIT NORMAL", value: "KIT NORMAL" },
+                          { label: "KIT+MANGUEIRA", value: "KIT+MANGUEIRA" },
+                          { label: "PERSONALIZADO", value: "PERSONALIZADO" },
+                        ]}
+                        handleChange={(value) =>
+                          setDados({ ...dados, infraCabos: value })
+                        }
+                      />
+                      <TextInput
+                        label={"DISTÂNCIA ITBA À ZONA RURAL"}
+                        editable={false}
+                        value={infoVisita.distanciaItbaRural}
+                        handleChange={(value) =>
+                          setDados({ ...dados, distanciaItbaRural: value })
+                        }
+                      />
+                      <TextInput
+                        label={"DISTÂNCIA DO SISTEMA AO INVERSOR"}
+                        editable={false}
+                        value={infoVisita.distanciaSistemaInversor}
+                        handleChange={(value) =>
+                          setDados({
+                            ...dados,
+                            distanciaSistemaInversor: value,
+                          })
+                        }
+                      />
+                      <SelectInput
+                        label={"REALIMENTAR A FAZENDA ?"}
+                        editable={false}
+                        value={
+                          infoVisita.realimentar
+                            ? infoVisita.realimentar
+                            : "NÃO DEFINIDO"
+                        }
+                        options={[
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                          { label: "NÃO", value: "NÃO" },
+                          { label: "SIM", value: "SIM" },
+                        ]}
+                        handleChange={(value) =>
+                          setDados({ ...dados, realimentar: value })
+                        }
+                      />
+                      <SelectInput
+                        label={"TEM ESTUDO DE CASO?"}
+                        editable={false}
+                        value={
+                          infoVisita.temEstudoDeCaso
+                            ? infoVisita.temEstudoDeCaso
+                            : "NÃO DEFINIDO"
+                        }
+                        options={[
+                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                          { label: "NÃO", value: "NÃO" },
+                          { label: "SIM", value: "SIM" },
+                        ]}
+                        handleChange={(value) =>
+                          setDados({ ...dados, temEstudoDeCaso: value })
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col w-full self-center mt-2 items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        OBSERVAÇÕES P/OBRAS
+                      </span>
+                      <textarea
+                        value={infoVisita.obsObras}
+                        readOnly={true}
+                        placeholder={"Observações da obra aqui..."}
+                        onChange={(e) => {
+                          setDados({
+                            ...dados,
+                            obsObras: e.target.value.toUpperCase(),
+                          });
+                        }}
+                        className="w-full text-center h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                      />
+                    </div>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+
             {![
               "OPERAÇÃO E MANUTENÇÃO",
               "BOMBA SOLAR",

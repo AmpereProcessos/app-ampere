@@ -16,11 +16,12 @@ import NotificationCreationBlock from "./NotificationCreationBlock";
 import NumberInput from "./NumberInput";
 import dayjs from "dayjs";
 import AnexoArquivo from "./AnexoArquivo";
-import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import { useKey } from "../utils/hooks";
+import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
 import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
 import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
+import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -488,7 +489,15 @@ function ModalSuprimentos({
                 </p>
               )}
             </div>
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+            <InfoVisitaTecnicaBlock
+              editor={false}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              infoVisita={infoVisita}
+            />
+            {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 VISITA TÉCNICA
               </span>
@@ -649,7 +658,7 @@ function ModalSuprimentos({
                   </div>
                 </div>
               )}
-            </div>
+            </div> */}
             <InfoSistemaBlock
               editor={true}
               infoHolder={infoHolder}

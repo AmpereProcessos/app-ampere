@@ -23,6 +23,7 @@ export default async function handler(req, res) {
     const collection = db.collection("dados");
     var depois = new Date(req.query.depois).toISOString();
     var antes = new Date(req.query.antes).toISOString();
+    console.log(depois, antes);
     try {
       var arr = await collection
         .aggregate([

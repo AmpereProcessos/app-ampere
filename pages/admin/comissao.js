@@ -28,8 +28,8 @@ function Comissao() {
     vendedor: [],
   });
   const [dateFilter, setDateFilter] = useState({
-    after: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
-    before: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0),
+    after: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, -3),
+    before: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1),
   });
   function getProjects() {
     axios

@@ -257,7 +257,8 @@ function Obras() {
   useEffect(() => {
     if (
       session?.user.accessibleRoutes.includes("Obras") ||
-      session?.user.accessibleRoutes.includes("Marketing")
+      session?.user.accessibleRoutes.includes("Marketing") ||
+      session?.user.accessibleRoutes.includes("Suprimentos")
     ) {
       if (!projects) {
         getProjects(session.user);

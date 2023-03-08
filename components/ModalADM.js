@@ -17,6 +17,7 @@ import Link from "next/link";
 import AnexoArquivo from "./AnexoArquivo";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import InfoContratoBlock from "./blocosInfoProjeto/InfoContratoBlock";
+import InfoClienteBlock from "./blocosInfoProjeto/InfoClienteBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -156,15 +157,20 @@ function ModalADM({
           </div>
           <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                NOTIFICAR
-              </span>
               <NotificationCreationBlock
                 nomeDoProjeto={project.nomeDoContrato}
                 codProjeto={project.qtde}
               />
             </div>
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+            <InfoClienteBlock
+              editor={false}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              project={project}
+            />
+            {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 Informações do cliente
               </span>
@@ -424,7 +430,7 @@ function ModalADM({
                   </a>
                 </p>
               )}
-            </div>
+            </div> */}
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 PADRÃO

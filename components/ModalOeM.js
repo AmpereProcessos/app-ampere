@@ -23,6 +23,9 @@ import { useKey } from "../utils/hooks";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
 import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
+import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
+import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
+import InfoClienteBlock from "./blocosInfoProjeto/InfoClienteBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -190,14 +193,19 @@ function ModalOeM({
           </div>
           <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                NOTIFICAR
-              </span>
               <NotificationCreationBlock
                 nomeDoProjeto={project.nomeDoContrato}
                 codProjeto={project.qtde}
               />
             </div>
+            <InfoClienteBlock
+              editor={false}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              project={project}
+            />
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 Informações do cliente
@@ -800,135 +808,6 @@ function ModalOeM({
                       )
                     )
                   : false}
-                {/**{console.log(
-                    reportsByPlan["PLANO SOL"]?.relatorios,
-                    infoHolder.oem?.plano
-                  )}
-                  <DateInput
-                    label={"RELATÓRIO 1"}
-                    editable={editor}
-                    value={
-                      infoHolder.relatorios.envioUm?.data != undefined &&
-                      infoHolder.relatorios.envioUm.data != "-"
-                        ? new Date(infoHolder.relatorios.envioUm.data)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "relatorios.envioUm.data": new Date(
-                          value
-                        ).toISOString(),
-                        "relatorios.envioUm.status": "REALIZADO",
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioUm: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label={"RELATÓRIO 2"}
-                    editable={editor}
-                    value={
-                      infoHolder.relatorios.envioDois?.data != undefined &&
-                      infoHolder.relatorios.envioDois.data != "-"
-                        ? new Date(infoHolder.relatorios.envioDois.data)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "relatorios.envioDois.data": new Date(
-                          value
-                        ).toISOString(),
-                        "relatorios.envioDois.status": "REALIZADO",
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioDois: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label={"RELATÓRIO 3"}
-                    editable={editor}
-                    value={
-                      infoHolder.relatorios.envioTres.data != undefined &&
-                      infoHolder.relatorios.envioTres.data != "-"
-                        ? new Date(infoHolder.relatorios.envioTres.data)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "relatorios.envioTres.data": new Date(
-                          value
-                        ).toISOString(),
-                        "relatorios.envioTres.status": "REALIZADO",
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioTres: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                    }}
-                  />
-                  <DateInput
-                    label={"RELATÓRIO 4"}
-                    editable={editor}
-                    value={
-                      infoHolder.relatorios.envioQuatro.data != undefined &&
-                      infoHolder.relatorios.envioQuatro.data != "-"
-                        ? new Date(infoHolder.relatorios.envioQuatro.data)
-                            .toISOString()
-                            .slice(0, 10)
-                        : 0
-                    }
-                    handleChange={(value) => {
-                      setChanges({
-                        ...changes,
-                        "relatorios.envioQuatro.data": new Date(
-                          value
-                        ).toISOString(),
-                        "relatorios.envioQuatro.status": "REALIZADO",
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        relatorios: {
-                          ...infoHolder.relatorios,
-                          envioQuatro: {
-                            data: new Date(value).toISOString(),
-                            status: "REALIZADO",
-                          },
-                        },
-                      });
-                    }}
-                  /> */}
-
                 <DateInput
                   label={"MANUTENÇÃO PREVENTIVA"}
                   editable={editor}
@@ -1113,156 +992,37 @@ function ModalOeM({
                   </div>
                 )}
             </div>
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                VISITA TÉCNICA
-              </span>
-              <div className="flex gap-2 justify-around flex-wrap">
-                <div>
-                  <input
-                    disabled={true}
-                    checked={
-                      infoHolder.visitaTecnica?.status === "REALIZADA"
-                        ? true
-                        : false
-                    }
-                    onChange={(e) => {
-                      setChanges({
-                        ...changes,
-                        "visitaTecnica.status": e.target.checked
-                          ? "REALIZADA"
-                          : "PENDÊNCIA",
-                      });
-                      setInfo({
-                        ...infoHolder,
-                        visitaTecnica: {
-                          ...infoHolder.visitaTecnica,
-                          status: e.target.checked ? "REALIZADA" : "PENDÊNCIA",
-                        },
-                      });
-                    }}
-                    type="checkbox"
-                    name="visitaTecnica"
-                    id="visitaTecnica"
-                  />
-                  <label className="ml-2" htmlFor="visitaTecnica">
-                    REALIZADA
-                  </label>
-                </div>
-                <TextInput
-                  label={"TÉCNICO RESPONSÁVEL"}
-                  editable={false}
-                  value={
-                    infoHolder.visitaTecnica.tecnico
-                      ? infoHolder.visitaTecnica.tecnico
-                      : ""
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "visitaTecnica.tecnico": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      visitaTecnica: {
-                        ...infoHolder.visitaTecnica,
-                        tecnico: value,
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"Saída do cliente"}
-                  editable={false}
-                  value={
-                    infoHolder.visitaTecnica.saidaDoCliente
-                      ? infoHolder.visitaTecnica.saidaDoCliente
-                      : "N/A"
-                  }
-                  options={[
-                    { label: "SUBTERRANEO", value: "SUBTERRANEO" },
-                    { label: "AEREO", value: "AEREO" },
-                    { label: "N/A", value: "N/A" },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "visitaTecnica.saidaDoCliente": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      visitaTecnica: {
-                        ...infoHolder.visitaTecnica,
-                        saidaDoCliente: value,
-                      },
-                    });
-                  }}
-                />
-                <TextInput
-                  label={"Amperagem"}
-                  editable={false}
-                  value={
-                    infoHolder.visitaTecnica?.amperagem
-                      ? infoHolder.visitaTecnica.amperagem
-                      : ""
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "visitaTecnica.amperagem": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      visitaTecnica: {
-                        ...infoHolder.visitaTecnica,
-                        amperagem: value,
-                      },
-                    });
-                  }}
-                />
-                <TextInput
-                  label={"Tipo da telha"}
-                  editable={false}
-                  value={
-                    infoHolder.visitaTecnica?.tipoDaTelha
-                      ? infoHolder.visitaTecnica?.tipoDaTelha
-                      : ""
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "visitaTecnica.tipoDaTelha": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      visitaTecnica: {
-                        ...infoHolder.visitaTecnica,
-                        tipoDaTelha: value,
-                      },
-                    });
-                  }}
-                />
-              </div>
-            </div>
-            {
-              ![
-                "TROCA DE PADRÃO",
-                "REFORMA DE PADRÃO",
-                "SUBESTAÇÃO DE ENERGIA",
-              ].includes(
-                infoHolder.tipoDeServico && (
-                  <InfoEstruturaBlock
-                    comercialEdition={false}
-                    technicalEdition={false}
-                    infoHolder={infoHolder}
-                    setInfo={setInfo}
-                    changes={changes}
-                    setChanges={setChanges}
-                    showPaymentInfo={false}
-                  />
-                )
-              )
-            }
+            <InfoVisitaTecnicaBlock
+              editor={false}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+            />
+            <InfoPadraoBlock
+              comercialEdition={false}
+              technicalEdition={false}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              showPaymentInfo={false}
+            />
+            {![
+              "TROCA DE PADRÃO",
+              "REFORMA DE PADRÃO",
+              "SUBESTAÇÃO DE ENERGIA",
+            ].includes(infoHolder.tipoDeServico) && (
+              <InfoEstruturaBlock
+                comercialEdition={false}
+                technicalEdition={false}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                showPaymentInfo={false}
+              />
+            )}
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 Informações da compra

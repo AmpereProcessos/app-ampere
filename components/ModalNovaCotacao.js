@@ -12,6 +12,17 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
   const { credentials } = useContext(AppContext);
   console.log(credentials);
   const [quotationInfo, setQuotationInfo] = useState({
+    nomeDoKit: "",
+    inclusoEstrutura: true,
+    inclusoTransformador: false,
+    carport: false,
+    ceramico: false,
+    laje: false,
+    shingle: false,
+    metalico: false,
+    zipado: false,
+    solo: false,
+    topologia: "MICRO",
     inversores: [],
     modulos: [],
     componentes: [],
@@ -206,8 +217,8 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
   return (
     <>
       <AnimatedModalWrapper
-        width={"60%"}
-        height={"70%"}
+        width={"90%"}
+        height={"80%"}
         modalIsOpen={modalIsOpen}
         setModalIsOpen={() => setModalIsOpen(false)}
       >
@@ -225,7 +236,261 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
           </div>
           <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto ">
             <div className="flex flex-col pt-1">
-              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2">
+              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2 rounded-md">
+                INFORMAÇÕES GERAIS
+              </h1>
+              <div className="grid grid-cols-3 pt-3 gap-2">
+                <TextFloatingInput
+                  label={"NOME DO KIT"}
+                  editable={true}
+                  width={"100%"}
+                  value={quotationInfo.nomeDoKit}
+                  handleChange={(value) =>
+                    setQuotationInfo({
+                      ...quotationInfo,
+                      nomeDoKit: value.toUpperCase(),
+                    })
+                  }
+                />
+                <SelectFloatingInput
+                  label={"INCLUIR ESTRUTURA?"}
+                  editable={true}
+                  width={"100%"}
+                  value={quotationInfo.inclusoEstrutura ? "SIM" : "NÃO"}
+                  options={[
+                    { label: "SIM", value: "SIM" },
+                    { label: "NÃO", value: "NÃO" },
+                  ]}
+                  handleChange={(value) =>
+                    setQuotationInfo({
+                      ...quotationInfo,
+                      inclusoEstrutura: value == "SIM" ? true : false,
+                    })
+                  }
+                />
+                <SelectFloatingInput
+                  label={"INCLUIR TRANSFORMADOR?"}
+                  editable={true}
+                  width={"100%"}
+                  value={quotationInfo.inclusoTransformador ? "SIM" : "NÃO"}
+                  options={[
+                    { label: "SIM", value: "SIM" },
+                    { label: "NÃO", value: "NÃO" },
+                  ]}
+                  handleChange={(value) =>
+                    setQuotationInfo({
+                      ...quotationInfo,
+                      inclusoTransformador: value == "SIM" ? true : false,
+                    })
+                  }
+                />
+              </div>
+              <div className="grid grid-cols-4 pt-3 gap-2">
+                <SelectFloatingInput
+                  label={"TOPOLOGIA"}
+                  editable={true}
+                  options={[
+                    { label: "INVERSOR", value: "INVERSOR" },
+                    { label: "MICRO-INVERSOR", value: "MICRO" },
+                  ]}
+                  width="100%"
+                  value={quotationInfo.fornecedor}
+                  handleChange={(value) =>
+                    setQuotationInfo({ ...quotationInfo, fornecedor: value })
+                  }
+                />
+                <SelectFloatingInput
+                  label={"FORNECEDOR"}
+                  editable={true}
+                  options={fornecedores}
+                  width="100%"
+                  value={quotationInfo.fornecedor}
+                  handleChange={(value) =>
+                    setQuotationInfo({ ...quotationInfo, fornecedor: value })
+                  }
+                />
+                <NumberFloatingInput
+                  label={"POTÊNCIA PICO"}
+                  editable={true}
+                  width="100%"
+                  value={quotationInfo.potPico}
+                  handleChange={(value) =>
+                    setQuotationInfo({
+                      ...quotationInfo,
+                      potPico: Number(value),
+                    })
+                  }
+                />
+                <NumberFloatingInput
+                  label={"VALOR DO KIT"}
+                  editable={true}
+                  width="100%"
+                  value={quotationInfo.valorDoKit}
+                  handleChange={(value) =>
+                    setQuotationInfo({
+                      ...quotationInfo,
+                      valorDoKit: Number(value),
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <div className="flex flex-col pt-1">
+              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2 rounded-md">
+                TIPOS DE ESTRUTURA APLICÁVEIS
+              </h1>
+              <div className="grid grid-cols-3 pt-3 gap-2">
+                <div class="flex items-center mb-4 w-full justify-center">
+                  <input
+                    id="carport"
+                    type="checkbox"
+                    value=""
+                    checked={quotationInfo.carport}
+                    onChange={(e) =>
+                      setQuotationInfo({
+                        ...quotationInfo,
+                        carport: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
+                  />
+                  <label
+                    for="carport"
+                    className="ml-2 text-sm font-medium text-gray-400 w-10"
+                  >
+                    Carport
+                  </label>
+                </div>
+                <div class="flex items-center mb-4 w-full justify-center">
+                  <input
+                    id="ceramico"
+                    type="checkbox"
+                    value=""
+                    checked={quotationInfo.ceramico}
+                    onChange={(e) =>
+                      setQuotationInfo({
+                        ...quotationInfo,
+                        ceramico: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
+                  />
+                  <label
+                    for="ceramico"
+                    className="ml-2 text-sm font-medium text-gray-400 w-10"
+                  >
+                    Cerâmico
+                  </label>
+                </div>
+                <div class="flex items-center mb-4 w-full justify-center">
+                  <input
+                    id="laje"
+                    type="checkbox"
+                    value=""
+                    checked={quotationInfo.laje}
+                    onChange={(e) =>
+                      setQuotationInfo({
+                        ...quotationInfo,
+                        laje: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
+                  />
+                  <label
+                    for="laje"
+                    className="ml-2 text-sm font-medium text-gray-400 w-10"
+                  >
+                    Laje
+                  </label>
+                </div>
+                <div class="flex items-center mb-4 w-full justify-center">
+                  <input
+                    id="shingle"
+                    type="checkbox"
+                    value=""
+                    checked={quotationInfo.shingle}
+                    onChange={(e) =>
+                      setQuotationInfo({
+                        ...quotationInfo,
+                        shingle: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
+                  />
+                  <label
+                    for="shingle"
+                    className="ml-2 text-sm font-medium text-gray-400 w-10"
+                  >
+                    Shingle
+                  </label>
+                </div>
+                <div class="flex items-center mb-4 w-full justify-center">
+                  <input
+                    id="metalico"
+                    type="checkbox"
+                    value=""
+                    checked={quotationInfo.metalico}
+                    onChange={(e) =>
+                      setQuotationInfo({
+                        ...quotationInfo,
+                        metalico: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
+                  />
+                  <label
+                    for="metalico"
+                    className="ml-2 text-sm font-medium text-gray-400 w-10"
+                  >
+                    Metálico
+                  </label>
+                </div>
+                <div class="flex items-center mb-4 w-full justify-center">
+                  <input
+                    id="zipado"
+                    type="checkbox"
+                    value=""
+                    checked={quotationInfo.zipado}
+                    onChange={(e) =>
+                      setQuotationInfo({
+                        ...quotationInfo,
+                        zipado: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
+                  />
+                  <label
+                    for="zipado"
+                    className="ml-2 text-sm font-medium text-gray-400 w-10"
+                  >
+                    Zipado
+                  </label>
+                </div>
+                <div class="flex items-center mb-4 w-full justify-center">
+                  <input
+                    id="solo"
+                    type="checkbox"
+                    value=""
+                    checked={quotationInfo.solo}
+                    onChange={(e) =>
+                      setQuotationInfo({
+                        ...quotationInfo,
+                        solo: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
+                  />
+                  <label
+                    for="solo"
+                    className="ml-2 text-sm font-medium text-gray-400 w-10"
+                  >
+                    Solo
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col pt-1">
+              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2 rounded-md">
                 INVERSORES
               </h1>
               <div className="grid grid-cols-7 gap-2 pt-3">
@@ -328,7 +593,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
               ) : null}
             </div>
             <div className="flex flex-col pt-1">
-              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2">
+              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2 rounded-md">
                 PAINÉIS
               </h1>
               <div className="grid grid-cols-7 gap-2 pt-3">
@@ -431,7 +696,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
               ) : null}
             </div>
             <div className="flex flex-col pt-1">
-              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2">
+              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2 rounded-md">
                 COMPONENTES
               </h1>
               <div className="w-full grid items-center grid-cols-8 gap-2 pt-3">
@@ -561,47 +826,6 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                   ))}
                 </div>
               ) : null}
-            </div>
-            <div className="flex flex-col pt-1">
-              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2">
-                INFORMAÇÕES ADICIONAIS
-              </h1>
-              <div className="grid grid-cols-3 pt-3 gap-2">
-                <SelectFloatingInput
-                  label={"FORNECEDOR"}
-                  editable={true}
-                  options={fornecedores}
-                  width="100%"
-                  value={quotationInfo.fornecedor}
-                  handleChange={(value) =>
-                    setQuotationInfo({ ...quotationInfo, fornecedor: value })
-                  }
-                />
-                <NumberFloatingInput
-                  label={"POTÊNCIA PICO"}
-                  editable={true}
-                  width="100%"
-                  value={quotationInfo.potPico}
-                  handleChange={(value) =>
-                    setQuotationInfo({
-                      ...quotationInfo,
-                      potPico: Number(value),
-                    })
-                  }
-                />
-                <NumberFloatingInput
-                  label={"VALOR DO KIT"}
-                  editable={true}
-                  width="100%"
-                  value={quotationInfo.valorDoKit}
-                  handleChange={(value) =>
-                    setQuotationInfo({
-                      ...quotationInfo,
-                      valorDoKit: Number(value),
-                    })
-                  }
-                />
-              </div>
             </div>
             {errorMsg.general ? (
               <p className="text-center italic text-red-500">

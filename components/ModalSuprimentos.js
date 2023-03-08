@@ -684,7 +684,7 @@ function ModalSuprimentos({
                 showMonetaryValues={true}
               />
             )}
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+            {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 Informações da compra
               </span>
@@ -1269,7 +1269,7 @@ function ModalSuprimentos({
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 PAGAMENTO

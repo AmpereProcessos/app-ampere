@@ -424,6 +424,10 @@ function ChamadosSuporte() {
                             label: "MARCOS DIAS",
                           },
                           {
+                            value: "PÓS-VENDA",
+                            label: "PÓS-VENDA",
+                          },
+                          {
                             value: "A DEFINIR",
                             label: "A DEFINIR",
                           },
@@ -672,6 +676,10 @@ function ChamadosSuporte() {
                           {
                             value: "MARCOS DIAS",
                             label: "MARCOS DIAS",
+                          },
+                          {
+                            value: "PÓS-VENDA",
+                            label: "PÓS-VENDA",
                           },
                           {
                             value: "A DEFINIR",

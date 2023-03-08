@@ -16,6 +16,7 @@ import axios from "axios";
 import Link from "next/link";
 import AnexoArquivo from "./AnexoArquivo";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
+import InfoContratoBlock from "./blocosInfoProjeto/InfoContratoBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -660,6 +661,15 @@ function ModalADM({
                 )}
               </div>
             </div>
+            <InfoContratoBlock
+              editor={false}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              minimalInfo={true}
+              showPaymentInfo={true}
+            />
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 CONTRATO

@@ -432,10 +432,10 @@ function Administracao() {
                       </p>
                     </div>
                     <div className="flex flex-col gap-1 items-end">
-                      <p className="text-xxs text-end">PAGAMENTO</p>
+                      <p className="text-xxs text-end">PAGAMENTO DO KIT</p>
                       <p className="text-xs text-gray-600 text-end">
-                        {project.pagamento?.status
-                          ? project.pagamento.status
+                        {project.compra?.statusLiberacao
+                          ? project.compra.statusLiberacao
                           : "-"}
                       </p>
                     </div>

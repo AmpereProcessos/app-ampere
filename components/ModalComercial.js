@@ -31,6 +31,7 @@ import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
 import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
 import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
 import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
+import InfoContratoBlock from "./blocosInfoProjeto/InfoContratoBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -730,7 +731,16 @@ function ModalComercial({
                 showPaymentInfo={true}
               />
             )}
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+            <InfoContratoBlock
+              editor={true}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              minimalInfo={false}
+              showPaymentInfo={true}
+            />
+            {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 CONTRATO
               </span>
@@ -951,7 +961,7 @@ function ModalComercial({
                   }}
                 />
               </div>
-            </div>
+            </div> */}
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 PAGAMENTO

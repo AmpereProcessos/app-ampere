@@ -340,7 +340,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                 TIPOS DE ESTRUTURA APLICÁVEIS
               </h1>
               <div className="grid grid-cols-3 pt-3 gap-2">
-                <div class="flex items-center mb-4 w-full justify-center">
+                <div className="flex items-center mb-4 w-full justify-center">
                   <input
                     id="carport"
                     type="checkbox"
@@ -355,13 +355,13 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                   />
                   <label
-                    for="carport"
+                    htmlFor="carport"
                     className="ml-2 text-sm font-medium text-gray-400 w-10"
                   >
                     Carport
                   </label>
                 </div>
-                <div class="flex items-center mb-4 w-full justify-center">
+                <div className="flex items-center mb-4 w-full justify-center">
                   <input
                     id="ceramico"
                     type="checkbox"
@@ -376,13 +376,13 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                   />
                   <label
-                    for="ceramico"
+                    htmlFor="ceramico"
                     className="ml-2 text-sm font-medium text-gray-400 w-10"
                   >
                     Cerâmico
                   </label>
                 </div>
-                <div class="flex items-center mb-4 w-full justify-center">
+                <div className="flex items-center mb-4 w-full justify-center">
                   <input
                     id="laje"
                     type="checkbox"
@@ -397,13 +397,13 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                   />
                   <label
-                    for="laje"
+                    htmlFor="laje"
                     className="ml-2 text-sm font-medium text-gray-400 w-10"
                   >
                     Laje
                   </label>
                 </div>
-                <div class="flex items-center mb-4 w-full justify-center">
+                <div className="flex items-center mb-4 w-full justify-center">
                   <input
                     id="shingle"
                     type="checkbox"
@@ -418,13 +418,13 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                   />
                   <label
-                    for="shingle"
+                    htmlFor="shingle"
                     className="ml-2 text-sm font-medium text-gray-400 w-10"
                   >
                     Shingle
                   </label>
                 </div>
-                <div class="flex items-center mb-4 w-full justify-center">
+                <div className="flex items-center mb-4 w-full justify-center">
                   <input
                     id="metalico"
                     type="checkbox"
@@ -439,13 +439,13 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                   />
                   <label
-                    for="metalico"
+                    htmlFor="metalico"
                     className="ml-2 text-sm font-medium text-gray-400 w-10"
                   >
                     Metálico
                   </label>
                 </div>
-                <div class="flex items-center mb-4 w-full justify-center">
+                <div className="flex items-center mb-4 w-full justify-center">
                   <input
                     id="zipado"
                     type="checkbox"
@@ -460,13 +460,13 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                   />
                   <label
-                    for="zipado"
+                    htmlFor="zipado"
                     className="ml-2 text-sm font-medium text-gray-400 w-10"
                   >
                     Zipado
                   </label>
                 </div>
-                <div class="flex items-center mb-4 w-full justify-center">
+                <div className="flex items-center mb-4 w-full justify-center">
                   <input
                     id="solo"
                     type="checkbox"
@@ -481,7 +481,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
                   />
                   <label
-                    for="solo"
+                    htmlFor="solo"
                     className="ml-2 text-sm font-medium text-gray-400 w-10"
                   >
                     Solo

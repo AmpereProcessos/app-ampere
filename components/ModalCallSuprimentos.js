@@ -234,14 +234,13 @@ function ModalCallSuprimentos({ setModalIsOpen, info, getCalls, modalIsOpen }) {
                     ? { chamadosSuprimentos: modalInfo.links }
                     : {}
                 }
-                cliente={`${modalInfo.nomeDoContrato}-${modalInfo.codigoProjeto}`}
-                categorias={[
+                client={`${modalInfo.nomeDoContrato}-${modalInfo.codigoProjeto}`}
+                categories={[
                   {
                     label: "CHAMADOS DE SUPRIMENTOS",
                     value: "links.chamadosSuprimentos",
                   },
                 ]}
-                multiple={true}
                 handleUpdates={(_, obj) => addLinks(obj)}
               />
               {modalInfo.links?.length > 0 && (

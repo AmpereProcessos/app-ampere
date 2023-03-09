@@ -108,17 +108,17 @@ export default async function handler(req, res) {
   //     },
   //   ])
   //   .toArray();
-  let arr = await collection.updateMany(
-    {
-      "estruturaPersonalizada.respPagamento": "NÃO SE APLICA",
-    },
-    {
-      $set: {
-        "estruturaPersonalizada.respPagamento": "NÃO SE APLICA",
-      },
-    }
-  );
-  res.json(arr);
+  // let arr = await collection.updateMany(
+  //   {
+  //     "estruturaPersonalizada.respPagamento": "NÃO SE APLICA",
+  //   },
+  //   {
+  //     $set: {
+  //       "estruturaPersonalizada.respPagamento": "NÃO SE APLICA",
+  //     },
+  //   }
+  // );
+  res.json("DESATIVADA");
 }
 /*
   let arr = await collection.updateMany(

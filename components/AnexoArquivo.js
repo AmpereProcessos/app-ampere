@@ -5,61 +5,67 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../utils/firebase";
 import axios from "axios";
 function AnexoArquivo({
-  categorias,
-  cliente,
+  categories,
+  client,
   id,
   prevLinks,
   handleUpdates,
   multiple,
 }) {
-  const [nomeDoArquivo, setNomeDoArquivo] = useState("");
-  const [categoria, setCategoria] = useState("NÃO DEFINIDO");
-  const [imagem, setImagem] = useState(null);
+  const [fileName, setFileName] = useState("");
+  const [category, setCategory] = useState("NÃO DEFINIDO");
+  const [image, setImage] = useState(null);
   const [msg, setMsg] = useState({ text: "", color: "" });
-  async function anexarArquivo() {
-    var splitNome = nomeDoArquivo.toLowerCase().split(" ");
+
+  function clearMsg(time = 1500) {
+    setTimeout(() => {
+      setMsg({ text: "", color: "" });
+    }, time);
+  }
+  async function uploadFiles() {
+    var splitNome = fileName.toLowerCase().split(" ");
     var fixedNome = splitNome.join("_");
-    if (nomeDoArquivo.trim().length < 3) {
+    if (fileName.trim().length < 3) {
       setMsg({
         text: "Por favor, preenche um nome de arquivo válido",
         color: "text-red-500",
       });
+      clearMsg(2000);
       return;
     }
-    if (categoria == "NÃO DEFINIDO") {
+    if (category == "NÃO DEFINIDO") {
       setMsg({
         text: "Por favor, preencha uma categoria",
         color: "text-red-500",
       });
+      clearMsg(2000);
       return;
     }
     try {
-      var arr = prevLinks[categoria.split(".")[1]]
-        ? prevLinks[categoria.split(".")[1]]
+      var arr = prevLinks[category.split(".")[1]]
+        ? prevLinks[category.split(".")[1]]
         : [];
       setMsg({ text: "Enviando arquivos...", color: "text-[#15599a]" });
-      if (imagem.length > 0) {
-        for (let i = 0; i < imagem.length; i++) {
-          let file = imagem.item(i);
+      if (image.length > 0) {
+        for (let i = 0; i < image.length; i++) {
+          let file = image.item(i);
           let storageName =
-            imagem.length > 1
-              ? `clientes/${cliente}/${fixedNome}-{${i + 1}}`
-              : `clientes/${cliente}/${fixedNome}`;
+            image.length > 1
+              ? `clientes/${client}/${fixedNome}-{${i + 1}}`
+              : `clientes/${client}/${fixedNome}`;
           var imageRef = ref(storage, storageName);
           let res = await uploadBytes(imageRef, file).catch((err) => {
             throw "Houve um erro no envio das imagens";
           });
           var url = await getDownloadURL(ref(storage, res.metadata.fullPath));
           let name =
-            imagem.length > 1
-              ? `${nomeDoArquivo} (${i + 1})`
-              : `${nomeDoArquivo}`;
+            image.length > 1 ? `${fileName} (${i + 1})` : `${fileName}`;
           arr = [
             ...arr,
             {
               title: name,
               link: url,
-              category: categorias.filter((x) => x.value == categoria)[0].label,
+              category: categories.filter((x) => x.value == category)[0].label,
               format: fileTypes[res.metadata.contentType]
                 ? fileTypes[res.metadata.contentType].title
                 : "INDEFINIDO",
@@ -69,7 +75,7 @@ function AnexoArquivo({
       }
       await axios
         .post(`/api/projects/update/${id}`, {
-          [`${categoria}`]: arr,
+          [`${category}`]: arr,
         })
         .catch((err) => {
           throw "Houve um erro no salvamento dos links.";
@@ -78,16 +84,17 @@ function AnexoArquivo({
         text: "Arquivo(s) salvo(s) com sucesso",
         color: "text-green-500",
       });
-      setNomeDoArquivo("");
-      setCategoria("NÃO DEFINIDO");
-      setImagem(null);
+      clearMsg();
+      setFileName("");
+      setCategory("NÃO DEFINIDO");
+      setImage(null);
       console.log(arr);
       handleUpdates(id, arr);
       return;
     } catch (error) {
       console.log("ERRO", error);
       setMsg({
-        text: "TESTE",
+        text: "Erro no envio das imagens.",
         color: "text-red-500",
       });
     }
@@ -96,11 +103,11 @@ function AnexoArquivo({
     <div className="flex flex-col gap-2">
       <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
         <div className="absolute">
-          {imagem ? (
+          {image ? (
             <div className="flex flex-col items-center">
               <i className="fa fa-folder-open fa-4x text-blue-700"></i>
               <span className="block text-gray-400 font-normal text-center">
-                {imagem.length == 1 ? imagem[0].name : `${imagem[0].name}...`}
+                {image.length == 1 ? image[0].name : `${image[0].name}...`}
               </span>
             </div>
           ) : (
@@ -113,7 +120,7 @@ function AnexoArquivo({
           )}
         </div>
         <input
-          onChange={(e) => setImagem(e.target.files)}
+          onChange={(e) => setImage(e.target.files)}
           className="h-full w-full opacity-0"
           multiple={multiple != undefined ? multiple : true}
           type="file"
@@ -121,17 +128,17 @@ function AnexoArquivo({
         />
       </div>
       <input
-        value={nomeDoArquivo}
-        onChange={(e) => setNomeDoArquivo(e.target.value.toUpperCase())}
+        value={fileName}
+        onChange={(e) => setFileName(e.target.value.toUpperCase())}
         placeholder="Dê um nome para identificação do arquivo."
         className="outline-none border border-gray-200 p-2"
       />
       <select
-        value={categoria}
-        onChange={(e) => setCategoria(e.target.value)}
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
         className="p-2 outline-none border border-gray-200"
       >
-        {[...categorias, { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" }].map(
+        {[...categories, { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" }].map(
           (opt, index) => (
             <option key={index} value={opt.value}>
               {opt.label}
@@ -140,14 +147,14 @@ function AnexoArquivo({
         )}
       </select>
       {msg.text ? (
-        <p className={`text-center italic ${msg.color} text-xs h-[10px]`}>
+        <p className={`text-center italic ${msg.color} text-xs h-[10px] my-1`}>
           {msg.text}
         </p>
       ) : (
-        <div className="h-[10px]"></div>
+        <div className="h-[10px] my-1"></div>
       )}
       <button
-        onClick={anexarArquivo}
+        onClick={uploadFiles}
         className="p-2 rounded bg-blue-400 hover:bg-blue-700 text-white font-bold"
       >
         ANEXAR

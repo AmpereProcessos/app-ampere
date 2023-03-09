@@ -10,7 +10,6 @@ import NumberInput from "./NumberInput";
 import NotificationCreationBlock from "./NotificationCreationBlock";
 import Link from "next/link";
 import OSCreationBlock from "./OSCreationBlock";
-import AnexoArquivo from "./AnexoArquivo";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import { useKey } from "../utils/hooks";
 import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
@@ -19,6 +18,7 @@ import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
 import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
 import InfoClienteBlock from "./blocosInfoProjeto/InfoClienteBlock";
 import InfoDadosConcessionariaBlock from "./blocosInfoProjeto/InfoDadosConcessionariaBlock";
+import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -1580,50 +1580,17 @@ function ModalProjetos({
                 </div>
               </div>
             </div>
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                ARQUIVOS
-              </span>
-              <div className="flex flex-col items-center">
-                <h1 className="text-xs text-center font-bold text-[#15599a] uppercase py-2">
-                  ANEXE ARQUIVOS
-                </h1>
-                <AnexoArquivo
-                  id={infoHolder._id}
-                  prevLinks={project.links ? project.links : {}}
-                  cliente={`${infoHolder.nomeDoProjeto}-${infoHolder.codigoSVB}`}
-                  categorias={[
-                    { label: "DOCUMENTOS", value: "links.documentos" },
-                    { label: "PROJETOS", value: "links.projetos" },
-                    { label: "OBRAS", value: "links.obras" },
-                    { label: "VISITA TÉCNICA", value: "links.visitaTecnica" },
-                  ]}
-                  handleUpdates={handleUpdates}
-                />
-              </div>
-              {project.links && (
-                <div className="flex justify-around gap-2 mt-3">
-                  {Object.keys(project.links).map((category, index) => (
-                    <div key={index} className="flex flex-col">
-                      <h1 className="text-sm font-bold text-center text-[#15599a]">
-                        {category.toUpperCase()}
-                      </h1>
-                      <div className="flex flex-col items-center gap-1">
-                        {project.links[category].map((obj, index2) => (
-                          <a
-                            className="text-xs text-[#15599a] font-bold"
-                            key={index2}
-                            href={obj.link}
-                          >
-                            {obj.title} ({obj.format})
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <InfoArquivosBlock
+              project={project}
+              infoHolder={infoHolder}
+              categories={[
+                { label: "DOCUMENTOS", value: "links.documentos" },
+                { label: "PROJETOS", value: "links.projetos" },
+                { label: "OBRAS", value: "links.obras" },
+                { label: "VISITA TÉCNICA", value: "links.visitaTecnica" },
+              ]}
+              handleUpdates={handleUpdates}
+            />
           </div>
         </div>
       </AnimatedModalWrapper>

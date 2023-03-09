@@ -22,8 +22,8 @@ function BandoDeDados({ data }) {
     },
   });
   // Data
-  const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [projects, setProjects] = useState();
+  const [filteredProjects, setFilteredProjects] = useState();
 
   // Modal Control
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -268,7 +268,7 @@ function BandoDeDados({ data }) {
             </p>
             {filteredProjects && (
               <p className="text-[#fead61] font-raleway">
-                ({filteredProjects.length})
+                ({filteredProjects?.length})
               </p>
             )}
           </div>
@@ -561,7 +561,7 @@ function BandoDeDados({ data }) {
           </nav>
         </div>
         <div className="flex  justify-around gap-3 mt-4 flex-wrap">
-          {opInProgress ? (
+          {!filteredProjects ? (
             <div role="status">
               <svg
                 aria-hidden="true"

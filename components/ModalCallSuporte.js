@@ -153,16 +153,16 @@ function ModalCallSuporte({
         updateModalInfo(info._id);
       });
   }
-  function addLinks(obj) {
+  function addLinks(arr) {
+    console.log("LINKS", arr);
     setInfo({
       ...infoHolder,
-      links: infoHolder.links ? [...infoHolder.links, obj] : [obj],
+      links: arr,
     });
     axios
       .put("/api/calls/suporte/updateSuporte", {
         ...infoHolder,
-        links:
-          infoHolder.links?.length > 0 ? [...infoHolder.links, obj] : [obj],
+        links: arr,
       })
       .then(() => {
         setMessage({ text: "Link adicionado", color: "text-green-500" });
@@ -172,7 +172,7 @@ function ModalCallSuporte({
   useEffect(() => {
     setMessage({ text: "", color: "" });
   }, [infoHolder]);
-  console.log(infoHolder);
+
   return (
     <>
       <AnimatedModalWrapper
@@ -528,6 +528,27 @@ function ModalCallSuporte({
                       ? { chamadosSuporte: infoHolder.links }
                       : {}
                   }
+                  client={
+                    infoHolder.nomeCliente
+                      ? `${infoHolder.nomeCliente}`
+                      : `${infoHolder.nomeUsina}`
+                  }
+                  categories={[
+                    {
+                      label: "CHAMADOS DE SUPORTE",
+                      value: "links.chamadosSuporte",
+                    },
+                  ]}
+                  multiple={false}
+                  handleUpdates={(_, obj) => addLinks(obj)}
+                />
+                {/* <AnexoArquivo
+                  id={infoHolder.idPai}
+                  prevLinks={
+                    infoHolder.links
+                      ? { chamadosSuporte: infoHolder.links }
+                      : {}
+                  }
                   cliente={
                     infoHolder.nomeCliente
                       ? `${infoHolder.nomeCliente}`
@@ -541,7 +562,7 @@ function ModalCallSuporte({
                   ]}
                   multiple={false}
                   handleUpdates={(_, obj) => addLinks(obj)}
-                />
+                /> */}
                 {infoHolder.links?.length > 0 && (
                   <div className="flex flex-col">
                     <h1 className="text-center font-bold">IMAGENS ANEXADAS</h1>

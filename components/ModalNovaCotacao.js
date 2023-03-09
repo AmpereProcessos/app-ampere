@@ -5,7 +5,9 @@ import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import TextFloatingInput from "./TextFloatingInput";
 import NumberFloatingInput from "./NumberFloatingInput";
 import SelectFloatingInput from "./SelectFloatingInput";
-import { fornecedores, suprimentoOption } from "../utils/constants";
+import { suprimentoOption } from "../utils/constants";
+import fornecedores from "../utils/fornecedores.json";
+import modulos from "../utils/modulos.json";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
@@ -13,10 +15,12 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
   console.log(credentials);
   const [quotationInfo, setQuotationInfo] = useState({
     nomeDoKit: "",
+    habilitado: true,
     inclusoEstrutura: true,
     inclusoTransformador: false,
     carport: false,
     ceramico: false,
+    fibrocimento: false,
     laje: false,
     shingle: false,
     metalico: false,
@@ -24,9 +28,10 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
     solo: false,
     topologia: "MICRO",
     inversores: [],
-    modulos: [],
+    descModulo: "",
+    qtdeModulo: 0,
     componentes: [],
-    fornecedor: "NÃO DEFINIDO",
+    fornecedor: "WEG",
     valorDoKit: 0,
     potPico: 0,
   });
@@ -43,11 +48,15 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
     marca: "",
     modelo: "",
     qtde: 0,
+    potencia: 0,
+    qtdeFases: 0,
+    tensaoSaida: 0,
   });
   const [moduleHolder, setModuleHolder] = useState({
     marca: "",
     modelo: "",
     qtde: 0,
+    potencia: 0,
   });
   const [componentHolder, setComponentHolder] = useState({
     insumo: Object.keys(suprimentoOption)[0],
@@ -150,11 +159,44 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
       });
       return;
     }
+    if (inverterHolder.potencia <= 0) {
+      setErrorMsg({
+        inverter: "Por favor, adicione uma potência válida para o inversor.",
+        module: "",
+        component: "",
+      });
+      return;
+    }
+    if (inverterHolder.qtdeFases <= 0) {
+      setErrorMsg({
+        inverter:
+          "Por favor, adicione uma quantidade de fases válida para o inversor.",
+        module: "",
+        component: "",
+      });
+      return;
+    }
+    if (inverterHolder.tensaoSaida <= 0) {
+      setErrorMsg({
+        inverter:
+          "Por favor, adicione uma tensão de saída válida para o inversor.",
+        module: "",
+        component: "",
+      });
+      return;
+    }
     let info = { ...inverterHolder };
     let currentArr = [...quotationInfo.inversores];
     currentArr.push(info);
     setQuotationInfo({ ...quotationInfo, inversores: currentArr });
-    setInverterHolder({ marca: "", modelo: "", qtde: 0 });
+    setInverterHolder({
+      marca: "",
+      modelo: "",
+      qtde: 0,
+      potencia: 0,
+      qtdeFases: 0,
+      tensaoSaida: 0,
+    });
     resetErrorMsg();
     return;
   }
@@ -172,6 +214,14 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
         inverter: "",
         module:
           "Por favor, adicione alguma informação sobre o modelo do painel.",
+        component: "",
+      });
+      return;
+    }
+    if (moduleHolder.potencia <= 0) {
+      setErrorMsg({
+        inverter: "",
+        module: "Por favor, adicione uma potência válida de painéis.",
         component: "",
       });
       return;
@@ -236,10 +286,10 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
           </div>
           <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto ">
             <div className="flex flex-col pt-1">
-              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2 rounded-md">
+              <h1 className="text-center bg-black text-white font-bold w-full py-2 rounded-md">
                 INFORMAÇÕES GERAIS
               </h1>
-              <div className="grid grid-cols-3 pt-3 gap-2">
+              <div className="grid grid-cols-1 lg:grid-cols-3 pt-4 gap-2">
                 <TextFloatingInput
                   label={"NOME DO KIT"}
                   editable={true}
@@ -285,7 +335,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                   }
                 />
               </div>
-              <div className="grid grid-cols-4 pt-3 gap-2">
+              <div className="grid grid-cols-1 lg:grid-cols-4 pt-3 gap-2">
                 <SelectFloatingInput
                   label={"TOPOLOGIA"}
                   editable={true}
@@ -294,15 +344,17 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                     { label: "MICRO-INVERSOR", value: "MICRO" },
                   ]}
                   width="100%"
-                  value={quotationInfo.fornecedor}
+                  value={quotationInfo.topologia}
                   handleChange={(value) =>
-                    setQuotationInfo({ ...quotationInfo, fornecedor: value })
+                    setQuotationInfo({ ...quotationInfo, topologia: value })
                   }
                 />
                 <SelectFloatingInput
                   label={"FORNECEDOR"}
                   editable={true}
-                  options={fornecedores}
+                  options={fornecedores.map((fornecedor) => {
+                    return { label: fornecedor.nome, value: fornecedor.nome };
+                  })}
                   width="100%"
                   value={quotationInfo.fornecedor}
                   handleChange={(value) =>
@@ -310,7 +362,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                   }
                 />
                 <NumberFloatingInput
-                  label={"POTÊNCIA PICO"}
+                  label={"POTÊNCIA PICO (kW)"}
                   editable={true}
                   width="100%"
                   value={quotationInfo.potPico}
@@ -336,7 +388,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
               </div>
             </div>
             <div className="flex flex-col pt-1">
-              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2 rounded-md">
+              <h1 className="text-center bg-black text-white font-bold w-full py-2 rounded-md">
                 TIPOS DE ESTRUTURA APLICÁVEIS
               </h1>
               <div className="grid grid-cols-3 pt-3 gap-2">
@@ -380,6 +432,27 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                     className="ml-2 text-sm font-medium text-gray-400 w-10"
                   >
                     Cerâmico
+                  </label>
+                </div>
+                <div className="flex items-center mb-4 w-full justify-center">
+                  <input
+                    id="fibrocimento"
+                    type="checkbox"
+                    value=""
+                    checked={quotationInfo.fibrocimento}
+                    onChange={(e) =>
+                      setQuotationInfo({
+                        ...quotationInfo,
+                        fibrocimento: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2"
+                  />
+                  <label
+                    htmlFor="fibrocimento"
+                    className="ml-2 text-sm font-medium text-gray-400 w-10"
+                  >
+                    Fibrocimento
                   </label>
                 </div>
                 <div className="flex items-center mb-4 w-full justify-center">
@@ -490,42 +563,89 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
               </div>
             </div>
             <div className="flex flex-col pt-1">
-              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2 rounded-md">
+              <h1 className="text-center bg-black text-white font-bold w-full py-2 rounded-md">
                 INVERSORES
               </h1>
-              <div className="grid grid-cols-7 gap-2 pt-3">
-                <div className="flex items-center justify-center col-span-2">
-                  <TextFloatingInput
-                    label={"MARCA"}
-                    editable={true}
-                    value={inverterHolder.marca}
-                    handleChange={(value) =>
-                      setInverterHolder({ ...inverterHolder, marca: value })
-                    }
-                  />
-                </div>
-                <div className="flex items-center justify-center col-span-2">
-                  <TextFloatingInput
-                    label={"MODELO"}
-                    editable={true}
-                    value={inverterHolder.modelo}
-                    handleChange={(value) =>
-                      setInverterHolder({ ...inverterHolder, modelo: value })
-                    }
-                  />
-                </div>
-                <div className="flex items-center justify-center col-span-2">
-                  <NumberFloatingInput
-                    label={"QTDE"}
-                    editable={true}
-                    value={inverterHolder.qtde}
-                    handleChange={(value) =>
-                      setInverterHolder({
-                        ...inverterHolder,
-                        qtde: Number(value),
-                      })
-                    }
-                  />
+              <div className="grid grid-cols-13 gap-2 pt-4">
+                <div className="grid grid-cols-3 gap-2 col-span-12">
+                  <div className="flex items-center justify-center">
+                    <TextFloatingInput
+                      label={"MARCA"}
+                      editable={true}
+                      width={"100%"}
+                      value={inverterHolder.marca}
+                      handleChange={(value) =>
+                        setInverterHolder({ ...inverterHolder, marca: value })
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <TextFloatingInput
+                      label={"MODELO"}
+                      width={"100%"}
+                      editable={true}
+                      value={inverterHolder.modelo}
+                      handleChange={(value) =>
+                        setInverterHolder({ ...inverterHolder, modelo: value })
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <NumberFloatingInput
+                      label={"QTDE"}
+                      width={"100%"}
+                      editable={true}
+                      value={inverterHolder.qtde}
+                      handleChange={(value) =>
+                        setInverterHolder({
+                          ...inverterHolder,
+                          qtde: Number(value),
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <NumberFloatingInput
+                      label={"POTÊNCIA (W)"}
+                      width={"100%"}
+                      editable={true}
+                      value={inverterHolder.potencia}
+                      handleChange={(value) =>
+                        setInverterHolder({
+                          ...inverterHolder,
+                          potencia: Number(value),
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <NumberFloatingInput
+                      label={"QTDE DE FASES"}
+                      width={"100%"}
+                      editable={true}
+                      value={inverterHolder.qtdeFases}
+                      handleChange={(value) =>
+                        setInverterHolder({
+                          ...inverterHolder,
+                          qtdeFases: Number(value),
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <NumberFloatingInput
+                      label={"TENSÃO DE SAÍDA (V)"}
+                      width={"100%"}
+                      editable={true}
+                      value={inverterHolder.tensaoSaida}
+                      handleChange={(value) =>
+                        setInverterHolder({
+                          ...inverterHolder,
+                          tensaoSaida: Number(value),
+                        })
+                      }
+                    />
+                  </div>
                 </div>
                 <div className="flex items-center justify-center col-span-1">
                   <IoMdAddCircle
@@ -549,30 +669,51 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                   <h1 className="text-center font-bold text-[#15599a]">
                     INVERSORES ADICIONADOS
                   </h1>
-                  <div className="grid grid-cols-7 gap-2">
+                  <div className="grid grid-cols-7 lg:grid-cols-13 gap-2">
                     <h1 className="font-bold text-gray-700 col-span-2 text-center text-xs">
                       MARCA
                     </h1>
-                    <h1 className="font-bold text-gray-700 col-span-2 text-center text-xs">
+                    <h1 className="hidden lg:block font-bold text-gray-700 col-span-2 text-center text-xs">
                       MODELO
                     </h1>
                     <h1 className="font-bold text-gray-700 col-span-2 text-center text-xs">
                       QTDE
                     </h1>
-                    <h1 className="font-bold text-gray-700 col-span-1 text-center text-xs">
+                    <h1 className="font-bold text-gray-700 col-span-2 text-center text-xs">
+                      POTÊNCIA
+                    </h1>
+                    <h1 className="hidden lg:block font-bold text-gray-700 col-span-2 text-center text-xs">
+                      QTDE DE FASES
+                    </h1>
+                    <h1 className="hidden lg:block font-bold text-gray-700 col-span-2 text-center text-xs">
+                      TENSÃO DE SAÍDA
+                    </h1>
+                    <h1 className="hidden lg:block font-bold text-gray-700 col-span-1 text-center text-xs">
                       EXCLUIR
                     </h1>
                   </div>
                   {quotationInfo.inversores.map((inverter, index) => (
-                    <div key={index} className="grid grid-cols-7 gap-2 pt-1">
+                    <div
+                      key={index}
+                      className="grid grid-cols-7 lg:grid-cols-13 gap-2 pt-1"
+                    >
                       <h1 className=" text-gray-700 col-span-2 text-center text-xs">
                         {inverter.marca}
                       </h1>
-                      <h1 className=" text-gray-700 col-span-2 text-center text-xs">
+                      <h1 className="hidden lg:block text-gray-700 col-span-2 text-center text-xs">
                         {inverter.modelo}
                       </h1>
                       <h1 className=" text-gray-700 col-span-2 text-center text-xs">
                         {inverter.qtde}
+                      </h1>
+                      <h1 className=" text-gray-700 col-span-2 text-center text-xs">
+                        {inverter.potencia}
+                      </h1>
+                      <h1 className="hidden lg:block text-gray-700 col-span-2 text-center text-xs">
+                        {inverter.qtdeFases}
+                      </h1>
+                      <h1 className="hidden lg:block text-gray-700 col-span-2 text-center text-xs">
+                        {inverter.tensaoSaida}
                       </h1>
                       <div className="flex items-center col-span-1 justify-center text-red-500">
                         <IoMdRemoveCircle
@@ -593,44 +734,42 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
               ) : null}
             </div>
             <div className="flex flex-col pt-1">
-              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2 rounded-md">
+              <h1 className="text-center bg-black text-white font-bold w-full py-2 rounded-md">
                 PAINÉIS
               </h1>
-              <div className="grid grid-cols-7 gap-2 pt-3">
-                <div className="flex items-center justify-center col-span-2">
-                  <TextFloatingInput
-                    label={"MARCA DOS PAINÉIS"}
+              <div className="grid grid-cols-12 gap-2 pt-4">
+                <div className="flex items-center justify-center col-span-8">
+                  <SelectFloatingInput
+                    label={"MODELO DO PAINÉL"}
                     editable={true}
-                    value={moduleHolder.marca}
+                    width={"100%"}
+                    options={modulos.map((modulo) => {
+                      return { label: modulo.modelo, value: modulo.modelo };
+                    })}
+                    value={quotationInfo.descModulo}
                     handleChange={(value) =>
-                      setModuleHolder({ ...moduleHolder, marca: value })
-                    }
-                  />
-                </div>
-                <div className="flex items-center justify-center col-span-2">
-                  <TextFloatingInput
-                    label={"MODELO DOS PAINÉIS"}
-                    editable={true}
-                    value={moduleHolder.modelo}
-                    handleChange={(value) =>
-                      setModuleHolder({ ...moduleHolder, modelo: value })
-                    }
-                  />
-                </div>
-                <div className="flex items-center justify-center col-span-2">
-                  <NumberFloatingInput
-                    label={"QTDE DE PAINÉIS"}
-                    editable={true}
-                    value={moduleHolder.qtde}
-                    handleChange={(value) =>
-                      setModuleHolder({
-                        ...moduleHolder,
-                        qtde: Number(value),
+                      setQuotationInfo({
+                        ...quotationInfo,
+                        descModulo: value,
                       })
                     }
                   />
                 </div>
-                <div className="flex items-center justify-center col-span-1">
+                <div className="flex items-center justify-center col-span-4">
+                  <NumberFloatingInput
+                    label={"QTDE DE PAINÉIS"}
+                    editable={true}
+                    width={"100%"}
+                    value={quotationInfo.qtdeModulo}
+                    handleChange={(value) =>
+                      setQuotationInfo({
+                        ...quotationInfo,
+                        qtdeModulo: Number(value),
+                      })
+                    }
+                  />
+                </div>
+                {/* <div className="flex items-center justify-center col-span-1">
                   <IoMdAddCircle
                     onClick={addModule}
                     style={{
@@ -640,9 +779,9 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                       marginBottom: "5px",
                     }}
                   />
-                </div>
+                </div> */}
               </div>
-              {errorMsg.module && (
+              {/* {errorMsg.module && (
                 <p className="text-center text-red-500 italic">
                   {errorMsg.module}
                 </p>
@@ -652,29 +791,38 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                   <h1 className="text-center font-bold text-[#15599a]">
                     MÓDULOS ADICIONADOS
                   </h1>
-                  <div className="grid grid-cols-7 gap-2">
-                    <h1 className="font-bold text-gray-700 col-span-2 text-center text-xs">
+                  <div className="grid grid-cols-10 lg:grid-cols-13 gap-2">
+                    <h1 className="font-bold text-gray-700 col-span-3 text-center text-xs">
                       MARCA
                     </h1>
-                    <h1 className="font-bold text-gray-700 col-span-2 text-center text-xs">
+                    <h1 className="font-bold hidden lg:block text-gray-700 col-span-3 text-center text-xs">
                       MODELO
                     </h1>
-                    <h1 className="font-bold text-gray-700 col-span-2 text-center text-xs">
+                    <h1 className="font-bold text-gray-700 col-span-3 text-center text-xs">
+                      POTÊNCIA
+                    </h1>
+                    <h1 className="font-bold text-gray-700 col-span-3 text-center text-xs">
                       QTDE
                     </h1>
-                    <h1 className="font-bold text-gray-700 col-span-1 text-center text-xs">
+                    <h1 className="hidden lg:block font-bold text-gray-700 col-span-1 text-center text-xs">
                       EXCLUIR
                     </h1>
                   </div>
                   {quotationInfo.modulos.map((module, index) => (
-                    <div key={index} className="grid grid-cols-7 gap-2">
-                      <h1 className=" text-gray-700 col-span-2 text-center text-xs">
+                    <div
+                      key={index}
+                      className="grid grid-cols-10 lg:grid-cols-13 gap-2"
+                    >
+                      <h1 className=" text-gray-700 col-span-3 text-center text-xs">
                         {module.marca}
                       </h1>
-                      <h1 className=" text-gray-700 col-span-2 text-center text-xs">
+                      <h1 className="hidden lg:block text-gray-700 col-span-3 text-center text-xs">
                         {module.modelo}
                       </h1>
-                      <h1 className=" text-gray-700 col-span-2 text-center text-xs">
+                      <h1 className=" text-gray-700 col-span-3 text-center text-xs">
+                        {module.potencia}
+                      </h1>
+                      <h1 className=" text-gray-700 col-span-3 text-center text-xs">
                         {module.qtde}
                       </h1>
                       <div className="flex items-center col-span-1 justify-center text-red-500">
@@ -693,13 +841,13 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                     </div>
                   ))}
                 </div>
-              ) : null}
+              ) : null} */}
             </div>
             <div className="flex flex-col pt-1">
-              <h1 className="text-center bg-[#15599a] text-white font-bold w-full py-2 rounded-md">
+              <h1 className="text-center bg-black text-white font-bold w-full py-2 rounded-md">
                 COMPONENTES
               </h1>
-              <div className="w-full grid items-center grid-cols-8 gap-2 pt-3">
+              <div className="w-full grid items-center grid-cols-7 lg:grid-cols-8 gap-2 pt-3">
                 <div className="flex items-center justify-center col-span-2">
                   <SelectFloatingInput
                     label={"INSUMO"}
@@ -753,7 +901,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                   />
                 </div>
 
-                <p className="text-gray-600 text-xs text-center col-span-1">
+                <p className="hidden lg:block text-gray-600 text-xs text-center col-span-1">
                   {componentHolder.medida}
                 </p>
                 <div className="flex items-center justify-center col-span-1">

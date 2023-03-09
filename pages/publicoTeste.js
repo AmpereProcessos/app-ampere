@@ -15,357 +15,524 @@ import { fileTypes } from "../utils/constants";
 import { storage } from "../utils/firebase";
 function Teste() {
   return (
-    <div className="p-6 grow flex flex-col">
-      <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-            <p className="w-[250px] h-[72px] xs:w-[370px] xs:h-[36px] bg-gray-200 animate-pulse"></p>
-            <p className="w-[121] h-[18px] bg-gray-200 animate-pulse"></p>
+    <div className="w-[21cm] h-[29.7cm]">
+      <div className="flex flex-col w-full h-full">
+        <div className="flex flex-col">
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border-x border-black">
+            CADASTRO
+          </h1>
+          <div className="flex">
+            <div className="grid grid-rows-6 w-[60%]">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                  CLIENTE
+                </div>
+                <div className="flex justify-center text-center items-center text-xs border-r border-black">
+                  DISTRIBUIDORA DE ALIMENTOS DONA DONA NENEM LTDA
+                </div>
+              </div>
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                  REPRESENTANTE
+                </div>
+                <div className="flex justify-center items-center text-xs border-r border-black">
+                  MATHEUS OLIVEIRA
+                </div>
+              </div>
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                  ENDEREÇO
+                </div>
+                <div
+                  className={`flex justify-center items-center text-xs border-r border-black`}
+                >
+                  Q QI 616 CONJUNTO 2 LOTE
+                </div>
+              </div>
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                  BAIRRO
+                </div>
+                <div className="flex justify-center items-center text-xs border-r border-black">
+                  SAMAMBAIA NORTE (SAMAMBAIA)
+                </div>
+              </div>
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                  DATA DA VISITA
+                </div>
+                <div className="flex justify-center items-center text-xs border-r border-black">
+                  {" "}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                  TIPO DE SOLICITAÇÃO
+                </div>
+                <div className="flex justify-center items-center text-xs border-r border-black">
+                  VISITA TÉCNICA REMOTA - URBANA
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-rows-6 w-[40%]">
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                  TELEFONE
+                </div>
+                <div className="flex justify-center items-center text-xs border-r border-black">
+                  {" "}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                  Nº DE PROJETO
+                </div>
+                <div className="flex justify-center items-center text-xs border-r border-black">
+                  {" "}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                  NÚMERO
+                </div>
+                <div className="flex justify-center items-center text-xs border-r border-black">
+                  09
+                </div>
+              </div>
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                  MUNICÍPIO
+                </div>
+                <div className="flex justify-center items-center text-xs border-r border-black">
+                  BRASÍLIA
+                </div>
+              </div>
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                  PRAZO LAUDO
+                </div>
+                <div className="flex justify-center items-center text-xs border-r border-black">
+                  {" "}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 border-b border-black h-[40px]">
+                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
+                  TIPO DE LAUDO
+                </div>
+                <div className="flex justify-center items-center text-xs border-r border-black">
+                  {" "}
+                </div>
+              </div>
+            </div>
           </div>
-          <p className="w-[25px] h-[25px] rounded-full bg-gray-200 animate-pulse"></p>
         </div>
-      </div>
-      <div className="flex flex-col gap-2 mt-2">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((item, index) => (
-          <div
-            key={index}
-            className={`grid grid-rows-6 grid-cols-1 lg:grid-cols-10 lg:grid-rows-1 border border-gray-200 p-2`}
-          >
-            <div className="flex flex-col justify-around row-span-1 col-span-1">
-              <h1 className="w-[180px] h-[50px] bg-gray-200 animate-pulse"></h1>
-              <div className="w-[184px] h-[32px] bg-gray-200 animate-pulse"></div>
+        {/* <div className="flex flex-col mt-6">
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold">
+            ESTRUTURA FOTOVOLTAICA
+          </h1>
+          <div className="flex">
+            <div className="w-[20%] h-full flex justify-center items-center bg-[#15599a] text-center text-white font-bold">
+              DESCRIÇÃO DO SISTEMA FOTOVOLTAICO
             </div>
-            <div className="col-span-9 flex flex-col row-span-5">
-              <div className="flex items-center justify-center gap-4 mb-2">
-                <div className="flex flex-col items-center gap-1">
-                  <p className="w-[121px] h-[18px] bg-gray-200 animate-pulse"></p>
-                  <p className="w-[62px] h-[15px] bg-gray-200 animate-pulse"></p>
+            <div className="w-[80%] flex flex-col">
+              <h1 className="bg-[#fead61] text-white text-sm  text-center font-raleway font-bold  border border-black border-b-0">
+                INVERSORES
+              </h1>
+              <div className="flex border border-black border-b-0">
+                <div className="flex flex-col w-[50%]">
+                  <div className="grid grid-cols-2">
+                    <p className="bg-gray-200 text-center text-xs font-bold">
+                      TOPOLOGIA
+                    </p>
+                    <p className="text-center text-xs font-bold"> </p>
+                  </div>
+                  <div className="grid grid-cols-2">
+                    <p className="bg-gray-200 text-center text-xs font-bold">
+                      QUANTIDADE
+                    </p>
+                    <p className="text-center text-xs font-bold"> </p>
+                  </div>
                 </div>
-                <div className="flex flex-col items-center gap-1">
-                  <p className="w-[121px] h-[18px] bg-gray-200 animate-pulse"></p>
-                  <p className="w-[62px] h-[15px] bg-gray-200 animate-pulse"></p>
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <p className="w-[121px] h-[18px] bg-gray-200 animate-pulse"></p>
-                  <p className="w-[62px] h-[15px] bg-gray-200 animate-pulse"></p>
+                <div className="flex flex-col w-[50%]">
+                  <div className="grid grid-cols-2">
+                    <p className="bg-gray-200 text-center text-xs font-bold">
+                      MARCA DO INVERSOR
+                    </p>
+                    <p className="text-center text-xs font-bold"> </p>
+                  </div>
+                  <div className="grid grid-cols-2">
+                    <p className="bg-gray-200 text-center text-xs font-bold">
+                      POTÊNCIA
+                    </p>
+                    <p className="text-center text-xs font-bold"> </p>
+                  </div>
                 </div>
               </div>
-
-              <div className="flex items-center justify-center gap-1 flex-wrap col-span-9">
-                <div className="flex flex-col gap-1 w-[350px] items-center">
-                  <div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-                  <div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
+              <h1 className="bg-[#fead61] text-white text-sm  text-center font-raleway font-bold  border border-black border-b-0">
+                MÓDULOS FOTOVOLTÁICOS
+              </h1>
+              <div className="flex  border border-black border-b-0">
+                <div className="flex flex-col w-[50%]">
+                  <div className="grid grid-cols-2">
+                    <p className="bg-gray-200 text-center text-xs font-bold">
+                      QUANTIDADE
+                    </p>
+                    <p className="text-center text-xs font-bold"> </p>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-1 w-[350px] items-center">
-                  <div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-                  <div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
+                <div className="flex flex-col w-[50%]">
+                  <div className="grid grid-cols-2">
+                    <p className="bg-gray-200 text-center text-xs font-bold">
+                      POTÊNCIA
+                    </p>
+                    <p className="text-center text-xs font-bold"> </p>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-1 w-[350px] items-center">
-                  <div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-                  <div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
+              </div>
+              <div className="flex  border border-black">
+                <p className="bg-gray-200 text-center text-xs font-bold w-[50%]">
+                  MARCA DOS MÓDULOS
+                </p>
+                <p className="text-center text-xs font-bold w-[50%]"> </p>
+              </div>
+            </div>
+          </div>
+          <div className="flex mt-1 border border-black">
+            <h1 className="w-[20%] border-r border-black text-xs font-bold text-center">
+              OBSERVAÇÕES SOBRE A VISITA
+            </h1>
+            <div className="w-[80%] h-full"></div>
+          </div>
+        </div> */}
+        <div className="flex flex-col mt-6">
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border-x border-black">
+            OBRAS
+          </h1>
+          <h1 className="bg-[#fead61] text-white text-xs text-center font-bold border-x border-t border-black">
+            ESTRUTURA DE MONTAGEM
+          </h1>
+          <div className="grid grid-cols-2">
+            <div className="flex border border-black border-r-0">
+              <h1 className="w-[60%] text-center bg-gray-200 text-xs border-r border-black font-bold">
+                TELHA RESERVA
+              </h1>
+              <div className="grid grid-cols-2 w-[40%]">
+                <h1 className="text-center text-xs border-r border-black">
+                  SIM
+                </h1>
+                <h1 className="text-center text-xs">NÃO</h1>
+              </div>
+            </div>
+            <div className="flex border border-black">
+              <h1 className="w-[60%] text-center bg-gray-200 text-xs border-r border-black font-bold">
+                TIPO DA ESTRUTURA
+              </h1>
+              <div className="grid grid-cols-2 w-[40%]">
+                <h1 className="text-center text-xs border-r border-black">
+                  FERRO
+                </h1>
+                <h1 className="text-center text-xs">MADEIRA</h1>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2">
+            <div className="flex border border-black border-t-0 border-r-0">
+              <h1 className="w-[60%] text-center bg-gray-200 text-xs border-r border-black font-bold">
+                QTDE DE TELHAS RESERVAS
+              </h1>
+              <div className=" w-[40%]"></div>
+            </div>
+            <div className="flex border border-black border-t-0">
+              <h1 className="w-[60%] text-center bg-gray-200 text-xs border-r border-black font-bold">
+                ORIENTAÇÃO DO TELHADO
+              </h1>
+              <div className="w-[40%]"></div>
+            </div>
+          </div>
+          <div className="flex border border-black border-t-0">
+            <div className="w-[30%] flex items-center justify-center text-center text-xs border-r border-black bg-gray-200 font-bold">
+              TIPO DA TELHA
+            </div>
+            <div className="grid grid-rows-2 grid-cols-7 w-[70%]">
+              <h1 className="text-center text-xs border-r border-b border-black">
+                AMERICANA
+              </h1>
+              <h1 className="text-center text-xs border-r border-b border-black">
+                ETHERNIT
+              </h1>
+              <h1 className="text-center text-xs border-r border-b border-black">
+                CIMENTO
+              </h1>
+              <h1 className="text-center text-xs border-r border-b border-black">
+                PORTUGUESA
+              </h1>
+              <h1 className="text-center text-xs border-r border-b border-black">
+                ROMANA
+              </h1>
+              <h1 className="text-center text-xs border-r border-b border-black">
+                CAPA+BICA
+              </h1>
+              <h1 className="text-center text-xs border-b border-black">
+                ZINCO
+              </h1>
+              <h1 className="text-center text-xs border-r border-black">
+                SANDUÍCHE
+              </h1>
+              <h1 className="text-center text-xs border-r border-black">
+                FRANCESA
+              </h1>
+              <h1 className="text-center text-xs border-r border-black">
+                PINTADA
+              </h1>
+              <h1 className="text-center text-xs border-r border-black">
+                ESPECIAL
+              </h1>
+              <h1 className="text-center text-xs border-r border-black">
+                VER FOTO
+              </h1>
+              <h1 className="text-center text-xs border-r border-black">N/A</h1>
+              <h1 className="text-center text-xs">AMERICANA</h1>
+            </div>
+          </div>
+          <div className="flex border border-black border-t-0">
+            <h1 className="w-[30%] flex items-center justify-center text-center text-xs border-r border-black bg-gray-200 font-bold">
+              TIPO DE EDIFICAÇÃO
+            </h1>
+            <div className="w-[70%] grid grid-cols-11">
+              <div className="text-center flex items-center justify-center text-xs border-r border-black col-span-2">
+                COLONIAL
+              </div>
+              <div className="text-center flex items-center justify-center text-xs border-r border-black col-span-2">
+                BARRACÃO
+              </div>
+              <div className="text-center flex items-center justify-center text-xs border-r border-black col-span-2">
+                CAIXOTE
+              </div>
+              <div className="text-center flex items-center justify-center text-xs border-r border-black col-span-2">
+                SOLO
+              </div>
+              <div className="text-center flex items-center justify-center text-xs col-span-3">
+                BARRACÃO A SER CONSTRUÍDO
+              </div>
+            </div>
+          </div>
+          <h1 className="bg-[#fead61] text-white text-xs text-center font-bold border-x border-black">
+            INFRAESTRUTURA ELÉTRICA
+          </h1>
+          <div className="grid grid-cols-2">
+            <div className="flex border border-black border-r-0">
+              <h1 className="w-[60%] text-center bg-gray-200 text-xs border-r border-black font-bold">
+                ESPAÇO NO QGBT
+              </h1>
+              <div className="grid grid-cols-2 w-[40%]">
+                <h1 className="text-center text-xs border-r border-black">
+                  SIM
+                </h1>
+                <h1 className="text-center text-xs">NÃO</h1>
+              </div>
+            </div>
+            <div className="flex border border-black">
+              <h1 className="w-[60%] text-center bg-gray-200 text-xs border-r border-black font-bold">
+                DPS NO QGBT
+              </h1>
+              <div className="grid grid-cols-2 w-[40%]">
+                <h1 className="text-center text-xs border-r border-black">
+                  SIM
+                </h1>
+                <h1 className="text-center text-xs">NÃO</h1>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2">
+            <div className="flex border border-black border-t-0 border-r-0">
+              <div className="w-[60%] text-center flex items-center justify-center bg-gray-200 text-xs border-r border-black font-bold">
+                ADAPTAÇÃO NO QGBT
+              </div>
+              <div className="grid grid-cols-3 w-[40%]">
+                <div className="text-center flex items-center justify-center text-xs border-r border-black">
+                  TRILHO
                 </div>
-                <div className="flex flex-col gap-1 w-[350px] items-center">
-                  <div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-                  <div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
+                <div className="text-center flex items-center justify-center text-xs border-r border-black">
+                  CORTE
                 </div>
-                <div className="flex flex-col gap-1 w-[350px] items-center">
-                  <div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-                  <div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
+                <div className="text-center flex items-center justify-center text-xs">
+                  NÃO
                 </div>
-                <div className="flex flex-col gap-1 w-[350px] items-center">
-                  <div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-                  <div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
+              </div>
+            </div>
+            <div className="flex border border-black border-t-0">
+              <h1 className="w-[60%] text-center bg-gray-200 text-xs border-r border-black font-bold">
+                PARADE DE FIXAÇÃO DOS EQUIPAMENTOS
+              </h1>
+              <div className="grid grid-cols-2 w-[40%]">
+                <div className="text-center flex items-center justify-center text-xs border-r border-black">
+                  ALVENARIA
                 </div>
-                <div className="flex flex-col gap-1 w-[350px] items-center">
-                  <div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-                  <div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
-                </div>
-                <div className="flex flex-col gap-1 w-[350px] items-center">
-                  <div className="w-[150px] h-[20px] bg-gray-200 animate-pulse"></div>
-                  <div className="w-[75px] h-[20px] bg-gray-200 animate-pulse"></div>
+                <div className="text-center flex items-center justify-center text-xs">
+                  OUTRO
                 </div>
               </div>
             </div>
           </div>
-        ))}
+          <div className="flex border border-black border-t-0">
+            <h1 className="w-[30%] text-center text-xs bg-gray-200 border-r border-black font-bold">
+              LOCAL DE INSTALAÇÃO DOS EQUIPAMENTOS
+            </h1>
+            <div className="w-[70%]"></div>
+          </div>
+          <div className="flex border border-black border-t-0">
+            <h1 className="w-[30%] text-center text-xs bg-gray-200 border-r border-black font-bold">
+              INFRA P/ LANÇAMENTO DE CABOS
+            </h1>
+            <div className="w-[70%]">
+              <h1 className="w-[29%] text-center text-xs border-r border-black">
+                KIT NORMAL
+              </h1>
+              <div className="w-[70%]"></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2">
+            <div className="flex border border-black border-t-0 border-r-0">
+              <h1 className="w-[60%] text-center text-xs bg-gray-200 font-bold border-r border-black">
+                DISTÂNCIA DO SISTEMA AO QGBT
+              </h1>
+              <h1 className="w-[40%] text-end text-xs pr-2">METROS</h1>
+            </div>
+            <div className="flex border border-black border-t-0">
+              <h1 className="w-[60%] text-center text-xs bg-gray-200 font-bold border-r border-black">
+                DISTÂNCIA DO ROTEADOR AO INVERSOR
+              </h1>
+              <h1 className="w-[40%] text-end text-xs pr-2">METROS</h1>
+            </div>
+          </div>
+          <h1 className="bg-[#fead61] text-white text-xs text-center font-bold border-x border-black border-t-0">
+            OBSERVAÇÕES
+          </h1>
+          <div className="border border-black border-t-0 h-[100px]"></div>
+        </div>
+        <div className="flex flex-col mt-6">
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-black">
+            CHECKLIST DE FOTOS E LOCALIZAÇÕES
+          </h1>
+          <div className="grid grid-cols-3 grid-rows-3 border border-black">
+            <div className="flex border-b border-black">
+              <div className="text-center bg-gray-200 flex items-center justify-center w-[20%] border-r border-black">
+                1
+              </div>
+              <div className="text-center text-xs bg-gray-200 flex items-center justify-center w-[60%] border-r border-black">
+                FOTO DA FAIXADA
+              </div>
+              <div className="text-center text-xs w-[20%] border-r border-black"></div>
+            </div>
+            <div className="flex border-b border-black">
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[20%] border-r border-black">
+                2
+              </div>
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[60%] border-r border-black">
+                FOTO DO PADRÃO
+              </div>
+              <div className="text-center text-xs w-[20%] border-r border-black"></div>
+            </div>
+            <div className="flex border-b border-black">
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[20%] border-r border-black">
+                3
+              </div>
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[60%] border-r border-black">
+                FOTO DO DISJUNTOR
+              </div>
+              <div className="text-center text-xs w-[20%]"></div>
+            </div>
+            <div className="flex border-b border-black">
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[20%] border-r border-black">
+                4
+              </div>
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[60%] border-r border-black">
+                FOTO DO QUADRO(QDG)
+              </div>
+              <div className="text-center text-xs w-[20%] border-r border-black"></div>
+            </div>
+            <div className="flex border-b border-black">
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[20%] border-r border-black">
+                5
+              </div>
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[60%] border-r border-black">
+                FOTO DO LOCAL DO EQUIPAMENTO
+              </div>
+              <div className="text-center text-xs w-[20%] border-r border-black"></div>
+            </div>
+            <div className="flex border-b border-black">
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[20%] border-r border-black">
+                6
+              </div>
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[60%] border-r border-black">
+                FOTO DO TELHADO
+              </div>
+              <div className="text-center text-xs w-[20%]"></div>
+            </div>
+            <div className="flex border-b border-black">
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[20%] border-r border-black">
+                7
+              </div>
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[60%] border-r border-black">
+                FOTO DA ESTRUTURA DO TELHADO
+              </div>
+              <div className="text-center text-xs w-[20%] border-r border-black"></div>
+            </div>
+            <div className="flex border-b border-black">
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[20%] border-r border-black">
+                8
+              </div>
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[60%] border-r border-black">
+                LOCALIZAÇÃO DA RESIDÊNCIA
+              </div>
+              <div className="text-center text-xs w-[20%] border-r border-black"></div>
+            </div>
+            <div className="flex border-b border-black border-r-0">
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[20%] border-r border-black">
+                9
+              </div>
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[60%] border-r border-black">
+                LOCALIZAÇÃO DO TRANSFORMADOR
+              </div>
+              <div className="text-center text-xs w-[20%]"></div>
+            </div>
+          </div>
+          <h1 className="bg-[#15599a] text-white text-xs text-center font-bold border border-black border-t-0">
+            GOIÁS
+          </h1>
+          <div className="grid grid-cols-3">
+            <div className="flex border-b border-black">
+              <div className="text-center text-xs bg-gray-200 flex items-center justify-center w-[80%] border-r border-black">
+                FOTO DO POSTE DE DERIVAÇÃO
+              </div>
+              <div className="text-center text-xs w-[20%] border-r border-black"></div>
+            </div>
+            <div className="flex border-b border-black">
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[80%] border-r border-black">
+                NÚMERO E LOCALIZAÇÃO DO POSTE
+              </div>
+              <div className="text-center text-xs w-[20%] border-r border-black"></div>
+            </div>
+            <div className="flex border-b border-black">
+              <div className="text-center bg-gray-200 flex items-center justify-center text-xs w-[80%] border-r border-black">
+                FOTO DO LOCAL DE ATERRAMENTO
+              </div>
+              <div className="text-center text-xs w-[20%] border-r border-black"></div>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col mt-6">
+          <h1 className="text-[#15599a] text-sm text-center font-bold border border-black">
+            DESENHO TÉCNICO
+          </h1>
+          <h1 className="bg-[#15599a] text-white text-xs text-center font-bold border border-black border-t-0">
+            OBSERVAÇÕES
+          </h1>
+          <div className="h-[100px] border border-t-0 border-black mb-2"></div>
+        </div>
       </div>
     </div>
   );
 }
 
 export default Teste;
-{
-  /** 
-    <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
-      <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-        <div className="absolute">
-          {images.videoTeste ? (
-            <div className="flex flex-col items-center">
-              <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-              <span className="block text-gray-400 font-normal text-center">
-                {images.videoTeste.name}
-              </span>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center">
-              <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-              <span className="block text-gray-400 font-normal">
-                Adicione o arquivo aqui...
-              </span>
-            </div>
-          )}
-        </div>
-        <input
-          onChange={(e) =>
-            setImages({
-              ...images,
-              videoTeste: e.target.files[0],
-            })
-          }
-          className="h-full w-full opacity-0"
-          type="file"
-          accept=".jpg"
-        />
-      </div>
-      <button onClick={send} className="bg-black text-white p-2 rounded">
-        ENVIAR
-      </button>
-      <div className="grid grid-cols-5 w-full">
-        <div className="col-span-2">
-          <h1 className="text-xl font-bold text-[#15599b]">SEST SENAI</h1>
-          <p className="text-xl font-bold">ITUIUTABA</p>
-          <p className="text-xl font-bold">{new Date().toLocaleDateString()}</p>
-        </div>
-        <Link href="/oem/propostas">
-          <div className="flex justify-center">
-            <Image
-              width="80px"
-              height="80px"
-              className="rounded-full cursor-pointer"
-              src={Logo}
-            />
-          </div>
-        </Link>
-        <div className="col-span-2 place-self-end">
-          <h1 className="text-xl font-bold">Atendido por:</h1>
-          <p className="font-bold text-center">LEANDRO VIALI</p>
-          <p className="font-bold">(34) 9 9775-7001</p>
-        </div>
-      </div>
-      <div className="mt-5 border-2 border-black">
-        <h1 className="text-xl w-full text-center bg-[#15599b] text-white font-semibold">
-          ESCOPO DO PROJETO
-        </h1>
-        <div className="grid grid-cols-4 divide-x-2 divide-black">
-          <div className="flex flex-col items-center">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
-              Qtd.Módulos - Potência
-            </p>
-            <p>380 - 335W</p>
-          </div>
-          <div className="flex flex-col items-center">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
-              Potência kWp
-            </p>
-            <p>127,3 kWp</p>
-          </div>
-          <div className="flex flex-col items-center">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
-              Eficiência atual
-            </p>
-            <p>-</p>
-          </div>
-          <div className="flex flex-col items-center border-r-2 border-black">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
-              Estimativa de perda financeira anual
-            </p>
-            <p>-</p>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col mt-2">
-        <h1 className="w-full text-center text-xl text-[#15599b] font-semibold">
-          CONSEQUÊNCIAS DA FALTA DE MANUTENÇÃO
-        </h1>
-        <div className="flex justify-center">
-          <ul className="font-semibold">
-            <li>1. Perda de geração de energia e eficiência;</li>
-            <li>
-              2. Danificação e perda de vida útil dos modulos por criação de
-              pontos de aquecimento;
-            </li>
-            <li>3. Redução da vida útil dos equipamentos elétricos;</li>
-            <li>
-              4. Riscos de falhas elétricas e mecânicas, ocasionando
-              danificações e até possíveis incêndios;
-            </li>
-            <li>
-              5. Falta de monitoramento e consequentemente o sistema ficar
-              desconectado sem gerar energia;
-            </li>
-            <li>6. Perda da garantia de instalação do sistema fotovoltaico.</li>
-          </ul>
-        </div>
-      </div>
-      <div className="mt-2">
-        <h1 className="w-full bg-[#15599b] text-white font-bold text-center ">
-          SERVIÇOS DE OPERAÇÃO E MANUTENÇÃO
-        </h1>
-        <div className="flex flex-col">
-          <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full sm:px-6 lg:px-8">
-              <div className="overflow-hidden">
-                <table className="min-w-full border text-center">
-                  <thead className="border-b bg-white">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="text-sm font-medium text-[#15599a] px-6 py-2 border-r"
-                      >
-                        SERVIÇOS
-                      </th>
-                      <th
-                        scope="col"
-                        className="text-sm font-medium text-[#15599a] px-6 py-2"
-                      >
-                        PLANO SOL+
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
-                        MANUTENÇÃO ELÉTRICA INVERSORES + QUADROS ELÉTRICOS
-                      </td>
-                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap text-center">
-                        <div className="flex justify-center items-center">
-                          <p>2x</p>
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
-                        REAPERTO CONEXÕES ELÉTRICAS
-                      </td>
-                      <td className="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap">
-                        <div className="flex justify-center items-center">
-                          <p>2x</p>
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
-                        ANÁLISE E CONFERÊNCIA DE GRANDEZAS ELÉTRICAS DOS
-                        EQUIPAMENTOS ELÉTRICOS
-                      </td>
-                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                        <div className="flex justify-center items-center">
-                          <p>2x</p>
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
-                        CONFIGURAÇÃO E INSTALAÇÃO DE APLICATIVO DE MONITORAMENTO
-                        DE GERAÇÃO DO INVERSOR
-                      </td>
-                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                        <div className="flex justify-center items-center">
-                          <p>2x</p>
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
-                        LIMPEZA NOS MÓDULOS FOTOVOLTAICOS
-                      </td>
-                      <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                        <div className="flex justify-center items-center">
-                          <p>2x</p>
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
-                        MONITORAMENTO DA GERAÇÃO DE ENERGIA POR 12 MESES C/
-                        RELATÓRIOS MENSAIS DE GERAÇÃO
-                      </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                        <div className="flex justify-center">
-                          <FiCheck
-                            style={{
-                              color: "#23c906",
-                              fontSize: "20px",
-                              margin: 0,
-                            }}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b bg-white">
-                      <td className="px-2 py-1 text-sm font-medium text-gray-900 border-r">
-                        VALOR DO PLANO ANUAL
-                      </td>
-                      <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
-                        R$ 9218,04
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <h1 className="w-full bg-[#15599b] text-white font-bold text-center">
-          ASSINATURA
-        </h1>
-        <div className="mt-10 flex justify-between">
-          <div className="w-[35%]">
-            <hr className="border-t-2 border-black" />
-            <p className="text-center">Cliente</p>
-          </div>
-          <div className="w-[35%]">
-            <hr className="border-t-2 border-black" />
-            <p className="text-center">Ampère Energias</p>
-          </div>
-        </div>
-      </div>
-    </div>*/
-}

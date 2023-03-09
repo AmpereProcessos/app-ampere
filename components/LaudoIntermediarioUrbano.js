@@ -52,7 +52,7 @@ function LaudoIntermediarioUrbano({ info }) {
       : 0;
     let sudeste = info.modSudeste
       ? (
-          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["NORTE"]) *
+          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["SUDESTE"]) *
             info.modSudeste *
             info.potModulos) /
           1000
@@ -68,7 +68,7 @@ function LaudoIntermediarioUrbano({ info }) {
       : 0;
     let sudoeste = info.modSudoeste
       ? (
-          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["SUDESTE"]) *
+          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["SUDOESTE"]) *
             info.modSudoeste *
             info.potModulos) /
           1000

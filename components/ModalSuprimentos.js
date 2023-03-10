@@ -189,7 +189,7 @@ function ModalSuprimentos({
       getVisitaInfo(infoHolder.idVisitaTecnica);
     }
   }, []);
-  // console.log(infoHolder);
+  console.log(infoHolder);
   console.log(changes);
   return (
     <>
@@ -275,6 +275,7 @@ function ModalSuprimentos({
             {infoHolder.tipoDeServico != "MONTAGEM E DESMONTAGEM" && (
               <InfoCompraBlock
                 editor={true}
+                project={project}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
                 changes={changes}

@@ -691,6 +691,7 @@ function ModalADM({
               <InfoCompraBlock
                 editor={true}
                 infoHolder={infoHolder}
+                project={project}
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}

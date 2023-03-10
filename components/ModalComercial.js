@@ -276,6 +276,7 @@ function ModalComercial({
               <InfoEstruturaBlock
                 comercialEdition={true}
                 technicalEdition={true}
+                project={project}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
                 changes={changes}
@@ -302,6 +303,7 @@ function ModalComercial({
             {infoHolder.tipoDeServico != "MONTAGEM E DESMONTAGEM" && (
               <InfoCompraBlock
                 editor={true}
+                project={project}
                 comercialEditionOnly={true}
                 infoHolder={infoHolder}
                 setInfo={setInfo}

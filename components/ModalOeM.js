@@ -783,6 +783,7 @@ function ModalOeM({
                 comercialEdition={false}
                 technicalEdition={false}
                 infoHolder={infoHolder}
+                project={project}
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
@@ -793,6 +794,7 @@ function ModalOeM({
               <InfoCompraBlock
                 editor={false}
                 infoHolder={infoHolder}
+                project={project}
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}

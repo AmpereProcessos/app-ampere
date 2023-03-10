@@ -964,6 +964,7 @@ function ModalObras({
                 comercialEdition={false}
                 technicalEdition={true}
                 infoHolder={infoHolder}
+                project={project}
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}

@@ -9,6 +9,7 @@ import TextInput from "../TextInput";
 function InfoCompraBlock({
   editor,
   comercialEditionOnly,
+  project,
   infoHolder,
   setInfo,
   changes,

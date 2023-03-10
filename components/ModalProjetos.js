@@ -355,6 +355,7 @@ function ModalProjetos({
             {infoHolder.tipoDeServico != "MONTAGEM E DESMONTAGEM" && (
               <InfoCompraBlock
                 editor={false}
+                project={project}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
                 changes={changes}

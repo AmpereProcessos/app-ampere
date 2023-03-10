@@ -28,6 +28,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
     solo: false,
     topologia: "MICRO",
     inversores: [],
+    marcaModulo: "",
     descModulo: "",
     qtdeModulo: 0,
     componentes: [],
@@ -738,7 +739,27 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                 PAINÉIS
               </h1>
               <div className="grid grid-cols-12 gap-2 pt-4">
-                <div className="flex items-center justify-center col-span-8">
+                <div className="flex items-center justify-center col-span-3">
+                  <SelectFloatingInput
+                    label={"MARCA DO PAINÉL"}
+                    editable={true}
+                    width={"100%"}
+                    options={modulos.map((modulo) => {
+                      return {
+                        label: modulo.fabricante,
+                        value: modulo.fabricante,
+                      };
+                    })}
+                    value={quotationInfo.marcaModulo}
+                    handleChange={(value) =>
+                      setQuotationInfo({
+                        ...quotationInfo,
+                        marcaModulo: value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="flex items-center justify-center col-span-3">
                   <SelectFloatingInput
                     label={"MODELO DO PAINÉL"}
                     editable={true}
@@ -769,79 +790,7 @@ function ModalNovaCotacao({ modalIsOpen, setModalIsOpen, getQuotations }) {
                     }
                   />
                 </div>
-                {/* <div className="flex items-center justify-center col-span-1">
-                  <IoMdAddCircle
-                    onClick={addModule}
-                    style={{
-                      color: "green",
-                      fontSize: "25px",
-                      cursor: "pointer",
-                      marginBottom: "5px",
-                    }}
-                  />
-                </div> */}
               </div>
-              {/* {errorMsg.module && (
-                <p className="text-center text-red-500 italic">
-                  {errorMsg.module}
-                </p>
-              )}
-              {quotationInfo.modulos.length > 0 ? (
-                <div className="flex flex-col w-full">
-                  <h1 className="text-center font-bold text-[#15599a]">
-                    MÓDULOS ADICIONADOS
-                  </h1>
-                  <div className="grid grid-cols-10 lg:grid-cols-13 gap-2">
-                    <h1 className="font-bold text-gray-700 col-span-3 text-center text-xs">
-                      MARCA
-                    </h1>
-                    <h1 className="font-bold hidden lg:block text-gray-700 col-span-3 text-center text-xs">
-                      MODELO
-                    </h1>
-                    <h1 className="font-bold text-gray-700 col-span-3 text-center text-xs">
-                      POTÊNCIA
-                    </h1>
-                    <h1 className="font-bold text-gray-700 col-span-3 text-center text-xs">
-                      QTDE
-                    </h1>
-                    <h1 className="hidden lg:block font-bold text-gray-700 col-span-1 text-center text-xs">
-                      EXCLUIR
-                    </h1>
-                  </div>
-                  {quotationInfo.modulos.map((module, index) => (
-                    <div
-                      key={index}
-                      className="grid grid-cols-10 lg:grid-cols-13 gap-2"
-                    >
-                      <h1 className=" text-gray-700 col-span-3 text-center text-xs">
-                        {module.marca}
-                      </h1>
-                      <h1 className="hidden lg:block text-gray-700 col-span-3 text-center text-xs">
-                        {module.modelo}
-                      </h1>
-                      <h1 className=" text-gray-700 col-span-3 text-center text-xs">
-                        {module.potencia}
-                      </h1>
-                      <h1 className=" text-gray-700 col-span-3 text-center text-xs">
-                        {module.qtde}
-                      </h1>
-                      <div className="flex items-center col-span-1 justify-center text-red-500">
-                        <IoMdRemoveCircle
-                          onClick={() => {
-                            let modulesArr = quotationInfo.modulos;
-                            modulesArr.splice(index, 1);
-                            setQuotationInfo({
-                              ...quotationInfo,
-                              modulos: modulesArr,
-                            });
-                          }}
-                          style={{ fontSize: "15px", cursor: "pointer" }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : null} */}
             </div>
             <div className="flex flex-col pt-1">
               <h1 className="text-center bg-black text-white font-bold w-full py-2 rounded-md">

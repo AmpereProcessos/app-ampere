@@ -1,7 +1,13 @@
 import dayjs from "dayjs";
 import React, { useState } from "react";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-function CotacaoCard({ info }) {
+import { BsPatchCheckFill } from "react-icons/bs";
+import {
+  IoMdArrowDropdownCircle,
+  IoMdArrowDropupCircle,
+  IoIosSend,
+} from "react-icons/io";
+import { VscDebugBreakpointData } from "react-icons/vsc";
+function CotacaoCard({ info, addToSolarMarket }) {
   const [infoHolder, setInfoHolder] = useState(info);
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
   return (
@@ -16,14 +22,31 @@ function CotacaoCard({ info }) {
               : null}
           </h1>
           <h1 className="text-[#15599a] font-bold text-xl">
-            {infoHolder.fornecedor}
+            {infoHolder.nomeDoKit}
           </h1>
+          <h1 className="text-[#fead61] font-bold">{infoHolder.fornecedor}</h1>
           <h1 className="text-green-500 font-bold">
             {infoHolder.potPico?.toFixed(2).replace(".", ",")} kWp
           </h1>
         </div>
-
         <div className="flex items-center gap-2">
+          {!info.kitCriadoSVB ? (
+            <button
+              onClick={() => addToSolarMarket(info)}
+              className="bg-blue-200 hover:text-white hover:bg-blue-600 p-1 rounded-lg mt-2"
+            >
+              <IoIosSend style={{ fontSize: "25px" }} />
+            </button>
+          ) : (
+            <BsPatchCheckFill
+              style={{
+                fontSize: "20px",
+                color: "rgb(21 128 61)",
+                marginLeft: "10px",
+              }}
+            />
+          )}
+
           <h1 className="text-[#15599a] font-bold">
             R$ {infoHolder.valorDoKit.toFixed(2).replace(".", ",")}
           </h1>
@@ -45,42 +68,98 @@ function CotacaoCard({ info }) {
         </div>
       </div>
       {dropdownMenuVisible ? (
-        <div className="flex justify-around mt-2 border-t border-gray-200 pt-2">
-          {infoHolder.modulos ? (
-            <div className="flex flex-col">
-              <h1 className="text-center text-[#15599a] font-bold">MÓDULOS</h1>
-              {infoHolder.modulos.map((modulo, index) => (
-                <h1 key={index} className="text-gray-500">
-                  ({modulo.qtde}) {modulo.marca} - {modulo.modelo}
-                </h1>
-              ))}
-            </div>
-          ) : null}
-          {infoHolder.inversores ? (
-            <div className="flex flex-col">
-              <h1 className="text-center text-[#15599a] font-bold">
-                INVERSORES
+        <div className="flex flex-col w-full mt-2 border-t border-gray-200 pt-2">
+          <div className="flex flex-col w-full">
+            <h1 className="w-full bg-black border border-black text-white font-bold text-center">
+              MÓDULOS
+            </h1>
+            <div className="grid grid-cols-3 items-center border-b border-x border-black">
+              <h1 className="font-bold text-center border-r border-white p-1 bg-gray-500 text-white">
+                QTDE
               </h1>
-              {infoHolder.inversores.map((inversor, index) => (
-                <h1 key={index} className="text-gray-500">
-                  ({inversor.qtde}) {inversor.marca} - {inversor.modelo}
-                </h1>
-              ))}
-            </div>
-          ) : null}
-          {infoHolder.componentes ? (
-            <div className="flex flex-col">
-              <h1 className="text-center text-[#15599a] font-bold">
-                INVERSORES
+              <h1 className="font-bold text-center border-r border-white p-1 bg-gray-500 text-white">
+                FABRICANTE
               </h1>
-              {infoHolder.componentes.map((componente, index) => (
-                <h1 key={index} className="text-gray-500">
-                  ({componente.qtde}) {componente.insumo} -{" "}
-                  {`[ ${componente.tipo} ]`}
-                </h1>
-              ))}
+              <h1 className="font-bold text-center  p-1 bg-gray-500 text-white">
+                MODELO
+              </h1>
             </div>
-          ) : null}
+            <div className="grid grid-cols-3 items-center  border-x border-black">
+              <h1 className="text-gray-600 font-bold text-center border-r border-black">
+                {info.qtdeModulo}
+              </h1>
+              <h1 className="text-gray-600 font-bold text-center border-r border-black">
+                {info.marcaModulo}
+              </h1>
+              <h1 className="text-gray-600 font-bold text-center">
+                {info.descModulo}
+              </h1>
+            </div>
+          </div>
+          <div className="flex flex-col w-full">
+            <h1 className="w-full bg-black border border-black text-white font-bold text-center">
+              INVERSORES
+            </h1>
+            <div className="grid grid-cols-3 items-center border-b border-x border-black">
+              <h1 className="font-bold text-center border-r border-white p-1 bg-gray-500 text-white">
+                QTDE
+              </h1>
+              <h1 className="font-bold text-center border-r border-white p-1 bg-gray-500 text-white">
+                FABRICANTE
+              </h1>
+              <h1 className="font-bold text-center p-1 bg-gray-500 text-white">
+                MODELO
+              </h1>
+            </div>
+            {info.inversores?.map((inversor, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-3 items-center  border-x border-black"
+              >
+                <h1 className="text-gray-600 font-bold text-center border-r border-black">
+                  {inversor.qtde}
+                </h1>
+                <h1 className="text-gray-600 font-bold text-center border-r border-black">
+                  {inversor.marca}
+                </h1>
+                <h1 className="text-gray-600 font-bold text-center">
+                  {inversor.modelo}
+                </h1>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col w-full">
+            <h1 className="w-full bg-black border border-black text-white font-bold text-center">
+              COMPONENTES
+            </h1>
+            <div className="grid grid-cols-3 items-center border-b border-x border-black">
+              <h1 className="font-bold text-center border-r border-white p-1 bg-gray-500 text-white">
+                QTDE
+              </h1>
+              <h1 className="font-bold text-center border-r border-white p-1 bg-gray-500 text-white">
+                INSUMO
+              </h1>
+              <h1 className="font-bold text-center p-1 bg-gray-500 text-white">
+                TIPO
+              </h1>
+            </div>
+            {info.componentes?.map((componente, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-3 items-center border-b  p-1 border-x border-black"
+              >
+                <h1 className="text-gray-600 font-bold text-center border-r border-black">
+                  {componente.qtde}
+                </h1>
+                <h1 className="text-gray-600 font-bold text-center border-r border-black">
+                  {componente.insumo}
+                </h1>
+                <h1 className="text-gray-600 font-bold text-center">
+                  {componente.tipo}
+                </h1>
+              </div>
+            ))}
+          </div>
         </div>
       ) : null}
     </div>

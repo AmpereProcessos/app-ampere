@@ -39,7 +39,6 @@ export function AppProvider({ children }) {
       getNotificacoes(session.user.id);
     }
   }, [session]);
-  console.log(session);
   // useEffect(() => {
   //   if (!credentials) {
   //     let storedCredentials = validateUserSession();

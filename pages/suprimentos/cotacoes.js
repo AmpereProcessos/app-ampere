@@ -5,8 +5,10 @@ import React, { useEffect, useState } from "react";
 import CotacaoCard from "../../components/CotacaoCard";
 import ModalNovaCotacao from "../../components/ModalNovaCotacao";
 import LoadingPage from "../../components/utils/LoadingPage";
-import { AppContext } from "../../context/AppContext";
-import xlsx from "json-as-xlsx";
+import fornecedores from "../../utils/fornecedores.json";
+import modulos from "../../utils/modulos.json";
+import inversores from "../../utils/inversores.json";
+import TextFloatingInput from "../../components/TextFloatingInput";
 function Cotacoes() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -16,118 +18,115 @@ function Cotacoes() {
     },
   });
 
+  const [solarMarketAuth, setSolarMarketAuth] = useState("");
+
+  const [msg, setMsg] = useState({ text: "", color: "" });
+
   const [quotations, setQuotations] = useState();
   const [newQuotationModalOpen, setNewQuotationModalOpen] = useState(false);
-  function convertToXLSX() {
-    let contentArr = quotations.map((quotation) => {
-      return {
-        fornecedor: quotation.fornecedor,
-        codigo: (Math.random() * 100000000).toFixed(0),
-        nomeDoKit: quotation.nomeDoKit,
-        valorDoKit: quotation.valorDoKit,
-        habilitado: quotation.habilitado ? 1 : 0,
-        carport: quotation.carport ? 1 : 0,
-        ceramico: quotation.ceramico ? 1 : 0,
-        fibrocimento: quotation.fibrocimento ? 1 : 0,
-        laje: quotation.laje ? 1 : 0,
-        shingle: quotation.shingle ? 1 : 0,
-        metalico: quotation.metalico ? 1 : 0,
-        zipado: quotation.zipado ? 1 : 0,
-        solo: quotation.solo ? 1 : 0,
-        semEstrutura: quotation.inclusoEstrutura ? 0 : 1,
-        inclusoEstrutura: quotation.inclusoEstrutura ? 1 : 0,
-        inclusoTransformador: quotation.inclusoTransformador ? 1 : 0,
-        moduloFabricante: quotation.marcaModulo,
-        moduloModelo: quotation.modeloModulo,
-        moduloQtde: quotation.qtdeModulo,
-        marcaInversor1: quotation.inversores[0].marca,
-        modeloInversor1: quotation.inversores[0].modelo,
-        qtdeInversor1: quotation.inversores[0].qtde,
-        marcaInversor2: quotation.inversores[1]
-          ? quotation.inversores[1].marca
-          : "",
-        modeloInversor2: quotation.inversores[1]
-          ? quotation.inversores[1].modelo
-          : "",
-        qtdeInversor2: quotation.inversores[1]
-          ? quotation.inversores[1].qtde
-          : "",
-        marcaInversor3: quotation.inversores[2]
-          ? quotation.inversores[2].marca
-          : "",
-        modeloInversor3: quotation.inversores[2]
-          ? quotation.inversores[2].modelo
-          : "",
-        qtdeInversor3: quotation.inversores[2]
-          ? quotation.inversores[2].qtde
-          : "",
-        marcaOtimizador: "",
-        modeloOtimizador: "",
-        qtdeOtimizador: "",
-        topologia: quotation.topologia,
-        excluir: 0,
-        potenciaModulo: quotation.potenciaModulo,
-        potenciaInversor1: quotation.inversores[0].potencia,
-        qtdeFasesInversor1: quotation.inversores[0].qtdeFases,
-        tensaoSaidaInversor1: quotation.inversores[0].tensaoSaida,
-      };
-    });
-    let convertData = [
-      {
-        sheet: "Planilha 1",
-        columns: [
-          { label: "Fornecedor", value: "fornecedor" },
-          { label: "Código", value: "codigo" },
-          { label: "Nome", value: "nomeDoKit" },
-          { label: "Custo (R$)", value: "valorDoKit" },
-          { label: "Habilitado?", value: "habilitado" },
-          { label: "Carport?", value: "carport" },
-          { label: "Cerâmico?", value: "ceramico" },
-          { label: "Fibrocimento?", value: "fibrocimento" },
-          { label: "Laje?", value: "laje" },
-          { label: "Shingle?", value: "shingle" },
-          { label: "Metálico?", value: "metalico" },
-          { label: "Zipado?", value: "zipado" },
-          { label: "Solo?", value: "solo" },
-          { label: "Sem estrutura?", value: "semEstrutura" },
-          { label: "Inclui estrutura?", value: "inclusoEstrutura" },
-          { label: "Inclui transformador?", value: "inclusoTransformador" },
-          { label: "Módulo fabricante", value: "moduloFabricante" },
-          { label: "Módulo modelo", value: "moduloModelo" },
-          { label: "Módulo qtd", value: "moduloQtde" },
-          { label: "Inversor 1 fabricante", value: "marcaInversor1" },
-          { label: "Inversor 1 modelo", value: "modeloInversor1" },
-          { label: "Inversor 1 qtd", value: "qtdeInversor1" },
-          { label: "Inversor 2 fabricante", value: "marcaInversor2" },
-          { label: "Inversor 2 modelo", value: "modeloInversor2" },
-          { label: "Inversor 2 qtd", value: "qtdeInversor2" },
-          { label: "Inversor 3 fabricante", value: "marcaInversor3" },
-          { label: "Inversor 3 modelo", value: "modeloInversor3" },
-          { label: "Inversor 3 qtd", value: "qtdeInversor3" },
-          { label: "Otimizador fabricante", value: "marcaOtimizador" },
-          { label: "Otimizador modelo", value: "modeloOtimizador" },
-          { label: "Otimizador qtd", value: "qtdeOtimizador" },
-          { label: "Topologia", value: "topologia" },
-          { label: "excluir?", value: "excluir" },
-          { label: "Módulo potência (W)", value: "potenciaModulo" },
-          { label: "Inversor 1 potência (W)", value: "potenciaInversor1" },
-          { label: "Inversor 1 qtd fases", value: "qtdeFasesInversor1" },
+  async function addToSolarMarket(quotation) {
+    let randomCode = (Math.random() * 10 ** 14).toFixed(0);
+    let components = quotation.componentes
+      ? [
+          ...quotation.componentes.map((quotComponent) => {
+            return {
+              tipo: "componente",
+              qtd: quotComponent.qtde,
+              potencia: 0,
+              nome: `${quotComponent.insumo} - ${quotComponent.tipo}`,
+            };
+          }),
+        ]
+      : [];
+    if (solarMarketAuth.trim() < 20) {
+      setMsg({
+        text: "Por favor, adicione um código de autorização válido.",
+        color: "text-red-500",
+      });
+    } else {
+      let input = {
+        nome: quotation.nomeDoKit,
+        custo: quotation.valorDoKit,
+        itens: [
           {
-            label: "Inversor 1 tensão saída (Linha)",
-            value: "tensaoSaidaInversor1",
+            tipo: "modulo",
+            qtd: quotation.qtdeModulo,
+            modulo: modulos.filter(
+              (modulo) =>
+                modulo.fabricante == quotation.marcaModulo &&
+                modulo.modelo == quotation.descModulo
+            )[0].id,
           },
+          ...quotation.inversores.map((quotInversor) => {
+            return {
+              tipo: "inversor",
+              qtd: quotInversor.qtde,
+              inversor: inversores.filter(
+                (inversor) =>
+                  inversor.fabricante == quotInversor.marca &&
+                  inversor.modelo == quotInversor.modelo
+              )[0].id,
+            };
+          }),
+          ...components,
         ],
-        content: contentArr,
-      },
-    ];
-    let settings = {
-      fileName: "MySpreadsheet", // Name of the resulting spreadsheet
-      extraLength: 3, // A bigger number means that columns will be wider
-      writeMode: "writeFile", // The available parameters are 'WriteFile' and 'write'. This setting is optional. Useful in such cases https://docs.sheetjs.com/docs/solutions/output#example-remote-file
-      writeOptions: {}, // Style options from https://docs.sheetjs.com/docs/api/write-options
-      RTL: true, // Display the columns from right-to-left (the default value is false)
-    };
-    xlsx(convertData, session);
+        codigo: quotation.codigo,
+        topologia:
+          quotation.topologia == "INVERSOR" ? "tradicional" : "microinversor",
+        incluiEstrutura: quotation.inclusoEstrutura,
+        isPermitidoCarport: quotation.carport,
+        isPermitidoCeramico: quotation.ceramico,
+        isPermitidoFibrocimento: quotation.fibrocimento,
+        isPermitidoLaje: quotation.laje,
+        isPermitidoShingle: quotation.shingle,
+        isPermitidoMetalico: quotation.metalico,
+        isPermitidoZipado: quotation.zipado,
+        isPermitidoSemEstrutura: false,
+        isPermitidoSolo: quotation.solo,
+        isHabilitado: true,
+        incluiTransformador: quotation.inclusoTransformador,
+        fornecedor: Number(
+          fornecedores.filter(
+            (fornecedor) => fornecedor.nome == quotation.fornecedor
+          )[0].id
+        ),
+      };
+      let obj = {
+        operationName: "CriarKitFechadoFornecedor",
+        variables: {
+          input: input,
+        },
+        query:
+          "mutation CriarKitFechadoFornecedor($input: KitFechadoFornecedorCreateInput!) {\n  criarKitFechadoFornecedor(input: $input) {\n    id\n  }\n}\n",
+      };
+      var solarMarketResponse = await axios.post(
+        "https://business.solarmarket.com.br/graphql",
+        obj,
+        {
+          headers: {
+            Authorization: solarMarketAuth,
+          },
+        }
+      );
+      console.log(solarMarketResponse);
+      if (solarMarketResponse.data?.data) {
+        let apiResponse = await axios.put("/api/projects/cotacoes", {
+          id: quotation._id,
+          changes: { kitCriadoSVB: true },
+        });
+
+        setMsg({
+          text: `${quotation.nomeDoKit} adicionado.`,
+          color: "text-green-500",
+        });
+        getQuotations();
+      } else {
+        setMsg({
+          text: `Erro ao adicionar kit ao Solar Market`,
+          color: "text-red-500",
+        });
+      }
+    }
   }
   async function getQuotations() {
     let response = await axios.get("/api/projects/cotacoes");
@@ -144,7 +143,9 @@ function Cotacoes() {
       session?.user.accessibleRoutes.includes("Suprimentos") ||
       session?.user.accessibleRoutes.includes("Comercial")
     ) {
-      getQuotations();
+      if (!quotations) {
+        getQuotations();
+      }
     } else {
       if (session?.user) {
         router.push("/");
@@ -155,19 +156,21 @@ function Cotacoes() {
   if (status == "authenticated") {
     return (
       <div className="p-6 grow flex flex-col">
-        <div className="flex items-center pb-2 border-b border-gray-200">
+        <div className="flex items-center justify-between pb-2 border-b border-gray-200">
           <h1 className="font-['Raleway'] text-2xl font-bold text-[#15599a]">
             CONTROLE DE COTAÇÕES
           </h1>
-          {/* {quotations && (
-            <button
-              onClick={convertToXLSX}
-              className="p-2 rounded border border-black"
-            >
-              CONVERTER PARA XLSX
-            </button>
-          )} */}
+          <TextFloatingInput
+            editable={true}
+            width="600px"
+            label={"AUTHORIZATION (SOLARMARKET)"}
+            value={solarMarketAuth}
+            handleChange={(value) => setSolarMarketAuth(value)}
+          />
         </div>
+        {msg.text ? (
+          <p className={`text-center italic ${msg.color}`}>{msg.text}</p>
+        ) : null}
         {!quotations ? (
           <div className="self-center mt-6" role="status">
             <svg
@@ -192,7 +195,11 @@ function Cotacoes() {
         {quotations ? (
           <div className="flex flex-wrap justify-between gap-2">
             {quotations.map((quotation, index) => (
-              <CotacaoCard info={quotation} key={index} />
+              <CotacaoCard
+                info={quotation}
+                key={index}
+                addToSolarMarket={addToSolarMarket}
+              />
             ))}
           </div>
         ) : null}

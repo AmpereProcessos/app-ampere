@@ -119,7 +119,7 @@ function InfoProjetoBlock({
           }}
         />
         <SelectInput
-          label={"Forma de Assinatura"}
+          label={"Forma de Assinatura (DOC)"}
           value={
             infoHolder.projeto?.formaAssDocumentacao
               ? infoHolder.projeto?.formaAssDocumentacao

@@ -1,11 +1,18 @@
 import React from "react";
 
-function TextFloatingInput({ label, value, handleChange, width, editable }) {
+function TextFloatingInput({
+  label,
+  value,
+  handleChange,
+  width,
+  editable,
+  marginBottom,
+}) {
   return (
     <div
       className={`flex flex-col relative items-center z-0 ${
         width ? `w-full lg:w-[${width}]` : "w-full lg:w-[250px]"
-      } mb-6 group`}
+      } ${marginBottom ? `mb-[${marginBottom}]` : "mb-6"} group`}
     >
       <input
         value={value}

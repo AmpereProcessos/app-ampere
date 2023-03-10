@@ -1249,6 +1249,72 @@ export const suprimentoOption = {
     unidade: "MESA",
   },
 };
+export const statusDoParecerDeAcesso = [
+  {
+    label: "AGUARDANDO ASSINATURA",
+    value: "AGUARDANDO ASSINATURA",
+  },
+  {
+    label: "AGUARDANDO AUMENTO DE CARGA",
+    value: "AGUARDANDO AUMENTO DE CARGA",
+  },
+  {
+    label: "INICIAR PROJETO",
+    value: "INICIAR PROJETO",
+  },
+  {
+    label: "SOLICITAR TROCA DE TITULARIDADE",
+    value: "SOLICITAR TROCA DE TITULARIDADE",
+  },
+  {
+    label: "AGUARDANDO FATURAMENTO ART",
+    value: "AGUARDANDO FATURAMENTO ART",
+  },
+  {
+    label: "AGUARDANDO FORMULÁRIOS",
+    value: "AGUARDANDO FORMULÁRIOS",
+  },
+  {
+    label: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
+    value: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
+  },
+  {
+    label: "AGUARDANDO TROCA DE TITULARIDADE",
+    value: "AGUARDANDO TROCA DE TITULARIDADE",
+  },
+  {
+    label: "AUMENTO DE CARGA",
+    value: "AUMENTO DE CARGA",
+  },
+  {
+    label: "CANCELADO",
+    value: "CANCELADO",
+  },
+  {
+    label: "PARECER DE ACESSO APROVADO",
+    value: "PARECER DE ACESSO APROVADO",
+  },
+  {
+    label: "PENDENCIAS",
+    value: "PENDENCIAS",
+  },
+  {
+    label: "SOLICITAR ACESSO",
+    value: "SOLICITAR ACESSO",
+  },
+  {
+    label: "SOLICITAR AUMENTO DE CARGA",
+    value: "SOLICITAR AUMENTO DE CARGA",
+  },
+  {
+    label: "PARECER DE ACESSO COM OBRAS",
+    value: "PARECER DE ACESSO COM OBRAS",
+  },
+  {
+    label: "NÃO DEFINIDO",
+    value: "NÃO DEFINIDO",
+  },
+];
 export const statusObra = [
   {
     label: "AGENDADA",

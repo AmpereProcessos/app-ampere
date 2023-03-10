@@ -6,7 +6,7 @@ import {
   IoMdArrowDropupCircle,
   IoIosSend,
 } from "react-icons/io";
-import { VscDebugBreakpointData } from "react-icons/vsc";
+
 function CotacaoCard({ info, addToSolarMarket }) {
   const [infoHolder, setInfoHolder] = useState(info);
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
@@ -85,13 +85,13 @@ function CotacaoCard({ info, addToSolarMarket }) {
               </h1>
             </div>
             <div className="grid grid-cols-3 items-center  border-x border-black">
-              <h1 className="text-gray-600 font-bold text-center border-r border-black">
+              <h1 className="text-gray-600 font-bold text-center border-r border-black p-1">
                 {info.qtdeModulo}
               </h1>
-              <h1 className="text-gray-600 font-bold text-center border-r border-black">
+              <h1 className="text-gray-600 font-bold text-center border-r border-black p-1">
                 {info.marcaModulo}
               </h1>
-              <h1 className="text-gray-600 font-bold text-center">
+              <h1 className="text-gray-600 font-bold text-center p-1">
                 {info.descModulo}
               </h1>
             </div>
@@ -116,13 +116,13 @@ function CotacaoCard({ info, addToSolarMarket }) {
                 key={index}
                 className="grid grid-cols-3 items-center  border-x border-black"
               >
-                <h1 className="text-gray-600 font-bold text-center border-r border-black">
+                <h1 className="text-gray-600 font-bold text-center border-r border-black p-1">
                   {inversor.qtde}
                 </h1>
-                <h1 className="text-gray-600 font-bold text-center border-r border-black">
+                <h1 className="text-gray-600 font-bold text-center border-r border-black p-1">
                   {inversor.marca}
                 </h1>
-                <h1 className="text-gray-600 font-bold text-center">
+                <h1 className="text-gray-600 font-bold text-center p-1">
                   {inversor.modelo}
                 </h1>
               </div>
@@ -146,15 +146,15 @@ function CotacaoCard({ info, addToSolarMarket }) {
             {info.componentes?.map((componente, index) => (
               <div
                 key={index}
-                className="grid grid-cols-3 items-center border-b  p-1 border-x border-black"
+                className="grid grid-cols-3 items-center border-b  border-x border-black"
               >
-                <h1 className="text-gray-600 font-bold text-center border-r border-black">
+                <h1 className="text-gray-600 font-bold text-center border-r border-black p-1">
                   {componente.qtde}
                 </h1>
-                <h1 className="text-gray-600 font-bold text-center border-r border-black">
+                <h1 className="text-gray-600 font-bold text-center border-r border-black p-1">
                   {componente.insumo}
                 </h1>
-                <h1 className="text-gray-600 font-bold text-center">
+                <h1 className="text-gray-600 font-bold text-center p-1">
                   {componente.tipo}
                 </h1>
               </div>

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import TextInput from "./TextInput";
-import NumberInput from "./NumberInput";
-import DateInput from "./DateInput";
-import SelectInput from "./SelectInput";
+import TextFloatingInput from "./TextFloatingInput";
+import NumberFloatingInput from "./NumberFloatingInput";
+import DateFloatingInput from "./DateFloatingInput";
+import SelectFloatingInput from "./SelectFloatingInput";
 import axios from "axios";
 import { equipesTecnicas } from "../utils/constants";
+import { useSession } from "next-auth/react";
 function OSCreationBlock({
   editor,
-  credentials,
   handleUpdates,
   ordensDeServico,
   id,
@@ -15,11 +15,13 @@ function OSCreationBlock({
   nomeDoContrato,
   qtde,
 }) {
+  const { data: session } = useSession();
+
   const [osInfo, setOsInfo] = useState({
     categoria: "NÃO DEFINIDO",
     servicoExecutado: "",
     realizarCobranca: false,
-    valorCobranca: 0,
+    valorCobranca: null,
     usuarioEmissor: "",
     grauDeUrgencia: "NÃO DEFINIDO",
     observacoes: "",
@@ -35,9 +37,10 @@ function OSCreationBlock({
     text: "",
     color: "",
   });
+  console.log(session.user);
   async function handleOSCreation() {
     var arr;
-    if (!credentials?.controller) {
+    if (!session.user?.controller) {
       setOsMsg({
         text: "Usuário não autorizado para geração de OSs.",
         color: "text-red-500",
@@ -47,7 +50,7 @@ function OSCreationBlock({
         if (ordensDeServico != undefined && ordensDeServico?.length > 0) {
           ordensDeServico.push({
             ...osInfo,
-            usuarioEmissor: credentials?.name,
+            usuarioEmissor: session.user?.name,
             index: ordensDeServico?.length,
             cobrancaRealizada: false,
           });
@@ -56,7 +59,7 @@ function OSCreationBlock({
           arr = [
             {
               ...osInfo,
-              usuarioEmissor: credentials?.name,
+              usuarioEmissor: session.user?.name,
               index: 0,
               cobrancaRealizada: false,
             },
@@ -67,7 +70,7 @@ function OSCreationBlock({
           await axios.post("/api/calls/adm/mainData", {
             codigoProjeto: qtde,
             nomeCliente: nomeDoContrato,
-            usuarioEmissor: credentials?.name,
+            usuarioEmissor: session.user?.name,
             demanda: "COBRANÇA",
             valor: osInfo.valorCobranca,
             servico: `${osInfo.categoria} - ${osInfo.servicoExecutado}`,
@@ -77,7 +80,7 @@ function OSCreationBlock({
           await axios.post("/api/calls/adm/mainData", {
             codigoProjeto: qtde,
             nomeCliente: nomeDoContrato,
-            usuarioEmissor: credentials?.name,
+            usuarioEmissor: session.user?.name,
             demanda: "PAGAMENTO",
             nomeRecebedor: osInfo.nomeTerceiro,
             valor: osInfo.valorPagamentoTerceiro,
@@ -102,7 +105,7 @@ function OSCreationBlock({
           });
           // handleUpdates({
           //   ...osInfo,
-          //   usuarioEmissor: credentials?.name,
+          //   usuarioEmissor: session.user?.name,
           //   index: ordensDeServico?.length,
           //   cobrancaRealizada: false,
           // });
@@ -112,16 +115,16 @@ function OSCreationBlock({
     }
   }
   function validateFields() {
-    if (osInfo.servicoExecutado.trim().length < 3) {
+    if (osInfo.categoria == "NÃO DEFINIDO") {
       setOsMsg({
-        text: "Por favor, preencha o serviço a ser executado.",
+        text: "Por favor, preencha a categoria da OS",
         color: "text-red-500",
       });
       return false;
     }
-    if (osInfo.categoria == "NÃO DEFINIDO") {
+    if (osInfo.servicoExecutado.trim().length < 3) {
       setOsMsg({
-        text: "Por favor, preencha a categoria da OS",
+        text: "Por favor, preencha o serviço a ser executado.",
         color: "text-red-500",
       });
       return false;
@@ -175,12 +178,12 @@ function OSCreationBlock({
   }
   return (
     <div className="flex flex-col">
-      {" "}
-      <div className="flex gap-2 justify-center flex-wrap">
-        <SelectInput
+      <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 items-center px-2">
+        <SelectFloatingInput
           label={"CATEGORIA DA OS"}
           value={osInfo.categoria}
           editable={editor}
+          width={"100%"}
           options={
             categories
               ? categories
@@ -219,10 +222,11 @@ function OSCreationBlock({
             })
           }
         />
-        <TextInput
-          label={"Serviço a ser executado"}
+        <TextFloatingInput
+          label={"SERVIÇO A SER EXECUTADO"}
           value={osInfo.servicoExecutado}
           editable={editor}
+          width={"100%"}
           handleChange={(value) =>
             setOsInfo({
               ...osInfo,
@@ -230,56 +234,75 @@ function OSCreationBlock({
             })
           }
         />
-        <div className="flex gap-2 justify-center flex-wrap mt-4">
-          <div className="mx-3 flex gap-2 items-center">
+      </div>
+      <div className="flex items-center justify-center flex-wrap gap-2">
+        <div className="flex flex-col w-[350px] items-center">
+          <span className="uppercase font-bold font-raleway text-center text-sm">
+            REALIZAR COBRANÇA ?
+          </span>
+          <div className="flex">
             <input
               disabled={!editor}
               checked={osInfo.realizarCobranca}
-              onChange={(e) =>
+              onChange={(e) => {
                 setOsInfo({
                   ...osInfo,
                   realizarCobranca: e.target.checked,
-                })
-              }
+                  valorCobranca: e.target.checked ? osInfo.valorCobranca : 0,
+                });
+              }}
               type="checkbox"
               name="realizarCobranca"
               id="realizarCobranca"
             />
             <label className="ml-2" htmlFor="realizarCobranca">
-              REALIZAR COBRANÇA ?
+              {osInfo.realizarCobranca ? "SIM" : "NÃO"}
             </label>
           </div>
-          <div className="mx-3 flex gap-2 items-center">
-            <input
-              checked={osInfo.valorCobranca == "NÃO DEFINIDO"}
-              onChange={(e) =>
-                setOsInfo({
-                  ...osInfo,
-                  valorCobranca: e.target.checked ? "NÃO DEFINIDO" : 0,
-                })
-              }
-              type="checkbox"
-              name="valorCobranca"
-              id="valorCobranca"
-            />
-            <label className="" htmlFor="valorCobranca">
-              VALOR NÃO DEFINIDO ?
-            </label>
-          </div>
-          {osInfo.valorCobranca != "NÃO DEFINIDO" && (
-            <NumberInput
-              label={"VALOR DO SERVIÇO A COBRAR"}
-              value={osInfo.valorCobranca}
-              editable={editor}
-              handleChange={(value) =>
-                setOsInfo({ ...osInfo, valorCobranca: Number(value) })
-              }
-            />
-          )}
         </div>
+        {osInfo.realizarCobranca ? (
+          <>
+            <div className="flex flex-col w-[350px] items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                VALOR AINDA NÃO DEFINIDO ?
+              </span>
+              <div className="flex">
+                <input
+                  disabled={!editor}
+                  checked={osInfo.valorCobranca == "NÃO DEFINIDO"}
+                  onChange={(e) =>
+                    setOsInfo({
+                      ...osInfo,
+                      valorCobranca: e.target.checked ? "NÃO DEFINIDO" : 0,
+                    })
+                  }
+                  type="checkbox"
+                  name="valorCobranca"
+                  id="valorCobranca"
+                />
+                <label className="ml-2" htmlFor="valorCobranca">
+                  {osInfo.valorCobranca ? "SIM" : "NÃO"}
+                </label>
+              </div>
+            </div>
+            {osInfo.valorCobranca != "NÃO DEFINIDO" && (
+              <NumberFloatingInput
+                label={"VALOR DO SERVIÇO A COBRAR"}
+                value={osInfo.valorCobranca}
+                editable={editor}
+                handleChange={(value) =>
+                  setOsInfo({ ...osInfo, valorCobranca: Number(value) })
+                }
+                marginBottom={"0px"}
+              />
+            )}
+          </>
+        ) : null}
+      </div>
+      <div className="flex items-center justify-center flex-wrap gap-2 mt-4">
         <div className="flex flex-col w-[350px] items-center">
           <span className="uppercase font-bold font-raleway text-center text-sm">
-            PAGAMENTO DE TERCEIRO
+            PAGAMENTO DE TERCEIRO NECESSÁRIO ?
           </span>
           <div className="flex">
             <input
@@ -289,6 +312,7 @@ function OSCreationBlock({
                 setOsInfo({
                   ...osInfo,
                   pagamentoTerceiro: e.target.checked,
+                  valorCobranca: e.target.checked ? osInfo.valorCobranca : 0,
                 });
               }}
               type="checkbox"
@@ -296,13 +320,13 @@ function OSCreationBlock({
               id="pagamentoTerceiro"
             />
             <label className="ml-2" htmlFor="pagamentoTerceiro">
-              APLICÁVEL?
+              {osInfo.pagamentoTerceiro ? "SIM" : "NÃO"}
             </label>
           </div>
         </div>
         {osInfo.pagamentoTerceiro && (
           <>
-            <NumberInput
+            <NumberFloatingInput
               label={"VALOR A PAGAR AO TERCEIRO?"}
               editable={editor}
               value={osInfo.valorPagamentoTerceiro}
@@ -312,8 +336,9 @@ function OSCreationBlock({
                   valorPagamentoTerceiro: Number(value),
                 })
               }
+              marginBottom={"0px"}
             />
-            <TextInput
+            <TextFloatingInput
               label={"NOME DO TERCEIRO"}
               editable={editor}
               value={osInfo.nomeTerceiro}
@@ -323,10 +348,13 @@ function OSCreationBlock({
                   nomeTerceiro: value.toUpperCase(),
                 })
               }
+              marginBottom={"0px"}
             />
           </>
         )}
-        <SelectInput
+      </div>
+      <div className="flex gap-2 justify-center flex-wrap items-center mt-4">
+        <SelectFloatingInput
           label={"GRAU DE URGÊNCIA"}
           value={osInfo.grauDeUrgencia}
           editable={editor}
@@ -340,7 +368,7 @@ function OSCreationBlock({
             setOsInfo({ ...osInfo, grauDeUrgencia: value })
           }
         />
-        <DateInput
+        <DateFloatingInput
           label={"DATA DE ABERTURA"}
           editable={editor}
           value={new Date(osInfo.dataDeAbertura).toISOString().slice(0, 10)}
@@ -351,29 +379,14 @@ function OSCreationBlock({
             })
           }
         />
-        {osInfo.categoria == "MANUTENÇÃO PREVENTIVA" && (
-          <>
-            <div className="flex pl-2 items-center">
-              <input
-                disabled={!editor}
-                checked={osInfo.configurar ? true : false}
-                onChange={(e) =>
-                  setOsInfo({
-                    ...osInfo,
-                    configurar: e.target.checked,
-                  })
-                }
-                type="checkbox"
-                name="configurar"
-                id="configurar"
-              />
-              <label className="ml-2" htmlFor="configurar">
-                CONFIGURAR
-              </label>
-            </div>
-            <TextInput
-              label={"Modelo Micro/inversor"}
+      </div>
+      {osInfo.categoria == "MANUTENÇÃO PREVENTIVA" && (
+        <div className="flex flex-col">
+          <div className="grid grid-cols-3 gap-2 px-2">
+            <TextFloatingInput
+              label={"MODELO DO MICRO/INVERSOR"}
               editable={editor}
+              width={"100%"}
               value={osInfo.inversor ? osInfo.inversor : ""}
               handleChange={(value) =>
                 setOsInfo({
@@ -382,9 +395,10 @@ function OSCreationBlock({
                 })
               }
             />
-            <TextInput
+            <TextFloatingInput
               label={"SENHA DO WIFI"}
               editable={editor}
+              width={"100%"}
               normalCase={true}
               value={osInfo.senhaDoWifi ? osInfo.senhaDoWifi : ""}
               handleChange={(value) =>
@@ -394,36 +408,73 @@ function OSCreationBlock({
                 })
               }
             />
-            <TextInput
+            <TextFloatingInput
               label={"PONTO DE AGUA"}
               editable={editor}
+              width={"100%"}
               normalCase={true}
               value={osInfo.pontoDeAgua ? osInfo.pontoDeAgua : ""}
               handleChange={(value) =>
                 setOsInfo({ ...osInfo, pontoDeAgua: value })
               }
             />
-            <div className="flex pl-2 items-center">
-              <input
-                disabled={!editor}
-                checked={osInfo.trafo ? true : false}
-                onChange={(e) =>
-                  setOsInfo({
-                    ...osInfo,
-                    trafo: e.target.checked,
-                  })
-                }
-                type="checkbox"
-                name="trafo"
-                id="trafo"
-              />
-              <label className="ml-2" htmlFor="trafo">
-                TRAFO
-              </label>
+          </div>
+          <div className="flex items-center justify-center gap-2">
+            <div className="flex flex-col w-[350px] items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                CONFIGURAÇÃO NECESSÁRIA ?
+              </span>
+              <div className="flex">
+                <input
+                  disabled={!editor}
+                  checked={osInfo.configurar}
+                  onChange={(e) => {
+                    setOsInfo({
+                      ...osInfo,
+                      configurar: e.target.checked,
+                      valorCobranca: e.target.checked
+                        ? osInfo.valorCobranca
+                        : 0,
+                    });
+                  }}
+                  type="checkbox"
+                  name="configurar"
+                  id="configurar"
+                />
+                <label className="ml-2" htmlFor="configurar">
+                  {osInfo.configurar ? "SIM" : "NÃO"}
+                </label>
+              </div>
             </div>
-          </>
-        )}
-      </div>
+            <div className="flex flex-col w-[350px] items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                POSSUI TRAFO ?
+              </span>
+              <div className="flex">
+                <input
+                  disabled={!editor}
+                  checked={osInfo.trafo}
+                  onChange={(e) => {
+                    setOsInfo({
+                      ...osInfo,
+                      trafo: e.target.checked,
+                      valorCobranca: e.target.checked
+                        ? osInfo.valorCobranca
+                        : 0,
+                    });
+                  }}
+                  type="checkbox"
+                  name="trafo"
+                  id="trafo"
+                />
+                <label className="ml-2" htmlFor="trafo">
+                  {osInfo.trafo ? "SIM" : "NÃO"}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {osInfo.categoria != "MONTAGEM" && osInfo.categoria != "NÃO DEFINIDO" && (
         <div className="flex flex-col w-[450px] self-center mt-2 items-center">
           <span className="uppercase font-bold font-raleway text-center text-sm">
@@ -440,7 +491,18 @@ function OSCreationBlock({
           />
         </div>
       )}
-      <div className="flex gap-2 justify-center flex-wrap mt-4">
+      <div className="flex items-center justify-center w-full">
+        <SelectFloatingInput
+          label={"EQUIPE"}
+          editable={true}
+          width={"450px"}
+          value={osInfo.equipe ? osInfo.equipe : "NÃO DEFINIDO"}
+          options={equipesTecnicas.map((equipe) => equipe)}
+          handleChange={(value) => setOsInfo({ ...osInfo, equipe: value })}
+        />
+      </div>
+
+      {/* <div className="flex gap-2 justify-center flex-wrap mt-4">
         <div>
           <input
             disabled={!editor}
@@ -461,14 +523,7 @@ function OSCreationBlock({
         </div>
         {osInfo.agendar && (
           <>
-            <SelectInput
-              label={"EQUIPE"}
-              editable={true}
-              value={osInfo.equipe ? osInfo.equipe : "NÃO DEFINIDO"}
-              options={equipesTecnicas.map((equipe) => equipe)}
-              handleChange={(value) => setOsInfo({ ...osInfo, equipe: value })}
-            />
-            <DateInput
+            <DateFloatingInput
               label={"DATA DE INÍCIO"}
               editable={true}
               value={
@@ -483,7 +538,7 @@ function OSCreationBlock({
                 })
               }
             />
-            <DateInput
+            <DateFloatingInput
               label={"DATA DE FIM"}
               editable={true}
               value={
@@ -500,7 +555,7 @@ function OSCreationBlock({
             />
           </>
         )}
-      </div>
+      </div> */}
       {osMsg.text.length > 0 && (
         <p className={`text-center ${osMsg.color} italic`}>{osMsg.text}</p>
       )}

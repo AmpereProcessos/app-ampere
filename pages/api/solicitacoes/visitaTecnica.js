@@ -9,7 +9,25 @@ export default async function handler(req, res) {
   } else if (req.method === "GET") {
     const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);
     const collection = db.collection("visitaTecnica");
-    let arr = await collection.find({}).toArray();
+
+    let arr = await collection
+      .aggregate([
+        {
+          $project: {
+            nomeDoCliente: 1,
+            cidade: 1,
+            nomeVendedor: 1,
+            qtdeModulos: 1,
+            status: 1,
+            tipoDeLaudo: 1,
+            tipoDeSolicitacao: 1,
+            dataDeAbertura: 1,
+            dataDeConclusao: 1,
+            solicitacaoContrato: 1,
+          },
+        },
+      ])
+      .toArray();
     res.json(arr);
   } else if (req.method === "PUT") {
     const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);

@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
+import FilterButton from "../../components/utils/FilterButton";
 function VisitaTecnica() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -17,8 +18,8 @@ function VisitaTecnica() {
     },
   });
 
-  const [forms, setForms] = useState([]);
-  const [filteredForms, setFilteredForms] = useState([]);
+  const [forms, setForms] = useState();
+  const [filteredForms, setFilteredForms] = useState();
   const [filters, setFilters] = useState({
     status: [],
     numModules: "",
@@ -86,6 +87,18 @@ function VisitaTecnica() {
       return newArr;
     }
   }
+  function filterBySearch(value) {
+    setFilters({ ...filters, search: value });
+    if (value.trim().length > 0) {
+      let filtered = filterForms();
+      let newArr = filtered.filter((form) =>
+        form.nomeDoCliente.toUpperCase().includes(filters.search.toUpperCase())
+      );
+      setFilteredForms(newArr);
+    } else {
+      setFilteredForms(forms);
+    }
+  }
   function getPendenceStatusBorder(tipoDeLaudo, currentTimeDiff, status) {
     if (tipoDeLaudo == "NÃO DEFINIDO") return;
     if (status != "CONCLUIDO") {
@@ -118,6 +131,17 @@ function VisitaTecnica() {
       return "text-gray-700";
     }
   }
+  async function handleOpenModal(id) {
+    try {
+      let { data } = await axios.get(
+        `/api/solicitacoes/getVisitaTecnica/${id}`
+      );
+      setModal({ open: true, form: data });
+    } catch (error) {
+      let { response } = error;
+      alert(response.data.msg);
+    }
+  }
   useEffect(() => {
     if (session?.user.accessibleRoutes.includes("Projetos")) {
       getProjects(session?.user);
@@ -133,7 +157,7 @@ function VisitaTecnica() {
       <div className="p-6 grow bg-[#fff] flex flex-col">
         <div className="flex flex-col gap-2 items-center w-full border-b border-gray-200 pb-2">
           <h1 className="pb-2 text-[#fead61] text-xl font-bold w-full text-center">
-            FORMULÁRIOS DE VISITA TÉCNICA ({filteredForms.length})
+            FORMULÁRIOS DE VISITA TÉCNICA ({filteredForms?.length})
           </h1>
           <div className="flex items-center justify-center gap-2">
             <div className="flex items-center gap-2">
@@ -153,28 +177,52 @@ function VisitaTecnica() {
               <p>VISITA IN LOCO</p>
             </div>
           </div>
-          <div className="flex items-center justify-center flex-wrap grow gap-2">
-            <div className="hidden lg:flex gap-x-2">
-              <input
-                type={"text"}
-                placeholder="Digite o nome do cliente..."
-                value={filters.search}
-                className="outline-none text-xs p-1.5 h-[36px] w-[300px] text-center rounded border border-gray-200 placeholder:italic"
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap w-full">
+            <input
+              type={"text"}
+              value={filters.search}
+              className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+              placeholder="DIGITE O NOME DO CONTRATO"
+              onChange={(e) => filterBySearch(e.target.value)}
+            />
+            <input
+              placeholder="NºMODULOS > QUE:"
+              className="outline-none p-1.5 w-full lg:w-[250px] rounded border border-gray-200 placeholder:italic"
+              type="number"
+              value={filters.numModules}
+              onChange={(e) =>
+                setFilters({ ...filters, numModules: Number(e.target.value) })
+              }
+            />
+            <div className="w-full lg:w-[250px]">
+              <Select
+                isMulti
+                placeholder="STATUS"
+                styles={{
+                  control: (base, state) => ({
+                    ...base,
+                    width: "100%",
+                    minHeight: "41px",
+                  }),
+                }}
                 onChange={(e) =>
-                  setFilters({ ...filters, search: e.target.value })
+                  setFilters({
+                    ...filters,
+                    status: e.map((x) => x.value),
+                  })
                 }
+                options={[
+                  { label: "CONCLUIDO", value: "CONCLUIDO" },
+                  { label: "EM ANÁLISE TÉCNICA", value: "EM ANÁLISE TÉCNICA" },
+                  {
+                    label: "PENDÊNCIA COMERCIAL",
+                    value: "PENDÊNCIA COMERCIAL",
+                  },
+                  { label: "VISITA IN LOCO", value: "VISITA IN LOCO" },
+                ]}
               />
-              <input
-                type="number"
-                placeholder="NºModulos > que"
-                className={
-                  "outline-none text-xs p-1.5 h-[36px] text-center rounded border border-gray-200 placeholder:italic"
-                }
-                value={filters.numModules}
-                onChange={(e) =>
-                  setFilters({ ...filters, numModules: Number(e.target.value) })
-                }
-              />
+            </div>
+            <div className="flex gap-x-2 w-full lg:w-fit">
               <div className="flex flex-col w-fit items-center">
                 <span className="uppercase font-bold font-raleway text-center text-sm">
                   Depois de:
@@ -217,136 +265,140 @@ function VisitaTecnica() {
                   }
                 />
               </div>
-              <Select
-                isMulti={false}
-                placeholder={"CAMPO DE FILTRO"}
-                options={[
-                  {
-                    label: "DATA DE CONCLUSÃO",
-                    value: "dataDeConclusao",
-                  },
-                  { label: "NÃO DEFINIDO", value: null },
-                ]}
-                onChange={(e) =>
-                  setDateFilter({
-                    ...dateFilter,
-                    field: e.value,
-                  })
-                }
-              />
+              <div className="w-full lg:w-[250px]">
+                <Select
+                  isMulti={false}
+                  placeholder={"CAMPO DE FILTRO"}
+                  styles={{
+                    control: (base, state) => ({
+                      ...base,
+                      width: "100%",
+                      minHeight: "41px",
+                    }),
+                  }}
+                  options={[
+                    {
+                      label: "DATA DE CONCLUSÃO",
+                      value: "dataDeConclusao",
+                    },
+                    { label: "NÃO DEFINIDO", value: null },
+                  ]}
+                  onChange={(e) =>
+                    setDateFilter({
+                      ...dateFilter,
+                      field: e.value,
+                    })
+                  }
+                />
+              </div>
             </div>
-            <Select
-              isMulti
-              placeholder="STATUS"
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  status: e.map((x) => x.value),
-                })
-              }
-              options={[
-                { label: "CONCLUIDO", value: "CONCLUIDO" },
-                { label: "EM ANÁLISE TÉCNICA", value: "EM ANÁLISE TÉCNICA" },
-                { label: "PENDÊNCIA COMERCIAL", value: "PENDÊNCIA COMERCIAL" },
-                { label: "VISITA IN LOCO", value: "VISITA IN LOCO" },
-              ]}
+            <FilterButton
+              text={"FILTRAR"}
+              icon={<AiOutlineSearch />}
+              handleClick={filterForms}
             />
-            <button
-              onClick={filterForms}
-              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
-            >
-              <p>Filtrar</p>
-              <AiOutlineSearch />
-            </button>
           </div>
         </div>
         <div className="flex flex-wrap justify-around gap-3 mt-4">
-          {filteredForms.map((form) => (
-            <div
-              onClick={() => {
-                setModal({ open: true, form: form });
-              }}
-              key={form._id}
-              className={`w-[250px] ${getCardColor(
-                form.status
-              )} ${getPendenceStatusBorder(
-                form.tipoDeLaudo,
-                dayjs().diff(dayjs(form.dataDeAbertura), "hours"),
-                form.status
-              )} lg:w-[450px]  cursor-pointer border border-gray-200 hover:bg-blue-100 flex flex-col`}
-            >
+          {filteredForms ? (
+            filteredForms?.map((form) => (
               <div
-                className={`bg-[#15599a] text-[#fead61] text-xs font-bold text-center rounded-br-lg rounded-bl-lg`}
+                onClick={() => {
+                  // setModal({ open: true, form: form });
+                  handleOpenModal(form._id);
+                }}
+                key={form._id}
+                className={`${getCardColor(
+                  form.status
+                )} ${getPendenceStatusBorder(
+                  form.tipoDeLaudo,
+                  dayjs().diff(dayjs(form.dataDeAbertura), "hours"),
+                  form.status
+                )} w-full md:w-[350px] lg:w-[450px] cursor-pointer border border-gray-200 hover:bg-blue-100 flex flex-col`}
               >
-                {form.tipoDeSolicitacao
-                  ? form.tipoDeSolicitacao
-                  : "NÃO DEFINIDO"}
+                <div
+                  className={`bg-[#15599a] text-[#fead61] text-xs font-bold text-center rounded-br-lg rounded-bl-lg`}
+                >
+                  {form.tipoDeSolicitacao
+                    ? form.tipoDeSolicitacao
+                    : "NÃO DEFINIDO"}
+                </div>
+                <div className="flex flex-col p-3">
+                  <div className="flex justify-center">
+                    <h1 className="text-xs text-[#15599a] font-bold">
+                      {form.nomeDoCliente}
+                    </h1>
+                    {form.solicitacaoContrato && (
+                      <BsPatchCheckFill
+                        style={{
+                          fontSize: "20px",
+                          color: "rgb(21 128 61)",
+                          marginLeft: "10px",
+                        }}
+                      />
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col items-center">
+                      <p className="text-xxs text-gray-700">CIDADE</p>
+                      <p className="text-xs text-gray-700 font-bold">
+                        {form.cidade}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <p className="text-xxs text-gray-700">VENDEDOR</p>
+                      <p className="text-xs text-gray-700 font-bold">
+                        {form.nomeVendedor}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col items-center">
+                      <p className="text-xxs text-gray-700">TIPO DE LAUDO</p>
+                      <p className="text-xs text-gray-700 font-bold">
+                        {form.tipoDeLaudo}
+                      </p>
+                    </div>
+                    <div
+                      className={`flex flex-col ${getPendenceStatusText(
+                        form.tipoDeLaudo,
+                        dayjs().diff(dayjs(form.dataDeAbertura), "hours"),
+                        form.status
+                      )} items-center mt-2`}
+                    >
+                      <p className="text-xxs">
+                        {form.dataDeConclusao
+                          ? "TEMPO ATÉ CONCLUSÃO"
+                          : "TEMPO DESDE ABERTURA"}
+                      </p>
+                      <p className="text-xs font-bold">
+                        {form.dataDeConclusao
+                          ? dayjs(form.dataDeConclusao).diff(
+                              dayjs(form.dataDeAbertura),
+                              "hours"
+                            )
+                          : dayjs().diff(
+                              dayjs(form.dataDeAbertura),
+                              "hours"
+                            )}{" "}
+                        HORAS
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <p className="text-xxs text-gray-700">ABERTURA</p>
+                    <p className="text-xs text-gray-700 font-bold">
+                      {form.dataDeAbertura
+                        ? dayjs(form.dataDeAbertura).format("DD/MM/YYYY HH:MM")
+                        : "-"}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="flex flex-col p-3">
-                <div className="flex justify-center">
-                  <h1 className="text-xs text-[#15599a] font-bold">
-                    {form.nomeDoCliente}
-                  </h1>
-                  {form.solicitacaoContrato && (
-                    <BsPatchCheckFill
-                      style={{
-                        fontSize: "20px",
-                        color: "rgb(21 128 61)",
-                        marginLeft: "10px",
-                      }}
-                    />
-                  )}
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col items-center">
-                    <p className="text-xxs text-gray-700">CIDADE</p>
-                    <p className="text-xs text-gray-700 font-bold">
-                      {form.cidade}
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <p className="text-xxs text-gray-700">VENDEDOR</p>
-                    <p className="text-xs text-gray-700 font-bold">
-                      {form.nomeVendedor}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col items-center">
-                    <p className="text-xxs text-gray-700">TIPO DE LAUDO</p>
-                    <p className="text-xs text-gray-700 font-bold">
-                      {form.tipoDeLaudo}
-                    </p>
-                  </div>
-                  <div
-                    className={`flex flex-col ${getPendenceStatusText(
-                      form.tipoDeLaudo,
-                      dayjs().diff(dayjs(form.dataDeAbertura), "hours"),
-                      form.status
-                    )} items-center mt-2`}
-                  >
-                    <p className="text-xxs">
-                      {form.dataDeConclusao
-                        ? "TEMPO ATÉ CONCLUSÃO"
-                        : "TEMPO DESDE ABERTURA"}
-                    </p>
-                    <p className="text-xs font-bold">
-                      {form.dataDeConclusao
-                        ? dayjs(form.dataDeConclusao).diff(
-                            dayjs(form.dataDeAbertura),
-                            "hours"
-                          )
-                        : dayjs().diff(
-                            dayjs(form.dataDeAbertura),
-                            "hours"
-                          )}{" "}
-                      HORAS
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <LoadingPage />
+          )}
           {modal.open && (
             <ModalVisitaTecnica
               info={modal.form}

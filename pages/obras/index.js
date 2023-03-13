@@ -98,7 +98,7 @@ function Obras() {
   }
   function handleTipoDaTelhaFilter(value) {
     setFilters({ ...filters, tipoDaTelhaFilter: value });
-    if (value != "" || " ") {
+    if (value != "" || value != " ") {
       let filtered = filterProjects();
       console.log(filtered);
       let newArr = filtered.filter(

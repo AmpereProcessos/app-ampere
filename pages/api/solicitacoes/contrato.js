@@ -28,6 +28,7 @@ export default async function handler(req, res) {
             tipoDeServico: 1,
             cidade: 1,
             confeccionado: 1,
+            dataSolicitacao: 1,
             aprovacao: 1,
           },
         },

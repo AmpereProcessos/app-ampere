@@ -64,15 +64,15 @@ const OVERLAY_STYLES = {
 const validation = {
   nomeDoContrato: {
     test(value) {
-      return value.trim().length < 10;
+      return value?.trim().length < 10;
     },
-    msg: "Por favor, preencha um nome válido",
+    msg: "Por favor, preencha um nome válido.",
   },
   nomeDoProjeto: {
     test(value) {
-      return value.trim().length < 2;
+      return value?.trim().length < 2;
     },
-    msg: "Por favor, preencha um nome válido",
+    msg: "Por favor, preencha um nome de projeto válido.",
   },
   "vendedor.nome": {
     test(value) {
@@ -88,21 +88,15 @@ const validation = {
   },
   cpf_cnpj: {
     test(value) {
-      return value.toString().length < 10;
+      return value?.toString().length < 10;
     },
     msg: "Por favor, preencha um CPF/CNPJ válido",
   },
   telefone: {
     test(value) {
-      return value.toString().length < 9;
+      return value?.toString().length < 9;
     },
     msg: "Por favor, preencha um Telefone válido",
-  },
-  linkDrive: {
-    test(value) {
-      return value.trim().length < 5;
-    },
-    msg: "Por favor, preencha o link da pasta no Drive do cliente",
   },
   "estruturaPersonaliza.tipo": {
     test(value) {
@@ -124,13 +118,13 @@ const validation = {
   },
   "pagamento.pagador": {
     test(value) {
-      return value.trim().length < 3;
+      return value?.trim().length < 3;
     },
     msg: "Por favor, preencha o nome do pagador.",
   },
   "pagamento.contatoPagador": {
     test(value) {
-      return value.trim().length < 9;
+      return value?.trim().length < 9;
     },
     msg: "Por favor, preencha o contato do pagador.",
   },
@@ -148,7 +142,7 @@ const validation = {
   },
   "dadosCemig.titularProjeto": {
     test(value) {
-      return value.trim().length < 5;
+      return value?.trim().length < 5;
     },
     msg: "Por favor, digite o titular do projeto",
   },
@@ -178,7 +172,7 @@ const validation = {
   },
   "sistema.inversor": {
     test(value) {
-      return value.trim().length < 5;
+      return value?.trim().length < 5;
     },
     msg: "Por favor, preencha informacoes sobre os micro/inversor",
   },
@@ -196,13 +190,13 @@ const validation = {
   },
   "visitaTecnica.tecnico": {
     test(value) {
-      return value.trim().length < 3;
+      return value?.trim().length < 3;
     },
     msg: "Por favor, preencha o técnico responsável",
   },
   "visitaTecnica.tipoDaTelha": {
     test(value) {
-      return value.trim().length < 3;
+      return value?.trim().length < 3;
     },
     msg: "Por favor, preencha o tipo da telha",
   },
@@ -754,6 +748,7 @@ function ModalFormSolicitacao({
   function validateCreation() {
     var holder;
     Object.entries(insertObj).forEach((entry) => {
+      console.log(entry);
       if (typeof entry[1] == "object") {
         let tag = entry[0];
         Object.keys(entry[1]).forEach((x) => {

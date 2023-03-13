@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 import FilterButton from "../../components/utils/FilterButton";
 import { AiOutlineSearch } from "react-icons/ai";
+import dayjs from "dayjs";
 function FormulariosSolicitacao() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -235,14 +236,23 @@ function FormulariosSolicitacao() {
                       />
                     )}
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div>
+                  <div className="grid grid-cols-3 mt-1">
+                    <div className="flex flex-col gap-1 items-start">
                       <span className="text-xxs">VENDEDOR</span>
                       <p className="text-xs text-gray-600">
                         {solicitacao.nomeVendedor && solicitacao.nomeVendedor}
                       </p>
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1 items-center">
+                      <span className="text-xxs">SOLICITAÇÃO</span>
+                      <p className="text-xs text-gray-600">
+                        {solicitacao.dataSolicitacao &&
+                          dayjs(solicitacao.dataSolicitacao).format(
+                            "DD/MM/YYYY HH:MM"
+                          )}
+                      </p>
+                    </div>
+                    <div className="flex flex-col gap-1 items-end">
                       <span className="text-xxs">CIDADE</span>
                       <p className="text-xs text-gray-600">
                         {solicitacao.cidade ? solicitacao.cidade : "-"}

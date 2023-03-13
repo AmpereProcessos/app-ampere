@@ -5,13 +5,17 @@ import CardProposta from "./CardProposta";
 function ListPropostas({ proposes, title, listId, fetchProposes }) {
   const [filteredPropostas, setFilteredPropostas] = useState(proposes);
   const [searchPropostas, setSearch] = useState("");
-  function handleDrop(proposeId, stageId) {
-    axios
-      .put("/api/o&m/updatePropose", {
+  async function handleDrop(proposeId, stageId) {
+    try {
+      let { data } = await axios.put("/api/o&m/updatePropose", {
         id: proposeId,
         listId: stageId,
-      })
-      .then((res) => fetchProposes());
+      });
+      console.log("DATA", data);
+      fetchProposes();
+    } catch (error) {
+      alert(JSON.stringify(error));
+    }
   }
   const [, dropRef] = useDrop({
     accept: "CARD",

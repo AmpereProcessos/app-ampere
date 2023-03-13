@@ -30,12 +30,13 @@ function Propostas() {
     currentEfficience: null,
     distance: 0,
   });
-  const [propostas, setPropostas] = useState({
-    emApresentacao: [],
-    emNegociacao: [],
-    emFechamento: [],
-    fechadas: [],
-  });
+  const [propostas, setPropostas] = useState();
+  // let obj = {
+  //   emApresentacao: [],
+  //   emNegociacao: [],
+  //   emFechamento: [],
+  //   fechadas: [],
+  // };
   function findPrice() {
     for (let i = 0; i < prices.length; i++) {
       console.log(prices[i]);
@@ -89,16 +90,16 @@ function Propostas() {
       clientName: "",
       city: cities[0].name,
       attendant: "NÃO DEFINIDO",
-      modulesQty: null,
-      modulesPot: null,
-      currentEfficience: null,
+      modulesQty: 0,
+      modulesPot: 0,
+      currentEfficience: 0,
       distance: 0,
     });
   }
-  function gerarProposta() {
+  async function gerarProposta() {
     if (handleValidations()) {
-      axios
-        .post("/api/o&m/propose", {
+      try {
+        let { data } = await axios.post("/api/o&m/propose", {
           ...dados,
           price: findPrice(),
           expectedMonthlyGen: (
@@ -107,25 +108,22 @@ function Propostas() {
           ).toFixed(2),
           negotiationStage: 1,
           currentPlanOption: 0,
-        })
-        .then((res) => {
-          resetState();
-          setMsg({
-            text: "Proposta gerada!",
-            color: "text-green-500",
-          });
-        })
-        .catch((er) =>
-          setMsg({
-            text: "Um erro ocorreu, por favor tente novamente.",
-            color: "text-red-500",
-          })
-        );
+        });
+        resetState();
+        getPropostas();
+        setMsg({ text: data, color: "text-green-500" });
+      } catch (error) {
+        let { response } = error;
+        console.log("Error", error);
+        setMsg({ text: response.data, color: "text-red-500" });
+      }
     }
   }
   useEffect(() => {
     if (session?.user) {
-      getPropostas();
+      if (!propostas) {
+        getPropostas();
+      }
     }
   }, [session]);
   if (status == "loading") return <LoadingPage />;
@@ -166,6 +164,7 @@ function Propostas() {
               options={[
                 { label: "LUIS EDUARDO", value: "LUIS EDUARDO" },
                 { label: "GABRIEL MARTINS", value: "GABRIEL MARTINS" },
+                { label: "MARCOS DIAS", value: "MARCOS DIAS" },
                 { label: "VOLTS", value: "VOLTS" },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
               ]}
@@ -221,25 +220,27 @@ function Propostas() {
             title={"Em apresentação"}
             listId={1}
             fetchProposes={getPropostas}
-            proposes={propostas.emApresentacao}
+            proposes={
+              propostas?.emApresentacao ? propostas?.emApresentacao : []
+            }
           />
           <ListPropostas
             title={"Em negociação"}
             listId={2}
             fetchProposes={getPropostas}
-            proposes={propostas.emNegociacao}
+            proposes={propostas?.emNegociacao ? propostas?.emNegociacao : []}
           />
           <ListPropostas
             title={"Em fechamento"}
             listId={3}
             fetchProposes={getPropostas}
-            proposes={propostas.emFechamento}
+            proposes={propostas?.emFechamento ? propostas?.emFechamento : []}
           />
           <ListPropostas
             title={"Vendas fechadas"}
             listId={4}
             fetchProposes={getPropostas}
-            proposes={propostas.fechadas}
+            proposes={propostas?.fechadas ? propostas?.fechadas : []}
           />
         </div>
       </div>

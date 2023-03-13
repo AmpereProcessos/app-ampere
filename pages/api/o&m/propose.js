@@ -13,11 +13,12 @@ export default async function handler(req, res) {
     distance,
     price,
   } = req.body;*/
-    const db = await connectToDatabase(process.env.DB2_KEY);
-    const collection = db.collection("infos");
+
     try {
+      const db = await connectToDatabase(process.env.DB2_KEY);
+      const collection = db.collection("infos");
       await collection.insertOne(req.body);
-      res.json("Proposta gerada");
+      res.json("Proposta gerada.");
     } catch (error) {
       res.status(500).send("Houve um erro, por favor tente novamente.");
     }

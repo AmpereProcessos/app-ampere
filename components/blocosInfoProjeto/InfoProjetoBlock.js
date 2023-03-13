@@ -155,6 +155,35 @@ function InfoProjetoBlock({
           ]}
         />
         <DateInput
+          label={"DATA DE SOLICITAÇÃO DE ACESSO"}
+          editable={editor}
+          value={
+            infoHolder.projeto.dataSolicitacaoAcesso != undefined &&
+            infoHolder.projeto.dataSolicitacaoAcesso != "-"
+              ? new Date(infoHolder.projeto.dataSolicitacaoAcesso)
+                  .toISOString()
+                  .slice(0, 10)
+              : 0
+          }
+          handleChange={(value) => {
+            setChanges({
+              ...changes,
+              "projeto.dataSolicitacaoAcesso": isNaN(value)
+                ? new Date(value).toISOString()
+                : null,
+            });
+            setInfo({
+              ...infoHolder,
+              projeto: {
+                ...infoHolder.projeto,
+                dataSolicitacaoAcesso: isNaN(value)
+                  ? new Date(value).toISOString()
+                  : null,
+              },
+            });
+          }}
+        />
+        <DateInput
           label={"Parecer de acesso"}
           editable={editor}
           value={

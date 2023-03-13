@@ -42,7 +42,7 @@ function InfoArquivosBlock({ project, infoHolder, categories, handleUpdates }) {
         });
         clearMsg(2500);
       } catch (error) {
-        setMsg({ text: error, color: "text-red-500" });
+        setMsg({ text: "Erro ao excluir arquivo", color: "text-red-500" });
         clearMsg();
       }
     } else {
@@ -71,11 +71,14 @@ function InfoArquivosBlock({ project, infoHolder, categories, handleUpdates }) {
         />
       </div>
       {project.links && (
-        <div className="flex justify-around gap-2 mt-3 flex-wrap">
+        <div className="flex justify-center gap-2 gap-y-4 mt-3 flex-wrap">
           {Object.keys(project.links).map((category, index) =>
             project.links[category]?.length > 0 ? (
-              <div key={index} className="flex flex-col">
-                <h1 className="text-sm font-bold text-center text-[#15599a]">
+              <div
+                key={index}
+                className="flex flex-col w-full lg:w-[45%] p-1 shadow-sm"
+              >
+                <h1 className="font-bold text-center text-green-500">
                   {category.toUpperCase()}
                 </h1>
                 <div className="flex flex-col items-center gap-1">

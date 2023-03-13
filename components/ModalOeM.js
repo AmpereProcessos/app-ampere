@@ -28,6 +28,7 @@ import InfoClienteBlock from "./blocosInfoProjeto/InfoClienteBlock";
 import InfoDadosConcessionariaBlock from "./blocosInfoProjeto/InfoDadosConcessionariaBlock";
 import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
 import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
+import InfoProjetoBlock from "./blocosInfoProjeto/InfoProjetoBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -826,7 +827,16 @@ function ModalOeM({
                 setChanges={setChanges}
               />
             )}
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+            <InfoProjetoBlock
+              editor={false}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              handleUpdates={handleUpdates}
+              project={project}
+            />
+            {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 PROJETO
               </span>
@@ -1326,7 +1336,7 @@ function ModalOeM({
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 Informações sobre a obra

@@ -8,7 +8,7 @@ import EtapaMontagemMecanica from "./etapasConferenciaMontagem/EtapaMontagemMeca
 import EtapaLancamentoCabosConexoes from "./etapasConferenciaMontagem/EtapaLancamentoCabosConexoes";
 import EtapaFinalizacao from "./etapasConferenciaMontagem/EtapaFinalizacao";
 import EtapaEntrada from "./etapasConferenciaMontagem/EtapaEntrada";
-function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
+function ConferenciaMontagemOS({ info, cliente, index, saveChanges, getOSs }) {
   const [stage, setStage] = useState(0);
 
   const [msg, setMsg] = useState({ text: "", color: "" });
@@ -469,6 +469,7 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges }) {
           index={index}
           infoCliente={info}
           next={() => setStage((prev) => prev + 1)}
+          getOSs={getOSs}
         />
       )}
       {msg.text && (

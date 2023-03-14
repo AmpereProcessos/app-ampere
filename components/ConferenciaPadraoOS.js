@@ -7,18 +7,15 @@ import { MdOutlineAddCircle } from "react-icons/md";
 import { VscChromeClose } from "react-icons/vsc";
 import axios from "axios";
 function ConferenciaPadraoOS({ info, cliente, index, saveChanges }) {
+  const [loading, setLoading] = useState(false);
+
   const [infoHolder, setInfo] = useState({
     realimentacaoFeita: info.conferencias?.realimentacaoFeita,
     ramalPassado: info.conferencias?.ramalPassado,
     anotacoes: info.conferencias?.anotacoes,
     materiais: info.materiais,
   });
-  const [materiais, setMateriais] = useState([]);
-  const [materialHolder, setMaterialHolder] = useState({
-    nome: null,
-    id: null,
-    qtde: null,
-  });
+
   const [images, setImages] = useState({});
 
   const [msg, setMsg] = useState({ text: "", color: "" });
@@ -29,6 +26,7 @@ function ConferenciaPadraoOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione anotações acerca da OS, dificultades encontradas, se o ramal não foi passado, o tamanho de ramal a ser levado e afins.",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     if (!images.padraoMontado) {
@@ -36,6 +34,7 @@ function ConferenciaPadraoOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione uma foto do padrão montado",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     if (!images.ligacoesFeitas) {
@@ -43,6 +42,7 @@ function ConferenciaPadraoOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione uma foto das ligações feitas",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     if (!images.disjuntor) {
@@ -50,12 +50,14 @@ function ConferenciaPadraoOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione uma foto do disjuntor do padrão pós-montagem",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     setMsg({ text: "", color: "" });
     return true;
   }
   async function closeOS() {
+    setLoading(true);
     if (validateOSClosing()) {
       var holder;
       var links = [];
@@ -102,10 +104,12 @@ function ConferenciaPadraoOS({ info, cliente, index, saveChanges }) {
           text: "Houve um erro com a finalização da OS. Por favor, tente novamente.",
           color: "text-green-500",
         });
+        setLoading(false);
         holder = "ERRO";
       }
+      setMsg({ text: "", color: "" });
       if (holder == undefined) {
-        saveChanges({
+        let response = await saveChanges({
           [`ordensDeServico.${index}.conferencias.realimentacaoFeita`]:
             infoHolder.realimentacaoFeita,
           [`ordensDeServico.${index}.conferencias.ramalPassado`]:
@@ -115,10 +119,12 @@ function ConferenciaPadraoOS({ info, cliente, index, saveChanges }) {
           [`ordensDeServico.${index}.dataDeFechamento`]: new Date(),
           [`links.padrao`]: links,
         });
-        setMsg({
-          text: "Ordem de serviço finalizada !",
-          color: "text-green-500",
-        });
+        if (response.success == true) return;
+        else {
+          setTimeout(() => {
+            setLoading(false);
+          }, 2000);
+        }
       }
     }
   }
@@ -315,14 +321,18 @@ function ConferenciaPadraoOS({ info, cliente, index, saveChanges }) {
           {msg.text}
         </p>
       )}
-      <div className="my-2 flex items-center justify-center mt-6">
-        <button
-          onClick={closeOS}
-          className="p-2 rounded font-bold border border-[#15599a] text-[#15599a] hover:bg-[#15599a] hover:text-white "
-        >
-          FINALIZAR OS
-        </button>
-      </div>
+      {loading ? (
+        <></>
+      ) : (
+        <div className="my-2 flex items-center justify-center mt-6">
+          <button
+            onClick={closeOS}
+            className="p-2 rounded font-bold border border-[#15599a] text-[#15599a] hover:bg-[#15599a] hover:text-white "
+          >
+            FINALIZAR OS
+          </button>
+        </div>
+      )}
     </div>
   );
 }

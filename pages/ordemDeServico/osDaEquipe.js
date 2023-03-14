@@ -15,7 +15,7 @@ function OSDaEquipe() {
       router.push("/auth/authHome");
     },
   });
-  const [ordensDeServico, setOrdensDeServico] = useState([]);
+  const [ordensDeServico, setOrdensDeServico] = useState();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalOS, setModalOS] = useState({});
   function getOSs() {
@@ -32,7 +32,9 @@ function OSDaEquipe() {
   }
   useEffect(() => {
     if (session?.user) {
-      getOSs();
+      if (!ordensDeServico) {
+        getOSs();
+      }
     }
   }, [session]);
   if (status == "loading") return <LoadingPage />;
@@ -43,7 +45,7 @@ function OSDaEquipe() {
           <div className="flex flex-col items-center pb-2 border-b border-gray-200">
             <h1 className="text-center font-bold text-[#15599a]">MINHAS OSs</h1>
           </div>
-          {ordensDeServico.length > 0 ? (
+          {ordensDeServico && ordensDeServico.length > 0 ? (
             <div className="flex  justify-around gap-3 mt-4 flex-wrap">
               {ordensDeServico.map((item, i) => (
                 <div
@@ -81,7 +83,11 @@ function OSDaEquipe() {
           )}
         </div>
         {modalIsOpen && (
-          <ModalOS info={modalOS} setModalIsOpen={setModalIsOpen} />
+          <ModalOS
+            info={modalOS}
+            setModalIsOpen={setModalIsOpen}
+            getOSs={getOSs}
+          />
         )}
       </div>
     );

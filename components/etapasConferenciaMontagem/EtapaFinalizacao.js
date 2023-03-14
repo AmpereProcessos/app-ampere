@@ -7,7 +7,7 @@ import { destroyCookie, setCookie } from "nookies";
 import { fileTypes, cidadesGoias } from "../../utils/constants";
 import { storage } from "../../utils/firebase";
 
-function EtapaFinalizacao({ infoCliente, next, cliente, index }) {
+function EtapaFinalizacao({ infoCliente, next, cliente, index, getOSs }) {
   const [checkFinishingStage, setCheckFinishingStage] = useState(false);
   const [files, setFiles] = useState({});
   const [msg, setMsg] = useState({ text: "", color: "" });
@@ -279,6 +279,7 @@ function EtapaFinalizacao({ infoCliente, next, cliente, index }) {
         text: "Fechamento de Ordem De Serviço concluído !",
         color: "text-green-500",
       });
+      getOSs();
       destroyCookie(null, "OSClosingStage");
     }
   }

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 import ConferenciaManPreventivaOS from "./ConferenciaManPreventivaOS";
 import ConferenciaMontagemOS from "./ConferenciaMontagemOS";
+import ConferenciaOutrasCategorias from "./ConferenciaOutrasCategorias";
 import ConferenciaPadraoOS from "./ConferenciaPadraoOS";
 const MODAL_STYLES = {
   position: "fixed",
@@ -26,20 +27,29 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function ModalOS({ info, setModalIsOpen }) {
+function ModalOS({ info, setModalIsOpen, getOSs }) {
   // const [holder, setHolder] = useState(info);
   // const [changes, setChanges] = useState({});
-  function saveChanges(changes) {
-    console.log(changes);
-    axios
-      .post(`/api/projects/update/${info.id}`, changes)
-      .then((res) => {
-        alert("OS finalizada com sucesso!");
-        location.reload();
-      })
-      .catch((err) =>
-        alert("Erro ao finalizar baixa na OS. Por favor, tente novamente.")
+  const [msg, setMsg] = useState({
+    text: "",
+    color: "",
+  });
+  async function saveChanges(changes) {
+    try {
+      let { data, statusCode } = await axios.post(
+        `/api/projects/update/${info.id}`,
+        changes
       );
+      setMsg({ text: "Ordem de serviço finalizada.", color: "text-green-500" });
+      getOSs();
+      return { success: true };
+    } catch (error) {
+      setMsg({
+        text: "Erro ao finalizar baixa na OS. Por favor, tente novamente.",
+        color: "text-red-500",
+      });
+      return { success: false };
+    }
   }
   console.log(info);
   return (
@@ -222,8 +232,22 @@ function ModalOS({ info, setModalIsOpen }) {
                   cliente={info.cliente}
                   index={info.index}
                   saveChanges={saveChanges}
+                  getOSs={getOSs}
                 />
               )}
+              {!["MONTAGEM", "MANUTENÇÃO PREVENTIVA", "PADRÃO"].includes(
+                info.categoria
+              ) ? (
+                <ConferenciaOutrasCategorias
+                  saveChanges={saveChanges}
+                  index={info.index}
+                />
+              ) : null}
+              {msg.text ? (
+                <div className={`text-center italic ${msg.color} text-sm`}>
+                  {msg.text}
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

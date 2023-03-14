@@ -3,6 +3,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { fileTypes } from "../utils/constants";
 import { storage } from "../utils/firebase";
 function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
+  const [loading, setLoading] = useState(false);
   const [infoHolder, setInfo] = useState({
     testesCCeCA: info.conferencias?.testesCCeCA,
     conferenciaConectores: info.conferencias?.conferenciaConectores,
@@ -21,6 +22,7 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione preencha a execução dos testes CC e CA",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     if (!infoHolder.conferenciaConectores) {
@@ -28,6 +30,7 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione preencha a execução da conferência dos conectores.",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     if (!infoHolder.conferenciaGrampos) {
@@ -35,6 +38,7 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione preencha a execução da conferência dos grampos.",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     if (!infoHolder.revisaoMadeiramento) {
@@ -42,6 +46,7 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione preencha a execução da revisão do madeiramento.",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     if (!images.paineisPreLimpeza) {
@@ -49,6 +54,7 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione foto(s) dos painéis pré-limpeza.",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     if (!images.paineisPosLimpeza) {
@@ -56,6 +62,7 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione foto(s) dos painéis pós-limpeza.",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     if (!images.kitInversor) {
@@ -63,6 +70,7 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione foto(s) do quadro(s), string box (se houver) e inversor(res).",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     if (!images.infraEletromecanica) {
@@ -70,6 +78,7 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione foto(s) da infraestrutura eletromecânica.",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     if (!images.sistemaLigado) {
@@ -77,6 +86,7 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione foto(s) do sistema ligado.",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     if (!images.termoAssinado) {
@@ -84,12 +94,14 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
         text: "Por favor, adicione foto(s) do termo assinado.",
         color: "text-red-500",
       });
+      setLoading(false);
       return false;
     }
     setMsg({ text: "", color: "" });
     return true;
   }
   async function closeOS() {
+    setLoading(true);
     if (validateOSClosing()) {
       var holder;
       var links = [];
@@ -268,10 +280,11 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
           text: "Houve um erro com a finalização da OS. Por favor, tente novamente.",
           color: "text-green-500",
         });
+        setLoading(false);
         holder = "ERRO";
       }
       if (holder == undefined) {
-        saveChanges({
+        let response = await saveChanges({
           [`ordensDeServico.${index}.conferencias.testesCCeCA`]:
             infoHolder.testesCCeCA,
           [`ordensDeServico.${index}.conferencias.conferenciaConectores`]:
@@ -285,10 +298,12 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
           [`ordensDeServico.${index}.dataDeFechamento`]: new Date(),
           [`links.manutencaoPreventiva`]: links,
         });
-        setMsg({
-          text: "Ordem de serviço finalizada !",
-          color: "text-green-500",
-        });
+        if (response.success == true) return;
+        else {
+          setTimeout(() => {
+            setLoading(false);
+          }, 2000);
+        }
       }
     }
   }
@@ -712,14 +727,18 @@ function ConferenciaManPreventivaOS({ info, cliente, index, saveChanges }) {
           {msg.text}
         </p>
       )}
-      <div className="my-2 flex items-center justify-center mt-6">
-        <button
-          onClick={closeOS}
-          className="p-2 rounded font-bold border border-[#15599a] text-[#15599a] hover:bg-[#15599a] hover:text-white "
-        >
-          FINALIZAR OS
-        </button>
-      </div>
+      {loading ? (
+        <></>
+      ) : (
+        <div className="my-2 flex items-center justify-center mt-6">
+          <button
+            onClick={closeOS}
+            className="p-2 rounded font-bold border border-[#15599a] text-[#15599a] hover:bg-[#15599a] hover:text-white "
+          >
+            FINALIZAR OS
+          </button>
+        </div>
+      )}
     </div>
   );
 }

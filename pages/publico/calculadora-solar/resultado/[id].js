@@ -245,7 +245,7 @@ export async function getServerSideProps({ query }) {
   let numModulos = Math.ceil((energiaNecessaria * 1000) / (127 * 550)); // onde 127 é a média do fator de geração da região
   let potPico = (numModulos * 550) / 1000;
   let economiaAnual = Number((potPico * 127 * 12 * 0.75).toFixed(2));
-  let valorInvestido = potPico * 4000; // onde 4 é o valor em R$ do kWp
+  let valorInvestido = potPico * 4500; // onde 4 é o valor em R$ do kWp
   let anosCompletosPayback = (
     (valorInvestido - (valorInvestido % economiaAnual)) /
     economiaAnual

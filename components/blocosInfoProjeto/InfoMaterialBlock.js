@@ -238,7 +238,7 @@ function InfoMaterialBlock({
                 </h1>
               </div>
               {circuitBreakersArr?.map((circuitBreaker, index) => (
-                <div className="grid grid-cols-7 px-2 gap-2 mt-4">
+                <div key={index} className="grid grid-cols-7 px-2 gap-2 mt-4">
                   <h1 className="text-center font-semibold text-gray-500 col-span-2">
                     {circuitBreaker.tipo}
                   </h1>

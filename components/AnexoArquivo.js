@@ -23,7 +23,7 @@ function AnexoArquivo({
     }, time);
   }
   async function uploadFiles() {
-    var splitNome = fileName.toLowerCase().split(" ");
+    var splitNome = fileName.replace("/", "").toLowerCase().split(" ");
     var fixedNome = splitNome.join("_");
     if (fileName.trim().length < 3) {
       setMsg({

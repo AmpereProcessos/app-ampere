@@ -584,6 +584,7 @@ function ModalObras({
               setInfo={setInfo}
               changes={changes}
               setChanges={setChanges}
+              showCircuitBreakers={true}
             />
             {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">

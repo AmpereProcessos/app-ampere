@@ -452,7 +452,7 @@ function ChamadosSuporte() {
                 <div
                   onClick={() => handleOpenModal(call._id)}
                   key={call._id}
-                  className={`w-[420px] max-h-[200px] cursor-pointer border ${getDeadlineStatus(
+                  className={`w-[450px] max-h-[200px] cursor-pointer border ${getDeadlineStatus(
                     call.tipoChamado,
                     call.plano,
                     call.oemConcluido,
@@ -460,17 +460,17 @@ function ChamadosSuporte() {
                     call.statusChamado
                   )} p-3 hover:bg-blue-100`}
                 >
-                  <div className="flex justify-between gap-3 items-center w-full">
-                    <h1 className="uppercase text-sm">
+                  <div className="grid grid-cols-6 gap-2 items-center w-full">
+                    <h1 className="uppercase text-sm col-span-3 font-semibold">
                       {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
                     </h1>
                     {call.cidade && (
-                      <p className="text-xs uppercase text-gray-700">
+                      <p className="text-xxs uppercase text-gray-700 col-span-1 text-center font-bold">
                         {call.cidade}
                       </p>
                     )}
                     <p
-                      className={`text-xs text-center font-bold border p-1 rounded-lg ${
+                      className={`text-xs col-span-2 text-center font-bold border p-1 rounded-lg ${
                         statusStyles[call.statusChamado].textColor
                       } ${statusStyles[call.statusChamado].borderColor}`}
                     >
@@ -721,7 +721,7 @@ function ChamadosSuporte() {
                     ) : (
                       false
                     )}
-                    <h1 className="uppercase text-sm">
+                    <h1 className="uppercase text-sm font-semibold">
                       {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
                     </h1>
                     {call.cidade && (

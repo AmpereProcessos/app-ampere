@@ -320,7 +320,9 @@ function ChamadosPPS() {
                   className="w-full lg:w-[450px] max-h-[240px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
                 >
                   <div className="flex justify-between items-center w-full">
-                    <h1 className="text-xs text-center">{call.vendedor}</h1>
+                    <h1 className="text-xs text-center font-semibold">
+                      {call.vendedor}
+                    </h1>
                     <p className="text-xs text-center">
                       {call.codigoDoProjeto} SVB
                     </p>
@@ -453,7 +455,7 @@ function ChamadosPPS() {
                   onClick={() => handleOpenModal(call)}
                   className="w-full max-h-[100px] lg:w-[300px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
                 >
-                  <div className="flex justify-between items-center w-full">
+                  <div className="flex justify-between items-center w-full font-semibold">
                     <h1>{call.vendedor}</h1>
                     <p
                       className={`text-xs font-bold border p-1 rounded-lg ${

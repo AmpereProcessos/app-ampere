@@ -453,7 +453,7 @@ function ChamadosProjetos() {
                   className="w-full lg:w-[420px] min-h-[120px] max-h-[150px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
                 >
                   <div className="grid grid-cols-5 justify-between items-center w-full">
-                    <h1 className="col-span-3 uppercase text-sm">
+                    <h1 className="col-span-3 uppercase text-sm font-semibold">
                       {call.projeto && call.projeto}
                     </h1>
                     {call.status && (
@@ -657,7 +657,7 @@ function ChamadosProjetos() {
                   className="flex flex-col min-h-[120px] max-h-[150px] w-full lg:w-[420px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
                 >
                   <div className="grid grid-cols-3 gap-x-2 items-center w-full">
-                    <h1 className="uppercase text-sm col-span-2">
+                    <h1 className="uppercase text-sm col-span-2 font-semibold">
                       {call.projeto && call.projeto}
                     </h1>
                     <p

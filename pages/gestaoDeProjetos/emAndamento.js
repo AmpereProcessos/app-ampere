@@ -21,7 +21,7 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
   });
   return (
     <>
-      <div className="flex bg-gray-100 grow p-6 w-full">
+      <div className="flex grow p-6 w-full">
         <ol className="border-l-2 border-[#15599a]">
           <li>
             <div className="flex flex-start items-center">
@@ -274,7 +274,7 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </div>
           </li>
         </ol>
-        <div className="sticky top-[10%] left-[60%] h-[600px] w-[500px] bg-[#fff] rounded-sm border border-gray-200 shadow-lg p-3">
+        <div className="flex flex-col sticky top-[10%] left-[60%] h-[600px] w-[500px] bg-[#fff] rounded-sm border border-gray-200 shadow-lg p-3">
           <div className="flex flex-col items-center border-b border-gray-200 pb-2">
             <h1 className="font-bold text-center text-[#15599a] text-xl">
               PROJETOS
@@ -283,19 +283,28 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
               CLIENTES NO ESTÁGIO: {selectedProjects.estagio}
             </p>
           </div>
-          <div className="flex flex-col overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 max-h-[520px]">
-            {selectedProjects.projetos.map((info, index) => (
-              <div key={index} className="border-b p-2 flex items-center gap-3">
-                <FaUser />
-                <p className="text-xs">
-                  {info.nomeDoContrato}
-                  {"  "}
-                  <strong className="font-bold text-[#15599a]">
-                    (#{info.qtde})
-                  </strong>
-                </p>
-              </div>
-            ))}
+          <div className="flex flex-col overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 max-h-[520px] grow">
+            {selectedProjects.projetos?.length > 0 ? (
+              selectedProjects.projetos.map((info, index) => (
+                <div
+                  key={index}
+                  className="border-b p-2 flex items-center gap-3"
+                >
+                  <FaUser />
+                  <p className="text-xs">
+                    {info.nomeDoContrato}
+                    {"  "}
+                    <strong className="font-bold text-[#15599a]">
+                      (#{info.qtde})
+                    </strong>
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="flex items-center justify-center text-center text-sm text-gray-500 h-full italic">
+                Nenhum projeto se encontra nesse estágio...
+              </p>
+            )}
           </div>
         </div>
         {/* {modalIsOpen && (

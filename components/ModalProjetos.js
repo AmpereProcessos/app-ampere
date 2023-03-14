@@ -21,6 +21,7 @@ import InfoDadosConcessionariaBlock from "./blocosInfoProjeto/InfoDadosConcessio
 import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
 import InfoProjetoBlock from "./blocosInfoProjeto/InfoProjetoBlock";
 import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
+import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -382,6 +383,16 @@ function ModalProjetos({
               changes={changes}
               setChanges={setChanges}
               project={project}
+            />
+            <InfoMaterialBlock
+              editor={false}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              project={project}
+              showCircuitBreakers={true}
+              circuitBreakerAddition={true}
             />
             <InfoArquivosBlock
               project={project}

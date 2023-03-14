@@ -106,12 +106,13 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
                   }),
                 }}
                 options={
-                  infoHolder.uf &&
-                  estadosCidades
-                    .filter((x) => x.sigla == infoHolder.uf)[0]
-                    .cidades.map((cidade, index) => {
-                      return { label: cidade, value: cidade };
-                    })
+                  infoHolder.uf
+                    ? estadosCidades
+                        .filter((x) => x.sigla == infoHolder.uf)[0]
+                        .cidades.map((cidade, index) => {
+                          return { label: cidade, value: cidade };
+                        })
+                    : []
                 }
                 onChange={(item) =>
                   setInfoHolder({ ...infoHolder, cidade: item.value })

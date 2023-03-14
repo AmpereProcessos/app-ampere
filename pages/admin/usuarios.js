@@ -29,7 +29,9 @@ export default function UsersControl() {
 
   useEffect(() => {
     if (session?.user.manager == true) {
-      getUsers();
+      if (!users) {
+        getUsers();
+      }
     } else {
       if (session?.user) {
         router.push("/");

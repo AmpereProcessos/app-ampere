@@ -36,6 +36,8 @@ import InfoDadosConcessionariaBlock from "./blocosInfoProjeto/InfoDadosConcessio
 import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
 import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
 import InfoProjetoBlock from "./blocosInfoProjeto/InfoProjetoBlock";
+import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
+import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -348,308 +350,22 @@ function ModalComercial({
               handleUpdates={handleUpdates}
               project={project}
             />
-
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                Informações sobre a obra
-              </span>
-              <div className="flex gap-2 justify-center flex-wrap">
-                <SelectInput
-                  label={"Laudo"}
-                  value={
-                    infoHolder.obra?.laudo
-                      ? infoHolder.obra?.laudo
-                      : "NÃO DEFINIDO"
-                  }
-                  editable={editor}
-                  options={[
-                    { label: "EM ESTUDO", value: "EM ESTUDO" },
-                    { label: "EMITIDO", value: "EMITIDO" },
-                    { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "obra.laudo": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      obra: {
-                        ...infoHolder.obra,
-                        laudo: value,
-                      },
-                    });
-                  }}
-                />
-                <div className="flex flex-col w-[350px] items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">
-                    SOLICITAÇÃO DA OBRA
-                  </span>
-                  <div className="flex">
-                    <input
-                      disabled={!editor}
-                      checked={
-                        infoHolder.obra?.statusSolicitacao === "SOLICITADA"
-                          ? true
-                          : false
-                      }
-                      onChange={(e) => {
-                        setChanges({
-                          ...changes,
-                          "obra.statusSolicitacao": e.target.checked
-                            ? "SOLICITADA"
-                            : "NÃO SOLICITADA",
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          obra: {
-                            ...infoHolder.obra,
-                            statusSolicitacao: e.target.checked
-                              ? "SOLICITADA"
-                              : "NÃO SOLICITADA",
-                          },
-                        });
-                      }}
-                      type="checkbox"
-                      name="solicitacaoobra"
-                      id="solicitacaoobra"
-                    />
-                    <label className="ml-2" htmlFor="solicitacaoobra">
-                      SOLICITADA
-                    </label>
-                  </div>
-                </div>
-                <DateInput
-                  label={"ENTRADA NA OBRA"}
-                  editable={editor}
-                  value={
-                    infoHolder.obra?.entrada != undefined &&
-                    infoHolder.obra?.entrada != "-"
-                      ? new Date(infoHolder.obra?.entrada)
-                          .toISOString()
-                          .slice(0, 10)
-                      : 0
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "obra.entrada": dayjs(value).isValid()
-                        ? new Date(value).toISOString()
-                        : null,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      obra: {
-                        ...infoHolder.obra,
-                        entrada: dayjs(value).isValid()
-                          ? new Date(value).toISOString()
-                          : null,
-                      },
-                    });
-                  }}
-                />
-                <DateInput
-                  label={"SAIDA DE OBRA"}
-                  editable={editor}
-                  value={
-                    infoHolder.obra?.saida != undefined &&
-                    infoHolder.obra?.saida != "-"
-                      ? new Date(infoHolder.obra?.saida)
-                          .toISOString()
-                          .slice(0, 10)
-                      : 0
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "obra.saida": dayjs(value).isValid()
-                        ? new Date(value).toISOString()
-                        : null,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      obra: {
-                        ...infoHolder.obra,
-                        saida: dayjs(value).isValid()
-                          ? new Date(value).toISOString()
-                          : null,
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"EQUIPE RESPONSÁVEL"}
-                  editable={editor}
-                  value={
-                    infoHolder.obra?.equipeResp != undefined &&
-                    infoHolder.obra?.equipeResp != "-"
-                      ? infoHolder.obra?.equipeResp == "TERCEIROS" ||
-                        infoHolder.obra?.equipeResp == "TERCERIZADOS" ||
-                        infoHolder.obra?.equipeResp == "OUTROS"
-                        ? "OUTROS"
-                        : infoHolder.obra?.equipeResp
-                      : "NÃO DEFINIDO"
-                  }
-                  options={equipesTecnicas.map((equipe) => equipe)}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "obra.equipeResp": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      obra: {
-                        ...infoHolder.obra,
-                        equipeResp: value,
-                      },
-                    });
-                  }}
-                />
-                <div className="flex flex-col w-[350px] items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">
-                    CHECKLIST OBRA
-                  </span>
-                  <div className="flex">
-                    <input
-                      disabled={!editor}
-                      checked={
-                        infoHolder.obra?.checklist === "SIM" ? true : false
-                      }
-                      onChange={(e) => {
-                        setChanges({
-                          ...changes,
-                          "obra.checklist": e.target.checked ? "SIM" : "NÃO",
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          obra: {
-                            ...infoHolder.obra,
-                            checklist: e.target.checked ? "SIM" : "NÃO",
-                          },
-                        });
-                      }}
-                      type="checkbox"
-                      name="checklistobra"
-                      id="checklistobra"
-                    />
-                    <label className="ml-2" htmlFor="checklistobra">
-                      SIM
-                    </label>
-                  </div>
-                </div>
-                <div className="flex flex-col w-[350px] items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">
-                    TRAFO
-                  </span>
-                  <div className="flex">
-                    <input
-                      disabled={!editor}
-                      checked={infoHolder.obra?.trafo === "SIM" ? true : false}
-                      onChange={(e) => {
-                        setChanges({
-                          ...changes,
-                          "obra.trafo": e.target.checked ? "SIM" : "NÃO",
-                        });
-                        setInfo({
-                          ...infoHolder,
-                          obra: {
-                            ...infoHolder.obra,
-                            trafo: e.target.checked ? "SIM" : "NÃO",
-                          },
-                        });
-                      }}
-                      type="checkbox"
-                      name="trafo"
-                      id="trafo"
-                    />
-                    <label className="ml-2" htmlFor="trafo">
-                      APLICÁVEL?
-                    </label>
-                  </div>
-                </div>
-                <SelectInput
-                  label={"STATUS DA OBRA"}
-                  value={
-                    infoHolder.obra?.statusDaObra
-                      ? infoHolder.obra?.statusDaObra
-                      : "NÃO DEFINIDO"
-                  }
-                  editable={editor}
-                  options={[
-                    {
-                      label: "AGENDADA",
-                      value: "AGENDADA",
-                    },
-                    {
-                      label: "AGUARDANDO AGENDAMENTO",
-                      value: "AGUARDANDO AGENDAMENTO",
-                    },
-                    {
-                      label: "CONCLUIDA",
-                      value: "CONCLUIDA",
-                    },
-                    {
-                      label: "EM ANDAMENTO",
-                      value: "EM ANDAMENTO",
-                    },
-                    {
-                      label: "OBRA CANCELADA",
-                      value: "OBRA CANCELADA",
-                    },
-                    {
-                      label: "CASA EM CONSTRUÇÃO",
-                      value: "CASA EM CONSTRUÇÃO",
-                    },
-                    {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
-                    },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "obra.statusDaObra": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      obra: {
-                        ...infoHolder.obra,
-                        statusDaObra: value,
-                      },
-                    });
-                  }}
-                />
-              </div>
-              <div className="flex flex-col w-full lg:w-[450px] self-center mt-2 items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  OBSERVAÇÕES
-                </span>
-                <textarea
-                  readOnly={!editor}
-                  value={
-                    infoHolder.obra?.observacoes
-                      ? infoHolder.obra.observacoes
-                      : ""
-                  }
-                  placeholder={"Observações da obra aqui..."}
-                  onChange={(e) => {
-                    setChanges({
-                      ...changes,
-                      "obra.observacoes": e.target.value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      obra: {
-                        ...infoHolder.obra,
-                        observacoes: e.target.value,
-                      },
-                    });
-                  }}
-                  className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+            <InfoObrasBlock
+              editor={true}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              project={project}
+            />
+            <InfoMaterialBlock
+              editor={true}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+            />
+            {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 MATERIAL
               </span>
@@ -744,7 +460,7 @@ function ModalComercial({
                   </>
                 )}
               </div>
-            </div>
+            </div> */}
             <InfoArquivosBlock
               project={project}
               infoHolder={infoHolder}

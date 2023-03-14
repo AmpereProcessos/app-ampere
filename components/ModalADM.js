@@ -23,6 +23,8 @@ import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
 import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
 import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
 import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
+import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
+import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -244,140 +246,22 @@ function ModalADM({
               setChanges={setChanges}
               showPaymentInfo={true}
             />
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                Informações sobre a obra
-              </span>
-              <div className="flex gap-2 justify-center flex-wrap">
-                <DateInput
-                  label={"ENTRADA NA OBRA"}
-                  editable={false}
-                  value={
-                    infoHolder.obra?.entrada != undefined &&
-                    infoHolder.obra?.entrada != "-"
-                      ? new Date(infoHolder.obra?.entrada)
-                          .toISOString()
-                          .slice(0, 10)
-                      : 0
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "obra.entrada": new Date(value).toISOString(),
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      obra: {
-                        ...infoHolder.obra,
-                        entrada: new Date(value).toISOString(),
-                      },
-                    });
-                  }}
-                />
-                <DateInput
-                  label={"SAIDA DE OBRA"}
-                  editable={false}
-                  value={
-                    infoHolder.obra?.saida != undefined &&
-                    infoHolder.obra?.saida != "-"
-                      ? new Date(infoHolder.obra?.saida)
-                          .toISOString()
-                          .slice(0, 10)
-                      : 0
-                  }
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "obra.saida": new Date(value).toISOString(),
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      obra: {
-                        ...infoHolder.obra,
-                        saida: new Date(value).toISOString(),
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"STATUS DA OBRA"}
-                  value={
-                    infoHolder.obra?.statusDaObra
-                      ? infoHolder.obra?.statusDaObra
-                      : "NÃO DEFINIDO"
-                  }
-                  editable={false}
-                  options={[
-                    {
-                      label: "AGENDADA",
-                      value: "AGENDADA",
-                    },
-                    {
-                      label: "AGUARDANDO AGENDAMENTO",
-                      value: "AGUARDANDO AGENDAMENTO",
-                    },
-                    {
-                      label: "CONCLUIDA",
-                      value: "CONCLUIDA",
-                    },
-                    {
-                      label: "EM ANDAMENTO",
-                      value: "EM ANDAMENTO",
-                    },
-                    {
-                      label: "OBRA CANCELADA",
-                      value: "OBRA CANCELADA",
-                    },
-                    {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
-                    },
-                  ]}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "obra.statusDaObra": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      obra: {
-                        ...infoHolder.obra,
-                        statusDaObra: value,
-                      },
-                    });
-                  }}
-                />
-                <SelectInput
-                  label={"EQUIPE RESPONSÁVEL"}
-                  editable={false}
-                  value={
-                    infoHolder.obra?.equipeResp != undefined &&
-                    infoHolder.obra?.equipeResp != "-"
-                      ? infoHolder.obra?.equipeResp == "TERCEIROS" ||
-                        infoHolder.obra?.equipeResp == "TERCERIZADOS" ||
-                        infoHolder.obra?.equipeResp == "OUTROS"
-                        ? "OUTROS"
-                        : infoHolder.obra?.equipeResp
-                      : "NÃO DEFINIDO"
-                  }
-                  options={equipesTecnicas.map((equipe) => equipe)}
-                  handleChange={(value) => {
-                    setChanges({
-                      ...changes,
-                      "obra.equipeResp": value,
-                    });
-                    setInfo({
-                      ...infoHolder,
-                      obra: {
-                        ...infoHolder.obra,
-                        equipeResp: value,
-                      },
-                    });
-                  }}
-                />
-              </div>
-            </div>
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+            <InfoObrasBlock
+              editor={false}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              project={project}
+            />
+            <InfoMaterialBlock
+              editor={true}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+            />
+            {/* <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 MATERIAL
               </span>
@@ -476,7 +360,7 @@ function ModalADM({
                   }}
                 />
               </div>
-            </div>
+            </div> */}
             <InfoArquivosBlock
               project={project}
               infoHolder={infoHolder}

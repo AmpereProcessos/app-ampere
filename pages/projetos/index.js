@@ -252,6 +252,7 @@ function Projetos() {
       }
     }
   }, [session]);
+  console.log(projects);
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     if (filteredProjects) {
@@ -916,6 +917,26 @@ function Projetos() {
                       </p>
                     </div>
                   </div>
+                  {project.projeto.dataSolicitacaoAcesso ? (
+                    <div className="flex items-center w-full justify-between">
+                      <p className="text-xxs ">
+                        {project.parecer?.dataParecerDeAcesso
+                          ? "ATÉ APROVAÇÃO DO PARECER"
+                          : "DESDE A SOLICITAÇÃO DE ACESSO"}
+                      </p>
+                      <p className="text-xs text-gray-600 text-start">
+                        {project.parecer?.dataParecerDeAcesso
+                          ? `${getDateDiff(
+                              new Date(project.parecer?.dataParecerDeAcesso),
+                              new Date(project.projeto.dataSolicitacaoAcesso)
+                            )} DIAS`
+                          : `${getDateDiff(
+                              new Date(),
+                              new Date(project.projeto.dataSolicitacaoAcesso)
+                            )} DIAS`}
+                      </p>
+                    </div>
+                  ) : null}
                 </div>
               </motion.div>
             ))}

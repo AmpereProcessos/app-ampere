@@ -4,10 +4,10 @@ import connectToDatabase from "../../../utils/usersDb";
 export const authOptions = {
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60 * 2,
+    maxAge: 60 * 60 * 5,
   },
   jwt: {
-    maxAge: 60 * 60 * 2,
+    maxAge: 60 * 60 * 5,
   },
   providers: [
     CredentialsProvider({

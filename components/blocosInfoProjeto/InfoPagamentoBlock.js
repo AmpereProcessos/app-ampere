@@ -116,8 +116,8 @@ function InfoPagamentoBlock({
           editable={editor}
           options={[
             {
-              label: "CAPITAL PROPRIO",
-              value: "CAPITAL PROPRIO",
+              label: "CAPITAL PRÓPRIO",
+              value: "CAPITAL PRÓPRIO",
             },
             {
               label: "FINANCIAMENTO",

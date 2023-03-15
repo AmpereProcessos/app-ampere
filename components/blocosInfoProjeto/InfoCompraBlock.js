@@ -205,7 +205,7 @@ function InfoCompraBlock({
             />
           )}
 
-          <SelectInput
+          <TextInput
             label={"LOCAL DE ENTREGA"}
             value={
               infoHolder.compra?.localEntrega != undefined &&
@@ -214,11 +214,6 @@ function InfoCompraBlock({
                 : "NÃO DEFINIDO"
             }
             editable={editor}
-            options={[
-              { label: "MESMO DO PROJETO", value: "MESMO DO PROJETO" },
-              { label: "SEM RESTRIÇÕES", value: "SEM RESTRIÇÕES" },
-              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            ]}
             handleChange={(value) => {
               setChanges({
                 ...changes,

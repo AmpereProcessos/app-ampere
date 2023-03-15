@@ -16,6 +16,7 @@ export default async function handler(req, res) {
   //         cidade: 1,
   //         vendedor: 1,
   //         nps: 1,
+  //         telefone: 1,
   //         "contrato.dataAssinatura": 1,
   //       },
   //     },
@@ -25,6 +26,7 @@ export default async function handler(req, res) {
   //   return {
   //     nome: item.nomeDoContrato,
   //     nps: item.nps,
+  //     telefone: item.telefone ? item.telefone : "-",
   //     cidade: item.cidade,
   //     vendedor: item.vendedor?.nome,
   //     assinaturaDoContrato: item.contrato?.dataAssinatura
@@ -34,6 +36,7 @@ export default async function handler(req, res) {
   //       : "-",
   //   };
   // });
+  // res.json(arr);
   res.json("DESATIVADA");
 }
 

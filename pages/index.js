@@ -98,7 +98,6 @@ function Home() {
   });
   const [regional, setRegional] = useState("GERAL");
   function getStats(credenciais) {
-    console.log("GETSTATS", credenciais);
     if (credenciais?.visualizacao == "REGIONAL") {
       axios
         .post("/api/stats", {
@@ -136,7 +135,6 @@ function Home() {
     }
   }
   function getBirthDay(credenciais) {
-    console.log("BIRTHDAY", credenciais);
     if (credenciais?.visualizacao == "REGIONAL") {
       axios
         .post("/api/stats/clientsBirthday", {
@@ -167,7 +165,6 @@ function Home() {
     }
   }
   function getGraphDataByYear(year, credenciais) {
-    console.log("GRAPH", credenciais);
     setSelectedYear(year);
     if (credenciais?.visualizacao == "REGIONAL") {
       axios
@@ -227,6 +224,19 @@ function Home() {
     getGraphDataByYear(2023, { visualizacao: "REGIONAL", regional: value });
     getStats({ visualizacao: "REGIONAL", regional: value });
   }
+  function validateStatsMonth(obj) {
+    let currentMonth = new Date().getMonth() + 1;
+    let currentYear = new Date().getFullYear();
+    if (obj.mes < currentMonth)
+      return obj.mes >= 10 ? (
+        <p className="text-xs font-semibold text-[#fead61]">{`${obj.mes}/${currentYear}`}</p>
+      ) : (
+        <p className="text-xs font-semibold text-[#fead61]">{`0${obj.mes}/${currentYear}`}</p>
+      );
+    else {
+      return null;
+    }
+  }
   useEffect(() => {
     if (session?.user) {
       getStats(session.user);
@@ -234,6 +244,7 @@ function Home() {
       getBirthDay(session.user);
     }
   }, [session]);
+  console.log(installedData, averageHomoData, averageBuyTime);
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     if (session.user?.visualizacao == "OBRAS") {
@@ -281,6 +292,9 @@ function Home() {
                 <h1 className="uppercase text-gray-600">
                   Obras finalizadas no mês
                 </h1>
+                {installedData[0]
+                  ? validateStatsMonth(installedData[0]._id)
+                  : null}
               </div>
               <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
                 {installedData.length > 0 ? installedData[0]?.count : "-"} obras
@@ -299,6 +313,9 @@ function Home() {
                 <h1 className="uppercase text-gray-600">
                   Potência Pico instalada no mês
                 </h1>
+                {installedData[0]
+                  ? validateStatsMonth(installedData[0]._id)
+                  : null}
               </div>
               <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
                 {installedData.length > 0
@@ -320,6 +337,9 @@ function Home() {
                 <h1 className="uppercase text-gray-600">
                   Potência Pico homologada no mês
                 </h1>
+                {averageHomoData[0]
+                  ? validateStatsMonth(averageHomoData[0]._id)
+                  : null}
               </div>
               <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
                 {averageHomoData.length > 0
@@ -341,6 +361,9 @@ function Home() {
                 <h1 className="uppercase text-gray-600">
                   TEMPO MÉDIO PARA COMPRA
                 </h1>
+                {averageBuyTime[0]
+                  ? validateStatsMonth(averageBuyTime[0]._id)
+                  : null}
               </div>
               <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
                 {averageBuyTime.length > 0
@@ -361,6 +384,9 @@ function Home() {
                 <h1 className="uppercase text-gray-600">
                   TEMPO MÉDIO DE APROVAÇÃO
                 </h1>
+                {averageHomoData[0]
+                  ? validateStatsMonth(averageHomoData[0]._id)
+                  : null}
               </div>
               <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
                 {averageHomoData.length > 0 && averageHomoData[0]?.averageTime

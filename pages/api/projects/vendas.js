@@ -15,6 +15,7 @@ export default async function handler(req, res) {
       queryKey = "insider";
       queryValue = req.body.parametro;
     }
+
     let vendas = await collection
       .aggregate([
         {

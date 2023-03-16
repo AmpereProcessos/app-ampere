@@ -28,8 +28,8 @@ function Vendas() {
       router.push("/auth/authHome");
     },
   });
-  const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [projects, setProjects] = useState();
+  const [filteredProjects, setFilteredProjects] = useState();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalProject, setModalProject] = useState({});
   const [filters, setFilters] = useState({
@@ -110,14 +110,14 @@ function Vendas() {
       }
     }
   }, [session]);
-  console.log(filteredProjects);
+  console.log(session);
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
       <div className="p-6 flex flex-col grow bg-[#fff]">
         <div className="flex flex-col items-center border-b border-gray-200 pb-3">
           <h1 className="text-[#15599a] font-bold text-xl">
-            SEUS CLIENTES ({filteredProjects.length})
+            SEUS CLIENTES ({filteredProjects?.length})
           </h1>
           <div className="flex flex-wrap items-center justify-around gap-3">
             <input
@@ -244,58 +244,64 @@ function Vendas() {
           </div>
         </div>
         <div className="flex flex-wrap justify-around mt-4 gap-3">
-          {filteredProjects.map((project) => (
-            <div
-              onClick={() => {
-                handleOpenModal(project._id);
-              }}
-              key={project._id}
-              className={`w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
-            >
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-gray-700">
-                  {project.nomeDoContrato}
-                </p>
-                <p className="text-xs text-[#15599a]">#{project.qtde}</p>
+          {filteredProjects ? (
+            filteredProjects.map((project) => (
+              <div
+                onClick={() => {
+                  handleOpenModal(project._id);
+                }}
+                key={project._id}
+                className={`w-[250px] lg:w-[450px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-gray-700">
+                    {project.nomeDoContrato}
+                  </p>
+                  <p className="text-xs text-[#15599a]">#{project.qtde}</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="hidden lg:flex lg:flex-col">
+                    <span className="text-xxs">CONTRATO</span>
+                    <p
+                      className={`text-xs ${
+                        statusStyles[project.contrato?.status]
+                          ? statusStyles[project.contrato.status].textColor
+                          : ""
+                      }`}
+                    >
+                      {project.contrato?.status && project.contrato?.status}
+                    </p>
+                  </div>
+                  <div className="text-end">
+                    <span className="text-xxs text-end">PAGAMENTO</span>
+                    <p className="text-xs text-center text-gray-600">
+                      {project.pagamento.status
+                        ? project.pagamento.status
+                        : "-"}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xxs">STATUS OBRA</span>
+                    <p className={`text-[#fead61] text-xs uppercase`}>
+                      {project.obra.statusDaObra
+                        ? project.obra.statusDaObra
+                        : "-"}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-xxs">VISTORIA</span>
+                    <p className="text-xs text-gray-600 text-center">
+                      {project.vistoria.status ? project.vistoria.status : "-"}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="hidden lg:flex lg:flex-col">
-                  <span className="text-xxs">CONTRATO</span>
-                  <p
-                    className={`text-xs ${
-                      statusStyles[project.contrato?.status]
-                        ? statusStyles[project.contrato.status].textColor
-                        : ""
-                    }`}
-                  >
-                    {project.contrato?.status && project.contrato?.status}
-                  </p>
-                </div>
-                <div className="text-end">
-                  <span className="text-xxs text-end">PAGAMENTO</span>
-                  <p className="text-xs text-center text-gray-600">
-                    {project.pagamento.status ? project.pagamento.status : "-"}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="text-xxs">STATUS OBRA</span>
-                  <p className={`text-[#fead61] text-xs uppercase`}>
-                    {project.obra.statusDaObra
-                      ? project.obra.statusDaObra
-                      : "-"}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-xxs">VISTORIA</span>
-                  <p className="text-xs text-gray-600 text-center">
-                    {project.vistoria.status ? project.vistoria.status : "-"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <LoadingPage />
+          )}
         </div>
         {modalIsOpen && (
           <ModalVendas

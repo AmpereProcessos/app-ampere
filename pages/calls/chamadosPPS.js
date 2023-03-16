@@ -14,6 +14,7 @@ import FetchDataButton from "../../components/utils/FetchDataButton";
 import FilterButton from "../../components/utils/FilterButton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
+import { respChamadosPPS } from "../../utils/constants";
 var dateFilterParam = new Date();
 dateFilterParam.setHours(0, 0, 0, 0);
 dateFilterParam.setDate(dateFilterParam.getDate() - 2);
@@ -277,28 +278,7 @@ function ChamadosPPS() {
                             respFilter: e.map((x) => x.value),
                           })
                         }
-                        options={[
-                          {
-                            value: "ADRIANO",
-                            label: "ADRIANO",
-                          },
-                          {
-                            value: "ARTHUR",
-                            label: "ARTHUR",
-                          },
-                          {
-                            value: "NATHAN",
-                            label: "NATHAN",
-                          },
-                          {
-                            value: "MATHEUS",
-                            label: "MATHEUS",
-                          },
-                          {
-                            value: "A DEFINIR",
-                            label: "A DEFINIR",
-                          },
-                        ]}
+                        options={respChamadosPPS.map((resp) => resp)}
                       />
                     </div>
                     <FilterButton

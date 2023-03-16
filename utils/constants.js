@@ -13,6 +13,14 @@ export const routes = [
   "RH",
   "Almoxarifado",
 ];
+export const respChamadosPPS = [
+  { label: "A DEFINIR", value: "A DEFINIR" },
+  { label: "ADRIANO", value: "ADRIANO" },
+  { label: "ARTHUR", value: "ARTHUR" },
+  { label: "NATHAN", value: "NATHAN" },
+  { label: "MATHEUS", value: "MATHEUS" },
+  { label: "LUCAS", value: "LUCAS" },
+];
 export const tiposChamadosSuporte = [
   {
     tipo: "PROBLEMAS COM CONCESSIONÁRIA",

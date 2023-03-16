@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 import { AppContext } from "../context/AppContext";
+import { respChamadosPPS } from "../utils/constants";
 import PPSModalCallInfo from "./PPSModalCallInfo";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 const MODAL_STYLES = {
@@ -317,11 +318,9 @@ function ModalCallPPS({
                 onChange={(e) => setResponsavel(e.target.value)}
                 className="text-xs grow text-center outline-none mt-2 lg:mt-0"
               >
-                <option value={"A DEFINIR"}>A DEFINIR</option>
-                <option value={"ARTHUR"}>ARTHUR</option>
-                <option value={"NATHAN"}>NATHAN</option>
-                <option value={"ADRIANO"}>ADRIANO</option>
-                <option value={"MATHEUS"}>MATHEUS</option>
+                {respChamadosPPS.map((resp) => (
+                  <option value={resp.value}>{resp.label}</option>
+                ))}
               </select>
             </div>
             {info.demanda == "EXTERNA" && (

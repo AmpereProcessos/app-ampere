@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 import dayjs from "dayjs";
 import Select from "react-select";
+import FormAlmoxarifadoCard from "../../components/FormAlmoxarifadoCard";
 function Formularios() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -214,38 +215,11 @@ function Formularios() {
         </div>
         <div className="flex  justify-around gap-3 mt-4 flex-wrap">
           {filteredForms.map((form) => (
-            <div
-              key={form._id}
-              onClick={() => {
-                handleOpenModal(form);
-              }}
-              className={`w-[250px] lg:w-[450px] ${getCardColor(
-                form.efetivado
-              )} cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
-            >
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-gray-700">{form.nomeDoContrato}</p>
-                <p className="text-xs text-[#15599a]">#{form.codigoProjeto}</p>
-              </div>
-              <div className="flex items-center justify-between mt-2">
-                <div className="flex flex-col gap-1 items-start">
-                  <span className="text-xxs">RESPONSÁVEL</span>
-                  <p className="text-xs text-gray-600">
-                    {form.responsavel && form.responsavel}
-                  </p>
-                </div>
-                <div className="flex flex-col gap-1 items-end">
-                  <span className="text-xxs">SAÍDA DE OBRA</span>
-                  <p className="text-xs text-gray-600">
-                    {form.saidaDeObra
-                      ? dayjs(form.saidaDeObra)
-                          .add(3, "hour")
-                          .format("DD/MM/YYYY")
-                      : "-"}
-                  </p>
-                </div>
-              </div>
-            </div>
+            <FormAlmoxarifadoCard
+              getForms={getForms}
+              form={form}
+              handleOpenModal={handleOpenModal}
+            />
           ))}
         </div>
         {modalIsOpen && (

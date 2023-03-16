@@ -216,6 +216,7 @@ function Formularios() {
         <div className="flex  justify-around gap-3 mt-4 flex-wrap">
           {filteredForms.map((form) => (
             <FormAlmoxarifadoCard
+            key={form._id}
               getForms={getForms}
               form={form}
               handleOpenModal={handleOpenModal}

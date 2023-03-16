@@ -2,10 +2,13 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import ModalNovoFormAlmoxarifado from "../../components/ModalNovoFormAlmoxarifado";
+import FilterButton from "../../components/utils/FilterButton";
 import ModalFormAlmoxarifado from "../../components/ModalFormAlmoxarifado";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
+import dayjs from "dayjs";
+import Select from "react-select";
 function Formularios() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -21,6 +24,12 @@ function Formularios() {
     efetivados: false,
     pesquisa: "",
   });
+  const [dateFilter, setDateFilter] = useState({
+    after: null,
+    before: null,
+    field: null,
+  });
+
   const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalForm, setModalForm] = useState({});
@@ -44,6 +53,14 @@ function Formularios() {
           .includes(filters.pesquisa.toUpperCase())
       );
     }
+    if (dateFilter.after && dateFilter.before && dateFilter.field != null) {
+      if (!newArr) newArr = forms;
+      newArr = newArr.filter(
+        (call) =>
+          call[dateFilter.field] >= dateFilter.after &&
+          call[dateFilter.field] <= dateFilter.before
+      );
+    }
     if (!newArr) {
       setFilteredForms(forms);
     } else {
@@ -58,6 +75,13 @@ function Formularios() {
     } else {
       return "bg-[#fff]";
     }
+  }
+  async function handleOpenModal(form) {
+    let { data } = await axios.get(
+      `/api/almoxarifado/getFormularios?id=${form._id}`
+    );
+    setModalForm(data);
+    setModalIsOpen(true);
   }
   useEffect(() => {
     if (session?.user.accessibleRoutes.includes("Almoxarifado")) {
@@ -93,22 +117,93 @@ function Formularios() {
             </button>
             <input
               type={"text"}
-              placeholder="Digite o nome do cliente"
               value={filters.pesquisa}
-              className={
-                "outline-none p-1.5 rounded border border-gray-200 placeholder:italic"
-              }
+              className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+              placeholder="DIGITE O NOME DO CONTRATO"
               onChange={(e) =>
                 setFilters({ ...filters, pesquisa: e.target.value })
               }
             />
-            <button
-              onClick={filterProjects}
-              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] h-[36px] font-bold rounded px-2 items-center gap-x-2"
-            >
-              <p>Filtrar</p>
-              <AiOutlineSearch />
-            </button>
+
+            <div className="flex gap-x-2 w-full lg:w-fit">
+              <div className="flex flex-col w-fit items-center">
+                <span className="uppercase font-bold font-raleway text-center text-sm">
+                  Depois de:
+                </span>
+                <input
+                  className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                  type="date"
+                  value={
+                    dateFilter.after &&
+                    new Date(dateFilter.after).toISOString().slice(0, 10)
+                  }
+                  onChange={(e) =>
+                    setDateFilter({
+                      ...dateFilter,
+                      after: isNaN(e.target.value)
+                        ? new Date(e.target.value).toISOString()
+                        : null,
+                    })
+                  }
+                />
+              </div>
+              <div className="flex flex-col w-fit items-center">
+                <span className="uppercase font-bold font-raleway text-center text-sm">
+                  Antes de:
+                </span>
+                <input
+                  className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                  type="date"
+                  value={
+                    dateFilter.before &&
+                    new Date(dateFilter.before).toISOString().slice(0, 10)
+                  }
+                  onChange={(e) =>
+                    setDateFilter({
+                      ...dateFilter,
+                      before: isNaN(e.target.value)
+                        ? new Date(e.target.value).toISOString()
+                        : null,
+                    })
+                  }
+                />
+              </div>
+              <div className="w-full lg:w-[250px]">
+                <Select
+                  isMulti={false}
+                  placeholder={"CAMPO DE FILTRO"}
+                  styles={{
+                    control: (base, state) => ({
+                      ...base,
+                      width: "100%",
+                      minHeight: "41px",
+                    }),
+                  }}
+                  options={[
+                    {
+                      label: "SAÍDA DE OBRA",
+                      value: "saidaDeObra",
+                    },
+                    {
+                      label: "ABERTURA",
+                      value: "abertura",
+                    },
+                    { label: "NÃO DEFINIDO", value: null },
+                  ]}
+                  onChange={(e) =>
+                    setDateFilter({
+                      ...dateFilter,
+                      field: e.value,
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <FilterButton
+              text={"FILTRAR"}
+              icon={<AiOutlineSearch />}
+              handleClick={filterProjects}
+            />
           </div>
         </div>
         <div
@@ -122,8 +217,7 @@ function Formularios() {
             <div
               key={form._id}
               onClick={() => {
-                setModalForm(form);
-                setModalIsOpen(true);
+                handleOpenModal(form);
               }}
               className={`w-[250px] lg:w-[450px] ${getCardColor(
                 form.efetivado
@@ -133,11 +227,21 @@ function Formularios() {
                 <p className="text-xs text-gray-700">{form.nomeDoContrato}</p>
                 <p className="text-xs text-[#15599a]">#{form.codigoProjeto}</p>
               </div>
-              <div className="flex items-center justify-center">
-                <div>
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex flex-col gap-1 items-start">
                   <span className="text-xxs">RESPONSÁVEL</span>
                   <p className="text-xs text-gray-600">
                     {form.responsavel && form.responsavel}
+                  </p>
+                </div>
+                <div className="flex flex-col gap-1 items-end">
+                  <span className="text-xxs">SAÍDA DE OBRA</span>
+                  <p className="text-xs text-gray-600">
+                    {form.saidaDeObra
+                      ? dayjs(form.saidaDeObra)
+                          .add(3, "hour")
+                          .format("DD/MM/YYYY")
+                      : "-"}
                   </p>
                 </div>
               </div>

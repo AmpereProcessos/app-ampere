@@ -9,7 +9,15 @@ export default async function handler(req, res) {
   } else if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("formularios");
-    let forms = await collection.find({}).toArray();
+    let forms = await collection
+      .aggregate([
+        {
+          $sort: {
+            _id: -1,
+          },
+        },
+      ])
+      .toArray();
     res.json(forms);
   } else if (req.method === "PUT") {
     const db = await connectToDatabase(process.env.DB_KEY);

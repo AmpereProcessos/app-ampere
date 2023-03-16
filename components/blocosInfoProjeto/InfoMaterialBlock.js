@@ -67,9 +67,9 @@ function InfoMaterialBlock({
           <Link
             href={`/almoxarifado/pdfFormulario/${infoHolder.material.formularioId}?backTo=adm`}
           >
-            <p className="cursor-pointer bg-[#15599a] text-white items-center justify-center p-2 rounded font-bold">
+            <a className="cursor-pointer bg-[#15599a] text-white items-center justify-center p-2 rounded font-bold">
               VER SOLICITAÇÃO
-            </p>
+            </a>
           </Link>
         )}
         <SelectInput

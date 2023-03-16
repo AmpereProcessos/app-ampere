@@ -101,7 +101,9 @@ function Vendas() {
   }
   useEffect(() => {
     if (session?.user.accessibleRoutes.includes("Vendas")) {
-      getProjects(session.user);
+      if (!projects) {
+        getProjects(session.user);
+      }
     } else {
       if (session?.user) {
         router.push("/");

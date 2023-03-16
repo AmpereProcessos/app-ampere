@@ -228,7 +228,7 @@ export default PDFFormulario;
 export async function getServerSideProps({ query }) {
   // Fetch data from external API
   const id = query.id;
-  const backTo = query.backTo;
+  const backTo = query.backTo ? query.backTo : "";
   const db = await connectToDatabase(process.env.DB_KEY);
   const collection = db.collection("formularios");
   let form = await collection.findOne({

@@ -1,7 +1,8 @@
 import axios from "axios";
 import dayjs from "dayjs";
+import Link from "next/link";
 import React, { useState } from "react";
-
+import { TbExternalLink } from "react-icons/tb";
 function FormAlmoxarifadoCard({ form, handleOpenModal, getForms }) {
   const [msg, setMsg] = useState({ text: "", color: "" });
   const [formInfo, setFormInfo] = useState(form);
@@ -60,6 +61,18 @@ function FormAlmoxarifadoCard({ form, handleOpenModal, getForms }) {
             {formInfo.responsavel && formInfo.responsavel}
           </p>
         </div>
+        {form.efetivado && (
+          <div className="flex items-center">
+            <Link href={`/almoxarifado/pdfFormulario/${form._id}`}>
+              <a
+                onClick={(e) => e.stopPropagation()}
+                className="p-1 rounded h-[30px] font-bold text-[#fead61] border border-[#fead61] hover:text-black hover:bg-[#fead61]"
+              >
+                <TbExternalLink />
+              </a>
+            </Link>
+          </div>
+        )}
         <div className="flex flex-col gap-1 items-end">
           <span className="text-xxs">SAÍDA DE OBRA</span>
           {msg.text ? (

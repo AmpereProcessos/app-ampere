@@ -319,7 +319,9 @@ function ModalCallPPS({
                 className="text-xs grow text-center outline-none mt-2 lg:mt-0"
               >
                 {respChamadosPPS.map((resp) => (
-                  <option value={resp.value}>{resp.label}</option>
+                  <option key={resp.value} value={resp.value}>
+                    {resp.label}
+                  </option>
                 ))}
               </select>
             </div>

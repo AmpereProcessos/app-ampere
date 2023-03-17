@@ -1,10 +1,12 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import { AppContext } from "../context/AppContext";
 import { respChamadosPPS } from "../utils/constants";
 import PPSModalCallInfo from "./PPSModalCallInfo";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -392,13 +394,12 @@ function ModalCallPPS({
               </p>
             )}
             {editor && (
-              <div className="text-center">
-                <button
-                  onClick={saveProject}
-                  className="px-2 py-1 font-raleway mt-2 hover:bg-[#15599a] hover:text-white font-bold rounded-lg bg-blue-400"
-                >
-                  SALVAR
-                </button>
+              <div className="flex items-center justify-center mt-2">
+                <SaveButton
+                  text={"SALVAR"}
+                  icon={<FaSave />}
+                  handleClick={saveProject}
+                />
               </div>
             )}
           </div>

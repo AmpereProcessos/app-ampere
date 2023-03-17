@@ -3,6 +3,7 @@ import Select from "react-select";
 import { VscChromeClose } from "react-icons/vsc";
 import { FaSave } from "react-icons/fa";
 import axios from "axios";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -220,12 +221,11 @@ function BaixaPerformanceModal({ info, setModalIsOpen, handleUpdates }) {
               <div className="flex items-center justify-center w-full mt-4">
                 {info.created ? (
                   <div className="flex flex-col gap-2">
-                    <button
-                      onClick={saveChanges}
-                      className="p-2 bg-[#fead49] text-[#15599a] rounded hover:bg-[#15599a] hover:text-white font-bold transition duration-300 ease-in-out hover:scale-105"
-                    >
-                      SALVAR
-                    </button>
+                    <SaveButton
+                      text={"SALVAR"}
+                      icon={<FaSave />}
+                      handleClick={saveChanges}
+                    />
                     <button
                       onClick={closeCall}
                       className="p-2 bg-green-300 rounded font-bold hover:bg-green-500 hover:text-white transition duration-300 ease-in-out hover:scale-105"

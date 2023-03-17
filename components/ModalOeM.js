@@ -30,6 +30,7 @@ import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
 import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
 import InfoProjetoBlock from "./blocosInfoProjeto/InfoProjetoBlock";
 import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -178,15 +179,13 @@ function ModalOeM({
               )}
             </div>
 
-            <div className="flex gap-x-2">
+            <div className="flex gap-x-2 items-center">
               {msg && <p className="text-sm italic text-green-400">{msg}</p>}
-              <button
-                onClick={handleChanges}
-                className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
-              >
-                <p>Salvar alterações</p>
-                <FaSave />
-              </button>
+              <SaveButton
+                text={"Salvar alterações"}
+                icon={<FaSave />}
+                handleClick={handleChanges}
+              />
               <button>
                 <VscChromeClose
                   onClick={() => setModalIsOpen(false)}

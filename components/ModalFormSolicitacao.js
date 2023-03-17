@@ -14,6 +14,7 @@ import { VscChromeClose } from "react-icons/vsc";
 import { FaSave } from "react-icons/fa";
 import { useRouter } from "next/router";
 import axios from "axios";
+import SaveButton from "./utils/Buttons/SaveButton";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -834,13 +835,11 @@ function ModalFormSolicitacao({
                   <p className={`italic ${msg.color}`}>{msg.text}</p>
                 )}
                 {editor && (
-                  <button
-                    onClick={saveChanges}
-                    className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
-                  >
-                    <p>Salvar alterações</p>
-                    <FaSave />
-                  </button>
+                  <SaveButton
+                    text={"Salvar alterações"}
+                    icon={<FaSave />}
+                    handleClick={saveChanges}
+                  />
                 )}
                 <button>
                   <VscChromeClose

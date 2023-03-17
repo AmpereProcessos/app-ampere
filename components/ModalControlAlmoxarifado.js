@@ -4,6 +4,7 @@ import { FaSave } from "react-icons/fa";
 import Select from "react-select";
 import { cities } from "../utils/constants";
 import axios from "axios";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -134,13 +135,11 @@ function ControleAlmoxarifado({
                 <p className={`text-center italic ${msg.color}`}>{msg.text}</p>
               )}
               <div className="mt-4 flex justify-center">
-                <button
-                  onClick={handleAlteracoes}
-                  className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
-                >
-                  <p>SALVAR ALTERAÇÕES</p>
-                  <FaSave />
-                </button>
+                <SaveButton
+                  text={"SALVAR"}
+                  icon={<FaSave />}
+                  handleClick={handleAlteracoes}
+                />
               </div>
             </div>
           </div>

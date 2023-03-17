@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import { FaSave } from "react-icons/fa";
 import axios from "axios";
+import SaveButton from "./utils/Buttons/SaveButton";
 function MaterialCard({ project }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({});
@@ -190,13 +191,13 @@ function MaterialCard({ project }) {
               </label>
             </div>
           </div>
-          <button
-            onClick={() => handleChanges(changes)}
-            className="flex items-center gap-x-3 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
-          >
-            <p>Salvar alterações</p>
-            <FaSave />
-          </button>
+          <div className="flex items-center justify-center">
+            <SaveButton
+              text={"Salvar alterações"}
+              icon={<FaSave />}
+              handleClick={() => handleChanges(changes)}
+            />
+          </div>
         </div>
       </div>
       <div className="w-full flex flex-wrap items-center justify-center gap-x-4  border-t border-gray-200">

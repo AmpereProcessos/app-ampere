@@ -389,7 +389,7 @@ function VisitaTecnica() {
                     <p className="text-xxs text-gray-700">ABERTURA</p>
                     <p className="text-xs text-gray-700 font-bold">
                       {form.dataDeAbertura
-                        ? dayjs(form.dataDeAbertura).format("DD/MM/YYYY HH:MM")
+                        ? new Date(form.dataDeAbertura).toLocaleString()
                         : "-"}
                     </p>
                   </div>

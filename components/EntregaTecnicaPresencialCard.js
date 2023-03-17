@@ -2,6 +2,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import { FaSave } from "react-icons/fa";
+import SaveButton from "./utils/Buttons/SaveButton";
 function EntregaTecnicaPresencialCard({ info }) {
   const [changes, setChanges] = useState({});
   const [message, setMessage] = useState({ text: "", color: "" });
@@ -86,12 +87,13 @@ function EntregaTecnicaPresencialCard({ info }) {
               </label>
             </div>
           </div>
-          <button
-            onClick={saveChanges}
-            className="flex items-center rounded gap-2 p-2 font-bold border border-[#15599a] text-[#15599a] hover:text-white hover:bg-[#15599a]"
-          >
-            Salvar <FaSave />
-          </button>
+          <div className="flex items-center justify-center">
+            <SaveButton
+              text={"SALVAR"}
+              icon={<FaSave />}
+              handleClick={saveChanges}
+            />
+          </div>
         </div>
       </div>
       {message.text && (

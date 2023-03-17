@@ -1,9 +1,11 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
+import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import AnexoArquivo from "./AnexoArquivo";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -265,12 +267,11 @@ function ModalCallSuprimentos({ setModalIsOpen, info, getCalls, modalIsOpen }) {
                 {message.text}
               </p>
             )}
-            <button
-              onClick={() => handleChanges()}
-              className="mt-3 self-center rounded w-fit p-2 border border-[#15599a] text-[#15599a] hover:text-white hover:bg-[#15599a] hover:font-bold"
-            >
-              SALVAR ALTERAÇÕES
-            </button>
+            <SaveButton
+              text={"SALVAR"}
+              icon={<FaSave />}
+              handleClick={handleChanges}
+            />
             {modalInfo.status != "FECHADO" ? (
               <button
                 onClick={() => closeCall()}

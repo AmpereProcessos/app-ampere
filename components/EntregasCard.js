@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
+import SaveButton from "./utils/Buttons/SaveButton";
+import { FaSave } from "react-icons/fa";
 function EntregasCard({ project, index }) {
   const { credentials } = useContext(AppContext);
   const [prevEntrega, setPrevEntrega] = useState(
@@ -128,12 +130,11 @@ function EntregasCard({ project, index }) {
           />
         </div>
         <div className="flex justify-center items-center col-span-1">
-          <button
-            onClick={handleChanges}
-            className="p-1 text-white rounded text-sm font-bold bg-blue-400 hover:bg-blue-700"
-          >
-            Salvar
-          </button>
+          <SaveButton
+            text={"SALVAR"}
+            icon={<FaSave />}
+            handleClick={handleChanges}
+          />
         </div>
       </div>
       {msg.text && (

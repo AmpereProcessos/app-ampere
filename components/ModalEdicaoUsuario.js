@@ -6,6 +6,8 @@ import { BsCheckLg } from "react-icons/bs";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
 import { routes, vendedores } from "../utils/constants";
+import SaveButton from "./utils/Buttons/SaveButton";
+import { FaSave } from "react-icons/fa";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -493,13 +495,13 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                 {msg.text}
               </p>
             ) : (
-              <button
-                onClick={saveChanges}
-                type="button"
-                className="mt-4 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800  font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800"
-              >
-                SALVAR ALTERAÇÕES
-              </button>
+              <div className="flex items-center justify-center">
+                <SaveButton
+                  text={"SALVAR"}
+                  icon={<FaSave />}
+                  handleClick={saveChanges}
+                />
+              </div>
             )}
           </div>
         </div>

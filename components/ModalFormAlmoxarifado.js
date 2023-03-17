@@ -7,6 +7,7 @@ import { cities } from "../utils/constants";
 import axios from "axios";
 import MaterialItem from "./MaterialItem";
 import Link from "next/link";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -302,13 +303,11 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                   >
                     DAR BAIXA
                   </button>
-                  <button
-                    onClick={saveChanges}
-                    className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
-                  >
-                    <p>Salvar alterações</p>
-                    <FaSave />
-                  </button>
+                  <SaveButton
+                    text={"Salvar alterações"}
+                    icon={<FaSave />}
+                    handleClick={saveChanges}
+                  />
                 </div>
               )}
             </div>

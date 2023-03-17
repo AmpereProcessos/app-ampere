@@ -6,6 +6,8 @@ import { AppContext } from "../context/AppContext";
 import DateInput from "./DateInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
+import SaveButton from "./utils/Buttons/SaveButton";
+import { FaSave } from "react-icons/fa";
 
 function ComissionamentoPosObraCard({ project, index }) {
   const { credentials } = useContext(AppContext);
@@ -90,12 +92,13 @@ function ComissionamentoPosObraCard({ project, index }) {
             {msg.text}
           </p>
         )}
-        <button
-          onClick={handleChanges}
-          className="p-1 rounded bg-blue-300 hover:bg-[#15599a] hover:text-white hover:scale-105 duration-300 ease-in-out font-bold"
-        >
-          SALVAR
-        </button>
+        <div className="flex items-center justify-center">
+          <SaveButton
+            text={"SALVAR"}
+            icon={<FaSave />}
+            handleClick={handleChanges}
+          />
+        </div>
       </div>
       <div className="col-span-9 flex flex-col row-span-5">
         <div className="flex items-center justify-center gap-4">

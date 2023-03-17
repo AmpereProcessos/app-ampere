@@ -216,13 +216,6 @@ function ModalSuprimentos({
                 icon={<FaSave />}
                 handleClick={handleChanges}
               />
-              {/* <button
-                onClick={handleChanges}
-                className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
-              >
-                <p>Salvar alterações</p>
-                <FaSave />
-              </button> */}
               <button>
                 <VscChromeClose
                   onClick={() => setModalIsOpen(false)}

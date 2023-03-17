@@ -8,6 +8,8 @@ import { BsPatchCheckFill } from "react-icons/bs";
 import axios from "axios";
 import NumberFloatingInput from "./NumberFloatingInput";
 import NumberInput from "./NumberInput";
+import SaveButton from "./utils/Buttons/SaveButton";
+import { FaSave } from "react-icons/fa";
 function phoneMask(value) {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -271,17 +273,13 @@ function LeadCard({ lead, getLeads }) {
                 setInfo({ ...infoHolder, vendedor: value })
               }
             />
-            <button
-              onClick={saveChanges}
-              className="p-1 rounded bg-blue-300 hover:bg-[#15599a] text-white font-bold text-sm flex items-center gap-2"
-            >
-              <p>{lead.vendedor != "NÃO DEFINIDO" ? "SALVAR" : "ENVIAR"}</p>
-              {lead.vendedor ? (
-                <MdSave style={{ color: "white" }} />
-              ) : (
-                <MdSend style={{ color: "white" }} />
-              )}
-            </button>
+            <div className="flex items-center justify-center">
+              <SaveButton
+                text={"SALVAR"}
+                icon={<FaSave />}
+                handleClick={saveChanges}
+              />
+            </div>
           </div>
           <div className="grid grid-cols-1 relative">
             {deleteMenu ? (

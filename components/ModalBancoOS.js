@@ -4,6 +4,7 @@ import { VscChromeClose } from "react-icons/vsc";
 import { FaSave } from "react-icons/fa";
 import TextFloatingInput from "./TextFloatingInput";
 import axios from "axios";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -371,12 +372,11 @@ function ModalBancoOS({ info, clientName, projectID, setModalIsOpen, index }) {
               </p>
             )}
             <div className="flex items-center justify-center mt-2">
-              <button
-                onClick={handleChanges}
-                className="p-2 font-bold rounded flex items-center border border-[#15599a] text-[#15599a] hover:text-white hover:bg-[#15599a]"
-              >
-                SALVAR <FaSave style={{ marginLeft: "2px" }} />
-              </button>
+              <SaveButton
+                text={"SALVAR"}
+                icon={<FaSave />}
+                handleClick={handleChanges}
+              />
             </div>
           </div>
         </div>

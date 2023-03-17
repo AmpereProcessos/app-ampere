@@ -25,6 +25,7 @@ import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
 import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
 import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
 import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -147,13 +148,11 @@ function ModalADM({
               {msg.text && (
                 <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
               )}
-              <button
-                onClick={handleChanges}
-                className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
-              >
-                <p>Salvar alterações</p>
-                <FaSave />
-              </button>
+              <SaveButton
+                text={"Salvar alterações"}
+                icon={<FaSave />}
+                handleClick={handleChanges}
+              />
               <button>
                 <VscChromeClose
                   onClick={() => setModalIsOpen(false)}

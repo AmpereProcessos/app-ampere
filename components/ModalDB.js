@@ -18,6 +18,7 @@ import NumberInput from "./NumberInput";
 import axios from "axios";
 import Link from "next/link";
 import OSCreationBlock from "./OSCreationBlock";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -89,20 +90,18 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   #{infoHolder.codigoSVB}
                 </p>
               )}
-              <div className="flex gap-x-2">
+              <div className="flex gap-x-2 items-center">
                 {msg.text && (
                   <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
                 )}
                 {(credentials?.accessibleRoutes.includes("O&M") ||
                   credentials?.accessibleRoutes.includes("Obras") ||
                   editor) && (
-                  <button
-                    onClick={handleChanges}
-                    className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
-                  >
-                    <p>Salvar alterações</p>
-                    <FaSave />
-                  </button>
+                  <SaveButton
+                    text={"Salvar alterações"}
+                    icon={<FaSave />}
+                    handleClick={handleChanges}
+                  />
                 )}
                 <button>
                   <VscChromeClose

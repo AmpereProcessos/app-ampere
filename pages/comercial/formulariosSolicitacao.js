@@ -246,10 +246,11 @@ function FormulariosSolicitacao() {
                     <div className="flex flex-col gap-1 items-center">
                       <span className="text-xxs">SOLICITAÇÃO</span>
                       <p className="text-xs text-gray-600">
-                        {solicitacao.dataSolicitacao &&
-                          dayjs(solicitacao.dataSolicitacao).format(
-                            "DD/MM/YYYY HH:MM"
-                          )}
+                        {solicitacao.dataSolicitacao
+                          ? new Date(
+                              solicitacao.dataSolicitacao
+                            ).toLocaleString()
+                          : "-"}
                       </p>
                     </div>
                     <div className="flex flex-col gap-1 items-end">

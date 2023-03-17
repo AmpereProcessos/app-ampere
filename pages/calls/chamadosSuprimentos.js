@@ -5,11 +5,11 @@ import React, { useEffect, useState } from "react";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { AiOutlineReload, AiOutlineSearch } from "react-icons/ai";
 import ModalCallSuprimentos from "../../components/ModalCallSuprimentos";
-import FetchDataButton from "../../components/utils/FetchDataButton";
+import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
 import { AnimatePresence, motion } from "framer-motion";
 import Select from "react-select";
 import { fornecedores } from "../../utils/constants";
-import FilterButton from "../../components/utils/FilterButton";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 

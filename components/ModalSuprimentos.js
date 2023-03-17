@@ -24,6 +24,7 @@ import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
 import InfoClienteBlock from "./blocosInfoProjeto/InfoClienteBlock";
 import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
 import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -206,17 +207,22 @@ function ModalSuprimentos({
                 </p>
               )}
             </div>
-            <div className="flex gap-x-2">
+            <div className="flex gap-x-2 items-center">
               {msg.text && (
                 <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
               )}
-              <button
+              <SaveButton
+                text={"Salvar alterações"}
+                icon={<FaSave />}
+                handleClick={handleChanges}
+              />
+              {/* <button
                 onClick={handleChanges}
                 className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
               >
                 <p>Salvar alterações</p>
                 <FaSave />
-              </button>
+              </button> */}
               <button>
                 <VscChromeClose
                   onClick={() => setModalIsOpen(false)}

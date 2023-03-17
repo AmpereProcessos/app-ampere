@@ -3,13 +3,7 @@ import { equipesTecnicas, projetistas, vendedores } from "../utils/constants";
 import axios from "axios";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
-import TextInput from "./TextInput";
-import SelectInput from "./SelectInput";
-import DateInput from "./DateInput";
-import NumberInput from "./NumberInput";
 import NotificationCreationBlock from "./NotificationCreationBlock";
-import Link from "next/link";
-import OSCreationBlock from "./OSCreationBlock";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import { useKey } from "../utils/hooks";
 import InfoPadraoBlock from "./blocosInfoProjeto/InfoPadraoBlock";
@@ -22,6 +16,7 @@ import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
 import InfoProjetoBlock from "./blocosInfoProjeto/InfoProjetoBlock";
 import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
 import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -176,15 +171,13 @@ function ModalProjetos({
                   </div>
                 )}
             </div>
-            <div className="flex gap-x-2">
+            <div className="flex gap-x-2 items-center">
               {msg && <p className="text-sm italic text-green-400">{msg}</p>}
-              <button
-                onClick={handleChanges}
-                className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
-              >
-                <p>Salvar alterações</p>
-                <FaSave />
-              </button>
+              <SaveButton
+                text={"Salvar alterações"}
+                icon={<FaSave />}
+                handleClick={handleChanges}
+              />
               <button>
                 <VscChromeClose
                   onClick={() => setModalIsOpen(false)}

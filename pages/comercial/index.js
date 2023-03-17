@@ -14,7 +14,7 @@ import {
   vendedores,
 } from "../../utils/constants";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
-import FilterButton from "../../components/utils/FilterButton";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
 import ComercialSkeleton from "../../components/skeletons/ComercialSkeleton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";

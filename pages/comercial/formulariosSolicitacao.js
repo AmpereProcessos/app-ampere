@@ -8,7 +8,7 @@ import { tiposDeServico, vendedores } from "../../utils/constants";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
-import FilterButton from "../../components/utils/FilterButton";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
 import { AiOutlineSearch } from "react-icons/ai";
 import dayjs from "dayjs";
 function FormulariosSolicitacao() {

@@ -13,7 +13,7 @@ import { cidadesAtendidas, vendedores } from "../../utils/constants";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 import { AnimatePresence, motion } from "framer-motion";
-import FilterButton from "../../components/utils/FilterButton";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
 function Posvenda() {
   const router = useRouter();
   const { data: session, status } = useSession({

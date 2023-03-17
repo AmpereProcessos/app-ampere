@@ -11,8 +11,8 @@ import Link from "next/link";
 import { AiOutlineSearch } from "react-icons/ai";
 import { cities } from "../../utils/constants";
 import ModalCallADM from "../../components/ModalCallADM";
-import FetchDataButton from "../../components/utils/FetchDataButton";
-import FilterButton from "../../components/utils/FilterButton";
+import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 

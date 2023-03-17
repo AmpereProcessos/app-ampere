@@ -12,8 +12,8 @@ import ModalNovoLead from "../../components/ModalNovoLead";
 import LeadCard from "../../components/LeadCard";
 import { cidadesAtendidas, vendedores } from "../../utils/constants";
 import AnimatedTextAndIconButton from "../../components/AnimatedTextAndIconButton";
-import FilterButton from "../../components/utils/FilterButton";
-import FetchDataButton from "../../components/utils/FetchDataButton";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
+import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 

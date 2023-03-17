@@ -17,6 +17,7 @@ import { VscChromeClose } from "react-icons/vsc";
 import { MdOutlineAddCircle } from "react-icons/md";
 import { FiDelete } from "react-icons/fi";
 import axios from "axios";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -235,13 +236,11 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
             )}
             <div className="flex items-center justify-around gap-x-2">
               {msg.text && <p className={`italic ${msg.color}`}>{msg.text}</p>}
-              <button
-                onClick={saveChanges}
-                className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm w-fit"
-              >
-                <p>Salvar alterações</p>
-                <FaSave />
-              </button>
+              <SaveButton
+                text={"Salvar alterações"}
+                icon={<FaSave />}
+                handleClick={saveChanges}
+              />
               <button>
                 <VscChromeClose
                   onClick={() => setModalIsOpen(false)}
@@ -2591,12 +2590,11 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   {imageMsg.text}
                 </p>
               )}
-              <button
-                onClick={uploadImage}
-                className="p-2 rounded bg-[#fead61] font-bold hover:bg-[#15599a] hover:text-white"
-              >
-                SALVAR IMAGEM
-              </button>
+              <SaveButton
+                text={"SALVAR IMAGEM"}
+                icon={<FaSave />}
+                handleClick={uploadImage}
+              />
             </div>
             <div className="w-full flex items-center justify-center gap-2 border border-[#15599a] p-4 shadow-lg bg-[#fff]">
               <SelectInput

@@ -11,7 +11,7 @@ import ADMSkeleton from "../../components/skeletons/ADMSkeleton";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
 import { equipesTecnicas, statusLiberacao } from "../../utils/constants";
 import dayjs from "dayjs";
-import FilterButton from "../../components/utils/FilterButton";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 function Administracao() {

@@ -193,6 +193,7 @@ function ModalCallPPS({
     }, []); // Empty array ensures that effect is only run on mount and unmount
     return keyPressed;
   }
+  console.log("TESTE");
   console.log(info);
   return (
     <>

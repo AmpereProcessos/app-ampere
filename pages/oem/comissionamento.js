@@ -13,7 +13,7 @@ import {
   equipesTecnicas,
   vendedores,
 } from "../../utils/constants";
-import FilterButton from "../../components/utils/FilterButton";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 

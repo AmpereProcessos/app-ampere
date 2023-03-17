@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import SelectInput from "../components/SelectInput";
 import dayjs from "dayjs";
 import axios from "axios";
+import SaveButton from "./utils/Buttons/SaveButton";
+import { FaSave } from "react-icons/fa";
 function PosVendaCard({ project, getUpdates, cardMode, editor }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({
@@ -597,18 +599,19 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
                 {msg.text}
               </p>
             )}
-            <button
-              onClick={() => {
-                handleChanges({
-                  nps: changes.nps,
-                  "jornada.dataNps": changes.dataNPS ? new Date() : null,
-                  "jornada.obsJornada": changes.obsJornada,
-                });
-              }}
-              className="font-bold bg-[#15599a] self-end w-fit h-fit text-white hover:bg-[#fead61] hover:text-black p-1 rounded"
-            >
-              SALVAR
-            </button>
+            <div className="flex items-center justify-center">
+              <SaveButton
+                text={"SALVAR"}
+                icon={<FaSave />}
+                handleClick={() => {
+                  handleChanges({
+                    nps: changes.nps,
+                    "jornada.dataNps": changes.dataNPS ? new Date() : null,
+                    "jornada.obsJornada": changes.obsJornada,
+                  });
+                }}
+              />
+            </div>
           </div>
         </div>
       ) : (

@@ -17,6 +17,7 @@ import { VscChromeClose } from "react-icons/vsc";
 import { MdOutlineAddCircle } from "react-icons/md";
 import { FiDelete } from "react-icons/fi";
 import axios from "axios";
+import SaveButton from "./utils/Buttons/SaveButton";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -216,13 +217,11 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
             )}
             <div className="flex items-center justify-around gap-x-2">
               {msg.text && <p className={`italic ${msg.color}`}>{msg.text}</p>}
-              <button
-                onClick={saveChanges}
-                className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm w-fit"
-              >
-                <p>Salvar alterações</p>
-                <FaSave />
-              </button>
+              <SaveButton
+                text={"Salvar alterações"}
+                icon={<FaSave />}
+                handleClick={saveChanges}
+              />
               <button>
                 <VscChromeClose
                   onClick={() => setModalIsOpen(false)}

@@ -14,7 +14,7 @@ import { useSession } from "next-auth/react";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import LoadingPage from "../../components/utils/LoadingPage";
-import FilterButton from "../../components/utils/FilterButton";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
 function BandoDeDados({ data }) {
   const router = useRouter();
   const { data: session, status } = useSession({

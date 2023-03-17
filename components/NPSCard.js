@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import NumberInput from "./NumberInput";
 import axios from "axios";
+import SaveButton from "./utils/Buttons/SaveButton";
+import { FaSave } from "react-icons/fa";
 function NPSCard({ project, credentials }) {
   const [nps, setNps] = useState(project.nps);
   const [obsNps, setObsNps] = useState(project.jornada.obsNps);
@@ -82,13 +84,12 @@ function NPSCard({ project, credentials }) {
               : "-"}
           </p>
         </div>
-        <div>
-          <button
-            onClick={handleChanges}
-            className="text-xs bg-[#fead41] font-bold hover:text-white hover:bg-[#15599a] p-2 rounded"
-          >
-            SALVAR
-          </button>
+        <div className="flex items-center justify-center">
+          <SaveButton
+            text={"SALVAR"}
+            icon={<FaSave />}
+            handleClick={handleChanges}
+          />
         </div>
       </div>
       {msg.text && (

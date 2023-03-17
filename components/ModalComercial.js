@@ -38,45 +38,8 @@ import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
 import InfoProjetoBlock from "./blocosInfoProjeto/InfoProjetoBlock";
 import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
 import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
-const MODAL_STYLES = {
-  position: "fixed",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%,-50%)",
-  backgroundColor: "#fff",
-  width: "93%",
-  height: "98%",
-  borderRadius: "10px",
-  padding: "10px",
-  zIndex: 1000,
-};
-const OVERLAY_STYLES = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: "rgba(0,0,0,.85)",
-  zIndex: 1000,
-};
-const backdrop = {
-  visible: { opacity: 1 },
-  hidden: { opacity: 0 },
-};
-const modal = {
-  hidden: {
-    y: "-50%",
-    x: "-50%",
-    scale: 0.7,
-    opacity: 0.3,
-  },
-  visible: {
-    y: "-50%",
-    x: "-50%",
-    scale: 1,
-    opacity: 1,
-  },
-};
+import SaveButton from "./utils/Buttons/SaveButton";
+
 function formatCnpjCpf(value) {
   const cnpjCpf = value.replace(/\D/g, "");
 
@@ -215,17 +178,22 @@ function ModalComercial({
                 </p>
               )}
             </div>
-            <div className="flex gap-x-2">
+            <div className="flex gap-x-2 items-center">
               {msg.text && (
                 <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
               )}
-              <button
+              <SaveButton
+                text={"Salvar alterações"}
+                icon={<FaSave />}
+                handleClick={handleChanges}
+              />
+              {/* <button
                 onClick={handleChanges}
                 className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
               >
                 <p>Salvar alterações</p>
                 <FaSave />
-              </button>
+              </button> */}
               <button>
                 <VscChromeClose
                   onClick={() => setModalIsOpen(false)}

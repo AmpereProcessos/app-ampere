@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
-import FilterButton from "../../components/utils/FilterButton";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
 function VisitaTecnica() {
   const router = useRouter();
   const { data: session, status } = useSession({

@@ -17,7 +17,7 @@ import {
 } from "../../utils/constants";
 import { AppContext } from "../../context/AppContext";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
-import FilterButton from "../../components/utils/FilterButton";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 function Projetos() {

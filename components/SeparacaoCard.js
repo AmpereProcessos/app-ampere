@@ -3,6 +3,7 @@ import SelectInput from "./SelectInput";
 import { FaSave } from "react-icons/fa";
 import { AiFillEye } from "react-icons/ai";
 import axios from "axios";
+import SaveButton from "./utils/Buttons/SaveButton";
 function SeparacaoCard({ info, editor }) {
   const [infoHolder, setInfo] = useState(info);
   const [changes, setChanges] = useState({});
@@ -193,13 +194,11 @@ function SeparacaoCard({ info, editor }) {
         <p className={`${msg.color} italic text-center`}>{msg.text}</p>
       )}
       <div className="flex justify-center">
-        <button
-          onClick={handleChanges}
-          className="flex items-center gap-x-2 bg-[#15599a] hover:bg-blue-500 p-1 text-white font-bold rounded text-sm"
-        >
-          <p>Salvar alterações</p>
-          <FaSave />
-        </button>
+        <SaveButton
+          text={"Salvar alterações"}
+          icon={<FaSave />}
+          handleClick={handleChanges}
+        />
       </div>
     </div>
   );

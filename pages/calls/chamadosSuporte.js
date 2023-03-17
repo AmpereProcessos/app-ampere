@@ -17,9 +17,9 @@ import {
 } from "../../utils/constants";
 import { AppContext } from "../../context/AppContext";
 import dayjs from "dayjs";
-import FetchDataButton from "../../components/utils/FetchDataButton";
+import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
 import { AnimatePresence, motion } from "framer-motion";
-import FilterButton from "../../components/utils/FilterButton";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 

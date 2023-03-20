@@ -1199,6 +1199,7 @@ export const cidadesAtendidas = [
   "TRINDADE", // GO
   "PATOS DE MINAS", // MG
   "ITUMBIARA", // GO
+  "ITURAMA", // MG
   "CENTRALINA", // MG
   "SÃO GONÇALO DO ABAETÉ", // MG
   "PATROCÍNIO", // MG

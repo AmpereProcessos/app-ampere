@@ -1,18 +1,23 @@
 import axios from "axios";
 import Select from "react-select";
 import React, { useContext, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { AiOutlineSearch } from "react-icons/ai";
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
+import { AnimatePresence, motion } from "framer-motion";
+import { vendedores } from "../../utils/constants";
 import ComissaoGeralView from "../../components/ComissaoGeralView";
 import ComissaoPDFView from "../../components/ComissaoPDFView";
 import ComissaoPDFViewInside from "../../components/ComissaoPDFViewInside";
-import { vendedores } from "../../utils/constants";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import LoadingPage from "../../components/utils/LoadingPage";
-
+import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
+import { MdDateRange } from "react-icons/md";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
+import { BsDownload } from "react-icons/bs";
 const currentDate = new Date();
 
-function Comissao() {
+function ComissaoPage() {
   const router = useRouter();
   const { data: session, status } = useSession({
     required: true,
@@ -20,6 +25,9 @@ function Comissao() {
       router.push("/auth/authHome");
     },
   });
+
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
+
   const [view, setView] = useState("GERAL");
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -31,6 +39,7 @@ function Comissao() {
     after: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, -3),
     before: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1),
   });
+
   function getProjects() {
     axios
       .get(
@@ -41,6 +50,7 @@ function Comissao() {
         setProjects(res.data);
       });
   }
+
   function filterProjects() {
     var newArr;
     if (filters.vendedor.length > 0) {
@@ -61,6 +71,7 @@ function Comissao() {
       return newArr;
     }
   }
+
   function exportData() {
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
       JSON.stringify(filteredProjects)
@@ -119,8 +130,7 @@ function Comissao() {
     sumProjeto = sumProjeto != undefined ? sumProjeto : 0;
     sumPadrao = sumPadrao != undefined ? sumPadrao : 0;
     sumInside = sumInside != undefined ? sumInside : 0;
-    console.log("VALOR PROJETO", sumProjeto);
-    console.log("VALOR PADRÃO", sumPadrao);
+
     return {
       ativoProjeto: sumProjeto.toFixed(2),
       ativoPadrao: sumPadrao.toFixed(2),
@@ -135,6 +145,7 @@ function Comissao() {
     }
     return sum;
   }
+
   useEffect(() => {
     if (session?.user.manager || session?.user.visualizacao == "REGIONAL") {
       getProjects();
@@ -149,193 +160,251 @@ function Comissao() {
     if (session?.user?.manager || session?.user?.visualizacao == "REGIONAL")
       return (
         <div className="flex flex-col p-6 grow">
-          <div className="flex flex-col gap-2 items-center py-2 border-b border-gray-200">
-            <div className="flex items-center justify-center gap-3">
-              <h1 className="text-[#15599a] font-bold text-xl">COMISSÕES</h1>
-              <div className="hidden lg:flex gap-x-2">
-                <div className="flex flex-col w-fit items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">
-                    Depois de:
-                  </span>
-                  <input
-                    className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                    type="date"
-                    value={
-                      dateFilter.after &&
-                      new Date(dateFilter.after).toISOString().slice(0, 10)
-                    }
-                    onChange={(e) =>
-                      setDateFilter({
-                        ...dateFilter,
-                        after: isNaN(e.target.value) ? e.target.value : null,
-                      })
-                    }
+          <div className="flex flex-col items-center px-1 py-2 border-b border-gray-200">
+            <div className="flex items-center justify-between w-full">
+              <h1 className="font-bold uppercase text-center text-2xl text-[#15599a]">
+                COMISSÕES
+              </h1>
+              {dropdownMenuVisible ? (
+                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                  <IoMdArrowDropupCircle
+                    style={{ fontSize: "25px" }}
+                    onClick={() => setDropdownMenuVisible(false)}
                   />
                 </div>
-                <div className="flex flex-col w-fit items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">
-                    Antes de:
-                  </span>
-                  <input
-                    className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                    type="date"
-                    value={
-                      dateFilter.before &&
-                      new Date(dateFilter.before).toISOString().slice(0, 10)
-                    }
-                    onChange={(e) =>
-                      setDateFilter({
-                        ...dateFilter,
-                        before: isNaN(e.target.value) ? e.target.value : null,
-                      })
-                    }
+              ) : (
+                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                  <IoMdArrowDropdownCircle
+                    style={{ fontSize: "25px" }}
+                    onClick={() => setDropdownMenuVisible(true)}
                   />
                 </div>
-              </div>
-              <button
-                onClick={() => getProjects()}
-                className="flex bg-cyan-200 hover:text-white hover:bg-[#07F2E7] font-bold rounded py-2 px-2 items-center gap-x-2"
-              >
-                <p>BUSCAR DADOS</p>
-              </button>
+              )}
             </div>
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center justify-between gap-2">
-                <Select
-                  isMulti
-                  placeholder="VENDEDOR"
-                  onChange={(e) =>
-                    setFilters({
-                      ...filters,
-                      vendedor: e.map((x) => x.value),
-                    })
-                  }
-                  options={vendedores.map((vendedor) => {
-                    return { label: vendedor.nome, value: vendedor.nome };
-                  })}
-                />
-                <Select
-                  isMulti
-                  placeholder="INSIDER"
-                  onChange={(e) =>
-                    setFilters({
-                      ...filters,
-                      insider: e.map((x) => x.value),
-                    })
-                  }
-                  options={vendedores
-                    .filter((x) => x.qualificacao?.includes("INSIDE"))
-                    .map((vendedor) => {
-                      return { label: vendedor.nome, value: vendedor.nome };
-                    })}
-                />
-                <button
-                  onClick={filterProjects}
-                  className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-1 px-2 items-center gap-x-2"
+            <AnimatePresence>
+              {dropdownMenuVisible ? (
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0.6 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="flex flex-col w-full gap-y-2 mt-4"
                 >
-                  <p>Filtrar</p>
-                  <AiOutlineSearch />
-                </button>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={exportData}
-                  className="p-1 rounded bg-green-200 text-black font-bold hover:bg-[#44F213] hover:text-white"
-                >
-                  BAIXAR DADOS
-                </button>
-                <button
-                  onClick={() => setView("GERAL")}
-                  className={`p-1 cursor-pointer rounded font-bold ${
-                    view == "GERAL"
-                      ? "bg-[#15599a] text-white hover:bg-[#fead61] hover:text-black"
-                      : "bg-[#fead61] hover:bg-[#15599a] hover:text-white"
-                  }`}
-                >
-                  VISÃO GERAL
-                </button>
-                <button
-                  onClick={() => setView("PDF")}
-                  className={`p-1 cursor-pointer rounded font-bold ${
-                    view == "PDF"
-                      ? "bg-[#0781F2] text-white hover:bg-blue-300 hover:text-black"
-                      : "bg-blue-300 hover:bg-[#0781F2] hover:text-white"
-                  }`}
-                >
-                  VISÃO PDF
-                </button>
-                <button
-                  onClick={() => setView("PDF INSIDE")}
-                  className={`p-1 cursor-pointer rounded font-bold ${
-                    view == "PDF INSIDE"
-                      ? "bg-[#0781F2] text-white hover:bg-blue-300 hover:text-black"
-                      : "bg-blue-300 hover:bg-[#0781F2] hover:text-white"
-                  }`}
-                >
-                  VISÃO PDF INSIDE
-                </button>
-              </div>
-            </div>
-            <div className="flex items-center justify-center gap-1">
-              <div className="flex flex-col border-x border-gray-200 px-2">
-                <h1 className="text-[#15599a] font-bold text-center">
-                  FATURAMENTO TOTAL
-                </h1>
-                <p className="text-gray-700 text-center text-xs">
-                  R$ {Number(getTotalSold()).toLocaleString("pt-br")}
-                </p>
-              </div>
-              <div className="flex flex-col border-x border-gray-200 px-2">
-                <h1 className="text-[#15599a] font-bold text-center">
-                  COMISSÃO TOTAL ATIVO (PROJETO)
-                </h1>
-                <p className="text-gray-700 text-center text-xs">
-                  R${" "}
-                  {Number(getTotalComission().ativoProjeto).toLocaleString(
-                    "pt-br"
-                  )}
-                </p>
-              </div>
-              <div className="flex flex-col border-x border-gray-200 px-2">
-                <h1 className="text-[#15599a] font-bold text-center">
-                  COMISSÃO TOTAL ATIVO (PADRÃO)
-                </h1>
-                <p className="text-gray-700 text-center text-xs">
-                  R${" "}
-                  {Number(getTotalComission().ativoPadrao).toLocaleString(
-                    "pt-br"
-                  )}
-                </p>
-              </div>
-              <div className="flex flex-col border-x border-gray-200 px-2">
-                <h1 className="text-[#15599a] font-bold text-center">
-                  COMISSÃO TOTAL INSIDE
-                </h1>
-                <p className="text-gray-700 text-center text-xs">
-                  R${" "}
-                  {Number(getTotalComission().inside).toLocaleString("pt-br")}
-                </p>
-              </div>
-              <div className="flex flex-col border-x border-gray-200 px-2">
-                <h1 className="text-[#15599a] font-bold text-center">
-                  COMISSÃO TOTAL SOBRE FATURAMENTO
-                </h1>
-                <p className="text-gray-700 text-center text-xs">
-                  {((getTotalComission().total * 100) / getTotalSold()).toFixed(
-                    2
-                  )}
-                  %
-                </p>
-              </div>
-              <div className="flex flex-col border-x border-gray-200 px-2">
-                <h1 className="text-[#15599a] font-bold text-center">
-                  VALOR DO kWp
-                </h1>
-                <p className="text-gray-700 text-center text-xs">
-                  R$ {(getTotalSold() / getTotalPeakPot()).toFixed(2)}
-                </p>
-              </div>
-            </div>
+                  <div className="grid grid-rows-3 grid-cols-1 lg:grid-rows-1 lg:grid-cols-3">
+                    <div className="flex flex-col items-start w-full gap-1">
+                      <span className="font-['Roboto'] text-xs">
+                        KITS PAGOS ENTRE:
+                      </span>
+                      <div className="flex items-center justify-center flex-wrap gap-2">
+                        <input
+                          value={
+                            dateFilter.after &&
+                            new Date(dateFilter.after)
+                              .toISOString()
+                              .slice(0, 10)
+                          }
+                          onChange={(e) =>
+                            setDateFilter({
+                              ...dateFilter,
+                              after: isNaN(e.target.value)
+                                ? e.target.value
+                                : null,
+                            })
+                          }
+                          type="date"
+                          className="border border-gray-200 outline-none py-1 px-2"
+                        />
+                        <p>&</p>
+                        <input
+                          value={
+                            dateFilter.before &&
+                            new Date(dateFilter.before)
+                              .toISOString()
+                              .slice(0, 10)
+                          }
+                          onChange={(e) =>
+                            setDateFilter({
+                              ...dateFilter,
+                              before: isNaN(e.target.value)
+                                ? e.target.value
+                                : null,
+                            })
+                          }
+                          type="date"
+                          className="border border-gray-200 outline-none py-1 px-2"
+                        />
+                      </div>
+                      <div className="flex items-center justify-between gap-2">
+                        <FetchDataButton
+                          text={"BUSCAR"}
+                          icon={<MdDateRange />}
+                          handleClick={getProjects}
+                        />
+                        <div
+                          onClick={exportData}
+                          className="flex cursor-pointer text-[#15599a] items-center  font-bold p-2 rounded-lg transition duration-300 ease-in-out hover:scale-105"
+                        >
+                          <p className="mr-2 text-sm">BAIXAR DADOS</p>
+                          <BsDownload />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center w-full gap-1">
+                      <button
+                        onClick={() => setView("GERAL")}
+                        className={`p-1 cursor-pointer w-[350px] rounded font-bold ${
+                          view == "GERAL"
+                            ? "bg-[#15599a] text-white hover:bg-[#fead61] hover:text-black"
+                            : "bg-[#fead61] hover:bg-[#15599a] hover:text-white"
+                        }`}
+                      >
+                        VISÃO GERAL
+                      </button>
+                      <button
+                        onClick={() => setView("PDF")}
+                        className={`p-1 cursor-pointer w-[350px] rounded font-bold ${
+                          view == "PDF"
+                            ? "bg-[#0781F2] text-white hover:bg-blue-300 hover:text-black"
+                            : "bg-blue-300 hover:bg-[#0781F2] hover:text-white"
+                        }`}
+                      >
+                        VISÃO PDF
+                      </button>
+                      <button
+                        onClick={() => setView("PDF INSIDE")}
+                        className={`p-1 cursor-pointer w-[350px] rounded font-bold ${
+                          view == "PDF INSIDE"
+                            ? "bg-[#0781F2] text-white hover:bg-blue-300 hover:text-black"
+                            : "bg-blue-300 hover:bg-[#0781F2] hover:text-white"
+                        }`}
+                      >
+                        VISÃO PDF INSIDE
+                      </button>
+                    </div>
+                    <div className="flex flex-col items-end w-full gap-1">
+                      <div className="w-full lg:w-[250px]">
+                        <Select
+                          isMulti
+                          placeholder="VENDEDOR"
+                          styles={{
+                            control: (base, state) => ({
+                              ...base,
+                              width: "100%",
+                              minHeight: "41px",
+                            }),
+                          }}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              vendedor: e.map((x) => x.value),
+                            })
+                          }
+                          options={vendedores.map((vendedor) => {
+                            return {
+                              label: vendedor.nome,
+                              value: vendedor.nome,
+                            };
+                          })}
+                        />
+                      </div>
+                      <div className="w-full lg:w-[250px]">
+                        <Select
+                          isMulti
+                          placeholder="INSIDER"
+                          styles={{
+                            control: (base, state) => ({
+                              ...base,
+                              width: "100%",
+                              minHeight: "41px",
+                            }),
+                          }}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              insider: e.map((x) => x.value),
+                            })
+                          }
+                          options={vendedores
+                            .filter((x) => x.qualificacao?.includes("INSIDE"))
+                            .map((vendedor) => {
+                              return {
+                                label: vendedor.nome,
+                                value: vendedor.nome,
+                              };
+                            })}
+                        />
+                      </div>
+                      <FilterButton
+                        text={"FILTRAR"}
+                        icon={<AiOutlineSearch />}
+                        handleClick={filterProjects}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 lg:grid-cols-6">
+                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
+                      <h1 className="text-[#15599a] font-bold text-center">
+                        FATURAMENTO TOTAL
+                      </h1>
+                      <p className="text-gray-700 text-center text-xs">
+                        R$ {Number(getTotalSold()).toLocaleString("pt-br")}
+                      </p>
+                    </div>
+                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
+                      <h1 className="text-[#15599a] font-bold text-center">
+                        COMISSÃO TOTAL ATIVO (PROJETO)
+                      </h1>
+                      <p className="text-gray-700 text-center text-xs">
+                        R${" "}
+                        {Number(
+                          getTotalComission().ativoProjeto
+                        ).toLocaleString("pt-br")}
+                      </p>
+                    </div>
+                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
+                      <h1 className="text-[#15599a] font-bold text-center">
+                        COMISSÃO TOTAL ATIVO (PADRÃO)
+                      </h1>
+                      <p className="text-gray-700 text-center text-xs">
+                        R${" "}
+                        {Number(getTotalComission().ativoPadrao).toLocaleString(
+                          "pt-br"
+                        )}
+                      </p>
+                    </div>
+                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
+                      <h1 className="text-[#15599a] font-bold text-center">
+                        COMISSÃO TOTAL INSIDE
+                      </h1>
+                      <p className="text-gray-700 text-center text-xs">
+                        R${" "}
+                        {Number(getTotalComission().inside).toLocaleString(
+                          "pt-br"
+                        )}
+                      </p>
+                    </div>
+                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
+                      <h1 className="text-[#15599a] font-bold text-center">
+                        COMISSÃO TOTAL SOBRE FATURAMENTO
+                      </h1>
+                      <p className="text-gray-700 text-center text-xs">
+                        {(
+                          (getTotalComission().total * 100) /
+                          getTotalSold()
+                        ).toFixed(2)}
+                        %
+                      </p>
+                    </div>
+                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
+                      <h1 className="text-[#15599a] font-bold text-center">
+                        VALOR DO kWp
+                      </h1>
+                      <p className="text-gray-700 text-center text-xs">
+                        R$ {(getTotalSold() / getTotalPeakPot()).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
           </div>
           {view == "GERAL" && (
             <ComissaoGeralView
@@ -360,4 +429,4 @@ function Comissao() {
   }
 }
 
-export default Comissao;
+export default ComissaoPage;

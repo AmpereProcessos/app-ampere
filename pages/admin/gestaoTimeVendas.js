@@ -125,11 +125,11 @@ function GestaoTimeDeVendas() {
     }
   }
   useEffect(() => {
-    if (session.user?.manager || session.user?.visualizacao == "REGIONAL") {
+    if (session?.user?.manager || session?.user?.visualizacao == "REGIONAL") {
       getVendedoresInfo();
       getStats(2023);
     } else {
-      if (session.user) {
+      if (session?.user) {
         router.push("/");
       }
     }

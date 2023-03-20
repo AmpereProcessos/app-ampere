@@ -51,7 +51,7 @@ function ComissaoGeralView({ projects, setProjects }) {
               )}
             </div>
 
-            <div className="flex items-center justify-between flex-wrap pb-1 border-b border-gray-200">
+            <div className="flex items-center justify-center lg:justify-between flex-wrap pb-1 border-b border-gray-200 gap-3">
               <div className="flex flex-col items-center">
                 <p className="text-xs text-gray-700 font-bold">CÓDIGO SVB</p>
                 <p className="text-xs text-gray-600">
@@ -147,9 +147,9 @@ function ComissaoGeralView({ projects, setProjects }) {
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="flex items-center justify-center gap-3">
-                <div className="flex flex-col items-center">
+            <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2">
+              <div className="flex items-center justify-center flex-wrap gap-3">
+                <div className="flex flex-col items-center ">
                   <p className="text-sm font-bold text-gray-700 text-center">
                     PORCENTAGEM DE COMISSÃO
                   </p>

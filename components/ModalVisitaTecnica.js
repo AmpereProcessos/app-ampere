@@ -141,7 +141,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
     });
     setSuprimentoHolder({
       insumo: Object.keys(suprimentoOption)[0],
-      tipo: "",
+      tipo: suprimentoOption[Object.keys(suprimentoOption)[0]].tipo[0],
       qtde: 0,
       medida: suprimentoOption[Object.keys(suprimentoOption)[0]].unidade,
     });

@@ -189,11 +189,11 @@ function ComissaoPage() {
                   className="flex flex-col w-full gap-y-2 mt-4"
                 >
                   <div className="grid grid-rows-3 grid-cols-1 lg:grid-rows-1 lg:grid-cols-3">
-                    <div className="flex flex-col items-start w-full gap-1">
+                    <div className="flex flex-col items-center lg:items-start w-full gap-1">
                       <span className="font-['Roboto'] text-xs">
                         KITS PAGOS ENTRE:
                       </span>
-                      <div className="flex items-center justify-center flex-wrap gap-2">
+                      <div className="flex flex-col lg:flex-row items-center justify-center flex-wrap gap-2">
                         <input
                           value={
                             dateFilter.after &&

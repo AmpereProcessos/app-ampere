@@ -12,6 +12,7 @@ const MODAL_STYLES = {
   transform: "translate(-50%,-50%)",
   backgroundColor: "#fff",
   minWidth: "40%",
+  maxWidth: "97%",
   height: "87%",
   borderRadius: "10px",
   padding: "10px",
@@ -59,7 +60,7 @@ function ModalBancoOS({ info, clientName, projectID, setModalIsOpen, index }) {
             </button>
           </div>
           <div className="flex py-2 pr-3 flex-col gap-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-            <div className="flex py-2 items-center justify-center border-y border-[#15599a] w-full">
+            <div className="flex flex-col lg:flex-row py-2 items-center justify-center border-y border-[#15599a] w-full">
               <p className="text-gray-800 font-bold">DATA DE ABERTURA</p>
               <p className="grow text-gray-500 font-bold text-center">
                 {dayjs(infoHolder.dataDeAbertura)
@@ -67,7 +68,7 @@ function ModalBancoOS({ info, clientName, projectID, setModalIsOpen, index }) {
                   .format("DD/MM/YYYY")}
               </p>
             </div>
-            <div className="flex py-2 items-center justify-center border-y border-[#15599a] w-full">
+            <div className="flex flex-col lg:flex-row py-2 items-center justify-center border-y border-[#15599a] w-full">
               <p className="text-gray-800 font-bold">CATEGORIA</p>
               <select
                 value={infoHolder.categoria}
@@ -91,7 +92,7 @@ function ModalBancoOS({ info, clientName, projectID, setModalIsOpen, index }) {
                 </option>
               </select>
             </div>
-            <div className="flex py-2 items-center justify-center border-y border-[#15599a] w-full">
+            <div className="flex flex-col lg:flex-row py-2 items-center justify-center border-y border-[#15599a] w-full">
               <p className="text-gray-800 font-bold">SERVIÇO EXECUTADO</p>
               <input
                 type={"text"}
@@ -124,7 +125,7 @@ function ModalBancoOS({ info, clientName, projectID, setModalIsOpen, index }) {
                 className="outline-none resize-none h-[80px] text-center text-xs border border-gray-300 w-full p-2"
               />
             </div>
-            <div className="flex py-2 items-center justify-center border-y border-[#15599a] w-full">
+            <div className="flex flex-col lg:flex-row py-2 items-center justify-center border-y border-[#15599a] w-full">
               <p className="text-gray-800 font-bold">REALIZAR COBRANÇA</p>
               <div className="grow h-full flex items-center justify-center">
                 <input
@@ -149,7 +150,7 @@ function ModalBancoOS({ info, clientName, projectID, setModalIsOpen, index }) {
                 </label>
               </div>
             </div>
-            <div className="flex py-2 items-center justify-center border-y border-[#15599a] w-full">
+            <div className="flex flex-col lg:flex-row py-2 items-center justify-center border-y border-[#15599a] w-full">
               <p className="text-gray-800 font-bold">
                 VALOR DA COBRANÇA
                 {infoHolder.valorCobranca == "NÃO DEFINIDO"
@@ -178,7 +179,7 @@ function ModalBancoOS({ info, clientName, projectID, setModalIsOpen, index }) {
                 }}
               />
             </div>
-            <div className="flex py-2 items-center justify-center border-y border-[#15599a] w-full">
+            <div className="flex flex-col lg:flex-row py-2 items-center justify-center border-y border-[#15599a] w-full">
               <p className="text-gray-800 font-bold">PAGAMENTO DE TERCEIRO ?</p>
               <div className="grow h-full flex items-center justify-center">
                 <input

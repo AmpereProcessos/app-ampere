@@ -55,7 +55,7 @@ function OSBlock({
   return (
     <div className="flex flex-col">
       <div
-        className={`grid items-center grid-cols-6  border-b border-gray-200 py-2 ${validateVisibility(
+        className={`grid items-start grid-cols-4 lg:grid-cols-6  border-b border-gray-200 py-2 ${validateVisibility(
           {
             categories,
             open,
@@ -63,19 +63,19 @@ function OSBlock({
           }
         )}`}
       >
-        <div className="flex flex-col items-center justify-center">
+        <div className="hidden lg:flex flex-col items-center justify-center">
           <p className="text-gray-500 text-xs">EMISSOR</p>
           <p className="text-gray-700 text-xs font-bold uppercase">
             {order.usuarioEmissor}
           </p>
         </div>
-        <div className="flex flex-col items-center justify-center">
+        <div className="hidden lg:flex flex-col items-center justify-center">
           <p className="text-gray-500 text-xs">CATEGORIA</p>
           <p className="text-gray-700 text-xs font-bold">{order.categoria}</p>
         </div>
         <div className="flex flex-col items-center justify-center">
           <p className="text-gray-500 text-xs">SERVIÇO</p>
-          <p className="text-gray-700 text-xs font-bold">
+          <p className="text-gray-700 text-xxs lg:text-xs font-bold text-center">
             {order.servicoExecutado}
           </p>
         </div>
@@ -89,8 +89,10 @@ function OSBlock({
         <div className="flex items-center justify-center">
           {order.dataDeFechamento ? (
             <div className="flex flex-col items-center justify-center">
-              <p className="text-gray-500 text-xs">DATA DE FECHAMENTO</p>
-              <p className="text-gray-700 text-xs font-bold">
+              <p className="text-gray-500 text-xs text-center">
+                DATA DE FECHAMENTO
+              </p>
+              <p className="text-gray-700 text-xxs lg:text-xs font-bold text-center">
                 {dayjs(order.dataDeFechamento)
                   .add(4, "hour")
                   .format("DD/MM/YYYY")}

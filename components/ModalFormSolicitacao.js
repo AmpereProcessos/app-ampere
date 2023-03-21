@@ -305,7 +305,10 @@ function ModalFormSolicitacao({
         emailTo: "contasareceber@ampereenergias.com.br", // amperecontasareceber@gmail.com
         subject: "SOLICITAÇÃO DE CONTRATO",
         message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Formulário disponível no link: https://app.ampereenergias.com.br/comercial/publicoFormulario/${dados._id} . Desde já agradeço, Volts.`,
-        copy: ["comercial@ampereenergias.com.br"],
+        copy: [
+          "comercial@ampereenergias.com.br",
+          "adm02@ampereenergias.com.br",
+        ],
       });
 
       setEmailMsg({ text: "Email enviado", color: "text-green-500" });

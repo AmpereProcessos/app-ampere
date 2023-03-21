@@ -190,7 +190,7 @@ function LeadCard({ lead, getLeads }) {
               }
             />
           </div>
-          <div className="flex justify-center items-center col-span-4 gap-4">
+          <div className="flex justify-center items-start col-span-4 gap-4">
             <div className="flex flex-col items-center">
               <p className="text-gray-600 text-center font-bold text-sm">
                 DATA DE AQUISIÇÃO
@@ -281,7 +281,7 @@ function LeadCard({ lead, getLeads }) {
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 relative">
+          <div className="grid grid-cols-1 relative mt-1 lg:mt-0">
             {deleteMenu ? (
               <div className="flex flex-col items-center justify-center">
                 <div

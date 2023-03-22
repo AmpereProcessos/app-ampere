@@ -7,34 +7,28 @@ import SelectFloatingInput from "./SelectFloatingInput";
 import TextFloatingInput from "./TextFloatingInput";
 import ModalBancoOS from "./ModalBancoOS";
 import dayjs from "dayjs";
-function OSBlock({
-  order,
-  clientName,
-  index,
-  open,
-  categories,
-  projectID,
-  getOSS,
-}) {
+function OSBlock({ order, clientName, index, projectID, getOSS }) {
   const [msg, setMsg] = useState({
     text: "",
     color: "",
   });
+  const [closedDateHolder, setClosedDateHolder] = useState(
+    order.dataDeFechamento
+  );
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState();
-  console.log(index);
   // Utils
-  function validateVisibility({ categories, openOnly, closingDate }) {
-    if (openOnly) {
-      if (closingDate != undefined) return "hidden";
-      else return "";
-    } else if (categories.length > 0) {
-      if (!categories.includes(order.categoria)) return "hidden";
-      else return "";
-    } else {
-      return "";
-    }
-  }
+  // function validateVisibility(categoria, openOnly, closingDate) {
+  //   if (openOnly) {
+  //     if (closingDate != undefined) return "hidden";
+  //     else return "";
+  //   } else if (categories.length > 0) {
+  //     if (!categories.includes(categoria)) return "hidden";
+  //     else return "";
+  //   } else {
+  //     return "";
+  //   }
+  // }
   async function closeOS() {
     let { data } = await axios
       .post(`/api/projects/update/${projectID}`, {
@@ -42,10 +36,11 @@ function OSBlock({
       })
       .catch((err) => alert("Houve um erro na comunicação com o servidor."));
     if (data) {
+      setClosedDateHolder(new Date().toISOString());
       setMsg({ text: "Alterações feitas", color: "text-green-500" });
-      setTimeout(() => {
-        getOSS();
-      }, 1000);
+      // setTimeout(() => {
+      //   getOSS();
+      // }, 1000);
     }
   }
   function handleOpenModal(order) {
@@ -55,13 +50,7 @@ function OSBlock({
   return (
     <div className="flex flex-col">
       <div
-        className={`grid items-start grid-cols-4 lg:grid-cols-6  border-b border-gray-200 py-2 ${validateVisibility(
-          {
-            categories,
-            open,
-            closingDate: order.dataDeFechamento,
-          }
-        )}`}
+        className={`grid items-start grid-cols-4 lg:grid-cols-6  border-b border-gray-200 py-2`}
       >
         <div className="hidden lg:flex flex-col items-center justify-center">
           <p className="text-gray-500 text-xs">EMISSOR</p>
@@ -80,22 +69,20 @@ function OSBlock({
           </p>
         </div>
         <div className="flex items-center justify-center">
-          <Link href={`/ordemDeServico/pdf/${projectID}?index=${index}`}>
+          <Link href={`/ordemDeServico/pdf/${projectID}?index=${order.index}`}>
             <button className="p-1 rounded h-[30px] font-bold text-[#fead61] border border-[#fead61] hover:text-black hover:bg-[#fead61]">
               <TbExternalLink />
             </button>
           </Link>
         </div>
         <div className="flex items-center justify-center">
-          {order.dataDeFechamento ? (
+          {closedDateHolder ? (
             <div className="flex flex-col items-center justify-center">
               <p className="text-gray-500 text-xs text-center">
                 DATA DE FECHAMENTO
               </p>
               <p className="text-gray-700 text-xxs lg:text-xs font-bold text-center">
-                {dayjs(order.dataDeFechamento)
-                  .add(4, "hour")
-                  .format("DD/MM/YYYY")}
+                {dayjs(closedDateHolder).add(4, "hour").format("DD/MM/YYYY")}
               </p>
             </div>
           ) : (

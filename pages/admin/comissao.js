@@ -188,7 +188,7 @@ function ComissaoPage() {
                   animate={{ scale: 1, opacity: 1 }}
                   className="flex flex-col w-full gap-y-2 mt-4"
                 >
-                  <div className="grid grid-rows-3 grid-cols-1 lg:grid-rows-1 lg:grid-cols-3">
+                  <div className="grid grid-rows-3 grid-cols-1 lg:grid-rows-1 lg:grid-cols-3 gap-3">
                     <div className="flex flex-col items-center lg:items-start w-full gap-1">
                       <span className="font-['Roboto'] text-xs">
                         KITS PAGOS ENTRE:

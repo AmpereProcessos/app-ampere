@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { useDrag } from "react-dnd";
+import {BsCheckSquareFill} from 'react-icons/bs'
+import {FaFileSignature} from 'react-icons/fa'
+import {IoMdRemoveCircle} from "react-icons/io"
+import {MdDelete} from 'react-icons/md'
 import axios from "axios";
 import Link from "next/link";
 function CardProposta({ propose, fetchProposes }) {
@@ -86,7 +90,7 @@ function CardProposta({ propose, fetchProposes }) {
       })
       .then((res) => createProjectStatus());*/
   }
-  function createProjectStatus() {
+  function setAsClosed() {
     axios
       .patch("/api/o&m/updatePropose", { id: propose._id })
       .then(() => fetchProposes());
@@ -98,6 +102,15 @@ function CardProposta({ propose, fetchProposes }) {
         rejected: true,
       })
       .then(() => fetchProposes());
+  }
+  async function deletePropose() {
+    try {
+      let response = await axios.delete(`/api/o&m/updatePropose?id=${propose._id}`)
+      fetchProposes()
+    } catch (error) {
+      alert(error)
+    }
+    
   }
   return (
     <div
@@ -138,29 +151,17 @@ function CardProposta({ propose, fetchProposes }) {
             ))}
           </select>
         </div>
+        {propose.closed && <p className="text-green-600"><BsCheckSquareFill/></p>}      
         {propose.negotiationStage == 4 && !propose.closed && (
           <div className="flex items-center">
-            <button
-              onClick={handleProjectInitiation}
-              className="bg-[#f6c228] h-[24px] w-[40px] px-2 rounded"
-            >
-              &#128221;
-            </button>
+            <p onClick={setAsClosed} className="text-md text-green-600 border border-green-500 p-1 rounded hover:text-white cursor-pointer hover:bg-green-500 hover:scale-105 duration-300 ease-in-out"><FaFileSignature/></p>
           </div>
         )}
-        {propose.closed && (
-          <div className="flex items-center">
-            <p>&#9989;</p>
-          </div>
-        )}
-        {propose.negotiationStage != 4 && !propose.rejected && (
-          <div className="flex items-center">
-            <button
-              onClick={() => setProposeAsRejected()}
-              className="bg-red-400 h-[24px] w-[40px] px-2 rounded"
-            >
-              &#x2716;
-            </button>
+        {propose.negotiationStage != 4 &&  (
+          <div className="flex items-center gap-2">
+            {!propose.rejected &&<div onClick={setProposeAsRejected} className="hover:scale-105 duration-300 ease-in-out cursor-pointer text-xl text-gray-300 hover:text-gray-500"><IoMdRemoveCircle/></div>}
+            
+            <div onClick={deletePropose} className="hover:scale-105 duration-300 ease-in-out cursor-pointer text-xl text-red-300 hover:text-red-500"><MdDelete/></div>
           </div>
         )}
       </div>

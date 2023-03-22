@@ -49,5 +49,19 @@ export default async function handler(req, res) {
       { returnNewDocument: true }
     );
     return res.json("Proposta alterada");
+  } else if (req.method === "DELETE") {
+    try {
+      const db = await connectToDatabase(process.env.DB2_KEY);
+      const id = req.query.id
+      console.log(id)
+      const collection = db.collection("infos")
+      let response = await collection.deleteOne({_id: ObjectId(id)}) 
+      if(response.deletedCount ==0) {
+        throw {msg: "Proposta não encontrada."}
+      }
+      res.send("Proposta excluída com sucesso.")
+    } catch (error) {
+      res.status(500).send(error?.msg ? error.msg : "Erro ao excluír proposta.")
+    }
   }
 }

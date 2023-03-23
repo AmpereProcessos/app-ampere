@@ -3,7 +3,9 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import NumberInput from "./NumberInput";
 import DateInput from "./DateInput";
+import { TbExternalLink } from "react-icons/tb";
 import { AiOutlineSearch, AiOutlineCheck } from "react-icons/ai";
+import { MdCheckBoxOutlineBlank, MdOutlineCheckBox } from "react-icons/md";
 import {
   cidadesAtendidas,
   credores,
@@ -809,55 +811,73 @@ function ModalFormSolicitacao({
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full">
-            <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-[#15599a] pl-6  font-bold">
-                {dados.nomeDoContrato}
-              </h1>
-              <p className="text-xxs italic text-gray-600">#{dados._id}</p>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() =>
-                    router.push(`/comercial/publicoFormulario/${dados._id}`)
-                  }
-                  className="p-2 text-sm bg-[#fead61] font-bold rounded"
-                >
-                  Visualização para PDF
-                </button>
-                {dados.aprovacao && !dados.confeccionado && (
+            <div className="flex flex-col lg:flex-row gap-2 justify-between items-center px-2 pb-2 border-b border-gray-200">
+              <div className="flex items-center justify-center gap-2">
+                <h1 className="text-[#15599a] pl-6  font-bold">
+                  {dados.nomeDoContrato}
+                </h1>
+                <p className="text-xxs italic text-gray-600">#{dados._id}</p>
+              </div>
+              <div className="flex items-center justify-between gap-2 w-full lg:w-fit">
+                {dados.aprovacao && !dados.confeccionado ? (
                   <button
                     onClick={contractMade}
-                    className="bg-green-300 text-sm hover:bg-green-600 hover:text-white font-bold rounded p-2"
+                    className="group flex items-center gap-2 text-sm border border-red-500 text-red-500 hover:text-white hover:border-green-500 hover:bg-green-500 font-bold rounded p-2"
                   >
-                    Contrato confeccionado?
+                    <p className="text-xs">CONTRATO CONFECCIONADO</p>
+                    <div className="block group-hover:hidden text-lg">
+                      <MdCheckBoxOutlineBlank />
+                    </div>
+                    <div className="hidden group-hover:block text-lg">
+                      <MdOutlineCheckBox />
+                    </div>
                   </button>
+                ) : (
+                  <div></div>
                 )}
+                <div className="flex items-center justify-end gap-2 grow lg:grow-0">
+                  {msg.text && (
+                    <p className={`hidden lg:block italic ${msg.color}`}>
+                      {msg.text}
+                    </p>
+                  )}
+                  {editor && (
+                    <SaveButton
+                      text={"Salvar alterações"}
+                      icon={<FaSave />}
+                      handleClick={saveChanges}
+                    />
+                  )}
+                  <button>
+                    <VscChromeClose
+                      onClick={() => setModalIsOpen(false)}
+                      style={{ color: "red" }}
+                    />
+                  </button>
+                </div>
+                <div className="flex items-center gap-x-2"></div>
               </div>
-
-              <div className="flex items-center gap-x-2">
-                {msg.text && (
-                  <p className={`italic ${msg.color}`}>{msg.text}</p>
-                )}
-                {editor && (
-                  <SaveButton
-                    text={"Salvar alterações"}
-                    icon={<FaSave />}
-                    handleClick={saveChanges}
-                  />
-                )}
-                <button>
-                  <VscChromeClose
-                    onClick={() => setModalIsOpen(false)}
-                    style={{ color: "red" }}
-                  />
-                </button>
-              </div>
+              {msg.text && (
+                <p className={`italic block lg:hidden ${msg.color}`}>
+                  {msg.text}
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
               <>
-                <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                  <h1 className="text-center font-bold text-[#fead61] mt-1 text-xl">
+                <div className="w-full flex justify-center items-center gap-2 border border-[#15599a] py-2 shadow-lg bg-[#fff]">
+                  <h1 className="text-center w-fit font-bold text-green-500 text-md lg:text-xl">
                     REVISÃO DAS INFORMAÇÕES
                   </h1>
+                  <button
+                    onClick={() =>
+                      router.push(`/comercial/publicoFormulario/${dados._id}`)
+                    }
+                    className="flex items-center justify-center gap-2 p-2 text-sm rounded font-bold border border-[#fead61] text-[#fead61] hover:text-black hover:bg-[#fead61] "
+                  >
+                    <TbExternalLink />
+                    <p>PDF</p>
+                  </button>
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">

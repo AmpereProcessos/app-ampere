@@ -4,6 +4,7 @@ import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import { AppContext } from "../context/AppContext";
 import { respChamadosPPS } from "../utils/constants";
+import { useKey } from "../utils/hooks";
 import PPSModalCallInfo from "./PPSModalCallInfo";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import SaveButton from "./utils/Buttons/SaveButton";
@@ -53,6 +54,8 @@ function ModalCallPPS({
   updateModalInfo,
   modalIsOpen,
 }) {
+  useKey("Escape", () => setModalIsOpen(false));
+
   const { credentials } = useContext(AppContext);
   const editor =
     credentials?.accessibleRoutes.includes("PPS") &&
@@ -89,9 +92,10 @@ function ModalCallPPS({
   };
   let initialNote = info.anotacoes ? info.anotacoes : "";
   // Letter handler
-  const escPress = useKeyPress("Escape");
+  // const escPress = useKeyPress("Escape");
   // State Holders
   const [responsavel, setResponsavel] = useState(info.responsavel);
+  const [SVBCode, setSVBCode] = useState(info.codigoDoProjeto);
   const [notes, setNotes] = useState(initialNote);
   const [selectedStatus, setSelectedStatus] = useState(info.status);
   const [message, setMessage] = useState({
@@ -112,11 +116,13 @@ function ModalCallPPS({
       ultAlteracoes.anotAlteracoes.depois = notes;
       ultAlteracoes.anotAlteracoes.data = new Date().toJSON();
     }
+
     axios
       .put("/api/calls/pps/updatePPS", {
         ...info,
         status: selectedStatus,
         anotacoes: notes,
+        codigoDoProjeto: SVBCode,
         responsavel: responsavel ? responsavel : info.responsavel,
         ultAlteracoes: ultAlteracoes,
       })
@@ -167,36 +173,36 @@ function ModalCallPPS({
       })
       .then((res) => updateModalInfo(info._id));
   }
-  function useKeyPress(targetKey) {
-    // State for keeping track of whether key is pressed
-    const [keyPressed, setKeyPressed] = useState(false);
-    // If pressed key is our target key then set to true
-    function downHandler({ key }) {
-      if (key === targetKey) {
-        setKeyPressed(true);
-        setModalIsOpen(false);
-      }
-    }
-    // If released key is our target key then set to false
-    const upHandler = ({ key }) => {
-      if (key === targetKey) {
-        setKeyPressed(false);
-      }
-    };
-    // Add event listeners
-    useEffect(() => {
-      window.addEventListener("keydown", downHandler);
-      window.addEventListener("keyup", upHandler);
-      // Remove event listeners on cleanup
-      return () => {
-        window.removeEventListener("keydown", downHandler);
-        window.removeEventListener("keyup", upHandler);
-      };
-    }, []); // Empty array ensures that effect is only run on mount and unmount
-    return keyPressed;
-  }
+  // function useKeyPress(targetKey) {
+  //   // State for keeping track of whether key is pressed
+  //   const [keyPressed, setKeyPressed] = useState(false);
+  //   // If pressed key is our target key then set to true
+  //   function downHandler({ key }) {
+  //     if (key === targetKey) {
+  //       setKeyPressed(true);
+  //       setModalIsOpen(false);
+  //     }
+  //   }
+  //   // If released key is our target key then set to false
+  //   const upHandler = ({ key }) => {
+  //     if (key === targetKey) {
+  //       setKeyPressed(false);
+  //     }
+  //   };
+  //   // Add event listeners
+  //   useEffect(() => {
+  //     window.addEventListener("keydown", downHandler);
+  //     window.addEventListener("keyup", upHandler);
+  //     // Remove event listeners on cleanup
+  //     return () => {
+  //       window.removeEventListener("keydown", downHandler);
+  //       window.removeEventListener("keyup", upHandler);
+  //     };
+  //   }, []); // Empty array ensures that effect is only run on mount and unmount
+  //   return keyPressed;
+  // }
   console.log("TESTE");
-  console.log(info);
+  console.log(SVBCode);
   return (
     <>
       <AnimatedModalWrapper
@@ -272,9 +278,15 @@ function ModalCallPPS({
               <span className="text-center font-bold font-raleway">
                 CÓDIGO SOLAR MARKET (SVB)
               </span>
-              <span className="grow text-center font-raleway">
+              <input
+                type={"number"}
+                value={SVBCode}
+                onChange={(e) => setSVBCode(Number(e.target.value))}
+                className="grow outline-none h-full text-center"
+              />
+              {/* <span className="grow text-center font-raleway">
                 {info.codigoDoProjeto}
-              </span>
+              </span> */}
             </div>
             <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
               <span className="text-center font-bold font-raleway">

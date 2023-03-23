@@ -180,7 +180,9 @@ function ModalComercial({
             </div>
             <div className="flex gap-x-2 items-center">
               {msg.text && (
-                <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
+                <p className={`hidden lg:block text-sm italic ${msg.color}`}>
+                  {msg.text}
+                </p>
               )}
               <SaveButton
                 text={"Salvar alterações"}
@@ -194,6 +196,11 @@ function ModalComercial({
                 />
               </button>
             </div>
+            {msg.text && (
+              <p className={`block lg:hidden text-sm italic ${msg.color}`}>
+                {msg.text}
+              </p>
+            )}
           </div>
           <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

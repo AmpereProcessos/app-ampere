@@ -835,7 +835,7 @@ function ModalFormSolicitacao({
                 ) : (
                   <div></div>
                 )}
-                <div className="flex items-center justify-end gap-2 grow lg:grow-0">
+                <div className="flex items-center justify-center lg:justify-end gap-2 grow lg:grow-0">
                   {msg.text && (
                     <p className={`hidden lg:block italic ${msg.color}`}>
                       {msg.text}

@@ -172,7 +172,9 @@ function ModalProjetos({
                 )}
             </div>
             <div className="flex gap-x-2 items-center">
-              {msg && <p className="text-sm italic text-green-400">{msg}</p>}
+              <p className={`hidden lg:block text-sm italic text-green-500`}>
+                {msg}
+              </p>
               <SaveButton
                 text={"Salvar alterações"}
                 icon={<FaSave />}
@@ -185,6 +187,9 @@ function ModalProjetos({
                 />
               </button>
             </div>
+            <p className={`block lg:hidden text-sm italic text-green-500`}>
+              {msg}
+            </p>
           </div>
           <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

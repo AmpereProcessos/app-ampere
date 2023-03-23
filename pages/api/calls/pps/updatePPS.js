@@ -31,6 +31,7 @@ export default async function handler(req, res) {
           anotacoes: req.body.anotacoes,
           responsavel: req.body.responsavel,
           status: req.body.status,
+          codigoDoProjeto: req.body.codigoDoProjeto,
           ultAlteracoes: req.body.ultAlteracoes,
         },
       },

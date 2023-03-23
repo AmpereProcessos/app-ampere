@@ -179,7 +179,7 @@ function ChamadosPPS() {
   if (status == "authenticated") {
     return (
       <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
-        <div className="flex items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
+        <div className="flex flex-col lg:flex-row items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
           <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">
             CHAMADOS DE SUPORTE AO VENDEDOR
           </p>
@@ -297,7 +297,7 @@ function ChamadosPPS() {
                 <div
                   key={call._id}
                   onClick={() => handleOpenModal(call)}
-                  className="w-full lg:w-[450px] max-h-[240px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+                  className="flex flex-col items-center w-full lg:w-[450px] max-h-[240px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
                 >
                   <div className="flex justify-between items-center w-full">
                     <h1 className="text-xs text-center font-semibold">
@@ -317,7 +317,7 @@ function ChamadosPPS() {
                   <div className="text-xs mt-2 text-center text-gray-500">
                     <p>TIPO DE SOLITAÇÃO : {call.tipoDeSolicitacao}</p>
                   </div>
-                  <div className="flex flex-col mt-3 text-xs max-w-[400px] text-center">
+                  <div className="flex flex-col mt-3 items-center text-xs max-w-[400px] text-center">
                     <p>Observações:</p>
                     <p>
                       {call.observacoes

@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import axios from "axios";
 import SaveButton from "./utils/Buttons/SaveButton";
 import { FaSave } from "react-icons/fa";
+import { AiFillInteraction } from "react-icons/ai";
 function PosVendaCard({ project, getUpdates, cardMode, editor }) {
   const [infoHolder, setInfo] = useState(project);
   const [changes, setChanges] = useState({
@@ -215,9 +216,10 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
                         },
                       });
                     }}
-                    className="font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+                    className="flex items-center gap-2 font-bold bg-[#15599a] w-fit text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
                   >
-                    CONTATO RECENTE?
+                    <p>CONTATO RECENTE</p>
+                    <AiFillInteraction style={{ fontSize: "20px" }} />
                   </button>
                 )}
                 <div className="flex flex-col w-[350px] items-center">

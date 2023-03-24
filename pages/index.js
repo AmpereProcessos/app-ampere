@@ -260,7 +260,7 @@ function Home() {
                 onClick={() => getDataByRegional("REGIONAL ITUIUTABA")}
                 className={`h-[52px] lg:h-fit border border-gray-200 rounded-sm p-1 ${
                   regional == "REGIONAL ITUIUTABA" ? "bg-blue-100" : ""
-                } hover:bg-blue-100 font-raleway font-bold text-sm`}
+                } hover:bg-blue-100 font-raleway font-bold text-xs lg:text-sm`}
               >
                 REGIONAL ITUIUTABA
               </button>
@@ -268,7 +268,7 @@ function Home() {
                 onClick={() => getDataByRegional("REGIONAL UBERLÂNDIA")}
                 className={`h-[52px] lg:h-fit border border-gray-200 rounded-sm p-1 ${
                   regional == "REGIONAL UBERLÂNDIA" ? "bg-blue-100" : ""
-                } hover:bg-blue-100 font-raleway font-bold text-sm`}
+                } hover:bg-blue-100 font-raleway font-bold text-xs lg:text-sm`}
               >
                 REGIONAL UBERLÂNDIA
               </button>
@@ -280,7 +280,7 @@ function Home() {
                 }}
                 className={`h-[52px] lg:h-fit border border-gray-200 rounded-sm p-1 ${
                   regional == "GERAL" ? "bg-blue-100" : ""
-                } hover:bg-blue-100 font-raleway font-bold text-sm`}
+                } hover:bg-blue-100 font-raleway font-bold text-xs lg:text-sm`}
               >
                 GERAL
               </button>
@@ -433,7 +433,7 @@ function Home() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col p-4 h-fit lg:h-[425px] border border-gray-200 bg-[#fff] shadow-xl col-span-8">
+            <div className="flex flex-col p-4 h-[600px] lg:h-[425px] border border-gray-200 bg-[#fff] shadow-xl col-span-8">
               <div className="grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 py-2">
                 <h1 className="text-gray-600 uppercase text-xl text-center">
                   Potência pico vendida

@@ -5,8 +5,8 @@ function ProjetosSkeleton() {
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
         <div className="flex items-center justify-between w-full">
-          <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-            <p className="w-[165px] md:w-[400px] lg:w-[494px] h-[36px] bg-gray-200 animate-pulse"></p>
+          <div className="flex flex-col lg:flex-row items-center gap-2 font-['Roboto']">
+            <p className="w-[290px] lg:w-[494px] h-[72px] lg:h-[36px] bg-gray-200 animate-pulse"></p>
             <p className="w-[38px] h-[24px] bg-gray-200 animate-pulse"></p>
             <p className="w-[103px] h-[24px] bg-gray-200 animate-pulse"></p>
           </div>

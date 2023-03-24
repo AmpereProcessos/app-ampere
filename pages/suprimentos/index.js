@@ -196,7 +196,7 @@ function Suprimentos() {
         <div className="p-6 grow">
           <div className="flex flex-col justify-between border-b border-gray-200 p-1">
             <div className="flex items-center justify-between w-full">
-              <div className="flex items-center gap-2 font-['Roboto']">
+              <div className="flex flex-col lg:flex-row items-center gap-2 font-['Roboto']">
                 <p className="font-bold uppercase text-center text-2xl text-[#15599a]">
                   Projetos no estágio de suprimentos
                 </p>
@@ -239,53 +239,56 @@ function Suprimentos() {
                       value={searchFilter}
                       onChange={(e) => handleSearchFilter(e.target.value)}
                     />
-                    <div className="flex gap-x-2">
-                      <div className="flex flex-col w-fit items-center">
-                        <span className="uppercase font-bold font-raleway text-center text-sm">
-                          Depois de:
-                        </span>
-                        <input
-                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                          type="date"
-                          value={
-                            dateFilter.after &&
-                            new Date(dateFilter.after)
-                              .toISOString()
-                              .slice(0, 10)
-                          }
-                          onChange={(e) =>
-                            setDateFilter({
-                              ...dateFilter,
-                              after: isNaN(e.target.value)
-                                ? new Date(e.target.value).toISOString()
-                                : null,
-                            })
-                          }
-                        />
+                    <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
+                      <div className="flex items-center gap-x-2 justify-center">
+                        <div className="flex flex-col w-fit items-center">
+                          <span className="uppercase font-bold font-raleway text-center text-sm">
+                            Depois de:
+                          </span>
+                          <input
+                            className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                            type="date"
+                            value={
+                              dateFilter.after &&
+                              new Date(dateFilter.after)
+                                .toISOString()
+                                .slice(0, 10)
+                            }
+                            onChange={(e) =>
+                              setDateFilter({
+                                ...dateFilter,
+                                after: isNaN(e.target.value)
+                                  ? new Date(e.target.value).toISOString()
+                                  : null,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="flex flex-col w-fit items-center">
+                          <span className="uppercase font-bold font-raleway text-center text-sm">
+                            Antes de:
+                          </span>
+                          <input
+                            className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                            type="date"
+                            value={
+                              dateFilter.before &&
+                              new Date(dateFilter.before)
+                                .toISOString()
+                                .slice(0, 10)
+                            }
+                            onChange={(e) =>
+                              setDateFilter({
+                                ...dateFilter,
+                                before: isNaN(e.target.value)
+                                  ? new Date(e.target.value).toISOString()
+                                  : null,
+                              })
+                            }
+                          />
+                        </div>
                       </div>
-                      <div className="flex flex-col w-fit items-center">
-                        <span className="uppercase font-bold font-raleway text-center text-sm">
-                          Antes de:
-                        </span>
-                        <input
-                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                          type="date"
-                          value={
-                            dateFilter.before &&
-                            new Date(dateFilter.before)
-                              .toISOString()
-                              .slice(0, 10)
-                          }
-                          onChange={(e) =>
-                            setDateFilter({
-                              ...dateFilter,
-                              before: isNaN(e.target.value)
-                                ? new Date(e.target.value).toISOString()
-                                : null,
-                            })
-                          }
-                        />
-                      </div>
+
                       <div className="w-full lg:w-[250px]">
                         <Select
                           isMulti={false}
@@ -584,7 +587,7 @@ function Suprimentos() {
           </Link>
           {session?.user?.regional == undefined && (
             <Link href={"/suprimentos/cotacoes"}>
-              <a className="fixed bg-[#15599a] cursor-pointer ml-[240px] hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+              <a className="fixed bg-[#15599a] cursor-pointer ml-[0px] lg:ml-[240px] hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-[7rem] lg:bottom-10 left-150">
                 <p className="uppercase font-bold text-sm">COTAÇÕES</p>
               </a>
             </Link>

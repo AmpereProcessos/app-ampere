@@ -14,7 +14,7 @@ import { SessionProvider } from "next-auth/react";
 import AppHead from "../components/Head/index";
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const [credentials, setCredentials] = useState({});
-  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
   const [users, setUsers] = useState([]);
   const [notificacoes, setNotificacoes] = useState([]);
   const router = useRouter();

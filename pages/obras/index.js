@@ -277,7 +277,7 @@ function Obras() {
         <div className="p-6 grow">
           <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
             <div className="flex items-center justify-between w-full">
-              <div className="flex items-center gap-2 font-['Roboto']">
+              <div className="flex flex-col lg:flex-row items-center gap-2 font-['Roboto']">
                 <p className="font-bold uppercase text-2xl text-[#15599a] text-center">
                   Projetos no estágio de obras
                 </p>

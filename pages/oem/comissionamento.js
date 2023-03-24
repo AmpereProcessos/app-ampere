@@ -199,52 +199,54 @@ function Comissionamento() {
                       value={filters.search}
                       onChange={(e) => handleSearchFilter(e.target.value)}
                     />
-                    <div className="flex gap-x-2">
-                      <div className="flex flex-col w-fit items-center">
-                        <span className="uppercase font-bold font-raleway text-center text-sm">
-                          Depois de:
-                        </span>
-                        <input
-                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                          type="date"
-                          value={
-                            dateFilter.after &&
-                            new Date(dateFilter.after)
-                              .toISOString()
-                              .slice(0, 10)
-                          }
-                          onChange={(e) =>
-                            setDateFilter({
-                              ...dateFilter,
-                              after: isNaN(e.target.value)
-                                ? new Date(e.target.value).toISOString()
-                                : null,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="flex flex-col w-fit items-center">
-                        <span className="uppercase font-bold font-raleway text-center text-sm">
-                          Antes de:
-                        </span>
-                        <input
-                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                          type="date"
-                          value={
-                            dateFilter.before &&
-                            new Date(dateFilter.before)
-                              .toISOString()
-                              .slice(0, 10)
-                          }
-                          onChange={(e) =>
-                            setDateFilter({
-                              ...dateFilter,
-                              before: isNaN(e.target.value)
-                                ? new Date(e.target.value).toISOString()
-                                : null,
-                            })
-                          }
-                        />
+                    <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
+                      <div className="flex items-center gap-x-2 justify-center">
+                        <div className="flex flex-col w-fit items-center">
+                          <span className="uppercase font-bold font-raleway text-center text-sm">
+                            Depois de:
+                          </span>
+                          <input
+                            className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                            type="date"
+                            value={
+                              dateFilter.after &&
+                              new Date(dateFilter.after)
+                                .toISOString()
+                                .slice(0, 10)
+                            }
+                            onChange={(e) =>
+                              setDateFilter({
+                                ...dateFilter,
+                                after: isNaN(e.target.value)
+                                  ? new Date(e.target.value).toISOString()
+                                  : null,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="flex flex-col w-fit items-center">
+                          <span className="uppercase font-bold font-raleway text-center text-sm">
+                            Antes de:
+                          </span>
+                          <input
+                            className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                            type="date"
+                            value={
+                              dateFilter.before &&
+                              new Date(dateFilter.before)
+                                .toISOString()
+                                .slice(0, 10)
+                            }
+                            onChange={(e) =>
+                              setDateFilter({
+                                ...dateFilter,
+                                before: isNaN(e.target.value)
+                                  ? new Date(e.target.value).toISOString()
+                                  : null,
+                              })
+                            }
+                          />
+                        </div>
                       </div>
                       <div className="w-full lg:w-[250px]">
                         <Select

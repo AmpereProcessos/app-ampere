@@ -250,7 +250,7 @@ function ComissaoPage() {
                     <div className="flex flex-col items-center w-full gap-1">
                       <button
                         onClick={() => setView("GERAL")}
-                        className={`p-1 cursor-pointer w-[350px] rounded font-bold ${
+                        className={`p-1 cursor-pointer w-full lg:w-[350px] rounded font-bold ${
                           view == "GERAL"
                             ? "bg-[#15599a] text-white hover:bg-[#fead61] hover:text-black"
                             : "bg-[#fead61] hover:bg-[#15599a] hover:text-white"
@@ -260,7 +260,7 @@ function ComissaoPage() {
                       </button>
                       <button
                         onClick={() => setView("PDF")}
-                        className={`p-1 cursor-pointer w-[350px] rounded font-bold ${
+                        className={`p-1 cursor-pointer w-full lg:w-[350px] rounded font-bold ${
                           view == "PDF"
                             ? "bg-[#0781F2] text-white hover:bg-blue-300 hover:text-black"
                             : "bg-blue-300 hover:bg-[#0781F2] hover:text-white"
@@ -270,7 +270,7 @@ function ComissaoPage() {
                       </button>
                       <button
                         onClick={() => setView("PDF INSIDE")}
-                        className={`p-1 cursor-pointer w-[350px] rounded font-bold ${
+                        className={`p-1 cursor-pointer w-full lg:w-[350px] rounded font-bold ${
                           view == "PDF INSIDE"
                             ? "bg-[#0781F2] text-white hover:bg-blue-300 hover:text-black"
                             : "bg-blue-300 hover:bg-[#0781F2] hover:text-white"
@@ -341,18 +341,18 @@ function ComissaoPage() {
                   </div>
                   <div className="grid grid-cols-3 lg:grid-cols-6">
                     <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs lg:text-base">
                         FATURAMENTO TOTAL
                       </h1>
-                      <p className="text-gray-700 text-center text-xs">
+                      <p className="text-gray-700 text-center text-xxs lg:text-xs">
                         R$ {Number(getTotalSold()).toLocaleString("pt-br")}
                       </p>
                     </div>
                     <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs lg:text-base">
                         COMISSÃO TOTAL ATIVO (PROJETO)
                       </h1>
-                      <p className="text-gray-700 text-center text-xs">
+                      <p className="text-gray-700 text-center text-xxs lg:text-xs">
                         R${" "}
                         {Number(
                           getTotalComission().ativoProjeto
@@ -360,10 +360,10 @@ function ComissaoPage() {
                       </p>
                     </div>
                     <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs lg:text-base">
                         COMISSÃO TOTAL ATIVO (PADRÃO)
                       </h1>
-                      <p className="text-gray-700 text-center text-xs">
+                      <p className="text-gray-700 text-center text-xxs lg:text-xs">
                         R${" "}
                         {Number(getTotalComission().ativoPadrao).toLocaleString(
                           "pt-br"
@@ -371,10 +371,10 @@ function ComissaoPage() {
                       </p>
                     </div>
                     <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs lg:text-base">
                         COMISSÃO TOTAL INSIDE
                       </h1>
-                      <p className="text-gray-700 text-center text-xs">
+                      <p className="text-gray-700 text-center text-xxs lg:text-xs">
                         R${" "}
                         {Number(getTotalComission().inside).toLocaleString(
                           "pt-br"
@@ -382,10 +382,10 @@ function ComissaoPage() {
                       </p>
                     </div>
                     <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs lg:text-base">
                         COMISSÃO TOTAL SOBRE FATURAMENTO
                       </h1>
-                      <p className="text-gray-700 text-center text-xs">
+                      <p className="text-gray-700 text-center text-xxs lg:text-xs">
                         {(
                           (getTotalComission().total * 100) /
                           getTotalSold()
@@ -394,10 +394,10 @@ function ComissaoPage() {
                       </p>
                     </div>
                     <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs lg:text-base">
                         VALOR DO kWp
                       </h1>
-                      <p className="text-gray-700 text-center text-xs">
+                      <p className="text-gray-700 text-center text-xxs lg:text-xs">
                         R$ {(getTotalSold() / getTotalPeakPot()).toFixed(2)}
                       </p>
                     </div>

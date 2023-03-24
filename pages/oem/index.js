@@ -287,8 +287,8 @@ function OeM({ users }) {
     return (
       <div className="p-6 grow">
         <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-2 font-['Roboto']">
+          <div className="flex items-center justify-between w-full gap-2">
+            <div className="flex flex-col lg:flex-row items-center gap-2 font-['Roboto']">
               <p className="font-bold uppercase text-2xl text-[#15599a] text-center">
                 Projetos no estágio de O&M
               </p>
@@ -343,49 +343,56 @@ function OeM({ users }) {
                       })
                     }
                   />
-                  <div className="flex gap-x-2 flex-wrap justify-center">
-                    <div className="flex flex-col w-fit items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        Depois de:
-                      </span>
-                      <input
-                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                        type="date"
-                        value={
-                          dateFilter.after &&
-                          new Date(dateFilter.after).toISOString().slice(0, 10)
-                        }
-                        onChange={(e) =>
-                          setDateFilter({
-                            ...dateFilter,
-                            after: isNaN(e.target.value)
-                              ? new Date(e.target.value).toISOString()
-                              : null,
-                          })
-                        }
-                      />
+                  <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
+                    <div className="flex items-center gap-x-2 justify-center">
+                      <div className="flex flex-col w-fit items-center">
+                        <span className="uppercase font-bold font-raleway text-center text-sm">
+                          Depois de:
+                        </span>
+                        <input
+                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                          type="date"
+                          value={
+                            dateFilter.after &&
+                            new Date(dateFilter.after)
+                              .toISOString()
+                              .slice(0, 10)
+                          }
+                          onChange={(e) =>
+                            setDateFilter({
+                              ...dateFilter,
+                              after: isNaN(e.target.value)
+                                ? new Date(e.target.value).toISOString()
+                                : null,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex flex-col w-fit items-center">
+                        <span className="uppercase font-bold font-raleway text-center text-sm">
+                          Antes de:
+                        </span>
+                        <input
+                          className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                          type="date"
+                          value={
+                            dateFilter.before &&
+                            new Date(dateFilter.before)
+                              .toISOString()
+                              .slice(0, 10)
+                          }
+                          onChange={(e) =>
+                            setDateFilter({
+                              ...dateFilter,
+                              before: isNaN(e.target.value)
+                                ? new Date(e.target.value).toISOString()
+                                : null,
+                            })
+                          }
+                        />
+                      </div>
                     </div>
-                    <div className="flex flex-col w-fit items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        Antes de:
-                      </span>
-                      <input
-                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                        type="date"
-                        value={
-                          dateFilter.before &&
-                          new Date(dateFilter.before).toISOString().slice(0, 10)
-                        }
-                        onChange={(e) =>
-                          setDateFilter({
-                            ...dateFilter,
-                            before: isNaN(e.target.value)
-                              ? new Date(e.target.value).toISOString()
-                              : null,
-                          })
-                        }
-                      />
-                    </div>
+
                     <div className="w-full lg:w-[250px]">
                       <Select
                         isMulti={false}
@@ -681,7 +688,7 @@ function OeM({ users }) {
                   handleOpenModal(project._id);
                 }}
                 key={project._id}
-                className="w-[250px] lg:w-[450px] cursor-pointer border border-gray-200  hover:bg-blue-100"
+                className="w-full md:w-[350px] lg:w-[450px] cursor-pointer border border-gray-200  hover:bg-blue-100"
               >
                 <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
                 <div className="flex flex-col p-2">

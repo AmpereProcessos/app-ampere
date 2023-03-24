@@ -6,7 +6,7 @@ import { FaUser } from "react-icons/fa";
 import connectToDatabase from "../../utils/projectsDb";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-function InProgress({ setCredentials, credentials, assContrato, data }) {
+function InProgress({ data }) {
   const router = useRouter();
   const { data: session, status } = useSession({
     required: true,
@@ -14,19 +14,20 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
       router.push("/auth/authHome");
     },
   });
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const [selectedProjects, setProjects] = useState({
     estagio: "ASSINATURA DO CONTRATO",
     projetos: data.assContrato,
   });
+
   return (
     <>
-      <div className="flex grow p-6 w-full">
-        <ol className="border-l-2 border-[#15599a]">
+      <div className="flex items flex-col-reverse lg:flex-row grow gap-2 p-6 w-full">
+        <ol className="border-l-2 border-[#15599a] self-center">
           <li>
             <div className="flex flex-start items-center">
               <div className="bg-blue-600 w-4 h-4 flex text-white text-xxs items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
+              <h4 className="text-gray-800 font-semibold text-xs lg:text-xl -mt-2">
                 ASSINATURA DO CONTRATO
               </h4>
             </div>
@@ -51,7 +52,7 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
           <li>
             <div className="flex flex-start items-center">
               <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
+              <h4 className="text-gray-800 font-semibold text-xs lg:text-xl -mt-2">
                 COMPRA DO KIT
               </h4>
             </div>
@@ -76,7 +77,7 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
           <li>
             <div className="flex flex-start items-center">
               <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
+              <h4 className="text-gray-800 font-semibold text-xs lg:text-xl -mt-2">
                 ENTREGA DO KIT
               </h4>
             </div>
@@ -101,7 +102,7 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
           <li>
             <div className="flex flex-start items-center">
               <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
+              <h4 className="text-gray-800 font-semibold text-xs lg:text-xl -mt-2">
                 ASSINATURA DA DOCUMENTAÇÃO
               </h4>
             </div>
@@ -126,7 +127,7 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
           <li>
             <div className="flex flex-start items-center">
               <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
+              <h4 className="text-gray-800 font-semibold text-xs lg:text-xl -mt-2">
                 LIBERAÇÃO DA CONCESSIONÁRIA
               </h4>
             </div>
@@ -151,7 +152,7 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
           <li>
             <div className="flex flex-start items-center">
               <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
+              <h4 className="text-gray-800 font-semibold text-xs lg:text-xl -mt-2">
                 AGENDAMENTO DA OBRA
               </h4>
             </div>
@@ -176,7 +177,7 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
           <li>
             <div className="flex flex-start items-center">
               <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
+              <h4 className="text-gray-800 font-semibold text-xs lg:text-xl -mt-2">
                 TÉRMINO DA OBRA
               </h4>
             </div>
@@ -201,7 +202,7 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
           <li>
             <div className="flex flex-start items-center">
               <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
+              <h4 className="text-gray-800 font-semibold text-xs lg:text-xl -mt-2">
                 VISTORIA DA CONCESSIONÁRIA
               </h4>
             </div>
@@ -226,7 +227,7 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
           <li>
             <div className="flex flex-start items-center">
               <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
+              <h4 className="text-gray-800 font-semibold text-xs lg:text-xl -mt-2">
                 LIGAMENTO DA USINA
               </h4>
             </div>
@@ -251,7 +252,7 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
           <li>
             <div className="flex flex-start items-center">
               <div className="bg-blue-600 w-4 h-4 flex items-center justify-center rounded-full -ml-2 mr-3 -mt-2"></div>
-              <h4 className="text-gray-800 font-semibold text-xl -mt-2">
+              <h4 className="text-gray-800 font-semibold text-xs lg:text-xl -mt-2">
                 ENTREGA TÉCNICA
               </h4>
             </div>
@@ -274,7 +275,7 @@ function InProgress({ setCredentials, credentials, assContrato, data }) {
             </div>
           </li>
         </ol>
-        <div className="flex flex-col sticky top-[10%] left-[60%] h-[600px] w-[500px] bg-[#fff] rounded-sm border border-gray-200 shadow-lg p-3">
+        <div className="flex flex-col mb-2 lg:mb-0 lg:sticky top-0 lg:top-[10%] left-0 lg:left-[60%] h-[450px] lg:h-[600px] w-full lg:w-[500px] bg-[#fff] rounded-sm border border-gray-200 shadow-lg p-3">
           <div className="flex flex-col items-center border-b border-gray-200 pb-2">
             <h1 className="font-bold text-center text-[#15599a] text-xl">
               PROJETOS

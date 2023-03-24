@@ -258,7 +258,7 @@ function Home() {
             <div className="flex items-center justify-center gap-2 mb-3">
               <button
                 onClick={() => getDataByRegional("REGIONAL ITUIUTABA")}
-                className={`border border-gray-200 rounded-sm p-1 ${
+                className={`h-[52px] lg:h-fit border border-gray-200 rounded-sm p-1 ${
                   regional == "REGIONAL ITUIUTABA" ? "bg-blue-100" : ""
                 } hover:bg-blue-100 font-raleway font-bold text-sm`}
               >
@@ -266,7 +266,7 @@ function Home() {
               </button>
               <button
                 onClick={() => getDataByRegional("REGIONAL UBERLÂNDIA")}
-                className={`border border-gray-200 rounded-sm p-1 ${
+                className={`h-[52px] lg:h-fit border border-gray-200 rounded-sm p-1 ${
                   regional == "REGIONAL UBERLÂNDIA" ? "bg-blue-100" : ""
                 } hover:bg-blue-100 font-raleway font-bold text-sm`}
               >
@@ -278,7 +278,7 @@ function Home() {
                   getStats(session.user);
                   getGraphDataByYear(2023, session.user);
                 }}
-                className={`border border-gray-200 rounded-sm p-1 ${
+                className={`h-[52px] lg:h-fit border border-gray-200 rounded-sm p-1 ${
                   regional == "GERAL" ? "bg-blue-100" : ""
                 } hover:bg-blue-100 font-raleway font-bold text-sm`}
               >
@@ -404,7 +404,7 @@ function Home() {
             </div>
           </div>
           <div className="grid grid-rows-2 grid-cols-1 gap-y-2 mt-4 lg:grid-cols-10 lg:grid-rows-1 lg:gap-x-3">
-            <div className="flex flex-col p-4 h-[400px] border border-gray-200 bg-[#fff] shadow-xl col-span-2">
+            <div className="flex flex-col p-4 h-[425px] border border-gray-200 bg-[#fff] shadow-xl col-span-2">
               <h1 className="text-gray-600 text-xl text-center">NPS</h1>
               <div className="flex grow items-center justify-center">
                 <div className="w-[150px] h-[150px]">
@@ -433,8 +433,8 @@ function Home() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col p-4 h-[400px] border border-gray-200 bg-[#fff] shadow-xl col-span-8">
-              <div className="grid grid-cols-2 py-2">
+            <div className="flex flex-col p-4 h-fit lg:h-[425px] border border-gray-200 bg-[#fff] shadow-xl col-span-8">
+              <div className="grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 py-2">
                 <h1 className="text-gray-600 uppercase text-xl text-center">
                   Potência pico vendida
                 </h1>
@@ -549,7 +549,7 @@ function Home() {
             </div>
           </div>
           <div className="flex mt-4 grow flex-col p-4  border border-gray-200 bg-[#fff] shadow-xl">
-            <div className="flex w-full items-center justify-between">
+            <div className="flex flex-col lg:flex-row w-full items-center justify-between">
               <h1 className="text-gray-600 uppercase">
                 ANIVERSARIANTES DO MÊS
               </h1>
@@ -560,7 +560,7 @@ function Home() {
                 ANIVERSARIANDO HOJE
               </button>
             </div>
-            <div className="w-full grow flex flex-wrap justify-between gap-y-2 mt-2">
+            <div className="w-full grow flex flex-wrap justify-center lg:justify-between gap-y-2 mt-2">
               {clientBirthday.filtered.length > 0 &&
                 clientBirthday.filtered?.map((client, index) => (
                   <div

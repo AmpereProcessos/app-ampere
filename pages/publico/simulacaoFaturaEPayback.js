@@ -6,7 +6,11 @@ import EmptyLogo from "../../utils/empty-logo.png";
 import {
   Area,
   AreaChart,
+  Bar,
+  BarChart,
   CartesianGrid,
+  Legend,
+  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
@@ -174,7 +178,48 @@ function SimulacaoFaturaEPayback() {
     simultaneidade: 0.33,
   });
   const [data, setData] = useState();
+  const [msg, setMsg] = useState({ text: "", color: "" });
   function simulate() {
+    if (info.qtdeModulos <= 0) {
+      setMsg({
+        text: "Por favor, preencha uma quantidade válida de módulos",
+        color: "text-red-500",
+      });
+      setTimeout(() => {
+        setMsg({ text: "", color: "" });
+      }, 2500);
+      return;
+    }
+    if (info.potModulos <= 0) {
+      setMsg({
+        text: "Por favor, preencha uma potência válida de módulos",
+        color: "text-red-500",
+      });
+      setTimeout(() => {
+        setMsg({ text: "", color: "" });
+      }, 2500);
+      return;
+    }
+    if (info.consumoMedio <= 0) {
+      setMsg({
+        text: "Por favor, preencha um consumo válido.",
+        color: "text-red-500",
+      });
+      setTimeout(() => {
+        setMsg({ text: "", color: "" });
+      }, 2500);
+      return;
+    }
+    if (info.valorInvestido <= 0) {
+      setMsg({
+        text: "Por favor, preencha um valor de investimento válido.",
+        color: "text-red-500",
+      });
+      setTimeout(() => {
+        setMsg({ text: "", color: "" });
+      }, 2500);
+      return;
+    }
     const irradianca = fatoresListOfDict[info.cidade];
     const consumo = [
       { mes: 1, valor: info.consumoMedio },
@@ -299,7 +344,7 @@ function SimulacaoFaturaEPayback() {
           ? saldoPassado + injetadoMesComparacao
           : usoConcessionariaMesComparacao;
       var compensacao =
-        liquidoMesComparacao > 0
+        liquidoMesComparacao >= 0
           ? usoConcessionariaMesComparacao
           : compensacaoSeComUsoDeSaldo > 0
           ? compensacaoSeComUsoDeSaldo
@@ -324,8 +369,7 @@ function SimulacaoFaturaEPayback() {
       var valorFaturaDireitoAdquirido =
         saldoParaAdicionarDireitoAdquirido > 0
           ? custoDisponibilidade + info.iluminacaoPublica
-          : saldoParaAdicionarDireitoAdquirido +
-              saldoParaAdicionarDireitoAdquirido >=
+          : saldoParaAdicionarDireitoAdquirido + saldoPassadoDireitoAdquirido >=
             0
           ? custoDisponibilidade + info.iluminacaoPublica
           : Math.abs(
@@ -354,13 +398,23 @@ function SimulacaoFaturaEPayback() {
       tabelaFinal.push({
         ANO: anoComparacao,
         MÊS: mesComparacao,
-        "SALDO ACUMULADO (NOVA LEI)": saldoCumulado,
-        "SALDO ACUMULADO (DIREITO ADQUIRIDO)": saldoCumuladoDireitoAdquirido,
-        "VALOR FATURA (NOVA LEI)": valorFatura,
-        "VALOR FATURA (DIREITO ADQUIRIDO)": valorFaturaDireitoAdquirido,
+        TAG:
+          mesComparacao >= 10
+            ? `${mesComparacao}/${anoComparacao}`
+            : `0${mesComparacao}/${anoComparacao}`,
+        "SALDO ACUMULADO (NOVA LEI)": Number(saldoCumulado.toFixed(2)),
+        "SALDO ACUMULADO (DIREITO ADQUIRIDO)": Number(
+          saldoCumuladoDireitoAdquirido.toFixed(2)
+        ),
+        "VALOR FATURA (NOVA LEI)": Number(valorFatura.toFixed(2)),
+        "VALOR FATURA (DIREITO ADQUIRIDO)": Number(
+          valorFaturaDireitoAdquirido.toFixed(2)
+        ),
 
-        "PAYBACK (NOVA LEI)": payback,
-        "PAYBACK (DIREITO ADQUIRIDO)": paybackDireitoAdquirido,
+        "PAYBACK (NOVA LEI)": Number(payback.toFixed(2)),
+        "PAYBACK (DIREITO ADQUIRIDO)": Number(
+          paybackDireitoAdquirido.toFixed(2)
+        ),
       });
 
       if (mesComparacao + 1 > 12) {
@@ -378,117 +432,76 @@ function SimulacaoFaturaEPayback() {
       <div className="p-6 grow flex flex-col">
         <div className="flex items-center justify-center gap-2 w-full mb-3">
           <h1 className="text-center font-bold text-[#15599a] text-xl font-['Roboto']">
-            TABELA DE PROGRESSÃO
+            ANÁLISE
           </h1>
           <button
             onClick={() => setData(null)}
-            className="p-2 rounded border border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white"
+            className="p-2 rounded border border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white hover:scale-110 duration-300 ease-in-out"
           >
             <MdRestartAlt />
           </button>
         </div>
-        <div className="w-full">
-          <AreaChart
-            width={1200}
-            height={250}
-            data={data}
-            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-          >
-            <defs>
-              <linearGradient
-                id="PAYBACK (DIREITO ADQUIRIDO)"
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient
-                id="PAYBACK (NOVA LEI)"
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <XAxis dataKey="ANO" />
-            <YAxis />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip />
-            <Area
-              type="monotone"
-              dataKey="PAYBACK (DIREITO ADQUIRIDO)"
-              stroke="#8884d8"
-              fillOpacity={1}
-              fill="#8884d8"
-            />
-            <Area
-              type="monotone"
-              dataKey="PAYBACK (NOVA LEI)"
-              stroke="#82ca9d"
-              fillOpacity={1}
-              fill="#82ca9d"
-            />
-          </AreaChart>
+        <div className="w-full h-[600px]">
+          <ResponsiveContainer>
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="TAG" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="PAYBACK (DIREITO ADQUIRIDO)" fill="#fead61" />
+              <Bar dataKey="PAYBACK (NOVA LEI)" fill="#15599a" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
-        <div className="w-full grid grid-cols-8">
-          <div className="text-center flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
-            ANO
+
+        <div className="w-full grid grid-cols-5 lg:grid-cols-7">
+          <div className="text-center text-xxs lg:text-base flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
+            PERÍODO
           </div>
-          <div className="text-center flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
-            MES
-          </div>
-          <div className="text-center flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
+          <div className="hidden lg:flex text-center text-xxs lg:text-base items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
             SALDO DIREITO ADQUIRIDO
           </div>
-          <div className="text-center flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
+          <div className="hidden lg:flex text-center text-xxs lg:text-base items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
             SALDO NOVA LEI
           </div>
-          <div className="text-center flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
+          <div className="text-center text-xxs lg:text-base flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
             FATURA DIREITO ADQUIRIDO
           </div>
-          <div className="text-center flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
+          <div className="text-center text-xxs lg:text-base flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
             FATURA NOVA LEI{" "}
           </div>
-          <div className="text-center flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
+          <div className="text-center text-xxs lg:text-base flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
             PAYBACK DIREITO ADQUIRIDO
           </div>
-          <div className="text-center flex items-center justify-center bg-black text-white p-1 font-bold">
+          <div className="text-center text-xxs lg:text-base flex items-center justify-center bg-black text-white p-1 font-bold">
             PAYBACK NOVA LEI
           </div>
         </div>
         {data?.map((obj, index) => (
           <div
             key={index}
-            className="w-full grid grid-cols-8 border-x border-b border-gray-200"
+            className="w-full grid grid-cols-5 lg:grid-cols-7 border-x border-b border-gray-200"
           >
-            <h1 className="text-center text-sm text-gray-600 border-r border-gray-300 p-1">
-              {obj["ANO"]}
+            <h1 className="text-center text-xxs lg:text-sm text-gray-600 border-r border-gray-300 p-1">
+              {obj["TAG"]}
             </h1>
-            <h1 className="text-center text-sm text-gray-600 border-r border-gray-300 p-1">
-              {obj["MÊS"]}
-            </h1>
-            <h1 className="text-center text-sm text-gray-600 border-r border-gray-300 p-1">
+            <h1 className="hidden lg:block text-center text-xxs lg:text-sm text-gray-600 border-r border-gray-300 p-1">
               {obj["SALDO ACUMULADO (DIREITO ADQUIRIDO)"].toFixed(2)}
             </h1>
-            <h1 className="text-center text-sm text-gray-600 border-r border-gray-300 p-1">
+            <h1 className="hidden lg:block text-center text-xxs lg:text-sm text-gray-600 border-r border-gray-300 p-1">
               {obj["SALDO ACUMULADO (NOVA LEI)"].toFixed(2)}
             </h1>
-            <h1 className="text-center text-sm text-gray-600 border-r border-gray-300 p-1">
+            <h1 className="text-center text-xxs lg:text-sm text-gray-600 border-r border-gray-300 p-1">
               {obj["VALOR FATURA (DIREITO ADQUIRIDO)"].toFixed(2)}
             </h1>
-            <h1 className="text-center text-sm text-gray-600 border-r border-gray-300 p-1">
+            <h1 className="text-center text-xxs lg:text-sm text-gray-600 border-r border-gray-300 p-1">
               {obj["VALOR FATURA (NOVA LEI)"].toFixed(2)}
             </h1>
-            <h1 className="text-center text-sm text-gray-600 border-r border-gray-300 p-1">
+            <h1 className="text-center text-xxs lg:text-sm text-gray-600 border-r border-gray-300 p-1">
               {obj["PAYBACK (DIREITO ADQUIRIDO)"].toFixed(2)}
             </h1>
-            <h1 className="text-center text-sm text-gray-600 p-1">
+            <h1 className="text-center text-xxs lg:text-sm text-gray-600 p-1">
               {obj["PAYBACK (NOVA LEI)"].toFixed(2)}
             </h1>
           </div>
@@ -713,12 +726,18 @@ function SimulacaoFaturaEPayback() {
               </div>
             </div>
             <div className="flex items-center justify-center mt-2">
-              <button
-                onClick={simulate}
-                className="flex items-center text-[#fead61] border border-[#fead61] hover:text-white hover:bg-[#fead61] hover:scale-110 duration-300 ease-in-out p-6 rounded-full"
-              >
-                <FaPlay />
-              </button>
+              {msg.text ? (
+                <p className={`text-center text-base italic ${msg.color}`}>
+                  {msg.text}
+                </p>
+              ) : (
+                <button
+                  onClick={simulate}
+                  className="flex items-center text-[#fead61] border border-[#fead61] hover:text-white hover:bg-[#fead61] hover:scale-110 duration-300 ease-in-out p-6 rounded-full"
+                >
+                  <FaPlay />
+                </button>
+              )}
             </div>
           </div>
         </div>

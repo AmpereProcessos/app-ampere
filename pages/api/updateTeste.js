@@ -7,6 +7,44 @@ export default async function handler(req, res) {
   //   .aggregate([
   //     {
   //       $match: {
+  //         "contrato.status": "ASSINADO",
+  //       },
+  //     },
+  //     {
+  //       $project: {
+  //         qtde: 1,
+  //         "sistema.potPico": 1,
+  //         "contrato.dataAssinatura": 1,
+  //         "contrato.formaAssinatura": 1,
+  //         "vendedor.nome": 1,
+  //         cidade: 1,
+  //         regional: 1,
+  //         tipoDeServico: 1,
+  //       },
+  //     },
+  //   ])
+  //   .toArray();
+  // let newArr = arr.map((item) => {
+  //   return {
+  //     QTDE: item.qtde,
+  //     "POTÊNCIA PICO": item.sistema.potPico ? item.sistema.potPico : "-",
+  //     "DATA ASSINATURA": item.contrato?.dataAssinatura
+  //       ? dayjs(item.contrato?.dataAssinatura)
+  //           .add(4, "hours")
+  //           .format("DD/MM/YYYY")
+  //       : "-",
+  //     "FORMA ASSINATURA": item.contrato?.formaAssinatura
+  //       ? item.contrato?.formaAssinatura
+  //       : "-",
+  //     CIDADE: item.cidade ? item.cidade : "-",
+  //     REGIONAL: item.regional ? item.regional : "-",
+  //     "TIPO DE SERVIÇO": item.tipoDeServico ? item.tipoDeServico : "-",
+  //   };
+  // });
+  // let arr = await collection
+  //   .aggregate([
+  //     {
+  //       $match: {
   //         nps: { $gte: 8 },
   //       },
   //     },

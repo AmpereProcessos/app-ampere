@@ -139,7 +139,7 @@ function ModalCallProjetos({
               />
             </button>
           </div>
-          <div className="overflow-y-auto">
+          <div className="overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
               <span className="font-bold font-raleway">STATUS</span>
               <div className="flex gap-x-2 justify-center grow">
@@ -305,7 +305,7 @@ function ModalCallProjetos({
                     FINALIZAR CHAMADO
                   </button>
                 </div>
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center mt-3">
                   <SaveButton
                     text={"SALVAR"}
                     icon={<FaSave />}

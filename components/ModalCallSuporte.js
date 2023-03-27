@@ -213,7 +213,7 @@ function ModalCallSuporte({
                   "hours"
                 )} horas em aberto`}
           </p>
-          <div className="overflow-y-auto">
+          <div className="overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {credentials?.accessibleRoutes.includes("Pós-Venda") &&
             info.fechamento ? (
               <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">

@@ -228,7 +228,7 @@ function ModalCallPPS({
               />
             </button>
           </div>
-          <div className="overflow-y-auto">
+          <div className="overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
               <span className="font-bold font-raleway">STATUS</span>
               <div className="flex gap-x-2 justify-center grow">
@@ -355,7 +355,7 @@ function ModalCallPPS({
                 readOnly={!editor}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Digite aqui as anotações do chamado"
-                className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit grow"
+                className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit grow scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
               />
             </div>
             {editor ? (

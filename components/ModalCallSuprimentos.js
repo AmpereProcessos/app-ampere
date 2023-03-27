@@ -267,11 +267,14 @@ function ModalCallSuprimentos({ setModalIsOpen, info, getCalls, modalIsOpen }) {
                 {message.text}
               </p>
             )}
-            <SaveButton
-              text={"SALVAR"}
-              icon={<FaSave />}
-              handleClick={handleChanges}
-            />
+            <div className="flex items-center justify-center">
+              <SaveButton
+                text={"SALVAR"}
+                icon={<FaSave />}
+                handleClick={handleChanges}
+              />
+            </div>
+
             {modalInfo.status != "FECHADO" ? (
               <button
                 onClick={() => closeCall()}
@@ -282,7 +285,7 @@ function ModalCallSuprimentos({ setModalIsOpen, info, getCalls, modalIsOpen }) {
             ) : (
               <button
                 onClick={() => reopenCall()}
-                className="mt-3 self-center rounded w-fit p-2 border border-yellow-500 text-yellow-500 hover:text-white hover:bg-yellow-500 hover:font-bold"
+                className="mt-3 self-center rounded w-fit p-2 border border-yellow-500 text-yellow-500 hover:text-white hover:bg-yellow-500 font-bold"
               >
                 REABRIR CHAMADO
               </button>

@@ -527,10 +527,22 @@ function SimulacaoFaturaEPayback() {
             <h1 className="text-center text-xxs lg:text-sm text-gray-600 border-r border-gray-300 p-1">
               {obj["VALOR FATURA (NOVA LEI)"].toFixed(2)}
             </h1>
-            <h1 className="text-center text-xxs lg:text-sm text-gray-600 border-r border-gray-300 p-1">
+            <h1
+              className={`text-center text-xxs lg:text-sm ${
+                obj["PAYBACK (DIREITO ADQUIRIDO)"] > 0
+                  ? "text-green-500"
+                  : "text-red-500"
+              } border-r border-gray-300 p-1`}
+            >
               {obj["PAYBACK (DIREITO ADQUIRIDO)"].toFixed(2)}
             </h1>
-            <h1 className="text-center text-xxs lg:text-sm text-gray-600 p-1">
+            <h1
+              className={`text-center text-xxs lg:text-sm ${
+                obj["PAYBACK (NOVA LEI)"] > 0
+                  ? "text-green-500"
+                  : "text-red-500"
+              } p-1`}
+            >
               {obj["PAYBACK (NOVA LEI)"].toFixed(2)}
             </h1>
           </div>
@@ -726,7 +738,7 @@ function SimulacaoFaturaEPayback() {
             <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 w-full gap-2">
               <div className="flex flex-col gap-2 w-full">
                 <label className="text-start italic text-md text-gray-500">
-                  Consumo médio
+                  Consumo médio (kWh)
                 </label>
                 <input
                   value={info.consumoMedio}

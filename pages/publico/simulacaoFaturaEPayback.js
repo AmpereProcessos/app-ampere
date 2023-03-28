@@ -178,6 +178,7 @@ function SimulacaoFaturaEPayback() {
     simultaneidade: 0.33,
   });
   const [data, setData] = useState();
+  const [graphData, setGraphData] = useState();
   const [msg, setMsg] = useState({ text: "", color: "" });
   function simulate() {
     if (info.qtdeModulos <= 0) {
@@ -426,6 +427,26 @@ function SimulacaoFaturaEPayback() {
     }
     console.log(tabelaFinal);
     setData(tabelaFinal);
+    setGraphData(tabelaFinal);
+  }
+
+  function getYearlyGraphData(data) {
+    let arrayOfYears = data.map((data) => data.ANO);
+    let uniqueYears = arrayOfYears.filter(
+      (value, index, array) => array.indexOf(value) === index
+    );
+    let newArrOfObjs = uniqueYears.map((year) => {
+      let matchingObjForThisYear = data.filter(
+        (item) => item.ANO == year && item["MÊS"] == 12
+      )[0];
+      return {
+        TAG: year,
+        "PAYBACK (DIREITO ADQUIRIDO)":
+          matchingObjForThisYear["PAYBACK (DIREITO ADQUIRIDO)"],
+        "PAYBACK (NOVA LEI)": matchingObjForThisYear["PAYBACK (NOVA LEI)"],
+      };
+    });
+    setGraphData(newArrOfObjs);
   }
   if (data) {
     return (
@@ -441,9 +462,17 @@ function SimulacaoFaturaEPayback() {
             <MdRestartAlt />
           </button>
         </div>
+        <div className="flex items-center justify-center lg:justify-end w-full">
+          <button
+            onClick={() => getYearlyGraphData(data)}
+            className="p-2 text-xs rounded text-white bg-[#15599a] hover:scale-110 duration-300 ease-in-out mb-2"
+          >
+            VISUALIZAÇÃO POR ANO
+          </button>
+        </div>
         <div className="w-full h-[600px]">
           <ResponsiveContainer>
-            <BarChart data={data}>
+            <BarChart data={graphData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="TAG" />
               <YAxis />
@@ -519,7 +548,7 @@ function SimulacaoFaturaEPayback() {
             SIMULAÇÃO DE FATURAS E PAYBACK
           </h1>
           <div className="w-full flex flex-col py-2 px-12 gap-2">
-            <div className="grid grid-cols-2 w-full gap-2">
+            <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 w-full gap-2">
               <div className="flex flex-col gap-2 w-full">
                 <label className="text-start italic text-md text-gray-500">
                   Quantidade de Módulos
@@ -547,7 +576,7 @@ function SimulacaoFaturaEPayback() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 w-full gap-2">
+            <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 w-full gap-2">
               <div className="flex flex-col gap-2 w-full">
                 <label className="text-start italic text-md text-gray-500">
                   Tipo de ligação
@@ -582,7 +611,7 @@ function SimulacaoFaturaEPayback() {
                 </select>
               </div>
             </div>
-            <div className="grid grid-cols-2 w-full gap-2">
+            <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 w-full gap-2">
               <div className="flex flex-col gap-2 w-full">
                 <label className="text-start italic text-md text-gray-500">
                   Ano de início
@@ -629,7 +658,7 @@ function SimulacaoFaturaEPayback() {
                 </select>
               </div>
             </div>
-            <div className="grid grid-cols-2 w-full gap-2">
+            <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 w-full gap-2">
               <div className="flex flex-col gap-2 w-full">
                 <label className="text-start italic text-md text-gray-500">
                   Valor do kWh
@@ -660,7 +689,7 @@ function SimulacaoFaturaEPayback() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 w-full gap-2">
+            <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 w-full gap-2">
               <div className="flex flex-col gap-2 w-full">
                 <label className="text-start italic text-md text-gray-500">
                   Iluminação pública
@@ -694,7 +723,7 @@ function SimulacaoFaturaEPayback() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 w-full gap-2">
+            <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 w-full gap-2">
               <div className="flex flex-col gap-2 w-full">
                 <label className="text-start italic text-md text-gray-500">
                   Consumo médio

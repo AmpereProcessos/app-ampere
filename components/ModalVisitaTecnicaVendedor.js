@@ -187,7 +187,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
     <div style={OVERLAY_STYLES}>
       <div style={MODAL_STYLES}>
         <div className="flex flex-col h-full">
-          <div className="flex flex-col lg:flex-row justify-around gap-2 flex-wrap items-center px-2 text-lg pb-2 border-b border-gray-200">
+          <div className="grid grid-cols-3 items-center px-2 text-lg pb-2 border-b border-gray-200">
             <h1 className="text-[#15599a] p-0 lg:pl-6 font-bold text-xs lg:text-base">
               {dados.nomeDoCliente}
             </h1>
@@ -211,17 +211,22 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 </select>
               </div>
             ) : (
-              <p className="font-bold p-1 bg-green-400 text-white rounded">
-                CONCLUIDO
-              </p>
+              <div className="flex items-center justify-center">
+                <p className="font-bold p-1 bg-green-400 text-white rounded w-fit self-center text-xs lg:text-base">
+                  CONCLUIDO
+                </p>
+              </div>
             )}
-            <div className="flex items-center justify-around gap-x-2">
+            <div className="flex items-center justify-end gap-x-2">
               {msg.text && <p className={`italic ${msg.color}`}>{msg.text}</p>}
-              <SaveButton
-                text={"Salvar alterações"}
-                icon={<FaSave />}
-                handleClick={saveChanges}
-              />
+              {dados.status == "REJEITADA" ? (
+                <SaveButton
+                  text={"Salvar alterações"}
+                  icon={<FaSave />}
+                  handleClick={saveChanges}
+                />
+              ) : null}
+
               <button>
                 <VscChromeClose
                   onClick={() => setModalIsOpen(false)}

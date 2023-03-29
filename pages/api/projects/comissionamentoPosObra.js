@@ -27,6 +27,7 @@ export default async function handler(req, res) {
             "jornada.entregaTecnica": 1,
             "jornada.tipoEntregaTecnica": 1,
             "vendedor.nome": 1,
+            "oem.diagnostico": 1,
           },
         },
         {

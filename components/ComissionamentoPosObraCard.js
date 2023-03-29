@@ -123,8 +123,7 @@ function ComissionamentoPosObraCard({ project, index }) {
             <p className="text-xs text-gray-600">{info.vendedor.nome}</p>
           </div>
         </div>
-
-        <div className="flex items-center justify-center gap-1 flex-wrap col-span-9">
+        <div className="flex items-center justify-center gap-1 flex-wrap">
           <DateInput
             label={"Usina Ligada"}
             editable={true}
@@ -350,6 +349,47 @@ function ComissionamentoPosObraCard({ project, index }) {
               </label>
             </div>
           </div>
+        </div>
+        <div className="flex items-center justify-center w-full">
+          <SelectInput
+            label={"DIAGNÓSTICO"}
+            value={
+              info.oem?.diagnostico ? info.oem?.diagnostico : "NÃO DEFINIDO"
+            }
+            editable={true}
+            options={[
+              {
+                label: "MICRO/INVERSOR DESCONFIGURADO",
+                value: "MICRO/INVERSOR DESCONFIGURADO",
+              },
+              {
+                label: "CLIENTE SEM INTERNET",
+                value: "CLIENTE SEM INTERNET",
+              },
+              {
+                label: "TEMPO DE O&M VENCIDO",
+                value: "TEMPO DE O&M VENCIDO",
+              },
+              {
+                label: "EQUIPAMENTOS PARA GARANTIA",
+                value: "EQUIPAMENTOS PARA GARANTIA",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
+            handleChange={(value) => {
+              setChanges({ ...changes, "oem.diagnostico": value });
+              setInfo({
+                ...info,
+                oem: {
+                  ...info.oem,
+                  diagnostico: value,
+                },
+              });
+            }}
+          />
         </div>
       </div>
     </motion.div>

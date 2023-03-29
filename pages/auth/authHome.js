@@ -7,7 +7,10 @@ function Auth() {
   const router = useRouter();
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState({ text: "", color: "" });
+  const [message, setMessage] = useState({
+    text: "",
+    color: "",
+  });
   // function handleLogin() {
   //   axios.post("/api/auth/login", { email: user, password }).then((res) => {
   //     if (res.data.error) {
@@ -65,49 +68,42 @@ function Auth() {
     }
   }
   return (
-    <section className="h-screen">
-      <div className="px-6 h-full text-gray-800">
-        <div className="flex xl:justify-center lg:justify-between justify-center items-center flex-wrap h-full g-6">
-          <div className="mr-4">
-            <Image src={EmptyLogo}></Image>
-          </div>
-          <div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
-            <form>
-              <div className="mb-6">
-                <input
-                  type="text"
-                  className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  placeholder="Email"
-                  value={user}
-                  onChange={(e) => setUser(e.target.value)}
-                />
-              </div>
-              <div className="mb-6">
-                <input
-                  type="password"
-                  className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  placeholder="Senha"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div className="flex items-center justify-start gap-2">
-                <button
-                  type="button"
-                  className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-                  onClick={handleSignIn}
-                >
-                  Login
-                </button>
-                {message.text ? (
-                  <p className={`text-lg text-center ${message.color}`}>
-                    {message.text}
-                  </p>
-                ) : null}
-              </div>
-            </form>
-          </div>
+    <section className="h-screen grow">
+      <div className="grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 gap-2 items-center h-full">
+        <div className="flex items-center justify-center">
+          <Image src={EmptyLogo}></Image>
         </div>
+        <form className="h-full w-full items-center lg:items-start flex flex-col justify-start lg:justify-center px-6 lg:px-0">
+          <input
+            type="text"
+            className="form-control mb-6 block w-full md:w-[400px] lg:w-[400px] xl:w-[500px] px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            placeholder="Email"
+            value={user}
+            onChange={(e) => setUser(e.target.value)}
+          />
+
+          <input
+            type="password"
+            className="form-control mb-6 block w-full md:w-[400px] lg:w-[400px] xl:w-[500px] px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            placeholder="Senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <div className="flex flex-col justify-center lg:flex-row items-center lg:justify-start gap-2">
+            <button
+              type="button"
+              className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+              onClick={handleSignIn}
+            >
+              Login
+            </button>
+            {message.text ? (
+              <p className={`text-lg text-center ${message.color}`}>
+                {message.text}
+              </p>
+            ) : null}
+          </div>
+        </form>
       </div>
     </section>
   );

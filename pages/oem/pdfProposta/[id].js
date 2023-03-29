@@ -169,7 +169,7 @@ function pdfProposta({ info }) {
                       >
                         Manutenção simples
                       </th>
-                      {!info.maintenanceOnly ? (
+                      {!info.currentPlanOption == 1 ? (
                         <>
                           <th
                             scope="col"
@@ -206,7 +206,7 @@ function pdfProposta({ info }) {
                           />
                         </div>
                       </td>
-                      {!info.maintenanceOnly ? (
+                      {!info.currentPlanOption == 1 ? (
                         <>
                           <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
                             <div className="flex justify-center">
@@ -252,7 +252,7 @@ function pdfProposta({ info }) {
                           />
                         </div>
                       </td>
-                      {!info.maintenanceOnly ? (
+                      {!info.currentPlanOption == 1 ? (
                         <>
                           <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
                             <div className="flex justify-center">
@@ -299,7 +299,7 @@ function pdfProposta({ info }) {
                           />
                         </div>
                       </td>
-                      {!info.maintenanceOnly ? (
+                      {!info.currentPlanOption == 1 ? (
                         <>
                           <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                             <div className="flex justify-center">
@@ -346,7 +346,7 @@ function pdfProposta({ info }) {
                           />
                         </div>
                       </td>
-                      {!info.maintenanceOnly ? (
+                      {!info.currentPlanOption == 1 ? (
                         <>
                           <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                             <div className="flex justify-center">
@@ -400,7 +400,7 @@ function pdfProposta({ info }) {
                           />
                         </div>
                       </td>
-                      {!info.maintenanceOnly ? (
+                      {!info.currentPlanOption == 1 ? (
                         <>
                           <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                             <div className="flex justify-center">
@@ -428,7 +428,7 @@ function pdfProposta({ info }) {
                         </>
                       ) : null}
                     </tr>
-                    {!info.maintenanceOnly ? (
+                    {!info.currentPlanOption == 1 ? (
                       <>
                         <tr className="border-b bg-white">
                           <td className="px-2 text-sm font-medium text-gray-900 border-r">
@@ -554,7 +554,7 @@ function pdfProposta({ info }) {
                           .toFixed(2)
                           .replace(".", ",")}
                       </td>
-                      {!info.maintenanceOnly ? (
+                      {!info.currentPlanOption == 1 ? (
                         <>
                           <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
                             R${" "}

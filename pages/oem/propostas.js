@@ -28,7 +28,6 @@ function Propostas() {
     modulesQty: null,
     modulesPot: null,
     currentEfficience: null,
-    maintenanceOnly: false,
     distance: 0,
   });
   const [propostas, setPropostas] = useState();
@@ -195,18 +194,6 @@ function Propostas() {
                 setDados({ ...dados, currentEfficience: value })
               }
             />
-            <div className="flex items-center gap-2">
-              <label htmlFor="maintenanceOnly">SOMENTE MANUTENÇÃO ?</label>
-              <input
-                checked={dados.maintenanceOnly}
-                onChange={(e) =>
-                  setDados({ ...dados, maintenanceOnly: e.target.checked })
-                }
-                id="maintenanceOnly"
-                name="maintenanceOnly"
-                type={"checkbox"}
-              />
-            </div>
             <NumberInput
               label={"DISTÂNCIA"}
               editable={true}

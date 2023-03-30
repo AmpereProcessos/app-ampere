@@ -22,6 +22,7 @@ function ConferenciaMontagemOS({ info, cliente, index, saveChanges, getOSs }) {
     "QUIRINÓPOLIS", // GO
     "PARANAIGUARA", // GO
     "CATALÃO", // GO
+    "CACHOEIRA ALTA", // GO
   ];
   // function validateOSClosing() {
   //   if (!infoHolder.testesCCeCA) {

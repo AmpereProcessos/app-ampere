@@ -1221,6 +1221,7 @@ export const cidadesAtendidas = [
   "SÃO FRANCISCO DE SALES", // MG,
   "BRASÍLIA", // DF
   "CAÇU", // GO
+  "CACHOEIRA ALTA", // GO
 ];
 export const cidadesGoias = [
   "CALDAS NOVAS", // GO

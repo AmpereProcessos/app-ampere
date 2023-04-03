@@ -7,6 +7,7 @@ import {
   fornecedores,
   localEntregaOptions,
   equipesTecnicas,
+  customersAcquisitionChannels,
 } from "../utils/constants";
 import { AppContext } from "../context/AppContext";
 import { FaSave } from "react-icons/fa";
@@ -288,20 +289,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         : "NÃO DEFINIDO"
                     }
                     editable={editor}
-                    options={[
-                      { label: "EVENTO", value: "EVENTO" },
-                      {
-                        label: "INDICAÇÃO DE AMIGO",
-                        value: "INDICAÇÃO DE AMIGO",
-                      },
-                      { label: "INSIDE SALES", value: "INSIDE SALES" },
-                      { label: "PASSIVO", value: "PASSIVO" },
-                      { label: "PORTA A PORTA", value: "PORTA A PORTA" },
-                      { label: "TELEVENDAS", value: "TELEVENDAS" },
-                      { label: "NETWORK", value: "NETWORK" },
-                      { label: "OUTRO", value: "OUTRO" },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
+                    options={customersAcquisitionChannels}
                     handleChange={(value) => {
                       setChanges({ ...changes, canalVenda: value });
                       setInfo({ ...infoHolder, canalVenda: value });

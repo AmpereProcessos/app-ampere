@@ -9,6 +9,7 @@ import { MdCheckBoxOutlineBlank, MdOutlineCheckBox } from "react-icons/md";
 import {
   cidadesAtendidas,
   credores,
+  customersAcquisitionChannels,
   tiposDeServico,
   vendedores,
 } from "../utils/constants";
@@ -1175,40 +1176,9 @@ function ModalFormSolicitacao({
                       handleChange={(value) =>
                         setDados({ ...dados, canalVenda: value })
                       }
-                      options={[
-                        {
-                          label: "NETWORK",
-                          value: "NETWORK",
-                        },
-                        {
-                          label: "INSIDE SALES",
-                          value: "INSIDE SALES",
-                        },
-                        {
-                          label: "INDICAÇÃO DE AMIGO",
-                          value: "INDICAÇÃO DE AMIGO",
-                        },
-                        {
-                          label: "PORTA A PORTA",
-                          value: "PORTA A PORTA",
-                        },
-                        {
-                          label: "TELEVENDAS",
-                          value: "TELEVENDAS",
-                        },
-                        {
-                          label: "EVENTO",
-                          value: "EVENTO",
-                        },
-                        {
-                          label: "PASSIVO",
-                          value: "PASSIVO",
-                        },
-                        {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
-                        },
-                      ]}
+                      options={customersAcquisitionChannels.map(
+                        (value) => value
+                      )}
                     />
                     {dados.canalVenda == "INDICAÇÃO DE AMIGO" && (
                       <>

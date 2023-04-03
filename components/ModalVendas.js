@@ -6,6 +6,7 @@ import {
   credores,
   fornecedores,
   localEntregaOptions,
+  customersAcquisitionChannels,
 } from "../utils/constants";
 import { FaSave } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
@@ -237,20 +238,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         ? infoHolder.canalVenda
                         : "NÃO DEFINIDO"
                     }
-                    options={[
-                      { label: "EVENTO", value: "EVENTO" },
-                      {
-                        label: "INDICAÇÃO DE AMIGO",
-                        value: "INDICAÇÃO DE AMIGO",
-                      },
-                      { label: "INSIDE SALES", value: "INSIDE SALES" },
-                      { label: "PASSIVO", value: "PASSIVO" },
-                      { label: "PORTA A PORTA", value: "PORTA A PORTA" },
-                      { label: "TELEVENDAS", value: "TELEVENDAS" },
-                      { label: "NETWORK", value: "NETWORK" },
-                      { label: "OUTRO", value: "OUTRO" },
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
+                    options={customersAcquisitionChannels.map((value) => value)}
                     handleChange={(value) => {
                       setChanges({ ...changes, canalVenda: value });
                       setInfo({ ...infoHolder, canalVenda: value });

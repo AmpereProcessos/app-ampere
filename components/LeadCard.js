@@ -1,6 +1,10 @@
 import dayjs from "dayjs";
 import React, { useState } from "react";
-import { vendedores } from "../utils/constants";
+import {
+  customersAcquisitionChannels,
+  AcquisitionChannels,
+  vendedores,
+} from "../utils/constants";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 import { MdSend, MdSave, MdDelete } from "react-icons/md";
@@ -136,18 +140,7 @@ function LeadCard({ lead, getLeads }) {
             widthFit={true}
             editable={true}
             value={infoHolder.canal}
-            options={[
-              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-              {
-                label: "CALCULADORA SOLAR",
-                value: "CALCULADORA SOLAR",
-              },
-              { label: "GOOGLE ADS", value: "GOOGLE ADS" },
-              { label: "FACEBOOK ADS", value: "FACEBOOK ADS" },
-              { label: "INDICAÇÃO", value: "INDICAÇÃO" },
-              { label: "PASSIVO", value: "PASSIVO" },
-              { label: "PROSPECÇÃO ATIVA", value: "PROSPECÇÃO ATIVA" },
-            ]}
+            options={customersAcquisitionChannels.map((value) => value)}
             handleChange={(value) => setInfo({ ...infoHolder, canal: value })}
           />
         </div>

@@ -4,6 +4,7 @@ import axios from "axios";
 import Select from "react-select";
 import {
   cidadesAtendidas,
+  customersAcquisitionChannels,
   equipesTecnicas,
   vendedores,
 } from "../../utils/constants";
@@ -50,6 +51,8 @@ function BandoDeDados({ data }) {
     equipeFilter: [],
     entregaTecnicaFeita: false,
     condicaoOeM: "TODOS",
+    insider: [],
+    canal: [],
     numModulos: null,
   });
 
@@ -98,6 +101,10 @@ function BandoDeDados({ data }) {
           filters.numModulos != 0 && filters.numModulos
             ? { $gte: filters.numModulos }
             : { $ne: null },
+        canalVenda:
+          filters.canal.length > 0 ? { $in: filters.canal } : { $ne: "" },
+        insider:
+          filters.insider.length > 0 ? { $in: filters.insider } : { $ne: "" },
         [`${
           dateFilter.field1
             ? `${[dateFilter.field1]}.${[dateFilter.field2]}`
@@ -131,6 +138,10 @@ function BandoDeDados({ data }) {
           filters.numModulos != 0 && filters.numModulos
             ? { $gte: filters.numModulos }
             : { $ne: null },
+        canalVenda:
+          filters.canal.length > 0 ? { $in: filters.canal } : { $ne: "" },
+        insider:
+          filters.insider.length > 0 ? { $in: filters.insider } : { $ne: "" },
         [`${
           dateFilter.field1
             ? `${[dateFilter.field1]}.${[dateFilter.field2]}`
@@ -198,6 +209,10 @@ function BandoDeDados({ data }) {
           filters.numModulos != 0 && filters.numModulos
             ? { $gte: filters.numModulos }
             : { $ne: null },
+        canalVenda:
+          filters.canal.length > 0 ? { $in: filters.canal } : { $ne: "" },
+        insider:
+          filters.insider.length > 0 ? { $in: filters.insider } : { $ne: "" },
         [`${
           dateFilter.field1
             ? `${[dateFilter.field1]}.${[dateFilter.field2]}`
@@ -262,6 +277,49 @@ function BandoDeDados({ data }) {
       }
     }
   }, [session]);
+  function getListCumulativePeakPot() {
+    var totalSum = 0;
+    for (var i = 0; i < filteredProjects.length; i++) {
+      if (filteredProjects[i].tipoDeServico == "OPERAÇÃO E MANUTENÇÃO") {
+        totalSum = totalSum;
+      } else {
+        let pot = filteredProjects[i].sistema?.potPico
+          ? filteredProjects[i].sistema.potPico
+          : null;
+        if (isNaN(pot)) {
+          totalSum = totalSum;
+        } else {
+          totalSum = totalSum + pot;
+        }
+      }
+    }
+    return totalSum.toFixed(2);
+  }
+  function getListCumulativeValue() {
+    var totalSum = 0;
+    for (var i = 0; i < filteredProjects.length; i++) {
+      let projeto = !isNaN(filteredProjects[i].sistema?.valorProjeto)
+        ? filteredProjects[i].sistema.valorProjeto
+        : 0;
+      let padrao = !isNaN(filteredProjects[i].padrao?.valor)
+        ? filteredProjects[i].padrao?.valor
+        : 0;
+      let estrutura = !isNaN(filteredProjects[i].estruturaPersonalizada?.valor)
+        ? filteredProjects[i].estruturaPersonalizada.valor
+        : 0;
+      let oem = !isNaN(filteredProjects[i].oem?.valor)
+        ? filteredProjects[i].oem.valor
+        : 0;
+
+      totalSum =
+        Number(totalSum) +
+        Number(projeto) +
+        Number(padrao) +
+        Number(estrutura) +
+        Number(oem);
+    }
+    return totalSum;
+  }
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
@@ -277,6 +335,26 @@ function BandoDeDados({ data }) {
                   ({filteredProjects?.length})
                 </p>
               )}
+              {session.user.manager ? (
+                <div className="flex items-center gap-2">
+                  <p className="font-bold text-[#fead61]">
+                    (
+                    {getListCumulativePeakPot() != 0
+                      ? `${getListCumulativePeakPot()}kWp`
+                      : ""}
+                    )
+                  </p>
+                  <p className="font-bold text-[#fead61]">
+                    (
+                    {getListCumulativeValue() != 0
+                      ? `R$ ${getListCumulativeValue().toLocaleString("pt-br", {
+                          minimumFractionDigits: 2,
+                        })}`
+                      : ""}
+                    )
+                  </p>
+                </div>
+              ) : null}
             </div>
             {dropdownMenuVisible ? (
               <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
@@ -423,6 +501,26 @@ function BandoDeDados({ data }) {
                   <div className="w-full lg:w-[250px]">
                     <Select
                       isMulti
+                      placeholder="CANAL"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          canal: e.map((x) => x.value),
+                        })
+                      }
+                      options={customersAcquisitionChannels}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
                       placeholder="CIDADE"
                       styles={{
                         control: (base, state) => ({
@@ -466,6 +564,34 @@ function BandoDeDados({ data }) {
                         setFilters({
                           ...filters,
                           vendedorFilter: e.map((x) => x.value),
+                        })
+                      }
+                      closeMenuOnSelect={false}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti
+                      placeholder="INSIDER"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      options={vendedores
+                        .filter((x) => x.qualificacao?.includes("INSIDE"))
+                        .map((vendedor) => {
+                          return {
+                            label: vendedor.nome,
+                            value: vendedor.nome,
+                          };
+                        })}
+                      onChange={(e) =>
+                        setFilters({
+                          ...filters,
+                          insider: e.map((x) => x.value),
                         })
                       }
                       closeMenuOnSelect={false}
@@ -549,7 +675,7 @@ function BandoDeDados({ data }) {
                     getProjects(currentPage - 1);
                     setCurrentPage((prevState) => prevState - 1);
                   }}
-                  className="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700"
+                  className="px-3 py-2 cursor-pointer ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700"
                 >
                   Anterior
                 </a>
@@ -562,7 +688,7 @@ function BandoDeDados({ data }) {
                       getProjects(1);
                     } else return;
                   }}
-                  className={`px-3 py-2 ${
+                  className={`px-3 py-2 cursor-pointer ${
                     currentPage == 1
                       ? "text-blue-700 bg-blue-300 hover:text-blue-500 hover:bg-blue-100"
                       : "text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700"
@@ -579,7 +705,7 @@ function BandoDeDados({ data }) {
                       getProjects(2);
                     } else return;
                   }}
-                  className={`px-3 py-2 ${
+                  className={`px-3 py-2 cursor-pointer ${
                     currentPage == 2
                       ? "text-blue-700 bg-blue-300 hover:text-blue-500 hover:bg-blue-100"
                       : "text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700"
@@ -596,7 +722,7 @@ function BandoDeDados({ data }) {
                       getProjects(3);
                     } else return;
                   }}
-                  className={`px-3 py-2 ${
+                  className={`px-3 py-2 cursor-pointer ${
                     currentPage == 3
                       ? "text-blue-700 bg-blue-300 hover:text-blue-500 hover:bg-blue-100"
                       : "text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700"
@@ -613,7 +739,7 @@ function BandoDeDados({ data }) {
                       getProjects(4);
                     } else return;
                   }}
-                  className={`px-3 py-2 ${
+                  className={`px-3 py-2 cursor-pointer ${
                     currentPage == 4
                       ? "text-blue-700 bg-blue-300 hover:text-blue-500 hover:bg-blue-100"
                       : "text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700"
@@ -629,7 +755,7 @@ function BandoDeDados({ data }) {
                     getProjects(currentPage + 1);
                     setCurrentPage((prevState) => prevState + 1);
                   }}
-                  className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700"
+                  className="px-3 py-2 cursor-pointer leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700"
                 >
                   Próximo
                 </a>

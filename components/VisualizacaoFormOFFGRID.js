@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { AiOutlineSearch, AiOutlineCheck } from "react-icons/ai";
-import { cidadesAtendidas, credores, vendedores } from "../utils/constants";
+import {
+  cidadesAtendidas,
+  credores,
+  customersAcquisitionChannels,
+  vendedores,
+} from "../utils/constants";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../utils/firebase";
@@ -430,40 +435,7 @@ function VisualizacaoOFFGrid({
               handleChange={(value) =>
                 setDados({ ...dados, canalVenda: value })
               }
-              options={[
-                {
-                  label: "NETWORK",
-                  value: "NETWORK",
-                },
-                {
-                  label: "INSIDE SALES",
-                  value: "INSIDE SALES",
-                },
-                {
-                  label: "INDICAÇÃO DE AMIGO",
-                  value: "INDICAÇÃO DE AMIGO",
-                },
-                {
-                  label: "PORTA A PORTA",
-                  value: "PORTA A PORTA",
-                },
-                {
-                  label: "TELEVENDAS",
-                  value: "TELEVENDAS",
-                },
-                {
-                  label: "EVENTO",
-                  value: "EVENTO",
-                },
-                {
-                  label: "PASSIVO",
-                  value: "PASSIVO",
-                },
-                {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
-                },
-              ]}
+              options={customersAcquisitionChannels}
             />
           </div>
 

@@ -21,6 +21,47 @@ export const respChamadosPPS = [
   { label: "MATHEUS", value: "MATHEUS" },
   { label: "LUCAS", value: "LUCAS" },
 ];
+export const customersAcquisitionChannels = [
+  {
+    label: "NÃO DEFINIDO",
+    value: "NÃO DEFINIDO",
+  },
+  {
+    label: "NETWORK",
+    value: "NETWORK",
+  },
+  {
+    label: "INSIDE SALES",
+    value: "INSIDE SALES",
+  },
+  {
+    label: "INDICAÇÃO DE AMIGO",
+    value: "INDICAÇÃO DE AMIGO",
+  },
+  {
+    label: "CALCULADORA SOLAR",
+    value: "CALCULADORA SOLAR",
+  },
+  { label: "GOOGLE ADS", value: "GOOGLE ADS" },
+  { label: "FACEBOOK ADS", value: "FACEBOOK ADS" },
+  {
+    label: "PORTA A PORTA",
+    value: "PORTA A PORTA",
+  },
+  {
+    label: "TELEVENDAS",
+    value: "TELEVENDAS",
+  },
+  {
+    label: "EVENTO",
+    value: "EVENTO",
+  },
+  {
+    label: "PASSIVO",
+    value: "PASSIVO",
+  },
+  { label: "PROSPECÇÃO ATIVA", value: "PROSPECÇÃO ATIVA" },
+];
 export const tiposChamadosSuporte = [
   {
     tipo: "PROBLEMAS COM CONCESSIONÁRIA",

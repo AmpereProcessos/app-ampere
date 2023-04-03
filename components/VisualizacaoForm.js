@@ -5,7 +5,11 @@ import NumberInput from "./NumberInput";
 import DateInput from "./DateInput";
 import { FiDelete } from "react-icons/fi";
 import { AiOutlineSearch, AiOutlineCheck } from "react-icons/ai";
-import { cidadesAtendidas, vendedores } from "../utils/constants";
+import {
+  cidadesAtendidas,
+  customersAcquisitionChannels,
+  vendedores,
+} from "../utils/constants";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../utils/firebase";
@@ -359,40 +363,7 @@ function VisualizacaoForm({
             editable={true}
             value={dados.canalVenda}
             handleChange={(value) => setDados({ ...dados, canalVenda: value })}
-            options={[
-              {
-                label: "NETWORK",
-                value: "NETWORK",
-              },
-              {
-                label: "INSIDE SALES",
-                value: "INSIDE SALES",
-              },
-              {
-                label: "INDICAÇÃO DE AMIGO",
-                value: "INDICAÇÃO DE AMIGO",
-              },
-              {
-                label: "PORTA A PORTA",
-                value: "PORTA A PORTA",
-              },
-              {
-                label: "TELEVENDAS",
-                value: "TELEVENDAS",
-              },
-              {
-                label: "EVENTO",
-                value: "EVENTO",
-              },
-              {
-                label: "PASSIVO",
-                value: "PASSIVO",
-              },
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
-            ]}
+            options={customersAcquisitionChannels.map((value) => value)}
           />
           {dados.canalVenda == "INDICAÇÃO DE AMIGO" && (
             <>

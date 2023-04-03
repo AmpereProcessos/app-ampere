@@ -335,7 +335,7 @@ function BandoDeDados({ data }) {
                   ({filteredProjects?.length})
                 </p>
               )}
-              {session.user.manager ? (
+              {session.user.manager && filteredProjects ? (
                 <div className="flex items-center gap-2">
                   <p className="font-bold text-[#fead61]">
                     (

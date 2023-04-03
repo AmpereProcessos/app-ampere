@@ -83,6 +83,14 @@ function ComissaoGeralView({ projects, setProjects }) {
                 </p>
               </div>
               <div className="flex flex-col items-center">
+                <p className="text-xs text-gray-700 font-bold">
+                  TIPO DE SERVIÇO
+                </p>
+                <p className="text-xs text-gray-600">
+                  {project.tipoDeServico ? project.tipoDeServico : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
                 <p className="text-xs text-gray-700 font-bold">CIDADE</p>
                 <p className="text-xs text-gray-600">
                   {project.cidade ? project.cidade : "-"}

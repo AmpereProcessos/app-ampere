@@ -43,6 +43,7 @@ export default async function handler(req, res) {
               codigoSVB: 1,
               cidade: 1,
               vendedor: 1,
+              tipoDeServico: 1,
               "contrato.dataAssinatura": 1,
               "contrato.comissaoVendedor": 1,
               "contrato.comissaoPaga": 1,

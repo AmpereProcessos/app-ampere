@@ -6,7 +6,10 @@ import { useRouter } from "next/router";
 import { AiOutlineSearch } from "react-icons/ai";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { AnimatePresence, motion } from "framer-motion";
-import { vendedores } from "../../utils/constants";
+import {
+  customersAcquisitionChannels,
+  vendedores,
+} from "../../utils/constants";
 import ComissaoGeralView from "../../components/ComissaoGeralView";
 import ComissaoPDFView from "../../components/ComissaoPDFView";
 import ComissaoPDFViewInside from "../../components/ComissaoPDFViewInside";
@@ -34,6 +37,7 @@ function ComissaoPage() {
   const [filters, setFilters] = useState({
     insider: [],
     vendedor: [],
+    canal: [],
   });
   const [dateFilter, setDateFilter] = useState({
     after: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, -3),
@@ -63,6 +67,10 @@ function ComissaoPage() {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) => filters.insider.includes(call.insider));
     }
+    if (filters.canal.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) => filters.canal.includes(call.canalVenda));
+    }
     if (!newArr) {
       setFilteredProjects(projects);
       return projects;
@@ -71,7 +79,42 @@ function ComissaoPage() {
       return newArr;
     }
   }
+  function getListCumulativePeakPot() {
+    var totalSum = 0;
+    for (var i = 0; i < filteredProjects.length; i++) {
+      if (filteredProjects[i].tipoDeServico == "OPERAÇÃO E MANUTENÇÃO") {
+        totalSum = totalSum;
+      } else {
+        let pot = filteredProjects[i].sistema?.potPico
+          ? filteredProjects[i].sistema.potPico
+          : null;
+        if (isNaN(pot)) {
+          totalSum = totalSum;
+        } else {
+          totalSum = totalSum + pot;
+        }
+      }
+    }
+    return totalSum.toFixed(2);
+  }
+  function getListCumulativeValue() {
+    var totalSum = 0;
+    for (var i = 0; i < filteredProjects.length; i++) {
+      let projeto = !isNaN(filteredProjects[i].sistema?.valorProjeto)
+        ? filteredProjects[i].sistema.valorProjeto
+        : 0;
+      let padrao = !isNaN(filteredProjects[i].padrao?.valor)
+        ? filteredProjects[i].padrao?.valor
+        : 0;
+      let oem = !isNaN(filteredProjects[i].oem?.valor)
+        ? filteredProjects[i].oem.valor
+        : 0;
 
+      totalSum =
+        Number(totalSum) + Number(projeto) + Number(padrao) + Number(oem);
+    }
+    return totalSum;
+  }
   function exportData() {
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
       JSON.stringify(filteredProjects)
@@ -99,6 +142,7 @@ function ComissaoPage() {
   function getTotalComission() {
     var sumProjeto = 0;
     var sumPadrao = 0;
+    var sumOem = 0;
     var sumInside = 0;
     for (let i = 0; i < filteredProjects.length; i++) {
       var comissao = filteredProjects[i].porcentagemComissao
@@ -114,7 +158,11 @@ function ComissaoPage() {
         filteredProjects[i].padrao.valor != null
           ? filteredProjects[i].padrao.valor
           : 0;
-
+      var valueOem =
+        !isNaN(filteredProjects[i].oem?.valor) &&
+        filteredProjects[i].oem.valor != null
+          ? filteredProjects[i].oem.valor
+          : 0;
       if (
         filteredProjects[i].insider != null ||
         filteredProjects[i].insider != undefined
@@ -122,20 +170,23 @@ function ComissaoPage() {
         sumInside =
           sumInside +
           (filteredProjects[i].porcentagemComissaoInsider / 100) *
-            (valueProjeto + valuePadrao);
+            (valueProjeto + valuePadrao + valueOem);
       }
       sumProjeto = sumProjeto + (Number(valueProjeto) * comissao) / 100;
       sumPadrao = sumPadrao + (Number(valuePadrao) * comissao) / 100;
+      sumOem = sumOem + (Number(valueOem) * comissao) / 100;
     }
     sumProjeto = sumProjeto != undefined ? sumProjeto : 0;
     sumPadrao = sumPadrao != undefined ? sumPadrao : 0;
+    sumOem = sumOem != undefined ? sumOem : 0;
     sumInside = sumInside != undefined ? sumInside : 0;
 
     return {
       ativoProjeto: sumProjeto.toFixed(2),
       ativoPadrao: sumPadrao.toFixed(2),
+      ativoOem: sumOem.toFixed(2),
       inside: sumInside.toFixed(2),
-      total: (sumProjeto + sumPadrao + sumInside).toFixed(2),
+      total: (sumProjeto + sumPadrao + sumInside + sumOem).toFixed(2),
     };
   }
   function getTotalPeakPot() {
@@ -162,9 +213,29 @@ function ComissaoPage() {
         <div className="flex flex-col p-6 grow">
           <div className="flex flex-col items-center px-1 py-2 border-b border-gray-200">
             <div className="flex items-center justify-between w-full">
-              <h1 className="font-bold uppercase text-center text-2xl text-[#15599a]">
-                COMISSÕES
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="font-bold uppercase text-center text-2xl text-[#15599a]">
+                  COMISSÕES
+                </h1>
+                {filteredProjects && (
+                  <>
+                    <p className="font-bold text-[#fead61]">
+                      {filteredProjects.length}
+                    </p>
+                    <p className="font-bold text-[#fead61]">
+                      {getListCumulativePeakPot()}kWp
+                    </p>
+
+                    <p className="font-bold text-[#fead61]">
+                      R${" "}
+                      {getListCumulativeValue().toLocaleString("pt-br", {
+                        minimumFractionDigits: 2,
+                      })}
+                    </p>
+                  </>
+                )}
+              </div>
+
               {dropdownMenuVisible ? (
                 <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
                   <IoMdArrowDropupCircle
@@ -283,6 +354,26 @@ function ComissaoPage() {
                       <div className="w-full lg:w-[250px]">
                         <Select
                           isMulti
+                          placeholder="CANAL"
+                          styles={{
+                            control: (base, state) => ({
+                              ...base,
+                              width: "100%",
+                              minHeight: "41px",
+                            }),
+                          }}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              canal: e.map((x) => x.value),
+                            })
+                          }
+                          options={customersAcquisitionChannels}
+                        />
+                      </div>
+                      <div className="w-full lg:w-[250px]">
+                        <Select
+                          isMulti
                           placeholder="VENDEDOR"
                           styles={{
                             control: (base, state) => ({
@@ -339,20 +430,20 @@ function ComissaoPage() {
                       />
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 lg:grid-cols-6">
+                  <div className="grid grid-cols-3 lg:grid-cols-7 gap-y-2">
                     <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs lg:text-base">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
                         FATURAMENTO TOTAL
                       </h1>
-                      <p className="text-gray-700 text-center text-xxs lg:text-xs">
+                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
                         R$ {Number(getTotalSold()).toLocaleString("pt-br")}
                       </p>
                     </div>
                     <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs lg:text-base">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
                         COMISSÃO TOTAL ATIVO (PROJETO)
                       </h1>
-                      <p className="text-gray-700 text-center text-xxs lg:text-xs">
+                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
                         R${" "}
                         {Number(
                           getTotalComission().ativoProjeto
@@ -360,10 +451,10 @@ function ComissaoPage() {
                       </p>
                     </div>
                     <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs lg:text-base">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
                         COMISSÃO TOTAL ATIVO (PADRÃO)
                       </h1>
-                      <p className="text-gray-700 text-center text-xxs lg:text-xs">
+                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
                         R${" "}
                         {Number(getTotalComission().ativoPadrao).toLocaleString(
                           "pt-br"
@@ -371,10 +462,21 @@ function ComissaoPage() {
                       </p>
                     </div>
                     <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs lg:text-base">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
+                        COMISSÃO TOTAL ATIVO (OeM)
+                      </h1>
+                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
+                        R${" "}
+                        {Number(getTotalComission().ativoOem).toLocaleString(
+                          "pt-br"
+                        )}
+                      </p>
+                    </div>
+                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
                         COMISSÃO TOTAL INSIDE
                       </h1>
-                      <p className="text-gray-700 text-center text-xxs lg:text-xs">
+                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
                         R${" "}
                         {Number(getTotalComission().inside).toLocaleString(
                           "pt-br"
@@ -382,10 +484,10 @@ function ComissaoPage() {
                       </p>
                     </div>
                     <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs lg:text-base">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
                         COMISSÃO TOTAL SOBRE FATURAMENTO
                       </h1>
-                      <p className="text-gray-700 text-center text-xxs lg:text-xs">
+                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
                         {(
                           (getTotalComission().total * 100) /
                           getTotalSold()
@@ -394,10 +496,10 @@ function ComissaoPage() {
                       </p>
                     </div>
                     <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs lg:text-base">
+                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
                         VALOR DO kWp
                       </h1>
-                      <p className="text-gray-700 text-center text-xxs lg:text-xs">
+                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
                         R$ {(getTotalSold() / getTotalPeakPot()).toFixed(2)}
                       </p>
                     </div>

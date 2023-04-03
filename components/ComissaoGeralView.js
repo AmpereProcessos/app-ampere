@@ -8,9 +8,12 @@ function ComissaoGeralView({ projects, setProjects }) {
       .post("/api/projects/comissao", projects)
       .then((res) => alert(res.data));
   }
-  function setAsPaid(id, index) {
+  function setAsPaid(id, index, porcentagemComissao) {
     axios
-      .post(`/api/projects/update/${id}`, { "contrato.comissaoPaga": true })
+      .post(`/api/projects/update/${id}`, {
+        "contrato.comissaoPaga": true,
+        "contrato.comissaoVendedor": porcentagemComissao,
+      })
       .then((res) => {
         let arr = [...projects];
         arr[index].contrato.comissaoPaga = true;
@@ -43,7 +46,9 @@ function ComissaoGeralView({ projects, setProjects }) {
                 />
               ) : (
                 <button
-                  onClick={() => setAsPaid(project._id, index)}
+                  onClick={() =>
+                    setAsPaid(project._id, index, project.porcentagemComissao)
+                  }
                   className="p-1 font-bold rounded border border-green-500 text-green-500 hover:text-white hover:bg-green-500"
                 >
                   PAGO?

@@ -304,19 +304,12 @@ function BandoDeDados({ data }) {
       let padrao = !isNaN(filteredProjects[i].padrao?.valor)
         ? filteredProjects[i].padrao?.valor
         : 0;
-      let estrutura = !isNaN(filteredProjects[i].estruturaPersonalizada?.valor)
-        ? filteredProjects[i].estruturaPersonalizada.valor
-        : 0;
       let oem = !isNaN(filteredProjects[i].oem?.valor)
         ? filteredProjects[i].oem.valor
         : 0;
 
       totalSum =
-        Number(totalSum) +
-        Number(projeto) +
-        Number(padrao) +
-        Number(estrutura) +
-        Number(oem);
+        Number(totalSum) + Number(projeto) + Number(padrao) + Number(oem);
     }
     return totalSum;
   }
@@ -335,26 +328,6 @@ function BandoDeDados({ data }) {
                   ({filteredProjects?.length})
                 </p>
               )}
-              {session.user.manager && filteredProjects ? (
-                <div className="flex items-center gap-2">
-                  <p className="font-bold text-[#fead61]">
-                    (
-                    {getListCumulativePeakPot() != 0
-                      ? `${getListCumulativePeakPot()}kWp`
-                      : ""}
-                    )
-                  </p>
-                  <p className="font-bold text-[#fead61]">
-                    (
-                    {getListCumulativeValue() != 0
-                      ? `R$ ${getListCumulativeValue().toLocaleString("pt-br", {
-                          minimumFractionDigits: 2,
-                        })}`
-                      : ""}
-                    )
-                  </p>
-                </div>
-              ) : null}
             </div>
             {dropdownMenuVisible ? (
               <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
@@ -794,7 +767,7 @@ function BandoDeDados({ data }) {
                 animate={{ opacity: 1, translateX: 0 }}
                 transition={{ duration: 0.3, delay: 0.01 * index }}
                 key={project._id}
-                className="w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
+                className="w-full md:w-[250px] lg:w-[450px]  cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
               >
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-gray-700">
@@ -803,13 +776,13 @@ function BandoDeDados({ data }) {
                   <p className="text-xs text-[#15599a]">#{project.qtde}</p>
                 </div>
                 <div className="flex items-center mt-2 justify-between">
-                  <div className="hidden lg:flex lg:flex-col">
+                  <div className="flex flex-col">
                     <span className="text-xxs">CIDADE</span>
                     <p className="text-xs text-yellow-500">
                       {project.cidade && project.cidade}
                     </p>
                   </div>
-                  <div className="hidden lg:flex lg:flex-col">
+                  <div className="flex flex-col">
                     <span className="text-xxs">VENDEDOR</span>
                     <p className="text-xs text-[#15599a]">
                       {project.vendedor && project.vendedor.nome}

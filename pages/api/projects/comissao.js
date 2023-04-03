@@ -51,6 +51,7 @@ export default async function handler(req, res) {
               "sistema.valorProjeto": 1,
               "padrao.valor": 1,
               "estruturaPersonalizada.valor": 1,
+              "oem.valor": 1,
               "compra.dataPagamento": 1,
               canalVenda: 1,
               insider: 1,

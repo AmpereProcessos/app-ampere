@@ -31,8 +31,8 @@ function Posvenda() {
       paraAssinar: 0,
     },
   });
-  const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [projects, setProjects] = useState();
+  const [filteredProjects, setFilteredProjects] = useState();
   const [filters, setFilters] = useState({
     noContactFilter: false,
     cidadeFilter: [],
@@ -173,7 +173,7 @@ function Posvenda() {
       session?.user.accessibleRoutes.includes("Pós-Venda") ||
       session?.user.accessibleRoutes.includes("Marketing")
     ) {
-      getProjects();
+      if (!projects) getProjects();
     } else {
       if (session?.user) {
         router.push("/");
@@ -204,6 +204,11 @@ function Posvenda() {
               <p className="font-bold uppercase text-center text-2xl text-[#15599a]">
                 PROJETOS EM JORNADA
               </p>
+              {filteredProjects && (
+                <p className="text-[#fead61] text-xl font-bold">
+                  ({filteredProjects.length})
+                </p>
+              )}
             </div>
             {dropdownMenuVisible ? (
               <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
@@ -468,20 +473,24 @@ function Posvenda() {
           </AnimatePresence>
         </div>
         <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
-          {filteredProjects.map((project, index) => (
-            <PosVendaCard
-              getUpdates={getProjects}
-              editor={
-                session?.user?.accessibleRoutes.includes("Pós-Venda") &&
-                session?.user?.visualizacao == undefined
-                  ? true
-                  : false
-              }
-              key={project._id}
-              project={project}
-              cardMode={cardMode}
-            />
-          ))}
+          {filteredProjects ? (
+            filteredProjects.map((project, index) => (
+              <PosVendaCard
+                getUpdates={getProjects}
+                editor={
+                  session?.user?.accessibleRoutes.includes("Pós-Venda") &&
+                  session?.user?.visualizacao == undefined
+                    ? true
+                    : false
+                }
+                key={project._id}
+                project={project}
+                cardMode={cardMode}
+              />
+            ))
+          ) : (
+            <LoadingPage />
+          )}
         </div>
       </div>
     );

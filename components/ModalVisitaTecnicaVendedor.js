@@ -1066,7 +1066,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                         handleChange={(value) =>
                           setDados({
                             ...dados,
-                            fotosDrone: value.toUpperCase(),
+                            fotosDrone: value,
                           })
                         }
                       />

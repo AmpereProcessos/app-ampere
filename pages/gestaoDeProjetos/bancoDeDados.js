@@ -454,6 +454,10 @@ function BandoDeDados({ data }) {
                             value: "compra.dataPagamento",
                           },
                           { label: "TROCA DO MEDIDOR", value: "medidor.data" },
+                          {
+                            label: "PEDIDO DE VISTORIA",
+                            value: "vistoria.dataPedido",
+                          },
                           { label: "DATA PEDIDO", value: "compra.dataPedido" },
                           { label: "NÃO DEFINIDO", value: null },
                         ]}

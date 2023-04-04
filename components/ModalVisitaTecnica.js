@@ -1082,10 +1082,11 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                         label={"LINK PARA FOTOS DO DRONE"}
                         editable={true}
                         value={dados.fotosDrone}
+                        normalCase={true}
                         handleChange={(value) =>
                           setDados({
                             ...dados,
-                            fotosDrone: value.toUpperCase(),
+                            fotosDrone: value,
                           })
                         }
                       />

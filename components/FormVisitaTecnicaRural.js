@@ -887,9 +887,7 @@ function FormVisitaTecnicaRural({
             editable={true}
             width={"450px"}
             value={dados.fotosDrone}
-            handleChange={(value) =>
-              setDados({ ...dados, fotosDrone: value.toUpperCase() })
-            }
+            handleChange={(value) => setDados({ ...dados, fotosDrone: value })}
           />
         </div>
         <div className="flex gap-2 items-center justify-around flex-wrap mt-4">

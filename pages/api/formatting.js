@@ -135,7 +135,7 @@ export default async function handler(req, res) {
         mapaDeMicro: project.mapademicro,
         aumentoDeCarga: project.aumentodecarga,
         acStatus: project.acstatus,
-        fechamentoAC: projeto.conclusaoAC,
+        fechamentoAC: project.conclusaoAC,
         projetoConcluido: project.projetoconcluido,
       },
       parecer: {

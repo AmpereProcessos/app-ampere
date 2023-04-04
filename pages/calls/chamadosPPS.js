@@ -388,9 +388,9 @@ function ChamadosPPS() {
                     <div className="flex flex-wrap gap-x-2 items-center">
                       <p>Entre:</p>
                       <input
-                        value={new Date(closedFilterDate.after)
-                          .toISOString()
-                          .slice(0, 10)}
+                        value={dayjs(closedFilterDate.after).format(
+                          "YYYY-MM-DD"
+                        )}
                         onChange={(e) =>
                           setClosedFilterDate({
                             ...closedFilterDate,

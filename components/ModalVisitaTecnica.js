@@ -541,7 +541,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       handleChange={(value) =>
                         setDados({
                           ...dados,
-                          infoPadraoConjugado: value.toUpperCase(),
+                          infoPadraoConjugado: value,
                         })
                       }
                     />
@@ -791,7 +791,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       handleChange={(value) =>
                         setDados({
                           ...dados,
-                          localAterramento: value.toUpperCase(),
+                          localAterramento: value,
                         })
                       }
                     />
@@ -975,7 +975,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                         handleChange={(value) =>
                           setDados({
                             ...dados,
-                            orientacaoEstrutura: value.toUpperCase(),
+                            orientacaoEstrutura: value,
                           })
                         }
                       />
@@ -1040,7 +1040,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                         handleChange={(value) =>
                           setDados({
                             ...dados,
-                            localInstalacaoInversor: value.toUpperCase(),
+                            localInstalacaoInversor: value,
                           })
                         }
                       />
@@ -1410,7 +1410,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       onChange={(e) =>
                         setDados({
                           ...dados,
-                          descricaoOrcamentacao: e.target.value.toUpperCase(),
+                          descricaoOrcamentacao: e.target.value,
                         })
                       }
                       type="text"
@@ -1584,7 +1584,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     onChange={(e) => {
                       setDados({
                         ...dados,
-                        obsObras: e.target.value.toUpperCase(),
+                        obsObras: e.target.value,
                       });
                     }}
                     className="w-full text-center h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
@@ -1708,7 +1708,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     onChange={(e) => {
                       setDados({
                         ...dados,
-                        obsSuprimentos: e.target.value.toUpperCase(),
+                        obsSuprimentos: e.target.value,
                       });
                     }}
                     className="w-full text-center h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
@@ -1933,7 +1933,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     onChange={(e) => {
                       setDados({
                         ...dados,
-                        obsProjetos: e.target.value.toUpperCase(),
+                        obsProjetos: e.target.value,
                       });
                     }}
                     className="w-full text-center h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
@@ -1968,7 +1968,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       handleChange={(value) =>
                         setDescritivoHolder({
                           ...descritivoHolder,
-                          texto: value.toUpperCase(),
+                          texto: value,
                         })
                       }
                     />
@@ -2154,7 +2154,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     onChange={(e) => {
                       setDados({
                         ...dados,
-                        respostaConclusao: e.target.value.toUpperCase(),
+                        respostaConclusao: e.target.value,
                       });
                     }}
                     className="w-full text-center h-[100px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
@@ -2173,7 +2173,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     handleChange={(value) =>
                       setCustoAdicionalHolder({
                         ...custoAdicionalHolder,
-                        descricao: value.toUpperCase(),
+                        descricao: value,
                       })
                     }
                   />
@@ -2195,7 +2195,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     handleChange={(value) =>
                       setCustoAdicionalHolder({
                         ...custoAdicionalHolder,
-                        grandeza: value.toUpperCase(),
+                        grandeza: value,
                       })
                     }
                   />

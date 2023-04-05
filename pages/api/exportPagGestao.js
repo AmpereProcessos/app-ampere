@@ -4,7 +4,8 @@ function fixDate(value) {
   if (isNaN(Date.parse(value)) == true) {
     return "-";
   } else {
-    return new Date(value).toLocaleDateString("pt-br");
+    let date = dayjs(value).add(3, "hours");
+    return new Date(date).toLocaleDateString("pt-br");
   }
 }
 function getContractValue(valorProjeto, valorPadrao, valorEstrutura) {
@@ -246,6 +247,16 @@ export default async function handler(req, res) {
           obj.padrao.valor,
           obj.estruturaPersonalizada.valor
         ),
+        usinaLigada: obj.conferencias?.usinaLigada
+          ? obj.conferencias.usinaLigada.data
+          : null,
+        monitoramentoFeito: obj.conferencias.monitoramentoFeito?.data
+          ? fixDate(obj.conferencias.monitoramentoFeito.data)
+          : null,
+        energiaInjetada: obj.conferencias.energiaInjetada?.data
+          ? fixDate(obj.conferencias.energiaInjetada.data)
+          : null,
+        appMonitoramento: obj.app?.data ? fixDate(obj.app.data) : "-",
         dataUltimoContato: obj.jornada.dataUltimoContato
           ? fixDate(obj.jornada.dataUltimoContato)
           : "-",
@@ -475,6 +486,16 @@ export default async function handler(req, res) {
           ? obj.indicacao?.quemIndicou
           : "-",
         ondeTrabalha: obj.ondeTrabalha ? obj.ondeTrabalha : "-",
+        usinaLigada: obj.conferencias?.usinaLigada
+          ? obj.conferencias.usinaLigada.data
+          : null,
+        monitoramentoFeito: obj.conferencias.monitoramentoFeito
+          ? obj.conferencias.monitoramentoFeito.data
+          : null,
+        energiaInjetada: obj.conferencias.energiaInjetada
+          ? obj.conferencias.energiaInjetada.data
+          : null,
+        appMonitoramento: obj.app ? obj.app : null,
         valorContrato: getContractValue(
           obj.sistema.valorProjeto,
           obj.padrao.valor,

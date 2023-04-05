@@ -167,9 +167,10 @@ function Projetos() {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
         (project) =>
-          project.projeto.dataAssDocumentacao == undefined ||
-          project.projeto.dataAssDocumentacao == null ||
-          project.projeto.dataAssDocumentacao == "-"
+          project.projeto.dataLiberacaoDocumentacao != undefined &&
+          (project.projeto.dataAssDocumentacao == undefined ||
+            project.projeto.dataAssDocumentacao == null ||
+            project.projeto.dataAssDocumentacao == "-")
       );
     }
     if (filters.parecerReprovado) {

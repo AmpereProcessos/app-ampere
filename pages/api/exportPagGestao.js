@@ -247,8 +247,8 @@ export default async function handler(req, res) {
           obj.padrao.valor,
           obj.estruturaPersonalizada.valor
         ),
-        usinaLigada: obj.conferencias?.usinaLigada
-          ? obj.conferencias.usinaLigada.data
+        usinaLigada: obj.conferencias?.usinaLigada?.data
+          ? fixDate(obj.conferencias.usinaLigada.data)
           : null,
         monitoramentoFeito: obj.conferencias.monitoramentoFeito?.data
           ? fixDate(obj.conferencias.monitoramentoFeito.data)

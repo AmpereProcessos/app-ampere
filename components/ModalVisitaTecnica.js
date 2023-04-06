@@ -188,6 +188,17 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
       setImageMsg({ text: "Erro ao enviar imagem.", color: "text-red-500" });
     }
   }
+  function getJoinedInfo({ marca, qtde, pot }) {
+    let splitMarca = marca.split("/");
+    let splitQtde = qtde.split("/");
+    let splitPot = pot.split("/");
+    let holder = [];
+    for (let i = 0; i < splitMarca.length; i++) {
+      let str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`;
+      holder.push(str);
+    }
+    return holder.join(" - ");
+  }
   function formatCEP(cep) {
     cep = cep
       .replace(/\D/g, "")
@@ -338,7 +349,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                 EQUIPAMENTO
               </span>
-              <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <div className="flex items-center justify-center">
                 <SelectInput
                   label={"TIPO DE INVERSOR"}
                   editable={true}
@@ -347,26 +358,30 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
                     { label: "MICRO-INVERSOR", value: "MICRO-INVERSOR" },
                     { label: "INVERSOR", value: "INVERSOR" },
+                    { label: "OTIMIZADOR", value: "OTIMIZADOR" },
                   ]}
                   handleChange={(value) =>
                     setDados({ ...dados, tipoInversor: value })
                   }
                 />
-                <NumberInput
+              </div>
+
+              <div className="flex gap-2 justify-around flex-wrap mt-2">
+                <TextInput
                   label={"QTDE DE INVERSORES"}
                   editable={true}
                   value={dados.qtdeInversor}
                   handleChange={(value) =>
-                    setDados({ ...dados, qtdeInversor: Number(value) })
+                    setDados({ ...dados, qtdeInversor: value })
                   }
                 />
-                <NumberInput
+                <TextInput
                   label={"POTÊNCIA DO INVERSOR"}
                   editable={true}
                   unit={"W"}
                   value={dados.potInversor}
                   handleChange={(value) =>
-                    setDados({ ...dados, potInversor: Number(value) })
+                    setDados({ ...dados, potInversor: value })
                   }
                 />
                 <TextInput
@@ -377,20 +392,70 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     setDados({ ...dados, marcaInversor: value.toUpperCase() })
                   }
                 />
-                <NumberInput
+              </div>
+              {dados.tipoInversor == "OTIMIZADOR" && (
+                <div className="flex gap-2 justify-around flex-wrap mt-2 p-2">
+                  <TextInput
+                    label={"MARCA DO OTIMIZADOR"}
+                    editable={true}
+                    value={dados.marcaOtimizador ? dados.marcaOtimizador : ""}
+                    handleChange={(value) =>
+                      setDados({
+                        ...dados,
+                        marcaOtimizador: value.toUpperCase(),
+                      })
+                    }
+                  />
+                  <NumberInput
+                    label={"QTDE DE OTIMIZADORES"}
+                    editable={true}
+                    value={dados.qtdeOtimizador ? dados.qtdeOtimizador : null}
+                    handleChange={(value) =>
+                      setDados({ ...dados, qtdeOtimizador: Number(value) })
+                    }
+                  />
+                  <NumberInput
+                    label={"POTÊNCIA DO(S) OTIMIZADOR(ES"}
+                    unit={"W"}
+                    editable={true}
+                    value={dados.potOtimizador ? dados.potOtimizador : null}
+                    handleChange={(value) =>
+                      setDados({ ...dados, potOtimizador: Number(value) })
+                    }
+                  />
+                </div>
+              )}
+              <div className="flex flex-col text-sm lg:text-base  items-center">
+                <span className="uppercase font-bold font-raleway text-center text-sm">
+                  INFORMAÇÃO MICRO/INVERSOR
+                </span>
+                <p className="text-xs w-full text-center  text-gray-600 outline-none">
+                  {getJoinedInfo({
+                    marca: dados.marcaInversor
+                      ? dados.marcaInversor?.toString().toUpperCase()
+                      : "",
+                    qtde: dados.qtdeInversor
+                      ? dados.qtdeInversor?.toString()
+                      : "",
+                    pot: dados.potInversor ? dados.potInversor?.toString() : "",
+                  })}
+                </p>
+              </div>
+              <div className="flex gap-2 justify-around flex-wrap mt-2">
+                <TextInput
                   label={"QTDE DE MODULOS"}
                   editable={true}
                   value={dados.qtdeModulos}
                   handleChange={(value) =>
-                    setDados({ ...dados, qtdeModulos: Number(value) })
+                    setDados({ ...dados, qtdeModulos: value })
                   }
                 />
-                <NumberInput
+                <TextInput
                   label={"POTÊNCIA DOS MÓDULOS"}
                   editable={true}
                   value={dados.potModulos}
                   handleChange={(value) =>
-                    setDados({ ...dados, potModulos: Number(value) })
+                    setDados({ ...dados, potModulos: value })
                   }
                 />
                 <TextInput
@@ -401,19 +466,33 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     setDados({ ...dados, marcaModulos: value.toUpperCase() })
                   }
                 />
-                <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">
-                    OBSERVAÇÕES PARA VISITA
-                  </span>
-                  <textarea
-                    placeholder={"Descrição aqui.."}
-                    value={dados.obsVisita}
-                    onChange={(e) =>
-                      setDados({ ...dados, obsVisita: e.target.value })
-                    }
-                    className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-                  />
-                </div>
+              </div>
+              <div className="flex flex-col text-sm lg:text-base  items-center">
+                <span className="uppercase font-bold font-raleway text-center text-sm">
+                  INFORMAÇÃO MÓDULOS
+                </span>
+                <p className="text-xs w-full text-center  text-gray-600 outline-none">
+                  {getJoinedInfo({
+                    marca: dados.marcaModulos
+                      ? dados.marcaModulos.toString().toUpperCase()
+                      : "",
+                    qtde: dados.qtdeModulos ? dados.qtdeModulos.toString() : "",
+                    pot: dados.potModulos ? dados.potModulos.toString() : "",
+                  })}
+                </p>
+              </div>
+              <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
+                <span className="uppercase font-bold font-raleway text-center text-sm">
+                  OBSERVAÇÕES PARA VISITA
+                </span>
+                <textarea
+                  placeholder={"Descrição aqui.."}
+                  value={dados.obsVisita}
+                  onChange={(e) =>
+                    setDados({ ...dados, obsVisita: e.target.value })
+                  }
+                  className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
+                />
               </div>
               <div className="flex gap-2 justify-around flex-wrap mt-2">
                 <SelectInput

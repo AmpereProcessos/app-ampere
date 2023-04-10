@@ -1955,7 +1955,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       }
                     />
                     <SelectInput
-                      label="FOTO CLARA DA FAIXADA"
+                      label="FOTO CLARA DA FACHADA"
                       editable={true}
                       value={
                         dados.fotoFaixada ? dados.fotoFaixada : "NÃO DEFINIDO"

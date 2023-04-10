@@ -590,7 +590,7 @@ function LaudoTecnicoUrbano({ info }) {
               <div className="w-[50%] grid grid-rows-2">
                 <div className="grid grid-cols-2 border-b border-black">
                   <p className="bg-gray-200 text-xxs text-center font-bold border-r border-black">
-                    FOTO DA FAIXADA
+                    FOTO DA FACHADA
                   </p>
                   <p className="text-xxs text-center font-bold border-r border-black">
                     {info.fotoFaixada}

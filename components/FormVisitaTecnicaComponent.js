@@ -407,7 +407,7 @@ function FormVisitaTecnicaComponent() {
                 1
               </div>
               <div className="text-center text-xs bg-gray-200 flex items-center justify-center w-[60%] border-r border-black">
-                FOTO DA FAIXADA
+                FOTO DA FACHADA
               </div>
               <div className="text-center text-xs w-[20%] border-r border-black"></div>
             </div>

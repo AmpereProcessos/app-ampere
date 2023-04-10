@@ -1824,7 +1824,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     }
                   />
                   <SelectInput
-                    label="FOTO CLARA DA FAIXADA"
+                    label="FOTO CLARA DA FACHADA"
                     editable={dados.status == "REJEITADA" ? true : false}
                     value={
                       dados.fotoFaixada ? dados.fotoFaixada : "NÃO DEFINIDO"

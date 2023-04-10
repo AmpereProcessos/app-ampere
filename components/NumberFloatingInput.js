@@ -15,7 +15,7 @@ function NumberFloatingInput({
       } ${marginBottom ? `mb-[${marginBottom}]` : "mb-6"}  group`}
     >
       <input
-        value={value}
+        value={value ? value.toString() : 0}
         onChange={(e) => handleChange(e.target.value)}
         readOnly={!editable}
         type="number"

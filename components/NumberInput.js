@@ -35,7 +35,7 @@ function NumberInput({
           className="text-xs w-fit text-center uppercase text-gray-600 outline-none bg-transparent"
           type="number"
           readOnly={!editable}
-          value={value}
+          value={value ? value.toString() : 0}
           onChange={(e) => handleChange(e.target.value)}
         />
         {unit && (

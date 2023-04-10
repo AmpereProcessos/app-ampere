@@ -152,7 +152,7 @@ function FormVisitaTecnicaQuatro({
             className="ml-2 text-center text-[#15599a] font-bold"
             htmlFor="propostaComercial"
           >
-            FOTO DA FAIXADA
+            FOTO DA FACHADA
           </label>
           <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
             <div className="absolute">
@@ -177,7 +177,7 @@ function FormVisitaTecnicaQuatro({
                 setImages({
                   ...images,
                   fotoFaixada: {
-                    title: "FOTO DA FAIXADA",
+                    title: "FOTO DA FACHADA",
                     file: e.target.files[0],
                   },
                 })

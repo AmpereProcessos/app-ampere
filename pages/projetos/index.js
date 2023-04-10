@@ -14,6 +14,7 @@ import {
   cidadesAtendidas,
   vendedores,
   tiposDeServico,
+  statusDoParecerDeAcesso,
 } from "../../utils/constants";
 import { AppContext } from "../../context/AppContext";
 import TagTipoDeServico from "../../components/TagTipoDeServico";
@@ -474,72 +475,7 @@ function Projetos() {
                             parecerFilter: e.map((x) => x.value),
                           })
                         }
-                        options={[
-                          {
-                            label: "AGUARDANDO ASSINATURA",
-                            value: "AGUARDANDO ASSINATURA",
-                          },
-                          {
-                            label: "AGUARDANDO AUMENTO DE CARGA",
-                            value: "AGUARDANDO AUMENTO DE CARGA",
-                          },
-                          {
-                            label: "INICIAR PROJETO",
-                            value: "INICIAR PROJETO",
-                          },
-                          {
-                            label: "SOLICITAR TROCA DE TITULARIDADE",
-                            value: "SOLICITAR TROCA DE TITULARIDADE",
-                          },
-                          {
-                            label: "AGUARDANDO FATURAMENTO ART",
-                            value: "AGUARDANDO FATURAMENTO ART",
-                          },
-                          {
-                            label: "AGUARDANDO FORMULÁRIOS",
-                            value: "AGUARDANDO FORMULÁRIOS",
-                          },
-                          {
-                            label: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
-                            value: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
-                          },
-                          {
-                            label: "AGUARDANDO TROCA DE TITULARIDADE",
-                            value: "AGUARDANDO TROCA DE TITULARIDADE",
-                          },
-                          {
-                            label: "AUMENTO DE CARGA",
-                            value: "AUMENTO DE CARGA",
-                          },
-                          {
-                            label: "CANCELADO",
-                            value: "CANCELADO",
-                          },
-                          {
-                            label: "PARECER DE ACESSO APROVADO",
-                            value: "PARECER DE ACESSO APROVADO",
-                          },
-                          {
-                            label: "PENDENCIAS",
-                            value: "PENDENCIAS",
-                          },
-                          {
-                            label: "SOLICITAR ACESSO",
-                            value: "SOLICITAR ACESSO",
-                          },
-                          {
-                            label: "SOLICITAR AUMENTO DE CARGA",
-                            value: "SOLICITAR AUMENTO DE CARGA",
-                          },
-                          {
-                            label: "PARECER DE ACESSO COM OBRAS",
-                            value: "PARECER DE ACESSO COM OBRAS",
-                          },
-                          {
-                            label: "NÃO DEFINIDO",
-                            value: "NÃO DEFINIDO",
-                          },
-                        ]}
+                        options={statusDoParecerDeAcesso}
                       />
                     </div>
                     <div className="w-full lg:w-[250px]">

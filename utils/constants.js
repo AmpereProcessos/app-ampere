@@ -1348,6 +1348,10 @@ export const statusDoParecerDeAcesso = [
     value: "CANCELADO",
   },
   {
+    label: "PARECER DE ACESSO SUSPENSO",
+    value: "PARECER DE ACESSO SUSPENSO",
+  },
+  {
     label: "PARECER DE ACESSO APROVADO",
     value: "PARECER DE ACESSO APROVADO",
   },

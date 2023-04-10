@@ -68,7 +68,7 @@ function RelatorioEstoque() {
                   {material.nome}
                 </p>
                 <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
-                  {material.qtde}
+                  {material.qtde && material.qtde > 0 ? material.qtde : "-"}
                 </p>
               </div>
             ))

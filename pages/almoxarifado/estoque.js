@@ -6,6 +6,8 @@ import ModalNovoItemAlmoxarifado from "../../components/ModalNovoItemAlmoxarifad
 import { AiOutlineSearch } from "react-icons/ai";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
+import Link from "next/link";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
 function Estoque() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -80,6 +82,11 @@ function Estoque() {
             ESTOQUE
           </h1>
           <div className="flex justify-center gap-2 flex-wrap">
+            <Link href="/almoxarifado/pdfRelatorioEstoque">
+              <button className="p-2 rounded border border-[#fead61] text-[#fead61] font-medium">
+                RELATÓRIO
+              </button>
+            </Link>
             <input
               type={"text"}
               placeholder="Digite o nome do produto..."
@@ -104,13 +111,18 @@ function Estoque() {
                 setFiltros({ ...filtros, filtroQtde: Number(e.target.value) })
               }
             />
-            <button
+            <FilterButton
+              text={"FILTRAR"}
+              icon={<AiOutlineSearch />}
+              handleClick={() => handleFilters()}
+            />
+            {/* <button
               onClick={handleFilters}
               className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
             >
               <p>Filtrar</p>
               <AiOutlineSearch />
-            </button>
+            </button> */}
           </div>
         </div>
         <div className="flex justify-around gap-3 mt-4 flex-wrap">

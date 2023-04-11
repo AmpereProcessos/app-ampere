@@ -599,6 +599,12 @@ function pdfProposta({ info }) {
           </div>
         </div>
       </div>
+      <div className="w-full flex items-center justify-center mt-1">
+        <p className="text-sm text-[#15599a] italic">
+          *Proposta com validade de 30 dias contando de{" "}
+          {new Date().toLocaleDateString()}
+        </p>
+      </div>
     </div>
   );
 }

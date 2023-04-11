@@ -13,16 +13,14 @@ function PropostaOeMPersonalizada() {
           <p className="text-xl font-bold">Ituiutaba</p>
           <p className="text-xl font-bold">{new Date().toLocaleDateString()}</p>
         </div>
-        <Link href="/oem/propostas">
-          <div className="flex justify-center">
-            <Image
-              width="80px"
-              height="80px"
-              className="rounded-full cursor-pointer"
-              src={Logo}
-            />
-          </div>
-        </Link>
+        <div className="flex items-center justify-center">
+          <Link href="/oem/propostas">
+            <div className="h-[70px] w-[70px]">
+              <Image objectFit="fill" className="cursor-pointer" src={Logo} />
+            </div>
+          </Link>
+        </div>
+
         <div className="col-span-2 place-self-end">
           <h1 className="text-xl font-bold">Atendido por:</h1>
           <p className="font-bold text-center">LEANDRO VIALI</p>
@@ -484,17 +482,17 @@ function PropostaOeMPersonalizada() {
                     <tr className="border-b bg-white">
                       <td className="flex flex-col px-2 py-1 text-sm font-medium text-gray-900 border-r">
                         <p>
-                          VALOR DO PLANO ANUAL DIVIDIDO EM ATÉ 12x NO CARTÃO
+                          VALOR TOTAL DIVIDIDO EM ATÉ 5x SEM JUROS NO CARTÃO
                         </p>
-                        <p className="text-xs text-gray-500 italic">
-                          *Taxas a depender da bandeira do cartão.
+                        <p className="text-xs text-green-500 italic">
+                          *8% de desconto no pagamento à vista.
                         </p>
                       </td>
                       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         -
                       </td>
                       <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
-                        R$ 7.600,00
+                        R$ 6.500,00
                       </td>
                       {!planOption == 1 ? (
                         <>
@@ -540,6 +538,12 @@ function PropostaOeMPersonalizada() {
             <p className="text-center">Ampère Energias</p>
           </div>
         </div>
+      </div>
+      <div className="w-full flex items-center justify-center mt-4">
+        <p className="text-sm text-[#15599a] italic">
+          *Proposta com validade de 30 dias contando de{" "}
+          {new Date().toLocaleDateString()}
+        </p>
       </div>
     </div>
   );

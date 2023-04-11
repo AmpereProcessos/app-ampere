@@ -42,7 +42,7 @@ function ControleAlmoxarifado({
     axios
       .put("/api/almoxarifado/materiais", {
         id: info._id,
-        novaQtde: novaQuantidade ? novaQuantidade : info.qtde,
+        novaQtde: novaQuantidade >= 0 ? novaQuantidade : info.qtde,
         novoPreco: novoPreco ? novoPreco : info.preco,
         infoAlt: {
           valorAnterior: info.qtde,
@@ -109,10 +109,14 @@ function ControleAlmoxarifado({
                   <div className={"grow"}>
                     <input
                       type={"number"}
-                      value={novaQuantidade}
-                      onChange={(e) =>
-                        setNovaQuantidade(Number(e.target.value))
+                      value={
+                        novaQuantidade >= 0 ? novaQuantidade.toString() : null
                       }
+                      onChange={(e) => {
+                        let number = Number(e.target.value);
+                        if (number >= 0) setNovaQuantidade(number);
+                        else setNovaQuantidade(0);
+                      }}
                       className="text-gray-600 w-full p-1 h-full text-sm text-center outline-none"
                     />
                   </div>
@@ -125,7 +129,11 @@ function ControleAlmoxarifado({
                     <input
                       type={"number"}
                       value={novoPreco}
-                      onChange={(e) => setNovoPreco(Number(e.target.value))}
+                      onChange={(e) => {
+                        let number = Number(e.target.value);
+                        if (number >= 0) setNovoPreco(Number(e.target.value));
+                        else setNovoPreco(0);
+                      }}
                       className="text-gray-600 w-full p-1 h-full text-sm text-center outline-none"
                     />
                   </div>

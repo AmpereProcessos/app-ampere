@@ -7,8 +7,8 @@ function PropostaOeMPersonalizada() {
   const planOption = 1;
   return (
     <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
-      <div className="grid grid-cols-5 w-full">
-        <div className="col-span-2">
+      <div className="grid grid-cols-5 w-full items-start">
+        <div className="flex flex-col col-span-2">
           <h1 className="text-xl font-bold text-[#15599b]">SEST SENAI</h1>
           <p className="text-xl font-bold">Ituiutaba</p>
           <p className="text-xl font-bold">{new Date().toLocaleDateString()}</p>
@@ -21,10 +21,10 @@ function PropostaOeMPersonalizada() {
           </Link>
         </div>
 
-        <div className="col-span-2 place-self-end">
+        <div className="flex flex-col col-span-2 items-end">
           <h1 className="text-xl font-bold">Atendido por:</h1>
           <p className="font-bold text-center">LEANDRO VIALI</p>
-          <p className="font-bold">(34) 9 9775-7001</p>
+          <p className="font-bold">(34) 9 9767-7001 </p>
         </div>
       </div>
       <div className="mt-5 border-2 border-black">
@@ -480,19 +480,14 @@ function PropostaOeMPersonalizada() {
                     ) : null}
 
                     <tr className="border-b bg-white">
-                      <td className="flex flex-col px-2 py-1 text-sm font-medium text-gray-900 border-r">
-                        <p>
-                          VALOR TOTAL DIVIDIDO EM ATÉ 5x SEM JUROS NO CARTÃO
-                        </p>
-                        <p className="text-xs text-green-500 italic">
-                          *8% de desconto no pagamento à vista.
-                        </p>
+                      <td className="px-2 py-1 text-sm font-medium text-gray-900 border-r">
+                        VALOR TOTAL
                       </td>
                       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         -
                       </td>
                       <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
-                        R$ 6.500,00
+                        R$ 5.980,00
                       </td>
                       {!planOption == 1 ? (
                         <>
@@ -524,6 +519,9 @@ function PropostaOeMPersonalizada() {
           </div>
         </div>
       </div>
+      <p className="w-full text-sm text-red-500 text-center font-medium mb-1 uppercase">
+        *Mediante pagamento à vista*
+      </p>
       <div>
         <h1 className="w-full bg-[#15599b] text-white font-bold text-center">
           ASSINATURA

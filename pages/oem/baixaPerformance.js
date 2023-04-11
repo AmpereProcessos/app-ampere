@@ -10,6 +10,15 @@ import { MdSignalWifiStatusbarConnectedNoInternet4 } from "react-icons/md";
 import BaixaPerformanceModal from "../../components/BaixaPerformanceModal";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
+
+function getProblemsNotBooked(badPerformers, monitoramentoBook) {
+  const nomeUsinaSet = new Set(monitoramentoBook.map((item) => item.nomeUsina));
+
+  const filteredArr = badPerformers.filter(
+    (item) => !nomeUsinaSet.has(item.nomeUsina)
+  );
+  return filteredArr;
+}
 function BaixaPerformance() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -74,7 +83,8 @@ function BaixaPerformance() {
             }
           }
         });
-        setBadPerformers(arr);
+        let filteredArr = getProblemsNotBooked(arr, monitoramentoBook);
+        setBadPerformers(filteredArr);
         setInProgress(false);
       } catch (error) {
         alert("Erro na requisição.");
@@ -130,7 +140,7 @@ function BaixaPerformance() {
       }
     }
   }, [session]);
-  console.log(badPerformers);
+  console.log(monitoramentoBook);
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (

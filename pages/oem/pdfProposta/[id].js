@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Image from "next/image";
-import Logo from "../../../utils/logo.png";
+import Logo from "../../../utils/whitelogoHD.png";
 import Link from "next/link";
 import connectToDatabase from "../../../utils/proposesDb";
 import { FiCheck } from "react-icons/fi";
@@ -44,24 +44,21 @@ function pdfProposta({ info }) {
   return (
     <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
       <div className="grid grid-cols-5 w-full">
-        <div className="col-span-2">
+        <div className="flex flex-col col-span-2">
           <h1 className="text-xl font-bold text-[#15599b]">
             {info.clientName}
           </h1>
           <p className="text-xl font-bold">{info.city}</p>
           <p className="text-xl font-bold">{new Date().toLocaleDateString()}</p>
         </div>
-        <Link href="/oem/propostas">
-          <div className="flex justify-center">
-            <Image
-              width="80px"
-              height="80px"
-              className="rounded-full cursor-pointer"
-              src={Logo}
-            />
-          </div>
-        </Link>
-        <div className="col-span-2 place-self-end">
+        <div className="flex items-center justify-center">
+          <Link href="/oem/propostas">
+            <div className="h-[70px] w-[70px]">
+              <Image objectFit="fill" className="cursor-pointer" src={Logo} />
+            </div>
+          </Link>
+        </div>
+        <div className="flex flex-col items-end col-span-2">
           <h1 className="text-xl font-bold">Atendido por:</h1>
           <p className="font-bold text-center">{info.attendant}</p>
           <p className="font-bold">(34) 9 9775-7001</p>

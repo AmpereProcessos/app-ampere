@@ -27,6 +27,7 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { storage } from "../utils/firebase";
+import Link from "next/link";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -989,15 +990,12 @@ function ModalFormSolicitacao({
                   <h1 className="text-center w-fit font-bold text-green-500 text-md lg:text-xl">
                     REVISÃO DAS INFORMAÇÕES
                   </h1>
-                  <button
-                    onClick={() =>
-                      router.push(`/comercial/publicoFormulario/${dados._id}`)
-                    }
-                    className="flex items-center justify-center gap-2 p-2 text-sm rounded font-bold border border-[#fead61] text-[#fead61] hover:text-black hover:bg-[#fead61] "
-                  >
-                    <TbExternalLink />
-                    <p>PDF</p>
-                  </button>
+                  <Link href={`/comercial/publicoFormulario/${dados._id}`}>
+                    <a className="flex items-center justify-center gap-2 p-2 text-sm rounded font-bold border border-[#fead61] text-[#fead61] hover:text-black hover:bg-[#fead61] ">
+                      <TbExternalLink />
+                      <p>PDF</p>
+                    </a>
+                  </Link>
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">

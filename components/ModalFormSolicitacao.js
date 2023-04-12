@@ -10,6 +10,7 @@ import {
   cidadesAtendidas,
   credores,
   customersAcquisitionChannels,
+  fileTypes,
   tiposDeServico,
   vendedores,
 } from "../utils/constants";
@@ -17,7 +18,15 @@ import { VscChromeClose } from "react-icons/vsc";
 import { FaSave } from "react-icons/fa";
 import { useRouter } from "next/router";
 import axios from "axios";
+import FileLinkBlock from "./utils/FileLinkBlock";
 import SaveButton from "./utils/Buttons/SaveButton";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import { storage } from "../utils/firebase";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -219,6 +228,10 @@ function ModalFormSolicitacao({
   const [msg, setMessage] = useState({ text: "", color: "" });
   const [creationMsg, setCreationMsg] = useState({ text: "", color: "" });
   const [emailMsg, setEmailMsg] = useState({ text: "", color: "" });
+  const [fileMsg, setFileMsg] = useState({ text: "", color: "" });
+
+  const [image, setImage] = useState(null);
+  const [fileName, setFileName] = useState("");
 
   // Handling Distribuições
   const [dadosDistribuicao, setDadosDistribuicao] = useState({
@@ -805,6 +818,112 @@ function ModalFormSolicitacao({
       });
     });
     setDados({ ...dados, aprovacao: true });
+  }
+
+  async function uploadFiles() {
+    if (fileName.trim().length < 3) {
+      setFileMsg({
+        text: "Por favor, preencha um nome de arquivo válido.",
+        color: "text-red-500",
+      });
+      setTimeout(() => {
+        setFileMsg({ text: "", color: "" });
+      }, 2000);
+    }
+    var splitNome = fileName.replace("/", "").toLowerCase().split(" ");
+    var fixedNome = splitNome.join("_");
+    try {
+      var arr = dados.links ? dados.links : [];
+      setFileMsg({ text: "Enviando arquivo(s)...", color: "text-[#15599a]" });
+      if (image.length > 0) {
+        for (let i = 0; i < image.length; i++) {
+          let file = image.item(i);
+          let storageName =
+            image.length > 1
+              ? `clientes/${dados.nomeDoContrato}/${fixedNome}-{${i + 1}}`
+              : `clientes/${dados.nomeDoContrato}/${fixedNome}`;
+          var imageRef = ref(storage, storageName);
+          let res = await uploadBytes(imageRef, file).catch((err) => {
+            throw "Houve um erro no envio das imagens";
+          });
+          var url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          let name =
+            image.length > 1 ? `${fileName} (${i + 1})` : `${fileName}`;
+          arr = [
+            ...arr,
+            {
+              title: name,
+              link: url,
+              format: fileTypes[res.metadata.contentType]
+                ? fileTypes[res.metadata.contentType].title
+                : "INDEFINIDO",
+            },
+          ];
+        }
+      }
+      let apiResponse = await axios
+        .put(`/api/solicitacoes/update?id=${dados._id}`, {
+          operation: {
+            $set: {
+              links: arr,
+            },
+          },
+        })
+        .catch((err) => {
+          throw "Houve um erro no salvamento dos links";
+        });
+      setDados({ ...dados, links: arr });
+      setFileMsg({
+        text: "Arquivo(s) salvo(s) com sucesso.",
+        color: "text-green-500",
+      });
+      setTimeout(() => {
+        setFileMsg({
+          text: "",
+          color: "",
+        });
+      }, 2000);
+      setFileName("");
+    } catch (error) {
+      setFileMsg({
+        text: "Erro no envio das images.",
+        color: "text-red-500",
+      });
+    }
+  }
+
+  async function deleteFile(obj) {
+    try {
+      let fileRef = ref(storage, obj.link);
+      let firebaseResponse = await deleteObject(fileRef).catch((err) => {
+        throw new Error("Erro ao excluir arquivo no Firebase.");
+      });
+      const newArr = dados.links.filter((x) => x.link != obj.link);
+      let apiResponse = await axios.put(
+        `/api/solicitacoes/update?id=${dados._id}`,
+        {
+          operation: {
+            $pull: {
+              [`links`]: obj,
+            },
+          },
+        }
+      );
+      console.log("API RESPONSE", apiResponse.data);
+      setDados({ ...dados, links: newArr });
+      setFileMsg({
+        text: "Arquivo excluído com sucesso.",
+        color: "text-green-500",
+      });
+      setTimeout(() => {
+        setFileMsg({
+          text: "",
+          color: "",
+        });
+      }, 2000);
+    } catch (error) {
+      setFileMsg({ text: "Erro ao exluir arquivo.", color: "text-red-500" });
+    }
   }
   console.log(dados);
   return (
@@ -3020,16 +3139,77 @@ function ModalFormSolicitacao({
                     </span>
                     <div className="flex flex-col items-center gap-2">
                       {dados.links.map((x, index) => (
-                        <div key={index} className="flex items-center gap-x-2">
-                          <a className="text-blue-300" href={x.link}>
-                            {x.title}
-                            {x.format ? ` - ${x.format}` : false}
-                          </a>
-                          <AiOutlineCheck
-                            style={{ color: "#49be25", fontSize: "18px" }}
-                          />
-                        </div>
+                        // <div key={index} className="flex items-center gap-x-2">
+                        //   <a className="text-blue-300" href={x.link}>
+                        //     {x.title}
+                        //     {x.format ? ` - ${x.format}` : false}
+                        //   </a>
+                        //   <AiOutlineCheck
+                        //     style={{ color: "#49be25", fontSize: "18px" }}
+                        //   />
+                        // </div>
+                        <FileLinkBlock
+                          key={index}
+                          obj={x}
+                          deleteFile={(obj) => deleteFile(obj)}
+                        />
                       ))}
+                    </div>
+                    {fileMsg.text ? (
+                      <p
+                        className={`text-center italic ${fileMsg.color} text-xs h-[10px] my-1`}
+                      >
+                        {fileMsg.text}
+                      </p>
+                    ) : (
+                      <div className="h-[10px] my-1"></div>
+                    )}
+                    <div className="flex flex-col w-full items-center mt-2">
+                      <h1 className="text-[#fead61] font-medium text-sm">
+                        ANEXO DE ARQUIVOS
+                      </h1>
+                      <div className="relative w-full lg:w-[450px] self-center border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                        <div className="absolute">
+                          {image ? (
+                            <div className="flex flex-col items-center">
+                              <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                              <span className="block text-gray-400 font-normal text-center">
+                                {image.length == 1
+                                  ? image[0].name
+                                  : `${image[0].name}...`}
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center">
+                              <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                              <span className="block text-gray-400 font-normal">
+                                Adicione o arquivo aqui
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <input
+                          onChange={(e) => setImage(e.target.files)}
+                          className="h-full w-full opacity-0"
+                          multiple={true}
+                          type="file"
+                          accept=".png, .jpeg, .jpg, .pdf, .docx, .doc"
+                        />
+                      </div>
+                      <input
+                        value={fileName}
+                        onChange={(e) =>
+                          setFileName(e.target.value.toUpperCase())
+                        }
+                        placeholder="Dê um nome para identificação do arquivo."
+                        className="outline-none border border-gray-200 p-2 w-full lg:w-[450px] mt-2"
+                      />
+                      <button
+                        onClick={uploadFiles}
+                        className="p-2 rounded bg-blue-400 hover:bg-blue-700 text-white font-bold mt-2"
+                      >
+                        ANEXAR
+                      </button>
                     </div>
                   </div>
                 ) : (

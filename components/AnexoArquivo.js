@@ -27,7 +27,7 @@ function AnexoArquivo({
     var fixedNome = splitNome.join("_");
     if (fileName.trim().length < 3) {
       setMsg({
-        text: "Por favor, preenche um nome de arquivo válido",
+        text: "Por favor, preencha um nome de arquivo válido",
         color: "text-red-500",
       });
       clearMsg(2000);

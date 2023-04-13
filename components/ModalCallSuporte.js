@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import SaveButton from "./utils/Buttons/SaveButton";
 import { FaSave } from "react-icons/fa";
+import OSCreationBlock from "./OSCreationBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -89,6 +90,8 @@ function ModalCallSuporte({
   );
   const [infoHolder, setInfo] = useState(info);
   const [message, setMessage] = useState({ text: "", color: "" });
+  const [osMessage, setOsMessage] = useState({ text: "", color: "" });
+
   function saveCallChanges() {
     if (info.statusChamado != infoHolder.statusChamado) {
       ultAlteracoes.statusAlteracoes.usuario = credentials?.id;
@@ -155,13 +158,13 @@ function ModalCallSuporte({
         updateModalInfo(info._id);
       });
   }
-  function addLinks(arr) {
+  async function addLinks(arr) {
     console.log("LINKS", arr);
     setInfo({
       ...infoHolder,
       links: arr,
     });
-    axios
+    await axios
       .put("/api/calls/suporte/updateSuporte", {
         ...infoHolder,
         links: arr,
@@ -184,9 +187,13 @@ function ModalCallSuporte({
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
-            <h1 className="text-[#15599a] pl-6 uppercase font-bold">
-              {info.tipoChamado} {info.equipamento && `- ${info.equipamento}`}
-            </h1>
+            <div className="flex flex-col items-center">
+              <h1 className="text-[#15599a] pl-6 uppercase font-bold">
+                {info.tipoChamado} {info.equipamento && `- ${info.equipamento}`}
+              </h1>
+              <p className="text-xs text-gray-500">{info._id}</p>
+            </div>
+
             {info.demanda && (
               <span className="text-xs border border-gray-200 p-2 font-bold text-gray-600">
                 DEMANDA {info.demanda}
@@ -585,6 +592,58 @@ function ModalCallSuporte({
             ) : (
               false
             )}
+            {info.idPai ? (
+              <div className="flex flex-col w-full gap-2 mt-2">
+                <h1 className="text-center font-medium text-green-500">
+                  ORDEM DE SERVIÇO
+                </h1>
+                <OSCreationBlock
+                  id={info.idPai}
+                  qtde={"N/A"}
+                  editor={true}
+                  nomeDoContrato={info.nomeCliente}
+                  categories={[
+                    {
+                      label: "MANUTENÇÃO PREVENTIVA",
+                      value: "MANUTENÇÃO PREVENTIVA",
+                    },
+                    {
+                      label: "MANUTENÇÃO CORRETIVA",
+                      value: "MANUTENÇÃO CORRETIVA",
+                    },
+                    {
+                      label: "OUTROS",
+                      value: "OUTROS",
+                    },
+                    {
+                      label: "NÃO DEFINIDO",
+                      value: "NÃO DEFINIDO",
+                    },
+                  ]}
+                  handleUpdates={(id, data) =>
+                    setOsMessage({
+                      text: `OS DISPONÍVEL EM: https://app.ampereenergias.com.br/ordemDeServico/pdf/${id}?index=${data.index} `,
+                      color: "text-green-500",
+                    })
+                  }
+                />
+                {osMessage.text ? (
+                  <>
+                    <p
+                      className={`text-sm mt-1 text-center w-full ${osMessage.color}`}
+                    >
+                      {osMessage.text.split(":")[0]}
+                    </p>
+                    <a
+                      className="text-blue-400 text-xs text-center"
+                      href={osMessage.text.split(": ")[1]}
+                    >
+                      {osMessage.text.split(": ")[1]}
+                    </a>
+                  </>
+                ) : null}
+              </div>
+            ) : null}
             {info.statusChamado == "RESOLVIDO" ? (
               <div className="text-center">
                 <button
@@ -609,7 +668,7 @@ function ModalCallSuporte({
                 {message.text}
               </p>
             )}
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center mt-2">
               <SaveButton
                 text={"SALVAR"}
                 icon={<FaSave />}

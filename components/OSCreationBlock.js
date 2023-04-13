@@ -47,25 +47,25 @@ function OSCreationBlock({
       });
     } else {
       if (validateFields() == true) {
-        if (ordensDeServico != undefined && ordensDeServico?.length > 0) {
-          ordensDeServico.push({
-            ...osInfo,
-            usuarioEmissor: session.user?.name,
-            index: ordensDeServico?.length,
-            cobrancaRealizada: false,
-          });
-          arr = ordensDeServico;
-        } else {
-          arr = [
-            {
-              ...osInfo,
-              usuarioEmissor: session.user?.name,
-              index: 0,
-              cobrancaRealizada: false,
-            },
-          ];
-          ordensDeServico = arr;
-        }
+        // if (ordensDeServico != undefined && ordensDeServico?.length > 0) {
+        //   ordensDeServico.push({
+        //     ...osInfo,
+        //     usuarioEmissor: session.user?.name,
+        //     index: ordensDeServico?.length,
+        //     cobrancaRealizada: false,
+        //   });
+        //   arr = ordensDeServico;
+        // } else {
+        //   arr = [
+        //     {
+        //       ...osInfo,
+        //       usuarioEmissor: session.user?.name,
+        //       index: 0,
+        //       cobrancaRealizada: false,
+        //     },
+        //   ];
+        //   ordensDeServico = arr;
+        // }
         if (osInfo.realizarCobranca) {
           await axios.post("/api/calls/adm/mainData", {
             codigoProjeto: qtde,
@@ -87,30 +87,48 @@ function OSCreationBlock({
             servico: `${osInfo.categoria} - ${osInfo.servicoExecutado}`,
           });
         }
-        axios.post("/api/ordensDeServico", { id: id, arr: arr }).then((res) => {
-          setOsMsg({
-            text: "Ordem de serviço gerada",
-            color: "text-green-500",
-          });
-          setOsInfo({
-            categoria: "NÃO DEFINIDO",
-            servicoExecutado: "",
-            realizarCobranca: false,
-            valorCobranca: 0,
-            usuarioEmissor: "",
-            grauDeUrgencia: "NÃO DEFINIDO",
-            observacoes: "",
-            dataDeAbertura: new Date().toISOString(),
-            agendar: false,
-          });
-          // handleUpdates({
-          //   ...osInfo,
-          //   usuarioEmissor: session.user?.name,
-          //   index: ordensDeServico?.length,
-          //   cobrancaRealizada: false,
-          // });
-          handleUpdates(id);
+        // axios.post("/api/ordensDeServico", { id: id, arr: arr }).then((res) => {
+        //   setOsMsg({
+        //     text: "Ordem de serviço gerada",
+        //     color: "text-green-500",
+        //   });
+        //   setOsInfo({
+        //     categoria: "NÃO DEFINIDO",
+        //     servicoExecutado: "",
+        //     realizarCobranca: false,
+        //     valorCobranca: 0,
+        //     usuarioEmissor: "",
+        //     grauDeUrgencia: "NÃO DEFINIDO",
+        //     observacoes: "",
+        //     dataDeAbertura: new Date().toISOString(),
+        //     agendar: false,
+        //   });
+        //   handleUpdates(id);
+        // });
+        let { data } = await axios.post("/api/ordensDeServico/add", {
+          id: id,
+          info: {
+            ...osInfo,
+            usuarioEmissor: session.user?.name,
+            cobrancaRealizada: false,
+          },
         });
+        setOsMsg({
+          text: "Ordem de serviço gerada",
+          color: "text-green-500",
+        });
+        setOsInfo({
+          categoria: "NÃO DEFINIDO",
+          servicoExecutado: "",
+          realizarCobranca: false,
+          valorCobranca: 0,
+          usuarioEmissor: "",
+          grauDeUrgencia: "NÃO DEFINIDO",
+          observacoes: "",
+          dataDeAbertura: new Date().toISOString(),
+          agendar: false,
+        });
+        handleUpdates(id, data);
       }
     }
   }
@@ -491,7 +509,7 @@ function OSCreationBlock({
           />
         </div>
       )}
-      <div className="flex items-center justify-center w-full">
+      <div className="flex items-center justify-center w-full mt-2">
         <SelectFloatingInput
           label={"EQUIPE"}
           editable={true}

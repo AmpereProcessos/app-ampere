@@ -31,6 +31,7 @@ export default async function handler(req, res) {
           $set: {
             qtde: req.body.novaQtde,
             preco: req.body.novoPreco,
+            codigo: req.body.codigo,
             infoAlteracoes: { ...req.body.infoAlt, dataAlt: new Date() },
           },
         }

@@ -582,7 +582,7 @@ function OSCreationBlock({
           onClick={handleOSCreation}
           className="p-2 bg-[#fead61] font-bold rounded"
         >
-          GERAR OS DE OBRA
+          GERAR OS
         </button>
       </div>
     </div>

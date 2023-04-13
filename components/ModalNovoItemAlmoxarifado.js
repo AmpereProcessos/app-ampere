@@ -29,6 +29,7 @@ function Novoitem({ setModalAberta }) {
   const [nome, setNome] = useState("");
   const [quantidade, setQuantidade] = useState(0);
   const [preco, setPreco] = useState(0);
+  const [codigo, setCodigo] = useState("");
   const [msg, setMsg] = useState({
     text: "",
     color: "",
@@ -38,6 +39,7 @@ function Novoitem({ setModalAberta }) {
       nome: nome,
       qtde: quantidade,
       preco: preco,
+      codigo: codigo,
     };
     if (nome.trim().length < 3) {
       setMsg({
@@ -125,6 +127,19 @@ function Novoitem({ setModalAberta }) {
                       type={"number"}
                       value={preco}
                       onChange={(e) => setPreco(Number(e.target.value))}
+                      className="text-gray-600 w-full p-1 h-full text-sm text-center outline-none"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2 mt-4">
+                  <span className="text-center uppercase font-bold">
+                    CÓDIGO NEREUS
+                  </span>
+                  <div className={"grow"}>
+                    <input
+                      type={"text"}
+                      value={codigo}
+                      onChange={(e) => setCodigo(e.target.value)}
                       className="text-gray-600 w-full p-1 h-full text-sm text-center outline-none"
                     />
                   </div>

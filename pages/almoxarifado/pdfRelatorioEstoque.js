@@ -6,6 +6,8 @@ import Logo from "../../utils/whitelogoHD.png";
 import LoadingPage from "../../components/utils/LoadingPage";
 import Image from "next/image";
 import Link from "next/link";
+import Select from "react-select";
+import { RiArrowDownSFill, RiArrowUpSFill } from "react-icons/ri";
 
 function RelatorioEstoque() {
   const router = useRouter();
@@ -15,27 +17,87 @@ function RelatorioEstoque() {
       router.push("/auth/authHome");
     },
   });
+  const [showFilter, setShowFilter] = useState(true);
   const [materials, setMaterials] = useState();
+  const [hideMaterials, setHideMaterials] = useState([]);
   function getMateriais() {
     axios.get("/api/almoxarifado/materiais").then((res) => {
       setMaterials(res.data);
     });
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes("Almoxarifado")) {
-      if (!materials) {
-        getMateriais();
-      }
-    } else {
-      if (session?.user) router.push("/");
+    // console
+    // if (session?.user.accessibleRoutes.includes("Almoxarifado")) {
+    if (!materials) {
+      getMateriais();
     }
+    //   }
+    // } else {
+    //   if (session?.user) router.push("/");
+    // }
   }, []);
+
+  function filterItems(materiais) {
+    let filtered = materiais.filter(
+      (item) => !hideMaterials.includes(item.nome)
+    );
+    return filtered;
+  }
   console.log(materials);
   if (status == "loading") return <LoadingPage />;
   return (
     <div className="w-[21cm] h-[29.7cm] p-4 px-4 flex flex-col">
+      <div
+        className={`flex flex-col items-center w-full gap-2 ${
+          !showFilter ? "hidden" : ""
+        }`}
+      >
+        <div className="w-full">
+          <Select
+            isMulti
+            placeholder="ESCONDER ITENS"
+            styles={{
+              control: (base, state) => ({
+                ...base,
+                width: "100%",
+                minHeight: "41px",
+              }),
+            }}
+            onChange={(e) => setHideMaterials(e.map((x) => x.value))}
+            options={
+              materials
+                ? materials.map((material) => {
+                    return {
+                      label: material.nome,
+                      value: material.nome,
+                    };
+                  })
+                : []
+            }
+          />
+        </div>
+        {/* <button
+            onClick={() => setShowFilter(false)}
+            className="w-fit p-2 bg-[#15559a] text-white hover:bg-[#fead61] hover:text-black font-bold rounded-md"
+          >
+            VISUALIZAR PDF
+          </button> */}
+      </div>
+
       <div className="grid items-center grid-cols-3 w-full my-2 px-2">
-        <div></div>
+        <div className="flex items-center justify-center text-2xl hover:text-[#fead61]">
+          {showFilter ? (
+            <RiArrowDownSFill
+              style={{ cursor: "pointer" }}
+              onClick={() => setShowFilter(false)}
+            />
+          ) : (
+            <RiArrowUpSFill
+              style={{ cursor: "pointer" }}
+              onClick={() => setShowFilter(true)}
+            />
+          )}
+        </div>
         <h1 className="text-center font-bold text-xl">RELATÓRIO DE ESTOQUE</h1>
         <Link href={"/almoxarifado/estoque"}>
           <div className="flex items-center justify-end cursor-pointer">
@@ -56,7 +118,7 @@ function RelatorioEstoque() {
           </p>
         </div>
         {materials && materials?.length
-          ? materials.map((material, index) => (
+          ? filterItems(materials).map((material, index) => (
               <div
                 key={index}
                 className="grid grid-cols-6 gap-x-2 border-b border-x border-gray-700"

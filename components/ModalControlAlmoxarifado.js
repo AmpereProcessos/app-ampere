@@ -34,6 +34,7 @@ function ControleAlmoxarifado({
 }) {
   const [novaQuantidade, setNovaQuantidade] = useState();
   const [novoPreco, setNovoPreco] = useState();
+  const [codigo, setCodigo] = useState(info.codigo);
   const [msg, setMsg] = useState({
     text: "",
     color: "",
@@ -44,6 +45,7 @@ function ControleAlmoxarifado({
         id: info._id,
         novaQtde: novaQuantidade >= 0 ? novaQuantidade : info.qtde,
         novoPreco: novoPreco ? novoPreco : info.preco,
+        codigo: codigo,
         infoAlt: {
           valorAnterior: info.qtde,
           respAlteracao: credentials?.name,
@@ -98,6 +100,19 @@ function ControleAlmoxarifado({
                     <p className="text-gray-600 text-center">
                       R${info.preco.toFixed(2).replace(".", ",")}
                     </p>
+                  </div>
+                </div>
+                <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2 mt-4">
+                  <span className="text-center uppercase font-bold">
+                    CÓDIGO NEREUS
+                  </span>
+                  <div className={"grow"}>
+                    <input
+                      type={"text"}
+                      value={codigo}
+                      onChange={(e) => setCodigo(e.target.value)}
+                      className="text-gray-600 w-full p-1 h-full text-sm text-center outline-none"
+                    />
                   </div>
                 </div>
               </div>

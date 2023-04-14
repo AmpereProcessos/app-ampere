@@ -17,63 +17,64 @@ function Estoque() {
     },
   });
 
-  const [materiais, setMateriais] = useState();
-  const [materiaisFiltrados, setMateriaisFiltrados] = useState();
-  const [modalAberta, setModalAberta] = useState(false);
-  const [modalNovoItem, setModalNovoItem] = useState(false);
-  const [modalMaterial, setModalMaterial] = useState({});
-  const [filtros, setFiltros] = useState({
-    filtroPesquisa: "",
-    filtroQtde: null,
+  const [materials, setMaterials] = useState();
+  const [filteredMaterials, setFilteredMaterials] = useState();
+  const [editModal, setEditModal] = useState({
+    isOpen: false,
+    info: {},
+  });
+  const [newItemModalIsOpen, setNewItemModalIsOpen] = useState(false);
+
+  const [filters, setFilters] = useState({
+    search: "",
+    qtde: null,
   });
   function getMateriais() {
     axios.get("/api/almoxarifado/materiais").then((res) => {
-      setMateriaisFiltrados(res.data);
-      setMateriais(res.data);
+      setFilteredMaterials(res.data);
+      setMaterials(res.data);
     });
   }
   function handleFilters() {
     var newArr;
-    if (filtros.filtroPesquisa.trim().length > 0) {
-      if (!newArr) newArr = materiais;
-      console.log(filtros.filtroPesquisa.length);
+    if (filters.search.trim().length > 0) {
+      if (!newArr) newArr = materials;
+      console.log(filters.search.length);
       newArr = newArr.filter((material) =>
-        material.nome
-          .toUpperCase()
-          .includes(filtros.filtroPesquisa.toUpperCase())
+        material.nome.toUpperCase().includes(filters.search.toUpperCase())
       );
     }
-    if (filtros.filtroQtde && filtros.filtroQtde >= 0) {
-      if (!newArr) newArr = materiais;
+    if (filters.qtde && filters.qtde >= 0) {
+      if (!newArr) newArr = materials;
       newArr = newArr.filter(
-        (material) => material.qtde < Number(filtros.filtroQtde)
+        (material) => material.qtde < Number(filters.qtde)
       );
     }
     console.log(newArr);
     if (!newArr) {
-      setMateriaisFiltrados(materiais);
-      return materiais;
+      setFilteredMaterials(materials);
+      return materials;
     } else {
-      setMateriaisFiltrados(newArr);
+      setFilteredMaterials(newArr);
       return newArr;
     }
   }
   function handleSearchFilter(value) {
-    setFiltros((prev) => ({ ...prev, filtroPesquisa: value }));
+    setFilters((prev) => ({ ...prev, search: value }));
     var filtered = handleFilters();
     if (value.trim().length > 0) {
       let newArr = filtered.filter((item) =>
         item.nome.toUpperCase().includes(value.toUpperCase())
       );
-      setMateriaisFiltrados(newArr);
+      setFilteredMaterials(newArr);
     } else {
-      setMateriaisFiltrados(materiais);
+      setFilteredMaterials(materials);
     }
   }
   function handleUpdates(id) {
     getMateriais();
-    let changedObj = materiais.filter((project) => project._id == id);
-    setModalMaterial(changedObj[0]);
+    let changedObj = materials.filter((project) => project._id == id);
+    setEditModal((prev) => ({ ...prev, info: changedObj[0] }));
   }
   function handleKeyPress(e) {
     if (e.key === "Enter") {
@@ -85,21 +86,21 @@ function Estoque() {
       session?.user.accessibleRoutes.includes("Obras") ||
       session?.user.accessibleRoutes.includes("Almoxarifado")
     ) {
-      if (!materiais) getMateriais();
+      if (!materials) getMateriais();
     } else {
       if (session?.user) {
         router.push("/");
       }
     }
   }, [session]);
-  console.log(materiais);
+
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
       <div className="p-6 grow flex flex-col">
         <div className="flex flex-col items-center border-b border-gray-200 pb-2">
           <h1 className="text-[#fead61] font-raleway font-bold text-xl">
-            ESTOQUE ({materiaisFiltrados?.length})
+            ESTOQUE ({filteredMaterials?.length})
           </h1>
           <div className="flex justify-center gap-2 flex-wrap">
             <Link href="/almoxarifado/pdfRelatorioEstoque">
@@ -110,7 +111,7 @@ function Estoque() {
             <input
               type={"text"}
               placeholder="Digite o nome do produto..."
-              value={filtros.filtroPesquisa}
+              value={filters.search}
               className={
                 "outline-none p-1.5 rounded border border-gray-200 placeholder:italic min-w-[250px]"
               }
@@ -119,12 +120,12 @@ function Estoque() {
             <input
               type={"number"}
               placeholder="Quantidade abaixo de:"
-              value={filtros.filtroQtde ? filtros.filtroQtde.toString() : null}
+              value={filters.qtde ? filters.qtde.toString() : null}
               className={
                 "outline-none p-1.5 rounded border border-gray-200 placeholder:italic min-w-[190px]"
               }
               onChange={(e) =>
-                setFiltros({ ...filtros, filtroQtde: Number(e.target.value) })
+                setFilters({ ...filters, qtde: Number(e.target.value) })
               }
             />
             <FilterButton
@@ -142,12 +143,11 @@ function Estoque() {
           </div>
         </div>
         <div className="flex justify-around gap-3 mt-4 flex-wrap w-full grow">
-          {materiaisFiltrados ? (
-            materiaisFiltrados.map((material) => (
+          {filteredMaterials ? (
+            filteredMaterials.map((material) => (
               <div
                 onClick={() => {
-                  setModalAberta(true);
-                  setModalMaterial(material);
+                  setEditModal({ isOpen: true, info: material });
                 }}
                 key={material._id}
                 className="w-[250px] max-h-[80px] lg:w-[250px] hover:bg-blue-100 bg-[#fff] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100flex flex-col"
@@ -174,21 +174,27 @@ function Estoque() {
           )}
         </div>
         <div
-          onClick={() => setModalNovoItem(true)}
+          onClick={() => setNewItemModalIsOpen(true)}
           className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
         >
           <p className="uppercase font-bold text-sm">NOVO ITEM</p>
         </div>
-        {modalAberta && (
+        {editModal.isOpen && editModal.info ? (
           <ModalControlAlmoxarifado
             credentials={session?.user}
-            setModalAberta={setModalAberta}
-            info={modalMaterial}
+            closeModal={() =>
+              setEditModal((prev) => ({ isOpen: false, info: {} }))
+            }
+            info={editModal.info}
             handleUpdates={handleUpdates}
           />
+        ) : (
+          false
         )}
-        {modalNovoItem && (
-          <ModalNovoItemAlmoxarifado setModalAberta={setModalNovoItem} />
+        {newItemModalIsOpen && (
+          <ModalNovoItemAlmoxarifado
+            closeModal={() => setNewItemModalIsOpen(false)}
+          />
         )}
       </div>
     );

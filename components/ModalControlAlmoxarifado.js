@@ -5,14 +5,16 @@ import Select from "react-select";
 import { cities } from "../utils/constants";
 import axios from "axios";
 import SaveButton from "./utils/Buttons/SaveButton";
+import TextFloatingInput from "./TextFloatingInput";
+import NumberFloatingInput from "./NumberFloatingInput";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
   left: "50%",
   transform: "translate(-50%,-50%)",
   backgroundColor: "#fff",
-  width: "30%",
-  height: "50%",
+  width: "50%",
+  height: "80%",
   borderRadius: "10px",
   padding: "10px",
   zIndex: 1000,
@@ -27,11 +29,12 @@ const OVERLAY_STYLES = {
   zIndex: 1000,
 };
 function ControleAlmoxarifado({
-  setModalAberta,
+  closeModal,
   info,
   credentials,
   handleUpdates,
 }) {
+  const [materialInfo, setMaterialInfo] = useState(info);
   const [novaQuantidade, setNovaQuantidade] = useState();
   const [novoPreco, setNovoPreco] = useState();
   const [codigo, setCodigo] = useState(info.codigo);
@@ -39,23 +42,23 @@ function ControleAlmoxarifado({
     text: "",
     color: "",
   });
-  function handleAlteracoes() {
-    axios
-      .put("/api/almoxarifado/materiais", {
-        id: info._id,
-        novaQtde: novaQuantidade >= 0 ? novaQuantidade : info.qtde,
-        novoPreco: novoPreco ? novoPreco : info.preco,
-        codigo: codigo,
-        infoAlt: {
-          valorAnterior: info.qtde,
-          respAlteracao: credentials?.name,
-        },
-      })
-      .then((res) => {
-        handleUpdates(info._id);
-        setMsg({ text: res.data, color: "text-green-500" });
-      })
-      .catch((err) => setMsg({ text: err, color: "text-red-500" }));
+  async function handleAlteracoes() {
+    // axios
+    //   .put("/api/almoxarifado/materiais", {
+    //     id: info._id,
+    //     novaQtde: novaQuantidade >= 0 ? novaQuantidade : info.qtde,
+    //     novoPreco: novoPreco ? novoPreco : info.preco,
+    //     codigo: codigo,
+    //     infoAlt: {
+    //       valorAnterior: info.qtde,
+    //       respAlteracao: credentials?.name,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     handleUpdates(info._id);
+    //     setMsg({ text: res.data, color: "text-green-500" });
+    //   })
+    //   .catch((err) => setMsg({ text: err, color: "text-red-500" }));
   }
   /*console.log({
     novaQtde: novaQuantidade,
@@ -64,115 +67,100 @@ function ControleAlmoxarifado({
       respAlteracao: credentials?.name,
     },
   });*/
+  console.log(materialInfo);
   return (
-    <>
-      <div style={OVERLAY_STYLES}>
-        <div style={MODAL_STYLES}>
-          <div className="flex flex-col h-full">
-            <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-[#15599a] pl-6 uppercase font-bold">
-                {info.nome}
-              </h1>
-              <button>
+    <div style={OVERLAY_STYLES}>
+      <div style={MODAL_STYLES}>
+        <div className="flex h-full flex-col">
+          <div className="flex items-center justify-between min-h-[30px]">
+            <h1 className="text-[#15599a] font-bold">{info.nome}</h1>
+            <div className="">
+              <button className="hover:bg-red-200 rounded-lg p-1">
                 <VscChromeClose
-                  onClick={() => {
-                    setModalAberta(false);
-                  }}
+                  onClick={() => closeModal()}
                   style={{ color: "red" }}
                 />
               </button>
             </div>
-            <div className="flex flex-col h-full justify-around overflow-y-auto py-2">
-              <div className="flex flex-col w-full mt-5">
-                <div className="flex items-center justify-between w-full">
-                  <h1 className="text-gray-700 font-medium">QUANTIDADE</h1>
-                  <h1>{info.qtde}</h1>
-                </div>
-                {/* <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2  mt-4">
-                  <span className="text-center uppercase font-bold">
-                    QUANTIDADE ATUAL
-                  </span>
-                  <div className={"grow"}>
-                    <p className="text-gray-600 text-center">{info.qtde}</p>
-                  </div>
-                </div> */}
-                <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2  mt-4">
-                  <span className="text-center uppercase font-bold">
-                    PREÇO ATUAL
-                  </span>
-                  <div className={"grow"}>
-                    <p className="text-gray-600 text-center">
-                      R${info.preco.toFixed(2).replace(".", ",")}
-                    </p>
-                  </div>
-                </div>
-                <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2 mt-4">
-                  <span className="text-center uppercase font-bold">
-                    CÓDIGO NEREUS
-                  </span>
-                  <div className={"grow"}>
-                    <input
-                      type={"text"}
-                      value={codigo}
-                      onChange={(e) => setCodigo(e.target.value)}
-                      className="text-gray-600 w-full p-1 h-full text-sm text-center outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2 mt-4">
-                  <span className="text-center uppercase font-bold">
-                    NOVA QUANTIDADE
-                  </span>
-                  <div className={"grow"}>
-                    <input
-                      type={"number"}
-                      value={
-                        novaQuantidade >= 0 ? novaQuantidade.toString() : null
+          </div>
+          <div className="grow py-2 overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            <div className="w-full h-full px-4">
+              <div className="flex flex-col w-full">
+                <h1 className="font-raleway text-center w-full font-medium text-[#15599a]">
+                  INFORMAÇÕES DO ITEM
+                </h1>
+                <div className="flex mt-4 flex-col w-full gap-4">
+                  <TextFloatingInput
+                    label="NOME DO ITEM"
+                    value={materialInfo.nome}
+                    handleChange={(value) =>
+                      setMaterialInfo((prev) => ({ ...prev, nome: value }))
+                    }
+                    editable={true}
+                    width={"100%"}
+                  />
+                  <TextFloatingInput
+                    label="CÓDIGO NEREUS"
+                    value={materialInfo.codigo}
+                    handleChange={(value) =>
+                      setMaterialInfo((prev) => ({ ...prev, codigo: value }))
+                    }
+                    editable={true}
+                    width={"100%"}
+                  />
+                  <NumberFloatingInput
+                    label={"QUANTIDADE"}
+                    value={materialInfo.qtde}
+                    editable={true}
+                    handleChange={(value) =>
+                      setMaterialInfo((prev) => ({
+                        ...prev,
+                        qtde: Number(value),
+                      }))
+                    }
+                    width={"100%"}
+                  />
+                  <NumberFloatingInput
+                    label={"PREÇO"}
+                    value={materialInfo.preco}
+                    editable={true}
+                    handleChange={(value) =>
+                      setMaterialInfo((prev) => ({
+                        ...prev,
+                        preco: Number(value),
+                      }))
+                    }
+                    width={"100%"}
+                  />
+                  <div className="flex flex-col w-full gap-1">
+                    <h1 className="text-gray-500 font-medium text-xs w-full text-center">
+                      ANOTAÇÕES
+                    </h1>
+                    <textarea
+                      value={materialInfo.anotacoes}
+                      onChange={(e) =>
+                        setMaterialInfo((prev) => ({
+                          ...prev,
+                          anotacoes: e.target.value,
+                        }))
                       }
-                      onChange={(e) => {
-                        let number = Number(e.target.value);
-                        if (number >= 0) setNovaQuantidade(number);
-                        else setNovaQuantidade(0);
-                      }}
-                      className="text-gray-600 w-full p-1 h-full text-sm text-center outline-none"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2 mt-4">
-                  <span className="text-center uppercase font-bold">
-                    NOVO PREÇO
-                  </span>
-                  <div className={"grow"}>
-                    <input
-                      type={"number"}
-                      value={novoPreco}
-                      onChange={(e) => {
-                        let number = Number(e.target.value);
-                        if (number >= 0) setNovoPreco(Number(e.target.value));
-                        else setNovoPreco(0);
-                      }}
-                      className="text-gray-600 w-full p-1 h-full text-sm text-center outline-none"
+                      placeholder="Deixe aqui anotações sobre o item em questão..."
+                      className="w-full h-[80px] p-1 text-sm text-center resize-none outline-blue-200 bg-gray-100 border border-gray-200"
                     />
                   </div>
                 </div>
               </div>
-              {msg.text && (
-                <p className={`text-center italic ${msg.color}`}>{msg.text}</p>
-              )}
-              <div className="mt-4 flex justify-center">
-                <SaveButton
-                  text={"SALVAR"}
-                  icon={<FaSave />}
-                  handleClick={handleAlteracoes}
-                />
+              <div className="flex flex-col w-full mt-4">
+                <h1 className="font-raleway text-center w-full font-medium text-green-500">
+                  HISTÓRICO DE ALTERAÇÕES
+                </h1>
+                <h1 className="h-[60px]">A</h1>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

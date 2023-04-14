@@ -25,7 +25,7 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-function Novoitem({ setModalAberta }) {
+function Novoitem({ closeModal }) {
   const [nome, setNome] = useState("");
   const [quantidade, setQuantidade] = useState(0);
   const [preco, setPreco] = useState(0);
@@ -86,7 +86,7 @@ function Novoitem({ setModalAberta }) {
               <button>
                 <VscChromeClose
                   onClick={() => {
-                    setModalAberta(false);
+                    closeModal(false);
                   }}
                   style={{ color: "red" }}
                 />

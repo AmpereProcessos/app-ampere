@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
-import { FaSave } from "react-icons/fa";
+import { FaLongArrowAltRight, FaSave } from "react-icons/fa";
 import Select from "react-select";
 import { cities } from "../utils/constants";
 import axios from "axios";
 import SaveButton from "./utils/Buttons/SaveButton";
 import TextFloatingInput from "./TextFloatingInput";
 import NumberFloatingInput from "./NumberFloatingInput";
+import dayjs from "dayjs";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -35,39 +36,84 @@ function ControleAlmoxarifado({
   handleUpdates,
 }) {
   const [materialInfo, setMaterialInfo] = useState(info);
-  const [novaQuantidade, setNovaQuantidade] = useState();
-  const [novoPreco, setNovoPreco] = useState();
-  const [codigo, setCodigo] = useState(info.codigo);
+
   const [msg, setMsg] = useState({
     text: "",
     color: "",
   });
-  async function handleAlteracoes() {
-    // axios
-    //   .put("/api/almoxarifado/materiais", {
-    //     id: info._id,
-    //     novaQtde: novaQuantidade >= 0 ? novaQuantidade : info.qtde,
-    //     novoPreco: novoPreco ? novoPreco : info.preco,
-    //     codigo: codigo,
-    //     infoAlt: {
-    //       valorAnterior: info.qtde,
-    //       respAlteracao: credentials?.name,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     handleUpdates(info._id);
-    //     setMsg({ text: res.data, color: "text-green-500" });
-    //   })
-    //   .catch((err) => setMsg({ text: err, color: "text-red-500" }));
+
+  function validateChanges() {
+    if (materialInfo.qtde < 0) {
+      setMsg({
+        text: "Por favor, preencha uma quantidade válida.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (materialInfo.preco < 0) {
+      setMsg({
+        text: "Por favor, preencha um preço válido.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    setMsg({ text: "", color: "" });
+    return true;
   }
-  /*console.log({
-    novaQtde: novaQuantidade,
-    infoAlt: {
-      valorAnterior: info.qtde,
-      respAlteracao: credentials?.name,
-    },
-  });*/
-  console.log(materialInfo);
+  async function handleAlteracoes() {
+    if (validateChanges()) {
+      var qtdeChangeObj;
+      var priceChangeObj;
+
+      var histChangesQtde = materialInfo.qtdeAlteracoes
+        ? [...materialInfo.qtdeAlteracoes]
+        : [];
+      var histChangesPrice = materialInfo.precoAlteracoes
+        ? [...materialInfo.precoAlteracoes]
+        : [];
+      if (info.qtde != materialInfo.qtde) {
+        qtdeChangeObj = {
+          dataAlteracao: new Date().toISOString(),
+          responsavel: credentials?.name,
+          anterior: info.qtde,
+          novo: materialInfo.qtde,
+        };
+        if (histChangesQtde.length == 10) {
+          histChangesQtde.shift();
+          histChangesQtde.push(qtdeChangeObj);
+        } else histChangesQtde.push(qtdeChangeObj);
+      }
+
+      if (info.preco != materialInfo.preco) {
+        priceChangeObj = {
+          dataAlteracao: new Date().toISOString(),
+          responsavel: credentials?.name,
+          anterior: info.preco,
+          novo: materialInfo.preco,
+        };
+        if (histChangesPrice.length == 10) {
+          histChangesPrice.shift();
+          histChangesPrice.push(priceChangeObj);
+        } else histChangesPrice.push(priceChangeObj);
+      }
+
+      let response = await axios.put("/api/almoxarifado/materiais", {
+        id: info._id,
+        changes: {
+          ...materialInfo,
+          qtdeAlteracoes: histChangesQtde,
+          precoAlteracoes: histChangesPrice,
+        },
+      });
+      if (response.status == 201)
+        setMsg({ text: response.data, color: "text-green-500" });
+      handleUpdates(info._id);
+    }
+  }
+
+  useEffect(() => {
+    setMaterialInfo(info);
+  }, [info]);
   return (
     <div style={OVERLAY_STYLES}>
       <div style={MODAL_STYLES}>
@@ -150,12 +196,94 @@ function ControleAlmoxarifado({
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col w-full mt-4">
-                <h1 className="font-raleway text-center w-full font-medium text-green-500">
-                  HISTÓRICO DE ALTERAÇÕES
-                </h1>
-                <h1 className="h-[60px]">A</h1>
+              <div className="my-2 flex flex-col items-center w-full gap-1">
+                <p
+                  className={`w-full italic text-center ${msg.color} text-center`}
+                >
+                  {msg.text}
+                </p>
+                <div>
+                  <SaveButton
+                    text={"SALVAR"}
+                    icon={<FaSave />}
+                    handleClick={handleAlteracoes}
+                  />
+                </div>
               </div>
+              {(materialInfo.qtdeAlteracoes &&
+                materialInfo.qtdeAlteracoes.length > 0) ||
+              (materialInfo.precoAlteracoes &&
+                materialInfo.precoAlteracoes.length > 0) ? (
+                <div className="flex flex-col items-center gap-2 w-full mt-4">
+                  <h1 className="font-raleway text-center w-full font-medium bg-zinc-700 text-white p-2 rounded">
+                    HISTÓRICO DE ALTERAÇÕES
+                  </h1>
+                  {materialInfo.qtdeAlteracoes?.map((alt, index) => (
+                    <div
+                      key={index}
+                      className="w-full lg:w-[60%] p-2 px-4 flex flex-col rounded border border-gray-200"
+                    >
+                      <h1 className="text-blue-700 font-medium text-sm">
+                        ALTERAÇÃO DE QUANTIDADE
+                      </h1>
+                      <div className="grid grid-cols-3 items-center">
+                        <h1 className="text-lg text-gray-600 text-end">
+                          {alt.anterior}
+                        </h1>
+                        <div className="flex items-center justify-center">
+                          <FaLongArrowAltRight />
+                        </div>
+                        <h1 className="text-lg text-gray-600 text-start">
+                          {alt.novo}
+                        </h1>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <h1 className="text-gray-500 text-xs">
+                          {alt.responsavel}
+                        </h1>
+                        <h1 className="text-gray-500 text-xs">
+                          {dayjs(alt.dataAlteracao).format("DD/MM/YYYY")}
+                        </h1>
+                      </div>
+                    </div>
+                  ))}
+                  {materialInfo.precoAlteracoes?.map((alt, index) => (
+                    <div
+                      key={index}
+                      className="w-full lg:w-[60%] p-2 px-4 flex flex-col rounded border border-gray-200"
+                    >
+                      <h1 className="text-green-700 font-medium text-sm">
+                        ALTERAÇÃO DE PREÇO
+                      </h1>
+                      <div className="grid grid-cols-3 items-center">
+                        <h1 className="text-lg text-gray-600 text-end">
+                          R${" "}
+                          {Number(alt.anterior).toLocaleString("pt-br", {
+                            minimumFractionDigits: 2,
+                          })}
+                        </h1>
+                        <div className="flex items-center justify-center">
+                          <FaLongArrowAltRight />
+                        </div>
+                        <h1 className="text-lg text-gray-600 text-start">
+                          R${" "}
+                          {Number(alt.novo).toLocaleString("pt-br", {
+                            minimumFractionDigits: 2,
+                          })}
+                        </h1>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <h1 className="text-gray-500 text-xs">
+                          {alt.responsavel}
+                        </h1>
+                        <h1 className="text-gray-500 text-xs">
+                          {dayjs(alt.dataAlteracao).format("DD/MM/YYYY")}
+                        </h1>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

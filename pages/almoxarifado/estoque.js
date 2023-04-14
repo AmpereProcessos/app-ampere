@@ -71,10 +71,10 @@ function Estoque() {
       setFilteredMaterials(materials);
     }
   }
-  function handleUpdates(id) {
-    getMateriais();
-    let changedObj = materials.filter((project) => project._id == id);
-    setEditModal((prev) => ({ ...prev, info: changedObj[0] }));
+  async function handleUpdates(id) {
+    let { data } = await axios.get(`/api/almoxarifado/materiais?id=${id}`);
+
+    setEditModal((prev) => ({ ...prev, info: data }));
   }
   function handleKeyPress(e) {
     if (e.key === "Enter") {

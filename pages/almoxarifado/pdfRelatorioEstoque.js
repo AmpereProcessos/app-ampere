@@ -106,12 +106,15 @@ function RelatorioEstoque() {
         </Link>
       </div>
       <div className="w-full grow flex flex-col">
-        <div className="grid grid-cols-6 gap-x-2 border-b bg-gray-800 w-full">
+        <div className="grid grid-cols-8 gap-x-2 border-b bg-gray-800 w-full">
           <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
             INDEX
           </p>
           <p className="text-sm col-span-4 font-medium text-white px-6 py-4 text-center">
             NOME
+          </p>
+          <p className="text-sm col-span-2 font-medium text-white px-6 py-4 text-center">
+            CÓDIGO
           </p>
           <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
             QTDE
@@ -121,17 +124,20 @@ function RelatorioEstoque() {
           ? filterItems(materials).map((material, index) => (
               <div
                 key={index}
-                className="grid grid-cols-6 gap-x-2 border-b border-x border-gray-700"
+                className="grid grid-cols-8 gap-x-2 border-b border-x border-gray-700"
               >
-                <p className="col-span-1 py-4 text-center whitespace-nowrap text-xs font-medium text-gray-900">
+                <div className="col-span-1 py-4 text-center whitespace-nowrap text-xs font-medium text-gray-900">
                   {index + 1}
-                </p>
-                <p className="text-sm col-span-4 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+                </div>
+                <div className="text-xs col-span-4 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
                   {material.nome}
-                </p>
-                <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+                </div>
+                <div className="text-xs col-span-2 break-words text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+                  {material.codigo ? material.codigo : "-"}
+                </div>
+                <div className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
                   {material.qtde && material.qtde > 0 ? material.qtde : "-"}
-                </p>
+                </div>
               </div>
             ))
           : null}

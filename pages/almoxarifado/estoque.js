@@ -17,8 +17,8 @@ function Estoque() {
     },
   });
 
-  const [materiais, setMateriais] = useState([]);
-  const [materiaisFiltrados, setMateriaisFiltrados] = useState([]);
+  const [materiais, setMateriais] = useState();
+  const [materiaisFiltrados, setMateriaisFiltrados] = useState();
   const [modalAberta, setModalAberta] = useState(false);
   const [modalNovoItem, setModalNovoItem] = useState(false);
   const [modalMaterial, setModalMaterial] = useState({});
@@ -34,22 +34,41 @@ function Estoque() {
   }
   function handleFilters() {
     var newArr;
-    if (filtros.filtroPesquisa != "" || filtros.filtroPesquisa != " ") {
+    if (filtros.filtroPesquisa.trim().length > 0) {
       if (!newArr) newArr = materiais;
+      console.log(filtros.filtroPesquisa.length);
       newArr = newArr.filter((material) =>
         material.nome
           .toUpperCase()
           .includes(filtros.filtroPesquisa.toUpperCase())
       );
     }
-    if (filtros.filtroQtde != 0) {
+    if (filtros.filtroQtde && filtros.filtroQtde >= 0) {
       if (!newArr) newArr = materiais;
       newArr = newArr.filter(
         (material) => material.qtde < Number(filtros.filtroQtde)
       );
     }
-    if (!newArr) setMateriaisFiltrados(materiais);
-    else setMateriaisFiltrados(newArr);
+    console.log(newArr);
+    if (!newArr) {
+      setMateriaisFiltrados(materiais);
+      return materiais;
+    } else {
+      setMateriaisFiltrados(newArr);
+      return newArr;
+    }
+  }
+  function handleSearchFilter(value) {
+    setFiltros((prev) => ({ ...prev, filtroPesquisa: value }));
+    var filtered = handleFilters();
+    if (value.trim().length > 0) {
+      let newArr = filtered.filter((item) =>
+        item.nome.toUpperCase().includes(value.toUpperCase())
+      );
+      setMateriaisFiltrados(newArr);
+    } else {
+      setMateriaisFiltrados(materiais);
+    }
   }
   function handleUpdates(id) {
     getMateriais();
@@ -66,20 +85,21 @@ function Estoque() {
       session?.user.accessibleRoutes.includes("Obras") ||
       session?.user.accessibleRoutes.includes("Almoxarifado")
     ) {
-      getMateriais();
+      if (!materiais) getMateriais();
     } else {
       if (session?.user) {
         router.push("/");
       }
     }
   }, [session]);
+  console.log(materiais);
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
-      <div className="p-6 grow">
+      <div className="p-6 grow flex flex-col">
         <div className="flex flex-col items-center border-b border-gray-200 pb-2">
           <h1 className="text-[#fead61] font-raleway font-bold text-xl">
-            ESTOQUE
+            ESTOQUE ({materiaisFiltrados?.length})
           </h1>
           <div className="flex justify-center gap-2 flex-wrap">
             <Link href="/almoxarifado/pdfRelatorioEstoque">
@@ -94,19 +114,15 @@ function Estoque() {
               className={
                 "outline-none p-1.5 rounded border border-gray-200 placeholder:italic min-w-[250px]"
               }
-              onKeyUp={handleKeyPress}
-              onChange={(e) =>
-                setFiltros({ ...filtros, filtroPesquisa: e.target.value })
-              }
+              onChange={(e) => handleSearchFilter(e.target.value)}
             />
             <input
               type={"number"}
               placeholder="Quantidade abaixo de:"
-              value={filtros.filtroQtde}
+              value={filtros.filtroQtde ? filtros.filtroQtde.toString() : null}
               className={
                 "outline-none p-1.5 rounded border border-gray-200 placeholder:italic min-w-[190px]"
               }
-              onKeyUp={handleKeyPress}
               onChange={(e) =>
                 setFiltros({ ...filtros, filtroQtde: Number(e.target.value) })
               }
@@ -125,33 +141,37 @@ function Estoque() {
             </button> */}
           </div>
         </div>
-        <div className="flex justify-around gap-3 mt-4 flex-wrap">
-          {materiaisFiltrados.map((material) => (
-            <div
-              onClick={() => {
-                setModalAberta(true);
-                setModalMaterial(material);
-              }}
-              key={material._id}
-              className="w-[250px] lg:w-[250px] hover:bg-blue-100 bg-[#fff] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100flex flex-col"
-            >
-              <div className="flex items-center justify-center">
-                <p className="text-xs text-gray-700 text-center">
-                  {material.nome}
-                </p>
+        <div className="flex justify-around gap-3 mt-4 flex-wrap w-full grow">
+          {materiaisFiltrados ? (
+            materiaisFiltrados.map((material) => (
+              <div
+                onClick={() => {
+                  setModalAberta(true);
+                  setModalMaterial(material);
+                }}
+                key={material._id}
+                className="w-[250px] max-h-[80px] lg:w-[250px] hover:bg-blue-100 bg-[#fff] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100flex flex-col"
+              >
+                <div className="flex items-center justify-center">
+                  <p className="text-xs text-gray-700 text-center">
+                    {material.nome}
+                  </p>
+                </div>
+                <div className="flex items-center justify-around mt-2">
+                  <p className="text-xs text-gray-700 text-center">
+                    {material.qtde}
+                  </p>
+                  <p className="text-xs text-gray-700 text-center">
+                    {material.preco
+                      ? `R$${material.preco.toFixed(2).replace(".", ",")}`
+                      : "-"}
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center justify-around mt-2">
-                <p className="text-xs text-gray-700 text-center">
-                  {material.qtde}
-                </p>
-                <p className="text-xs text-gray-700 text-center">
-                  {material.preco
-                    ? `R$${material.preco.toFixed(2).replace(".", ",")}`
-                    : "-"}
-                </p>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <LoadingPage />
+          )}
         </div>
         <div
           onClick={() => setModalNovoItem(true)}

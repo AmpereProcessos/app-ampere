@@ -82,16 +82,20 @@ function ControleAlmoxarifado({
                 />
               </button>
             </div>
-            <div className="flex flex-col h-full justify-around overflow-y-auto">
-              <div className="flex flex-col">
-                <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2  mt-4">
+            <div className="flex flex-col h-full justify-around overflow-y-auto py-2">
+              <div className="flex flex-col w-full mt-5">
+                <div className="flex items-center justify-between w-full">
+                  <h1 className="text-gray-700 font-medium">QUANTIDADE</h1>
+                  <h1>{info.qtde}</h1>
+                </div>
+                {/* <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2  mt-4">
                   <span className="text-center uppercase font-bold">
                     QUANTIDADE ATUAL
                   </span>
                   <div className={"grow"}>
                     <p className="text-gray-600 text-center">{info.qtde}</p>
                   </div>
-                </div>
+                </div> */}
                 <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2  mt-4">
                   <span className="text-center uppercase font-bold">
                     PREÇO ATUAL

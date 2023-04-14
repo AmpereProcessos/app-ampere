@@ -313,6 +313,7 @@ function BandoDeDados({ data }) {
     }
     return totalSum;
   }
+  console.log(filteredProjects?.map((project) => project.qtde));
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
@@ -433,6 +434,10 @@ function BandoDeDados({ data }) {
                         }}
                         options={[
                           { label: "SAÍDA DE OBRA", value: "obra.saida" },
+                          {
+                            label: "DATA DE SOLICITAÇÃO DO PARECER",
+                            value: "projeto.dataSolicitacaoAcesso",
+                          },
                           {
                             label: "DATA DO PARECER",
                             value: "parecer.dataParecerDeAcesso",

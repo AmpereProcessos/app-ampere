@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import HeaderSVG from "../utils/HeaderSVG.svg";
 import { useRouter } from "next/router";
-import WhiteLogo from "../utils/whiteLogoHD.png";
+import WhiteLogo from "../utils/whitelogoHD.png";
 import AlertVolts from "../utils/alertVolts-svg.svg";
 import SleepVolts from "../utils/sleepVolts-svg.svg";
 import { BiLogIn } from "react-icons/bi";

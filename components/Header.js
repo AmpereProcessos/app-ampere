@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
+import HeaderSVG from "../utils/HeaderSVG.svg";
 import { useRouter } from "next/router";
-import WhiteLogo from "../utils/whitelogoHD.png";
+import WhiteLogo from "../utils/logobrancoSemTexto.png";
 import AlertVolts from "../utils/alertVolts-svg.svg";
 import SleepVolts from "../utils/sleepVolts-svg.svg";
 import { BiLogIn } from "react-icons/bi";
@@ -62,6 +63,10 @@ function Header({ toggleSidebar }) {
   if (status == "loading" || status == "unauthenticated") return null;
   return (
     <div className="w-full sticky z-[1] top-0 bg-[#fff] grid grid-cols-3 items-center px-3 lg:px-12 h-[70px] border-b border-gray-200">
+      <div className="absolute w-full h-full -z-20">
+        <Image src={HeaderSVG} objectFit="fill" objectPosition="center" />
+      </div>
+
       <div className="flex items-center gap-x-2">
         <FaBars
           onClick={toggleSidebar}
@@ -81,9 +86,9 @@ function Header({ toggleSidebar }) {
       </div>
 
       <div className="flex justify-end items-center">
-        <p className="hidden lg:block">
+        <p className="hidden lg:block text-white">
           Seja bem vindo,{" "}
-          <strong className="text-[#15599a]">{session?.user.name}</strong> !
+          <strong className="text-[#fead61]">{session?.user.name}</strong> !
         </p>
         {session.user.image ? (
           <div className="relative w-[40px] h-[40px] ml-2">

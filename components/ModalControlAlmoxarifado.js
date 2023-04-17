@@ -178,6 +178,18 @@ function ControleAlmoxarifado({
                     }
                     width={"100%"}
                   />
+                  <TextFloatingInput
+                    label={"LOCALIZAÇÃO"}
+                    value={materialInfo.localizacao}
+                    editable={true}
+                    handleChange={(value) =>
+                      setMaterialInfo((prev) => ({
+                        ...prev,
+                        localizacao: value,
+                      }))
+                    }
+                    width={"100%"}
+                  />
                   <div className="flex flex-col w-full gap-1">
                     <h1 className="text-gray-500 font-medium text-xs w-full text-center">
                       ANOTAÇÕES

@@ -1,32 +1,54 @@
 import dayjs from "dayjs";
 import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-  // const collection = db.collection("dados");
-  // let arr = await collection
-  //   .aggregate([
-  //     {
-  //       $match: {
-  //         "contrato.status": "ASSINADO",
-  //         "contrato.dataAssinatura": { $gte: "2022-01-01T00:00:00.000Z" },
-  //       },
-  //     },
-  //     {
-  //       $project: {
-  //         qtde: 1,
-  //         codigoSVB: 1,
-  //         tipoDeServico: 1,
-  //         nomeDoContrato: 1,
-  //         "contrato.dataAssinatura": 1,
-  //         "sistema.valorProjeto": 1,
-  //         "padrao.valor": 1,
-  //         "estruturaPersonalizada.valor": 1,
-  //         "compra.valorDoKit": 1,
-  //         "oem.valor": 1,
-  //       },
-  //     },
-  //   ])
-  //   .toArray();
+  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  const collection = db.collection("dados");
+  let arr = await collection
+    .aggregate([
+      {
+        $match: {
+          "parecer.statusDoParecerDeAcesso": "PARECER DE ACESSO SUSPENSO",
+          "pagamento.forma": "FINANCIAMENTO",
+        },
+      },
+      {
+        $project: {
+          qtde: 1,
+          nomeDoContrato: 1,
+          cidade: 1,
+          cpf_cnpj: 1,
+          "vendedor.nome": 1,
+          "pagamento.forma": 1,
+          "pagamento.credor": 1,
+          "pagamento.pagador": 1,
+          "pagamento.contatoPagador": 1,
+          "contrato.dataAssinatura": 1,
+          "compra.dataPagamento": 1,
+        },
+      },
+    ])
+    .toArray();
+  const ajustedArr = arr.map((item) => {
+    return {
+      QTDE: item.qtde,
+      "NOME DO CONTRATO": item.nomeDoContrato,
+      "CPF/CNPJ DO CLIENTE": item.cpf_cnpj,
+      PAGADOR: item.pagamento.pagador,
+      "CONTATO PAGADOR": item.pagamento.contatoPagador,
+      CIDADE: item.cidade,
+      "NOME DO VENDEDOR": item.vendedor.nome,
+      "FORMA DE PAGAMENTO": item.pagamento.forma,
+      CREDOR: item.pagamento.credor,
+      "DATA DE ASSINATURA": item.contrato.dataAssinatura
+        ? dayjs(item.contrato.dataAssinatura)
+            .add(4, "hours")
+            .format("DD/MM/YYYY")
+        : "-",
+      "DATA DE PAGAMENTO": item.compra.dataPagamento
+        ? dayjs(item.compra.dataPagamento).add(4, "hours").format("DD/MM/YYYY")
+        : "-",
+    };
+  });
   // console.log(arr.length);
   // // let arr = await collection
   // //   .aggregate([
@@ -151,7 +173,7 @@ export default async function handler(req, res) {
   //     "SEGURO (SE APLICÁVEL)": itemFromSVB?.seguro ? itemFromSVB?.seguro : 0,
   //   };
   // });
-  res.json("DESATIVADA");
+  res.json(ajustedArr);
 }
 
 // Update Many example:

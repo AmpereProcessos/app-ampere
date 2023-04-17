@@ -257,7 +257,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>
@@ -298,7 +298,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>
@@ -339,7 +339,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>
@@ -380,7 +380,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>
@@ -509,7 +509,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>
@@ -550,7 +550,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>
@@ -591,7 +591,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>
@@ -639,7 +639,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>
@@ -685,7 +685,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>
@@ -733,7 +733,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>
@@ -929,7 +929,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>
@@ -970,7 +970,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>
@@ -1011,7 +1011,7 @@ function FormVisitaTecnicaRural({
                 }
                 className="h-full w-full opacity-0"
                 type="file"
-                accept=".png, .jpeg, .pdf"
+                accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
               />
             </div>
           </div>

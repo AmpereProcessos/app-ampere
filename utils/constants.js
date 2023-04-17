@@ -189,6 +189,12 @@ export const fileTypes = {
   "video/mp4": {
     title: "MP4",
   },
+  "application/vnd.sealed.tiff": {
+    title: "IMAGEM(.TIFF)",
+  },
+  "image/vnd.sealedmedia.softseal.jpg": {
+    title: "IMAGEM(.JPG)",
+  },
 };
 export const vendedores = [
   {

@@ -2269,7 +2269,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <SelectInput
                     label={"Status do parecer de acesso"}
                     value={
-                      infoHolder.parecer.statusDoParecerDeAcessO
+                      infoHolder.parecer.statusDoParecerDeAcesso
                         ? infoHolder.parecer.statusDoParecerDeAcesso
                         : "NÃO DEFINIDO"
                     }

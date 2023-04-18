@@ -1,5 +1,7 @@
+import { getSession } from "next-auth/react";
 import connectToDatabase from "../../../utils/materialDb";
 import { ObjectId } from "mongodb";
+import { getServerSession } from "next-auth";
 export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY);
@@ -17,16 +19,34 @@ export default async function handler(req, res) {
       res.status(500).json("Erro ao comunicar com o servidor.");
     }
   } else if (req.method === "POST") {
+    const { user } = await getSession({ req: req });
+    console.log(user);
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("material");
     let changes = req.body.map((mat) => {
       return {
         updateOne: {
           filter: { nome: mat.nome },
-          update: { $inc: { qtde: -mat.diff } },
+          update: {
+            $push: {
+              qtdeAlteracoes: {
+                $each: [
+                  {
+                    dataAlteracao: new Date().toISOString(), // current date
+                    responsavel: user.name, // name of responsible person
+                    movimentacao: -mat.diff,
+                  },
+                ],
+                $slice: -10, // limit the array size to 10 items
+              },
+            },
+            $inc: { qtde: -mat.diff },
+          },
         },
       };
     });
+    console.log("BODY", req.body);
+    console.log("CHANGES", changes[0]);
     await collection.bulkWrite(changes);
     res.json("UEPA");
   } else if (req.method === "PUT") {

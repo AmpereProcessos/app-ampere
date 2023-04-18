@@ -120,6 +120,7 @@ function ControleAlmoxarifado({
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between min-h-[30px]">
             <h1 className="text-[#15599a] font-bold">{info.nome}</h1>
+            <p className="text-xs text-gray-500">#{info._id}</p>
             <div className="">
               <button className="hover:bg-red-200 rounded-lg p-1">
                 <VscChromeClose
@@ -239,15 +240,23 @@ function ControleAlmoxarifado({
                         ALTERAÇÃO DE QUANTIDADE
                       </h1>
                       <div className="grid grid-cols-3 items-center">
-                        <h1 className="text-lg text-gray-600 text-end">
-                          {alt.anterior}
-                        </h1>
-                        <div className="flex items-center justify-center">
-                          <FaLongArrowAltRight />
-                        </div>
-                        <h1 className="text-lg text-gray-600 text-start">
-                          {alt.novo}
-                        </h1>
+                        {alt.movimentacao ? (
+                          <div className="flex items-center justify-center col-span-3">
+                            {alt.movimentacao}
+                          </div>
+                        ) : (
+                          <>
+                            <h1 className="text-lg text-gray-600 text-end">
+                              {alt.anterior}
+                            </h1>
+                            <div className="flex items-center justify-center">
+                              <FaLongArrowAltRight />
+                            </div>
+                            <h1 className="text-lg text-gray-600 text-start">
+                              {alt.novo}
+                            </h1>
+                          </>
+                        )}
                       </div>
                       <div className="flex items-center justify-between">
                         <h1 className="text-gray-500 text-xs">

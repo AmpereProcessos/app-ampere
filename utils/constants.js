@@ -177,6 +177,9 @@ export const fileTypes = {
   "image/jpeg": {
     title: "IMAGEM(.JPEG)",
   },
+  "image/tiff": {
+    title: "IMAGEM(.TIFF)",
+  },
   "application/pdf": {
     title: "PDF",
   },

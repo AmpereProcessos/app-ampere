@@ -11,7 +11,19 @@ import {
 import { AiOutlineCalendar } from "react-icons/ai";
 import axios from "axios";
 import dayjs from "dayjs";
-import PurchaseSolicitationModal from "../../components/PurchaseSolicitationModal";
+import PurchaseSolicitationModal from "../../components/ModalSolicitacaoCompra";
+
+function getBGColor(status) {
+  if (status == true) return "bg-green-100";
+  if (status == false) return "bg-red-100";
+  return "";
+}
+function getStatusColor(status) {
+  if (status == "EM ABERTO" || status == null)
+    return "text-yellow-600 border border-yellow-600";
+  if (status == "FINALIZADO") return "text-green-600 border border-green-600";
+  return "text-[#15599a] border border-[#15599a]";
+}
 
 function SolicitacoesCompra() {
   const router = useRouter();
@@ -51,7 +63,7 @@ function SolicitacoesCompra() {
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
-      <div className="p-6 grow">
+      <div className="p-6 grow flex flex-col">
         <div className="flex flex-col justify-between border-b border-gray-200 p-1">
           <p className="font-bold uppercase text-start text-2xl text-[#15599a] font-['Roboto']">
             SOLICITAÇÕES DE COMPRA
@@ -63,21 +75,35 @@ function SolicitacoesCompra() {
               <div
                 key={index}
                 onClick={() => handleOpenModal(solicitation)}
-                className="flex flex-col hover:scale-[1.02] duration-300 ease-in-out cursor-pointer hover:bg-blue-50 gap-4 border border-gray-300 shadow-lg w-[450px] p-3 rounded-sm"
+                className={`flex flex-col ${getBGColor(
+                  solicitation.aprovacao
+                )} hover:scale-[1.02] duration-300 ease-in-out cursor-pointer hover:bg-blue-50 gap-4 border border-gray-300 shadow-lg w-[450px] p-3 rounded-sm`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <FaUserAlt style={{ color: "#16B010" }} />
+                    <FaUserAlt style={{ color: "#003d5b" }} />
                     <h1 className="text-gray-700 font-medium">
                       {solicitation.requisitante}
                     </h1>
                   </div>
                   <div className="flex items-center gap-2">
-                    <BsFillTelephoneFill style={{ color: "#FEAD41" }} />
+                    <BsFillTelephoneFill style={{ color: "#16B010" }} />
                     <h1 className="text-gray-700 font-medium">
                       {solicitation.telefone}
                     </h1>
                   </div>
+                </div>
+                <div className="flex flex-col w-full items-center">
+                  <h1 className="text-start text-gray-500 text-xs font-medium">
+                    STATUS
+                  </h1>
+                  <h1
+                    className={`text-xs ${getStatusColor(
+                      solicitation.status
+                    )} font-medium p-1 rounded-md`}
+                  >
+                    {solicitation.status ? solicitation.status : "EM ABERTO"}
+                  </h1>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex flex-col items-start">
@@ -100,7 +126,9 @@ function SolicitacoesCompra() {
                       PRAZO
                     </h1>
                     <div className="flex items-center justify-end gap-2">
-                      <BsCalendarCheckFill style={{ color: "#ef233c" }} />
+                      <BsCalendarCheckFill
+                        style={{ color: "rgb(249,115,22)" }}
+                      />
                       <h1 className="text-gray-700 font-medium text-xs lg:text-base">
                         {solicitation.prazo
                           ? dayjs(solicitation.prazo).format("DD/MM/YY HH:mm")
@@ -134,7 +162,9 @@ function SolicitacoesCompra() {
             ))}
           </div>
         ) : (
-          <LoadingPage />
+          <div className="grow flex items-center justify-center">
+            <LoadingPage />
+          </div>
         )}
         {modal.isOpen && modal.info ? (
           <PurchaseSolicitationModal

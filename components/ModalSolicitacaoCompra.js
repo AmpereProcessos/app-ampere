@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import AnimatedModalWrapper from "../components/utils/AnimatedModalWrapper";
+import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
 import { VscChromeClose } from "react-icons/vsc";
 import TextFloatingInput from "./TextFloatingInput";
-import { AiFillEye, AiOutlineCalendar } from "react-icons/ai";
+import SelectFloatingInput from "./SelectFloatingInput";
+import { AiOutlineCalendar } from "react-icons/ai";
 import dayjs from "dayjs";
 import { BsCalendarCheckFill, BsFillCalendarXFill } from "react-icons/bs";
-import { MdCancel } from "react-icons/md";
-import PurchaseSolicitationItemRow from "./PurchaseSolicitationItemRow";
+import PurchaseSolicitationItemRow from "./LinhaItemSolicitacaoCompra";
 import SaveButton from "./utils/Buttons/SaveButton";
 import { FaSave } from "react-icons/fa";
 import axios from "axios";
@@ -17,13 +17,19 @@ function PurchaseSolicitationModal({
   getSolicitations,
 }) {
   const [infoHolder, setInfo] = useState(info);
+  const [msg, setMsg] = useState({ text: "", color: "" });
   async function handleChange() {
-    const { data } = await axios.put("/api/solicitacoes/compra", {
-      id: info._id,
-      changes: infoHolder,
-    });
-    getSolicitations();
-    console.log("RESPONSE", data);
+    setMsg({ text: "Processando...", color: "text-[#15599a]" });
+    try {
+      const { data } = await axios.put("/api/solicitacoes/compra", {
+        id: info._id,
+        changes: infoHolder,
+      });
+      setMsg({ text: "Alterações feitas!", color: "text-green-500" });
+      getSolicitations();
+    } catch (error) {
+      setMsg({ text: "Erro ao atualizar solicitação.", color: "text-red-500" });
+    }
   }
   return (
     <AnimatedModalWrapper modalIsOpen={isOpen} width={"50%"} height={"90%"}>
@@ -43,7 +49,7 @@ function PurchaseSolicitationModal({
           </button>
         </div>
         <div className="w-full py-2 grow flex flex-col overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          <div className="flex items-center w-full justify-center gap-4 pb-4">
+          <div className="flex flex-wrap items-center w-full justify-center gap-4 pb-4">
             <div className="flex flex-col items-center">
               <h1 className="text-start text-gray-500 text-xs font-medium">
                 SOLICITAÇÃO FEITA EM:
@@ -62,7 +68,7 @@ function PurchaseSolicitationModal({
                 PRAZO:
               </h1>
               <div className="flex items-center justify-end gap-2">
-                <BsCalendarCheckFill style={{ color: "rgb(249,115,22) " }} />
+                <BsCalendarCheckFill style={{ color: "rgb(249,115,22)" }} />
                 <h1 className="text-gray-700 font-medium text-xs lg:text-base">
                   {info.prazo
                     ? dayjs(info.prazo).format("DD/MM/YY HH:mm")
@@ -99,7 +105,29 @@ function PurchaseSolicitationModal({
               </div>
             ) : null}
           </div>
-          <div className="flex flex-col lg:flex-row items-center w-full pb-4">
+          <div className="w-full flex items-center justify-center pb-4">
+            <SelectFloatingInput
+              label={"STATUS"}
+              editable={true}
+              value={infoHolder.status ? infoHolder.status : "EM ABERTO"}
+              options={[
+                { label: "EM ABERTO", value: "EM ABERTO" },
+                { label: "EM ANDAMENTO", value: "EM ANDAMENTO" },
+                {
+                  label: "AGUARDANDO APROVAÇÃO",
+                  value: "AGUARDANDO APROVAÇÃO",
+                },
+                { label: "COMPRA REALIZADA", value: "COMPRA REALIZADA" },
+                { label: "EM ROTA", value: "EM ROTA" },
+                { label: "FINALIZADO", value: "FINALIZADO" },
+              ]}
+              handleChange={(value) =>
+                setInfo((prev) => ({ ...prev, status: value }))
+              }
+              width={"50%"}
+            />
+          </div>
+          <div className="flex flex-col gap-4 lg:flex-row items-center w-full pb-4">
             <div className="w-full lg:w-[50%]">
               <TextFloatingInput
                 label={"REQUISITANTE"}
@@ -134,6 +162,19 @@ function PurchaseSolicitationModal({
               width={"100%"}
             />
           </div>
+          <div className="flex flex-col w-full gap-1">
+            <h1 className="text-sm text-gray-900 scale-75 w-full text-center">
+              ANOTAÇÕES
+            </h1>
+            <textarea
+              value={infoHolder.anotacoes}
+              onChange={(e) =>
+                setInfo((prev) => ({ ...prev, anotacoes: e.target.value }))
+              }
+              placeholder="Anotações sobre a compra, detalhes sobre aprovação e outras informações relevantes..."
+              className="outline-none resize-none text-sm border border-gray-200 bg-gray-100 h-[90px] p-1 text-center"
+            />
+          </div>
           <div className="grow flex flex-col">
             <h1 className="text-[#fead61] text-center font-bold pb-2">ITENS</h1>
             <div className="flex items-center w-full bg-black rounded-tr-sm rounded-tl-sm">
@@ -166,7 +207,11 @@ function PurchaseSolicitationModal({
               infoHolder.aprovacao == true ? (
                 <button
                   onClick={() =>
-                    setInfo((prev) => ({ ...prev, aprovacao: false }))
+                    setInfo((prev) => ({
+                      ...prev,
+                      aprovacao: false,
+                      dataResposta: new Date().toISOString(),
+                    }))
                   }
                   className="bg-red-300 hover:bg-red-500 hover:text-black p-2 text-sm rounded font-bold text-white"
                 >
@@ -188,7 +233,10 @@ function PurchaseSolicitationModal({
                 </button>
               ) : null}
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center gap-4">
+              {msg.text ? (
+                <p className={`text-sm italic ${msg.color}`}>{msg.text}</p>
+              ) : null}
               <SaveButton
                 handleClick={handleChange}
                 icon={<FaSave />}

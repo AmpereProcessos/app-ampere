@@ -1,54 +1,79 @@
 import dayjs from "dayjs";
 import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-  const collection = db.collection("dados");
-  let arr = await collection
-    .aggregate([
-      {
-        $match: {
-          "parecer.statusDoParecerDeAcesso": "PARECER DE ACESSO SUSPENSO",
-          "pagamento.forma": "FINANCIAMENTO",
-        },
-      },
-      {
-        $project: {
-          qtde: 1,
-          nomeDoContrato: 1,
-          cidade: 1,
-          cpf_cnpj: 1,
-          "vendedor.nome": 1,
-          "pagamento.forma": 1,
-          "pagamento.credor": 1,
-          "pagamento.pagador": 1,
-          "pagamento.contatoPagador": 1,
-          "contrato.dataAssinatura": 1,
-          "compra.dataPagamento": 1,
-        },
-      },
-    ])
-    .toArray();
-  const ajustedArr = arr.map((item) => {
-    return {
-      QTDE: item.qtde,
-      "NOME DO CONTRATO": item.nomeDoContrato,
-      "CPF/CNPJ DO CLIENTE": item.cpf_cnpj,
-      PAGADOR: item.pagamento.pagador,
-      "CONTATO PAGADOR": item.pagamento.contatoPagador,
-      CIDADE: item.cidade,
-      "NOME DO VENDEDOR": item.vendedor.nome,
-      "FORMA DE PAGAMENTO": item.pagamento.forma,
-      CREDOR: item.pagamento.credor,
-      "DATA DE ASSINATURA": item.contrato.dataAssinatura
-        ? dayjs(item.contrato.dataAssinatura)
-            .add(4, "hours")
-            .format("DD/MM/YYYY")
-        : "-",
-      "DATA DE PAGAMENTO": item.compra.dataPagamento
-        ? dayjs(item.compra.dataPagamento).add(4, "hours").format("DD/MM/YYYY")
-        : "-",
-    };
-  });
+  // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  // const collection = db.collection("dados");
+  // let arr = await collection
+  //   .aggregate([
+  //     {
+  //       $match: {
+  //         "contrato.status": "ASSINADO",
+  //         $or: [
+  //           {
+  //             cidade: {
+  //               $in: [
+  //                 "CALDAS NOVAS",
+  //                 "PORTEIRÃO",
+  //                 "SÃO SIMÃO",
+  //                 "INACIOLÂNDIA",
+  //                 "TRINDADE",
+  //                 "ITUMBIARA",
+  //                 "QUIRINÓPOLIS",
+  //                 "PARANAIGUARA",
+  //                 "CATALÃO",
+  //                 "CACHOEIRA ALTA",
+  //               ],
+  //             },
+  //           },
+  //           { uf: "GO" },
+  //         ],
+  //       },
+  //     },
+  //     {
+  //       $project: {
+  //         qtde: 1,
+  //         nomeDoContrato: 1,
+  //         nomeDoProjeto: 1,
+  //         cidade: 1,
+  //         "contrato.dataAssinatura": 1,
+  //         "obra.saida": 1,
+  //         "sistema.potPico": 1,
+  //         "sistema.topologia": 1,
+  //         "sistema.qtdeModulos": 1,
+  //         "sistema.inversor": 1,
+  //         "material.previsaoCustos": 1,
+  //         "material.efetivoCustos": 1,
+  //       },
+  //     },
+  //   ])
+  //   .toArray();
+  // const ajustedArr = arr.map((item) => {
+  //   return {
+  //     QTDE: item.qtde,
+  //     "NOME DO CONTRATO": item.nomeDoContrato,
+  //     "NOME DO PROJETO": item.nomeDoProjeto,
+  //     CIDADE: item.cidade,
+  //     TOPOLOGIA: item.sistema.topologia,
+  //     "ASSINATURA DO CONTRATO": item.contrato.dataAssinatura
+  //       ? dayjs(item.contrato.dataAssinatura)
+  //           .add(4, "hours")
+  //           .format("DD/MM/YYYY")
+  //       : "-",
+  //     "SAÍDA DE OBRA": item.obra.saida
+  //       ? dayjs(item.obra.saida).add(4, "hours").format("DD/MM/YYYY")
+  //       : "-",
+  //     "POTÊNCIA PICO": item.sistema.potPico,
+  //     "QTDE MÓDULOS": item.sistema.qtdeModulos,
+  //     INVERSOR: item.sistema.inversor,
+  //     "PREVISÃO DE CUSTOS": item.material.previsaoCustos
+  //       ? item.material.previsaoCustos
+  //       : "-",
+  //     "EFETIVO DE CUSTOS": item.material.efetivoCustos
+  //       ? item.material.efetivoCustos
+  //       : "-",
+  //   };
+  // });
+
   // console.log(arr.length);
   // // let arr = await collection
   // //   .aggregate([
@@ -173,7 +198,7 @@ export default async function handler(req, res) {
   //     "SEGURO (SE APLICÁVEL)": itemFromSVB?.seguro ? itemFromSVB?.seguro : 0,
   //   };
   // });
-  res.json(ajustedArr);
+  res.json("DESATIVADA");
 }
 
 // Update Many example:

@@ -244,7 +244,7 @@ function SolicitacaoCompra() {
                 </h1>
               </div>
               {solicitationInfo.itens.map((item, index) => (
-                <div className="w-full flex items-center gap-2">
+                <div key={index} className="w-full flex items-center gap-2">
                   <h1 className="w-1/3 text-center p-1 font-medium">
                     {item.nome}
                   </h1>

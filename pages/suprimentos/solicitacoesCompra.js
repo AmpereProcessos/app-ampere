@@ -117,7 +117,10 @@ function SolicitacoesCompra() {
                     </h1>
                   </div>
                   {solicitation.itens.map((item, index) => (
-                    <div className="w-full flex justify-between items-center">
+                    <div
+                      key={index}
+                      className="w-full flex justify-between items-center"
+                    >
                       <p className="text-gray-700 text-sm font-light">
                         {item.nome}
                       </p>

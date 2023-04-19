@@ -4,11 +4,27 @@ import { VscChromeClose } from "react-icons/vsc";
 import TextFloatingInput from "./TextFloatingInput";
 import { AiFillEye, AiOutlineCalendar } from "react-icons/ai";
 import dayjs from "dayjs";
-import { BsCalendarCheckFill } from "react-icons/bs";
+import { BsCalendarCheckFill, BsFillCalendarXFill } from "react-icons/bs";
 import { MdCancel } from "react-icons/md";
-function PurchaseSolicitationModal({ info, closeModal, isOpen }) {
+import PurchaseSolicitationItemRow from "./PurchaseSolicitationItemRow";
+import SaveButton from "./utils/Buttons/SaveButton";
+import { FaSave } from "react-icons/fa";
+import axios from "axios";
+function PurchaseSolicitationModal({
+  info,
+  closeModal,
+  isOpen,
+  getSolicitations,
+}) {
   const [infoHolder, setInfo] = useState(info);
-  console.log(infoHolder);
+  async function handleChange() {
+    const { data } = await axios.put("/api/solicitacoes/compra", {
+      id: info._id,
+      changes: infoHolder,
+    });
+    getSolicitations();
+    console.log("RESPONSE", data);
+  }
   return (
     <AnimatedModalWrapper modalIsOpen={isOpen} width={"50%"} height={"90%"}>
       <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
@@ -46,7 +62,7 @@ function PurchaseSolicitationModal({ info, closeModal, isOpen }) {
                 PRAZO:
               </h1>
               <div className="flex items-center justify-end gap-2">
-                <BsCalendarCheckFill style={{ color: "#ef233c" }} />
+                <BsCalendarCheckFill style={{ color: "rgb(249,115,22) " }} />
                 <h1 className="text-gray-700 font-medium text-xs lg:text-base">
                   {info.prazo
                     ? dayjs(info.prazo).format("DD/MM/YY HH:mm")
@@ -54,6 +70,34 @@ function PurchaseSolicitationModal({ info, closeModal, isOpen }) {
                 </h1>
               </div>
             </div>
+            {infoHolder.dataResposta ? (
+              <div className="flex flex-col items-center">
+                <h1 className="text-end text-gray-500 text-xs font-medium">
+                  {infoHolder.aprovacao ? " APROVAÇÃO EM:" : "REJEITADA EM:"}
+                </h1>
+                <div className="flex items-center justify-end gap-2">
+                  {infoHolder.aprovacao ? (
+                    <BsCalendarCheckFill
+                      style={{
+                        color: "rgb(34,197,94)",
+                      }}
+                    />
+                  ) : (
+                    <BsFillCalendarXFill
+                      style={{
+                        color: "#ef233c",
+                      }}
+                    />
+                  )}
+
+                  <h1 className="text-gray-700 font-medium text-xs lg:text-base">
+                    {infoHolder.dataResposta
+                      ? dayjs(infoHolder.dataResposta).format("DD/MM/YY HH:mm")
+                      : "NÃO DEFINIDO"}
+                  </h1>
+                </div>
+              </div>
+            ) : null}
           </div>
           <div className="flex flex-col lg:flex-row items-center w-full pb-4">
             <div className="w-full lg:w-[50%]">
@@ -107,43 +151,50 @@ function PurchaseSolicitationModal({ info, closeModal, isOpen }) {
               </h1>
             </div>
             {infoHolder.itens?.map((item, index) => (
-              <div
+              <PurchaseSolicitationItemRow
+                index={index}
+                infoHolder={infoHolder}
+                item={item}
+                setInfo={setInfo}
                 key={index}
-                className="flex items-center w-full bg-gray-50 rounded-tr-sm rounded-tl-sm"
-              >
-                <h1 className="w-1/4 text-center text-xs text-gray-700 font-medium p-1">
-                  {item.nome}
-                </h1>
-                <div className="w-1/4 p-1">
-                  <input
-                    value={item.qtde.toString()}
-                    onChange={(e) => {
-                      const list = infoHolder.itens;
-                      list[index].qtde = Number(e.target.value);
-                      setInfo((prev) => ({ ...prev, itens: list }));
-                    }}
-                    type="number"
-                    className="outline-none text-center text-xs text-gray-700 h-full w-full bg-transparent"
-                  />
-                </div>
-                <div className="w-1/4 p-1">
-                  <input
-                    value={item.cotacao ? item.cotacao.toString() : null}
-                    onChange={(e) => {
-                      const list = infoHolder.itens;
-                      list[index].cotacao = Number(e.target.value);
-                      setInfo((prev) => ({ ...prev, itens: list }));
-                    }}
-                    type="number"
-                    className="outline-none text-center text-xs text-gray-700 h-full w-full bg-transparent"
-                  />
-                </div>
-                <div className="w-1/4 flex items-center justify-center font-medium p-1 gap-4">
-                  <AiFillEye style={{ color: "#fead61" }} />
-                  <MdCancel style={{ color: "red" }} />
-                </div>
-              </div>
+              />
             ))}
+          </div>
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center gap-2">
+              {infoHolder.aprovacao == undefined ||
+              infoHolder.aprovacao == true ? (
+                <button
+                  onClick={() =>
+                    setInfo((prev) => ({ ...prev, aprovacao: false }))
+                  }
+                  className="bg-red-300 hover:bg-red-500 hover:text-black p-2 text-sm rounded font-bold text-white"
+                >
+                  REJEITAR
+                </button>
+              ) : null}
+              {infoHolder.aprovacao == undefined || !infoHolder.aprovacao ? (
+                <button
+                  onClick={() =>
+                    setInfo((prev) => ({
+                      ...prev,
+                      aprovacao: true,
+                      dataResposta: new Date().toISOString(),
+                    }))
+                  }
+                  className="bg-green-300 hover:bg-green-500 p-2 text-sm rounded font-bold text-white"
+                >
+                  APROVAR
+                </button>
+              ) : null}
+            </div>
+            <div className="flex items-center justify-center">
+              <SaveButton
+                handleClick={handleChange}
+                icon={<FaSave />}
+                text={"SALVAR"}
+              />
+            </div>
           </div>
         </div>
       </div>

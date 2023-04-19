@@ -30,7 +30,7 @@ function SolicitacoesCompra() {
   function handleOpenModal(solicitation) {
     setModal({ info: solicitation, isOpen: true });
   }
-  async function getSolicitation() {
+  async function getSolicitations() {
     const { data } = await axios.get("/api/solicitacoes/compra");
     setSolicitations(data);
   }
@@ -40,7 +40,7 @@ function SolicitacoesCompra() {
       session?.user.accessibleRoutes.includes("Suprimentos") ||
       session?.user.accessibleRoutes.includes("ADM")
     ) {
-      if (!solicitations) getSolicitation();
+      if (!solicitations) getSolicitations();
     } else {
       if (session?.user) {
         router.push("/");
@@ -141,6 +141,7 @@ function SolicitacoesCompra() {
             info={modal.info}
             isOpen={modal.isOpen}
             closeModal={() => setModal({ info: null, isOpen: false })}
+            getSolicitations={getSolicitations}
           />
         ) : null}
       </div>

@@ -18,6 +18,7 @@ import {
   MdOutlineBuildCircle,
   MdSentimentSatisfiedAlt,
   MdAddIcCall,
+  MdAddShoppingCart,
 } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import { SiCashapp } from "react-icons/si";
@@ -291,6 +292,21 @@ function Sidebar({ sidebarVisible }) {
                           style={{ color: "#15599a", fontSize: "20px" }}
                         />
                         <p className="pl-3 text-xs text-gray-600">Chamados</p>
+                      </a>
+                    </Link>
+                  ) : (
+                    false
+                  )}
+                  {credentials?.visualizacao == undefined &&
+                  credentials.accessibleRoutes.includes("Suprimentos") ? (
+                    <Link href="/suprimentos/solicitacoesCompra">
+                      <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
+                        <MdAddShoppingCart
+                          style={{ color: "#15599a", fontSize: "20px" }}
+                        />
+                        <p className="pl-3 text-xs text-gray-600">
+                          Solicitações de Compra
+                        </p>
                       </a>
                     </Link>
                   ) : (

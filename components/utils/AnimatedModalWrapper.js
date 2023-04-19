@@ -25,8 +25,8 @@ function AnimatedModalWrapper({ children, modalIsOpen, width, height }) {
     left: "50%",
     transform: "translate(-50%,-50%)",
     backgroundColor: "#fff",
-    width: width ? width : "93%",
-    height: height ? height : "98%",
+    // width: width ? width : "93%",
+    // height: height ? height : "98%",
     borderRadius: "10px",
     padding: "10px",
     zIndex: 1000,
@@ -55,6 +55,9 @@ function AnimatedModalWrapper({ children, modalIsOpen, width, height }) {
               initial="hidden"
               animate="visible"
               style={MODAL_STYLES}
+              className={`${width ? `w-[90%] lg:w-[${width}]` : "w-[93%]"} ${
+                height ? `h-[90%] lg:h-[${height}]` : "h-[98%]"
+              }`}
             >
               {children}
             </motion.div>

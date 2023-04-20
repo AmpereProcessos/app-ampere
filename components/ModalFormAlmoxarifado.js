@@ -95,7 +95,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
           color: "text-red-500",
         })
       );
-    setDados({ ...dados, efetivado: true });
+    // setDados({ ...dados, efetivado: true });
   }
   function saveChanges() {
     axios
@@ -122,9 +122,13 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full">
             <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-[#15599a] pl-6 uppercase font-bold">
-                REQUISIÇÃO
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-[#15599a] pl-6 uppercase font-bold">
+                  REQUISIÇÃO
+                </h1>
+                <h1 className="text-gray-400 italic text-xs">#{dados._id}</h1>
+              </div>
+
               {dados.efetivado == true ? (
                 <Link href={`/almoxarifado/pdfFormulario/${dados._id}`}>
                   <p className="p-2 rounded cursor-pointer bg-[#fead61] font-bold text-sm">

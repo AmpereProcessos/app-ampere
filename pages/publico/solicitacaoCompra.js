@@ -15,7 +15,7 @@ function SolicitacaoCompra() {
   const [solicitationInfo, setSolicitationInfo] = useState({
     requisitante: "",
     telefone: "",
-    motivo: "",
+    motivo: "NÃO DEFINIDO",
     prazo: null,
     itens: [],
   });
@@ -34,7 +34,7 @@ function SolicitacaoCompra() {
     setSolicitationInfo({
       requisitante: "",
       telefone: "",
-      motivo: "",
+      motivo: "NÃO DEFINIDO",
       prazo: null,
       itens: [],
     });
@@ -63,6 +63,14 @@ function SolicitacaoCompra() {
       });
       return false;
     }
+    if (solicitationInfo.motivo == "NÃO DEFINIDO") {
+      setSendMsg({
+        status: null,
+        text: "Por favor, preencha o motivo da solicitação.",
+        color: "text-red-500",
+      });
+      return false;
+    }
     if (solicitationInfo.itens.length == 0) {
       setSendMsg({
         status: null,
@@ -86,7 +94,7 @@ function SolicitacaoCompra() {
       setSolicitationInfo({
         requisitante: "",
         telefone: "",
-        motivo: "",
+        motivo: "NÃO DEFINIDO",
         prazo: null,
         itens: [],
       });
@@ -209,10 +217,27 @@ function SolicitacaoCompra() {
               notDefinedOption={true}
               width={"50%"}
             />
-            <TextFloatingInput
-              label={"MOTIVO DA SOLICITAÇÃO"}
+            <SelectFloatingInput
+              label="MOTIVO DA SOLICITAÇÃO"
               value={solicitationInfo.motivo}
               editable={true}
+              options={[
+                { label: "PARA USO EM OBRA", value: "USO EM OBRA" },
+                {
+                  label: "REPOSIÇÃO DO ALMOXARIFADO",
+                  value: "REPOSIÇÃO DO ALMOXARIFADO",
+                },
+                {
+                  label: "REPOSIÇÃO DE ITENS DE LIMPEZA",
+                  value: "REPOSIÇÃO DE ITENS DE LIMPEZA",
+                },
+                {
+                  label: "REPOSIÇÃO/COMPRA DE ITENS DE ALIMENTAÇÃO",
+                  value: "REPOSIÇÃO/COMPRA DE ITENS DE ALIMENTAÇÃO",
+                },
+                { label: "OUTROS", value: "OUTROS" },
+                { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              ]}
               handleChange={(value) =>
                 setSolicitationInfo((prev) => ({ ...prev, motivo: value }))
               }
@@ -245,7 +270,7 @@ function SolicitacaoCompra() {
                 htmlFor={"datahora"}
                 className="peer-focus:font-medium z-2 absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3  origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
-                PARA QUANDO ?
+                ITENS NECESSÁRIOS PARA QUE DATA?
               </label>
             </div>
             <h1 className="text-[#fead61] font-bold text-center mt-4">ITENS</h1>
@@ -254,9 +279,9 @@ function SolicitacaoCompra() {
               <strong className="text-green-500">adicionar.</strong>
             </p>
             <div className="w-full flex-col lg:flex-row flex items-center gap-4">
-              <div className="lg:w-[90%] w-full flex flex-col">
-                <div className="flex items-center gap-4">
-                  <div className="w-[50%]">
+              <div className="lg:w-[90%] w-full flex flex-col lg:flex-row gap-4  items-center">
+                <div className="flex flex-col items-center gap-4 lg:w-[40%] w-full">
+                  <div className="w-full">
                     <TextFloatingInput
                       label={"NOME DO ITEM"}
                       width={"100%"}
@@ -267,7 +292,7 @@ function SolicitacaoCompra() {
                       }
                     />
                   </div>
-                  <div className="w-[50%]">
+                  <div className="w-full">
                     <NumberFloatingInput
                       label={"QUANTIDADE"}
                       width={"100%"}
@@ -291,7 +316,7 @@ function SolicitacaoCompra() {
                     }))
                   }
                   placeholder="Descreva aqui a finalidade do item (uso próprio ou venda), características do item, lugares específico pra compra e outras informações relevantes..."
-                  className="w-full resize-none border border-gray-300 outline-none text-xs text-center h-[100px] lg:h-[70px] p-2"
+                  className="lg:w-[60%] w-full resize-none  bg-gray-100 border border-blue-200 outline-none text-sm text-center h-[100px] p-2"
                 />
               </div>
               <div className="w-full lg:w-[10%] flex items-center justify-center">

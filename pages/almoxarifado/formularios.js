@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import ModalNovoFormAlmoxarifado from "../../components/ModalNovoFormAlmoxarifado";
 import FilterButton from "../../components/utils/Buttons/FilterButton";
 import ModalFormAlmoxarifado from "../../components/ModalFormAlmoxarifado";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineReload, AiOutlineSearch } from "react-icons/ai";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 import dayjs from "dayjs";
 import Select from "react-select";
 import FormAlmoxarifadoCard from "../../components/FormAlmoxarifadoCard";
+import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
 function Formularios() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -104,6 +105,11 @@ function Formularios() {
             FORMULÁRIOS ({filteredForms.length})
           </h1>
           <div className="flex items-center flex-wrap justify-around gap-2">
+            <FetchDataButton
+              text={"ATUALIZAR"}
+              icon={<AiOutlineReload />}
+              handleClick={getForms}
+            />
             <button
               onClick={() =>
                 setFilters({ ...filters, efetivados: !filters.efetivados })

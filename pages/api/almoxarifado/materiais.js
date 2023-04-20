@@ -12,7 +12,7 @@ export default async function handler(req, res) {
         let material = await collection.findOne({ _id: ObjectId(id) });
         res.status(200).json(material);
       } else {
-        let materials = await collection.find({}).toArray();
+        let materials = await collection.find({}).sort({ nome: 1 }).toArray();
         res.json(materials);
       }
     } catch (error) {

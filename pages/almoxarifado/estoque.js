@@ -3,11 +3,12 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import ModalControlAlmoxarifado from "../../components/ModalControlAlmoxarifado";
 import ModalNovoItemAlmoxarifado from "../../components/ModalNovoItemAlmoxarifado";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineReload, AiOutlineSearch } from "react-icons/ai";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 import Link from "next/link";
 import FilterButton from "../../components/utils/Buttons/FilterButton";
+import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
 function Estoque() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -108,6 +109,11 @@ function Estoque() {
                 RELATÓRIO
               </button>
             </Link>
+            <FetchDataButton
+              text={"ATUALIZAR"}
+              icon={<AiOutlineReload />}
+              handleClick={getMateriais}
+            />
             <input
               type={"text"}
               placeholder="Digite o nome do produto..."

@@ -34,6 +34,7 @@ function CadastrosFenesc() {
   });
   const [filters, setFilters] = useState({
     efetivado: false,
+    naoEfetivado: false,
   });
   const [registers, setRegisters] = useState();
   const [filteredRegisters, setFilteredRegisters] = useState();
@@ -79,8 +80,12 @@ function CadastrosFenesc() {
     }
     if (filters.efetivado) {
       if (!newArr) newArr = registers;
+      newArr = newArr.filter((call) => call.efetivado == true);
+    }
+    if (!filters.naoEfetivado) {
+      if (!newArr) newArr = registers;
       newArr = newArr.filter(
-        (call) => call.efetivado == false || call.efetivado == null
+        (call) => call.efetivado == null || call.efetivado == false
       );
     }
     if (!newArr) {
@@ -228,6 +233,19 @@ function CadastrosFenesc() {
                   } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
                 >
                   EFETIVADOS
+                </div>
+                <div
+                  onClick={() =>
+                    setFilters({
+                      ...filters,
+                      naoEfetivado: !filters.naoEfetivado,
+                    })
+                  }
+                  className={`${
+                    filters.efetivado ? "bg-[#15599a]" : "bg-blue-300"
+                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                >
+                  NÃO EFETIVADOS
                 </div>
               </div>
               <div className="flex items-center justify-end gap-x-2">

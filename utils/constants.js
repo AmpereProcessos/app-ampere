@@ -1751,6 +1751,25 @@ export const equipesTecnicas = [
     value: undefined,
   },
 ];
+export function formatToPhone(value) {
+  if (!value) return "";
+  value = value.replace(/\D/g, "");
+  value = value.replace(/(\d{2})(\d)/, "($1) $2");
+  value = value.replace(/(\d)(\d{4})$/, "$1-$2");
+  return value;
+}
+export function formatCPFCpnj(value) {
+  const cnpjCpf = value.replace(/\D/g, "");
+
+  if (cnpjCpf.length === 11) {
+    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+  }
+
+  return cnpjCpf.replace(
+    /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
+    "$1.$2.$3/$4-$5"
+  );
+}
 // Função para deletar arquivos antigos do Firebase
 // async function listFiles() {
 //   const listRef = ref(storage);

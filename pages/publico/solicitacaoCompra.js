@@ -201,7 +201,6 @@ function SolicitacaoCompra() {
                 }))
               }
               editable={true}
-              notDefinedOption={true}
               width={"50%"}
             />
             <TextFloatingInput
@@ -214,7 +213,6 @@ function SolicitacaoCompra() {
                 }))
               }
               editable={true}
-              notDefinedOption={true}
               width={"50%"}
             />
             <SelectFloatingInput

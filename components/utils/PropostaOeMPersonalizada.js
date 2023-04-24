@@ -4,12 +4,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { FiCheck } from "react-icons/fi";
 function PropostaOeMPersonalizada() {
-  const planOption = 1;
+  const planOption = 2;
   return (
     <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
       <div className="grid grid-cols-5 w-full items-start">
         <div className="flex flex-col col-span-2">
-          <h1 className="text-xl font-bold text-[#15599b]">SEST SENAI</h1>
+          <h1 className="text-xl font-bold text-[#15599b]">
+            RAFAEL LEONEL SILVA
+          </h1>
           <p className="text-xl font-bold">Ituiutaba</p>
           <p className="text-xl font-bold">{new Date().toLocaleDateString()}</p>
         </div>
@@ -23,11 +25,11 @@ function PropostaOeMPersonalizada() {
 
         <div className="flex flex-col col-span-2 items-end">
           <h1 className="text-xl font-bold">Atendido por:</h1>
-          <p className="font-bold text-center">LEANDRO VIALI</p>
-          <p className="font-bold">(34) 9 9767-7001 </p>
+          <p className="font-bold text-center">STENIO DE ASSIS</p>
+          <p className="font-bold">(34) 9 9647-7115 </p>
         </div>
       </div>
-      <div className="mt-5 border-2 border-black">
+      <div className="mt-2 border-2 border-black">
         <h1 className="text-xl w-full text-center bg-[#15599b] text-white font-semibold">
           ESCOPO DO PROJETO
         </h1>
@@ -36,13 +38,13 @@ function PropostaOeMPersonalizada() {
             <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
               Qtd.Módulos - Potência
             </p>
-            <p>380 - 335W</p>
+            <p>92 - 330W</p>
           </div>
           <div className="flex flex-col items-center">
             <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
               Potência kWp
             </p>
-            <p>127,3 kWp</p>
+            <p>30,36 kWp</p>
           </div>
           <div className="flex flex-col items-center">
             <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
@@ -58,12 +60,12 @@ function PropostaOeMPersonalizada() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col mt-10">
+      <div className="flex flex-col mt-5">
         <h1 className="w-full text-center text-xl text-[#15599b] font-semibold">
           CONSEQUÊNCIAS DA FALTA DE MANUTENÇÃO
         </h1>
         <div className="flex justify-center">
-          <ul className="font-semibold">
+          <ul className="font-semibold text-xs">
             <li>1. Perda de geração de energia e eficiência;</li>
             <li>
               2. Danificação e perda de vida útil dos modulos por criação de
@@ -82,7 +84,7 @@ function PropostaOeMPersonalizada() {
           </ul>
         </div>
       </div>
-      <div className="mt-10">
+      <div className="mt-5">
         <h1 className="w-full bg-[#15599b] text-white font-bold text-center ">
           PLANOS E SERVIÇOS DE OPERAÇÃO E MANUTENÇÃO
         </h1>
@@ -105,39 +107,48 @@ function PropostaOeMPersonalizada() {
                       >
                         Com a concorrência
                       </th>
-                      <th
+                      {/* <th
                         scope="col"
                         className="text-sm font-medium text-gray-900 px-2 py-2 border-r"
                       >
                         Manutenção simples
+                      </th> */}
+
+                      <th
+                        scope="col"
+                        className="text-sm font-medium text-gray-900 px-2 py-2 border-r"
+                      >
+                        Plano Sol
                       </th>
-                      {!planOption == 1 ? (
-                        <>
-                          <th
-                            scope="col"
-                            className="text-sm font-medium text-gray-900 px-2 py-2 border-r"
-                          >
-                            Plano Sol
-                          </th>
-                          <th
+                      {/* <th
                             scope="col"
                             className="text-sm font-medium text-gray-900 px-6 py-2"
                           >
                             Plano Sol+
-                          </th>
-                        </>
-                      ) : null}
+                          </th> */}
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                      <td className="px-2 text-xs font-medium text-gray-900 border-r">
                         MANUTENÇÃO ELÉTRICA INVERSORES + QUADROS ELÉTRICOS
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
                         X
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
+                      {/* <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
+                        <div className="flex justify-center">
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td> */}
+
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
@@ -148,20 +159,7 @@ function PropostaOeMPersonalizada() {
                           />
                         </div>
                       </td>
-                      {!planOption == 1 ? (
-                        <>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
-                            <div className="flex justify-center">
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
-                            </div>
-                          </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap text-center">
+                      {/* <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap text-center">
                             <div className="flex justify-center items-center">
                               <p>2x</p>
                               <FiCheck
@@ -172,18 +170,27 @@ function PropostaOeMPersonalizada() {
                                 }}
                               />
                             </div>
-                          </td>
-                        </>
-                      ) : null}
+                          </td> */}
                     </tr>
                     <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                      <td className="px-2 text-xs font-medium text-gray-900 border-r">
                         REAPERTO CONEXÕES ELÉTRICAS
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
+                      <td className="text-xs text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
                         X
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
+                      {/* <td className="text-xs text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
+                        <div className="flex justify-center">
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td> */}
+                      <td className="text-xs text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
@@ -194,20 +201,7 @@ function PropostaOeMPersonalizada() {
                           />
                         </div>
                       </td>
-                      {!planOption == 1 ? (
-                        <>
-                          <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
-                            <div className="flex justify-center">
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
-                            </div>
-                          </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap">
+                      {/* <td className="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap">
                             <div className="flex justify-center items-center">
                               <p>2x</p>
                               <FiCheck
@@ -218,19 +212,28 @@ function PropostaOeMPersonalizada() {
                                 }}
                               />
                             </div>
-                          </td>
-                        </>
-                      ) : null}
+                          </td> */}
                     </tr>
                     <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                      <td className="px-2 text-xs font-medium text-gray-900 border-r">
                         ANÁLISE E CONFERÊNCIA DE GRANDEZAS ELÉTRICAS DOS
                         EQUIPAMENTOS ELÉTRICOS
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         X
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                      {/* <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                        <div className="flex justify-center">
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td> */}
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
@@ -241,20 +244,7 @@ function PropostaOeMPersonalizada() {
                           />
                         </div>
                       </td>
-                      {!planOption == 1 ? (
-                        <>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                            <div className="flex justify-center">
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
-                            </div>
-                          </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
+                      {/* <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
                             <div className="flex justify-center items-center">
                               <p>2x</p>
                               <FiCheck
@@ -265,19 +255,28 @@ function PropostaOeMPersonalizada() {
                                 }}
                               />
                             </div>
-                          </td>
-                        </>
-                      ) : null}
+                          </td> */}
                     </tr>
                     <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                      <td className="px-2 text-xs font-medium text-gray-900 border-r">
                         CONFIGURAÇÃO E INSTALAÇÃO DE APLICATIVO DE MONITORAMENTO
                         DE GERAÇÃO DO INVERSOR
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         X
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                      {/* <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                        <div className="flex justify-center">
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td> */}
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
@@ -288,39 +287,24 @@ function PropostaOeMPersonalizada() {
                           />
                         </div>
                       </td>
-                      {!planOption == 1 ? (
-                        <>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                            <div className="flex justify-center">
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
-                            </div>
-                          </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                            <div className="flex justify-center items-center">
-                              <p>2x</p>
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
-                            </div>
-                          </td>
-                        </>
-                      ) : null}
+                      {/* <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
+                        <div className="flex justify-center items-center">
+                          <p>2x</p>
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td> */}
                     </tr>
                     <tr className="border-b bg-white">
-                      <td className="px-2 text-sm font-medium text-gray-900 border-r">
+                      <td className="px-2 text-xs font-medium text-gray-900 border-r">
                         LIMPEZA NOS MÓDULOS FOTOVOLTAICOS
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
@@ -331,7 +315,18 @@ function PropostaOeMPersonalizada() {
                           />
                         </div>
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                      {/* <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                        <div className="flex justify-center">
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td> */}
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
@@ -342,20 +337,7 @@ function PropostaOeMPersonalizada() {
                           />
                         </div>
                       </td>
-                      {!planOption == 1 ? (
-                        <>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                            <div className="flex justify-center">
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
-                            </div>
-                          </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
+                      {/* <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
                             <div className="flex justify-center items-center">
                               <p>2x</p>
                               <FiCheck
@@ -366,151 +348,159 @@ function PropostaOeMPersonalizada() {
                                 }}
                               />
                             </div>
-                          </td>
-                        </>
-                      ) : null}
+                          </td> */}
                     </tr>
-                    {!planOption == 1 ? (
-                      <>
-                        <tr className="border-b bg-white">
-                          <td className="px-2 text-sm font-medium text-gray-900 border-r">
-                            MONITORAMENTO DA GERAÇÃO DE ENERGIA POR 12 MESES C/
-                            RELATÓRIOS MENSAIS DE GERAÇÃO
-                          </td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                            X
-                          </td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                            X
-                          </td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                            <div className="flex justify-center">
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
-                            </div>
-                          </td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                            <div className="flex justify-center">
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                        <tr className="border-b bg-white">
-                          <td className="px-2 text-sm font-medium text-gray-900 border-r">
-                            MANUTENÇÃO CORRETIVA EM CASO DE NECESSIDADE (SEM
-                            INSUMOS ELÉTRICOS)
-                          </td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                            X
-                          </td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                            X
-                          </td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                            <div className="flex justify-center">
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
-                            </div>
-                          </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
-                            <div className="flex justify-center items-center">
-                              <p>2x</p>
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                        <tr className="border-b bg-white">
-                          <td className="px-2 text-sm font-medium text-gray-900 border-r">
-                            DISTRIBUIÇÃO DE CRÉDITOS
-                          </td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
-                            X
-                          </td>
-                          <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
-                            X
-                          </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap border-r">
-                            <div className="flex justify-center items-center">
-                              <p>2x</p>
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
-                            </div>
-                          </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap">
-                            <div className="flex justify-center items-center">
-                              <p>4x</p>
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      </>
-                    ) : null}
 
                     <tr className="border-b bg-white">
-                      <td className="px-2 py-1 text-sm font-medium text-gray-900 border-r">
-                        VALOR TOTAL
+                      <td className="px-2 text-xs font-medium text-gray-900 border-r">
+                        MONITORAMENTO DA GERAÇÃO DE ENERGIA POR 12 MESES C/
+                        RELATÓRIOS MENSAIS DE GERAÇÃO
                       </td>
-                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                        X
+                      </td>
+                      {/* <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                        X
+                      </td> */}
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                        <div className="flex justify-center">
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td>
+                      {/* <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                        <div className="flex justify-center">
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td> */}
+                    </tr>
+                    <tr className="border-b bg-white">
+                      <td className="px-2 text-xs font-medium text-gray-900 border-r">
+                        MANUTENÇÃO CORRETIVA EM CASO DE NECESSIDADE (SEM INSUMOS
+                        ELÉTRICOS)
+                      </td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                        X
+                      </td>
+                      {/* <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                        X
+                      </td> */}
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                        <div className="flex justify-center">
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td>
+                      {/* <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
+                        <div className="flex justify-center items-center">
+                          <p>2x</p>
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td> */}
+                    </tr>
+                    <tr className="border-b bg-white">
+                      <td className="px-2 text-xs font-medium text-gray-900 border-r">
+                        DISTRIBUIÇÃO DE CRÉDITOS
+                      </td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
+                        X
+                      </td>
+                      {/* <td className="text-xs text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
+                        X
+                      </td> */}
+                      <td className="text-xs text-gray-900 font-bold px-6 py-2 whitespace-nowrap border-r">
+                        <div className="flex justify-center items-center">
+                          <p>2x</p>
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td>
+                      {/* <td className="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap">
+                        <div className="flex justify-center items-center">
+                          <p>4x</p>
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
+                      </td> */}
+                    </tr>
+
+                    <tr className="border-b bg-white">
+                      <td className="px-2 py-1 text-xs font-medium text-gray-900 border-r">
+                        VALOR DO PLANO ANUAL EM ATÉ 10X SEM JUROS
+                      </td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         -
                       </td>
-                      <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
-                        R$ 5.980,00
+                      {/* <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
+                        R$ 3.008,84
+                      </td> */}
+                      <td className="text-xs text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
+                        R$ 3.008,84
                       </td>
-                      {!planOption == 1 ? (
-                        <>
-                          <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
-                            R${" "}
-                            {(
-                              1.3 * info.price * info.modulesQty +
-                              1.5 * 2 * info.distance
-                            )
-                              .toFixed(2)
-                              .replace(".", ",")}
-                          </td>
-                          <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
-                            R${" "}
-                            {(
-                              1.95 * info.price * info.modulesQty +
-                              1.5 * 4 * info.distance
-                            )
-                              .toFixed(2)
-                              .replace(".", ",")}
-                          </td>
-                        </>
-                      ) : null}
+                      {/* <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
+                        R${" "}
+                        {(
+                          1.95 * info.price * info.modulesQty +
+                          1.5 * 4 * info.distance
+                        )
+                          .toFixed(2)
+                          .replace(".", ",")}
+                      </td> */}
+                    </tr>
+                    <tr className="border-b bg-white">
+                      <td className="px-2 py-1 text-xs font-medium text-gray-900 border-r">
+                        VALOR DO PLANO ANUAL A VISTA
+                      </td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                        -
+                      </td>
+                      {/* <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
+                        R$ 3.008,84
+                      </td> */}
+                      <td className="text-xs text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
+                        R$ 2.700,00
+                      </td>
+                      {/* <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
+                        R${" "}
+                        {(
+                          1.95 * info.price * info.modulesQty +
+                          1.5 * 4 * info.distance
+                        )
+                          .toFixed(2)
+                          .replace(".", ",")}
+                      </td> */}
                     </tr>
                   </tbody>
                 </table>
@@ -519,14 +509,11 @@ function PropostaOeMPersonalizada() {
           </div>
         </div>
       </div>
-      <p className="w-full text-sm text-red-500 text-center font-medium mb-1 uppercase">
-        *Mediante pagamento à vista*
-      </p>
       <div>
         <h1 className="w-full bg-[#15599b] text-white font-bold text-center">
           ASSINATURA
         </h1>
-        <div className="mt-12 flex justify-between">
+        <div className="mt-10 flex justify-between">
           <div className="w-[35%]">
             <hr className="border-t-2 border-black" />
             <p className="text-center">Cliente</p>

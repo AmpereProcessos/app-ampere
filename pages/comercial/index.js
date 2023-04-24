@@ -572,10 +572,17 @@ function Comercial({ users }) {
               </motion.div>
             ))}
           </div>
-          {session.user?.regional == undefined && (
+          {/* {session.user?.regional == undefined && (
             <Link href={"/comercial/addProjeto"}>
               <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
                 <p className="uppercase font-bold text-sm">Novo projeto</p>
+              </a>
+            </Link>
+          )} */}
+          {session.user?.regional == undefined && (
+            <Link href={"/comercial/cadastrosFenesc"}>
+              <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+                <p className="uppercase font-bold text-sm">CAD.FENESC</p>
               </a>
             </Link>
           )}

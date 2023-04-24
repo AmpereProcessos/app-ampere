@@ -168,7 +168,7 @@ function BandoDeDados({ data }) {
                     startDate: {
                       $dateFromString: { dateString: "$medidor.data" },
                     },
-                    endDate: ISODate("2023-01-24T08:00:00.000Z"),
+                    endDate: { $toDate: "2023-01-25" },
                     unit: "day",
                   },
                 },
@@ -184,7 +184,7 @@ function BandoDeDados({ data }) {
                     startDate: {
                       $dateFromString: { dateString: "$medidor.data" },
                     },
-                    endDate: ISODate("2023-01-24T08:00:00.000Z"),
+                    endDate: { $toDate: "2023-01-25" },
                     unit: "day",
                   },
                 },
@@ -195,7 +195,7 @@ function BandoDeDados({ data }) {
         ],
       };
     }
-    if (filters.condicaoOeM == "O&M VENDIDO") {
+    if (filters.condicaoOeM == "O&M VENCIDO") {
       matchObj = {
         cidade:
           filters.cidadeFilter.length > 0
@@ -237,7 +237,7 @@ function BandoDeDados({ data }) {
                 startDate: {
                   $dateFromString: { dateString: "$medidor.data" },
                 },
-                endDate: ISODate("2023-01-24T08:00:00.000Z"),
+                endDate: { $toDate: "2023-01-25" },
                 unit: "day",
               },
             },

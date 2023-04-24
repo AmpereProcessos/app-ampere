@@ -22,6 +22,7 @@ export default async function handler(req, res) {
       {
         $set: {
           efetivado: changes.efetivado,
+          dataEfetivacao: changes.dataEfetivacao,
         },
       }
     );

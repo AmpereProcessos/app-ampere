@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import LoadingPage from "../../components/utils/LoadingPage";
+import { AiOutlineCalendar, AiOutlineSearch } from "react-icons/ai";
 import { HiIdentification } from "react-icons/hi";
 import { BsBank, BsFolderFill } from "react-icons/bs";
 import { FaSolarPanel, FaUserAlt } from "react-icons/fa";
@@ -15,6 +16,8 @@ import { BsCheck2All } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
 import Select from "react-select";
 import { MdEmail } from "react-icons/md";
+import FilterButton from "../../components/utils/Buttons/FilterButton";
+import dayjs from "dayjs";
 function CadastrosFenesc() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -58,10 +61,33 @@ function CadastrosFenesc() {
       id: id,
       changes: {
         efetivado: obj.efetivado ? !obj.efetivado : true,
+        dataEfetivacao: new Date().toISOString(),
       },
     });
     await sendEmail(obj.emailVendedor, obj.codigoSVB);
     getRegisters();
+  }
+  function filterRegisters() {
+    var newArr;
+    if (dateFilter.after && dateFilter.before && dateFilter.field != null) {
+      if (!newArr) newArr = registers;
+      newArr = newArr.filter(
+        (call) =>
+          call[dateFilter.field] >= dateFilter.after &&
+          call[dateFilter.field] <= dateFilter.before
+      );
+    }
+    if (filters.efetivado) {
+      if (!newArr) newArr = registers;
+      newArr = newArr.filter(
+        (call) => call.efetivado == false || call.efetivado == null
+      );
+    }
+    if (!newArr) {
+      setFilteredRegisters(registers);
+    } else {
+      setFilteredRegisters(newArr);
+    }
   }
   useEffect(() => {
     if (session?.user.accessibleRoutes.includes("PPS")) {
@@ -208,19 +234,19 @@ function CadastrosFenesc() {
                 <FilterButton
                   text={"FILTRAR"}
                   icon={<AiOutlineSearch />}
-                  handleClick={filterProjects}
+                  handleClick={filterRegisters}
                 />
               </div>
             </motion.div>
           ) : null}
         </AnimatePresence>
       </div>
-      <div className="flex  grow gap-3 mt-4 flex-wrap">
+      <div className="flex justify-around grow gap-3 mt-4 flex-wrap">
         {filteredRegisters ? (
           filteredRegisters.map((register) => (
             <div
               key={register._id}
-              className="w-full lg:w-[450px] rounded-md gap-1 flex flex-col border border-gray-300 shadow-sm h-fit lg:h-[270px] p-3"
+              className="w-full lg:w-[450px] rounded-md gap-1 flex flex-col border border-gray-300 shadow-sm h-fit lg:h-[290px] p-3"
             >
               <div className="flex items-center justify-between w-full">
                 <h1 className="text-lg font-medium">
@@ -339,6 +365,14 @@ function CadastrosFenesc() {
                 </div>
               </div>
               <div className="flex flex-col w-full">
+                <div className="flex items-center gap-2">
+                  <AiOutlineCalendar style={{ color: "#15599a" }} />
+                  <h1 className="text-gray-700 font-medium text-xs lg:text-base">
+                    {register.dataRegistro
+                      ? dayjs(register.dataRegistro).format("DD/MM/YY HH:mm")
+                      : null}
+                  </h1>
+                </div>
                 <div className="flex gap-3 items-center justify-center">
                   <a
                     href={register.proposta.link}

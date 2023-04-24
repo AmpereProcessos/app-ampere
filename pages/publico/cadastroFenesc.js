@@ -143,7 +143,11 @@ function CadastroFenesc() {
             : "INDEFINIDO",
         };
         console.log("URL", url);
-        const obj = { ...registerInfo, proposta };
+        const obj = {
+          ...registerInfo,
+          proposta,
+          dataRegistro: new Date().toISOString(),
+        };
         let { data } = await axios.post("/api/auxiliares/cadastroFenesc", obj);
         console.log(data);
         if (data.acknowledged)
@@ -179,6 +183,7 @@ function CadastroFenesc() {
     setMsg({ text: "", color: "" });
     return;
   }
+
   return (
     <div className="p-6 grow flex flex-col bg-[#15599a] items-center">
       {msg.status ? (
@@ -283,28 +288,29 @@ function CadastroFenesc() {
               label={"POTÊNCIA EM kWp"}
               editable={true}
               width={"50%"}
-              value={
-                registerInfo.potPico ? registerInfo.potPico.toString() : null
-              }
+              value={registerInfo.potPico ? registerInfo.potPico : null}
               handleChange={(value) =>
-                setRegisterInfo((prev) => ({ ...prev, potPico: Number(value) }))
+                setRegisterInfo((prev) => ({
+                  ...prev,
+                  potPico: Number(value),
+                }))
               }
+              toString={false}
             />
             <NumberFloatingInput
               label={"VALOR DO SISTEMA"}
               editable={true}
               width={"50%"}
               value={
-                registerInfo.valorProjeto
-                  ? registerInfo.valorProjeto.toString()
-                  : null
+                registerInfo.valorProjeto ? registerInfo.valorProjeto : null
               }
-              handleChange={(value) =>
+              handleChange={(value) => {
                 setRegisterInfo((prev) => ({
                   ...prev,
                   valorProjeto: Number(value),
-                }))
-              }
+                }));
+              }}
+              toString={false}
             />
             <h1 className="text-[#fead61] font-bold text-center my-4">
               FINANCIAMENTO

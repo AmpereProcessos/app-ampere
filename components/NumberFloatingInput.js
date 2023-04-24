@@ -7,7 +7,13 @@ function NumberFloatingInput({
   handleChange,
   width,
   marginBottom,
+  toString = true,
 }) {
+  function fixValue(value) {
+    if (toString) {
+      return value.toString();
+    } else return value;
+  }
   return (
     <div
       className={`flex flex-col relative items-center z-0 ${
@@ -15,12 +21,13 @@ function NumberFloatingInput({
       } ${marginBottom ? `mb-[${marginBottom}]` : "mb-6"}  group`}
     >
       <input
-        value={value ? value.toString() : 0}
+        value={value ? fixValue(value) : 0}
         onChange={(e) => handleChange(e.target.value)}
         readOnly={!editable}
         type="number"
         name={label.toLowerCase()}
         id={label.toLowerCase()}
+        step={0.01}
         className="flex py-2.5 px-0 w-full text-sm z-1 font-arial text-center text-gray-900 bg-[#fff] border-0 border-b-2 border-gray-300 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
         placeholder=" "
       />

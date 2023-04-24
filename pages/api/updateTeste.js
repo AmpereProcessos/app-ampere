@@ -3,6 +3,67 @@ import connectToDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
   // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
   // const collection = db.collection("dados");
+  // const items = await collection
+  //   .aggregate([
+  //     {
+  //       $match: {
+  //         "contrato.status": "ASSINADO",
+  //         "manutencaoPreventiva.data": null,
+  //         $expr: {
+  //           $gt: [
+  //             {
+  //               $dateDiff: {
+  //                 startDate: {
+  //                   $dateFromString: { dateString: "$medidor.data" },
+  //                 },
+  //                 endDate: { $toDate: "2023-03-31" },
+  //                 unit: "day",
+  //               },
+  //             },
+  //             365,
+  //           ],
+  //         },
+  //       },
+  //     },
+  //     {
+  //       $project: {
+  //         qtde: 1,
+  //         nomeDoContrato: 1,
+  //         nomeDoProjeto: 1,
+  //         "contrato.dataAssinatura": 1,
+  //         "vendedor.nome": 1,
+  //         cidade: 1,
+  //         sistema: 1,
+  //         estruturaPersonalizada: 1,
+  //         "medidor.data": 1,
+  //         "oem.plano": 1,
+  //       },
+  //     },
+  //   ])
+  //   .toArray();
+  // const formattedArr = items.map((item) => {
+  //   return {
+  //     QTDE: item.qtde,
+  //     "NOME DO CONTRATO": item.nomeDoContrato,
+  //     "NOME DO PROJETO": item.nomeDoProjeto,
+  //     "DATA DE ASSINATURA": dayjs(item.contrato.dataAssinatura)
+  //       .add(3, "hours")
+  //       .format("DD/MM/YYYY"),
+  //     VENDEDOR: item.vendedor.nome,
+  //     CIDADE: item.cidade,
+  //     "QTDE MÓDULOS": item.sistema.qtdeModulos,
+  //     "POTÊNCIA PICO": item.sistema.potPico,
+  //     TOPOLOGIA: item.sistema.topologia,
+  //     "VALOR DO PROJETO": item.sistema.valorProjeto,
+  //     "TIPO DE ESTRUTURA": item.estruturaPersonalizada.tipo
+  //       ? item.estruturaPersonalizada.tipo
+  //       : "-",
+  //     "TROCA DO MEDIDOR": dayjs(item.medidor.data)
+  //       .add(3, "hours")
+  //       .format("DD/MM/YYYY"),
+  //     "PLANO DE O&M": item.oem?.plano,
+  //   };
+  // });
   // let arr = await collection
   //   .aggregate([
   //     {
@@ -198,6 +259,7 @@ export default async function handler(req, res) {
   //     "SEGURO (SE APLICÁVEL)": itemFromSVB?.seguro ? itemFromSVB?.seguro : 0,
   //   };
   // });
+
   res.json("DESATIVADA");
 }
 

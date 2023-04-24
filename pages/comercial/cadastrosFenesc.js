@@ -5,9 +5,16 @@ import React, { useEffect, useState } from "react";
 import LoadingPage from "../../components/utils/LoadingPage";
 import { HiIdentification } from "react-icons/hi";
 import { BsBank, BsFolderFill } from "react-icons/bs";
-import { FaSolarPanel } from "react-icons/fa";
-import { IoMdCheckmark } from "react-icons/io";
+import { FaSolarPanel, FaUserAlt } from "react-icons/fa";
+import {
+  IoMdArrowDropdownCircle,
+  IoMdArrowDropupCircle,
+  IoMdCheckmark,
+} from "react-icons/io";
 import { BsCheck2All } from "react-icons/bs";
+import { AnimatePresence, motion } from "framer-motion";
+import Select from "react-select";
+import { MdEmail } from "react-icons/md";
 function CadastrosFenesc() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -16,8 +23,30 @@ function CadastrosFenesc() {
       router.push("/auth/authHome");
     },
   });
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
+  const [dateFilter, setDateFilter] = useState({
+    after: null,
+    before: null,
+    field: null,
+  });
+  const [filters, setFilters] = useState({
+    efetivado: false,
+  });
   const [registers, setRegisters] = useState();
   const [filteredRegisters, setFilteredRegisters] = useState();
+
+  async function sendEmail(email, projectCode) {
+    try {
+      await axios.post("/api/email", {
+        emailTo: email, // amperecontasareceber@gmail.com
+        subject: "EFETIVAÇÃO DE REGISTRO FENESC",
+        message: `Olá, acabo de efetivar o cadastro do projeto ${projectCode} para FENESC. Atenciosamente, Volts.`,
+        copy: ["comercial@ampereenergias.com.br"],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function getRegisters() {
     const { data } = await axios.get("/api/auxiliares/cadastroFenesc");
@@ -31,6 +60,7 @@ function CadastrosFenesc() {
         efetivado: obj.efetivado ? !obj.efetivado : true,
       },
     });
+    await sendEmail(obj.emailVendedor, obj.codigoSVB);
     getRegisters();
   }
   useEffect(() => {
@@ -57,14 +87,140 @@ function CadastrosFenesc() {
               ({filteredRegisters?.length})
             </p>
           </div>
+          {dropdownMenuVisible ? (
+            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <IoMdArrowDropupCircle
+                style={{ fontSize: "25px" }}
+                onClick={() => setDropdownMenuVisible(false)}
+              />
+            </div>
+          ) : (
+            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <IoMdArrowDropdownCircle
+                style={{ fontSize: "25px" }}
+                onClick={() => setDropdownMenuVisible(true)}
+              />
+            </div>
+          )}
         </div>
+        <AnimatePresence>
+          {dropdownMenuVisible ? (
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0.6 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="flex flex-col w-full gap-y-2 mt-4"
+            >
+              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
+                  <div className="flex items-center gap-x-2 justify-center">
+                    <div className="flex flex-col w-fit items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        Depois de:
+                      </span>
+                      <input
+                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                        type="date"
+                        value={
+                          dateFilter.after &&
+                          new Date(dateFilter.after).toISOString().slice(0, 10)
+                        }
+                        onChange={(e) =>
+                          setDateFilter({
+                            ...dateFilter,
+                            after: isNaN(e.target.value)
+                              ? new Date(e.target.value).toISOString()
+                              : null,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col w-fit items-center">
+                      <span className="uppercase font-bold font-raleway text-center text-sm">
+                        Antes de:
+                      </span>
+                      <input
+                        className="text-xs w-full text-center uppercase text-gray-600 outline-none"
+                        type="date"
+                        value={
+                          dateFilter.before &&
+                          new Date(dateFilter.before).toISOString().slice(0, 10)
+                        }
+                        onChange={(e) =>
+                          setDateFilter({
+                            ...dateFilter,
+                            before: isNaN(e.target.value)
+                              ? new Date(e.target.value).toISOString()
+                              : null,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti={false}
+                      placeholder={"CAMPO DE FILTRO"}
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      options={[
+                        {
+                          label: "DATA DE REGISTRO",
+                          value: "dataRegistro",
+                        },
+                        {
+                          label: "DATA DE EFETIVAÇÃO",
+                          value: "dataEfetivacao",
+                        },
+                        { label: "NÃO DEFINIDO", value: null },
+                      ]}
+                      onChange={(e) =>
+                        setDateFilter({
+                          ...dateFilter,
+                          field: e.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                <div
+                  onClick={() =>
+                    setFilters({
+                      ...filters,
+                      efetivado: !filters.efetivado,
+                    })
+                  }
+                  className={`${
+                    filters.efetivado ? "bg-[#15599a]" : "bg-blue-300"
+                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                >
+                  EFETIVADOS
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-x-2">
+                <FilterButton
+                  text={"FILTRAR"}
+                  icon={<AiOutlineSearch />}
+                  handleClick={filterProjects}
+                />
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
       <div className="flex  grow gap-3 mt-4 flex-wrap">
         {filteredRegisters ? (
           filteredRegisters.map((register) => (
             <div
               key={register._id}
-              className="w-[450px] rounded-md flex flex-col border border-gray-300 shadow-sm h-[230px] p-3"
+              className="w-full lg:w-[450px] rounded-md gap-1 flex flex-col border border-gray-300 shadow-sm h-fit lg:h-[270px] p-3"
             >
               <div className="flex items-center justify-between w-full">
                 <h1 className="text-lg font-medium">
@@ -92,13 +248,27 @@ function CadastrosFenesc() {
                   </h1>
                 </div>
               </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FaUserAlt style={{ color: "#003d5b" }} />
+                  <h1 className="text-gray-700 font-medium text-sm">
+                    {register.nomeVendedor}
+                  </h1>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MdEmail style={{ color: "#16B010" }} />
+                  <h1 className="text-gray-700 font-medium text-sm">
+                    {register.emailVendedor}
+                  </h1>
+                </div>
+              </div>
               <div className="flex flex-col w-full justify-between">
                 <div className="flex gap-3 items-center justify-center">
                   <h1 className="text-sm text-gray-500">FINANCIAMENTO</h1>
                   <BsBank style={{ color: "#fead61" }} />
                 </div>
-                <div className="flex w-full items-center justify-between">
-                  <div className="flex flex-col items-start">
+                <div className="flex flex-col lg:flex-row w-full items-center justify-between">
+                  <div className="flex flex-col items-center lg:items-start">
                     <h1 className="text-gray-600 font-medium text-xs">
                       GERENTE
                     </h1>
@@ -106,7 +276,13 @@ function CadastrosFenesc() {
                       {register.nomeGerente}
                     </h1>
                   </div>
-                  <div className="flex flex-col items-end">
+                  <div className="flex flex-col items-center">
+                    <h1 className="text-gray-600 font-medium text-xs">PA</h1>
+                    <h1 className="text-sm font-medium">
+                      {register.pontoAtendimento}
+                    </h1>
+                  </div>
+                  <div className="flex flex-col items-center lg:items-end">
                     <h1 className="text-gray-600 font-medium text-xs">
                       CONTATO
                     </h1>

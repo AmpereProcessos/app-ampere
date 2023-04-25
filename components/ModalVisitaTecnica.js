@@ -19,6 +19,7 @@ import { MdOutlineAddCircle } from "react-icons/md";
 import { FiDelete } from "react-icons/fi";
 import axios from "axios";
 import SaveButton from "./utils/Buttons/SaveButton";
+import CustosVisitaPesquisa from "./CustosVisitaPesquisa";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -55,6 +56,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
     descricao: "",
     qtde: 0,
     grandeza: "",
+    custo: 0,
     valor: 0,
   });
   const [descritivoHolder, setDescritivoHolder] = useState({
@@ -150,7 +152,13 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
   function addCost() {
     var arr = dados.custosAdicionais ? dados.custosAdicionais : [];
     setDados({ ...dados, custosAdicionais: [...arr, custoAdicionalHolder] });
-    setCustoAdicionalHolder({ descricao: "", qtde: 0, grandeza: "", valor: 0 });
+    setCustoAdicionalHolder({
+      descricao: "",
+      qtde: 0,
+      grandeza: "",
+      custo: 0,
+      valor: 0,
+    });
   }
   function addDesc() {
     var arr = dados.descritivo ? dados.descritivo : [];
@@ -2218,61 +2226,88 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   CUSTOS ADICIONAIS
                 </span>
-                <div className="grid grid-cols-6 gap-2 items-center">
-                  <TextInput
-                    label={"DESCRIÇÃO"}
-                    editable={true}
-                    value={custoAdicionalHolder.descricao}
-                    handleChange={(value) =>
-                      setCustoAdicionalHolder({
-                        ...custoAdicionalHolder,
-                        descricao: value,
-                      })
-                    }
-                  />
-                  <NumberInput
-                    label={"QUANTIDADE"}
-                    editable={true}
-                    value={custoAdicionalHolder.qtde}
-                    handleChange={(value) =>
-                      setCustoAdicionalHolder({
-                        ...custoAdicionalHolder,
-                        qtde: Number(value),
-                      })
-                    }
-                  />
-                  <TextInput
-                    label={"GRANDEZA"}
-                    editable={true}
-                    value={custoAdicionalHolder.grandeza}
-                    handleChange={(value) =>
-                      setCustoAdicionalHolder({
-                        ...custoAdicionalHolder,
-                        grandeza: value,
-                      })
-                    }
-                  />
-                  <NumberInput
-                    label={"VALOR"}
-                    editable={true}
-                    value={custoAdicionalHolder.valor}
-                    handleChange={(value) =>
-                      setCustoAdicionalHolder({
-                        ...custoAdicionalHolder,
-                        valor: Number(value),
-                      })
-                    }
-                  />
-                  <div className="flex flex-col items-center">
-                    <p className="font-bold font-raleway">TOTAL</p>
-                    <p className="text-gray-600 text-xs text-center">
-                      R$
-                      {(custoAdicionalHolder.qtde * custoAdicionalHolder.valor)
-                        .toFixed(2)
-                        .replace(".", ",")}
-                    </p>
+                <CustosVisitaPesquisa
+                  setCustoAdicionalHolder={setCustoAdicionalHolder}
+                />
+                <div className="flex w-full items-center">
+                  <div className="flex items-center w-[90%]">
+                    <div className="grid grid-cols-3 lg:grid-cols-6 gap-2 items-center w-full">
+                      <TextInput
+                        label={"DESCRIÇÃO"}
+                        editable={true}
+                        value={custoAdicionalHolder.descricao}
+                        handleChange={(value) =>
+                          setCustoAdicionalHolder({
+                            ...custoAdicionalHolder,
+                            descricao: value,
+                          })
+                        }
+                        widthFit={true}
+                      />
+                      <NumberInput
+                        label={"QUANTIDADE"}
+                        editable={true}
+                        value={custoAdicionalHolder.qtde}
+                        handleChange={(value) =>
+                          setCustoAdicionalHolder({
+                            ...custoAdicionalHolder,
+                            qtde: Number(value),
+                          })
+                        }
+                        widthFit={true}
+                      />
+                      <TextInput
+                        label={"GRANDEZA"}
+                        editable={true}
+                        value={custoAdicionalHolder.grandeza}
+                        handleChange={(value) =>
+                          setCustoAdicionalHolder({
+                            ...custoAdicionalHolder,
+                            grandeza: value,
+                          })
+                        }
+                        widthFit={true}
+                      />
+                      <NumberInput
+                        label={"CUSTO"}
+                        editable={true}
+                        value={custoAdicionalHolder.custo}
+                        handleChange={(value) =>
+                          setCustoAdicionalHolder({
+                            ...custoAdicionalHolder,
+                            custo: Number(value),
+                          })
+                        }
+                        widthFit={true}
+                      />
+                      <NumberInput
+                        label={"VALOR"}
+                        editable={true}
+                        value={custoAdicionalHolder.valor}
+                        handleChange={(value) =>
+                          setCustoAdicionalHolder({
+                            ...custoAdicionalHolder,
+                            valor: Number(value),
+                          })
+                        }
+                        widthFit={true}
+                      />
+                      <div className="flex flex-col items-center">
+                        <p className="font-bold font-raleway">TOTAL</p>
+                        <p className="text-gray-600 text-xs text-center">
+                          R$
+                          {(
+                            custoAdicionalHolder.qtde *
+                            custoAdicionalHolder.valor
+                          )
+                            .toFixed(2)
+                            .replace(".", ",")}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-center items-center h-fit p-2 rounded cursor-pointer">
+
+                  <div className="flex justify-center items-center h-fit p-2 rounded cursor-pointer w-[10%]">
                     <div
                       onClick={addCost}
                       className="bg-green-300 hover:bg-green-500 text-white p-2 rounded cursor-pointer"
@@ -2282,50 +2317,73 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   </div>
                 </div>
                 <div className="flex flex-col mx-12 mt-2 gap-2">
-                  <div className="grid grid-cols-6 w-full">
-                    <p className="text-md text-[#fead61] font-bold text-center">
-                      DESCRIÇÃO
-                    </p>
-                    <p className="text-md text-[#fead61] font-bold text-center">
-                      QUANTIDADE
-                    </p>
-                    <p className="text-md text-[#fead61] font-bold text-center">
-                      GRANDEZA
-                    </p>
-                    <p className="text-md text-[#fead61] font-bold text-center">
-                      VALOR
-                    </p>
-                    <p className="text-md text-[#fead61] font-bold text-center">
-                      VALOR TOTAL
-                    </p>
-                    <p className="text-md text-[#fead61] font-bold text-center">
+                  <div className="flex items-center w-full">
+                    <div className="w-[90%] grid grid-cols-6">
+                      <p className="text-md text-[#fead61] font-bold text-center">
+                        DESCRIÇÃO
+                      </p>
+                      <p className="text-md text-[#fead61] font-bold text-center">
+                        QUANTIDADE
+                      </p>
+                      <p className="text-md text-[#fead61] font-bold text-center">
+                        GRANDEZA
+                      </p>
+                      <p className="text-md text-[#fead61] font-bold text-center">
+                        CUSTO (UN)
+                      </p>
+                      <p className="text-md text-[#fead61] font-bold text-center">
+                        VALOR
+                      </p>
+                      <p className="text-md text-[#fead61] font-bold text-center">
+                        VALOR TOTAL
+                      </p>
+                    </div>
+                    <p className="text-md text-[#fead61] font-bold text-center w-[10%]">
                       EXCLUIR
                     </p>
                   </div>
                   {dados.custosAdicionais?.map((custo, index) => (
-                    <div key={index} className="grid grid-cols-6 w-full">
-                      <p className="text-xs text-gray-600 font-bold text-center">
-                        {custo.descricao}
-                      </p>
-                      <p className="text-xs text-gray-600 font-bold text-center">
-                        {custo.qtde}
-                      </p>
-                      <p className="text-xs text-gray-600 font-bold text-center">
-                        {custo.grandeza}
-                      </p>
-                      <p className="text-xs text-gray-600 font-bold text-center">
-                        {custo.valor}
-                      </p>
-                      <p className="text-xs text-gray-600 font-bold text-center">
-                        {(custo.valor * custo.qtde).toFixed(2)}
-                      </p>
+                    <div key={index} className="flex items-center w-full">
+                      <div className="grid grid-cols-6 w-[90%]">
+                        <p className="text-xs text-gray-600 font-bold text-center">
+                          {custo.descricao}
+                        </p>
+                        <p className="text-xs text-gray-600 font-bold text-center">
+                          {custo.qtde}
+                        </p>
+                        <p className="text-xs text-gray-600 font-bold text-center">
+                          {custo.grandeza}
+                        </p>
+                        <p className="text-xs text-gray-600 font-bold text-center">
+                          R${" "}
+                          {custo.custo
+                            ? Number(custo.custo).toLocaleString("pt-br", {
+                                minimumFractionDigits: 2,
+                              })
+                            : null}
+                        </p>
+                        <p className="text-xs text-gray-600 font-bold text-center">
+                          R${" "}
+                          {custo.valor
+                            ? Number(custo.valor).toLocaleString("pt-br", {
+                                minimumFractionDigits: 2,
+                              })
+                            : null}
+                        </p>
+                        <p className="text-xs text-gray-600 font-bold text-center">
+                          R${" "}
+                          {(custo.valor * custo.qtde).toLocaleString("pt-br", {
+                            minimumFractionDigits: 2,
+                          })}
+                        </p>
+                      </div>
                       <div
                         onClick={() => {
                           let custos = dados.custosAdicionais;
                           custos.splice(index, 1);
                           setDados({ ...dados, custosAdicionais: custos });
                         }}
-                        className="flex items-center justify-center cursor-pointer"
+                        className="flex items-center justify-center cursor-pointer w-[10%]"
                       >
                         <div className="bg-red-500 rounded w-fit p-1">
                           <FiDelete />

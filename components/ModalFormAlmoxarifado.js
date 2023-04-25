@@ -81,7 +81,11 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
       "material.formularioId": dados._id,
     });
     axios
-      .post("/api/almoxarifado/materiais", dados.materiais)
+      .post("/api/almoxarifado/materiais", {
+        idFormulario: dados._id,
+        nomeDoContrato: dados.nomeDoContrato,
+        changes: dados.materiais,
+      })
       .then((res) => {
         setResponseMessage({
           text: "Baixa de produtos realizado!",

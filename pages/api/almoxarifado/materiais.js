@@ -23,7 +23,8 @@ export default async function handler(req, res) {
     console.log(user);
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("material");
-    let changes = req.body.map((mat) => {
+    let { changes, idFormulario, nomeDoContrato } = req.body;
+    changes = changes.map((mat) => {
       const saida = mat.qtdeSaida ? mat.qtdeSaida : 0;
       const devolucao = mat.qtdeDevolucao ? mat.qtdeDevolucao : 0;
       const diff = saida - devolucao;
@@ -35,6 +36,8 @@ export default async function handler(req, res) {
               qtdeAlteracoes: {
                 $each: [
                   {
+                    idFormulario: idFormulario,
+                    nomeDoContrato: nomeDoContrato,
                     dataAlteracao: new Date().toISOString(), // current date
                     responsavel: user.name, // name of responsible person
                     movimentacao: -diff,

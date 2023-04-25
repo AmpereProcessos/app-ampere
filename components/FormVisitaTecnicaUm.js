@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { cidadesAtendidas } from "../utils/constants";
+import {
+  cidadesAtendidas,
+  tiposSolicitacaoVisitaTecnica,
+} from "../utils/constants";
 import NumberFloatingInput from "./NumberFloatingInput";
 import SelectFloatingInput from "./SelectFloatingInput";
 import TextFloatingInput from "./TextFloatingInput";
@@ -204,6 +207,11 @@ function FormVisitaTecnicaUm({
     }
     setMsg({ text: "", color: "" });
     return true;
+  }
+  function handleConclusion() {
+    if (validateFields()) {
+      uploadImages();
+    }
   }
   function goToNext() {
     if (validateFields()) {
@@ -629,32 +637,7 @@ function FormVisitaTecnicaUm({
           editable={true}
           width={"450px"}
           value={dados.tipoDeSolicitacao}
-          options={[
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            {
-              label: "VISITA TÉCNICA REMOTA - URBANA",
-              value: "VISITA TÉCNICA REMOTA - URBANA",
-            },
-            {
-              label: "VISITA TÉCNICA REMOTA - RURAL",
-              value: "VISITA TÉCNICA REMOTA - RURAL",
-            },
-            {
-              label: "VISITA TÉCNICA IN LOCO - URBANA",
-              value: "VISITA TÉCNICA IN LOCO - URBANA",
-            },
-            {
-              label: "VISITA TÉCNICA IN LOCO - RURAL",
-              value: "VISITA TÉCNICA IN LOCO - RURAL",
-            },
-            { label: "ALTERAÇÃO DE PROJETO", value: "ALTERAÇÃO DE PROJETO" },
-            {
-              label: "AUMENTO DE SISTEMA AMPÈRE",
-              value: "AUMENTO DE SISTEMA AMPÈRE",
-            },
-            { label: "DESENHO PERSONALIZADO", value: "DESENHO PERSONALIZADO" },
-            { label: "ORÇAMENTAÇÃO", value: "ORÇAMENTAÇÃO" },
-          ]}
+          options={tiposSolicitacaoVisitaTecnica}
           handleChange={(value) =>
             setDados({ ...dados, tipoDeSolicitacao: value })
           }
@@ -704,13 +687,14 @@ function FormVisitaTecnicaUm({
       {msg.text && (
         <p className={`text-center text-sm italic ${msg.color}`}>{msg.text}</p>
       )}
-      {dados.tipoDeSolicitacao == "VISITA TÉCNICA IN LOCO - URBANA" ||
-      dados.tipoDeSolicitacao == "VISITA TÉCNICA IN LOCO - RURAL" ||
-      dados.tipoDeSolicitacao == "ALTERAÇÃO DE PROJETO" ||
-      dados.tipoDeSolicitacao == "AUMENTO DE SISTEMA AMPÈRE" ? (
+      {[
+        "VISITA TÉCNICA IN LOCO - URBANA",
+        "ALTERAÇÃO DE PROJETO",
+        "AUMENTO DE SISTEMA AMPÈRE",
+      ].includes(dados.tipoDeSolicitacao) ? (
         <div className="flex justify-center items-center mt-3">
           <button
-            onClick={uploadImages}
+            onClick={handleConclusion}
             className="bg-[#fead61] hover:bg-[#15599a] text-center hover:text-white font-bold p-2 rounded w-fit"
           >
             ENVIAR FORMULÁRIO

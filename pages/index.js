@@ -90,7 +90,7 @@ function Home() {
   });
   const [nps, setNps] = useState(0);
   const [statsData, setStatsData] = useState({
-    graphData: [],
+    graphData: null,
     maxGraphValue: 1000,
   });
   const [filters, setFilters] = useState({
@@ -251,7 +251,7 @@ function Home() {
       router.push("/ordemDeServico/osDaEquipe");
       return <></>;
     }
-    if (statsData.graphData.length > 0) {
+    if (statsData.graphData) {
       return (
         <div className="p-6 grow">
           {!session.user?.visualizacao && (

@@ -305,7 +305,7 @@ function SolicitacoesCompra() {
                     </div>
                     <div className="flex flex-col items-end">
                       <h1 className="text-end text-gray-500 text-xs font-medium">
-                        PRAZO
+                        PRAZO/URGÊNCIA
                       </h1>
                       <div className="flex items-center justify-end gap-2">
                         <BsCalendarCheckFill
@@ -314,7 +314,7 @@ function SolicitacoesCompra() {
                         <h1 className="text-gray-700 font-medium text-xs lg:text-base">
                           {solicitation.prazo
                             ? dayjs(solicitation.prazo).format("DD/MM/YY HH:mm")
-                            : "NÃO DEFINIDO"}
+                            : solicitation.urgencia}
                         </h1>
                       </div>
                     </div>

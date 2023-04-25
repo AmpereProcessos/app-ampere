@@ -72,7 +72,7 @@ function PurchaseSolicitationModal({
                 <h1 className="text-gray-700 font-medium text-xs lg:text-base">
                   {info.prazo
                     ? dayjs(info.prazo).format("DD/MM/YY HH:mm")
-                    : "NÃO DEFINIDO"}
+                    : info.urgencia}
                 </h1>
               </div>
             </div>

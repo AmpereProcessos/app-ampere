@@ -8,6 +8,7 @@ import {
   cidadesAtendidas,
   fatorDeGeracaoPorOrientacao,
   suprimentoOption,
+  tiposSolicitacaoVisitaTecnica,
 } from "../utils/constants";
 import { storage } from "../utils/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -424,34 +425,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   label={"TIPO DE SOLICITAÇÃO"}
                   editable={dados.status == "REJEITADA" ? true : false}
                   value={dados.tipoDeSolicitacao}
-                  options={[
-                    { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    {
-                      label: "VISITA TÉCNICA REMOTA - URBANA",
-                      value: "VISITA TÉCNICA REMOTA - URBANA",
-                    },
-                    {
-                      label: "VISITA TÉCNICA REMOTA - RURAL",
-                      value: "VISITA TÉCNICA REMOTA - RURAL",
-                    },
-                    {
-                      label: "VISITA TÉCNICA IN LOCO - URBANA",
-                      value: "VISITA TÉCNICA IN LOCO - URBANA",
-                    },
-                    {
-                      label: "VISITA TÉCNICA IN LOCO - RURAL",
-                      value: "VISITA TÉCNICA IN LOCO - RURAL",
-                    },
-                    {
-                      label: "ALTERAÇÃO DE PROJETO",
-                      value: "ALTERAÇÃO DE PROJETO",
-                    },
-                    {
-                      label: "DESENHO PERSONALIZADO",
-                      value: "DESENHO PERSONALIZADO",
-                    },
-                    { label: "ORÇAMENTAÇÃO", value: "ORÇAMENTAÇÃO" },
-                  ]}
+                  options={tiposSolicitacaoVisitaTecnica}
                   handleChange={(value) =>
                     setDados({ ...dados, tipoDeSolicitacao: value })
                   }

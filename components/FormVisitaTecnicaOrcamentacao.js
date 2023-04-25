@@ -14,7 +14,10 @@ function FormVisitaTecnicaOrcamentacao({
     color: "",
   });
   function validateFields() {
-    if (dados.tipoOrcamentacao == "NÃO DEFINIDO") {
+    if (
+      dados.tipoOrcamentacao == "NÃO DEFINIDO" ||
+      dados.tipoOrcamentacao == null
+    ) {
       setMsg({
         text: "Por favor, preencha o tipo de orçamentação.",
         color: "text-red-500",

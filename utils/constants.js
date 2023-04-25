@@ -886,6 +886,17 @@ export const fatorDeGeracaoPorOrientacao = {
     SUL: "97.37",
     SUDESTE: "105.38",
   },
+  CHAVESLÂNDIA: {
+    fatorGen: "127.25",
+    LESTE: "115.41",
+    NORDESTE: "124.83",
+    NORTE: "127.25",
+    NOROESTE: "124.83",
+    OESTE: "114.27",
+    SUDOESTE: "107.22",
+    SUL: "100.14",
+    SUDESTE: "108.39",
+  },
 };
 
 export const projetistas = [
@@ -929,6 +940,32 @@ export const projetistas = [
     label: "NÃO DEFINIDO",
     cod: 0,
   },
+];
+export const tiposSolicitacaoVisitaTecnica = [
+  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+  {
+    label: "VISITA TÉCNICA REMOTA - URBANA",
+    value: "VISITA TÉCNICA REMOTA - URBANA",
+  },
+  {
+    label: "VISITA TÉCNICA REMOTA - RURAL",
+    value: "VISITA TÉCNICA REMOTA - RURAL",
+  },
+  {
+    label: "VISITA TÉCNICA IN LOCO - URBANA",
+    value: "VISITA TÉCNICA IN LOCO - URBANA",
+  },
+  {
+    label: "VISITA TÉCNICA IN LOCO - RURAL",
+    value: "VISITA TÉCNICA IN LOCO - RURAL",
+  },
+  { label: "ALTERAÇÃO DE PROJETO", value: "ALTERAÇÃO DE PROJETO" },
+  {
+    label: "AUMENTO DE SISTEMA AMPÈRE",
+    value: "AUMENTO DE SISTEMA AMPÈRE",
+  },
+  { label: "DESENHO PERSONALIZADO", value: "DESENHO PERSONALIZADO" },
+  { label: "ORÇAMENTAÇÃO", value: "ORÇAMENTAÇÃO" },
 ];
 export const regionais = ["REGIONAL UBERLÂNDIA", "REGIONAL ITUIUTABA"];
 export const acessAuth = {
@@ -1272,6 +1309,7 @@ export const cidadesAtendidas = [
   "BRASÍLIA", // DF
   "CAÇU", // GO
   "CACHOEIRA ALTA", // GO
+  "CHAVESLÂNDIA", // MG
 ];
 export const cidadesGoias = [
   "CALDAS NOVAS", // GO

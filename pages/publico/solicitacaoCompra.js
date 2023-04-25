@@ -16,7 +16,7 @@ function SolicitacaoCompra() {
     requisitante: "",
     telefone: "",
     motivo: "NÃO DEFINIDO",
-    prazo: null,
+    urgencia: "NÃO DEFINIDO",
     itens: [],
   });
   const [itemHolder, setItemHolder] = useState({
@@ -35,7 +35,7 @@ function SolicitacaoCompra() {
       requisitante: "",
       telefone: "",
       motivo: "NÃO DEFINIDO",
-      prazo: null,
+      urgencia: "NÃO DEFINIDO",
       itens: [],
     });
     setSendMsg({
@@ -71,6 +71,14 @@ function SolicitacaoCompra() {
       });
       return false;
     }
+    if (solicitationInfo.urgencia == "NÃO DEFINIDO") {
+      sendMsg({
+        status: null,
+        text: "Por favor, preencha o grau de urgência da solicitação.",
+        color: "text-red-500",
+      });
+      return false;
+    }
     if (solicitationInfo.itens.length == 0) {
       setSendMsg({
         status: null,
@@ -95,7 +103,7 @@ function SolicitacaoCompra() {
         requisitante: "",
         telefone: "",
         motivo: "NÃO DEFINIDO",
-        prazo: null,
+        urgencia: "NÃO DEFINIDO",
         itens: [],
       });
     } catch (error) {
@@ -241,7 +249,28 @@ function SolicitacaoCompra() {
               }
               width={"50%"}
             />
-            <div
+            <SelectFloatingInput
+              label="URGÊNCIA"
+              value={solicitationInfo.urgencia}
+              editable={true}
+              options={[
+                { label: "EMERGÊNCIA (4 dias utéis)", value: "EMERGÊNCIA" },
+                {
+                  label: "URGENTE (6 dias utéis)",
+                  value: "URGENTE",
+                },
+                {
+                  label: "POUCO URGENTE (8 diais utéis)",
+                  value: "POUCO URGENTE",
+                },
+                { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              ]}
+              handleChange={(value) =>
+                setSolicitationInfo((prev) => ({ ...prev, urgencia: value }))
+              }
+              width={"50%"}
+            />
+            {/* <div
               className={`flex flex-col relative font-mono items-center z-0 w-full lg:w-[50%] text-center mb-6 group`}
             >
               <input
@@ -270,16 +299,16 @@ function SolicitacaoCompra() {
               >
                 ITENS NECESSÁRIOS PARA QUE DATA?
               </label>
-            </div>
+            </div> */}
             <h1 className="text-[#fead61] font-bold text-center mt-4">ITENS</h1>
             <p className="text-xs text-[#15599a] italic text-center mb-4">
               Preencha as informações sobre o item e clique em{" "}
               <strong className="text-green-500">adicionar.</strong>
             </p>
             <div className="w-full flex-col lg:flex-row flex items-center gap-4">
-              <div className="lg:w-[90%] w-full flex flex-col lg:flex-row gap-4  items-center">
-                <div className="flex flex-col items-center gap-4 lg:w-[40%] w-full">
-                  <div className="w-full">
+              <div className="lg:w-[90%] w-full flex flex-col  gap-4  items-center">
+                <div className="flex items-center gap-4  w-full">
+                  <div className="w-[60%]">
                     <TextFloatingInput
                       label={"NOME DO ITEM"}
                       width={"100%"}
@@ -290,7 +319,7 @@ function SolicitacaoCompra() {
                       }
                     />
                   </div>
-                  <div className="w-full">
+                  <div className="w-[40%]">
                     <NumberFloatingInput
                       label={"QUANTIDADE"}
                       width={"100%"}
@@ -314,7 +343,7 @@ function SolicitacaoCompra() {
                     }))
                   }
                   placeholder="Descreva aqui a finalidade do item (uso próprio ou venda), características do item, lugares específico pra compra e outras informações relevantes..."
-                  className="lg:w-[60%] w-full resize-none  bg-gray-100 border border-blue-200 outline-none text-sm text-center h-[100px] p-2"
+                  className="w-full resize-none  bg-gray-100 border border-blue-200 outline-none text-sm text-center h-[100px] p-2"
                 />
               </div>
               <div className="w-full lg:w-[10%] flex items-center justify-center">
@@ -369,7 +398,7 @@ function SolicitacaoCompra() {
               </div>
             ) : null}
           </div>
-          <div className="w-full flex items-center justify-end gap-2">
+          <div className="w-full flex items-center justify-end gap-2 mt-4">
             {sendMsg.text ? (
               <p className={`text-sm italic ${sendMsg.color}`}>
                 {sendMsg.text}

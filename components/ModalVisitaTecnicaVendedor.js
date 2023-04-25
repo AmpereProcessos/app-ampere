@@ -1542,7 +1542,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   CAMPOS ADICIONAIS P/SUPRIMENTOS
                 </span>
-                <div className="w-full grid items-center grid-cols-4">
+                {/* <div className="w-full grid items-center grid-cols-4">
                   <SelectInput
                     label={"INSUMO"}
                     editable={dados.status == "REJEITADA" ? true : false}
@@ -1589,7 +1589,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                   <p className="text-gray-600 text-xs text-center">
                     {suprimentoHolder.medida}
                   </p>
-                </div>
+                </div> */}
                 <div className="flex flex-col mx-12 mt-2 gap-2">
                   <div className="grid grid-cols-4 w-full">
                     <p className="text-md text-[#fead61] font-bold text-center">
@@ -2072,7 +2072,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                   CUSTOS ADICIONAIS
                 </span>
-                <div className="grid grid-cols-6 gap-2 items-center">
+                {/* <div className="grid grid-cols-6 gap-2 items-center">
                   <TextInput
                     label={"DESCRIÇÃO"}
                     editable={dados.status == "REJEITADA" ? true : false}
@@ -2126,7 +2126,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                         .replace(".", ",")}
                     </p>
                   </div>
-                </div>
+                </div> */}
                 <div className="flex flex-col mx-12 mt-2 gap-2">
                   <div className="grid grid-cols-5 w-full">
                     <p className="text-md text-[#fead61] font-bold text-center">
@@ -2423,41 +2423,46 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                 </div>
               )}
             </div>
-            <div className="w-full flex items-center justify-center gap-2 border border-[#15599a] p-4 shadow-lg bg-[#fff]">
-              <SelectInput
-                label={"TIPO DE LAUDO(PDF)"}
-                editable={true}
-                value={laudoType}
-                options={[
-                  {
-                    label: "LAUDO TÉCNICO(URBANO)",
-                    value: "LAUDO TÉCNICO(URBANO)",
-                  },
-                  {
-                    label: "LAUDO SIMPLES(URBANO)",
-                    value: "LAUDO SIMPLES(URBANO)",
-                  },
-                  {
-                    label: "LAUDO INTERMEDIÁRIO(URBANO)",
-                    value: "LAUDO INTERMEDIÁRIO(URBANO)",
-                  },
-                  {
-                    label: "LAUDO TÉCNICO(RURAL)",
-                    value: "LAUDO TÉCNICO(RURAL)",
-                  },
-                  {
-                    label: "LAUDO SIMPLES(RURAL)",
-                    value: "LAUDO SIMPLES(RURAL)",
-                  },
-                ]}
-                handleChange={(value) => setLaudoType(value)}
-              />
-              <Link href={`/projetos/laudo/pdf/${dados._id}?tipo=${laudoType}`}>
-                <button className="p-2 rounded bg-[#fead61] font-bold hover:bg-[#15599a] hover:text-white">
-                  LAUDO
-                </button>
-              </Link>
-            </div>
+            {dados.status == "CONCLUIDO" ? (
+              <div className="w-full flex items-center justify-center gap-2 border border-[#15599a] p-4 shadow-lg bg-[#fff]">
+                <SelectInput
+                  label={"TIPO DE LAUDO(PDF)"}
+                  editable={true}
+                  value={laudoType}
+                  options={[
+                    {
+                      label: "LAUDO TÉCNICO(URBANO)",
+                      value: "LAUDO TÉCNICO(URBANO)",
+                    },
+                    {
+                      label: "LAUDO SIMPLES(URBANO)",
+                      value: "LAUDO SIMPLES(URBANO)",
+                    },
+                    {
+                      label: "LAUDO INTERMEDIÁRIO(URBANO)",
+                      value: "LAUDO INTERMEDIÁRIO(URBANO)",
+                    },
+                    {
+                      label: "LAUDO TÉCNICO(RURAL)",
+                      value: "LAUDO TÉCNICO(RURAL)",
+                    },
+                    {
+                      label: "LAUDO SIMPLES(RURAL)",
+                      value: "LAUDO SIMPLES(RURAL)",
+                    },
+                  ]}
+                  handleChange={(value) => setLaudoType(value)}
+                />
+                <Link
+                  href={`/projetos/laudo/pdf/${dados._id}?tipo=${laudoType}`}
+                >
+                  <button className="p-2 rounded bg-[#fead61] font-bold hover:bg-[#15599a] hover:text-white">
+                    LAUDO
+                  </button>
+                </Link>
+              </div>
+            ) : null}
+
             <div className="w-full flex items-center justify-center gap-2">
               {!dados.solicitacaoContrato && (
                 <Link

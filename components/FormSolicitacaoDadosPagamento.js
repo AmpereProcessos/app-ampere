@@ -45,17 +45,26 @@ function FormSolicitacaoDadosPagamento({ dados, setDados, avancar, voltar }) {
       setMessage("Por favor, preencha um CPF/CPNJ válido para NF");
       return false;
     }
-    if (dados.localEntrega == "NÃO DEFINIDO") {
+    if (
+      dados.localEntrega == "NÃO DEFINIDO" &&
+      dados.tipoDeServico != "MONTAGEM E DESMONTAGEM"
+    ) {
       setMessage("Por favor, preencha o local de entrega.");
       return false;
     }
-    if (dados.entregaIgualCobranca == "NÃO DEFINIDO") {
+    if (
+      dados.entregaIgualCobranca == "NÃO DEFINIDO" &&
+      dados.tipoDeServico != "MONTAGEM E DESMONTAGEM"
+    ) {
       setMessage(
         "Por favor, preencha se o endereço de entrega é igual ao de cobrança."
       );
       return false;
     }
-    if (dados.restricoesEntrega == "NÃO DEFINIDO") {
+    if (
+      dados.restricoesEntrega == "NÃO DEFINIDO" &&
+      dados.tipoDeServico != "MONTAGEM E DESMONTAGEM"
+    ) {
       setMessage("Por favor, preencha as restrições para entrega.");
       return false;
     }

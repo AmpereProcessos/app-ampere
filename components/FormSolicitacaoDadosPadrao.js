@@ -21,15 +21,21 @@ function FormSolicitacaoDadosPadrao({ avancar, setDados, dados, voltar }) {
         setMessage("Por favor, preencha o tipo de padrão.");
         return false;
       }
-      if (dados.respTrocaPadrao == "NÃO SE APLICA") {
+      if (
+        dados.respTrocaPadrao == "NÃO SE APLICA" &&
+        dados.aumentoDeCarga == "SIM"
+      ) {
         setMessage("Por favor, preencha o responsável pela troca do padrão.");
         return false;
       }
-      if (dados.formaPagamentoPadrao == "NÃO SE APLICA") {
+      if (
+        dados.formaPagamentoPadrao == "NÃO SE APLICA" &&
+        dados.aumentoDeCarga == "SIM"
+      ) {
         setMessage("Por favor, preencha a forma de pagamento do padrão.");
         return false;
       }
-      if (dados.valorPadrao == null) {
+      if (dados.valorPadrao == null && dados.aumentoDeCarga == "SIM") {
         setMessage("Por favor, preencha o valor do padrão.");
         return false;
       }

@@ -28,6 +28,7 @@ import {
 } from "firebase/storage";
 import { storage } from "../utils/firebase";
 import Link from "next/link";
+import { FiDelete } from "react-icons/fi";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -240,10 +241,11 @@ function ModalFormSolicitacao({
     excedente: null,
   });
   function adicionarDistribuicao() {
+    const distribuicoesArr = dados.distribuicoes ? dados.distribuicoes : [];
     setDados({
       ...dados,
       distribuicoes: [
-        ...dados.distribuicoes,
+        ...distribuicoesArr,
         {
           numInstalacao: dadosDistribuicao.numInstalacao,
           excedente: dadosDistribuicao.excedente,
@@ -3123,6 +3125,19 @@ function ModalFormSolicitacao({
                               <p className="text-sm font-bold text-gray-600">
                                 {distribuicao.excedente}%
                               </p>
+                              <button
+                                onClick={() => {
+                                  let distribuicoes = dados.distribuicoes;
+                                  distribuicoes.splice(index, 1);
+                                  setDados({
+                                    ...dados,
+                                    distribuicoes: distribuicoes,
+                                  });
+                                }}
+                                className="bg-red-500 p-1 rounded"
+                              >
+                                <FiDelete />
+                              </button>
                             </div>
                           ))}
                         </div>

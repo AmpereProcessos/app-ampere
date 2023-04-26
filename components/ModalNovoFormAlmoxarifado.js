@@ -46,10 +46,20 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
     materiais: [],
   });
   const [message, setMessage] = useState({
+    status: null,
     text: "",
     color: "",
   });
   const [materialMsg, setMaterialMsg] = useState("");
+  function resetMsg(time = 2000) {
+    setTimeout(() => {
+      setMessage({
+        status: null,
+        text: "",
+        color: "",
+      });
+    }, time);
+  }
   function getMaterials() {
     axios
       .get("/api/almoxarifado/materiais")
@@ -75,42 +85,64 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
   }
   async function addFormulario() {
     if (callInfo.nomeDoContrato.trim().length < 3) {
-      setMessage({ text: "Nome do contrato inválido", color: "text-red-500" });
+      setMessage({
+        status: "failure",
+        text: "Nome do contrato inválido",
+        color: "text-red-500",
+      });
+      resetMsg();
     } else if (callInfo.responsavel == "A DEFINIR") {
-      setMessage({ text: "Responsável não definido", color: "text-red-500" });
+      setMessage({
+        status: "failure",
+        text: "Responsável não definido",
+        color: "text-red-500",
+      });
+      resetMsg();
     } else if (callInfo.servico == "NÃO DEFINIDO") {
-      setMessage({ text: "Serviço não definido", color: "text-red-500" });
+      setMessage({
+        status: "failure",
+        text: "Serviço não definido",
+        color: "text-red-500",
+      });
+      resetMsg();
     } else if (callInfo.materiais.length == 0) {
       setMessage({
+        status: "failure",
         text: "Nenhum produto não definido",
         color: "text-red-500",
       });
+      resetMsg();
     } else {
-      await axios.post(`/api/projects/update/${callInfo.idPai}`, {
-        "material.statusSeparacao": "SEPARADO",
-      });
-      axios
-        .post("/api/almoxarifado/formularios", {
+      try {
+        await axios.post(`/api/projects/update/${callInfo.idPai}`, {
+          "material.statusSeparacao": "SEPARADO",
+        });
+        await axios.post("/api/almoxarifado/formularios", {
           ...callInfo,
           tipo: "RETIRADA",
           abertura: new Date().toISOString(),
-        })
-        .then((res) => {
-          setCallInfo({
-            idPai: null,
-            codigoProjeto: null,
-            nomeDoContrato: "",
-            cidade: null,
-            segmento: null,
-            topologia: null,
-            equipeResp: null,
-            responsavel: "A DEFINIR",
-            servico: "NÃO DEFINIDO",
-            materiais: [],
-          });
-          setMessage({ text: "Formulário criado !", color: "text-green-500" });
-          getForms();
         });
+
+        setCallInfo({
+          idPai: null,
+          codigoProjeto: null,
+          nomeDoContrato: "",
+          cidade: null,
+          segmento: null,
+          topologia: null,
+          equipeResp: null,
+          responsavel: "A DEFINIR",
+          servico: "NÃO DEFINIDO",
+          materiais: [],
+        });
+        setMessage({
+          status: "success",
+          text: "Formulário criado !",
+          color: "text-green-500",
+        });
+        resetMsg(2500);
+        getForms();
+      } catch (error) {}
     }
   }
   useEffect(() => {
@@ -296,17 +328,20 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                   ))}
                 </div>
               </div>
-              {message.text && (
-                <p className={`${message.color} text-center text-sm`}>
+              {!message.status ? (
+                <button
+                  onClick={addFormulario}
+                  className="bg-blue-300 h-[40px] align-bottom mt-1 hover:text-white font-bold hover:bg-[#15599a] p-2"
+                >
+                  ABRIR FORMULÁRIO
+                </button>
+              ) : (
+                <div
+                  className={`${message.color} flex items-center justify-center text-center text-sm h-[40px]`}
+                >
                   {message.text}
-                </p>
+                </div>
               )}
-              <button
-                onClick={addFormulario}
-                className="bg-blue-300 align-bottom mt-1 hover:text-white font-bold hover:bg-[#15599a] p-2"
-              >
-                ABRIR FORMULÁRIO
-              </button>
             </div>
           </div>
         </div>

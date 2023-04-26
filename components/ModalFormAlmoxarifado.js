@@ -37,17 +37,21 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
     id: null,
     qtdeSaida: null,
   });
+
+  // Messages
   const [saidaMaterialMsg, setSaidaMaterialMsg] = useState("");
   const [responseMessage, setResponseMessage] = useState({
+    status: null,
     text: "",
     color: "",
   });
+
   function getMaterials() {
     axios.get("/api/almoxarifado/materiais").then((res) => {
       setMateriais(res.data);
     });
   }
-  console.log(dados);
+
   function addMaterialSaida() {
     if (
       saidaMaterialHolder.qtdeSaida > 0 &&
@@ -68,38 +72,99 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
     }
   }
   async function validateForm() {
-    await axios.put("/api/almoxarifado/formularios", {
-      id: dados._id,
-      data: {
-        materiais: dados.materiais,
-        dataEfetivacao: new Date(),
-        efetivado: true,
-      },
-    });
-    await axios.post(`/api/projects/update/${dados.idPai}`, {
-      "material.lista": dados.materiais,
-      "material.formularioId": dados._id,
-    });
-    axios
-      .post("/api/almoxarifado/materiais", {
+    try {
+      setResponseMessage({
+        status: "loading",
+        text: "Atualizando preços...",
+        color: "text-[#15599a]",
+      });
+      // Correcting prices to up to date information
+      const { data: upToDateItems } = await axios.post(
+        "/api/almoxarifado/pesquisarMateriais",
+        { materials: dados.materiais }
+      );
+      const correctedMaterials = dados.materiais.map((item) => {
+        const correspondentUpToDateItem = upToDateItems.filter(
+          (i) => i._id == item.id
+        )[0];
+        return {
+          id: item.id,
+          nome: correspondentUpToDateItem.nome,
+          precoUnit: correspondentUpToDateItem.preco,
+          qtdeDevolucao: item.qtdeDevolucao,
+          qtdeSaida: item.qtdeSaida,
+        };
+      });
+      setResponseMessage({
+        status: "loading",
+        text: "Finalizando formulário...",
+        color: "text-[#15599a]",
+      });
+      await axios.put("/api/almoxarifado/formularios", {
+        id: dados._id,
+        data: {
+          materiais: correctedMaterials,
+          dataEfetivacao: new Date(),
+          efetivado: true,
+        },
+      });
+      setResponseMessage({
+        status: "loading",
+        text: "Atualizando informações do cliente...",
+        color: "text-[#15599a]",
+      });
+      await axios.post(`/api/projects/update/${dados.idPai}`, {
+        "material.lista": correctedMaterials,
+        "material.formularioId": dados._id,
+      });
+      setResponseMessage({
+        status: "loading",
+        text: "Atualizando quantidades...",
+        color: "text-[#15599a]",
+      });
+
+      await axios.post("/api/almoxarifado/materiais", {
         idFormulario: dados._id,
         nomeDoContrato: dados.nomeDoContrato,
-        changes: dados.materiais,
-      })
-      .then((res) => {
+        changes: correctedMaterials,
+      });
+      // .then((res) => {
+      //   setResponseMessage({
+      //     text: "Baixa de produtos realizado!",
+      //     color: "text-green-500",
+      //   });
+      //   setTimeout(() => {
+      //     setResponseMessage({
+      //       text: "",
+      //       color: "",
+      //     });
+      //   }, 2500);
+      //   getForms();
+      // })
+      // .catch((err) => {
+      //   throw "Um erro ocorreu, por favor tente novamente.";
+      // });
+      setResponseMessage({
+        status: "success",
+        text: "Baixa de produtos realizado!",
+        color: "text-green-500",
+      });
+      getForms();
+      setDados({ ...dados, efetivado: true });
+    } catch (error) {
+      setResponseMessage({
+        status: "failure",
+        text: "Um erro ocorreu, por favor tente novamente.",
+        color: "text-red-500",
+      });
+      setTimeout(() => {
         setResponseMessage({
-          text: "Baixa de produtos realizado!",
-          color: "text-green-500",
+          status: null,
+          text: "",
+          color: "",
         });
-        getForms();
-      })
-      .catch((err) =>
-        setResponseMessage({
-          text: "Um erro ocorreu, por favor tente novamente.",
-          color: "text-red-500",
-        })
-      );
-    // setDados({ ...dados, efetivado: true });
+      }, 2500);
+    }
   }
   function saveChanges() {
     axios
@@ -298,26 +363,31 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                   ))}
                 </div>
               </div>
-              {responseMessage.text && (
-                <p className={`text-center italic ${responseMessage.color}`}>
-                  {responseMessage.text}
-                </p>
-              )}
-              {dados.efetivado != true && (
+              {dados.efetivado != true ? (
                 <div className="flex justify-center mt-2 gap-2">
-                  <button
-                    onClick={validateForm}
-                    className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
-                  >
-                    DAR BAIXA
-                  </button>
-                  <SaveButton
-                    text={"Salvar alterações"}
-                    icon={<FaSave />}
-                    handleClick={saveChanges}
-                  />
+                  {!responseMessage.status ? (
+                    <>
+                      <button
+                        onClick={validateForm}
+                        className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
+                      >
+                        DAR BAIXA
+                      </button>
+                      <SaveButton
+                        text={"Salvar alterações"}
+                        icon={<FaSave />}
+                        handleClick={saveChanges}
+                      />
+                    </>
+                  ) : (
+                    <p
+                      className={`text-center italic ${responseMessage.color}`}
+                    >
+                      {responseMessage.text}
+                    </p>
+                  )}
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         </div>

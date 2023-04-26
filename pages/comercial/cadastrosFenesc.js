@@ -295,13 +295,13 @@ function CadastrosFenesc() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <FaUserAlt style={{ color: "#003d5b" }} />
-                  <h1 className="text-gray-700 font-medium text-sm">
+                  <h1 className="text-gray-700 font-medium text-xs">
                     {register.nomeVendedor}
                   </h1>
                 </div>
                 <div className="flex items-center gap-2">
                   <MdEmail style={{ color: "#16B010" }} />
-                  <h1 className="text-gray-700 font-medium text-sm">
+                  <h1 className="text-gray-700 font-medium text-xs">
                     {register.emailVendedor}
                   </h1>
                 </div>
@@ -313,7 +313,7 @@ function CadastrosFenesc() {
                 </div>
                 <div className="flex flex-col lg:flex-row w-full items-center justify-between">
                   <div className="flex flex-col items-center lg:items-start">
-                    <h1 className="text-gray-600 font-medium text-xs">
+                    <h1 className="text-gray-600 font-medium text-sm">
                       GERENTE
                     </h1>
                     <h1 className="text-sm font-medium">
@@ -321,13 +321,13 @@ function CadastrosFenesc() {
                     </h1>
                   </div>
                   <div className="flex flex-col items-center">
-                    <h1 className="text-gray-600 font-medium text-xs">PA</h1>
+                    <h1 className="text-gray-600 font-medium text-sm">PA</h1>
                     <h1 className="text-sm font-medium">
                       {register.pontoAtendimento}
                     </h1>
                   </div>
                   <div className="flex flex-col items-center lg:items-end">
-                    <h1 className="text-gray-600 font-medium text-xs">
+                    <h1 className="text-gray-600 font-medium text-sm">
                       CONTATO
                     </h1>
                     <h1 className="text-sm font-medium">
@@ -385,7 +385,7 @@ function CadastrosFenesc() {
               <div className="flex flex-col w-full">
                 <div className="flex items-center gap-2">
                   <AiOutlineCalendar style={{ color: "#15599a" }} />
-                  <h1 className="text-gray-700 font-medium text-xs lg:text-base">
+                  <h1 className="text-gray-700 font-medium text-xs">
                     {register.dataRegistro
                       ? dayjs(register.dataRegistro).format("DD/MM/YY HH:mm")
                       : null}

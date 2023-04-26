@@ -37,6 +37,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
     idPai: null,
     codigoProjeto: null,
     nomeDoContrato: "",
+    uso: "CLIENTE",
     cidade: null,
     segmento: null,
     topologia: null,
@@ -45,11 +46,13 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
     servico: "NÃO DEFINIDO",
     materiais: [],
   });
+
   const [message, setMessage] = useState({
     status: null,
     text: "",
     color: "",
   });
+
   const [materialMsg, setMaterialMsg] = useState("");
   function resetMsg(time = 2000) {
     setTimeout(() => {
@@ -84,10 +87,13 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
     }
   }
   async function addFormulario() {
-    if (callInfo.nomeDoContrato.trim().length < 3) {
+    if (
+      callInfo.nomeDoContrato?.trim().length < 3 &&
+      callInfo.nomeTerceiro?.trim().length < 3
+    ) {
       setMessage({
         status: "failure",
-        text: "Nome do contrato inválido",
+        text: "Nome do contrato/terceiro inválido",
         color: "text-red-500",
       });
       resetMsg();
@@ -114,8 +120,20 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
       resetMsg();
     } else {
       try {
-        await axios.post(`/api/projects/update/${callInfo.idPai}`, {
-          "material.statusSeparacao": "SEPARADO",
+        if (callInfo.idPai) {
+          setMessage({
+            status: "loading",
+            text: "Atualizando status de separação do materiais...",
+            color: "text-[#15599a]",
+          });
+          await axios.post(`/api/projects/update/${callInfo.idPai}`, {
+            "material.statusSeparacao": "SEPARADO",
+          });
+        }
+        setMessage({
+          status: "loading",
+          text: "Criando formulário...",
+          color: "text-[#15599a]",
         });
         await axios.post("/api/almoxarifado/formularios", {
           ...callInfo,
@@ -149,7 +167,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
     getClients();
     getMaterials();
   }, []);
-  console.log(materialHolder);
+  console.log(callInfo);
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -170,45 +188,113 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
               </button>
             </div>
             <div className="flex flex-col grow overflow-y-auto">
-              <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">CLIENTE</span>
-                <div className={"grow"}>
-                  <Select
-                    isMulti={false}
-                    placeholder="NOME DO CLIENTE"
+              <div className="w-full flex items-center justify-center gap-4 mt-4">
+                <div className="flex items-center gap-1">
+                  <input
+                    id="usoCliente"
+                    name="usoCliente"
+                    type={"checkbox"}
+                    checked={callInfo.uso == "CLIENTE"}
                     onChange={(e) =>
-                      setCallInfo({
-                        ...callInfo,
-                        nomeDoContrato: e.value.nome,
-                        idPai: e.value.id,
-                        codigoProjeto: e.value.qtde,
-                        cidade: e.value.cidade,
-                        segmento: e.value.segmento,
-                        topologia: e.value.topologia,
-                        equipeResp: e.value.equipeResp,
-                      })
+                      setCallInfo((prev) => ({
+                        ...prev,
+                        uso: e.target.checked ? "CLIENTE" : "TERCEIRO",
+                      }))
                     }
-                    options={clientes.map((cliente) => {
-                      return {
-                        label: cliente.nomeDoContrato,
-                        value: {
-                          id: cliente._id,
-                          qtde: cliente.qtde,
-                          nome: cliente.nomeDoContrato,
-                          cidade: cliente.cidade ? cliente.cidade : "-",
-                          segmento: cliente.segmento ? cliente.segmento : "-",
-                          topologia: cliente.sistema.topologia
-                            ? cliente.sistema.topologia
-                            : "-",
-                          equipeResp: cliente.obra.equipeResp
-                            ? cliente.obra.equipeResp
-                            : "-",
-                        },
-                      };
-                    })}
                   />
+                  <label className="text-lg" htmlFor="usoCliente">
+                    CLIENTE
+                  </label>
+                </div>
+                <div className="flex items-center gap-1">
+                  <input
+                    id="usoTerceiro"
+                    name="usoTerceiro"
+                    type={"checkbox"}
+                    checked={callInfo.uso == "TERCEIRO"}
+                    onChange={(e) =>
+                      setCallInfo((prev) => ({
+                        ...prev,
+                        uso: e.target.checked ? "TERCEIRO" : "CLIENTE",
+                        idPai: null,
+                        codigoProjeto: null,
+                        nomeDoContrato: "",
+                      }))
+                    }
+                  />
+                  <label className="text-lg" htmlFor="usoTerceiro">
+                    TERCEIRO
+                  </label>
                 </div>
               </div>
+              {callInfo.uso == "CLIENTE" ? (
+                <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-2">
+                  <span className="text-center uppercase font-bold">
+                    CLIENTE
+                  </span>
+                  <div className={"grow"}>
+                    <Select
+                      isMulti={false}
+                      placeholder="NOME DO CLIENTE"
+                      onChange={(e) =>
+                        setCallInfo({
+                          ...callInfo,
+                          nomeDoContrato: e.value.nome,
+                          idPai: e.value.id,
+                          codigoProjeto: e.value.qtde,
+                          cidade: e.value.cidade,
+                          segmento: e.value.segmento,
+                          topologia: e.value.topologia,
+                          equipeResp: e.value.equipeResp,
+                        })
+                      }
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      options={clientes.map((cliente) => {
+                        return {
+                          label: cliente.nomeDoContrato,
+                          value: {
+                            id: cliente._id,
+                            qtde: cliente.qtde,
+                            nome: cliente.nomeDoContrato,
+                            cidade: cliente.cidade ? cliente.cidade : "-",
+                            segmento: cliente.segmento ? cliente.segmento : "-",
+                            topologia: cliente.sistema.topologia
+                              ? cliente.sistema.topologia
+                              : "-",
+                            equipeResp: cliente.obra.equipeResp
+                              ? cliente.obra.equipeResp
+                              : "-",
+                          },
+                        };
+                      })}
+                    />
+                  </div>
+                </div>
+              ) : null}
+              {callInfo.uso == "TERCEIRO" ? (
+                <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-2">
+                  <span className="text-center uppercase font-bold">
+                    TERCEIRO
+                  </span>
+                  <input
+                    value={callInfo.nomeTerceiro}
+                    onChange={(e) =>
+                      setCallInfo((prev) => ({
+                        ...prev,
+                        nomeTerceiro: e.target.value.toUpperCase(),
+                      }))
+                    }
+                    placeholder="Digite aqui o nome do terceiro..."
+                    className="outline-none grow p-1 h-[41px] border border-gray-200 rounded-md text-center"
+                  />
+                </div>
+              ) : null}
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center uppercase font-bold">
                   RESPONSÁVEL

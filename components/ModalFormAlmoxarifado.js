@@ -100,6 +100,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
         text: "Finalizando formulário...",
         color: "text-[#15599a]",
       });
+
       await axios.put("/api/almoxarifado/formularios", {
         id: dados._id,
         data: {
@@ -108,20 +109,23 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
           efetivado: true,
         },
       });
-      setResponseMessage({
-        status: "loading",
-        text: "Atualizando informações do cliente...",
-        color: "text-[#15599a]",
-      });
-      await axios.post(`/api/projects/update/${dados.idPai}`, {
-        "material.lista": correctedMaterials,
-        "material.formularioId": dados._id,
-      });
-      setResponseMessage({
-        status: "loading",
-        text: "Atualizando quantidades...",
-        color: "text-[#15599a]",
-      });
+      if (dados.idPai) {
+        setResponseMessage({
+          status: "loading",
+          text: "Atualizando informações do cliente...",
+          color: "text-[#15599a]",
+        });
+        await axios.post(`/api/projects/update/${dados.idPai}`, {
+          "material.lista": correctedMaterials,
+          "material.formularioId": dados._id,
+        });
+
+        setResponseMessage({
+          status: "loading",
+          text: "Atualizando quantidades...",
+          color: "text-[#15599a]",
+        });
+      }
 
       await axios.post("/api/almoxarifado/materiais", {
         idFormulario: dados._id,
@@ -197,15 +201,22 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                 </h1>
                 <h1 className="text-gray-400 italic text-xs">#{dados._id}</h1>
               </div>
-
               {dados.efetivado == true ? (
-                <Link href={`/almoxarifado/pdfFormulario/${dados._id}`}>
+                <Link
+                  href={`/almoxarifado/pdfFormulario/${dados._id}?efetivado=SIM`}
+                >
                   <p className="p-2 rounded cursor-pointer bg-[#fead61] font-bold text-sm">
                     VISUALIZAR PDF
                   </p>
                 </Link>
               ) : (
-                false
+                <Link
+                  href={`/almoxarifado/pdfFormulario/${dados._id}?efetivado=NAO`}
+                >
+                  <p className="p-2 rounded cursor-pointer bg-[#fead61] font-bold text-sm">
+                    VISUALIZAR PDF
+                  </p>
+                </Link>
               )}
               <button>
                 <VscChromeClose
@@ -218,17 +229,23 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
             </div>
             <div className="flex flex-col grow overflow-y-auto scrollbar-thin scrollbar-thumb-[#15599a80] scrollbar-track-gray-100">
               <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">CLIENTE</span>
+                <span className="text-center uppercase font-bold">
+                  {dados.uso == "TERCEIRO" ? "TERCEIRO" : "CLIENTE"}
+                </span>
                 <div className={"grow"}>
                   <p className="text-gray-600 text-center">
-                    {dados.nomeDoContrato}
+                    {dados.uso == "TERCEIRO"
+                      ? dados.nomeTerceiro
+                      : dados.nomeDoContrato}
                   </p>
                 </div>
               </div>
               <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center uppercase font-bold">CIDADE</span>
                 <div className={"grow"}>
-                  <p className="text-gray-600 text-center">{dados.cidade}</p>
+                  <p className="text-gray-600 text-center">
+                    {dados.cidade ? dados.cidade : "-"}
+                  </p>
                 </div>
               </div>
               <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
@@ -236,7 +253,9 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                   SEGMENTO
                 </span>
                 <div className={"grow"}>
-                  <p className="text-gray-600 text-center">{dados.segmento}</p>
+                  <p className="text-gray-600 text-center">
+                    {dados.segmento ? dados.segmento : "-"}
+                  </p>
                 </div>
               </div>
               <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
@@ -244,7 +263,9 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                   TOPOLOGIA
                 </span>
                 <div className={"grow"}>
-                  <p className="text-gray-600 text-center">{dados.topologia}</p>
+                  <p className="text-gray-600 text-center">
+                    {dados.topologia ? dados.topologia : "-"}
+                  </p>
                 </div>
               </div>
               <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
@@ -253,7 +274,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                 </span>
                 <div className={"grow"}>
                   <p className="text-gray-600 text-center">
-                    {dados.equipeResp}
+                    {dados.equipeResp ? dados.equipeResp : "-"}
                   </p>
                 </div>
               </div>
@@ -263,7 +284,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                 </span>
                 <div className={"grow"}>
                   <p className="text-gray-600 text-center">
-                    {dados.responsavel}
+                    {dados.responsavel ? dados.responsavel : "-"}
                   </p>
                 </div>
               </div>
@@ -275,7 +296,6 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
               </div>
               {dados.efetivado != true && (
                 <>
-                  {" "}
                   <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                     <span className="text-center uppercase font-bold">
                       ADICIONAR
@@ -364,7 +384,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                 </div>
               </div>
               {dados.efetivado != true ? (
-                <div className="flex justify-center mt-2 gap-2">
+                <div className="flex w-full justify-end my-2 gap-2 pr-4">
                   {!responseMessage.status ? (
                     <>
                       <button
@@ -374,7 +394,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                         DAR BAIXA
                       </button>
                       <SaveButton
-                        text={"Salvar alterações"}
+                        text={"SALVAR ALTERAÇÕES"}
                         icon={<FaSave />}
                         handleClick={saveChanges}
                       />

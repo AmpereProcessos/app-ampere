@@ -51,8 +51,14 @@ function FormAlmoxarifadoCard({ form, handleOpenModal, getForms }) {
       )} cursor-pointer border border-gray-200 p-3 hover:bg-blue-100`}
     >
       <div className="flex items-center justify-between">
-        <p className="text-xs text-gray-700">{formInfo.nomeDoContrato}</p>
-        <p className="text-xs text-[#15599a]">#{formInfo.codigoProjeto}</p>
+        <p className="text-xs text-gray-700">
+          {formInfo.nomeDoContrato
+            ? formInfo.nomeDoContrato
+            : formInfo.nomeTerceiro}
+        </p>
+        <p className="text-xs text-[#15599a]">
+          #{formInfo.codigoProjeto ? formInfo.codigoProjeto : "-"}
+        </p>
       </div>
       <div className="flex items-center justify-between mt-2">
         <div className="flex flex-col gap-1 items-start">

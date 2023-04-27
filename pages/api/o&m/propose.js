@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import connectToDatabase from "../../../utils/proposesDb";
+import connectToDatabase from "../../../utils/auxiliaresDb";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -15,10 +15,10 @@ export default async function handler(req, res) {
   } = req.body;*/
 
     try {
-      const db = await connectToDatabase(process.env.DB2_KEY);
-      const collection = db.collection("infos");
-      await collection.insertOne(req.body);
-      res.json("Proposta gerada.");
+      const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+      const collection = db.collection("propostas");
+      const dbRes = await collection.insertOne(req.body);
+      res.json(dbRes);
     } catch (error) {
       res.status(500).send("Houve um erro, por favor tente novamente.");
     }

@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const routes = [
   "Projetos",
   "Obras",
@@ -1807,6 +1809,18 @@ export function formatCPFCpnj(value) {
     /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
     "$1.$2.$3/$4-$5"
   );
+}
+export async function getDistanceBetweenCities(destination, origin) {
+  console.log(process.env.DB_KEY);
+  const proxyurl = "https://cors-anywhere.herokuapp.com/";
+  const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destination}&departure_time=now&key=${process.env.DISTANCE_API}`;
+  try {
+    const { data } = await axios.post(url, {});
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+    console.log("ERRO", error);
+  }
 }
 // Função para deletar arquivos antigos do Firebase
 // async function listFiles() {

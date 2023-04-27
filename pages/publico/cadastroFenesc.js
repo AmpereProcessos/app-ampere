@@ -364,7 +364,7 @@ function CadastroFenesc() {
               }
               options={[
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                { label: "SICOOB 26", value: "PA 00 - ITUIUTABA - 36" },
+                { label: "SICOOB 36", value: "PA 00 - ITUIUTABA - 36" },
                 { label: "SICOOB 26", value: "PA 01 - CENTRO - 26" },
                 { label: "SICOOB CAPINÓPOLIS", value: "PA 02 - CAPINÓPOLIS" },
                 {
@@ -384,7 +384,7 @@ function CadastroFenesc() {
                 { label: "SICOOB CANÁPOLIS", value: "PA 08 - CANÁPOLIS" },
                 { label: "SICOOB SETOR SUL", value: "PA 09 - SETOR SUL" },
                 { label: "SICOOB UBERLAÂNDIA", value: "PA 10 - UBERLÂNDIA" },
-                { label: "SICOOB 36", value: "PA 88 - MATRIZ" },
+                { label: "SICOOB MATRIZ", value: "PA 88 - MATRIZ" },
               ]}
             />
             <NumberFloatingInput

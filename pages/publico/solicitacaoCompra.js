@@ -254,13 +254,13 @@ function SolicitacaoCompra() {
               value={solicitationInfo.urgencia}
               editable={true}
               options={[
-                { label: "EMERGÊNCIA (4 dias utéis)", value: "EMERGÊNCIA" },
+                { label: "EMERGÊNCIA (4 dias úteis)", value: "EMERGÊNCIA" },
                 {
-                  label: "URGENTE (6 dias utéis)",
+                  label: "URGENTE (6 dias úteis)",
                   value: "URGENTE",
                 },
                 {
-                  label: "POUCO URGENTE (8 diais utéis)",
+                  label: "POUCO URGENTE (8 diais úteis)",
                   value: "POUCO URGENTE",
                 },
                 { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },

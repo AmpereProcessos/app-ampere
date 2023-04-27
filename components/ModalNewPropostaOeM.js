@@ -6,20 +6,17 @@ import { VscChromeClose } from "react-icons/vsc";
 import { useState } from "react";
 import TextFloatingInput from "./TextFloatingInput";
 import SelectFoatingInput from "./SelectFloatingInput";
-import {
-  cidadesAtendidas,
-  cities,
-  getDistanceBetweenCities,
-} from "../utils/constants";
+import { cidadesAtendidas, cities } from "../utils/constants";
 import { vendedores } from "../utils/constants";
 import NumberFloatingInput from "./NumberFloatingInput";
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from "axios";
-
+import estadosECidades from "../utils/estados_cidades.json";
 function ModalNewPropostaOeM({ isOpen, closeModal }) {
   const [msg, setMsg] = useState({ text: "", color: "" });
   const [proposeInfo, setProposeInfo] = useState({
     nomeCliente: "",
+    uf: "MG",
     cidade: "ITUIUTABA",
     vendedor: "NÃO DEFINIDO",
     qtdeModulos: 0,
@@ -27,7 +24,24 @@ function ModalNewPropostaOeM({ isOpen, closeModal }) {
     distancia: 0,
     eficienciaAtual: 0,
   });
-
+  async function getDistanceBetweenCities(destination, origin) {
+    try {
+      const { data } = await axios.get(
+        `/api/distance?destination=${destination}&origin=${origin}`
+      );
+      const distance = (data.rows[0].elements[0].distance.value / 1000).toFixed(
+        2
+      );
+      console.log(distance);
+      setProposeInfo((prev) => ({ ...prev, distancia: distance }));
+    } catch (error) {
+      console.log("ERROR", error);
+    }
+  }
+  function getCities(uf) {
+    var filteredState = estadosECidades.filter((item) => item.sigla == uf)[0];
+    return filteredState.cidades;
+  }
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={isOpen} width={"60%"} height={"80%"}>
@@ -47,7 +61,7 @@ function ModalNewPropostaOeM({ isOpen, closeModal }) {
               </button>
             </div>
           </div>
-          <div className="flex flex-col py-4 items-center gap-y-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+          <div className="flex flex-col px-4 py-4 items-center gap-y-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             <h1 className="text-center w-full text-lg text-[#fead61] font-medium pb-2">
               INFORMAÇÕES DA VENDA
             </h1>
@@ -64,10 +78,27 @@ function ModalNewPropostaOeM({ isOpen, closeModal }) {
               width={"50%"}
             />
             <SelectFoatingInput
+              label={"UF"}
+              editable={true}
+              value={proposeInfo.uf}
+              options={[
+                { label: "MG", value: "MG" },
+                { label: "GO", value: "GO" },
+              ]}
+              handleChange={(value) =>
+                setProposeInfo((prev) => ({
+                  ...prev,
+                  uf: value,
+                  cidade: getCities(value)[0],
+                }))
+              }
+              width={"50%"}
+            />
+            <SelectFoatingInput
               label={"CIDADE"}
               editable={true}
               value={proposeInfo.cidade}
-              options={cidadesAtendidas.map((city) => ({
+              options={getCities(proposeInfo.uf).map((city) => ({
                 label: city,
                 value: city,
               }))}
@@ -129,21 +160,26 @@ function ModalNewPropostaOeM({ isOpen, closeModal }) {
               width={"50%"}
             />
             <div className="w-full flex items-center justify-center gap-2">
-              <NumberFloatingInput
-                label={"DISTÂNCIA DE ITBA À INSTALAÇÃO DO CLIENTE"}
-                editable={true}
-                value={proposeInfo.distancia}
-                handleChange={(value) =>
-                  setProposeInfo((prev) => ({
-                    ...prev,
-                    distancia: Number(value),
-                  }))
-                }
-                width={"45%"}
-              />
+              <div className="lg:ml-[24px] ml-0 w-full lg:w-[50%]">
+                <NumberFloatingInput
+                  label={"DISTÂNCIA DE ITBA À CIDADE DE INSTALAÇÃO"}
+                  editable={true}
+                  value={proposeInfo.distancia}
+                  handleChange={(value) =>
+                    setProposeInfo((prev) => ({
+                      ...prev,
+                      distancia: Number(value),
+                    }))
+                  }
+                  width={"100%"}
+                />
+              </div>
               <button
                 onClick={() =>
-                  getDistanceBetweenCities(proposeInfo.cidade, "ITUIUTABA")
+                  getDistanceBetweenCities(
+                    `${proposeInfo.cidade}, ${proposeInfo.uf}, BRASIL`,
+                    "ITUIUTABA, MG, BRASIL"
+                  )
                 }
                 className="bg-[#fead61] text-[#15599a] p-1 rounded hover:bg-[#15599a] hover:text-[#fead61]"
               >

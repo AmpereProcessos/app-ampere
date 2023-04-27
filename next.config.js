@@ -27,6 +27,9 @@ const nextConfig = {
 
 module.exports = withTM({
   reactStrictMode: true,
+  env: {
+    DISTANCE_API: process.env.DISTANCE_API,
+  },
   swcMinify: true,
   module: {
     rules: [

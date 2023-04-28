@@ -133,11 +133,11 @@ function PropostaOeM() {
   if (pageType == "FORM")
     return (
       <div className="p-6 grow flex flex-col bg-[#15599a] items-center">
-        <div className="w-[90%] h-[100%] bg-[#fff] rounded-lg flex flex-col border border-gray-300 shadow-lg p-2 items-center">
+        <div className="w-[90%] bg-[#fff] rounded-lg flex flex-col border border-gray-300 shadow-lg p-2 items-center">
           <div className="flex items-center justify-center h-[80px]">
             <Image height={"80px"} width={"80px"} src={Logo} objectFit="fill" />
           </div>
-          <div className="flex flex-col w-full px-4 py-4 items-center gap-y-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+          <div className="flex flex-col w-full px-4 py-4 items-center gap-y-2">
             <h1 className="text-center w-full text-lg text-[#fead61] font-medium pb-2">
               INFORMAÇÕES DA VENDA
             </h1>

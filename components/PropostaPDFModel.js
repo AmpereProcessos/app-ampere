@@ -64,6 +64,7 @@ function PropostaPDFModel({ info }) {
   };
   const handleDownloadPdf = async () => {
     const element = pdfRef.current;
+    window.scrollTo(0, 0);
     const canvas = await html2canvas(element);
     const data = canvas.toDataURL("image/png");
 
@@ -73,7 +74,7 @@ function PropostaPDFModel({ info }) {
     const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
 
     pdf.addImage(data, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save("print.pdf");
+    pdf.save(`PROPOSTA-${info.nomeCliente}.pdf`);
   };
   return (
     <div
@@ -158,7 +159,12 @@ function PropostaPDFModel({ info }) {
             // }}
             className="h-[70px] w-[70px]"
           >
-            <Image objectFit="fill" className="cursor-pointer" src={Logo} />
+            <Image
+              objectFit="fill"
+              className="cursor-pointer"
+              src={Logo}
+              quality={""}
+            />
           </div>
         </div>
         <div className="flex flex-col items-end col-span-2">

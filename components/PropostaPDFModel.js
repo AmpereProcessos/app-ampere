@@ -160,10 +160,11 @@ function PropostaPDFModel({ info }) {
             className="h-[70px] w-[70px]"
           >
             <Image
-              objectFit="fill"
+              // objectFit="fill"
+              height={70}
+              width={70}
               className="cursor-pointer"
               src={Logo}
-              quality={""}
             />
           </div>
         </div>

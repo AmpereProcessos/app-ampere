@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { useDrag } from "react-dnd";
-import {BsCheckSquareFill} from 'react-icons/bs'
-import {FaFileSignature} from 'react-icons/fa'
-import {IoMdRemoveCircle} from "react-icons/io"
-import {MdDelete} from 'react-icons/md'
+import {
+  BsCheckSquareFill,
+  BsFolderFill,
+  BsTelephoneFill,
+} from "react-icons/bs";
+import { FaCity, FaFileSignature, FaSolarPanel, FaUser } from "react-icons/fa";
+import { IoMdRemoveCircle } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
 import axios from "axios";
 import Link from "next/link";
+import { AiFillThunderbolt } from "react-icons/ai";
+import { GoGraph } from "react-icons/go";
+import { HiIdentification } from "react-icons/hi";
 function CardProposta({ propose, fetchProposes }) {
   const [plan, setPlan] = useState(propose.currentPlanOption);
   const [{ isDragging, targetId }, dragRef] = useDrag({
@@ -105,68 +112,78 @@ function CardProposta({ propose, fetchProposes }) {
   }
   async function deletePropose() {
     try {
-      let response = await axios.delete(`/api/o&m/updatePropose?id=${propose._id}`)
-      fetchProposes()
+      let response = await axios.delete(
+        `/api/o&m/updatePropose?id=${propose._id}`
+      );
+      fetchProposes();
     } catch (error) {
-      alert(error)
+      alert(error);
     }
-    
   }
   return (
     <div
       {...conditionalProp}
-      className={`flex w-full flex-col gap-y-2 ${
-        propose.rejected && "bg-gray-300"
-      } py-2 mt-2 border border-gray-200 rounded shadow-lg`}
+      key={propose._id}
+      className="flex gap-3 flex-col p-3 w-full min-h-[175px] h-[175px] border border-gray-200 shadow-md"
     >
-      <div className="grid grid-cols-4">
-        <p className="col-span-2 text-sm text-center mx-2">
-          {propose.clientName}
-        </p>
-        <div className="flex col-span-1">
-          <Link href={`/oem/pdfProposta/${propose._id}`}>
-            <button className="bg-[#f6c228] h-[24px] font-bold w-[40px] rounded">
-              VER
-            </button>
-          </Link>
+      <div className="w-full flex items-center justify-between">
+        <div className="flex items-center gap-2 text-gray-700">
+          <HiIdentification style={{ color: "#15599a" }} />
+          <h1 className="font-medium">{propose.nomeCliente}</h1>
         </div>
-        <p className="bg-green-400 text-xs py-1 col-span-1 mx-1 align-middle h-fit text-center rounded px-1">
-          R$ {getCurrentPlanPrice()}
-        </p>
+        <div className="flex items-center gap-2 text-gray-700">
+          <FaCity style={{ color: "#fead61" }} />
+          <h1 className="font-medium">
+            {propose.cidade}/{propose.uf}
+          </h1>
+        </div>
       </div>
-      <div className="w-full hidden xl:flex justify-around">
-        <div className="flex flex-col items-center">
-          <span className="text-xs uppercase text-gray-400">Plano:</span>
-          <select
-            onChange={(e) => handlePlanChange(e.target.value)}
-            className="outline-none rounded bg-transparent text-center text-[#15599b] text-sm"
-          >
-            <option defaultValue value={propose.currentPlanOption}>
-              {currentPlan[0].text}
-            </option>
-            {plansForSelection.map((plan) => (
-              <option key={plan.id} value={plan.id}>
-                {plan.text}
-              </option>
-            ))}
-          </select>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <FaUser style={{ color: "#003d5b" }} />
+          <h1 className="text-gray-700 font-medium text-xs">
+            {propose.vendedor}
+          </h1>
         </div>
-        {propose.closed && <p className="text-green-600"><BsCheckSquareFill/></p>}      
-        {propose.negotiationStage == 4 && !propose.closed && (
-          <div className="flex items-center">
-            <p onClick={setAsClosed} className="text-md text-green-600 border border-green-500 p-1 rounded hover:text-white cursor-pointer hover:bg-green-500 hover:scale-105 duration-300 ease-in-out"><FaFileSignature/></p>
-          </div>
-        )}
-        {propose.negotiationStage != 4 &&  (
-          <div className="flex items-center gap-2">
-            {!propose.rejected &&<div onClick={setProposeAsRejected} className="hover:scale-105 duration-300 ease-in-out cursor-pointer text-xl text-gray-300 hover:text-gray-500"><IoMdRemoveCircle/></div>}
-            
-            <div onClick={deletePropose} className="hover:scale-105 duration-300 ease-in-out cursor-pointer text-xl text-red-300 hover:text-red-500"><MdDelete/></div>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          <BsTelephoneFill style={{ color: "#16B010" }} />
+          <h1 className="text-gray-700 font-medium text-xs">
+            {propose.telefoneVendedor
+              ? propose.telefoneVendedor
+              : "NÃO FORNECIDO"}
+          </h1>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="w-1/3 flex items-center justify-start gap-2">
+          <FaSolarPanel style={{ color: " rgb(217,119,6)" }} />
+          <h1 className="text-gray-700 font-medium text-xs">
+            {propose.qtdeModulos} MÓDULOS
+          </h1>
+        </div>
+        <div className="w-1/3 flex items-center justify-center gap-2">
+          <GoGraph style={{ color: "blue" }} />
+          <h1 className="text-gray-700 font-medium text-xs">
+            {propose.eficienciaAtual}%
+          </h1>
+        </div>
+        <div className="w-1/3 flex items-end justify-end gap-2">
+          <AiFillThunderbolt style={{ color: "red" }} />
+          <h1 className="text-gray-700 font-medium text-xs">
+            {propose.potModulos} W
+          </h1>
+        </div>
+      </div>
+      <div className="flex gap-3 items-center justify-center">
+        <a
+          onClick={() => router.push(`/oem/pdfProposta/${propose._id}`)}
+          className="text-sm text-blue-300 font-medium cursor-pointer"
+        >
+          PROPOSTA
+        </a>
+        <BsFolderFill style={{ color: "rgb(30,64,175)" }} />
       </div>
     </div>
   );
 }
-
 export default CardProposta;

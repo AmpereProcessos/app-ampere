@@ -15,6 +15,14 @@ import { BsFolderFill, BsTelephoneFill } from "react-icons/bs";
 import { IoMdPower } from "react-icons/io";
 import { AiFillThunderbolt } from "react-icons/ai";
 import { GoGraph } from "react-icons/go";
+
+const stages = {
+  1: "Em apresentação",
+  2: "Em negociação",
+  3: "Em fechamento",
+  4: "Venda fechada",
+};
+
 function Propostas() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -31,8 +39,13 @@ function Propostas() {
     setProposes({ status: "loading", data: null });
     try {
       const { data } = await axios.get("/api/o&m/proposes");
-      console.log("DATA", data);
-      setProposes({ status: "success", data: data });
+      let obj = {
+        inPresentation: data.filter((p) => p.estagio == 1 || !p.estagio),
+        inNegotiation: data.filter((p) => p.estagio == 2),
+        closing: data.filter((p) => p.estagio == 3),
+        closed: data.filter((p) => p.estagio == 4),
+      };
+      setProposes({ status: "success", data: obj });
     } catch (error) {
       setProposes({ status: "failure", data: [] });
     }
@@ -132,7 +145,6 @@ function Propostas() {
       }
     }
   }, [session]);
-  console.log(proposes);
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
@@ -142,13 +154,13 @@ function Propostas() {
             PROPOSTAS DE O&M
           </h1>
         </div>
-        {proposes.status == "loading" ? <LoadingPage /> : null}
+        {/* {proposes.status == "loading" ? <LoadingPage /> : null}
         {proposes.status == "success" ? (
           <div className="grow flex gap-2 flex-wrap justify-around p-2">
             {proposes.data.map((propose) => (
               <div
                 key={propose._id}
-                className="flex gap-3 flex-col p-3 w-full lg:w-[400px] h-[150px] border border-gray-200 shadow-md"
+                className="flex gap-3 flex-col p-3 w-full lg:w-[400px] h-[175px] border border-gray-200 shadow-md"
               >
                 <div className="w-full flex items-center justify-between">
                   <div className="flex items-center gap-2 text-gray-700">
@@ -213,34 +225,48 @@ function Propostas() {
             ))}
           </div>
         ) : null}
-        {/* <div className="grid lg:grid-cols-4 lg:grid-rows-1 grid-rows-4 grid-cols-1  w-full  py-2 gap-4 mt-5 border border-[#15599a] shadow-lg">
+        {proposes.status == "failure" ? (
+          <p className="text-lg text-red-500 py-2 text-center w-full">
+            Houve um erro ao buscar as propostas no banco de dados. Por favor,
+            verifique a conexão com a internet e tente novamente.
+          </p>
+        ) : null} */}
+        <div className="flex py-2 gap-4 mt-5  shadow-lg w-full max-w-full overflow-x-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
           <ListPropostas
             title={"Em apresentação"}
             listId={1}
-            fetchProposes={getPropostas}
+            fetchProposes={getProposes}
             proposes={
-              propostas?.emApresentacao ? propostas?.emApresentacao : []
+              proposes.data?.inPresentation ? proposes.data.inPresentation : []
             }
           />
           <ListPropostas
             title={"Em negociação"}
             listId={2}
-            fetchProposes={getPropostas}
-            proposes={propostas?.emNegociacao ? propostas?.emNegociacao : []}
+            fetchProposes={getProposes}
+            proposes={
+              proposes.data?.inNegotiation ? proposes.data.inNegotiation : []
+            }
           />
           <ListPropostas
             title={"Em fechamento"}
             listId={3}
-            fetchProposes={getPropostas}
-            proposes={propostas?.emFechamento ? propostas?.emFechamento : []}
+            fetchProposes={getProposes}
+            proposes={proposes.data?.closing ? proposes.data.closing : []}
           />
           <ListPropostas
+            title={"Vendas Fechadas"}
+            listId={4}
+            fetchProposes={getProposes}
+            proposes={proposes.data?.closed ? proposes.data.closed : []}
+          />
+          {/* <ListPropostas
             title={"Vendas fechadas"}
             listId={4}
-            fetchProposes={getPropostas}
-            proposes={propostas?.fechadas ? propostas?.fechadas : []}
-          />
-        </div> */}
+            fetchProposes={getProposes}
+            proposes={[]}
+          /> */}
+        </div>
         <div
           onClick={() => setNewProposeModalIsOpen(true)}
           className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
@@ -249,6 +275,7 @@ function Propostas() {
         </div>
         {newProposeModalIsOpen ? (
           <ModalNewPropostaOeM
+            getProposes={getProposes}
             closeModal={() => setNewProposeModalIsOpen(false)}
             isOpen={newProposeModalIsOpen}
           />

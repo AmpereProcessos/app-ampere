@@ -16,6 +16,7 @@ function PropostaOeM() {
     uf: "MG",
     cidade: "ITUIUTABA",
     vendedor: "NÃO DEFINIDO",
+    telefoneVendedor: "",
     qtdeModulos: 0,
     potModulos: 0,
     distancia: 0,

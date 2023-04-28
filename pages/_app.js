@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
                 notificacoes={notificacoes}
                 toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
               />
-              <div className="flex min-h-[100%] grow">
+              <div className="flex min-h-[100%] grow ">
                 {sidebarVisible && (
                   <Sidebar
                     sidebarVisible={sidebarVisible}
@@ -47,11 +47,14 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
                   />
                 )}
                 <div
+                  style={{
+                    width: sidebarVisible ? "calc(100vw - 250px)" : "100%",
+                  }}
                   className={`${
                     sidebarVisible
                       ? "hidden md:flex md:flex-col"
                       : "flex flex-col"
-                  } grow w-full`}
+                  } grow`}
                 >
                   <Component
                     sidebarVisible={sidebarVisible}

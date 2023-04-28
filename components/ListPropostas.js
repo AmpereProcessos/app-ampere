@@ -9,7 +9,7 @@ function ListPropostas({ proposes, title, listId, fetchProposes }) {
     try {
       let { data } = await axios.put("/api/o&m/updatePropose", {
         id: proposeId,
-        listId: stageId,
+        changes: { estagio: stageId },
       });
       console.log("DATA", data);
       fetchProposes();
@@ -37,37 +37,37 @@ function ListPropostas({ proposes, title, listId, fetchProposes }) {
       setFilteredPropostas(proposes);
     }
   }
-  function getListCumulativePrice() {
-    var totalSum = 0;
-    for (var i = 0; i < proposes.length; i++) {
-      if (proposes[i]?.currentPlanOption == 0) {
-        totalSum = totalSum;
-      }
-      if (proposes[i]?.currentPlanOption == 1) {
-        totalSum =
-          totalSum +
-          (proposes[i].price * proposes[i].modulesQty +
-            1.5 * 2 * proposes[i].distance);
-      }
-      if (proposes[i]?.currentPlanOption == 2) {
-        totalSum =
-          totalSum +
-          (1.3 * proposes[i].price * proposes[i].modulesQty +
-            1.5 * 2 * proposes[i].distance);
-      }
-      if (proposes[i]?.currentPlanOption == 3) {
-        totalSum =
-          totalSum +
-          (1.95 * proposes[i].price * proposes[i].modulesQty +
-            1.5 * 2 * proposes[i].distance);
-      }
-    }
-    return totalSum.toFixed(2).replace(".", ",");
-  }
+  // function getListCumulativePrice() {
+  //   var totalSum = 0;
+  //   for (var i = 0; i < proposes.length; i++) {
+  //     if (proposes[i]?.currentPlanOption == 0) {
+  //       totalSum = totalSum;
+  //     }
+  //     if (proposes[i]?.currentPlanOption == 1) {
+  //       totalSum =
+  //         totalSum +
+  //         (proposes[i].price * proposes[i].qtdeModulos +
+  //           1.5 * 2 * proposes[i].distance);
+  //     }
+  //     if (proposes[i]?.currentPlanOption == 2) {
+  //       totalSum =
+  //         totalSum +
+  //         (1.3 * proposes[i].price * proposes[i].qtdeModulos +
+  //           1.5 * 2 * proposes[i].distance);
+  //     }
+  //     if (proposes[i]?.currentPlanOption == 3) {
+  //       totalSum =
+  //         totalSum +
+  //         (1.95 * proposes[i].price * proposes[i].qtdeModulos +
+  //           1.5 * 2 * proposes[i].distance);
+  //     }
+  //   }
+  //   return totalSum.toFixed(2).replace(".", ",");
+  // }
   function getListCumulativeModules() {
     var totalSum = 0;
     for (var i = 0; i < proposes.length; i++) {
-      let n = Number(proposes[i].modulesQty);
+      let n = Number(proposes[i].qtdeModulos);
       totalSum = totalSum + n;
     }
     return totalSum;
@@ -75,9 +75,9 @@ function ListPropostas({ proposes, title, listId, fetchProposes }) {
   function getListCumulativePeakPot() {
     var totalSum = 0;
     for (var i = 0; i < proposes.length; i++) {
-      let qty = Number(proposes[i].modulesQty);
-      let pot = Number(proposes[i].modulesPot);
-      if (isNaN(proposes[i].modulesPot || proposes[i].modulesQty)) {
+      let qty = Number(proposes[i].qtdeModulos);
+      let pot = Number(proposes[i].potModulos);
+      if (isNaN(proposes[i].potModulos || proposes[i].qtdeModulos)) {
         totalSum = totalSum;
       } else {
         totalSum = totalSum + pot * qty;
@@ -93,12 +93,12 @@ function ListPropostas({ proposes, title, listId, fetchProposes }) {
     <div
       ref={dropRef}
       id={listId}
-      className="flex flex-col lg:max-h-[550px] max-h-[150px] py-2 items-center pt-2 px-1 grow bg-white h-full rounded border border-gray-200 shadow-lg"
+      className="flex flex-col min-w-[400px] w-[400px] max-h-[550px] py-2 items-center pt-2 px-1 grow bg-white h-full rounded border border-gray-200 shadow-lg"
     >
       <div className="border-b pb-2 h-fit w-full text-center border-blue-300 text-xl font-bold">
         <h1>{title}</h1>
         <div className="flex justify-center gap-x-2">
-          <p className="text-xs text-gray-500">R$ {getListCumulativePrice()}</p>
+          {/* <p className="text-xs text-gray-500">R$ {getListCumulativePrice()}</p> */}
           <p className="text-xs text-gray-500">
             {getListCumulativeModules()} módulos
           </p>
@@ -115,7 +115,7 @@ function ListPropostas({ proposes, title, listId, fetchProposes }) {
           placeholder={"Digite aqui o nome da proposta..."}
         />
       </div>
-      <div className="flex flex-col overflow-y-auto overscroll-y-auto py-2 w-full">
+      <div className="flex flex-col overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-2 py-2 w-full">
         {filteredPropostas &&
           filteredPropostas?.map((propose) => (
             <CardProposta

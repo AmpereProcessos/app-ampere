@@ -1,14 +1,16 @@
-import connectToDatabase from "../../../utils/proposesDb";
+import connectToDatabase from "../../../utils/auxiliaresDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
   if (req.method === "PUT") {
-    const db = await connectToDatabase(process.env.DB2_KEY);
-    const collection = db.collection("infos");
+    const db = await connectToDatabase(process.env.DB_KEY);
+    const collection = db.collection("propostas");
+    const { id, changes } = req.body;
+    console.log(id, changes);
     let newDocument = await collection.findOneAndUpdate(
       {
-        _id: ObjectId(req.body.id),
+        _id: ObjectId(id),
       },
-      { $set: { negotiationStage: req.body.listId } },
+      { $set: changes },
       { returnNewDocument: true }
     );
     // await collection.insertOne(req.body);
@@ -52,16 +54,18 @@ export default async function handler(req, res) {
   } else if (req.method === "DELETE") {
     try {
       const db = await connectToDatabase(process.env.DB2_KEY);
-      const id = req.query.id
-      console.log(id)
-      const collection = db.collection("infos")
-      let response = await collection.deleteOne({_id: ObjectId(id)}) 
-      if(response.deletedCount ==0) {
-        throw {msg: "Proposta não encontrada."}
+      const id = req.query.id;
+      console.log(id);
+      const collection = db.collection("infos");
+      let response = await collection.deleteOne({ _id: ObjectId(id) });
+      if (response.deletedCount == 0) {
+        throw { msg: "Proposta não encontrada." };
       }
-      res.send("Proposta excluída com sucesso.")
+      res.send("Proposta excluída com sucesso.");
     } catch (error) {
-      res.status(500).send(error?.msg ? error.msg : "Erro ao excluír proposta.")
+      res
+        .status(500)
+        .send(error?.msg ? error.msg : "Erro ao excluír proposta.");
     }
   }
 }

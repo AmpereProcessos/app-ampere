@@ -126,7 +126,7 @@ function Card({ propose, fetchProposes }) {
           <span className="text-xs uppercase text-gray-400">Plano:</span>
           <select
             onChange={(e) => handlePlanChange(e.target.value)}
-            className="outline-none rounded bg-transparent text-base text-center text-[#15599b] text-sm"
+            className="outline-none rounded bg-transparent text-center text-[#15599b] text-sm"
           >
             <option defaultValue value={propose.currentPlanOption}>
               {currentPlan[0].text}

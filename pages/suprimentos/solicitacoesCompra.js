@@ -46,6 +46,8 @@ function SolicitacoesCompra() {
 
   const [filters, setFilters] = useState({
     search: "",
+    status: [],
+    responsavel: [],
   });
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -87,6 +89,16 @@ function SolicitacoesCompra() {
         (item) =>
           item[dateFilter.field] >= dateFilter.after &&
           item[dateFilter.field] <= dateFilter.before
+      );
+    }
+    if (filters.status.length > 0) {
+      if (!newArr) newArr = solicitations;
+      newArr = newArr.filter((item) => filters.status.includes(item.status));
+    }
+    if (filters.responsavel.length > 0) {
+      if (!newArr) newArr = solicitations;
+      newArr = newArr.filter((item) =>
+        filters.responsavel.includes(item.responsavel)
       );
     }
     if (!newArr) {
@@ -239,6 +251,75 @@ function SolicitacoesCompra() {
                     </div>
                   </div>
                 </div>
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti={true}
+                      placeholder={"STATUS"}
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      options={[
+                        { label: "EM ABERTO", value: "EM ABERTO" },
+                        { label: "EM ANDAMENTO", value: "EM ANDAMENTO" },
+                        {
+                          label: "AGUARDANDO APROVAÇÃO",
+                          value: "AGUARDANDO APROVAÇÃO",
+                        },
+                        {
+                          label: "COMPRA REALIZADA",
+                          value: "COMPRA REALIZADA",
+                        },
+                        { label: "EM ROTA", value: "EM ROTA" },
+                        { label: "FINALIZADO", value: "FINALIZADO" },
+                      ]}
+                      onChange={(e) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          status: e.map((x) => x.value),
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <Select
+                      isMulti={true}
+                      placeholder={"RESPONSÁVEL"}
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          width: "100%",
+                          minHeight: "41px",
+                        }),
+                      }}
+                      options={[
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: "LUIZ PAULO", value: "LUIZ PAULO" },
+                        { label: "PÉRSIA PINHEIRO", value: "PÉRSIA PINHEIRO" },
+                        {
+                          label: "DANILO DE LIMA",
+                          value: "DANILO DE LIMA",
+                        },
+                        { label: "NATASHA CANDIDO", value: "NATASHA CANDIDO" },
+                        {
+                          label: "POLLIANA CRISTINA",
+                          value: "POLLIANA CRISTINA",
+                        },
+                        { label: "DIOGO PAULINO", value: "DIOGO PAULINO" },
+                      ]}
+                      onChange={(e) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          responsavel: e.map((x) => x.value),
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
                 <div className="flex flex-wrap gap-2 justify-end items-center">
                   <FilterButton
                     text={"FILTRAR"}
@@ -275,18 +356,35 @@ function SolicitacoesCompra() {
                       </h1>
                     </div>
                   </div>
-                  <div className="flex flex-col w-full items-center">
-                    <h1 className="text-start text-gray-500 text-xs font-medium">
-                      STATUS
-                    </h1>
-                    <h1
-                      className={`text-xs ${getStatusColor(
-                        solicitation.status
-                      )} font-medium p-1 rounded-md`}
-                    >
-                      {solicitation.status ? solicitation.status : "EM ABERTO"}
-                    </h1>
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col  items-start">
+                      <h1 className="text-start text-gray-500 text-xs font-medium">
+                        STATUS
+                      </h1>
+                      <h1
+                        className={`text-xs ${getStatusColor(
+                          solicitation.status
+                        )} font-medium p-1 rounded-md`}
+                      >
+                        {solicitation.status
+                          ? solicitation.status
+                          : "EM ABERTO"}
+                      </h1>
+                    </div>
+                    <div className="flex flex-col  items-end">
+                      <h1 className="text-end text-gray-500 text-xs font-medium">
+                        RESPONSÁVEL
+                      </h1>
+                      <h1
+                        className={`text-xs font-medium p-1 rounded-md text-end`}
+                      >
+                        {solicitation.responsavel
+                          ? solicitation.responsavel
+                          : "NÃO DEFINIDO"}
+                      </h1>
+                    </div>
                   </div>
+
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col items-start">
                       <h1 className="text-start text-gray-500 text-xs font-medium">

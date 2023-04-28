@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 import { FaSave } from "react-icons/fa";
 import Select from "react-select";
-import { cities } from "../utils/constants";
+import { cities, units } from "../utils/constants";
 import axios from "axios";
 import TextFloatingInput from "./TextFloatingInput";
 import NumberFloatingInput from "./NumberFloatingInput";
+import SelectFoatingInput from "./SelectFloatingInput";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -30,6 +31,7 @@ const OVERLAY_STYLES = {
 function Novoitem({ closeModal, getMateriais }) {
   const [nome, setNome] = useState("");
   const [quantidade, setQuantidade] = useState(0);
+  const [grandeza, setGrandeza] = useState("UN");
   const [preco, setPreco] = useState(0);
   const [codigo, setCodigo] = useState("");
   const [localizacao, setLocalizacao] = useState("");
@@ -42,6 +44,7 @@ function Novoitem({ closeModal, getMateriais }) {
     let obj = {
       nome: nome,
       qtde: quantidade,
+      grandeza: grandeza,
       preco: preco,
       codigo: codigo,
       localizacao: localizacao,
@@ -122,6 +125,14 @@ function Novoitem({ closeModal, getMateriais }) {
                   editable={true}
                   value={quantidade}
                   handleChange={(value) => setQuantidade(Number(value))}
+                  width={"100%"}
+                />
+                <SelectFoatingInput
+                  label={"GRANDEZA"}
+                  editable={true}
+                  value={grandeza}
+                  options={units}
+                  handleChange={(value) => setGrandeza(value)}
                   width={"100%"}
                 />
                 {/* <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-2 border border-gray-200 p-2 mt-4" >

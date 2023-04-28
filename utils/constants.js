@@ -23,6 +23,15 @@ export const respChamadosPPS = [
   { label: "MATHEUS", value: "MATHEUS" },
   { label: "LUCAS", value: "LUCAS" },
 ];
+export const units = [
+  { label: "UNIDADE (UN)", value: "UN" },
+  { label: "PACOTE (PC)", value: "PC" },
+  { label: "QUILO (KG)", value: "KG" },
+  { label: "CX (CAIXA)", value: "CX" },
+  { label: "M (METRO)", value: "M" },
+  { label: "METRO CÚBICO (M³)", value: "M³" },
+  { label: "LITROS (L)", value: "L" },
+];
 export const customersAcquisitionChannels = [
   {
     label: "NÃO DEFINIDO",

@@ -9,7 +9,9 @@ function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
     <div className="flex flex-col w-full gap-2 bg-gray-50 rounded-tr-sm rounded-tl-sm">
       <div className="flex items-center w-full">
         <h1 className="w-1/4 text-center text-xs text-gray-700 font-medium p-1">
-          {item.nome}
+          {item.nome && item.grandeza
+            ? `${item.nome} (${item.grandeza})`
+            : item.nome}
         </h1>
         <div className="w-1/4 p-1">
           <input

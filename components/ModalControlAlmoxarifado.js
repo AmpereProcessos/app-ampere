@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
 import { FaLongArrowAltRight, FaSave } from "react-icons/fa";
 import Select from "react-select";
-import { cities } from "../utils/constants";
+import { cities, units } from "../utils/constants";
 import axios from "axios";
 import SaveButton from "./utils/Buttons/SaveButton";
 import TextFloatingInput from "./TextFloatingInput";
 import NumberFloatingInput from "./NumberFloatingInput";
 import dayjs from "dayjs";
+import SelectFoatingInput from "./SelectFloatingInput";
+import { utils } from "xlsx";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -164,6 +166,16 @@ function ControleAlmoxarifado({
                         ...prev,
                         qtde: Number(value),
                       }))
+                    }
+                    width={"100%"}
+                  />
+                  <SelectFoatingInput
+                    label={"GRANDEZA"}
+                    editable={true}
+                    value={materialInfo.grandeza}
+                    options={units}
+                    handleChange={(value) =>
+                      setMaterialInfo((prev) => ({ ...prev, grandeza: value }))
                     }
                     width={"100%"}
                   />

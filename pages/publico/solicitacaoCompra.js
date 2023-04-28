@@ -10,6 +10,8 @@ import Image from "next/image";
 import dayjs from "dayjs";
 import { MdCancel, MdSmsFailed } from "react-icons/md";
 import axios from "axios";
+import SelectFoatingInput from "../../components/SelectFloatingInput";
+import { units } from "../../utils/constants";
 
 function SolicitacaoCompra() {
   const [solicitationInfo, setSolicitationInfo] = useState({
@@ -22,6 +24,7 @@ function SolicitacaoCompra() {
   const [itemHolder, setItemHolder] = useState({
     nome: "",
     qtde: 0,
+    grandeza: "UN",
     descricao: "",
   });
   const [itemsMsg, setItemsMsg] = useState({ text: "", color: "" });
@@ -43,6 +46,18 @@ function SolicitacaoCompra() {
       text: "",
       color: "",
     });
+  }
+  async function notifySuprimentos() {
+    try {
+      let data = await axios.post("/api/notificacoes/1", {
+        destinatario: "6353eb47ef4e1a367a877947",
+        remetente: "SISTEMA",
+        mensagem: `Olá, uma nova solicitação de compra de caratér ${solicitationInfo.urgencia} foi efetuada por ${solicitationInfo.requisitante}.`,
+      });
+      return;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function sendSolicitation() {
@@ -93,7 +108,12 @@ function SolicitacaoCompra() {
       color: "text-[#15999a]",
     }));
     try {
-      await axios.post("/api/solicitacoes/compra", solicitationInfo);
+      await notifySuprimentos();
+      await axios.post("/api/solicitacoes/compra", {
+        ...solicitationInfo,
+        status: "EM ABERTO",
+        responsavel: "NÃO DEFINIDO",
+      });
       setSendMsg({
         status: "success",
         text: "Solicitação enviada com sucesso. O prazo para avaliação da solicitação é de 24 horas.",
@@ -133,7 +153,7 @@ function SolicitacaoCompra() {
     var currentItensArr = [...solicitationInfo.itens];
     currentItensArr.push(itemHolder);
     setSolicitationInfo((prev) => ({ ...prev, itens: currentItensArr }));
-    setItemHolder({ nome: "", qtde: 0, descricao: "" });
+    setItemHolder({ nome: "", qtde: 0, grandeza: "UN", descricao: "" });
   }
   function formatPhone(value) {
     if (!value) return "";
@@ -270,6 +290,17 @@ function SolicitacaoCompra() {
               }
               width={"50%"}
             />
+            <textarea
+              value={solicitationInfo.anotacoes}
+              onChange={(e) =>
+                setSolicitationInfo((prev) => ({
+                  ...prev,
+                  anotacoes: e.target.value,
+                }))
+              }
+              placeholder="Adicione aqui algum comentário/anotação sobre a solicitação de compra..."
+              className="w-[50%] resize-none  bg-gray-100 border border-blue-200 outline-none text-sm text-center h-[100px] p-2"
+            />
             {/* <div
               className={`flex flex-col relative font-mono items-center z-0 w-full lg:w-[50%] text-center mb-6 group`}
             >
@@ -307,8 +338,8 @@ function SolicitacaoCompra() {
             </p>
             <div className="w-full flex-col lg:flex-row flex items-center gap-4">
               <div className="lg:w-[90%] w-full flex flex-col  gap-4  items-center">
-                <div className="flex items-center gap-4  w-full">
-                  <div className="w-[60%]">
+                <div className="flex flex-col lg:flex-row items-center gap-4  w-full">
+                  <div className="w-full lg:w-[50%]">
                     <TextFloatingInput
                       label={"NOME DO ITEM"}
                       width={"100%"}
@@ -319,7 +350,7 @@ function SolicitacaoCompra() {
                       }
                     />
                   </div>
-                  <div className="w-[40%]">
+                  <div className="w-full lg:w-[25%]">
                     <NumberFloatingInput
                       label={"QUANTIDADE"}
                       width={"100%"}
@@ -331,6 +362,21 @@ function SolicitacaoCompra() {
                           qtde: Number(value),
                         }))
                       }
+                    />
+                  </div>
+                  <div className="w-full lg:w-[25%]">
+                    <SelectFoatingInput
+                      label={"GRANDEZA"}
+                      editable={true}
+                      value={itemHolder.grandeza}
+                      options={units}
+                      handleChange={(value) =>
+                        setItemHolder((prev) => ({
+                          ...prev,
+                          grandeza: value,
+                        }))
+                      }
+                      width={"100%"}
                     />
                   </div>
                 </div>
@@ -362,25 +408,31 @@ function SolicitacaoCompra() {
             {solicitationInfo.itens.length > 0 ? (
               <div className="flex flex-col w-full items-center mt-4">
                 <div className="w-full flex items-center gap-2 bg-black">
-                  <h1 className="w-1/3 text-white text-center p-1 font-medium">
+                  <h1 className="w-[40%] text-white text-center p-1 font-medium">
                     NOME
                   </h1>
-                  <h1 className="w-1/3 text-white text-center p-1 font-medium">
+                  <h1 className="w-[20%] text-white text-center p-1 font-medium">
                     QTDE
                   </h1>
-                  <h1 className="w-1/3 text-white text-center p-1 font-medium">
+                  <h1 className="w-[20%] text-white text-center p-1 font-medium">
+                    GRANDEZA
+                  </h1>
+                  <h1 className="w-[20%] text-white text-center p-1 font-medium">
                     EXCLUIR
                   </h1>
                 </div>
                 {solicitationInfo.itens.map((item, index) => (
                   <div key={index} className="w-full flex items-center gap-2">
-                    <h1 className="w-1/3 text-center p-1 font-medium">
+                    <h1 className="w-[40%] text-center p-1 font-medium">
                       {item.nome}
                     </h1>
-                    <h1 className="w-1/3 text-center p-1 font-medium">
+                    <h1 className="w-[20%] text-center p-1 font-medium">
                       {item.qtde}
                     </h1>
-                    <div className="flex items-center justify-center text-red-500 w-1/3">
+                    <h1 className="w-[20%] text-center p-1 font-medium">
+                      {item.grandeza}
+                    </h1>
+                    <div className="flex items-center justify-center text-red-500 w-[20%]">
                       <MdCancel
                         style={{ cursor: "pointer" }}
                         onClick={() => {

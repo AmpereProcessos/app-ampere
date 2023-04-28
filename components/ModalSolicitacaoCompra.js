@@ -105,27 +105,56 @@ function PurchaseSolicitationModal({
               </div>
             ) : null}
           </div>
-          <div className="w-full flex items-center justify-center pb-4">
-            <SelectFloatingInput
-              label={"STATUS"}
-              editable={true}
-              value={infoHolder.status ? infoHolder.status : "EM ABERTO"}
-              options={[
-                { label: "EM ABERTO", value: "EM ABERTO" },
-                { label: "EM ANDAMENTO", value: "EM ANDAMENTO" },
-                {
-                  label: "AGUARDANDO APROVAÇÃO",
-                  value: "AGUARDANDO APROVAÇÃO",
-                },
-                { label: "COMPRA REALIZADA", value: "COMPRA REALIZADA" },
-                { label: "EM ROTA", value: "EM ROTA" },
-                { label: "FINALIZADO", value: "FINALIZADO" },
-              ]}
-              handleChange={(value) =>
-                setInfo((prev) => ({ ...prev, status: value }))
-              }
-              width={"50%"}
-            />
+          <div className="flex flex-col gap-4 lg:flex-row items-center w-full pb-4">
+            <div className="w-full lg:w-[50%]">
+              <SelectFloatingInput
+                label={"STATUS"}
+                editable={true}
+                value={infoHolder.status ? infoHolder.status : "EM ABERTO"}
+                options={[
+                  { label: "EM ABERTO", value: "EM ABERTO" },
+                  { label: "EM ANDAMENTO", value: "EM ANDAMENTO" },
+                  {
+                    label: "AGUARDANDO APROVAÇÃO",
+                    value: "AGUARDANDO APROVAÇÃO",
+                  },
+                  { label: "COMPRA REALIZADA", value: "COMPRA REALIZADA" },
+                  { label: "EM ROTA", value: "EM ROTA" },
+                  { label: "FINALIZADO", value: "FINALIZADO" },
+                ]}
+                handleChange={(value) =>
+                  setInfo((prev) => ({ ...prev, status: value }))
+                }
+                width={"100%"}
+              />
+            </div>
+            <div className="w-full lg:w-[50%]">
+              <SelectFloatingInput
+                label={"RESPONSÁVEL"}
+                editable={true}
+                value={
+                  infoHolder.responsavel
+                    ? infoHolder.responsavel
+                    : "NÃO DEFINIDO"
+                }
+                options={[
+                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: "LUIZ PAULO", value: "LUIZ PAULO" },
+                  { label: "PÉRSIA PINHEIRO", value: "PÉRSIA PINHEIRO" },
+                  {
+                    label: "DANILO DE LIMA",
+                    value: "DANILO DE LIMA",
+                  },
+                  { label: "NATASHA CANDIDO", value: "NATASHA CANDIDO" },
+                  { label: "POLLIANA CRISTINA", value: "POLLIANA CRISTINA" },
+                  { label: "DIOGO PAULINO", value: "DIOGO PAULINO" },
+                ]}
+                handleChange={(value) =>
+                  setInfo((prev) => ({ ...prev, responsavel: value }))
+                }
+                width={"100%"}
+              />
+            </div>
           </div>
           <div className="flex flex-col gap-4 lg:flex-row items-center w-full pb-4">
             <div className="w-full lg:w-[50%]">

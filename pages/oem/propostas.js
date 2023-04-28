@@ -9,7 +9,12 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 import ModalNewPropostaOeM from "../../components/ModalNewPropostaOeM";
-
+import { FaCity, FaSolarPanel, FaUser } from "react-icons/fa";
+import { HiIdentification } from "react-icons/hi";
+import { BsFolderFill, BsTelephoneFill } from "react-icons/bs";
+import { IoMdPower } from "react-icons/io";
+import { AiFillThunderbolt } from "react-icons/ai";
+import { GoGraph } from "react-icons/go";
 function Propostas() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -20,20 +25,18 @@ function Propostas() {
   });
   const [newProposeModalIsOpen, setNewProposeModalIsOpen] = useState(false);
 
-  const [msg, setMsg] = useState({
-    text: "",
-    color: "",
-  });
-  const [dados, setDados] = useState({
-    clientName: "",
-    city: cities[0].name,
-    attendant: "NÃO DEFINIDO",
-    modulesQty: null,
-    modulesPot: null,
-    currentEfficience: null,
-    distance: 0,
-  });
-  const [propostas, setPropostas] = useState();
+  const [proposes, setProposes] = useState({ status: null, data: null });
+
+  async function getProposes() {
+    setProposes({ status: "loading", data: null });
+    try {
+      const { data } = await axios.get("/api/o&m/proposes");
+      console.log("DATA", data);
+      setProposes({ status: "success", data: data });
+    } catch (error) {
+      setProposes({ status: "failure", data: [] });
+    }
+  }
   // let obj = {
   //   emApresentacao: [],
   //   emNegociacao: [],
@@ -122,13 +125,14 @@ function Propostas() {
   //     }
   //   }
   // }
-  // useEffect(() => {
-  //   if (session?.user) {
-  //     if (!propostas) {
-  //       getPropostas();
-  //     }
-  //   }
-  // }, [session]);
+  useEffect(() => {
+    if (session?.user) {
+      if (!proposes.data) {
+        getProposes();
+      }
+    }
+  }, [session]);
+  console.log(proposes);
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
@@ -138,6 +142,74 @@ function Propostas() {
             PROPOSTAS DE O&M
           </h1>
         </div>
+        {proposes.status == "loading" ? <LoadingPage /> : null}
+        {proposes.status == "success" ? (
+          <div className="grow flex gap-2 flex-wrap justify-around p-2">
+            {proposes.data.map((propose) => (
+              <div className="flex gap-3 flex-col p-3 w-full lg:w-[400px] h-[150px] border border-gray-200 shadow-md">
+                <div className="w-full flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <HiIdentification style={{ color: "#15599a" }} />
+                    <h1 className="font-medium">{propose.nomeCliente}</h1>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <FaCity style={{ color: "#fead61" }} />
+                    <h1 className="font-medium">
+                      {propose.cidade}/{propose.uf}
+                    </h1>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <FaUser style={{ color: "#003d5b" }} />
+                    <h1 className="text-gray-700 font-medium text-xs">
+                      {propose.vendedor}
+                    </h1>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <BsTelephoneFill style={{ color: "#16B010" }} />
+                    <h1 className="text-gray-700 font-medium text-xs">
+                      {propose.telefoneVendedor
+                        ? propose.telefoneVendedor
+                        : "NÃO FORNECIDO"}
+                    </h1>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="w-1/3 flex items-center justify-start gap-2">
+                    <FaSolarPanel style={{ color: " rgb(217,119,6)" }} />
+                    <h1 className="text-gray-700 font-medium text-xs">
+                      {propose.qtdeModulos} MÓDULOS
+                    </h1>
+                  </div>
+                  <div className="w-1/3 flex items-center justify-center gap-2">
+                    <GoGraph style={{ color: "blue" }} />
+                    <h1 className="text-gray-700 font-medium text-xs">
+                      {propose.eficienciaAtual}%
+                    </h1>
+                  </div>
+                  <div className="w-1/3 flex items-end justify-end gap-2">
+                    <AiFillThunderbolt style={{ color: "red" }} />
+                    <h1 className="text-gray-700 font-medium text-xs">
+                      {propose.potModulos} W
+                    </h1>
+                  </div>
+                </div>
+                <div className="flex gap-3 items-center justify-center">
+                  <a
+                    onClick={() =>
+                      router.push(`/oem/pdfProposta/${propose._id}`)
+                    }
+                    className="text-sm text-blue-300 font-medium cursor-pointer"
+                  >
+                    PROPOSTA
+                  </a>
+                  <BsFolderFill style={{ color: "rgb(30,64,175)" }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
         {/* <div className="grid lg:grid-cols-4 lg:grid-rows-1 grid-rows-4 grid-cols-1  w-full  py-2 gap-4 mt-5 border border-[#15599a] shadow-lg">
           <ListPropostas
             title={"Em apresentação"}

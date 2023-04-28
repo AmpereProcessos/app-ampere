@@ -7,7 +7,7 @@ import estadosECidades from "../../utils/estados_cidades.json";
 import axios from "axios";
 import NumberFloatingInput from "../../components/NumberFloatingInput";
 import { AiOutlineSearch } from "react-icons/ai";
-import { vendedores } from "../../utils/constants";
+import { formatToPhone, vendedores } from "../../utils/constants";
 import irradiacoes from "../../utils/irradiancia.json";
 import PropostaPDFModel from "../../components/PropostaPDFModel";
 function PropostaOeM() {
@@ -48,6 +48,14 @@ function PropostaOeM() {
       });
       return false;
     }
+    if (proposeInfo.telefoneVendedor.length < 11) {
+      setMsg({
+        status: null,
+        text: "Por favor, preencha um telefone válido para o vendedor.",
+        color: "text-red-500",
+      });
+      return false;
+    }
     if (proposeInfo.qtdeModulos <= 0) {
       setMsg({
         status: null,
@@ -64,7 +72,7 @@ function PropostaOeM() {
       });
       return false;
     }
-    if (proposeInfo.distancia <= 0) {
+    if (proposeInfo.distancia < 0) {
       setMsg({
         status: null,
         text: "Por favor, preencha uma distância válida ou clica na pesquisa automática.",
@@ -84,7 +92,7 @@ function PropostaOeM() {
           color: "text-[#15599a]",
         });
         const genFactor = getIrradiance(proposeInfo.cidade);
-        const { data } = await axios.post("/api/o&m/propose", {
+        const { data } = await axios.post("/api/o&m/proposes", {
           ...proposeInfo,
           fatorDeGeracao: genFactor,
         });
@@ -185,6 +193,18 @@ function PropostaOeM() {
               }))}
               handleChange={(value) =>
                 setProposeInfo((prev) => ({ ...prev, vendedor: value }))
+              }
+              width={"50%"}
+            />
+            <TextFloatingInput
+              label={"TELEFONE DO VENDEDOR"}
+              editable={true}
+              value={proposeInfo.telefoneVendedor}
+              handleChange={(value) =>
+                setProposeInfo((prev) => ({
+                  ...prev,
+                  telefoneVendedor: formatToPhone(value),
+                }))
               }
               width={"50%"}
             />

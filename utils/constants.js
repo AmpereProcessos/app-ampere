@@ -518,6 +518,10 @@ export const vendedores = [
     comissaoAtivo: 4,
   },
   {
+    nome: "GABRIEL MARTINS",
+    cod: 999,
+  },
+  {
     nome: "NÃO DEFINIDO",
     cod: 999,
   },
@@ -1085,57 +1089,57 @@ export const prices = [
   {
     min: 0,
     max: 12,
-    price: 29.6,
+    price: 19.9,
   },
   {
     min: 13,
     max: 19,
-    price: 28.12,
+    price: 18.91,
   },
   {
     min: 20,
     max: 29,
-    price: 26.71,
+    price: 17.96,
   },
   {
     min: 30,
     max: 49,
-    price: 25.38,
+    price: 17.06,
   },
   {
     min: 50,
     max: 79,
-    price: 24.11,
+    price: 16.21,
   },
   {
     min: 80,
     max: 109,
-    price: 22.9,
+    price: 15.4,
   },
   {
     min: 110,
     max: 149,
-    price: 21.76,
+    price: 13.86,
   },
   {
     min: 150,
     max: 199,
-    price: 20.67,
+    price: 12.47,
   },
   {
     min: 200,
     max: 299,
-    price: 19.64,
+    price: 11.23,
   },
   {
     min: 300,
     max: 499,
-    price: 18.66,
+    price: 10.1,
   },
   {
     min: 500,
     max: 2000,
-    price: 17.72,
+    price: 9.09,
   },
 ];
 export const sellers = [

@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { ObjectId } from "mongodb";
 import connectToDatabase from "../../../utils/auxiliaresDb";
 
 export default async function handler(req, res) {
@@ -23,9 +24,17 @@ export default async function handler(req, res) {
       res.status(500).send("Houve um erro, por favor tente novamente.");
     }
   } else if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB2_KEY);
-    const collection = db.collection("infos");
-    let users = await collection.find({}).toArray();
-    return res.status(201).json(users);
+    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+    const collection = db.collection("propostas");
+    const { id, seller } = req.query;
+    var dbResp;
+    if (id) {
+      dbResp = await collection.find({ _id: ObjectId(id) }).toArray();
+    } else if (seller) {
+      dbResp = await collection.find({ vendedor: seller }).toArray();
+    } else {
+      dbResp = await collection.find({}).toArray();
+    }
+    return res.status(201).json(dbResp);
   }
 }

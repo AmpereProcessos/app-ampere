@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useRef } from "react";
 import Logo from "../utils/whitelogoHD.png";
 import { FiCheck } from "react-icons/fi";
 import { prices } from "../utils/constants";
@@ -8,6 +8,8 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
 function PropostaPDFModel({ info }) {
+  const pdfRef = useRef();
+
   function findPrice(modulesQtd) {
     for (let i = 0; i < prices.length; i++) {
       console.log(prices[i]);
@@ -60,11 +62,24 @@ function PropostaPDFModel({ info }) {
         return id + start;
       });
   };
+  const handleDownloadPdf = async () => {
+    const element = pdfRef.current;
+    const canvas = await html2canvas(element);
+    const data = canvas.toDataURL("image/png");
 
+    const pdf = new jsPDF();
+    const imgProperties = pdf.getImageProperties(data);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
+
+    pdf.addImage(data, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save("print.pdf");
+  };
   return (
     <div
       style={{ width: "210mm", height: "297mm" }}
       id="pdf"
+      ref={pdfRef}
       className="bg-zinc-200 p-4"
     >
       <div id="myMm" style={{ height: "1mm" }} />
@@ -78,67 +93,69 @@ function PropostaPDFModel({ info }) {
         </div>
         <div className="flex items-center justify-center">
           <div
-            onClick={() => {
-              const input = document.getElementById("pdf");
-              const inputHeightMm = pxToMm(input.offsetHeight);
-              const a4WidthMm = 210;
-              const a4HeightMm = 297;
-              const a4HeightPx = mmToPx(a4HeightMm);
-              const numPages =
-                inputHeightMm <= a4HeightMm
-                  ? 1
-                  : Math.floor(inputHeightMm / a4HeightMm) + 1;
-              console.log({
-                input,
-                inputHeightMm,
-                a4HeightMm,
-                a4HeightPx,
-                numPages,
-                range: range(0, numPages),
-                comp: inputHeightMm <= a4HeightMm,
-                inputHeightPx: input.offsetHeight,
-              });
+            onClick={handleDownloadPdf}
+            // onClick={() => {
+            //   // const input = document.getElementById("pdf");
+            //   const input = pdfRef.current;
+            //   const inputHeightMm = pxToMm(input.offsetHeight);
+            //   const a4WidthMm = 210;
+            //   const a4HeightMm = 297;
+            //   const a4HeightPx = mmToPx(a4HeightMm);
+            //   const numPages =
+            //     inputHeightMm <= a4HeightMm
+            //       ? 1
+            //       : Math.floor(inputHeightMm / a4HeightMm) + 1;
+            //   console.log({
+            //     input,
+            //     inputHeightMm,
+            //     a4HeightMm,
+            //     a4HeightPx,
+            //     numPages,
+            //     range: range(0, numPages),
+            //     comp: inputHeightMm <= a4HeightMm,
+            //     inputHeightPx: input.offsetHeight,
+            //   });
 
-              html2canvas(input).then((canvas) => {
-                const imgData = canvas.toDataURL("image/png");
-                var pdf;
-                // Document of a4WidthMm wide and inputHeightMm high
-                if (inputHeightMm > a4HeightMm) {
-                  // elongated a4 (system print dialog will handle page breaks)
-                  pdf = new jsPDF("p", "mm", [inputHeightMm + 16, a4WidthMm]);
-                } else {
-                  // standard a4
-                  pdf = new jsPDF();
-                }
+            //   html2canvas(input).then((canvas) => {
+            //     const imgData = canvas.toDataURL("image/png");
+            //     var pdf;
+            //     // Document of a4WidthMm wide and inputHeightMm high
+            //     if (inputHeightMm > a4HeightMm) {
+            //       // elongated a4 (system print dialog will handle page breaks)
+            //       pdf = new jsPDF("p", "mm", [inputHeightMm + 16, a4WidthMm]);
+            //     } else {
+            //       // standard a4
+            //       pdf = new jsPDF();
+            //     }
 
-                pdf.addImage(imgData, "PNG", 0, 0);
-                pdf.save(`PROPOSTA.pdf`);
-              });
+            //     pdf.addImage(imgData, "PNG", 0, 0);
+            //     pdf.save(`PROPOSTA.pdf`);
+            //   });
 
-              ////////////////////////////////////////////////////////
-              // System to manually handle page breaks
-              // Wasn't able to get it working !
-              // The idea is to break html2canvas screenshots into multiple chunks and stich them together as a pdf
-              // If you get this working, please email me a khuranashivek@outlook.com and I'll update the article
-              ////////////////////////////////////////////////////////
-              // range(0, numPages).forEach((page) => {
-              //   console.log(`Rendering page ${page}. Capturing height: ${a4HeightPx} at yOffset: ${page*a4HeightPx}`);
-              //   html2canvas(input, {height: a4HeightPx, y: page*a4HeightPx})
-              //     .then((canvas) => {
-              //       const imgData = canvas.toDataURL('image/png');
-              //       console.log(imgData)
-              //       if (page > 0) {
-              //         pdf.addPage();
-              //       }
-              //       pdf.addImage(imgData, 'PNG', 0, 0);
-              //     });
-              //   ;
-              // });
+            //   ////////////////////////////////////////////////////////
+            //   // System to manually handle page breaks
+            //   // Wasn't able to get it working !
+            //   // The idea is to break html2canvas screenshots into multiple chunks and stich them together as a pdf
+            //   // If you get this working, please email me a khuranashivek@outlook.com and I'll update the article
+            //   ////////////////////////////////////////////////////////
+            //   // range(0, numPages).forEach((page) => {
+            //   //   console.log(`Rendering page ${page}. Capturing height: ${a4HeightPx} at yOffset: ${page*a4HeightPx}`);
+            //   //   html2canvas(input, {height: a4HeightPx, y: page*a4HeightPx})
+            //   //     .then((canvas) => {
+            //   //       const imgData = canvas.toDataURL('image/png');
+            //   //       console.log(imgData)
+            //   //       if (page > 0) {
+            //   //         pdf.addPage();
+            //   //       }
+            //   //       pdf.addImage(imgData, 'PNG', 0, 0);
+            //   //     });
+            //   //   ;
+            //   // });
 
-              // setTimeout(() => {
-              //   pdf.save(`${id}.pdf`);
-              // }, 5000);
-            }}
+            //   // setTimeout(() => {
+            //   //   pdf.save(`${id}.pdf`);
+            //   // }, 5000);
+            // }}
             className="h-[70px] w-[70px]"
           >
             <Image objectFit="fill" className="cursor-pointer" src={Logo} />
@@ -147,14 +164,16 @@ function PropostaPDFModel({ info }) {
         <div className="flex flex-col items-end col-span-2">
           <h1 className="text-xl font-bold">Atendido por:</h1>
           <p className="font-bold text-center">{info.vendedor}</p>
-          <p className="font-bold">(34) 9 9775-7001</p>
+          <p className="font-bold">
+            {info.telefoneVendedor ? info.telefoneVendedor : "(34) 9 9775-7001"}
+          </p>
         </div>
       </div>
       <div className="mt-5 border-2 border-black">
-        <h1 className="text-xl w-full text-center bg-[#15599b] text-white font-semibold">
+        <div className="w-full flex items-center justify-center pb-2 bg-[#15599b] text-white font-bold text-center">
           ESCOPO DO PROJETO
-        </h1>
-        <div className="grid grid-cols-4 divide-x-2 divide-black">
+        </div>
+        <div className="grid grid-cols-4 divide-x-2 divide-black pb-2">
           <div className="flex flex-col items-center">
             <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
               Qtd.Módulos - Potência
@@ -208,7 +227,7 @@ function PropostaPDFModel({ info }) {
         </div>
       </div>
       <div className="mt-2">
-        <h1 className="w-full bg-[#15599b] text-white font-bold text-center ">
+        <h1 className="w-full pb-2 bg-[#15599b] text-white font-bold text-center ">
           PLANOS E SERVIÇOS DE OPERAÇÃO E MANUTENÇÃO
         </h1>
         <div className="flex flex-col">
@@ -271,7 +290,6 @@ function PropostaPDFModel({ info }) {
                           </td>
                           <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap text-center">
                             <div className="flex justify-center items-center">
-                              <p>2x</p>
                               <FiCheck
                                 style={{
                                   color: "#23c906",
@@ -306,7 +324,6 @@ function PropostaPDFModel({ info }) {
                           </td>
                           <td className="text-sm text-gray-900 font-bold px-6 py-2 whitespace-nowrap">
                             <div className="flex justify-center items-center">
-                              <p>2x</p>
                               <FiCheck
                                 style={{
                                   color: "#23c906",
@@ -342,7 +359,6 @@ function PropostaPDFModel({ info }) {
                           </td>
                           <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
                             <div className="flex justify-center items-center">
-                              <p>2x</p>
                               <FiCheck
                                 style={{
                                   color: "#23c906",
@@ -410,25 +426,12 @@ function PropostaPDFModel({ info }) {
                           </td>
                           <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                             <div className="flex justify-center">
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
+                              <p>50% do valor do contrato</p>
                             </div>
                           </td>
-                          <td className="text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
+                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                             <div className="flex justify-center items-center">
-                              <p>2x</p>
-                              <FiCheck
-                                style={{
-                                  color: "#23c906",
-                                  fontSize: "20px",
-                                  margin: 0,
-                                }}
-                              />
+                              <p>70% do valor do contrato</p>
                             </div>
                           </td>
                         </tr>
@@ -491,7 +494,7 @@ function PropostaPDFModel({ info }) {
                           <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
                             R${" "}
                             {(
-                              1.95 *
+                              1.5 *
                                 findPrice(info.qtdeModulos) *
                                 info.qtdeModulos +
                               1.5 * 4 * info.distancia
@@ -510,10 +513,10 @@ function PropostaPDFModel({ info }) {
         </div>
       </div>
       <div>
-        <h1 className="w-full bg-[#15599b] text-white font-bold text-center">
+        <div className="w-full flex items-center justify-center pb-2 bg-[#15599b] text-white font-bold text-center">
           ASSINATURA
-        </h1>
-        <div className="mt-10 flex justify-between">
+        </div>
+        <div className="pt-10 flex justify-between">
           <div className="w-[35%]">
             <hr className="border-t-2 border-black" />
             <p className="text-center">Cliente</p>

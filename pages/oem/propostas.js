@@ -146,7 +146,10 @@ function Propostas() {
         {proposes.status == "success" ? (
           <div className="grow flex gap-2 flex-wrap justify-around p-2">
             {proposes.data.map((propose) => (
-              <div className="flex gap-3 flex-col p-3 w-full lg:w-[400px] h-[150px] border border-gray-200 shadow-md">
+              <div
+                key={propose._id}
+                className="flex gap-3 flex-col p-3 w-full lg:w-[400px] h-[150px] border border-gray-200 shadow-md"
+              >
                 <div className="w-full flex items-center justify-between">
                   <div className="flex items-center gap-2 text-gray-700">
                     <HiIdentification style={{ color: "#15599a" }} />

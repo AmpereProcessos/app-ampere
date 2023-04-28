@@ -29,7 +29,7 @@ function ListPropostas({ proposes, title, listId, fetchProposes }) {
     setSearch(value);
     if (value != "" || value != " ") {
       let newArr = proposes.filter((propose) =>
-        propose.clientName.toUpperCase().includes(value.toUpperCase())
+        propose.nomeCliente.toUpperCase().includes(value.toUpperCase())
       );
       console.log(newArr);
       setFilteredPropostas(newArr);

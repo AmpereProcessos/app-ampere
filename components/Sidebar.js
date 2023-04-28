@@ -537,6 +537,19 @@ function Sidebar({ sidebarVisible }) {
                     </Link>
                   )}
                   {credentials?.vendedor && (
+                    <Link href={`/vendas/propostasOeM`}>
+                      <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
+                        <FaSolarPanel
+                          style={{
+                            color: "#15599a",
+                            fontSize: "20px",
+                          }}
+                        />
+                        <p className="pl-3 text-xs text-gray-600">O&M</p>
+                      </a>
+                    </Link>
+                  )}
+                  {credentials?.vendedor && (
                     <Link href={`/vendas/entregaTecnica`}>
                       <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
                         <BsFillPatchCheckFill

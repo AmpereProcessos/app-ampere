@@ -10,7 +10,11 @@ import { IoMdRemoveCircle } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import axios from "axios";
 import Link from "next/link";
-import { AiFillThunderbolt } from "react-icons/ai";
+import {
+  AiFillThunderbolt,
+  AiOutlineArrowLeft,
+  AiOutlineArrowRight,
+} from "react-icons/ai";
 import { GoGraph } from "react-icons/go";
 import { HiIdentification } from "react-icons/hi";
 function CardProposta({ propose, fetchProposes }) {
@@ -120,6 +124,18 @@ function CardProposta({ propose, fetchProposes }) {
       alert(error);
     }
   }
+  async function moveStage(stage) {
+    try {
+      let { data } = await axios.put("/api/o&m/updatePropose", {
+        id: propose._id,
+        changes: { estagio: stage },
+      });
+      console.log("DATA", data);
+      fetchProposes();
+    } catch (error) {
+      alert(JSON.stringify(error));
+    }
+  }
   return (
     <div
       {...conditionalProp}
@@ -174,14 +190,37 @@ function CardProposta({ propose, fetchProposes }) {
           </h1>
         </div>
       </div>
-      <div className="flex gap-3 items-center justify-center">
-        <a
-          onClick={() => router.push(`/oem/pdfProposta/${propose._id}`)}
-          className="text-sm text-blue-300 font-medium cursor-pointer"
-        >
-          PROPOSTA
-        </a>
-        <BsFolderFill style={{ color: "rgb(30,64,175)" }} />
+      <div className="w-full grid grid-cols-3 items-center  px-0 lg:px-4">
+        {propose.estagio > 1 ? (
+          <div
+            onClick={() => moveStage(propose.estagio - 1)}
+            className="flex items-center justify-start cursor-pointer"
+          >
+            <AiOutlineArrowLeft />
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+        <div className="flex gap-3 items-center justify-center">
+          <a
+            onClick={() => router.push(`/oem/pdfProposta/${propose._id}`)}
+            className="text-sm text-blue-300 font-medium cursor-pointer"
+          >
+            PROPOSTA
+          </a>
+          <BsFolderFill style={{ color: "rgb(30,64,175)" }} />
+        </div>
+        {propose.estagio < 4 || !propose.estagio ? (
+          <div
+            onClick={() => moveStage(propose.estagio + 1)}
+            className="flex items-center justify-end cursor-pointer"
+          >
+            <AiOutlineArrowRight />
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

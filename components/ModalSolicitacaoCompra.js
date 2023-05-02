@@ -31,8 +31,9 @@ function PurchaseSolicitationModal({
       setMsg({ text: "Erro ao atualizar solicitação.", color: "text-red-500" });
     }
   }
+
   return (
-    <AnimatedModalWrapper modalIsOpen={isOpen} width={"50%"} height={"90%"}>
+    <AnimatedModalWrapper modalIsOpen={isOpen} width={"70%"} height={"90%"}>
       <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
         <div className="w-full flex items-center justify-between pb-2 border-b border-gray-300">
           <div className="flex items-center gap-2">
@@ -206,17 +207,23 @@ function PurchaseSolicitationModal({
           </div>
           <div className="grow flex flex-col">
             <h1 className="text-[#fead61] text-center font-bold pb-2">ITENS</h1>
-            <div className="flex items-center w-full bg-black rounded-tr-sm rounded-tl-sm">
-              <h1 className="w-1/4 text-center text-xs lg:text-base text-white font-medium p-2">
+            <div className="grid grid-cols-10 items-center w-full bg-black rounded-tr-sm rounded-tl-sm">
+              <h1 className="col-span-2 text-center text-xs lg:text-base text-white font-medium p-2">
                 NOME
               </h1>
-              <h1 className="w-1/4 text-center text-xs lg:text-base text-white font-medium p-2">
+              <h1 className="col-span-1 text-center text-xs lg:text-base text-white font-medium p-2">
                 QTDE
               </h1>
-              <h1 className="w-1/4 text-center text-xs lg:text-base text-white font-medium p-2">
+              <h1 className="col-span-2 text-center text-xs lg:text-base text-white font-medium p-2">
                 COTAÇÃO
               </h1>
-              <h1 className="w-1/4 text-center text-xs lg:text-base text-white font-medium p-2">
+              <h1 className="col-span-2 text-center text-xs lg:text-base text-white font-medium p-2">
+                DATA DE COMPRA
+              </h1>
+              <h1 className="col-span-2 text-center text-xs lg:text-base text-white font-medium p-2">
+                DATA ENTREGA
+              </h1>
+              <h1 className="col-span-1 text-center text-xs lg:text-base text-white font-medium p-2">
                 AÇÕES
               </h1>
             </div>

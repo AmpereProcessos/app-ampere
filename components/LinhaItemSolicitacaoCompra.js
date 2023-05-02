@@ -1,19 +1,20 @@
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { BsArrowsExpand } from "react-icons/bs";
 import { MdCancel } from "react-icons/md";
 
 function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
   const [showDescription, setShowDescription] = useState(false);
-  console.log(showDescription);
   return (
     <div className="flex flex-col w-full gap-2 bg-gray-50 rounded-tr-sm rounded-tl-sm">
-      <div className="flex items-center w-full">
-        <h1 className="w-1/4 text-center text-xs text-gray-700 font-medium p-1">
+      <div className="grid grid-cols-10 items-center w-full h-[60px]">
+        <h1 className="col-span-2 w-full text-center text-xs text-gray-700 font-medium p-1">
           {item.nome && item.grandeza
             ? `${item.nome} (${item.grandeza})`
             : item.nome}
         </h1>
-        <div className="w-1/4 p-1">
+        <div className="col-span-1 w-full p-1">
           <input
             value={item.qtde.toString()}
             onChange={(e) => {
@@ -25,7 +26,7 @@ function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
             className="outline-none text-center text-xs text-gray-700 h-full w-full bg-transparent"
           />
         </div>
-        <div className="w-1/4 p-1">
+        <div className="col-span-2 w-full p-1">
           <input
             value={item.cotacao ? item.cotacao.toString() : null}
             onChange={(e) => {
@@ -37,7 +38,77 @@ function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
             className="outline-none text-center text-xs text-gray-700 h-full w-full bg-transparent"
           />
         </div>
-        <div className="w-1/4 flex items-center justify-center font-medium p-1 gap-4">
+        <div className="flex items-center col-span-2 w-full p-1 h-full">
+          <input
+            value={
+              item.dataCompra
+                ? dayjs(item.dataCompra).add(4, "hour").format("YYYY-MM-DD")
+                : null
+            }
+            onChange={(e) => {
+              const list = infoHolder.itens;
+              list[index].dataCompra = new Date(e.target.value).toISOString();
+              setInfo((prev) => ({ ...prev, itens: list }));
+            }}
+            type="date"
+            className="outline-none text-center text-xs text-gray-700 h-full w-full bg-transparent grow"
+          />
+          {infoHolder.itens.length > 1 && item.dataCompra ? (
+            <div
+              title="Alterar todas as data para essa."
+              className="mx-2 bg-yellow-500 p-1 rounded cursor-pointer"
+              onClick={() => {
+                var list = infoHolder.itens;
+                const itemDate = item.dataCompra;
+                const finalList = list.map((item) => {
+                  return {
+                    ...item,
+                    dataCompra: itemDate,
+                  };
+                });
+                setInfo((prev) => ({ ...prev, itens: finalList }));
+              }}
+            >
+              <BsArrowsExpand />
+            </div>
+          ) : null}
+        </div>
+        <div className="flex items-center col-span-2 w-full p-1 h-full">
+          <input
+            value={
+              item.dataEntrega
+                ? dayjs(item.dataEntrega).add(4, "hour").format("YYYY-MM-DD")
+                : null
+            }
+            onChange={(e) => {
+              const list = infoHolder.itens;
+              list[index].dataEntrega = new Date(e.target.value).toISOString();
+              setInfo((prev) => ({ ...prev, itens: list }));
+            }}
+            type="date"
+            className="outline-none text-center text-xs text-gray-700 h-full w-full grow bg-transparent"
+          />
+          {infoHolder.itens.length > 1 && item.dataEntrega ? (
+            <div
+              title="Alterar todas as data para essa."
+              className="mx-2 bg-yellow-500 p-1 rounded cursor-pointer"
+              onClick={() => {
+                var list = infoHolder.itens;
+                const itemDate = item.dataEntrega;
+                const finalList = list.map((item) => {
+                  return {
+                    ...item,
+                    dataEntrega: itemDate,
+                  };
+                });
+                setInfo((prev) => ({ ...prev, itens: finalList }));
+              }}
+            >
+              <BsArrowsExpand />
+            </div>
+          ) : null}
+        </div>
+        <div className="col-span-1 w-full flex items-center justify-center font-medium p-1 gap-4">
           {item.descricao ? (
             showDescription ? (
               <AiFillEye

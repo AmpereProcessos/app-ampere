@@ -691,6 +691,7 @@ function FormVisitaTecnicaUm({
         "VISITA TÉCNICA IN LOCO - URBANA",
         "ALTERAÇÃO DE PROJETO",
         "AUMENTO DE SISTEMA AMPÈRE",
+        "VISITA TÉCNICA IN LOCO - RURAL",
       ].includes(dados.tipoDeSolicitacao) ? (
         <div className="flex justify-center items-center mt-3">
           <button

@@ -697,8 +697,11 @@ function Acompanhamento() {
             ? `${filteredArr.length} CLIENTES`
             : `${filteredArr.length} CLIENTE`}
         </h1>
-        {filteredArr.map((item) => (
-          <div className="w-full flex items-center font-medium py-1 gap-2">
+        {filteredArr.map((item, index) => (
+          <div
+            key={index}
+            className="w-full flex items-center font-medium py-1 gap-2"
+          >
             <FaUserAlt style={{ color: "#15599a" }} />
             <h1>{item.nomeDoContrato}</h1>
           </div>

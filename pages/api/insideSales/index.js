@@ -25,20 +25,15 @@ export default async function handler(req, res) {
       .toArray();
     res.json(arr);
   } else if (req.method == "POST") {
-    const after = req.body.after;
-    const before = req.body.before;
+    // const after = req.body.after;
+    // const before = req.body.before;
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("leads");
+    console.log(req.body);
     var arr = await collection
       .aggregate([
         {
-          $match: {
-            responsavel: { $in: [req.body.responsavel, "NÃO DEFINIDO"] },
-            dataDeAquisicao: {
-              $gte: after,
-              $lt: before,
-            },
-          },
+          $match: req.body.match,
         },
         {
           $sort: {

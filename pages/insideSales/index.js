@@ -72,9 +72,13 @@ function InsideSales() {
     } else {
       axios
         .post("/api/insideSales", {
-          responsavel: session?.user.vendedor,
-          after: new Date(fetchDateFilter.after).toISOString(),
-          before: fetchDateFilter.before,
+          match: {
+            responsavel: session?.user.vendedor,
+            dataDeAquisicao: {
+              $gte: new Date(fetchDateFilter.after).toISOString(),
+              $lt: fetchDateFilter.before,
+            },
+          },
         })
         .then((res) => {
           setLeads(res.data);

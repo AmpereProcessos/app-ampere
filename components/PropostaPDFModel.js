@@ -472,8 +472,13 @@ function PropostaPDFModel({ info }) {
 
                     <tr className="border-b bg-white">
                       <td className="px-2 py-1 text-sm font-medium text-gray-900 border-r">
-                        VALOR DO PLANO ANUAL {quotaCreditNumber()}
-                        {quotaBoletoNumber()}
+                        VALOR DO PLANO ANUAL
+                        <strong className="text-xxs font-medium">
+                          {" "}
+                          PARCELAMOS EM ATÉ 6X NOS CARTÕES VISA/MASTER SEM JUROS
+                        </strong>
+                        {/* {quotaCreditNumber()}
+                        {quotaBoletoNumber()} */}
                       </td>
 
                       <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">

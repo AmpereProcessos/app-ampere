@@ -564,6 +564,20 @@ function Sidebar({ sidebarVisible }) {
                       </a>
                     </Link>
                   )}
+                  {credentials?.vendedor &&
+                    credentials.visualizacao == "VENDEDOR" && (
+                      <Link href={`/vendas/leads`}>
+                        <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
+                          <MdAddIcCall
+                            style={{
+                              color: "#15599a",
+                              fontSize: "20px",
+                            }}
+                          />
+                          <p className="pl-3 text-xs text-gray-600">Leads</p>
+                        </a>
+                      </Link>
+                    )}
                 </div>
               )}
           </>

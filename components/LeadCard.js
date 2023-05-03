@@ -14,6 +14,7 @@ import NumberFloatingInput from "./NumberFloatingInput";
 import NumberInput from "./NumberInput";
 import SaveButton from "./utils/Buttons/SaveButton";
 import { FaSave } from "react-icons/fa";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 function phoneMask(value) {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -21,11 +22,18 @@ function phoneMask(value) {
   value = value.replace(/(\d)(\d{4})$/, "$1-$2");
   return value;
 }
+
+const stages = {
+  1: "Em atendimento",
+  2: "Em acompanhamento",
+  3: "Venda fechada",
+};
+
 function LeadCard({ lead, getLeads }) {
   const [infoHolder, setInfo] = useState(lead);
   const [msg, setMsg] = useState({ text: "", color: "" });
   const [deleteMenu, setDeleteMenu] = useState(false);
-
+  const [showLostLeadJustification, setShowJustification] = useState(false);
   function saveChanges() {
     console.log(infoHolder);
     axios
@@ -62,7 +70,9 @@ function LeadCard({ lead, getLeads }) {
   return (
     <div
       key={lead._id}
-      className={`flex flex-col w-full border border-gray-200 p-3 hover:bg-blue-100 items-center`}
+      className={`flex flex-col w-full border border-gray-200 p-3 hover:bg-blue-100 ${
+        lead.perdido ? "bg-red-100" : ""
+      } items-center`}
     >
       <div className="relative grid grid-cols-1 lg:grid-cols-10 items-center border-b border-gray-200 pb-1 w-full">
         {lead.contratoSolicitado && (
@@ -215,23 +225,6 @@ function LeadCard({ lead, getLeads }) {
                   .add(4, "hour")
                   .format("DD/MM/YYYY")}
               </p>
-              {/* <input
-                type={"date"}
-                className="outline-none text-gray-600 text-center text-sm bg-transparent"
-                value={
-                  infoHolder.dataDeEnvio
-                    ? dayjs(infoHolder.dataDeEnvio)
-                        .add(4, "hour")
-                        .format("YYYY-MM-DD")
-                    : null
-                }
-                onChange={(e) => {
-                  setInfo({
-                    ...infoHolder,
-                    dataDeEnvio: new Date(e.target.value).toISOString(),
-                  });
-                }}
-              /> */}
             </div>
 
             <div className="hidden lg:flex flex-col items-center">
@@ -248,9 +241,10 @@ function LeadCard({ lead, getLeads }) {
               </p>
             </div>
           </div>
-          <div className="flex justify-center items-center col-span-1 lg:col-span-4 gap-2">
+          <div className="flex justify-center items-center col-span-1 lg:col-span-4 gap-3">
             <SelectInput
               label={"VENDEDOR P/ENVIO"}
+              labelColor={"text-gray-600"}
               editable={true}
               widthFit={true}
               value={
@@ -273,6 +267,18 @@ function LeadCard({ lead, getLeads }) {
                 handleClick={saveChanges}
               />
             </div>
+            <div className="flex flex-col items-center">
+              <p className="text-gray-600 text-center font-bold text-sm">
+                STATUS
+              </p>
+              <p className="text-gray-600 uppercase text-center text-sm">
+                {lead.perdido
+                  ? "PERDIDO"
+                  : lead.estagioFunil
+                  ? stages[lead.estagioFunil]
+                  : stages[1]}
+              </p>
+            </div>
           </div>
           <div className="grid grid-cols-1 relative mt-1 lg:mt-0">
             {deleteMenu ? (
@@ -294,6 +300,21 @@ function LeadCard({ lead, getLeads }) {
               </div>
             ) : (
               <div className="flex items-center justify-center">
+                {lead.perdido ? (
+                  showLostLeadJustification ? (
+                    <AiFillEye
+                      title="ESCONDER MOTIVO DA PERDA"
+                      onClick={() => setShowJustification(false)}
+                      style={{ color: "#fead61", cursor: "pointer" }}
+                    />
+                  ) : (
+                    <AiFillEyeInvisible
+                      title="MOSTRAR MOTIVO DA PERDA"
+                      onClick={() => setShowJustification(true)}
+                      style={{ color: "#fead61", cursor: "pointer" }}
+                    />
+                  )
+                ) : null}
                 <div
                   onClick={() => setDeleteMenu(true)}
                   className="w-fit text-red-500 opacity-40 hover:opacity-100 hover:text-red-500 hover:scale-110 duration-300 ease-in cursor-pointer text-[20px]"
@@ -306,6 +327,16 @@ function LeadCard({ lead, getLeads }) {
         </div>
         {msg && <p className={`text-center italic ${msg.color}`}>{msg.text}</p>}
       </div>
+      {showLostLeadJustification ? (
+        <div className="flex flex-col w-full border border-red-500">
+          <h1 className="font-bold text-center text-sm">
+            MOTIVO DA PERDA DO LEAD
+          </h1>
+          <p className="w-full text-center py-1 text-xs italic text-red-500 font-medium">
+            {lead.motivoPerda}
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }

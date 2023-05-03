@@ -98,7 +98,9 @@ function ListPropostas({ proposes, title, listId, fetchProposes }) {
       <div className="border-b pb-2 h-fit w-full text-center border-blue-300 text-xl font-bold">
         <h1>{title}</h1>
         <div className="flex justify-center gap-x-2">
-          {/* <p className="text-xs text-gray-500">R$ {getListCumulativePrice()}</p> */}
+          <p className="text-xs text-gray-500">
+            {filteredPropostas.length} proposta(s)
+          </p>
           <p className="text-xs text-gray-500">
             {getListCumulativeModules()} módulos
           </p>

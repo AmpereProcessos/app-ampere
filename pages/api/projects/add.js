@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     let cod = isNaN(req.body.codigoSVB) ? 0 : Number(req.body.codigoSVB);
     let obj = await collectionIS.findOneAndUpdate(
       { codigoSVB: cod },
-      { $set: { contratoSolicitado: true } },
+      { $set: { contratoSolicitado: true, estagioFunil: 3 } },
       { returnNewDocument: true }
     );
     let insider = obj ? obj?.value?.responsavel : null;

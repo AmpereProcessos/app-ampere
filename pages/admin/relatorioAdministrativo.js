@@ -2,6 +2,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import React, { useContext, useEffect, useState } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import Select from "react-select";
@@ -10,6 +11,15 @@ import {
   tiposDeServico,
   vendedores,
 } from "../../utils/constants";
+import { AnimatePresence, motion } from "framer-motion";
+import { FaUserAlt } from "react-icons/fa";
+
+function renderShowClientsButtonStyles(show) {
+  if (!show)
+    return "bg-gray-100 text-gray-300 border border-gray-300 hover:bg-blue-100 hover:text-blue-400";
+  else
+    return "bg-blue-100 text-blue-400 hover:bg-gray-100 hover:text-gray-300 border border-gray-300";
+}
 
 function Acompanhamento() {
   const router = useRouter();
@@ -19,7 +29,7 @@ function Acompanhamento() {
       router.push("/auth/authHome");
     },
   });
-
+  const [showClientsNames, setShowClientsNames] = useState(false);
   const [info, setInfo] = useState([]);
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -37,7 +47,6 @@ function Acompanhamento() {
   function getInfo() {
     axios.get("/api/report").then((res) => setInfo(res.data));
   }
-  console.log(info);
   function getPotenciaVendida() {
     var filteredArr = info;
     filteredArr = filteredArr.filter((x) => x.contrato.status == "ASSINADO");
@@ -216,7 +225,6 @@ function Acompanhamento() {
           x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
           x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
-      console.log("pós filtro de data", filteredArr);
     }
     if (filters.tipoVendaFilter != "GERAL") {
       if (!filteredArr) filteredArr = info;
@@ -522,6 +530,9 @@ function Acompanhamento() {
         (x) => x.regional == filters.regionalFilter
       );
     }
+    console.log(
+      "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    );
     var totalSum = 0;
     for (var i = 0; i < filteredArr.length; i++) {
       let projeto = !isNaN(filteredArr[i].sistema?.valorProjeto)
@@ -536,6 +547,13 @@ function Acompanhamento() {
       let oem = !isNaN(filteredArr[i].oem?.valor)
         ? filteredArr[i].oem.valor
         : 0;
+      console.log(
+        filteredArr[i].nomeDoContrato,
+        projeto,
+        padrao,
+        estrutura,
+        oem
+      );
       totalSum =
         Number(totalSum) +
         Number(projeto) +
@@ -623,7 +641,71 @@ function Acompanhamento() {
       // porcentagemCustoNaoPreenchido: countCustoNotInformed / filteredArr.length,
     };
   }
-  console.log("teste");
+  function renderClients() {
+    var filteredArr = info;
+    filteredArr = filteredArr.filter(
+      (x) =>
+        x.parecer.statusDoParecerDeAcesso != "CANCELADO" &&
+        x.obra.statusDaObra != "OBRA CANCELADA"
+    );
+    if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter(
+        (x) =>
+          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
+          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      );
+    }
+    if (filters.tipoVendaFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
+        filteredArr = filteredArr.filter((item) => !item.insider);
+      }
+      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
+        filteredArr = filteredArr.filter((item) => item.insider != null);
+      }
+    }
+    if (filters.vendedorFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((call) =>
+        filters.vendedorFilter.includes(call.vendedor.nome)
+      );
+    }
+    if (filters.cidadeFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((call) =>
+        filters.cidadeFilter.includes(call.cidade)
+      );
+    }
+    if (filters.tipoDeServicoFilter.length > 0) {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter((item) =>
+        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
+      );
+    }
+    if (filters.regionalFilter != "GERAL") {
+      if (!filteredArr) filteredArr = info;
+      filteredArr = filteredArr.filter(
+        (x) => x.regional == filters.regionalFilter
+      );
+    }
+
+    return (
+      <div className="w-full flex flex-col">
+        <h1 className="text-[#fead61] font-medium text-center">
+          {filteredArr.length > 1
+            ? `${filteredArr.length} CLIENTES`
+            : `${filteredArr.length} CLIENTE`}
+        </h1>
+        {filteredArr.map((item) => (
+          <div className="w-full flex items-center font-medium py-1 gap-2">
+            <FaUserAlt style={{ color: "#15599a" }} />
+            <h1>{item.nomeDoContrato}</h1>
+          </div>
+        ))}
+      </div>
+    );
+  }
   useEffect(() => {
     if (session?.user.manager == true) {
       getInfo();
@@ -767,6 +849,29 @@ function Acompanhamento() {
             </div>
           </div>
         </div>
+        <div className="w-full py-2 flex items-center justify-end">
+          <button
+            onClick={() => setShowClientsNames((prev) => !prev)}
+            className={`flex items-center gap-2 p-1 rounded font-medium ${renderShowClientsButtonStyles(
+              showClientsNames
+            )}`}
+          >
+            <p>MOSTRAR CLIENTES</p>
+            {showClientsNames ? <AiFillEye /> : <AiFillEyeInvisible />}
+          </button>
+        </div>
+        <AnimatePresence>
+          {showClientsNames ? (
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0.6 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="flex flex-col self-center border border-gray-200 p-2 h-fit max-h-[400px] w-full lg:w-[50%] overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+            >
+              {renderClients()}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+
         <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">
           <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">

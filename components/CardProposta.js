@@ -204,7 +204,7 @@ function CardProposta({ propose, fetchProposes }) {
 
         <div className="flex gap-3 items-center justify-center">
           <a
-            onClick={() => router.push(`/oem/pdfProposta/${propose._id}`)}
+            href={`https://app.ampereenergias.com.br/oem/pdfProposta/${propose._id}`}
             className="text-sm text-blue-300 font-medium cursor-pointer"
           >
             PROPOSTA

@@ -106,7 +106,7 @@ function RelatorioEstoque() {
         </Link>
       </div>
       <div className="w-full grow flex flex-col">
-        <div className="grid grid-cols-8 gap-x-2 border-b bg-gray-800 w-full">
+        <div className="grid grid-cols-9 gap-x-2 border-b bg-gray-800 w-full">
           <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
             INDEX
           </p>
@@ -119,12 +119,15 @@ function RelatorioEstoque() {
           <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
             QTDE
           </p>
+          <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
+            PREÇO
+          </p>
         </div>
         {materials && materials?.length
           ? filterItems(materials).map((material, index) => (
               <div
                 key={index}
-                className="grid grid-cols-8 gap-x-2 border-b border-x border-gray-700"
+                className="grid grid-cols-9 gap-x-2 border-b border-x border-gray-700"
               >
                 <div className="col-span-1 py-4 text-center whitespace-nowrap text-xs font-medium text-gray-900">
                   {index + 1}
@@ -137,6 +140,9 @@ function RelatorioEstoque() {
                 </div>
                 <div className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
                   {material.qtde && material.qtde > 0 ? material.qtde : "-"}
+                </div>
+                <div className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+                  {material.preco && material.preco > 0 ? material.preco : "-"}
                 </div>
               </div>
             ))

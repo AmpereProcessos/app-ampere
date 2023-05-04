@@ -15,6 +15,9 @@ export const routes = [
   "RH",
   "Almoxarifado",
 ];
+
+// ESQUERDA  129ABA
+// DIREITA   15599A
 export const respChamadosPPS = [
   { label: "A DEFINIR", value: "A DEFINIR" },
   { label: "ADRIANO", value: "ADRIANO" },

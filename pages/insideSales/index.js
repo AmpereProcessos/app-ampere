@@ -53,7 +53,16 @@ function InsideSales() {
     before: null,
     field: null,
   });
-
+  function getConversion() {
+    const convertedNum = filteredLeads.filter(
+      (lead) => !!lead.contratoAssinado
+    ).length;
+    return (convertedNum * 100) / filteredLeads.length;
+  }
+  function getLoses() {
+    const lostNum = filteredLeads.filter((lead) => !!lead.perdido).length;
+    return (lostNum * 100) / filteredLeads.length;
+  }
   function getLeads() {
     if (
       session?.user.accessibleRoutes.includes("PPS") ||
@@ -153,15 +162,38 @@ function InsideSales() {
       }
     }
   }, [session]);
+
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
       <div className="flex flex-col grow p-6">
         <div className="flex flex-col pb-2 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h1 className="font-bold  text-2xl text-[#15599a] w-full font-['Roboto'] text-start">
+            <h1 className="font-bold  text-2xl text-[#15599a]  font-['Roboto'] text-start">
               ACOMPANHAMENTO DE OPORTUNIDADES ({filteredLeads.length})
             </h1>
+            <div className="flex items-start gap-4">
+              <div className="flex flex-col items-center font-medium">
+                <h1 className="text-xs">CONVERSÃO (%)</h1>
+                <h1 className="text-sm text-green-500">
+                  {getConversion().toLocaleString("pt-br", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  %
+                </h1>
+              </div>
+              <div className="flex flex-col items-center font-medium">
+                <h1 className="text-xs">PERDAS (%)</h1>
+                <h1 className="text-sm text-red-500">
+                  {getLoses().toLocaleString("pt-br", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  %
+                </h1>
+              </div>
+            </div>
             {dropdownMenuVisible ? (
               <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
                 <IoMdArrowDropupCircle

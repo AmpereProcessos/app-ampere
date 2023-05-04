@@ -13,7 +13,7 @@ import axios from "axios";
 import NumberFloatingInput from "./NumberFloatingInput";
 import NumberInput from "./NumberInput";
 import SaveButton from "./utils/Buttons/SaveButton";
-import { FaSave } from "react-icons/fa";
+import { FaFileContract, FaHandshake, FaSave } from "react-icons/fa";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 function phoneMask(value) {
   if (!value) return "";
@@ -80,7 +80,11 @@ function LeadCard({ lead, getLeads }) {
             <BsPatchCheckFill style={{ fontSize: "20px" }} />
           </div>
         )}
-
+        {lead.contratoAssinado && (
+          <div className="absolute -left-2 top-4 text-green-600">
+            <FaHandshake style={{ fontSize: "20px" }} />
+          </div>
+        )}
         <p className="text-sm text-[#15599a] font-bold text-center">
           #{lead.codigoSVB} - {lead.nome?.toUpperCase()}
         </p>

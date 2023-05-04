@@ -1,9 +1,26 @@
 import dayjs from "dayjs";
 import connectToDatabase from "../../utils/connectDb";
+import connectoToInsideDb from "../../utils/insideSalesDb";
 export default async function handler(req, res) {
   // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
   // const collection = db.collection("dados");
 
+  // const db2 = await connectoToInsideDb(process.env.DB_KEY);
+  // const collection2 = db2.collection("leads");
+  // const codes = await collection
+  //   .aggregate([
+  //     {
+  //       $match: {
+  //         "contrato.status": "ASSINADO",
+  //       },
+  //     },
+  //     {
+  //       $project: {
+  //         codigoSVB: 1,
+  //       },
+  //     },
+  //   ])
+  //   .toArray();
   // const arr = await collection
   //   .aggregate([
   //     {
@@ -81,6 +98,15 @@ export default async function handler(req, res) {
   // });
 
   // res.json(newArr);
+
+  // const filteredCodes = codes.filter((obj) => !!obj.codigoSVB);
+  // const arr = filteredCodes.map((obj) => Number(obj.codigoSVB));
+  // console.log(arr.length);
+  // const dbResp = await collection2.updateMany(
+  //   { codigoSVB: { $in: arr } },
+  //   { $set: { contratoAssinado: true } }
+  // );
+  // console.log(arr.length);
   res.json("DESATIVADA");
 }
 

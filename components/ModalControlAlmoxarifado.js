@@ -248,15 +248,17 @@ function ControleAlmoxarifado({
                       key={index}
                       className="w-full lg:w-[60%] p-2 px-4 flex flex-col rounded border border-gray-200"
                     >
-                      <h1 className="text-blue-700 font-medium text-sm">
-                        ALTERAÇÃO DE QUANTIDADE
-                      </h1>
+                      <div className="flex items-center justify-between">
+                        <h1 className="text-blue-700 font-medium text-sm">
+                          ALTERAÇÃO DE QUANTIDADE
+                        </h1>
+                        <h1 className="text-sm font-medium">
+                          {alt.movimentacao ? "SAÍDA" : "ALTERAÇÃO MANUAL"}
+                        </h1>
+                      </div>
+
                       <div className="grid grid-cols-3 items-center">
-                        {alt.movimentacao ? (
-                          <div className="flex items-center justify-center col-span-3">
-                            {alt.movimentacao}
-                          </div>
-                        ) : (
+                        {alt.anterior && alt.novo ? (
                           <>
                             <h1 className="text-lg text-gray-600 text-end">
                               {alt.anterior}
@@ -268,6 +270,10 @@ function ControleAlmoxarifado({
                               {alt.novo}
                             </h1>
                           </>
+                        ) : (
+                          <div className="flex items-center justify-center col-span-3">
+                            {alt.movimentacao}
+                          </div>
                         )}
                       </div>
                       <div className="flex items-center justify-between">

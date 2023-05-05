@@ -28,6 +28,9 @@ export default async function handler(req, res) {
       const saida = mat.qtdeSaida ? mat.qtdeSaida : 0;
       const devolucao = mat.qtdeDevolucao ? mat.qtdeDevolucao : 0;
       const diff = saida - devolucao;
+      const anterior = mat.qtdePreBaixa ? mat.qtdePreBaixa : 0;
+      const novo = anterior - diff;
+      if (diff <= 0) return;
       return {
         updateOne: {
           filter: { nome: mat.nome },
@@ -41,6 +44,8 @@ export default async function handler(req, res) {
                     dataAlteracao: new Date().toISOString(), // current date
                     responsavel: user.name, // name of responsible person
                     movimentacao: -diff,
+                    anterior: anterior,
+                    novo: novo,
                   },
                 ],
                 $slice: -10, // limit the array size to 10 items
@@ -51,7 +56,10 @@ export default async function handler(req, res) {
         },
       };
     });
-    await collection.bulkWrite(changes);
+    const filteredChanges = changes.filter((change) => !!change);
+
+    await collection.bulkWrite(filteredChanges);
+
     res.json("UEPA");
   } else if (req.method === "PUT") {
     const db = await connectToDatabase(process.env.DB_KEY);

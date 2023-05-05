@@ -15,11 +15,19 @@ function PDFFormulario({ info, backTo, type }) {
       } else {
         total =
           total +
-          (info.materiais[i].qtdeSaida - info.materiais[i].qtdeDevolucao) *
+          getDiff(
+            info.materiais[i].qtdeSaida,
+            info.materiais[i].qtdeDevolucao
+          ) *
             info.materiais[i].precoUnit;
       }
     }
     return total.toFixed(2);
+  }
+  function getDiff(taken, returned) {
+    const fixedTaken = taken ? taken : 0;
+    const fixedReturned = returned ? returned : 0;
+    return Number((fixedTaken - fixedReturned).toFixed(2));
   }
   if (type == "SIM")
     return (
@@ -100,7 +108,7 @@ function PDFFormulario({ info, backTo, type }) {
                 <p className="text-sm col-span-1  text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
                   {material.diff
                     ? material.diff.toFixed(2)
-                    : (material.qtdeSaida - material.qtdeDevolucao).toFixed(2)}
+                    : getDiff(material.qtdeSaida, material.qtdeDevolucao)}
                 </p>
                 <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
                   R$
@@ -109,7 +117,7 @@ function PDFFormulario({ info, backTo, type }) {
                         .toFixed(2)
                         .replace(".", ",")
                     : (
-                        (material.qtdeSaida - material.qtdeDevolucao) *
+                        getDiff(material.qtdeSaida, material.qtdeDevolucao) *
                         material.precoUnit
                       )
                         .toFixed(2)

@@ -87,12 +87,14 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
         const correspondentUpToDateItem = upToDateItems.filter(
           (i) => i._id == item.id
         )[0];
+        console.log("ITEM", item);
         return {
           id: item.id,
           nome: correspondentUpToDateItem.nome,
           precoUnit: correspondentUpToDateItem.preco,
-          qtdeDevolucao: item.qtdeDevolucao,
+          qtdeDevolucao: item.qtdeDevolucao ? item.qtdeDevolucao : 0,
           qtdeSaida: item.qtdeSaida,
+          qtdePreBaixa: correspondentUpToDateItem.qtde,
         };
       });
       setResponseMessage({

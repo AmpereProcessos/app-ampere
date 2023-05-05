@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/resetRescissionLeads",
-      "schedule": "* * * * 2"
+      "schedule": "0 19 * * *"
     }
   ]
 }

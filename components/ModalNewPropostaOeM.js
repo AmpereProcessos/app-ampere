@@ -28,8 +28,14 @@ function ModalNewPropostaOeM({ isOpen, closeModal, getProposes, seller }) {
   });
 
   function getIrradiance(city) {
+    const uf = {
+      MG: "MINAS GERAIS",
+      GO: "GOIÁS",
+    };
     const irrad = irradiacoes.filter(
-      (city) => city.NAME.toUpperCase() == proposeInfo.cidade
+      (city) =>
+        city.NAME.toUpperCase() == proposeInfo.cidade &&
+        city.STATE == proposeInfo.uf
     )[0];
     if (irrad) return Number(((irrad.ANNUAL / 1000) * 30 * 0.81).toFixed(2));
     else return 0;

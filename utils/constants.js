@@ -544,7 +544,7 @@ export const irradByCity = [
   { cidade: "UBERABA", irrad: 5.148 },
   { cidade: "CALDAS NOVAS", irrad: 5.215 },
   { cidade: "SÃO SEBASTIÃO DO PARAÍSO", irrad: 5.053 },
-  { cidade: "BOM JESUS", irrad: 4.962 },
+  { cidade: "BOM JESUS DE GOIÁS", irrad: 4.962 },
   { cidade: "PORTEIRÃO", irrad: 5.215 },
   { cidade: "JOÃO PINHEIRO", irrad: 5.514 },
   { cidade: "SÃO SIMÃO", irrad: 5.165 },
@@ -673,7 +673,7 @@ export const fatorDeGeracaoPorOrientacao = {
     SUL: "99.01",
     SUDESTE: "107.16",
   },
-  "MONTE ALEGRE": {
+  "MONTE ALEGRE DE MINAS": {
     fatorGen: "117.02",
     LESTE: "106.14",
     NORDESTE: "114.80",
@@ -717,7 +717,7 @@ export const fatorDeGeracaoPorOrientacao = {
     SUL: "95.44",
     SUDESTE: "103.30",
   },
-  "BOM JESUS": {
+  "BOM JESUS DE GOIÁS": {
     fatorGen: "119.09",
     LESTE: "108.01",
     NORDESTE: "116.83",
@@ -1193,7 +1193,7 @@ export const cities = [
     annualGenFactor: 125.86,
   },
   {
-    name: "Monte Alegre-MG",
+    name: "MONTE ALEGRE DE MINAS",
     annualGenFactor: 125.3,
   },
   {
@@ -1298,11 +1298,11 @@ export const cidadesAtendidas = [
   "PRATA", // MG
   "CANÁPOLIS", // MG
   "CACHOEIRA DOURADA", // MG
-  "MONTE ALEGRE", // MG
+  "MONTE ALEGRE DE MINAS", // MG
   "UBERABA", // MG
   "CALDAS NOVAS", // GO
   "SÃO SEBASTIÃO DO PARAÍSO", // MG
-  "BOM JESUS", // MG
+  "BOM JESUS DE GOIÁS", // MG
   "PORTEIRÃO", // GO
   "JOÃO PINHEIRO", // MG
   "SÃO SIMÃO", // GO

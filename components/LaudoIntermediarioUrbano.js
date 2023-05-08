@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Logo from "../utils/whitelogoHD.png";
-import { fatorDeGeracaoPorOrientacao } from "../utils/constants";
+import fatorDeGeracaoPorOrientacao from "../utils/fatoresDeGeracao.json";
 import Assinatura from "../utils/assinatura.jpg";
 import dayjs from "dayjs";
 import {

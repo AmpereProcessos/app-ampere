@@ -29,6 +29,7 @@ function BaixaPerformance() {
   });
 
   const [token, setToken] = useState("");
+  const [authorization, setAuthorization] = useState("");
 
   const [badPerformers, setBadPerformers] = useState([]);
   const [monitoramentoBook, setMonitoramentoBook] = useState([]);
@@ -95,6 +96,25 @@ function BaixaPerformance() {
       alert("Por favor, preencha um token válido.");
     }
   }
+  async function getDeyeBadPerfomers() {
+    console.log(authorization);
+    try {
+      const { data } = await axios.post(
+        "https://globalpro.solarmanpv.com/maintain-s/operating/station/v2/search?page=1&size=500&order.direction=ASC&order.property=name",
+        { station: { powerTypeList: ["PV"] } },
+        {
+          headers: {
+            Authorization: authorization,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+      console.log(data);
+    } catch (error) {
+      console.log("ERRO", error);
+      alert("Erro na requisição.");
+    }
+  }
   async function getMonitoramentoBook() {
     try {
       let { data } = await axios.get("/api/o&m/monitoramento");
@@ -151,20 +171,37 @@ function BaixaPerformance() {
             {badPerformers.length > 0 && `(${badPerformers.length})`}
           </h1>
         </div>
-        <div className="flex justify-center gap-2 items-center mt-2">
-          <TextInput
-            editable={true}
-            label={"Token Solar View"}
-            placeholder="Preencha aqui o token SolarView"
-            value={token}
-            handleChange={(value) => setToken(value)}
-          />
-          <button
-            onClick={getBadPerformers}
-            className="p-2 rounded bg-[#15599a] text-xs text-white font-bold hover:bg-[#fead61] hover:text-black transition duration-300 ease-in-out hover:scale-105"
-          >
-            BUSCAR
-          </button>
+        <div className="flex items-center gap-4 justify-center">
+          <div className="flex justify-center gap-2 items-center mt-2">
+            <TextInput
+              editable={true}
+              label={"Token Solar View"}
+              placeholder="Preencha aqui o token SolarView"
+              value={token}
+              handleChange={(value) => setToken(value)}
+            />
+            <button
+              onClick={getBadPerformers}
+              className="p-2 rounded bg-[#15599a] text-xs text-white font-bold hover:bg-[#fead61] hover:text-black transition duration-300 ease-in-out hover:scale-105"
+            >
+              BUSCAR
+            </button>
+          </div>
+          <div className="flex justify-center gap-2 items-center mt-2">
+            <TextInput
+              editable={true}
+              label={"Authorization Deye"}
+              placeholder="Preencha aqui a authorization da Deye"
+              value={authorization}
+              handleChange={(value) => setAuthorization(value)}
+            />
+            <button
+              onClick={getDeyeBadPerfomers}
+              className="p-2 rounded bg-[#15599a] text-xs text-white font-bold hover:bg-[#fead61] hover:text-black transition duration-300 ease-in-out hover:scale-105"
+            >
+              BUSCAR
+            </button>
+          </div>
         </div>
         <div className="flex flex-col items-center mt-4">
           {inProgress && (

@@ -1,17 +1,11 @@
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function DateFloatingInput({ value, handleChange, width, editable, label }) {
-  const [type, setType] = useState("text");
-  function handleDateFormating(type, value) {
-    if (type == "date") return value;
-    else {
-      if (value) return dayjs(value).format("DD/MM/YYYY");
-      else {
-        return "";
-      }
-    }
-  }
+  const [holder, setHolder] = useState(value);
+  useEffect(() => {
+    setHolder(value);
+  }, [value]);
   return (
     <>
       {/* <div className={`flex flex-col lg:hidden w-full my-2`}>
@@ -37,7 +31,7 @@ function DateFloatingInput({ value, handleChange, width, editable, label }) {
         } mb-6 group`}
       >
         <input
-          value={value}
+          value={holder ? holder : null}
           onChange={(e) => {
             console.log(e.target.value);
             handleChange(
@@ -50,7 +44,7 @@ function DateFloatingInput({ value, handleChange, width, editable, label }) {
           type={"date"}
           name={label.toLowerCase()}
           id={label.toLowerCase()}
-          className="flex py-2.5 z-1 text-center px-0 w-full bg-[#fff] text-sm text-gray-900 border-0 border-b-2 border-gray-300  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          className="flex py-[0.570rem] z-1 text-center px-0 w-full bg-[#fff] text-sm text-gray-900 border-0 border-b-2 border-gray-300  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           placeholder=" "
         />
 

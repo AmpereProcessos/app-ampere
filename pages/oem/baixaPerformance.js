@@ -108,11 +108,13 @@ function BaixaPerformance() {
           const station = item.station;
           return {
             nomeUsina: station.name,
-            performance: station.generationCapacity,
+            performance: station.generationCapacity
+              ? station.generationCapacity * 100
+              : 0,
           };
         });
         formattedArr = formattedArr.filter(
-          (item) => item.performance && item.performance < 0.55
+          (item) => item.performance && item.performance < 55
         );
         console.log(formattedArr);
         setBadPerformers(formattedArr);

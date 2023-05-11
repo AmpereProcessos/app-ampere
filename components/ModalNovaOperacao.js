@@ -170,6 +170,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
               {operationInfo.atividades.length > 0 ? (
                 operationInfo.atividades.map((activity, index, arr) => (
                   <div
+                    key={index}
                     className={`w-full flex justify-around py-2 ${
                       arr.length > 1 ? "border-b border-gray-200" : ""
                     }`}

@@ -97,22 +97,34 @@ function BaixaPerformance() {
     }
   }
   async function getDeyeBadPerfomers() {
-    console.log(authorization);
-    try {
-      const { data } = await axios.post(
-        "https://globalpro.solarmanpv.com/maintain-s/operating/station/v2/search?page=1&size=500&order.direction=ASC&order.property=name",
-        { station: { powerTypeList: ["PV"] } },
-        {
-          headers: {
-            Authorization: authorization,
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      );
-      console.log(data);
-    } catch (error) {
-      console.log("ERRO", error);
-      alert("Erro na requisição.");
+    if (authorization.trim().length > 700) {
+      setInProgress(true);
+      try {
+        const { data } = await axios.get(
+          `/api/teste?authorization=${authorization}`
+        );
+        const arr = data.data;
+        var formattedArr = arr.map((item) => {
+          const station = item.station;
+          return {
+            nomeUsina: station.name,
+            performance: station.generationCapacity,
+          };
+        });
+        formattedArr = formattedArr.filter(
+          (item) => item.performance && item.performance < 0.55
+        );
+        console.log(formattedArr);
+        setBadPerformers(formattedArr);
+        setInProgress(false);
+      } catch (error) {
+        console.log("ERRO", error);
+        setInProgress(false);
+        alert("Erro na requisição.");
+      }
+    } else {
+      setInProgress(false);
+      alert("Por favor, preencha uma autorização válida.");
     }
   }
   async function getMonitoramentoBook() {

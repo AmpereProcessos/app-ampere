@@ -5,6 +5,24 @@ import connectToDatabase from "../../utils/callsDb";
 import connectToISDatabase from "../../utils/insideSalesDb";
 export default async function handler(req, res) {
   if (req.method == "GET") {
+    try {
+      const { authorization } = req.query;
+      const { data } = await axios.post(
+        "https://globalpro.solarmanpv.com/maintain-s/operating/station/v2/search?page=1&size=500&order.direction=ASC&order.property=name",
+        { station: { powerTypeList: ["PV"] } },
+        {
+          headers: {
+            Authorization: authorization,
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+        }
+      );
+      res.json(data);
+    } catch (error) {
+      console.log(error);
+      res.json("ERRO");
+    }
     // const db = await connectToDatabase(process.env.DB_KEY);
     // const collection = db.collection("suporte");
     // let arr = await collection.find({}).toArray();

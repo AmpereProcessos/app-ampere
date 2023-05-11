@@ -6,10 +6,14 @@ import DateInput from "./DateInput";
 import dayjs from "dayjs";
 import DateFloatingInput from "./DateFloatingInput";
 import { AiOutlineMinus } from "react-icons/ai";
+import { IoMdAdd } from "react-icons/io";
 import { FaProjectDiagram } from "react-icons/fa";
+import axios from "axios";
 
 function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
+  const [operationMsg, setOperationMsg] = useState({ text: "", color: "" });
   const [activityMsg, setActivityMsg] = useState({ text: "", color: "" });
+  const [subActivityMsg, setSubActivityMsg] = useState({ text: "", color: "" });
 
   const [operationInfo, setOperationInfo] = useState({
     nome: "",
@@ -29,10 +33,16 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
     info: {
       nome: "",
       dataInicio: new Date().toISOString(),
-      previsaoConclusao: new Date().toISOString(),
+      previsaoConclusao: null,
       progresso: 0,
     },
   });
+
+  function resetOperationMsg() {
+    setTimeout(() => {
+      setOperationMsg({ text: "", color: "" });
+    }, 2500);
+  }
   function addActivity() {
     var activities = operationInfo.atividades;
     if (activityHolder.nome.trim().length < 4) {
@@ -40,6 +50,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
         text: "Por favor, dê um nome de ao menos 3 letras a atividade.",
         color: "text-red-500",
       });
+
       return false;
     }
     if (!activityHolder.dataInicio) {
@@ -79,7 +90,109 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
     activities.splice(index, 1);
     setOperationInfo((prev) => ({ ...prev, atividades: activities }));
   }
+  function addSubActivity(activityIndex) {
+    const activities = [...operationInfo.atividades];
 
+    var subactivityArr = activities[activityIndex].subAtividades
+      ? activities[activityIndex].subAtividades
+      : [];
+    if (subactivityHolder.info.nome.trim().length < 4) {
+      setSubActivityMsg({
+        text: "Por favor, dê um nome de ao menos 3 letras a atividade.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!subactivityHolder.info.dataInicio) {
+      setSubActivityMsg({
+        text: "Por favor, especifique uma data de início para a atividade.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (
+      subactivityHolder.info.dataInicio &&
+      subactivityHolder.info.previsaoConclusao
+    ) {
+      if (
+        new Date(subactivityHolder.info.previsaoConclusao) <
+        new Date(subactivityHolder.info.dataInicio)
+      ) {
+        setSubActivityMsg({
+          text: "Por favor, especifique uma previsão de conclusão maior que a data de início.",
+          color: "text-red-500",
+        });
+        return false;
+      }
+    }
+    setActivityMsg({ text: "", color: "" });
+    subactivityArr.push({
+      ...subactivityHolder.info,
+      nome: subactivityHolder.info.nome.toUpperCase(),
+    });
+    activities[activityIndex].subAtividades = subactivityArr;
+    setOperationInfo((prev) => ({ ...prev, atividades: activities }));
+    setSubactivityHolder((prev) => ({
+      ...prev,
+      info: {
+        nome: "",
+        dataInicio: new Date().toISOString(),
+        previsaoConclusao: new Date().toISOString(),
+        progresso: 0,
+      },
+    }));
+  }
+  function removeSubActivity(activityIndex, subActivityIndex) {
+    const activities = [...operationInfo.atividades];
+    var subactivityArr = activities[activityIndex].subAtividades;
+    subactivityArr.splice(subActivityIndex, 1);
+    activities[activityIndex].subAtividades = subactivityArr;
+    setOperationInfo((prev) => ({ ...prev, atividades: activities }));
+  }
+
+  async function createOperation() {
+    setOperationMsg({ text: "Processando...", color: "text-[#15599a]" });
+    if (operationInfo.nome.trim().length < 5) {
+      setOperationMsg({
+        text: "Por favor, preencha um nome de ao menos 5 letras para a operação.",
+        color: "text-red-500",
+      });
+      resetOperationMsg();
+      return false;
+    }
+    if (!operationInfo.dataInicio) {
+      setOperationMsg({
+        text: "Por favor, preencha uma data de início para a operação.",
+        color: "text-red-500",
+      });
+      resetOperationMsg();
+      return false;
+    }
+    if (operationInfo.atividades.length == 0) {
+      setOperationMsg({
+        text: "Por favor, adicione ao menos uma atividade a essa operação.",
+        color: "text-red-500",
+      });
+      resetOperationMsg();
+      return false;
+    }
+    try {
+      const { data } = await axios.post("/api/operacoes", operationInfo);
+      if (data)
+        setOperationMsg({
+          text: "Operação criada com sucesso !",
+          color: "text-green-500",
+        });
+      resetOperationMsg();
+    } catch (error) {
+      console.log(error);
+      setOperationMsg({
+        text: "Houve um erro na criação da operação.",
+        color: "text-red-500",
+      });
+      resetOperationMsg();
+    }
+  }
   return (
     <>
       <AnimatedModalWrapper width={"90%"} height={"80%"} modalIsOpen={isOpen}>
@@ -171,49 +284,85 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                 operationInfo.atividades.map((activity, index, arr) => (
                   <div
                     key={index}
-                    className={`w-full flex justify-around py-2 ${
+                    className={`w-full items-start flex flex-col py-2 ${
                       arr.length > 1 ? "border-b border-gray-200" : ""
                     }`}
                   >
-                    <p className="w-1/4 text-sm text-gray-500 text-center">
-                      {activity.nome}
-                    </p>
-                    <p className="w-1/4 text-sm text-gray-500 text-center">
-                      {activity.dataInicio
-                        ? `INICIO EM: ${dayjs(activity.dataInicio)
-                            .add(4, "hours")
-                            .format("DD/MM/YYYY")}`
-                        : "-"}
-                    </p>
-                    <p className="w-1/4 text-sm text-gray-500 text-center">
-                      {activity.previsaoConclusao
-                        ? `FIM EM: ${dayjs(activity.previsaoConclusao)
-                            .add(4, "hours")
-                            .format("DD/MM/YYYY")}`
-                        : "-"}
-                    </p>
-                    <div className="w-1/4 flex items-center justify-center gap-4">
-                      <button
-                        onClick={() =>
-                          setSubactivityHolder((prev) => ({
-                            ...prev,
-                            activityIndex: index,
-                          }))
-                        }
-                        className="text-[#fead61] text-sm flex items-center justify-center"
-                      >
-                        <FaProjectDiagram
-                          title="ADICIONAR SUBTAREFA"
-                          style={{ fontSize: "15px" }}
-                        />
-                      </button>
-                      <button
-                        onClick={() => removeActivity(index)}
-                        className="text-red-500 text-sm flex items-center justify-center"
-                      >
-                        <AiOutlineMinus style={{ fontSize: "15px" }} />
-                      </button>
+                    <div className="w-full items-start flex justify-around">
+                      <p className="w-1/4 text-gray-700 font-medium text-center">
+                        {activity.nome}
+                      </p>
+                      <p className="w-1/4 text-gray-700 font-medium text-center">
+                        {activity.dataInicio
+                          ? `INICIO EM: ${dayjs(activity.dataInicio)
+                              .add(4, "hours")
+                              .format("DD/MM/YYYY")}`
+                          : "-"}
+                      </p>
+                      <p className="w-1/4 text-gray-700 font-medium text-center">
+                        {activity.previsaoConclusao
+                          ? `FIM EM: ${dayjs(activity.previsaoConclusao)
+                              .add(4, "hours")
+                              .format("DD/MM/YYYY")}`
+                          : "-"}
+                      </p>
+                      <div className="w-1/4 flex items-center justify-center gap-4">
+                        <button
+                          onClick={() =>
+                            setSubactivityHolder((prev) => ({
+                              ...prev,
+                              activityIndex: index,
+                            }))
+                          }
+                          className="text-[#fead61] text-sm flex items-center justify-center hover:scale-110 duration-300 ease-in-out"
+                        >
+                          <FaProjectDiagram
+                            title="ADICIONAR SUBTAREFA"
+                            style={{ fontSize: "15px" }}
+                          />
+                        </button>
+                        <button
+                          onClick={() => removeActivity(index)}
+                          className="text-red-500 text-sm flex items-center justify-center hover:scale-110 duration-300 ease-in-out"
+                        >
+                          <AiOutlineMinus style={{ fontSize: "15px" }} />
+                        </button>
+                      </div>
                     </div>
+                    {activity.subAtividades
+                      ? activity.subAtividades.map((subActivity, subIndex) => (
+                          <div className="w-full items-start flex justify-around">
+                            <p className="w-1/4 text-xs text-gray-500 text-center">
+                              {subActivity.nome}
+                            </p>
+
+                            <p className="w-1/4 text-xs text-gray-500 text-center">
+                              {subActivity.dataInicio
+                                ? `INICIO EM: ${dayjs(subActivity.dataInicio)
+                                    .add(4, "hours")
+                                    .format("DD/MM/YYYY")}`
+                                : "-"}
+                            </p>
+                            <p className="w-1/4 text-xs text-gray-500 text-center">
+                              {subActivity.previsaoConclusao
+                                ? `FIM EM: ${dayjs(
+                                    subActivity.previsaoConclusao
+                                  )
+                                    .add(4, "hours")
+                                    .format("DD/MM/YYYY")}`
+                                : "-"}
+                            </p>
+                            <div
+                              onClick={() => removeSubActivity(index, subIndex)}
+                              className="w-1/4 flex items-center justify-center gap-4"
+                            >
+                              <button className="text-red-500 text-sm flex items-center justify-center">
+                                <AiOutlineMinus style={{ fontSize: "15px" }} />
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      : null}
                   </div>
                 ))
               ) : (
@@ -306,19 +455,41 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                   onClick={addActivity}
                   className="bg-green-300 hover:bg-green-500 hover:text-white hover:scale-105 duration-300 ease-in-out font-medium text-sm p-3 rounded"
                 >
-                  ADD
+                  <IoMdAdd />
                 </button>
               </div>
             </div>
             <h1 className="w-full p-1 text-center bg-[#15599a] text-white font-medium">
               SUBTAREFAS
             </h1>
+            <div className="flex items-center py-1">
+              <div className="flex flex-col">
+                <h1 className="text-gray-500 italic text-xs">
+                  ADICIONAR SUBTAREFA À:
+                </h1>
+                <h1 className="text-gray-700 text-sm font-medium">
+                  {subactivityHolder.activityIndex != null
+                    ? operationInfo.atividades[subactivityHolder.activityIndex]
+                        .nome
+                    : null}
+                </h1>
+              </div>
+            </div>
+            {subActivityMsg.text ? (
+              <p
+                className={`w-full text-center text-sm italic ${subActivityMsg.color}`}
+              >
+                {subActivityMsg.text}
+              </p>
+            ) : (
+              <p className="h-[21px] w-full"></p>
+            )}
             {subactivityHolder.activityIndex != null ? (
               <div className="w-full flex pt-4">
                 <div className="w-[90%] flex  items-center gap-2 ">
                   <div className="w-4/6">
                     <TextFloatingInput
-                      label={"NOME DA ATIVIDADE"}
+                      label={"NOME DA SUBTAREFA"}
                       editable={true}
                       value={subactivityHolder.info.nome}
                       handleChange={(value) =>
@@ -373,14 +544,30 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                 </div>
                 <div className="w-[10%] flex items-start justify-center">
                   <button
-                    onClick={addActivity}
+                    onClick={() =>
+                      addSubActivity(subactivityHolder.activityIndex)
+                    }
                     className="bg-green-300 hover:bg-green-500 hover:text-white hover:scale-105 duration-300 ease-in-out font-medium text-sm p-3 rounded"
                   >
-                    ADD
+                    <IoMdAdd />
                   </button>
                 </div>
               </div>
             ) : null}
+          </div>
+          <div className="w-full py-2 border-t border-gray-200 flex items-center justify-end justify-self-end">
+            {operationMsg.text ? (
+              <p className={`text-sm italic ${operationMsg.color}`}>
+                {operationMsg.text}
+              </p>
+            ) : (
+              <button
+                onClick={createOperation}
+                className="p-2 rounded bg-green-300 hover:bg-green-500 hover:text-white font-medium"
+              >
+                CRIAR OPERAÇÃO
+              </button>
+            )}
           </div>
         </div>
       </AnimatedModalWrapper>

@@ -101,7 +101,7 @@ function BaixaPerformance() {
       setInProgress(true);
       try {
         const { data } = await axios.get(
-          `/api/teste?authorization=${authorization}`
+          `/api/o&m/deyeBadPerformers?authorization=${authorization}`
         );
         const arr = data.data;
         var formattedArr = arr.map((item) => {

@@ -331,7 +331,10 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                     </div>
                     {activity.subAtividades
                       ? activity.subAtividades.map((subActivity, subIndex) => (
-                          <div className="w-full items-start flex justify-around">
+                          <div
+                            key={subIndex}
+                            className="w-full items-start flex justify-around"
+                          >
                             <p className="w-1/4 text-xs text-gray-500 text-center">
                               {subActivity.nome}
                             </p>

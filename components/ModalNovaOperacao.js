@@ -300,7 +300,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
             <h1 className="w-full p-1 text-center bg-[#15599a] text-white font-medium">
               ATIVIDADES
             </h1>
-            <div className="w-full h-[200px] min-h-[200px] max-h-[200px] flex flex-col overflow-y-auto overscroll-y-auto">
+            <div className="w-full h-[200px] min-h-[200px] max-h-[200px] flex flex-col overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               {operationInfo.atividades.length > 0 ? (
                 operationInfo.atividades.map((activity, index, arr) => (
                   <div

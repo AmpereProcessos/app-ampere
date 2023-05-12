@@ -64,8 +64,10 @@ function Estoque() {
     setFilters((prev) => ({ ...prev, search: value }));
     var filtered = handleFilters();
     if (value.trim().length > 0) {
-      let newArr = filtered.filter((item) =>
-        item.nome.toUpperCase().includes(value.toUpperCase())
+      let newArr = filtered.filter(
+        (item) =>
+          item.nome.toUpperCase().includes(value.toUpperCase()) ||
+          item.nomeTecnico?.toUpperCase().includes(value.toUpperCase())
       );
       setFilteredMaterials(newArr);
     } else {
@@ -156,19 +158,23 @@ function Estoque() {
                   setEditModal({ isOpen: true, info: material });
                 }}
                 key={material._id}
-                className="w-[250px] max-h-[80px] lg:w-[250px] hover:bg-blue-100 bg-[#fff] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100flex flex-col"
+                className="w-[350px] max-h-[100px] lg:w-[350px] hover:bg-blue-100 bg-[#fff] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100flex flex-col"
               >
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-gray-700 text-center">
+                  <p className="text-lg text-[#15599a] text-center font-medium">
                     {material.nome}
                   </p>
                   <p className="text-lg text-green-600 text-center font-bold">
                     {material.localizacao ? material.localizacao : "-"}
                   </p>
                 </div>
+                <p className="text-xs text-gray-500 text-center">
+                  {material.nomeTecnico ? material.nomeTecnico : "NÃO DEFINIDO"}
+                </p>
                 <div className="flex items-center justify-around mt-2">
                   <p className="text-xs text-gray-700 text-center">
                     {material.qtde}
+                    {material.grandeza}
                   </p>
                   <p className="text-xs text-gray-700 text-center">
                     {material.preco

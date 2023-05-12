@@ -11,7 +11,7 @@ import { FaProjectDiagram, FaSave } from "react-icons/fa";
 import axios from "axios";
 import SaveButton from "./utils/Buttons/SaveButton";
 
-function ModalEdicaoOperacao({ isOpen, setModalIsOpen, operation }) {
+function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
   const [operationMsg, setOperationMsg] = useState({ text: "", color: "" });
   const [activityMsg, setActivityMsg] = useState({ text: "", color: "" });
   const [subActivityMsg, setSubActivityMsg] = useState({ text: "", color: "" });
@@ -228,68 +228,40 @@ function ModalEdicaoOperacao({ isOpen, setModalIsOpen, operation }) {
             </h1>
             <div className="w-full flex-col lg:flex-row flex gap-2 pt-4">
               <div className="w-full lg:w-1/2">
-                <TextFloatingInput
-                  label={"NOME DA OPERAÇÃO"}
-                  editable={true}
-                  value={operationInfo.nome}
-                  handleChange={(value) =>
-                    setOperationInfo((prev) => ({ ...prev, nome: value }))
-                  }
-                  width={"100%"}
-                />
+                <div className="flex flex-col w-full">
+                  <h1 className="text-gray-500 text-sm">NOME DA OPERAÇÃO</h1>
+                  <p className="font-arial text-center text-sm border-b-2 border-gray-300 text-gray-700">
+                    {operationInfo.nome}
+                  </p>
+                </div>
               </div>
               <div className="w-full lg:w-1/2">
-                <TextFloatingInput
-                  label={"DESCRIÇÃO"}
-                  editable={true}
-                  value={operationInfo.descricao}
-                  handleChange={(value) =>
-                    setOperationInfo((prev) => ({ ...prev, descricao: value }))
-                  }
-                  width={"100%"}
-                />
+                <div className="flex flex-col w-full">
+                  <h1 className="text-gray-500 text-sm">DESCRIÇÃO</h1>
+                  <p className="font-arial text-center text-sm border-b-2 border-gray-300 text-gray-700">
+                    {operationInfo.descricao}
+                  </p>
+                </div>
               </div>
             </div>
             <div className="w-full flex-col lg:flex-row flex gap-2 pt-4">
               <div className="w=full lg:w-1/2">
-                <DateFloatingInput
-                  label={"DATA DE INÍCIO"}
-                  editable={true}
-                  value={
-                    operationInfo.dataInicio
-                      ? dayjs(operationInfo.dataInicio)
-                          .add(4, "hours")
-                          .format("YYYY-MM-DD")
-                      : null
-                  }
-                  handleChange={(value) =>
-                    setOperationInfo((prev) => ({
-                      ...prev,
-                      dataInicio: value,
-                    }))
-                  }
-                  width={"100%"}
-                />
+                <div className="flex flex-col w-full">
+                  <h1 className="text-gray-500 text-sm">DATA DE INÍCIO</h1>
+                  <p className="font-arial text-center text-sm border-b-2 border-gray-300 text-gray-700">
+                    {operationInfo.dataInicio}
+                  </p>
+                </div>
               </div>
               <div className="w-full lg:w-1/2">
-                <DateFloatingInput
-                  label={"PREVISÃO DE CONCLUSÃO"}
-                  editable={true}
-                  value={
-                    operationInfo.previsaoConclusao
-                      ? dayjs(operationInfo.previsaoConclusao)
-                          .add(4, "hours")
-                          .format("YYYY-MM-DD")
-                      : null
-                  }
-                  handleChange={(value) =>
-                    setOperationInfo((prev) => ({
-                      ...prev,
-                      previsaoConclusao: value,
-                    }))
-                  }
-                  width={"100%"}
-                />
+                <div className="flex flex-col w-full">
+                  <h1 className="text-gray-500 text-sm">
+                    PREVISÃO DE CONCLUSÃO
+                  </h1>
+                  <p className="font-arial text-center text-sm border-b-2 border-gray-300 text-gray-700">
+                    {operationInfo.previsaoConclusao}
+                  </p>
+                </div>
               </div>
             </div>
             <h1 className="w-full p-1 text-center bg-[#15599a] text-white font-medium">
@@ -342,16 +314,10 @@ function ModalEdicaoOperacao({ isOpen, setModalIsOpen, operation }) {
                           }}
                           className="text-[#fead61] text-sm flex items-center justify-center hover:scale-110 duration-300 ease-in-out"
                         >
-                          <FaProjectDiagram
+                          <TbReport
                             title="ADICIONAR SUBTAREFA"
                             style={{ fontSize: "15px" }}
                           />
-                        </button>
-                        <button
-                          onClick={() => removeActivity(index)}
-                          className="text-red-500 text-sm flex items-center justify-center hover:scale-110 duration-300 ease-in-out"
-                        >
-                          <AiOutlineMinus style={{ fontSize: "15px" }} />
                         </button>
                       </div>
                     </div>
@@ -402,187 +368,6 @@ function ModalEdicaoOperacao({ isOpen, setModalIsOpen, operation }) {
                 </div>
               )}
             </div>
-            {activityMsg.text ? (
-              <p
-                className={`w-full text-center text-sm italic ${activityMsg.color}`}
-              >
-                {activityMsg.text}
-              </p>
-            ) : (
-              <p className="h-[21px] w-full"></p>
-            )}
-            <div className="w-full flex flex-col lg:flex-row pb-2 pt-4">
-              <div className="w-full lg:w-[90%] flex flex-col lg:flex-row items-center gap-2 ">
-                <div className="w-full lg:w-2/6">
-                  <TextFloatingInput
-                    label={"NOME DA ATIVIDADE"}
-                    editable={true}
-                    value={activityHolder.nome}
-                    handleChange={(value) =>
-                      setActivityHolder((prev) => ({ ...prev, nome: value }))
-                    }
-                    width={"100%"}
-                  />
-                </div>
-                <div className="w-full lg:w-2/6">
-                  <TextFloatingInput
-                    label={"DESCRIÇÃO DA ATIVIDADE"}
-                    width={"100%"}
-                    editable={true}
-                    value={activityHolder.descricao}
-                    handleChange={(value) =>
-                      setActivityHolder((prev) => ({
-                        ...prev,
-                        descricao: value,
-                      }))
-                    }
-                  />
-                </div>
-                <div className="w-full lg:w-1/6">
-                  <DateFloatingInput
-                    label={"INÍCIO DA ATIVIDADE"}
-                    width={"100%"}
-                    editable={true}
-                    value={
-                      activityHolder.dataInicio
-                        ? dayjs(activityHolder.dataInicio)
-                            .add(4, "hours")
-                            .format("YYYY-MM-DD")
-                        : null
-                    }
-                    handleChange={(value) =>
-                      setActivityHolder((prev) => ({
-                        ...prev,
-                        dataInicio: value,
-                      }))
-                    }
-                  />
-                </div>
-                <div className="w-full lg:w-1/6">
-                  <DateFloatingInput
-                    label={"PREVISÃO DA CONCLUSÃO"}
-                    width={"100%"}
-                    editable={true}
-                    value={
-                      activityHolder.previsaoConclusao
-                        ? dayjs(activityHolder.previsaoConclusao)
-                            .add(4, "hours")
-                            .format("YYYY-MM-DD")
-                        : null
-                    }
-                    handleChange={(value) =>
-                      setActivityHolder((prev) => ({
-                        ...prev,
-                        previsaoConclusao: value,
-                      }))
-                    }
-                  />
-                </div>
-              </div>
-              <div className="w-full lg:w-[10%] flex items-start justify-center">
-                <button
-                  onClick={addActivity}
-                  className="bg-green-300 hover:bg-green-500 hover:text-white hover:scale-105 duration-300 ease-in-out font-medium text-sm p-3 rounded"
-                >
-                  <IoMdAdd />
-                </button>
-              </div>
-            </div>
-            <h1 className="w-full p-1 text-center bg-[#15599a] text-white font-medium">
-              SUBTAREFAS
-            </h1>
-            <div className="flex items-center py-1">
-              <div className="flex flex-col">
-                <h1 className="text-gray-500 italic text-xs">
-                  ADICIONAR SUBTAREFA À:
-                </h1>
-                <h1 className="text-gray-700 text-sm font-medium">
-                  {subactivityHolder.activityIndex != null
-                    ? operationInfo.atividades[subactivityHolder.activityIndex]
-                        .nome
-                    : null}
-                </h1>
-              </div>
-            </div>
-            {subActivityMsg.text ? (
-              <p
-                className={`w-full text-center text-sm italic ${subActivityMsg.color}`}
-              >
-                {subActivityMsg.text}
-              </p>
-            ) : (
-              <p className="h-[21px] w-full"></p>
-            )}
-            {subactivityHolder.activityIndex != null ? (
-              <div className="w-full flex flex-col lg:flex-row pt-4 py-2">
-                <div className="w-full lg:w-[90%] flex flex-col lg:flex-row items-center gap-2 ">
-                  <div className="w-full lg:w-4/6">
-                    <TextFloatingInput
-                      label={"NOME DA SUBTAREFA"}
-                      editable={true}
-                      value={subactivityHolder.info.nome}
-                      handleChange={(value) =>
-                        setSubactivityHolder((prev) => ({
-                          ...prev,
-                          info: { ...prev.info, nome: value },
-                        }))
-                      }
-                      width={"100%"}
-                    />
-                  </div>
-                  <div className="w-full lg:w-1/6">
-                    <DateFloatingInput
-                      label={"INÍCIO DA ATIVIDADE"}
-                      width={"100%"}
-                      editable={true}
-                      value={
-                        subactivityHolder.info.dataInicio
-                          ? dayjs(subactivityHolder.info.dataInicio)
-                              .add(4, "hours")
-                              .format("YYYY-MM-DD")
-                          : null
-                      }
-                      handleChange={(value) =>
-                        setSubactivityHolder((prev) => ({
-                          ...prev,
-                          info: { ...prev.info, dataInicio: value },
-                        }))
-                      }
-                    />
-                  </div>
-                  <div className="w-full lg:w-1/6">
-                    <DateFloatingInput
-                      label={"PREVISÃO DA CONCLUSÃO"}
-                      width={"100%"}
-                      editable={true}
-                      value={
-                        subactivityHolder.info.previsaoConclusao
-                          ? dayjs(subactivityHolder.info.previsaoConclusao)
-                              .add(4, "hours")
-                              .format("YYYY-MM-DD")
-                          : null
-                      }
-                      handleChange={(value) =>
-                        setSubactivityHolder((prev) => ({
-                          ...prev,
-                          info: { ...prev.info, previsaoConclusao: value },
-                        }))
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="w-full lg:w-[10%] flex items-start justify-center">
-                  <button
-                    onClick={() =>
-                      addSubActivity(subactivityHolder.activityIndex)
-                    }
-                    className="bg-green-300 hover:bg-green-500 hover:text-white hover:scale-105 duration-300 ease-in-out font-medium text-sm p-3 rounded"
-                  >
-                    <IoMdAdd />
-                  </button>
-                </div>
-              </div>
-            ) : null}
           </div>
           <div className="w-full py-2 border-t border-gray-200 flex items-center justify-end justify-self-end">
             {operationMsg.text ? (
@@ -603,4 +388,4 @@ function ModalEdicaoOperacao({ isOpen, setModalIsOpen, operation }) {
   );
 }
 
-export default ModalEdicaoOperacao;
+export default ModalControlOperacao;

@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       if (diff <= 0) return;
       return {
         updateOne: {
-          filter: { nome: mat.nome },
+          filter: { _id: new ObjectId(mat.id) },
           update: {
             $push: {
               qtdeAlteracoes: {

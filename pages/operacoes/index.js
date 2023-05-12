@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import { FaProjectDiagram } from "react-icons/fa";
 import LoadingPage from "../../components/utils/LoadingPage";
 import ModalEdicaoOperacao from "../../components/ModalEdicaoOperacao";
+import ModalControlOperacao from "../../components/ModalControlOperacao";
 
 function Operacoes() {
   const router = useRouter();
@@ -68,7 +69,15 @@ function Operacoes() {
           {operations?.map((operation, index) => (
             <div
               key={index}
-              className="w-[450px] h-[250px] shadow-lg border border-gray-200 flex flex-col p-3"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOperationModal((prev) => ({
+                  ...prev,
+                  controlIsOpen: true,
+                  info: operation,
+                }));
+              }}
+              className="w-[450px] h-[250px] shadow-lg border cursor-pointer border-gray-200 flex flex-col p-3"
             >
               <div className="w-full flex justify-between">
                 <div></div>
@@ -162,6 +171,19 @@ function Operacoes() {
         >
           <p className="uppercase font-bold text-sm">NOVA OPERAÇÃO</p>
         </div>
+        {operationModal.controlIsOpen && operationModal.info ? (
+          <ModalControlOperacao
+            isOpen={operationModal.controlIsOpen}
+            setModalIsOpen={() =>
+              setOperationModal((prev) => ({
+                controlIsOpen: false,
+                editIsOpen: false,
+                info: null,
+              }))
+            }
+            operation={operationModal.info}
+          />
+        ) : null}
         {operationModal.editIsOpen && operationModal.info ? (
           <ModalEdicaoOperacao
             isOpen={operationModal.editIsOpen}

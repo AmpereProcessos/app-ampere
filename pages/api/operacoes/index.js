@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import connectToDatabase from "../../../utils/auxiliaresDb";
 export default async function handler(req, res) {
   if (req.method == "POST") {
@@ -14,7 +15,18 @@ export default async function handler(req, res) {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("operacoes");
     const operations = await collection.find({}).toArray();
-    console.log("OPERACOES", operations);
     res.json(operations);
+  } else if (req.method == "PUT") {
+    const db = await connectToDatabase(process.env.DB_KEY);
+    const collection = db.collection("operacoes");
+    const id = req.body._id;
+    const body = { ...req.body };
+    console.log(id, body);
+    delete body._id;
+    var newObj = await collection.updateOne(
+      { _id: ObjectId(id) },
+      { $set: { ...body } }
+    );
+    res.json(newObj);
   }
 }

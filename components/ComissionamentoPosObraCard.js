@@ -79,6 +79,7 @@ function ComissionamentoPosObraCard({ project, index, handleUpdates }) {
       return "border border-[#15599a]";
     }
   }
+  console.log(project);
   return (
     <motion.div
       initial={{ opacity: 0, translateY: -20 }}

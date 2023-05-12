@@ -7,21 +7,16 @@ import dayjs from "dayjs";
 import DateFloatingInput from "./DateFloatingInput";
 import { AiOutlineMinus } from "react-icons/ai";
 import { IoMdAdd } from "react-icons/io";
-import { FaProjectDiagram } from "react-icons/fa";
+import { FaProjectDiagram, FaSave } from "react-icons/fa";
 import axios from "axios";
+import SaveButton from "./utils/Buttons/SaveButton";
 
-function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
+function ModalEdicaoOperacao({ isOpen, setModalIsOpen, operation }) {
   const [operationMsg, setOperationMsg] = useState({ text: "", color: "" });
   const [activityMsg, setActivityMsg] = useState({ text: "", color: "" });
   const [subActivityMsg, setSubActivityMsg] = useState({ text: "", color: "" });
 
-  const [operationInfo, setOperationInfo] = useState({
-    nome: "",
-    descricao: "",
-    dataInicio: new Date().toISOString(),
-    previsaoConclusao: null,
-    atividades: [],
-  });
+  const [operationInfo, setOperationInfo] = useState(operation);
   const [activityHolder, setActivityHolder] = useState({
     nome: "",
     descricao: "",
@@ -159,7 +154,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
     setOperationInfo((prev) => ({ ...prev, atividades: activities }));
   }
 
-  async function createOperation() {
+  async function updateOperation() {
     setOperationMsg({ text: "Processando...", color: "text-[#15599a]" });
     if (operationInfo.nome.trim().length < 5) {
       setOperationMsg({
@@ -198,17 +193,17 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
       }
     }
     try {
-      const { data } = await axios.post("/api/operacoes", operationInfo);
+      const { data } = await axios.put(`/api/operacoes`, operationInfo);
       if (data)
         setOperationMsg({
-          text: "Operação criada com sucesso !",
+          text: "Atualizações feitas !",
           color: "text-green-500",
         });
       resetOperationMsg();
     } catch (error) {
       console.log(error);
       setOperationMsg({
-        text: "Houve um erro na criação da operação.",
+        text: "Houve um erro nas alterações da operação.",
         color: "text-red-500",
       });
       resetOperationMsg();
@@ -219,7 +214,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
       <AnimatedModalWrapper width={"90%"} height={"80%"} modalIsOpen={isOpen}>
         <div className="h-full flex flex-col">
           <div className="flex items-center justify-between pb-2 border-b border-gray-200">
-            <h1 className="font-bold text-[#15599a]">NOVA OPERAÇÃO</h1>
+            <h1 className="font-bold text-[#15599a]">{operation.nome}</h1>
             <button>
               <VscChromeClose
                 onClick={() => setModalIsOpen(false)}
@@ -595,12 +590,11 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                 {operationMsg.text}
               </p>
             ) : (
-              <button
-                onClick={createOperation}
-                className="p-2 rounded bg-green-300 hover:bg-green-500 hover:text-white font-medium"
-              >
-                CRIAR OPERAÇÃO
-              </button>
+              <SaveButton
+                text={"Salvar alterações"}
+                icon={<FaSave />}
+                handleClick={updateOperation}
+              />
             )}
           </div>
         </div>
@@ -609,4 +603,4 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
   );
 }
 
-export default ModalNovaOperacao;
+export default ModalEdicaoOperacao;

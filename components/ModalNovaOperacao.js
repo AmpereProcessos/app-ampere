@@ -494,7 +494,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
               <p className="h-[21px] w-full"></p>
             )}
             {subactivityHolder.activityIndex != null ? (
-              <div className="w-full flex flex-col lg:flex-row pt-4">
+              <div className="w-full flex flex-col lg:flex-row pt-4 py-2">
                 <div className="w-full lg:w-[90%] flex flex-col lg:flex-row items-center gap-2 ">
                   <div className="w-full lg:w-4/6">
                     <TextFloatingInput

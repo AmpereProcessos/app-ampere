@@ -33,7 +33,7 @@ function Operacoes() {
   }
 
   useEffect(() => {
-    if (session?.user) {
+    if (session?.user.manager) {
       if (!operations) {
         getOperations();
       }
@@ -43,6 +43,7 @@ function Operacoes() {
       }
     }
   }, [session]);
+  console.log(session);
   return (
     <div className="p-6 grow">
       <div className="flex flex-col border-b border-gray-200 p-1">

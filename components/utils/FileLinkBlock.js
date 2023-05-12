@@ -1,10 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MdDelete } from "react-icons/md";
 
 function ArchiveLinkBlock({ obj, deleteFile }) {
+  const ref = useRef();
   const [deleteMenu, setDeleteMenu] = useState(false);
+  function onClickOutside() {
+    setDeleteMenu(false);
+  }
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        onClickOutside();
+      }
+    };
+    document.addEventListener("click", (e) => handleClickOutside(e), true);
+    return () => {
+      document.removeEventListener("click", (e) => handleClickOutside(e), true);
+    };
+  }, [onClickOutside]);
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div ref={ref} className="flex items-center justify-center gap-2">
       <a
         className="text-xs text-[#15599a] font-bold text-center"
         href={obj.link}

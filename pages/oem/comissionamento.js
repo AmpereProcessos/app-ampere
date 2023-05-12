@@ -153,6 +153,7 @@ function Comissionamento() {
       }
     }
   }, [session]);
+
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     if (filteredProjects) {
@@ -468,6 +469,7 @@ function Comissionamento() {
                 key={project._id}
                 project={project}
                 index={index}
+                handleUpdates={() => getProjects()}
               />
             ))}
           </div>

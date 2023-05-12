@@ -5,7 +5,11 @@ import NumberInput from "../../../components/NumberInput";
 import SelectInput from "../../../components/SelectInput";
 import connectToSolicitacoesDatabase from "../../../utils/solicitacoesDb";
 import { AiOutlineSearch } from "react-icons/ai";
-import { cidadesAtendidas, vendedores } from "../../../utils/constants";
+import {
+  cidadesAtendidas,
+  tiposDePadrao,
+  vendedores,
+} from "../../../utils/constants";
 import { ObjectId } from "mongodb";
 function Formulario({ info }) {
   const [dados, setDados] = useState(info);
@@ -1192,60 +1196,7 @@ function Formulario({ info }) {
                   handleChange={(value) =>
                     setDados({ ...dados, tipoDePadrao: value })
                   }
-                  options={[
-                    {
-                      label: "MONO 40A",
-                      value: "MONO 40A",
-                    },
-                    {
-                      label: "MONO 63A",
-                      value: "MONO 63A",
-                    },
-                    {
-                      label: "BIFASICO 63A",
-                      value: "BIFASICO 63A",
-                    },
-                    {
-                      label: "BIFASICO 100A",
-                      value: "BIFASICO 100A",
-                    },
-                    {
-                      label: "BIFASICO 125A",
-                      value: "BIFASICO 125A",
-                    },
-                    {
-                      label: "BIFASICO 150A",
-                      value: "BIFASICO 150A",
-                    },
-                    {
-                      label: "BIFASICO 200A",
-                      value: "BIFASICO 200A",
-                    },
-                    {
-                      label: "TRIFASICO 63A",
-                      value: "TRIFASICO 63A",
-                    },
-                    {
-                      label: "TRIFASICO 100A",
-                      value: "TRIFASICO 100A",
-                    },
-                    {
-                      label: "TRIFASICO 125A",
-                      value: "TRIFASICO 125A",
-                    },
-                    {
-                      label: "TRIFASICO 150A",
-                      value: "TRIFASICO 150A",
-                    },
-                    {
-                      label: "TRIFASICO 200A",
-                      value: "TRIFASICO 200A",
-                    },
-                    {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
-                    },
-                  ]}
+                  options={tiposDePadrao}
                 />
                 <SelectInput
                   label={"HAVERÁ AUMENTO DO DISJUNTOR?"}

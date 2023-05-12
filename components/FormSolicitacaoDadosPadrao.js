@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TextInput from "./TextInput";
 import SelectFloatingInput from "./SelectFloatingInput";
 import NumberFloatingInput from "./NumberFloatingInput";
+import { tiposDePadrao } from "../utils/constants";
 function FormSolicitacaoDadosPadrao({ avancar, setDados, dados, voltar }) {
   const [message, setMessage] = useState("");
   function validarCamposObrigatorios() {
@@ -93,60 +94,7 @@ function FormSolicitacaoDadosPadrao({ avancar, setDados, dados, voltar }) {
               handleChange={(value) =>
                 setDados({ ...dados, tipoDePadrao: value })
               }
-              options={[
-                {
-                  label: "MONO 40A",
-                  value: "MONO 40A",
-                },
-                {
-                  label: "MONO 63A",
-                  value: "MONO 63A",
-                },
-                {
-                  label: "BIFASICO 63A",
-                  value: "BIFASICO 63A",
-                },
-                {
-                  label: "BIFASICO 100A",
-                  value: "BIFASICO 100A",
-                },
-                {
-                  label: "BIFASICO 125A",
-                  value: "BIFASICO 125A",
-                },
-                {
-                  label: "BIFASICO 150A",
-                  value: "BIFASICO 150A",
-                },
-                {
-                  label: "BIFASICO 200A",
-                  value: "BIFASICO 200A",
-                },
-                {
-                  label: "TRIFASICO 63A",
-                  value: "TRIFASICO 63A",
-                },
-                {
-                  label: "TRIFASICO 100A",
-                  value: "TRIFASICO 100A",
-                },
-                {
-                  label: "TRIFASICO 125A",
-                  value: "TRIFASICO 125A",
-                },
-                {
-                  label: "TRIFASICO 150A",
-                  value: "TRIFASICO 150A",
-                },
-                {
-                  label: "TRIFASICO 200A",
-                  value: "TRIFASICO 200A",
-                },
-                {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
-                },
-              ]}
+              options={tiposDePadrao}
             />
           </div>
           <div className="flex items-center justify-center">

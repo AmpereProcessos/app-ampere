@@ -210,8 +210,8 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
             <h1 className="w-full p-1 text-center bg-[#15599a] text-white font-medium">
               INFORMAÇÕES GERAIS DA OPERAÇÃO
             </h1>
-            <div className="w-full flex gap-2 pt-4">
-              <div className="w-1/2">
+            <div className="w-full flex-col lg:flex-row flex gap-2 pt-4">
+              <div className="w-full lg:w-1/2">
                 <TextFloatingInput
                   label={"NOME DA OPERAÇÃO"}
                   editable={true}
@@ -222,7 +222,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                   width={"100%"}
                 />
               </div>
-              <div className="w-1/2">
+              <div className="w-full lg:w-1/2">
                 <TextFloatingInput
                   label={"DESCRIÇÃO"}
                   editable={true}
@@ -234,8 +234,8 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                 />
               </div>
             </div>
-            <div className="w-full flex gap-2 pt-4">
-              <div className="w-1/2">
+            <div className="w-full flex-col lg:flex-row flex gap-2 pt-4">
+              <div className="w=full lg:w-1/2">
                 <DateFloatingInput
                   label={"DATA DE INÍCIO"}
                   editable={true}
@@ -255,7 +255,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                   width={"100%"}
                 />
               </div>
-              <div className="w-1/2">
+              <div className="w-full lg:w-1/2">
                 <DateFloatingInput
                   label={"PREVISÃO DE CONCLUSÃO"}
                   editable={true}
@@ -279,7 +279,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
             <h1 className="w-full p-1 text-center bg-[#15599a] text-white font-medium">
               ATIVIDADES
             </h1>
-            <div className="w-full h-[150px] max-h-[150px] flex flex-col overflow-y-auto overscroll-y-auto">
+            <div className="w-full h-[200px] min-h-[200px] max-h-[200px] flex flex-col overflow-y-auto overscroll-y-auto">
               {operationInfo.atividades.length > 0 ? (
                 operationInfo.atividades.map((activity, index, arr) => (
                   <div
@@ -289,24 +289,30 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                     }`}
                   >
                     <div className="w-full items-start flex justify-around">
-                      <p className="w-1/4 text-gray-700 font-medium text-center">
+                      <p className="w-2/3 lg:w-1/4 text-gray-700 font-medium text-center">
                         {activity.nome}
                       </p>
-                      <p className="w-1/4 text-gray-700 font-medium text-center">
-                        {activity.dataInicio
-                          ? `INICIO EM: ${dayjs(activity.dataInicio)
-                              .add(4, "hours")
-                              .format("DD/MM/YYYY")}`
-                          : "-"}
-                      </p>
-                      <p className="w-1/4 text-gray-700 font-medium text-center">
-                        {activity.previsaoConclusao
-                          ? `FIM EM: ${dayjs(activity.previsaoConclusao)
-                              .add(4, "hours")
-                              .format("DD/MM/YYYY")}`
-                          : "-"}
-                      </p>
-                      <div className="w-1/4 flex items-center justify-center gap-4">
+                      <div className="hidden lg:flex w-1/4 items-center gap-2 text-gray-700 font-medium text-center">
+                        <p className="hidden lg:block">INICIO EM:</p>
+                        <p>
+                          {activity.dataInicio
+                            ? dayjs(activity.dataInicio)
+                                .add(4, "hours")
+                                .format("DD/MM/YYYY")
+                            : "-"}
+                        </p>
+                      </div>
+                      <div className="hidden lg:flex w-1/4 items-center gap-2 text-gray-700 font-medium text-center">
+                        <p className="hidden lg:block">FIM EM:</p>
+                        <p>
+                          {activity.previsaoConclusao
+                            ? dayjs(activity.previsaoConclusao)
+                                .add(4, "hours")
+                                .format("DD/MM/YYYY")
+                            : "-"}
+                        </p>
+                      </div>
+                      <div className="w-1/3 lg:w-1/4 flex items-center justify-center gap-4">
                         <button
                           onClick={() =>
                             setSubactivityHolder((prev) => ({
@@ -333,20 +339,20 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                       ? activity.subAtividades.map((subActivity, subIndex) => (
                           <div
                             key={subIndex}
-                            className="w-full items-start flex justify-around"
+                            className="w-full items-start flex  justify-around"
                           >
-                            <p className="w-1/4 text-xs text-gray-500 text-center">
+                            <p className="w-2/3 lg:w-1/4 text-xs text-gray-500 text-center">
                               {subActivity.nome}
                             </p>
 
-                            <p className="w-1/4 text-xs text-gray-500 text-center">
+                            <p className="hidden lg:block w-1/4 text-xs text-gray-500 text-center">
                               {subActivity.dataInicio
                                 ? `INICIO EM: ${dayjs(subActivity.dataInicio)
                                     .add(4, "hours")
                                     .format("DD/MM/YYYY")}`
                                 : "-"}
                             </p>
-                            <p className="w-1/4 text-xs text-gray-500 text-center">
+                            <p className="hidden lg:block w-1/4 text-xs text-gray-500 text-center">
                               {subActivity.previsaoConclusao
                                 ? `FIM EM: ${dayjs(
                                     subActivity.previsaoConclusao
@@ -357,7 +363,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                             </p>
                             <div
                               onClick={() => removeSubActivity(index, subIndex)}
-                              className="w-1/4 flex items-center justify-center gap-4"
+                              className="w-1/3 lg:w-1/4 flex items-center justify-center gap-4"
                             >
                               <button className="text-red-500 text-sm flex items-center justify-center">
                                 <AiOutlineMinus style={{ fontSize: "15px" }} />
@@ -385,9 +391,9 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
             ) : (
               <p className="h-[21px] w-full"></p>
             )}
-            <div className="w-full flex pt-4">
-              <div className="w-[90%] flex  items-center gap-2 ">
-                <div className="w-2/6">
+            <div className="w-full flex flex-col lg:flex-row pb-2 pt-4">
+              <div className="w-full lg:w-[90%] flex flex-col lg:flex-row items-center gap-2 ">
+                <div className="w-full lg:w-2/6">
                   <TextFloatingInput
                     label={"NOME DA ATIVIDADE"}
                     editable={true}
@@ -398,7 +404,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                     width={"100%"}
                   />
                 </div>
-                <div className="w-2/6">
+                <div className="w-full lg:w-2/6">
                   <TextFloatingInput
                     label={"DESCRIÇÃO DA ATIVIDADE"}
                     width={"100%"}
@@ -412,7 +418,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                     }
                   />
                 </div>
-                <div className="w-1/6">
+                <div className="w-full lg:w-1/6">
                   <DateFloatingInput
                     label={"INÍCIO DA ATIVIDADE"}
                     width={"100%"}
@@ -432,7 +438,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                     }
                   />
                 </div>
-                <div className="w-1/6">
+                <div className="w-full lg:w-1/6">
                   <DateFloatingInput
                     label={"PREVISÃO DA CONCLUSÃO"}
                     width={"100%"}
@@ -453,7 +459,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                   />
                 </div>
               </div>
-              <div className="w-[10%] flex items-start justify-center">
+              <div className="w-full lg:w-[10%] flex items-start justify-center">
                 <button
                   onClick={addActivity}
                   className="bg-green-300 hover:bg-green-500 hover:text-white hover:scale-105 duration-300 ease-in-out font-medium text-sm p-3 rounded"
@@ -488,9 +494,9 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
               <p className="h-[21px] w-full"></p>
             )}
             {subactivityHolder.activityIndex != null ? (
-              <div className="w-full flex pt-4">
-                <div className="w-[90%] flex  items-center gap-2 ">
-                  <div className="w-4/6">
+              <div className="w-full flex flex-col lg:flex-row pt-4">
+                <div className="w-full lg:w-[90%] flex flex-col lg:flex-row items-center gap-2 ">
+                  <div className="w-full lg:w-4/6">
                     <TextFloatingInput
                       label={"NOME DA SUBTAREFA"}
                       editable={true}
@@ -504,7 +510,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                       width={"100%"}
                     />
                   </div>
-                  <div className="w-1/6">
+                  <div className="w-full lg:w-1/6">
                     <DateFloatingInput
                       label={"INÍCIO DA ATIVIDADE"}
                       width={"100%"}
@@ -524,7 +530,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                       }
                     />
                   </div>
-                  <div className="w-1/6">
+                  <div className="w-full lg:w-1/6">
                     <DateFloatingInput
                       label={"PREVISÃO DA CONCLUSÃO"}
                       width={"100%"}
@@ -545,7 +551,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                     />
                   </div>
                 </div>
-                <div className="w-[10%] flex items-start justify-center">
+                <div className="w-full lg:w-[10%] flex items-start justify-center">
                   <button
                     onClick={() =>
                       addSubActivity(subactivityHolder.activityIndex)

@@ -8,6 +8,7 @@ import DateFloatingInput from "./DateFloatingInput";
 import { AiOutlineMinus } from "react-icons/ai";
 import { IoMdAdd } from "react-icons/io";
 import { FaProjectDiagram, FaSave } from "react-icons/fa";
+import { TbReport } from "react-icons/tb";
 import axios from "axios";
 import SaveButton from "./utils/Buttons/SaveButton";
 

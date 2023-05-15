@@ -477,7 +477,10 @@ function ModalFormSolicitacao({
       informacoes: "",
       previsaoNotaFiscal: undefined,
       rastreio: "",
-      statusEntrega: "NÃO DEFINIDO",
+      statusEntrega:
+        dados.tipoDeServico === "MONTAGEM E DESMONTAGEM"
+          ? "ENTREGUE"
+          : "NÃO DEFINIDO",
     },
     dadosCemig: {
       titularProjeto: dados.nomeTitularProjeto,

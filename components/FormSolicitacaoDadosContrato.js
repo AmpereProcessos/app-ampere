@@ -7,6 +7,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import {
   cidadesAtendidas,
   customersAcquisitionChannels,
+  formatDate,
   vendedores,
 } from "../utils/constants";
 import axios from "axios";
@@ -38,6 +39,7 @@ function formatCEP(cep) {
   return cep;
 }
 function FormSolicitacaoDadosContrato({ dados, setDados, avancar }) {
+  Date;
   const [message, setMessage] = useState("");
   async function findCPF(field) {
     axios
@@ -214,9 +216,7 @@ function FormSolicitacaoDadosContrato({ dados, setDados, avancar }) {
             label={"DATA DE NASCIMENTO"}
             editable={true}
             value={
-              dados.dataDeNascimento
-                ? new Date(dados.dataDeNascimento).toISOString().slice(0, 10)
-                : null
+              dados.dataDeNascimento ? formatDate(dados.dataDeNascimento) : null
             }
             handleChange={(value) =>
               setDados({

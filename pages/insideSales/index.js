@@ -10,7 +10,11 @@ import dayjs from "dayjs";
 import { motion, AnimatePresence } from "framer-motion";
 import ModalNovoLead from "../../components/ModalNovoLead";
 import LeadCard from "../../components/LeadCard";
-import { cidadesAtendidas, vendedores } from "../../utils/constants";
+import {
+  cidadesAtendidas,
+  formatDate,
+  vendedores,
+} from "../../utils/constants";
 import AnimatedTextAndIconButton from "../../components/AnimatedTextAndIconButton";
 import FilterButton from "../../components/utils/Buttons/FilterButton";
 import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
@@ -223,9 +227,7 @@ function InsideSales() {
                   </span>
                   <div className="flex items-center justify-center flex-wrap gap-2">
                     <input
-                      value={dayjs(fetchDateFilter.after)
-                        .add(4, "hours")
-                        .format("YYYY-MM-DD")}
+                      value={formatDate(fetchDateFilter.after)}
                       onChange={(e) =>
                         setFetchDateFilter({
                           ...fetchDateFilter,
@@ -240,7 +242,7 @@ function InsideSales() {
                     />
                     <p>&</p>
                     <input
-                      value={dayjs(fetchDateFilter.before).format("YYYY-MM-DD")}
+                      value={formatDate(fetchDateFilter.before)}
                       onChange={(e) =>
                         setFetchDateFilter({
                           ...fetchDateFilter,
@@ -294,10 +296,9 @@ function InsideSales() {
                           className="text-xs w-full text-center uppercase text-gray-600 outline-none"
                           type="date"
                           value={
-                            dateFilter.after &&
-                            new Date(dateFilter.after)
-                              .toISOString()
-                              .slice(0, 10)
+                            dateFilter.after
+                              ? formatDate(dateFilter.after)
+                              : null
                           }
                           onChange={(e) =>
                             setDateFilter({
@@ -317,10 +318,9 @@ function InsideSales() {
                           className="text-xs w-full text-center uppercase text-gray-600 outline-none"
                           type="date"
                           value={
-                            dateFilter.before &&
-                            new Date(dateFilter.before)
-                              .toISOString()
-                              .slice(0, 10)
+                            dateFilter.before
+                              ? formatDate(dateFilter.before)
+                              : null
                           }
                           onChange={(e) =>
                             setDateFilter({

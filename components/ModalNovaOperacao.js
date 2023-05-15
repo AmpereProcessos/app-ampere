@@ -9,6 +9,7 @@ import { AiOutlineMinus } from "react-icons/ai";
 import { IoMdAdd } from "react-icons/io";
 import { FaProjectDiagram } from "react-icons/fa";
 import axios from "axios";
+import { formatDate } from "../utils/constants";
 
 function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
   const [operationMsg, setOperationMsg] = useState({ text: "", color: "" });
@@ -262,9 +263,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                   editable={true}
                   value={
                     operationInfo.dataInicio
-                      ? dayjs(operationInfo.dataInicio)
-                          .add(4, "hours")
-                          .format("YYYY-MM-DD")
+                      ? formatDate(operationInfo.dataInicio)
                       : null
                   }
                   handleChange={(value) =>
@@ -282,9 +281,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                   editable={true}
                   value={
                     operationInfo.previsaoConclusao
-                      ? dayjs(operationInfo.previsaoConclusao)
-                          .add(4, "hours")
-                          .format("YYYY-MM-DD")
+                      ? formatDate(operationInfo.previsaoConclusao)
                       : null
                   }
                   handleChange={(value) =>
@@ -450,9 +447,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                     editable={true}
                     value={
                       activityHolder.dataInicio
-                        ? dayjs(activityHolder.dataInicio)
-                            .add(4, "hours")
-                            .format("YYYY-MM-DD")
+                        ? formatDate(activityHolder.dataInicio)
                         : null
                     }
                     handleChange={(value) =>
@@ -470,9 +465,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                     editable={true}
                     value={
                       activityHolder.previsaoConclusao
-                        ? dayjs(activityHolder.previsaoConclusao)
-                            .add(4, "hours")
-                            .format("YYYY-MM-DD")
+                        ? formatDate(activityHolder.previsaoConclusao)
                         : null
                     }
                     handleChange={(value) =>
@@ -542,9 +535,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                       editable={true}
                       value={
                         subactivityHolder.info.dataInicio
-                          ? dayjs(subactivityHolder.info.dataInicio)
-                              .add(4, "hours")
-                              .format("YYYY-MM-DD")
+                          ? formatDate(subactivityHolder.info.dataInicio)
                           : null
                       }
                       handleChange={(value) =>
@@ -562,9 +553,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                       editable={true}
                       value={
                         subactivityHolder.info.previsaoConclusao
-                          ? dayjs(subactivityHolder.info.previsaoConclusao)
-                              .add(4, "hours")
-                              .format("YYYY-MM-DD")
+                          ? formatDate(subactivityHolder.info.previsaoConclusao)
                           : null
                       }
                       handleChange={(value) =>

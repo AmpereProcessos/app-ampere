@@ -2,10 +2,6 @@ import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 
 function DateFloatingInput({ value, handleChange, width, editable, label }) {
-  const [holder, setHolder] = useState(value);
-  useEffect(() => {
-    setHolder(value);
-  }, [value]);
   return (
     <>
       {/* <div className={`flex flex-col lg:hidden w-full my-2`}>
@@ -31,14 +27,9 @@ function DateFloatingInput({ value, handleChange, width, editable, label }) {
         } mb-6 group`}
       >
         <input
-          value={holder ? holder : null}
+          value={value}
           onChange={(e) => {
-            console.log(e.target.value);
-            handleChange(
-              e.target.value != ""
-                ? new Date(e.target.value).toISOString()
-                : undefined
-            );
+            handleChange(e.target.value != "" ? e.target.value : undefined);
           }}
           readOnly={!editable}
           type={"date"}

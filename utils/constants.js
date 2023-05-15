@@ -1884,6 +1884,9 @@ export function formatCPFCpnj(value) {
     "$1.$2.$3/$4-$5"
   );
 }
+export function formatDate(value) {
+  return new Date(value).toISOString().slice(0, 10);
+}
 export async function getDistanceBetweenCities(destination, origin) {
   console.log(process.env.DB_KEY);
   const proxyurl = "https://cors-anywhere.herokuapp.com/";

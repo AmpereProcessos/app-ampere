@@ -14,6 +14,7 @@ import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
 import FilterButton from "../../components/utils/Buttons/FilterButton";
 import dayjs from "dayjs";
 import BancoDeOSCard from "../../components/BancoDeOSCard";
+import { formatDate } from "../../utils/constants";
 
 var dateFilterParam = new Date();
 dateFilterParam.setMonth(dateFilterParam.getMonth() - 3);
@@ -137,9 +138,7 @@ function BancoDeOS() {
                     </span>
                     <div className="flex flex-col md:flex-row items-center justify-center gap-2">
                       <input
-                        value={dayjs(dateFilter.after)
-                          .add(4, "hours")
-                          .format("YYYY-MM-DD")}
+                        value={formatDate(dateFilter.after)}
                         onChange={(e) =>
                           setDateFilter({
                             ...dateFilter,
@@ -154,7 +153,7 @@ function BancoDeOS() {
                       />
                       <p>&</p>
                       <input
-                        value={dayjs(dateFilter.before).format("YYYY-MM-DD")}
+                        value={formatDate(dateFilter.before)}
                         onChange={(e) =>
                           setDateFilter({
                             ...dateFilter,

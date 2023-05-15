@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
-import { cidadesAtendidas, cities } from "../utils/constants";
+import { cidadesAtendidas, cities, formatDate } from "../utils/constants";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import AnexoArquivo from "./AnexoArquivo";
@@ -459,9 +459,7 @@ function ModalCallSuporte({
                   <input
                     value={
                       infoHolder.ultAtualizacaoCliente
-                        ? dayjs(infoHolder.ultAtualizacaoCliente)
-                            .add(4, "hours")
-                            .format("YYYY-MM-DD")
+                        ? formatDate(infoHolder.ultAtualizacaoCliente)
                         : null
                     }
                     onChange={(e) =>

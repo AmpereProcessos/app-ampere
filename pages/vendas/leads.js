@@ -8,6 +8,7 @@ import { BsDownload } from "react-icons/bs";
 import dayjs from "dayjs";
 import LeadCard from "../../components/LeadCard";
 import ListLeads from "../../components/ListLeads";
+import { formatDate } from "../../utils/constants";
 
 var dateFilterParam = new Date();
 dateFilterParam.setMonth(dateFilterParam.getMonth() - 6);
@@ -74,9 +75,7 @@ function SellerLeads() {
               </span>
               <div className="flex items-center justify-center flex-wrap gap-2">
                 <input
-                  value={dayjs(fetchDateFilter.after)
-                    .add(4, "hours")
-                    .format("YYYY-MM-DD")}
+                  value={formatDate(fetchDateFilter.after)}
                   onChange={(e) =>
                     setFetchDateFilter({
                       ...fetchDateFilter,
@@ -91,7 +90,7 @@ function SellerLeads() {
                 />
                 <p>&</p>
                 <input
-                  value={dayjs(fetchDateFilter.before).format("YYYY-MM-DD")}
+                  value={formatDate(fetchDateFilter.before)}
                   onChange={(e) =>
                     setFetchDateFilter({
                       ...fetchDateFilter,

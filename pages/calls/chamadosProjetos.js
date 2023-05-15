@@ -8,7 +8,11 @@ import Select from "react-select";
 import { AiOutlineReload, AiOutlineSearch } from "react-icons/ai";
 import { MdDateRange } from "react-icons/md";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import { projetistas, projetosSolicitations } from "../../utils/constants";
+import {
+  formatDate,
+  projetistas,
+  projetosSolicitations,
+} from "../../utils/constants";
 import ModalCallProjetos from "../../components/ModalCallProjetos";
 import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
 import FilterButton from "../../components/utils/Buttons/FilterButton";
@@ -547,7 +551,7 @@ function ChamadosProjetos() {
                   <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
                     <p>Entre:</p>
                     <input
-                      value={dayjs(closedFilterDate.after).format("YYYY-MM-DD")}
+                      value={formatDate(closedFilterDate.after)}
                       onChange={(e) =>
                         setClosedFilterDate({
                           ...closedFilterDate,
@@ -559,9 +563,7 @@ function ChamadosProjetos() {
                     />
                     <p>&</p>
                     <input
-                      value={dayjs(closedFilterDate.before).format(
-                        "YYYY-MM-DD"
-                      )}
+                      value={formatDate(closedFilterDate.before)}
                       onChange={(e) =>
                         setClosedFilterDate({
                           ...closedFilterDate,

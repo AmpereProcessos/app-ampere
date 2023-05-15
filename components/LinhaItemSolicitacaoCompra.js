@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { BsArrowsExpand } from "react-icons/bs";
 import { MdCancel } from "react-icons/md";
+import { formatDate } from "../utils/constants";
 
 function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
   const [showDescription, setShowDescription] = useState(false);
@@ -40,11 +41,7 @@ function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
         </div>
         <div className="flex items-center col-span-2 w-full p-1 h-full">
           <input
-            value={
-              item.dataCompra
-                ? dayjs(item.dataCompra).add(4, "hour").format("YYYY-MM-DD")
-                : null
-            }
+            value={item.dataCompra ? formatDate(item.dataCompra) : null}
             onChange={(e) => {
               const list = infoHolder.itens;
               list[index].dataCompra = new Date(e.target.value).toISOString();
@@ -75,11 +72,7 @@ function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
         </div>
         <div className="flex items-center col-span-2 w-full p-1 h-full">
           <input
-            value={
-              item.dataEntrega
-                ? dayjs(item.dataEntrega).add(4, "hour").format("YYYY-MM-DD")
-                : null
-            }
+            value={item.dataEntrega ? formatDate(item.dataEntrega) : null}
             onChange={(e) => {
               const list = infoHolder.itens;
               list[index].dataEntrega = new Date(e.target.value).toISOString();

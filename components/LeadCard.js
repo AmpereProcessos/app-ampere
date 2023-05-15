@@ -4,6 +4,7 @@ import {
   customersAcquisitionChannels,
   AcquisitionChannels,
   vendedores,
+  formatDate,
 } from "../utils/constants";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
@@ -207,9 +208,7 @@ function LeadCard({ lead, getLeads }) {
                 className="outline-none text-gray-600 text-center text-sm bg-transparent"
                 value={
                   infoHolder.dataDeAquisicao
-                    ? dayjs(infoHolder.dataDeAquisicao)
-                        .add(4, "hour")
-                        .format("YYYY-MM-DD")
+                    ? formatDate(infoHolder.dataDeAquisicao)
                     : null
                 }
                 onChange={(e) =>

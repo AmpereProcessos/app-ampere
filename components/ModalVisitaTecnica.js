@@ -250,7 +250,12 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 </button>
               </div>
             ) : (
-              <p className="font-bold p-1 bg-green-400 text-white rounded">
+              <p
+                onClick={() =>
+                  setDados((prev) => ({ ...prev, status: "NÃO DEFINIDO" }))
+                }
+                className="font-bold p-1 bg-green-400 text-white rounded hover:bg-red-400 cursor-pointer"
+              >
                 CONCLUIDO
               </p>
             )}

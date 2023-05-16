@@ -314,7 +314,7 @@ function ModalCallPPS({
               <span className="grow text-center font-raleway text-sm bg-gray-100 p-4 italic">
                 {info.observacoes ? (
                   <ul className="text-xs font-bold text-center list-none">
-                    {info.observacoes.split("/").map((string, index) => (
+                    {info.observacoes.split("/ ").map((string, index) => (
                       <li key={index}>{string}</li>
                     ))}
                   </ul>

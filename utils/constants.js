@@ -951,7 +951,12 @@ export const projetistas = [
   {
     nome: "TULIO HENRIQUE SILVA MEDEIROS",
     label: "TULIO",
-    cod: 52,
+    cod: 53,
+  },
+  {
+    nome: "EDUARDO HENRIQUE DOMINGOS DE MORAES",
+    label: "EDUARDO",
+    cod: 54,
   },
   {
     nome: "NÃO DEFINIDO",

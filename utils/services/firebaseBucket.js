@@ -1,12 +1,12 @@
 import admin from "firebase-admin";
-import serviceAccount from "../../sistemaampere-firebase-adminsdk-5srhq-e6de8630c7.json";
+import { firebaseServiceAccount } from "../constants";
 
 export default async function getBucket() {
   var sdkApp = admin.apps.find((app) => app.name == "SDK");
   if (!sdkApp) {
     sdkApp = admin.initializeApp(
       {
-        credential: admin.credential.cert(serviceAccount),
+        credential: admin.credential.cert(firebaseServiceAccount),
         storageBucket: "sistemaampere.appspot.com",
       },
       "SDK"

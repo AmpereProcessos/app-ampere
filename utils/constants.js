@@ -1469,6 +1469,13 @@ export const statusDoParecerDeAcesso = [
     value: "NÃO DEFINIDO",
   },
 ];
+export const distributionCompanies = [
+  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+  { label: "CEMIG", value: "CEMIG" },
+  { label: "ENEL", value: "ENEL" },
+  { label: "CELG", value: "CELG" },
+  { label: "ENERGISA", value: "ENERGISA" },
+];
 export const statusObra = [
   {
     label: "AGENDADA",

@@ -6,6 +6,7 @@ import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
 import {
   cidadesAtendidas,
+  distributionCompanies,
   fatorDeGeracaoPorOrientacao,
   suprimentoOption,
   tiposSolicitacaoVisitaTecnica,
@@ -1653,13 +1654,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                         ? dados.concessionaria
                         : "NÃO DEFINIDO"
                     }
-                    options={[
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      { label: "CEMIG", value: "CEMIG" },
-                      { label: "ENEL", value: "ENEL" },
-                      { label: "CELG", value: "CELG" },
-                      { label: "ENERGISA", value: "ENERGISA" },
-                    ]}
+                    options={distributionCompanies}
                     handleChange={(value) =>
                       setDados({ ...dados, concessionaria: value })
                     }

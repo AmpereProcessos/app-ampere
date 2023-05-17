@@ -104,7 +104,7 @@ function ArchiveLinkBlock({ obj, deleteFile, prefix }) {
       </div>
       <div
         onClick={() => handleDownload(obj.link)}
-        className="flex items-center justify-center text-blue-700 cursor-pointer"
+        className="flex items-center justify-center text-blue-700 hover:text-blue-500 hover:scale-105 duration-300 ease-in-out cursor-pointer"
       >
         <TbDownload />
       </div>

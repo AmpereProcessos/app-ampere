@@ -70,7 +70,6 @@ function ArchiveLinkBlock({ obj, deleteFile, prefix }) {
       <a
         className="text-xs text-[#15599a] font-bold text-center"
         href={obj.link}
-        download={obj.title}
       >
         {obj.title} ({obj.format})
       </a>

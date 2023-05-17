@@ -347,6 +347,8 @@ function FormVisitaTecnicaUm({
           handleChange={(value) =>
             setDados({ ...dados, numeroResidencia: Number(value) })
           }
+          min={0}
+          step={1}
         />
       </div>
       <div className="flex flex-col mt-2">
@@ -407,6 +409,8 @@ function FormVisitaTecnicaUm({
                 handleChange={(value) =>
                   setDadosInvesores({ ...dadosInversores, qtde: value })
                 }
+                min={0}
+                step={1}
               />
             </div>
             <div className="flex items-center justify-center">
@@ -486,6 +490,8 @@ function FormVisitaTecnicaUm({
               handleChange={(value) =>
                 setDados({ ...dados, qtdeOtimizador: Number(value) })
               }
+              min={0}
+              step={1}
             />
             <NumberFloatingInput
               label={"POTÊNCIA DO(S) OTIMIZADOR(ES"}
@@ -533,6 +539,8 @@ function FormVisitaTecnicaUm({
                 handleChange={(value) =>
                   setDadosModulos({ ...dadosModulos, qtde: Number(value) })
                 }
+                min={0}
+                step={1}
               />
             </div>
             <div className="flex items-center justify-center">

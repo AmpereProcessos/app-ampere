@@ -74,9 +74,12 @@ function PDFFormulario({ info, backTo, type }) {
             </h1>
           </div>
           <div className="flex flex-col px-2">
-            <div className="grid grid-cols-6 gap-x-2 border-b bg-gray-800">
+            <div className="grid grid-cols-7 gap-x-2 border-b bg-gray-800">
               <p className="text-sm col-span-2 font-medium text-white px-6 py-4 text-center">
                 PRODUTO
+              </p>
+              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
+                CÓDIGO
               </p>
               <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
                 RETIRADA
@@ -94,10 +97,13 @@ function PDFFormulario({ info, backTo, type }) {
             {info.materiais.map((material, index) => (
               <div
                 key={index}
-                className="grid grid-cols-6 gap-x-2 border-b border-x border-gray-700"
+                className="grid grid-cols-7 gap-x-2 border-b border-x border-gray-700"
               >
                 <p className="col-span-2 py-4 text-center whitespace-nowrap text-xs font-medium text-gray-900">
                   {material.nome}
+                </p>
+                <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+                  {material.codigo}
                 </p>
                 <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
                   {material.qtdeSaida}
@@ -125,9 +131,12 @@ function PDFFormulario({ info, backTo, type }) {
                 </p>
               </div>
             ))}
-            <div className="grid grid-cols-6 gap-x-2  border-b border-x border-gray-700">
+            <div className="grid grid-cols-7 gap-x-2  border-b border-x border-gray-700">
               <p className="px-6 py-4 col-span-2 text-center whitespace-nowrap text-sm font-medium text-gray-900">
                 TOTAL
+              </p>
+              <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
+                -
               </p>
               <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
                 -
@@ -403,9 +412,16 @@ export async function getServerSideProps({ query }) {
   const type = query.efetivado ? query.efetivado : "SIM";
   const db = await connectToDatabase(process.env.DB_KEY);
   const collection = db.collection("formularios");
+  const materialCollection = db.collection("material");
   let form = await collection.findOne({
     _id: ObjectId(id),
   });
+  let items = await materialCollection.find({}).toArray();
+  let ajustedMaterials = form.materiais.map((mat) => {
+    const itemInDb = items.find((item) => item._id == mat.id);
+    return { ...mat, codigo: itemInDb?.codigo ? itemInDb.codigo : "N/A" };
+  });
+  form = { ...form, materiais: ajustedMaterials };
   let info = JSON.parse(JSON.stringify(form));
   // Pass data to the page via props
   return { props: { info, backTo, type } };

@@ -7,6 +7,9 @@ function NumberFloatingInput({
   handleChange,
   width,
   marginBottom,
+  step = 0.01,
+  min = undefined,
+  max = undefined,
   toString = true,
 }) {
   function fixValue(value) {
@@ -27,7 +30,9 @@ function NumberFloatingInput({
         type="number"
         name={label.toLowerCase()}
         id={label.toLowerCase()}
-        step={0.01}
+        step={step}
+        min={min}
+        max={max}
         className="flex py-2.5 px-0 w-full text-sm z-1 font-arial text-center text-gray-900 bg-[#fff] border-0 border-b-2 border-gray-300 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
         placeholder=" "
       />

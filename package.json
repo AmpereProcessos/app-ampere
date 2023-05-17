@@ -19,6 +19,7 @@
     "dayjs": "^1.11.6",
     "dayjs-business-days": "^1.0.4",
     "firebase": "^9.14.0",
+    "firebase-admin": "^11.8.0",
     "fireworks-js": "^2.10.0",
     "framer-motion": "^9.0.4",
     "googleapis": "^107.0.0",

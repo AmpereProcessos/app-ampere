@@ -1,11 +1,58 @@
+import { getBlob, getMetadata, ref } from "firebase/storage";
+import { storage } from "../../utils/firebase";
 import React, { useEffect, useRef, useState } from "react";
 import { MdDelete } from "react-icons/md";
-
-function ArchiveLinkBlock({ obj, deleteFile }) {
-  const ref = useRef();
+import { TbDownload } from "react-icons/tb";
+import axios from "axios";
+import { fileTypes } from "../../utils/constants";
+function ArchiveLinkBlock({ obj, deleteFile, prefix }) {
+  const divRef = useRef();
   const [deleteMenu, setDeleteMenu] = useState(false);
   function onClickOutside() {
     setDeleteMenu(false);
+  }
+  async function handleDownload(url) {
+    var splitFileName = obj.title.replace("/", "").toUpperCase().split(" ");
+    var fixedFileName = splitFileName.join("_");
+    if (prefix) {
+      fixedFileName = `${prefix}-${fixedFileName}`;
+    }
+    let fileRef = ref(storage, obj.link);
+    const metadata = await getMetadata(fileRef);
+
+    const filePath = fileRef.fullPath;
+    const extension = fileTypes[metadata.contentType]?.extension;
+
+    try {
+      const response = await axios.get(
+        `/api/firebase/download?filePath=${encodeURIComponent(filePath)}`,
+        {
+          responseType: "blob",
+        }
+      );
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${fixedFileName}${extension}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      alert("Houve um erro no download do arquivo.");
+    }
+
+    // const xhr = new XMLHttpRequest();
+    // xhr.responseType = "blob";
+    // xhr.onload = (event) => {
+    //   const blob = xhr.response;
+    //   console.log(blob);
+    // };
+    // xhr.open("GET", url);
+    // xhr.send();
+
+    // let fileRef = ref(storage, obj.link);
+    // const resp = await getBlob(fileRef);
+    // console.log(resp);
   }
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -19,10 +66,11 @@ function ArchiveLinkBlock({ obj, deleteFile }) {
     };
   }, [onClickOutside]);
   return (
-    <div ref={ref} className="flex items-center justify-center gap-2">
+    <div ref={divRef} className="flex items-center justify-center gap-2">
       <a
         className="text-xs text-[#15599a] font-bold text-center"
         href={obj.link}
+        download={obj.title}
       >
         {obj.title} ({obj.format})
       </a>
@@ -54,6 +102,12 @@ function ArchiveLinkBlock({ obj, deleteFile }) {
             </div>
           </div>
         )}
+      </div>
+      <div
+        onClick={() => handleDownload(obj.link)}
+        className="flex items-center justify-center text-blue-700 cursor-pointer"
+      >
+        <TbDownload />
       </div>
     </div>
   );

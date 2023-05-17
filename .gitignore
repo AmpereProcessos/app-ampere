@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# firebase
+sistemaampere-firebase-adminsdk-5srhq-e6de8630c7.json

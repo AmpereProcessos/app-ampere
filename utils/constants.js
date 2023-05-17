@@ -184,33 +184,43 @@ export const reportsByPlan = {
 export const fileTypes = {
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
     title: "WORD",
+    extension: ".docx",
   },
   "image/png": {
     title: "IMAGEM (.PNG)",
+    extension: ".png",
   },
   "image/jpeg": {
     title: "IMAGEM(.JPEG)",
+    extension: ".jpeg",
   },
   "image/tiff": {
     title: "IMAGEM(.TIFF)",
+    extension: ".tiff",
   },
   "application/pdf": {
     title: "PDF",
+    extension: ".pdf",
   },
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
     title: "EXCEL",
+    extension: ".xlsx",
   },
   "text/xml": {
     title: "XML",
+    extension: ".xml",
   },
   "video/mp4": {
     title: "MP4",
+    extension: ".mp4",
   },
   "application/vnd.sealed.tiff": {
     title: "IMAGEM(.TIFF)",
+    extension: ".tiff",
   },
   "image/vnd.sealedmedia.softseal.jpg": {
     title: "IMAGEM(.JPG)",
+    extension: ".jpg",
   },
 };
 export const vendedores = [

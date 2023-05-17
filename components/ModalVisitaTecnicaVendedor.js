@@ -1658,6 +1658,7 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                       { label: "CEMIG", value: "CEMIG" },
                       { label: "ENEL", value: "ENEL" },
                       { label: "CELG", value: "CELG" },
+                      { label: "ENERGISA", value: "ENERGISA" },
                     ]}
                     handleChange={(value) =>
                       setDados({ ...dados, concessionaria: value })

@@ -86,6 +86,7 @@ function InfoArquivosBlock({ project, infoHolder, categories, handleUpdates }) {
                     <FileLinkBlock
                       key={index2}
                       obj={obj}
+                      prefix={infoHolder.nomeDoContrato}
                       deleteFile={(obj) => deleteFile(obj, category)}
                     />
                   ))}

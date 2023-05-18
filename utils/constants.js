@@ -1528,6 +1528,10 @@ export const statusLiberacao = [
     label: "AGUARDANDO N.F",
   },
   {
+    value: "PREVISÃO DE EQUIPAMENTOS",
+    label: "PREVISÃO DE EQUIPAMENTOS",
+  },
+  {
     label: "RECISÃO DE CONTRATO",
     value: "RECISÃO DE CONTRATO", //tirar
   },

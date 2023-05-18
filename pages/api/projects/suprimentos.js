@@ -33,7 +33,10 @@ export default async function handler(req, res) {
             //     "CANCELADO",
             //   ],
             // },
-            "contrato.status": "ASSINADO",
+            $or: [
+              { "contrato.status": "ASSINADO" },
+              { "compra.statusLiberacao": "PREVISÃO DE EQUIPAMENTOS" },
+            ],
             "obra.statusDaObra": { $ne: "CONCLUIDA" },
           },
         },

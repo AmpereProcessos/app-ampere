@@ -9,6 +9,7 @@ function FormSolicitacaoDadosEstrutura({ avancar, setDados, dados, voltar }) {
       setMessage("Por favor, preencha o tipo da estrutura");
       return false;
     }
+
     if (
       dados.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" &&
       (!dados.materialEstrutura || dados.materialEstrutura == "NÃO DEFINIDO")
@@ -16,33 +17,36 @@ function FormSolicitacaoDadosEstrutura({ avancar, setDados, dados, voltar }) {
       setMessage("Por favor, preencha sobre o material da estrutura.");
       return false;
     }
-    if (dados.estruturaAmpere == "NÃO DEFINIDO") {
-      setMessage(
-        "Por favor, preencha sobre a necessidade de adequações ou construção de estrutura."
-      );
-      return false;
+    if (dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO") {
+      if (dados.estruturaAmpere == "NÃO DEFINIDO") {
+        setMessage(
+          "Por favor, preencha sobre a necessidade de adequações ou construção de estrutura."
+        );
+        return false;
+      }
+      if (
+        dados.estruturaAmpere == "SIM" &&
+        dados.responsavelEstrutura == "NÃO SE APLICA"
+      ) {
+        setMessage("Por favor, preencha o responsável pela estrutura.");
+        return false;
+      }
+      if (
+        dados.responsavelEstrutura != "NÃO SE APLICA" &&
+        dados.formaPagamentoEstrutura == "NÃO DEFINIDO"
+      ) {
+        setMessage("Por favor, preencha uma forma de pagamento válida.");
+        return false;
+      }
+      if (
+        dados.responsavelEstrutura != "NÃO SE APLICA" &&
+        (dados.valorEstrutura == null || dados.valorEstrutura == 0)
+      ) {
+        setMessage("Por favor, preencha o valor da estrutura");
+        return false;
+      }
     }
-    if (
-      dados.estruturaAmpere == "SIM" &&
-      dados.responsavelEstrutura == "NÃO SE APLICA"
-    ) {
-      setMessage("Por favor, preencha o responsável pela estrutura.");
-      return false;
-    }
-    if (
-      dados.responsavelEstrutura != "NÃO SE APLICA" &&
-      dados.formaPagamentoEstrutura == "NÃO DEFINIDO"
-    ) {
-      setMessage("Por favor, preencha uma forma de pagamento válida.");
-      return false;
-    }
-    if (
-      dados.responsavelEstrutura != "NÃO SE APLICA" &&
-      (dados.valorEstrutura == null || dados.valorEstrutura == 0)
-    ) {
-      setMessage("Por favor, preencha o valor da estrutura");
-      return false;
-    }
+
     setMessage("");
     return true;
   }
@@ -57,7 +61,7 @@ function FormSolicitacaoDadosEstrutura({ avancar, setDados, dados, voltar }) {
         ESTRUTURA DE MONTAGEM
       </span>
       <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 p-2">
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center col-span-3">
           <SelectFloatingInput
             width={"450px"}
             label={"TIPO DA ESTRUTURA"}
@@ -90,32 +94,35 @@ function FormSolicitacaoDadosEstrutura({ avancar, setDados, dados, voltar }) {
             }
           />
         </div>
-        <div className="flex items-center justify-center">
-          <SelectFloatingInput
-            label={"ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"}
-            width={"450px"}
-            editable={true}
-            options={[
-              {
-                label: "NÃO",
-                value: "NÃO",
-              },
-              {
-                label: "SIM",
-                value: "SIM",
-              },
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
-            ]}
-            value={dados.estruturaAmpere}
-            handleChange={(value) =>
-              setDados({ ...dados, estruturaAmpere: value })
-            }
-          />
-        </div>
-        <div className="flex items-center justify-center">
+        {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
+          <div className="flex items-center justify-center col-span-3">
+            <SelectFloatingInput
+              label={"ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"}
+              width={"450px"}
+              editable={true}
+              options={[
+                {
+                  label: "NÃO",
+                  value: "NÃO",
+                },
+                {
+                  label: "SIM",
+                  value: "SIM",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+              value={dados.estruturaAmpere}
+              handleChange={(value) =>
+                setDados({ ...dados, estruturaAmpere: value })
+              }
+            />
+          </div>
+        ) : null}
+
+        <div className="flex items-center justify-center col-span-3">
           <SelectFloatingInput
             label={"MATERIAL DA ESTRUTURA"}
             width={"450px"}
@@ -133,31 +140,33 @@ function FormSolicitacaoDadosEstrutura({ avancar, setDados, dados, voltar }) {
             }
           />
         </div>
-        <div className="flex items-center justify-center col-span-3">
-          <SelectFloatingInput
-            width={"450px"}
-            label={"RESPONSÁVEL PELA ESTRUTURA"}
-            editable={true}
-            options={[
-              {
-                label: "AMPERE",
-                value: "AMPERE",
-              },
-              {
-                label: "CLIENTE",
-                value: "CLIENTE",
-              },
-              {
-                label: "NÃO SE APLICA",
-                value: "NÃO SE APLICA",
-              },
-            ]}
-            value={dados.responsavelEstrutura}
-            handleChange={(value) =>
-              setDados({ ...dados, responsavelEstrutura: value })
-            }
-          />
-        </div>
+        {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
+          <div className="flex items-center justify-center col-span-3">
+            <SelectFloatingInput
+              width={"450px"}
+              label={"RESPONSÁVEL PELA ESTRUTURA"}
+              editable={true}
+              options={[
+                {
+                  label: "AMPERE",
+                  value: "AMPERE",
+                },
+                {
+                  label: "CLIENTE",
+                  value: "CLIENTE",
+                },
+                {
+                  label: "NÃO SE APLICA",
+                  value: "NÃO SE APLICA",
+                },
+              ]}
+              value={dados.responsavelEstrutura}
+              handleChange={(value) =>
+                setDados({ ...dados, responsavelEstrutura: value })
+              }
+            />
+          </div>
+        ) : null}
 
         {dados.responsavelEstrutura != "NÃO SE APLICA" && (
           <>

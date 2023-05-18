@@ -29,7 +29,11 @@ function FormSolicitacaoDocumentacaoOeM({ dados, setDados, voltar, avancar }) {
       });
       return false;
     }
-    if (dados.tipoDaInstalacao == "URBANO" && !images.iptu) {
+    if (
+      dados.tipoDaInstalacao == "URBANO" &&
+      dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" &&
+      !images.iptu
+    ) {
       setImagesMsg({
         text: "Por favor, anexe o arquivo do IPTU.",
         color: "text-red-500",
@@ -338,48 +342,49 @@ function FormSolicitacaoDocumentacaoOeM({ dados, setDados, voltar, avancar }) {
             />
           </div>
         </div>
-        {dados.tipoDaInstalacao == "URBANO" && (
-          <>
-            <div className="w-fit flex flex-col items-center">
-              <label
-                className="ml-2 text-center text-[#15599a] font-bold"
-                htmlFor="propostaComercial"
-              >
-                IPTU
-              </label>
-              <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-                <div className="absolute">
-                  {images.iptu ? (
-                    <div className="flex flex-col items-center">
-                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">
-                        {images.iptu.name}
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">
-                        Adicione o arquivo aqui
-                      </span>
-                    </div>
-                  )}
+        {dados.tipoDaInstalacao == "URBANO" &&
+          dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" && (
+            <>
+              <div className="w-fit flex flex-col items-center">
+                <label
+                  className="ml-2 text-center text-[#15599a] font-bold"
+                  htmlFor="propostaComercial"
+                >
+                  IPTU
+                </label>
+                <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+                  <div className="absolute">
+                    {images.iptu ? (
+                      <div className="flex flex-col items-center">
+                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span className="block text-gray-400 font-normal text-center">
+                          {images.iptu.name}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                        <span className="block text-gray-400 font-normal">
+                          Adicione o arquivo aqui
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    onChange={(e) =>
+                      setImages({
+                        ...images,
+                        iptu: e.target.files[0],
+                      })
+                    }
+                    className="h-full w-full opacity-0"
+                    type="file"
+                    accept=".png, .jpeg, .pdf"
+                  />
                 </div>
-                <input
-                  onChange={(e) =>
-                    setImages({
-                      ...images,
-                      iptu: e.target.files[0],
-                    })
-                  }
-                  className="h-full w-full opacity-0"
-                  type="file"
-                  accept=".png, .jpeg, .pdf"
-                />
               </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
         {dados.tipoDaInstalacao == "RURAL" && (
           <>
             <div className="w-fit flex flex-col items-center">

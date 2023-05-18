@@ -10,6 +10,7 @@ import VisualizacaoFormBombaSolar from "./VisualizacaoFormBolhaSolar";
 import FormSolicitacaoPagamentoOeM from "./FormSolicitacaoPagamentoOeM";
 import FormSolicitacaoDocumentacaoOeM from "./FormSolicitacaoDocumentacaoOeM";
 import VisualizacaoForm from "./VisualizacaoForm";
+import FormSolicitacaoDistribuicoesCredito from "./FormSolicitacaoDistribuicoesCredito";
 function SolicitacaoOeM({
   cliente,
   links,
@@ -18,7 +19,7 @@ function SolicitacaoOeM({
   nomeVendedor,
   telefoneVendedor,
 }) {
-  const [estagio, setEstagio] = useState(0);
+  const [estagio, setEstagio] = useState(4);
   const [dados, setDados] = useState({
     nomeVendedor: nomeVendedor,
     nomeDoProjeto: cliente ? cliente : null,
@@ -84,7 +85,7 @@ function SolicitacaoOeM({
     responsavelEstrutura: "NÃO SE APLICA",
     formaPagamentoEstrutura: "NÃO DEFINIDO",
     valorEstrutura: null,
-    possuiOeM: "NÃO DEFINIDO",
+    possuiOeM: "SIM",
     planoOeM: "NÃO SE APLICA",
     // clienteSegurado: "NÃO DEFINIDO",
     // tempoSegurado: "NÃO SE APLICA",
@@ -138,6 +139,13 @@ function SolicitacaoOeM({
         />
       )}
       {estagio == 1 && (
+        <FormSolicitacaoDadosContato
+          avancar={() => setEstagio(estagio + 1)}
+          dados={dados}
+          setDados={setDados}
+        />
+      )}
+      {estagio == 2 && (
         <FormSolicitacaoEnderecoInstalacao
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
@@ -145,7 +153,7 @@ function SolicitacaoOeM({
           setDados={setDados}
         />
       )}
-      {estagio == 2 && (
+      {estagio == 3 && (
         <FormSolicitacaoEquipamentosONGRID
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
@@ -153,7 +161,7 @@ function SolicitacaoOeM({
           setDados={setDados}
         />
       )}
-      {estagio == 3 && (
+      {estagio == 4 && (
         <FormSolicitacaoDadosEstrutura
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
@@ -161,7 +169,7 @@ function SolicitacaoOeM({
           setDados={setDados}
         />
       )}
-      {estagio == 4 && (
+      {estagio == 5 && (
         <FormSolicitacaoPagamentoOeM
           voltar={() => setEstagio(estagio - 1)}
           avancar={() => setEstagio(estagio + 1)}
@@ -169,7 +177,16 @@ function SolicitacaoOeM({
           setDados={setDados}
         />
       )}
-      {estagio == 5 && (
+      {estagio == 6 && (
+        <FormSolicitacaoDistribuicoesCredito
+          dados={dados}
+          setDados={setDados}
+          avancar={() => setEstagio(estagio + 1)}
+          voltar={() => setEstagio(estagio - 1)}
+          prevLinks={links ? links : []}
+        />
+      )}
+      {estagio == 7 && (
         <FormSolicitacaoDocumentacaoOeM
           dados={dados}
           setDados={setDados}
@@ -178,7 +195,7 @@ function SolicitacaoOeM({
           prevLinks={links ? links : []}
         />
       )}
-      {estagio == 6 && (
+      {estagio == 8 && (
         <VisualizacaoForm
           dados={dados}
           setDados={setDados}

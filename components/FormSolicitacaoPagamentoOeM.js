@@ -267,7 +267,8 @@ function FormSolicitacaoPagamentoOeM({ dados, setDados, avancar, voltar }) {
             label={"FORMA DE PAGAMENTO"}
             editable={true}
             options={
-              dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)"
+              dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" ||
+              dados.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO"
                 ? [
                     {
                       label:

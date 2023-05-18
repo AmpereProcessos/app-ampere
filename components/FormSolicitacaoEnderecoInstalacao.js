@@ -100,40 +100,63 @@ function FormSolicitacaoEnderecoInstalacao({
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
         ENDEREÇO DA INSTALAÇAO
       </span>
-      <div className="flex flex-col lg:grid grid-cols-3 gap-2">
-        <div className="flex items-center justify-center col-span-3 mt-2">
-          <SelectFoatingInput
-            label={"TIPO DA INSTALAÇÃO"}
-            editable={true}
-            value={dados.tipoDaInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, tipoDaInstalacao: value })
-            }
-            options={[
-              {
-                label: "RURAL",
-                value: "RURAL",
-              },
-              {
-                label: "URBANO",
-                value: "URBANO",
-              },
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
-            ]}
-          />
+      <div className="flex flex-col lg:grid grid-cols-3 gap-2 px-2">
+        <div className="col-span-3 mt-2 flex items-center justify-center">
+          <div className="flex items-center justify-center w-full lg:w-[50%]">
+            <TextFloatingInput
+              label={"NOME DO TITULAR DO PROJETO"}
+              value={dados.nomeTitularProjeto}
+              editable={true}
+              handleChange={(value) =>
+                setDados({
+                  ...dados,
+                  nomeTitularProjeto: value.toUpperCase(),
+                })
+              }
+              width={"100%"}
+            />
+          </div>
+        </div>
+        <div className="flex items-center justify-center col-span-3">
+          <div className="flex items-center justify-center w-full lg:w-[50%]">
+            <SelectFoatingInput
+              label={"TIPO DA INSTALAÇÃO"}
+              editable={true}
+              value={dados.tipoDaInstalacao}
+              handleChange={(value) =>
+                setDados({ ...dados, tipoDaInstalacao: value })
+              }
+              options={[
+                {
+                  label: "RURAL",
+                  value: "RURAL",
+                },
+                {
+                  label: "URBANO",
+                  value: "URBANO",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+              width={"100%"}
+            />
+          </div>
         </div>
         <div className="flex items-center justify-center gap-x-2 flex-wrap">
-          <TextFloatingInput
-            editable={true}
-            label={"CEP INSTALAÇÃO"}
-            value={dados.cepInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, cepInstalacao: formatCEP(value) })
-            }
-          />
+          <div className="grow">
+            <TextFloatingInput
+              editable={true}
+              label={"CEP INSTALAÇÃO"}
+              value={dados.cepInstalacao}
+              handleChange={(value) =>
+                setDados({ ...dados, cepInstalacao: formatCEP(value) })
+              }
+              width={"100%"}
+            />
+          </div>
+
           <button
             onClick={() => findCPF("enderecoInstalacao")}
             className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
@@ -149,6 +172,7 @@ function FormSolicitacaoEnderecoInstalacao({
             handleChange={(value) =>
               setDados({ ...dados, enderecoInstalacao: value.toUpperCase() })
             }
+            width={"100%"}
           />
         </div>
         <div className="flex items-center justify-center">
@@ -159,6 +183,7 @@ function FormSolicitacaoEnderecoInstalacao({
             handleChange={(value) =>
               setDados({ ...dados, numeroResInstalacao: value })
             }
+            width={"100%"}
           />
         </div>
         <div className="flex items-center justify-center">

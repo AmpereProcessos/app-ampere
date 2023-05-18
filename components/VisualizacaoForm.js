@@ -815,50 +815,72 @@ function VisualizacaoForm({
               setDados({ ...dados, tipoEstrutura: value })
             }
           />
+          {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
+            <SelectInput
+              label={
+                "SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"
+              }
+              editable={true}
+              options={[
+                {
+                  label: "NÃO",
+                  value: "NÃO",
+                },
+                {
+                  label: "SIM",
+                  value: "SIM",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+              value={dados.estruturaAmpere}
+              handleChange={(value) =>
+                setDados({ ...dados, estruturaAmpere: value })
+              }
+            />
+          ) : null}
+
+          {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
+            <SelectInput
+              label={"RESPONSÁVEL PELA ESTRUTURA"}
+              editable={true}
+              options={[
+                {
+                  label: "AMPERE",
+                  value: "AMPERE",
+                },
+                {
+                  label: "CLIENTE",
+                  value: "CLIENTE",
+                },
+                {
+                  label: "NÃO SE APLICA",
+                  value: "NÃO SE APLICA",
+                },
+              ]}
+              value={dados.responsavelEstrutura}
+              handleChange={(value) =>
+                setDados({ ...dados, responsavelEstrutura: value })
+              }
+            />
+          ) : null}
+
           <SelectInput
-            label={
-              "SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"
-            }
+            label={"MATERIAL DA ESTRUTURA"}
+            width={"450px"}
             editable={true}
             options={[
-              {
-                label: "NÃO",
-                value: "NÃO",
-              },
-              {
-                label: "SIM",
-                value: "SIM",
-              },
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
+              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              { label: "MADEIRA", value: "MADEIRA" },
+              { label: "FERRO", value: "FERRO" },
             ]}
-            value={dados.estruturaAmpere}
-            handleChange={(value) =>
-              setDados({ ...dados, estruturaAmpere: value })
+            value={
+              dados.materialEstrutura ? dados.materialEstrutura : "NÃO DEFINIDO"
             }
-          />
-          <SelectInput
-            label={"RESPONSÁVEL PELA ESTRUTURA"}
-            editable={true}
-            options={[
-              {
-                label: "AMPERE",
-                value: "AMPERE",
-              },
-              {
-                label: "CLIENTE",
-                value: "CLIENTE",
-              },
-              {
-                label: "NÃO SE APLICA",
-                value: "NÃO SE APLICA",
-              },
-            ]}
-            value={dados.responsavelEstrutura}
             handleChange={(value) =>
-              setDados({ ...dados, responsavelEstrutura: value })
+              setDados({ ...dados, materialEstrutura: value })
             }
           />
           {dados.responsavelEstrutura != "NÃO SE APLICA" && (
@@ -961,69 +983,75 @@ function VisualizacaoForm({
             </>
           )}
         </div>
-        <div className="flex gap-2 justify-around flex-wrap mt-2">
-          <SelectInput
-            label={"CLIENTE SEGURADO?"}
-            editable={true}
-            options={[
-              {
-                label: "SIM",
-                value: "SIM",
-              },
-              {
-                label: "NÃO",
-                value: "NÃO",
-              },
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
-            ]}
-            value={dados.clienteSegurado}
-            handleChange={(value) =>
-              setDados({ ...dados, clienteSegurado: value })
-            }
-          />
-          {dados.clienteSegurado == "SIM" && (
-            <>
-              <SelectInput
-                label={"TEMPO SEGURADO"}
-                editable={true}
-                options={[
-                  {
-                    label: "1 ANO",
-                    value: "1 ANO",
-                  },
-                  {
-                    label: "2 ANOS",
-                    value: "2 ANOS",
-                  },
-                  {
-                    label: "3 ANOS",
-                    value: "3 ANOS",
-                  },
-                  {
-                    label: "4 ANOS",
-                    value: "4 ANOS",
-                  },
-                  {
-                    label: "5 ANOS",
-                    value: "5 ANOS",
-                  },
-                  {
-                    label: "NÃO SE APLICA",
-                    value: "NÃO SE APLICA",
-                  },
-                ]}
-                value={dados.tempoSegurado}
-                handleChange={(value) =>
-                  setDados({ ...dados, tempoSegurado: value })
-                }
-              />
-            </>
-          )}
-        </div>
-        {(dados.possuiOeM == "SIM" || dados.clienteSegurado == "SIM") && (
+        {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
+          <div className="flex gap-2 justify-around flex-wrap mt-2">
+            <SelectInput
+              label={"CLIENTE SEGURADO?"}
+              editable={true}
+              options={[
+                {
+                  label: "SIM",
+                  value: "SIM",
+                },
+                {
+                  label: "NÃO",
+                  value: "NÃO",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+              value={
+                dados.clienteSegurado ? dados.clienteSegurado : "NÃO DEFINIDO"
+              }
+              handleChange={(value) =>
+                setDados({ ...dados, clienteSegurado: value })
+              }
+            />
+            {dados.clienteSegurado == "SIM" && (
+              <>
+                <SelectInput
+                  label={"TEMPO SEGURADO"}
+                  editable={true}
+                  options={[
+                    {
+                      label: "1 ANO",
+                      value: "1 ANO",
+                    },
+                    {
+                      label: "2 ANOS",
+                      value: "2 ANOS",
+                    },
+                    {
+                      label: "3 ANOS",
+                      value: "3 ANOS",
+                    },
+                    {
+                      label: "4 ANOS",
+                      value: "4 ANOS",
+                    },
+                    {
+                      label: "5 ANOS",
+                      value: "5 ANOS",
+                    },
+                    {
+                      label: "NÃO SE APLICA",
+                      value: "NÃO SE APLICA",
+                    },
+                  ]}
+                  value={dados.tempoSegurado}
+                  handleChange={(value) =>
+                    setDados({ ...dados, tempoSegurado: value })
+                  }
+                />
+              </>
+            )}
+          </div>
+        ) : null}
+
+        {(dados.possuiOeM == "SIM" || dados.clienteSegurado == "SIM") &&
+        dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
           <div className="flex gap-2 justify-around flex-wrap mt-2">
             <SelectInput
               label={"FORMA de PAGAMENTO"}
@@ -1060,40 +1088,16 @@ function VisualizacaoForm({
               }
             />
           </div>
-        )}
+        ) : null}
       </div>
-      <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          AUMENTO DE CARGA
-        </span>
-        <div className="flex justify-center">
-          <SelectInput
-            label={"HAVERÁ TROCA DE PADRÃO?"}
-            editable={true}
-            options={[
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
-              {
-                label: "NÃO",
-                value: "NÃO",
-              },
-              {
-                label: "SIM",
-                value: "SIM",
-              },
-            ]}
-            value={dados.aumentoDeCarga}
-            handleChange={(value) =>
-              setDados({ ...dados, aumentoDeCarga: value })
-            }
-          />
-        </div>
-        {dados.aumentoDeCarga == "SIM" && (
-          <div className="flex gap-2 justify-around flex-wrap mt-2">
+      {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
+        <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+          <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+            AUMENTO DE CARGA
+          </span>
+          <div className="flex justify-center">
             <SelectInput
-              label={"CAIXA CONJUGADA?"}
+              label={"HAVERÁ TROCA DE PADRÃO?"}
               editable={true}
               options={[
                 {
@@ -1109,101 +1113,128 @@ function VisualizacaoForm({
                   value: "SIM",
                 },
               ]}
-              value={dados.caixaConjugada}
+              value={dados.aumentoDeCarga}
               handleChange={(value) =>
-                setDados({ ...dados, caixaConjugada: value })
-              }
-            />
-            <SelectInput
-              label={"TIPO DO PADRÃO"}
-              editable={true}
-              value={dados.tipoDePadrao}
-              handleChange={(value) =>
-                setDados({ ...dados, tipoDePadrao: value })
-              }
-              options={tiposDePadrao}
-            />
-            <SelectInput
-              label={"HAVERÁ AUMENTO DO DISJUNTOR?"}
-              editable={true}
-              value={dados.aumentoDisjuntor}
-              handleChange={(value) =>
-                setDados({ ...dados, aumentoDisjuntor: value })
-              }
-              options={[
-                {
-                  label: "SIM",
-                  value: "SIM",
-                },
-                {
-                  label: "NÃO",
-                  value: "NÃO",
-                },
-              ]}
-            />
-            <SelectInput
-              label={"RESPONSÁVEL PELA TROCA"}
-              editable={true}
-              value={dados.respTrocaPadrao}
-              handleChange={(value) =>
-                setDados({ ...dados, respTrocaPadrao: value })
-              }
-              options={[
-                {
-                  label: "AMPERE",
-                  value: "AMPERE",
-                },
-                {
-                  label: "CLIENTE",
-                  value: "CLIENTE",
-                },
-                {
-                  label: "NÃO SE APLICA",
-                  value: "NÃO SE APLICA",
-                },
-              ]}
-            />
-            <SelectInput
-              label={"PAGAMENTO DO PADRÃO"}
-              editable={true}
-              value={
-                dados.formaPagamentoPadrao
-                  ? dados.formaPagamentoPadrao
-                  : "NÃO HAVERA TROCA PADRÃO"
-              }
-              options={[
-                {
-                  label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                  value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                },
-                {
-                  label: "CLIENTE PAGAR POR FORA",
-                  value: "CLIENTE PAGAR POR FORA",
-                },
-                {
-                  label: "INCLUSO NO CONTRATO",
-                  value: "INCLUSO NO CONTRATO",
-                },
-                {
-                  label: "NÃO HAVERA TROCA PADRÃO",
-                  value: "NÃO HAVERA TROCA PADRÃO",
-                },
-              ]}
-              handleChange={(value) => {
-                setDados({ ...dados, formaPagamentoPadrao: value });
-              }}
-            />
-            <NumberInput
-              label={"VALOR DO PADRÃO"}
-              editable={true}
-              value={dados.valorPadrao}
-              handleChange={(value) =>
-                setDados({ ...dados, valorPadrao: Number(value) })
+                setDados({ ...dados, aumentoDeCarga: value })
               }
             />
           </div>
-        )}
-      </div>
+          {dados.aumentoDeCarga == "SIM" && (
+            <div className="flex gap-2 justify-around flex-wrap mt-2">
+              <SelectInput
+                label={"CAIXA CONJUGADA?"}
+                editable={true}
+                options={[
+                  {
+                    label: "NÃO DEFINIDO",
+                    value: "NÃO DEFINIDO",
+                  },
+                  {
+                    label: "NÃO",
+                    value: "NÃO",
+                  },
+                  {
+                    label: "SIM",
+                    value: "SIM",
+                  },
+                ]}
+                value={dados.caixaConjugada}
+                handleChange={(value) =>
+                  setDados({ ...dados, caixaConjugada: value })
+                }
+              />
+              <SelectInput
+                label={"TIPO DO PADRÃO"}
+                editable={true}
+                value={dados.tipoDePadrao}
+                handleChange={(value) =>
+                  setDados({ ...dados, tipoDePadrao: value })
+                }
+                options={tiposDePadrao}
+              />
+              <SelectInput
+                label={"HAVERÁ AUMENTO DO DISJUNTOR?"}
+                editable={true}
+                value={dados.aumentoDisjuntor}
+                handleChange={(value) =>
+                  setDados({ ...dados, aumentoDisjuntor: value })
+                }
+                options={[
+                  {
+                    label: "SIM",
+                    value: "SIM",
+                  },
+                  {
+                    label: "NÃO",
+                    value: "NÃO",
+                  },
+                ]}
+              />
+              <SelectInput
+                label={"RESPONSÁVEL PELA TROCA"}
+                editable={true}
+                value={dados.respTrocaPadrao}
+                handleChange={(value) =>
+                  setDados({ ...dados, respTrocaPadrao: value })
+                }
+                options={[
+                  {
+                    label: "AMPERE",
+                    value: "AMPERE",
+                  },
+                  {
+                    label: "CLIENTE",
+                    value: "CLIENTE",
+                  },
+                  {
+                    label: "NÃO SE APLICA",
+                    value: "NÃO SE APLICA",
+                  },
+                ]}
+              />
+              <SelectInput
+                label={"PAGAMENTO DO PADRÃO"}
+                editable={true}
+                value={
+                  dados.formaPagamentoPadrao
+                    ? dados.formaPagamentoPadrao
+                    : "NÃO HAVERA TROCA PADRÃO"
+                }
+                options={[
+                  {
+                    label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                    value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                  },
+                  {
+                    label: "CLIENTE PAGAR POR FORA",
+                    value: "CLIENTE PAGAR POR FORA",
+                  },
+                  {
+                    label: "INCLUSO NO CONTRATO",
+                    value: "INCLUSO NO CONTRATO",
+                  },
+                  {
+                    label: "NÃO HAVERA TROCA PADRÃO",
+                    value: "NÃO HAVERA TROCA PADRÃO",
+                  },
+                ]}
+                handleChange={(value) => {
+                  setDados({ ...dados, formaPagamentoPadrao: value });
+                }}
+              />
+              <NumberInput
+                label={"VALOR DO PADRÃO"}
+                editable={true}
+                value={dados.valorPadrao}
+                handleChange={(value) =>
+                  setDados({ ...dados, valorPadrao: Number(value) })
+                }
+              />
+            </div>
+          )}
+        </div>
+      ) : null}
+
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
         <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
           DADOS FINANCEIROS E NEGOCIAÇÃO
@@ -1262,90 +1293,98 @@ function VisualizacaoForm({
             />
           )}
         </div>
-        <div className="flex gap-2 justify-around flex-wrap mt-2">
-          <SelectInput
-            label={"LOCAL DE ENTREGA"}
-            editable={true}
-            options={[
-              {
-                label: "MESMO DO PROJETO",
-                value: "MESMO DO PROJETO",
-              },
-              {
-                label:
-                  "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
-                value:
-                  "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
-              },
-              {
-                label:
-                  "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
-                value:
-                  "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
-              },
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
-            ]}
-            value={dados.localEntrega}
-            handleChange={(value) =>
-              setDados({ ...dados, localEntrega: value })
-            }
-          />
-          <SelectInput
-            label={"END. ENTREGA IGUAL COBRANÇA?"}
-            editable={true}
-            value={dados.entregaIgualCobranca}
-            handleChange={(value) =>
-              setDados({ ...dados, entregaIgualCobranca: value })
-            }
-            options={[
-              {
-                label: "SIM",
-                value: "SIM",
-              },
-              {
-                label: "NÃO",
-                value: "NÃO",
-              },
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
-            ]}
-          />
-          <SelectInput
-            label={"HÁ RESTRIÇÕES PARA ENTREGA?"}
-            editable={true}
-            value={dados.restricoesEntrega}
-            handleChange={(value) =>
-              setDados({ ...dados, restricoesEntrega: value })
-            }
-            options={[
-              {
-                label: "SOMENTE HORARIO COMERCIAL",
-                value: "SOMENTE HORARIO COMERCIAL",
-              },
-              {
-                label: "NÃO HÁ RESTRIÇÕES",
-                value: "NÃO HÁ RESTRIÇÕES",
-              },
-              {
-                label: "CASA EM CONSTRUÇÃO",
-                value: "CASA EM CONSTRUÇÃO",
-              },
-              {
-                label: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
-                value: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
-              },
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
-            ]}
-          />
-        </div>
+        {![
+          "OPERAÇÃO E MANUTENÇÃO",
+          "MANUTENÇÃO CORRETIVA",
+          "MANUTENÇÃO PREVENTIVA",
+          "MONTAGEM E DESMONTAGEM",
+        ].includes(dados.tipoDeServico) ? (
+          <div className="flex gap-2 justify-around flex-wrap mt-2">
+            <SelectInput
+              label={"LOCAL DE ENTREGA"}
+              editable={true}
+              options={[
+                {
+                  label: "MESMO DO PROJETO",
+                  value: "MESMO DO PROJETO",
+                },
+                {
+                  label:
+                    "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
+                  value:
+                    "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
+                },
+                {
+                  label:
+                    "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
+                  value:
+                    "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+              value={dados.localEntrega}
+              handleChange={(value) =>
+                setDados({ ...dados, localEntrega: value })
+              }
+            />
+            <SelectInput
+              label={"END. ENTREGA IGUAL COBRANÇA?"}
+              editable={true}
+              value={dados.entregaIgualCobranca}
+              handleChange={(value) =>
+                setDados({ ...dados, entregaIgualCobranca: value })
+              }
+              options={[
+                {
+                  label: "SIM",
+                  value: "SIM",
+                },
+                {
+                  label: "NÃO",
+                  value: "NÃO",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+            />
+            <SelectInput
+              label={"HÁ RESTRIÇÕES PARA ENTREGA?"}
+              editable={true}
+              value={dados.restricoesEntrega}
+              handleChange={(value) =>
+                setDados({ ...dados, restricoesEntrega: value })
+              }
+              options={[
+                {
+                  label: "SOMENTE HORARIO COMERCIAL",
+                  value: "SOMENTE HORARIO COMERCIAL",
+                },
+                {
+                  label: "NÃO HÁ RESTRIÇÕES",
+                  value: "NÃO HÁ RESTRIÇÕES",
+                },
+                {
+                  label: "CASA EM CONSTRUÇÃO",
+                  value: "CASA EM CONSTRUÇÃO",
+                },
+                {
+                  label: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
+                  value: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+            />
+          </div>
+        ) : null}
+
         <div className="flex gap-2 justify-around flex-wrap mt-2">
           <NumberInput
             label={"VALOR DO CONTRATO FOTOVOLTAICO(SEM CUSTOS ADICIONAIS)"}
@@ -1510,26 +1549,50 @@ function VisualizacaoForm({
           <SelectInput
             label={"FORMA DE PAGAMENTO"}
             editable={true}
-            options={[
-              {
-                label:
-                  "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
-                value:
-                  "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
-              },
-              {
-                label: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
-                value: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
-              },
-              {
-                label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
-                value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
-              },
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
-            ]}
+            options={
+              dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" ||
+              dados.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO"
+                ? [
+                    {
+                      label:
+                        "70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO",
+                      value:
+                        "70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO",
+                    },
+                    {
+                      label: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                      value: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                    },
+                    {
+                      label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                      value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                    },
+                    {
+                      label: "NÃO DEFINIDO",
+                      value: "NÃO DEFINIDO",
+                    },
+                  ]
+                : [
+                    {
+                      label:
+                        "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
+                      value:
+                        "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
+                    },
+                    {
+                      label: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                      value: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                    },
+                    {
+                      label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                      value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                    },
+                    {
+                      label: "NÃO DEFINIDO",
+                      value: "NÃO DEFINIDO",
+                    },
+                  ]
+            }
             value={dados.formaDePagamento}
             handleChange={(value) =>
               setDados({ ...dados, formaDePagamento: value })
@@ -1576,7 +1639,7 @@ function VisualizacaoForm({
         </div>
         {dados.possuiDistribuicao == "SIM" && (
           <>
-            {dados.distribuicoes.length > 0 && (
+            {dados.distribuicoes?.length > 0 && (
               <div className="flex flex-col gap-2 mt-4">
                 {dados.distribuicoes.map((distribuicao, index) => (
                   <div key={index} className="flex justify-around flex-wrap">

@@ -15,15 +15,14 @@ function FormSolicitacaoDistribuicoesCredito({
     excedente: null,
   });
   function adicionarDistribuicao() {
+    var distArr = dados.distribuicoes ? dados.distribuicoes : [];
+    distArr.push({
+      numInstalacao: dadosDistribuicao.numInstalacao,
+      excedente: dadosDistribuicao.excedente,
+    });
     setDados({
       ...dados,
-      distribuicoes: [
-        ...dados.distribuicoes,
-        {
-          numInstalacao: dadosDistribuicao.numInstalacao,
-          excedente: dadosDistribuicao.excedente,
-        },
-      ],
+      distribuicoes: distArr,
     });
     setDadosDistribuicao({ numInstalacao: "", excedente: 0 });
   }
@@ -106,7 +105,7 @@ function FormSolicitacaoDistribuicoesCredito({
               </button>
             </div>
           </div>
-          {dados.distribuicoes.length > 0 && (
+          {dados.distribuicoes?.length > 0 && (
             <div className="flex flex-col gap-2 mt-4">
               {dados.distribuicoes.map((distribuicao, index) => (
                 <div key={index} className="flex justify-around flex-wrap">

@@ -61,7 +61,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
     valor: 0,
   });
   const [descritivoHolder, setDescritivoHolder] = useState({
-    topico: "NÃO DEFINIDO",
+    topico: "",
     texto: "",
   });
   const [images, setImages] = useState({
@@ -166,7 +166,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
     arr.push(descritivoHolder);
     setDados({ ...dados, descritivo: arr });
     setDescritivoHolder({
-      topico: "NÃO DEFINIDO",
+      topico: "",
       texto: "",
     });
   }
@@ -2006,16 +2006,10 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                     DESCRITIVO
                   </span>
                   <div className="flex items-center justify-around">
-                    <SelectInput
+                    <TextInput
                       label={"TÓPICO"}
                       editable={true}
                       value={descritivoHolder.topico}
-                      options={[
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                        { label: "INFRA ELÉTRICA", value: "INFRA ELÉTRICA" },
-                        { label: "AQUECEDOR", value: "AQUECEDOR" },
-                        { label: "SOMBREAMENTO", value: "SOMBREAMENTO" },
-                      ]}
                       handleChange={(value) =>
                         setDescritivoHolder({
                           ...descritivoHolder,

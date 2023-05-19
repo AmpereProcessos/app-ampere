@@ -21,6 +21,7 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
     nomeAtividade: null,
     atividades: [],
     anotacoes: "",
+    data: new Date().toISOString(),
   });
 
   function resetOperationMsg() {
@@ -233,6 +234,8 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
               )}
             </div>
             <OperationReportBlock
+              operationName={operationInfo.nome}
+              operationId={operationInfo._id}
               data={reportInfo}
               setReportInfo={setReportInfo}
             />

@@ -75,6 +75,14 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
               </div>
               <div className="flex flex-col items-center">
                 <p className="text-sm uppercase text-[#15599a] font-bold">
+                  TIPO DE SERVIÇO
+                </p>
+                <p className="text-xs uppercase text-gray-500">
+                  {infoHolder.tipoDeServico ? infoHolder.tipoDeServico : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-sm uppercase text-[#15599a] font-bold">
                   STATUS DO PARECER
                 </p>
                 <p className="text-xs uppercase text-gray-500">

@@ -89,7 +89,7 @@ function ReportLine({ report }) {
       </div>
       {showInfo ? (
         <div className="w-full flex flex-col">
-          <div className="w-full flex items-start justify-center">
+          <div className="w-full flex flex-col lg:flex-row items-start justify-center">
             <div className="flex flex-col items-center w-full lg:w-[50%]">
               <h1 className="text-sm font-extralight text-gray-600 mb-1">
                 ATIVIDADES REALIZADAS
@@ -101,7 +101,7 @@ function ReportLine({ report }) {
                 </div>
               ))}
             </div>
-            <div className="flex flex-col items-center w-full lg:w-[50%]">
+            <div className="flex flex-col items-center w-full lg:w-[50%] mt-4 lg:mt-0">
               <h1 className="text-sm font-extralight text-gray-600 mb-1">
                 ANEXOS
               </h1>
@@ -124,7 +124,10 @@ function ReportLine({ report }) {
               ))}
             </div>
           </div>
-          <p className="w-full text-center text-sm italic text-gray-500">
+          <h1 className="text-sm font-extralight text-gray-600 mb-1 text-center mt-4 lg:mt-0">
+            ANOTAÇÕES
+          </h1>
+          <p className="w-full text-center text-xs text-gray-800 font-thin">
             {report.anotacoes}
           </p>
         </div>

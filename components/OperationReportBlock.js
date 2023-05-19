@@ -290,7 +290,7 @@ function OperationReportBlock({
             {fileHolder.file ? (
               <div className="flex flex-col items-center">
                 <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                <span className="block text-gray-400 font-normal text-center text-sm">
+                <span className="block text-gray-400 font-normal text-center text-xxs lg:text-sm">
                   {fileHolder.file.length == 1
                     ? fileHolder.file[0].name
                     : `${fileHolder.file[0].name}...`}
@@ -299,7 +299,7 @@ function OperationReportBlock({
             ) : (
               <div className="flex flex-col items-center">
                 <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                <span className="block text-gray-400 font-normal">
+                <span className="block text-gray-400 font-normal text-xs lg:text-sm">
                   Adicione o arquivo aqui
                 </span>
               </div>
@@ -396,21 +396,23 @@ function OperationReportBlock({
             </div>
           )}
         </div>
-        {reports ? (
-          reports.length > 0 ? (
-            reports.map((report, index) => (
-              <ReportLine report={report} key={index} />
-            ))
+        {showReportHistory ? (
+          reports ? (
+            reports.length > 0 ? (
+              reports.map((report, index) => (
+                <ReportLine report={report} key={index} />
+              ))
+            ) : (
+              <p className="py-4 text-center w-full animate-pulse text-gray-600 font-medium">
+                Sem relatórios vinculados a essa operação.
+              </p>
+            )
           ) : (
             <p className="py-4 text-center w-full animate-pulse text-gray-600 font-medium">
-              Sem relatórios vinculados a essa operação.
+              Buscando...
             </p>
           )
-        ) : (
-          <p className="py-4 text-center w-full animate-pulse text-gray-600 font-medium">
-            Buscando...
-          </p>
-        )}
+        ) : null}
       </div>
     </div>
   );

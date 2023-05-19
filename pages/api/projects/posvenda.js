@@ -19,6 +19,7 @@ export default async function handler(req, res) {
             _id: 1,
             qtde: 1,
             nomeDoContrato: 1,
+            tipoDeServico: 1,
             telefone: 1,
             jornada: 1,
             cidade: 1,

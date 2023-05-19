@@ -27,6 +27,7 @@ import {
   BsFolderPlus,
   BsFillPatchCheckFill,
 } from "react-icons/bs";
+import { IoIosCalendar } from "react-icons/io";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
 import { ImFolderOpen, ImCheckboxChecked } from "react-icons/im";
 import { motion, AnimatePresence } from "framer-motion";
@@ -292,6 +293,18 @@ function Sidebar({ sidebarVisible }) {
                           style={{ color: "#15599a", fontSize: "20px" }}
                         />
                         <p className="pl-3 text-xs text-gray-600">Chamados</p>
+                      </a>
+                    </Link>
+                  ) : (
+                    false
+                  )}
+                  {credentials?.accessibleRoutes?.includes("Obras") ? (
+                    <Link href="/operacoes">
+                      <a className="hover:bg-blue-100 hover:scale-105 duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
+                        <IoIosCalendar
+                          style={{ color: "#15599a", fontSize: "20px" }}
+                        />
+                        <p className="pl-3 text-xs text-gray-600">Operações</p>
                       </a>
                     </Link>
                   ) : (

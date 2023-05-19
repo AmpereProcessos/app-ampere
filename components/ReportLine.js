@@ -56,8 +56,8 @@ function ReportLine({ report }) {
   }
   return (
     <div className="w-full flex flex-col py-1">
-      <div className="w-full flex items-center justify-between pr-2">
-        <div className="flex items-center gap-2">
+      <div className="w-full flex flex-col lg:flex-row items-center justify-between pr-2">
+        <div className="flex items-center gap-2 w-full">
           {showInfo ? (
             <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
               <IoMdArrowDropupCircle
@@ -73,7 +73,7 @@ function ReportLine({ report }) {
               />
             </div>
           )}
-          <p className="text-sm font-medium text-gray-700">
+          <p className="text-xs lg:text-sm font-medium text-gray-700">
             {report.nomeAtividade
               ? `ATUALIZAÇÕES DA ATIVIDADE ${report.nomeAtividade}`
               : "ATUALIZAÇÕES DA OPERAÇÃO"}
@@ -88,7 +88,7 @@ function ReportLine({ report }) {
         </div>
       </div>
       {showInfo ? (
-        <div className="w-full flex flex-col">
+        <div className="w-full flex flex-col border-t border-gray-200 pt-1 mt-1">
           <div className="w-full flex flex-col lg:flex-row items-start justify-center">
             <div className="flex flex-col items-center w-full lg:w-[50%]">
               <h1 className="text-sm font-extralight text-gray-600 mb-1">
@@ -128,7 +128,7 @@ function ReportLine({ report }) {
             ANOTAÇÕES
           </h1>
           <p className="w-full text-center text-xs text-gray-800 font-thin">
-            {report.anotacoes}
+            {report.anotacoes ? report.anotacoes : "Sem anotações preenchidas."}
           </p>
         </div>
       ) : null}

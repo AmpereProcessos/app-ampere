@@ -162,10 +162,18 @@ function OperationReportBlock({
         links: linkArr,
       });
       setReportMsg((prev) => ({
-        text: "",
-        color: "",
-        status: null,
+        text: "Relatório enviado !",
+        color: "text-[#15599a]",
+        status: "loading",
       }));
+      setTimeout(() => {
+        setReportMsg((prev) => ({
+          text: "",
+          color: "",
+          status: null,
+        }));
+      }, 2000);
+
       setReportInfo({
         nomeAtividade: null,
         atividades: [],
@@ -267,12 +275,12 @@ function OperationReportBlock({
           setReportInfo((prev) => ({ ...prev, anotacoes: e.target.value }))
         }
         placeholder="Relate aqui detalhes adicionais sobre o dia, problemas enfrentados, imprevistos, desvios de planejamento ou qualquer outra informação relevante."
-        className="h-[100px] max-h-[100px] bg-gray-100 border border-gray-300 text-center resize-none w-full lg:w-[50%] outline-none p-2"
+        className="h-[150px] lg:h-[100px] max-h-[150px] lg:max-h-[100px] bg-gray-100 border border-gray-300 text-center resize-none w-full lg:w-[50%] outline-none p-2"
       />
       <h3 className="text-sm text-gray-500 font-medium w-full text-center py-2">
         ANEXE ARQUIVOS:
       </h3>
-      <div className="w-full lg:w-[50%] flex items-center gap-2">
+      <div className="w-full lg:w-[50%] flex flex-col lg:flex-row items-center gap-2">
         <input
           type="text"
           value={fileHolder.name}
@@ -347,7 +355,7 @@ function OperationReportBlock({
           </div>
         ))
       ) : (
-        <p className="text-xs text-center italic font-extralight text-gray-500 py-4">
+        <p className="text-xs text-center italic font-extralight text-gray-500 py-1">
           Sem arquivos adicionados ao relatório...
         </p>
       )}

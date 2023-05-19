@@ -65,7 +65,7 @@ function InfoArquivosBlock({ project, infoHolder, categories, handleUpdates }) {
         <AnexoArquivo
           id={infoHolder._id}
           prevLinks={project.links ? project.links : {}}
-          client={`${infoHolder.nomeDoContrato}-${infoHolder.codigoSVB}`}
+          client={`${infoHolder._id}-${infoHolder.nomeDoContrato}-${infoHolder.codigoSVB}`}
           categories={categories}
           handleUpdates={handleUpdates}
         />

@@ -11,148 +11,22 @@ import { FaProjectDiagram, FaSave } from "react-icons/fa";
 import { TbReport } from "react-icons/tb";
 import axios from "axios";
 import SaveButton from "./utils/Buttons/SaveButton";
+import OperationReportBlock from "./OperationReportBlock";
 
 function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
   const [operationMsg, setOperationMsg] = useState({ text: "", color: "" });
-  const [activityMsg, setActivityMsg] = useState({ text: "", color: "" });
-  const [subActivityMsg, setSubActivityMsg] = useState({ text: "", color: "" });
 
   const [operationInfo, setOperationInfo] = useState(operation);
-  const [activityHolder, setActivityHolder] = useState({
-    nome: "",
-    descricao: "",
-    dataInicio: new Date().toISOString(),
-    previsaoConclusao: null,
-  });
-  const [subactivityHolder, setSubactivityHolder] = useState({
-    activityIndex: null,
-    info: {
-      nome: "",
-      dataInicio: new Date().toISOString(),
-      previsaoConclusao: null,
-      progresso: 0,
-    },
+  const [reportInfo, setReportInfo] = useState({
+    nomeAtividade: null,
+    atividades: [],
+    anotacoes: "",
   });
 
   function resetOperationMsg() {
     setTimeout(() => {
       setOperationMsg({ text: "", color: "" });
     }, 2500);
-  }
-  function addActivity() {
-    var activities = operationInfo.atividades;
-    if (activityHolder.nome.trim().length < 4) {
-      setActivityMsg({
-        text: "Por favor, dê um nome de ao menos 3 letras a atividade.",
-        color: "text-red-500",
-      });
-
-      return false;
-    }
-    if (!activityHolder.dataInicio) {
-      setActivityMsg({
-        text: "Por favor, especifique uma data de início para a atividade.",
-        color: "text-red-500",
-      });
-      return false;
-    }
-    if (
-      new Date(activityHolder.dataInicio) < new Date(operationInfo.dataInicio)
-    ) {
-      setActivityMsg({
-        text: "Por favor, especifique uma data de início maior ou igual a data de início da operação.",
-        color: "text-red-500",
-      });
-      return false;
-    }
-    if (activityHolder.dataInicio && activityHolder.previsaoConclusao) {
-      if (
-        new Date(activityHolder.previsaoConclusao) <
-        new Date(activityHolder.dataInicio)
-      ) {
-        setActivityMsg({
-          text: "Por favor, especifique uma previsão de conclusão maior que a data de início.",
-          color: "text-red-500",
-        });
-        return false;
-      }
-    }
-    setActivityMsg({ text: "", color: "" });
-    activities.push({
-      ...activityHolder,
-      nome: activityHolder.nome.toUpperCase(),
-    });
-    setOperationInfo((prev) => ({ ...prev, atividades: activities }));
-    setActivityHolder((prev) => ({
-      nome: "",
-      descricao: "",
-      dataInicio: new Date().toISOString(),
-      previsaoConclusao: undefined,
-    }));
-  }
-  function removeActivity(index) {
-    var activities = operationInfo.atividades;
-    activities.splice(index, 1);
-    setOperationInfo((prev) => ({ ...prev, atividades: activities }));
-  }
-  function addSubActivity(activityIndex) {
-    const activities = [...operationInfo.atividades];
-
-    var subactivityArr = activities[activityIndex].subAtividades
-      ? activities[activityIndex].subAtividades
-      : [];
-    if (subactivityHolder.info.nome.trim().length < 4) {
-      setSubActivityMsg({
-        text: "Por favor, dê um nome de ao menos 3 letras a atividade.",
-        color: "text-red-500",
-      });
-      return false;
-    }
-    if (!subactivityHolder.info.dataInicio) {
-      setSubActivityMsg({
-        text: "Por favor, especifique uma data de início para a atividade.",
-        color: "text-red-500",
-      });
-      return false;
-    }
-    if (
-      subactivityHolder.info.dataInicio &&
-      subactivityHolder.info.previsaoConclusao
-    ) {
-      if (
-        new Date(subactivityHolder.info.previsaoConclusao) <
-        new Date(subactivityHolder.info.dataInicio)
-      ) {
-        setSubActivityMsg({
-          text: "Por favor, especifique uma previsão de conclusão maior que a data de início.",
-          color: "text-red-500",
-        });
-        return false;
-      }
-    }
-    setActivityMsg({ text: "", color: "" });
-    subactivityArr.push({
-      ...subactivityHolder.info,
-      nome: subactivityHolder.info.nome.toUpperCase(),
-    });
-    activities[activityIndex].subAtividades = subactivityArr;
-    setOperationInfo((prev) => ({ ...prev, atividades: activities }));
-    setSubactivityHolder((prev) => ({
-      ...prev,
-      info: {
-        nome: "",
-        dataInicio: new Date().toISOString(),
-        previsaoConclusao: new Date().toISOString(),
-        progresso: 0,
-      },
-    }));
-  }
-  function removeSubActivity(activityIndex, subActivityIndex) {
-    const activities = [...operationInfo.atividades];
-    var subactivityArr = activities[activityIndex].subAtividades;
-    subactivityArr.splice(subActivityIndex, 1);
-    activities[activityIndex].subAtividades = subactivityArr;
-    setOperationInfo((prev) => ({ ...prev, atividades: activities }));
   }
 
   async function updateOperation() {
@@ -210,6 +84,7 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
       resetOperationMsg();
     }
   }
+  console.log(operationInfo);
   return (
     <>
       <AnimatedModalWrapper width={"90%"} height={"80%"} modalIsOpen={isOpen}>
@@ -250,7 +125,7 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
                 <div className="flex flex-col w-full">
                   <h1 className="text-gray-500 text-sm">DATA DE INÍCIO</h1>
                   <p className="font-arial text-center text-sm border-b-2 border-gray-300 text-gray-700">
-                    {operationInfo.dataInicio}
+                    {new Date(operationInfo.dataInicio).toLocaleDateString()}
                   </p>
                 </div>
               </div>
@@ -304,19 +179,15 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
                       <div className="w-1/3 lg:w-1/4 flex items-center justify-center gap-4">
                         <button
                           onClick={() => {
-                            setSubactivityHolder((prev) => ({
+                            setReportInfo((prev) => ({
                               ...prev,
-                              activityIndex: index,
-                              info: {
-                                ...prev.info,
-                                dataInicio: activity.dataInicio,
-                              },
+                              nomeAtividade: activity.nome,
                             }));
                           }}
                           className="text-[#fead61] text-sm flex items-center justify-center hover:scale-110 duration-300 ease-in-out"
                         >
                           <TbReport
-                            title="ADICIONAR SUBTAREFA"
+                            title="REPORTAR ATUALIZAÇÃO A ESSA ATIVIDADE"
                             style={{ fontSize: "15px" }}
                           />
                         </button>
@@ -348,14 +219,6 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
                                     .format("DD/MM/YYYY")}`
                                 : "-"}
                             </p>
-                            <div
-                              onClick={() => removeSubActivity(index, subIndex)}
-                              className="w-1/3 lg:w-1/4 flex items-center justify-center gap-4"
-                            >
-                              <button className="text-red-500 text-sm flex items-center justify-center">
-                                <AiOutlineMinus style={{ fontSize: "15px" }} />
-                              </button>
-                            </div>
                           </div>
                         ))
                       : null}
@@ -369,6 +232,10 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
                 </div>
               )}
             </div>
+            <OperationReportBlock
+              data={reportInfo}
+              setReportInfo={setReportInfo}
+            />
           </div>
           <div className="w-full py-2 border-t border-gray-200 flex items-center justify-end justify-self-end">
             {operationMsg.text ? (

@@ -65,8 +65,12 @@ function OperationReportBlock({
           let file = files[i].files.item(j);
           let storageName =
             files[i].files.length > 1
-              ? `operacoes/${fixedName}/${files[i].name}-{${j + 1}}`
-              : `operacoes/${fixedName}/${files[i].name}`;
+              ? `operacoes/${fixedName}/${files[i].name}-{${
+                  j + 1
+                }}-${new Date().toISOString()}`
+              : `operacoes/${fixedName}/${
+                  files[i].name
+                }-${new Date().toISOString()}`;
           const imageRef = ref(storage, storageName);
           const firebaseResponse = await uploadBytes(imageRef, file).catch(
             (err) => {
@@ -180,6 +184,7 @@ function OperationReportBlock({
         anotacoes: "",
         data: new Date().toISOString(),
       });
+      fetchOperationReports();
     } catch (error) {
       setReportMsg((prev) => ({
         text: "Houve um erro no envio do relatório. Por favor, tente novamente.",

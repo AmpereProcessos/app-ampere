@@ -1375,7 +1375,18 @@ export const suprimentoOption = {
     unidade: "UNIDADE",
   },
   TRILHO: {
-    tipo: ["1,85", "2,20", "2,36", "2,40", "2,50", "3,20", "3,30", "4,20"],
+    tipo: [
+      "1,85",
+      "2,20",
+      "2,36",
+      "2,40",
+      "2,50",
+      "3,20",
+      "3,30",
+      "4,20",
+      "4,70",
+      "4,80",
+    ],
     unidade: "UNIDADE",
   },
   "PARAFUSO FIBROCIMENTO": {

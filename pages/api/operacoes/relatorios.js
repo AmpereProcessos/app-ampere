@@ -18,7 +18,10 @@ export default async function handler(req, res) {
       res.status(400).json("ID inválido.");
     }
     try {
-      const reports = await collection.find({ idPai: id }).toArray();
+      const reports = await collection
+        .find({ idPai: id })
+        .sort({ data: -1 })
+        .toArray();
       res.status(200).json(reports);
     } catch (error) {
       res.status(500).json("Houve um erro ao buscar relatórios.");

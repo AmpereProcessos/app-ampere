@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { FiEdit } from "react-icons/fi";
-import { TbActivity } from "react-icons/tb";
+import { TbActivity, TbExternalLink } from "react-icons/tb";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { BsCalendarCheckFill } from "react-icons/bs";
 import dayjs from "dayjs";
@@ -12,6 +12,7 @@ import { FaProjectDiagram } from "react-icons/fa";
 import LoadingPage from "../../components/utils/LoadingPage";
 import ModalEdicaoOperacao from "../../components/ModalEdicaoOperacao";
 import ModalControlOperacao from "../../components/ModalControlOperacao";
+import Link from "next/link";
 
 function Operacoes() {
   const router = useRouter();
@@ -84,20 +85,36 @@ function Operacoes() {
                 <h1 className="w-full text-center text-lg font-medium">
                   {operation.nome}
                 </h1>
-                {session?.user.manager ? (
-                  <div
-                    onClick={() =>
-                      setOperationModal((prev) => ({
-                        ...prev,
-                        editIsOpen: true,
-                        info: operation,
-                      }))
-                    }
-                    className="text-[#fead61] hover:scale-105 duration-300 ease-in-out"
-                  >
-                    <FiEdit style={{ fontSize: "20px", cursor: "pointer" }} />
-                  </div>
-                ) : null}
+                <div className="flex items-center gap-2">
+                  <Link href={`/operacoes/calendario/${operation._id}`}>
+                    <a
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-[#15599a] hover:scale-105 duration-300 ease-in-out"
+                    >
+                      <TbExternalLink
+                        style={{
+                          fontSize: "26px",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </a>
+                  </Link>
+
+                  {session?.user.manager ? (
+                    <div
+                      onClick={() =>
+                        setOperationModal((prev) => ({
+                          ...prev,
+                          editIsOpen: true,
+                          info: operation,
+                        }))
+                      }
+                      className="text-[#fead61] hover:scale-105 duration-300 ease-in-out"
+                    >
+                      <FiEdit style={{ fontSize: "20px", cursor: "pointer" }} />
+                    </div>
+                  ) : null}
+                </div>
               </div>
 
               <div className="flex items-center justify-between">

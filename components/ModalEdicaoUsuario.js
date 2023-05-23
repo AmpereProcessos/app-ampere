@@ -5,7 +5,7 @@ import { storage } from "../utils/firebase";
 import { BsCheckLg } from "react-icons/bs";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
-import { routes, vendedores } from "../utils/constants";
+import { equipesTecnicas, routes, vendedores } from "../utils/constants";
 import SaveButton from "./utils/Buttons/SaveButton";
 import { FaSave } from "react-icons/fa";
 const MODAL_STYLES = {
@@ -426,6 +426,22 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                 >
                   INSIDE
                 </button>
+                <button
+                  onClick={() =>
+                    setInfo({
+                      ...info,
+                      visualizacao: "OBRAS",
+                      equipe: "NÃO DEFINIDO",
+                      regional: undefined,
+                      vendedor: undefined,
+                    })
+                  }
+                  className={`${
+                    info.visualizacao == "OBRAS" ? "" : "opacity-30"
+                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
+                >
+                  OBRAS
+                </button>
               </div>
               {info.visualizacao == "VENDEDOR" && (
                 <div className="flex flex-col justify-center items-center w-full mt-2">
@@ -489,6 +505,22 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                   </select>
                 </div>
               )}
+              {info.visualizacao == "OBRAS" ? (
+                <div className="flex flex-col justify-center items-center w-full mt-2">
+                  <h1 className="text-center font-bold">EQUIPE TÉCNICA</h1>
+                  <select
+                    value={info.equipe ? info.equipe : "NÃO DEFINIDO"}
+                    onChange={(e) =>
+                      setInfo({ ...info, equipe: e.target.value })
+                    }
+                    className="p-2 outline-none text-gray-600"
+                  >
+                    {equipesTecnicas.map((equipe) => (
+                      <option value={equipe.value}>{equipe.label}</option>
+                    ))}
+                  </select>
+                </div>
+              ) : null}
             </div>
             {msg.text ? (
               <p className={`text-center text-xs italic ${msg.color}`}>

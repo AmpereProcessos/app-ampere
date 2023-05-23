@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
-import { routes, vendedores } from "../utils/constants";
+import { equipesTecnicas, routes, vendedores } from "../utils/constants";
 import RoutesCard from "./RoutesCard";
 const MODAL_STYLES = {
   position: "fixed",
@@ -330,6 +330,22 @@ function ModalNovoUsuario({ closeModal }) {
                 >
                   INSIDE
                 </button>
+                <button
+                  onClick={() =>
+                    setUserInfo({
+                      ...userInfo,
+                      visualizacao: "OBRAS",
+                      equipe: "NÃO DEFINIDO",
+                      regional: undefined,
+                      vendedor: undefined,
+                    })
+                  }
+                  className={`${
+                    userInfo.visualizacao == "OBRAS" ? "" : "opacity-30"
+                  } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
+                >
+                  OBRAS
+                </button>
               </div>
               {userInfo.visualizacao == "VENDEDOR" && (
                 <div className="flex flex-col justify-center items-center w-full mt-2">
@@ -399,6 +415,22 @@ function ModalNovoUsuario({ closeModal }) {
                   </select>
                 </div>
               )}
+              {userInfo.visualizacao == "OBRAS" ? (
+                <div className="flex flex-col justify-center items-center w-full mt-2">
+                  <h1 className="text-center font-bold">EQUIPE TÉCNICA</h1>
+                  <select
+                    value={userInfo.equipe ? userInfo.equipe : "NÃO DEFINIDO"}
+                    onChange={(e) =>
+                      setUserInfo({ ...userInfo, equipe: e.target.value })
+                    }
+                    className="p-2 outline-none text-gray-600"
+                  >
+                    {equipesTecnicas.map((equipe) => (
+                      <option value={equipe.value}>{equipe.label}</option>
+                    ))}
+                  </select>
+                </div>
+              ) : null}
             </div>
             {message.text && (
               <p className={`text-center italic my-2 ${message.color}`}>

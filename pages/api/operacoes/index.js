@@ -14,8 +14,14 @@ export default async function handler(req, res) {
   } else if (req.method == "GET") {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("dados");
-    const operations = await collection.find({}).toArray();
-    res.json(operations);
+    const { equipe } = req.query;
+    if (equipe == "undefined") {
+      const operations = await collection.find({}).toArray();
+      res.status(200).json(operations);
+    } else {
+      const operations = await collection.find({ equipe: equipe }).toArray();
+      res.status(200).json(operations);
+    }
   } else if (req.method == "PUT") {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("dados");

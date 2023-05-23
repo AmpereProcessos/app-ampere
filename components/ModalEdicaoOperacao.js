@@ -10,7 +10,8 @@ import { IoMdAdd } from "react-icons/io";
 import { FaProjectDiagram, FaSave } from "react-icons/fa";
 import axios from "axios";
 import SaveButton from "./utils/Buttons/SaveButton";
-import { formatDate } from "../utils/constants";
+import { equipesTecnicas, formatDate } from "../utils/constants";
+import SelectFoatingInput from "./SelectFloatingInput";
 
 function ModalEdicaoOperacao({ isOpen, setModalIsOpen, operation }) {
   const [operationMsg, setOperationMsg] = useState({ text: "", color: "" });
@@ -284,6 +285,20 @@ function ModalEdicaoOperacao({ isOpen, setModalIsOpen, operation }) {
                       ...prev,
                       previsaoConclusao: value,
                     }))
+                  }
+                  width={"100%"}
+                />
+              </div>
+            </div>
+            <div className="w-full flex flex-col items-center justify-center pt-4">
+              <div className="w-full lg:w-[50%]">
+                <SelectFoatingInput
+                  label={"EQUIPE"}
+                  value={operationInfo.equipe}
+                  editable={true}
+                  options={equipesTecnicas}
+                  handleChange={(value) =>
+                    setOperationInfo((prev) => ({ ...prev, equipe: value }))
                   }
                   width={"100%"}
                 />

@@ -9,7 +9,8 @@ import { AiOutlineMinus } from "react-icons/ai";
 import { IoMdAdd } from "react-icons/io";
 import { FaProjectDiagram } from "react-icons/fa";
 import axios from "axios";
-import { formatDate } from "../utils/constants";
+import { equipesTecnicas, formatDate } from "../utils/constants";
+import SelectFoatingInput from "./SelectFloatingInput";
 
 function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
   const [operationMsg, setOperationMsg] = useState({ text: "", color: "" });
@@ -22,6 +23,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
     dataInicio: new Date().toISOString(),
     previsaoConclusao: null,
     atividades: [],
+    equipe: "NÃO DEFINIDO",
   });
   const [activityHolder, setActivityHolder] = useState({
     nome: "",
@@ -170,6 +172,14 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
       resetOperationMsg();
       return false;
     }
+    if (operationInfo.equipe == "NÃO DEFINIDO") {
+      setOperationMsg({
+        text: "Por favor, preencha uma equipe para a operação.",
+        color: "text-red-500",
+      });
+      resetOperationMsg();
+      return false;
+    }
     if (!operationInfo.dataInicio) {
       setOperationMsg({
         text: "Por favor, preencha uma data de início para a operação.",
@@ -191,7 +201,7 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
         new Date(operationInfo.previsaoConclusao) <
         new Date(operationInfo.dataInicio)
       ) {
-        setOperationInfo({
+        setOperationMsg({
           text: "Por favor, especifique uma previsão de conclusão maior que a data de início.",
           color: "text-red-500",
         });
@@ -289,6 +299,20 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
                       ...prev,
                       previsaoConclusao: value,
                     }))
+                  }
+                  width={"100%"}
+                />
+              </div>
+            </div>
+            <div className="w-full flex flex-col items-center justify-center pt-4">
+              <div className="w-full lg:w-[50%]">
+                <SelectFoatingInput
+                  label={"EQUIPE"}
+                  value={operationInfo.equipe}
+                  editable={true}
+                  options={equipesTecnicas}
+                  handleChange={(value) =>
+                    setOperationInfo((prev) => ({ ...prev, equipe: value }))
                   }
                   width={"100%"}
                 />

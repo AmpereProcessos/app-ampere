@@ -12,8 +12,10 @@ import { TbReport } from "react-icons/tb";
 import axios from "axios";
 import SaveButton from "./utils/Buttons/SaveButton";
 import OperationReportBlock from "./OperationReportBlock";
+import { useSession } from "next-auth/react";
 
 function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
+  const { data: session } = useSession();
   const [operationMsg, setOperationMsg] = useState({ text: "", color: "" });
 
   const [operationInfo, setOperationInfo] = useState(operation);
@@ -234,6 +236,7 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
               )}
             </div>
             <OperationReportBlock
+              session={session}
               operationName={operationInfo.nome}
               operationId={operationInfo._id}
               data={reportInfo}

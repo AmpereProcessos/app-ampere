@@ -29,9 +29,9 @@ function Operacoes() {
     controlIsOpen: false,
     info: null,
   });
-  async function getOperations() {
+  async function getOperations(equipe) {
     try {
-      const { data } = await axios.get("/api/operacoes");
+      const { data } = await axios.get(`/api/operacoes?equipe=${equipe}`);
       console.log(data);
       setOperations(data);
     } catch (error) {
@@ -42,9 +42,9 @@ function Operacoes() {
   }
 
   useEffect(() => {
-    if (session?.user.manager) {
+    if (session?.user.manager || session?.user.visualizacao == "OBRAS") {
       if (!operations) {
-        getOperations();
+        getOperations(session.user.equipe);
       }
     } else {
       if (session?.user) {
@@ -56,7 +56,7 @@ function Operacoes() {
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
-      <div className="p-6 grow">
+      <div className="flex flex-col p-6 grow">
         <div className="flex flex-col border-b border-gray-200 p-1">
           <div className="flex items-center justify-between w-full">
             <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
@@ -67,127 +67,146 @@ function Operacoes() {
           </div>
         </div>
         <div className="flex justify-around flex-wrap grow py-2">
-          {operations?.map((operation, index) => (
-            <div
-              key={index}
-              onClick={(e) => {
-                e.stopPropagation();
-                setOperationModal((prev) => ({
-                  ...prev,
-                  controlIsOpen: true,
-                  info: operation,
-                }));
-              }}
-              className="w-[450px] h-[250px] shadow-lg border cursor-pointer border-gray-200 flex flex-col p-3"
-            >
-              <div className="w-full flex justify-between">
-                <div></div>
-                <h1 className="w-full text-center text-lg font-medium">
-                  {operation.nome}
-                </h1>
-                <div className="flex items-center gap-2">
-                  <Link href={`/operacoes/calendario/${operation._id}`}>
-                    <a
-                      onClick={(e) => e.stopPropagation()}
-                      className="text-[#15599a] hover:scale-105 duration-300 ease-in-out"
-                    >
-                      <TbExternalLink
-                        style={{
-                          fontSize: "26px",
-                          cursor: "pointer",
-                        }}
-                      />
-                    </a>
-                  </Link>
-
-                  {session?.user.manager ? (
-                    <div
-                      onClick={() =>
-                        setOperationModal((prev) => ({
-                          ...prev,
-                          editIsOpen: true,
-                          info: operation,
-                        }))
-                      }
-                      className="text-[#fead61] hover:scale-105 duration-300 ease-in-out"
-                    >
-                      <FiEdit style={{ fontSize: "20px", cursor: "pointer" }} />
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex flex-col items-start">
-                  <h1 className="text-start text-gray-500 text-xs font-medium">
-                    INÍCIO
-                  </h1>
-                  <div className="flex items-center gap-2">
-                    <AiOutlineCalendar
-                      style={{ color: "#15599a", fontSize: "20px" }}
-                    />
-                    <h1 className="text-gray-700 font-medium text-xs lg:text-base">
-                      {operation.dataInicio
-                        ? dayjs(operation.dataInicio).format("DD/MM/YY")
-                        : null}
+          {operations ? (
+            operations.length > 0 ? (
+              operations?.map((operation, index) => (
+                <div
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOperationModal((prev) => ({
+                      ...prev,
+                      controlIsOpen: true,
+                      info: operation,
+                    }));
+                  }}
+                  className="w-[450px] h-[250px] shadow-lg border cursor-pointer border-gray-200 flex flex-col p-3"
+                >
+                  <div className="w-full flex justify-between">
+                    <div></div>
+                    <h1 className="w-full text-center text-lg font-medium">
+                      {operation.nome}
                     </h1>
+                    <div className="flex items-center gap-2">
+                      <Link href={`/operacoes/calendario/${operation._id}`}>
+                        <a
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-[#15599a] hover:scale-105 duration-300 ease-in-out"
+                        >
+                          <TbExternalLink
+                            style={{
+                              fontSize: "26px",
+                              cursor: "pointer",
+                            }}
+                          />
+                        </a>
+                      </Link>
+
+                      {session?.user.manager ? (
+                        <div
+                          onClick={() =>
+                            setOperationModal((prev) => ({
+                              ...prev,
+                              editIsOpen: true,
+                              info: operation,
+                            }))
+                          }
+                          className="text-[#fead61] hover:scale-105 duration-300 ease-in-out"
+                        >
+                          <FiEdit
+                            style={{ fontSize: "20px", cursor: "pointer" }}
+                          />
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col items-end">
-                  <h1 className="text-end text-gray-500 text-xs font-medium">
-                    PREVISÃO DE CONCLUSÃO
-                  </h1>
-                  <div className="flex items-center justify-end gap-2">
-                    {operation.previsaoConclusao ? (
-                      <>
-                        <BsCalendarCheckFill
-                          style={{ color: "rgb(249,115,22)" }}
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col items-start">
+                      <h1 className="text-start text-gray-500 text-xs font-medium">
+                        INÍCIO
+                      </h1>
+                      <div className="flex items-center gap-2">
+                        <AiOutlineCalendar
+                          style={{ color: "#15599a", fontSize: "20px" }}
                         />
                         <h1 className="text-gray-700 font-medium text-xs lg:text-base">
-                          {dayjs(operation.previsaoConclusao).format(
-                            "DD/MM/YY HH:mm"
-                          )}
+                          {operation.dataInicio
+                            ? dayjs(operation.dataInicio).format("DD/MM/YY")
+                            : null}
                         </h1>
-                      </>
-                    ) : (
-                      <h1 className="text-gray-700 font-medium text-xs lg:text-base">
-                        NÃO DEFINIDO
-                      </h1>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <h1 className="w-full text-center mt-3 font-medium text-sm">
-                ATIVIDADES
-              </h1>
-              {operation.atividades.map((activity, subIndex) => (
-                <div
-                  key={subIndex}
-                  className="w-full flex items-center justify-between gap-2"
-                >
-                  <div className="flex items-center gap-2">
-                    <TbActivity />
-                    <p className="text-xs text-gray-500">{activity.nome}</p>
-                  </div>
-                  {activity.subAtividades ? (
-                    <div className="flex items-center gap-2">
-                      <FaProjectDiagram style={{ color: "#15599a" }} />
-                      <p className="text-xs text-gray-500">
-                        + {activity.subAtividades.length}
-                      </p>
+                      </div>
                     </div>
-                  ) : null}
+                    <div className="flex flex-col items-end">
+                      <h1 className="text-end text-gray-500 text-xs font-medium">
+                        PREVISÃO DE CONCLUSÃO
+                      </h1>
+                      <div className="flex items-center justify-end gap-2">
+                        {operation.previsaoConclusao ? (
+                          <>
+                            <BsCalendarCheckFill
+                              style={{ color: "rgb(249,115,22)" }}
+                            />
+                            <h1 className="text-gray-700 font-medium text-xs lg:text-base">
+                              {dayjs(operation.previsaoConclusao).format(
+                                "DD/MM/YY HH:mm"
+                              )}
+                            </h1>
+                          </>
+                        ) : (
+                          <h1 className="text-gray-700 font-medium text-xs lg:text-base">
+                            NÃO DEFINIDO
+                          </h1>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <h1 className="w-full text-center mt-3 font-medium text-sm">
+                    ATIVIDADES
+                  </h1>
+                  {operation.atividades.map((activity, subIndex) => (
+                    <div
+                      key={subIndex}
+                      className="w-full flex items-center justify-between gap-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <TbActivity />
+                        <p className="text-xs text-gray-500">{activity.nome}</p>
+                      </div>
+                      {activity.subAtividades ? (
+                        <div className="flex items-center gap-2">
+                          <FaProjectDiagram style={{ color: "#15599a" }} />
+                          <p className="text-xs text-gray-500">
+                            + {activity.subAtividades.length}
+                          </p>
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          ))}
+              ))
+            ) : (
+              <div className="grow flex items-center justify-center">
+                <p className="italic text-gray-500">
+                  {session.user.equipe
+                    ? "Nenhuma operação encontrada vinculada a sua equipe."
+                    : "Nenhuma operação encontrada."}
+                </p>
+              </div>
+            )
+          ) : (
+            <LoadingPage />
+          )}
         </div>
-        <div
-          onClick={() => setNewOperationModalIsOpen(true)}
-          className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
-        >
-          <p className="uppercase font-bold text-sm">NOVA OPERAÇÃO</p>
-        </div>
+        {session.user.manager ? (
+          <div
+            onClick={() => setNewOperationModalIsOpen(true)}
+            className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150"
+          >
+            <p className="uppercase font-bold text-sm">NOVA OPERAÇÃO</p>
+          </div>
+        ) : null}
+
         {operationModal.controlIsOpen && operationModal.info ? (
           <ModalControlOperacao
             isOpen={operationModal.controlIsOpen}

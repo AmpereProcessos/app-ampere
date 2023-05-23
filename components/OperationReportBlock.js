@@ -15,6 +15,7 @@ import axios from "axios";
 import ReportLine from "./ReportLine";
 
 function OperationReportBlock({
+  session,
   data,
   setReportInfo,
   operationName,
@@ -162,6 +163,10 @@ function OperationReportBlock({
       }));
       await axios.post("/api/operacoes/relatorios", {
         ...data,
+        responsavel: {
+          id: session.user.id,
+          nome: session.user.name,
+        },
         idPai: operationId,
         links: linkArr,
       });

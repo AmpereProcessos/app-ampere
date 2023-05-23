@@ -425,8 +425,10 @@ function ModalNovoUsuario({ closeModal }) {
                     }
                     className="p-2 outline-none text-gray-600"
                   >
-                    {equipesTecnicas.map((equipe) => (
-                      <option value={equipe.value}>{equipe.label}</option>
+                    {equipesTecnicas.map((equipe, index) => (
+                      <option key={index} value={equipe.value}>
+                        {equipe.label}
+                      </option>
                     ))}
                   </select>
                 </div>

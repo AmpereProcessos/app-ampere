@@ -1771,6 +1771,10 @@ export const fornecedores = [
     value: "BYD",
   },
   {
+    label: "SOL MAIS",
+    value: "SOL MAIS",
+  },
+  {
     label: "NÃO DEFINIDO",
     value: "NÃO DEFINIDO",
   },

@@ -4,6 +4,7 @@ import { VscChromeClose } from "react-icons/vsc";
 import TextFloatingInput from "./TextFloatingInput";
 import DateInput from "./DateInput";
 import dayjs from "dayjs";
+import { BsPatchCheckFill } from "react-icons/bs";
 import DateFloatingInput from "./DateFloatingInput";
 import { AiOutlineMinus } from "react-icons/ai";
 import { IoMdAdd } from "react-icons/io";
@@ -63,7 +64,7 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
         new Date(operationInfo.previsaoConclusao) <
         new Date(operationInfo.dataInicio)
       ) {
-        setOperationInfo({
+        setOperationMsg({
           text: "Por favor, especifique uma previsão de conclusão maior que a data de início.",
           color: "text-red-500",
         });
@@ -85,6 +86,16 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
         color: "text-red-500",
       });
       resetOperationMsg();
+    }
+  }
+  async function handleUpdates(changes) {
+    try {
+      const { data } = await axios.put(`/api/operacoes`, {
+        ...changes,
+        _id: operationInfo._id,
+      });
+    } catch (error) {
+      alert("Não foi possível realizar alterações.");
     }
   }
   console.log(operationInfo);
@@ -200,11 +211,39 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
                       ? activity.subAtividades.map((subActivity, subIndex) => (
                           <div
                             key={subIndex}
-                            className="w-full items-start flex  justify-around"
+                            className="w-full items-start flex  justify-around my-1"
                           >
-                            <p className="w-2/3 lg:w-1/4 text-xs text-gray-500 text-center">
-                              {subActivity.nome}
-                            </p>
+                            <div className="w-full lg:w-2/3 flex items-center justify-between lg:justify-start gap-2 px-2 lg:px-0">
+                              <p className="text-xs text-gray-500 text-center">
+                                {subActivity.nome}
+                              </p>
+                              {subActivity.status != "CONCLUIDO" ? (
+                                <button
+                                  onClick={() => {
+                                    const activitiesArr =
+                                      operationInfo.atividades;
+                                    activitiesArr[index].subAtividades[
+                                      subIndex
+                                    ].status = "CONCLUIDO";
+                                    setOperationInfo((prev) => ({
+                                      ...prev,
+                                      atividades: activitiesArr,
+                                    }));
+                                    handleUpdates({
+                                      [`atividades.${index}.subAtividades.${subIndex}.status`]:
+                                        "CONCLUIDO",
+                                    });
+                                  }}
+                                  className="text-xxs cursor-pointer text-green-500 border border-green-500 p-1 rounded hover:bg-green-500 hover:text-white"
+                                >
+                                  CONCLUÍDO
+                                </button>
+                              ) : (
+                                <BsPatchCheckFill
+                                  style={{ color: "rgb(34,197,94)" }}
+                                />
+                              )}
+                            </div>
 
                             <p className="hidden lg:block w-1/4 text-xs text-gray-500 text-center">
                               {subActivity.dataInicio
@@ -243,7 +282,7 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
               setReportInfo={setReportInfo}
             />
           </div>
-          <div className="w-full py-2 border-t border-gray-200 flex items-center justify-end justify-self-end">
+          {/* <div className="w-full py-2 border-t border-gray-200 flex items-center justify-end justify-self-end">
             {operationMsg.text ? (
               <p className={`text-sm italic ${operationMsg.color}`}>
                 {operationMsg.text}
@@ -255,7 +294,7 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
                 handleClick={updateOperation}
               />
             )}
-          </div>
+          </div> */}
         </div>
       </AnimatedModalWrapper>
     </>

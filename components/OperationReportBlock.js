@@ -284,7 +284,7 @@ function OperationReportBlock({
         onChange={(e) =>
           setReportInfo((prev) => ({ ...prev, anotacoes: e.target.value }))
         }
-        placeholder="Relate aqui detalhes adicionais sobre o dia, problemas enfrentados, imprevistos, desvios de planejamento ou qualquer outra informação relevante."
+        placeholder="Relate aqui detalhes adicionais sobre o dia, clima, problemas enfrentados, imprevistos, desvios de planejamento ou qualquer outra informação relevante."
         className="h-[150px] lg:h-[100px] max-h-[150px] lg:max-h-[100px] bg-gray-100 border border-gray-300 text-center resize-none w-full lg:w-[50%] outline-none p-2"
       />
       <h3 className="text-sm text-gray-500 font-medium w-full text-center py-2">
@@ -330,7 +330,7 @@ function OperationReportBlock({
             className="h-full w-full opacity-0"
             multiple={true}
             type="file"
-            accept=".png, .jpeg, .jpg, .pdf, .docx, .doc"
+            accept=".png, .jpeg, .jpg"
           />
         </div>
         <button onClick={addFiles} className="text-green-500 text-lg">
@@ -418,7 +418,11 @@ function OperationReportBlock({
           reports ? (
             reports.length > 0 ? (
               reports.map((report, index) => (
-                <ReportLine report={report} key={index} />
+                <ReportLine
+                  report={report}
+                  key={index}
+                  count={reports.length - index}
+                />
               ))
             ) : (
               <p className="py-4 text-center w-full animate-pulse text-gray-600 font-medium">

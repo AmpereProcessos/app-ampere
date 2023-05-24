@@ -180,7 +180,11 @@ const Calendar = ({ operation }) => {
             reports ? (
               reports.length > 0 ? (
                 reports.map((report, index) => (
-                  <ReportLine report={report} key={index} />
+                  <ReportLine
+                    report={report}
+                    key={index}
+                    count={reports.length - index}
+                  />
                 ))
               ) : (
                 <p className="py-4 text-center w-full animate-pulse text-gray-600 font-medium">

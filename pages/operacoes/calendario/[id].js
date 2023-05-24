@@ -15,9 +15,6 @@ const colors = [
     cor: "#15599a",
   },
   {
-    cor: "#20e83e",
-  },
-  {
     cor: "#fead61",
   },
   {
@@ -51,7 +48,9 @@ const Calendar = ({ operation }) => {
       activities = activities.map((activity, index) => {
         return {
           ...activity,
-          title: activity.nome,
+          title: activity.dataConclusao
+            ? `(CONCLUIDO) ${activity.nome}`
+            : activity.nome,
           start: dayjs(activity.dataInicio).add(1, "days").format("YYYY-MM-DD"),
           end: activity.dataConclusao
             ? dayjs(activity.dataConclusao)
@@ -60,8 +59,12 @@ const Calendar = ({ operation }) => {
             : dayjs(activity.previsaoConclusao)
                 .add(1.5, "days")
                 .format("YYYY-MM-DD"),
-          backgroundColor: colors[index].cor,
-          borderColor: colors[index].cor,
+          backgroundColor: activity.dataConclusao
+            ? "rgb(34,197,94)"
+            : colors[index].cor,
+          borderColor: activity.dataConclusao
+            ? "rgb(34,197,94)"
+            : colors[index].cor,
         };
       });
       setEvents(activities);
@@ -72,15 +75,17 @@ const Calendar = ({ operation }) => {
         let subs = activity.subAtividades.map((x) => {
           return {
             ...x,
-            title: x.nome,
+            title: x.dataConclusao ? `(CONCLUIDO) ${x.nome}` : x.nome,
             start: dayjs(x.dataInicio).add(1, "days").format("YYYY-MM-DD"),
             end: x.dataConclusao
               ? dayjs(x.dataConclusao).add(1.5, "days").format("YYYY-MM-DD")
               : dayjs(x.previsaoConclusao)
                   .add(1.5, "days")
                   .format("YYYY-MM-DD"),
-            backgroundColor: colors[index].cor,
-            borderColor: colors[index].cor,
+            backgroundColor: x.dataConclusao
+              ? "rgb(34,197,94)"
+              : colors[index].cor,
+            borderColor: x.dataConclusao ? "rgb(34,197,94)" : colors[index].cor,
           };
         });
         subactivities = subactivities.concat(subs);

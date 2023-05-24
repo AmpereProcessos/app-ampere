@@ -157,7 +157,7 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
             <h1 className="w-full p-1 text-center bg-[#15599a] text-white font-medium">
               ATIVIDADES
             </h1>
-            <div className="w-full h-[200px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 min-h-[200px] max-h-[200px] flex flex-col overflow-y-auto overscroll-y-auto">
+            <div className="w-full h-[250px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 min-h-[250px] max-h-[250px] flex flex-col overflow-y-auto overscroll-y-auto">
               {operationInfo.atividades.length > 0 ? (
                 operationInfo.atividades.map((activity, index, arr) => (
                   <div
@@ -166,31 +166,34 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
                       arr.length > 1 ? "border-b border-gray-200" : ""
                     }`}
                   >
-                    <div className="w-full items-start flex justify-around">
-                      <p className="w-2/3 lg:w-1/4 text-gray-700 font-medium text-center">
+                    <div className="w-full items-center flex justify-around">
+                      <p className="w-3/5 lg:w-2/5 text-gray-700 font-medium text-start">
                         {activity.nome}
                       </p>
-                      <div className="hidden lg:flex w-1/4 items-center gap-2 text-gray-700 font-medium text-center">
-                        <p className="hidden lg:block">INICIO EM:</p>
-                        <p>
-                          {activity.dataInicio
-                            ? dayjs(activity.dataInicio)
-                                .add(4, "hours")
-                                .format("DD/MM/YYYY")
-                            : "-"}
-                        </p>
+                      <div className="hidden w-2/6 lg:flex items-center gap-2">
+                        <div className="flex items-center gap-2 text-gray-700 font-medium text-center">
+                          <p>INICIO EM:</p>
+                          <p>
+                            {activity.dataInicio
+                              ? dayjs(activity.dataInicio)
+                                  .add(4, "hours")
+                                  .format("DD/MM/YYYY")
+                              : "-"}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-700 font-medium text-center">
+                          <p>PREV.CONCLUSAO EM:</p>
+                          <p>
+                            {activity.previsaoConclusao
+                              ? dayjs(activity.previsaoConclusao)
+                                  .add(4, "hours")
+                                  .format("DD/MM/YYYY")
+                              : "-"}
+                          </p>
+                        </div>
                       </div>
-                      <div className="hidden lg:flex w-1/4 items-center gap-2 text-gray-700 font-medium text-center">
-                        <p className="hidden lg:block">FIM EM:</p>
-                        <p>
-                          {activity.previsaoConclusao
-                            ? dayjs(activity.previsaoConclusao)
-                                .add(4, "hours")
-                                .format("DD/MM/YYYY")
-                            : "-"}
-                        </p>
-                      </div>
-                      <div className="w-1/3 lg:w-1/4 flex items-center justify-center gap-4">
+
+                      <div className="flex items-center justify-center w-2/5 lg:w-1/5 gap-4">
                         <button
                           onClick={() => {
                             setReportInfo((prev) => ({
@@ -205,62 +208,135 @@ function ModalControlOperacao({ isOpen, setModalIsOpen, operation }) {
                             style={{ fontSize: "15px" }}
                           />
                         </button>
+                        {activity.dataConclusao ? (
+                          <BsPatchCheckFill
+                            style={{ color: "rgb(34,197,94)" }}
+                          />
+                        ) : null}
                       </div>
                     </div>
                     {activity.subAtividades
                       ? activity.subAtividades.map((subActivity, subIndex) => (
                           <div
                             key={subIndex}
-                            className="w-full items-start flex  justify-around my-1"
+                            className="w-full items-start flex justify-around my-1"
                           >
-                            <div className="w-full lg:w-2/3 flex items-center justify-between lg:justify-start gap-2 px-2 lg:px-0">
-                              <p className="text-xs text-gray-500 text-center">
-                                {subActivity.nome}
+                            <p className="w-3/5 lg:w-2/5 text-xs text-gray-500 text-center">
+                              {subActivity.nome}
+                            </p>
+
+                            <div className="hidden lg:flex w-2/5 items-center gap-2">
+                              <p className="hidden lg:block text-xs text-gray-500 text-center">
+                                {subActivity.dataInicio
+                                  ? `INICIO EM: ${dayjs(subActivity.dataInicio)
+                                      .add(4, "hours")
+                                      .format("DD/MM/YYYY")}`
+                                  : "-"}
                               </p>
+                              {subActivity.dataConclusao ? (
+                                <p className="hidden lg:block text-xs text-gray-500 text-center">
+                                  CONCLUSÃO EM:{" "}
+                                  {dayjs(subActivity.dataConclusao)
+                                    .add(4, "hours")
+                                    .format("DD/MM/YYYY")}
+                                </p>
+                              ) : (
+                                <p className="hidden lg:block text-xs text-gray-500 text-center">
+                                  {subActivity.previsaoConclusao
+                                    ? `PREV.CONCLUSÃO EM: ${dayjs(
+                                        subActivity.previsaoConclusao
+                                      )
+                                        .add(4, "hours")
+                                        .format("DD/MM/YYYY")}`
+                                    : "-"}
+                                </p>
+                              )}
+                            </div>
+                            <div className="flex items-center justify-center w-2/5 lg:w-1/5">
                               {subActivity.status != "CONCLUIDO" ? (
                                 <button
                                   onClick={() => {
+                                    var changesObj = {
+                                      [`atividades.${index}.subAtividades.${subIndex}.status`]:
+                                        "CONCLUIDO",
+                                      [`atividades.${index}.subAtividades.${subIndex}.dataConclusao`]:
+                                        new Date().toISOString(),
+                                    };
+                                    // dealing with states
                                     const activitiesArr =
                                       operationInfo.atividades;
                                     activitiesArr[index].subAtividades[
                                       subIndex
                                     ].status = "CONCLUIDO";
+                                    activitiesArr[index].subAtividades[
+                                      subIndex
+                                    ].dataConclusao = new Date().toISOString();
+                                    // validating conclusion of all subactivities
+                                    if (
+                                      activitiesArr[index].subAtividades.every(
+                                        (subact) => subact.status == "CONCLUIDO"
+                                      )
+                                    ) {
+                                      activitiesArr[index].dataConclusao =
+                                        new Date().toISOString();
+                                      changesObj = {
+                                        ...changesObj,
+                                        [`atividades.${index}.dataConclusao`]:
+                                          new Date().toISOString(),
+                                      };
+                                    }
+
                                     setOperationInfo((prev) => ({
                                       ...prev,
                                       atividades: activitiesArr,
                                     }));
-                                    handleUpdates({
-                                      [`atividades.${index}.subAtividades.${subIndex}.status`]:
-                                        "CONCLUIDO",
-                                    });
+                                    handleUpdates(changesObj);
                                   }}
                                   className="text-xxs cursor-pointer text-green-500 border border-green-500 p-1 rounded hover:bg-green-500 hover:text-white"
                                 >
-                                  CONCLUÍDO
+                                  CONCLUIR
                                 </button>
                               ) : (
-                                <BsPatchCheckFill
-                                  style={{ color: "rgb(34,197,94)" }}
-                                />
+                                <div
+                                  onClick={() => {
+                                    var changesObj = {
+                                      [`atividades.${index}.subAtividades.${subIndex}.status`]:
+                                        null,
+                                      [`atividades.${index}.subAtividades.${subIndex}.dataConclusao`]:
+                                        null,
+                                    };
+                                    // dealing with states
+                                    const activitiesArr =
+                                      operationInfo.atividades;
+                                    activitiesArr[index].subAtividades[
+                                      subIndex
+                                    ].status = null;
+                                    activitiesArr[index].subAtividades[
+                                      subIndex
+                                    ].dataConclusao = null;
+
+                                    // reseting conclusion in the main activity
+                                    if (activitiesArr[index].dataConclusao) {
+                                      activitiesArr[index].dataConclusao = null;
+                                      changesObj = {
+                                        ...changesObj,
+                                        [`atividades.${index}.dataConclusao`]:
+                                          null,
+                                      };
+                                    }
+
+                                    setOperationInfo((prev) => ({
+                                      ...prev,
+                                      atividades: activitiesArr,
+                                    }));
+                                    handleUpdates(changesObj);
+                                  }}
+                                  className="text-green-500 hover:text-red-500 cursor-pointer"
+                                >
+                                  <BsPatchCheckFill />
+                                </div>
                               )}
                             </div>
-
-                            <p className="hidden lg:block w-1/4 text-xs text-gray-500 text-center">
-                              {subActivity.dataInicio
-                                ? `INICIO EM: ${dayjs(subActivity.dataInicio)
-                                    .add(4, "hours")
-                                    .format("DD/MM/YYYY")}`
-                                : "-"}
-                            </p>
-                            <p className="hidden lg:block w-1/4 text-xs text-gray-500 text-center">
-                              {subActivity.previsaoConclusao
-                                ? `FIM EM: ${dayjs(
-                                    subActivity.previsaoConclusao
-                                  )
-                                    .add(4, "hours")
-                                    .format("DD/MM/YYYY")}`
-                                : "-"}
-                            </p>
                           </div>
                         ))
                       : null}

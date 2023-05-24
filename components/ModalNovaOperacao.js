@@ -37,7 +37,6 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
       nome: "",
       dataInicio: new Date().toISOString(),
       previsaoConclusao: null,
-      progresso: 0,
     },
   });
 
@@ -150,7 +149,6 @@ function ModalNovaOperacao({ isOpen, setModalIsOpen }) {
         nome: "",
         dataInicio: new Date().toISOString(),
         previsaoConclusao: new Date().toISOString(),
-        progresso: 0,
       },
     }));
   }

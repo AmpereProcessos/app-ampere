@@ -22,7 +22,7 @@ function CotacaoCard({ info, addToSolarMarket }) {
               : null}
           </h1>
           <h1 className="text-[#15599a] font-bold text-xl">
-            {infoHolder.nomeDoKit}
+            {infoHolder.nomeDoKit} - ({infoHolder.codigo})
           </h1>
           <h1 className="text-[#fead61] font-bold">{infoHolder.fornecedor}</h1>
           <h1 className="text-green-500 font-bold">

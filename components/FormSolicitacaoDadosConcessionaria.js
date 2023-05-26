@@ -95,8 +95,9 @@ function FormSolicitacaoDadosConcessionaria({
       return false;
     }
     if (
-      dados.numeroInstalacao == null ||
-      dados.numeroInstalacao.trim().length < 7
+      dados.tipoDaLigacao == "EXISTENTE" &&
+      (dados.numeroInstalacao == null ||
+        dados.numeroInstalacao.trim().length < 7)
     ) {
       setMessage("Por favor, preencha um número de instalação válido.");
       return false;

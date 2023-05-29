@@ -522,7 +522,9 @@ function LaudoTecnicoUrbano({ info }) {
                     NºPOSTE(GOIÁS)
                   </p>
                   <p className="text-center font-bold border-r border-black text-xxs">
-                    -
+                    {info.numeroPosteDerivacao
+                      ? info.numeroPosteDerivacao
+                      : "-"}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">

@@ -486,7 +486,12 @@ function Comercial({ users }) {
                       />
                     </div>
                   </div>
-                  <div className="flex items-center justify-end gap-x-2">
+                  <div className="flex items-center justify-between gap-x-2">
+                    <Link href="/comercial/analise">
+                      <a className="p-1 border border-[#fead61] text-[#fead61] font-medium rounded">
+                        ANALÍTICO
+                      </a>
+                    </Link>
                     <FilterButton
                       text={"FILTRAR"}
                       icon={<AiOutlineSearch />}

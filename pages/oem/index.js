@@ -165,6 +165,13 @@ function OeM({ users }) {
             dayjs().diff(dayjs(project.medidor?.data), "days") > 365
         );
       }
+      if (filters.condicaoOeM == "O&M ATIVO") {
+        newArr = newArr.filter(
+          (project) =>
+            project.medidor?.data &&
+            dayjs().diff(dayjs(project.medidor?.data), "days") < 365
+        );
+      }
     }
     if (filters.manutencaoAtrasada) {
       if (!newArr) newArr = projects;
@@ -436,7 +443,19 @@ function OeM({ users }) {
                           minHeight: "41px",
                         }),
                       }}
-                      value={filters.condicaoOeM}
+                      value={
+                        filters.condicaoOeM
+                          ? [
+                              { label: "TODOS", value: "TODOS" },
+                              {
+                                label: "O&M EM VENCIMENTO",
+                                value: "O&M EM VENCIMENTO",
+                              },
+                              { label: "O&M VENCIDO", value: "O&M VENCIDO" },
+                              { label: "O&M ATIVO", value: "O&M ATIVO" },
+                            ].find((x) => x.value == filters.condicaoOeM)
+                          : undefined
+                      }
                       options={[
                         { label: "TODOS", value: "TODOS" },
                         {
@@ -444,10 +463,12 @@ function OeM({ users }) {
                           value: "O&M EM VENCIMENTO",
                         },
                         { label: "O&M VENCIDO", value: "O&M VENCIDO" },
+                        { label: "O&M ATIVO", value: "O&M ATIVO" },
                       ]}
-                      onChange={(item) =>
-                        setFilters({ ...filters, condicaoOeM: item.value })
-                      }
+                      onChange={(item) => {
+                        console.log(item);
+                        setFilters({ ...filters, condicaoOeM: item.value });
+                      }}
                     />
                   </div>
                 </div>

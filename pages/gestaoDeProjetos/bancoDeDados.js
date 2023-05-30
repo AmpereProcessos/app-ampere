@@ -246,6 +246,58 @@ function BandoDeDados({ data }) {
         },
       };
     }
+    if (filters.condicaoOeM == "O&M ATIVO") {
+      matchObj = {
+        cidade:
+          filters.cidadeFilter.length > 0
+            ? { $in: filters.cidadeFilter }
+            : { $ne: null },
+        "vendedor.nome":
+          filters.vendedorFilter.length > 0
+            ? { $in: filters.vendedorFilter }
+            : { $ne: null },
+        "sistema.qtdeModulos":
+          filters.numModulos != 0 && filters.numModulos
+            ? { $gte: filters.numModulos }
+            : { $ne: null },
+        canalVenda:
+          filters.canal.length > 0 ? { $in: filters.canal } : { $ne: "" },
+        insider:
+          filters.insider.length > 0 ? { $in: filters.insider } : { $ne: "" },
+        [`${
+          dateFilter.field1
+            ? `${[dateFilter.field1]}.${[dateFilter.field2]}`
+            : "qtde"
+        }`]: dateFilter.field1
+          ? {
+              $gte: dateFilter.after,
+              $lte: dateFilter.before,
+            }
+          : { $ne: null },
+        nomeDoContrato:
+          searchFilter.length > 0
+            ? { $regex: searchFilter.toUpperCase() }
+            : { $ne: null },
+        "jornada.entregaTecnica": filters.entregaTecnicaFeita
+          ? true
+          : { $in: [null, true, false] },
+        "medidor.data": { $ne: null },
+        $expr: {
+          $lte: [
+            {
+              $dateDiff: {
+                startDate: {
+                  $dateFromString: { dateString: "$medidor.data" },
+                },
+                endDate: { $toDate: "2023-01-25" },
+                unit: "day",
+              },
+            },
+            365,
+          ],
+        },
+      };
+    }
     // setCurrentPage(page);
     // setOpInProgress(true);
     // let lastId = projects.length > 0 ? projects[projects.length - 1].qtde : 0;
@@ -617,6 +669,7 @@ function BandoDeDados({ data }) {
                         value: "O&M EM VENCIMENTO",
                       },
                       { label: "O&M VENCIDO", value: "O&M VENCIDO" },
+                      { label: "O&M ATIVO", value: "O&M ATIVO" },
                     ]}
                     handleChange={(value) =>
                       setFilters({ ...filters, condicaoOeM: value })

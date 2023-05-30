@@ -111,7 +111,7 @@ function AnaliseBlock({ project }) {
             <div className="flex flex-col items-center">
               <h1 className="text-center text-gray-600 text-xs">CPF/CNPJ</h1>
               <h1 className="text-center text-gray-600 text-sm font-medium">
-                {project.cpfCnpj ? project.cpfCnpj : "-"}
+                {project.cpf_cnpj ? project.cpf_cnpj : "-"}
               </h1>
             </div>
             <div className="flex flex-col items-center">

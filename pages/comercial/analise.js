@@ -16,6 +16,7 @@ import LoadingPage from "../../components/utils/LoadingPage";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { IoMdArrowDropdownCircle } from "react-icons/io";
 import AnaliseBlock from "../../components/AnaliseBlock";
+import TextInput from "../../components/TextInput";
 const currentDate = new Date();
 
 function getContractValue(valorProjeto, valorPadrao, valorEstrutura) {
@@ -31,7 +32,7 @@ function getContractValue(valorProjeto, valorPadrao, valorEstrutura) {
 
 function Analise() {
   const { data: session } = useSession({ required: true });
-
+  const [authorization, setAuthorization] = useState("");
   const [projects, setProjects] = useState();
   const [filteredProjects, setFilteredProjects] = useState();
   const [filters, setFilters] = useState({
@@ -99,9 +100,42 @@ function Analise() {
         dateFilter.before
       }&field=${"contrato.dataAssinatura"}`
     );
-    console.log(data);
     setProjects(data);
     setFilteredProjects(data);
+  }
+  async function fetchAcceptedSVB() {
+    if (authorization.length < 15) {
+      alert("Por favor, preencha uma authorization válida.");
+      return;
+    }
+    try {
+      const { data } = await axios.get(
+        `/api/utils/aceites?authorization=${authorization}&after=${dateFilter.after}&before=${dateFilter.before}`
+      );
+      var listOfProjects = [...projects];
+      listOfProjects = listOfProjects.map((project) => {
+        const acceptProposeOnSVB = data.find(
+          (x) => x.codigoSVB == project.codigoSVB
+        );
+        if (acceptProposeOnSVB) {
+          return {
+            ...project,
+            proposta: {
+              nome: acceptProposeOnSVB.nomeProposta,
+              preco: acceptProposeOnSVB.precoProposta,
+              potencia: acceptProposeOnSVB.potenciaProposta,
+            },
+          };
+        } else return project;
+      });
+
+      setFilteredProjects(listOfProjects);
+      setProjects(listOfProjects);
+    } catch (error) {
+      alert(
+        "Houve um erro na busca dos aceites. Por favor, confira o código de autenticação e tente novamente."
+      );
+    }
   }
 
   function getListCumulativePeakPot() {
@@ -175,6 +209,19 @@ function Analise() {
                 (R${getListCumulativeValue().toLocaleString()})
               </p>
             )}
+          </div>
+          <div className="flex items-center gap-2">
+            <TextInput
+              label={"AUTHORIZATION"}
+              editable={true}
+              value={authorization}
+              handleChange={(value) => setAuthorization(value)}
+            />
+            <FetchDataButton
+              text={"BUSCAR NO SVB"}
+              icon={<AiOutlineSearch />}
+              handleClick={fetchAcceptedSVB}
+            />
           </div>
         </div>
         <div className="flex flex-col lg:flex-row items-center lg:justify-between mt-4 gap-2 w-full">

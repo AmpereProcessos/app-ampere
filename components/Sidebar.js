@@ -61,7 +61,6 @@ function Sidebar({ sidebarVisible }) {
   )
     return null;
   if (status == "loading" || status == "unauthenticated") return null;
-  console.log(credentials);
   return (
     <AnimatePresence>
       <motion.div

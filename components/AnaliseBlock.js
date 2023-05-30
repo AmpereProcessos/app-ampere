@@ -17,28 +17,36 @@ function AnaliseBlock({ project }) {
   return (
     <div className="flex flex-col w-full p-1 border border-gray-200">
       <div className="w-full grid grid-cols-8 items-center">
-        <div className="flex items-center gap-2 col-span-2">
-          {showAdditionalInfo ? (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-              <IoMdArrowDropupCircle
-                style={{ fontSize: "15px" }}
-                onClick={() => setShowAdditionalInfo(false)}
-              />
+        <div className="flex flex-col col-span-2">
+          <div className="flex items-center gap-2 col-span-2">
+            {showAdditionalInfo ? (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropupCircle
+                  style={{ fontSize: "15px" }}
+                  onClick={() => setShowAdditionalInfo(false)}
+                />
+              </div>
+            ) : (
+              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+                <IoMdArrowDropdownCircle
+                  style={{ fontSize: "15px" }}
+                  onClick={() => setShowAdditionalInfo(true)}
+                />
+              </div>
+            )}
+            <div className="text-sm gap-2 flex items-center">
+              <strong className="text-[#fead61]">({project.codigoSVB})</strong>
+              {project.nomeDoContrato}{" "}
+              <strong className="text-[#15599a]">{project.qtde}</strong> -{" "}
             </div>
-          ) : (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-              <IoMdArrowDropdownCircle
-                style={{ fontSize: "15px" }}
-                onClick={() => setShowAdditionalInfo(true)}
-              />
-            </div>
-          )}
-          <div className="text-sm gap-2 flex items-center">
-            <strong className="text-[#fead61]">({project.codigoSVB})</strong>
-            {project.nomeDoContrato}{" "}
-            <strong className="text-[#15599a]">{project.qtde}</strong> -{" "}
           </div>
+          {project.proposta ? (
+            <h1 className={`text-blue-700 text-xs font-medium text-center`}>
+              {project.proposta.nome}
+            </h1>
+          ) : null}
         </div>
+
         <div className="flex flex-col items-center col-span-1">
           <h1 className="text-center text-gray-600 text-xs">TIPO DE SERVIÇO</h1>
           <h1 className="text-center text-gray-600 text-sm font-medium">
@@ -50,6 +58,19 @@ function AnaliseBlock({ project }) {
           <h1 className="text-center text-gray-600 text-sm font-medium">
             {project.sistema?.potPico}kWp
           </h1>
+          {project.proposta ? (
+            <h1
+              className={`${
+                Number(
+                  project.proposta.potencia.replace(".", "").replace(",", ".")
+                ) == project.sistema?.potPico
+                  ? "text-green-500"
+                  : "text-red-500"
+              } text-xs font-medium`}
+            >
+              {project.proposta.potencia}
+            </h1>
+          ) : null}
         </div>
         <div className="flex flex-col items-center col-span-1">
           <h1 className="text-center text-gray-600 text-xs">
@@ -103,6 +124,24 @@ function AnaliseBlock({ project }) {
               maximumFractionDigits: 2,
             })}
           </h1>
+          {project.proposta ? (
+            <h1
+              className={`${
+                Number(
+                  project.proposta.preco.replace(".", "").replace(",", ".")
+                ) ==
+                getContractValue(
+                  project.sistema?.valorProjeto,
+                  project.padrao?.valor,
+                  project.estruturaPersonalizada?.valor
+                )
+                  ? "text-green-500"
+                  : "text-red-500"
+              } text-xs font-medium`}
+            >
+              {project.proposta.preco}
+            </h1>
+          ) : null}
         </div>
       </div>
       {showAdditionalInfo ? (

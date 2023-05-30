@@ -13,6 +13,11 @@ export default async function handler(req, res) {
             $and: [{ [field]: { $gte: after } }, { [field]: { $lte: before } }],
           },
         },
+        {
+          $sort: {
+            qtde: 1,
+          },
+        },
       ])
       .toArray();
     res.json(arr);

@@ -19,7 +19,7 @@ function SolicitacaoOeM({
   nomeVendedor,
   telefoneVendedor,
 }) {
-  const [estagio, setEstagio] = useState(4);
+  const [estagio, setEstagio] = useState(0);
   const [dados, setDados] = useState({
     nomeVendedor: nomeVendedor,
     nomeDoProjeto: cliente ? cliente : null,

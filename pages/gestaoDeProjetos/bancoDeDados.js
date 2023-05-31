@@ -54,6 +54,7 @@ function BandoDeDados({ data }) {
     insider: [],
     canal: [],
     numModulos: null,
+    nps: null,
   });
 
   // Functions
@@ -101,6 +102,10 @@ function BandoDeDados({ data }) {
           filters.numModulos != 0 && filters.numModulos
             ? { $gte: filters.numModulos }
             : { $ne: null },
+        nps:
+          filters.nps != 0 && filters.nps
+            ? { $gte: filters.nps }
+            : { $ne: null },
         canalVenda:
           filters.canal.length > 0 ? { $in: filters.canal } : { $ne: "" },
         insider:
@@ -137,6 +142,10 @@ function BandoDeDados({ data }) {
         "sistema.qtdeModulos":
           filters.numModulos != 0 && filters.numModulos
             ? { $gte: filters.numModulos }
+            : { $ne: null },
+        nps:
+          filters.nps != 0 && filters.nps
+            ? { $gte: filters.nps }
             : { $ne: null },
         canalVenda:
           filters.canal.length > 0 ? { $in: filters.canal } : { $ne: "" },
@@ -209,6 +218,10 @@ function BandoDeDados({ data }) {
           filters.numModulos != 0 && filters.numModulos
             ? { $gte: filters.numModulos }
             : { $ne: null },
+        nps:
+          filters.nps != 0 && filters.nps
+            ? { $gte: filters.nps }
+            : { $ne: null },
         canalVenda:
           filters.canal.length > 0 ? { $in: filters.canal } : { $ne: "" },
         insider:
@@ -259,6 +272,10 @@ function BandoDeDados({ data }) {
         "sistema.qtdeModulos":
           filters.numModulos != 0 && filters.numModulos
             ? { $gte: filters.numModulos }
+            : { $ne: null },
+        nps:
+          filters.nps != 0 && filters.nps
+            ? { $gte: filters.nps }
             : { $ne: null },
         canalVenda:
           filters.canal.length > 0 ? { $in: filters.canal } : { $ne: "" },
@@ -421,6 +438,18 @@ function BandoDeDados({ data }) {
                       setFilters({
                         ...filters,
                         numModulos: Number(e.target.value),
+                      })
+                    }
+                  />
+                  <input
+                    type="number"
+                    placeholder="NPS > QUE"
+                    className="outline-none p-1.5 w-full lg:w-[200px] rounded border border-gray-200 placeholder:italic"
+                    value={filters.nps}
+                    onChange={(e) =>
+                      setFilters({
+                        ...filters,
+                        nps: Number(e.target.value),
                       })
                     }
                   />

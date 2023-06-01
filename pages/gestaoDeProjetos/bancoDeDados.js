@@ -105,7 +105,7 @@ function BandoDeDados({ data }) {
         nps:
           filters.nps != 0 && filters.nps
             ? { $gte: filters.nps }
-            : { $ne: null },
+            : { $ne: "NULO" },
         canalVenda:
           filters.canal.length > 0 ? { $in: filters.canal } : { $ne: "" },
         insider:
@@ -146,7 +146,7 @@ function BandoDeDados({ data }) {
         nps:
           filters.nps != 0 && filters.nps
             ? { $gte: filters.nps }
-            : { $ne: null },
+            : { $ne: "NULO" },
         canalVenda:
           filters.canal.length > 0 ? { $in: filters.canal } : { $ne: "" },
         insider:
@@ -221,7 +221,7 @@ function BandoDeDados({ data }) {
         nps:
           filters.nps != 0 && filters.nps
             ? { $gte: filters.nps }
-            : { $ne: null },
+            : { $ne: "NULO" },
         canalVenda:
           filters.canal.length > 0 ? { $in: filters.canal } : { $ne: "" },
         insider:
@@ -276,7 +276,7 @@ function BandoDeDados({ data }) {
         nps:
           filters.nps != 0 && filters.nps
             ? { $gte: filters.nps }
-            : { $ne: null },
+            : { $ne: "NULO" },
         canalVenda:
           filters.canal.length > 0 ? { $in: filters.canal } : { $ne: "" },
         insider:

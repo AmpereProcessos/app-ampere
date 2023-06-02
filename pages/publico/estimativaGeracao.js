@@ -14,6 +14,7 @@ function GeneratioEstimative() {
     uf: "MINAS GERAIS",
     cidade: "ITUIUTABA",
     potPico: 0,
+    perda: 0,
   });
   function getGenFactor(city, uf, month) {
     console.log(city, uf);
@@ -76,6 +77,15 @@ function GeneratioEstimative() {
             }
             width={"50%"}
           />
+          <NumberFloatingInput
+            label={"PERDA DE GERAÇÃO (%)"}
+            editable={true}
+            value={infoHolder.perda}
+            handleChange={(value) =>
+              setInfoHolder((prev) => ({ ...prev, perda: Number(value) }))
+            }
+            width={"50%"}
+          />
         </div>
         <div className="flex w-full flex-col">
           <div className="w-full grid grid-cols-3 border-b border-gray-200">
@@ -99,8 +109,10 @@ function GeneratioEstimative() {
             <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
               {infoHolder.potPico
                 ? Number(
-                    getGenFactor(infoHolder.cidade, infoHolder.uf, "JAN") *
-                      infoHolder.potPico
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "JAN") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
                   ).toFixed(2)
                 : "-"}
             </div>
@@ -115,8 +127,10 @@ function GeneratioEstimative() {
             <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
               {infoHolder.potPico
                 ? Number(
-                    getGenFactor(infoHolder.cidade, infoHolder.uf, "FEB") *
-                      infoHolder.potPico
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "FEB") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
                   ).toFixed(2)
                 : "-"}
             </div>
@@ -131,8 +145,10 @@ function GeneratioEstimative() {
             <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
               {infoHolder.potPico
                 ? Number(
-                    getGenFactor(infoHolder.cidade, infoHolder.uf, "MAR") *
-                      infoHolder.potPico
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "MAR") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
                   ).toFixed(2)
                 : "-"}
             </div>
@@ -147,8 +163,10 @@ function GeneratioEstimative() {
             <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
               {infoHolder.potPico
                 ? Number(
-                    getGenFactor(infoHolder.cidade, infoHolder.uf, "APR") *
-                      infoHolder.potPico
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "APR") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
                   ).toFixed(2)
                 : "-"}
             </div>
@@ -163,8 +181,10 @@ function GeneratioEstimative() {
             <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
               {infoHolder.potPico
                 ? Number(
-                    getGenFactor(infoHolder.cidade, infoHolder.uf, "MAY") *
-                      infoHolder.potPico
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "MAY") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
                   ).toFixed(2)
                 : "-"}
             </div>
@@ -179,8 +199,10 @@ function GeneratioEstimative() {
             <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
               {infoHolder.potPico
                 ? Number(
-                    getGenFactor(infoHolder.cidade, infoHolder.uf, "JUN") *
-                      infoHolder.potPico
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "JUN") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
                   ).toFixed(2)
                 : "-"}
             </div>
@@ -195,8 +217,10 @@ function GeneratioEstimative() {
             <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
               {infoHolder.potPico
                 ? Number(
-                    getGenFactor(infoHolder.cidade, infoHolder.uf, "JUL") *
-                      infoHolder.potPico
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "JUL") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
                   ).toFixed(2)
                 : "-"}
             </div>
@@ -211,8 +235,10 @@ function GeneratioEstimative() {
             <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
               {infoHolder.potPico
                 ? Number(
-                    getGenFactor(infoHolder.cidade, infoHolder.uf, "AUG") *
-                      infoHolder.potPico
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "AUG") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
                   ).toFixed(2)
                 : "-"}
             </div>
@@ -227,8 +253,10 @@ function GeneratioEstimative() {
             <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
               {infoHolder.potPico
                 ? Number(
-                    getGenFactor(infoHolder.cidade, infoHolder.uf, "SEP") *
-                      infoHolder.potPico
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "SEP") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
                   ).toFixed(2)
                 : "-"}
             </div>
@@ -243,8 +271,10 @@ function GeneratioEstimative() {
             <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
               {infoHolder.potPico
                 ? Number(
-                    getGenFactor(infoHolder.cidade, infoHolder.uf, "OCT") *
-                      infoHolder.potPico
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "OCT") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
                   ).toFixed(2)
                 : "-"}
             </div>
@@ -259,8 +289,10 @@ function GeneratioEstimative() {
             <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
               {infoHolder.potPico
                 ? Number(
-                    getGenFactor(infoHolder.cidade, infoHolder.uf, "NOV") *
-                      infoHolder.potPico
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "NOV") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
                   ).toFixed(2)
                 : "-"}
             </div>
@@ -275,8 +307,30 @@ function GeneratioEstimative() {
             <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
               {infoHolder.potPico
                 ? Number(
-                    getGenFactor(infoHolder.cidade, infoHolder.uf, "DEC") *
-                      infoHolder.potPico
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "DEC") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
+                  ).toFixed(2)
+                : "-"}
+            </div>
+          </div>
+          <div className="w-full grid grid-cols-3 border-b border-gray-200">
+            <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-l border-gray-200">
+              MÉDIA
+            </div>
+            <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-x border-gray-200">
+              {getGenFactor(infoHolder.cidade, infoHolder.uf, "ANNUAL").toFixed(
+                2
+              )}
+            </div>
+            <div className="text-gray-600 font-medium col-span-1 p-1 text-center border-r border-gray-200">
+              {infoHolder.potPico
+                ? Number(
+                    (getGenFactor(infoHolder.cidade, infoHolder.uf, "ANNUAL") *
+                      infoHolder.potPico *
+                      (100 - infoHolder.perda)) /
+                      100
                   ).toFixed(2)
                 : "-"}
             </div>

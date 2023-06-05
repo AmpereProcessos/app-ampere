@@ -20,6 +20,14 @@ function ComissaoGeralView({ projects, setProjects }) {
         setProjects([...arr]);
       });
   }
+  function getTotal(project, pa, comission) {
+    const projectValue = project ? (project * comission) / 100 : 0;
+    const paValue = pa ? (pa * comission) / 100 : 0;
+    return (projectValue + paValue).toLocaleString("pt-br", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
+  }
   return (
     <>
       <div className="flex items-center justify-center">
@@ -242,13 +250,11 @@ function ComissaoGeralView({ projects, setProjects }) {
                   <p className="text-xs  text-gray-600 p-2 text-center">
                     R$
                     {project.padrao.valor || project.sistema.valorProjeto
-                      ? (
-                          (project.sistema.valorProjeto *
-                            project.porcentagemComissao) /
-                            100 +
-                          (project.padrao.valor * project.porcentagemComissao) /
-                            100
-                        ).toFixed(2)
+                      ? getTotal(
+                          project.sistema.valorProjeto,
+                          project.padrao.valor,
+                          project.porcentagemComissao
+                        )
                       : 0}
                   </p>
                 </div>

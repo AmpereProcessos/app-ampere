@@ -8,6 +8,7 @@ import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   customersAcquisitionChannels,
+  tiposDeServico,
   vendedores,
 } from "../../utils/constants";
 import ComissaoGeralView from "../../components/ComissaoGeralView";
@@ -38,6 +39,7 @@ function ComissaoPage() {
     insider: [],
     vendedor: [],
     canal: [],
+    tipoDeServico: [],
   });
   const [dateFilter, setDateFilter] = useState({
     after: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, -3),
@@ -70,6 +72,12 @@ function ComissaoPage() {
     if (filters.canal.length > 0) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((call) => filters.canal.includes(call.canalVenda));
+    }
+    if (filters.tipoDeServico.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((call) =>
+        filters.tipoDeServico.includes(call.tipoDeServico)
+      );
     }
     if (!newArr) {
       setFilteredProjects(projects);
@@ -421,6 +429,31 @@ function ComissaoPage() {
                                 value: vendedor.nome,
                               };
                             })}
+                        />
+                      </div>
+                      <div className="w-full lg:w-[250px]">
+                        <Select
+                          isMulti
+                          placeholder="TIPO DE SERVIÇO"
+                          styles={{
+                            control: (base, state) => ({
+                              ...base,
+                              width: "100%",
+                              minHeight: "41px",
+                            }),
+                          }}
+                          onChange={(e) =>
+                            setFilters({
+                              ...filters,
+                              tipoDeServico: e.map((x) => x.value),
+                            })
+                          }
+                          options={tiposDeServico.map((tipo) => {
+                            return {
+                              label: tipo.label,
+                              value: tipo.value,
+                            };
+                          })}
                         />
                       </div>
                       <FilterButton

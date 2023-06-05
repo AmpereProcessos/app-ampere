@@ -2,20 +2,25 @@ import { ObjectId } from "mongodb";
 import connectToDatabase from "../../../utils/connectDb";
 import { vendedores } from "../../../utils/constants";
 export default async function handler(req, res) {
-  function getComissao(vendedorNome, insider) {
+  function getComissao(vendedorNome, insider, tipoDeServico) {
     let vendedorInfo = vendedores.filter((x) => x.nome == vendedorNome)[0];
-    if (vendedorInfo != undefined) {
-      if (insider) return { porcentagemComissao: vendedorInfo.comissaoInside };
-      else return { porcentagemComissao: vendedorInfo.comissaoAtivo };
-
-      // return {
-      //   pcAtivo: Number(vendedorInfo.comissaoAtivo),
-      //   pcInside: Number(vendedorInfo.comissaoInside),
-      // };
+    if (tipoDeServico == "OPERAÇÃO E MANUTENÇÃO") {
+      return { porcentagemComissao: 10 };
     } else {
-      return {
-        porcentagemComissao: 0,
-      };
+      if (vendedorInfo != undefined) {
+        if (insider)
+          return { porcentagemComissao: vendedorInfo.comissaoInside };
+        else return { porcentagemComissao: vendedorInfo.comissaoAtivo };
+
+        // return {
+        //   pcAtivo: Number(vendedorInfo.comissaoAtivo),
+        //   pcInside: Number(vendedorInfo.comissaoInside),
+        // };
+      } else {
+        return {
+          porcentagemComissao: 0,
+        };
+      }
     }
   }
   if (req.method == "GET") {
@@ -30,9 +35,21 @@ export default async function handler(req, res) {
           {
             $match: {
               "contrato.status": "ASSINADO",
-              $and: [
-                { "compra.dataPagamento": { $gte: depois } },
-                { "compra.dataPagamento": { $lte: antes } },
+              $or: [
+                {
+                  tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
+                  $and: [
+                    { "compra.dataPagamento": { $gte: depois } },
+                    { "compra.dataPagamento": { $lte: antes } },
+                  ],
+                },
+                {
+                  tipoDeServico: "OPERAÇÃO E MANUTENÇÃO",
+                  $and: [
+                    { "contrato.dataAssinatura": { $gte: depois } },
+                    { "contrato.dataAssinatura": { $lte: antes } },
+                  ],
+                },
               ],
             },
           },
@@ -134,7 +151,8 @@ export default async function handler(req, res) {
           ...x,
           porcentagemComissao: x.contrato.comissaoVendedor
             ? x.contrato.comissaoVendedor
-            : getComissao(x.vendedor.nome, x.insider).porcentagemComissao,
+            : getComissao(x.vendedor.nome, x.insider, x.tipoDeServico)
+                .porcentagemComissao,
           porcentagemComissaoInsider: 0.3,
           // valorComissaoProjeto: Number(valor),
           // valorComissaoPadrao: Number(valorPadrao),

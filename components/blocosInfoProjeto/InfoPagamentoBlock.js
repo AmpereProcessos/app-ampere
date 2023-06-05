@@ -1,8 +1,9 @@
 import React from "react";
-import { credores } from "../../utils/constants";
+import { credores, formatDate } from "../../utils/constants";
 import NumberInput from "../NumberInput";
 import SelectInput from "../SelectInput";
 import TextInput from "../TextInput";
+import DateInput from "../DateInput";
 function formatCnpjCpf(value) {
   const cnpjCpf = value.replace(/\D/g, "");
 
@@ -37,31 +38,61 @@ function InfoPagamentoBlock({
       </span>
       <div className="flex gap-2 justify-center flex-wrap">
         {showADMOnly && (
-          <div className="w-[350px]">
-            <input
-              disabled={!editor}
-              checked={infoHolder.pagamento?.cobrancaFeita ? true : false}
-              onChange={(e) => {
+          <>
+            <div className="w-[350px]">
+              <input
+                disabled={!editor}
+                checked={infoHolder.pagamento?.cobrancaFeita ? true : false}
+                onChange={(e) => {
+                  setChanges({
+                    ...changes,
+                    "pagamento.cobrancaFeita": e.target.checked,
+                    "pagamento.dataRecebimento": new Date().toISOString(),
+                  });
+                  setInfo({
+                    ...infoHolder,
+                    pagamento: {
+                      ...infoHolder.pagamento,
+                      cobrancaFeita: e.target.checked,
+                      dataRecebimento: new Date().toISOString(),
+                    },
+                  });
+                }}
+                type="checkbox"
+                name="cobrancaFeita"
+                id="cobrancaFeita"
+              />
+              <label className="ml-2" htmlFor="cobrancaFeita">
+                COBRANÇA REALIZADA ?
+              </label>
+            </div>
+            <DateInput
+              label={"DATA DE RECEBIMENTO"}
+              editable={true}
+              value={
+                infoHolder.pagamento?.dataRecebimento
+                  ? formatDate(infoHolder.pagamento?.dataRecebimento)
+                  : null
+              }
+              handleChange={(value) => {
                 setChanges({
                   ...changes,
-                  "pagamento.cobrancaFeita": e.target.checked,
+                  "pagamento.dataRecebimento": dayjs(value).isValid()
+                    ? new Date(value).toISOString()
+                    : null,
                 });
                 setInfo({
                   ...infoHolder,
                   pagamento: {
                     ...infoHolder.pagamento,
-                    cobrancaFeita: e.target.checked,
+                    dataRecebimento: dayjs(value).isValid()
+                      ? new Date(value).toISOString()
+                      : null,
                   },
                 });
               }}
-              type="checkbox"
-              name="cobrancaFeita"
-              id="cobrancaFeita"
             />
-            <label className="ml-2" htmlFor="cobrancaFeita">
-              COBRANÇA REALIZADA ?
-            </label>
-          </div>
+          </>
         )}
 
         {/**

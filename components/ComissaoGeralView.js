@@ -97,6 +97,18 @@ function ComissaoGeralView({ projects, setProjects }) {
               </div>
               <div className="flex flex-col items-center">
                 <p className="text-xs text-gray-700 font-bold">
+                  DATA RECEBIMENTO
+                </p>
+                <p className="text-xs text-gray-600">
+                  {project.pagamento && project.pagamento.dataRecebimento
+                    ? dayjs(project.pagamento.dataRecebimento)
+                        .add(4, "hours")
+                        .format("DD/MM/YYYY")
+                    : "-"}
+                </p>
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-xs text-gray-700 font-bold">
                   TIPO DE SERVIÇO
                 </p>
                 <p className="text-xs text-gray-600">

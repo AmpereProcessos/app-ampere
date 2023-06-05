@@ -82,6 +82,7 @@ export default async function handler(req, res) {
         contatoPagador: project.contatopagamento,
         retorno: project.retorno,
         cobrancaFeita: project.cobrancarealizada == "REALIZADA" ? true : false,
+        dataRecebimento: project.dataRecebimento,
       },
       faturamento: {
         previsaoFaturamento: project.previsaofaturamento, // adicionar empresa e cnpj de faturamento

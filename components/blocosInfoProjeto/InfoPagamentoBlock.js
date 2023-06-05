@@ -47,14 +47,18 @@ function InfoPagamentoBlock({
                   setChanges({
                     ...changes,
                     "pagamento.cobrancaFeita": e.target.checked,
-                    "pagamento.dataRecebimento": new Date().toISOString(),
+                    "pagamento.dataRecebimento": e.target.checked
+                      ? new Date().toISOString()
+                      : undefined,
                   });
                   setInfo({
                     ...infoHolder,
                     pagamento: {
                       ...infoHolder.pagamento,
                       cobrancaFeita: e.target.checked,
-                      dataRecebimento: new Date().toISOString(),
+                      dataRecebimento: e.target.checked
+                        ? new Date().toISOString()
+                        : undefined,
                     },
                   });
                 }}
@@ -72,7 +76,7 @@ function InfoPagamentoBlock({
               value={
                 infoHolder.pagamento?.dataRecebimento
                   ? formatDate(infoHolder.pagamento?.dataRecebimento)
-                  : null
+                  : undefined
               }
               handleChange={(value) => {
                 setChanges({

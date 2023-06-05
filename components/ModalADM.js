@@ -131,6 +131,7 @@ function ModalADM({
       });
     }
   }
+  console.log(infoHolder);
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>

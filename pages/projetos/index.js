@@ -742,11 +742,16 @@ function Projetos() {
                       <h1 className="text-gray-600 font-medium">
                         CONTAGEM DE DISJUNTORES CADASTRADOS
                       </h1>
-                      {Object.keys(getTotalCircuitBreakers()).map((key) => (
-                        <p className="bg-[#15599a] text-white p-1 rounded">
-                          {key} - ({getTotalCircuitBreakers()[key]} UN)
-                        </p>
-                      ))}
+                      {Object.keys(getTotalCircuitBreakers()).map(
+                        (key, index) => (
+                          <p
+                            key={index}
+                            className="bg-[#15599a] text-white p-1 rounded"
+                          >
+                            {key} - ({getTotalCircuitBreakers()[key]} UN)
+                          </p>
+                        )
+                      )}
                     </div>
                   ) : null}
                   <div className="flex items-center justify-end gap-x-2">

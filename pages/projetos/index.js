@@ -254,9 +254,29 @@ function Projetos() {
       }
     }
   }, [session]);
+  function getTotalCircuitBreakers() {
+    var circuitBreakerObj = {};
+    for (let i = 0; i < filteredProjects.length; i++) {
+      const cbArr = filteredProjects[i].material?.disjuntores;
+      if (cbArr) {
+        for (let j = 0; j < cbArr.length; j++) {
+          var tag = `${cbArr[j].tipo} ${cbArr[j].corrente}A`;
+          var currentTagQtde = circuitBreakerObj[tag]
+            ? circuitBreakerObj[tag]
+            : 0;
+          circuitBreakerObj[tag] = currentTagQtde + cbArr[j].qtde;
+        }
+      }
+    }
+    if (Object.keys(circuitBreakerObj).length > 0) {
+      return circuitBreakerObj;
+    } else {
+      return null;
+    }
+  }
   // [1462, 1521, 1522, 1523, 1524, 1526, 1527, 1528, 1535, 1537, 1538, 1539, 1540, 1541, 1542, 1546, 1548, 1549, 1550, 1551, 1552, 1553, 1554]
   // [1462, 1521, 1522, 1523, 1524, 1526, 1527, 1528, 1534, 1535, 1537, 1538, 1539, 1540, 1541, 1542, 1546, 1548, 1549, 1550, 1551, 1552, 1553, 1554]
-  console.log(filteredProjects?.map((project) => project.qtde));
+
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     if (filteredProjects) {
@@ -717,6 +737,18 @@ function Projetos() {
                       VISTORIA REPROVADA
                     </div>
                   </div>
+                  {getTotalCircuitBreakers() ? (
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <h1 className="text-gray-600 font-medium">
+                        CONTAGEM DE DISJUNTORES CADASTRADOS
+                      </h1>
+                      {Object.keys(getTotalCircuitBreakers()).map((key) => (
+                        <p className="bg-[#15599a] text-white p-1 rounded">
+                          {key} - ({getTotalCircuitBreakers()[key]} UN)
+                        </p>
+                      ))}
+                    </div>
+                  ) : null}
                   <div className="flex items-center justify-end gap-x-2">
                     <FilterButton
                       text={"FILTRAR"}

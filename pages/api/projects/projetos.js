@@ -45,6 +45,7 @@ export default async function handler(req, res) {
             "compra.dataPagamento": 1,
             "contrato.dataAssinatura": 1,
             "sistema.potPico": 1,
+            "material.disjuntores": 1,
           },
         },
       ])

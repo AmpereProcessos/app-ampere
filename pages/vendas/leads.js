@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import LeadCard from "../../components/LeadCard";
 import ListLeads from "../../components/ListLeads";
 import { formatDate } from "../../utils/constants";
+import LeadsLostBlock from "../../components/LeadsLostBlock";
 
 var dateFilterParam = new Date();
 dateFilterParam.setMonth(dateFilterParam.getMonth() - 6);
@@ -40,10 +41,11 @@ function SellerLeads() {
       });
       let obj = {
         inPresentation: data.filter(
-          (p) => p.estagioFunil == 1 || !p.estagioFunil
+          (p) => (p.estagioFunil == 1 || !p.estagioFunil) && !p.perdido
         ),
-        inFollowUp: data.filter((p) => p.estagioFunil == 2),
-        closed: data.filter((p) => p.estagioFunil == 3),
+        inFollowUp: data.filter((p) => p.estagioFunil == 2 && !p.perdido),
+        closed: data.filter((p) => p.estagioFunil == 3 && !p.perdido),
+        lost: data.filter((p) => !!p.perdido),
       };
       setLeads(obj);
     } catch (error) {
@@ -62,10 +64,11 @@ function SellerLeads() {
       });
       let obj = {
         inPresentation: data.filter(
-          (p) => p.estagioFunil == 1 || !p.estagioFunil
+          (p) => (p.estagioFunil == 1 || !p.estagioFunil) && !p.perdido
         ),
-        inFollowUp: data.filter((p) => p.estagioFunil == 2),
-        closed: data.filter((p) => p.estagioFunil == 3),
+        inFollowUp: data.filter((p) => p.estagioFunil == 2 && !p.perdido),
+        closed: data.filter((p) => p.estagioFunil == 3 && !p.perdido),
+        lost: data.filter((p) => !!p.perdido),
       };
       setLeads(obj);
     } catch (error) {
@@ -161,6 +164,7 @@ function SellerLeads() {
           leads={leads?.closed ? leads.closed : []}
         />
       </div>
+      {leads?.lost ? <LeadsLostBlock lostLeads={leads.lost} /> : null}
     </div>
   );
 }

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useDrag } from "react-dnd";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import { BsPatchCheckFill } from "react-icons/bs";
-import { FaCity, FaHandshake, FaUser } from "react-icons/fa";
+import { FaCity, FaHandshake, FaUser, FaUserTie } from "react-icons/fa";
 import { HiIdentification } from "react-icons/hi";
 import { IoIosSend, IoMdClose } from "react-icons/io";
 import { CgCode } from "react-icons/cg";
@@ -90,11 +90,11 @@ function ListLeadCard({ lead, fetchLeads }) {
     >
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center justify-start gap-1 text-gray-700 text-xs grow">
-          <CgCode style={{ color: "#003d5b" }} />
+          <CgCode style={{ color: "#003d5b", fontSize: "20px" }} />
           <h1 className="font-medium">{lead.codigoSVB}</h1>
         </div>
         <div className="flex items-center justify-center gap-2 text-gray-700 text-xs grow-2">
-          <RiUser2Fill style={{ color: "#003d5b" }} />
+          <FaUserTie style={{ color: "#003d5b", fontSize: "20px" }} />
           <h1 className="font-medium">{lead.vendedor}</h1>
         </div>
       </div>

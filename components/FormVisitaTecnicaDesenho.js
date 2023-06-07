@@ -21,7 +21,7 @@ function FormVisitaTecnicaDesenho({
       });
       return false;
     }
-    if (dados.localizacaoInstalacao.trim().length < 5) {
+    if (dados.localizacaoInstalacao?.trim().length < 5) {
       setMsg({
         text: "Por favor, preencha uma localização válida",
         color: "text-red-500",

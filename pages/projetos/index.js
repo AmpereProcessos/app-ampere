@@ -256,27 +256,47 @@ function Projetos() {
   }, [session]);
   function getTotalCircuitBreakers() {
     var circuitBreakerObj = {};
-    for (let i = 0; i < filteredProjects.length; i++) {
-      const cbArr = filteredProjects[i].material?.disjuntores;
-      if (cbArr) {
-        for (let j = 0; j < cbArr.length; j++) {
-          var tag = `${cbArr[j].tipo} ${cbArr[j].corrente}A`;
-          var currentTagQtde = circuitBreakerObj[tag]
-            ? circuitBreakerObj[tag]
-            : 0;
-          circuitBreakerObj[tag] = currentTagQtde + cbArr[j].qtde;
+    if (filteredProjects) {
+      for (let i = 0; i < filteredProjects.length; i++) {
+        const cbArr = filteredProjects[i].material?.disjuntores;
+        if (cbArr) {
+          for (let j = 0; j < cbArr.length; j++) {
+            var tag = `${cbArr[j].tipo} ${cbArr[j].corrente}A`;
+            var currentTagQtde = circuitBreakerObj[tag]
+              ? circuitBreakerObj[tag]
+              : 0;
+            circuitBreakerObj[tag] = currentTagQtde + cbArr[j].qtde;
+          }
         }
       }
-    }
-    if (Object.keys(circuitBreakerObj).length > 0) {
-      return circuitBreakerObj;
+      if (Object.keys(circuitBreakerObj).length > 0) {
+        return circuitBreakerObj;
+      } else {
+        return null;
+      }
     } else {
-      return null;
+      return {};
     }
+  }
+  function sortTotalCircuitBreakerKeys(arrOfKeys) {
+    // console.log(
+    //   Object.keys(circuitBreakerObj).sort((a, b) =>
+    //     a.localeCompare(b, "pt-br", { numeric: true })
+    //   )
+    // );
+    const sortedArr = arrOfKeys.sort((a, b) =>
+      a.localeCompare(b, "pt-br", { numeric: true })
+    );
+    return sortedArr;
+  }
+  function getCircuitBreakerTypeColors(str) {
+    if (str.includes("MONOFÁSICO")) return "bg-[#fead61] text-black";
+    if (str.includes("BIFÁSICO")) return "bg-[#15599a] text-white";
+    if (str.includes("TRIFÁSICO")) return "bg-black text-white";
   }
   // [1462, 1521, 1522, 1523, 1524, 1526, 1527, 1528, 1535, 1537, 1538, 1539, 1540, 1541, 1542, 1546, 1548, 1549, 1550, 1551, 1552, 1553, 1554]
   // [1462, 1521, 1522, 1523, 1524, 1526, 1527, 1528, 1534, 1535, 1537, 1538, 1539, 1540, 1541, 1542, 1546, 1548, 1549, 1550, 1551, 1552, 1553, 1554]
-
+  console.log(Object.keys(getTotalCircuitBreakers()));
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     if (filteredProjects) {
@@ -742,16 +762,23 @@ function Projetos() {
                       <h1 className="text-gray-600 font-medium">
                         CONTAGEM DE DISJUNTORES CADASTRADOS
                       </h1>
-                      {Object.keys(getTotalCircuitBreakers()).map(
-                        (key, index) => (
-                          <p
-                            key={index}
-                            className="bg-[#15599a] text-white p-1 rounded"
-                          >
-                            {key} - ({getTotalCircuitBreakers()[key]} UN)
-                          </p>
-                        )
-                      )}
+                      <div className="w-full grid grid-cols-1 md:grid-cols-4 gap-2">
+                        {sortTotalCircuitBreakerKeys(
+                          Object.keys(getTotalCircuitBreakers())
+                        ).map(
+                          //Object.keys(getTotalCircuitBreakers())
+                          (key, index) => (
+                            <p
+                              key={index}
+                              className={`${getCircuitBreakerTypeColors(
+                                key
+                              )} p-1 rounded text-center`}
+                            >
+                              {key} - ({getTotalCircuitBreakers()[key]} UN)
+                            </p>
+                          )
+                        )}
+                      </div>
                     </div>
                   ) : null}
                   <div className="flex items-center justify-end gap-x-2">

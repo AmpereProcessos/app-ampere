@@ -141,20 +141,19 @@ function Analise() {
   function getListCumulativePeakPot() {
     var totalSum = 0;
     for (var i = 0; i < filteredProjects.length; i++) {
-      if (filteredProjects[i].tipoDeServico == "OPERAÇÃO E MANUTENÇÃO") {
+      let pot = filteredProjects[i].sistema?.potPico
+        ? filteredProjects[i].sistema.potPico
+        : null;
+      if (isNaN(pot)) {
         totalSum = totalSum;
       } else {
-        let pot = filteredProjects[i].sistema?.potPico
-          ? filteredProjects[i].sistema.potPico
-          : null;
-        if (isNaN(pot)) {
-          totalSum = totalSum;
-        } else {
-          totalSum = totalSum + pot;
-        }
+        totalSum = totalSum + pot;
       }
     }
-    return totalSum.toFixed(2);
+    return totalSum.toLocaleString("pt-br", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
   function getListCumulativeValue() {
     var totalSum = 0;
@@ -171,9 +170,53 @@ function Analise() {
       totalSum =
         Number(totalSum) + Number(projeto) + Number(padrao) + Number(estrutura);
     }
-    return totalSum;
+    return totalSum.toLocaleString("pt-br", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
-
+  function getProposesCumulativePeakPot() {
+    var totalSum = 0;
+    for (var i = 0; i < filteredProjects.length; i++) {
+      let pot = filteredProjects[i].proposta?.potencia
+        ? Number(
+            filteredProjects[i].proposta.potencia
+              .replace(".", "")
+              .replace(",", ".")
+          )
+        : null;
+      if (isNaN(pot)) {
+        totalSum = totalSum;
+      } else {
+        totalSum = totalSum + pot;
+      }
+    }
+    return totalSum.toLocaleString("pt-br", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+  function getProposesCumulativeValue() {
+    var totalSum = 0;
+    for (var i = 0; i < filteredProjects.length; i++) {
+      let value = filteredProjects[i].proposta?.preco
+        ? Number(
+            filteredProjects[i].proposta.preco
+              .replace(".", "")
+              .replace(",", ".")
+          )
+        : null;
+      if (isNaN(value)) {
+        totalSum = totalSum;
+      } else {
+        totalSum = totalSum + value;
+      }
+    }
+    return totalSum.toLocaleString("pt-br", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
   useEffect(() => {
     if (
       session?.user.accessibleRoutes.includes("PPS") ||
@@ -200,15 +243,45 @@ function Analise() {
               {filteredProjects ? filteredProjects.length : "-"}
             </p>
             {filteredProjects && (
-              <p className="font-bold text-[#fead61]">
-                ({getListCumulativePeakPot()}kWp)
-              </p>
+              <div className="flex flex-col">
+                <p className="font-bold text-[#fead61]">
+                  ({getListCumulativePeakPot()}kWp)
+                </p>
+                {filteredProjects?.some((x) => x.proposta != undefined) ? (
+                  <p
+                    className={`font-bold ${
+                      getListCumulativePeakPot() ==
+                      getProposesCumulativePeakPot()
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    ({getProposesCumulativePeakPot()} kWp)
+                  </p>
+                ) : null}
+              </div>
             )}
             {filteredProjects && (
-              <p className="font-bold text-[#fead61]">
-                (R${getListCumulativeValue().toLocaleString()})
-              </p>
+              <div className="flex flex-col">
+                <p className="font-bold text-[#fead61]">
+                  (R${getListCumulativeValue()})
+                </p>
+                {filteredProjects?.some((x) => x.proposta != undefined) ? (
+                  <p
+                    className={`font-bold ${
+                      getListCumulativeValue() == getProposesCumulativeValue()
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    (R$ {getProposesCumulativeValue()})
+                  </p>
+                ) : null}
+              </div>
             )}
+            {filteredProjects?.some((x) => x.proposta != undefined) ? (
+              <></>
+            ) : null}
           </div>
           <div className="flex items-center gap-2">
             <TextInput

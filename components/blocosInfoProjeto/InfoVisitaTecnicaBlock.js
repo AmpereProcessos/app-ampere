@@ -90,7 +90,7 @@ function InfoVisitaTecnicaBlock({
           }}
         />
       </div>
-      {(infoVisita?.suprimentos || infoVisita.obsSuprimentos) && (
+      {(infoVisita?.suprimentos || infoVisita?.obsSuprimentos) && (
         <div className="flex flex-col items-center">
           <div className="flex flex-col mx-12 mt-2 gap-2">
             {infoVisita.suprimentos ? (

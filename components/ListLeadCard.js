@@ -4,9 +4,10 @@ import React, { useState } from "react";
 import { useDrag } from "react-dnd";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import { BsPatchCheckFill } from "react-icons/bs";
-import { FaCity, FaUser } from "react-icons/fa";
+import { FaCity, FaHandshake, FaUser } from "react-icons/fa";
 import { HiIdentification } from "react-icons/hi";
 import { IoIosSend, IoMdClose } from "react-icons/io";
+import { CgCode } from "react-icons/cg";
 import { MdAttachMoney, MdOutlineCategory } from "react-icons/md";
 import { RiUser2Fill } from "react-icons/ri";
 import { VscChromeClose } from "react-icons/vsc";
@@ -87,21 +88,35 @@ function ListLeadCard({ lead, fetchLeads }) {
         lead.perdido ? "bg-red-100" : "bg-[#fff]"
       } border border-gray-200 shadow-md`}
     >
-      <div className="flex items-center justify-center gap-2 text-gray-700 text-xs">
-        <RiUser2Fill style={{ color: "#003d5b" }} />
-        <h1 className="font-medium">{lead.vendedor}</h1>
+      <div className="w-full flex items-center justify-between">
+        <div className="flex items-center justify-start gap-1 text-gray-700 text-xs grow">
+          <CgCode style={{ color: "#003d5b" }} />
+          <h1 className="font-medium">{lead.codigoSVB}</h1>
+        </div>
+        <div className="flex items-center justify-center gap-2 text-gray-700 text-xs grow-2">
+          <RiUser2Fill style={{ color: "#003d5b" }} />
+          <h1 className="font-medium">{lead.vendedor}</h1>
+        </div>
       </div>
+
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center gap-2 text-gray-700">
           <HiIdentification style={{ color: "#15599a" }} />
           <h1 className="font-medium text-xs">{lead.nome}</h1>
         </div>
-        {lead.contratoSolicitado ? (
-          <div className="flex items-center gap-1 text-green-600 text-xs">
-            <h1 className="hidden lg:block">CONTRATO SOLICITADO</h1>
-            <BsPatchCheckFill style={{ fontSize: "20px" }} />
-          </div>
-        ) : null}
+        <div className="flex gap-2 items-center">
+          {lead.contratoSolicitado ? (
+            <div className="flex items-center gap-1 text-green-600 text-sm">
+              <BsPatchCheckFill />
+            </div>
+          ) : null}
+          {lead.contratoAssinado ? (
+            <div className="flex items-center gap-1 text-green-600 text-sm">
+              <FaHandshake style={{ fontSize: "20px" }} />
+            </div>
+          ) : null}
+        </div>
+
         <div className="flex items-center gap-2 text-gray-700">
           <FaCity style={{ color: "#fead61" }} />
           <h1 className="font-medium text-xs">{lead.cidade}</h1>

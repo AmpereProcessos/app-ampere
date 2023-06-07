@@ -90,26 +90,29 @@ function InfoVisitaTecnicaBlock({
           }}
         />
       </div>
-      {infoVisita?.suprimentos && (
+      {(infoVisita?.suprimentos || infoVisita.obsSuprimentos) && (
         <div className="flex flex-col items-center">
           <div className="flex flex-col mx-12 mt-2 gap-2">
-            <div className="grid grid-cols-6 w-full">
-              <p className="text-md text-[#fead61] font-bold text-center">
-                INSUMO
-              </p>
-              <p className="text-md text-[#fead61] font-bold text-center">
-                TIPO
-              </p>
-              <p className="text-md text-[#fead61] font-bold text-center">
-                QUANTIDADE
-              </p>
-              <p className="text-md text-[#fead61] font-bold text-center">
-                UNIDADE
-              </p>
-              <p className="text-md text-[#fead61] font-bold text-center col-span-2">
-                AÇÃO
-              </p>
-            </div>
+            {infoVisita.suprimentos ? (
+              <div className="grid grid-cols-6 w-full">
+                <p className="text-md text-[#fead61] font-bold text-center">
+                  INSUMO
+                </p>
+                <p className="text-md text-[#fead61] font-bold text-center">
+                  TIPO
+                </p>
+                <p className="text-md text-[#fead61] font-bold text-center">
+                  QUANTIDADE
+                </p>
+                <p className="text-md text-[#fead61] font-bold text-center">
+                  UNIDADE
+                </p>
+                <p className="text-md text-[#fead61] font-bold text-center col-span-2">
+                  AÇÃO
+                </p>
+              </div>
+            ) : null}
+
             {infoVisita.suprimentos?.map((suprimento, index) => (
               <div key={index} className="grid grid-cols-6 w-full">
                 <p className="text-xs text-gray-600 font-bold text-center">

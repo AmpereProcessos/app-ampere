@@ -275,7 +275,7 @@ function Projetos() {
         return null;
       }
     } else {
-      return {};
+      return null;
     }
   }
   function sortTotalCircuitBreakerKeys(arrOfKeys) {
@@ -296,7 +296,7 @@ function Projetos() {
   }
   // [1462, 1521, 1522, 1523, 1524, 1526, 1527, 1528, 1535, 1537, 1538, 1539, 1540, 1541, 1542, 1546, 1548, 1549, 1550, 1551, 1552, 1553, 1554]
   // [1462, 1521, 1522, 1523, 1524, 1526, 1527, 1528, 1534, 1535, 1537, 1538, 1539, 1540, 1541, 1542, 1546, 1548, 1549, 1550, 1551, 1552, 1553, 1554]
-  console.log(Object.keys(getTotalCircuitBreakers()));
+
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     if (filteredProjects) {

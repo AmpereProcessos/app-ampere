@@ -72,97 +72,90 @@ function ModalComercial({
   useKey("Escape", () => setModalIsOpen(false));
 
   const [infoHolder, setInfo] = useState(project);
-  const [infoVisita, setInfoVisita] = useState({});
+
   const [changes, setChanges] = useState({});
   const [msg, setMsg] = useState({
     text: "",
     color: "",
   });
-  async function findCPF(field) {
-    axios
-      .get(`https://viacep.com.br/ws/${infoHolder.cep.replace("-", "")}/json/`)
-      .then((res) => {
-        if (res.data.erro) {
-          return;
-        } else {
-          console.log(
-            cidadesAtendidas.includes(res.data.localidade.toUpperCase())
-          );
-          setInfo({
-            ...infoHolder,
-            bairro: res.data.bairro,
-            cidade: cidadesAtendidas.includes(res.data.localidade.toUpperCase())
-              ? res.data.localidade.toUpperCase()
-              : "NÃO DEFINIDO",
-            logradouro: res.data.logradouro,
-            uf: res.data.uf,
-          });
-          setChanges({
-            ...changes,
-            bairro: res.data.bairro,
-            cidade: cidadesAtendidas.includes(res.data.localidade.toUpperCase())
-              ? res.data.localidade.toUpperCase()
-              : "NÃO DEFINIDO",
-            logradouro: res.data.logradouro,
-            uf: res.data.uf,
-          });
-        }
+  async function notifyContractSigning() {
+    const notifyArr = [
+      {
+        destinatario: "6318db05929e9f8731d8d9bb",
+        remetente: "SISTEMA",
+        mensagem: `Contrato atualizado para ASSINADO.`,
+        projetoReferencia: project.qtde,
+        nomeDoProjeto: project.nomeDoContrato,
+      },
+      {
+        destinatario: "64638b6c2071c508968bdf08",
+        remetente: "SISTEMA",
+        mensagem: `Contrato atualizado para ASSINADO.`,
+        projetoReferencia: project.qtde,
+        nomeDoProjeto: project.nomeDoContrato,
+      },
+    ];
+
+    try {
+      notifyArr.forEach(async (notifyObj) => {
+        let data = await axios.post("/api/notificacoes/1", notifyObj);
       });
+    } catch (error) {
+      console.log("Erro ao notificar usuários sobre assinatura do contrato.");
+    }
   }
-  async function handleChanges() {
+  function handleValidation() {
     if (
       infoHolder.contrato.status != "ASSINADO" &&
       infoHolder.pagamento.status == "PAGO"
     ) {
-      setMsg({ text: "Verifique as informações!", color: "text-red-400" });
-    } else if (
+      setMsg({
+        text: "Status de contrato e status de pagamento incompatíveis.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (
       !infoHolder.comissionamento?.comercial &&
       (infoHolder.compra?.statusLiberacao == "REALIZAR COMPRA" ||
         infoHolder.compra?.statusLiberacao == "PAGO")
     ) {
       setMsg({
-        text: "Preencha o relatório de comissionamento.",
-        color: "text-red-400",
+        text: "Liberação para compra não permitida sem relatório de comissionamento.",
+        color: "text-red-500",
       });
-    } else if (
-      infoHolder.linkDrive?.trim().length < 5 &&
-      (infoHolder.compra?.statusLiberacao == "REALIZAR COMPRA" ||
-        infoHolder.compra?.statusLiberacao == "PAGO")
-    ) {
+      return false;
+    }
+    return true;
+  }
+  async function handleChanges() {
+    if (handleValidation()) {
       setMsg({
-        text: "Preencha o link do cliente no drive",
-        color: "text-red-400",
+        text: "Enviando informações para alteração...",
+        color: "text-[#15599a]",
       });
-    } else {
-      axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
-        setMsg({ text: "Alterações feitas !", color: "text-green-400" });
+      try {
+        if (
+          project.contrato?.status != "ASSINADO" &&
+          infoHolder.contrato?.status == "ASSINADO"
+        ) {
+          notifyContractSigning();
+        }
+        const { data } = await axios.post(
+          `/api/projects/update/${project._id}`,
+          changes
+        );
+        setMsg({ text: "Alterações feitas !", color: "text-green-500" });
         handleUpdates(project._id);
-      });
+      } catch (error) {
+        setMsg({
+          text: "Um erro ocorreu. Tente novamente.",
+          color: "text-red-500",
+        });
+      }
     }
   }
-  function getVisitaInfo(id) {
-    axios
-      .post(`/api/solicitacoes/getVisitaTecnica/${id}`, {
-        links: 1,
-      })
-      .then((res) => {
-        console.log(res.data);
-        if (!project.links?.visitaTecnica) {
-          project.links = { ...project.links, visitaTecnica: res.data.links };
-          setInfo({
-            ...infoHolder,
-            links: {
-              ...infoHolder.links,
-              visitaTecnica: res.data.links,
-            },
-          });
-          return setChanges({
-            ...changes,
-            "links.visitaTecnica": res.data.links,
-          });
-        }
-      });
-  }
+
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>

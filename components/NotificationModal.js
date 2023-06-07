@@ -5,6 +5,7 @@ import { MdEmail } from "react-icons/md";
 import { IoIosSend } from "react-icons/io";
 import { AppContext } from "../context/AppContext";
 import { VscChromeClose } from "react-icons/vsc";
+import dayjs from "dayjs";
 const MODAL_STYLES = {
   position: "fixed",
   top: "230px",
@@ -150,40 +151,55 @@ function NotificationModal({ setNotificationIsOpen }) {
                 <p className="text-xs text-gray-500 font-raleway text-center">
                   {notificacao.mensagem}
                 </p>
-                <div className="flex items-center justify-end pr-4 gap-2">
-                  {notificacao.remetenteId && (
-                    <button
-                      onClick={() =>
-                        setInfo({
-                          destinatario: notificacao.remetenteId,
-                          remetente: credentials?.name,
-                          remetenteId: credentials?.id,
-                          projetoReferencia: notificacao.projetoReferencia,
-                          nomeDoProjeto: notificacao.nomeDoProjeto,
-                        })
-                      }
-                      className="outline-none transition duration-300 ease-in-out hover:scale-125"
-                    >
-                      <MdEmail style={{ fontSize: "20px", color: "#15599a" }} />{" "}
-                    </button>
-                  )}
+                <div className="flex items-center justify-between pr-2 gap-2 mt-1">
+                  <div>
+                    <p className="text-xs text-gray-500">
+                      {notificacao.dataDeEnvio
+                        ? dayjs(notificacao.dataDeEnvio).format(
+                            "DD/MM/YYYY HH:mm"
+                          )
+                        : null}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {notificacao.remetenteId && (
+                      <button
+                        onClick={() =>
+                          setInfo({
+                            destinatario: notificacao.remetenteId,
+                            remetente: credentials?.name,
+                            remetenteId: credentials?.id,
+                            projetoReferencia: notificacao.projetoReferencia,
+                            nomeDoProjeto: notificacao.nomeDoProjeto,
+                          })
+                        }
+                        className="outline-none transition duration-300 ease-in-out hover:scale-125"
+                      >
+                        <MdEmail
+                          style={{ fontSize: "20px", color: "#15599a" }}
+                        />{" "}
+                      </button>
+                    )}
 
-                  {notificacao.lido ? (
-                    <BsCheckAll style={{ fontSize: "20px", color: "green" }} />
-                  ) : (
-                    <button
-                      onClick={() => setAsRead(notificacao._id, index)}
-                      className="outline-none transition duration-300 ease-in-out hover:scale-150"
-                    >
-                      <BsCheck
-                        style={{
-                          fontSize: "20px",
-                          color: "gray",
-                          cursor: "pointer",
-                        }}
+                    {notificacao.lido ? (
+                      <BsCheckAll
+                        style={{ fontSize: "20px", color: "green" }}
                       />
-                    </button>
-                  )}
+                    ) : (
+                      <button
+                        onClick={() => setAsRead(notificacao._id, index)}
+                        className="outline-none transition duration-300 ease-in-out hover:scale-150"
+                      >
+                        <BsCheck
+                          style={{
+                            fontSize: "20px",
+                            color: "gray",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             ))

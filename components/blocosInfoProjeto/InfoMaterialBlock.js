@@ -55,8 +55,7 @@ function InfoMaterialBlock({
     setChanges({ ...changes, "material.disjuntores": arr });
     setCircuitBreakersArr(arr);
   }
-  console.log(infoHolder);
-  console.log(changes);
+
   return (
     <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg w-full">
       <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">

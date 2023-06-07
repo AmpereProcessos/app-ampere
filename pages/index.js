@@ -244,7 +244,7 @@ function Home() {
       getBirthDay(session.user);
     }
   }, [session]);
-  console.log(installedData, averageHomoData, averageBuyTime);
+  console.log(session);
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     if (session.user?.visualizacao == "OBRAS") {

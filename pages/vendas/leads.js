@@ -50,10 +50,34 @@ function SellerLeads() {
       alert("Erro ao buscar leads.");
     }
   }
+  async function getGeneralLeads() {
+    try {
+      const { data } = await axios.post("/api/insideSales", {
+        match: {
+          dataDeAquisicao: {
+            $gte: new Date(fetchDateFilter.after).toISOString(),
+            $lt: fetchDateFilter.before,
+          },
+        },
+      });
+      let obj = {
+        inPresentation: data.filter(
+          (p) => p.estagioFunil == 1 || !p.estagioFunil
+        ),
+        inFollowUp: data.filter((p) => p.estagioFunil == 2),
+        closed: data.filter((p) => p.estagioFunil == 3),
+      };
+      setLeads(obj);
+    } catch (error) {
+      alert("Erro ao buscar leads.");
+    }
+  }
   useEffect(() => {
-    if (session?.user?.visualizacao == "VENDEDOR") {
+    if (session?.user) {
       if (!leads) {
-        getSellerLeads();
+        if (session?.user?.visualizacao == "VENDEDOR") getSellerLeads();
+        if (session?.user?.visualizacao == "REGIONAL" || session?.user?.manager)
+          getGeneralLeads();
       }
     } else {
       if (session?.user) {

@@ -8,6 +8,7 @@ import { FaCity, FaUser } from "react-icons/fa";
 import { HiIdentification } from "react-icons/hi";
 import { IoIosSend, IoMdClose } from "react-icons/io";
 import { MdAttachMoney, MdOutlineCategory } from "react-icons/md";
+import { RiUser2Fill } from "react-icons/ri";
 import { VscChromeClose } from "react-icons/vsc";
 
 function ListLeadCard({ lead, fetchLeads }) {
@@ -82,14 +83,18 @@ function ListLeadCard({ lead, fetchLeads }) {
     <div
       {...conditionalProp}
       key={lead._id}
-      className={`flex gap-3 flex-col p-3 w-full min-h-[175px] h-[175px] ${
+      className={`flex gap-3 flex-col p-3 w-full min-h-[190px] h-[190px] ${
         lead.perdido ? "bg-red-100" : "bg-[#fff]"
       } border border-gray-200 shadow-md`}
     >
+      <div className="flex items-center justify-center gap-2 text-gray-700 text-xs">
+        <RiUser2Fill style={{ color: "#003d5b" }} />
+        <h1 className="font-medium">{lead.vendedor}</h1>
+      </div>
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center gap-2 text-gray-700">
           <HiIdentification style={{ color: "#15599a" }} />
-          <h1 className="font-medium text-sm">{lead.nome}</h1>
+          <h1 className="font-medium text-xs">{lead.nome}</h1>
         </div>
         {lead.contratoSolicitado ? (
           <div className="flex items-center gap-1 text-green-600 text-xs">
@@ -99,17 +104,17 @@ function ListLeadCard({ lead, fetchLeads }) {
         ) : null}
         <div className="flex items-center gap-2 text-gray-700">
           <FaCity style={{ color: "#fead61" }} />
-          <h1 className="font-medium text-sm">{lead.cidade}</h1>
+          <h1 className="font-medium text-xs">{lead.cidade}</h1>
         </div>
       </div>
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center gap-2 text-gray-700">
           <FaUser style={{ color: "#003d5b" }} />
-          <h1 className="font-medium text-sm">{lead.responsavel}</h1>
+          <h1 className="font-medium text-xs">{lead.responsavel}</h1>
         </div>
         <div className="flex items-center gap-2 text-gray-700">
           <IoIosSend style={{ color: "#16B010" }} />
-          <h1 className="font-medium">
+          <h1 className="font-medium text-xs">
             {lead.dataDeEnvio
               ? dayjs(lead.dataDeEnvio).add(4, "hour").format("DD/MM/YYYY")
               : "-"}
@@ -119,7 +124,7 @@ function ListLeadCard({ lead, fetchLeads }) {
       <div className="w-full flex items-center justify-between">
         <div className="flex flex-col items-start text-gray-700">
           <h1 className="text-xxs font-medium">CONSUMO</h1>
-          <h1 className="font-medium text-sm">
+          <h1 className="font-medium text-xs">
             R${" "}
             {lead.consumo
               ? Number(lead.consumo).toLocaleString("pt-br", {
@@ -130,7 +135,7 @@ function ListLeadCard({ lead, fetchLeads }) {
         </div>
         <div className="flex flex-col items-end text-gray-700">
           <h1 className="text-xxs font-medium">NICHO</h1>
-          <h1 className="font-medium text-sm">
+          <h1 className="font-medium text-xs">
             {lead.nicho ? lead.nicho : "-"}
           </h1>
         </div>
@@ -151,7 +156,7 @@ function ListLeadCard({ lead, fetchLeads }) {
           {!lead.perdido ? (
             loseLeadInfo.open ? (
               <div className="p-2 absolute w-[200%] h-[150px] bg-[#fff] shadow-lg border border-gray-200 flex flex-col">
-                <div className="w-full flex items-center justify-between text-sm border-b border-gray-200 pb-1">
+                <div className="w-full flex items-center justify-between text-xs border-b border-gray-200 pb-1">
                   <h1 className="font-medium">PERDA DE LEAD</h1>
                   <button>
                     <VscChromeClose
@@ -196,13 +201,13 @@ function ListLeadCard({ lead, fetchLeads }) {
                 }
                 className="flex items-center gap-1 p-1 cursor-pointer rounded border border-red-300 text-red-300 hover:border-red-500 hover:text-red-500 hover:scale-105 duration-300"
               >
-                <p className="text-sm">PERDER</p>
+                <p className="text-xs">PERDER</p>
                 <IoMdClose />
               </div>
             )
           ) : (
             <div>
-              <p className="text-sm text-red-500">PERDIDO</p>
+              <p className="text-xs text-red-500">PERDIDO</p>
             </div>
           )}
         </div>

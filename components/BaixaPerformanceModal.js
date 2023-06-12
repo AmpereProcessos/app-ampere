@@ -126,6 +126,16 @@ function BaixaPerformanceModal({ info, setModalIsOpen, handleUpdates }) {
                     >
                       EM ANDAMENTO
                     </h1>
+                    <h1
+                      onClick={() =>
+                        setInfo({ ...infoHolder, status: "EXECUTADO" })
+                      }
+                      className={`p-2 rounded cursor-pointer transition duration-300 ease-in-out hover:scale-105 text-xs border border-yellow-500 text-yellow-500 font-bold ${
+                        infoHolder.status == "EXECUTADO" ? "" : "opacity-30"
+                      }`}
+                    >
+                      EXECUTADO
+                    </h1>
                   </>
                 )
               ) : (

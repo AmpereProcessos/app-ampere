@@ -10,6 +10,7 @@ import { MdSignalWifiStatusbarConnectedNoInternet4 } from "react-icons/md";
 import BaixaPerformanceModal from "../../components/BaixaPerformanceModal";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
+import SelectInput from "../../components/SelectInput";
 
 function getProblemsNotBooked(badPerformers, monitoramentoBook) {
   const nomeUsinaSet = new Set(monitoramentoBook.map((item) => item.nomeUsina));
@@ -39,6 +40,7 @@ function BaixaPerformance() {
 
   const [filters, setFilters] = useState({
     searchFilter: "",
+    status: "TODOS",
   });
   const [inProgress, setInProgress] = useState(false);
   const statusStyles = {
@@ -49,6 +51,10 @@ function BaixaPerformance() {
     "EM ANDAMENTO": {
       textColor: "text-blue-300",
       borderColor: "border-blue-300",
+    },
+    EXECUTADO: {
+      textColor: "text-yellow-500",
+      borderColor: "border-yellow-500",
     },
     RESOLVIDO: {
       textColor: "text-green-400",
@@ -155,14 +161,26 @@ function BaixaPerformance() {
     setModalIsOpen(true);
   }
   function handleSearchFilter(value) {
-    setFilters({ ...filters, searchFilter: value });
+    setFilters((prev) => ({ ...prev, searchFilter: value }));
     if (value != "" || " ") {
       let filtered = monitoramentoBook.filter((item) =>
         item.nomeUsina.toUpperCase().includes(value.toUpperCase())
       );
       setFilteredMonitoramentoBook(filtered);
+      return filtered;
     } else {
       setFilteredMonitoramentoBook(monitoramentoBook);
+      return monitoramentoBook;
+    }
+  }
+  function handleFilterByStatus(value) {
+    var filtered = handleSearchFilter(filters.searchFilter);
+    if (value != "TODOS") {
+      setFilters((prev) => ({ ...prev, status: value }));
+      filtered = filtered.filter((x) => x.status == value);
+      setFilteredMonitoramentoBook(filtered);
+    } else {
+      setFilteredMonitoramentoBook(filtered);
     }
   }
   useEffect(() => {
@@ -270,6 +288,18 @@ function BaixaPerformance() {
               ANÁLISES EM ABERTO ({monitoramentoBook.length})
             </h1>
             <div className="flex items-center justify-center gap-2 my-2">
+              <SelectInput
+                label={"STATUS"}
+                value={filters.status}
+                editable={true}
+                handleChange={(value) => handleFilterByStatus(value)}
+                options={[
+                  { label: "PENDENTE", value: "PENDENTE" },
+                  { label: "EM ANDAMENTO", value: "EM ANDAMENTO" },
+                  { label: "EXECUTADO", value: "EXECUTADO" },
+                  { label: "TODOS", value: "TODOS" },
+                ]}
+              />
               <input
                 type={"text"}
                 className={

@@ -7,6 +7,7 @@ function FormVisitaTecnicaDesenho({
   images,
   setImages,
   uploadImages,
+  sendStatus,
 }) {
   const [imagesOK, setImagesOK] = useState(false);
   const [msg, setMsg] = useState({
@@ -155,9 +156,10 @@ function FormVisitaTecnicaDesenho({
       <div className="flex justify-center items-center mt-3">
         <button
           onClick={handleSend}
-          className="bg-[#fead61] hover:bg-[#15599a] text-center hover:text-white font-bold p-2 rounded w-fit"
+          disabled={sendStatus == "loading"}
+          className="bg-[#fead61] hover:bg-[#15599a] text-center hover:text-white font-bold p-2 rounded w-fit disabled:bg-gray-500"
         >
-          ENVIAR FORMULÁRIO
+          {sendStatus == "loading" ? "CARREGANDO" : "ENVIAR FORMULÁRIO"}
         </button>
       </div>
     </div>

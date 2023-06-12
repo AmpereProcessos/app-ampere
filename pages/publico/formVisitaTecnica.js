@@ -15,6 +15,7 @@ import axios from "axios";
 import FormVisitaTecnicaOrcamentacao from "../../components/FormVisitaTecnicaOrcamentacao";
 import FormVisitaTecnicaDesenho from "../../components/FormVisitaTecnicaDesenho";
 function FormVisitaTecnica() {
+  const [sendStatus, setSendStatus] = useState();
   function formatPhoneNumber(value) {
     if (!value) return "";
     value = value.replace(/\D/g, "");
@@ -82,6 +83,7 @@ function FormVisitaTecnica() {
   const [msg, setMsg] = useState({ text: "", color: "" });
   var links = [];
   async function uploadImages() {
+    setSendStatus("loading");
     setMsg({ text: "Processando...", color: "text-[#15599a]" });
     let arrOfImagesKeys = Object.keys(images);
     try {
@@ -96,6 +98,7 @@ function FormVisitaTecnica() {
           imageRef,
           images[arrOfImagesKeys[i]].file
         ).catch((err) => {
+          setSendStatus("failure");
           throw `ERRO AO ENVIAR ${images[arrOfImagesKeys[i]].title}`;
         });
         console.log(res.metadata);
@@ -123,9 +126,14 @@ function FormVisitaTecnica() {
       })
       .then((res) => {
         setMsg({ text: "Solicitação enviada!", color: "text-green-500" });
+
         setTimeout(() => {
           location.reload();
         }, 2800);
+        setSendStatus("success");
+      })
+      .catch((err) => {
+        setSendStatus("failure");
       });
   }
   function renderFirstStage(type) {
@@ -138,6 +146,7 @@ function FormVisitaTecnica() {
             images={images}
             setImages={setImages}
             uploadImages={uploadImages}
+            sendStatus={sendStatus}
             voltar={() => setEstagio((prevStage) => prevStage - 1)}
           />
         );
@@ -160,6 +169,7 @@ function FormVisitaTecnica() {
             images={images}
             setImages={setImages}
             uploadImages={uploadImages}
+            sendStatus={sendStatus}
           />
         );
       case "ORÇAMENTAÇÃO":
@@ -170,6 +180,7 @@ function FormVisitaTecnica() {
             images={images}
             setImages={setImages}
             uploadImages={uploadImages}
+            sendStatus={sendStatus}
           />
         );
       default:
@@ -214,6 +225,7 @@ function FormVisitaTecnica() {
             setImages={setImages}
             avancar={() => setEstagio((prevStage) => prevStage + 1)}
             uploadImages={uploadImages}
+            sendStatus={sendStatus}
           />
         )}
         {estagio == 1 && renderFirstStage(dados.tipoDeSolicitacao)}
@@ -255,6 +267,7 @@ function FormVisitaTecnica() {
             dados={dados}
             setDados={setDados}
             images={images}
+            sendStatus={sendStatus}
             setImages={setImages}
             uploadImages={uploadImages}
           />

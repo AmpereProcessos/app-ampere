@@ -81,7 +81,7 @@ function ModalComercial({
   async function notifyContractSigning() {
     const notifyArr = [
       {
-        destinatario: "6318db05929e9f8731d8d9bb",
+        destinatario: "6353eb83ef4e1a367a877949",
         remetente: "SISTEMA",
         mensagem: `Contrato atualizado para ASSINADO.`,
         projetoReferencia: project.qtde,

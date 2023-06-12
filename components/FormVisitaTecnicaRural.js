@@ -9,6 +9,7 @@ function FormVisitaTecnicaRural({
   images,
   setImages,
   uploadImages,
+  sendStatus,
 }) {
   const [msg, setMsg] = useState({ text: "", color: "" });
   function validateFields() {
@@ -1206,10 +1207,11 @@ function FormVisitaTecnicaRural({
       </div>
       <div className="flex items-center justify-center gap-2">
         <button
+          disabled={sendStatus == "loading"}
           onClick={uploadImages}
-          className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
+          className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded disabled:bg-gray-500"
         >
-          ENVIAR FORMULÁRIO
+          {sendStatus == "loading" ? "CARREGANDO" : "ENVIAR FORMULÁRIO"}
         </button>
       </div>
     </div>

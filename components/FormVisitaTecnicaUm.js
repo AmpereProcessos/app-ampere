@@ -17,6 +17,7 @@ function FormVisitaTecnicaUm({
   setImages,
   avancar,
   uploadImages,
+  sendStatus,
 }) {
   const [msg, setMsg] = useState({
     text: "",
@@ -703,10 +704,11 @@ function FormVisitaTecnicaUm({
       ].includes(dados.tipoDeSolicitacao) ? (
         <div className="flex justify-center items-center mt-3">
           <button
+            disabled={sendStatus == "loading"}
             onClick={handleConclusion}
-            className="bg-[#fead61] hover:bg-[#15599a] text-center hover:text-white font-bold p-2 rounded w-fit"
+            className="bg-[#fead61] hover:bg-[#15599a] text-center hover:text-white font-bold p-2 rounded w-fit disabled:bg-gray-500"
           >
-            ENVIAR FORMULÁRIO
+            {sendStatus == "loading" ? "CARREGANDO" : "ENVIAR FORMULÁRIO"}
           </button>
         </div>
       ) : (

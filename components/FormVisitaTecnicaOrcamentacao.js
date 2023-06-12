@@ -7,6 +7,7 @@ function FormVisitaTecnicaOrcamentacao({
   uploadImages,
   images,
   setImages,
+  sendStatus,
 }) {
   const [imagesOK, setImagesOK] = useState(false);
   const [msg, setMsg] = useState({
@@ -142,10 +143,11 @@ function FormVisitaTecnicaOrcamentacao({
       )}
       <div className="flex justify-center items-center mt-3">
         <button
+          disabled={sendStatus == "loading"}
           onClick={handleSend}
-          className="bg-[#fead61] hover:bg-[#15599a] text-center hover:text-white font-bold p-2 rounded w-fit"
+          className="bg-[#fead61] hover:bg-[#15599a] text-center hover:text-white font-bold p-2 rounded w-fit disabled:bg-gray-500"
         >
-          ENVIAR FORMULÁRIO
+          {sendStatus == "loading" ? "CARREGANDO" : "ENVIAR FORMULÁRIO"}
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import connectToDatabase from "../../../utils/connectDb";
 import connectToVendedoresDatabase from "../../../utils/auxiliaresDb";
 import { ObjectId } from "mongodb";
+import { vendedores } from "../../../utils/constants";
 export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
@@ -31,7 +32,7 @@ export default async function handler(req, res) {
               vendedor: "$vendedor.nome",
             },
             total: {
-              $sum: "$sistema.potPico",
+              $sum: "$sistema.valorProjeto",
             },
             count: { $count: {} },
           },
@@ -48,13 +49,21 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    let newArr = result.map((item) => {
+    const filtered = result.filter((x) => {
+      const sellerInfo = vendedores.find(
+        (seller) => seller.nome == x._id.vendedor && seller.ativo == true
+      );
+
+      if (sellerInfo) return true;
+      else return false;
+    });
+    let newArr = filtered.map((item) => {
       return {
         vendedor: item._id.vendedor,
         ano: item._id.ano,
         mes: item._id.mes,
         numProjetos: item.count,
-        potVendida: item.total,
+        valorVendido: item.total,
       };
     });
     res.json(newArr);
@@ -68,8 +77,7 @@ export default async function handler(req, res) {
       { _id: ObjectId(id) },
       { $set: { [ano]: novasMetas } }
     );
-    console.log(id);
-    console.log(req.body);
+
     res.json(newObj);
   }
 }

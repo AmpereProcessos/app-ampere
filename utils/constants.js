@@ -244,6 +244,7 @@ export const vendedores = [
     qualificacao: "MASTER",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: true,
   },
   {
     nome: "ARTUR MILANE",
@@ -252,6 +253,7 @@ export const vendedores = [
     qualificacao: "PLENO",
     comissaoInside: 1,
     comissaoAtivo: 2,
+    ativo: true,
   },
   {
     nome: "CARLOS MARQUES",
@@ -260,6 +262,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: false,
   },
   {
     nome: "DEVISSON LIMA",
@@ -268,6 +271,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 1,
     comissaoAtivo: 2,
+    ativo: true,
   },
   {
     nome: "DIOMAR HONORIO",
@@ -276,6 +280,7 @@ export const vendedores = [
     qualificacao: "PLENO",
     comissaoInside: 4,
     comissaoAtivo: 5,
+    ativo: true,
   },
   {
     nome: "GETULIO EDUARDO",
@@ -284,6 +289,7 @@ export const vendedores = [
     qualificacao: "PLENO",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: false,
   },
   {
     nome: "GLAIDSTONE JOSÉ",
@@ -292,6 +298,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 1,
     comissaoAtivo: 2,
+    ativo: true,
   },
   {
     nome: "JESSICA PARANAIBA",
@@ -300,6 +307,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: false,
   },
   {
     nome: "JORGINHO HABIB",
@@ -308,6 +316,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 2,
     comissaoAtivo: 3,
+    ativo: false,
   },
   {
     nome: "JULIANO SILVA",
@@ -316,6 +325,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 2,
     comissaoAtivo: 4,
+    ativo: true,
   },
   {
     nome: "MATHEUS OLIVEIRA",
@@ -324,6 +334,7 @@ export const vendedores = [
     qualificacao: "MASTER",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: true,
   },
   {
     nome: "NEIDSON FILHO",
@@ -332,6 +343,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 4,
     comissaoAtivo: 5,
+    ativo: true,
   },
   {
     nome: "RAFAEL FEO",
@@ -340,6 +352,7 @@ export const vendedores = [
     qualificacao: "PLENO",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: true,
   },
   {
     nome: "ROMES ALVES",
@@ -348,6 +361,7 @@ export const vendedores = [
     qualificacao: "PLENO",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: false,
   },
   {
     nome: "RODRIGO MORAIS",
@@ -356,6 +370,7 @@ export const vendedores = [
     qualificacao: "PLENO",
     comissaoInside: 3,
     comissaoAtivo: 4,
+    ativo: true,
   },
   {
     nome: "LUCIANO MUNIZ",
@@ -364,6 +379,7 @@ export const vendedores = [
     qualificacao: "PLENO",
     comissaoInside: 2,
     comissaoAtivo: 4,
+    ativo: false,
   },
   {
     nome: "DIONISIO JUNIOR",
@@ -372,6 +388,7 @@ export const vendedores = [
     qualificacao: "PLENO",
     comissaoInside: 4,
     comissaoAtivo: 5,
+    ativo: true,
   },
   {
     nome: "LEANDRO VIALI",
@@ -380,6 +397,7 @@ export const vendedores = [
     qualificacao: "INSIDE JUNIOR",
     comissaoInside: 0.5,
     comissaoAtivo: 0.5,
+    ativo: true,
   },
   {
     nome: "GUILHERME LIMA",
@@ -388,6 +406,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: false,
   },
   {
     nome: "LUCIANO JORGE",
@@ -396,6 +415,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: false,
   },
   {
     nome: "STENIO DE ASSIS",
@@ -404,6 +424,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 2,
     comissaoAtivo: 4,
+    ativo: true,
   },
   {
     nome: "RONIVALDO MARTINS",
@@ -412,6 +433,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 2,
     comissaoAtivo: 4,
+    ativo: true,
   },
   {
     nome: "DIOGO PAULINO",
@@ -420,6 +442,7 @@ export const vendedores = [
     qualificacao: "MASTER",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: true,
   },
   {
     nome: "ADRIANO ARANTES",
@@ -428,6 +451,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: true,
   },
   {
     nome: "ARIÁDNNY APARECIDA",
@@ -436,6 +460,7 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: false,
   },
   {
     nome: "DÁFINY VILLANO",
@@ -444,10 +469,12 @@ export const vendedores = [
     qualificacao: "INSIDE JUNIOR",
     comissaoInside: 0.9,
     comissaoAtivo: 0.9,
+    ativo: false,
   },
   {
     nome: "ARTHUR ALEXANDER",
     cod: 54,
+    ativo: false,
   },
   {
     nome: "FELIPE RIBEIRO",
@@ -456,10 +483,12 @@ export const vendedores = [
     qualificacao: "INSIDE SENIOR",
     comissaoInside: 0.25,
     comissaoAtivo: 0.25,
+    ativo: false,
   },
   {
     nome: "ADAILSON COSTA",
     cod: 57,
+    ativo: false,
   },
   {
     nome: "LUCIANO LOPES",
@@ -468,12 +497,14 @@ export const vendedores = [
     qualificacao: "JUNIOR",
     comissaoInside: 2,
     comissaoAtivo: 4,
+    ativo: true,
   },
   {
     nome: "RODRIGO DE MORAIS",
     cod: 63,
     cargo: "EXTERNO",
     qualificacao: "PLENO",
+    ativo: true,
   },
   {
     nome: "EURIPEDES JUNIOR",
@@ -482,16 +513,19 @@ export const vendedores = [
     qualificacao: "MASTER",
     comissaoInside: 0,
     comissaoAtivo: 0,
+    ativo: true,
   },
   {
     nome: "FRANCO MUSTAFE",
     cod: 64,
     comissaoInside: 2,
     comissaoAtivo: 4,
+    ativo: false,
   },
   {
     nome: "ALLISSON OSCAR",
     cod: 65,
+    ativo: false,
   },
   {
     nome: "WILLIAM MENEZES",
@@ -504,48 +538,58 @@ export const vendedores = [
     qualificacao: "INSIDE JUNIOR",
     comissaoInside: 0.9,
     comissaoAtivo: 0.9,
+    ativo: false,
   },
   {
     nome: "CÉLIO JUNIOR",
     cod: 68,
+    ativo: false,
   },
   {
     nome: "THIAGO DE PAULA",
     cod: 69,
+    ativo: true,
   },
   {
     nome: "GLEITON RESENDE",
     cod: 70,
+    ativo: false,
   },
   {
     nome: "ANA PAULA PEREIRA",
     cod: 71,
+    ativo: false,
   },
   {
     nome: "GRASIELE DA SILVA",
     cod: 72,
+    ativo: false,
   },
   {
     nome: "MARCUS VINÍCIUS",
     cod: 73,
     comissaoInside: 2,
     comissaoAtivo: 4,
+    ativo: true,
   },
   {
     nome: "LEONARDO VILARINHO",
     cod: 75,
     comissaoInside: 1,
     comissaoAtivo: 1.5,
+    ativo: true,
   },
   {
     nome: "ROBERTH JUNQUEIRA GONÇALVES",
     cod: 75,
     comissaoInside: 2,
     comissaoAtivo: 4,
+    ativo: true,
   },
   {
     nome: "GABRIEL MARTINS",
     cod: 999,
+    ativo: true,
   },
   {
     nome: "NÃO DEFINIDO",

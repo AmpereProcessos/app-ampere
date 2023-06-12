@@ -18,7 +18,7 @@ function VendedorMetaCard({ vendedor, ano, getVendedoresInfo }) {
         }, 1500);
       });
   }
-  console.log(infoHolder);
+
   return (
     <div
       className={`grid grid-cols-14 ${

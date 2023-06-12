@@ -42,7 +42,6 @@ function GestaoTimeDeVendas() {
       newArrSellersInfo = newArrSellersInfo.filter((item) =>
         filters.seller.includes(item.nome)
       );
-      console.log(newArrSellersInfo);
     }
 
     if (!newArr) {
@@ -60,7 +59,7 @@ function GestaoTimeDeVendas() {
   const [sellersInfo, setSellersInfo] = useState([]);
   const [filteredSellersInfo, setFilteredSellersInfo] = useState([]);
   const [sellers, setSellers] = useState(
-    vendedores.filter((x) => x.nome != "NÃO DEFINIDO")
+    vendedores.filter((x) => x.nome != "NÃO DEFINIDO" && !!x.ativo)
   );
   // Fetch functions
   function getStats(ano) {
@@ -72,6 +71,7 @@ function GestaoTimeDeVendas() {
   }
   function getVendedoresInfo() {
     axios.get("/api/auxiliares/vendedoresInfo").then((res) => {
+      console.log(res.data);
       setSellersInfo(res.data);
       setFilteredSellersInfo(res.data);
     });
@@ -89,35 +89,56 @@ function GestaoTimeDeVendas() {
           ? vendedorInfo[filters.yearFetched][mes - 1]
           : 0;
       if (mesObj) {
-        let text = `${Number(mesObj.potVendida)
+        let text = `${Number(mesObj.valorVendido)
           .toFixed(2)
           .replace(".", ",")} / ${metaVendedor}`;
-        if (mesObj.potVendida > metaVendedor) {
+        if (mesObj.valorVendido > metaVendedor) {
           return {
-            potVendida: Number(mesObj.potVendida).toFixed(2).replace(".", ","),
-            meta: metaVendedor,
+            valorVendido: `R$ ${Number(mesObj.valorVendido).toLocaleString(
+              "pt-br",
+              {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }
+            )}`,
+            meta: `R$ ${Number(metaVendedor).toLocaleString("pt-br", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`,
             color: "bg-green-500 text-white",
             borderColor: "border-white",
           };
         } else {
           return {
-            potVendida: Number(mesObj.potVendida).toFixed(2).replace(".", ","),
-            meta: metaVendedor,
+            valorVendido: `R$ ${Number(mesObj.valorVendido).toLocaleString(
+              "pt-br",
+              {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }
+            )}`,
+            meta: `R$ ${Number(metaVendedor).toLocaleString("pt-br", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`,
             color: "bg-red-500 text-white",
             borderColor: "border-white",
           };
         }
       } else {
         return {
-          potVendida: "-",
-          meta: metaVendedor,
+          valorVendido: "-",
+          meta: `R$ ${Number(metaVendedor).toLocaleString("pt-br", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`,
           color: "bg-white text-gray-600",
           borderColor: "border-gray-600",
         };
       }
     } else {
       return {
-        potVendida: "-",
+        valorVendido: "-",
         meta: "-",
         color: "bg-white text-gray-600",
         borderColor: "border-gray-600",
@@ -134,7 +155,6 @@ function GestaoTimeDeVendas() {
       }
     }
   }, [session]);
-  console.log(filteredSellersInfo);
   // console.log(stats);
 
   if (status == "loading") return <LoadingPage />;
@@ -260,7 +280,7 @@ function GestaoTimeDeVendas() {
                       </p>
                       <p className="text-center pt-1">
                         ALCANÇADO:{" "}
-                        {getMonthlyPerformance(vendedor.nome, 1).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 1).valorVendido}
                       </p>
                     </>
                   ) : (
@@ -273,7 +293,7 @@ function GestaoTimeDeVendas() {
                         {getMonthlyPerformance(vendedor.nome, 1).meta}
                       </p>
                       <p className="text-center pt-1">
-                        {getMonthlyPerformance(vendedor.nome, 1).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 1).valorVendido}
                       </p>
                     </>
                   )}
@@ -294,7 +314,7 @@ function GestaoTimeDeVendas() {
                       </p>
                       <p className="text-center pt-1">
                         ALCANÇADO:{" "}
-                        {getMonthlyPerformance(vendedor.nome, 2).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 2).valorVendido}
                       </p>
                     </>
                   ) : (
@@ -307,7 +327,7 @@ function GestaoTimeDeVendas() {
                         {getMonthlyPerformance(vendedor.nome, 2).meta}
                       </p>
                       <p className="text-center pt-1">
-                        {getMonthlyPerformance(vendedor.nome, 2).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 2).valorVendido}
                       </p>
                     </>
                   )}
@@ -328,7 +348,7 @@ function GestaoTimeDeVendas() {
                       </p>
                       <p className="text-center pt-1">
                         ALCANÇADO:{" "}
-                        {getMonthlyPerformance(vendedor.nome, 3).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 3).valorVendido}
                       </p>
                     </>
                   ) : (
@@ -341,7 +361,7 @@ function GestaoTimeDeVendas() {
                         {getMonthlyPerformance(vendedor.nome, 3).meta}
                       </p>
                       <p className="text-center pt-1">
-                        {getMonthlyPerformance(vendedor.nome, 3).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 3).valorVendido}
                       </p>
                     </>
                   )}
@@ -362,7 +382,7 @@ function GestaoTimeDeVendas() {
                       </p>
                       <p className="text-center pt-1">
                         ALCANÇADO:{" "}
-                        {getMonthlyPerformance(vendedor.nome, 4).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 4).valorVendido}
                       </p>
                     </>
                   ) : (
@@ -375,7 +395,7 @@ function GestaoTimeDeVendas() {
                         {getMonthlyPerformance(vendedor.nome, 4).meta}
                       </p>
                       <p className="text-center pt-1">
-                        {getMonthlyPerformance(vendedor.nome, 4).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 4).valorVendido}
                       </p>
                     </>
                   )}
@@ -396,7 +416,7 @@ function GestaoTimeDeVendas() {
                       </p>
                       <p className="text-center pt-1">
                         ALCANÇADO:{" "}
-                        {getMonthlyPerformance(vendedor.nome, 5).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 5).valorVendido}
                       </p>
                     </>
                   ) : (
@@ -409,7 +429,7 @@ function GestaoTimeDeVendas() {
                         {getMonthlyPerformance(vendedor.nome, 5).meta}
                       </p>
                       <p className="text-center pt-1">
-                        {getMonthlyPerformance(vendedor.nome, 5).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 5).valorVendido}
                       </p>
                     </>
                   )}
@@ -430,7 +450,7 @@ function GestaoTimeDeVendas() {
                       </p>
                       <p className="text-center pt-1">
                         ALCANÇADO:{" "}
-                        {getMonthlyPerformance(vendedor.nome, 6).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 6).valorVendido}
                       </p>
                     </>
                   ) : (
@@ -443,7 +463,7 @@ function GestaoTimeDeVendas() {
                         {getMonthlyPerformance(vendedor.nome, 6).meta}
                       </p>
                       <p className="text-center pt-1">
-                        {getMonthlyPerformance(vendedor.nome, 6).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 6).valorVendido}
                       </p>
                     </>
                   )}
@@ -464,7 +484,7 @@ function GestaoTimeDeVendas() {
                       </p>
                       <p className="text-center pt-1">
                         ALCANÇADO:{" "}
-                        {getMonthlyPerformance(vendedor.nome, 7).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 7).valorVendido}
                       </p>
                     </>
                   ) : (
@@ -477,7 +497,7 @@ function GestaoTimeDeVendas() {
                         {getMonthlyPerformance(vendedor.nome, 7).meta}
                       </p>
                       <p className="text-center pt-1">
-                        {getMonthlyPerformance(vendedor.nome, 7).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 7).valorVendido}
                       </p>
                     </>
                   )}
@@ -498,7 +518,7 @@ function GestaoTimeDeVendas() {
                       </p>
                       <p className="text-center pt-1">
                         ALCANÇADO:{" "}
-                        {getMonthlyPerformance(vendedor.nome, 8).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 8).valorVendido}
                       </p>
                     </>
                   ) : (
@@ -511,7 +531,7 @@ function GestaoTimeDeVendas() {
                         {getMonthlyPerformance(vendedor.nome, 8).meta}
                       </p>
                       <p className="text-center pt-1">
-                        {getMonthlyPerformance(vendedor.nome, 8).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 8).valorVendido}
                       </p>
                     </>
                   )}
@@ -532,7 +552,7 @@ function GestaoTimeDeVendas() {
                       </p>
                       <p className="text-center pt-1">
                         ALCANÇADO:{" "}
-                        {getMonthlyPerformance(vendedor.nome, 9).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 9).valorVendido}
                       </p>
                     </>
                   ) : (
@@ -545,7 +565,7 @@ function GestaoTimeDeVendas() {
                         {getMonthlyPerformance(vendedor.nome, 9).meta}
                       </p>
                       <p className="text-center pt-1">
-                        {getMonthlyPerformance(vendedor.nome, 9).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 9).valorVendido}
                       </p>
                     </>
                   )}
@@ -566,7 +586,7 @@ function GestaoTimeDeVendas() {
                       </p>
                       <p className="text-center pt-1">
                         ALCANÇADO:{" "}
-                        {getMonthlyPerformance(vendedor.nome, 10).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 10).valorVendido}
                       </p>
                     </>
                   ) : (
@@ -579,7 +599,7 @@ function GestaoTimeDeVendas() {
                         {getMonthlyPerformance(vendedor.nome, 10).meta}
                       </p>
                       <p className="text-center pt-1">
-                        {getMonthlyPerformance(vendedor.nome, 10).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 10).valorVendido}
                       </p>
                     </>
                   )}
@@ -600,7 +620,7 @@ function GestaoTimeDeVendas() {
                       </p>
                       <p className="text-center pt-1">
                         ALCANÇADO:{" "}
-                        {getMonthlyPerformance(vendedor.nome, 11).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 11).valorVendido}
                       </p>
                     </>
                   ) : (
@@ -613,7 +633,7 @@ function GestaoTimeDeVendas() {
                         {getMonthlyPerformance(vendedor.nome, 11).meta}
                       </p>
                       <p className="text-center pt-1">
-                        {getMonthlyPerformance(vendedor.nome, 11).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 11).valorVendido}
                       </p>
                     </>
                   )}
@@ -634,7 +654,7 @@ function GestaoTimeDeVendas() {
                       </p>
                       <p className="text-center pt-1">
                         ALCANÇADO:{" "}
-                        {getMonthlyPerformance(vendedor.nome, 12).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 12).valorVendido}
                       </p>
                     </>
                   ) : (
@@ -647,7 +667,7 @@ function GestaoTimeDeVendas() {
                         {getMonthlyPerformance(vendedor.nome, 12).meta}
                       </p>
                       <p className="text-center pt-1">
-                        {getMonthlyPerformance(vendedor.nome, 12).potVendida}
+                        {getMonthlyPerformance(vendedor.nome, 12).valorVendido}
                       </p>
                     </>
                   )}

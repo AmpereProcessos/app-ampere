@@ -32,9 +32,14 @@ export default async function handler(req, res) {
             aprovacao: 1,
           },
         },
+        {
+          $sort: {
+            dataSolicitacao: -1,
+          },
+        },
       ])
       .toArray();
-    res.json(arr);
+    res.status(200).json(arr);
   } else if (req.method === "PUT") {
     const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);
     const collection = db.collection("contrato");

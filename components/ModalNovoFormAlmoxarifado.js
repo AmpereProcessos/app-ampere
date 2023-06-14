@@ -257,7 +257,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                       }}
                       options={clientes.map((cliente) => {
                         return {
-                          label: cliente.nomeDoContrato,
+                          label: `${cliente.qtde}-${cliente.nomeDoContrato}`,
                           value: {
                             id: cliente._id,
                             qtde: cliente.qtde,

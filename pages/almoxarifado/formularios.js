@@ -25,6 +25,7 @@ function Formularios() {
   const [filters, setFilters] = useState({
     efetivados: false,
     pesquisa: "",
+    codigo: "",
   });
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -54,6 +55,12 @@ function Formularios() {
         form.nomeDoContrato
           .toUpperCase()
           .includes(filters.pesquisa.toUpperCase())
+      );
+    }
+    if (filters.codigo.trim().length > 0) {
+      if (!newArr) newArr = forms;
+      newArr = newArr.filter((form) =>
+        form.codigoProjeto?.toString().includes(filters.codigo)
       );
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field != null) {
@@ -131,6 +138,15 @@ function Formularios() {
               placeholder="DIGITE O NOME DO CONTRATO"
               onChange={(e) =>
                 setFilters({ ...filters, pesquisa: e.target.value })
+              }
+            />
+            <input
+              type={"number"}
+              value={filters.codigo}
+              className="outline-none p-1.5  w-full lg:w-[200px] rounded border border-gray-200 placeholder:italic"
+              placeholder="DIGITE O CÓDIGO DO PROJETO"
+              onChange={(e) =>
+                setFilters({ ...filters, codigo: e.target.value })
               }
             />
 

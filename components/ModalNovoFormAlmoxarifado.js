@@ -307,7 +307,8 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                   className="text-xs grow text-center outline-none mt-2 lg:mt-0"
                 >
                   <option value={"A DEFINIR"}>A DEFINIR</option>
-                  <option value={"PABLO RODRIGUES"}>PABLO RODRIGUES</option>
+                  <option value={"DANNIEL RODRIGUES"}>DANNIEL RODRIGUES</option>
+                  <option value={"ALEX SANDRO"}>ALEX SANDRO</option>
                   <option value={"MATHEUS OLIVEIRA"}>MATHEUS OLIVEIRA</option>
                   <option value={"DIOGO PAULINO"}>DIOGO PAULINO</option>
                 </select>

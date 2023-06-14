@@ -24,13 +24,14 @@ export default async function handler(req, res) {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("material");
     let { changes, idFormulario, nomeDoContrato } = req.body;
+    // console.log(req.body);
     changes = changes.map((mat) => {
       const saida = mat.qtdeSaida ? mat.qtdeSaida : 0;
       const devolucao = mat.qtdeDevolucao ? mat.qtdeDevolucao : 0;
       const diff = saida - devolucao;
       const anterior = mat.qtdePreBaixa ? mat.qtdePreBaixa : 0;
       const novo = anterior - diff;
-      if (diff <= 0) return;
+      if (diff == 0) return;
       return {
         updateOne: {
           filter: { _id: new ObjectId(mat.id) },
@@ -56,6 +57,7 @@ export default async function handler(req, res) {
         },
       };
     });
+
     const filteredChanges = changes.filter((change) => !!change);
 
     await collection.bulkWrite(filteredChanges);

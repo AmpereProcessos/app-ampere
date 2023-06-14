@@ -1,9 +1,16 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TbExternalLink } from "react-icons/tb";
-function FormAlmoxarifadoCard({ form, handleOpenModal, getForms }) {
+function FormAlmoxarifadoCard({
+  form,
+  handleOpenModal,
+  getForms,
+  index,
+  forms,
+  setFilteredForms,
+}) {
   const [msg, setMsg] = useState({ text: "", color: "" });
   const [formInfo, setFormInfo] = useState(form);
   async function fetchSaidaDeObra(e, id) {
@@ -11,7 +18,6 @@ function FormAlmoxarifadoCard({ form, handleOpenModal, getForms }) {
     try {
       let { data } = await axios.get(`/api/projects/fetchDoc/${id}`);
       let projectPai = data[0];
-      console.log(projectPai);
       if (projectPai.obra?.saida) {
         setFormInfo({ ...formInfo, saidaDeObra: projectPai.obra.saida });
         await axios.put("/api/almoxarifado/formularios", {
@@ -20,7 +26,10 @@ function FormAlmoxarifadoCard({ form, handleOpenModal, getForms }) {
             saidaDeObra: projectPai.obra.saida,
           },
         });
-        getForms();
+        var previousForms = [...forms];
+        previousForms[index].saidaDeObra == projectPai.obra.saida;
+        setFilteredForms((prev) => previousForms);
+        // getForms();
       } else {
         setMsg({
           text: "Saída de obra não preenchida.",
@@ -41,6 +50,9 @@ function FormAlmoxarifadoCard({ form, handleOpenModal, getForms }) {
       return "bg-[#fff]";
     }
   }
+  useEffect(() => {
+    setFormInfo(form);
+  }, [form]);
   return (
     <div
       onClick={() => {
@@ -87,7 +99,7 @@ function FormAlmoxarifadoCard({ form, handleOpenModal, getForms }) {
             <p className="text-xs text-gray-600">
               {dayjs(formInfo.saidaDeObra).add(3, "hour").format("DD/MM/YYYY")}
             </p>
-          ) : formInfo.efetivado ? (
+          ) : formInfo.efetivado && form.idPai ? (
             <div
               onClick={(e) => fetchSaidaDeObra(e, form.idPai)}
               className="flex items-center cursor-pointer border border-black text-black hover:bg-black hover:text-white font-bold p-1 rounded transition duration-300 ease-in-out hover:scale-105"

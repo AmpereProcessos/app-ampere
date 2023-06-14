@@ -37,8 +37,9 @@ function Formularios() {
   const [modalForm, setModalForm] = useState({});
   function getForms() {
     axios.get("/api/almoxarifado/formularios").then((res) => {
-      setForms(res.data);
-      setFilteredForms(res.data);
+      const forms = [...res.data];
+      setForms(forms);
+      setFilteredForms(forms);
     });
   }
   function filterProjects() {
@@ -96,6 +97,7 @@ function Formularios() {
       }
     }
   }, [session]);
+
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
@@ -220,9 +222,12 @@ function Formularios() {
           <p className="uppercase font-bold text-sm">Novo Formulário</p>
         </div>
         <div className="flex  justify-around gap-3 mt-4 flex-wrap">
-          {filteredForms.map((form) => (
+          {filteredForms.map((form, index) => (
             <FormAlmoxarifadoCard
               key={form._id}
+              index={index}
+              forms={filteredForms}
+              setFilteredForms={setFilteredForms}
               getForms={getForms}
               form={form}
               handleOpenModal={handleOpenModal}

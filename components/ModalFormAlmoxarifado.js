@@ -87,7 +87,6 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
         const correspondentUpToDateItem = upToDateItems.filter(
           (i) => i._id == item.id
         )[0];
-        console.log("ITEM", item);
         return {
           id: item.id,
           nome: correspondentUpToDateItem.nome,
@@ -172,6 +171,65 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
       }, 2500);
     }
   }
+  async function resetForm() {
+    const { data: upToDateItems } = await axios.post(
+      "/api/almoxarifado/pesquisarMateriais",
+      { materials: dados.materiais }
+    );
+    var changesArr = dados.materiais.map((item) => {
+      const correspondentUpToDateItem = upToDateItems.filter(
+        (i) => i._id == item.id
+      )[0];
+      return {
+        id: item.id,
+        nome: correspondentUpToDateItem.nome,
+        precoUnit: correspondentUpToDateItem.preco,
+        qtdeDevolucao: item.qtdeSaida ? item.qtdeSaida : 0,
+        qtdeSaida: item.qtdeDevolucao ? item.qtdeDevolucao : 0,
+        qtdePreBaixa: correspondentUpToDateItem.qtde,
+      };
+    });
+    setResponseMessage({
+      status: "loading",
+      text: "Resetando formulários...",
+      color: "text-[#15599a]",
+    });
+    await axios.put("/api/almoxarifado/formularios", {
+      id: dados._id,
+      data: {
+        materiais: dados.materiais,
+        dataEfetivacao: null,
+        efetivado: null,
+      },
+    });
+    if (dados.idPai) {
+      setResponseMessage({
+        status: "loading",
+        text: "Atualizando informações do cliente...",
+        color: "text-[#15599a]",
+      });
+      await axios.post(`/api/projects/update/${dados.idPai}`, {
+        "material.lista": null,
+        "material.formularioId": null,
+      });
+    }
+    setResponseMessage({
+      status: "loading",
+      text: "Atualizando quantidades...",
+      color: "text-[#15599a]",
+    });
+    await axios.post("/api/almoxarifado/materiais", {
+      idFormulario: dados._id,
+      nomeDoContrato: dados.nomeDoContrato,
+      changes: changesArr,
+    });
+    setResponseMessage({
+      status: "success",
+      text: "Formulário resetado com sucesso.",
+      color: "text-green-500",
+    });
+    getForms();
+  }
   function saveChanges() {
     axios
       .put("/api/almoxarifado/formularios", {
@@ -190,7 +248,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
   useEffect(() => {
     getMaterials();
   }, []);
-  console.log(dados);
+
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -409,7 +467,24 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                     </p>
                   )}
                 </div>
-              ) : null}
+              ) : (
+                <div className="flex w-full justify-end my-2 gap-2 pr-4">
+                  {!responseMessage.status ? (
+                    <button
+                      onClick={() => resetForm()}
+                      className="p-2 rounded border-orange-500 text-orange-500 font-medium"
+                    >
+                      RESETAR
+                    </button>
+                  ) : (
+                    <p
+                      className={`text-center italic ${responseMessage.color}`}
+                    >
+                      {responseMessage.text}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

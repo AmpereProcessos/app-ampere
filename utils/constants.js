@@ -393,7 +393,7 @@ export const vendedores = [
   {
     nome: "LEANDRO VIALI",
     cod: 37,
-    cargo: "EXTERNO",
+    cargo: "INTERNO",
     qualificacao: "INSIDE JUNIOR",
     comissaoInside: 0.5,
     comissaoAtivo: 0.5,
@@ -581,7 +581,7 @@ export const vendedores = [
   },
   {
     nome: "ROBERTH JUNQUEIRA GONÇALVES",
-    cod: 75,
+    cod: 76,
     comissaoInside: 2,
     comissaoAtivo: 4,
     ativo: true,
@@ -589,6 +589,15 @@ export const vendedores = [
   {
     nome: "GABRIEL MARTINS",
     cod: 999,
+    ativo: true,
+  },
+  {
+    nome: "GABRIEL EMANUEL",
+    cod: 77,
+    cargo: "INTERNO",
+    qualificacao: "INSIDE JUNIOR",
+    comissaoInside: 0.5,
+    comissaoAtivo: 0.5,
     ativo: true,
   },
   {

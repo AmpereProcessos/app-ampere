@@ -253,7 +253,11 @@ function ControleAlmoxarifado({
                           ALTERAÇÃO DE QUANTIDADE
                         </h1>
                         <h1 className="text-sm font-medium">
-                          {alt.movimentacao ? "SAÍDA" : "ALTERAÇÃO MANUAL"}
+                          {alt.movimentacao
+                            ? alt.movimentacao < 0
+                              ? "SAÍDA"
+                              : "AJUSTE"
+                            : "ALTERAÇÃO MANUAL"}
                         </h1>
                       </div>
 

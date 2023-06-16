@@ -1868,200 +1868,214 @@ function ModalFormSolicitacao({
                           }}
                         />
                       </div>
-                      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 p-2">
-                        <div className="flex items-center justify-center">
-                          <SelectInput
-                            label={"TIPO DA LIGAÇÃO (NOVO LOCAL)"}
-                            editable={true}
-                            value={dados.tipoDaLigacao}
-                            handleChange={(value) =>
-                              setDados({ ...dados, tipoDaLigacao: value })
-                            }
-                            options={[
-                              {
-                                label: "NOVA",
-                                value: "NOVA",
-                              },
-                              {
-                                label: "EXISTENTE",
-                                value: "EXISTENTE",
-                              },
-                              {
-                                label: "NÃO DEFINIDO",
-                                value: "NÃO DEFINIDO",
-                              },
-                            ]}
-                          />
+                      {dados.mudancaLocal == "SIM" ? (
+                        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 p-2">
+                          <div className="flex items-center justify-center">
+                            <SelectInput
+                              label={"TIPO DA LIGAÇÃO (NOVO LOCAL)"}
+                              editable={true}
+                              value={dados.tipoDaLigacao}
+                              handleChange={(value) =>
+                                setDados({ ...dados, tipoDaLigacao: value })
+                              }
+                              options={[
+                                {
+                                  label: "NOVA",
+                                  value: "NOVA",
+                                },
+                                {
+                                  label: "EXISTENTE",
+                                  value: "EXISTENTE",
+                                },
+                                {
+                                  label: "NÃO DEFINIDO",
+                                  value: "NÃO DEFINIDO",
+                                },
+                              ]}
+                            />
+                          </div>
+                          <div className="flex items-center justify-center">
+                            <SelectInput
+                              label={"TIPO DA INSTALAÇÃO (NOVO LOCAL)"}
+                              editable={true}
+                              value={
+                                dados.tipoDaInstalacaoRemontagem
+                                  ? dados.tipoDaInstalacaoRemontagem
+                                  : "NÃO DEFINIDO"
+                              }
+                              handleChange={(value) =>
+                                setDados({
+                                  ...dados,
+                                  tipoDaInstalacaoRemontagem: value,
+                                })
+                              }
+                              options={[
+                                {
+                                  label: "RURAL",
+                                  value: "RURAL",
+                                },
+                                {
+                                  label: "URBANO",
+                                  value: "URBANO",
+                                },
+                                {
+                                  label: "NÃO DEFINIDO",
+                                  value: "NÃO DEFINIDO",
+                                },
+                              ]}
+                            />
+                          </div>
+                          <div className="flex items-center justify-center gap-x-2 flex-wrap">
+                            <TextInput
+                              editable={true}
+                              label={"CEP INSTALAÇÃO (NOVO LOCAL)"}
+                              value={dados.cepInstalacaoRemontagem}
+                              handleChange={(value) =>
+                                setDados({
+                                  ...dados,
+                                  cepInstalacaoRemontagem: formatCEP(value),
+                                })
+                              }
+                            />
+                            <button
+                              onClick={() =>
+                                findCPFRemontagem("enderecoInstalacao")
+                              }
+                              className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
+                            >
+                              <AiOutlineSearch />
+                            </button>
+                          </div>
+                          <div className="flex items-center justify-center">
+                            <TextInput
+                              label={"ENDEREÇO DE INSTALAÇÃO (NOVO LOCAL)"}
+                              editable={true}
+                              value={dados.enderecoInstalacaoRemontagem}
+                              handleChange={(value) =>
+                                setDados({
+                                  ...dados,
+                                  enderecoInstalacaoRemontagem:
+                                    value.toUpperCase(),
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center justify-center">
+                            <TextInput
+                              label={"Nº (NOVO LOCAL)"}
+                              editable={true}
+                              value={dados.numeroResInstalacaoRemontagem}
+                              handleChange={(value) =>
+                                setDados({
+                                  ...dados,
+                                  numeroResInstalacaoRemontagem: value,
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center justify-center">
+                            <NumberInput
+                              label={"Nº DA INSTALAÇÃO (NOVO LOCAL)"}
+                              editable={true}
+                              value={dados.numeroInstalacaoRemontagem}
+                              handleChange={(value) =>
+                                setDados({
+                                  ...dados,
+                                  numeroInstalacaoRemontagem: value,
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center justify-center">
+                            <TextInput
+                              label={"BAIRRO (NOVO LOCAL)"}
+                              editable={true}
+                              value={dados.bairroInstalacaoRemontagem}
+                              handleChange={(value) =>
+                                setDados({
+                                  ...dados,
+                                  bairroInstalacaoRemontagem:
+                                    value.toUpperCase(),
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center justify-center">
+                            <SelectInput
+                              label={"CIDADE (NOVO LOCAL)"}
+                              editable={true}
+                              value={dados.cidadeInstalacaoRemontagem}
+                              options={[
+                                {
+                                  label: "NÃO DEFINIDO",
+                                  value: "NÃO DEFINIDO",
+                                },
+                                ...cidadesAtendidas.map((cidade) => {
+                                  return { label: cidade, value: cidade };
+                                }),
+                              ]}
+                              handleChange={(value) =>
+                                setDados({
+                                  ...dados,
+                                  cidadeInstalacaoRemontagem: value,
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center justify-center">
+                            <TextInput
+                              label={"UF (NOVO LOCAL)"}
+                              editable={true}
+                              value={dados.ufInstalacaoRemontagem}
+                              handleChange={(value) =>
+                                setDados({
+                                  ...dados,
+                                  ufInstalacaoRemontagem: value,
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center justify-center">
+                            <TextInput
+                              label={"PONTO DE REFERÊNCIA (NOVO LOCAL)"}
+                              editable={true}
+                              value={
+                                dados.pontoDeReferenciaInstalacaoRemontagem
+                              }
+                              handleChange={(value) =>
+                                setDados({
+                                  ...dados,
+                                  pontoDeReferenciaInstalacaoRemontagem: value,
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center justify-center gap-2 flex-wrap col-span-3">
+                            <TextInput
+                              label={"LATITUDE (NOVO LOCAL)"}
+                              value={dados.latitudeRemontagem}
+                              editable={true}
+                              handleChange={(value) =>
+                                setDados({
+                                  ...dados,
+                                  latitudeRemontagem: value,
+                                })
+                              }
+                            />
+                            <TextInput
+                              label={"LONGITUDE (NOVO LOCAL)"}
+                              editable={true}
+                              value={dados.longitudeRemontagem}
+                              handleChange={(value) =>
+                                setDados({
+                                  ...dados,
+                                  longitudeRemontagem: value,
+                                })
+                              }
+                            />
+                          </div>
                         </div>
-                        <div className="flex items-center justify-center">
-                          <SelectInput
-                            label={"TIPO DA INSTALAÇÃO (NOVO LOCAL)"}
-                            editable={true}
-                            value={
-                              dados.tipoDaInstalacaoRemontagem
-                                ? dados.tipoDaInstalacaoRemontagem
-                                : "NÃO DEFINIDO"
-                            }
-                            handleChange={(value) =>
-                              setDados({
-                                ...dados,
-                                tipoDaInstalacaoRemontagem: value,
-                              })
-                            }
-                            options={[
-                              {
-                                label: "RURAL",
-                                value: "RURAL",
-                              },
-                              {
-                                label: "URBANO",
-                                value: "URBANO",
-                              },
-                              {
-                                label: "NÃO DEFINIDO",
-                                value: "NÃO DEFINIDO",
-                              },
-                            ]}
-                          />
-                        </div>
-                        <div className="flex items-center justify-center gap-x-2 flex-wrap">
-                          <TextInput
-                            editable={true}
-                            label={"CEP INSTALAÇÃO (NOVO LOCAL)"}
-                            value={dados.cepInstalacaoRemontagem}
-                            handleChange={(value) =>
-                              setDados({
-                                ...dados,
-                                cepInstalacaoRemontagem: formatCEP(value),
-                              })
-                            }
-                          />
-                          <button
-                            onClick={() =>
-                              findCPFRemontagem("enderecoInstalacao")
-                            }
-                            className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-                          >
-                            <AiOutlineSearch />
-                          </button>
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <TextInput
-                            label={"ENDEREÇO DE INSTALAÇÃO (NOVO LOCAL)"}
-                            editable={true}
-                            value={dados.enderecoInstalacaoRemontagem}
-                            handleChange={(value) =>
-                              setDados({
-                                ...dados,
-                                enderecoInstalacaoRemontagem:
-                                  value.toUpperCase(),
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <TextInput
-                            label={"Nº (NOVO LOCAL)"}
-                            editable={true}
-                            value={dados.numeroResInstalacaoRemontagem}
-                            handleChange={(value) =>
-                              setDados({
-                                ...dados,
-                                numeroResInstalacaoRemontagem: value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <NumberInput
-                            label={"Nº DA INSTALAÇÃO (NOVO LOCAL)"}
-                            editable={true}
-                            value={dados.numeroInstalacaoRemontagem}
-                            handleChange={(value) =>
-                              setDados({
-                                ...dados,
-                                numeroInstalacaoRemontagem: value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <TextInput
-                            label={"BAIRRO (NOVO LOCAL)"}
-                            editable={true}
-                            value={dados.bairroInstalacaoRemontagem}
-                            handleChange={(value) =>
-                              setDados({
-                                ...dados,
-                                bairroInstalacaoRemontagem: value.toUpperCase(),
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <SelectInput
-                            label={"CIDADE (NOVO LOCAL)"}
-                            editable={true}
-                            value={dados.cidadeInstalacaoRemontagem}
-                            options={[
-                              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                              ...cidadesAtendidas.map((cidade) => {
-                                return { label: cidade, value: cidade };
-                              }),
-                            ]}
-                            handleChange={(value) =>
-                              setDados({
-                                ...dados,
-                                cidadeInstalacaoRemontagem: value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <TextInput
-                            label={"UF (NOVO LOCAL)"}
-                            editable={true}
-                            value={dados.ufInstalacaoRemontagem}
-                            handleChange={(value) =>
-                              setDados({
-                                ...dados,
-                                ufInstalacaoRemontagem: value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="flex items-center justify-center">
-                          <TextInput
-                            label={"PONTO DE REFERÊNCIA (NOVO LOCAL)"}
-                            editable={true}
-                            value={dados.pontoDeReferenciaInstalacaoRemontagem}
-                            handleChange={(value) =>
-                              setDados({
-                                ...dados,
-                                pontoDeReferenciaInstalacaoRemontagem: value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="flex items-center justify-center gap-2 flex-wrap col-span-3">
-                          <TextInput
-                            label={"LATITUDE (NOVO LOCAL)"}
-                            value={dados.latitudeRemontagem}
-                            editable={true}
-                            handleChange={(value) =>
-                              setDados({ ...dados, latitudeRemontagem: value })
-                            }
-                          />
-                          <TextInput
-                            label={"LONGITUDE (NOVO LOCAL)"}
-                            editable={true}
-                            value={dados.longitudeRemontagem}
-                            handleChange={(value) =>
-                              setDados({ ...dados, longitudeRemontagem: value })
-                            }
-                          />
-                        </div>
-                      </div>
+                      ) : null}
                     </div>
                   ) : null}
                 </div>

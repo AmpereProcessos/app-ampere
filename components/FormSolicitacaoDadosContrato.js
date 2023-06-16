@@ -410,14 +410,14 @@ function FormSolicitacaoDadosContrato({ dados, setDados, avancar }) {
           />
         </div>
         <div className="flex items-center justify-center">
-          <NumberFloatingInput
+          <TextFloatingInput
             width={"450px"}
             label={"Nº"}
             tag={"R$"}
             value={dados.numeroResCobranca}
             editable={true}
             handleChange={(value) =>
-              setDados({ ...dados, numeroResCobranca: Number(value) })
+              setDados({ ...dados, numeroResCobranca: value })
             }
           />
         </div>

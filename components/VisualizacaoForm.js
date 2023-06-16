@@ -202,7 +202,7 @@ function VisualizacaoForm({
               setDados({ ...dados, enderecoCobranca: value.toUpperCase() })
             }
           />
-          <NumberInput
+          <TextInput
             label={"Nº"}
             editable={true}
             value={dados.numeroResCobranca}
@@ -559,7 +559,7 @@ function VisualizacaoForm({
               setDados({ ...dados, enderecoInstalacao: value })
             }
           />
-          <NumberInput
+          <TextInput
             label={"Nº"}
             editable={true}
             value={dados.numeroResInstalacao}

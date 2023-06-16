@@ -176,7 +176,7 @@ function FormSolicitacaoEnderecoInstalacao({
           />
         </div>
         <div className="flex items-center justify-center">
-          <NumberFloatingInput
+          <TextFloatingInput
             label={"Nº"}
             editable={true}
             value={dados.numeroResInstalacao}

@@ -216,18 +216,18 @@ function InfoClienteBlock({
             setInfo({ ...infoHolder, bairro: value });
           }}
         />
-        <NumberInput
+        <TextInput
           label={"Número da residência"}
           editable={editor}
           value={infoHolder.numeroResidencia ? infoHolder.numeroResidencia : 0}
           handleChange={(value) => {
             setChanges({
               ...changes,
-              numeroResidencia: Number(value),
+              numeroResidencia: value,
             });
             setInfo({
               ...infoHolder,
-              numeroResidencia: Number(value),
+              numeroResidencia: value,
             });
           }}
         />

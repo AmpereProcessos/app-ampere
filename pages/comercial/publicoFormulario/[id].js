@@ -131,7 +131,7 @@ function Formulario({ info }) {
                   })
                 }
               />
-              <NumberInput
+              <TextInput
                 label={"Nº"}
                 value={dados.numeroResCobranca}
                 handleChange={(value) =>
@@ -520,7 +520,7 @@ function Formulario({ info }) {
                   setDados({ ...dados, enderecoInstalacao: value })
                 }
               />
-              <NumberInput
+              <TextInput
                 label={"Nº"}
                 value={dados.numeroResInstalacao}
                 handleChange={(value) =>

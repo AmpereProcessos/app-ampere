@@ -336,7 +336,7 @@ function VisualizacaoFormBombaSolar({
             />
           </div>
           <div className="flex items-center justify-center">
-            <NumberFloatingInput
+            <TextFloatingInput
               width={"450px"}
               label={"Nº"}
               tag={"R$"}
@@ -591,7 +591,7 @@ function VisualizacaoFormBombaSolar({
             />
           </div>
           <div className="flex items-center justify-center">
-            <NumberFloatingInput
+            <TextFloatingInput
               label={"Nº"}
               editable={true}
               value={dados.numeroResInstalacao}

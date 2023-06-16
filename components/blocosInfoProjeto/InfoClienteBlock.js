@@ -522,13 +522,28 @@ function InfoClienteBlock({
           </>
         )}
       </div>
+      <div className="w-full flex items-center my-1 px-2">
+        <textarea
+          value={infoHolder.obsComercial}
+          onChange={(e) => {
+            setChanges({ ...changes, obsComercial: e.target.value });
+            setInfo({
+              ...infoHolder,
+              obsComercial: e.target.value,
+            });
+          }}
+          className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600 text-xs"
+        />
+      </div>
       {infoHolder.linkDrive && (
-        <p className="text-center my-2 italic font-bold">
-          Vá para a pasta do drive{" "}
-          <a className="text-blue-400" href={infoHolder.linkDrive}>
-            {infoHolder.linkDrive}
+        <div className="w-full py-2 flex items-center justify-center">
+          <a
+            className="text-blue-400 font-medium hover:text-[#15599a]"
+            href={infoHolder.linkDrive}
+          >
+            LINK PASTA NA NUVEM
           </a>
-        </p>
+        </div>
       )}
     </div>
   );

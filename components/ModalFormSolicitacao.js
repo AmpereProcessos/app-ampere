@@ -396,6 +396,14 @@ function ModalFormSolicitacao({
       return { duracao: 0, qtdeManutencoes: 0 };
     }
   }
+  function getObraObs() {
+    if (dados.mudancaLocal == "SIM") {
+      return `HAVERÁ MUDANÇA DE LOCAL. A NOVA INSTALAÇÃO SERÁ FEITA EM: ${dados.enderecoInstalacaoRemontagem},${dados.bairroInstalacaoRemontagem}, Nº ${dados.numeroInstalacaoRemontagem} ${dados.cidadeInstalacaoRemontagem}(${dados.ufInstalacaoRemontagem}).`;
+    } else {
+      return `NÃO HAVERÁ MUDANÇA DE LOCAL`;
+    }
+  }
+
   // Handling Validations and Project Insert
   var insertObj = {
     nomeDoContrato: dados.nomeDoContrato.toUpperCase(),
@@ -417,7 +425,12 @@ function ModalFormSolicitacao({
       : "SISTEMA FOTOVOLTAICO",
     codigoSVB: dados.codigoSVB,
     segmento: dados.segmento,
-    obsComercial: dados.obsComercial ? dados.obsComercial : "",
+    obsComercial:
+      dados.tipoDeServico == "MONTAGEM E DESMONTAGEM"
+        ? dados.obsComercial
+          ? dados.obsComercial + getObraObs()
+          : getObraObs()
+        : dados.obsComercial,
     visitaTecnica: {
       status: dados.visitaTecnica,
       tecnico: dados.respVisitaTecnica,
@@ -575,7 +588,8 @@ function ModalFormSolicitacao({
     },
     obra: {
       laudo: dados.laudo ? dados.laudo : "NÃO DEFINIDO",
-      observacoes: "", // possibilidade de substituir \n por /, e quebrar textp em pontos
+      observacoes:
+        dados.tipoDeServico == "MONTAGEM E DESMONTAGEM" ? getObraObs() : "", // possibilidade de substituir \n por /, e quebrar textp em pontos
       statusSolicitacao: "NÃO SOLICITADA",
       entrada: undefined, // formatar como data
       saida: undefined, // formatar como data.
@@ -1848,6 +1862,8 @@ function ModalFormSolicitacao({
                               setDados({
                                 ...dados,
                                 mudancaLocal: value.toUpperCase(),
+                                tipoDaLigacao: "NÃO DEFINIDO",
+                                tipoDaInstalacaoRemontagem: "NÃO DEFINIDO",
                                 cepInstalacaoRemontagem: "",
                                 enderecoInstalacaoRemontagem: "",
                                 numeroInstalacaoRemontagem: "",

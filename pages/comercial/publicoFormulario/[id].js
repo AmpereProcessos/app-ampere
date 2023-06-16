@@ -614,6 +614,262 @@ function Formulario({ info }) {
                   setDados({ ...dados, geracaoPrevista: value })
                 }
               />
+              {dados.tipoDeServico == "MONTAGEM E DESMONTAGEM" ? (
+                <div className="flex flex-col border-t border-gray-200 pt-2">
+                  <div className="flex items-center justify-center col-span-3">
+                    <SelectInput
+                      label={"HAVERÁ MUDANÇA DE LOCAL"}
+                      editable={false}
+                      value={
+                        dados.mudancaLocal ? dados.mudancaLocal : "NÃO DEFINIDO"
+                      }
+                      options={[
+                        {
+                          label: "SIM",
+                          value: "SIM",
+                        },
+                        {
+                          label: "NÃO",
+                          value: "NÃO",
+                        },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
+                        },
+                      ]}
+                      handleChange={(value) => {
+                        if (value == "NÃO") {
+                          setDados({
+                            ...dados,
+                            mudancaLocal: value.toUpperCase(),
+                            tipoDaLigacao: "NÃO DEFINIDO",
+                            tipoDaInstalacaoRemontagem: "NÃO DEFINIDO",
+                            cepInstalacaoRemontagem: "",
+                            enderecoInstalacaoRemontagem: "",
+                            numeroInstalacaoRemontagem: "",
+                            numeroResInstalacaoRemontagem: "",
+                            bairroInstalacaoRemontagem: "",
+                            cidadeInstalacaoRemontagem: "",
+                            ufInstalacaoRemontagem: "",
+                            latitudeRemontagem: "",
+                            longitudeRemontagem: "",
+                            pontoDeReferenciaInstalacaoRemontagem: "",
+                          });
+                        } else {
+                          setDados({
+                            ...dados,
+                            mudancaLocal: value.toUpperCase(),
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                  {dados.mudancaLocal == "SIM" ? (
+                    <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 p-2">
+                      <div className="flex items-center justify-center">
+                        <SelectInput
+                          label={"TIPO DA LIGAÇÃO (NOVO LOCAL)"}
+                          editable={false}
+                          value={dados.tipoDaLigacao}
+                          handleChange={(value) =>
+                            setDados({ ...dados, tipoDaLigacao: value })
+                          }
+                          options={[
+                            {
+                              label: "NOVA",
+                              value: "NOVA",
+                            },
+                            {
+                              label: "EXISTENTE",
+                              value: "EXISTENTE",
+                            },
+                            {
+                              label: "NÃO DEFINIDO",
+                              value: "NÃO DEFINIDO",
+                            },
+                          ]}
+                        />
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <SelectInput
+                          label={"TIPO DA INSTALAÇÃO (NOVO LOCAL)"}
+                          editable={false}
+                          value={
+                            dados.tipoDaInstalacaoRemontagem
+                              ? dados.tipoDaInstalacaoRemontagem
+                              : "NÃO DEFINIDO"
+                          }
+                          handleChange={(value) =>
+                            setDados({
+                              ...dados,
+                              tipoDaInstalacaoRemontagem: value,
+                            })
+                          }
+                          options={[
+                            {
+                              label: "RURAL",
+                              value: "RURAL",
+                            },
+                            {
+                              label: "URBANO",
+                              value: "URBANO",
+                            },
+                            {
+                              label: "NÃO DEFINIDO",
+                              value: "NÃO DEFINIDO",
+                            },
+                          ]}
+                        />
+                      </div>
+                      <div className="flex items-center justify-center gap-x-2 flex-wrap">
+                        <TextInput
+                          editable={false}
+                          label={"CEP INSTALAÇÃO (NOVO LOCAL)"}
+                          value={dados.cepInstalacaoRemontagem}
+                          handleChange={(value) =>
+                            setDados({
+                              ...dados,
+                              cepInstalacaoRemontagem: formatCEP(value),
+                            })
+                          }
+                        />
+                        <button
+                          onClick={() =>
+                            findCPFRemontagem("enderecoInstalacao")
+                          }
+                          className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
+                        >
+                          <AiOutlineSearch />
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <TextInput
+                          label={"ENDEREÇO DE INSTALAÇÃO (NOVO LOCAL)"}
+                          editable={false}
+                          value={dados.enderecoInstalacaoRemontagem}
+                          handleChange={(value) =>
+                            setDados({
+                              ...dados,
+                              enderecoInstalacaoRemontagem: value.toUpperCase(),
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <TextInput
+                          label={"Nº (NOVO LOCAL)"}
+                          editable={false}
+                          value={dados.numeroResInstalacaoRemontagem}
+                          handleChange={(value) =>
+                            setDados({
+                              ...dados,
+                              numeroResInstalacaoRemontagem: value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <NumberInput
+                          label={"Nº DA INSTALAÇÃO (NOVO LOCAL)"}
+                          editable={false}
+                          value={dados.numeroInstalacaoRemontagem}
+                          handleChange={(value) =>
+                            setDados({
+                              ...dados,
+                              numeroInstalacaoRemontagem: value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <TextInput
+                          label={"BAIRRO (NOVO LOCAL)"}
+                          editable={false}
+                          value={dados.bairroInstalacaoRemontagem}
+                          handleChange={(value) =>
+                            setDados({
+                              ...dados,
+                              bairroInstalacaoRemontagem: value.toUpperCase(),
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <SelectInput
+                          label={"CIDADE (NOVO LOCAL)"}
+                          editable={false}
+                          value={dados.cidadeInstalacaoRemontagem}
+                          options={[
+                            {
+                              label: "NÃO DEFINIDO",
+                              value: "NÃO DEFINIDO",
+                            },
+                            ...cidadesAtendidas.map((cidade) => {
+                              return { label: cidade, value: cidade };
+                            }),
+                          ]}
+                          handleChange={(value) =>
+                            setDados({
+                              ...dados,
+                              cidadeInstalacaoRemontagem: value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <TextInput
+                          label={"UF (NOVO LOCAL)"}
+                          editable={false}
+                          value={dados.ufInstalacaoRemontagem}
+                          handleChange={(value) =>
+                            setDados({
+                              ...dados,
+                              ufInstalacaoRemontagem: value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <TextInput
+                          label={"PONTO DE REFERÊNCIA (NOVO LOCAL)"}
+                          editable={false}
+                          value={dados.pontoDeReferenciaInstalacaoRemontagem}
+                          handleChange={(value) =>
+                            setDados({
+                              ...dados,
+                              pontoDeReferenciaInstalacaoRemontagem: value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-center justify-center gap-2 flex-wrap col-span-3">
+                        <TextInput
+                          label={"LATITUDE (NOVO LOCAL)"}
+                          value={dados.latitudeRemontagem}
+                          editable={false}
+                          handleChange={(value) =>
+                            setDados({
+                              ...dados,
+                              latitudeRemontagem: value,
+                            })
+                          }
+                        />
+                        <TextInput
+                          label={"LONGITUDE (NOVO LOCAL)"}
+                          editable={false}
+                          value={dados.longitudeRemontagem}
+                          handleChange={(value) =>
+                            setDados({
+                              ...dados,
+                              longitudeRemontagem: value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           </div>
           {![
@@ -756,7 +1012,7 @@ function Formulario({ info }) {
                     <div className="flex justify-center items-center w-full">
                       <TextInput
                         label={"MARCA DO CONTROLADOR"}
-                        editable={true}
+                        editable={false}
                         value={dados.marcaControlador}
                         handleChange={(value) =>
                           setDados({
@@ -769,7 +1025,7 @@ function Formulario({ info }) {
                     <div className="flex justify-center items-center w-full">
                       <NumberInput
                         label={"QTDE DE CONTROLADORES"}
-                        editable={true}
+                        editable={false}
                         value={dados.qtdeControlador}
                         handleChange={(value) =>
                           setDados({
@@ -782,7 +1038,7 @@ function Formulario({ info }) {
                     <div className="flex justify-center items-center w-full">
                       <SelectInput
                         label={"TIPO DO CONTROLADOR"}
-                        editable={true}
+                        editable={false}
                         value={
                           dados.tipoControlador
                             ? dados.tipoControlador
@@ -807,7 +1063,7 @@ function Formulario({ info }) {
                     <div className="flex justify-center items-center w-full">
                       <NumberInput
                         label={"CORRENTE DE CARGA (em A)"}
-                        editable={true}
+                        editable={false}
                         value={dados.correnteControlador}
                         handleChange={(value) =>
                           setDados({
@@ -822,7 +1078,7 @@ function Formulario({ info }) {
                     <div className="flex justify-center items-center w-full">
                       <TextInput
                         label={"MARCA DA BATERIA"}
-                        editable={true}
+                        editable={false}
                         value={dados.marcaBateria}
                         handleChange={(value) =>
                           setDados({
@@ -835,7 +1091,7 @@ function Formulario({ info }) {
                     <div className="flex justify-center items-center w-full">
                       <NumberInput
                         label={"QTDE DE BATERIAS"}
-                        editable={true}
+                        editable={false}
                         value={dados.qtdeBateria}
                         handleChange={(value) =>
                           setDados({ ...dados, qtdeBateria: Number(value) })
@@ -845,7 +1101,7 @@ function Formulario({ info }) {
                     <div className="flex justify-center items-center w-full">
                       <SelectInput
                         label={"TIPO DA BATERIA"}
-                        editable={true}
+                        editable={false}
                         value={
                           dados.tipoBateria ? dados.tipoBateria : "NÃO DEFINIDO"
                         }
@@ -862,7 +1118,7 @@ function Formulario({ info }) {
                     <div className="flex justify-center items-center w-full">
                       <NumberInput
                         label={"CAPACIDADE (em Ah)"}
-                        editable={true}
+                        editable={false}
                         value={dados.capacidadeBateria}
                         handleChange={(value) =>
                           setDados({
@@ -885,6 +1141,7 @@ function Formulario({ info }) {
             <div className="flex gap-2 justify-around flex-wrap">
               <SelectInput
                 label={"TIPO DA ESTRUTURA"}
+                editable={false}
                 options={[
                   {
                     label: "TELHADO",
@@ -912,8 +1169,93 @@ function Formulario({ info }) {
                   setDados({ ...dados, tipoEstrutura: value })
                 }
               />
+              {dados.tipoDeServico == "MONTAGEM E DESMONTAGEM" ? (
+                <SelectInput
+                  width={"450px"}
+                  label={"TIPO DA ESTRUTURA (REMONTAGEM)"}
+                  editable={true}
+                  options={[
+                    {
+                      label: "MESMA ESTRUTURA",
+                      value: "MESMA ESTRUTURA",
+                    },
+                    {
+                      label: "TELHADO",
+                      value: "TELHADO",
+                    },
+                    {
+                      label: "CARPORT",
+                      value: "CARPORT",
+                    },
+                    {
+                      label: "SOLO",
+                      value: "SOLO",
+                    },
+                    {
+                      label: "ESTRUTURA PERSONALIZADA",
+                      value: "ESTRUTURA PERSONALIZADA",
+                    },
+                    {
+                      label: "NÃO DEFINIDO",
+                      value: "NÃO DEFINIDO",
+                    },
+                  ]}
+                  value={
+                    dados.tipoEstruturaRemontagem
+                      ? dados.tipoEstruturaRemontagem
+                      : "NÃO DEFINIDO"
+                  }
+                  handleChange={(value) =>
+                    setDados({ ...dados, tipoEstruturaRemontagem: value })
+                  }
+                />
+              ) : null}
               <SelectInput
-                label={"ESTRUTURA AMPÈRE"}
+                label={"MATERIAL DA ESTRUTURA"}
+                editable={false}
+                options={[
+                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: "MADEIRA", value: "MADEIRA" },
+                  { label: "FERRO", value: "FERRO" },
+                ]}
+                value={
+                  dados.materialEstrutura
+                    ? dados.materialEstrutura
+                    : "NÃO DEFINIDO"
+                }
+                handleChange={(value) =>
+                  setDados({ ...dados, materialEstrutura: value })
+                }
+              />
+              {dados.tipoDeServico == "MONTAGEM E DESMONTAGEM" ? (
+                <SelectInput
+                  label={"MATERIAL DA ESTRUTURA (REMONTAGEM)"}
+                  width={"450px"}
+                  editable={true}
+                  options={[
+                    { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                    { label: "MESMO MATERIAL", value: "MESMO MATERIAL" },
+                    { label: "MADEIRA", value: "MADEIRA" },
+                    { label: "FERRO", value: "FERRO" },
+                  ]}
+                  value={
+                    dados.materialEstruturaRemontagem
+                      ? dados.materialEstruturaRemontagem
+                      : "NÃO DEFINIDO"
+                  }
+                  handleChange={(value) =>
+                    setDados({
+                      ...dados,
+                      materialEstruturaRemontagem: value,
+                    })
+                  }
+                />
+              ) : null}
+              <SelectInput
+                label={
+                  "SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"
+                }
+                editable={false}
                 options={[
                   {
                     label: "NÃO",
@@ -935,6 +1277,7 @@ function Formulario({ info }) {
               />
               <SelectInput
                 label={"RESPONSÁVEL PELA ESTRUTURA"}
+                editable={false}
                 options={[
                   {
                     label: "AMPERE",
@@ -958,6 +1301,7 @@ function Formulario({ info }) {
                 <>
                   <SelectInput
                     label={"FORMA DE PAGAMENTO"}
+                    editable={false}
                     options={[
                       {
                         label: "INCLUSO NO FINANCIAMENTO",
@@ -990,6 +1334,7 @@ function Formulario({ info }) {
                   />
                   <NumberInput
                     label={"VALOR DA ESTRUTURA"}
+                    editable={false}
                     value={dados.valorEstrutura}
                     handleChange={(value) =>
                       setDados({

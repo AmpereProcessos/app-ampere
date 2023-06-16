@@ -414,6 +414,8 @@ function FormSolicitacaoDadosInstalacaoRemontagem({
                 setDados({
                   ...dados,
                   mudancaLocal: value.toUpperCase(),
+                  tipoDaLigacao: "NÃO DEFINIDO",
+                  tipoDaInstalacaoRemontagem: "NÃO DEFINIDO",
                   cepInstalacaoRemontagem: "",
                   enderecoInstalacaoRemontagem: "",
                   numeroInstalacaoRemontagem: "",

@@ -246,104 +246,107 @@ function FormSolicitacaoDadosPagamento({ dados, setDados, avancar, voltar }) {
           )}
         </div>
       </div>
-      <div className="flex flex-col p-2">
-        <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
-          SOBRE A ENTREGA
-        </h1>
-        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 mt-2">
-          <div className="flex items-center justify-center">
-            <SelectFloatingInput
-              width={"450px"}
-              label={"LOCAL DE ENTREGA"}
-              options={[
-                {
-                  label: "MESMO DO PROJETO",
-                  value: "MESMO DO PROJETO",
-                },
-                {
-                  label:
-                    "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
-                  value:
-                    "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
-                },
-                {
-                  label:
-                    "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
-                  value:
-                    "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
-                },
-                {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
-                },
-              ]}
-              editable={true}
-              value={dados.localEntrega}
-              handleChange={(value) =>
-                setDados({ ...dados, localEntrega: value })
-              }
-            />
-          </div>
-          <div className="flex items-center justify-center">
-            <SelectFloatingInput
-              width={"450px"}
-              label={"END. ENTREGA IGUAL COBRANÇA?"}
-              editable={true}
-              value={dados.entregaIgualCobranca}
-              handleChange={(value) =>
-                setDados({ ...dados, entregaIgualCobranca: value })
-              }
-              options={[
-                {
-                  label: "SIM",
-                  value: "SIM",
-                },
-                {
-                  label: "NÃO",
-                  value: "NÃO",
-                },
-                {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
-                },
-              ]}
-            />
-          </div>
-          <div className="flex items-center justify-center">
-            <SelectFloatingInput
-              width={"450px"}
-              label={"HÁ RESTRIÇÕES PARA ENTREGA?"}
-              editable={true}
-              value={dados.restricoesEntrega}
-              handleChange={(value) =>
-                setDados({ ...dados, restricoesEntrega: value })
-              }
-              options={[
-                {
-                  label: "SOMENTE HORARIO COMERCIAL",
-                  value: "SOMENTE HORARIO COMERCIAL",
-                },
-                {
-                  label: "NÃO HÁ RESTRIÇÕES",
-                  value: "NÃO HÁ RESTRIÇÕES",
-                },
-                {
-                  label: "CASA EM CONSTRUÇÃO",
-                  value: "CASA EM CONSTRUÇÃO",
-                },
-                {
-                  label: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
-                  value: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
-                },
-                {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
-                },
-              ]}
-            />
+      {dados.tipoDeServico != "MONTAGEM E DESMONTAGEM" ? (
+        <div className="flex flex-col p-2">
+          <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+            SOBRE A ENTREGA
+          </h1>
+          <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 mt-2">
+            <div className="flex items-center justify-center">
+              <SelectFloatingInput
+                width={"450px"}
+                label={"LOCAL DE ENTREGA"}
+                options={[
+                  {
+                    label: "MESMO DO PROJETO",
+                    value: "MESMO DO PROJETO",
+                  },
+                  {
+                    label:
+                      "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
+                    value:
+                      "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
+                  },
+                  {
+                    label:
+                      "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
+                    value:
+                      "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
+                  },
+                  {
+                    label: "NÃO DEFINIDO",
+                    value: "NÃO DEFINIDO",
+                  },
+                ]}
+                editable={true}
+                value={dados.localEntrega}
+                handleChange={(value) =>
+                  setDados({ ...dados, localEntrega: value })
+                }
+              />
+            </div>
+            <div className="flex items-center justify-center">
+              <SelectFloatingInput
+                width={"450px"}
+                label={"END. ENTREGA IGUAL COBRANÇA?"}
+                editable={true}
+                value={dados.entregaIgualCobranca}
+                handleChange={(value) =>
+                  setDados({ ...dados, entregaIgualCobranca: value })
+                }
+                options={[
+                  {
+                    label: "SIM",
+                    value: "SIM",
+                  },
+                  {
+                    label: "NÃO",
+                    value: "NÃO",
+                  },
+                  {
+                    label: "NÃO DEFINIDO",
+                    value: "NÃO DEFINIDO",
+                  },
+                ]}
+              />
+            </div>
+            <div className="flex items-center justify-center">
+              <SelectFloatingInput
+                width={"450px"}
+                label={"HÁ RESTRIÇÕES PARA ENTREGA?"}
+                editable={true}
+                value={dados.restricoesEntrega}
+                handleChange={(value) =>
+                  setDados({ ...dados, restricoesEntrega: value })
+                }
+                options={[
+                  {
+                    label: "SOMENTE HORARIO COMERCIAL",
+                    value: "SOMENTE HORARIO COMERCIAL",
+                  },
+                  {
+                    label: "NÃO HÁ RESTRIÇÕES",
+                    value: "NÃO HÁ RESTRIÇÕES",
+                  },
+                  {
+                    label: "CASA EM CONSTRUÇÃO",
+                    value: "CASA EM CONSTRUÇÃO",
+                  },
+                  {
+                    label: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
+                    value: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
+                  },
+                  {
+                    label: "NÃO DEFINIDO",
+                    value: "NÃO DEFINIDO",
+                  },
+                ]}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
+
       <div className="flex flex-col p-2">
         <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
           SOBRE O PAGAMENTO

@@ -101,7 +101,7 @@ function FormSolicitacaoEnderecoInstalacao({
         ENDEREÇO DA INSTALAÇAO
       </span>
       <div className="flex flex-col lg:grid grid-cols-3 gap-2 px-2">
-        <div className="col-span-3 mt-2 flex items-center justify-center">
+        {/* <div className="col-span-3 mt-2 flex items-center justify-center">
           <div className="flex items-center justify-center w-full lg:w-[50%]">
             <TextFloatingInput
               label={"NOME DO TITULAR DO PROJETO"}
@@ -116,7 +116,7 @@ function FormSolicitacaoEnderecoInstalacao({
               width={"100%"}
             />
           </div>
-        </div>
+        </div> */}
         <div className="flex items-center justify-center col-span-3">
           <div className="flex items-center justify-center w-full lg:w-[50%]">
             <SelectFoatingInput

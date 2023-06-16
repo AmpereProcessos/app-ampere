@@ -17,6 +17,7 @@ import SolicitacaoOutrosServicos from "../../components/SolicitacaoOutrosServico
 import SolicitacaoOeM from "../../components/SolicitacaoOeM";
 import SolicitacaoManutencao from "../../components/SolicitacaoManutencao";
 import SolicitacaoAlteracaoPadrao from "../../components/SolicitacaoAlteracaoPadrao";
+import SolicitacaoMontagemDesmontagem from "../../components/SolicitacaoMontagemDesmontagem";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -231,6 +232,16 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             tipoDeServico={info.tipoDeServico}
           />
         )}
+        {info.tipoDeServico == "MONTAGEM E DESMONTAGEM" ? (
+          <SolicitacaoMontagemDesmontagem
+            nomeVendedor={info.nomeVendedor}
+            telefoneVendedor={info.telefoneVendedor}
+            cliente={cliente}
+            links={links}
+            formVisitaId={formVisitaId}
+            tipoDeServico={info.tipoDeServico}
+          />
+        ) : null}
         {![
           "SISTEMA FOTOVOLTAICO",
           "SISTEMA FOTOVOLTAICO (OFF GRID)",
@@ -241,6 +252,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
           "TROCA DE PADRÃO",
           "REFORMA DE PADRÃO",
           "SUBESTAÇÃO DE ENERGIA",
+          "MONTAGEM E DESMONTAGEM",
         ].includes(info.tipoDeServico) && (
           <SolicitacaoOutrosServicos
             nomeVendedor={info.nomeVendedor}

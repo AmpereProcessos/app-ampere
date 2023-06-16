@@ -54,30 +54,33 @@ function VisualizacaoOFFGrid({
     color: "",
   });
   async function criarSolicitacao() {
-    if (formVisitaId) {
-      await axios.put("/api/solicitacoes/visitaTecnica", {
-        _id: formVisitaId,
-        solicitacaoContrato: true,
-      });
-    }
-    axios
-      .post("/api/solicitacoes/contrato", {
+    try {
+      setMsg({ text: "Em progresso...", color: "text-[#15599a]" });
+      if (formVisitaId) {
+        await axios.put("/api/solicitacoes/visitaTecnica", {
+          _id: formVisitaId,
+          solicitacaoContrato: true,
+        });
+      }
+      await axios.post("/api/solicitacoes/contrato", {
         ...dados,
+        idVisitaTecnica: formVisitaId,
         linksVisita: linksVisita,
-      })
-      .then((res) => {
-        setMsg({ text: "Solicitação enviada!", color: "text-green-500" });
-        setTimeout(() => {
-          location.reload();
-          router.push("/publico/formSolicitacao");
-        }, 2800);
-      })
-      .catch((err) =>
-        setMsg({
-          text: "Um erro ocorreu, tente novamente!",
-          color: "text-green-500",
-        })
-      );
+      });
+      setMsg({ text: "Solicitação enviada!", color: "text-green-500" });
+      setTimeout(() => {
+        location.reload();
+        router.push("/publico/formSolicitacao");
+      }, 2000);
+    } catch (error) {
+      setMsg({
+        text: "Um erro ocorreu durante a criação do formulário, por favor, tente novamente.",
+        color: "text-red-500",
+      });
+      setTimeout(() => {
+        setMsg({ text: "", color: "" });
+      }, 1800);
+    }
   }
   return (
     <>
@@ -1425,25 +1428,26 @@ function VisualizacaoOFFGrid({
             ))}
         </div>
       </div>
-      {msg.text && (
+      {msg.text ? (
         <p className={`text-sm text-center font-bold ${msg.color}`}>
           {msg.text}
         </p>
+      ) : (
+        <div className="flex justify-center flex-wrap gap-2">
+          <button
+            onClick={voltar}
+            className="bg-[#15599a] rounded p-2 font-bold text-white"
+          >
+            VOLTAR
+          </button>
+          <button
+            onClick={criarSolicitacao}
+            className="bg-[#fead61] rounded p-2 font-bold"
+          >
+            CRIAR SOLICITAÇÃO
+          </button>
+        </div>
       )}
-      <div className="flex justify-center flex-wrap gap-2">
-        <button
-          onClick={voltar}
-          className="bg-[#15599a] rounded p-2 font-bold text-white"
-        >
-          VOLTAR
-        </button>
-        <button
-          onClick={criarSolicitacao}
-          className="bg-[#fead61] rounded p-2 font-bold"
-        >
-          CRIAR SOLICITAÇÃO
-        </button>
-      </div>
     </>
   );
 }

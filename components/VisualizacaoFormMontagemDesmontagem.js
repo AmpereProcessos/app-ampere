@@ -42,7 +42,7 @@ function formatCEP(cep) {
     .replace(/(-\d{3})\d+?$/, "$1");
   return cep;
 }
-function VisualizacaoForm({
+function VisualizacaoFormMontagemDesmontagem({
   dados,
   voltar,
   setDados,
@@ -436,209 +436,415 @@ function VisualizacaoForm({
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
         <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          DADOS PARA ENTRADA NA CEMIG
+          DADOS DA INSTALAÇÃO
         </span>
-        <div className="flex gap-2 justify-around flex-wrap">
-          <TextInput
-            label={"NOME DO TITULAR DO PROJETO"}
-            editable={true}
-            value={dados.nomeTitularProjeto}
-            handleChange={(value) =>
-              setDados({
-                ...dados,
-                nomeTitularProjeto: value.toUpperCase(),
-              })
-            }
-          />
-          <SelectInput
-            label={"TIPO DO TITULAR"}
-            editable={true}
-            value={dados.tipoDoTitular}
-            handleChange={(value) =>
-              setDados({ ...dados, tipoDoTitular: value })
-            }
-            options={[
-              {
-                label: "PESSOA FISICA",
-                value: "PESSOA FISICA",
-              },
-              {
-                label: "PESSOA JURIDICA",
-                value: "PESSOA JURIDICA",
-              },
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
-            ]}
-          />
-          <SelectInput
-            label={"TIPO DA LIGAÇÃO"}
-            editable={true}
-            value={dados.tipoDaLigacao}
-            handleChange={(value) =>
-              setDados({ ...dados, tipoDaLigacao: value })
-            }
-            options={[
-              {
-                label: "NOVA",
-                value: "NOVA",
-              },
-              {
-                label: "EXISTENTE",
-                value: "EXISTENTE",
-              },
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
-            ]}
-          />
-          <SelectInput
-            label={"TIPO DA INSTALAÇÃO"}
-            editable={true}
-            value={dados.tipoDaInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, tipoDaInstalacao: value })
-            }
-            options={[
-              {
-                label: "RURAL",
-                value: "RURAL",
-              },
-              {
-                label: "URBANO",
-                value: "URBANO",
-              },
-              {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
-              },
-            ]}
-          />
-          <TextInput
-            label={"CEP INSTALAÇÃO"}
-            editable={true}
-            value={dados.cepInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, cepInstalacao: formatCEP(value) })
-            }
-          />
-          <button
-            onClick={() => findCPF("enderecoInstalacao")}
-            className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-          >
-            <AiOutlineSearch />
-          </button>
-          <TextInput
-            label={"ENDEREÇO DE INSTALAÇÃO"}
-            editable={true}
-            value={dados.enderecoInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, enderecoInstalacao: value })
-            }
-          />
-          <TextInput
-            label={"Nº"}
-            editable={true}
-            value={dados.numeroResInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, numeroResInstalacao: value })
-            }
-          />
-          <NumberInput
-            label={"Nº DA INSTALAÇÃO"}
-            editable={true}
-            value={dados.numeroInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, numeroInstalacao: value })
-            }
-          />
-          <TextInput
-            label={"BAIRRO"}
-            editable={true}
-            value={dados.bairroInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, bairroInstalacao: value })
-            }
-          />
-          <SelectInput
-            label={"CIDADE"}
-            editable={true}
-            value={dados.cidadeInstalacao}
-            options={cidadesAtendidas.map((cidade) => {
-              return { label: cidade, value: cidade };
-            })}
-            handleChange={(value) =>
-              setDados({ ...dados, cidadeInstalacao: value })
-            }
-          />
-          <TextInput
-            label={"UF"}
-            editable={true}
-            value={dados.ufInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, ufInstalacao: value })
-            }
-          />
-          <TextInput
-            label={"PONTO DE REFERÊNCIA"}
-            editable={true}
-            value={dados.pontoDeReferenciaInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, pontoDeReferenciaInstalacao: value })
-            }
-          />
-          <TextInput
-            label={"LOGIN(CEMIG ATENDE)"}
-            normalCase={true}
-            editable={true}
-            value={dados.loginCemigAtende}
-            handleChange={(value) =>
-              setDados({ ...dados, loginCemigAtende: value })
-            }
-          />
-          <TextInput
-            label={"SENHA(CEMIG ATENDE)"}
-            normalCase={true}
-            editable={true}
-            value={dados.senhaCemigAtende}
-            handleChange={(value) =>
-              setDados({ ...dados, senhaCemigAtende: value })
-            }
-          />
-          <TextInput
-            label={"LATITUDE"}
-            editable={true}
-            value={dados.latitude}
-            handleChange={(value) => setDados({ ...dados, latitude: value })}
-          />
-          <TextInput
-            label={"LONGITUDE"}
-            editable={true}
-            value={dados.longitude}
-            handleChange={(value) => setDados({ ...dados, longitude: value })}
-          />
-          <NumberInput
-            label={"POTÊNIA PICO"}
-            editable={true}
-            value={dados.potPico}
-            handleChange={(value) =>
-              setDados({
-                ...dados,
-                potPico: Number(value),
-                geracaoPrevista: Number(value) * 126,
-              })
-            }
-          />
-          <NumberInput
-            label={"GERAÇÃO PREVISTA"}
-            editable={true}
-            value={dados.geracaoPrevista}
-            handleChange={(value) =>
-              setDados({ ...dados, geracaoPrevista: value })
-            }
-          />
+        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 p-2">
+          <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+            INFORMAÇÕES DA INSTALAÇÃO DO CLIENTE
+          </h1>
+          <div className="flex items-center justify-center">
+            <TextInput
+              label={"NOME DO TITULAR DO PROJETO"}
+              value={dados.nomeTitularProjeto}
+              editable={true}
+              handleChange={(value) =>
+                setDados({
+                  ...dados,
+                  nomeTitularProjeto: value.toUpperCase(),
+                })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <SelectInput
+              label={"TIPO DO TITULAR"}
+              editable={true}
+              value={dados.tipoDoTitular}
+              handleChange={(value) =>
+                setDados({ ...dados, tipoDoTitular: value })
+              }
+              options={[
+                {
+                  label: "PESSOA FISICA",
+                  value: "PESSOA FISICA",
+                },
+                {
+                  label: "PESSOA JURIDICA",
+                  value: "PESSOA JURIDICA",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <SelectInput
+              label={"TIPO DA INSTALAÇÃO (ATUAL)"}
+              editable={true}
+              value={dados.tipoDaInstalacao}
+              handleChange={(value) =>
+                setDados({ ...dados, tipoDaInstalacao: value })
+              }
+              options={[
+                {
+                  label: "RURAL",
+                  value: "RURAL",
+                },
+                {
+                  label: "URBANO",
+                  value: "URBANO",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+            />
+          </div>
+          <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+            ENDEREÇO DA INSTALAÇÃO ATUAL
+          </h1>
+          <div className="flex items-center justify-center gap-x-2 flex-wrap">
+            <TextInput
+              editable={true}
+              label={"CEP INSTALAÇÃO"}
+              value={dados.cepInstalacao}
+              handleChange={(value) =>
+                setDados({ ...dados, cepInstalacao: formatCEP(value) })
+              }
+            />
+            <button
+              onClick={() => findCPF("enderecoInstalacao")}
+              className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
+            >
+              <AiOutlineSearch />
+            </button>
+          </div>
+          <div className="flex items-center justify-center">
+            <TextInput
+              label={"ENDEREÇO DE INSTALAÇÃO"}
+              editable={true}
+              value={dados.enderecoInstalacao}
+              handleChange={(value) =>
+                setDados({ ...dados, enderecoInstalacao: value.toUpperCase() })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <TextInput
+              label={"Nº"}
+              editable={true}
+              value={dados.numeroResInstalacao}
+              handleChange={(value) =>
+                setDados({ ...dados, numeroResInstalacao: value })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <NumberInput
+              label={"Nº DA INSTALAÇÃO"}
+              editable={true}
+              value={dados.numeroInstalacao}
+              handleChange={(value) =>
+                setDados({ ...dados, numeroInstalacao: value })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <TextInput
+              label={"BAIRRO"}
+              editable={true}
+              value={dados.bairroInstalacao}
+              handleChange={(value) =>
+                setDados({ ...dados, bairroInstalacao: value.toUpperCase() })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <SelectInput
+              label={"CIDADE"}
+              editable={true}
+              value={dados.cidadeInstalacao}
+              options={[
+                { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                ...cidadesAtendidas.map((cidade) => {
+                  return { label: cidade, value: cidade };
+                }),
+              ]}
+              handleChange={(value) =>
+                setDados({ ...dados, cidadeInstalacao: value })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <TextInput
+              label={"UF"}
+              editable={true}
+              value={dados.ufInstalacao}
+              handleChange={(value) =>
+                setDados({ ...dados, ufInstalacao: value })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <TextInput
+              label={"PONTO DE REFERÊNCIA"}
+              editable={true}
+              value={dados.pontoDeReferenciaInstalacao}
+              handleChange={(value) =>
+                setDados({ ...dados, pontoDeReferenciaInstalacao: value })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-center gap-2 flex-wrap col-span-3">
+            <TextInput
+              label={"LATITUDE"}
+              value={dados.latitude}
+              editable={true}
+              handleChange={(value) => setDados({ ...dados, latitude: value })}
+            />
+            <TextInput
+              label={"LONGITUDE"}
+              editable={true}
+              value={dados.longitude}
+              handleChange={(value) => setDados({ ...dados, longitude: value })}
+            />
+          </div>
+          <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+            ENDEREÇO DA INSTALAÇÃO REMONTAGEM
+          </h1>
+          <div className="flex items-center justify-center col-span-3">
+            <SelectInput
+              label={"HAVERÁ MUDANÇA DE LOCAL"}
+              editable={true}
+              value={dados.mudancaLocal}
+              options={[
+                {
+                  label: "SIM",
+                  value: "SIM",
+                },
+                {
+                  label: "NÃO",
+                  value: "NÃO",
+                },
+                {
+                  label: "NÃO DEFINIDO",
+                  value: "NÃO DEFINIDO",
+                },
+              ]}
+              handleChange={(value) => {
+                if (value == "NÃO") {
+                  setDados({
+                    ...dados,
+                    mudancaLocal: value.toUpperCase(),
+                    cepInstalacaoRemontagem: "",
+                    enderecoInstalacaoRemontagem: "",
+                    numeroInstalacaoRemontagem: "",
+                    numeroResInstalacaoRemontagem: "",
+                    bairroInstalacaoRemontagem: "",
+                    cidadeInstalacaoRemontagem: "",
+                    ufInstalacaoRemontagem: "",
+                    latitudeRemontagem: "",
+                    longitudeRemontagem: "",
+                    pontoDeReferenciaInstalacaoRemontagem: "",
+                  });
+                } else {
+                  setDados({ ...dados, mudancaLocal: value.toUpperCase() });
+                }
+              }}
+            />
+          </div>
+          {dados.mudancaLocal == "SIM" ? (
+            <>
+              <div className="flex items-center justify-center">
+                <SelectInput
+                  label={"TIPO DA LIGAÇÃO (NOVO LOCAL)"}
+                  editable={true}
+                  value={dados.tipoDaLigacao}
+                  handleChange={(value) =>
+                    setDados({ ...dados, tipoDaLigacao: value })
+                  }
+                  options={[
+                    {
+                      label: "NOVA",
+                      value: "NOVA",
+                    },
+                    {
+                      label: "EXISTENTE",
+                      value: "EXISTENTE",
+                    },
+                    {
+                      label: "NÃO DEFINIDO",
+                      value: "NÃO DEFINIDO",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="flex items-center justify-center">
+                <SelectInput
+                  label={"TIPO DA INSTALAÇÃO (NOVO LOCAL)"}
+                  editable={true}
+                  value={
+                    dados.tipoDaInstalacaoRemontagem
+                      ? dados.tipoDaInstalacaoRemontagem
+                      : "NÃO DEFINIDO"
+                  }
+                  handleChange={(value) =>
+                    setDados({ ...dados, tipoDaInstalacaoRemontagem: value })
+                  }
+                  options={[
+                    {
+                      label: "RURAL",
+                      value: "RURAL",
+                    },
+                    {
+                      label: "URBANO",
+                      value: "URBANO",
+                    },
+                    {
+                      label: "NÃO DEFINIDO",
+                      value: "NÃO DEFINIDO",
+                    },
+                  ]}
+                />
+              </div>
+              <div className="flex items-center justify-center gap-x-2 flex-wrap">
+                <TextInput
+                  editable={true}
+                  label={"CEP INSTALAÇÃO (NOVO LOCAL)"}
+                  value={dados.cepInstalacaoRemontagem}
+                  handleChange={(value) =>
+                    setDados({
+                      ...dados,
+                      cepInstalacaoRemontagem: formatCEP(value),
+                    })
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-center">
+                <TextInput
+                  label={"ENDEREÇO DE INSTALAÇÃO (NOVO LOCAL)"}
+                  editable={true}
+                  value={dados.enderecoInstalacaoRemontagem}
+                  handleChange={(value) =>
+                    setDados({
+                      ...dados,
+                      enderecoInstalacaoRemontagem: value.toUpperCase(),
+                    })
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-center">
+                <TextInput
+                  label={"Nº (NOVO LOCAL)"}
+                  editable={true}
+                  value={dados.numeroResInstalacaoRemontagem}
+                  handleChange={(value) =>
+                    setDados({ ...dados, numeroResInstalacaoRemontagem: value })
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-center">
+                <NumberInput
+                  label={"Nº DA INSTALAÇÃO (NOVO LOCAL)"}
+                  editable={true}
+                  value={dados.numeroInstalacaoRemontagem}
+                  handleChange={(value) =>
+                    setDados({ ...dados, numeroInstalacaoRemontagem: value })
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-center">
+                <TextInput
+                  label={"BAIRRO (NOVO LOCAL)"}
+                  editable={true}
+                  value={dados.bairroInstalacaoRemontagem}
+                  handleChange={(value) =>
+                    setDados({
+                      ...dados,
+                      bairroInstalacaoRemontagem: value.toUpperCase(),
+                    })
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-center">
+                <SelectInput
+                  label={"CIDADE (NOVO LOCAL)"}
+                  editable={true}
+                  value={dados.cidadeInstalacaoRemontagem}
+                  options={[
+                    { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                    ...cidadesAtendidas.map((cidade) => {
+                      return { label: cidade, value: cidade };
+                    }),
+                  ]}
+                  handleChange={(value) =>
+                    setDados({ ...dados, cidadeInstalacaoRemontagem: value })
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-center">
+                <TextInput
+                  label={"UF (NOVO LOCAL)"}
+                  editable={true}
+                  value={dados.ufInstalacaoRemontagem}
+                  handleChange={(value) =>
+                    setDados({ ...dados, ufInstalacaoRemontagem: value })
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-center">
+                <TextInput
+                  label={"PONTO DE REFERÊNCIA (NOVO LOCAL)"}
+                  editable={true}
+                  value={dados.pontoDeReferenciaInstalacaoRemontagem}
+                  handleChange={(value) =>
+                    setDados({
+                      ...dados,
+                      pontoDeReferenciaInstalacaoRemontagem: value,
+                    })
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-center gap-2 flex-wrap col-span-3">
+                <TextInput
+                  label={"LATITUDE (NOVO LOCAL)"}
+                  value={dados.latitudeRemontagem}
+                  editable={true}
+                  handleChange={(value) =>
+                    setDados({ ...dados, latitudeRemontagem: value })
+                  }
+                />
+                <TextInput
+                  label={"LONGITUDE (NOVO LOCAL)"}
+                  editable={true}
+                  value={dados.longitudeRemontagem}
+                  handleChange={(value) =>
+                    setDados({ ...dados, longitudeRemontagem: value })
+                  }
+                />
+              </div>
+            </>
+          ) : null}
+          <h1 className="text-[#fead61] col-span-3 text-center font-bold py-2">
+            DADOS DO SISTEMA (SOMENTE QUANTIDADES A SER DESMONTADAS/MONTADAS)
+          </h1>
+          <div className="flex items-center justify-center col-span-3 gap-2 flex-wrap">
+            <NumberInput
+              label={"POTÊNCIA PICO"}
+              editable={true}
+              value={dados.potPico}
+              handleChange={(value) =>
+                setDados({
+                  ...dados,
+                  potPico: Number(value),
+                  geracaoPrevista: Number(value) * 126,
+                })
+              }
+            />
+          </div>
         </div>
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
@@ -794,58 +1000,45 @@ function VisualizacaoForm({
               setDados({ ...dados, tipoEstrutura: value })
             }
           />
-          {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
-            <SelectInput
-              label={
-                "SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"
-              }
-              editable={true}
-              options={[
-                {
-                  label: "NÃO",
-                  value: "NÃO",
-                },
-                {
-                  label: "SIM",
-                  value: "SIM",
-                },
-                {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
-                },
-              ]}
-              value={dados.estruturaAmpere}
-              handleChange={(value) =>
-                setDados({ ...dados, estruturaAmpere: value })
-              }
-            />
-          ) : null}
-
-          {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
-            <SelectInput
-              label={"RESPONSÁVEL PELA ESTRUTURA"}
-              editable={true}
-              options={[
-                {
-                  label: "AMPERE",
-                  value: "AMPERE",
-                },
-                {
-                  label: "CLIENTE",
-                  value: "CLIENTE",
-                },
-                {
-                  label: "NÃO SE APLICA",
-                  value: "NÃO SE APLICA",
-                },
-              ]}
-              value={dados.responsavelEstrutura}
-              handleChange={(value) =>
-                setDados({ ...dados, responsavelEstrutura: value })
-              }
-            />
-          ) : null}
-
+          <SelectInput
+            width={"450px"}
+            label={"TIPO DA ESTRUTURA (REMONTAGEM)"}
+            editable={true}
+            options={[
+              {
+                label: "MESMA ESTRUTURA",
+                value: "MESMA ESTRUTURA",
+              },
+              {
+                label: "TELHADO",
+                value: "TELHADO",
+              },
+              {
+                label: "CARPORT",
+                value: "CARPORT",
+              },
+              {
+                label: "SOLO",
+                value: "SOLO",
+              },
+              {
+                label: "ESTRUTURA PERSONALIZADA",
+                value: "ESTRUTURA PERSONALIZADA",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
+            value={
+              dados.tipoEstruturaRemontagem
+                ? dados.tipoEstruturaRemontagem
+                : "NÃO DEFINIDO"
+            }
+            handleChange={(value) =>
+              setDados({ ...dados, tipoEstruturaRemontagem: value })
+            }
+          />
           <SelectInput
             label={"MATERIAL DA ESTRUTURA"}
             width={"450px"}
@@ -860,6 +1053,72 @@ function VisualizacaoForm({
             }
             handleChange={(value) =>
               setDados({ ...dados, materialEstrutura: value })
+            }
+          />
+          <SelectInput
+            label={"MATERIAL DA ESTRUTURA (REMONTAGEM)"}
+            width={"450px"}
+            editable={true}
+            options={[
+              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              { label: "MESMO MATERIAL", value: "MESMO MATERIAL" },
+              { label: "MADEIRA", value: "MADEIRA" },
+              { label: "FERRO", value: "FERRO" },
+            ]}
+            value={
+              dados.materialEstruturaRemontagem
+                ? dados.materialEstruturaRemontagem
+                : "NÃO DEFINIDO"
+            }
+            handleChange={(value) =>
+              setDados({ ...dados, materialEstruturaRemontagem: value })
+            }
+          />
+          <SelectInput
+            label={
+              "SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"
+            }
+            editable={true}
+            options={[
+              {
+                label: "NÃO",
+                value: "NÃO",
+              },
+              {
+                label: "SIM",
+                value: "SIM",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
+              },
+            ]}
+            value={dados.estruturaAmpere}
+            handleChange={(value) =>
+              setDados({ ...dados, estruturaAmpere: value })
+            }
+          />
+
+          <SelectInput
+            label={"RESPONSÁVEL PELA ESTRUTURA"}
+            editable={true}
+            options={[
+              {
+                label: "AMPERE",
+                value: "AMPERE",
+              },
+              {
+                label: "CLIENTE",
+                value: "CLIENTE",
+              },
+              {
+                label: "NÃO SE APLICA",
+                value: "NÃO SE APLICA",
+              },
+            ]}
+            value={dados.responsavelEstrutura}
+            handleChange={(value) =>
+              setDados({ ...dados, responsavelEstrutura: value })
             }
           />
           {dados.responsavelEstrutura != "NÃO SE APLICA" && (
@@ -1675,4 +1934,4 @@ function VisualizacaoForm({
   );
 }
 
-export default VisualizacaoForm;
+export default VisualizacaoFormMontagemDesmontagem;

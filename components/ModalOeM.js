@@ -766,15 +766,20 @@ function ModalOeM({
               changes={changes}
               setChanges={setChanges}
             />
-            <InfoPadraoBlock
-              comercialEdition={false}
-              technicalEdition={false}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-              showPaymentInfo={false}
-            />
+            {!["BOMBA SOLAR", "OPERAÇÃO E MANUTENÇÃO"].includes(
+              project.tipoDeServico
+            ) ? (
+              <InfoPadraoBlock
+                comercialEdition={false}
+                technicalEdition={false}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                showPaymentInfo={false}
+              />
+            ) : null}
+
             {![
               "TROCA DE PADRÃO",
               "REFORMA DE PADRÃO",
@@ -791,7 +796,9 @@ function ModalOeM({
                 showPaymentInfo={false}
               />
             )}
-            {infoHolder.tipoDeServico != "MONTAGEM E DESMONTAGEM" && (
+            {!["MONTAGEM E DESMONTAGEM", "OPERAÇÃO E MANUTENÇÃO"].includes(
+              project.tipoDeServico
+            ) ? (
               <InfoCompraBlock
                 editor={false}
                 infoHolder={infoHolder}
@@ -802,7 +809,7 @@ function ModalOeM({
                 showDeliveryInfoOnly={true}
                 showMonetaryValues={false}
               />
-            )}
+            ) : null}
             {!["BOMBA SOLAR", "SISTEMA FOTOVOLTAICO (OFF GRID)"].includes(
               infoHolder.tipoDeServico
             ) && (
@@ -827,23 +834,33 @@ function ModalOeM({
                 setChanges={setChanges}
               />
             )}
-            <InfoProjetoBlock
-              editor={false}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-              handleUpdates={handleUpdates}
-              project={project}
-            />
-            <InfoObrasBlock
-              editor={false}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-              project={project}
-            />
+            {![
+              "OPERAÇÃO E MANUTENÇÃO",
+              "BOMBA SOLAR",
+              "SISTEMA FOTOVOLTAICO (OFF GRID)",
+            ].includes(project.tipoDeServico) ? (
+              <InfoProjetoBlock
+                editor={false}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                handleUpdates={handleUpdates}
+                project={project}
+              />
+            ) : null}
+
+            {project.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
+              <InfoObrasBlock
+                editor={false}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                project={project}
+              />
+            ) : null}
+
             <InfoArquivosBlock
               project={project}
               infoHolder={infoHolder}

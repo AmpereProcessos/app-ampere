@@ -263,16 +263,24 @@ function OeM({ users }) {
       setModalIsOpen(true);
     });
   }
-  function checkOeMEnding(dataMedidor) {
-    if (dataMedidor) {
-      if (dayjs().diff(dayjs(dataMedidor), "days") > 365) {
+  function checkOeMEnding(dataMedidor, tipoDeServico, dataAssinatura) {
+    if (tipoDeServico == "OPERAÇÃO E MANUTENÇÃO") {
+      if (dayjs().diff(dayjs(dataAssinatura), "days") > 15) {
         return { text: "O&M VENCIDO", color: "text-red-500" };
-      } else if (dayjs().diff(dayjs(dataMedidor), "days") > 350) {
-        return { text: "O&M EM VENCIMENTO", color: "text-orange-500" };
       } else {
-        return { text: "O&M EM ANDAMENTO", color: "text-green-500" };
+        return { text: "O&M EM ANDAMENTO", color: "text-red-500" };
       }
-    } else return { text: "O&M EM ANDAMENTO", color: "text-green-500" };
+    } else {
+      if (dataMedidor) {
+        if (dayjs().diff(dayjs(dataMedidor), "days") > 365) {
+          return { text: "O&M VENCIDO", color: "text-red-500" };
+        } else if (dayjs().diff(dayjs(dataMedidor), "days") > 350) {
+          return { text: "O&M EM VENCIMENTO", color: "text-orange-500" };
+        } else {
+          return { text: "O&M EM ANDAMENTO", color: "text-green-500" };
+        }
+      } else return { text: "O&M EM ANDAMENTO", color: "text-green-500" };
+    }
   }
   useEffect(() => {
     if (
@@ -737,13 +745,27 @@ function OeM({ users }) {
                         {project.cidade ? project.cidade : "-"}
                       </p>
                     </div>
-                    {checkOeMEnding(project.medidor.data).text && (
+                    {checkOeMEnding(
+                      project.medidor.data,
+                      project.tipoDeServico,
+                      project.contrato.dataAssinatura
+                    ).text && (
                       <span
                         className={`text-xs ${
-                          checkOeMEnding(project.medidor.data).color
+                          checkOeMEnding(
+                            project.medidor.data,
+                            project.tipoDeServico,
+                            project.contrato.dataAssinatura
+                          ).color
                         } text-center font-bold`}
                       >
-                        {checkOeMEnding(project.medidor.data).text}
+                        {
+                          checkOeMEnding(
+                            project.medidor.data,
+                            project.tipoDeServico,
+                            project.contrato.dataAssinatura
+                          ).text
+                        }
                       </span>
                     )}
                     <div>

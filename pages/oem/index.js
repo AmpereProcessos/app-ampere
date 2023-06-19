@@ -52,7 +52,8 @@ function OeM({ users }) {
     limparAteDezembro: false,
     appPendente: false,
     ordenarAlfabeticamente: false,
-    numModulos: null,
+    maiorQueQtdeModulos: null,
+    menorQueQtdeModulos: null,
     usinaLigadaFilter: [],
     condicaoOeM: "TODOS",
   });
@@ -214,10 +215,20 @@ function OeM({ users }) {
           call[dateFilter.field1][dateFilter.field2] <= dateFilter.before
       );
     }
-    if (filters.numModulos > 0) {
+    if (filters.maiorQueQtdeModulos > 0) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
-        (call) => Number(call.sistema.qtdeModulos) > Number(filters.numModulos)
+        (call) =>
+          Number(call.sistema.qtdeModulos) >=
+          Number(filters.maiorQueQtdeModulos)
+      );
+    }
+    if (filters.menorQueQtdeModulos > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (call) =>
+          Number(call.sistema.qtdeModulos) <=
+          Number(filters.menorQueQtdeModulos)
       );
     }
     if (!newArr) {
@@ -348,13 +359,25 @@ function OeM({ users }) {
                   />
                   <input
                     type="number"
-                    placeholder="> NºMÓDULOS"
+                    placeholder="< NºMÓDULOS"
                     className="outline-none p-1.5 w-full lg:w-[150px] rounded border border-gray-200 placeholder:italic"
-                    value={filters.numModulos}
+                    value={filters.menorQueQtdeModulos}
                     onChange={(e) =>
                       setFilters({
                         ...filters,
-                        numModulos: Number(e.target.value),
+                        menorQueQtdeModulos: Number(e.target.value),
+                      })
+                    }
+                  />
+                  <input
+                    type="number"
+                    placeholder="> NºMÓDULOS"
+                    className="outline-none p-1.5 w-full lg:w-[150px] rounded border border-gray-200 placeholder:italic"
+                    value={filters.maiorQueQtdeModulos}
+                    onChange={(e) =>
+                      setFilters({
+                        ...filters,
+                        maiorQueQtdeModulos: Number(e.target.value),
                       })
                     }
                   />

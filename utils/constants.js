@@ -602,11 +602,18 @@ export const vendedores = [
   },
   {
     nome: "YASMIM ARAUJO",
-    cod: 77,
+    cod: 78,
     cargo: "INTERNO",
     qualificacao: "INSIDE JUNIOR",
     comissaoInside: 0.5,
     comissaoAtivo: 0.5,
+    ativo: true,
+  },
+  {
+    nome: "RAILDO CARVALHO",
+    cod: 79,
+    comissaoInside: 2,
+    comissaoAtivo: 4,
     ativo: true,
   },
   {

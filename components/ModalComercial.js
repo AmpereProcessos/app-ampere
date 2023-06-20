@@ -233,6 +233,7 @@ function ModalComercial({
               />
             )}
             {![
+              "OPERAÇÃO E MANUTENÇÃO",
               "TROCA DE PADRÃO",
               "REFORMA DE PADRÃO",
               "SUBESTAÇÃO DE ENERGIA",
@@ -264,7 +265,9 @@ function ModalComercial({
               changes={changes}
               setChanges={setChanges}
             />
-            {infoHolder.tipoDeServico != "MONTAGEM E DESMONTAGEM" && (
+            {!["MONTAGEM E DESMONTAGEM", "OPERAÇÃO E MANUTENÇÃO"].includes(
+              infoHolder.tipoDeServico
+            ) && (
               <InfoCompraBlock
                 editor={true}
                 project={project}
@@ -302,15 +305,22 @@ function ModalComercial({
                 showPaymentInfo={true}
               />
             )}
-            <InfoProjetoBlock
-              editor={true}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-              handleUpdates={handleUpdates}
-              project={project}
-            />
+            {![
+              "BOMBA SOLAR",
+              "SISTEMA FOTOVOLTAICO (OFF GRID)",
+              "OPERAÇÃO E MANUTENÇÃO",
+            ].includes(infoHolder.tipoDeServico) ? (
+              <InfoProjetoBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                handleUpdates={handleUpdates}
+                project={project}
+              />
+            ) : null}
+
             <InfoObrasBlock
               editor={true}
               infoHolder={infoHolder}

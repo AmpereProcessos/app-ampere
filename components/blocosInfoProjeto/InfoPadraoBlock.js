@@ -210,9 +210,7 @@ function InfoPadraoBlock({
             label={"TIPO DO PADRÃO"}
             editable={technicalEdition}
             value={
-              infoHolder.padrao.tipo != undefined
-                ? infoHolder.padrao.tipo
-                : "N/A"
+              infoHolder.padrao.tipo ? infoHolder.padrao.tipo : "NÃO DEFINIDO"
             }
             options={[
               {
@@ -238,6 +236,10 @@ function InfoPadraoBlock({
               {
                 label: "N/A",
                 value: "N/A",
+              },
+              {
+                label: "NÃO DEFINIDO",
+                value: "NÃO DEFINIDO",
               },
             ]}
             handleChange={(value) => {

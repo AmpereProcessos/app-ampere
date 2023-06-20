@@ -96,13 +96,14 @@ function LeadCard({ lead, getLeads }) {
             widthFit={true}
             editable={true}
             value={infoHolder.responsavel}
-            options={[
-              { label: "DÁFINY VILLANO", value: "DÁFINY VILLANO" },
-              { label: "DEVISSON LIMA", value: "DEVISSON LIMA" },
-              { label: "LEANDRO VIALI", value: "LEANDRO VIALI" },
-              { label: "MARIANA DE SOUZA", value: "MARIANA DE SOUZA" },
-              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-            ]}
+            options={vendedores
+              .filter((x) => x.qualificacao?.includes("INSIDE"))
+              .map((vendedor) => {
+                return {
+                  label: vendedor.nome,
+                  value: vendedor.nome,
+                };
+              })}
             handleChange={(value) =>
               setInfo({ ...infoHolder, responsavel: value })
             }

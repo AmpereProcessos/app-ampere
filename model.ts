@@ -1,20 +1,52 @@
 interface IProject {
   _id: string;
-  app: {
-    login: string;
-    senha: string;
-    data: Date | string;
-  };
-  bairro: string;
-  canalVenda: string;
-  cep: string;
-  cidade: string;
+  qtde: number;
+  nomeDoContrato: string;
+  nomeDoProjeto: string;
   codigoSVB: number | string;
-  comissionamento: {
-    comercial: boolean;
-    projetos: boolean;
-    suprimentos: boolean;
+  tipoDeServico: string;
+  regional: "REGIONAL ITUIUTABA" | "REGIONAL UBERLÂNDIA";
+  vendedor: {
+    nome: string;
+    codigo: number;
   };
+  cep: string;
+  uf: "MG" | "GO" | string;
+  cidade: string;
+  bairro: string;
+  logradouro: string;
+  numeroResidencia: string;
+  cpf_cnpj: string;
+  dataNascimento: string;
+  email: string;
+  linkDrive: string;
+  segmento: "RESIDENCIAL" | "RURAL" | "COMERCIAL" | "INDUSTRIAL";
+  telefone: string;
+  ondeTrabalha: string;
+  possuiaGD: boolean;
+  idVisitaTecnica: string;
+  canalVenda: string;
+  insider: string;
+  obsComercial: string;
+  nps: number;
+  visitaTecnica: {
+    amperagem: string;
+    saidaDoCliente: "AEREO" | "SUBTERRANEO";
+    status: string;
+    tecnico: string;
+    tipoDaTelha: string;
+  };
+  // CONTRATO É COMUM PARA TODOS OS CONTRATOS
+  contrato: {
+    comissaoPaga: boolean;
+    comissaoVendedor: number;
+    dataAssinatura: string;
+    dataLiberacao: string;
+    dataSolicitacao: string;
+    formaAssinatura: "FISICO" | "DIGITAL";
+    status: string;
+  };
+  // COMPRA NÃO SE APLICA A O&M
   compra: {
     dataEntrega: string;
     dataLiberacao: string;
@@ -32,6 +64,162 @@ interface IProject {
     tipoDoKit: "NORMAL" | "PROMO" | "NÃO DEFINIDO";
     valorDoKit: number;
   };
+  // DADOS CONCESSIONÁRIA NÃO SE APLICA A OFF GRID E BOMBA SOLAR
+  dadosCemig: {
+    distCreditos: "NÃO" | "SIM";
+    numeroInstalacao: number;
+    qtdeDistCreditos: number;
+    titularProjeto: string;
+  };
+  // PROJETO NÃO SE APLICA A O&M, OFF GRID E BOMBA SOLAR
+  projeto: {
+    acStatus: string;
+    aumentoDeCarga: "SIM" | "NÃO";
+    dataLiberacaoDocumentacao: string;
+    dataAssDocumentacao: string;
+    dataSolicitacaoAcesso: string;
+    desenhoTelhado: string;
+    diagramaUnifilar: string;
+    mapaDeMicro: string;
+    fechamentoAC: string;
+    formaAssDocumentacao: "DIGITAL" | "FISICA";
+    iniciar: "SIM" | "NÃO" | "NÃO DEFINIDO";
+    projetista: {
+      nome: string;
+      codigo: string;
+    };
+    projetoConcluido: "SIM" | "NÃO";
+  };
+  // SISTEMA É COMUM PARA TODOS OS CONTRATOS
+  sistema: {
+    capacidadeBateria: number;
+    marcaBateria: string;
+    qtdeBateria: number;
+    tipoBateria: string;
+    marcaBomba: string;
+    potBomba: number;
+    qtdeBomba: number;
+    marcaControlador: string;
+    correnteControlador: number;
+    qtdeControlador: number;
+    tipoControlador: string;
+    inversor: string;
+    potModulos: number;
+    qtdeModulos: number;
+    potPico: number;
+    topologia: "MICRO" | "INVERSOR" | "OTIMIZADOR";
+    valorProjeto: number;
+  };
+  // PADRÃO NÃO SE APLICA A O&M, OFF GRID E BOMBA SOLAR
+  padrao: {
+    caixaConjugada: "SIM" | "NÃO" | "NÃO DEFINIDO";
+    respInstalacao: "AMPERE" | "CLIENTE" | "NÃO SE APLICA";
+    respPagamento: string;
+    tipo: string;
+    tipoEntrega: "AÉREA" | "SUBTERRÂNEO";
+    valor: number;
+  };
+  // ESTRUTURA PERSONALIZADA NÃO SE APLICA A O&M, TROCA DE PADRÃO
+  estruturaPersonalizada: {
+    aplicavel: "SIM" | "NÃO";
+    dataEntrega: string;
+    statusEntrega: string;
+    dataMontagem: string;
+    pagTerceiro: boolean;
+    respPagamento: "CLIENTE" | "AMPERE" | "NÃO SE APLICA";
+    status: "PRONTA" | "N/A" | "PENDÊNCIA";
+    tipo: string;
+    valor: number;
+  };
+  // PAGAMENTO É COMUM PARA TODOS OS CONTRATOS
+  pagamento: {
+    cobrancaFeita: boolean;
+    pagador: string;
+    contatoPagador: string;
+    credor: string;
+    dataRecebimento: string;
+    forma: "FINANCIAMENTO" | "CAPITAL PRÓPRIO";
+    retorno: number;
+    status: string;
+  };
+  // PARECER NÃO SE APLICA A O&M, OFF GRID E BOMBA SOLAR
+  parecer: {
+    dataParecerDeAcesso: string;
+    motivoReprova: string;
+    parecerReprovado: "SIM" | "NÃO";
+    pendencias: string;
+    qtdeDiasObraDeRede: number;
+    qtdeReprovas: number;
+    statusDoParecerDeAcesso: string;
+  };
+  // OBRA NÃO SE APLICA A O&M
+  obra: {
+    checklist: "SIM" | "NÃO";
+    entrada: string;
+    saida: string;
+    equipeResp: string;
+    laudo: "EMITIDO" | "EM ESTUDO" | "NÃO DEFINIDO";
+    observacoes: string;
+    statusDaObra: string;
+    statusSolicitacao: string;
+    trafo: "SIM" | "NÃO";
+  };
+  // VISTORIA NÃO APLICA A O&M, OFF GRID E BOMBA SOLAR
+  vistoria: {
+    dataPedido: string;
+    equipeDeCampoNecessaria: "SIM" | "NÃO";
+    motivoReprova: string;
+    qtdeReprovas: number;
+    status: string;
+    vistoriaReprovada: "SIM" | "NÃO";
+  };
+  // MATERIAL NÃO SE APLICA A O&M
+  material: {
+    avarias: boolean;
+    chamadoIrregularidade: boolean;
+    conferenciaFeita: boolean;
+    descricaoProblema: string;
+    disjuntores: {
+      corrente: number;
+      qtde: number;
+      tipo: "MONOFÁSICO" | "BIFÁSICO" | "TRIFÁSICO";
+    }[];
+    previsaoCustos: number;
+    efetivoCustos: number;
+    entregaFaltando: boolean;
+    formularioId: string;
+    lista: MaterialListItem[];
+    materialFaltante: boolean;
+    statusSeparacao: "SEPARADO" | "NÃO DEFINIDO" | "INICIAR SEPARAÇÃO";
+  };
+  // MEDIDOR NÃO SE APLICA A O&M, OFF GRID E BOMBA SOLAR
+  medidor: {
+    data: string;
+    status: string;
+  };
+  // O&M NÃO APLICA A TROCA DE PADRÃO
+  oem: {
+    aplicavel: boolean;
+    diagnostico: string;
+    duracao: number;
+    oemConcluido: boolean;
+    plano: string;
+    qtdeManutencao: number;
+    valor: number;
+  };
+  // APP NÃO SE APLICA A TROCA DE PADRÃO
+  app: {
+    login: string;
+    senha: string;
+    data: Date | string;
+  };
+  // COMISSIONAMENTO NÃO SE APLICA A O&M, OFF GRID E BOMBA
+  comissionamento: {
+    comercial: boolean;
+    projetos: boolean;
+    suprimentos: boolean;
+  };
+  // CONFERENCIAS É COMUM PARA TODOS OS CONTRATOS
   conferencias: {
     energiaInjetada: {
       data: string;
@@ -46,35 +234,26 @@ interface IProject {
       status: "REALIZADO" | "NÃO REALIZADO";
     };
   };
-  contrato: {
-    comissaoPaga: boolean;
-    comissaoVendedor: number;
-    dataAssinatura: string;
-    dataLiberacao: string;
-    dataSolicitacao: string;
-    formaAssinatura: "FISICO" | "DIGITAL";
-    status: string;
+  // RELATORIOS NÃO SE APLICA A O&M, OFF GRID E BOMBA
+  relatorios: {
+    envioUm: {
+      data: string;
+      status: "REALIZADO" | "NÃO REALIZADO";
+    };
+    envioDois: {
+      data: string;
+      status: "REALIZADO" | "NÃO REALIZADO";
+    };
+    envioTres: {
+      data: string;
+      status: "REALIZADO" | "NÃO REALIZADO";
+    };
+    envioQuatro: {
+      data: string;
+      status: "REALIZADO" | "NÃO REALIZADO";
+    };
   };
-  cpf_cnpj: string;
-  dadosCemig: {
-    distCreditos: "NÃO" | "SIM";
-    numeroInstalacao: number;
-    qtdeDistCreditos: number;
-    titularProjeto: string;
-  };
-  dataNascimento: string;
-  email: string;
-  estruturaPersonalizada: {
-    aplicavel: "SIM" | "NÃO";
-    dataEntrega: string;
-    statusEntrega: string;
-    dataMontagem: string;
-    pagTerceiro: boolean;
-    respPagamento: "CLIENTE" | "AMPERE" | "NÃO SE APLICA";
-    status: "PRONTA" | "N/A" | "PENDÊNCIA";
-    tipo: string;
-    valor: number;
-  };
+  // FATURAMENTO É COMUM PARA TODOS OS CONTRATOS
   faturamento: {
     cnpjFaturamento: string;
     empresaFaturamento:
@@ -83,12 +262,12 @@ interface IProject {
       | "IZAIRA SERVIÇOS";
     previsaoFaturamento: string;
   };
-  idVisitaTecnica: string;
+  // INDICACAO É COMUM PARA TODOS OS CONTRATOS
   indicacao: {
     contato: string;
     quemIndicou: string;
   };
-  insider: string;
+  // JORNADA É COMUM PARA TODOS OS CONTRATOS
   jornada: {
     assDocumentacoes: boolean;
     boasVindas: boolean;
@@ -112,7 +291,7 @@ interface IProject {
     tipoEntregaTecnica: "REMOTO" | "PRESENCIAL";
     vistoriaConcessionaria: boolean;
   };
-  linkDrive: string;
+  // LINKS É COMUM PARA TODOS OS CONTRATOS
   links: {
     chamadosSuporte: LinksItem[];
     chamadosSuprimentos: LinksItem[];
@@ -124,100 +303,13 @@ interface IProject {
     projetos: LinksItem[];
     visitaTecnica: LinksItem[];
   };
-  logradouro: string;
+  // MANUTENCAO PREVENTIVA NÃO SE APLICA A O&M, OFF GRID E BOMBA
   manutencaoPreventiva: {
     data: string;
     status: string;
   };
-  material: {
-    avarias: boolean;
-    chamadoIrregularidade: boolean;
-    conferenciaFeita: boolean;
-    descricaoProblema: string;
-    disjuntores: {
-      corrente: number;
-      qtde: number;
-      tipo: "MONOFÁSICO" | "BIFÁSICO" | "TRIFÁSICO";
-    }[];
-    previsaoCustos: number;
-    efetivoCustos: number;
-    entregaFaltando: boolean;
-    formularioId: string;
-    lista: MaterialListItem[];
-    materialFaltante: boolean;
-    statusSeparacao: "SEPARADO" | "NÃO DEFINIDO" | "INICIAR SEPARAÇÃO";
-  };
-  medidor: {
-    data: string;
-    status: string;
-  };
-  nomeDoContrato: string;
-  nomeDoProjeto: string;
-  nps: number;
-  numeroResidencia: string;
-  obra: {
-    checklist: "SIM" | "NÃO";
-    entrada: string;
-    saida: string;
-    equipeResp: string;
-    laudo: "EMITIDO" | "EM ESTUDO" | "NÃO DEFINIDO";
-    observacoes: string;
-    statusDaObra: string;
-    statusSolicitacao: string;
-    trafo: "SIM" | "NÃO";
-  };
-  obsComercial: string;
-  oem: {
-    aplicavel: boolean;
-    diagnostico: string;
-    duracao: number;
-    oemConcluido: boolean;
-    plano: string;
-    qtdeManutencao: number;
-    valor: number;
-  };
-  ondeTrabalha: string;
+  // ORDENS DE SERVIÇO É COMUM PARA TODOS OS CONTRATOS
   ordensDeServico: any[];
-  padrao: {
-    caixaConjugada: "SIM" | "NÃO" | "NÃO DEFINIDO";
-    respInstalacao: "AMPERE" | "CLIENTE" | "NÃO SE APLICA";
-    respPagamento: string;
-    tipo: string;
-    tipoEntrega: "AÉREA" | "SUBTERRÂNEO";
-    valor: number;
-  };
-  pagamento: {
-    cobrancaFeita: boolean;
-    pagador: string;
-    contatoPagador: string;
-    credor: string;
-    dataRecebimento: string;
-    forma: "FINANCIAMENTO" | "CAPITAL PRÓPRIO";
-    retorno: number;
-    status: string;
-  };
-  parecer: {
-    dataParecerDeAcesso: string;
-    motivoReprova: string;
-    parecerReprovado: "SIM" | "NÃO";
-    pendencias: string;
-    qtdeDiasObraDeRede: number;
-    qtdeReprovas: number;
-    statusDoParecerDeAcesso: string;
-  };
-  possuiaGD: boolean;
-  projeto: {
-    acStatus: string;
-    aumentoDeCarga: "SIM" | "NÃO";
-    dataLiberacaoDocumentacao: string;
-    dataAssDocumentacao: string;
-    dataSolicitacaoAcesso: string;
-    desenhoTelhado: string;
-    diagramaUnifilar: string;
-    fechamentoAC: string;
-    formaAssDocumentacao: "DIGITAL" | "FISICA";
-    iniciar: "SIM" | "NÃO" | "NÃO DEFINIDO";
-  };
 }
 type MaterialListItem = {
   diff: number;
@@ -370,6 +462,56 @@ const feedbackStatus = [
   {
     label: "PARECER DE ACESSO COM OBRAS",
     value: "PARECER DE ACESSO COM OBRAS",
+  },
+  {
+    label: "NÃO DEFINIDO",
+    value: "NÃO DEFINIDO",
+  },
+];
+const servicesType = [
+  {
+    label: "SISTEMA FOTOVOLTAICO",
+    value: "SISTEMA FOTOVOLTAICO",
+  },
+  {
+    label: "SISTEMA FOTOVOLTAICO (OFF GRID)",
+    value: "SISTEMA FOTOVOLTAICO (OFF GRID)",
+  },
+  {
+    label: "BOMBA SOLAR",
+    value: "BOMBA SOLAR",
+  },
+  {
+    label: "OPERAÇÃO E MANUTENÇÃO",
+    value: "OPERAÇÃO E MANUTENÇÃO",
+  },
+  {
+    label: "TROCA DE PADRÃO",
+    value: "TROCA DE PADRÃO",
+  },
+  {
+    label: "REFORMA DE PADRÃO",
+    value: "REFORMA DE PADRÃO",
+  },
+  {
+    label: "MANUTENÇÃO CORRETIVA",
+    value: "MANUTENÇÃO CORRETIVA",
+  },
+  {
+    label: "MANUTENÇÃO PREVENTIVA",
+    value: "MANUTENÇÃO PREVENTIVA",
+  },
+  {
+    label: "MONTAGEM E DESMONTAGEM",
+    value: "MONTAGEM E DESMONTAGEM",
+  },
+  {
+    label: "TROCA DE STRING BOX",
+    value: "TROCA DE STRING BOX",
+  },
+  {
+    label: "SUBESTAÇÃO DE ENERGIA",
+    value: "SUBESTAÇÃO DE ENERGIA",
   },
   {
     label: "NÃO DEFINIDO",

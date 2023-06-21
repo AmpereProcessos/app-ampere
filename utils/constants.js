@@ -1426,6 +1426,7 @@ export const cidadesAtendidas = [
   "CACHOEIRA ALTA", // GO
   "CHAVESLÂNDIA", // MG
   "PONTAL DO ARAGUAIA", // MT
+  "GOIATUBA", // GO
 ];
 export const cidadesGoias = [
   "CALDAS NOVAS", // GO
@@ -1695,6 +1696,10 @@ export const tiposDeServico = [
   {
     label: "SISTEMA FOTOVOLTAICO (OFF GRID)",
     value: "SISTEMA FOTOVOLTAICO (OFF GRID)",
+  },
+  {
+    label: "AUMENTO DE SISTEMA FOTOVOLTAICO",
+    value: "AUMENTO DE SISTEMA FOTOVOLTAICO",
   },
   {
     label: "BOMBA SOLAR",

@@ -7,6 +7,9 @@ function getServiceTypeTagColor(type) {
     "SISTEMA FOTOVOLTAICO (OFF GRID)": {
       combination: "bg-[#fead61] text-[#15599a]",
     },
+    "AUMENTO DE SISTEMA FOTOVOLTAICO": {
+      combination: "bg-green-500 text-white",
+    },
     "BOMBA SOLAR": {
       combination: "bg-[#000066] text-white",
     },

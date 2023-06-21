@@ -39,7 +39,8 @@ function FormSolicitacaoDadosEstrutura({ avancar, setDados, dados, voltar }) {
         return false;
       }
       if (
-        dados.responsavelEstrutura != "NÃO SE APLICA" &&
+        dados.responsavelEstrutura != "AMPERE" &&
+        dados.estruturaAmpere == "SIM" &&
         (dados.valorEstrutura == null || dados.valorEstrutura == 0)
       ) {
         setMessage("Por favor, preencha o valor da estrutura");
@@ -97,7 +98,7 @@ function FormSolicitacaoDadosEstrutura({ avancar, setDados, dados, voltar }) {
         {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
           <div className="flex items-center justify-center col-span-3">
             <SelectFloatingInput
-              label={"ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"}
+              label={"ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA ?"}
               width={"450px"}
               editable={true}
               options={[

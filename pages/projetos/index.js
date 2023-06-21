@@ -45,6 +45,7 @@ function Projetos() {
     desenhoFilter: false,
     parecerReprovado: false,
     vistoriaReprovada: false,
+    realizarHomologacao: false,
     obraStatusFilter: [],
     entregaStatusFilter: [],
     cidadeFilter: [],
@@ -184,6 +185,12 @@ function Projetos() {
       if (!newArr) newArr = projects;
       newArr = newArr.filter(
         (project) => project.vistoria.vistoriaReprovada == "SIM"
+      );
+    }
+    if (filters.realizarHomologacao) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter(
+        (project) => project.projeto.realizarHomologacao == true
       );
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
@@ -700,6 +707,21 @@ function Projetos() {
                     </div>
                   </div>
                   <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                    <div
+                      onClick={() =>
+                        setFilters({
+                          ...filters,
+                          realizarHomologacao: !filters.realizarHomologacao,
+                        })
+                      }
+                      className={`${
+                        filters.realizarHomologacao
+                          ? "bg-[#15599a]"
+                          : "bg-blue-300"
+                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    >
+                      NECESSÁRIO HOMOLOGAÇÃO
+                    </div>
                     <div
                       onClick={() =>
                         setFilters({

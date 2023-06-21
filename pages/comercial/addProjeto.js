@@ -1750,6 +1750,10 @@ function NovoProjeto() {
                     value: "PROMO",
                   },
                   {
+                    label: "NÃO SE APLICA",
+                    value: "NÃO SE APLICA",
+                  },
+                  {
                     label: "NÃO DEFINIDO",
                     value: "NÃO DEFINIDO",
                   },

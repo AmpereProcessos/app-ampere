@@ -303,6 +303,7 @@ function ControleAlmoxarifado({
                           R${" "}
                           {Number(alt.anterior).toLocaleString("pt-br", {
                             minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
                           })}
                         </h1>
                         <div className="flex items-center justify-center">
@@ -312,6 +313,7 @@ function ControleAlmoxarifado({
                           R${" "}
                           {Number(alt.novo).toLocaleString("pt-br", {
                             minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
                           })}
                         </h1>
                       </div>

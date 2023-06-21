@@ -29,6 +29,7 @@ interface IProject {
   insider: string;
   obsComercial: string;
   nps: number;
+
   visitaTecnica: {
     amperagem: string;
     saidaDoCliente: "AEREO" | "SUBTERRANEO";

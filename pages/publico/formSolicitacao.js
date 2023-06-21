@@ -18,6 +18,7 @@ import SolicitacaoOeM from "../../components/SolicitacaoOeM";
 import SolicitacaoManutencao from "../../components/SolicitacaoManutencao";
 import SolicitacaoAlteracaoPadrao from "../../components/SolicitacaoAlteracaoPadrao";
 import SolicitacaoMontagemDesmontagem from "../../components/SolicitacaoMontagemDesmontagem";
+import SolicitacaoAumentoSistema from "../../components/SolicitacaoAumentoSistema";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -187,6 +188,16 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             tipoDeServico={info.tipoDeServico}
           />
         )}
+        {info.tipoDeServico == "AUMENTO DE SISTEMA FOTOVOLTAICO" && (
+          <SolicitacaoAumentoSistema
+            nomeVendedor={info.nomeVendedor}
+            telefoneVendedor={info.telefoneVendedor}
+            cliente={cliente}
+            links={links}
+            formVisitaId={formVisitaId}
+            tipoDeServico={info.tipoDeServico}
+          />
+        )}
         {info.tipoDeServico == "BOMBA SOLAR" && (
           <SolicitacaoBombaSolar
             nomeVendedor={info.nomeVendedor}
@@ -245,6 +256,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
         {![
           "SISTEMA FOTOVOLTAICO",
           "SISTEMA FOTOVOLTAICO (OFF GRID)",
+          "AUMENTO DE SISTEMA FOTOVOLTAICO",
           "OPERAÇÃO E MANUTENÇÃO",
           "BOMBA SOLAR",
           "MANUTENÇÃO PREVENTIVA",

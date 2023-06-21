@@ -758,6 +758,109 @@ function VisualizacaoForm({
             }
           />
         </div>
+        {dados.tipoDeServico == "AUMENTO DE SISTEMA FOTOVOLTAICO" ? (
+          <div className="mt-2 border-t border-[#fead61] py-4">
+            <div className="flex gap-2 justify-around flex-wrap">
+              {dados.topologia != "NÃO DEFINIDO" && (
+                <>
+                  <TextInput
+                    label={"MARCA DO INVERSOR/MICRO (AUMENTO)"}
+                    editable={true}
+                    value={dados.marcaInversorAumento}
+                    handleChange={(value) =>
+                      setDados({ ...dados, marcaInversorAumento: value })
+                    }
+                  />
+                  <NumberInput
+                    label={"QTDE INVERSOR/MICRO (AUMENTO)"}
+                    editable={true}
+                    value={dados.qtdeInversorAumento}
+                    handleChange={(value) =>
+                      setDados({ ...dados, qtdeInversorAumento: Number(value) })
+                    }
+                  />
+                  <NumberInput
+                    label={"POTÊNCIA INVERSOR/MICRO (AUMENTO)"}
+                    editable={true}
+                    unit={"W"}
+                    value={dados.potInversorAumento}
+                    handleChange={(value) =>
+                      setDados({ ...dados, potInversorAumento: Number(value) })
+                    }
+                  />
+                </>
+              )}
+            </div>
+            {dados.topologia == "OTIMIZADOR" && (
+              <div className="flex gap-2 justify-around flex-wrap mt-2">
+                <TextInput
+                  label={"MARCA DO OTIMIZADOR (AUMENTO)"}
+                  editable={true}
+                  value={
+                    dados.marcaOtimizadorAumento
+                      ? dados.marcaOtimizadorAumento
+                      : ""
+                  }
+                  handleChange={(value) =>
+                    setDados({ ...dados, marcaOtimizadorAumento: value })
+                  }
+                />
+                <NumberInput
+                  label={"QTDE DO OTIMIZADOR"}
+                  editable={true}
+                  value={
+                    dados.qtdeOtimizadorAumento
+                      ? dados.qtdeOtimizadorAumento
+                      : null
+                  }
+                  handleChange={(value) =>
+                    setDados({ ...dados, qtdeOtimizadorAumento: Number(value) })
+                  }
+                />
+                <NumberInput
+                  label={"POTÊNCIA DO OTIMIZADOR"}
+                  editable={true}
+                  unit={"W"}
+                  value={
+                    dados.potOtimizadorAumento
+                      ? dados.potOtimizadorAumento
+                      : null
+                  }
+                  handleChange={(value) =>
+                    setDados({ ...dados, potOtimizadorAumento: Number(value) })
+                  }
+                />
+              </div>
+            )}
+            <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
+              <TextInput
+                label={"MARCA DOS MÓDULOS AUMENTO)"}
+                editable={true}
+                value={dados.marcaModulosAumento}
+                handleChange={(value) =>
+                  setDados({ ...dados, marcaModulosAumento: value })
+                }
+              />
+              <NumberInput
+                label={"Nº DE MÓDULOS (AUMENTO)"}
+                editable={true}
+                value={dados.qtdeModulosAumento}
+                handleChange={(value) =>
+                  setDados({ ...dados, qtdeModulosAumento: Number(value) })
+                }
+              />
+              <NumberInput
+                label={"POTÊNCIA DOS MÓDULOS (AUMENTO)"}
+                editable={true}
+                unit={"W"}
+                value={dados.potModulosAumento}
+                handleChange={(value) =>
+                  setDados({ ...dados, potModulosAumento: Number(value) })
+                }
+              />
+            </div>
+          </div>
+        ) : null}
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
         <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">

@@ -30,6 +30,7 @@ import {
 import { storage } from "../utils/firebase";
 import Link from "next/link";
 import { FiDelete } from "react-icons/fi";
+import CheckboxInput from "./CheckboxInput";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -264,14 +265,21 @@ function ModalFormSolicitacao({
       axios
         .post(`/api/solicitacoes/getVisitaTecnica/${idVisitaTecnica}`, {
           links: 1,
+          nomeDoCliente: 1,
+          nomeVendedor: 1,
           tipoEstrutura: 1,
+          tipoTelha: 1,
         })
         .then((res) => {
           console.log("VISITA TECNICA", res.data);
           setDados({
             ...dados,
+            nomeDoProjeto: res.data.nomeDoCliente,
+            visitaTecnica: "REALIZADA",
+            respVisitaTecnica: res.data.nomeVendedor,
             linksVisita: res.data.links,
             materialEstrutura: res.data.tipoEstrutura,
+            tipoDaTelha: res.data.tipoTelha,
             idVisitaTecnica: idVisitaTecnica,
           });
         });
@@ -408,6 +416,7 @@ function ModalFormSolicitacao({
   var insertObj = {
     nomeDoContrato: dados.nomeDoContrato.toUpperCase(),
     nomeDoProjeto: dados.nomeDoProjeto ? dados.nomeDoProjeto.toUpperCase() : "",
+    idFormularioContrato: dados._id,
     cpf_cnpj: dados.cpf_cnpj,
     telefone: dados.telefone,
     cidade: dados.cidadeInstalacao,
@@ -554,7 +563,12 @@ function ModalFormSolicitacao({
           : "NÃO",
       acStatus: dados.aumentoDeCarga == "SIM" ? "PENDÊNCIA" : "NÃO DEFINIDO",
       projetoConcluido: "NÃO",
-      relatorioComissionamento: undefined,
+      realizarHomologacao:
+        dados.tipoDeServico == "SISTEMA FOTOVOLTAICO" ||
+        (dados.tipoDeServico == "MONTAGEM E DESMONTAGEM" &&
+          dados.mudancaLocal == "SIM")
+          ? true
+          : false,
     },
     parecer: {
       statusDoParecerDeAcesso: "NÃO DEFINIDO",
@@ -818,10 +832,8 @@ function ModalFormSolicitacao({
       }
     });
     if (holder == undefined) {
-      if (validateDocuments()) {
-        setCreationMsg({ text: "", color: "" });
-        addProject();
-      }
+      setCreationMsg({ text: "", color: "" });
+      addProject();
     }
   }
   async function addProject() {
@@ -1402,152 +1414,6 @@ function ModalFormSolicitacao({
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    DADOS ADICIONAIS PARA ENTRADA NA GESTÃO
-                  </span>
-                  <div className="flex gap-2 justify-around flex-wrap">
-                    <TextInput
-                      label={"Nome do Projeto"}
-                      value={dados.nomeDoProjeto ? dados.nomeDoProjeto : ""}
-                      editable={editor}
-                      handleChange={(value) => {
-                        setDados({ ...dados, nomeDoProjeto: value });
-                      }}
-                    />
-                    <SelectInput
-                      label={"Regional"}
-                      editable={editor}
-                      value={dados.regional ? dados.regional : "NÃO DEFINIDO"}
-                      options={[
-                        {
-                          label: "REGIONAL ITUIUTABA",
-                          value: "REGIONAL ITUIUTABA",
-                        },
-                        {
-                          label: "REGIONAL UBERLÂNDIA",
-                          value: "REGIONAL UBERLÂNDIA",
-                        },
-                        {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
-                        },
-                      ]}
-                      handleChange={(value) => {
-                        setDados({ ...dados, regional: value });
-                      }}
-                    />
-                    <TextInput
-                      label={"LINK PASTA DO DRIVE"}
-                      normalCase={true}
-                      editable={editor}
-                      value={dados.linkDrive ? dados.linkDrive : ""}
-                      handleChange={(value) => {
-                        setDados({ ...dados, linkDrive: value });
-                      }}
-                    />
-                    <SelectInput
-                      label={"TIPO DE SERVIÇO"}
-                      editable={editor}
-                      options={tiposDeServico.map((tipo) => {
-                        return { label: tipo.label, value: tipo.value };
-                      })}
-                      value={
-                        dados.tipoDeServico
-                          ? dados.tipoDeServico
-                          : "SISTEMA FOTOVOLTAICO"
-                      }
-                      handleChange={(value) =>
-                        setDados({ ...dados, tipoDeServico: value })
-                      }
-                    />
-                    <NumberInput
-                      tag={"R$"}
-                      label={"Previsão de custos em insumos"}
-                      editable={editor}
-                      value={dados.previsaoCustos ? dados.previsaoCustos : 0}
-                      handleChange={(value) => {
-                        setDados({ ...dados, previsaoCustos: Number(value) });
-                      }}
-                    />
-                    <SelectInput
-                      label={"TIPO DO KIT"}
-                      value={dados.tipoDoKit ? dados.tipoDoKit : "NÃO DEFINIDO"}
-                      editable={editor}
-                      options={[
-                        {
-                          label: "NORMAL",
-                          value: "NORMAL",
-                        },
-                        {
-                          label: "PROMO",
-                          value: "PROMO",
-                        },
-                        {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
-                        },
-                      ]}
-                      handleChange={(value) => {
-                        setDados({ ...dados, tipoDoKit: value });
-                      }}
-                    />
-                    <SelectInput
-                      label={"Laudo"}
-                      value={dados.laudo ? dados.laudo : "NÃO DEFINIDO"}
-                      editable={editor}
-                      options={[
-                        { label: "EM ESTUDO", value: "EM ESTUDO" },
-                        { label: "EMITIDO", value: "EMITIDO" },
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                      ]}
-                      handleChange={(value) => {
-                        setDados({ ...dados, laudo: value });
-                      }}
-                    />
-                    <div>
-                      <input
-                        disabled={!editor}
-                        checked={
-                          dados.visitaTecnica == "REALIZADA" ? true : false
-                        }
-                        onChange={(e) => {
-                          setDados({
-                            ...dados,
-                            visitaTecnica: e.target.checked
-                              ? "REALIZADA"
-                              : "PENDÊNCIA",
-                          });
-                        }}
-                        type="checkbox"
-                        name="visitaTecnica"
-                        id="visitaTecnica"
-                      />
-                      <label className="ml-2" htmlFor="visitaTecnica">
-                        VISITA TÉCNICA REALIZADA ?
-                      </label>
-                    </div>
-                    <TextInput
-                      label={"TÉCNICO RESPONSÁVEL"}
-                      editable={editor}
-                      value={dados.respVisitaTecnica}
-                      handleChange={(value) => {
-                        setDados({
-                          ...dados,
-                          respVisitaTecnica: value.toUpperCase(),
-                        });
-                      }}
-                    />
-                    <TextInput
-                      label={"Tipo da telha"}
-                      editable={editor}
-                      value={dados.tipoDaTelha}
-                      handleChange={(value) => {
-                        setDados({ ...dados, tipoDaTelha: value });
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                     DADOS PARA CONTATO
                   </span>
                   <div className="flex gap-2 justify-around flex-wrap">
@@ -1613,7 +1479,7 @@ function ModalFormSolicitacao({
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    DADOS DA CONCESSIONÁRIA
+                    DADOS DA INSTALAÇÃO
                   </span>
                   <div className="flex gap-2 justify-around flex-wrap">
                     <TextInput
@@ -3566,6 +3432,182 @@ function ModalFormSolicitacao({
                 )}
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
+                    DADOS ADICIONAIS PARA APROVAÇÃO DO FORMULÁRIO
+                  </span>
+                  <div className="flex gap-2 justify-around flex-wrap">
+                    <TextInput
+                      label={"Nome do Projeto"}
+                      value={dados.nomeDoProjeto ? dados.nomeDoProjeto : ""}
+                      editable={editor}
+                      handleChange={(value) => {
+                        setDados({ ...dados, nomeDoProjeto: value });
+                      }}
+                    />
+                    <SelectInput
+                      label={"TIPO DE SERVIÇO"}
+                      editable={editor}
+                      options={tiposDeServico.map((tipo) => {
+                        return { label: tipo.label, value: tipo.value };
+                      })}
+                      value={
+                        dados.tipoDeServico
+                          ? dados.tipoDeServico
+                          : "SISTEMA FOTOVOLTAICO"
+                      }
+                      handleChange={(value) =>
+                        setDados({ ...dados, tipoDeServico: value })
+                      }
+                    />
+                    <CheckboxInput
+                      title={"REALIZAR HOMOLOGAÇÃO"}
+                      labelTrue={"SIM"}
+                      labelFalse={"NÃO"}
+                      checked={dados.realizarHomologacao}
+                      handleChange={(value) =>
+                        setDados({
+                          ...dados,
+                          realizarHomologacao: value,
+                        })
+                      }
+                    />
+                    <SelectInput
+                      label={"Regional"}
+                      editable={editor}
+                      value={dados.regional ? dados.regional : "NÃO DEFINIDO"}
+                      options={[
+                        {
+                          label: "REGIONAL ITUIUTABA",
+                          value: "REGIONAL ITUIUTABA",
+                        },
+                        {
+                          label: "REGIONAL UBERLÂNDIA",
+                          value: "REGIONAL UBERLÂNDIA",
+                        },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
+                        },
+                      ]}
+                      handleChange={(value) => {
+                        setDados({ ...dados, regional: value });
+                      }}
+                    />
+                    <TextInput
+                      label={"LINK PASTA NA NUVEM"}
+                      normalCase={true}
+                      editable={editor}
+                      value={dados.linkDrive ? dados.linkDrive : ""}
+                      handleChange={(value) => {
+                        setDados({ ...dados, linkDrive: value });
+                      }}
+                    />
+                    <NumberInput
+                      tag={"R$"}
+                      label={"Previsão de custos em insumos"}
+                      editable={editor}
+                      value={dados.previsaoCustos ? dados.previsaoCustos : 0}
+                      handleChange={(value) => {
+                        setDados({ ...dados, previsaoCustos: Number(value) });
+                      }}
+                    />
+                    <SelectInput
+                      label={"TIPO DO KIT"}
+                      value={dados.tipoDoKit ? dados.tipoDoKit : "NÃO DEFINIDO"}
+                      editable={editor}
+                      options={[
+                        {
+                          label: "NORMAL",
+                          value: "NORMAL",
+                        },
+                        {
+                          label: "PROMO",
+                          value: "PROMO",
+                        },
+                        {
+                          label: "NÃO SE APLICA",
+                          value: "NÃO SE APLICA",
+                        },
+                        {
+                          label: "NÃO DEFINIDO",
+                          value: "NÃO DEFINIDO",
+                        },
+                      ]}
+                      handleChange={(value) => {
+                        setDados({ ...dados, tipoDoKit: value });
+                      }}
+                    />
+                  </div>
+                  <div className="flex gap-2 justify-around flex-wrap">
+                    <CheckboxInput
+                      title={"VISITA TÉCNICA"}
+                      labelTrue={"REALIZADA"}
+                      labelFalse={"PENDÊNCIA"}
+                      checked={dados.visitaTecnica == "REALIZADA"}
+                      handleChange={(value) =>
+                        setDados({
+                          ...dados,
+                          visitaTecnica: value ? "REALIZADA" : "PENDÊNCIA",
+                        })
+                      }
+                    />
+                    {/* <div>
+                      <input
+                        disabled={!editor}
+                        checked={
+                          dados.visitaTecnica == "REALIZADA" ? true : false
+                        }
+                        onChange={(e) => {
+                          setDados({
+                            ...dados,
+                            visitaTecnica: e.target.checked
+                              ? "REALIZADA"
+                              : "PENDÊNCIA",
+                          });
+                        }}
+                        type="checkbox"
+                        name="visitaTecnica"
+                        id="visitaTecnica"
+                      />
+                      <label className="ml-2" htmlFor="visitaTecnica">
+                        VISITA TÉCNICA REALIZADA ?
+                      </label>
+                    </div> */}
+                    <SelectInput
+                      label={"Laudo"}
+                      value={dados.laudo ? dados.laudo : "NÃO DEFINIDO"}
+                      editable={editor}
+                      options={[
+                        { label: "EM ESTUDO", value: "EM ESTUDO" },
+                        { label: "EMITIDO", value: "EMITIDO" },
+                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                      ]}
+                      handleChange={(value) => {
+                        setDados({ ...dados, laudo: value });
+                      }}
+                    />
+                    <TextInput
+                      label={"TÉCNICO RESPONSÁVEL"}
+                      editable={editor}
+                      value={dados.respVisitaTecnica}
+                      handleChange={(value) => {
+                        setDados({
+                          ...dados,
+                          respVisitaTecnica: value.toUpperCase(),
+                        });
+                      }}
+                    />
+                    <TextInput
+                      label={"Tipo da telha"}
+                      editable={editor}
+                      value={dados.tipoDaTelha}
+                      handleChange={(value) => {
+                        setDados({ ...dados, tipoDaTelha: value });
+                      }}
+                    />
+                  </div>
+                </div>
+                {/* <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                     DOCUMENTOS NECESSÁRIOS
                   </span>
                   <div className="flex gap-2 justify-around flex-wrap mt-2">
@@ -3886,7 +3928,7 @@ function ModalFormSolicitacao({
                       </>
                     )}
                   </div>
-                </div>
+                </div> */}
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">

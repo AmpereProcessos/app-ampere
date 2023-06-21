@@ -2,8 +2,12 @@ import dayjs from "dayjs";
 import connectToDatabase from "../../utils/connectDb";
 import connectoToInsideDb from "../../utils/insideSalesDb";
 export default async function handler(req, res) {
-  // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-  // const collection = db.collection("dados");
+  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  const collection = db.collection("dados");
+  const dbResp = await collection.updateMany(
+    { tipoDeServico: "SISTEMA FOTOVOLTAICO" },
+    { $set: { "projeto.realizarHomologacao": true } }
+  );
 
   // const db2 = await connectoToInsideDb(process.env.DB_KEY);
   // const collection2 = db2.collection("leads");
@@ -107,7 +111,7 @@ export default async function handler(req, res) {
   //   { $set: { contratoAssinado: true } }
   // );
   // console.log(arr.length);
-  res.json("DESATIVADA");
+  res.json(dbResp);
 }
 
 // Update Many example:

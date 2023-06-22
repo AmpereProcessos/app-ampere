@@ -1,10 +1,28 @@
 import { ObjectId } from "mongodb";
 import connectToDatabase from "../../../../utils/connectDb";
+import { getSession } from "next-auth/react";
 export default async function handler(req, res) {
   if (req.method === "POST") {
+    const session = await getSession({ req: req });
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
+    const logCollection = db.collection("logAlteracoes");
     delete req.body._id;
+
+    // logging changes in changes collections
+    const logObject = {
+      autor: {
+        id: session?.user?.id,
+        nome: session?.user?.name,
+      },
+      idProjetoAlterado: req.query.id,
+      alteracoes: req.body,
+      dataAlteracao: new Date().toISOString(),
+      dataAlteracaoFormatada: new Date().toLocaleString(),
+    };
+    if (session) {
+      await logCollection.insertOne(logObject);
+    }
     // let obj = await collection.findOne({ _id: ObjectId(req.query.id) });
     var newObj = await collection.updateOne(
       { _id: ObjectId(req.query.id) },

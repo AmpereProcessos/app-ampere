@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       idProjetoAlterado: req.query.id,
       alteracoes: req.body,
       dataAlteracao: new Date().toISOString(),
-      dataAlteracaoFormatada: new Date().toLocaleString(),
+      dataAlteracaoFormatada: new Date().toLocaleString("pt-br"),
     };
     if (session) {
       await logCollection.insertOne(logObject);

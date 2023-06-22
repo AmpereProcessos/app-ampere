@@ -3159,28 +3159,53 @@ function ModalFormSolicitacao({
                     <SelectInput
                       label={"FORMA DE PAGAMENTO"}
                       editable={editor}
-                      options={[
-                        {
-                          label:
-                            "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
-                          value:
-                            "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
-                        },
-                        {
-                          label:
-                            "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
-                          value:
-                            "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
-                        },
-                        {
-                          label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
-                          value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
-                        },
-                        {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
-                        },
-                      ]}
+                      options={
+                        dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)"
+                          ? [
+                              {
+                                label:
+                                  "70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO",
+                                value:
+                                  "70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO",
+                              },
+                              {
+                                label:
+                                  "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                                value:
+                                  "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                              },
+                              {
+                                label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                                value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                              },
+                              {
+                                label: "NÃO DEFINIDO",
+                                value: "NÃO DEFINIDO",
+                              },
+                            ]
+                          : [
+                              {
+                                label:
+                                  "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
+                                value:
+                                  "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
+                              },
+                              {
+                                label:
+                                  "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                                value:
+                                  "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                              },
+                              {
+                                label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                                value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                              },
+                              {
+                                label: "NÃO DEFINIDO",
+                                value: "NÃO DEFINIDO",
+                              },
+                            ]
+                      }
                       value={dados.formaDePagamento}
                       handleChange={(value) =>
                         setDados({ ...dados, formaDePagamento: value })

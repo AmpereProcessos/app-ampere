@@ -20,7 +20,7 @@ export default async function handler(req, res) {
       dataAlteracao: new Date().toISOString(),
       dataAlteracaoFormatada: new Date().toLocaleString("pt-br"),
     };
-    if (session) {
+    if (session && Object.keys(req.body).length > 0) {
       await logCollection.insertOne(logObject);
     }
     // let obj = await collection.findOne({ _id: ObjectId(req.query.id) });

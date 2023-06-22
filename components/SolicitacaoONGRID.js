@@ -117,6 +117,7 @@ function SolicitacaoONGRID({
     formaDePagamento: "NÃO DEFINIDO",
     descricaoNegociacao: "",
     possuiDistribuicao: "NÃO",
+    realizarHomologacao: true,
     distribuicoes: [],
   });
   console.log(dados);

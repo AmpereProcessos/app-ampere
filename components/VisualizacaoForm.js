@@ -84,6 +84,17 @@ function VisualizacaoForm({
       }, 1800);
     }
   }
+  function getJoinedInfo({ marca, qtde, pot }) {
+    let splitMarca = marca.split("/");
+    let splitQtde = qtde.split("/");
+    let splitPot = pot.split("/");
+    let holder = [];
+    for (let i = 0; i < splitMarca.length; i++) {
+      let str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`;
+      holder.push(str);
+    }
+    return holder.join(" - ");
+  }
   return (
     <>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
@@ -758,108 +769,195 @@ function VisualizacaoForm({
             }
           />
         </div>
-        {dados.tipoDeServico == "AUMENTO DE SISTEMA FOTOVOLTAICO" ? (
-          <div className="mt-2 border-t border-[#fead61] py-4">
-            <div className="flex gap-2 justify-around flex-wrap">
-              {dados.topologia != "NÃO DEFINIDO" && (
-                <>
-                  <TextInput
-                    label={"MARCA DO INVERSOR/MICRO (AUMENTO)"}
-                    editable={true}
-                    value={dados.marcaInversorAumento}
-                    handleChange={(value) =>
-                      setDados({ ...dados, marcaInversorAumento: value })
-                    }
-                  />
-                  <NumberInput
-                    label={"QTDE INVERSOR/MICRO (AUMENTO)"}
-                    editable={true}
-                    value={dados.qtdeInversorAumento}
-                    handleChange={(value) =>
-                      setDados({ ...dados, qtdeInversorAumento: Number(value) })
-                    }
-                  />
-                  <NumberInput
-                    label={"POTÊNCIA INVERSOR/MICRO (AUMENTO)"}
-                    editable={true}
-                    unit={"W"}
-                    value={dados.potInversorAumento}
-                    handleChange={(value) =>
-                      setDados({ ...dados, potInversorAumento: Number(value) })
-                    }
-                  />
-                </>
-              )}
+        {dados.tipoDeServico == "AUMENTO DE SISTEMA FOTOVOLTAICO" &&
+        dados.clienteAmpere != "SIM" ? (
+          <>
+            <span className="text-sm text-center font-bold text-[#fead61] uppercase py-2 border-t border-blue-500 mt-1">
+              DADOS DO SISTEMA (ANTERIOR)
+            </span>
+            <div className="flex justify-center">
+              <SelectInput
+                label={"TOPOLOGIA (ANTERIOR)"}
+                editable={true}
+                value={dados.topologiaAnterior}
+                handleChange={(value) =>
+                  setDados({ ...dados, topologiaAnterior: value })
+                }
+                options={[
+                  {
+                    label: "MICRO-INVERSOR",
+                    value: "MICRO",
+                  },
+                  {
+                    label: "INVERSOR",
+                    value: "INVERSOR",
+                  },
+                  {
+                    label: "OTIMIZADOR",
+                    value: "OTIMIZADOR",
+                  },
+                  {
+                    label: "NÃO DEFINIDO",
+                    value: "NÃO DEFINIDO",
+                  },
+                ]}
+              />
             </div>
-            {dados.topologia == "OTIMIZADOR" && (
+            <div className="flex gap-2 justify-around flex-wrap mt-2 py-2 border-t border-gray-200">
+              <TextInput
+                label={
+                  dados.tipoDeServico != "BOMBA SOLAR"
+                    ? "MARCA DO INVERSOR/MICRO (ANTERIOR)"
+                    : " MARCA DO DRIVER (ANTERIOR)"
+                }
+                editable={true}
+                value={dados.marcaInversorAnterior}
+                handleChange={(value) =>
+                  setDados({ ...dados, marcaInversorAnterior: value })
+                }
+              />
+              <TextInput
+                label={
+                  dados.tipoDeServico != "BOMBA SOLAR"
+                    ? "QTDE INVERSOR/MICRO (ANTERIOR)"
+                    : "QTDE DRIVERS (ANTERIOR)"
+                }
+                editable={true}
+                value={dados.qtdeInversorAnterior}
+                handleChange={(value) =>
+                  setDados({ ...dados, qtdeInversorAnterior: value })
+                }
+              />
+              <TextInput
+                label={
+                  dados.tipoDeServico != "BOMBA SOLAR"
+                    ? "POTÊNCIA INVERSOR/MICRO (ANTERIOR)"
+                    : "POTÊNCIA DRIVER (ANTERIOR)"
+                }
+                editable={true}
+                unit={"W"}
+                value={dados.potInversorAnterior}
+                handleChange={(value) =>
+                  setDados({ ...dados, potInversorAnterior: value })
+                }
+              />
+            </div>
+            <div className="flex flex-col text-sm lg:text-base  items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                {dados.tipoDeServico != "BOMBA SOLAR"
+                  ? "INFORMAÇÃO MICRO/INVERSOR (ANTERIOR)"
+                  : "INFORMAÇÃO DRIVERS (ANTERIOR)"}
+              </span>
+              <p className="text-xs w-full text-center  text-gray-600 outline-none">
+                {getJoinedInfo({
+                  marca: dados.marcaInversorAnterior
+                    ? dados.marcaInversorAnterior?.toString().toUpperCase()
+                    : "",
+                  qtde: dados.qtdeInversorAnterior
+                    ? dados.qtdeInversorAnterior?.toString()
+                    : "",
+                  pot: dados.potInversorAnterior
+                    ? dados.potInversorAnterior?.toString()
+                    : "",
+                })}
+              </p>
+            </div>
+            {dados.topologiaAnterior == "OTIMIZADOR" && (
               <div className="flex gap-2 justify-around flex-wrap mt-2">
                 <TextInput
-                  label={"MARCA DO OTIMIZADOR (AUMENTO)"}
+                  label={"MARCA DO OTIMIZADOR (ANTERIOR)"}
                   editable={true}
                   value={
-                    dados.marcaOtimizadorAumento
-                      ? dados.marcaOtimizadorAumento
+                    dados.marcaOtimizadorAnterior
+                      ? dados.marcaOtimizadorAnterior
                       : ""
                   }
                   handleChange={(value) =>
-                    setDados({ ...dados, marcaOtimizadorAumento: value })
+                    setDados({
+                      ...dados,
+                      marcaOtimizadorAnterior: value,
+                    })
                   }
                 />
                 <NumberInput
-                  label={"QTDE DO OTIMIZADOR"}
+                  label={"QTDE DO OTIMIZADOR (ANTERIOR)"}
                   editable={true}
                   value={
-                    dados.qtdeOtimizadorAumento
-                      ? dados.qtdeOtimizadorAumento
+                    dados.qtdeOtimizadorAnterior
+                      ? dados.qtdeOtimizadorAnterior
                       : null
                   }
                   handleChange={(value) =>
-                    setDados({ ...dados, qtdeOtimizadorAumento: Number(value) })
+                    setDados({
+                      ...dados,
+                      qtdeOtimizadorAnterior: Number(value),
+                    })
                   }
                 />
                 <NumberInput
-                  label={"POTÊNCIA DO OTIMIZADOR"}
+                  label={"POTÊNCIA DO OTIMIZADOR (ANTERIOR)"}
                   editable={true}
                   unit={"W"}
                   value={
-                    dados.potOtimizadorAumento
-                      ? dados.potOtimizadorAumento
+                    dados.potOtimizadorAnterior
+                      ? dados.potOtimizadorAnterior
                       : null
                   }
                   handleChange={(value) =>
-                    setDados({ ...dados, potOtimizadorAumento: Number(value) })
+                    setDados({
+                      ...dados,
+                      potOtimizadorAnterior: Number(value),
+                    })
                   }
                 />
               </div>
             )}
             <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
               <TextInput
-                label={"MARCA DOS MÓDULOS AUMENTO)"}
+                label={"MARCA DOS MÓDULOS (ANTERIOR)"}
                 editable={true}
-                value={dados.marcaModulosAumento}
+                value={dados.marcaModulosAnterior}
                 handleChange={(value) =>
-                  setDados({ ...dados, marcaModulosAumento: value })
+                  setDados({ ...dados, marcaModulosAnterior: value })
                 }
               />
-              <NumberInput
-                label={"Nº DE MÓDULOS (AUMENTO)"}
+              <TextInput
+                label={"Nº DE MÓDULOS (ANTERIOR)"}
                 editable={true}
-                value={dados.qtdeModulosAumento}
+                value={dados.qtdeModulosAnterior}
                 handleChange={(value) =>
-                  setDados({ ...dados, qtdeModulosAumento: Number(value) })
+                  setDados({ ...dados, qtdeModulosAnterior: value })
                 }
               />
-              <NumberInput
-                label={"POTÊNCIA DOS MÓDULOS (AUMENTO)"}
+              <TextInput
+                label={"POTÊNCIA DOS MÓDULOS (ANTERIOR)"}
                 editable={true}
                 unit={"W"}
-                value={dados.potModulosAumento}
+                value={dados.potModulosAnterior}
                 handleChange={(value) =>
-                  setDados({ ...dados, potModulosAumento: Number(value) })
+                  setDados({ ...dados, potModulosAnterior: value })
                 }
               />
             </div>
-          </div>
+            <div className="flex flex-col text-sm lg:text-base  items-center">
+              <span className="uppercase font-bold font-raleway text-center text-sm">
+                INFORMAÇÃO MÓDULOS (ANTERIOR)
+              </span>
+              <p className="text-xs w-full text-center  text-gray-600 outline-none">
+                {getJoinedInfo({
+                  marca: dados.marcaModulosAnterior
+                    ? dados.marcaModulosAnterior.toString().toUpperCase()
+                    : "",
+                  qtde: dados.qtdeModulosAnterior
+                    ? dados.qtdeModulosAnterior.toString()
+                    : "",
+                  pot: dados.potModulosAnterior
+                    ? dados.potModulosAnterior.toString()
+                    : "",
+                })}
+              </p>
+            </div>
+          </>
         ) : null}
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">

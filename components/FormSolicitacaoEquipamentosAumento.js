@@ -57,48 +57,48 @@ function FormSolicitacaoEquipamentosAumento({
     });
   }
   // SISTEMA AUMENTO
-  const [dadosInversoresAumento, setDadosInvesoresAumento] = useState({
+  const [dadosInversoresAnterior, setDadosInvesoresAnterior] = useState({
     marca: "",
     qtde: 0,
     pot: 0,
   });
-  const [dadosModulosAumento, setDadosModulosAumento] = useState({
+  const [dadosModulosAnterior, setDadosModulosAnterior] = useState({
     marca: "",
     qtde: 0,
     pot: 0,
   });
-  const [arrModulosAumento, setArrModulosAumento] = useState([]);
-  const [arrInvAumento, setArrInvAumento] = useState([]);
-  function addInversorAumento() {
-    arrInvAumento.push(dadosInversoresAumento);
-    setArrInvAumento((arrInvAumento) => [...arrInvAumento]);
-    let marcaArr = arrInvAumento.map((i) => i.marca);
-    let qtdeArr = arrInvAumento.map((i) => i.qtde);
-    let potArr = arrInvAumento.map((i) => i.pot);
+  const [arrModulosAnterior, setArrModulosAnterior] = useState([]);
+  const [arrInvAnterior, setArrInvAnterior] = useState([]);
+  function addInversorAnterior() {
+    arrInvAnterior.push(dadosInversoresAnterior);
+    setArrInvAnterior((arrInvAnterior) => [...arrInvAnterior]);
+    let marcaArr = arrInvAnterior.map((i) => i.marca);
+    let qtdeArr = arrInvAnterior.map((i) => i.qtde);
+    let potArr = arrInvAnterior.map((i) => i.pot);
     let joinedMarcaArr = marcaArr.join("/");
     let joinedQtdeArr = qtdeArr.join("/");
     let joinedPotArr = potArr.join("/");
     setDados({
       ...dados,
-      marcaInversorAumento: joinedMarcaArr,
-      qtdeInversorAumento: joinedQtdeArr,
-      potInversorAumento: joinedPotArr,
+      marcaInversorAnterior: joinedMarcaArr,
+      qtdeInversorAnterior: joinedQtdeArr,
+      potInversorAnterior: joinedPotArr,
     });
   }
   function addModulosAumento() {
-    arrModulosAumento.push(dadosModulosAumento);
-    setArrModulosAumento((arrModulos) => [...arrModulos]);
-    let marcaArr = arrModulosAumento.map((i) => i.marca);
-    let qtdeArr = arrModulosAumento.map((i) => i.qtde);
-    let potArr = arrModulosAumento.map((i) => i.pot);
+    arrModulosAnterior.push(dadosModulosAnterior);
+    setArrModulosAnterior((arrModulos) => [...arrModulos]);
+    let marcaArr = arrModulosAnterior.map((i) => i.marca);
+    let qtdeArr = arrModulosAnterior.map((i) => i.qtde);
+    let potArr = arrModulosAnterior.map((i) => i.pot);
     let joinedMarcaArr = marcaArr.join("/");
     let joinedQtdeArr = qtdeArr.join("/");
     let joinedPotArr = potArr.join("/");
     setDados({
       ...dados,
-      marcaModulosAumento: joinedMarcaArr,
-      qtdeModulosAumento: joinedQtdeArr,
-      potModulosAumento: joinedPotArr,
+      marcaModulosAnterior: joinedMarcaArr,
+      qtdeModulosAnterior: joinedQtdeArr,
+      potModulosAnterior: joinedPotArr,
     });
   }
 
@@ -170,7 +170,7 @@ function FormSolicitacaoEquipamentosAumento({
       {dados.clienteAmpere != "SIM" ? (
         <>
           <span className="text-sm text-center font-bold text-[#fead61] uppercase py-2">
-            DADOS DO SISTEMA ATUAL
+            DADOS DO SISTEMA (AUMENTO)
           </span>
           <div className="flex justify-center my-2 p-2">
             <SelectFoatingInput
@@ -428,19 +428,19 @@ function FormSolicitacaoEquipamentosAumento({
           )}
           <>
             <span className="text-sm text-center font-bold text-[#fead61] uppercase py-2">
-              DADOS DO SISTEMA PARA AUMENTO
+              DADOS DO SISTEMA ATUAL
             </span>
             <div className="flex justify-center my-2 p-2">
               <SelectFoatingInput
-                label={"TOPOLOGIA (AUMENTO)"}
+                label={"TOPOLOGIA (ANTERIOR)"}
                 editable={true}
                 value={
-                  dados.topologiaAumento
-                    ? dados.topologiaAumento
+                  dados.topologiaAnterior
+                    ? dados.topologiaAnterior
                     : "NÃO DEFINIDO"
                 }
                 handleChange={(value) =>
-                  setDados({ ...dados, topologiaAumento: value })
+                  setDados({ ...dados, topologiaAnterior: value })
                 }
                 options={[
                   {
@@ -480,12 +480,12 @@ function FormSolicitacaoEquipamentosAumento({
               <div className="flex flex-col lg:grid lg:grid-cols-4 gap-x-2 gap-y-1 mt-3">
                 <div className="flex items-center justify-center">
                   <TextFloatingInput
-                    label={"MARCA DO INVERSOR/MICRO (AUMENTO)"}
+                    label={"MARCA DO INVERSOR/MICRO (ANTERIOR)"}
                     editable={true}
-                    value={dadosInversoresAumento.marca}
+                    value={dadosInversoresAnterior.marca}
                     handleChange={(value) =>
-                      setDadosInvesoresAumento({
-                        ...dadosInversoresAumento,
+                      setDadosInvesoresAnterior({
+                        ...dadosInversoresAnterior,
                         marca: value.toUpperCase(),
                       })
                     }
@@ -493,12 +493,12 @@ function FormSolicitacaoEquipamentosAumento({
                 </div>
                 <div className="flex items-center justify-center">
                   <NumberFloatingInput
-                    label={"QTDE INVERSOR/MICRO (AUMENTO)"}
+                    label={"QTDE INVERSOR/MICRO (ANTERIOR)"}
                     editable={true}
-                    value={dadosInversoresAumento.qtde}
+                    value={dadosInversoresAnterior.qtde}
                     handleChange={(value) =>
-                      setDadosInvesoresAumento({
-                        ...dadosInversoresAumento,
+                      setDadosInvesoresAnterior({
+                        ...dadosInversoresAnterior,
                         qtde: value,
                       })
                     }
@@ -506,13 +506,13 @@ function FormSolicitacaoEquipamentosAumento({
                 </div>
                 <div className="flex items-center justify-center">
                   <NumberFloatingInput
-                    label={"POTÊNCIA INVERSOR/MICRO (AUMENTO)"}
+                    label={"POTÊNCIA INVERSOR/MICRO (ANTERIOR)"}
                     unit={"W"}
                     editable={true}
-                    value={dadosInversoresAumento.pot}
+                    value={dadosInversoresAnterior.pot}
                     handleChange={(value) =>
-                      setDadosInvesoresAumento({
-                        ...dadosInversoresAumento,
+                      setDadosInvesoresAnterior({
+                        ...dadosInversoresAnterior,
                         pot: value,
                       })
                     }
@@ -520,7 +520,7 @@ function FormSolicitacaoEquipamentosAumento({
                 </div>
                 <div className="flex items-center justify-center">
                   <div
-                    onClick={addInversorAumento}
+                    onClick={addInversorAnterior}
                     className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
                   >
                     <MdOutlineAddCircle style={{ fontSize: "15px" }} />
@@ -528,12 +528,12 @@ function FormSolicitacaoEquipamentosAumento({
                 </div>
               </div>
             </div>
-            {arrInvAumento.length > 0 && (
+            {arrInvAnterior.length > 0 && (
               <div className="flex flex-col mt-2 font-bold">
                 <h1 className="text-center text-[#15599a] text-xs">
                   INVERSORES ADICIONADOS
                 </h1>
-                {arrInvAumento.map((inv, index) => (
+                {arrInvAnterior.map((inv, index) => (
                   <div
                     key={index}
                     className="flex justify-around items-center my-1"
@@ -543,21 +543,21 @@ function FormSolicitacaoEquipamentosAumento({
                     <p className="text-xs font-bold">{inv.pot} W</p>
                     <button
                       onClick={() => {
-                        let arr = arrInvAumento;
+                        let arr = arrInvAnterior;
                         arr.splice(index, 1);
-                        let marcaArr = arrInvAumento.map((i) => i.marca);
-                        let qtdeArr = arrInvAumento.map((i) => i.qtde);
-                        let potArr = arrInvAumento.map((i) => i.pot);
+                        let marcaArr = arrInvAnterior.map((i) => i.marca);
+                        let qtdeArr = arrInvAnterior.map((i) => i.qtde);
+                        let potArr = arrInvAnterior.map((i) => i.pot);
                         let joinedMarcaArr = marcaArr.join("/");
                         let joinedQtdeArr = qtdeArr.join("/");
                         let joinedPotArr = potArr.join("/");
                         setDados({
                           ...dados,
-                          marcaInversorAumento: joinedMarcaArr,
-                          qtdeInversorAumento: joinedQtdeArr,
-                          potInversorAumento: joinedPotArr,
+                          marcaInversorAnterior: joinedMarcaArr,
+                          qtdeInversorAnterior: joinedQtdeArr,
+                          potInversorAnterior: joinedPotArr,
                         });
-                        setArrInvAumento([...arr]);
+                        setArrInvAnterior([...arr]);
                       }}
                       className="bg-red-500 p-1 rounded"
                     >
@@ -568,10 +568,10 @@ function FormSolicitacaoEquipamentosAumento({
               </div>
             )}
 
-            {dados.topologiaAumento == "OTIMIZADOR" && (
+            {dados.topologiaAnterior == "OTIMIZADOR" && (
               <div className="flex gap-2 justify-around flex-wrap mt-2 p-2">
                 <TextFloatingInput
-                  label={"MARCA DO OTIMIZADOR (AUMENTO)"}
+                  label={"MARCA DO OTIMIZADOR (ANTERIOR)"}
                   editable={true}
                   value={
                     dados.marcaOtimizadorAumento
@@ -586,28 +586,31 @@ function FormSolicitacaoEquipamentosAumento({
                   }
                 />
                 <NumberFloatingInput
-                  label={"QTDE DE OTIMIZADORES (AUMENTO)"}
+                  label={"QTDE DE OTIMIZADORES (ANTERIOR)"}
                   editable={true}
                   value={
-                    dados.qtdeOtimizadorAumento
-                      ? dados.qtdeOtimizadorAumento
+                    dados.qtdeOtimizadorAnterior
+                      ? dados.qtdeOtimizadorAnterior
                       : null
                   }
                   handleChange={(value) =>
-                    setDados({ ...dados, qtdeOtimizadorAumento: Number(value) })
+                    setDados({
+                      ...dados,
+                      qtdeOtimizadorAnterior: Number(value),
+                    })
                   }
                 />
                 <NumberFloatingInput
-                  label={"POTÊNCIA DO(S) OTIMIZADOR(ES) (AUMENTO)"}
+                  label={"POTÊNCIA DO(S) OTIMIZADOR(ES) (ANTERIOR)"}
                   unit={"W"}
                   editable={true}
                   value={
-                    dados.potOtimizadorAumento
-                      ? dados.potOtimizadorAumento
+                    dados.potOtimizadorAnterior
+                      ? dados.potOtimizadorAnterior
                       : null
                   }
                   handleChange={(value) =>
-                    setDados({ ...dados, potOtimizadorAumento: Number(value) })
+                    setDados({ ...dados, potOtimizadorAnterior: Number(value) })
                   }
                 />
               </div>
@@ -628,12 +631,12 @@ function FormSolicitacaoEquipamentosAumento({
               <div className="flex flex-col lg:grid lg:grid-cols-4 gap-x-2 gap-y-1 mt-3">
                 <div className="flex items-center justify-center">
                   <TextFloatingInput
-                    label={"MARCA DOS MÓDULOS (AUMENTO)"}
+                    label={"MARCA DOS MÓDULOS (ANTERIOR)"}
                     editable={true}
-                    value={dadosModulosAumento.marca}
+                    value={dadosModulosAnterior.marca}
                     handleChange={(value) =>
-                      setDadosModulosAumento({
-                        ...dadosModulosAumento,
+                      setDadosModulosAnterior({
+                        ...dadosModulosAnterior,
                         marca: value.toUpperCase(),
                       })
                     }
@@ -641,12 +644,12 @@ function FormSolicitacaoEquipamentosAumento({
                 </div>
                 <div className="flex items-center justify-center">
                   <NumberFloatingInput
-                    label={"Nº DE MÓDULOS (AUMENTO)"}
+                    label={"Nº DE MÓDULOS (ANTERIOR)"}
                     editable={true}
-                    value={dadosModulosAumento.qtde}
+                    value={dadosModulosAnterior.qtde}
                     handleChange={(value) =>
-                      setDadosModulosAumento({
-                        ...dadosModulosAumento,
+                      setDadosModulosAnterior({
+                        ...dadosModulosAnterior,
                         qtde: Number(value),
                       })
                     }
@@ -654,13 +657,13 @@ function FormSolicitacaoEquipamentosAumento({
                 </div>
                 <div className="flex items-center justify-center">
                   <NumberFloatingInput
-                    label={"POTÊNCIA DOS MÓDULOS (AUMENTO)"}
+                    label={"POTÊNCIA DOS MÓDULOS (ANTERIOR)"}
                     unit={"W"}
                     editable={true}
-                    value={dadosModulosAumento.pot}
+                    value={dadosModulosAnterior.pot}
                     handleChange={(value) =>
-                      setDadosModulosAumento({
-                        ...dadosModulosAumento,
+                      setDadosModulosAnterior({
+                        ...dadosModulosAnterior,
                         pot: Number(value),
                       })
                     }
@@ -677,12 +680,12 @@ function FormSolicitacaoEquipamentosAumento({
               </div>
             </div>
 
-            {arrModulosAumento.length > 0 && (
+            {arrModulosAnterior.length > 0 && (
               <div className="flex flex-col mt-2 font-bold">
                 <h1 className="text-center text-[#15599a] text-xs">
                   MÓDULOS ADICIONADOS
                 </h1>
-                {arrModulosAumento.map((inv, index) => (
+                {arrModulosAnterior.map((inv, index) => (
                   <div
                     key={index}
                     className="flex flex-col lg:grid lg:grid-cols-4 gap-x-2 gap-y-1 mt-3"
@@ -695,21 +698,21 @@ function FormSolicitacaoEquipamentosAumento({
                     <div className="flex items-center justify-center">
                       <button
                         onClick={() => {
-                          let arr = arrModulosAumento;
+                          let arr = arrModulosAnterior;
                           arr.splice(index, 1);
-                          let marcaArr = arrModulosAumento.map((i) => i.marca);
-                          let qtdeArr = arrModulosAumento.map((i) => i.qtde);
-                          let potArr = arrModulosAumento.map((i) => i.pot);
+                          let marcaArr = arrModulosAnterior.map((i) => i.marca);
+                          let qtdeArr = arrModulosAnterior.map((i) => i.qtde);
+                          let potArr = arrModulosAnterior.map((i) => i.pot);
                           let joinedMarcaArr = marcaArr.join("/");
                           let joinedQtdeArr = qtdeArr.join("/");
                           let joinedPotArr = potArr.join("/");
                           setDados({
                             ...dados,
-                            marcaModulosAumento: joinedMarcaArr,
-                            qtdeModulosAumento: joinedQtdeArr,
-                            potModulosAumento: joinedPotArr,
+                            marcaModulosAnterior: joinedMarcaArr,
+                            qtdeModulosAnterior: joinedQtdeArr,
+                            potModulosAnterior: joinedPotArr,
                           });
-                          setArrModulosAumento([...arr]);
+                          setArrModulosAnterior([...arr]);
                         }}
                         className="bg-red-500 p-1 rounded"
                       >
@@ -731,12 +734,8 @@ function FormSolicitacaoEquipamentosAumento({
             <SelectFoatingInput
               label={"TOPOLOGIA"}
               editable={true}
-              value={
-                dados.topologiaAumento ? dados.topologiaAumento : "NÃO DEFINIDO"
-              }
-              handleChange={(value) =>
-                setDados({ ...dados, topologiaAumento: value })
-              }
+              value={dados.topologia ? dados.topologia : "NÃO DEFINIDO"}
+              handleChange={(value) => setDados({ ...dados, topologia: value })}
               options={[
                 {
                   label: "MICRO-INVERSOR",
@@ -776,10 +775,10 @@ function FormSolicitacaoEquipamentosAumento({
                 <TextFloatingInput
                   label={"MARCA DO INVERSOR/MICRO"}
                   editable={true}
-                  value={dadosInversoresAumento.marca}
+                  value={dadosInversores.marca}
                   handleChange={(value) =>
-                    setDadosInvesoresAumento({
-                      ...dadosInversoresAumento,
+                    setDadosInvesores({
+                      ...dadosInversores,
                       marca: value.toUpperCase(),
                     })
                   }
@@ -789,10 +788,10 @@ function FormSolicitacaoEquipamentosAumento({
                 <NumberFloatingInput
                   label={"QTDE INVERSOR/MICRO"}
                   editable={true}
-                  value={dadosInversoresAumento.qtde}
+                  value={dadosInversores.qtde}
                   handleChange={(value) =>
-                    setDadosInvesoresAumento({
-                      ...dadosInversoresAumento,
+                    setDadosInvesores({
+                      ...dadosInversores,
                       qtde: value,
                     })
                   }
@@ -803,10 +802,10 @@ function FormSolicitacaoEquipamentosAumento({
                   label={"POTÊNCIA INVERSOR/MICRO"}
                   unit={"W"}
                   editable={true}
-                  value={dadosInversoresAumento.pot}
+                  value={dadosInversores.pot}
                   handleChange={(value) =>
-                    setDadosInvesoresAumento({
-                      ...dadosInversoresAumento,
+                    setDadosInvesores({
+                      ...dadosInversores,
                       pot: value,
                     })
                   }
@@ -814,7 +813,7 @@ function FormSolicitacaoEquipamentosAumento({
               </div>
               <div className="flex items-center justify-center">
                 <div
-                  onClick={addInversorAumento}
+                  onClick={addInversor}
                   className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
                 >
                   <MdOutlineAddCircle style={{ fontSize: "15px" }} />
@@ -822,12 +821,12 @@ function FormSolicitacaoEquipamentosAumento({
               </div>
             </div>
           </div>
-          {arrInvAumento.length > 0 && (
+          {arrInv.length > 0 && (
             <div className="flex flex-col mt-2 font-bold">
               <h1 className="text-center text-[#15599a] text-xs">
                 INVERSORES ADICIONADOS
               </h1>
-              {arrInvAumento.map((inv, index) => (
+              {arrInv.map((inv, index) => (
                 <div
                   key={index}
                   className="flex justify-around items-center my-1"
@@ -837,21 +836,21 @@ function FormSolicitacaoEquipamentosAumento({
                   <p className="text-xs font-bold">{inv.pot} W</p>
                   <button
                     onClick={() => {
-                      let arr = arrInvAumento;
+                      let arr = arrInv;
                       arr.splice(index, 1);
-                      let marcaArr = arrInvAumento.map((i) => i.marca);
-                      let qtdeArr = arrInvAumento.map((i) => i.qtde);
-                      let potArr = arrInvAumento.map((i) => i.pot);
+                      let marcaArr = arrInv.map((i) => i.marca);
+                      let qtdeArr = arrInv.map((i) => i.qtde);
+                      let potArr = arrInv.map((i) => i.pot);
                       let joinedMarcaArr = marcaArr.join("/");
                       let joinedQtdeArr = qtdeArr.join("/");
                       let joinedPotArr = potArr.join("/");
                       setDados({
                         ...dados,
-                        marcaInversorAumento: joinedMarcaArr,
-                        qtdeInversorAumento: joinedQtdeArr,
-                        potInversorAumento: joinedPotArr,
+                        marcaInversor: joinedMarcaArr,
+                        qtdeInversor: joinedQtdeArr,
+                        potInversor: joinedPotArr,
                       });
-                      setArrInvAumento([...arr]);
+                      setArrInv([...arr]);
                     }}
                     className="bg-red-500 p-1 rounded"
                   >
@@ -862,44 +861,34 @@ function FormSolicitacaoEquipamentosAumento({
             </div>
           )}
 
-          {dados.topologiaAumento == "OTIMIZADOR" && (
+          {dados.topologia == "OTIMIZADOR" && (
             <div className="flex gap-2 justify-around flex-wrap mt-2 p-2">
               <TextFloatingInput
                 label={"MARCA DO OTIMIZADOR"}
                 editable={true}
-                value={
-                  dados.marcaOtimizadorAumento
-                    ? dados.marcaOtimizadorAumento
-                    : ""
-                }
+                value={dados.marcaOtimizador ? dados.marcaOtimizador : ""}
                 handleChange={(value) =>
                   setDados({
                     ...dados,
-                    marcaOtimizadorAumento: value.toUpperCase(),
+                    marcaOtimizador: value.toUpperCase(),
                   })
                 }
               />
               <NumberFloatingInput
                 label={"QTDE DE OTIMIZADORES"}
                 editable={true}
-                value={
-                  dados.qtdeOtimizadorAumento
-                    ? dados.qtdeOtimizadorAumento
-                    : null
-                }
+                value={dados.qtdeOtimizador ? dados.qtdeOtimizador : null}
                 handleChange={(value) =>
-                  setDados({ ...dados, qtdeOtimizadorAumento: Number(value) })
+                  setDados({ ...dados, qtdeOtimizador: Number(value) })
                 }
               />
               <NumberFloatingInput
                 label={"POTÊNCIA DO(S) OTIMIZADOR(ES"}
                 unit={"W"}
                 editable={true}
-                value={
-                  dados.potOtimizadorAumento ? dados.potOtimizadorAumento : null
-                }
+                value={dados.potOtimizador ? dados.potOtimizador : null}
                 handleChange={(value) =>
-                  setDados({ ...dados, potOtimizadorAumento: Number(value) })
+                  setDados({ ...dados, potOtimizador: Number(value) })
                 }
               />
             </div>
@@ -920,12 +909,12 @@ function FormSolicitacaoEquipamentosAumento({
             <div className="flex flex-col lg:grid lg:grid-cols-4 gap-x-2 gap-y-1 mt-3">
               <div className="flex items-center justify-center">
                 <TextFloatingInput
-                  label={"MARCA DOS MÓDULOS (AUMENTO)"}
+                  label={"MARCA DOS MÓDULOS"}
                   editable={true}
-                  value={dadosModulosAumento.marca}
+                  value={dadosModulos.marca}
                   handleChange={(value) =>
-                    setDadosModulosAumento({
-                      ...dadosModulosAumento,
+                    setDadosModulos({
+                      ...dadosModulos,
                       marca: value.toUpperCase(),
                     })
                   }
@@ -933,12 +922,12 @@ function FormSolicitacaoEquipamentosAumento({
               </div>
               <div className="flex items-center justify-center">
                 <NumberFloatingInput
-                  label={"Nº DE MÓDULOS (AUMENTO)"}
+                  label={"Nº DE MÓDULOS"}
                   editable={true}
-                  value={dadosModulosAumento.qtde}
+                  value={dadosModulos.qtde}
                   handleChange={(value) =>
-                    setDadosModulosAumento({
-                      ...dadosModulosAumento,
+                    setDadosModulos({
+                      ...dadosModulos,
                       qtde: Number(value),
                     })
                   }
@@ -946,13 +935,13 @@ function FormSolicitacaoEquipamentosAumento({
               </div>
               <div className="flex items-center justify-center">
                 <NumberFloatingInput
-                  label={"POTÊNCIA DOS MÓDULOS (AUMENTO)"}
+                  label={"POTÊNCIA DOS MÓDULOS"}
                   unit={"W"}
                   editable={true}
-                  value={dadosModulosAumento.pot}
+                  value={dadosModulos.pot}
                   handleChange={(value) =>
-                    setDadosModulosAumento({
-                      ...dadosModulosAumento,
+                    setDadosModulos({
+                      ...dadosModulos,
                       pot: Number(value),
                     })
                   }
@@ -960,7 +949,7 @@ function FormSolicitacaoEquipamentosAumento({
               </div>
               <div className="flex items-center justify-center">
                 <div
-                  onClick={addModulosAumento}
+                  onClick={addModulos}
                   className="bg-green-300 hover:bg-green-500 text-white flex justify-center items-center h-fit p-2 rounded cursor-pointer"
                 >
                   <MdOutlineAddCircle style={{ fontSize: "15px" }} />
@@ -969,12 +958,12 @@ function FormSolicitacaoEquipamentosAumento({
             </div>
           </div>
 
-          {arrModulosAumento.length > 0 && (
+          {arrModulos.length > 0 && (
             <div className="flex flex-col mt-2 font-bold">
               <h1 className="text-center text-[#15599a] text-xs">
                 MÓDULOS ADICIONADOS
               </h1>
-              {arrModulosAumento.map((inv, index) => (
+              {arrModulos.map((inv, index) => (
                 <div
                   key={index}
                   className="flex flex-col lg:grid lg:grid-cols-4 gap-x-2 gap-y-1 mt-3"
@@ -985,21 +974,21 @@ function FormSolicitacaoEquipamentosAumento({
                   <div className="flex items-center justify-center">
                     <button
                       onClick={() => {
-                        let arr = arrModulosAumento;
+                        let arr = arrModulos;
                         arr.splice(index, 1);
-                        let marcaArr = arrModulosAumento.map((i) => i.marca);
-                        let qtdeArr = arrModulosAumento.map((i) => i.qtde);
-                        let potArr = arrModulosAumento.map((i) => i.pot);
+                        let marcaArr = arrModulos.map((i) => i.marca);
+                        let qtdeArr = arrModulos.map((i) => i.qtde);
+                        let potArr = arrModulos.map((i) => i.pot);
                         let joinedMarcaArr = marcaArr.join("/");
                         let joinedQtdeArr = qtdeArr.join("/");
                         let joinedPotArr = potArr.join("/");
                         setDados({
                           ...dados,
-                          marcaModulosAumento: joinedMarcaArr,
-                          qtdeModulosAumento: joinedQtdeArr,
-                          potModulosAumento: joinedPotArr,
+                          marcaModulos: joinedMarcaArr,
+                          qtdeModulos: joinedQtdeArr,
+                          potModulos: joinedPotArr,
                         });
-                        setArrModulosAumento([...arr]);
+                        setArrModulos([...arr]);
                       }}
                       className="bg-red-500 p-1 rounded"
                     >

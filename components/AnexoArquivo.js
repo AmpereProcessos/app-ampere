@@ -124,7 +124,7 @@ function AnexoArquivo({
           className="h-full w-full opacity-0"
           multiple={multiple != undefined ? multiple : true}
           type="file"
-          accept=".png, .jpeg, .jpg, .pdf, .docx, .doc"
+          accept=".png, .jpeg, .jpg, .pdf, .docx, .doc, .mp4"
         />
       </div>
       <input

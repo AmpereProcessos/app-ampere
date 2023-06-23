@@ -701,6 +701,7 @@ function ModalObras({
                 { label: "EQUIPAMENTOS", value: "links.equipamentos" },
                 { label: "PROJETOS", value: "links.projetos" },
                 { label: "OBRAS", value: "links.obras" },
+                { label: "VISITA TÉCNICA", value: "links.visitaTecnica" },
               ]}
               handleUpdates={handleUpdates}
             />

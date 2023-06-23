@@ -159,7 +159,7 @@ const validation = {
   },
   "dadosCemig.titularProjeto": {
     test(value) {
-      return value?.trim().length < 5;
+      return value == null;
     },
     msg: "Por favor, digite o titular do projeto",
   },

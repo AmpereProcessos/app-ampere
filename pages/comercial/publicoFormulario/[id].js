@@ -29,6 +29,19 @@ function Formulario({ info }) {
     }
     return holder.join(" - ");
   }
+  function getSummedValues({ qtde, pot }) {
+    let splitQtde = qtde.split("/");
+    let splitPot = pot.split("/");
+    let totalPot = 0;
+    for (let i = 0; i < splitQtde.length; i++) {
+      totalPot = totalPot + (splitQtde[i] * splitPot[i]) / 1000;
+    }
+    let summedModules = splitQtde.reduce(
+      (partialSum, a) => Number(partialSum) + Number(a),
+      0
+    );
+    return { totalPot, summedModules };
+  }
   return (
     <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto py-2">
       <div className="flex flex-col gap-y-2 h-full">
@@ -536,7 +549,9 @@ function Formulario({ info }) {
                 <SelectInput
                   label={"TIPO DA LIGAÇÃO"}
                   editable={false}
-                  value={dados.tipoDaLigacao}
+                  value={
+                    dados.tipoDaLigacao ? dados.tipoDaLigacao : "NÃO DEFINIDO"
+                  }
                   handleChange={(value) =>
                     setDados({ ...dados, tipoDaLigacao: value })
                   }
@@ -1030,6 +1045,32 @@ function Formulario({ info }) {
                     },
                   ]}
                 />
+                <SelectInput
+                  label={"TIPO DO KIT"}
+                  value={dados.tipoDoKit ? dados.tipoDoKit : "NÃO DEFINIDO"}
+                  editable={false}
+                  options={[
+                    {
+                      label: "NORMAL",
+                      value: "NORMAL",
+                    },
+                    {
+                      label: "PROMO",
+                      value: "PROMO",
+                    },
+                    {
+                      label: "NÃO SE APLICA",
+                      value: "NÃO SE APLICA",
+                    },
+                    {
+                      label: "NÃO DEFINIDO",
+                      value: "NÃO DEFINIDO",
+                    },
+                  ]}
+                  handleChange={(value) => {
+                    setDados({ ...dados, tipoDoKit: value });
+                  }}
+                />
               </div>
               <div className="flex gap-2 justify-around flex-wrap mt-2 py-2 border-t border-gray-200">
                 <TextInput
@@ -1377,7 +1418,8 @@ function Formulario({ info }) {
                   </div>
                 </>
               )}
-              {dados.clienteAmpere != "SIM" ? (
+              {dados.clienteAmpere != "SIM" &&
+              dados.tipoDeServico == "AUMENTO DE SISTEMA FOTOVOLTAICO" ? (
                 <>
                   <span className="text-sm text-center font-bold text-[#fead61] uppercase py-2 border-t border-blue-500 mt-1">
                     DADOS DO SISTEMA (ANTERIOR)

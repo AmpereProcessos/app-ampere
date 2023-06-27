@@ -18,9 +18,9 @@ export default async function handler(req, res) {
               ativa: true,
               chaveVariaveis: ["potencia_sistema", "preco"],
               responsavelId: [
-                0, 6924, 13615, 6320, 13443, 2382, 6615, 6283, 8035, 5615, 5763,
-                5852, 11553, 12559, 8785, 12759, 11601, 2277, 4073, 3578, 12615,
-                6183, 6182,
+                0, 6924, 13615, 6320, 13443, 2382, 6615, 6283, 8035, 13817,
+                13705, 5615, 5763, 5852, 11553, 12559, 8785, 12759, 11601, 2277,
+                4073, 3578, 13922, 12615, 6183, 6182, 13921,
               ],
               dataAceiteInicial: formattedAfter,
               dataAceiteFinal: formattedABefore,

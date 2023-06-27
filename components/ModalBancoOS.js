@@ -5,6 +5,7 @@ import { FaSave } from "react-icons/fa";
 import TextFloatingInput from "./TextFloatingInput";
 import axios from "axios";
 import SaveButton from "./utils/Buttons/SaveButton";
+import { equipesTecnicas } from "../utils/constants";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -90,6 +91,26 @@ function ModalBancoOS({ info, clientName, projectID, setModalIsOpen, index }) {
                 <option value={"MANUTENÇÃO CORRETIVA"}>
                   MANUTENÇÃO CORRETIVA
                 </option>
+              </select>
+            </div>
+            <div className="flex flex-col lg:flex-row py-2 items-center justify-center border-y border-[#15599a] w-full">
+              <p className="text-gray-800 font-bold">EQUIPE</p>
+              <select
+                value={infoHolder.equipe}
+                onChange={(e) => {
+                  setInfo({ ...infoHolder, equipe: e.target.value });
+                  setChanges({
+                    ...changes,
+                    [`ordensDeServico.${index}.equipe`]: e.target.value,
+                  });
+                }}
+                className={"h-full grow text-center outline-none"}
+              >
+                {equipesTecnicas.map((equipe, index) => (
+                  <option key={index} value={equipe.value}>
+                    {equipe.label}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="flex flex-col lg:flex-row py-2 items-center justify-center border-y border-[#15599a] w-full">

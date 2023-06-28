@@ -2383,7 +2383,8 @@ function ModalFormSolicitacao({
                       </div>
                     </>
                   )}
-                  {dados.clienteAmpere != "SIM" ? (
+                  {dados.clienteAmpere != "SIM" &&
+                  dados.tipoDeServico == "AUMENTO DE SISTEMA FOTOVOLTAICO" ? (
                     <>
                       <span className="text-sm text-center font-bold text-[#fead61] uppercase py-2 border-t border-blue-500 mt-1">
                         DADOS DO SISTEMA (ANTERIOR)

@@ -156,6 +156,20 @@ const fatoresListOfDict = {
     10: 143.05,
     11: 147.4,
   },
+  QUIRINÓPOLIS: {
+    0: (5614 * 0.81 * 30) / 1000,
+    1: (5667 * 0.81 * 30) / 1000,
+    2: (5248 * 0.81 * 30) / 1000,
+    3: (5072 * 0.81 * 30) / 1000,
+    4: (4562 * 0.81 * 30) / 1000,
+    5: (4313 * 0.81 * 30) / 1000,
+    6: (4478 * 0.81 * 30) / 1000,
+    7: (5442 * 0.81 * 30) / 1000,
+    8: (5289 * 0.81 * 30) / 1000,
+    9: (5560 * 0.81 * 30) / 1000,
+    10: (5689 * 0.81 * 30) / 1000,
+    11: (5798 * 0.81 * 30) / 1000,
+  },
 };
 const disponibilidadePorTipoDeLigacao = {
   Monofásico: 30,
@@ -176,10 +190,12 @@ function SimulacaoFaturaEPayback() {
     valorInvestido: 0,
     iluminacaoPublica: 0,
     simultaneidade: 0.33,
+    rendimentoPoupanca: 0.6808,
   });
   const [data, setData] = useState();
   const [graphData, setGraphData] = useState();
   const [msg, setMsg] = useState({ text: "", color: "" });
+  console.log(info.rendimentoPoupanca / 100);
   function simulate() {
     if (info.qtdeModulos <= 0) {
       setMsg({
@@ -309,6 +325,7 @@ function SimulacaoFaturaEPayback() {
     var mesComparacao = info.mesInicio;
     var saldoPassado = 0;
     var saldoPassadoDireitoAdquirido = 0;
+    var poupanca = -info.valorInvestido;
     var payback = -info.valorInvestido;
     var paybackDireitoAdquirido = -info.valorInvestido;
     for (let i = 0; i <= meses; i++) {
@@ -392,6 +409,8 @@ function SimulacaoFaturaEPayback() {
       payback = payback + economia;
       paybackDireitoAdquirido =
         paybackDireitoAdquirido + economiaDireitoAdquirido;
+      if (i > 0)
+        poupanca = poupanca + (info.rendimentoPoupanca / 100) * -poupanca;
       if (custoDisponibilidade > outrosCustos)
         saldoCumulado =
           saldoCumulado + disponibilidadePorTipoDeLigacao[info.tipoDeLigacao];
@@ -416,6 +435,7 @@ function SimulacaoFaturaEPayback() {
         "PAYBACK (DIREITO ADQUIRIDO)": Number(
           paybackDireitoAdquirido.toFixed(2)
         ),
+        "INVESTIMENTO POUPANÇA": poupanca,
       });
 
       if (mesComparacao + 1 > 12) {
@@ -444,6 +464,8 @@ function SimulacaoFaturaEPayback() {
         "PAYBACK (DIREITO ADQUIRIDO)":
           matchingObjForThisYear["PAYBACK (DIREITO ADQUIRIDO)"],
         "PAYBACK (NOVA LEI)": matchingObjForThisYear["PAYBACK (NOVA LEI)"],
+        "INVESTIMENTO POUPANÇA":
+          matchingObjForThisYear["INVESTIMENTO POUPANÇA"],
       };
     });
     setGraphData(newArrOfObjs);
@@ -480,11 +502,12 @@ function SimulacaoFaturaEPayback() {
               <Legend />
               <Bar dataKey="PAYBACK (DIREITO ADQUIRIDO)" fill="#fead61" />
               <Bar dataKey="PAYBACK (NOVA LEI)" fill="#15599a" />
+              <Bar dataKey="INVESTIMENTO POUPANÇA" fill="#023047" />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="w-full grid grid-cols-5 lg:grid-cols-7">
+        <div className="w-full grid grid-cols-6 lg:grid-cols-8">
           <div className="text-center text-xxs lg:text-base flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
             PERÍODO
           </div>
@@ -503,14 +526,17 @@ function SimulacaoFaturaEPayback() {
           <div className="text-center text-xxs lg:text-base flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
             PAYBACK DIREITO ADQUIRIDO
           </div>
-          <div className="text-center text-xxs lg:text-base flex items-center justify-center bg-black text-white p-1 font-bold">
+          <div className="text-center text-xxs lg:text-base flex items-center justify-center bg-black text-white p-1 font-bold border-r border-white">
             PAYBACK NOVA LEI
+          </div>
+          <div className="text-center text-xxs lg:text-base flex items-center justify-center bg-black text-white p-1 font-bold">
+            POUPANÇA
           </div>
         </div>
         {data?.map((obj, index) => (
           <div
             key={index}
-            className="w-full grid grid-cols-5 lg:grid-cols-7 border-x border-b border-gray-200"
+            className="w-full grid grid-cols-6 lg:grid-cols-8 border-x border-b border-gray-200"
           >
             <h1 className="text-center text-xxs lg:text-sm text-gray-600 border-r border-gray-300 p-1">
               {obj["TAG"]}
@@ -544,6 +570,9 @@ function SimulacaoFaturaEPayback() {
               } p-1`}
             >
               {obj["PAYBACK (NOVA LEI)"].toFixed(2)}
+            </h1>
+            <h1 className="text-center text-xxs lg:text-sm text-gray-600 border-r border-gray-300 p-1">
+              {obj["INVESTIMENTO POUPANÇA"].toFixed(2)}
             </h1>
           </div>
         ))}
@@ -759,6 +788,24 @@ function SimulacaoFaturaEPayback() {
                     setInfo({
                       ...info,
                       valorInvestido: Number(e.target.value),
+                    })
+                  }
+                  type={"number"}
+                  className="outline-none text-lg p-2 border border-[#15599a] rounded-md text-center text-[#15599a]"
+                />
+              </div>
+            </div>
+            <div className="w-full justify-center items-center flex">
+              <div className="flex flex-col gap-2 w-full">
+                <label className="text-start italic text-md text-gray-500">
+                  Rendimento mensal da Poupança (%)
+                </label>
+                <input
+                  value={info.rendimentoPoupanca}
+                  onChange={(e) =>
+                    setInfo({
+                      ...info,
+                      rendimentoPoupanca: Number(e.target.value),
                     })
                   }
                   type={"number"}

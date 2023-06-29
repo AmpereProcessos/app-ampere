@@ -141,13 +141,6 @@ function Estoque() {
               icon={<AiOutlineSearch />}
               handleClick={() => handleFilters()}
             />
-            {/* <button
-              onClick={handleFilters}
-              className="flex bg-[#fead61] hover:text-white hover:bg-[#15599a] font-bold rounded py-2 px-2 items-center gap-x-2"
-            >
-              <p>Filtrar</p>
-              <AiOutlineSearch />
-            </button> */}
           </div>
         </div>
         <div className="flex justify-around gap-3 mt-4 flex-wrap w-full grow">

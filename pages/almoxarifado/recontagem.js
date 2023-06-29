@@ -172,7 +172,12 @@ function Recontagem() {
                   {material.codigo ? material.codigo : "-"}
                 </div>
                 <div className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
-                  {material.qtde && material.qtde > 0 ? material.qtde : "-"}
+                  {material.qtde && material.qtde > 0
+                    ? Number(material.qtde).toLocaleString("pt-br", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })
+                    : "-"}
                 </div>
 
                 <div className="text-sm col-span-1 text-gray-900 font-medium  text-center whitespace-nowrap">

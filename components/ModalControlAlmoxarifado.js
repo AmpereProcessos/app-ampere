@@ -235,7 +235,7 @@ function ControleAlmoxarifado({
                   />
                 </div>
               </div>
-              {(materialInfo.qtdeAlteracoes &&
+              {/* {(materialInfo.qtdeAlteracoes &&
                 materialInfo.qtdeAlteracoes.length > 0) ||
               (materialInfo.precoAlteracoes &&
                 materialInfo.precoAlteracoes.length > 0) ? (
@@ -328,7 +328,7 @@ function ControleAlmoxarifado({
                     </div>
                   ))}
                 </div>
-              ) : null}
+              ) : null} */}
             </div>
           </div>
         </div>

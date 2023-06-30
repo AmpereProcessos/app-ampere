@@ -39,6 +39,7 @@ import InfoProjetoBlock from "./blocosInfoProjeto/InfoProjetoBlock";
 import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
 import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
 import SaveButton from "./utils/Buttons/SaveButton";
+import ESigningBlock from "./blocosInfoProjeto/ESigningBlock";
 
 function formatCnpjCpf(value) {
   const cnpjCpf = value.replace(/\D/g, "");
@@ -351,6 +352,13 @@ function ModalComercial({
               ]}
               handleUpdates={handleUpdates}
             />
+            {/* <ESigningBlock
+              contractName={infoHolder.nomeDoContrato}
+              email={infoHolder.email}
+              phone_number={infoHolder.telefone}
+              documentation={infoHolder.cpf_cnpj}
+              contractLinks={infoHolder.links?.contratos}
+            /> */}
           </div>
         </div>
       </AnimatedModalWrapper>

@@ -3,16 +3,16 @@ import connectToDatabase from "../../utils/materialDb";
 import connectoToInsideDb from "../../utils/insideSalesDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
-  const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("material");
-  const dbResp = await collection.updateOne(
-    { _id: new ObjectId("63975cd0170b8934d7d7c436") },
-    {
-      $pull: {
-        "qtdeAlteracoes.anterior": { $type: 3 },
-      },
-    }
-  );
+  // const db = await connectToDatabase(process.env.DB_KEY);
+  // const collection = db.collection("material");
+  // const dbResp = await collection.updateOne(
+  //   { _id: new ObjectId("63975cd0170b8934d7d7c436") },
+  //   {
+  //     $pull: {
+  //       "qtdeAlteracoes.anterior": { $type: 3 },
+  //     },
+  //   }
+  // );
 
   // const db2 = await connectoToInsideDb(process.env.DB_KEY);
   // const collection2 = db2.collection("leads");
@@ -116,7 +116,7 @@ export default async function handler(req, res) {
   //   { $set: { contratoAssinado: true } }
   // );
   // console.log(arr.length);
-  res.json(dbResp);
+  res.json("TESTE");
 }
 
 // Update Many example:

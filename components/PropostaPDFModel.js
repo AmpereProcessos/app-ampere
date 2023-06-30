@@ -274,12 +274,12 @@ function PropostaPDFModel({ info }) {
                       >
                         Serviços
                       </th>
-                      {/* <th
+                      <th
                         scope="col"
                         className="text-sm font-medium text-gray-900 px-2 py-2 border-r"
                       >
                         Manutenção simples
-                      </th> */}
+                      </th>
                       {!info.currentPlanOption == 1 ? (
                         <>
                           <th
@@ -303,9 +303,9 @@ function PropostaPDFModel({ info }) {
                       <td className="px-2 text-sm font-medium text-gray-900 border-r">
                         MANUTENÇÃO ELÉTRICA INVERSORES + QUADROS ELÉTRICOS
                       </td>
-                      {/* <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
+                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
                         <div className="flex justify-center">X</div>
-                      </td> */}
+                      </td>
                       {!info.currentPlanOption == 1 ? (
                         <>
                           <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
@@ -337,9 +337,9 @@ function PropostaPDFModel({ info }) {
                       <td className="px-2 text-sm font-medium text-gray-900 border-r">
                         REAPERTO CONEXÕES ELÉTRICAS
                       </td>
-                      {/* <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
+                      <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
                         <div className="flex justify-center">X</div>
-                      </td> */}
+                      </td>
                       {!info.currentPlanOption == 1 ? (
                         <>
                           <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
@@ -372,9 +372,9 @@ function PropostaPDFModel({ info }) {
                         ANÁLISE E CONFERÊNCIA DE GRANDEZAS ELÉTRICAS DOS
                         EQUIPAMENTOS ELÉTRICOS
                       </td>
-                      {/* <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         <div className="flex justify-center">X</div>
-                      </td> */}
+                      </td>
                       {!info.currentPlanOption == 1 ? (
                         <>
                           <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
@@ -406,7 +406,7 @@ function PropostaPDFModel({ info }) {
                       <td className="px-2 text-sm font-medium text-gray-900 border-r">
                         LIMPEZA NOS MÓDULOS FOTOVOLTAICOS
                       </td>
-                      {/* <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                      <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
@@ -416,7 +416,7 @@ function PropostaPDFModel({ info }) {
                             }}
                           />
                         </div>
-                      </td> */}
+                      </td>
                       {!info.currentPlanOption == 1 ? (
                         <>
                           <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
@@ -452,9 +452,9 @@ function PropostaPDFModel({ info }) {
                             MANUTENÇÃO ADICIONAL, COM VALOR JÁ ESTIPULADO EM
                             CONTRATO
                           </td>
-                          {/* <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
+                          <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                             X
-                          </td> */}
+                          </td>
                           <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                             <div className="flex justify-center">
                               <p>50% do valor do contrato</p>
@@ -466,7 +466,7 @@ function PropostaPDFModel({ info }) {
                             </div>
                           </td>
                         </tr>
-                        {/* <tr className="border-b bg-white">
+                        <tr className="border-b bg-white">
                           <td className="px-2 text-sm font-medium text-gray-900 border-r">
                             DISTRIBUIÇÃO DE CRÉDITOS
                           </td>
@@ -490,7 +490,7 @@ function PropostaPDFModel({ info }) {
                               ILIMITADO
                             </div>
                           </td>
-                        </tr> */}
+                        </tr>
                       </>
                     ) : null}
 
@@ -505,7 +505,7 @@ function PropostaPDFModel({ info }) {
                         {quotaBoletoNumber()} */}
                       </td>
 
-                      {/* <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
+                      <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
                         R$
                         {(
                           findPrice(info.qtdeModulos) * info.qtdeModulos +
@@ -513,7 +513,7 @@ function PropostaPDFModel({ info }) {
                         )
                           .toFixed(2)
                           .replace(".", ",")}
-                      </td> */}
+                      </td>
                       {!info.currentPlanOption == 1 ? (
                         <>
                           <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">

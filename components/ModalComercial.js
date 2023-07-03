@@ -359,6 +359,7 @@ function ModalComercial({
               phone_number={infoHolder.telefone}
               documentation={infoHolder.cpf_cnpj}
               contractLinks={infoHolder.links?.contratos}
+              digitalSigningInfo={infoHolder.assinaturaDigital}
             />
           </div>
         </div>

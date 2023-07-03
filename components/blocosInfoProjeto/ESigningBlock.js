@@ -5,6 +5,7 @@ import { IoIosSend } from "react-icons/io";
 import { getMetadata, ref } from "firebase/storage";
 import { storage } from "../../utils/firebase";
 import axios from "axios";
+import { BsCheck } from "react-icons/bs";
 function ESigningBlock({
   projectId,
   contractName,
@@ -12,6 +13,7 @@ function ESigningBlock({
   phone_number,
   documentation,
   contractLinks,
+  digitalSigningInfo,
 }) {
   const [showMenu, setShowMenu] = useState();
   const [toSignFile, setToSignFile] = useState();
@@ -81,7 +83,82 @@ function ESigningBlock({
       </div>
       {showMenu ? (
         <div className="w-full flex flex-col mt-2 items-center">
-          {contractLinks ? (
+          {digitalSigningInfo ? (
+            <div className="w-full flex flex-col">
+              <h1 className="text-center text-gray-500 font-medium text-sm">
+                Um documento foi adicionado para assinatura digital. Abaixo,
+                estão os status de assinatura dos signatários vinculados:
+              </h1>
+              <div className="flex w-full flex-col items-center">
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`flex h-[13px] w-[13px] items-center justify-center rounded-full border-2 border-[#15599a] ${
+                      digitalSigningInfo.assinaturaContratante
+                        ? "bg-[#15599a]"
+                        : ""
+                    }`}
+                  >
+                    {digitalSigningInfo.assinaturaContratante ? (
+                      <BsCheck style={{ color: "#fead61" }} />
+                    ) : null}
+                  </div>
+                  <span
+                    className={`${
+                      digitalSigningInfo.assinaturaContratante
+                        ? "text-green-500"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    ASSINATURA DO CLIENTE
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`flex h-[13px] w-[13px] items-center justify-center rounded-full border-2 border-[#15599a] ${
+                      digitalSigningInfo.assinaturaContratada
+                        ? "bg-[#15599a]"
+                        : ""
+                    }`}
+                  >
+                    {digitalSigningInfo.assinaturaContratada ? (
+                      <BsCheck style={{ color: "#fead61" }} />
+                    ) : null}
+                  </div>
+                  <span
+                    className={`${
+                      digitalSigningInfo.assinaturaContratada
+                        ? "text-green-500"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    ASSINATURA DA CONTRATADA
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`flex h-[13px] w-[13px] items-center justify-center rounded-full border-2 border-[#15599a] ${
+                      digitalSigningInfo.assinaturaValidador
+                        ? "bg-[#15599a]"
+                        : ""
+                    }`}
+                  >
+                    {digitalSigningInfo.assinaturaValidador ? (
+                      <BsCheck style={{ color: "#fead61" }} />
+                    ) : null}
+                  </div>
+                  <span
+                    className={`${
+                      digitalSigningInfo.assinaturaValidador
+                        ? "text-green-500"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    ASSINATURA DO VALIDADOR
+                  </span>
+                </div>
+              </div>
+            </div>
+          ) : contractLinks ? (
             <>
               <SelectFoatingInput
                 label={"ARQUIVO PARA ASSINATURA"}

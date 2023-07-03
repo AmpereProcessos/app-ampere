@@ -530,7 +530,7 @@ function ModalOeM({
                     });
                   }}
                 />
-                {infoHolder.oem?.plano
+                {/* {infoHolder.oem?.plano
                   ? reportsByPlan[infoHolder.oem.plano].relatorios.map(
                       (relatorio, index) => (
                         <DateInput
@@ -574,7 +574,7 @@ function ModalOeM({
                         />
                       )
                     )
-                  : false}
+                  : false} */}
                 <DateInput
                   label={"MANUTENÇÃO PREVENTIVA"}
                   editable={editor}
@@ -622,9 +622,14 @@ function ModalOeM({
                         setChanges({
                           ...changes,
                           "oem.oemConcluido": e.target.checked,
+                          "obra.statusDaObra": "CONCLUIDA",
                         });
                         setInfo({
                           ...infoHolder,
+                          obra: {
+                            ...infoHolder.obra,
+                            statusDaObra: "CONCLUIDA",
+                          },
                           oem: {
                             ...infoHolder.oem,
                             oemConcluido: e.target.checked,

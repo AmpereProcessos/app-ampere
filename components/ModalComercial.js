@@ -353,6 +353,7 @@ function ModalComercial({
               handleUpdates={handleUpdates}
             />
             <ESigningBlock
+              projectId={infoHolder._id}
               contractName={infoHolder.nomeDoContrato}
               email={infoHolder.email}
               phone_number={infoHolder.telefone}

@@ -6,6 +6,7 @@ import { getMetadata, ref } from "firebase/storage";
 import { storage } from "../../utils/firebase";
 import axios from "axios";
 function ESigningBlock({
+  projectId,
   contractName,
   email,
   phone_number,
@@ -56,7 +57,7 @@ function ESigningBlock({
 
     const { data } = await axios.post(
       `/api/utils/sendDigitalSigning?filePath=${encodeURIComponent(filePath)}`,
-      { contractName, email, phone_number, documentation }
+      { projectId, contractName, email, phone_number, documentation }
     );
     console.log("RESPOSTA", data);
     setMsg({ text: "Deu certo!", color: "text-green-500" });

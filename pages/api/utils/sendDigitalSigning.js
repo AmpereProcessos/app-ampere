@@ -1,14 +1,20 @@
 import axios from "axios";
 import getBucket from "../../../utils/services/firebaseBucket";
 import { companySignerKeys } from "../../../utils/constants";
+import connectToDatabase from "../../../utils/connectDb";
+import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
   if (req.method == "POST") {
     const { filePath } = req.query;
-    const { contractName, email, phone_number, documentation } = req.body;
+    const { projectId, contractName, email, phone_number, documentation } =
+      req.body;
     const formattedFileName = contractName
       ? contractName.split(" ").join("_")
       : "CONTRATO";
     try {
+      const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+      const collection = db.collection("dados");
+
       if (typeof filePath === "string") {
         const bucket = await getBucket();
         const file = bucket.file(filePath);
@@ -76,6 +82,18 @@ export default async function handler(req, res) {
 
         // Adding Signers
         const documentKey = documentUploadResponse.document.key;
+
+        // Update project with document key
+        const digitalSignObject = {
+          documentoKey: documentKey,
+          assinaturaContratante: false,
+          assinaturaContratada: false,
+          assinaturaValidador: false,
+        };
+        await collection.updateOne(
+          { _id: ObjectId(projectId) },
+          { $set: { assinaturaDigital: digitalSignObject } }
+        );
         const signerKey = createSignerResponse.signer.key;
         const validator = "8cb69cac-4044-48fd-8ada-1d699f64bd1d";
         const contractee = "06d287f1-ae2a-4e01-ba10-4ca31c944dd2";

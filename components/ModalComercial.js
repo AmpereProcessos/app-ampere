@@ -352,13 +352,13 @@ function ModalComercial({
               ]}
               handleUpdates={handleUpdates}
             />
-            {/* <ESigningBlock
+            <ESigningBlock
               contractName={infoHolder.nomeDoContrato}
               email={infoHolder.email}
               phone_number={infoHolder.telefone}
               documentation={infoHolder.cpf_cnpj}
               contractLinks={infoHolder.links?.contratos}
-            /> */}
+            />
           </div>
         </div>
       </AnimatedModalWrapper>

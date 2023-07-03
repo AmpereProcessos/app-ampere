@@ -1443,6 +1443,7 @@ export const cidadesAtendidas = [
   "CHAVESLÂNDIA", // MG
   "PONTAL DO ARAGUAIA", // MT
   "GOIATUBA", // GO
+  "FRUTAL", // MG
 ];
 export const cidadesGoias = [
   "CALDAS NOVAS", // GO

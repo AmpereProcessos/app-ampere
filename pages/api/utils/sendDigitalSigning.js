@@ -38,6 +38,7 @@ export default async function handler(req, res) {
             reject(error);
           });
         });
+        // Uploading document
         const { data: documentUploadResponse } = await axios.post(
           "https://sandbox.clicksign.com/api/v1/documents?access_token=9686cf5e-a687-4b6e-85de-17d9d40da3f0",
           {
@@ -52,6 +53,7 @@ export default async function handler(req, res) {
             },
           }
         );
+
         const { data: createSignerResponse } = await axios.post(
           "https://sandbox.clicksign.com/api/v1/signers?access_token=9686cf5e-a687-4b6e-85de-17d9d40da3f0",
           {
@@ -71,10 +73,13 @@ export default async function handler(req, res) {
             },
           }
         );
+
+        // Adding Signers
         const documentKey = documentUploadResponse.document.key;
         const signerKey = createSignerResponse.signer.key;
         const validator = "8cb69cac-4044-48fd-8ada-1d699f64bd1d";
         const contractee = "06d287f1-ae2a-4e01-ba10-4ca31c944dd2";
+
         const { data: addClientSignerResponse } = await axios.post(
           "https://sandbox.clicksign.com/api/v1/lists?access_token=9686cf5e-a687-4b6e-85de-17d9d40da3f0",
           {
@@ -114,9 +119,20 @@ export default async function handler(req, res) {
             },
           }
         );
-        console.log("VALIDADOR", validator);
-        console.log("CONTRATANTE", contractee);
-        console.log(createSignerResponse);
+        // Send emails
+        const { data: sendEmailClientResponse } = await axios.post(
+          "https://sandbox.clicksign.com/api/v1/notifications?access_token=9686cf5e-a687-4b6e-85de-17d9d40da3f0",
+          {
+            request_signature_key:
+              addClientSignerResponse.list.request_signature_key,
+            message:
+              "Prezado,\nPor favor assine o documento.\n\nQualquer dúvida estou à disposição.\n\nAtenciosamente,\nVolts",
+          }
+        );
+        // console.log("CLIENTE", addClientSignerResponse);
+        // console.log("VALIDADOR", addValidatorSignerResponse);
+        // console.log("CONTRATANTE", addContracteeSignerResponse);
+        console.log(sendEmailClientResponse);
         // console.log(signerKey);
         res.json({ data: documentKey });
       } else {

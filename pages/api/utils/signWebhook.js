@@ -1,6 +1,5 @@
 import axios from "axios";
 import connectToDatabase from "../../../utils/connectDb";
-import connectToTestDatabase from "../../../utils/auxiliaresDb";
 async function sendSignEmail(signatureKey) {
   if (signatureKey) {
     try {
@@ -20,9 +19,6 @@ async function sendSignEmail(signatureKey) {
 }
 export default async function handler(req, res) {
   if (req.method == "POST") {
-    const testDb = await connectToTestDatabase(process.env.DB_KEY);
-    const testCollection = testDb.collection("webhook");
-    await testCollection.insertOne(req.body);
     try {
       const db = await connectToDatabase(process.env.DB_KEY, "projetos");
       const collection = db.collection("dados");
@@ -81,7 +77,6 @@ export default async function handler(req, res) {
             );
         }
       }
-      await collection.insertOne(req.body);
       res.status(201).json({ message: "Execução bem sucedida" });
     } catch (error) {
       res.status(501).json({ message: "Erro de execução." });

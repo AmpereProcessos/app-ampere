@@ -608,6 +608,11 @@ export const vendedores = [
     ativo: true,
   },
   {
+    nome: "LUCAS FERNANDES",
+    cod: 9999,
+    ativo: true,
+  },
+  {
     nome: "GABRIEL EMANUEL",
     cod: 77,
     cargo: "INTERNO",

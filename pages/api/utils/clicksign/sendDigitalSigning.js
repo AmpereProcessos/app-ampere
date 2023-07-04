@@ -64,11 +64,11 @@ export default async function handler(req, res) {
           "https://sandbox.clicksign.com/api/v1/signers?access_token=9686cf5e-a687-4b6e-85de-17d9d40da3f0",
           {
             signer: {
-              email: "processos@ampereenergias.com.br", // email
-              phone_number: null,
+              email: email, // email
+              phone_number: phone_number ? phone_number : null,
               auths: ["email"],
               name: contractName,
-              documentation: null,
+              documentation: documentation ? documentation : null,
               birthday: null,
               has_documentation: true,
               selfie_enabled: true,

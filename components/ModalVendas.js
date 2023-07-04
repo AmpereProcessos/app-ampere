@@ -225,6 +225,7 @@ function ModalVendas({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <TextInput
                     label={"EMAIL"}
                     value={infoHolder.email ? infoHolder.email : ""}
+                    normalCase={true}
                     handleChange={(value) => {
                       setChanges({ ...changes, email: value });
                       setInfo({ ...infoHolder, email: value });

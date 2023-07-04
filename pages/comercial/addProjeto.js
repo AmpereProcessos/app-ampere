@@ -769,6 +769,7 @@ function NovoProjeto() {
                 label={"EMAIL"}
                 editable={true}
                 value={infoHolder.email ? infoHolder.email : ""}
+                normalCase={true}
                 handleChange={(value) => {
                   setInfo({ ...infoHolder, email: value });
                 }}

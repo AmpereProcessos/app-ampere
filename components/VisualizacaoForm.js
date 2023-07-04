@@ -301,6 +301,7 @@ function VisualizacaoForm({
           <TextInput
             label={"EMAIL"}
             editable={true}
+            normalCase={true}
             value={dados.email}
             handleChange={(value) => setDados({ ...dados, email: value })}
           />

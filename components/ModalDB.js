@@ -275,6 +275,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                   <TextInput
                     label={"EMAIL"}
                     editable={editor}
+                    normalCase={true}
                     value={infoHolder.email ? infoHolder.email : ""}
                     handleChange={(value) => {
                       setChanges({ ...changes, email: value });

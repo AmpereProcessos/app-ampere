@@ -258,6 +258,7 @@ function InfoClienteBlock({
           label={"EMAIL"}
           editable={editor}
           value={infoHolder.email ? infoHolder.email : ""}
+          normalCase={true}
           handleChange={(value) => {
             setChanges({ ...changes, email: value });
             setInfo({ ...infoHolder, email: value });

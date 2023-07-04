@@ -311,6 +311,7 @@ function ModalSolicitacaoVendas({
                 />
                 <TextInput
                   label={"EMAIL"}
+                  normalCase={true}
                   editable={editable}
                   value={dados.email}
                   handleChange={(value) => setDados({ ...dados, email: value })}

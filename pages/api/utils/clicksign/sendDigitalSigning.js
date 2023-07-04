@@ -1,7 +1,7 @@
 import axios from "axios";
-import getBucket from "../../../utils/services/firebaseBucket";
-import { companySignerKeys } from "../../../utils/constants";
-import connectToDatabase from "../../../utils/connectDb";
+import getBucket from "../../../../utils/services/firebaseBucket";
+import { companySignerKeys } from "../../../../utils/constants";
+import connectToDatabase from "../../../../utils/connectDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
   if (req.method == "POST") {

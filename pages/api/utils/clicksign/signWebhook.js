@@ -1,5 +1,5 @@
 import axios from "axios";
-import connectToDatabase from "../../../utils/connectDb";
+import connectToDatabase from "../../../../utils/connectDb";
 async function sendSignEmail(signatureKey) {
   if (signatureKey) {
     try {
@@ -76,6 +76,18 @@ export default async function handler(req, res) {
               }
             );
         }
+      }
+      if (document.downloads && document.downloads.signed_file_url) {
+        await collection.updateOne(
+          {
+            "assinaturaDigital.documentoKey": document.key,
+          },
+          {
+            $set: {
+              "assinaturaDigital.documentoFinalizado": true,
+            },
+          }
+        );
       }
       res.status(201).json({ message: "Execução bem sucedida" });
     } catch (error) {

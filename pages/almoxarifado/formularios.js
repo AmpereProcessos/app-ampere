@@ -26,6 +26,7 @@ function Formularios() {
     efetivados: false,
     pesquisa: "",
     codigo: "",
+    servico: [],
   });
   const [dateFilter, setDateFilter] = useState({
     after: null,
@@ -62,6 +63,10 @@ function Formularios() {
       newArr = newArr.filter((form) =>
         form.codigoProjeto?.toString().includes(filters.codigo)
       );
+    }
+    if (filters.servico.length > 0) {
+      if (!newArr) newArr = forms;
+      newArr = newArr.filter((form) => filters.servico.includes(form.servico));
     }
     if (dateFilter.after && dateFilter.before && dateFilter.field != null) {
       if (!newArr) newArr = forms;
@@ -104,7 +109,7 @@ function Formularios() {
       }
     }
   }, [session]);
-
+  console.log(filters);
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
@@ -149,7 +154,47 @@ function Formularios() {
                 setFilters({ ...filters, codigo: e.target.value })
               }
             />
-
+            <div className="w-full lg:w-[250px]">
+              <Select
+                isMulti={true}
+                placeholder={"SERVIÇO"}
+                styles={{
+                  control: (base, state) => ({
+                    ...base,
+                    width: "100%",
+                    minHeight: "41px",
+                  }),
+                }}
+                options={[
+                  {
+                    label: "PADRÃO",
+                    value: "PADRÃO",
+                  },
+                  {
+                    label: "ESTRUTURA",
+                    value: "ESTRUTURA",
+                  },
+                  {
+                    label: "MONTAGEM",
+                    value: "MONTAGEM",
+                  },
+                  {
+                    label: "MANUTENÇÃO CORRETIVA",
+                    value: "MANUTENÇÃO CORRETIVA",
+                  },
+                  {
+                    label: "MANUTENÇÃO PREVENTIVA",
+                    value: "MANUTENÇÃO PREVENTIVA",
+                  },
+                ]}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    servico: e.map((x) => x.value),
+                  }))
+                }
+              />
+            </div>
             <div className="flex gap-x-2 w-full lg:w-fit">
               <div className="flex flex-col w-fit items-center">
                 <span className="uppercase font-bold font-raleway text-center text-sm">

@@ -209,6 +209,25 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
     }
     return holder.join(" - ");
   }
+  function getJoinedPAInfo({ tipo, amperagem, numeroMedidor }) {
+    let splitTipo = tipo.split("/");
+    let splitAmperagem = amperagem.split("/");
+    let splitNumeroMedidor = numeroMedidor.split("/");
+    let holder = [];
+    for (let i = 0; i < splitTipo.length; i++) {
+      const tipoStr = splitTipo[i];
+      const amperagemStr = splitAmperagem[i]
+        ? splitAmperagem[i]
+        : "NÃO DEFINIDO";
+      const numeroMedidorStr = splitNumeroMedidor[i]
+        ? splitNumeroMedidor[i]
+        : "NÃO DEFINIDO";
+
+      let str = `${tipoStr} de ${amperagemStr} com Nº(${numeroMedidorStr})`;
+      holder.push(str);
+    }
+    return holder;
+  }
   function formatCEP(cep) {
     cep = cep
       .replace(/\D/g, "")
@@ -550,46 +569,84 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
                     PADRÃO
                   </span>
+                  <div className="flex w-full flex-col">
+                    <div className="flex items-center gap-2 mt-6">
+                      <div className="w-1/3 flex items-center justify-center">
+                        <TextInput
+                          label={"TIPO DO DISJUNTOR"}
+                          editable={true}
+                          width={"450px"}
+                          value={dados.tipoDisjuntor}
+                          handleChange={(value) =>
+                            setDados((prev) => ({
+                              ...prev,
+                              tipoDisjuntor: value,
+                            }))
+                          }
+                        />
+                      </div>
+                      <div className="w-1/3 flex items-center justify-center">
+                        <TextInput
+                          label={"AMPERAGEM"}
+                          editable={true}
+                          width={"450px"}
+                          value={dados.amperagem}
+                          handleChange={(value) =>
+                            setDados((prev) => ({ ...prev, amperagem: value }))
+                          }
+                        />
+                      </div>
+                      <div className="w-1/3 flex items-center justify-center">
+                        <TextInput
+                          label={"NÚMERO DO MEDIDOR"}
+                          editable={true}
+                          width={"450px"}
+                          value={dados.numeroMedidor}
+                          handleChange={(value) =>
+                            setDados((prev) => ({
+                              ...prev,
+                              numeroMedidor: value,
+                            }))
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="w-full flex flex-col items-center">
+                      <span
+                        className={`uppercase font-bold font-raleway text-center text-sm`}
+                      >
+                        LISTA DE PADRÕES
+                      </span>
+                      <div className="flex flex-col w-full">
+                        {getJoinedPAInfo({
+                          tipo: dados.tipoDisjuntor,
+                          amperagem: dados.amperagem,
+                          numeroMedidor: dados.numeroMedidor,
+                        }).map((paInfo) => (
+                          <div className="flex items-center gap-2 w-full">
+                            <p className="w-full text-center font-medium">
+                              {paInfo}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                   <div className="flex gap-2 items-center justify-around flex-wrap mt-2">
-                    <SelectInput
-                      label={"AMPERAGEM"}
-                      editable={true}
-                      value={dados.amperagem}
-                      options={[
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                        { label: "40A", value: "40A" },
-                        { label: "50A", value: "50A" },
-                        { label: "60A", value: "60A" },
-                        { label: "63A", value: "63A" },
-                        { label: "70A", value: "70A" },
-                        { label: "90A", value: "90A" },
-                        { label: "100A", value: "100A" },
-                        { label: "200A", value: "200A" },
-                        {
-                          label: "PADRÃO CONJUGADO",
-                          value: "PADRÃO CONJUGADO",
-                        },
-                      ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, amperagem: value })
-                      }
-                    />
-                    <SelectInput
+                    {/* <TextInput
                       label={"TIPO DO DISJUNTOR"}
                       editable={true}
                       value={dados.tipoDisjuntor}
-                      options={[
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                        { label: "MONOFÁSICO", value: "MONOFÁSICO" },
-                        { label: "BIFÁSICO", value: "BIFÁSICO" },
-                        { label: "TRIFÁSICO", value: "TRIFÁSICO" },
-                        {
-                          label: "PADRÃO CONJUGADO",
-                          value: "PADRÃO CONJUGADO",
-                        },
-                      ]}
                       handleChange={(value) =>
                         setDados({ ...dados, tipoDisjuntor: value })
+                      }
+                    />
+                    <TextInput
+                      label={"AMPERAGEM"}
+                      editable={true}
+                      value={dados.amperagem}
+                      handleChange={(value) =>
+                        setDados({ ...dados, amperagem: value })
                       }
                     />
                     <TextInput
@@ -599,8 +656,8 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       handleChange={(value) =>
                         setDados({ ...dados, numeroMedidor: value })
                       }
-                    />
-                    <TextInput
+                    /> */}
+                    {/* <TextInput
                       label={"PARA PADRÕES CONJUGADOS"}
                       placeholder="ESCREVA: CAIXA 1 - APD1111111 - 40A MONOFÁSICO/ CAIXA 2 - APD222222 - 60A BIFÁSICO ..."
                       editable={true}
@@ -611,7 +668,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                           infoPadraoConjugado: value,
                         })
                       }
-                    />
+                    /> */}
                     <SelectInput
                       label={"RAMAL DE ENTRADA"}
                       editable={true}

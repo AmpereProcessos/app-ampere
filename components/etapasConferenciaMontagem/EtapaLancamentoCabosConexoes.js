@@ -122,7 +122,7 @@ function EtapaLancamentoCabosConexos({ infoCliente, next, cliente }) {
       setMsg({ text: "Processando...", color: "text-[#15599a]" });
       let links = await uploadFiles();
       await updateUser(links);
-      setCookie(null, "OSClosingStage", "4");
+      setCookie(null, `STAGE-${infoCliente.qtde}`, "4");
       next();
     }
   }

@@ -21,6 +21,7 @@ import { Fireworks } from "fireworks-js";
 import DashboardSkeleton from "../components/skeletons/DashboardSkeleton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../components/utils/LoadingPage";
+import { parseCookies, setCookie } from "nookies";
 const routes = [
   {
     title: "Projetos",
@@ -244,7 +245,6 @@ function Home() {
       getBirthDay(session.user);
     }
   }, [session]);
-  console.log(session);
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     if (session.user?.visualizacao == "OBRAS") {

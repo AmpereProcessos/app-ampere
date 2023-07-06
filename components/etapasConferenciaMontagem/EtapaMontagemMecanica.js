@@ -152,7 +152,7 @@ function EtapaMontagemMecanica({ infoCliente, next, cliente }) {
       let links = await uploadFiles();
       setMsg({ text: "Arquivos anexados !", color: "text-green-500" });
       await updateUser(links);
-      setCookie(null, "OSClosingStage", "3");
+      setCookie(null, `STAGE-${infoCliente.qtde}`, "3");
       next();
     } else return false;
   }

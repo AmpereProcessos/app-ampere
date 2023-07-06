@@ -210,6 +210,7 @@ export const reportsByPlan = {
     relatorios: ["envioUm", "envioDois", "envioTres", "envioQuatro"],
   },
 };
+
 export const fileTypes = {
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
     title: "WORD",
@@ -251,7 +252,7 @@ export const fileTypes = {
     title: "IMAGEM(.JPG)",
     extension: ".jpg",
   },
-};
+}
 export const vendedores = [
   {
     nome: "ARTHUR CARVALHO",

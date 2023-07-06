@@ -13,6 +13,7 @@ function OSInfo({ info, index }) {
   const [pdfVisible, setPdfVisible] = useState(false);
   const [osInfo, setosInfo] = useState(info);
   const [urgency, setUrgency] = useState("NÃO DEFINIDO");
+  console.log(info.ordensDeServico[index]);
   return (
     <>
       {osInfo.ordensDeServico[index].categoria == "PADRÃO" && (
@@ -36,6 +37,7 @@ function OSInfo({ info, index }) {
         <PreventivaOS
           info={osInfo}
           openingDate={osInfo.ordensDeServico[index].dataDeAbertura}
+          observacoesOS={osInfo.ordensDeServico[index].observacoes}
           urgencia={osInfo.ordensDeServico[index].grauDeUrgencia}
           servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
           senhaDoWifi={osInfo.ordensDeServico[index].senhaDoWifi}

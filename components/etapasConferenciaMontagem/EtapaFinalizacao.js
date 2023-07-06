@@ -280,7 +280,7 @@ function EtapaFinalizacao({ infoCliente, next, cliente, index, getOSs }) {
         color: "text-green-500",
       });
       getOSs();
-      destroyCookie(null, "OSClosingStage");
+      destroyCookie(null, `STAGE-${infoCliente.qtde}`);
     }
   }
   return (

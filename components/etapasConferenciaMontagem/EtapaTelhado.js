@@ -276,7 +276,7 @@ function EtapaTelhado({ infoCliente, next, cliente }) {
       let links = await uploadFiles();
       setMsg({ text: "Arquivos anexadas!", color: "text-green-500" });
       await updateUser(links);
-      setCookie(null, "OSClosingStage", "2");
+      setCookie(null, `STAGE-${infoCliente.qtde}`, "2");
       next();
     } else return;
   }

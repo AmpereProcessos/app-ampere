@@ -92,7 +92,7 @@ function EtapaEntrada({ infoCliente, next, cliente }) {
       let links = await uploadFiles();
       setMsg({ text: "Arquivos anexadas!", color: "text-green-500" });
       await updateUser(links);
-      setCookie(null, "OSClosingStage", "1");
+      setCookie(null, `STAGE-${infoCliente.qtde}`, "1");
       next();
     }
   }

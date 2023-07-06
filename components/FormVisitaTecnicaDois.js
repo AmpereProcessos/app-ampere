@@ -36,13 +36,13 @@ function FormVisitaTecnicaDois({
       });
       return;
     }
-    if (paInfo.amperagem == "NÃO DEFINIDO") {
-      setPAMsg({
-        text: "Por favor, preencha a amperagem.",
-        color: "text-red-500",
-      });
-      return;
-    }
+    // if (paInfo.amperagem == "NÃO DEFINIDO") {
+    //   setPAMsg({
+    //     text: "Por favor, preencha a amperagem.",
+    //     color: "text-red-500",
+    //   });
+    //   return;
+    // }
     if (paInfo.numeroMedidor.trim().length < 3) {
       setPAMsg({
         text: "Por favor, preencha um número de medidor válido.",

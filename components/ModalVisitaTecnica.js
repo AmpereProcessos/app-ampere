@@ -622,8 +622,11 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                           tipo: dados.tipoDisjuntor,
                           amperagem: dados.amperagem,
                           numeroMedidor: dados.numeroMedidor,
-                        }).map((paInfo) => (
-                          <div className="flex items-center gap-2 w-full">
+                        }).map((paInfo, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 w-full"
+                          >
                             <p className="w-full text-center font-medium">
                               {paInfo}
                             </p>

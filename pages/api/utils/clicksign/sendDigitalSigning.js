@@ -46,7 +46,7 @@ export default async function handler(req, res) {
         });
         // Uploading document
         const { data: documentUploadResponse } = await axios.post(
-          "https://sandbox.clicksign.com/api/v1/documents?access_token=9686cf5e-a687-4b6e-85de-17d9d40da3f0",
+          `https://sandbox.clicksign.com/api/v1/documents?access_token=${process.env.CLICKSIGN_TOKEN}`,
           {
             document: {
               path: `/${formattedFileName}.pdf`,
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
         );
 
         const { data: createSignerResponse } = await axios.post(
-          "https://sandbox.clicksign.com/api/v1/signers?access_token=9686cf5e-a687-4b6e-85de-17d9d40da3f0",
+          `https://sandbox.clicksign.com/api/v1/signers?access_token=${process.env.CLICKSIGN_TOKEN}`,
           {
             signer: {
               email: email, // email
@@ -99,7 +99,7 @@ export default async function handler(req, res) {
         const contractee = "06d287f1-ae2a-4e01-ba10-4ca31c944dd2";
 
         const { data: addClientSignerResponse } = await axios.post(
-          "https://sandbox.clicksign.com/api/v1/lists?access_token=9686cf5e-a687-4b6e-85de-17d9d40da3f0",
+          `https://sandbox.clicksign.com/api/v1/lists?access_token=${process.env.CLICKSIGN_TOKEN}`,
           {
             list: {
               document_key: documentKey,
@@ -112,7 +112,7 @@ export default async function handler(req, res) {
           }
         );
         const { data: addValidatorSignerResponse } = await axios.post(
-          "https://sandbox.clicksign.com/api/v1/lists?access_token=9686cf5e-a687-4b6e-85de-17d9d40da3f0",
+          `https://sandbox.clicksign.com/api/v1/lists?access_token=${process.env.CLICKSIGN_TOKEN}`,
           {
             list: {
               document_key: documentKey,
@@ -125,7 +125,7 @@ export default async function handler(req, res) {
           }
         );
         const { data: addContracteeSignerResponse } = await axios.post(
-          "https://sandbox.clicksign.com/api/v1/lists?access_token=9686cf5e-a687-4b6e-85de-17d9d40da3f0",
+          `https://sandbox.clicksign.com/api/v1/lists?access_token=${process.env.CLICKSIGN_TOKEN}`,
           {
             list: {
               document_key: documentKey,
@@ -139,7 +139,7 @@ export default async function handler(req, res) {
         );
         // Send emails
         const { data: sendEmailClientResponse } = await axios.post(
-          "https://sandbox.clicksign.com/api/v1/notifications?access_token=9686cf5e-a687-4b6e-85de-17d9d40da3f0",
+          `https://sandbox.clicksign.com/api/v1/notifications?access_token=${process.env.CLICKSIGN_TOKEN}`,
           {
             request_signature_key:
               addClientSignerResponse.list.request_signature_key,

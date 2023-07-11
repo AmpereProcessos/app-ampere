@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     try {
       if (!documentKey) throw "Chave de documento inválida.";
       const { data } = await axios.get(
-        `https://sandbox.clicksign.com/api/v1/documents/${documentKey}?access_token=9686cf5e-a687-4b6e-85de-17d9d40da3f0`
+        `https://sandbox.clicksign.com/api/v1/documents/${documentKey}?access_token=${process.env.CLICKSIGN_TOKEN}`
       );
       if (data.document.downloads.signed_file_url) {
         const response = await axios.get(

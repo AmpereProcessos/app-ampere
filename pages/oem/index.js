@@ -64,6 +64,7 @@ function OeM({ users }) {
     field2: null,
   });
   const [searchFilter, setSearchFilter] = useState("");
+  const [neighborhoodSearchFilter, setNeighborhoodSearchFilter] = useState("");
   const [modalProject, setModalProject] = useState({});
   function getProjects(credenciais) {
     if (credenciais.visualizacao == "REGIONAL") {
@@ -87,8 +88,20 @@ function OeM({ users }) {
     setSearchFilter(value);
     if (value != "" || " ") {
       let filtered = filterProjects();
-      let newArr = filtered.filter((call) =>
-        call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
+      let newArr = filtered.filter((project) =>
+        project.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
+      );
+      setFilteredProjects(newArr);
+    } else {
+      setFilteredProjects(projects);
+    }
+  }
+  function handleNeighborhoodSearchFilter(value) {
+    setNeighborhoodSearchFilter(value);
+    if (value != "" || " ") {
+      let filtered = filterProjects();
+      let newArr = filtered.filter((project) =>
+        project.bairro?.toUpperCase().includes(value.toUpperCase())
       );
       setFilteredProjects(newArr);
     } else {
@@ -258,16 +271,7 @@ function OeM({ users }) {
       .get(`/api/projects/fetchDoc/${id}`)
       .then((res) => setModalProject({ ...res.data[0] }));
   }
-  // function fetchMoreProjects() {
-  //   setOpInProgress(true);
-  //   let lastQtde = projects.length > 0 ? projects[projects.length - 1].qtde : 0;
-  //   axios.post("/api/projects/oem", { greater: lastQtde }).then((res) => {
-  //     let arr = [...projects, ...res.data];
-  //     setOpInProgress(false);
-  //     setProjects([...arr]);
-  //     setFilteredProjects([...arr]);
-  //   });
-  // }
+
   function handleOpenModal(id) {
     axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
       setModalProject(res.data[0]);
@@ -356,6 +360,14 @@ function OeM({ users }) {
                     placeholder="DIGITE O NOME DO CONTRATO"
                     value={searchFilter}
                     onChange={(e) => handleSearchFilter(e.target.value)}
+                  />
+                  <input
+                    className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                    placeholder="DIGITE O BAIRRO"
+                    value={neighborhoodSearchFilter}
+                    onChange={(e) =>
+                      handleNeighborhoodSearchFilter(e.target.value)
+                    }
                   />
                   <input
                     type="number"

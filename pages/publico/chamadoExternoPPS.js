@@ -5,11 +5,12 @@ import { vendedores } from "../../utils/constants";
 import SelectInput from "../../components/SelectInput";
 import NumberInput from "../../components/NumberInput";
 import ChamadosExternoPPSInfo from "../../components/ChamadoPPSInfo";
+import TextInput from "../../components/TextInput";
 function ChamadoExternoPPS() {
   const [dados, setDados] = useState({
     vendedor: "NÃO DEFINIDO",
     referenteAProjeto: "NÃO DEFINIDO",
-    codigoDoProjeto: 0,
+    codigoDoProjeto: "",
     tipoDeSolicitacao: "NÃO DEFINIDO", // NÃO DEFINIDO
     nomeDoCliente: "",
     telefone: "",
@@ -156,12 +157,12 @@ function ChamadoExternoPPS() {
           )}
           {dados.referenteAProjeto == "SIM" && (
             <div>
-              <NumberInput
+              <TextInput
                 label={"CÓDIGO DO PROJETO"}
                 value={dados.codigoDoProjeto}
                 editable={true}
                 handleChange={(value) =>
-                  setDados({ ...dados, codigoDoProjeto: Number(value) })
+                  setDados({ ...dados, codigoDoProjeto: value })
                 }
               />
             </div>

@@ -252,7 +252,7 @@ export const fileTypes = {
     title: "IMAGEM(.JPG)",
     extension: ".jpg",
   },
-}
+};
 export const vendedores = [
   {
     nome: "ARTHUR CARVALHO",
@@ -2025,6 +2025,13 @@ export const tiposDePadrao = [
     value: "NÃO DEFINIDO",
   },
 ];
+export function formatProjectCode(value) {
+  if (value) {
+    console.log("FORMATADO", value.split(" ").join(""));
+    return value.split(" ").join("");
+  }
+  return "";
+}
 export function formatToPhone(value) {
   if (!value) return "";
   value = value.replace(/\D/g, "");

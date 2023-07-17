@@ -1,4 +1,5 @@
 import connectToDatabase from "../../../../utils/callsDb";
+import { formatProjectCode } from "../../../../utils/constants";
 export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY);
@@ -43,7 +44,7 @@ export default async function handler(req, res) {
     });
   }
   if (req.method === "POST") {
-    let svbCode = Number(req.body.codigoDoProjeto);
+    let svbCode = formatProjectCode(req.body.codigoDoProjeto);
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("pps");
     try {

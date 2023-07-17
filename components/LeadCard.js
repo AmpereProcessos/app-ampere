@@ -188,14 +188,14 @@ function LeadCard({ lead, getLeads }) {
       <div className="flex flex-col w-full pt-1">
         <div className="grid grid-cols-1 grid-rows-4 gap-2 lg:grid-cols-10 lg:grid-rows-1 w-full">
           <div className="grid grid-cols-1">
-            <NumberInput
+            <TextInput
               label={"CÓDIGO"}
               labelColor={"text-gray-600"}
               editable={true}
               widthFit={true}
               value={infoHolder.codigoSVB}
               handleChange={(value) =>
-                setInfo({ ...infoHolder, codigoSVB: Number(value) })
+                setInfo({ ...infoHolder, codigoSVB: value })
               }
             />
           </div>

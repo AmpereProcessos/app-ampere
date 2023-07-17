@@ -268,11 +268,11 @@ function ModalSolicitacaoVendas({
                   }
                 />
                 <NumberInput
-                  label={"NºPROJETO SVB"}
+                  label={"CÓDIGO DO PROJETO CRM"}
                   editable={editable}
                   value={dados.codigoSVB}
                   handleChange={(value) =>
-                    setDados({ ...dados, codigoSVB: Number(value) })
+                    setDados({ ...dados, codigoSVB: value })
                   }
                 />
                 <SelectInput

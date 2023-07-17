@@ -304,7 +304,7 @@ function ChamadosPPS() {
                       {call.vendedor}
                     </h1>
                     <p className="text-xs text-center">
-                      {call.codigoDoProjeto} SVB
+                      {call.codigoDoProjeto}
                     </p>
                     <p
                       className={`text-xs font-bold border p-1 text-center rounded-lg ${

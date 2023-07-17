@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
-import { cidadesAtendidas, fileTypes } from "../utils/constants";
+import {
+  cidadesAtendidas,
+  fileTypes,
+  formatProjectCode,
+} from "../utils/constants";
 import NumberInput from "./NumberInput";
 import DateInput from "./DateInput";
 import { storage } from "../utils/firebase";
@@ -10,6 +14,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { IoMdAddCircle } from "react-icons/io";
 import dayjs from "dayjs";
 import axios from "axios";
+
 function ChamadosExternoPPSInfo({ dados, setDados, setStage }) {
   var links = [];
   const [images, setImages] = useState({});

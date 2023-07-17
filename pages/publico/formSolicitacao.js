@@ -131,7 +131,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
   const [info, setInfo] = useState({
     nomeVendedor: "NÃO DEFINIDO",
     telefoneVendedor: "",
-    tipoDeServico: "NÃO DEFINIDO",
+    tipoDeServico: "SISTEMA FOTOVOLTAICO",
   });
   return (
     <div className="p-6 bg-[#fff] min-h-[100vh] flex flex-col">

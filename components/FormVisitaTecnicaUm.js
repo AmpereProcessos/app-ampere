@@ -282,14 +282,12 @@ function FormVisitaTecnicaUm({
           />
         </div>
         <div className="flex items-center justify-center">
-          <NumberFloatingInput
-            label={"Nº DO PROJETO SVB"}
+          <TextFloatingInput
+            label={"CÓDIGO DO PROJETO SVB"}
             editable={true}
             width={"450px"}
             value={dados.codigoSVB ? dados.codigoSVB : ""}
-            handleChange={(value) =>
-              setDados({ ...dados, codigoSVB: Number(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, codigoSVB: value })}
           />
         </div>
       </div>

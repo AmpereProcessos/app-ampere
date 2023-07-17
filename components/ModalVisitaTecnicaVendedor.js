@@ -262,12 +262,12 @@ function ModalVisitaTecnicaVendedor({ info, setModalIsOpen, handleUpdates }) {
                     })
                   }
                 />
-                <NumberInput
+                <TextInput
                   label={"Nº DO PROJETO SVB"}
                   editable={false}
                   value={dados.codigoSVB ? dados.codigoSVB : ""}
                   handleChange={(value) =>
-                    setDados({ ...dados, codigoSVB: Number(value) })
+                    setDados({ ...dados, codigoSVB: value })
                   }
                 />
                 <SelectInput

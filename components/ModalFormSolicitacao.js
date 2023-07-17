@@ -1228,12 +1228,12 @@ function ModalFormSolicitacao({
                         setDados({ ...dados, formaAssinatura: value })
                       }
                     />
-                    <NumberInput
-                      label={"NºPROJETO SVB"}
+                    <TextInput
+                      label={"CÓDIGO DO PROJETO"}
                       editable={editor}
                       value={dados.codigoSVB}
                       handleChange={(value) =>
-                        setDados({ ...dados, codigoSVB: Number(value) })
+                        setDados({ ...dados, codigoSVB: value })
                       }
                     />
                     <SelectInput

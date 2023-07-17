@@ -258,13 +258,11 @@ function VisualizacaoForm({
               setDados({ ...dados, formaAssinatura: value })
             }
           />
-          <NumberInput
+          <TextInput
             label={"NºPROJETO SVB"}
             editable={true}
             value={dados.codigoSVB}
-            handleChange={(value) =>
-              setDados({ ...dados, codigoSVB: Number(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, codigoSVB: value })}
           />
           <SelectInput
             label={"ESTADO CIVIL"}

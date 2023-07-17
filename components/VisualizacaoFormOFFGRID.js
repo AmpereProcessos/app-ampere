@@ -421,12 +421,10 @@ function VisualizacaoOFFGrid({
           <div className="flex items-center justify-center">
             <NumberFloatingInput
               width={"450px"}
-              label={"NºPROJETO SVB"}
+              label={"CÓDIGO DO PROJETO CRM"}
               editable={true}
               value={dados.codigoSVB}
-              handleChange={(value) =>
-                setDados({ ...dados, codigoSVB: Number(value) })
-              }
+              handleChange={(value) => setDados({ ...dados, codigoSVB: value })}
             />
           </div>
           <div className="flex items-center justify-center">

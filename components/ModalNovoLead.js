@@ -371,15 +371,15 @@ function NovoLead({ setModalIsOpen, getLeads }) {
               </div>
               <div className="grid grid-cols-10 w-full border p-1 border-gray-200">
                 <span className="font-bold text-center p-2 col-span-2">
-                  CÓDIGO SVB
+                  CÓDIGO CRM
                 </span>
                 <input
-                  type="number"
+                  type="text"
                   value={info.codigoSVB}
                   onChange={(e) =>
                     setInfo({
                       ...info,
-                      codigoSVB: Number(e.target.value),
+                      codigoSVB: e.target.value,
                     })
                   }
                   className="outline-none grow p-2 h-full text-center col-span-8"

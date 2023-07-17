@@ -279,9 +279,9 @@ function ModalCallPPS({
                 CÓDIGO SOLAR MARKET (SVB)
               </span>
               <input
-                type={"number"}
+                type={"text"}
                 value={SVBCode}
-                onChange={(e) => setSVBCode(Number(e.target.value))}
+                onChange={(e) => setSVBCode(e.target.value)}
                 className="grow outline-none h-full text-center"
               />
               {/* <span className="grow text-center font-raleway">

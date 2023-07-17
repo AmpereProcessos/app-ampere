@@ -141,6 +141,27 @@ function FormVisitaTecnicaDois({
       });
       return false;
     }
+    if (!images.fotoTrafo) {
+      setMsg({
+        text: "Por favor, anexe a foto do transformador.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoLocalizacaoTrafo) {
+      setMsg({
+        text: "Por favor, anexe a foto da localização do transformador.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.fotoNumeroTrafo) {
+      setMsg({
+        text: "Por favor, anexe a foto do número do transformador.",
+        color: "text-red-500",
+      });
+      return false;
+    }
     setMsg({ text: "", color: "" });
     return true;
   }
@@ -489,6 +510,134 @@ function FormVisitaTecnicaDois({
                   ...images,
                   fotoPoste: {
                     title: "FOTO DO POSTE",
+                    file: e.target.files[0],
+                  },
+                })
+              }
+              className="h-full w-full opacity-0"
+              type="file"
+              accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
+            />
+          </div>
+        </div>
+      </div>
+      <h1 className="w-full text-center text-[#fead61] font-bold mt-4">
+        TRANSFORMADOR
+      </h1>
+      <div className="flex gap-2 items-center justify-around flex-wrap mt-4">
+        <div className="w-fit flex flex-col items-center self-center">
+          <label
+            className="ml-2 text-center text-[#15599a] font-bold"
+            htmlFor="propostaComercial"
+          >
+            FOTO DO TRANSFORMADOR
+          </label>
+          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="absolute">
+              {images.fotoTrafo ? (
+                <div className="flex flex-col items-center">
+                  <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                  <span className="block text-gray-400 font-normal text-center">
+                    {images.fotoTrafo.file.name}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center">
+                  <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                  <span className="block text-gray-400 font-normal">
+                    Adicione o arquivo aqui
+                  </span>
+                </div>
+              )}
+            </div>
+            <input
+              onChange={(e) =>
+                setImages({
+                  ...images,
+                  fotoTrafo: {
+                    title: "FOTO DO TRANSFORMADOR",
+                    file: e.target.files[0],
+                  },
+                })
+              }
+              className="h-full w-full opacity-0"
+              type="file"
+              accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
+            />
+          </div>
+        </div>
+        <div className="w-fit flex flex-col items-center self-center">
+          <label
+            className="ml-2 text-center text-[#15599a] font-bold"
+            htmlFor="propostaComercial"
+          >
+            FOTO DA LOCALIZAÇÃO DO TRANSFORMADOR
+          </label>
+          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="absolute">
+              {images.fotoLocalizacaoTrafo ? (
+                <div className="flex flex-col items-center">
+                  <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                  <span className="block text-gray-400 font-normal text-center">
+                    {images.fotoLocalizacaoTrafo.file.name}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center">
+                  <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                  <span className="block text-gray-400 font-normal">
+                    Adicione o arquivo aqui
+                  </span>
+                </div>
+              )}
+            </div>
+            <input
+              onChange={(e) =>
+                setImages({
+                  ...images,
+                  fotoLocalizacaoTrafo: {
+                    title: "FOTO DA LOCALIZAÇÃO DO TRAFO",
+                    file: e.target.files[0],
+                  },
+                })
+              }
+              className="h-full w-full opacity-0"
+              type="file"
+              accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
+            />
+          </div>
+        </div>
+        <div className="w-fit flex flex-col items-center self-center">
+          <label
+            className="ml-2 text-center text-[#15599a] font-bold"
+            htmlFor="propostaComercial"
+          >
+            FOTO DO NÚMERO DO TRANSFORMADOR
+          </label>
+          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="absolute">
+              {images.fotoNumeroTrafo ? (
+                <div className="flex flex-col items-center">
+                  <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                  <span className="block text-gray-400 font-normal text-center">
+                    {images.fotoNumeroTrafo.file.name}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center">
+                  <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                  <span className="block text-gray-400 font-normal">
+                    Adicione o arquivo aqui
+                  </span>
+                </div>
+              )}
+            </div>
+            <input
+              onChange={(e) =>
+                setImages({
+                  ...images,
+                  fotoNumeroTrafo: {
+                    title: "FOTO DO NÚMERO DO TRANSFORMADOR",
                     file: e.target.files[0],
                   },
                 })

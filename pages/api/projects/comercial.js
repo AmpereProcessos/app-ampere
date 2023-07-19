@@ -37,6 +37,7 @@ export default async function handler(req, res) {
             "sistema.potPico": 1,
             "compra.statusLiberacao": 1,
             "compra.dataPagamento": 1,
+            insider: 1,
           },
         },
         {

@@ -57,6 +57,7 @@ function Comercial({ users }) {
     contratoFilter: [],
     pagamentoFilter: [],
     vendedorFilter: [],
+    insiderFilter: [],
     tipoDeServicoFilter: [],
   });
 
@@ -115,6 +116,12 @@ function Comercial({ users }) {
       if (!newArr) newArr = projects;
       newArr = newArr.filter((project) =>
         filters.vendedorFilter.includes(project.vendedor.nome)
+      );
+    }
+    if (filters.insiderFilter.length > 0) {
+      if (!newArr) newArr = projects;
+      newArr = newArr.filter((project) =>
+        filters.insiderFilter.includes(project.insider)
       );
     }
     if (filters.tipoDeServicoFilter.length > 0) {
@@ -461,6 +468,33 @@ function Comercial({ users }) {
                         options={vendedores.map((vendedor) => {
                           return { label: vendedor.nome, value: vendedor.nome };
                         })}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <Select
+                        isMulti
+                        placeholder="INSIDER"
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            width: "100%",
+                            minHeight: "41px",
+                          }),
+                        }}
+                        onChange={(e) =>
+                          setFilters({
+                            ...filters,
+                            insiderFilter: e.map((x) => x.value),
+                          })
+                        }
+                        options={vendedores
+                          .filter((x) => x.qualificacao?.includes("INSIDE"))
+                          .map((vendedor) => {
+                            return {
+                              label: vendedor.nome,
+                              value: vendedor.nome,
+                            };
+                          })}
                       />
                     </div>
                     <div className="w-full lg:w-[250px]">

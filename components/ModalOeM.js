@@ -3,6 +3,7 @@ import {
   fornecedores,
   oemPlans,
   reportsByPlan,
+  statusObra,
   tiposDeEstruturas,
   vendedores,
 } from "../utils/constants";
@@ -645,6 +646,29 @@ function ModalOeM({
                     </label>
                   </div>
                 </div>
+                <SelectInput
+                  label={"STATUS DA OBRA"}
+                  value={
+                    infoHolder.obra?.statusDaObra
+                      ? infoHolder.obra?.statusDaObra
+                      : "NÃO DEFINIDO"
+                  }
+                  editable={editor}
+                  options={statusObra.map((status) => status)}
+                  handleChange={(value) => {
+                    setChanges({
+                      ...changes,
+                      "obra.statusDaObra": value,
+                    });
+                    setInfo({
+                      ...infoHolder,
+                      obra: {
+                        ...infoHolder.obra,
+                        statusDaObra: value,
+                      },
+                    });
+                  }}
+                />
               </div>
             </div>
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">

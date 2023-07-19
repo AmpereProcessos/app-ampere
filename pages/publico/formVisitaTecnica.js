@@ -3,7 +3,11 @@ import Image from "next/image";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../utils/firebase";
 import Logo from "../../utils/whitelogoHD.png";
-import { vendedores, fileTypes } from "../../utils/constants";
+import {
+  vendedores,
+  fileTypes,
+  formatProjectCode,
+} from "../../utils/constants";
 import SelectInput from "../../components/SelectInput";
 import TextInput from "../../components/TextInput";
 import FormVisitaTecnicaUm from "../../components/FormVisitaTecnicaUm";
@@ -121,6 +125,7 @@ function FormVisitaTecnica() {
     axios
       .post("/api/solicitacoes/visitaTecnica", {
         ...dados,
+        codigoSVB: formatProjectCode(dados.codigoSVB),
         links: links,
         dataDeAbertura: new Date().toISOString(),
       })

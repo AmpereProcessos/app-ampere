@@ -4,8 +4,10 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);
     const collection = db.collection("contrato");
+    const svbCode = formatProjectCode(req.body.codigoSVB);
     let arr = await collection.insertOne({
       ...req.body,
+      codigoSVB: svbCode,
       dataSolicitacao: new Date().toISOString(),
     });
     res.json(arr);

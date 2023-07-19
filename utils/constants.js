@@ -2027,7 +2027,7 @@ export const tiposDePadrao = [
 ];
 export function formatProjectCode(value) {
   if (value) {
-    console.log("FORMATADO", value.split(" ").join(""));
+    console.log("FORMATADO", value.toUpperCase().split(" ").join(""));
     return value.split(" ").join("");
   }
   return "";

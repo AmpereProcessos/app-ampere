@@ -12,6 +12,7 @@ function DateInput({ label, value, handleChange, editable }) {
         readOnly={!editable}
         value={value}
         onChange={(e) => handleChange(e.target.value)}
+        onReset={() => handleChange(null)}
       />
     </div>
   );

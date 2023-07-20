@@ -193,6 +193,7 @@ function LeadCard({ lead, getLeads }) {
               labelColor={"text-gray-600"}
               editable={true}
               widthFit={true}
+              normalCase={true}
               value={infoHolder.codigoSVB}
               handleChange={(value) =>
                 setInfo({ ...infoHolder, codigoSVB: value })

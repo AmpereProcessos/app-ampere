@@ -798,10 +798,12 @@ function ModalFormSolicitacao({
   }
   function validateCreation() {
     var holder;
+    // console.log(insertObj);
+    // console.log(Object.entries(insertObj));
     Object.entries(insertObj).forEach((entry) => {
-      console.log(entry);
-      if (typeof entry[1] == "object") {
+      if (typeof entry[1] == "object" && entry[1] != null) {
         let tag = entry[0];
+
         Object.keys(entry[1]).forEach((x) => {
           if (validation[`${tag}.${x}`] != undefined) {
             if (validation[`${tag}.${x}`].test(insertObj[tag][x]) == true) {

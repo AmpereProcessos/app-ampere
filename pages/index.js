@@ -289,7 +289,7 @@ function Home() {
           <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">
             <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <div className="flex justify-between">
-                <h1 className="uppercase text-gray-600">
+                <h1 className="uppercase text-gray-600 text-center w-full">
                   Obras finalizadas no mês
                 </h1>
                 {installedData[0]
@@ -310,7 +310,7 @@ function Home() {
             </div>
             <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <div className="flex justify-between">
-                <h1 className="uppercase text-gray-600">
+                <h1 className="uppercase text-gray-600 text-center w-full">
                   Potência Pico instalada no mês
                 </h1>
                 {installedData[0]
@@ -334,7 +334,7 @@ function Home() {
             </div>
             <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <div className="flex justify-between">
-                <h1 className="uppercase text-gray-600">
+                <h1 className="uppercase text-gray-600 text-center w-full">
                   Potência Pico homologada no mês
                 </h1>
                 {averageHomoData[0]
@@ -358,7 +358,7 @@ function Home() {
             </div>
             <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <div className="flex justify-between">
-                <h1 className="uppercase text-gray-600">
+                <h1 className="uppercase text-gray-600 text-center w-full">
                   TEMPO MÉDIO PARA COMPRA
                 </h1>
                 {averageBuyTime[0]
@@ -381,7 +381,7 @@ function Home() {
             </div>
             <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <div className="flex justify-between">
-                <h1 className="uppercase text-gray-600">
+                <h1 className="uppercase text-gray-600 text-center w-full">
                   TEMPO MÉDIO DE APROVAÇÃO
                 </h1>
                 {averageHomoData[0]

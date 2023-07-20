@@ -222,6 +222,9 @@ function FormulariosSolicitacao() {
               >
                 <TagTipoDeServico tipoDeServico={solicitacao.tipoDeServico} />
                 <div className="flex flex-col p-2">
+                  <p className="text-start text-xs text-[#fead61] font-bold">
+                    {solicitacao.codigoSVB}
+                  </p>
                   <div className="flex justify-between">
                     <h1 className="text-xs text-[#15599a] font-bold">
                       {solicitacao.nomeDoContrato}

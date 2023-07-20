@@ -10,6 +10,7 @@ import {
 import NumberInput from "../NumberInput";
 import SelectInput from "../SelectInput";
 import TextInput from "../TextInput";
+import { useSession } from "next-auth/react";
 
 function formatCnpjCpf(value) {
   const cnpjCpf = value.replace(/\D/g, "");
@@ -40,6 +41,7 @@ function InfoClienteBlock({
   setChanges,
   project,
 }) {
+  const { data: session } = useSession();
   async function findCPF(field) {
     axios
       .get(`https://viacep.com.br/ws/${infoHolder.cep.replace("-", "")}/json/`)
@@ -127,6 +129,21 @@ function InfoClienteBlock({
             setInfo({
               ...infoHolder,
               nomeDoProjeto: value.toUpperCase(),
+            });
+          }}
+        />
+        <TextInput
+          label={"CÓDIGO CRM"}
+          value={infoHolder.codigoSVB ? infoHolder.codigoSVB : ""}
+          editable={session?.user.accessibleRoutes.includes("PPS")}
+          handleChange={(value) => {
+            setChanges({
+              ...changes,
+              codigoSVB: value.toUpperCase(),
+            });
+            setInfo({
+              ...infoHolder,
+              codigoSVB: value.toUpperCase(),
             });
           }}
         />

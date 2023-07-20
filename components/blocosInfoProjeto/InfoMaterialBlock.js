@@ -114,7 +114,7 @@ function InfoMaterialBlock({
           value={
             infoHolder.material?.previsaoCustos != undefined &&
             infoHolder.material?.previsaoCustos != "#VALUE!"
-              ? infoHolder.material?.previsaoCustos.toFixed(2)
+              ? infoHolder.material?.previsaoCustos
               : 0
           }
           handleChange={(value) => {

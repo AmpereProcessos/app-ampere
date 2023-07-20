@@ -40,6 +40,10 @@ import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
 import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
 import SaveButton from "./utils/Buttons/SaveButton";
 import ESigningBlock from "./blocosInfoProjeto/ESigningBlock";
+import {
+  handleCRMProjectUpdatesAutomations,
+  handleProjectUpdatesAutomations,
+} from "../utils/methods/handlers";
 
 function formatCnpjCpf(value) {
   const cnpjCpf = value.replace(/\D/g, "");
@@ -146,9 +150,16 @@ function ModalComercial({
           `/api/projects/update/${project._id}`,
           changes
         );
+        await handleCRMProjectUpdatesAutomations({
+          idCRMProject: project.idProjetoCRM,
+          idCRMPropose: project.idPropostaCRM,
+          newData: changes,
+          previousData: project,
+        });
         setMsg({ text: "Alterações feitas !", color: "text-green-500" });
         handleUpdates(project._id);
       } catch (error) {
+        console.log(error);
         setMsg({
           text: "Um erro ocorreu. Tente novamente.",
           color: "text-red-500",
@@ -156,7 +167,7 @@ function ModalComercial({
       }
     }
   }
-
+  console.log(infoHolder);
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>

@@ -12,7 +12,7 @@ function SelectInput({
   return (
     <div
       className={`flex flex-col w-full text-sm lg:text-base ${
-        widthFit ? "w-fit" : "lg:w-[350px]"
+        widthFit ? "w-full" : "lg:w-[350px]"
       } items-center`}
     >
       <span

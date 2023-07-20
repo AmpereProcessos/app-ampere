@@ -54,6 +54,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
     medida: suprimentoOption[Object.keys(suprimentoOption)[0]].unidade,
   });
   const [custoAdicionalHolder, setCustoAdicionalHolder] = useState({
+    categoria: "PADRÃO",
     descricao: "",
     qtde: 0,
     grandeza: "",
@@ -154,6 +155,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
     var arr = dados.custosAdicionais ? dados.custosAdicionais : [];
     setDados({ ...dados, custosAdicionais: [...arr, custoAdicionalHolder] });
     setCustoAdicionalHolder({
+      categoria: "PADRÃO",
       descricao: "",
       qtde: 0,
       grandeza: "",
@@ -2286,7 +2288,37 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <div className="flex w-full items-center">
                   <div className="flex items-center w-[90%]">
-                    <div className="grid grid-cols-3 lg:grid-cols-6 gap-2 items-center w-full">
+                    <div className="grid grid-cols-3 lg:grid-cols-7 gap-2 items-center w-full">
+                      <SelectInput
+                        label={"CATEGORIA"}
+                        editable={true}
+                        value={custoAdicionalHolder.categoria}
+                        handleChange={(value) =>
+                          setCustoAdicionalHolder((prev) => ({
+                            ...prev,
+                            categoria: value,
+                          }))
+                        }
+                        options={[
+                          {
+                            label: "PADRÃO",
+                            value: "PADRÃO",
+                          },
+                          {
+                            label: "ESTRUTURA",
+                            value: "ESTRUTURA",
+                          },
+                          {
+                            label: "INSTALAÇÃO",
+                            value: "INSTALAÇÃO",
+                          },
+                          {
+                            label: "OUTROS",
+                            value: "OUTROS",
+                          },
+                        ]}
+                        widthFit={true}
+                      />
                       <TextInput
                         label={"DESCRIÇÃO"}
                         editable={true}
@@ -2373,7 +2405,10 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 </div>
                 <div className="flex flex-col mx-12 mt-2 gap-2">
                   <div className="flex items-center w-full">
-                    <div className="w-[90%] grid grid-cols-6">
+                    <div className="w-[90%] grid grid-cols-7">
+                      <p className="text-md text-[#fead61] font-bold text-center">
+                        CATEGORIA
+                      </p>
                       <p className="text-md text-[#fead61] font-bold text-center">
                         DESCRIÇÃO
                       </p>
@@ -2399,7 +2434,10 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   </div>
                   {dados.custosAdicionais?.map((custo, index) => (
                     <div key={index} className="flex items-center w-full">
-                      <div className="grid grid-cols-6 w-[90%]">
+                      <div className="grid grid-cols-7 w-[90%]">
+                        <p className="text-xs text-gray-600 font-bold text-center">
+                          {custo.categoria}
+                        </p>
                         <p className="text-xs text-gray-600 font-bold text-center">
                           {custo.descricao}
                         </p>

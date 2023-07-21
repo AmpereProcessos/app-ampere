@@ -52,10 +52,14 @@ function Formularios() {
     }
     if (filters.pesquisa.trim().length > 0) {
       if (!newArr) newArr = forms;
-      newArr = newArr.filter((form) =>
-        form.nomeDoContrato
-          .toUpperCase()
-          .includes(filters.pesquisa.toUpperCase())
+      newArr = newArr.filter(
+        (form) =>
+          form.nomeDoContrato
+            .toUpperCase()
+            .includes(filters.pesquisa.toUpperCase()) ||
+          form.nomeTerceiro
+            ?.toUpperCase()
+            .includes(filters.pesquisa.toUpperCase())
       );
     }
     if (filters.codigo.trim().length > 0) {

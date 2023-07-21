@@ -4,6 +4,7 @@ import LogoSemTexto from "../../../../utils/logoBrancoSemTexto.png";
 import Logo from "../../../../utils/logoBranco.png";
 import { ObjectId } from "mongodb";
 import connectToDatabase from "../../../../utils/insideSalesDb";
+import FacebookPixel from "../../../../components/Head/facebook/pixel-1";
 export default function Result(props) {
   console.log(props);
   function getGreetings(clientName) {
@@ -51,6 +52,7 @@ export default function Result(props) {
   }
   return (
     <div className={`bg-white flex flex-col grow font-['Raleway']`}>
+      <FacebookPixel />
       <div className="w-full flex justify-center items-center self-stretch h-[82px] bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">
         <div className="w-11 h-[46px]">
           <div className="w-11">

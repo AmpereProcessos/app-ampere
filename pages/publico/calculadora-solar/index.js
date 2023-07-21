@@ -9,6 +9,7 @@ import LogoSemTexto from "../../../utils/logoBrancoSemTexto.png";
 import estadosCidades from "../../../utils/estados_cidades.json";
 import Head from "next/head";
 import * as fbq from "../../../utils/fpixel";
+import FacebookPixel from "../../../components/Head/facebook/pixel-1";
 function Calculadora() {
   const [estagio, setEstagio] = useState(1);
   const [infoHolder, setInfoHolder] = useState({
@@ -22,11 +23,13 @@ function Calculadora() {
   console.log(infoHolder);
   return (
     <>
+      <FacebookPixel />
       <script
         type="text/javascript"
         async
         src="https://d335luupugsy2.cloudfront.net/js/loader-scripts/27c20af6-f2a5-4fb0-9a9b-3a64e69ebbfb-loader.js"
       ></script>
+
       <div
         className={`bg-white inline-flex flex-col h-full items-start overflow-clip font-['Raleway']`}
       >
@@ -118,27 +121,29 @@ function Calculadora() {
                 </div>
               </div>
             </div>
-            {estagio == 1 && (
-              <EstagioUm
-                infoHolder={infoHolder}
-                setInfoHolder={setInfoHolder}
-                next={() => setEstagio((prev) => prev + 1)}
-              />
-            )}
-            {estagio == 2 && (
-              <EstagioDois
-                infoHolder={infoHolder}
-                setInfoHolder={setInfoHolder}
-                previous={() => setEstagio((prev) => prev - 1)}
-                next={() => setEstagio((prev) => prev + 1)}
-              />
-            )}
-            {estagio == 3 && (
-              <EstagioTres
-                infoHolder={infoHolder}
-                setInfoHolder={setInfoHolder}
-              />
-            )}
+            <form>
+              {estagio == 1 && (
+                <EstagioUm
+                  infoHolder={infoHolder}
+                  setInfoHolder={setInfoHolder}
+                  next={() => setEstagio((prev) => prev + 1)}
+                />
+              )}
+              {estagio == 2 && (
+                <EstagioDois
+                  infoHolder={infoHolder}
+                  setInfoHolder={setInfoHolder}
+                  previous={() => setEstagio((prev) => prev - 1)}
+                  next={() => setEstagio((prev) => prev + 1)}
+                />
+              )}
+              {estagio == 3 && (
+                <EstagioTres
+                  infoHolder={infoHolder}
+                  setInfoHolder={setInfoHolder}
+                />
+              )}
+            </form>
           </div>
         </div>
         <div className="flex justify-center gap-3 px-10 w-full h-[100px] bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">

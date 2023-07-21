@@ -423,9 +423,7 @@ function ModalFormSolicitacao({
     uf: dados.ufInstalacao,
     vendedor: {
       nome: dados.nomeVendedor,
-      codigo: vendedores.filter(
-        (vendedor) => vendedor.nome == dados.nomeVendedor
-      )[0].cod,
+      codigo: null,
     },
     linkDrive: dados.linkDrive ? dados.linkDrive : "",
     regional: dados.regional ? dados.regional : "NÃO DEFINIDO",

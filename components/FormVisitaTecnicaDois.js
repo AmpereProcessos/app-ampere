@@ -264,7 +264,7 @@ function FormVisitaTecnicaDois({
                   onClick={() => {
                     let arr = paArr;
                     arr.splice(index, 1);
-                    let tipoArr = arr.map((i) => i.marca);
+                    let tipoArr = arr.map((i) => i.tipoDisjuntor);
                     let amperagemArr = arr.map((i) => i.amperagem);
                     let numeroMedidorArr = arr.map((i) => i.numeroMedidor);
 

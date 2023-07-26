@@ -9,29 +9,34 @@ const phoneMask = (value) => {
   value = value.replace(/(\d)(\d{4})$/, "$1-$2");
   return value;
 };
-function EstagioTres({ infoHolder, setInfoHolder }) {
-  const router = useRouter();
-  const [err, setErr] = useState({ field: null, text: "" });
-  const [loading, setLoading] = useState(false);
-  function validateFields() {
-    if (infoHolder.nome.trim().length < 2) {
-      setErr({ field: "NOME", text: "Por favor, preencha um nome válido." });
-      return false;
-    }
-    if (infoHolder.email.trim().length < 11) {
-      setErr({ field: "EMAIL", text: "Por favor, preencha um email válido." });
-      return false;
-    }
-    if (infoHolder.telefone.trim().length < 9) {
-      setErr({
-        field: "TELEFONE",
-        text: "Por favor, preencha um telefone válido.",
-      });
-      return false;
-    }
-    setErr({ field: "", text: "" });
-    return true;
-  }
+function EstagioTres({ infoHolder, setInfoHolder, submitLoading, submitErr }) {
+  // const router = useRouter();
+
+  // function validateFields() {
+  //   if (infoHolder.nome.trim().length < 2) {
+  //     setsubmitErr({
+  //       field: "NOME",
+  //       text: "Por favor, preencha um nome válido.",
+  //     });
+  //     return false;
+  //   }
+  //   if (infoHolder.email.trim().length < 11) {
+  //     setsubmitErr({
+  //       field: "EMAIL",
+  //       text: "Por favor, preencha um email válido.",
+  //     });
+  //     return false;
+  //   }
+  //   if (infoHolder.telefone.trim().length < 9) {
+  //     setsubmitErr({
+  //       field: "TELEFONE",
+  //       text: "Por favor, preencha um telefone válido.",
+  //     });
+  //     return false;
+  //   }
+  //   setsubmitErr({ field: "", text: "" });
+  //   return true;
+  // }
   let obj = {
     telefone: infoHolder.telefone,
     nome: infoHolder.nome,
@@ -48,19 +53,19 @@ function EstagioTres({ infoHolder, setInfoHolder }) {
     leadscoreProduto: "NÃO DEFINIDO",
     leadscoreBranding: "NÃO DEFINIDO",
   };
-  async function createSimulation() {
-    setLoading(true);
-    if (validateFields()) {
-      let response = await axios.post("/api/insideSales/newLead", obj);
-      console.log(response);
-      if (response.status == 200) {
-        let id = response.data.insertedId;
-        router.push(`/publico/calculadora-solar/resultado/${id}`);
-      } else {
-        setLoading(false);
-      }
-    }
-  }
+  // async function createSimulation() {
+  //   setLoading(true);
+  //   if (validateFields()) {
+  //     let response = await axios.post("/api/insideSales/newLead", obj);
+  //     console.log(response);
+  //     if (response.status == 200) {
+  //       let id = response.data.insertedId;
+  //       router.push(`/publico/calculadora-solar/resultado/${id}`);
+  //     } else {
+  //       setLoading(false);
+  //     }
+  //   }
+  // }
   return (
     <div className="flex flex-col h-[400px] w-full">
       <div className="w-full flex-1 gap-3 flex flex-col justify-center items-center flex-grow self-stretch font-normal text-[rgba(79,88,96,1)] h-[300px]">
@@ -83,7 +88,7 @@ function EstagioTres({ infoHolder, setInfoHolder }) {
               }
               type={"text"}
               className={`flex-1 ${
-                err.field == "NOME"
+                submitErr.field == "NOME"
                   ? "bg-red-200 border border-red-500"
                   : "bg-white"
               } outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]`}
@@ -107,7 +112,7 @@ function EstagioTres({ infoHolder, setInfoHolder }) {
                 setInfoHolder({ ...infoHolder, email: e.target.value })
               }
               className={`flex-1 ${
-                err.field == "EMAIL"
+                submitErr.field == "EMAIL"
                   ? "bg-red-200 border border-red-500"
                   : "bg-white"
               } outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]`}
@@ -133,7 +138,7 @@ function EstagioTres({ infoHolder, setInfoHolder }) {
               }
               type={"text"}
               className={`flex-1 ${
-                err.field == "TELEFONE"
+                submitErr.field == "TELEFONE"
                   ? "bg-red-200 border border-red-500"
                   : "bg-white"
               } outline-none rounded-lg p-2 text-center h-[47px] w-[300px] lg:w-[350px]`}
@@ -150,11 +155,11 @@ function EstagioTres({ infoHolder, setInfoHolder }) {
         </div>
       </div>
       <div className="w-full gap-4 flex flex-col justify-center items-center self-stretch text-white text-center font-black h-[100px]">
-        {err.text ? (
-          <p className="text-center italic text-red-500">{err.text}</p>
+        {submitErr.text ? (
+          <p className="text-center italic text-red-500">{submitErr.text}</p>
         ) : null}
         <div className="w-full">
-          {loading ? (
+          {submitLoading ? (
             <div className="flex w-[350px] justify-center items-center self-center">
               <div role="status">
                 <svg
@@ -179,7 +184,6 @@ function EstagioTres({ infoHolder, setInfoHolder }) {
           ) : (
             <button
               type="submit"
-              onClick={createSimulation}
               className="flex-1 w-[350px] cursor-pointer flex flex-col justify-center items-center flex-grow rounded-lg p-3 bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] hover:scale-[1.02] duration-300"
             >
               <p className="w-full m-0 text-[19px] leading-[1.2]">

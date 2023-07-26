@@ -11,7 +11,12 @@ import Head from "next/head";
 import * as fbq from "../../../utils/fpixel";
 import FacebookPixel from "../../../components/Head/facebook/pixel-1";
 import AnalyticsScripts from "../../../components/Head/analytics";
+import { useRouter } from "next/router";
+import axios from "axios";
 function Calculadora() {
+  const router = useRouter();
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [submitErr, setSubmitErr] = useState({ field: null, text: "" });
   const [estagio, setEstagio] = useState(1);
   const [infoHolder, setInfoHolder] = useState({
     valorFatura: null,
@@ -21,7 +26,63 @@ function Calculadora() {
     email: "",
     telefone: "",
   });
-  console.log(infoHolder);
+  function validateSubmitFields() {
+    if (infoHolder.nome.trim().length < 2) {
+      setSubmitErr({
+        field: "NOME",
+        text: "Por favor, preencha um nome válido.",
+      });
+      setSubmitLoading(false);
+      return false;
+    }
+    if (infoHolder.email.trim().length < 11) {
+      setSubmitErr({
+        field: "EMAIL",
+        text: "Por favor, preencha um email válido.",
+      });
+      setSubmitLoading(false);
+      return false;
+    }
+    if (infoHolder.telefone.trim().length < 9) {
+      setSubmitErr({
+        field: "TELEFONE",
+        text: "Por favor, preencha um telefone válido.",
+      });
+      setSubmitLoading(false);
+      return false;
+    }
+    setSubmitErr({ field: "", text: "" });
+    return true;
+  }
+  let obj = {
+    telefone: infoHolder.telefone,
+    nome: infoHolder.nome,
+    responsavel: "NÃO DEFINIDO",
+    cidade: infoHolder.cidade,
+    canal: "CALCULADORA SOLAR",
+    campanha: "",
+    dataDeAquisicao: new Date(),
+    consumo: infoHolder.valorFatura,
+    vendedor: "NÃO DEFINIDO",
+    dataDeEnvio: new Date(),
+    codigoSVB: 0,
+    nicho: "NÃO DEFINIDO",
+    leadscoreProduto: "NÃO DEFINIDO",
+    leadscoreBranding: "NÃO DEFINIDO",
+  };
+  async function createSimulation() {
+    setSubmitLoading(true);
+    if (validateSubmitFields()) {
+      let response = await axios.post("/api/insideSales/newLead", obj);
+      console.log(response);
+      if (response.status == 200) {
+        let id = response.data.insertedId;
+        router.push(`/publico/calculadora-solar/resultado/${id}`);
+      } else {
+        setSubmitLoading(false);
+      }
+    }
+  }
   return (
     <>
       <Head>
@@ -127,7 +188,12 @@ function Calculadora() {
                 </div>
               </div>
             </div>
-            <form>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                createSimulation();
+              }}
+            >
               {estagio == 1 && (
                 <EstagioUm
                   infoHolder={infoHolder}
@@ -147,6 +213,8 @@ function Calculadora() {
                 <EstagioTres
                   infoHolder={infoHolder}
                   setInfoHolder={setInfoHolder}
+                  submitLoading={submitLoading}
+                  submitErr={submitErr}
                 />
               )}
             </form>

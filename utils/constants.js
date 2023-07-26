@@ -597,7 +597,7 @@ export const vendedores = [
     ativo: true,
   },
   {
-    nome: "ROBERTH JUNQUEIRA GONÇALVES",
+    nome: "ROBERTH JUNQUEIRA",
     cod: 76,
     comissaoInside: 2,
     comissaoAtivo: 4,

@@ -11,6 +11,8 @@ import NumberInput from "../NumberInput";
 import SelectInput from "../SelectInput";
 import TextInput from "../TextInput";
 import { useSession } from "next-auth/react";
+import { FaFilePdf } from "react-icons/fa";
+import Link from "next/link";
 
 function formatCnpjCpf(value) {
   const cnpjCpf = value.replace(/\D/g, "");
@@ -563,6 +565,20 @@ function InfoClienteBlock({
           </a>
         </div>
       )}
+      {infoHolder.idSolicitacaoContrato ? (
+        <div className="w-full flex items-center justify-center">
+          <Link
+            href={`/comercial/publicoFormulario/${infoHolder.idSolicitacaoContrato}`}
+          >
+            <a className="hover:bg-orange-200 border border-orange-200 p-2 rounded hover:scale-[1.02] duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
+              <FaFilePdf style={{ color: "#fead41", fontSize: "20px" }} />
+              <p className="pl-3 text-sm text-gray-600 font-medium">
+                SOLICITAÇÃO DE CONTRATO
+              </p>
+            </a>
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }

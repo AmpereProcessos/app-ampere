@@ -661,6 +661,7 @@ function ModalFormSolicitacao({
     idVisitaTecnica: dados.idVisitaTecnica,
     idProjetoCRM: dados.idProjetoCRM,
     idPropostaCRM: dados?.idPropostaCRM,
+    idSolicitacaoContrato: dados._id,
     links: {
       documentos: dados.links,
       visitaTecnica: dados.linksVisita ? dados.linksVisita : undefined,

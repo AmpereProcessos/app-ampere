@@ -3,6 +3,7 @@ import Head from "next/head";
 
 import FacebookPixel from "./facebook/pixel-1";
 import { useRouter } from "next/router";
+import AnalyticsScripts from "./analytics";
 
 function AppHead({ name }) {
   const router = useRouter();
@@ -13,7 +14,12 @@ function AppHead({ name }) {
           ? "Ampère Energias"
           : "Sistema Ampère Energias"}
       </title>
-      <FacebookPixel />
+      {/* {router.pathname.includes("calculadora-solar") ? (
+        <>
+          <FacebookPixel />
+          <AnalyticsScripts />
+        </>
+      ) : null} */}
     </Head>
   );
 }

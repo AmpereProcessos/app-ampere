@@ -10,6 +10,7 @@ import estadosCidades from "../../../utils/estados_cidades.json";
 import Head from "next/head";
 import * as fbq from "../../../utils/fpixel";
 import FacebookPixel from "../../../components/Head/facebook/pixel-1";
+import AnalyticsScripts from "../../../components/Head/analytics";
 function Calculadora() {
   const [estagio, setEstagio] = useState(1);
   const [infoHolder, setInfoHolder] = useState({
@@ -23,8 +24,18 @@ function Calculadora() {
   console.log(infoHolder);
   return (
     <>
-      <FacebookPixel />
-
+      <Head>
+        <FacebookPixel />
+        <AnalyticsScripts />
+      </Head>
+      <noscript>
+        <iframe
+          src="https://www.googletagmanager.com/ns.html?id=GTM-TVBGCSZT"
+          height="0"
+          width="0"
+          style={{ display: "none", visibility: "hidden" }}
+        ></iframe>
+      </noscript>
       <div
         className={`bg-white inline-flex flex-col h-full items-start overflow-clip font-['Raleway']`}
       >

@@ -24,11 +24,6 @@ function Calculadora() {
   return (
     <>
       <FacebookPixel />
-      <script
-        type="text/javascript"
-        async
-        src="https://d335luupugsy2.cloudfront.net/js/loader-scripts/27c20af6-f2a5-4fb0-9a9b-3a64e69ebbfb-loader.js"
-      ></script>
 
       <div
         className={`bg-white inline-flex flex-col h-full items-start overflow-clip font-['Raleway']`}

@@ -22,6 +22,11 @@ function FacebookPixel() {
                 fbq('track', 'PageView');`,
         }}
       />
+      <script
+        type="text/javascript"
+        async
+        src="https://d335luupugsy2.cloudfront.net/js/loader-scripts/27c20af6-f2a5-4fb0-9a9b-3a64e69ebbfb-loader.js"
+      ></script>
       <noscript>
         <img
           height="1"

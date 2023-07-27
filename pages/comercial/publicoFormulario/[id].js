@@ -264,12 +264,12 @@ function Formulario({ info }) {
                   setDados({ ...dados, formaAssinatura: value })
                 }
               />
-              <NumberInput
-                label={"NºPROJETO SVB"}
+              <TextInput
+                label={"CÓDIGO SVB/CRM"}
                 editable={false}
                 value={dados.codigoSVB}
                 handleChange={(value) =>
-                  setDados({ ...dados, codigoSVB: Number(value) })
+                  setDados({ ...dados, codigoSVB: value })
                 }
               />
               <SelectInput

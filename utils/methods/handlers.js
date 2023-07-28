@@ -60,7 +60,13 @@ export async function handleCRMProjectUpdatesAutomations({
     };
     await updateProject({ idCRMProject: idCRMProject, changes: changes });
     if (idCRMPropose)
-      updatePropose({ idCRMPropose: idCRMPropose, changes: changes });
+      await updatePropose({ idCRMPropose: idCRMPropose, changes: changes });
+    if (previousData.vendedor)
+      await notifySellerInCRM(
+        previousData.vendedor.nome,
+        idCRMProject,
+        "CONTRATO ATUALIZADO COMO ASSINADO."
+      );
     return;
   }
 
@@ -77,4 +83,15 @@ export async function handleCRMProjectUpdatesAutomations({
     if (idCRMPropose)
       updatePropose({ idCRMPropose: idCRMPropose, changes: changes });
   }
+}
+export async function notifySellerInCRM(sellerName, idCRMProject, message) {
+  if (!sellerName || !idCRMProject) return;
+  const apiResponse = await axios.post(
+    `/api/crm/notifySeller?sellerName=${sellerName}&idCRMProject=${idCRMProject}`,
+    {
+      message: message,
+    }
+  );
+  console.log(apiResponse);
+  return apiResponse;
 }

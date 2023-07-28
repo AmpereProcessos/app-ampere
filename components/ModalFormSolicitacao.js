@@ -31,6 +31,7 @@ import { storage } from "../utils/firebase";
 import Link from "next/link";
 import { FiDelete } from "react-icons/fi";
 import CheckboxInput from "./CheckboxInput";
+import { notifySellerInCRM } from "../utils/methods/handlers";
 const phoneMask = (value) => {
   if (!value) return "";
   value = value.replace(/\D/g, "");
@@ -842,6 +843,13 @@ function ModalFormSolicitacao({
     });
     sendEmail();
     notifyCobrancas();
+    if (dados.idProjetoCRM)
+      await notifySellerInCRM(
+        insertObj.vendedor.nome,
+        dados.idProjetoCRM,
+        "SOLICITAÇÃO DE CONTRATO APROVADA."
+      );
+
     axios.post("/api/projects/add", insertObj).then((res) => {
       setCreationMsg({
         text: "Projeto adicionado!",

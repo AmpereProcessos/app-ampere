@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import connectToDatabase from "../../utils/materialDb";
+import connectToDatabase from "../../utils/crmDb";
 import connectoToInsideDb from "../../utils/insideSalesDb";
 import { ObjectId } from "mongodb";
 export default async function handler(req, res) {

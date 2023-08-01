@@ -634,8 +634,15 @@ export const vendedores = [
   {
     nome: "RAILDO CARVALHO",
     cod: 79,
-    comissaoInside: 2,
-    comissaoAtivo: 4,
+    comissaoInside: 1,
+    comissaoAtivo: 2,
+    ativo: true,
+  },
+  {
+    nome: "SEBATIÃO NETO",
+    cod: 80,
+    comissaoInside: 1,
+    comissaoAtivo: 2,
     ativo: true,
   },
   {
@@ -1302,6 +1309,7 @@ export const sellers = [
   "THIAGO DE PAULA",
   "GLEITON RESENDE",
   "ANA PAULA PEREIRA",
+  "MARCUS VINÍCIUS",
   "STENIO DE ASSIS",
   "SETOR O&M",
   "SETOR PROJETOS",
@@ -1341,6 +1349,31 @@ export const sellerPhotos = [
     nome: "LEONARDO VILARINHO",
     avatar_url:
       "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-leonardo_vilarinho?alt=media&token=fb98055c-ce57-4a3c-92fa-eee92c0aa683",
+  },
+  {
+    nome: "ARTUR MILANE",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-artur_milane?alt=media&token=5e0d511d-2449-4ec6-9158-5386b94ef3bd",
+  },
+  {
+    nome: "MARCUS VINÍCIUS",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_marcusvinicius.png?alt=media&token=c6183d6d-f141-403e-8ad0-beb313d1ecb8",
+  },
+  {
+    nome: "SEBASTIÃO NETO",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_sebastiao.jpg?alt=media&token=072eb65d-2937-4090-a9eb-7a7463f6ae14",
+  },
+  {
+    nome: "ROBERTH JUNQUEIRA",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_roberth.jpg?alt=media&token=4a5ca4c4-54a1-48ec-a280-b74a42a54073",
+  },
+  {
+    nome: "RAILDO CARVALHO",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_raildo.jpg?alt=media&token=395da0b6-ba7c-4943-a7ec-2551a64bf179",
   },
 ];
 export const cities = [

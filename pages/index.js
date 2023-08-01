@@ -425,7 +425,7 @@ function Home() {
                         <p className="text-center font-medium text-lg text-green-500">
                           {topSellerData[2]?.potenciaVendida} kWp
                         </p>
-                        <div className="h-[30%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">
+                        <div className="h-[40%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">
                           3º
                         </div>
                       </div>

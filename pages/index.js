@@ -90,11 +90,7 @@ function renderAvatarBySeller(sellerName) {
     const splittedName = sellerName.split(" ");
     const firstLetter = splittedName[0][0];
     var secondLetter;
-    if (
-      splittedName[1] == "DE" ||
-      splittedName[1] == "DA" ||
-      splittedName[1] == "DO"
-    )
+    if (["DE", "DA", "DO", "DOS", "DAS"].includes(splittedName[1]))
       secondLetter = splittedName[2] ? splittedName[2][0] : "";
     else secondLetter = splittedName[1] ? splittedName[1][0] : "";
 
@@ -322,19 +318,19 @@ function Home() {
             <h1 className="text-center w-full text-lg font-extrabold">
               META GLOBAL
             </h1>
-            <div className="w-full h-[45px] border border-gray-700 bg-[#919395] self-center flex items-center justify-between">
+            <div className="w-full h-[45px] border border-gray-500 bg-[#a8a9aa] self-center flex items-center justify-between">
               <div
                 style={{ width: `${(campainPeakPower / 2000) * 100}%` }}
                 className="bg-gradient-to-r from-yellow-300 to-[#fead41] w-full h-full flex flex-col items-center justify-center"
               >
-                <p className="text-[#15599a] bg-transparent font-bold">
+                <p className="text-[#15599a] bg-transparent font-bold text-xxs lg:text-sm">
                   {((campainPeakPower / 2000) * 100).toLocaleString("pt-br", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
                   %
                 </p>
-                <p className="w-full text-center font-raleway text-sm font-bold text-green-500">
+                <p className="w-full text-center font-raleway text-xxs lg:text-sm font-bold text-green-500">
                   {campainPeakPower.toLocaleString("pt-br", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -342,7 +338,7 @@ function Home() {
                   kWp
                 </p>
               </div>
-              <p className="text-lg text-white font-bold mr-4">
+              <p className="text-xs lg:text-lg text-white font-bold mr-4">
                 {(2000 - campainPeakPower).toLocaleString("pt-br", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
@@ -352,14 +348,14 @@ function Home() {
             </div>
           </div>
           <div className="w-full flex gap-2 justify-center">
-            <div className="w-[70%] flex justify-center items-center">
+            <div className="w-full lg:w-[70%] flex justify-center items-center">
               {topSellerData ? (
                 <div className="flex items-center w-full justify-center">
-                  <div className="flex flex-col items-center w-full">
+                  <div className="flex flex-col items-center w-full mb-2">
                     <h1 className="text-gray-600 uppercase text-xl text-center font-bold">
                       TOP 3 VENDEDORES
                     </h1>
-                    <div className="lg:w-[600px] w-full flex items-end justify-center h-[400px] gap-10 p-6">
+                    <div className="lg:w-[600px] w-full flex items-end justify-center h-[500px] lg:h-[400px] gap-4 lg:gap-10 p-0 lg:p-6">
                       <div className="h-full flex flex-col justify-end w-1/3">
                         {renderAvatarBySeller(topSellerData[1]?._id)}
                         {/* <div className="w-[50px] h-[50px] self-center">

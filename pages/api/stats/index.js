@@ -414,6 +414,56 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
+    let infoTopVendedores = await collection
+      .aggregate([
+        {
+          $match: {
+            "contrato.dataAssinatura": {
+              $gte: "2023-07-01T00:00:00.000Z",
+            },
+            "vendedor.nome": { $ne: "ARTHUR CARVALHO" },
+            tipoDeServico: "SISTEMA FOTOVOLTAICO",
+          },
+        },
+        {
+          $group: {
+            _id: "$vendedor.nome",
+            potenciaVendida: {
+              $sum: "$sistema.potPico",
+            },
+          },
+        },
+        {
+          $sort: {
+            potenciaVendida: -1,
+          },
+        },
+        {
+          $limit: 3,
+        },
+      ])
+      .toArray();
+    let potenciaVendidaCampanha = await collection
+      .aggregate([
+        {
+          $match: {
+            "contrato.dataAssinatura": {
+              $gte: "2023-07-01T00:00:00.000Z",
+            },
+            tipoDeServico: "SISTEMA FOTOVOLTAICO",
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            potenciaVendida: {
+              $sum: "$sistema.potPico",
+            },
+          },
+        },
+      ])
+      .toArray();
+    potenciaVendidaCampanha = potenciaVendidaCampanha[0].potenciaVendida;
     let promotores = await collection
       .aggregate([
         {
@@ -463,6 +513,8 @@ export default async function handler(req, res) {
     ).toFixed(2);
     console.log(nps);
     return res.status(201).json({
+      potenciaVendidaCampanha,
+      infoTopVendedores,
       infoInstalacao,
       infoHomologacao,
       infoSuprimentos,

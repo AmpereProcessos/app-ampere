@@ -42,8 +42,10 @@ export default async function handler(req, res) {
         console.log(sellerName, user.nome, similarityPercentage);
         if (similarityPercentage > 80) return true;
       });
-      if (!sellerInfo)
-        throw new createHttpError.NotFound("Vendedor não encontrado.");
+      if (!sellerInfo) {
+        res.json({ data: "Vendedor não encontrado." });
+        return;
+      }
 
       console.log(idCRMProject);
       const crmProjectInfo = await projectsCollection

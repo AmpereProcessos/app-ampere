@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY, "projetos");
     const collection = db.collection("dados");
-    let installedInfo = await collection
+    let infoInstalacao = await collection
       .aggregate([
         {
           $match: {
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    let averageHomoData = await collection
+    let infoHomologacao = await collection
       .aggregate([
         {
           $match: {
@@ -94,7 +94,7 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    let suprimentosData = await collection
+    let infoSuprimentos = await collection
       .aggregate([
         {
           $match: {
@@ -153,6 +153,52 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
+    let infoTopVendedores = await collection
+      .aggregate([
+        {
+          $match: {
+            "contrato.dataAssinatura": { $gte: "2023-07-01T00:00:00.000Z" },
+            "vendedor.nome": { $ne: "ARTHUR CARVALHO" },
+            tipoDeServico: "SISTEMA FOTOVOLTAICO",
+          },
+        },
+        {
+          $group: {
+            _id: "$vendedor.nome",
+            potenciaVendida: {
+              $sum: "$sistema.potPico",
+            },
+          },
+        },
+        {
+          $sort: {
+            potenciaVendida: -1,
+          },
+        },
+        {
+          $limit: 3,
+        },
+      ])
+      .toArray();
+    let potenciaVendidaCampanha = await collection
+      .aggregate([
+        {
+          $match: {
+            "contrato.dataAssinatura": { $gte: "2023-07-01T00:00:00.000Z" },
+            tipoDeServico: "SISTEMA FOTOVOLTAICO",
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            potenciaVendida: {
+              $sum: "$sistema.potPico",
+            },
+          },
+        },
+      ])
+      .toArray();
+    potenciaVendidaCampanha = potenciaVendidaCampanha[0].potenciaVendida;
     let promotores = await collection
       .aggregate([
         {
@@ -194,9 +240,11 @@ export default async function handler(req, res) {
       consultasTotais[0].nps
     ).toFixed(2);
     return res.status(201).json({
-      installedInfo,
-      averageHomoData,
-      suprimentosData,
+      potenciaVendidaCampanha,
+      infoInstalacao,
+      infoHomologacao,
+      infoSuprimentos,
+      infoTopVendedores,
       nps,
     });
   }
@@ -217,7 +265,7 @@ export default async function handler(req, res) {
     }
     console.log(queryKey);
     console.log(queryValue);
-    let installedInfo = await collection
+    let infoInstalacao = await collection
       .aggregate([
         {
           $match: {
@@ -250,7 +298,7 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    let averageHomoData = await collection
+    let infoHomologacao = await collection
       .aggregate([
         {
           $match: {
@@ -307,7 +355,7 @@ export default async function handler(req, res) {
         },
       ])
       .toArray();
-    let suprimentosData = await collection
+    let infoSuprimentos = await collection
       .aggregate([
         {
           $match: {
@@ -415,9 +463,9 @@ export default async function handler(req, res) {
     ).toFixed(2);
     console.log(nps);
     return res.status(201).json({
-      installedInfo,
-      averageHomoData,
-      suprimentosData,
+      infoInstalacao,
+      infoHomologacao,
+      infoSuprimentos,
       nps: isNaN(nps) ? 0 : nps,
     });
   }

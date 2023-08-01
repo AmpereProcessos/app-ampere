@@ -1306,6 +1306,43 @@ export const sellers = [
   "SETOR O&M",
   "SETOR PROJETOS",
 ];
+export const sellerPhotos = [
+  {
+    nome: "RAFAEL FEO",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-rafael_feo?alt=media&token=edec02ff-c2df-455d-ad30-8358710dda93",
+  },
+  {
+    nome: "STENIO DE ASSIS",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_stenio.jpg?alt=media&token=44eef96f-7f8b-4e1b-95c0-ab609aef50c9",
+  },
+  {
+    nome: "MATHEUS OLIVEIRA",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2FavatarMatheus.jpg?alt=media&token=adb60500-22e6-4c1d-908f-72e3279fc641",
+  },
+  {
+    nome: "GLAIDSTONE JOSÉ",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_glaidstone.jpg?alt=media&token=d3ccf4dc-a161-4ffd-93a3-4d00b4c58730",
+  },
+  {
+    nome: "DEVISSON LIMA",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-devisson_lima?alt=media&token=16b55942-a9ad-44dc-a9e0-84eedb00c01d",
+  },
+  {
+    nome: "JULIANO SILVA",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_juliano.jpg?alt=media&token=3893b2ea-9f9a-48ca-8f1c-cc85aa04ecbd",
+  },
+  {
+    nome: "LEONARDO VILARINHO",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-leonardo_vilarinho?alt=media&token=fb98055c-ce57-4a3c-92fa-eee92c0aa683",
+  },
+];
 export const cities = [
   {
     name: "Ituiutaba",

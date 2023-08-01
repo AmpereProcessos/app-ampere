@@ -16,12 +16,15 @@ import {
   Tooltip,
   ResponsiveContainer,
   YAxis,
+  BarChart,
+  Bar,
 } from "recharts";
 import { Fireworks } from "fireworks-js";
 import DashboardSkeleton from "../components/skeletons/DashboardSkeleton";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../components/utils/LoadingPage";
-import { parseCookies, setCookie } from "nookies";
+import LogoCampanha from "../utils/images/logoCampanha2023.png";
+import { sellerPhotos } from "../utils/constants";
 const routes = [
   {
     title: "Projetos",
@@ -72,7 +75,50 @@ const routes = [
     url: "rh",
   },
 ];
+function renderAvatarBySeller(sellerName) {
+  if (!sellerName) {
+    return (
+      <div className="w-[50px] h-[50px] self-center bg-gray-700 rounded-full flex items-center justify-center">
+        <p className="text-center font-bold text-lg text-white">V</p>
+      </div>
+    );
+  }
+  const existingSellerWithPhoto = sellerPhotos.find(
+    (x) => x.nome == sellerName
+  );
+  if (!existingSellerWithPhoto) {
+    const splittedName = sellerName.split(" ");
+    const firstLetter = splittedName[0][0];
+    var secondLetter;
+    if (
+      splittedName[1] == "DE" ||
+      splittedName[1] == "DA" ||
+      splittedName[1] == "DO"
+    )
+      secondLetter = splittedName[2] ? splittedName[2][0] : "";
+    else secondLetter = splittedName[1] ? splittedName[1][0] : "";
 
+    return (
+      <div className="w-[50px] h-[50px] self-center bg-gray-700 rounded-full flex items-center justify-center">
+        <p className="text-center font-bold text-lg uppercase text-white">
+          {firstLetter}
+          {secondLetter}
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div className="w-[50px] h-[50px] self-center">
+      <Image
+        src={existingSellerWithPhoto.avatar_url}
+        width={50}
+        height={50}
+        alt={existingSellerWithPhoto.nome}
+        style={{ borderRadius: "100%" }}
+      />
+    </div>
+  );
+}
 function Home() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -82,6 +128,8 @@ function Home() {
     },
   });
   const [selectedYear, setSelectedYear] = useState();
+  const [campainPeakPower, setCampainPeakPower] = useState(0);
+  const [topSellerData, setTopSellerData] = useState([]);
   const [installedData, setInstalledData] = useState([]);
   const [averageHomoData, setHomoData] = useState([]);
   const [averageBuyTime, setAverageBuyTime] = useState([]);
@@ -107,9 +155,11 @@ function Home() {
         })
         .then((res) => {
           setNps(res.data.nps);
-          setAverageBuyTime(res.data.suprimentosData);
-          setInstalledData(res.data.installedInfo);
-          setHomoData(res.data.averageHomoData);
+          setAverageBuyTime(res.data.infoSuprimentos);
+          setInstalledData(res.data.infoInstalacao);
+          setHomoData(res.data.infoHomologacao);
+          setTopSellerData(res.data.infoTopVendedores);
+          setCampainPeakPower(res.data.potenciaVendidaCampanha);
         });
     } else if (
       credenciais?.visualizacao == "VENDEDOR" ||
@@ -122,16 +172,20 @@ function Home() {
         })
         .then((res) => {
           setNps(res.data.nps);
-          setAverageBuyTime(res.data.suprimentosData);
-          setInstalledData(res.data.installedInfo);
-          setHomoData(res.data.averageHomoData);
+          setAverageBuyTime(res.data.infoSuprimentos);
+          setInstalledData(res.data.infoInstalacao);
+          setHomoData(res.data.infoHomologacao);
+          setTopSellerData(res.data.infoTopVendedores);
+          setCampainPeakPower(res.data.potenciaVendidaCampanha);
         });
     } else {
       axios.get("/api/stats").then((res) => {
         setNps(res.data.nps);
-        setAverageBuyTime(res.data.suprimentosData);
-        setInstalledData(res.data.installedInfo);
-        setHomoData(res.data.averageHomoData);
+        setAverageBuyTime(res.data.infoSuprimentos);
+        setInstalledData(res.data.infoInstalacao);
+        setHomoData(res.data.infoHomologacao);
+        setTopSellerData(res.data.infoTopVendedores);
+        setCampainPeakPower(res.data.potenciaVendidaCampanha);
       });
     }
   }
@@ -254,38 +308,177 @@ function Home() {
     if (statsData.graphData) {
       return (
         <div className="p-6 grow">
-          {!session.user?.visualizacao && (
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <button
-                onClick={() => getDataByRegional("REGIONAL ITUIUTABA")}
-                className={`h-[52px] lg:h-fit border border-gray-200 rounded-sm p-1 ${
-                  regional == "REGIONAL ITUIUTABA" ? "bg-blue-100" : ""
-                } hover:bg-blue-100 font-raleway font-bold text-xs lg:text-sm`}
-              >
-                REGIONAL ITUIUTABA
-              </button>
-              <button
-                onClick={() => getDataByRegional("REGIONAL UBERLÂNDIA")}
-                className={`h-[52px] lg:h-fit border border-gray-200 rounded-sm p-1 ${
-                  regional == "REGIONAL UBERLÂNDIA" ? "bg-blue-100" : ""
-                } hover:bg-blue-100 font-raleway font-bold text-xs lg:text-sm`}
-              >
-                REGIONAL UBERLÂNDIA
-              </button>
-              <button
-                onClick={() => {
-                  setRegional("GERAL");
-                  getStats(session.user);
-                  getGraphDataByYear(2023, session.user);
-                }}
-                className={`h-[52px] lg:h-fit border border-gray-200 rounded-sm p-1 ${
-                  regional == "GERAL" ? "bg-blue-100" : ""
-                } hover:bg-blue-100 font-raleway font-bold text-xs lg:text-sm`}
-              >
-                GERAL
-              </button>
+          {/* <div className="flex items-center justify-center w-full">
+            <div className="w-[350px]">
+              <Image
+                src={LogoCampanha}
+                fill={true}
+                alt={"LOGO DA CAMPANHA 2023"}
+                style={{ borderRadius: "100%", objectFit: "cover" }}
+              />
             </div>
-          )}
+          </div> */}
+          <div className="flex flex-col w-full mb-2">
+            <h1 className="text-center w-full text-lg font-extrabold">
+              META GLOBAL
+            </h1>
+            <div className="w-full h-[45px] border border-gray-700 bg-[#919395] self-center flex items-center justify-between">
+              <div
+                style={{ width: `${(campainPeakPower / 2000) * 100}%` }}
+                className="bg-gradient-to-r from-yellow-300 to-[#fead41] w-full h-full flex flex-col items-center justify-center"
+              >
+                <p className="text-[#15599a] bg-transparent font-bold">
+                  {((campainPeakPower / 2000) * 100).toLocaleString("pt-br", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                  %
+                </p>
+                <p className="w-full text-center font-raleway text-sm font-bold text-green-500">
+                  {campainPeakPower.toLocaleString("pt-br", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  kWp
+                </p>
+              </div>
+              <p className="text-lg text-white font-bold mr-4">
+                {(2000 - campainPeakPower).toLocaleString("pt-br", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{" "}
+                kWp
+              </p>
+            </div>
+          </div>
+          <div className="w-full flex gap-2 justify-center">
+            <div className="w-[70%] flex justify-center items-center">
+              {topSellerData ? (
+                <div className="flex items-center w-full justify-center">
+                  <div className="flex flex-col items-center w-full">
+                    <h1 className="text-gray-600 uppercase text-xl text-center font-bold">
+                      TOP 3 VENDEDORES
+                    </h1>
+                    <div className="lg:w-[600px] w-full flex items-end justify-center h-[400px] gap-10 p-6">
+                      <div className="h-full flex flex-col justify-end w-1/3">
+                        {renderAvatarBySeller(topSellerData[1]?._id)}
+                        {/* <div className="w-[50px] h-[50px] self-center">
+                          <Image
+                            src={
+                              "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_juliano.jpg?alt=media&token=3893b2ea-9f9a-48ca-8f1c-cc85aa04ecbd"
+                            }
+                            width={50}
+                            height={50}
+                            alt={"LOGO TOP 1º"}
+                            style={{ borderRadius: "100%" }}
+                          />
+                        </div> */}
+                        <h1 className="text-center font-bold text-sm text-gray-500">
+                          {topSellerData[1]?._id}
+                        </h1>
+                        <p className="text-center font-medium text-lg text-green-500">
+                          {topSellerData[1]?.potenciaVendida} kWp
+                        </p>
+                        <div className="h-[60%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">
+                          2º
+                        </div>
+                      </div>
+                      <div className="h-full flex flex-col justify-end w-1/3">
+                        {renderAvatarBySeller(topSellerData[0]?._id)}
+                        {/* <div className="w-[50px] h-[50px] self-center">
+                          <Image
+                            src={
+                              "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_stenio.jpg?alt=media&token=44eef96f-7f8b-4e1b-95c0-ab609aef50c9"
+                            }
+                            width={50}
+                            height={50}
+                            alt={"LOGO TOP 1º"}
+                            style={{ borderRadius: "100%" }}
+                          />
+                        </div> */}
+                        <h1 className="text-center font-bold text-sm text-gray-500">
+                          {topSellerData[0]?._id}
+                        </h1>
+                        <p className="text-center font-medium text-lg text-green-500">
+                          {topSellerData[0]?.potenciaVendida} kWp
+                        </p>
+                        <div className="grow w-full bg-[#fead41] flex justify-center items-center text-3xl text-white font-bold">
+                          1º
+                        </div>
+                      </div>
+                      <div className="h-full flex flex-col justify-end w-1/3">
+                        {renderAvatarBySeller(topSellerData[2]?._id)}
+                        {/* <div className="w-[50px] h-[50px] self-center">
+                          <Image
+                            src={
+                              "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-rafael_feo?alt=media&token=edec02ff-c2df-455d-ad30-8358710dda93"
+                            }
+                            width={50}
+                            height={50}
+                            alt={"LOGO TOP 1º"}
+                            style={{ borderRadius: "100%" }}
+                          />
+                        </div> */}
+                        <h1 className="text-center font-bold text-sm text-gray-500">
+                          {topSellerData[2]?._id}
+                        </h1>
+                        <p className="text-center font-medium text-lg text-green-500">
+                          {topSellerData[2]?.potenciaVendida} kWp
+                        </p>
+                        <div className="h-[30%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">
+                          3º
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              {/* {topSellerData ? (
+                <div className="flex items-center w-full justify-center">
+                  <div className="flex flex-col items-center w-full">
+                    <h1 className="text-gray-600 uppercase text-xl text-center font-bold">
+                      TOP 3 VENDEDORES
+                    </h1>
+                    <div className="lg:w-[600px] w-full flex items-end justify-center h-[300px] gap-10 p-6">
+                      <div className="h-full flex flex-col justify-end w-1/3">
+                        <h1 className="text-center font-bold text-sm text-gray-500">
+                          {topSellerData[1]._id}
+                        </h1>
+                        <p className="text-center font-medium text-lg text-green-500">
+                          {topSellerData[1].potenciaVendida} kWp
+                        </p>
+                        <div className="h-[60%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">
+                          2º
+                        </div>
+                      </div>
+                      <div className="h-full flex flex-col justify-end w-1/3">
+                        <h1 className="text-center font-bold text-sm text-gray-500">
+                          {topSellerData[0]._id}
+                        </h1>
+                        <p className="text-center font-medium text-lg text-green-500">
+                          {topSellerData[0].potenciaVendida} kWp
+                        </p>
+                        <div className="h-full w-full bg-[#fead41] flex justify-center items-center text-3xl text-white font-bold">
+                          1º
+                        </div>
+                      </div>
+                      <div className="h-full flex flex-col justify-end w-1/3">
+                        <h1 className="text-center font-bold text-sm text-gray-500">
+                          {topSellerData[2]._id}
+                        </h1>
+                        <p className="text-center font-medium text-lg text-green-500">
+                          {topSellerData[2].potenciaVendida} kWp
+                        </p>
+                        <div className="h-[30%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">
+                          3º
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null} */}
+            </div>
+          </div>
           <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">
             <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
               <div className="flex justify-between">

@@ -20,6 +20,7 @@ import NotificationModal from "./NotificationModal";
 import { signOut, useSession } from "next-auth/react";
 import { AppContext } from "../context/AppContext";
 import ConfigDropDown from "./ConfigDropDown";
+
 function Header({ toggleSidebar }) {
   const { notificacoes } = useContext(AppContext);
   const { data: session, status } = useSession();

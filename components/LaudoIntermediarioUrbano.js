@@ -101,6 +101,23 @@ function LaudoIntermediarioUrbano({ info }) {
       Number(noroeste)
     ).toFixed(2);
   }
+  function getAverageModulePower(modPower) {
+    const splittedPower = `${modPower}`.split("/");
+
+    if (splittedPower.length > 1) {
+      var total = 0;
+      for (let i = 0; i < splittedPower.length; i++) {
+        const powerAsNumber = Number(splittedPower[i]);
+        console.log(powerAsNumber, !isNaN(powerAsNumber));
+        if (isNaN(powerAsNumber)) total = total;
+        else total = total + powerAsNumber;
+      }
+
+      return total / splittedPower.length;
+    } else {
+      return Number(splittedPower[0]);
+    }
+  }
   function getProposedGen() {
     return (
       (info.qtdeModulos *
@@ -109,7 +126,6 @@ function LaudoIntermediarioUrbano({ info }) {
       1000
     ).toFixed(2);
   }
-  console.log(info.logradouro.length);
   return (
     <div className="w-[21cm] h-[29.7cm]">
       <div className="flex flex-col w-full h-full">
@@ -457,7 +473,7 @@ function LaudoIntermediarioUrbano({ info }) {
                           fatorDeGeracaoPorOrientacao[info.cidade]["NORTE"]
                         ) *
                           info.modNorte *
-                          info.potModulos) /
+                          getAverageModulePower(info.potModulos)) /
                         1000
                       ).toFixed(2)} kWh`
                     : " - "}{" "}
@@ -471,13 +487,21 @@ function LaudoIntermediarioUrbano({ info }) {
                   {info.modNordeste ? info.modNordeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
+                  {console.log(
+                    "NORDESTE",
+                    info.modNordeste,
+                    Number(
+                      fatorDeGeracaoPorOrientacao[info.cidade]["NORDESTE"]
+                    ),
+                    getAverageModulePower(info.potModulos)
+                  )}
                   {info.modNordeste && fatorDeGeracaoPorOrientacao[info.cidade]
                     ? `${(
                         (Number(
                           fatorDeGeracaoPorOrientacao[info.cidade]["NORDESTE"]
                         ) *
                           info.modNordeste *
-                          info.potModulos) /
+                          getAverageModulePower(info.potModulos)) /
                         1000
                       ).toFixed(2)} kWh`
                     : " - "}{" "}
@@ -497,7 +521,7 @@ function LaudoIntermediarioUrbano({ info }) {
                           fatorDeGeracaoPorOrientacao[info.cidade]["LESTE"]
                         ) *
                           info.modLeste *
-                          info.potModulos) /
+                          getAverageModulePower(info.potModulos)) /
                         1000
                       ).toFixed(2)} kWh`
                     : "-"}{" "}
@@ -517,7 +541,7 @@ function LaudoIntermediarioUrbano({ info }) {
                           fatorDeGeracaoPorOrientacao[info.cidade]["SUDESTE"]
                         ) *
                           info.modSudeste *
-                          info.potModulos) /
+                          getAverageModulePower(info.potModulos)) /
                         1000
                       ).toFixed(2)}`
                     : "-"}{" "}
@@ -550,7 +574,7 @@ function LaudoIntermediarioUrbano({ info }) {
                           fatorDeGeracaoPorOrientacao[info.cidade]["SUL"]
                         ) *
                           info.modSul *
-                          info.potModulos) /
+                          getAverageModulePower(info.potModulos)) /
                         1000
                       ).toFixed(2)} kWh`
                     : "-"}{" "}
@@ -570,7 +594,7 @@ function LaudoIntermediarioUrbano({ info }) {
                           fatorDeGeracaoPorOrientacao[info.cidade]["SUDOESTE"]
                         ) *
                           info.modSudoeste *
-                          info.potModulos) /
+                          getAverageModulePower(info.potModulos)) /
                         1000
                       ).toFixed(2)} kWh`
                     : "-"}{" "}
@@ -590,7 +614,7 @@ function LaudoIntermediarioUrbano({ info }) {
                           fatorDeGeracaoPorOrientacao[info.cidade]["OESTE"]
                         ) *
                           info.modOeste *
-                          info.potModulos) /
+                          getAverageModulePower(info.potModulos)) /
                         1000
                       ).toFixed(2)} kWh`
                     : "-"}{" "}
@@ -610,7 +634,7 @@ function LaudoIntermediarioUrbano({ info }) {
                           fatorDeGeracaoPorOrientacao[info.cidade]["NOROESTE"]
                         ) *
                           info.modNoroeste *
-                          info.potModulos) /
+                          getAverageModulePower(info.potModulos)) /
                         1000
                       ).toFixed(2)} kWh`
                     : "-"}{" "}

@@ -417,7 +417,6 @@ function ModalFormSolicitacao({
   var insertObj = {
     nomeDoContrato: dados.nomeDoContrato.toUpperCase(),
     nomeDoProjeto: dados.nomeDoProjeto ? dados.nomeDoProjeto.toUpperCase() : "",
-    idFormularioContrato: dados._id,
     cpf_cnpj: dados.cpf_cnpj,
     telefone: dados.telefone,
     cidade: dados.cidadeInstalacao,

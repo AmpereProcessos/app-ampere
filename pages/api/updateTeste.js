@@ -1,122 +1,110 @@
 import dayjs from "dayjs";
-import connectToDatabase from "../../utils/crmDb";
-import connectoToInsideDb from "../../utils/insideSalesDb";
+import connectToCRMDatabase from "../../utils/crmDb";
+import connectToRequestsDatabase from "../../utils/solicitacoesDb";
 import { ObjectId } from "mongodb";
+import connectToProjectsDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  // const db = await connectToDatabase(process.env.DB_KEY);
-  // const collection = db.collection("material");
-  // const dbResp = await collection.updateOne(
-  //   { _id: new ObjectId("63975cd0170b8934d7d7c436") },
-  //   {
-  //     $pull: {
-  //       "qtdeAlteracoes.anterior": { $type: 3 },
-  //     },
-  //   }
+  // // COnnecting to CRM projects and proposes db/collection
+  // const crmDb = await connectToCRMDatabase(process.env.CRM_KEY);
+  // const crmProjectsCollection = crmDb.collection("projects");
+  // const crmProposesCollection = crmDb.collection("proposes");
+  // // Connecting to projects db/collection
+  // const projectsDb = await connectToProjectsDatabase(
+  //   process.env.DB_KEY,
+  //   "projetos"
   // );
-
-  // const db2 = await connectoToInsideDb(process.env.DB_KEY);
-  // const collection2 = db2.collection("leads");
-  // const codes = await collection
+  // const projectsCollection = projectsDb.collection("dados");
+  // // Connecting to contract requests db/collection
+  // const requestsDb = await connectToRequestsDatabase(process.env.DB_KEY);
+  // const contractRequestsCollection = requestsDb.collection("contrato");
+  // const allProjects = await projectsCollection
   //   .aggregate([
   //     {
-  //       $match: {
-  //         "contrato.status": "ASSINADO",
-  //       },
+  //       $match: { "contrato.status": "ASSINADO", idProjetoCRM: { $ne: null } },
   //     },
   //     {
   //       $project: {
-  //         codigoSVB: 1,
-  //       },
-  //     },
-  //   ])
-  //   .toArray();
-  // const arr = await collection
-  //   .aggregate([
-  //     {
-  //       $match: {
-  //         "contrato.dataAssinatura": { $gte: "2023-04-01T00:00:00.000Z" },
-  //       },
-  //     },
-  //     {
-  //       $project: {
-  //         qtde: 1,
-  //         codigoSVB: 1,
   //         nomeDoContrato: 1,
-  //         tipoDeServico: 1,
   //         "contrato.dataAssinatura": 1,
-  //         "sistema.valorProjeto": 1,
-  //         "padrao.valor": 1,
-  //         "estruturaPersonalizada.valor": 1,
-  //         "oem.valor": 1,
+  //         codigoSVB: 1,
+  //         idProjetoCRM: 1,
+  //         idPropostaCRM: 1,
+  //         idSolicitacaoContrato: 1,
   //       },
   //     },
   //   ])
   //   .toArray();
-  // console.log(arr.length);
-  // let newArr = arr.map((item) => {
-  //   let projeto = !isNaN(item.sistema?.valorProjeto)
-  //     ? item.sistema.valorProjeto
-  //     : 0;
-  //   let padrao = !isNaN(item.padrao?.valor) ? item.padrao?.valor : 0;
-  //   let estrutura = !isNaN(item.estruturaPersonalizada?.valor)
-  //     ? item.estruturaPersonalizada.valor
-  //     : 0;
-  //   let oem = !isNaN(item.oem?.valor) ? item.oem.valor : 0;
-  //   let totalSum =
-  //     Number(projeto) + Number(padrao) + Number(estrutura) + Number(oem);
-  //   let itemFromSVB = svbJSON.filter(
-  //     (svbItem) => svbItem.codigoSVB == item.codigoSVB
-  //   )[0];
-  //   console.log(itemFromSVB);
+
+  // const allContractRequests = await contractRequestsCollection
+  //   .aggregate([
+  //     {
+  //       $project: {
+  //         dataSolicitacao: 1,
+  //       },
+  //     },
+  //   ])
+  //   .toArray();
+  // const allCRMProjects = await crmProjectsCollection
+  //   .aggregate([
+  //     {
+  //       $project: {
+  //         nome: 1,
+  //       },
+  //     },
+  //   ])
+  //   .toArray();
+  // const allCRMProposes = await crmProposesCollection
+  //   .aggregate([
+  //     {
+  //       $project: {
+  //         "projeto.nome": 1,
+  //       },
+  //     },
+  //   ])
+  //   .toArray();
+
+  // const bulkWriteArr = allProjects.map((project) => {
+  //   const equivalentCRMProject = allCRMProjects.find(
+  //     (x) => x._id == project.idProjetoCRM
+  //   );
+  //   const equivalentCRMPropose = allCRMProposes.find(
+  //     (x) => x._id == project.idPropostaCRM
+  //   );
+  //   const equivalentContractRequest = allContractRequests.find(
+  //     (x) => x._id == project.idSolicitacaoContrato
+  //   );
+  //   console.log(
+  //     project.nomeDoContrato,
+  //     " CRM: ",
+  //     equivalentCRMProject?.nome,
+  //     " PROPOSE: ",
+  //     equivalentCRMPropose?.projeto?.nome,
+  //     "SOLICITACAO CONTRATO: ",
+  //     equivalentContractRequest.dataSolicitacao
+  //   );
   //   return {
-  //     QTDE: item.qtde,
-  //     "CÓDIGO SVB": item.codigoSVB,
-  //     "TIPO DE SERVIÇO": item.tipoDeServico,
-  //     "NOME DO CONTRATO": item.nomeDoContrato,
-  //     "DATA DE ASSINATURA": item.contrato?.dataAssinatura
-  //       ? dayjs(item.contrato?.dataAssinatura)
-  //           .add(4, "hours")
-  //           .format("DD/MM/YYYY")
-  //       : "-",
-  //     "VALOR DO CONTRATO": totalSum,
-  //     "PREÇO INSTALAÇÃO": itemFromSVB?.InstalacaoPrecoTotal
-  //       ? itemFromSVB?.InstalacaoPrecoTotal
-  //       : 0,
-  //     "PREÇO DE TRANSFORMADORES (SE APLICÁVEL)": itemFromSVB?.TrafoPrecoTotal
-  //       ? itemFromSVB?.TrafoPrecoTotal
-  //       : 0,
-  //     IMPOSTO: itemFromSVB?.Imposto ? itemFromSVB?.Imposto : 0,
-  //     "MÃO DE OBRA": itemFromSVB?.MaoDeObra ? itemFromSVB?.MaoDeObra : 0,
-  //     "CUSTO DE PROJETO": itemFromSVB["CUSTO DO PROJETO"]
-  //       ? itemFromSVB["CUSTO DO PROJETO"]
-  //       : 0,
-  //     "CUSTO DE VENDA": itemFromSVB["CUSTO DE VENDA"]
-  //       ? itemFromSVB["CUSTO DE VENDA"]
-  //       : 0,
-  //     "MANUTENÇÃO (SE APLICÁVEL)": itemFromSVB?.Manutencao
-  //       ? itemFromSVB?.Manutencao
-  //       : 0,
-  //     "SERVIÇOS EXTRA (SE APLICÁVEL)": itemFromSVB?.ServicosExtra
-  //       ? itemFromSVB?.ServicosExtra
-  //       : 0,
-  //     "ATERRAMENTO (SE APLICÁVEL)": itemFromSVB?.ATERRAMENTO
-  //       ? itemFromSVB?.ATERRAMENTO
-  //       : 0,
-  //     "SEGURO (SE APLICÁVEL)": itemFromSVB?.SEGURO ? itemFromSVB?.SEGURO : 0,
+  //     updateOne: {
+  //       filter: { _id: new ObjectId(equivalentCRMProject._id) },
+  //       update: {
+  //         $set: {
+  //           contrato: {
+  //             id: new ObjectId(project._id).toString(),
+  //             idProposta: new ObjectId(equivalentCRMPropose._id).toString(),
+  //             dataAssinatura: project.contrato?.dataAssinatura,
+  //           },
+  //           solicitacaoContrato: {
+  //             id: project.idSolicitacaoContrato,
+  //             idProposta: new ObjectId(equivalentCRMPropose._id).toString(),
+  //             dataSolicitacao: equivalentContractRequest.dataSolicitacao,
+  //           },
+  //         },
+  //       },
+  //     },
   //   };
   // });
 
-  // res.json(newArr);
-
-  // const filteredCodes = codes.filter((obj) => !!obj.codigoSVB);
-  // const arr = filteredCodes.map((obj) => Number(obj.codigoSVB));
-  // console.log(arr.length);
-  // const dbResp = await collection2.updateMany(
-  //   { codigoSVB: { $in: arr } },
-  //   { $set: { contratoAssinado: true } }
-  // );
-  // console.log(arr.length);
-  res.json("TESTE");
+  // const bulkWriteResponse = await crmProjectsCollection.bulkWrite(bulkWriteArr);
+  res.json("DESATIVADA");
 }
 
 // Update Many example:

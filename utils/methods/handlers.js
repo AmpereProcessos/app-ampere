@@ -41,6 +41,7 @@ async function updatePropose({ idCRMPropose, changes }) {
   }
 }
 export async function handleCRMProjectUpdatesAutomations({
+  projectId,
   idCRMProject,
   idCRMPropose,
   newData,
@@ -51,16 +52,22 @@ export async function handleCRMProjectUpdatesAutomations({
 
   // Checking for signature event
   if (
-    newData["contrato.status"] == "ASSINADO" &&
-    previousData.contrato?.status != "ASSINADO"
+    newData["contrato.status"] == "ASSINADO" ||
+    !!newData["contrato.dataAssinatura"]
   ) {
     const changes = {
-      assinado: true,
-      dataAssinatura: new Date().toISOString(),
+      contrato: {
+        id: projectId,
+        idProposta: idCRMPropose,
+        dataAssinatura: newData["contrato.dataAssinatura"]
+          ? newData["contrato.dataAssinatura"]
+          : previousData.contrato?.dataAssinatura,
+      },
     };
+
     await updateProject({ idCRMProject: idCRMProject, changes: changes });
-    if (idCRMPropose)
-      await updatePropose({ idCRMPropose: idCRMPropose, changes: changes });
+    // if (idCRMPropose)
+    //   await updatePropose({ idCRMPropose: idCRMPropose, changes: changes });
     if (previousData.vendedor)
       await notifySellerInCRM(
         previousData.vendedor.nome,
@@ -71,17 +78,13 @@ export async function handleCRMProjectUpdatesAutomations({
   }
 
   // Checking for unsigning or rescission
-  if (
-    newData["contrato.status"] != "ASSINADO" &&
-    previousData.contrato?.status == "ASSINADO"
-  ) {
+  if (newData["contrato.status"] && newData["contrato.status"] != "ASSINADO") {
     const changes = {
-      assinado: false,
-      dataAssinatura: null,
+      contrato: null,
     };
     await updateProject({ idCRMProject: idCRMProject, changes: changes });
-    if (idCRMPropose)
-      updatePropose({ idCRMPropose: idCRMPropose, changes: changes });
+    // if (idCRMPropose)
+    //   updatePropose({ idCRMPropose: idCRMPropose, changes: changes });
   }
 }
 export async function notifySellerInCRM(sellerName, idCRMProject, message) {

@@ -151,6 +151,7 @@ function ModalComercial({
           changes
         );
         await handleCRMProjectUpdatesAutomations({
+          projectId: project._id,
           idCRMProject: project.idProjetoCRM,
           idCRMPropose: project.idPropostaCRM,
           newData: changes,
@@ -167,7 +168,7 @@ function ModalComercial({
       }
     }
   }
-  console.log(infoHolder);
+
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>

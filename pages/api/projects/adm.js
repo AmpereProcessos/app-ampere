@@ -8,7 +8,20 @@ export default async function handler(req, res) {
         {
           $match: {
             "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
-            "obra.statusDaObra": "CONCLUIDA",
+            $or: [
+              {
+                tipoDeServico: {
+                  $nin: ["OPERAÇÃO E MANUTENÇÃO", "MONTAGEM E DESMONTAGEM"],
+                },
+                "obra.statusDaObra": "CONCLUIDA",
+              },
+              {
+                tipoDeServico: {
+                  $in: ["OPERAÇÃO E MANUTENÇÃO", "MONTAGEM E DESMONTAGEM"],
+                },
+                "contrato.status": "ASSINADO",
+              },
+            ],
             "pagamento.cobrancaFeita": { $ne: true },
           },
         },

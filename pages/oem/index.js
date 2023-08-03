@@ -50,7 +50,6 @@ function OeM({ users }) {
     manutencaoPendente: false,
     manutencaoAtrasada: false,
     limparAteDezembro: false,
-    appPendente: false,
     ordenarAlfabeticamente: false,
     maiorQueQtdeModulos: null,
     menorQueQtdeModulos: null,
@@ -146,10 +145,6 @@ function OeM({ users }) {
         (project) => project.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO"
       );
     }
-    if (filters.appPendente) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((project) => project.app.data == undefined);
-    }
     if (filters.ordenarAlfabeticamente) {
       if (!newArr) newArr = projects;
       newArr = newArr.sort((a, b) =>
@@ -208,7 +203,7 @@ function OeM({ users }) {
       newArr = newArr.filter((project) => {
         if (project.medidor.data) {
           var timeDiff = Math.abs(
-            new Date("2022-12-31T20:35:47.757Z").getTime() -
+            new Date("2023-12-31T20:35:47.757Z").getTime() -
               new Date(project.medidor?.data).getTime()
           );
           var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -658,19 +653,6 @@ function OeM({ users }) {
                     } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
                   >
                     CLIENTES O&M
-                  </div>
-                  <div
-                    onClick={() =>
-                      setFilters({
-                        ...filters,
-                        appPendente: !filters.appPendente,
-                      })
-                    }
-                    className={`${
-                      filters.appPendente ? "bg-[#15599a]" : "bg-blue-300"
-                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                  >
-                    APP PENDENTE
                   </div>
                   <div
                     onClick={() =>

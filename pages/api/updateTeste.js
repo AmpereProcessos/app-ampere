@@ -4,16 +4,59 @@ import connectToRequestsDatabase from "../../utils/solicitacoesDb";
 import { ObjectId } from "mongodb";
 import connectToProjectsDatabase from "../../utils/connectDb";
 export default async function handler(req, res) {
-  // // COnnecting to CRM projects and proposes db/collection
-  // const crmDb = await connectToCRMDatabase(process.env.CRM_KEY);
-  // const crmProjectsCollection = crmDb.collection("projects");
   // const crmProposesCollection = crmDb.collection("proposes");
   // // Connecting to projects db/collection
-  // const projectsDb = await connectToProjectsDatabase(
-  //   process.env.DB_KEY,
-  //   "projetos"
-  // );
-  // const projectsCollection = projectsDb.collection("dados");
+  const projectsDb = await connectToProjectsDatabase(
+    process.env.DB_KEY,
+    "projetos"
+  );
+  const projectsCollection = projectsDb.collection("dados");
+  const oemProjects = await projectsCollection
+    .aggregate([
+      {
+        $match: {
+          "contrato.status": "ASSINADO",
+          tipoDeServico: "OPERAÇÃO E MANUTENÇÃO",
+        },
+      },
+      {
+        $project: {
+          qtde: 1,
+          nomeDoContrato: 1,
+          "contrato.dataAssinatura": 1,
+          cidade: 1,
+          "vendedor.nome": 1,
+          "oem.plano": 1,
+          "oem.oemConcluido": 1,
+          "oem.valor": 1,
+          "sistema.valorProjeto": 1,
+        },
+      },
+    ])
+    .toArray();
+  const formattedOemProjects = oemProjects.map((x) => {
+    console.log(x.oem?.valor, x.sistema?.valorProjeto);
+    return {
+      QTDE: x.qtde,
+      "NOME DO CONTRATO": x.nomeDoContrato,
+      "DATA DE ASSINATURA": x.contrato?.dataAssinatura
+        ? dayjs(x.contrato.dataAssinatura).add(3, "hours").format("DD/MM/YYYY")
+        : "-",
+      VENDEDOR: x.vendedor?.nome,
+      CIDADE: x.cidade,
+      "PLANO DE O&M": x.oem?.plano,
+      "OEM CONCLUIDO": x.oem?.oemConcluido ? "SIM" : "NÃO",
+      "VALOR DO O&M":
+        !!x.oem?.valor && x.oem.valor > 0
+          ? x.oem.valor
+          : x.sistema.valorProjeto,
+    };
+  });
+  const obj = {
+    "oem.plano": {
+      $nin: [null, "INCLUSO NO CONTRATO"],
+    },
+  };
   // // Connecting to contract requests db/collection
   // const requestsDb = await connectToRequestsDatabase(process.env.DB_KEY);
   // const contractRequestsCollection = requestsDb.collection("contrato");
@@ -104,7 +147,8 @@ export default async function handler(req, res) {
   // });
 
   // const bulkWriteResponse = await crmProjectsCollection.bulkWrite(bulkWriteArr);
-  res.json("DESATIVADA");
+  console.log(formattedOemProjects.length);
+  res.json(formattedOemProjects);
 }
 
 // Update Many example:

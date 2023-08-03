@@ -56,7 +56,6 @@ function ComissaoPage() {
         setProjects(res.data);
       });
   }
-
   function filterProjects() {
     var newArr;
     if (filters.vendedor.length > 0) {

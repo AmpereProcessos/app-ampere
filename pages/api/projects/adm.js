@@ -22,7 +22,10 @@ export default async function handler(req, res) {
                 "contrato.status": "ASSINADO",
               },
             ],
-            "pagamento.cobrancaFeita": { $ne: true },
+            $or: [
+              { "pagamento.cobrancaFeita": { $ne: true } },
+              { "faturamento.concluido": { $ne: true } },
+            ],
           },
         },
         {
@@ -34,6 +37,9 @@ export default async function handler(req, res) {
             "vendedor.nome": 1,
             "pagamento.forma": 1,
             "pagamento.status": 1,
+            "pagamento.cobrancaFeita": 1,
+            "faturamento.concluido": 1,
+            "faturamento.empresaFaturamento": 1,
             "contrato.status": 1,
             "contrato.dataAssinatura": 1,
             "compra.statusLiberacao": 1,

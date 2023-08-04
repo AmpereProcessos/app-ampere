@@ -284,7 +284,7 @@ function InfoObrasBlock({
           }}
         />
       </div>
-      <div className="flex flex-col w-[450px] self-center mt-2 items-center">
+      <div className="flex flex-col w-full  lg:w-[450px] self-center mt-2 items-center">
         <span className="uppercase font-bold font-raleway text-center text-sm">
           OBSERVAÇÕES
         </span>

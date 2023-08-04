@@ -256,6 +256,7 @@ interface IProject {
   };
   // FATURAMENTO É COMUM PARA TODOS OS CONTRATOS
   faturamento: {
+    concluido: boolean;
     cnpjFaturamento: string;
     empresaFaturamento:
       | "AMPERE ENERGIAS"
@@ -519,3 +520,32 @@ const servicesType = [
     value: "NÃO DEFINIDO",
   },
 ];
+interface ICosts {
+  categoria:
+    | "MONTAGEM"
+    | "PADRÃO"
+    | "ESTRUTURA"
+    | "MANUTENÇÃO CORRETIVA"
+    | "MANUTENÇÃO PREVENTIVA"
+    | "OUTROS"; // categoria do custo, de modo a especificar em que atividade/serviço estão sendo despendidos os gastos.
+  descricao: string; // descrição adicional, com detalhes, explicações ou qualquer informação para futura entendimento dos gastos
+  projeto: {
+    id: string; // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
+    nome: string; // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
+    identificador: number; // identificador QTDE do projeto no banco de projetos
+    tipo: string; // tipo de projeto (ou tipo de serviço) dentro do banco de projetos
+  };
+  autor: {
+    id: string; // id do usuário que criou o referente registro de custos
+    nome: string; // nome do usuário que criou o referente registro de custos
+  };
+  itens: {
+    idMaterial?: string; // id do material, se item estocável
+    descricao: string; // nome ou descrição do item de custo
+    unidade: string; // unidade do item
+    preco: string; // preco unitário do item
+    qtde: number; // quantidade de fato utilizada na execução do serviço
+  }[];
+  total: number; // somatória final do objeto de custo
+  dataInsercao: string; // data de inserção do documento
+}

@@ -71,6 +71,31 @@ function InfoPagamentoBlock({
                 COBRANÇA REALIZADA ?
               </label>
             </div>
+            <div className="w-[350px]">
+              <input
+                disabled={!editor}
+                checked={infoHolder.faturamento?.concluido ? true : false}
+                onChange={(e) => {
+                  setChanges({
+                    ...changes,
+                    "faturamento.concluido": e.target.checked,
+                  });
+                  setInfo({
+                    ...infoHolder,
+                    faturamento: {
+                      ...infoHolder.faturamento,
+                      concluido: e.target.checked,
+                    },
+                  });
+                }}
+                type="checkbox"
+                name="concluido"
+                id="concluido"
+              />
+              <label className="ml-2" htmlFor="concluido">
+                FATURAMENTO CONCLUIDO ?
+              </label>
+            </div>
             <DateInput
               label={"DATA DE RECEBIMENTO"}
               editable={true}

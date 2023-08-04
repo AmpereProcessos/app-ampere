@@ -3,7 +3,6 @@ import connectToCRMDatabase from "../../utils/crmDb";
 import connectToRequestsDatabase from "../../utils/solicitacoesDb";
 import { ObjectId } from "mongodb";
 import connectToProjectsDatabase from "../../utils/connectDb";
-import NotasEmitir from "../../utils/notasaemitir.json";
 import { calculateStringSimilarity } from "../../utils/constants";
 export default async function handler(req, res) {
   res.json("DESATIVADA");

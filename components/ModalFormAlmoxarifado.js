@@ -8,12 +8,17 @@ import axios from "axios";
 import MaterialItem from "./MaterialItem";
 import Link from "next/link";
 import SaveButton from "./utils/Buttons/SaveButton";
-import { returnMaterials } from "../utils/methods/mutation/materials";
+import {
+  debitMaterials,
+  returnMaterials,
+} from "../utils/methods/mutation/materials";
 import { insertExpensesFromMaterials } from "../utils/methods/mutation/expenses";
 import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
 import createHttpError from "http-errors";
 import { getErrorMessage } from "../utils/methods/handlers";
+import AddMaterialFormulario from "./identificador/almoxarifado/AddMaterialFormulario";
+import { useMaterials } from "../utils/methods/query/materials";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -38,7 +43,9 @@ const OVERLAY_STYLES = {
 function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
   const { data: session } = useSession();
   const [dados, setDados] = useState(info);
-  const [materiais, setMateriais] = useState([]);
+  const { data: materials, isFetching: materialsFetching } = useMaterials(
+    !!session.user
+  );
   const [saidaMaterialHolder, setSaidaMaterialHolder] = useState({
     nome: null,
     id: null,
@@ -59,24 +66,53 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
     });
   }
 
-  function addMaterialSaida() {
-    if (
-      saidaMaterialHolder.qtdeSaida > 0 &&
-      saidaMaterialHolder.nome.trim().length > 0
-    ) {
+  async function addMaterial(material) {
+    if (material.qtdeSaida > 0 && material.nome.trim().length > 0) {
       let arr = dados.materiais;
-      let index = arr.findIndex((obj) => obj.id == saidaMaterialHolder.id);
+      const debitMaterialsToastID = toast.loading(
+        "Debitando materiais do estoque..."
+      );
+      if (material.id)
+        await debitMaterials({
+          formId: dados._id,
+          identifier: dados.nomeDoContrato
+            ? dados.nomeDoContrato
+            : dados.nomeTerceiro,
+          changes: [material],
+          tag: "RETIRADA",
+        });
+      toast.dismiss(debitMaterialsToastID);
+      let index = arr.findIndex(
+        (obj) => !!material.id && obj.id == material.id
+      );
       if (index != -1) {
-        arr[index].qtdeSaida += saidaMaterialHolder.qtdeSaida;
+        arr[index].qtdeSaida += material.qtdeSaida;
       } else {
-        arr.push(saidaMaterialHolder);
+        arr.push(material);
       }
       setDados({ ...dados, materiais: arr });
-      setSaidaMaterialHolder({ ...saidaMaterialHolder, qtdeSaida: null });
-      setSaidaMaterialMsg("");
     } else {
       setSaidaMaterialMsg("Informações inválidas");
     }
+  }
+  async function removeMaterial(material, index) {
+    const returningMaterialsToastID = toast.loading(
+      "Atualizando quantidades no estoque..."
+    );
+    let infoMaterial = dados.materiais;
+    infoMaterial.splice(index, 1);
+    setDados({ ...dados, materiais: infoMaterial });
+    if (material.id)
+      await returnMaterials({
+        formId: dados._id,
+        identifier: dados.nomeDoContrato
+          ? dados.nomeDoContrato
+          : dados.nomeTerceiro,
+        changes: [{ id: material.id, qtdeDevolucao: material.qtdeSaida }],
+        tag: "DEVOLUÇÃO",
+      });
+    toast.dismiss(returningMaterialsToastID);
+    return;
   }
   async function getCorrectedMaterialList() {
     const toastID = toast.loading(
@@ -420,7 +456,16 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                   )}
                 </>
               )} */}
-
+              <div className="w-full flex flex-col border border-gray-200 p-2 mt-4">
+                <span className="text-center uppercase font-bold">
+                  ADICIONAR MATERIAIS
+                </span>
+                <AddMaterialFormulario
+                  materials={materials}
+                  materialsFetching={materialsFetching}
+                  addMaterial={addMaterial}
+                />
+              </div>
               <div className="flex h-[350px] flex-col gap-y-2 border border-gray-200 p-2 mt-4">
                 <h1 className="font-bold text-center">MATERIAIS</h1>
                 <div className="hidden lg:grid grid-cols-9">
@@ -447,6 +492,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                       index={index}
                       dados={dados}
                       setDados={setDados}
+                      removeItem={removeMaterial}
                     />
                   ))}
                 </div>

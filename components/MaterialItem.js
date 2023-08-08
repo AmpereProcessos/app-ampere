@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { VscChromeClose } from "react-icons/vsc";
-function MaterialItem({ obj, setDados, dados, index }) {
+function MaterialItem({ obj, setDados, dados, index, removeItem }) {
   const [message, setMessage] = useState("");
   return (
     <div className="flex flex-col w-full">
@@ -10,7 +10,7 @@ function MaterialItem({ obj, setDados, dados, index }) {
         </p>
         <input
           type={"number"}
-          disabled={dados.efetivado}
+          disabled={true}
           className="outline-none text-center p-1 col-span-2 border border-gray-200"
           value={obj.qtdeSaida ? obj.qtdeSaida : null}
           onChange={(e) => {
@@ -68,9 +68,7 @@ function MaterialItem({ obj, setDados, dados, index }) {
             <button
               className="col-span-1 self-center"
               onClick={() => {
-                let infoMaterial = dados.materiais;
-                infoMaterial.splice(index, 1);
-                setDados({ ...dados, materiais: infoMaterial });
+                removeItem(obj, index);
               }}
             >
               <VscChromeClose style={{ color: "red", fontSize: "15px" }} />

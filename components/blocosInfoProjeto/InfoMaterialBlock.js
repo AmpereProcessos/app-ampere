@@ -62,15 +62,6 @@ function InfoMaterialBlock({
         MATERIAL
       </span>
       <div className="flex gap-2 justify-center flex-wrap">
-        {infoHolder.material?.formularioId && (
-          <Link
-            href={`/almoxarifado/pdfFormulario/${infoHolder.material.formularioId}?backTo=adm`}
-          >
-            <a className="cursor-pointer bg-[#15599a] text-white items-center justify-center p-2 rounded font-bold">
-              VER SOLICITAÇÃO
-            </a>
-          </Link>
-        )}
         <SelectInput
           label={"Separação do material"}
           value={

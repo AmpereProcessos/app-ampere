@@ -1,12 +1,12 @@
 import React from "react";
 import { useProjectExpenses } from "../../utils/methods/query/expeses";
-import { validateAuthorization } from "../../utils/constants";
+import { formatToMoney, validateAuthorization } from "../../utils/constants";
 import { useSession } from "next-auth/react";
 import { BsCalendarFill } from "react-icons/bs";
 import LoadingPage from "../utils/LoadingPage";
 import dayjs from "dayjs";
 import { FaUserAlt } from "react-icons/fa";
-import ExpenseCard from "../identificador/expenses/ExpenseCard";
+import ExpenseItem from "../identificador/expenses/ExpenseItem";
 function InfoDespesasBlock({ projectId }) {
   const { data: session } = useSession();
   const {
@@ -30,7 +30,7 @@ function InfoDespesasBlock({ projectId }) {
         {isSuccess ? (
           expenses.length > 0 ? (
             expenses.map((expense, index) => (
-              <ExpenseCard key={expense._id} expense={expense} />
+              <ExpenseItem key={expense._id} expense={expense} />
             ))
           ) : (
             <div className="flex items-center justify-center w-full">
@@ -45,14 +45,10 @@ function InfoDespesasBlock({ projectId }) {
       {isSuccess ? (
         <div className="w-full flex flex-col mt-2">
           <h1 className="w-full text-center font-bold text-green-500">
-            TOTAL DE DESPESAS DO PROJETOS
+            TOTAL DE DESPESAS DO PROJETO
           </h1>
           <h1 className="text-center w-full font-black">
-            R${" "}
-            {getTotalExpenses(expenses).toLocaleString("pt-br", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+            {formatToMoney(getTotalExpenses(expenses))}
           </h1>
         </div>
       ) : null}

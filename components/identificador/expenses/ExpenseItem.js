@@ -1,11 +1,12 @@
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import { BsCalendarFill, BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import { FaUserAlt } from "react-icons/fa";
+import { FaFilePdf, FaUserAlt } from "react-icons/fa";
 import { formatToMoney } from "../../../utils/constants";
 import { format } from "util";
+import Link from "next/link";
 
-function ExpenseCard({ expense }) {
+function ExpenseItem({ expense }) {
   const [showItems, setShowItems] = useState(false);
   return (
     <div className="flex flex-col items-center p-3 border border-gray-200 w-full lg:w-[40%] shadow-sm gap-2">
@@ -28,6 +29,18 @@ function ExpenseCard({ expense }) {
           </p>
         </div>
       </div>
+      {expense.idFormularioAlmoxarifado ? (
+        <Link
+          href={`/almoxarifado/pdfFormulario/${expense.idFormularioAlmoxarifado}`}
+        >
+          <a className="hover:bg-orange-200 border border-orange-200 p-2 rounded hover:scale-[1.02] duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
+            <FaFilePdf style={{ color: "#fead41", fontSize: "15px" }} />
+            <p className="pl-3 text-xs text-gray-600 font-medium">
+              FORMULÁRIO (PDF)
+            </p>
+          </a>
+        </Link>
+      ) : null}
       {showItems ? (
         <div className="w-full flex flex-col items-center">
           <button
@@ -42,7 +55,10 @@ function ExpenseCard({ expense }) {
               className="w-full flex items-center text-xs justify-between"
             >
               <p>
-                {item.qtde} x {item.descricao} ({item.unidade})
+                {item.qtde.toLocaleString("pt-br", {
+                  maximumFractionDigits: 2,
+                })}{" "}
+                x {item.descricao} ({item.unidade})
               </p>
               <p>
                 {/* R${" "}
@@ -92,4 +108,4 @@ function ExpenseCard({ expense }) {
   );
 }
 
-export default ExpenseCard;
+export default ExpenseItem;

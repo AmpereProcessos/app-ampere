@@ -1,7 +1,6 @@
 import { getSession } from "next-auth/react";
 import connectToDatabase from "../../../utils/materialDb";
 import { ObjectId } from "mongodb";
-import { getServerSession } from "next-auth";
 export default async function handler(req, res) {
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY);
@@ -20,39 +19,70 @@ export default async function handler(req, res) {
     }
   } else if (req.method === "POST") {
     const { user } = await getSession({ req: req });
-    console.log(user);
+
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("material");
-    let { changes, idFormulario, nomeDoContrato } = req.body;
+
+    const currentStateMaterials = await collection
+      .aggregate([
+        {
+          $project: {
+            nome: 1,
+            qtde: 1,
+          },
+        },
+      ])
+      .toArray();
+
+    let { changes, idFormulario, identificador, tag } = req.body;
     // console.log(req.body);
+    console.log("CHANGES", changes);
     changes = changes.map((mat) => {
-      const saida = mat.qtdeSaida ? mat.qtdeSaida : 0;
-      const devolucao = mat.qtdeDevolucao ? mat.qtdeDevolucao : 0;
-      const diff = saida - devolucao;
-      const anterior = mat.qtdePreBaixa ? mat.qtdePreBaixa : 0;
-      const novo = anterior - diff;
-      if (diff == 0) return;
+      const materialId = mat.id;
+      const diff = Number(mat.diff);
+      const correspondentMaterial = currentStateMaterials?.find(
+        (currentMaterial) => currentMaterial._id == materialId
+      );
+      console.log("MATERIAL CORRESPONDENTE", correspondentMaterial);
+      const previousQty = correspondentMaterial
+        ? correspondentMaterial.qtde
+        : null;
+      const newQty = correspondentMaterial
+        ? correspondentMaterial.qtde + diff
+        : null;
+      console.log(
+        "SOMA",
+        correspondentMaterial.qtde,
+        diff,
+        correspondentMaterial.qtde + diff
+      );
+      // const saida = mat.qtdeSaida ? mat.qtdeSaida : 0;
+      // const devolucao = mat.qtdeDevolucao ? mat.qtdeDevolucao : 0;
+      // const diff = saida - devolucao;
+      // const anterior = mat.qtdePreBaixa ? mat.qtdePreBaixa : 0;
+      // const novo = anterior - diff;
       return {
         updateOne: {
-          filter: { _id: new ObjectId(mat.id) },
+          filter: { _id: new ObjectId(materialId) },
           update: {
             $push: {
               qtdeAlteracoes: {
                 $each: [
                   {
                     idFormulario: idFormulario,
-                    nomeDoContrato: nomeDoContrato,
+                    identificador: identificador,
                     dataAlteracao: new Date().toISOString(), // current date
                     responsavel: user.name, // name of responsible person
-                    movimentacao: -diff,
-                    anterior: anterior,
-                    novo: novo,
+                    movimentacao: diff,
+                    anterior: previousQty,
+                    novo: newQty,
+                    tag: tag,
                   },
                 ],
                 $slice: -10, // limit the array size to 10 items
               },
             },
-            $inc: { qtde: -diff },
+            $inc: { qtde: diff },
           },
         },
       };
@@ -61,8 +91,9 @@ export default async function handler(req, res) {
     const filteredChanges = changes.filter((change) => !!change);
 
     await collection.bulkWrite(filteredChanges);
+    res.status(200).json(filteredChanges);
 
-    res.json("UEPA");
+    // res.json("UEPA");
   } else if (req.method === "PUT") {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("material");
@@ -83,5 +114,6 @@ export default async function handler(req, res) {
     } catch (error) {
       res.json("Um erro ocorreu, tente novamente.");
     }
+  } else if (req.method === "PATCH") {
   }
 }

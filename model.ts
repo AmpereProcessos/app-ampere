@@ -535,6 +535,7 @@ interface ICosts {
     identificador: number; // identificador QTDE do projeto no banco de projetos
     tipo: string; // tipo de projeto (ou tipo de serviço) dentro do banco de projetos
   };
+  idFormularioAlmoxarifado?: string;
   autor: {
     id: string; // id do usuário que criou o referente registro de custos
     nome: string; // nome do usuário que criou o referente registro de custos

@@ -8,6 +8,12 @@ import axios from "axios";
 import MaterialItem from "./MaterialItem";
 import Link from "next/link";
 import SaveButton from "./utils/Buttons/SaveButton";
+import { returnMaterials } from "../utils/methods/mutation/materials";
+import { insertExpensesFromMaterials } from "../utils/methods/mutation/expenses";
+import { useSession } from "next-auth/react";
+import { toast } from "react-hot-toast";
+import createHttpError from "http-errors";
+import { getErrorMessage } from "../utils/methods/handlers";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -30,6 +36,7 @@ const OVERLAY_STYLES = {
   zIndex: 1000,
 };
 function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
+  const { data: session } = useSession();
   const [dados, setDados] = useState(info);
   const [materiais, setMateriais] = useState([]);
   const [saidaMaterialHolder, setSaidaMaterialHolder] = useState({
@@ -71,7 +78,60 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
       setSaidaMaterialMsg("Informações inválidas");
     }
   }
-  async function validateForm() {
+  async function getCorrectedMaterialList() {
+    const toastID = toast.loading(
+      "Buscando informações atualizadas dos materiais..."
+    );
+    try {
+      const { data: upToDateItems } = await axios.post(
+        "/api/almoxarifado/pesquisarMateriais",
+        { materials: dados.materiais }
+      );
+      const correctedMaterialList = dados.materiais.map((item) => {
+        const correspondentUpToDateItem = upToDateItems.filter(
+          (i) => i._id == item.id
+        )[0];
+        console.log(item, correspondentUpToDateItem, "CORRESPONENCIA");
+        return {
+          id: item.id,
+          nome: correspondentUpToDateItem
+            ? correspondentUpToDateItem.nome
+            : item.nome,
+          precoUnit: correspondentUpToDateItem
+            ? correspondentUpToDateItem.preco
+            : item.nome,
+          qtdeDevolucao: item.qtdeDevolucao ? item.qtdeDevolucao : 0,
+          qtdeSaida: item.qtdeSaida,
+          qtdePreBaixa: correspondentUpToDateItem
+            ? correspondentUpToDateItem.qtde
+            : item.qtde,
+        };
+      });
+      toast.dismiss(toastID);
+      return correctedMaterialList;
+    } catch (error) {
+      toast.dismiss(toastID);
+      throw error;
+    }
+  }
+  async function updateFormStatus(formId, materialList) {
+    const toastID = toast.loading("Atualizando status do formulário...");
+    try {
+      await axios.put("/api/almoxarifado/formularios", {
+        id: formId,
+        data: {
+          materiais: materialList,
+          dataEfetivacao: new Date(),
+          efetivado: true,
+        },
+      });
+      toast.dismiss(toastID);
+      return;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async function handleFormConclusion() {
     try {
       setResponseMessage({
         status: "loading",
@@ -79,96 +139,47 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
         color: "text-[#15599a]",
       });
       // Correcting prices to up to date information
-      const { data: upToDateItems } = await axios.post(
-        "/api/almoxarifado/pesquisarMateriais",
-        { materials: dados.materiais }
+      const correctedMaterials = await getCorrectedMaterialList();
+
+      // Updating form status to efetivado = true
+      await updateFormStatus(dados._id, correctedMaterials);
+
+      // Creating a cost object and, in case the form references a project, vinculating the cost to the project
+      await insertExpensesFromMaterials({
+        warehouseFormId: dados._id,
+        user: session?.user,
+        category: dados.servico,
+        projectId: dados.idPai,
+        projectQtde: dados.codigoProjeto,
+        projectName:
+          dados.nomeDoContrato && dados.nomeDoContrato.trim().length > 0
+            ? dados.nomeDoContrato
+            : dados.nomeTerceiro,
+        projectType: undefined,
+        materialList: dados.materiais,
+      });
+
+      // Updating the quantities in stock for the return quantities provided
+      const returningMaterialsToastID = toast.loading(
+        "Atualizando quantidades no estoque..."
       );
-      const correctedMaterials = dados.materiais.map((item) => {
-        const correspondentUpToDateItem = upToDateItems.filter(
-          (i) => i._id == item.id
-        )[0];
-        return {
-          id: item.id,
-          nome: correspondentUpToDateItem.nome,
-          precoUnit: correspondentUpToDateItem.preco,
-          qtdeDevolucao: item.qtdeDevolucao ? item.qtdeDevolucao : 0,
-          qtdeSaida: item.qtdeSaida,
-          qtdePreBaixa: correspondentUpToDateItem.qtde,
-        };
-      });
-      setResponseMessage({
-        status: "loading",
-        text: "Finalizando formulário...",
-        color: "text-[#15599a]",
-      });
-
-      await axios.put("/api/almoxarifado/formularios", {
-        id: dados._id,
-        data: {
-          materiais: correctedMaterials,
-          dataEfetivacao: new Date(),
-          efetivado: true,
-        },
-      });
-      if (dados.idPai) {
-        setResponseMessage({
-          status: "loading",
-          text: "Atualizando informações do cliente...",
-          color: "text-[#15599a]",
-        });
-        await axios.post(`/api/projects/update/${dados.idPai}`, {
-          "material.lista": correctedMaterials,
-          "material.formularioId": dados._id,
-        });
-
-        setResponseMessage({
-          status: "loading",
-          text: "Atualizando quantidades...",
-          color: "text-[#15599a]",
-        });
-      }
-
-      await axios.post("/api/almoxarifado/materiais", {
-        idFormulario: dados._id,
-        nomeDoContrato: dados.nomeDoContrato,
+      await returnMaterials({
+        formId: dados._id,
+        identifier: dados.nomeDoContrato
+          ? dados.nomeDoContrato
+          : dados.nomeTerceiro,
         changes: correctedMaterials,
+        tag: "DEVOLUÇÃO",
       });
-      // .then((res) => {
-      //   setResponseMessage({
-      //     text: "Baixa de produtos realizado!",
-      //     color: "text-green-500",
-      //   });
-      //   setTimeout(() => {
-      //     setResponseMessage({
-      //       text: "",
-      //       color: "",
-      //     });
-      //   }, 2500);
-      //   getForms();
-      // })
-      // .catch((err) => {
-      //   throw "Um erro ocorreu, por favor tente novamente.";
-      // });
-      setResponseMessage({
-        status: "success",
-        text: "Baixa de produtos realizado!",
-        color: "text-green-500",
-      });
+      toast.dismiss(returningMaterialsToastID);
+
+      toast.success("Formulário finalizado com sucesso !");
+
       getForms();
       setDados({ ...dados, efetivado: true });
     } catch (error) {
-      setResponseMessage({
-        status: "failure",
-        text: "Um erro ocorreu, por favor tente novamente.",
-        color: "text-red-500",
-      });
-      setTimeout(() => {
-        setResponseMessage({
-          status: null,
-          text: "",
-          color: "",
-        });
-      }, 2500);
+      const message = getErrorMessage(error);
+      toast.error(message);
     }
   }
   async function resetForm() {
@@ -202,17 +213,17 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
         efetivado: null,
       },
     });
-    if (dados.idPai) {
-      setResponseMessage({
-        status: "loading",
-        text: "Atualizando informações do cliente...",
-        color: "text-[#15599a]",
-      });
-      await axios.post(`/api/projects/update/${dados.idPai}`, {
-        "material.lista": null,
-        "material.formularioId": null,
-      });
-    }
+    // if (dados.idPai) {
+    //   setResponseMessage({
+    //     status: "loading",
+    //     text: "Atualizando informações do cliente...",
+    //     color: "text-[#15599a]",
+    //   });
+    //   await axios.post(`/api/projects/update/${dados.idPai}`, {
+    //     "material.lista": null,
+    //     "material.formularioId": null,
+    //   });
+    // }
     setResponseMessage({
       status: "loading",
       text: "Atualizando quantidades...",
@@ -230,24 +241,21 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
     });
     getForms();
   }
-  function saveChanges() {
-    axios
-      .put("/api/almoxarifado/formularios", {
+  async function saveChanges() {
+    const toastID = toast.loading("Atualizando formulário...");
+    try {
+      await axios.put("/api/almoxarifado/formularios", {
         id: dados._id,
         data: {
           materiais: dados.materiais,
         },
-      })
-      .then((res) =>
-        setResponseMessage({
-          text: "Alterações feitas",
-          color: "text-[#15599a]",
-        })
-      );
+      });
+      toast.dismiss(toastID);
+      toast.success("Atualizações feitas com sucesso !");
+    } catch (error) {
+      toast.error("Erro ao salvar informações do formulário.");
+    }
   }
-  useEffect(() => {
-    getMaterials();
-  }, []);
 
   return (
     <>
@@ -354,7 +362,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                   <p className="text-gray-600 text-center">{dados.servico}</p>
                 </div>
               </div>
-              {dados.efetivado != true && (
+              {/* {dados.efetivado != true && (
                 <>
                   <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                     <span className="text-center uppercase font-bold">
@@ -411,7 +419,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                     </p>
                   )}
                 </>
-              )}
+              )} */}
 
               <div className="flex h-[350px] flex-col gap-y-2 border border-gray-200 p-2 mt-4">
                 <h1 className="font-bold text-center">MATERIAIS</h1>
@@ -448,10 +456,10 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                   {!responseMessage.status ? (
                     <>
                       <button
-                        onClick={validateForm}
-                        className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
+                        onClick={handleFormConclusion}
+                        className="border border-green-500 text-green-500 bg-transparent hover:bg-green-500 hover:text-white font-bold p-2 rounded"
                       >
-                        DAR BAIXA
+                        FINALIZAR FORMULÁRIO
                       </button>
                       <SaveButton
                         text={"SALVAR ALTERAÇÕES"}
@@ -467,24 +475,23 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                     </p>
                   )}
                 </div>
-              ) : (
-                <div className="flex w-full justify-end my-2 gap-2 pr-4">
-                  {!responseMessage.status ? (
-                    <button
-                      onClick={() => resetForm()}
-                      className="p-2 rounded border-orange-500 text-orange-500 font-medium"
-                    >
-                      RESETAR
-                    </button>
-                  ) : (
-                    <p
-                      className={`text-center italic ${responseMessage.color}`}
-                    >
-                      {responseMessage.text}
-                    </p>
-                  )}
-                </div>
-              )}
+              ) : // <div className="flex w-full justify-end my-2 gap-2 pr-4">
+              //   {!responseMessage.status ? (
+              //     <button
+              //       onClick={() => resetForm()}
+              //       className="p-2 rounded border-orange-500 text-orange-500 font-medium"
+              //     >
+              //       RESETAR
+              //     </button>
+              //   ) : (
+              //     <p
+              //       className={`text-center italic ${responseMessage.color}`}
+              //     >
+              //       {responseMessage.text}
+              //     </p>
+              //   )}
+              // </div>
+              null}
             </div>
           </div>
         </div>

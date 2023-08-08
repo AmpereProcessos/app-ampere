@@ -2096,6 +2096,12 @@ export const tiposDePadrao = [
     value: "NÃO DEFINIDO",
   },
 ];
+export function validateAuthorization(session, paramRoute) {
+  if (!session) return false;
+  if (session.user.accessibleRoutes.includes(paramRoute)) return true;
+  return false;
+}
+
 export function formatProjectCode(value) {
   if (value) {
     console.log("FORMATADO", value.toUpperCase().split(" ").join(""));
@@ -2109,6 +2115,12 @@ export function formatToPhone(value) {
   value = value.replace(/(\d{2})(\d)/, "($1) $2");
   value = value.replace(/(\d)(\d{4})$/, "$1-$2");
   return value;
+}
+export function formatToMoney(value, tag = "R$") {
+  return `${tag} ${Number(value).toLocaleString("pt-br", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 }
 export function formatCPFCpnj(value) {
   const cnpjCpf = value.replace(/\D/g, "");

@@ -26,6 +26,7 @@ import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
 import InfoObrasBlock from "./blocosInfoProjeto/InfoObrasBlock";
 import InfoMaterialBlock from "./blocosInfoProjeto/InfoMaterialBlock";
 import SaveButton from "./utils/Buttons/SaveButton";
+import InfoDespesasBlock from "./blocosInfoProjeto/InfoDespesasBlock";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -177,6 +178,7 @@ function ModalADM({
               setChanges={setChanges}
               project={project}
             />
+            <InfoDespesasBlock projectId={infoHolder._id} />
             {![
               "OPERAÇÃO E MANUTENÇÃO",
               "BOMBA SOLAR",

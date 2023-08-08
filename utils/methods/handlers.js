@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import createHttpError from "http-errors";
 
 export function errorHandler(err, res) {
@@ -13,6 +13,12 @@ export function errorHandler(err, res) {
       status: createHttpError.isHttpError(err) ? err.statusCode : 500,
     });
   }
+}
+export function getErrorMessage(error) {
+  console.log(error);
+  if (createHttpError.isHttpError(error) && error.expose) return error.message;
+  if (error instanceof AxiosError) return error.message;
+  return "Houve um erro desconhecido, por favor, comunique o setor de tecnologia.";
 }
 async function updateProject({ idCRMProject, changes }) {
   try {

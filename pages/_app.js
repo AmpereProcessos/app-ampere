@@ -12,10 +12,12 @@ import axios from "axios";
 import { AppContext, AppProvider } from "../context/AppContext";
 import { SessionProvider } from "next-auth/react";
 import AppHead from "../components/Head/index";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { Toaster } from "react-hot-toast";
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+  const queryClient = new QueryClient();
   const [credentials, setCredentials] = useState({});
   const [sidebarVisible, setSidebarVisible] = useState(false);
-  const [users, setUsers] = useState([]);
   const [notificacoes, setNotificacoes] = useState([]);
   const router = useRouter();
   useEffect(() => {
@@ -31,43 +33,46 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     <>
       <SessionProvider session={session}>
         <AppHead />
-        <DndProvider backend={HTML5Backend}>
-          <AppProvider>
-            <div className="flex flex-col bg-[#fff] w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">
-              <Header
-                credentials={credentials}
-                notificacoes={notificacoes}
-                toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
-              />
-              <div className="flex min-h-[100%] grow ">
-                {sidebarVisible && (
-                  <Sidebar
-                    sidebarVisible={sidebarVisible}
-                    credentials={credentials}
-                  />
-                )}
-                <div
-                  style={{
-                    width: sidebarVisible ? "calc(100vw - 250px)" : "100%",
-                  }}
-                  className={`${
-                    sidebarVisible
-                      ? "hidden md:flex md:flex-col"
-                      : "flex flex-col"
-                  } grow`}
-                >
-                  <Component
-                    sidebarVisible={sidebarVisible}
-                    toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
-                    setCredentials={setCredentials}
-                    credentials={credentials}
-                    {...pageProps}
-                  />
+        <QueryClientProvider client={queryClient}>
+          <DndProvider backend={HTML5Backend}>
+            <AppProvider>
+              <div className="flex flex-col bg-[#fff] w-screen max-w-full xl:min-h-[100vh] min-h-[100vh]">
+                <Header
+                  credentials={credentials}
+                  notificacoes={notificacoes}
+                  toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
+                />
+                <div className="flex min-h-[100%] grow ">
+                  {sidebarVisible && (
+                    <Sidebar
+                      sidebarVisible={sidebarVisible}
+                      credentials={credentials}
+                    />
+                  )}
+                  <div
+                    style={{
+                      width: sidebarVisible ? "calc(100vw - 250px)" : "100%",
+                    }}
+                    className={`${
+                      sidebarVisible
+                        ? "hidden md:flex md:flex-col"
+                        : "flex flex-col"
+                    } grow`}
+                  >
+                    <Component
+                      sidebarVisible={sidebarVisible}
+                      toggleSidebar={() => setSidebarVisible(!sidebarVisible)}
+                      setCredentials={setCredentials}
+                      credentials={credentials}
+                      {...pageProps}
+                    />
+                    <Toaster />
+                  </div>
                 </div>
               </div>
-            </div>
-          </AppProvider>
-        </DndProvider>
+            </AppProvider>
+          </DndProvider>
+        </QueryClientProvider>
       </SessionProvider>
     </>
   );

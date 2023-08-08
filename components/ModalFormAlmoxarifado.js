@@ -90,7 +90,8 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
       } else {
         arr.push(material);
       }
-      setDados({ ...dados, materiais: arr });
+      setDados((prev) => ({ ...prev, materiais: arr }));
+      await saveChanges();
     } else {
       setSaidaMaterialMsg("Informações inválidas");
     }
@@ -112,6 +113,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
         tag: "DEVOLUÇÃO",
       });
     toast.dismiss(returningMaterialsToastID);
+    await saveChanges();
     return;
   }
   async function getCorrectedMaterialList() {
@@ -209,6 +211,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
       });
       toast.dismiss(returningMaterialsToastID);
 
+      await saveChanges();
       toast.success("Formulário finalizado com sucesso !");
 
       getForms();

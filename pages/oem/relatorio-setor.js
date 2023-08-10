@@ -128,8 +128,11 @@ function RelatorioSetor() {
   }
   function renderDataGroupedByCity(data) {
     // filteredDataByMaxDateParam
-    return Object.keys(getDataGroupedByCity(data)).map((city) => (
-      <div className="w-full flex items-center gap-2 py-1 border-b border-gray-300">
+    return Object.keys(getDataGroupedByCity(data)).map((city, index) => (
+      <div
+        key={index}
+        className="w-full flex items-center gap-2 py-1 border-b border-gray-300"
+      >
         <h1 className="text-center font-medium text-gray-500 w-1/3">{city}</h1>
         <h1 className="text-center font-medium text-gray-500 w-1/3">
           {getDataGroupedByCity(data)[city].plants}
@@ -142,17 +145,24 @@ function RelatorioSetor() {
   }
   function renderDataGroupedByCitySecondScenario(data) {
     // filteredDataByMaxDateParam
-    return Object.keys(getDataGroupedByCitySecondScenario(data)).map((city) => (
-      <div className="w-full flex items-center gap-2 py-1 border-b border-gray-300">
-        <h1 className="text-center font-medium text-gray-500 w-1/3">{city}</h1>
-        <h1 className="text-center font-medium text-gray-500 w-1/3">
-          {getDataGroupedByCitySecondScenario(data)[city].plants.toFixed(0)}
-        </h1>
-        <h1 className="text-center font-medium text-gray-500 w-1/3">
-          {getDataGroupedByCitySecondScenario(data)[city].modules.toFixed(0)}
-        </h1>
-      </div>
-    ));
+    return Object.keys(getDataGroupedByCitySecondScenario(data)).map(
+      (city, index) => (
+        <div
+          key={index}
+          className="w-full flex items-center gap-2 py-1 border-b border-gray-300"
+        >
+          <h1 className="text-center font-medium text-gray-500 w-1/3">
+            {city}
+          </h1>
+          <h1 className="text-center font-medium text-gray-500 w-1/3">
+            {getDataGroupedByCitySecondScenario(data)[city].plants.toFixed(0)}
+          </h1>
+          <h1 className="text-center font-medium text-gray-500 w-1/3">
+            {getDataGroupedByCitySecondScenario(data)[city].modules.toFixed(0)}
+          </h1>
+        </div>
+      )
+    );
   }
   console.log("DADOS DO RELATÓRIO", data);
   return (

@@ -14,7 +14,6 @@ export default async function handler(req, res) {
             $match: {
               "contrato.status": "ASSINADO",
               "medidor.data": { $ne: null },
-              // "medidor.data": { $lte: "2022-12-31T08:00:00.000Z" },
               "manutencaoPreventiva.data": { $in: [null] },
               "oem.plano": { $nin: [null, "NÃO SE APLICA"] },
             },

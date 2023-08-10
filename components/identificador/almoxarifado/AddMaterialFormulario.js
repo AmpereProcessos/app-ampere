@@ -6,10 +6,12 @@ import TextFloatingInput from "../../TextFloatingInput";
 
 function AddMaterialFormulario({ materials, materialsFetching, addMaterial }) {
   const [mode, setMode] = useState("ESTOCÁVEIS"); // ESTOCÁVEIS | NÃO ESTOCÁVEIS
+
   const [infoHolder, setInfoHolder] = useState({
     nome: "",
     id: null,
     qtdeSaida: null,
+    qtdeEstoque: null,
     grandeza: "",
     precoUnit: null,
   });
@@ -22,6 +24,7 @@ function AddMaterialFormulario({ materials, materialsFetching, addMaterial }) {
       precoUnit: null,
     });
   }
+  console.log(infoHolder);
   return (
     <div className="flex flex-col w-full gap-2 mt-2">
       <div className="flex items-center justify-center w-full gap-2">
@@ -72,6 +75,7 @@ function AddMaterialFormulario({ materials, materialsFetching, addMaterial }) {
                   id: e.value.id,
                   precoUnit: e.value.preco,
                   grandeza: e.value.grandeza,
+                  qtdeEstoque: e.value.qtdeEstoque,
                 }))
               }
               isLoading={materialsFetching}
@@ -84,6 +88,7 @@ function AddMaterialFormulario({ materials, materialsFetching, addMaterial }) {
                     nome: material.nome,
                     preco: material.preco,
                     grandeza: material.grandeza,
+                    qtdeEstoque: material.qtde,
                   },
                 };
               })}
@@ -104,8 +109,9 @@ function AddMaterialFormulario({ materials, materialsFetching, addMaterial }) {
           />
           <div
             onClick={() => {
-              addMaterial(infoHolder);
-              resetState();
+              if (addMaterial(infoHolder)) resetState();
+              // addMaterial(infoHolder);
+              // resetState();
             }}
             className="cursor-pointer h-[41px] w-full lg:w-[20%] flex justify-center items-center bg-green-300 hover:bg-green-500 text-white rounded font-bold col-span-1"
           >
@@ -172,7 +178,6 @@ function AddMaterialFormulario({ materials, materialsFetching, addMaterial }) {
           <button
             onClick={() => {
               addMaterial(infoHolder);
-              resetState();
             }}
             className="cursor-pointer h-[41px] w-full lg:w-[20%] flex justify-center items-center bg-green-300 hover:bg-green-500 text-white rounded font-bold col-span-1"
           >

@@ -69,18 +69,42 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
   const [materialMsg, setMaterialMsg] = useState("");
 
   function addMaterial(material) {
+    const toAddObj = {
+      nome: material.nome,
+      id: material.id,
+      qtdeSaida: material.qtdeSaida,
+      grandeza: material.grandeza,
+      precoUnit: material.precoUnit,
+    };
+    if (toAddObj.qtdeSaida > material.qtdeEstoque) {
+      toast.error(
+        `Quantidade não permitida. Quantidade atual contabilizada no estoque é de ${material.qtdeEstoque}`
+      );
+      return false;
+    }
     if (material.qtdeSaida > 0) {
       let arr = callInfo.materiais;
       let index = arr.findIndex((obj) => !!obj.id && obj.id == material.id);
       if (index != -1) {
         arr[index].qtdeSaida += material.qtdeSaida;
+        if (arr[index].qtdeSaida > material.qtdeEstoque) {
+          console.log(arr[index].qtdeSaida);
+          toast.error(
+            `Quantidade não permitida. Quantidade atual contabilizada no estoque é de ${material.qtdeEstoque}`
+          );
+          arr[index].qtdeSaida -= material.qtdeSaida;
+          return false;
+        }
       } else {
-        arr.push(material);
+        arr.push(toAddObj);
       }
+      toast.success("Material adicionado com sucesso!", { duration: 500 });
       setCallInfo({ ...callInfo, materiais: arr });
       setMaterialMsg("");
+      return true;
     } else {
       setMaterialMsg("Quantidade inválida");
+      return false;
     }
   }
   function validateFields() {

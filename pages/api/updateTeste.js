@@ -6,13 +6,40 @@ import connectToProjectsDatabase from "../../utils/connectDb";
 import { calculateStringSimilarity } from "../../utils/constants";
 import axios from "axios";
 import { createClient, get } from "@vercel/edge-config";
+import connectToDatabase from "../../utils/materialDb";
 export default async function handler(req, res) {
-  const rd_marketing_access_token = await createClient(
-    "ecfg_celqhqfkg1woq2lp9pztgjokn7av"
-  ).get("rd_marketing_access_token");
+  // var arr = [];
+  // const formatted = materials.map((material) => {
+  //   const duplicatedMaterial = materials.find(
+  //     (x) =>
+  //       x._id != material._id &&
+  //       calculateStringSimilarity(
+  //         x.nome.toUpperCase(),
+  //         material.nome.toUpperCase()
+  //       ) > 98
+  //   );
+  //   if (!!duplicatedMaterial) {
+  //     return {
+  //       materialUm: {
+  //         id: material._id,
+  //         nome: material.nome,
+  //         qtde: material.qtde,
+  //       },
+  //       materialDois: {
+  //         id: duplicatedMaterial._id,
+  //         nome: duplicatedMaterial.nome,
+  //         qtde: duplicatedMaterial.qtde,
+  //       },
+  //     };
+  //   } else return null;
+  // });
+
+  // const rd_marketing_access_token = await createClient(
+  //   "ecfg_celqhqfkg1woq2lp9pztgjokn7av"
+  // ).get("rd_marketing_access_token");
   // const edgeRequestItemAPI = `https://edge-config.vercel.com/ecfg_celqhqfkg1woq2lp9pztgjokn7av/item/rd_marketing_access_token?token=583e45e4-5ecd-4581-9e6f-65ba32d126a7`;
   // const item = await axios.get(edgeRequestItemAPI);
-  res.json(rd_marketing_access_token);
+  res.json("DESATIVADA");
 }
 
 // Update Many example:
@@ -107,3 +134,51 @@ export default async function handler(req, res) {
 //   };
 // });
 // res.json(newArr);
+
+// Query de O&M
+// const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+// const collection = db.collection("dados");
+// const projects = await collection
+//   .aggregate([
+//     {
+//       $match: {
+//         "contrato.status": "ASSINADO",
+//         "medidor.data": { $ne: null },
+//         // $and: [
+//         //   { "medidor.data": { $gte: "2022-09-01T08:00:00.000Z" } },
+//         //   { "medidor.data": { $lte: "2022-10-31T08:00:00.000Z" } },
+//         // ],
+//         "manutencaoPreventiva.data": { $in: [null] },
+//         "oem.plano": { $nin: [null, "NÃO SE APLICA"] },
+//       },
+//     },
+//     {
+//       $project: {
+//         qtde: 1,
+//         nomeDoContrato: 1,
+//         "contrato.dataAssinatura": 1,
+//         "medidor.data": 1,
+//         "sistema.qtdeModulos": 1,
+//         cidade: 1,
+//         "sistema.topologia": 1,
+//       },
+//     },
+//   ])
+//   .toArray();
+// const formatted = projects.map((project) => {
+//   return {
+//     QTDE: project.qtde,
+//     NOME: project.nomeDoContrato,
+//     CIDADE: project.cidade,
+//     "DATA DE ASSINATURA": project.contrato.dataAssinatura
+//       ? dayjs(project.contrato.dataAssinatura)
+//           .add(4, "hours")
+//           .format("DD/MM/YYYY")
+//       : "-",
+//     "DATA DE TROCA DO MEDIDOR": project.medidor.data
+//       ? dayjs(project.medidor.data).add(4, "hours").format("DD/MM/YYYY")
+//       : "-",
+//     "QUANTIDADE DE MÓDULOS": project.sistema.qtdeModulos,
+//     TOPOLOGIA: project.sistema.topologia,
+//   };
+// });

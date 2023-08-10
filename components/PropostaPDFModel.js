@@ -304,7 +304,15 @@ function PropostaPDFModel({ info }) {
                         MANUTENÇÃO ELÉTRICA INVERSORES + QUADROS ELÉTRICOS
                       </td>
                       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
-                        <div className="flex justify-center">X</div>
+                        <div className="flex justify-center">
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
                       </td>
                       {!info.currentPlanOption == 1 ? (
                         <>
@@ -338,7 +346,15 @@ function PropostaPDFModel({ info }) {
                         REAPERTO CONEXÕES ELÉTRICAS
                       </td>
                       <td className="text-sm text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
-                        <div className="flex justify-center">X</div>
+                        <div className="flex justify-center">
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
                       </td>
                       {!info.currentPlanOption == 1 ? (
                         <>
@@ -373,7 +389,15 @@ function PropostaPDFModel({ info }) {
                         EQUIPAMENTOS ELÉTRICOS
                       </td>
                       <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                        <div className="flex justify-center">X</div>
+                        <div className="flex justify-center">
+                          <FiCheck
+                            style={{
+                              color: "#23c906",
+                              fontSize: "20px",
+                              margin: 0,
+                            }}
+                          />
+                        </div>
                       </td>
                       {!info.currentPlanOption == 1 ? (
                         <>

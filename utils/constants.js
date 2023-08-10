@@ -49,6 +49,7 @@ export const firebaseServiceAccount = {
 // DIREITA   15599A
 export const respChamadosPPS = [
   { label: "A DEFINIR", value: "A DEFINIR" },
+  { label: "LEANDRO", value: "LEANDRO" },
   { label: "ADRIANO", value: "ADRIANO" },
   { label: "ARTHUR", value: "ARTHUR" },
   { label: "NATHAN", value: "NATHAN" },
@@ -1521,6 +1522,7 @@ export const cidadesAtendidas = [
   "GOIATUBA", // GO
   "FRUTAL", // MG
   "CAMPO FLORIDO", // MG
+  "SANTA JULIANA", // MG
 ];
 export const cidadesGoias = [
   "CALDAS NOVAS", // GO

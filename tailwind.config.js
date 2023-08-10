@@ -18,6 +18,7 @@ module.exports = {
       arial: ["Arial"],
       raleway: ["Raleway", "sans-serif"],
       ralewayBlack: ["Raleway Black"],
+      Poppins: ["Poppins", "Arial"],
     },
     fontSize: {
       xxs: "0.5rem",

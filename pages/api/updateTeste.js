@@ -4,8 +4,15 @@ import connectToRequestsDatabase from "../../utils/solicitacoesDb";
 import { ObjectId } from "mongodb";
 import connectToProjectsDatabase from "../../utils/connectDb";
 import { calculateStringSimilarity } from "../../utils/constants";
+import axios from "axios";
+import { createClient, get } from "@vercel/edge-config";
 export default async function handler(req, res) {
-  res.json("DESATIVADA");
+  const rd_marketing_access_token = await createClient(
+    "ecfg_celqhqfkg1woq2lp9pztgjokn7av"
+  ).get("rd_marketing_access_token");
+  // const edgeRequestItemAPI = `https://edge-config.vercel.com/ecfg_celqhqfkg1woq2lp9pztgjokn7av/item/rd_marketing_access_token?token=583e45e4-5ecd-4581-9e6f-65ba32d126a7`;
+  // const item = await axios.get(edgeRequestItemAPI);
+  res.json(rd_marketing_access_token);
 }
 
 // Update Many example:

@@ -8,6 +8,7 @@ export default async function handler(req, res) {
         {
           $match: {
             "contrato.status": "ASSINADO",
+            "medidor.data": { $ne: null },
           },
         },
         {

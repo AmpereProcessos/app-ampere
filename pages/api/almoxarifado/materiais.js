@@ -1,7 +1,167 @@
 import { getSession } from "next-auth/react";
 import connectToDatabase from "../../../utils/materialDb";
+import connectToProjectsDatabase from "../../../utils/connectDb";
 import { ObjectId } from "mongodb";
+import { getNotificationObjByMaterialMinQty } from "../../../utils/methods/mutation/notifications";
+import createHttpError from "http-errors";
+
 export default async function handler(req, res) {
+  // Fetching up to date information about the materials
+  async function getCurrentMaterials(dbCollection) {
+    try {
+      const currentStateMaterials = await dbCollection
+        .aggregate([
+          {
+            $project: {
+              nome: 1,
+              qtde: 1,
+              qtdeMinima: 1,
+            },
+          },
+        ])
+        .toArray();
+      return currentStateMaterials;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Automatizations involving other dbs/collections
+  async function handleNotifyingSupplySector(
+    materialList,
+    currentMaterials,
+    notificationCollection
+  ) {
+    var newNotificationsArr = materialList.map((material) => {
+      const materialId = material.id;
+      const correspondentMaterial = currentMaterials?.find(
+        (currentMaterial) => currentMaterial._id == materialId
+      );
+      if (!correspondentMaterial) return null;
+      const newQty = correspondentMaterial.qtde + material.diff;
+      if (
+        !!correspondentMaterial.qtdeMinima &&
+        material.diff < 0 &&
+        newQty < correspondentMaterial.qtdeMinima
+      ) {
+        const notficiationObject = getNotificationObjByMaterialMinQty({
+          materialName: correspondentMaterial.nome,
+          materialNewQty: newQty,
+          materialMinQty: correspondentMaterial.qtdeMinima,
+        });
+        return notficiationObject;
+      }
+      return null;
+    });
+    newNotificationsArr = newNotificationsArr.filter((not) => !!not);
+    try {
+      if (newNotificationsArr.length > 0)
+        await notificationCollection.insertMany(newNotificationsArr);
+      return;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async function handleStockActivityLogInsertion({
+    materialList,
+    currentMaterials,
+    logCollection,
+    projectId,
+    projectName,
+    formId,
+    userName,
+    userId,
+  }) {
+    const filteredMaterialList = materialList.filter(
+      (x) => !!x.diff && x.diff != 0
+    );
+    const logs = filteredMaterialList.map((material) => {
+      const materialId = material.id;
+      const correspondentMaterial = currentMaterials?.find(
+        (currentMaterial) => currentMaterial._id == materialId
+      );
+      const newQty = correspondentMaterial.qtde + material.diff;
+      const previousQty = correspondentMaterial.qtde;
+      return {
+        idFormulario: formId,
+        autor: {
+          nome: userName,
+          id: userId,
+        },
+        material: {
+          id: materialId,
+          nome: correspondentMaterial.nome,
+          categoria: correspondentMaterial.categoria,
+        },
+        alteracao: material.diff,
+        qtdeAnterior: previousQty,
+        qtdeNovo: newQty,
+        projeto: {
+          id: projectId,
+          nome: projectName,
+        },
+        tipo: material.diff > 0 ? "DEVOLUÇÃO" : "RETIRADA",
+        dataInsercao: new Date().toISOString(),
+      };
+    });
+    if (logs.length > 0) await logCollection.insertMany(logs);
+    return;
+  }
+  async function handleManualAlterationLogInsertion({
+    materialId,
+    materialNewQty,
+    userName,
+    userId,
+    currentMaterials,
+    logCollection,
+  }) {
+    console.log("FUI CHAMADO", materialId);
+    const correspondentMaterial = currentMaterials?.find(
+      (currentMaterial) => currentMaterial._id == materialId
+    );
+    console.log("MATERIAL", correspondentMaterial);
+    if (!correspondentMaterial) return null;
+    const diff = materialNewQty - correspondentMaterial.qtde;
+    const previousQty = correspondentMaterial.qtde;
+    const insertObj = {
+      autor: {
+        nome: userName,
+        id: userId,
+      },
+      material: {
+        id: materialId,
+        nome: correspondentMaterial.nome,
+        categoria: correspondentMaterial.categoria,
+      },
+      alteracao: diff,
+      qtdeAnterior: previousQty,
+      qtdeNovo: materialNewQty,
+      tipo: "ALTERAÇÃO MANUAL",
+      dataInsercao: new Date().toISOString(),
+    };
+    const response = await logCollection.insertOne(insertObj);
+    console.log(response);
+    return;
+  }
+  // Formatting function to MongoDB BulkWrite operation pattern
+  function handleBulkWriteFormatting(materialList) {
+    const filteredMaterialList = materialList.filter(
+      (x) => !!x.diff && x.diff != 0
+    );
+    const changes = filteredMaterialList.map((mat) => {
+      const materialId = mat.id;
+      const diff = Number(mat.diff);
+      return {
+        updateOne: {
+          filter: { _id: new ObjectId(materialId) },
+          update: {
+            $inc: { qtde: diff },
+          },
+        },
+      };
+    });
+    return changes;
+  }
   if (req.method === "GET") {
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("material");
@@ -19,88 +179,67 @@ export default async function handler(req, res) {
     }
   } else if (req.method === "POST") {
     const { user } = await getSession({ req: req });
-
-    const db = await connectToDatabase(process.env.DB_KEY);
-    const collection = db.collection("material");
-
-    const currentStateMaterials = await collection
-      .aggregate([
-        {
-          $project: {
-            nome: 1,
-            qtde: 1,
-          },
-        },
-      ])
-      .toArray();
-
-    let { changes, idFormulario, identificador, tag } = req.body;
-    // console.log(req.body);
-    console.log("CHANGES", changes);
-    changes = changes.map((mat) => {
-      const materialId = mat.id;
-      const diff = Number(mat.diff);
-      const correspondentMaterial = currentStateMaterials?.find(
-        (currentMaterial) => currentMaterial._id == materialId
+    let { changes, idProjeto, idFormulario, identificador, tag } = req.body;
+    // Validating existence of array of changes
+    if (!changes && !Array.isArray(changes))
+      throw new createHttpError.BadRequest(
+        "Array de mudanças não especificado."
       );
-      console.log("MATERIAL CORRESPONDENTE", correspondentMaterial);
-      const previousQty = correspondentMaterial
-        ? correspondentMaterial.qtde
-        : null;
-      const newQty = correspondentMaterial
-        ? correspondentMaterial.qtde + diff
-        : null;
-      console.log(
-        "SOMA",
-        correspondentMaterial.qtde,
-        diff,
-        correspondentMaterial.qtde + diff
-      );
-      // const saida = mat.qtdeSaida ? mat.qtdeSaida : 0;
-      // const devolucao = mat.qtdeDevolucao ? mat.qtdeDevolucao : 0;
-      // const diff = saida - devolucao;
-      // const anterior = mat.qtdePreBaixa ? mat.qtdePreBaixa : 0;
-      // const novo = anterior - diff;
-      return {
-        updateOne: {
-          filter: { _id: new ObjectId(materialId) },
-          update: {
-            $push: {
-              qtdeAlteracoes: {
-                $each: [
-                  {
-                    idFormulario: idFormulario,
-                    identificador: identificador,
-                    dataAlteracao: new Date().toISOString(), // current date
-                    responsavel: user.name, // name of responsible person
-                    movimentacao: diff,
-                    anterior: previousQty,
-                    novo: newQty,
-                    tag: tag,
-                  },
-                ],
-                $slice: -10, // limit the array size to 10 items
-              },
-            },
-            $inc: { qtde: diff },
-          },
-        },
-      };
+
+    // Getting the material collection
+    const warehouseDb = await connectToDatabase(process.env.DB_KEY);
+    const materialCollection = warehouseDb.collection("material");
+    const logCollection = warehouseDb.collection("alteracoes");
+    // Getting the notification collection
+    const projectsDb = await connectToProjectsDatabase(
+      process.env.DB_KEY,
+      "projetos"
+    );
+    const notificationCollection = projectsDb.collection("notificacoes");
+
+    // Getting the current state of materials so to check current quantities
+    const currentStateMaterials = await getCurrentMaterials(materialCollection);
+
+    await handleNotifyingSupplySector(
+      changes,
+      currentStateMaterials,
+      notificationCollection
+    );
+    // Doing multiple qtde alterations for material items
+    const bulkwriteArr = handleBulkWriteFormatting(changes);
+    await materialCollection.bulkWrite(bulkwriteArr);
+
+    // Logging stock activity into logs collection
+    await handleStockActivityLogInsertion({
+      currentMaterials: currentStateMaterials,
+      formId: idFormulario,
+      logCollection: logCollection,
+      materialList: changes,
+      projectId: idProjeto,
+      projectName: identificador,
+      userId: user.id,
+      userName: user.name,
     });
 
-    const filteredChanges = changes.filter((change) => !!change);
-
-    await collection.bulkWrite(filteredChanges);
-    res.status(200).json(filteredChanges);
-
-    // res.json("UEPA");
+    res.status(200).json(bulkwriteArr);
   } else if (req.method === "PUT") {
+    const { user } = await getSession({ req: req });
     const db = await connectToDatabase(process.env.DB_KEY);
     const collection = db.collection("material");
-
+    const logCollection = db.collection("alteracoes");
+    // Getting the current state of materials so to check current quantities
+    const currentStateMaterials = await getCurrentMaterials(collection);
     const { id, changes } = req.body;
     delete changes._id;
     try {
+      await handleManualAlterationLogInsertion({
+        materialId: id,
+        currentMaterials: currentStateMaterials,
+        userId: user.id,
+        userName: user.name,
+        materialNewQty: changes.qtde,
+        logCollection: logCollection,
+      });
       await collection.updateOne(
         {
           _id: ObjectId(id),
@@ -109,9 +248,9 @@ export default async function handler(req, res) {
           $set: { ...changes },
         }
       );
-
       res.status(201).json("Alterações feitas !");
     } catch (error) {
+      console.log(error);
       res.json("Um erro ocorreu, tente novamente.");
     }
   } else if (req.method === "PATCH") {

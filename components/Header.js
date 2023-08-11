@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
-import HeaderSVG from "../utils/HeaderSVG.svg";
+import LogoSVG from "../utils/images/logo.svg";
 import { useRouter } from "next/router";
 import WhiteLogo from "../utils/whitelogoHD.png";
 import AlertVolts from "../utils/alertVolts-svg.svg";
@@ -10,10 +10,6 @@ import SleepVolts from "../utils/sleepVolts-svg.svg";
 import { BiLogIn } from "react-icons/bi";
 import { TbPresentationAnalytics } from "react-icons/tb";
 import { FaUser } from "react-icons/fa";
-import {
-  MdNotificationsNone,
-  MdOutlineNotificationsActive,
-} from "react-icons/md";
 import axios from "axios";
 import NotificationModal from "./NotificationModal";
 
@@ -75,12 +71,12 @@ function Header({ toggleSidebar }) {
         />
       </div>
 
-      <div className="flex cursor-pointer items-center justify-center h-[50px]">
+      <div className="flex cursor-pointer items-center justify-center h-[58px]">
         <Link href="/">
           <Image
-            height={"50px"}
-            width={"50px"}
-            src={WhiteLogo}
+            height={"58px"}
+            width={"58px"}
+            src={LogoSVG}
             objectFit="fill"
           />
         </Link>

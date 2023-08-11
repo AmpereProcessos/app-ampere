@@ -1,7 +1,13 @@
 import axios from "axios";
 import createHttpError from "http-errors";
 
-export async function debitMaterials({ formId, identifier, changes, tag }) {
+export async function debitMaterials({
+  formId,
+  projectId,
+  identifier,
+  changes,
+  tag,
+}) {
   console.log("ID DO FORMULÁRIO", formId);
   console.log("MATERIAIS DEBITADOS", changes);
   console.log("TAG DA ALTERAÇÃO", tag);
@@ -22,6 +28,7 @@ export async function debitMaterials({ formId, identifier, changes, tag }) {
     console.log("UPDATE CHANGE OBJ", updateChangesObj);
     await axios.post("/api/almoxarifado/materiais", {
       idFormulario: formId,
+      idProjeto: projectId,
       tag: tag,
       identificador: identifier,
       changes: updateChangesObj,
@@ -29,7 +36,7 @@ export async function debitMaterials({ formId, identifier, changes, tag }) {
     return { status: "success", statusCode: 201 };
   } catch (error) {
     if (createHttpError.isHttpError(error)) throw error;
-    else new createHttpError.InternalServerError("Erro desconhecido.");
+    else throw new createHttpError.InternalServerError("Erro desconhecido.");
   }
 }
 export async function returnMaterials({ formId, identifier, changes, tag }) {

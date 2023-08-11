@@ -8,6 +8,18 @@ import axios from "axios";
 import { createClient, get } from "@vercel/edge-config";
 import connectToDatabase from "../../utils/materialDb";
 export default async function handler(req, res) {
+  const db = await connectToDatabase(process.env.DB_KEY);
+  const collection = db.collection("material");
+
+  const response = await collection.updateMany(
+    {},
+    {
+      $unset: {
+        infoAlteracoes: "",
+      },
+    }
+  );
+
   // var arr = [];
   // const formatted = materials.map((material) => {
   //   const duplicatedMaterial = materials.find(
@@ -39,7 +51,7 @@ export default async function handler(req, res) {
   // ).get("rd_marketing_access_token");
   // const edgeRequestItemAPI = `https://edge-config.vercel.com/ecfg_celqhqfkg1woq2lp9pztgjokn7av/item/rd_marketing_access_token?token=583e45e4-5ecd-4581-9e6f-65ba32d126a7`;
   // const item = await axios.get(edgeRequestItemAPI);
-  res.json("DESATIVADA");
+  res.json(response);
 }
 
 // Update Many example:

@@ -76,6 +76,10 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
       grandeza: material.grandeza,
       precoUnit: material.precoUnit,
     };
+    if (!material.nome) {
+      toast.error("Prencha/escolha um item.");
+      return false;
+    }
     if (toAddObj.qtdeSaida > material.qtdeEstoque) {
       toast.error(
         `Quantidade não permitida. Quantidade atual contabilizada no estoque é de ${material.qtdeEstoque}`
@@ -202,6 +206,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
       );
       await debitMaterials({
         formId: insertedId,
+        projectId: callInfo.idPai,
         identifier: callInfo.nomeDoContrato
           ? callInfo.nomeDoContrato
           : callInfo.nomeTerceiro,

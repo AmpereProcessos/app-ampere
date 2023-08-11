@@ -10,13 +10,16 @@ import NumberFloatingInput from "./NumberFloatingInput";
 import dayjs from "dayjs";
 import SelectFoatingInput from "./SelectFloatingInput";
 import { utils } from "xlsx";
+import { useMaterialLogs } from "../utils/methods/query/materials";
+import MaterialLogs from "./identificador/materials/MaterialLogs";
+import { useQueryClient } from "react-query";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
   left: "50%",
   transform: "translate(-50%,-50%)",
   backgroundColor: "#fff",
-  width: "50%",
+  minWidth: "70%",
   height: "80%",
   borderRadius: "10px",
   padding: "10px",
@@ -37,8 +40,8 @@ function ControleAlmoxarifado({
   credentials,
   handleUpdates,
 }) {
+  const queryClient = useQueryClient();
   const [materialInfo, setMaterialInfo] = useState(info);
-
   const [msg, setMsg] = useState({
     text: "",
     color: "",
@@ -64,51 +67,17 @@ function ControleAlmoxarifado({
   }
   async function handleAlteracoes() {
     if (validateChanges()) {
-      var qtdeChangeObj;
-      var priceChangeObj;
-
-      var histChangesQtde = materialInfo.qtdeAlteracoes
-        ? [...materialInfo.qtdeAlteracoes]
-        : [];
-      var histChangesPrice = materialInfo.precoAlteracoes
-        ? [...materialInfo.precoAlteracoes]
-        : [];
-      if (info.qtde != materialInfo.qtde) {
-        qtdeChangeObj = {
-          dataAlteracao: new Date().toISOString(),
-          responsavel: credentials?.name,
-          anterior: info.qtde,
-          novo: materialInfo.qtde,
-        };
-        if (histChangesQtde.length == 10) {
-          histChangesQtde.shift();
-          histChangesQtde.push(qtdeChangeObj);
-        } else histChangesQtde.push(qtdeChangeObj);
-      }
-
-      if (info.preco != materialInfo.preco) {
-        priceChangeObj = {
-          dataAlteracao: new Date().toISOString(),
-          responsavel: credentials?.name,
-          anterior: info.preco,
-          novo: materialInfo.preco,
-        };
-        if (histChangesPrice.length == 10) {
-          histChangesPrice.shift();
-          histChangesPrice.push(priceChangeObj);
-        } else histChangesPrice.push(priceChangeObj);
-      }
-
       let response = await axios.put("/api/almoxarifado/materiais", {
         id: info._id,
         changes: {
           ...materialInfo,
-          qtdeAlteracoes: histChangesQtde,
-          precoAlteracoes: histChangesPrice,
         },
       });
       if (response.status == 201)
         setMsg({ text: response.data, color: "text-green-500" });
+      await queryClient.invalidateQueries({
+        queryKey: ["materialLog", materialInfo._id],
+      });
       handleUpdates(info._id);
     }
   }
@@ -247,102 +216,7 @@ function ControleAlmoxarifado({
                   />
                 </div>
               </div>
-              {(materialInfo.qtdeAlteracoes &&
-                materialInfo.qtdeAlteracoes.length > 0) ||
-              (materialInfo.precoAlteracoes &&
-                materialInfo.precoAlteracoes.length > 0) ? (
-                <div className="flex flex-col items-center gap-2 w-full mt-4">
-                  <h1 className="font-raleway text-center w-full font-medium bg-zinc-700 text-white p-2 rounded">
-                    HISTÓRICO DE ALTERAÇÕES
-                  </h1>
-                  {materialInfo.qtdeAlteracoes?.map((alt, index) => (
-                    <div
-                      key={index}
-                      className="w-full lg:w-[60%] p-2 px-4 flex flex-col rounded border border-gray-200"
-                    >
-                      <div className="flex items-center justify-between">
-                        <h1 className="text-blue-700 font-medium text-sm">
-                          ALTERAÇÃO DE QUANTIDADE
-                        </h1>
-                        <h1 className="text-sm font-medium">
-                          {alt.tag
-                            ? alt.tag
-                            : alt.movimentacao
-                            ? alt.movimentacao < 0
-                              ? "SAÍDA"
-                              : "AJUSTE"
-                            : "ALTERAÇÃO MANUAL"}
-                        </h1>
-                      </div>
-
-                      <div className="grid grid-cols-3 items-center">
-                        {alt.anterior && alt.novo ? (
-                          <>
-                            <h1 className="text-lg text-gray-600 text-end">
-                              {alt.anterior}
-                            </h1>
-                            <div className="flex items-center justify-center">
-                              <FaLongArrowAltRight />
-                            </div>
-                            <h1 className="text-lg text-gray-600 text-start">
-                              {alt.novo}
-                            </h1>
-                          </>
-                        ) : (
-                          <div className="flex items-center justify-center col-span-3">
-                            {alt.movimentacao}
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <h1 className="text-gray-500 text-xs">
-                          {alt.responsavel}
-                        </h1>
-                        <h1 className="text-gray-500 text-xs">
-                          {dayjs(alt.dataAlteracao).format("DD/MM/YYYY")}
-                        </h1>
-                      </div>
-                    </div>
-                  ))}
-                  {materialInfo.precoAlteracoes?.map((alt, index) => (
-                    <div
-                      key={index}
-                      className="w-full lg:w-[60%] p-2 px-4 flex flex-col rounded border border-gray-200"
-                    >
-                      <h1 className="text-green-700 font-medium text-sm">
-                        ALTERAÇÃO DE PREÇO
-                      </h1>
-                      <div className="grid grid-cols-3 items-center">
-                        <h1 className="text-lg text-gray-600 text-end">
-                          R${" "}
-                          {Number(alt.anterior).toLocaleString("pt-br", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
-                        </h1>
-                        <div className="flex items-center justify-center">
-                          <FaLongArrowAltRight />
-                        </div>
-                        <h1 className="text-lg text-gray-600 text-start">
-                          R${" "}
-                          {Number(alt.novo).toLocaleString("pt-br", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
-                        </h1>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <h1 className="text-gray-500 text-xs">
-                          {alt.responsavel}
-                        </h1>
-                        <h1 className="text-gray-500 text-xs">
-                          {dayjs(alt.dataAlteracao).format("DD/MM/YYYY")}
-                        </h1>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
+              <MaterialLogs materialId={materialInfo._id} />
             </div>
           </div>
         </div>

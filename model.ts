@@ -550,3 +550,15 @@ interface ICosts {
   total: number; // somatória final do objeto de custo
   dataInsercao: string; // data de inserção do documento
 }
+interface IMaterial {
+  _id?: string;
+  nome: string;
+  nomeTecnico: string;
+  preco: number;
+  qtde: number;
+  qtdeMinima?: number;
+  anotacoes: string;
+  codigo: string;
+  grandeza: "UN" | "PC" | "KG" | "CX" | "M" | "M³" | "L";
+  localizacao: string;
+}

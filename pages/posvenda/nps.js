@@ -1,12 +1,17 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import NPSCard from "../../components/NPSCard";
-import { cidadesAtendidas, vendedores } from "../../utils/constants";
+import {
+  cidadesAtendidas,
+  validateAuthorization,
+  vendedores,
+} from "../../utils/constants";
 import { AiOutlineSearch } from "react-icons/ai";
 import Select from "react-select";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
+import { useNPS } from "../../utils/methods/query/aftersales";
 function NPS() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -15,8 +20,9 @@ function NPS() {
       router.push("/auth/authHome");
     },
   });
-
-  const [projects, setProjects] = useState([]);
+  const { data, isFetching, isSuccess } = useNPS(
+    validateAuthorization(session, "Pós-Venda")
+  );
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filters, setFilters] = useState({
     naoColetados: false,
@@ -29,22 +35,17 @@ function NPS() {
     after: null,
     before: null,
   });
-  function getProjects() {
-    axios.get("/api/projects/nps").then((res) => {
-      setFilteredProjects(res.data);
-      setProjects(res.data);
-    });
-  }
+
   function filterProjects() {
     var newArr;
     if (filters.naoColetados) {
-      if (!newArr) newArr = projects;
+      if (!newArr) newArr = data;
       newArr = newArr.filter(
         (project) => project.nps == undefined || project.nps == null
       );
     }
     if (filters.comObs) {
-      if (!newArr) newArr = projects;
+      if (!newArr) newArr = data;
       newArr = newArr.filter(
         (project) =>
           project.jornada.obsNps != undefined &&
@@ -53,19 +54,19 @@ function NPS() {
       );
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!newArr) newArr = projects;
+      if (!newArr) newArr = data;
       newArr = newArr.filter((project) =>
         filters.cidadeFilter.includes(project.cidade)
       );
     }
     if (filters.vendedorFilter.length > 0) {
-      if (!newArr) newArr = projects;
+      if (!newArr) newArr = data;
       newArr = newArr.filter((project) =>
         filters.vendedorFilter.includes(project.vendedor.nome)
       );
     }
     if (filters.pesquisaFilter.trim().length > 0) {
-      if (!newArr) newArr = projects;
+      if (!newArr) newArr = data;
       newArr = newArr.filter((call) =>
         call.nomeDoContrato
           .toUpperCase()
@@ -73,7 +74,7 @@ function NPS() {
       );
     }
     if (dateFilter.after && dateFilter.before) {
-      if (!newArr) newArr = projects;
+      if (!newArr) newArr = data;
       newArr = newArr.filter(
         (call) =>
           call.jornada.dataNps >= dateFilter.after &&
@@ -81,20 +82,27 @@ function NPS() {
       );
     }
     if (!newArr) {
-      setFilteredProjects(projects);
+      setFilteredProjects(data);
     } else {
       setFilteredProjects(newArr);
     }
   }
+
+  const renderCards = useMemo(
+    () =>
+      filteredProjects.map((project, index) => (
+        <NPSCard
+          key={project._id}
+          credentials={session?.user}
+          project={project}
+        />
+      )),
+    [filteredProjects]
+  );
   useEffect(() => {
-    if (session?.user.accessibleRoutes) {
-      getProjects();
-    } else {
-      if (session?.user) {
-        router.push("/");
-      }
-    }
-  }, [session]);
+    if (isSuccess) setFilteredProjects(data);
+  }, [data]);
+
   if (status == "loading") return <LoadingPage />;
   if (status == "authenticated") {
     return (
@@ -222,13 +230,14 @@ function NPS() {
           </div>
         </div>
         <div className="flex flex-wrap mt-4 gap-3 justify-around">
-          {filteredProjects.map((project) => (
+          {renderCards}
+          {/* {filteredProjects.map((project) => (
             <NPSCard
               credentials={session?.user}
               key={project._id}
               project={project}
             />
-          ))}
+          ))} */}
         </div>
       </div>
     );

@@ -3,12 +3,18 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import ModalControlAlmoxarifado from "../../components/ModalControlAlmoxarifado";
 import ModalNovoItemAlmoxarifado from "../../components/ModalNovoItemAlmoxarifado";
-import { AiOutlineReload, AiOutlineSearch } from "react-icons/ai";
+import {
+  AiFillWarning,
+  AiOutlineReload,
+  AiOutlineSearch,
+} from "react-icons/ai";
 import { useSession } from "next-auth/react";
 import LoadingPage from "../../components/utils/LoadingPage";
 import Link from "next/link";
 import FilterButton from "../../components/utils/Buttons/FilterButton";
 import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
+import { FaBox } from "react-icons/fa";
+import { ImPriceTag } from "react-icons/im";
 function Estoque() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -151,28 +157,45 @@ function Estoque() {
                   setEditModal({ isOpen: true, info: material });
                 }}
                 key={material._id}
-                className="w-[350px] max-h-[100px] lg:w-[350px] hover:bg-blue-100 bg-[#fff] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100flex flex-col"
+                className="w-[350px] lg:w-[350px] hover:bg-blue-100 bg-[#fff] cursor-pointer border border-gray-200 p-3 flex flex-col gap-2"
               >
-                <div className="flex items-center justify-between">
-                  <p className="text-lg text-[#15599a] text-center font-medium">
-                    {material.nome}
-                  </p>
-                  <p className="text-lg text-green-600 text-center font-bold">
-                    {material.localizacao ? material.localizacao : "-"}
-                  </p>
-                </div>
+                <h1 className="font-Poppins text-[#15599a] text-center font-black w-full">
+                  {material.nome}
+                </h1>
+                <p className="text-lg text-green-600 text-center font-bold">
+                  {material.localizacao ? material.localizacao : "-"}
+                </p>
                 <p className="text-xs text-gray-500 text-center">
                   {material.nomeTecnico ? material.nomeTecnico : "NÃO DEFINIDO"}
                 </p>
                 <div className="flex items-center justify-around mt-2">
-                  <p className="text-xs text-gray-700 text-center">
-                    {material.qtde}
-                    {material.grandeza}
-                  </p>
-                  <p className="text-xs text-gray-700 text-center">
-                    {material.preco
-                      ? `R$${material.preco.toFixed(2).replace(".", ",")}`
-                      : "-"}
+                  <div className="flex items-center gap-2">
+                    <FaBox color="#fead41" />
+                    <p className="text-xs text-gray-700 text-center">
+                      {material.qtde
+                        ? Number(material.qtde).toLocaleString("pt-br", {
+                            maximumFractionDigits: 2,
+                          })
+                        : "-"}{" "}
+                      {material.grandeza}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <ImPriceTag />
+                    <p className="text-xs text-gray-700 text-center">
+                      {material.preco
+                        ? `R$${material.preco.toFixed(2).replace(".", ",")}`
+                        : "-"}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-center gap-2 italic">
+                  <AiFillWarning color="rgb(239,68,68)" />
+                  <p className="text-gray-500 text-xs">
+                    Quantidade mínima definida de:{" "}
+                    <strong className="text-red-500">
+                      {material.qtdeMinima ? material.qtdeMinima : "N/A"}
+                    </strong>{" "}
                   </p>
                 </div>
               </div>

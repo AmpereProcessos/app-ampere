@@ -55,7 +55,7 @@ function ExpenseItem({ expense }) {
               className="w-full flex items-center text-xs justify-between"
             >
               <p>
-                {item.qtde.toLocaleString("pt-br", {
+                {item.qtde?.toLocaleString("pt-br", {
                   maximumFractionDigits: 2,
                 })}{" "}
                 x {item.descricao} ({item.unidade})

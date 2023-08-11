@@ -31,6 +31,7 @@ const OVERLAY_STYLES = {
 function Novoitem({ closeModal, getMateriais }) {
   const [nome, setNome] = useState("");
   const [quantidade, setQuantidade] = useState(0);
+  const [quantidadeMinima, setQuantidadeMinima] = useState(0);
   const [grandeza, setGrandeza] = useState("UN");
   const [preco, setPreco] = useState(0);
   const [codigo, setCodigo] = useState("");
@@ -44,6 +45,7 @@ function Novoitem({ closeModal, getMateriais }) {
     let obj = {
       nome: nome,
       qtde: quantidade,
+      qtdeMinima: quantidadeMinima,
       grandeza: grandeza,
       preco: preco,
       codigo: codigo,
@@ -125,6 +127,13 @@ function Novoitem({ closeModal, getMateriais }) {
                   editable={true}
                   value={quantidade}
                   handleChange={(value) => setQuantidade(Number(value))}
+                  width={"100%"}
+                />
+                <NumberFloatingInput
+                  label={"QUANTIDADE MÍNIMA"}
+                  editable={true}
+                  value={quantidadeMinima}
+                  handleChange={(value) => setQuantidadeMinima(Number(value))}
                   width={"100%"}
                 />
                 <SelectFoatingInput

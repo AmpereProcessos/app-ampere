@@ -169,6 +169,18 @@ function ControleAlmoxarifado({
                     }
                     width={"100%"}
                   />
+                  <NumberFloatingInput
+                    label={"QUANTIDADE MÍNIMA"}
+                    value={materialInfo.qtdeMinima}
+                    editable={true}
+                    handleChange={(value) =>
+                      setMaterialInfo((prev) => ({
+                        ...prev,
+                        qtdeMinima: Number(value),
+                      }))
+                    }
+                    width={"100%"}
+                  />
                   <SelectFoatingInput
                     label={"GRANDEZA"}
                     editable={true}

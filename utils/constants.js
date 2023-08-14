@@ -1376,6 +1376,11 @@ export const sellerPhotos = [
     avatar_url:
       "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_raildo.jpg?alt=media&token=395da0b6-ba7c-4943-a7ec-2551a64bf179",
   },
+  {
+    nome: "RONIVALDO MARTINS",
+    avatar_url:
+      "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_ronivaldo.jpg?alt=media&token=97d1f1e1-4ff7-41a7-8358-4723afb9fedf",
+  },
 ];
 export const cities = [
   {

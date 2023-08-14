@@ -14,11 +14,10 @@ import dayjsBusinessDays from "dayjs-business-days";
 import DateFloatingInput from "../../components/DateFloatingInput";
 import { AnimatePresence, motion } from "framer-motion";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import NumberInput from "../../components/NumberInput";
+import NumberFloatingInput from "../../components/NumberFloatingInput";
 dayjs.extend(dayjsBusinessDays);
 const dateParam = "2022-12-31T24:00:00.000Z";
-const limitDateParam = "2023-12-31T24:00:00.000Z";
-const secondScenarioMaxDateParam = "2023-03-31T24:00:00.000Z";
-const dilutionMaxDateParam = "2024-03-31T24:00:00.000Z";
 
 const initialCentralDateParam = "2023-12-31T20:00:00.000Z";
 const initialDilutionDateParam = "2024-03-31T20:00:00.000Z";
@@ -35,6 +34,7 @@ function getDayDiff(d1, d2) {
   const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
   return dayDiff;
 }
+
 function RelatorioSetor() {
   const router = useRouter();
   const { data: session } = useSession({
@@ -48,7 +48,10 @@ function RelatorioSetor() {
     central: initialCentralDateParam,
     dilution: initialDilutionDateParam,
   });
-
+  const [businessDays, setBusinessDays] = useState({
+    central: dayjs(initialCentralDateParam).businessDiff(dayjs()),
+    dilution: dayjs(initialDilutionDateParam).businessDiff(dayjs()),
+  });
   // Getting data and instances of filtered date based on date filter params
   const { data, isFetching, isSuccess } = useOeMReportData(
     validateAuthorization(session, "O&M")
@@ -109,7 +112,7 @@ function RelatorioSetor() {
       new Date(dateParams.dilution)
     );
     const multiplier = numeratorDays / denominatorDays;
-    console.log("MULTIPLICADOR", multiplier);
+    // console.log("MULTIPLICADOR", multiplier);
     const groupedResult = info.reduce((acc, current) => {
       const city = current.cidade;
       const currentModules = isNaN(current.sistema?.qtdeModulos)
@@ -181,6 +184,7 @@ function RelatorioSetor() {
       )
     );
   }
+  console.log("UTEIS", businessDays.central, businessDays.dilution);
   return (
     <div className="p-6 grow">
       <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-200 p-1">
@@ -202,6 +206,24 @@ function RelatorioSetor() {
             value={formatDate(dateParams.dilution)}
             handleChange={(value) =>
               setDateParams((prev) => ({ ...prev, dilution: value }))
+            }
+          />
+        </div>
+        <div className="w-full flex items-center justify-center gap-2">
+          <NumberFloatingInput
+            label={"DIAS UTEIS ATÉ VENCIMENTO"}
+            editable={true}
+            value={businessDays.central}
+            handleChange={(value) =>
+              setDateParams((prev) => ({ ...prev, central: Number(value) }))
+            }
+          />
+          <NumberFloatingInput
+            label={"DIAS UTEIS ATÉ DILUIÇÃO"}
+            editable={true}
+            value={businessDays.dilution}
+            handleChange={(value) =>
+              setBusinessDays((prev) => ({ ...prev, dilution: Number(value) }))
             }
           />
         </div>
@@ -258,8 +280,8 @@ function RelatorioSetor() {
               </p>
             </div>
 
-            <div className="w-full flex items-center gap-2">
-              <div className="w-1/2 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
+            <div className="w-full flex flex-col lg:flex-row items-center gap-2">
+              <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
                 <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">
                   Nº DE USINAS A SEREM LIMPAS
                 </h1>
@@ -270,14 +292,28 @@ function RelatorioSetor() {
                   </p>
                 </div>
               </div>
-              <div className="w-1/2 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
+              <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
                 <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">
-                  Nº DE MÓDULOS À SEREM LIMPOS
+                  Nº DE USINAS A SEREM LIMPAS
+                </h1>
+                <div className="flex items-center justify-center w-full gap-2">
+                  <FaHome color="#fead41" size={"40px"} />
+                  <p className="font-Poppins text-center text-[#fead41] font-black text-2xl">
+                    {getOverallTotalQty(filteredDataByMaxDateParam).plants}
+                  </p>
+                </div>
+              </div>
+              <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
+                <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">
+                  Nº DE MÓDULOS POR DIA
                 </h1>
                 <div className="flex items-center justify-center w-full gap-2">
                   <FaSolarPanel color="#fead41" size={"40px"} />
                   <p className="font-Poppins text-center text-[#fead41] font-black text-2xl">
-                    {getOverallTotalQty(filteredDataByMaxDateParam).modules}
+                    {(
+                      getOverallTotalQty(filteredDataByMaxDateParam).modules /
+                      businessDays.central
+                    ).toFixed(0)}
                   </p>
                 </div>
               </div>
@@ -306,8 +342,8 @@ function RelatorioSetor() {
                 {dayjs(dateParams.dilution).format("DD/MM/YYYY")}
               </p>
             </div>
-            <div className="w-full flex items-center gap-2">
-              <div className="w-1/2 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
+            <div className="w-full flex flex-col lg:flex-row items-center gap-2">
+              <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
                 <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">
                   Nº DE USINAS A SEREM LIMPAS
                 </h1>
@@ -328,7 +364,7 @@ function RelatorioSetor() {
                   até {dayjs(dateParam).format("DD/MM/YYYY")}
                 </p>
               </div>
-              <div className="w-1/2 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
+              <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
                 <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">
                   Nº DE MÓDULOS À SEREM LIMPOS
                 </h1>
@@ -346,6 +382,29 @@ function RelatorioSetor() {
                   {getDilutedOverallTotalQty(
                     filteredDataByMaxDateParamSecondScenario
                   ).modules.toFixed(0)}{" "}
+                  até {dayjs(dateParam).format("DD/MM/YYYY")}
+                </p>
+              </div>
+              <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
+                <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">
+                  Nº DE MÓDULOS POR DIA
+                </h1>
+                <div className="flex items-center justify-center w-full gap-2">
+                  <FaSolarPanel color="#fead41" size={"40px"} />
+                  <p className="font-Poppins text-center text-[#fead41] font-black text-2xl">
+                    {(
+                      getOverallTotalQty(
+                        filteredDataByMaxDateParamSecondScenario
+                      ).modules / businessDays.dilution
+                    ).toFixed(0)}
+                  </p>
+                </div>
+                <p className="text-center text-gray-500 italic">
+                  {(
+                    getDilutedOverallTotalQty(
+                      filteredDataByMaxDateParamSecondScenario
+                    ).modules / businessDays.dilution
+                  ).toFixed(0)}{" "}
                   até {dayjs(dateParam).format("DD/MM/YYYY")}
                 </p>
               </div>

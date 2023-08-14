@@ -30,13 +30,6 @@ function getCorrespondentDateInPreviousYear(date) {
   return new Date(previousYear, month, day);
 }
 
-function getMonthDiff(d1, d2) {
-  var months;
-  months = (d2.getFullYear() - d1.getFullYear()) * 12;
-  months -= d1.getMonth();
-  months += d2.getMonth();
-  return months <= 0 ? 0 : months;
-}
 function getDayDiff(d1, d2) {
   const timeDiff = Math.abs(new Date(d2) - new Date(d1));
   const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
@@ -76,6 +69,7 @@ function RelatorioSetor() {
       )
     : [];
 
+  // Calculating stats
   function getOverallTotalQty(info) {
     if (!info) return { plants: 0, modules: 0 };
     const totalModulesQty = info.reduce((acc, current) => {
@@ -115,7 +109,7 @@ function RelatorioSetor() {
       new Date(dateParams.dilution)
     );
     const multiplier = numeratorDays / denominatorDays;
-
+    console.log("MULTIPLICADOR", multiplier);
     const groupedResult = info.reduce((acc, current) => {
       const city = current.cidade;
       const currentModules = isNaN(current.sistema?.qtdeModulos)

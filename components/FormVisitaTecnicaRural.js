@@ -209,6 +209,20 @@ function FormVisitaTecnicaRural({
       });
       return false;
     }
+    if (!images.documentoComFoto) {
+      setMsg({
+        text: "Por favor, preencha uma documento com foto do cliente.",
+        color: "text-red-500",
+      });
+      return false;
+    }
+    if (!images.contaDeEnergia) {
+      setMsg({
+        text: "Por favor, preencha um documento da conta de energia.",
+        color: "text-red-500",
+      });
+      return false;
+    }
     return true;
   }
   return (
@@ -1205,10 +1219,99 @@ function FormVisitaTecnicaRural({
           />
         </div>
       </div>
+      <div className="w-full flex items-center justify-center gap-2 py-2">
+        <div className="w-fit flex flex-col items-center self-center">
+          <label
+            className="ml-2 text-center text-[#15599a] font-bold"
+            htmlFor="propostaComercial"
+          >
+            DOCUMENTO COM FOTO DO CLIENTE
+          </label>
+          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="absolute">
+              {images.documentoComFoto ? (
+                <div className="flex flex-col items-center">
+                  <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                  <span className="block text-gray-400 font-normal text-center">
+                    {images.documentoComFoto.file.name}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center">
+                  <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                  <span className="block text-gray-400 font-normal">
+                    Adicione o arquivo aqui
+                  </span>
+                </div>
+              )}
+            </div>
+            <input
+              onChange={(e) =>
+                setImages({
+                  ...images,
+                  documentoComFoto: {
+                    title: "DOCUMENTO COM FOTO DO CLIENTE",
+                    file: e.target.files[0],
+                  },
+                })
+              }
+              className="h-full w-full opacity-0"
+              type="file"
+              accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
+            />
+          </div>
+        </div>
+        <div className="w-fit flex flex-col items-center self-center">
+          <label
+            className="ml-2 text-center text-[#15599a] font-bold"
+            htmlFor="propostaComercial"
+          >
+            FATURA DE ENERGIA
+          </label>
+          <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+            <div className="absolute">
+              {images.contaDeEnergia ? (
+                <div className="flex flex-col items-center">
+                  <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                  <span className="block text-gray-400 font-normal text-center">
+                    {images.contaDeEnergia.file.name}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center">
+                  <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                  <span className="block text-gray-400 font-normal">
+                    Adicione o arquivo aqui
+                  </span>
+                </div>
+              )}
+            </div>
+            <input
+              onChange={(e) =>
+                setImages({
+                  ...images,
+                  contaDeEnergia: {
+                    title: "FATURA DE ENERGIA",
+                    file: e.target.files[0],
+                  },
+                })
+              }
+              className="h-full w-full opacity-0"
+              type="file"
+              accept=".png, .jpeg, .pdf, .tif, .tiff, .jpg, .raw"
+            />
+          </div>
+        </div>
+      </div>
+      {msg ? (
+        <p className={`w-full text-center italic ${msg.color}`}>{msg.text}</p>
+      ) : null}
       <div className="flex items-center justify-center gap-2">
         <button
           disabled={sendStatus == "loading"}
-          onClick={uploadImages}
+          onClick={() => {
+            if (validateFields()) uploadImages();
+          }}
           className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded disabled:bg-gray-500"
         >
           {sendStatus == "loading" ? "CARREGANDO" : "ENVIAR FORMULÁRIO"}

@@ -101,6 +101,7 @@ function LaudoIntermediarioUrbano({ info }) {
       Number(noroeste)
     ).toFixed(2);
   }
+
   function getAverageModulePower(modPower) {
     const splittedPower = `${modPower}`.split("/");
 
@@ -117,6 +118,10 @@ function LaudoIntermediarioUrbano({ info }) {
       return Number(splittedPower[0]);
     }
   }
+  console.log(
+    getAverageModulePower(info.potModulos),
+    fatorDeGeracaoPorOrientacao[info.cidade]["NOROESTE"]
+  );
   function getTotalModuleQtde(modQtde) {
     const splittedQty = `${modQtde}`.split("/");
 
@@ -141,7 +146,7 @@ function LaudoIntermediarioUrbano({ info }) {
       1000
     ).toFixed(2);
   }
-  console.log(info);
+
   return (
     <div className="w-[21cm] h-[29.7cm]">
       <div className="flex flex-col w-full h-full">

@@ -27,6 +27,11 @@ export default async function handler(req, res) {
               "sistema.topologia": 1,
             },
           },
+          {
+            $sort: {
+              "medidor.data": 1,
+            },
+          },
         ])
         .toArray();
       if (!Array.isArray(data))

@@ -7,10 +7,10 @@ import TextInput from "./TextInput";
 import {
   cidadesAtendidas,
   distributionCompanies,
-  fatorDeGeracaoPorOrientacao,
   suprimentoOption,
   tiposSolicitacaoVisitaTecnica,
 } from "../utils/constants";
+import fatorDeGeracaoPorOrientacao from "../utils/fatoresDeGeracao.json";
 import { storage } from "../utils/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -237,7 +237,8 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
       .replace(/(-\d{3})\d+?$/, "$1");
     return cep;
   }
-
+  console.log(fatorDeGeracaoPorOrientacao[dados.cidade]["NOROESTE"]);
+  // 2LaudoIntermediarioUrbano.js:121 590 124.7664020538131
   return (
     <div style={OVERLAY_STYLES}>
       <div style={MODAL_STYLES}>

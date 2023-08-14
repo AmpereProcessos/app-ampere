@@ -15,7 +15,7 @@ import {
 import { insertExpensesFromMaterials } from "../utils/methods/mutation/expenses";
 import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
-import createHttpError from "http-errors";
+import { BsCheckCircleFill } from "react-icons/bs";
 import { getErrorMessage } from "../utils/methods/handlers";
 import AddMaterialFormulario from "./identificador/almoxarifado/AddMaterialFormulario";
 import { useMaterials } from "../utils/methods/query/materials";
@@ -252,17 +252,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
         efetivado: null,
       },
     });
-    // if (dados.idPai) {
-    //   setResponseMessage({
-    //     status: "loading",
-    //     text: "Atualizando informações do cliente...",
-    //     color: "text-[#15599a]",
-    //   });
-    //   await axios.post(`/api/projects/update/${dados.idPai}`, {
-    //     "material.lista": null,
-    //     "material.formularioId": null,
-    //   });
-    // }
+
     setResponseMessage({
       status: "loading",
       text: "Atualizando quantidades...",
@@ -401,64 +391,6 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                   <p className="text-gray-600 text-center">{dados.servico}</p>
                 </div>
               </div>
-              {/* {dados.efetivado != true && (
-                <>
-                  <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                    <span className="text-center uppercase font-bold">
-                      ADICIONAR
-                    </span>
-                    <div className="grid grid-rows-3 gap-2 grid-cols-1 lg:grid-cols-7 lg:grid-rows-1 gap-x-2">
-                      <div className="grow row-span-1 lg:col-span-5">
-                        <Select
-                          isMulti={false}
-                          placeholder="MATERIAL"
-                          onChange={(e) =>
-                            setSaidaMaterialHolder({
-                              ...saidaMaterialHolder,
-                              nome: e.value.nome,
-                              id: e.value.id,
-                              precoUnit: e.value.preco,
-                            })
-                          }
-                          options={materiais.map((material) => {
-                            return {
-                              label: material.nome,
-                              value: {
-                                id: material._id,
-                                nome: material.nome,
-                                preco: material.preco,
-                              },
-                            };
-                          })}
-                        />
-                      </div>
-                      <input
-                        placeholder="QTDE"
-                        type="number"
-                        value={saidaMaterialHolder.qtdeSaida}
-                        className="row-span-1 lg:col-span-1 outline-none text-center border border-gray-200"
-                        onChange={(e) =>
-                          setSaidaMaterialHolder({
-                            ...saidaMaterialHolder,
-                            qtdeSaida: Number(e.target.value),
-                          })
-                        }
-                      />
-                      <div
-                        onClick={addMaterialSaida}
-                        className="cursor-pointer flex justify-center items-center bg-green-300 hover:bg-green-500 text-white rounded font-bold row-span-1 lg:col-span-1"
-                      >
-                        <MdOutlineAddCircle style={{ fontSize: "25px" }} />
-                      </div>
-                    </div>
-                  </div>
-                  {saidaMaterialMsg && (
-                    <p className="text-sm italic text-red-500 text-center">
-                      {saidaMaterialMsg}
-                    </p>
-                  )}
-                </>
-              )} */}
               <div className="w-full flex flex-col border border-gray-200 p-2 mt-4">
                 <span className="text-center uppercase font-bold">
                   ADICIONAR MATERIAIS
@@ -524,23 +456,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                     </p>
                   )}
                 </div>
-              ) : // <div className="flex w-full justify-end my-2 gap-2 pr-4">
-              //   {!responseMessage.status ? (
-              //     <button
-              //       onClick={() => resetForm()}
-              //       className="p-2 rounded border-orange-500 text-orange-500 font-medium"
-              //     >
-              //       RESETAR
-              //     </button>
-              //   ) : (
-              //     <p
-              //       className={`text-center italic ${responseMessage.color}`}
-              //     >
-              //       {responseMessage.text}
-              //     </p>
-              //   )}
-              // </div>
-              null}
+              ) : null}
             </div>
           </div>
         </div>

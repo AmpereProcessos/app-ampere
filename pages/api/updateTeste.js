@@ -6,20 +6,58 @@ import connectToProjectsDatabase from "../../utils/connectDb";
 import { calculateStringSimilarity } from "../../utils/constants";
 import axios from "axios";
 import { createClient, get } from "@vercel/edge-config";
-import connectToDatabase from "../../utils/materialDb";
+import connectToDatabase from "../../utils/connectDb.js";
 export default async function handler(req, res) {
-  const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("material");
+  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
+  const collection = db.collection("dados");
 
-  const response = await collection.updateMany(
-    {},
-    {
-      $unset: {
-        infoAlteracoes: "",
+  const projects = await collection
+    .aggregate([
+      {
+        $match: {
+          "contrato.status": "ASSINADO",
+          qtde: { $lte: 1556 },
+        },
       },
-    }
-  );
-
+      {
+        $project: {
+          qtde: 1,
+          nomeDoContrato: 1,
+          telefone: 1,
+          "contrato.dataAssinatura": 1,
+          cep: 1,
+          uf: 1,
+          cidade: 1,
+          bairro: 1,
+          logradouro: 1,
+          numeroResidencia: 1,
+        },
+      },
+      {
+        $sort: {
+          qtde: 1,
+        },
+      },
+    ])
+    .toArray();
+  const formatted = projects.map((project) => {
+    return {
+      QTDE: project.qtde,
+      "NOME DO CLIENTE": project.nomeDoContrato,
+      TELEFONE: project.telefone,
+      "DATA DE ASSINATURA": project.contrato?.dataAssinatura
+        ? dayjs(project.contrato.dataAssinatura)
+            .add(3, "hour")
+            .format("DD/MM/YYYY")
+        : null,
+      CEP: project.cep,
+      UF: project.uf,
+      CIDADE: project.cidade,
+      BAIRRO: project.bairro,
+      LOGRADOURO: project.logradouro,
+      "NÚMERO DA RESIDÊNCIA": project.numeroResidencia,
+    };
+  });
   // var arr = [];
   // const formatted = materials.map((material) => {
   //   const duplicatedMaterial = materials.find(
@@ -51,7 +89,7 @@ export default async function handler(req, res) {
   // ).get("rd_marketing_access_token");
   // const edgeRequestItemAPI = `https://edge-config.vercel.com/ecfg_celqhqfkg1woq2lp9pztgjokn7av/item/rd_marketing_access_token?token=583e45e4-5ecd-4581-9e6f-65ba32d126a7`;
   // const item = await axios.get(edgeRequestItemAPI);
-  res.json(response);
+  res.json(formatted);
 }
 
 // Update Many example:

@@ -47,6 +47,7 @@
     "react-intersection-observer": "^9.5.2",
     "react-query": "^3.39.3",
     "react-select": "^5.4.0",
+    "react-window": "^1.8.9",
     "recharts": "2.1.12",
     "stream": "^0.0.2",
     "util": "^0.12.5",

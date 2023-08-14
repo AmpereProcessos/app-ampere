@@ -272,9 +272,9 @@ function RelatorioSetor() {
                 </motion.div>
               ) : null}
             </AnimatePresence>
-            <div className="flex flex-col items-center  justify-center bg-[#15599a] py-2">
+            <div className="flex flex-col items-center  justify-center bg-[#15599a] p-2">
               <p className="text-3xl text-white font-bold">CENÁRIO GERAL</p>
-              <p className="text-sm italic text-white font-medium">
+              <p className="text-sm italic text-white font-medium text-center">
                 Considerando vencimento até:{" "}
                 {dayjs(dateParam).format("DD/MM/YYYY")}
               </p>
@@ -294,12 +294,12 @@ function RelatorioSetor() {
               </div>
               <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
                 <h1 className="text-center text-lg font-Poppins text-[#15599a] font-medium">
-                  Nº DE USINAS A SEREM LIMPAS
+                  Nº DE MÓDULOS A SEREM LIMPOS
                 </h1>
                 <div className="flex items-center justify-center w-full gap-2">
                   <FaHome color="#fead41" size={"40px"} />
                   <p className="font-Poppins text-center text-[#fead41] font-black text-2xl">
-                    {getOverallTotalQty(filteredDataByMaxDateParam).plants}
+                    {getOverallTotalQty(filteredDataByMaxDateParam).modules}
                   </p>
                 </div>
               </div>
@@ -332,11 +332,11 @@ function RelatorioSetor() {
               </div>
               {renderDataGroupedByCity(filteredDataByMaxDateParam)}
             </div>
-            <div className="flex flex-col items-center  justify-center bg-[#fead41] py-2">
+            <div className="flex flex-col items-center  justify-center bg-[#fead41] p-2">
               <p className="text-3xl text-white font-bold">
                 CENÁRIO SECUNDÁRIO
               </p>
-              <p className="text-sm italic text-white font-medium">
+              <p className="text-sm italic text-white font-medium text-center">
                 Considerando diluição das manutenção pendentes até{" "}
                 {dayjs(dateParams.central).format("DD/MM/YYYY")} em até{" "}
                 {dayjs(dateParams.dilution).format("DD/MM/YYYY")}
@@ -361,7 +361,7 @@ function RelatorioSetor() {
                   {getDilutedOverallTotalQty(
                     filteredDataByMaxDateParamSecondScenario
                   ).plants.toFixed(0)}{" "}
-                  até {dayjs(dateParam).format("DD/MM/YYYY")}
+                  até {dayjs(dateParams.central).format("DD/MM/YYYY")}
                 </p>
               </div>
               <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
@@ -382,7 +382,7 @@ function RelatorioSetor() {
                   {getDilutedOverallTotalQty(
                     filteredDataByMaxDateParamSecondScenario
                   ).modules.toFixed(0)}{" "}
-                  até {dayjs(dateParam).format("DD/MM/YYYY")}
+                  até {dayjs(dateParams.central).format("DD/MM/YYYY")}
                 </p>
               </div>
               <div className="w-full lg:w-1/3 flex flex-col items-center border border-gray-300 shadow-lg rounded p-3">
@@ -405,7 +405,7 @@ function RelatorioSetor() {
                       filteredDataByMaxDateParamSecondScenario
                     ).modules / businessDays.dilution
                   ).toFixed(0)}{" "}
-                  até {dayjs(dateParam).format("DD/MM/YYYY")}
+                  até {dayjs(dateParams.central).format("DD/MM/YYYY")}
                 </p>
               </div>
             </div>

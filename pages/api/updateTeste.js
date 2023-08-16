@@ -5,91 +5,11 @@ import { ObjectId } from "mongodb";
 import connectToProjectsDatabase from "../../utils/connectDb";
 import { calculateStringSimilarity } from "../../utils/constants";
 import axios from "axios";
-import { createClient, get } from "@vercel/edge-config";
-import connectToDatabase from "../../utils/connectDb.js";
+import { errorHandler } from "../../utils/methods/handlers";
+import connectToDatabase from "../../utils/auxiliaresDb";
+import createHttpError from "http-errors";
 export default async function handler(req, res) {
-  const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-  const collection = db.collection("dados");
-
-  const projects = await collection
-    .aggregate([
-      {
-        $match: {
-          "contrato.status": "ASSINADO",
-          qtde: { $lte: 1556 },
-        },
-      },
-      {
-        $project: {
-          qtde: 1,
-          nomeDoContrato: 1,
-          telefone: 1,
-          "contrato.dataAssinatura": 1,
-          cep: 1,
-          uf: 1,
-          cidade: 1,
-          bairro: 1,
-          logradouro: 1,
-          numeroResidencia: 1,
-        },
-      },
-      {
-        $sort: {
-          qtde: 1,
-        },
-      },
-    ])
-    .toArray();
-  const formatted = projects.map((project) => {
-    return {
-      QTDE: project.qtde,
-      "NOME DO CLIENTE": project.nomeDoContrato,
-      TELEFONE: project.telefone,
-      "DATA DE ASSINATURA": project.contrato?.dataAssinatura
-        ? dayjs(project.contrato.dataAssinatura)
-            .add(3, "hour")
-            .format("DD/MM/YYYY")
-        : null,
-      CEP: project.cep,
-      UF: project.uf,
-      CIDADE: project.cidade,
-      BAIRRO: project.bairro,
-      LOGRADOURO: project.logradouro,
-      "NÚMERO DA RESIDÊNCIA": project.numeroResidencia,
-    };
-  });
-  // var arr = [];
-  // const formatted = materials.map((material) => {
-  //   const duplicatedMaterial = materials.find(
-  //     (x) =>
-  //       x._id != material._id &&
-  //       calculateStringSimilarity(
-  //         x.nome.toUpperCase(),
-  //         material.nome.toUpperCase()
-  //       ) > 98
-  //   );
-  //   if (!!duplicatedMaterial) {
-  //     return {
-  //       materialUm: {
-  //         id: material._id,
-  //         nome: material.nome,
-  //         qtde: material.qtde,
-  //       },
-  //       materialDois: {
-  //         id: duplicatedMaterial._id,
-  //         nome: duplicatedMaterial.nome,
-  //         qtde: duplicatedMaterial.qtde,
-  //       },
-  //     };
-  //   } else return null;
-  // });
-
-  // const rd_marketing_access_token = await createClient(
-  //   "ecfg_celqhqfkg1woq2lp9pztgjokn7av"
-  // ).get("rd_marketing_access_token");
-  // const edgeRequestItemAPI = `https://edge-config.vercel.com/ecfg_celqhqfkg1woq2lp9pztgjokn7av/item/rd_marketing_access_token?token=583e45e4-5ecd-4581-9e6f-65ba32d126a7`;
-  // const item = await axios.get(edgeRequestItemAPI);
-  res.json(formatted);
+  res.json("DESATIVADA");
 }
 
 // Update Many example:

@@ -57,6 +57,7 @@ function Calculadora() {
   let obj = {
     telefone: infoHolder.telefone,
     nome: infoHolder.nome,
+    email: infoHolder.email,
     responsavel: "NÃO DEFINIDO",
     cidade: infoHolder.cidade,
     canal: "CALCULADORA SOLAR",

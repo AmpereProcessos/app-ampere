@@ -2144,6 +2144,15 @@ export function formatCPFCpnj(value) {
 export function formatDate(value) {
   return new Date(value).toISOString().slice(0, 10);
 }
+export function formatPersonalName(value) {
+  if (typeof value == "string") {
+    const splittedStr = value.split(" ");
+    const formattedNameArr = splittedStr.map(
+      (x) => x.charAt(0).toUpperCase() + x.slice(1)
+    );
+    return formattedNameArr.join(" ");
+  } else return "";
+}
 export async function getDistanceBetweenCities(destination, origin) {
   console.log(process.env.DB_KEY);
   const proxyurl = "https://cors-anywhere.herokuapp.com/";

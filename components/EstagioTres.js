@@ -83,7 +83,7 @@ function EstagioTres({ infoHolder, setInfoHolder, submitLoading, submitErr }) {
               onChange={(e) =>
                 setInfoHolder({
                   ...infoHolder,
-                  nome: e.target.value.toUpperCase(),
+                  nome: e.target.value,
                 })
               }
               type={"text"}

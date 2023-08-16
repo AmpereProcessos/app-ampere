@@ -13,6 +13,7 @@ import FacebookPixel from "../../../components/Head/facebook/pixel-1";
 import AnalyticsScripts from "../../../components/Head/analytics";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { formatPersonalName } from "../../../utils/constants";
 function Calculadora() {
   const router = useRouter();
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -56,7 +57,7 @@ function Calculadora() {
   }
   let obj = {
     telefone: infoHolder.telefone,
-    nome: infoHolder.nome,
+    nome: infoHolder.nome ? formatPersonalName(infoHolder.nome) : "",
     email: infoHolder.email,
     responsavel: "NÃO DEFINIDO",
     uf: infoHolder.uf,

@@ -59,6 +59,7 @@ function Calculadora() {
     nome: infoHolder.nome,
     email: infoHolder.email,
     responsavel: "NÃO DEFINIDO",
+    uf: infoHolder.uf,
     cidade: infoHolder.cidade,
     canal: "CALCULADORA SOLAR",
     campanha: "",

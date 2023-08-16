@@ -39,6 +39,7 @@ export default async function handler(req, res) {
     nome,
     email,
     responsavel,
+    uf,
     cidade,
     canal,
     campanha,
@@ -69,11 +70,14 @@ export default async function handler(req, res) {
         payload: {
           conversion_identifier: "CALCULADORA",
           email: email,
+          personal_phone: telefone,
           name: nome,
           cf_qual_o_valor_da_sua_conta_de_luz:
             value_cf_qual_o_valor_da_sua_conta_de_luz
               ? value_cf_qual_o_valor_da_sua_conta_de_luz.value
               : undefined,
+          state: uf,
+          city: cidade,
         },
       }
     );

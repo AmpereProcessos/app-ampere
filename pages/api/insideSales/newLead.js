@@ -61,6 +61,7 @@ export default async function handler(req, res) {
         (rdParam) =>
           consumo > rdParam.parametros.min && consumo <= rdParam.parametros.max
       );
+    console.log(value_cf_qual_o_valor_da_sua_conta_de_luz);
     // Creating oportunity on RD
     const { data: rdResponse } = await axios.post(
       `https://api.rd.services/platform/conversions?api_key=${process.env.RD_API_KEY}`,

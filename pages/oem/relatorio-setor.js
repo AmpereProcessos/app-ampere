@@ -92,6 +92,7 @@ function RelatorioSetor() {
       new Date(dateParams.dilution)
     );
     const dilutionMultiplier = numeratorDays / denominatorDays;
+
     const totalModulesQty = info.reduce((acc, current) => {
       const currentModules = isNaN(current.sistema?.qtdeModulos)
         ? 0
@@ -196,17 +197,25 @@ function RelatorioSetor() {
             label={"DATA DE VENCIMENTO"}
             editable={true}
             value={formatDate(dateParams.central)}
-            handleChange={(value) =>
-              setDateParams((prev) => ({ ...prev, central: value }))
-            }
+            handleChange={(value) => {
+              setDateParams((prev) => ({ ...prev, central: value }));
+              setBusinessDays((prev) => ({
+                ...prev,
+                central: dayjs(value).businessDiff(dayjs()),
+              }));
+            }}
           />
           <DateFloatingInput
             label={"DATA DE DILUIÇÃO"}
             editable={true}
             value={formatDate(dateParams.dilution)}
-            handleChange={(value) =>
-              setDateParams((prev) => ({ ...prev, dilution: value }))
-            }
+            handleChange={(value) => {
+              setDateParams((prev) => ({ ...prev, dilution: value }));
+              setBusinessDays((prev) => ({
+                ...prev,
+                dilution: dayjs(value).businessDiff(dayjs()),
+              }));
+            }}
           />
         </div>
         <div className="w-full flex items-center justify-center gap-2">
@@ -215,7 +224,7 @@ function RelatorioSetor() {
             editable={true}
             value={businessDays.central}
             handleChange={(value) =>
-              setDateParams((prev) => ({ ...prev, central: Number(value) }))
+              setBusinessDays((prev) => ({ ...prev, central: Number(value) }))
             }
           />
           <NumberFloatingInput
@@ -403,7 +412,7 @@ function RelatorioSetor() {
                   {(
                     getDilutedOverallTotalQty(
                       filteredDataByMaxDateParamSecondScenario
-                    ).modules / businessDays.dilution
+                    ).modules / businessDays.central
                   ).toFixed(0)}{" "}
                   até {dayjs(dateParams.central).format("DD/MM/YYYY")}
                 </p>

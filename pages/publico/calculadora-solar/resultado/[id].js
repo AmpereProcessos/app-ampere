@@ -103,7 +103,7 @@ export default function Result(props) {
             </p>
             <div className="w-full gap-4 flex flex-col justify-center items-center self-stretch text-center text-white font-black">
               <a
-                href={"https://linktr.ee/ampereenergias"}
+                href={"https://ig.rdstation.com/ampereenergias"}
                 className="flex items-center hover:bg-green-600 hover:scale-110 duration-300 ease-in-out bg-green-500 font-bold cursor-pointer text-white p-2 px-4 rounded gap-2"
               >
                 <FaWhatsapp style={{ fontSize: "25px" }} />

@@ -4,7 +4,7 @@ import LoadingPage from "../../utils/LoadingPage";
 import { FaLongArrowAltRight, FaUserCircle } from "react-icons/fa";
 import { ImArrowDown, ImArrowUp } from "react-icons/im";
 import { AiFillEdit } from "react-icons/ai";
-import { BsCalendarFill } from "react-icons/bs";
+import { BsCalendarFill, BsCartPlusFill } from "react-icons/bs";
 import dayjs from "dayjs";
 function MaterialLogs({ materialId }) {
   const {
@@ -27,9 +27,12 @@ function MaterialLogs({ materialId }) {
           logs.map((log, index) => (
             <div
               key={index}
-              className="w-full lg:w-[60%] p-2 px-4 flex flex-col rounded border border-gray-200"
+              className="w-full lg:w-[60%] p-2 px-4 flex flex-col rounded border border-gray-200 tex"
             >
               <div className="flex w-full justify-center">
+                {log.tipo == "ENTRADA" ? (
+                  <BsCartPlusFill color="rgb(34,197,94)" size={"20px"} />
+                ) : null}
                 {log.tipo == "RETIRADA" ? (
                   <ImArrowUp color="rgb(239,68,68)" />
                 ) : null}

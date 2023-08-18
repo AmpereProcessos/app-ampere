@@ -35,8 +35,7 @@ export async function debitMaterials({
     });
     return { status: "success", statusCode: 201 };
   } catch (error) {
-    if (createHttpError.isHttpError(error)) throw error;
-    else throw new createHttpError.InternalServerError("Erro desconhecido.");
+    throw error;
   }
 }
 export async function returnMaterials({ formId, identifier, changes, tag }) {
@@ -45,11 +44,9 @@ export async function returnMaterials({ formId, identifier, changes, tag }) {
   console.log("TAG DA ALTERAÇÃO", tag);
   try {
     if (!changes)
-      return {
-        status: "fail",
-        statusCode: 400,
-        message: "Array de mudanças não especificado.",
-      };
+      throw new createHttpError.BadRequest(
+        "Array de mudanças não especificado."
+      );
     const filteredChangesByStockableItems = changes.filter(
       (change) => !!change.id
     );
@@ -68,10 +65,55 @@ export async function returnMaterials({ formId, identifier, changes, tag }) {
     });
     return { status: "success", statusCode: 201 };
   } catch (error) {
-    return {
-      status: "error",
-      statusCode: 500,
-      message: "Erro ao retornar materiais.",
-    };
+    throw error;
+  }
+}
+export async function handleMaterialEntrance({ materialId, newPrice, diff }) {
+  try {
+    if (!materialId)
+      throw new createHttpError.BadRequest("ID do material não fornecido.");
+    if (!newPrice)
+      throw new createHttpError.BadRequest("Novo preço não fornecido.");
+    if (!diff) new createHttpError.BadRequest("Diferença não fornecida.");
+
+    const changes = { id: materialId, price: newPrice, diff: diff };
+    const response = await axios.patch("/api/almoxarifado/materiais", {
+      changes: changes,
+    });
+    return "Material atualizado com sucesso!";
+  } catch (error) {
+    throw error;
+  }
+}
+export async function addMaterial(newMaterialObj) {
+  const {
+    nome: nome,
+    qtde: quantidade,
+    qtdeMinima: quantidadeMinima,
+    grandeza: grandeza,
+    preco: preco,
+    codigo: codigo,
+    localizacao: localizacao,
+    anotacoes: anotacoes,
+  } = newMaterialObj;
+  try {
+    if (!nome) throw new createHttpError.BadRequest("Nome não fornecido.");
+    if (!quantidade || Number(quantidade) <= 0)
+      throw new createHttpError.BadRequest("Quantidade inválida!");
+    if (!preco || Number(preco) <= 0)
+      throw new createHttpError.BadRequest("Preço inválido!");
+    const response = await axios.post("/api/almoxarifado/novoMaterial", {
+      nome: nome,
+      qtde: quantidade,
+      qtdeMinima: quantidadeMinima,
+      grandeza: grandeza,
+      preco: preco,
+      codigo: codigo,
+      localizacao: localizacao,
+      anotacoes: anotacoes,
+    });
+    return "Material adicionado com sucesso !";
+  } catch (error) {
+    throw error;
   }
 }

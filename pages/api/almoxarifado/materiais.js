@@ -4,6 +4,7 @@ import connectToProjectsDatabase from "../../../utils/connectDb";
 import { ObjectId } from "mongodb";
 import { getNotificationObjByMaterialMinQty } from "../../../utils/methods/mutation/notifications";
 import createHttpError from "http-errors";
+import { errorHandler } from "../../../utils/methods/handlers";
 
 export default async function handler(req, res) {
   // Fetching up to date information about the materials
@@ -143,6 +144,43 @@ export default async function handler(req, res) {
     console.log(response);
     return;
   }
+  async function handleMaterialEntranceLogInsertion({
+    materialId,
+    diff,
+    userName,
+    userId,
+    currentMaterials,
+    logCollection,
+  }) {
+    console.log("FUI CHAMADO", materialId);
+    const correspondentMaterial = currentMaterials?.find(
+      (currentMaterial) => currentMaterial._id == materialId
+    );
+    console.log("MATERIAL", correspondentMaterial);
+    if (!correspondentMaterial) return null;
+    // const diff = materialNewQty - correspondentMaterial.qtde;
+    const materialNewQty = correspondentMaterial.qtde + diff;
+    const previousQty = correspondentMaterial.qtde;
+    const insertObj = {
+      autor: {
+        nome: userName,
+        id: userId,
+      },
+      material: {
+        id: materialId,
+        nome: correspondentMaterial.nome,
+        categoria: correspondentMaterial.categoria,
+      },
+      alteracao: diff,
+      qtdeAnterior: previousQty,
+      qtdeNovo: materialNewQty,
+      tipo: "ENTRADA",
+      dataInsercao: new Date().toISOString(),
+    };
+    const response = await logCollection.insertOne(insertObj);
+    console.log(response);
+    return;
+  }
   // Formatting function to MongoDB BulkWrite operation pattern
   function handleBulkWriteFormatting(materialList) {
     const filteredMaterialList = materialList.filter(
@@ -254,5 +292,45 @@ export default async function handler(req, res) {
       res.json("Um erro ocorreu, tente novamente.");
     }
   } else if (req.method === "PATCH") {
+    const { user } = await getSession({ req: req });
+    // Used for material entrance
+    const { changes } = req.body;
+    try {
+      if (!changes)
+        throw new createHttpError.BadRequest(
+          "Array de mudanças não fornecido.;"
+        );
+      const db = await connectToDatabase(process.env.DB_KEY);
+      const collection = db.collection("material");
+      const logCollection = db.collection("alteracoes");
+      const { id, price, diff } = changes;
+      if (isNaN(diff))
+        throw new createHttpError.BadRequest("Valor de diferença não válido.");
+      if (isNaN(price))
+        throw new createHttpError.BadRequest("Valor de preço inválido.");
+      const dbResponse = await collection.updateOne(
+        {
+          _id: ObjectId(id),
+        },
+        {
+          $set: {
+            preco: price,
+          },
+          $inc: { qtde: diff },
+        }
+      );
+      const currentStateMaterials = await getCurrentMaterials(collection);
+      await handleMaterialEntranceLogInsertion({
+        materialId: id,
+        currentMaterials: currentStateMaterials,
+        diff: diff,
+        userId: user.id,
+        userName: user.name,
+        logCollection: logCollection,
+      });
+      res.status(201).json(dbResponse);
+    } catch (error) {
+      errorHandler(error, res);
+    }
   }
 }

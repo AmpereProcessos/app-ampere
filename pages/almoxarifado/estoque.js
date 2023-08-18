@@ -214,7 +214,7 @@ function Estoque() {
         </div>
         <div
           onClick={() => setEntranceModalIsOpen(true)}
-          className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-[135px]"
+          className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150 ml-36"
         >
           <p className="uppercase font-bold text-sm">ENTRADA</p>
         </div>

@@ -9,7 +9,7 @@ function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
   const [showDescription, setShowDescription] = useState(false);
   return (
     <div className="flex flex-col w-full gap-2 bg-gray-50 rounded-tr-sm rounded-tl-sm">
-      <div className="grid grid-cols-10 items-center w-full h-[60px]">
+      <div className="grid grid-cols-10 items-center w-full">
         <h1 className="col-span-2 w-full text-center text-xs text-gray-700 font-medium p-1">
           {item.nome && item.grandeza
             ? `${item.nome} (${item.grandeza})`

@@ -7,6 +7,7 @@ import { FixedSizeList } from "react-window";
 function SelectInput({
   width,
   label,
+  alignLabel = "text-start",
   value,
   editable = true,
   options,
@@ -97,11 +98,17 @@ function SelectInput({
     >
       <label
         htmlFor={inputIdentifier}
-        className="font-sans font-bold  text-[#353432]"
+        className={`font-sans font-bold  text-[#353432] ${alignLabel}`}
       >
         {label}
       </label>
-      <div className="flex h-full w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm">
+      <div
+        onClick={() => {
+          if (editable && !selectMenuIsOpen)
+            setSelectMenuIsOpen((prev) => !prev);
+        }}
+        className="flex h-full cursor-pointer w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm"
+      >
         {selectMenuIsOpen ? (
           <input
             type="text"
@@ -112,12 +119,7 @@ function SelectInput({
             className="h-full w-full text-sm italic outline-none"
           />
         ) : (
-          <p
-            onClick={() => {
-              if (editable) setSelectMenuIsOpen((prev) => !prev);
-            }}
-            className="grow cursor-pointer text-[#353432]"
-          >
+          <p className="grow text-[#353432]">
             {selectedId && options
               ? options.filter((item) => item.id == selectedId)[0].label
               : "NÃO DEFINIDO"}

@@ -70,7 +70,11 @@ export async function handleCRMProjectUpdatesAutomations({
           : previousData.contrato?.dataAssinatura,
       },
     };
-
+    const pipeline = [
+      {
+        $set: changes,
+      },
+    ];
     await updateProject({ idCRMProject: idCRMProject, changes: changes });
     // if (idCRMPropose)
     //   await updatePropose({ idCRMPropose: idCRMPropose, changes: changes });

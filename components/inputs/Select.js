@@ -140,15 +140,42 @@ function SelectInput({
         )}
       </div>
       {selectMenuIsOpen ? (
-        <FixedSizeList
-          height={250}
-          itemCount={items.length}
-          itemSize={35}
-          width={300}
-          className="scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300"
-        >
-          {Item}
-        </FixedSizeList>
+        <div className="absolute top-[75px] z-[100] flex h-[250px] max-h-[250px] w-full flex-col self-center overflow-y-auto overscroll-y-auto rounded-md border border-gray-200 bg-[#fff] p-2 py-1 shadow-sm scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div
+            onClick={() => resetState()}
+            className={`flex w-full cursor-pointer items-center rounded p-1 px-2 hover:bg-gray-100 ${
+              !selectedId ? "bg-gray-100" : ""
+            }`}
+          >
+            <p className="grow font-medium text-[#353432]">
+              {selectedItemLabel}
+            </p>
+            {!selectedId ? (
+              <HiCheck style={{ color: "#fead61", fontSize: "20px" }} />
+            ) : null}
+          </div>
+          <div className="my-2 h-[1px] w-full bg-gray-200"></div>
+          {items ? (
+            items.map((item, index) => (
+              <div
+                onClick={() => handleSelect(item.id, item.value)}
+                key={item.id ? item.id : index}
+                className={`flex w-full cursor-pointer items-center rounded p-1 px-2 hover:bg-gray-100 ${
+                  selectedId == item.id ? "bg-gray-100" : ""
+                }`}
+              >
+                <p className="grow font-medium text-[#353432]">{item.label}</p>
+                {selectedId == item.id ? (
+                  <HiCheck style={{ color: "#fead61", fontSize: "20px" }} />
+                ) : null}
+              </div>
+            ))
+          ) : (
+            <p className="w-full text-center text-sm italic text-[#353432]">
+              Sem opções disponíveis.
+            </p>
+          )}
+        </div>
       ) : (
         false
       )}

@@ -13,8 +13,6 @@ const MODAL_STYLES = {
   left: "50%",
   transform: "translate(-50%,-50%)",
   backgroundColor: "#fff",
-  width: "40%",
-  height: "50%",
   borderRadius: "10px",
   padding: "10px",
   zIndex: 1000,
@@ -41,6 +39,7 @@ function Novoitem({ closeModal, getMateriais }) {
     text: "",
     color: "",
   });
+
   function addItem() {
     let obj = {
       nome: nome,
@@ -98,7 +97,10 @@ function Novoitem({ closeModal, getMateriais }) {
   return (
     <>
       <div style={OVERLAY_STYLES}>
-        <div style={MODAL_STYLES}>
+        <div
+          className="w-[90%] lg:w-[50%] h-[90%] lg:h-[80%]"
+          style={MODAL_STYLES}
+        >
           <div className="flex flex-col h-full">
             <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200 min-h-[30px]">
               <h1 className="text-[#15599a] pl-6 uppercase font-bold">

@@ -15,6 +15,7 @@ import FilterButton from "../../components/utils/Buttons/FilterButton";
 import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
 import { FaBox } from "react-icons/fa";
 import { ImPriceTag } from "react-icons/im";
+import ModalEntradaAlmoxarifado from "../../components/ModalEntradaAlmoxarifado";
 function Estoque() {
   const router = useRouter();
   const { data: session, status } = useSession({
@@ -31,6 +32,7 @@ function Estoque() {
     info: {},
   });
   const [newItemModalIsOpen, setNewItemModalIsOpen] = useState(false);
+  const [entranceModalIsOpen, setEntranceModalIsOpen] = useState(false);
 
   const [filters, setFilters] = useState({
     search: "",
@@ -210,6 +212,12 @@ function Estoque() {
         >
           <p className="uppercase font-bold text-sm">NOVO ITEM</p>
         </div>
+        <div
+          onClick={() => setEntranceModalIsOpen(true)}
+          className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-[135px]"
+        >
+          <p className="uppercase font-bold text-sm">ENTRADA</p>
+        </div>
         {editModal.isOpen && editModal.info ? (
           <ModalControlAlmoxarifado
             credentials={session?.user}
@@ -228,6 +236,11 @@ function Estoque() {
             getMateriais={getMateriais}
           />
         )}
+        {entranceModalIsOpen ? (
+          <ModalEntradaAlmoxarifado
+            closeModal={() => setEntranceModalIsOpen((prev) => !prev)}
+          />
+        ) : null}
       </div>
     );
   }

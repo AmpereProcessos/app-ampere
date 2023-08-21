@@ -9,10 +9,7 @@ import { AiFillEdit, AiOutlineEdit, AiTwotoneEdit } from "react-icons/ai";
 function ExpenseCard({ expense, openModal }) {
   const [showItems, setShowItems] = useState(false);
   return (
-    <div
-      oncli
-      className="flex flex-col items-center p-3 border border-gray-200 w-full lg:w-[450px] shadow-sm gap-2"
-    >
+    <div className="flex flex-col items-center p-3 border border-gray-200 w-full lg:w-[450px] shadow-sm gap-2">
       {expense.projeto ? (
         <p className="w-full text-center font-black text-black">
           {expense.projeto.nome}

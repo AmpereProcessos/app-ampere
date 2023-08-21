@@ -11,6 +11,9 @@ function Despesas() {
       router.push("/auth/authHome");
     },
   });
+  const [filters, setFilters] = useState({
+    search: "",
+  });
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
   const isAuthorized = !!session?.user.accessibleRoutes.includes("ADM");
   useEffect(() => {
@@ -39,9 +42,31 @@ function Despesas() {
             </div>
           )}
         </div>
+        <AnimatePresence>
+          {dropdownMenuVisible ? (
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0.6 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="flex flex-col w-full gap-y-2 mt-4"
+            >
+              <div className="flex flex-col lg:flex-row items-center justify-end gap-2 flex-wrap">
+                <input
+                  value={filters.search}
+                  placeholder="NOME DO PROJETO"
+                  onChange={(e) =>
+                    setFilters((prev) => ({ ...prev, search: e.target.value }))
+                  }
+                  className="outline-none p-2 h-[41px]  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
+                  type="text"
+                />
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
 
       <ExpensesWrapper
+        filters={filters}
         userAuthorized={isAuthorized}
         dropdownMenuVisible={dropdownMenuVisible}
       />

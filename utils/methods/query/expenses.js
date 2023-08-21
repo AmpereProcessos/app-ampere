@@ -30,11 +30,21 @@ async function fetchExpenses() {
     throw error;
   }
 }
-export function useExpenses(enabled) {
+export function useExpenses(enabled, filters) {
+  function checkName(expense, nameFilter) {
+    if (nameFilter != "") {
+      return (
+        expense.projeto?.nome &&
+        !!expense.projeto.nome.toUpperCase().includes(nameFilter.toUpperCase())
+      );
+    } else return true;
+  }
   return useQuery({
     queryKey: ["expenses"],
     queryFn: async () => await fetchExpenses(),
     enabled: !!enabled,
+    select: (expenses) =>
+      expenses.filter((expense) => checkName(expense, filters.search)),
     refetchOnWindowFocus: false,
   });
 }

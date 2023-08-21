@@ -15,8 +15,6 @@ const MODAL_STYLES = {
   left: "50%",
   transform: "translate(-50%,-50%)",
   backgroundColor: "#fff",
-  minWidth: "40%",
-  maxWidth: "97%",
   height: "87%",
   borderRadius: "10px",
   padding: "10px",
@@ -61,7 +59,7 @@ function ExpenseModal({ expense, closeModal }) {
   console.log(infoHolder);
   return (
     <div style={OVERLAY_STYLES}>
-      <div style={MODAL_STYLES}>
+      <div className="w-[80%]" style={MODAL_STYLES}>
         <div className="flex flex-col h-full w-full">
           <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
             <div className="flex items-center gap-x-2">

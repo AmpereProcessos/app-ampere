@@ -153,8 +153,15 @@ function ControleAlmoxarifado({
                   <SelectFoatingInput
                     label={"GRANDEZA"}
                     editable={true}
-                    value={materialInfo.grandeza}
-                    options={units}
+                    value={
+                      materialInfo.grandeza
+                        ? materialInfo.grandeza
+                        : "NÃO DEFINIDO"
+                    }
+                    options={[
+                      ...units,
+                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                    ]}
                     handleChange={(value) =>
                       setMaterialInfo((prev) => ({ ...prev, grandeza: value }))
                     }

@@ -17,7 +17,11 @@ export function errorHandler(err, res) {
 export function getErrorMessage(error) {
   console.log(error);
   if (createHttpError.isHttpError(error) && error.expose) return error.message;
-  if (error instanceof AxiosError) return error.message;
+  if (error instanceof AxiosError) {
+    const personalizedHttpError = error.response.data.error;
+    if (personalizedHttpError) return personalizedHttpError.message;
+    else return error.message;
+  }
   return "Houve um erro desconhecido, por favor, comunique o setor de tecnologia.";
 }
 async function updateProject({ idCRMProject, changes }) {

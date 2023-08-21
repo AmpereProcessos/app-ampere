@@ -1,5 +1,5 @@
 import React from "react";
-import { useProjectExpenses } from "../../utils/methods/query/expeses";
+import { useProjectExpenses } from "../../utils/methods/query/expenses";
 import { formatToMoney, validateAuthorization } from "../../utils/constants";
 import { useSession } from "next-auth/react";
 import { BsCalendarFill } from "react-icons/bs";

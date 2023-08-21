@@ -1,0 +1,52 @@
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import ExpensesWrapper from "../../components/identificador/expenses/ExpensesWrapper";
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
+import { AnimatePresence, motion } from "framer-motion";
+function Despesas() {
+  const router = useRouter();
+  const { data: session } = useSession({
+    onUnauthenticated: () => {
+      router.push("/auth/authHome");
+    },
+  });
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
+  const isAuthorized = !!session?.user.accessibleRoutes.includes("ADM");
+  useEffect(() => {
+    if (session?.user && !isAuthorized) router.push("/");
+  }, [session?.user]);
+  return (
+    <div className="p-6 grow flex flex-col gap-2">
+      <div className="flex flex-col w-full pb-1 border-b border-gray-200">
+        <div className="flex items-center gap-2 font-['Roboto']  justify-between">
+          <p className="font-bold uppercase text-start text-2xl text-[#15599a]">
+            REGISTROS DE DESPESAS
+          </p>
+          {dropdownMenuVisible ? (
+            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <IoMdArrowDropupCircle
+                style={{ fontSize: "25px" }}
+                onClick={() => setDropdownMenuVisible(false)}
+              />
+            </div>
+          ) : (
+            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <IoMdArrowDropdownCircle
+                style={{ fontSize: "25px" }}
+                onClick={() => setDropdownMenuVisible(true)}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <ExpensesWrapper
+        userAuthorized={isAuthorized}
+        dropdownMenuVisible={dropdownMenuVisible}
+      />
+    </div>
+  );
+}
+
+export default Despesas;

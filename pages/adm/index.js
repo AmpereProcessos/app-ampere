@@ -571,13 +571,18 @@ function Administracao() {
           </div>
           {session?.user?.visualizacao == undefined && (
             <Link href={"/comercial/formulariosSolicitacao"}>
-              <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
+              <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10">
                 <p className="uppercase font-bold text-sm">
                   SOLICITAÇÕES DE CONTRATO
                 </p>
               </a>
             </Link>
           )}
+          <Link href={"/financeiro/despesas"}>
+            <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 ml-60">
+              <p className="uppercase font-bold text-sm">DESPESAS</p>
+            </a>
+          </Link>
           {modalIsOpen && (
             <ModalADM
               handleUpdates={handleUpdates}

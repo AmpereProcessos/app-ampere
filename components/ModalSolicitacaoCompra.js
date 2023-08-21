@@ -13,6 +13,7 @@ import axios from "axios";
 import SelectInput from "./inputs/Select";
 import { toast } from "react-hot-toast";
 import { useClients } from "../utils/methods/query/clients";
+import ProjectCostVinculationMenu from "./utils/ProjectCostVinculationMenu";
 function PurchaseSolicitationModal({
   info,
   closeModal,
@@ -57,67 +58,7 @@ function PurchaseSolicitationModal({
           </button>
         </div>
         <div className="w-full py-2 grow flex gap-2 flex-col overflow-y-auto overscroll-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          <div className="flex flex-col w-full gap-2">
-            <SelectInput
-              label={"PROJETO PARA VINCULAÇÃO DE CUSTOS"}
-              alignLabel="text-center"
-              selectedItemLabel={"NÃO DEFINIDO"}
-              value={infoHolder.projeto?.id}
-              options={
-                projects?.map((project) => ({
-                  id: project._id,
-                  value: project._id,
-                  label: project.nomeDoContrato,
-                })) || []
-              }
-              handleChange={(value) => {
-                const selectedProject = projects.find((p) => p._id == value);
-                setInfo((prev) => ({
-                  ...prev,
-                  projeto: { id: value, nome: selectedProject.nomeDoContrato },
-                }));
-              }}
-              onReset={() => setInfo((prev) => ({ ...prev, projeto: null }))}
-              width={"100%"}
-            />
-            {infoHolder.projeto ? (
-              <SelectInput
-                label={"CATEGORIA DO CUSTO"}
-                alignLabel="text-center"
-                options={[
-                  { id: 1, label: "PADRÃO", value: "PADRÃO" },
-                  { id: 2, label: "ESTRUTURA", value: "ESTRUTURA" },
-                  { id: 3, label: "MONTAGEM", value: "MONTAGEM" },
-                  {
-                    id: 3,
-                    label: "MANUTENÇÃO PREVENTIVA",
-                    value: "MANUTENÇÃO PREVENTIVA",
-                  },
-                  {
-                    id: 4,
-                    label: "MANUTENÇÃO CORRETIVA",
-                    value: "MANUTENÇÃO CORRETIVA",
-                  },
-                  {
-                    id: 5,
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
-                  },
-                ]}
-                value={infoHolder.projeto?.categoriaCusto}
-                handleChange={(value) =>
-                  setInfo((prev) => ({
-                    ...prev,
-                    projeto: {
-                      ...prev.projeto,
-                      categoriaCusto: value,
-                    },
-                  }))
-                }
-                width={"100%"}
-              />
-            ) : null}
-          </div>
+          <ProjectCostVinculationMenu />
           <div className="flex flex-wrap items-center w-full justify-center gap-4 pb-4">
             <div className="flex flex-col items-center">
               <h1 className="text-start text-gray-500 text-xs font-medium">

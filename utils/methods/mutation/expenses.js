@@ -42,7 +42,7 @@ export async function insertExpensesFromMaterials({
       total: totalExpend, // somatória final do objeto de custo
       dataInsercao: new Date().toISOString(), // data de inserção do documento
     };
-    await axios.post("/api/expenses", { data: costObj });
+    await axios.post("/api/despesas", { data: costObj });
 
     return { status: "success", statusCode: 201 };
   } catch (error) {
@@ -51,5 +51,16 @@ export async function insertExpensesFromMaterials({
       statusCode: 500,
       message: "Erro ao retornar materiais.",
     };
+  }
+}
+export async function updateExpense({ expenseId, changes }) {
+  try {
+    const response = await axios.put(`/api/despesas?id=${expenseId}`, {
+      changes,
+    });
+    console.log(response);
+    return "Objeto de gastos atualizado com sucesso!";
+  } catch (error) {
+    throw error;
   }
 }

@@ -111,5 +111,9 @@ async function updatingCRMProjectsManually(req, res) {
   // });
 
   // const bulkWriteResponse = await crmProjectsCollection.bulkWrite(bulkWriteArr);
-  res.json(response);
+}
+export function isEmpty(value) {
+  return (
+    value == null || (typeof value === "string" && value.trim().length === 0)
+  );
 }

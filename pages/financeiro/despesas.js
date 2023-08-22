@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import ExpensesWrapper from "../../components/identificador/expenses/ExpensesWrapper";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { AnimatePresence, motion } from "framer-motion";
+import NewExpense from "../../components/identificador/expenses/NewExpense";
 function Despesas() {
   const router = useRouter();
   const { data: session } = useSession({
@@ -11,11 +12,13 @@ function Despesas() {
       router.push("/auth/authHome");
     },
   });
+  const isAuthorized = !!session?.user.accessibleRoutes.includes("ADM");
+  const [newExpenseModalIsOpen, setNewExpenseModalIsOpen] = useState(false);
+
   const [filters, setFilters] = useState({
     search: "",
   });
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
-  const isAuthorized = !!session?.user.accessibleRoutes.includes("ADM");
   useEffect(() => {
     if (session?.user && !isAuthorized) router.push("/");
   }, [session?.user]);
@@ -64,12 +67,20 @@ function Despesas() {
           ) : null}
         </AnimatePresence>
       </div>
-
       <ExpensesWrapper
         filters={filters}
         userAuthorized={isAuthorized}
         dropdownMenuVisible={dropdownMenuVisible}
       />
+      <a
+        onClick={() => setNewExpenseModalIsOpen(true)}
+        className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10"
+      >
+        <p className="uppercase font-bold text-sm">NOVA DESPESA</p>
+      </a>
+      {/* {newExpenseModalIsOpen ? (
+        <NewExpense closeModal={() => setNewExpenseModalIsOpen(false)} />
+      ) : null} */}
     </div>
   );
 }

@@ -1038,7 +1038,14 @@ export const fatorDeGeracaoPorOrientacao = {
     SUDESTE: "108.39",
   },
 };
-
+export const expenseCategories = [
+  { id: 1, label: "MONTAGEM", value: "MONTAGEM" },
+  { id: 2, label: "PADRÃO", value: "PADRÃO" },
+  { id: 3, label: "ESTRUTURA", value: "ESTRUTURA" },
+  { id: 4, label: "MANUTENÇÃO CORRETIVA", value: "MANUTENÇÃO CORRETIVA" },
+  { id: 5, label: "MANUTENÇÃO PREVENTIVA", value: "MANUTENÇÃO PREVENTIVA" },
+  { id: 6, label: "OUTROS", value: "OUTROS" },
+];
 export const projetistas = [
   {
     nome: "POLLIANA CRISTINA DE REZENDE",

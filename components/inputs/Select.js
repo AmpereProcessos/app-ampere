@@ -7,7 +7,8 @@ import { FixedSizeList } from "react-window";
 function SelectInput({
   width,
   label,
-  alignLabel = "text-start",
+  labelClassName = "font-sans font-bold  text-[#353432] text-start",
+  showLabel = true,
   value,
   editable = true,
   options,
@@ -31,7 +32,7 @@ function SelectInput({
   const [selectedId, setSelectedId] = useState(getValueID(value));
 
   const [searchFilter, setSearchFilter] = useState("");
-  const inputIdentifier = label.toLowerCase().replace(" ", "_");
+  const inputIdentifier = label ? label.toLowerCase().replace(" ", "_") : "";
   function handleSelect(id, item) {
     handleChange(item);
     setSelectedId(id);
@@ -96,18 +97,18 @@ function SelectInput({
         width ? width : "350px"
       }]`}
     >
-      <label
-        htmlFor={inputIdentifier}
-        className={`font-sans font-bold  text-[#353432] ${alignLabel}`}
-      >
-        {label}
-      </label>
+      {showLabel ? (
+        <label htmlFor={inputIdentifier} className={labelClassName}>
+          {label}
+        </label>
+      ) : null}
+
       <div
         onClick={() => {
           if (editable && !selectMenuIsOpen)
             setSelectMenuIsOpen((prev) => !prev);
         }}
-        className="flex h-full cursor-pointer w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm"
+        className="flex min-h-[41px] cursor-pointer w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm"
       >
         {selectMenuIsOpen ? (
           <input
@@ -129,14 +130,14 @@ function SelectInput({
           <IoMdArrowDropup
             style={{ cursor: "pointer" }}
             onClick={() => {
-              if (editable) setSelectMenuIsOpen((prev) => !prev);
+              if (editable) setSelectMenuIsOpen(false);
             }}
           />
         ) : (
           <IoMdArrowDropdown
             style={{ cursor: "pointer" }}
             onClick={() => {
-              if (editable) setSelectMenuIsOpen((prev) => !prev);
+              if (editable) setSelectMenuIsOpen(true);
             }}
           />
         )}

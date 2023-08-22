@@ -53,6 +53,14 @@ export async function insertExpensesFromMaterials({
     };
   }
 }
+export async function insertExpense(info) {
+  try {
+    await axios.post("/api/despesas", { data: info });
+    return "Despesa adicionada com sucesso !";
+  } catch (error) {
+    throw error;
+  }
+}
 export async function updateExpense({ expenseId, changes }) {
   try {
     const response = await axios.put(`/api/despesas?id=${expenseId}`, {

@@ -1,14 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaLink } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import ProjectVinculationMenu from "./ProjectVinculationMenu";
 import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
 import SelectInput from "../../inputs/Select";
-import { expenseCategories, formatToMoney } from "../../../utils/constants";
+import {
+  centrosDeCusto,
+  expenseCategories,
+  formatToMoney,
+} from "../../../utils/constants";
 import TextInput from "../../inputs/Text";
 import NumberInput from "../../inputs/Number";
 import { MdDelete } from "react-icons/md";
+import CheckboxInput from "../../CheckboxInput";
+import { insertExpense } from "../../../utils/methods/mutation/expenses";
+import { getErrorMessage } from "../../../utils/methods/handlers";
+import { useQueryClient } from "react-query";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -29,9 +37,26 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
+
+function getExpenseCategories(costApportionment) {
+  if (!costApportionment) return [];
+  const costApportionmentsObj = centrosDeCusto.find(
+    (center) => center.nome == costApportionment
+  );
+  if (!costApportionmentsObj) return [];
+
+  const options = costApportionmentsObj.categorias.map((category, index) => ({
+    id: index + 1,
+    ...category,
+  }));
+  return options;
+}
+
 function NewExpense({ closeModal }) {
+  const queryClient = useQueryClient();
   const { data: session } = useSession();
   const [infoHolder, setInfoHolder] = useState({
+    rateio: null,
     categoria: null,
     descricao: "",
     projeto: null,
@@ -41,6 +66,8 @@ function NewExpense({ closeModal }) {
     },
     itens: [],
     total: 0,
+    criterioReferencia: false,
+    criterioCompetencia: false,
     dataInsercao: new Date().toISOString(),
   });
   const [itemHolder, setItemHolder] = useState({
@@ -48,6 +75,7 @@ function NewExpense({ closeModal }) {
     preco: null,
     qtde: null,
   });
+  const [insertLoading, setInsertLoading] = useState(false);
   function linkClient(info) {
     const { _id, nomeDoContrato, qtde } = info;
     const project = {
@@ -98,6 +126,63 @@ function NewExpense({ closeModal }) {
     }, 0);
     return Number(total.toFixed(2));
   }
+  async function handleInsertExpense() {
+    if (!infoHolder.rateio) {
+      toast.error("Preencha o rateio/centro de custo da despesa.");
+      return false;
+    }
+    if (!infoHolder.categoria) {
+      toast.error("Preencha a categoria da despesa.");
+      return false;
+    }
+    if (infoHolder.total <= 0) {
+      toast.error("Valor da despesa inválido.");
+      return false;
+    }
+    if (!infoHolder.criterioCompetencia && !infoHolder.criterioReferencia) {
+      toast.error(
+        "Despesa deve ser aplicável a ao menos um critério de análise (Competência ou Referência)."
+      );
+      return false;
+    }
+    setInsertLoading(true);
+    const loadingToastID = toast.loading("Processando...");
+    try {
+      const user = {
+        id: session?.user.id,
+        nome: session?.user.name,
+      };
+      const response = await insertExpense({ ...infoHolder, autor: user });
+      toast.dismiss(loadingToastID);
+      toast.success(response);
+      setInfoHolder({
+        rateio: null,
+        categoria: null,
+        descricao: "",
+        projeto: null,
+        autor: {
+          id: session.user?.id,
+          nome: session.user?.name,
+        },
+        itens: [],
+        total: 0,
+        criterioReferencia: false,
+        criterioCompetencia: false,
+        dataInsercao: new Date().toISOString(),
+      });
+      await queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      setInsertLoading(false);
+    } catch (error) {
+      const msg = getErrorMessage(error);
+      toast.dismiss(loadingToastID);
+      toast.error(msg);
+      setInsertLoading(false);
+    }
+  }
+  useEffect(() => {
+    const total = getExpenseTotal(infoHolder.itens);
+    setInfoHolder((prev) => ({ ...prev, total: total }));
+  }, [infoHolder.itens]);
   return (
     <div style={OVERLAY_STYLES}>
       <div className="w-[80%]" style={MODAL_STYLES}>
@@ -149,11 +234,32 @@ function NewExpense({ closeModal }) {
             <div className="flex flex-col w-full my-2">
               <SelectInput
                 editable={true}
-                label={"CATEGORIAS DE GASTO"}
+                label={"RATEIO / CENTRO DE CUSTO"}
+                labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
+                selectedItemLabel={"NÃO DEFINIDO"}
+                value={infoHolder.rateio}
+                options={centrosDeCusto.map((center, index) => ({
+                  id: index + 1,
+                  label: center.nome,
+                  value: center.nome,
+                }))}
+                handleChange={(value) =>
+                  setInfoHolder((prev) => ({ ...prev, rateio: value }))
+                }
+                onReset={() =>
+                  setInfoHolder((prev) => ({ ...prev, rateio: null }))
+                }
+                width={"100%"}
+              />
+            </div>
+            <div className="flex flex-col w-full my-2">
+              <SelectInput
+                editable={true}
+                label={"CATEGORIA"}
                 labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
                 selectedItemLabel={"NÃO DEFINIDO"}
                 value={infoHolder.categoria}
-                options={expenseCategories}
+                options={getExpenseCategories(infoHolder.rateio)}
                 handleChange={(value) =>
                   setInfoHolder((prev) => ({ ...prev, categoria: value }))
                 }
@@ -161,6 +267,30 @@ function NewExpense({ closeModal }) {
                   setInfoHolder((prev) => ({ ...prev, categoria: null }))
                 }
                 width={"100%"}
+              />
+            </div>
+            <div className="flex flex-col md:flex-row justify-center gap-2 w-full my-2">
+              <CheckboxInput
+                checked={infoHolder.criterioCompetencia}
+                labelFalse={"NÃO APLICÁVEL A CRITÉRIO DE COMPETÊNCIA"}
+                labelTrue={"APLICÁVEL A CRITÉRIO DE COMPETÊNCIA"}
+                handleChange={(value) =>
+                  setInfoHolder((prev) => ({
+                    ...prev,
+                    criterioCompetencia: value,
+                  }))
+                }
+              />
+              <CheckboxInput
+                checked={infoHolder.criterioReferencia}
+                labelFalse={"NÃO APLICÁVEL A CRITÉRIO DE REFERÊNCIA"}
+                labelTrue={"APLICÁVEL A CRITÉRIO DE REFERÊNCIA"}
+                handleChange={(value) =>
+                  setInfoHolder((prev) => ({
+                    ...prev,
+                    criterioReferencia: value,
+                  }))
+                }
               />
             </div>
             <div className="flex flex-col w-full my-2">
@@ -276,11 +406,32 @@ function NewExpense({ closeModal }) {
                   </p>
                 </div>
               )}
-              <div className="flex items-center w-full justify-end mt-2">
-                <button className="w-fit p-2 rounded border font-medium border-green-500 text-green-500 hover:bg-green-500 hover:text-white">
-                  CRIAR NOVO REGISTRO
-                </button>
+            </div>
+            {!(infoHolder.itens.length > 0) ? (
+              <div className="flex justify-center items-center w-full my-2">
+                <NumberInput
+                  label={"TOTAL DA DESPESA"}
+                  labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
+                  value={infoHolder.total}
+                  handleChange={(value) =>
+                    setInfoHolder((prev) => ({ ...prev, total: value }))
+                  }
+                  onReset={() =>
+                    setInfoHolder((prev) => ({ ...prev, total: null }))
+                  }
+                  width={"100%"}
+                />
               </div>
+            ) : null}
+
+            <div className="flex items-center w-full justify-end mt-2">
+              <button
+                disabled={insertLoading}
+                onClick={handleInsertExpense}
+                className="w-fit p-2 rounded border font-medium border-green-500 text-green-500 hover:bg-green-500 hover:text-white disabled:text-gray-500 disabled:border-gray-500"
+              >
+                CRIAR NOVO REGISTRO
+              </button>
             </div>
           </div>
         </div>

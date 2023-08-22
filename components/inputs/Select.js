@@ -122,7 +122,7 @@ function SelectInput({
         ) : (
           <p className="grow text-[#353432]">
             {selectedId && options
-              ? options.filter((item) => item.id == selectedId)[0].label
+              ? options.filter((item) => item.id == selectedId)[0]?.label
               : "NÃO DEFINIDO"}
           </p>
         )}

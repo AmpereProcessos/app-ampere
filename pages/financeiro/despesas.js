@@ -78,9 +78,9 @@ function Despesas() {
       >
         <p className="uppercase font-bold text-sm">NOVA DESPESA</p>
       </a>
-      {/* {newExpenseModalIsOpen ? (
+      {newExpenseModalIsOpen ? (
         <NewExpense closeModal={() => setNewExpenseModalIsOpen(false)} />
-      ) : null} */}
+      ) : null}
     </div>
   );
 }

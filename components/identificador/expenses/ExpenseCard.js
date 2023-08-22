@@ -48,56 +48,58 @@ function ExpenseCard({ expense, openModal }) {
             </a>
           </Link>
         ) : null}
-        {showItems ? (
-          <div className="w-full flex flex-col items-center">
-            <button
-              onClick={() => setShowItems(false)}
-              className="text-sm text-blue-300 hover:text-blue-700 font-medium flex items-center gap-2"
-            >
-              ESCONDER ITENS <BsEyeSlashFill />
-            </button>
-            {expense.itens.map((item, index) => (
-              <div
-                key={index}
-                className="w-full flex items-center text-xs justify-between"
+        {expense.itens.length > 0 ? (
+          showItems ? (
+            <div className="mt-2 w-full flex flex-col items-center">
+              <button
+                onClick={() => setShowItems(false)}
+                className="text-sm text-blue-300 hover:text-blue-700 font-medium flex items-center gap-2"
               >
-                <p>
-                  {item.qtde?.toLocaleString("pt-br", {
-                    maximumFractionDigits: 2,
-                  })}{" "}
-                  x {item.descricao}
-                  {item.unidade ? `(${item.unidade})` : null}
-                </p>
-                <p>
-                  {/* R${" "}
+                ESCONDER ITENS <BsEyeSlashFill />
+              </button>
+              {expense.itens.map((item, index) => (
+                <div
+                  key={index}
+                  className="w-full flex items-center text-xs justify-between"
+                >
+                  <p>
+                    {item.qtde?.toLocaleString("pt-br", {
+                      maximumFractionDigits: 2,
+                    })}{" "}
+                    x {item.descricao}
+                    {item.unidade ? `(${item.unidade})` : null}
+                  </p>
+                  <p>
+                    {/* R${" "}
                 {item.preco.toLocaleString("pt-br", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })} */}
-                  {formatToMoney(item.preco)}
-                  {item.unidade ? `/${item.unidade}` : null}
-                </p>
-                <p className="font-medium">
-                  {formatToMoney(item.qtde * item.preco)}
-                  {/* R${" "}
+                    {formatToMoney(item.preco)}
+                    {item.unidade ? `/${item.unidade}` : null}
+                  </p>
+                  <p className="font-medium">
+                    {formatToMoney(item.qtde * item.preco)}
+                    {/* R${" "}
                 {(item.qtde * item.preco).toLocaleString("pt-br", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })} */}
-                </p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex items-center justify-center w-full">
-            <button
-              onClick={() => setShowItems(true)}
-              className="text-sm text-blue-300 hover:text-blue-700 font-medium flex items-center gap-2"
-            >
-              MOSTRAR ITENS <BsEyeFill />
-            </button>
-          </div>
-        )}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-2 flex items-center justify-center w-full">
+              <button
+                onClick={() => setShowItems(true)}
+                className="text-sm text-blue-300 hover:text-blue-700 font-medium flex items-center gap-2"
+              >
+                MOSTRAR ITENS <BsEyeFill />
+              </button>
+            </div>
+          )
+        ) : null}
       </div>
 
       <div className="flex items-center gap-2 w-full">

@@ -520,14 +520,156 @@ const servicesType = [
     value: "NÃO DEFINIDO",
   },
 ];
+const revenueTypes = [
+  { label: "SISTEMA FOTOVOLTAICO", value: "SISTEMA FOTOVOLTAICO" },
+  { label: "OPERAÇÃO E MANUTENÇÃO", value: "OPERAÇÃO E MANUTENÇÃO" },
+  { label: "SUBESTAÇÕES", value: "SUBESTAÇÕES" },
+  { label: "OUTRAS RECEITAS", value: "OUTRAS RECEITAS" },
+] as const;
+interface IRevenues {
+  tipo: (typeof revenueTypes)[number]["value"];
+  autor: {
+    id: string; // id do usuário que criou o referente registro de custos
+    nome: string; // nome do usuário que criou o referente registro de custos
+  };
+  projeto: {
+    id: string; // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
+    nome: string; // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
+    identificador: number; // identificador QTDE do projeto no banco de projetos
+  };
+  valor: number;
+  efetivacao: {
+    efetivado: boolean;
+    data: string;
+  };
+  dataInsercao: string;
+  criterioReferencia: boolean;
+  criterioCompetencia: boolean;
+}
+
+export const costApportionments = [
+  {
+    nome: "DEDUÇÕES",
+    categorias: [
+      { label: "IMPOSTOS DE VENDA", value: "IMPOSTOS DE VENDA" },
+      { label: "DEVOLUÇÕES/DESCONTOS", value: "DEVOLUÇÕES/DESCONTOS" },
+    ],
+  },
+  {
+    nome: "CUSTOS DIRETOS",
+    categorias: [
+      { label: "KIT'S GERADORES", value: "KIT'S GERADORES" },
+      { label: "INSUMOS DE ALMOXARIFADO", value: "INSUMOS DE ALMOXARIFADO" },
+      { label: "OUTROS CUSTOS DIRETOS", value: "OUTROS CUSTOS DIRETOS" }, // outros custos de serviço ou produto
+    ],
+  },
+  {
+    nome: "DESPESAS COMERCIAIS",
+    categorias: [
+      { label: "DESPESAS DE MARKETING", value: "DESPESAS DE MARKETING" },
+      { label: "EQUIPE DE MARKETING", value: "EQUIPE DE MARKETING" },
+      { label: "EQUIPE DE VENDAS", value: "EQUIPE DE VENDAS" },
+      { label: "COMISSÕES DE INTERNOS", value: "COMISSÕES DE INTERNOS" },
+      { label: "COMISSÕES DE TERCEIROS", value: "COMISSÕES DE TERCEIROS" },
+      { label: "AJUDAS DE CUSTO", value: "AJUDAS DE CUSTO" },
+      { label: "PROVISÕES", value: "PROVISÕES" }, // 13°'s, férias e etc
+      { label: "OUTROS CUSTOS COMERCIAIS", value: "OUTROS CUSTOS COMERCIAIS" },
+    ],
+  },
+  {
+    nome: "DESPESAS ADMINISTRATIVAS",
+    categorias: [
+      { label: "ALUGUEL/CONDOMÍNIO/IPTU", value: "ALUGUEL/CONDOMÍNIO/IPTU" },
+      { label: "MANUTENÇÕES", value: "MANUTENÇÕES" },
+      { label: "ENERGIA/INTERNET/ÁGUA", value: "ENERGIA/INTERNET/ÁGUA" },
+      { label: "ASSINATURAS DE SOFTWARE", value: "ASSINATURAS DE SOFTWARE" },
+      { label: "CONTABILIDADE/SEGUROS", value: "CONTABILIDADE/SEGUROS" },
+      { label: "PRÓ-LABORE", value: "PRÓ-LABORE" },
+      { label: "EQUIPE ADMINISTRATIVA", value: "EQUIPE ADMINISTRATIVA" },
+      { label: "HONORÁRIOS ADVOCATÍCIOS", value: "HONORÁRIOS ADVOCATÍCIOS" },
+      {
+        label: "FAXINA/MATERIAIS DO ESCRITÓRIO",
+        value: "FAXINA/MATERIAIS DO ESCRITÓRIO",
+      },
+      { label: "DOAÇÕES", value: "DOAÇÕES" },
+      { label: "PROVISÕES", value: "PROVISÕES" },
+      {
+        label: "OUTROS CUSTOS ADMINISTRATIVOS",
+        value: "OUTROS CUSTOS ADMINISTRATIVOS",
+      },
+    ],
+  },
+  {
+    nome: "DESPESAS OBRAS",
+    categorias: [
+      { label: "DESPESAS DE OBRAS", value: "DESPESAS DE OBRAS" },
+      { label: "ALUGUEL DE EQUIPAMENTOS", value: "ALUGUEL DE EQUIPAMENTOS" },
+      { label: "EQUIPE DE OBRAS", value: "EQUIPE DE OBRAS" },
+      { label: "TERCEIROS", value: "TERCEIROS" },
+      { label: "COMISSÕES", value: "COMISSÕES" },
+      { label: "PROVISÕES", value: "PROVISÕES" },
+    ],
+  },
+  {
+    nome: "DESPESAS OPERACIONAIS",
+    categorias: [
+      { label: "ALUGUEL DE VEÍCULOS", value: "ALUGUEL DE VEÍCULOS" },
+      { label: "ANUIDADE DO CREA", value: "ANUIDADE DO CREA" },
+      { label: "COMBUSTÍVEL", value: "COMBUSTÍVEL" },
+      { label: "PEDÁGIO E ESTACIONAMENTO", value: "PEDÁGIO E ESTACIONAMENTO" },
+      { label: "LANCHES E REFEIÇÕES", value: "LANCHES E REFEIÇÕES" },
+      { label: "HOSPEDAGEM", value: "HOSPEDAGEM" },
+      { label: "GASTOS COM GYMPASS", value: "GASTOS COM GYMPASS" },
+      { label: "UNIFORMES", value: "UNIFORMES" },
+      {
+        label: "OUTROS CUSTOS OPERACIONAIS",
+        value: "OUTROS CUSTOS OPERACIONAIS",
+      },
+    ],
+  },
+  {
+    nome: "DEPRECIAÇÃO E AMORTIZAÇÕES",
+    categorias: [
+      {
+        label: "DEPRECIAÇÃO E AMORTIZAÇÕES",
+        value: "DEPRECIAÇÃO E AMORTIZAÇÕES",
+      },
+    ],
+  },
+  {
+    nome: "DESPESAS FINANCEIRAS",
+    categorias: [
+      {
+        label: "JUROS/AMORTIZAÇÃO DE DÍVIDAS",
+        value: "JUROS/AMORTIZAÇÃO DE DÍVIDAS",
+      },
+      { label: "DESPESAS BANCÁRIAS", value: "DESPESAS BANCÁRIAS" },
+      { label: "EMPRÉSTIMOS", value: "EMPRÉSTIMOS" },
+      {
+        label: "OUTRAS CUSTOS FINANCEIROS",
+        value: "OUTRAS CUSTOS FINANCEIROS",
+      },
+    ],
+  },
+  {
+    nome: "IMPOSTOS",
+    categorias: [
+      { label: "ICMS", value: "ICMS" },
+      { label: "ISS", value: "ISS" },
+      { label: "PIS", value: "PIS" },
+      { label: "COFINS", value: "COFINS" },
+      { label: "INSS", value: "INSS" },
+      { label: "FGTS", value: "FGTS" },
+      { label: "IPVA/DPVAT/LICENCIAMENTO", value: "IPVA/DPVAT/LICENCIAMENTO" },
+      { label: "IRRF", value: "IRRF" },
+      { label: "SIMPLES NACIONAL - DAS", value: "SIMPLES NACIONAL - DAS" },
+      { label: "IRPJ/CSLL", value: "IRPJ/CSLL" },
+    ],
+  },
+] as const;
 interface ICosts {
-  categoria:
-    | "MONTAGEM"
-    | "PADRÃO"
-    | "ESTRUTURA"
-    | "MANUTENÇÃO CORRETIVA"
-    | "MANUTENÇÃO PREVENTIVA"
-    | "OUTROS"; // categoria do custo, de modo a especificar em que atividade/serviço estão sendo despendidos os gastos.
+  rateio: (typeof costApportionments)[number]["nome"];
+  categoria: (typeof costApportionments)[number]["categorias"][number]["value"];
   descricao: string; // descrição adicional, com detalhes, explicações ou qualquer informação para futura entendimento dos gastos
   projeto: {
     id: string; // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
@@ -548,6 +690,12 @@ interface ICosts {
     qtde: number; // quantidade de fato utilizada na execução do serviço
   }[];
   total: number; // somatória final do objeto de custo
+  efetivacao: {
+    efetivado: boolean;
+    data: string;
+  };
+  criterioReferencia: boolean;
+  criterioCompetencia: boolean;
   dataInsercao: string; // data de inserção do documento
 }
 interface IMaterial {

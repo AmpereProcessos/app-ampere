@@ -102,6 +102,14 @@ function ExpenseModal({ expense, closeModal }) {
             ) : null}
             <div className="flex flex-col w-full my-2">
               <h1 className="w-full text-center text-gray-500 font-normal font-raleway text-sm">
+                RATEIO / CENTRO DE CUSTO
+              </h1>
+              <p className="w-full text-center text-blue-500 font-black font-raleway text-lg">
+                {expense.rateio}
+              </p>
+            </div>
+            <div className="flex flex-col w-full my-2">
+              <h1 className="w-full text-center text-gray-500 font-normal font-raleway text-sm">
                 CATEGORIA DA DESPESA
               </h1>
               <p className="w-full text-center text-blue-500 font-black font-raleway text-lg">
@@ -129,20 +137,30 @@ function ExpenseModal({ expense, closeModal }) {
 
                 <h1 className="font-bold text-center w-1/6">VALOR TOTAL</h1>
               </div>
-              {expense.itens.map((item, index) => (
-                <ExpenseListItem
-                  key={index}
-                  item={item}
-                  index={index}
-                  items={infoHolder.itens}
-                  setExpenseInfo={setInfoHolder}
-                />
-              ))}
+              {expense.itens.length > 0 ? (
+                expense.itens.map((item, index) => (
+                  <ExpenseListItem
+                    key={index}
+                    item={item}
+                    index={index}
+                    items={infoHolder.itens}
+                    setExpenseInfo={setInfoHolder}
+                  />
+                ))
+              ) : (
+                <div className="flex items-center justify-center min-h-[40px]">
+                  <p className="text-sm italic text-gray-500">
+                    Não há itens adicionados...
+                  </p>
+                </div>
+              )}
               <div className="w-full bg-gray-500 text-white flex items-center gap-2 p-2 rounded">
                 <h1 className="font-bold text-center w-full">VALOR TOTAL</h1>
               </div>
               <h1 className="w-full py-2 text-center border-b border-gray-300 border-x px-2 font-black text-lg">
-                {formatToMoney(getTotal(expense.itens))}
+                {expense.itens.length > 0
+                  ? formatToMoney(getTotal(expense.itens))
+                  : formatToMoney(expense.total)}
               </h1>
             </div>
             <div className="w-full flex items-center justify-end px-2">

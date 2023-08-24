@@ -13,7 +13,7 @@ import axios from "axios";
 import SelectInput from "./inputs/Select";
 import { toast } from "react-hot-toast";
 import { useClients } from "../utils/methods/query/clients";
-import ProjectVinculationMenu from "../components/identificador/expenses/ProjectVinculationMenu";
+import ProjectVinculationMenu from "../components/identificador/despesas/ProjectVinculationMenu";
 import { formatToMoney, motivosSolicitacaoCompra } from "../utils/constants";
 import CheckboxInput from "./CheckboxInput";
 import { isEmpty } from "../utils/methods/custom";

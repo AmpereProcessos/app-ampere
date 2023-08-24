@@ -6,7 +6,7 @@ import { BsCalendarFill } from "react-icons/bs";
 import LoadingPage from "../utils/LoadingPage";
 import dayjs from "dayjs";
 import { FaUserAlt } from "react-icons/fa";
-import ExpenseItem from "../identificador/expenses/ExpenseItem";
+import ExpenseItem from "../identificador/despesas/ExpenseItem";
 function InfoDespesasBlock({ projectId }) {
   const { data: session } = useSession();
   const {

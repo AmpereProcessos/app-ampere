@@ -29,10 +29,11 @@ interface IProject {
   insider: string;
   obsComercial: string;
   nps: number;
-
   idProjetoCRM: string;
   idPropostaCRM: string;
   idSolicitacaoContrato: string;
+  possuiDeficiencia: string;
+  qualDeficiencia: string;
   visitaTecnica: {
     amperagem: string;
     saidaDoCliente: "AEREO" | "SUBTERRANEO";
@@ -295,6 +296,8 @@ interface IProject {
     sistemaLigado: boolean;
     tipoEntregaTecnica: "REMOTO" | "PRESENCIAL";
     vistoriaConcessionaria: boolean;
+    contatos: string;
+    cuidados: string;
   };
   // LINKS É COMUM PARA TODOS OS CONTRATOS
   links: {
@@ -540,7 +543,12 @@ interface IRevenues {
     nome: string; // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
     identificador: number; // identificador QTDE do projeto no banco de projetos
   };
-  valor: number;
+  itens?: {
+    descricao: string; // nome ou descrição do item de custo
+    preco: string; // preco unitário do item
+    qtde: number; // quantidade de fato utilizada na execução do serviço
+  }[];
+  total: number;
   efetivacao: {
     efetivado: boolean;
     data: string;

@@ -656,7 +656,13 @@ function ModalFormSolicitacao({
       sistemaLigado: false,
       jornadaConcluida: false,
       dataNps: undefined,
+      cuidados: dados.cuidadosContatoJornada,
+      contatos: dados.nomeContatoJornadaDois
+        ? `1º CONTATO - ${dados.nomeContatoJornadaUm} (${dados.telefoneContatoUm}) 2º CONTATO - ${dados.nomeContatoJornadaDois} (${dados.telefoneContatoDois})`
+        : `1º CONTATO - ${dados.nomeContatoJornadaUm} (${dados.telefoneContatoUm})`,
     },
+    possuiDeficiencia: dados.possuiDeficiencia,
+    qualDeficiencia: dados.qualDeficiencia,
     nps: undefined,
     idVisitaTecnica: dados.idVisitaTecnica,
     idProjetoCRM: dados.idProjetoCRM,

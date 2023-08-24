@@ -5,7 +5,8 @@ import ExpensesWrapper from "../../components/identificador/despesas/ExpensesWra
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 import { AnimatePresence, motion } from "framer-motion";
 import NewExpense from "../../components/identificador/despesas/NewExpense";
-function Despesas() {
+import RevenuesWrapper from "../../components/identificador/receitas/RevenuesWrapper";
+function Receitas() {
   const router = useRouter();
   const { data: session } = useSession({
     onUnauthenticated: () => {
@@ -29,7 +30,7 @@ function Despesas() {
       <div className="flex flex-col w-full pb-1 border-b border-gray-200">
         <div className="flex items-center gap-2 font-['Roboto']  justify-between">
           <p className="font-bold uppercase text-start text-2xl text-[#15599a]">
-            REGISTROS DE DESPESAS
+            REGISTROS DE RECEITAS
           </p>
           {dropdownMenuVisible ? (
             <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
@@ -69,7 +70,7 @@ function Despesas() {
           ) : null}
         </AnimatePresence>
       </div>
-      <ExpensesWrapper
+      <RevenuesWrapper
         filters={filters}
         userAuthorized={isAuthorized}
         dropdownMenuVisible={dropdownMenuVisible}
@@ -78,7 +79,7 @@ function Despesas() {
         onClick={() => setNewExpenseModalIsOpen(true)}
         className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10"
       >
-        <p className="uppercase font-bold text-sm">NOVA DESPESA</p>
+        <p className="uppercase font-bold text-sm">NOVA RECEITA</p>
       </a>
       {newExpenseModalIsOpen ? (
         <NewExpense closeModal={() => setNewExpenseModalIsOpen(false)} />
@@ -87,4 +88,4 @@ function Despesas() {
   );
 }
 
-export default Despesas;
+export default Receitas;

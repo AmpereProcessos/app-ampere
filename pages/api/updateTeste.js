@@ -32,9 +32,84 @@ const reasonFormatting = {
   "USO EM OBRA": "USO EM OBRA DE CLIENTE",
   OUTROS: "OUTROS",
 };
+function getContractValue(valorProjeto, valorPadrao, valorEstrutura, valorOeM) {
+  var totalSum = 0;
+
+  const projeto = !isNaN(valorProjeto) ? valorProjeto : 0;
+  const padrao = !isNaN(valorPadrao) ? valorPadrao : 0;
+  const estrutura = !isNaN(valorEstrutura) ? valorEstrutura : 0;
+  const oem = !isNaN(valorOeM) ? valorOeM : 0;
+  totalSum =
+    Number(totalSum) +
+    Number(projeto) +
+    Number(padrao) +
+    Number(estrutura) +
+    oem;
+  return totalSum;
+}
 export default async function handler(req, res) {
   // const db = await connectToProjectsDatabase(process.env.DB_KEY, "projetos");
-  // const expensesCollection = db.collection("despesas");
+  // const projectsCollection = db.collection("dados");
+  // const projects = await projectsCollection
+  //   .aggregate([
+  //     {
+  //       $match: {
+  //         "contrato.status": "ASSINADO",
+  //       },
+  //     },
+  //     {
+  //       $project: {
+  //         qtde: 1,
+  //         nomeDoContrato: 1,
+  //         tipoDeServico: 1,
+  //         contrato: 1,
+  //         "sistema.valorProjeto": 1,
+  //         "padrao.valor": 1,
+  //         "estruturaPersonalizada.valor": 1,
+  //         "oem.valor": 1,
+  //       },
+  //     },
+  //     {
+  //       $sort: {
+  //         qtde: 1,
+  //       },
+  //     },
+  //   ])
+  //   .toArray();
+  // const formattedRevenues = projects.map((project) => {
+  //   return {
+  //     tipo: project.tipoDeServico,
+  //     autor: {
+  //       id: "6318db05929e9f8731d8d9bb", // id do usuário que criou o referente registro de custos
+  //       nome: "Lucas Fernandes", // nome do usuário que criou o referente registro de custos
+  //     },
+  //     projeto: {
+  //       id: project._id, // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
+  //       nome: project.nomeDoContrato, // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
+  //       identificador: project.qtde, // identificador QTDE do projeto no banco de projetos
+  //     },
+  //     total: getContractValue(
+  //       project.sistema.valorProjeto,
+  //       project.padrao.valor,
+  //       project.estruturaPersonalizada.valor,
+  //       project.oem?.valor
+  //     ),
+  //     efetivacao: {
+  //       efetivado: true,
+  //       data: project.contrato.dataAssinatura,
+  //     },
+  //     dataInsercao:
+  //       project.contrato.dataAssinatura ||
+  //       new ObjectId(project._id).getTimestamp(),
+  //     criterioReferencia: false,
+  //     criterioCompetencia: true,
+  //   };
+  // });
+  // const totalRevenue = formattedRevenues.reduce((acc, current) => {
+  //   const toSum = current.total;
+  //   return acc + toSum;
+  // }, 0);
+  // console.log(totalRevenue);
   // const expenses = await expensesCollection.find({}).toArray();
   // const bulkwriteArr = expenses.map((expense) => {
   //   var updateObj;

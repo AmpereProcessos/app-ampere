@@ -50,7 +50,7 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
                 ? "border-2 border-red-400"
                 : "border border-gray-300"
               : "border-2 border-red-400"
-          } p-3 hover:bg-blue-100`}
+          } p-3`}
         >
           <div className="flex items-center justify-between border-b border-gray-200 pb-2">
             <p className="text-gray-700 font-bold">
@@ -176,7 +176,7 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
               </div>
               <div className="flex flex-col items-center">
                 <p className="text-sm uppercase text-[#15599a] font-bold">
-                  INFO fATURAMENTO
+                  INFO FATURAMENTO
                 </p>
                 <p className="text-xs uppercase text-gray-500">
                   {infoHolder.faturamento?.previsaoFaturamento
@@ -196,6 +196,30 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
                     : "-"}
                 </p>
               </div>
+              <div className="flex flex-col items-center">
+                <p className="text-sm uppercase text-[#15599a] font-bold">
+                  POSSUI DEFICIÊNCIA
+                </p>
+                <p
+                  className={`text-xs uppercase text-gray-500 ${
+                    infoHolder.possuiDeficiencia == "SIM"
+                      ? "text-red-500 font-bold"
+                      : ""
+                  }`}
+                >
+                  {infoHolder.possuiDeficiencia}
+                </p>
+              </div>
+              {infoHolder.possuiDeficiencia == "SIM" ? (
+                <div className="flex flex-col items-center">
+                  <p className="text-sm uppercase text-[#15599a] font-bold">
+                    QUAL DEFICIÊNCIA
+                  </p>
+                  <p className="text-xs uppercase text-gray-500">
+                    {infoHolder.qualDeficiencia}
+                  </p>
+                </div>
+              ) : null}
             </div>
             <p className="text-[#15599a]">#{infoHolder.qtde}</p>
           </div>
@@ -572,6 +596,26 @@ function PosVendaCard({ project, getUpdates, cardMode, editor }) {
           </div>
           <div className="flex flex-col gap-y-2 mt-1 py-1 border-t border-gray-200">
             <h1 className="text-[#fead61] font-bold">OBSERVAÇÕES</h1>
+            <div className="flex flex-col w-full items-center">
+              <p className="text-sm uppercase text-[#15599a] font-bold">
+                CONTATOS PARA JORNADA
+              </p>
+              <p className="text-xs uppercase text-gray-500">
+                {infoHolder.jornada.contatos
+                  ? infoHolder.jornada.contatos
+                  : "-"}
+              </p>
+            </div>
+            <div className="flex flex-col w-full items-center">
+              <p className="text-sm uppercase text-[#15599a] font-bold">
+                CUIDADOS PARA JORNADA
+              </p>
+              <p className="text-xs uppercase text-gray-500">
+                {infoHolder.jornada.cuidados
+                  ? infoHolder.jornada.cuidados
+                  : "-"}
+              </p>
+            </div>
             <textarea
               readOnly={!editor}
               value={changes.obsJornada ? changes.obsJornada : ""}

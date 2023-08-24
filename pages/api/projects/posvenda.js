@@ -37,6 +37,8 @@ export default async function handler(req, res) {
             "faturamento.dataFaturamento": 1,
             "sistema.qtdeModulos": 1,
             "medidor.data": 1,
+            possuiDeficiencia: 1,
+            qualDeficiencia: 1,
             nps: 1,
           },
         },

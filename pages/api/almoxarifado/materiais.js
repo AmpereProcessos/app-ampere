@@ -122,8 +122,8 @@ export default async function handler(req, res) {
     );
     console.log("MATERIAL", correspondentMaterial);
     if (!correspondentMaterial) return null;
-    const diff = materialNewQty - correspondentMaterial.qtde;
     const previousQty = correspondentMaterial.qtde;
+    const diff = materialNewQty - previousQty;
     const insertObj = {
       autor: {
         nome: userName,
@@ -140,8 +140,11 @@ export default async function handler(req, res) {
       tipo: "ALTERAÇÃO MANUAL",
       dataInsercao: new Date().toISOString(),
     };
-    const response = await logCollection.insertOne(insertObj);
-    console.log(response);
+    if (diff != 0) {
+      const response = await logCollection.insertOne(insertObj);
+      console.log(response);
+    }
+
     return;
   }
   async function handleMaterialEntranceLogInsertion({

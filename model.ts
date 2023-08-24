@@ -30,6 +30,9 @@ interface IProject {
   obsComercial: string;
   nps: number;
 
+  idProjetoCRM: string;
+  idPropostaCRM: string;
+  idSolicitacaoContrato: string;
   visitaTecnica: {
     amperagem: string;
     saidaDoCliente: "AEREO" | "SUBTERRANEO";

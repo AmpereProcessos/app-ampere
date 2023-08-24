@@ -16,6 +16,7 @@ export async function insertExpensesFromMaterials({
       const qtyTaken = material.qtdeSaida ? material.qtdeSaida : 0;
       const qtyReturned = material.qtdeDevolucao ? material.qtdeDevolucao : 0;
       const qtyDiff = qtyTaken - qtyReturned;
+      console.log(material.nome, qtyDiff);
       return {
         idMaterial: material.id, // id do material, se item estocável
         descricao: material.nome, // nome ou descrição do item de custo

@@ -57,22 +57,24 @@ function ExpenseCard({ expense, openModal }) {
   return (
     <div
       onClick={() => openModal(expense)}
-      className={`flex flex-col  h-[150px] items-center pt-2 p-4 border border-gray-200 w-full lg:w-[450px] shadow-md gap-2 rounded-lg hover:bg-blue-100 duration-300 cursor-pointer ease-in-out`}
+      className={`flex h-[150px] items-center border border-gray-200 w-full lg:w-[450px] shadow-md gap-2 rounded-lg hover:bg-blue-100 duration-300 cursor-pointer ease-in-out`}
     >
-      {/* <div
-        className={`w-full h-[4px] rounded ${getTagColor({
+      <div
+        className={`h-full w-[4px] rounded-tl-lg rounded-bl-lg ${getTagColor({
           paid: expense.efetivacao?.efetivado,
-          date: expense.efetivacao.data,
+          date: expense.efetivacao?.data,
         })}`}
-      ></div> */}
-      <div className="w-full flex grow mt-1">
+      ></div>
+      <div className="h-full flex grow p-4">
         <div className="flex w-[70%] flex-col justify-between h-full">
           <p
             className={`${
               expense.projeto ? "" : "text-gray-300"
             } font-raleway font-bold`}
           >
-            {expense.projeto ? formatLongString(expense.projeto.nome, 23) : "-"}
+            {expense.projeto?.nome
+              ? formatLongString(expense.projeto.nome, 23)
+              : "-"}
           </p>
           <p className="font-raleway text-[#fead41] font-medium">
             {expense.categoria}
@@ -98,24 +100,19 @@ function ExpenseCard({ expense, openModal }) {
         <div className="flex w-[30%] flex-col justify-between h-full">
           <div className="flex gap-2 items-center">
             <BsCalendarFill color="#15599a" size="20px" />
-            <p className="text-[#15599a] text-sm font-medium font-raleway">
+            <p className="text-gray-600 text-sm font-medium font-raleway">
               {dayjs(expense.dataInsercao).format("DD/MM/YYYY")}
             </p>
           </div>
           <div className="flex gap-2 items-center">
             <FaUserAlt color="#15599a" size="20px" />
-            <p className="text-[#15599a] text-sm font-medium font-raleway">
+            <p className="text-gray-600 text-sm font-medium font-raleway upper">
               {expense.autor.nome}
             </p>
           </div>
-          <div
-            className={`flex gap-2 items-center ${getPriceColor({
-              paid: expense.efetivacao.efetivado,
-              date: expense.efetivacao.data,
-            })}`}
-          >
-            <RiMoneyDollarCircleFill size="23px" />
-            <p className="text-sm font-medium font-raleway">
+          <div className={`flex gap-2 items-center`}>
+            <RiMoneyDollarCircleFill color="#15599a" size="23px" />
+            <p className="text-gray-600 text-sm font-medium font-raleway">
               {formatToMoney(expense.total)}
             </p>
           </div>

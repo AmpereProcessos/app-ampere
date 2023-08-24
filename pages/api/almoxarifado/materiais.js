@@ -189,6 +189,7 @@ export default async function handler(req, res) {
     const changes = filteredMaterialList.map((mat) => {
       const materialId = mat.id;
       const diff = Number(mat.diff);
+      console.log("DIFF", diff);
       return {
         updateOne: {
           filter: { _id: new ObjectId(materialId) },
@@ -243,10 +244,12 @@ export default async function handler(req, res) {
       currentStateMaterials,
       notificationCollection
     );
+    console.log("CHANGES", changes);
     // Doing multiple qtde alterations for material items
     const bulkwriteArr = handleBulkWriteFormatting(changes);
-    await materialCollection.bulkWrite(bulkwriteArr);
-
+    console.log("BULKWRITEARR", bulkwriteArr);
+    if (bulkwriteArr.length > 0)
+      await materialCollection.bulkWrite(bulkwriteArr);
     // Logging stock activity into logs collection
     await handleStockActivityLogInsertion({
       currentMaterials: currentStateMaterials,

@@ -2304,7 +2304,7 @@ export function formatPersonalName(value) {
   } else return "";
 }
 export function formatLongString(str, size = 35) {
-  if (str.length > size) {
+  if (str && str.length > size) {
     return str.substring(0, size) + "\u2026";
   } else {
     return str;

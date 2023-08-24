@@ -3,12 +3,14 @@ import React, { useState } from "react";
 import { BsCalendarFill } from "react-icons/bs";
 import { FaUserAlt } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
-import { formatToMoney } from "../../../utils/constants";
+import { formatDate, formatToMoney } from "../../../utils/constants";
 import ExpenseListItem from "./ExpenseListItem";
 import { updateExpense } from "../../../utils/methods/mutation/expenses";
 import { getErrorMessage } from "../../../utils/methods/handlers";
 import { toast } from "react-hot-toast";
 import { useQueryClient } from "react-query";
+import DateInput from "../../inputs/Date";
+import CheckboxInput from "../../CheckboxInput";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -125,6 +127,68 @@ function ExpenseModal({ expense, closeModal }) {
                   ? expense.descricao
                   : "Sem detalhes adicionais referentes a essa despesa..."}
               </p>
+            </div>
+            <div className="flex flex-col md:flex-row justify-center gap-2 w-full my-2">
+              <CheckboxInput
+                checked={infoHolder.criterioCompetencia}
+                labelFalse={"NÃO APLICÁVEL A CRITÉRIO DE COMPETÊNCIA"}
+                labelTrue={"APLICÁVEL A CRITÉRIO DE COMPETÊNCIA"}
+                handleChange={(value) =>
+                  setInfoHolder((prev) => ({
+                    ...prev,
+                    criterioCompetencia: value,
+                  }))
+                }
+              />
+              <CheckboxInput
+                checked={infoHolder.criterioReferencia}
+                labelFalse={"NÃO APLICÁVEL A CRITÉRIO DE REFERÊNCIA"}
+                labelTrue={"APLICÁVEL A CRITÉRIO DE REFERÊNCIA"}
+                handleChange={(value) =>
+                  setInfoHolder((prev) => ({
+                    ...prev,
+                    criterioReferencia: value,
+                  }))
+                }
+              />
+            </div>
+            <div className="flex flex-col justify-center  items-center gap-2 w-full my-2">
+              <DateInput
+                label={
+                  infoHolder.efetivacao?.efetivado
+                    ? "DATA DA EFETIVAÇÃO"
+                    : "PREVISÃO DE EFETIVAÇÃO"
+                }
+                labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
+                value={
+                  infoHolder.efetivacao?.data
+                    ? formatDate(infoHolder.efetivacao.data)
+                    : undefined
+                }
+                handleChange={(value) =>
+                  setInfoHolder((prev) => ({
+                    ...prev,
+                    efetivacao: {
+                      ...prev.efetivacao,
+                      data: new Date(value).toISOString(),
+                    },
+                  }))
+                }
+              />
+              <CheckboxInput
+                checked={infoHolder.efetivacao?.efetivado}
+                labelFalse={"NÃO EFETIVADO"}
+                labelTrue={"EFETIVADO"}
+                handleChange={(value) =>
+                  setInfoHolder((prev) => ({
+                    ...prev,
+                    efetivacao: {
+                      ...prev.efetivacao,
+                      efetivado: value,
+                    },
+                  }))
+                }
+              />
             </div>
             <div className="flex flex-col w-full my-2 px-2">
               <h1 className="w-full text-center text-gray-500 font-normal font-raleway text-sm pb-1">

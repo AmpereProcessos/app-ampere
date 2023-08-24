@@ -8,6 +8,7 @@ import SelectInput from "../../inputs/Select";
 import {
   centrosDeCusto,
   expenseCategories,
+  formatDate,
   formatToMoney,
 } from "../../../utils/constants";
 import TextInput from "../../inputs/Text";
@@ -17,6 +18,7 @@ import CheckboxInput from "../../CheckboxInput";
 import { insertExpense } from "../../../utils/methods/mutation/expenses";
 import { getErrorMessage } from "../../../utils/methods/handlers";
 import { useQueryClient } from "react-query";
+import DateInput from "../../inputs/Date";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -55,7 +57,7 @@ function getExpenseCategories(costApportionment) {
 function NewExpense({ closeModal }) {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
-  const [infoHolder, setInfoHolder] = useState({
+  const initialInfoHolder = {
     rateio: null,
     categoria: null,
     descricao: "",
@@ -66,16 +68,24 @@ function NewExpense({ closeModal }) {
     },
     itens: [],
     total: 0,
+    efetivacao: {
+      efetivado: false,
+      data: null,
+    },
     criterioReferencia: false,
     criterioCompetencia: false,
     dataInsercao: new Date().toISOString(),
-  });
+  };
+  const [infoHolder, setInfoHolder] = useState(initialInfoHolder);
   const [itemHolder, setItemHolder] = useState({
     descricao: "",
     preco: null,
     qtde: null,
   });
   const [insertLoading, setInsertLoading] = useState(false);
+  function clearInfoHolder() {
+    setInfoHolder(initialInfoHolder);
+  }
   function linkClient(info) {
     const { _id, nomeDoContrato, qtde } = info;
     const project = {
@@ -155,21 +165,7 @@ function NewExpense({ closeModal }) {
       const response = await insertExpense({ ...infoHolder, autor: user });
       toast.dismiss(loadingToastID);
       toast.success(response);
-      setInfoHolder({
-        rateio: null,
-        categoria: null,
-        descricao: "",
-        projeto: null,
-        autor: {
-          id: session.user?.id,
-          nome: session.user?.name,
-        },
-        itens: [],
-        total: 0,
-        criterioReferencia: false,
-        criterioCompetencia: false,
-        dataInsercao: new Date().toISOString(),
-      });
+      clearInfoHolder();
       await queryClient.invalidateQueries({ queryKey: ["expenses"] });
       setInsertLoading(false);
     } catch (error) {
@@ -293,6 +289,45 @@ function NewExpense({ closeModal }) {
                 }
               />
             </div>
+            <div className="flex flex-col justify-center  items-center gap-2 w-full my-2">
+              <DateInput
+                label={
+                  infoHolder.efetivacao.efetivado
+                    ? "DATA DA EFETIVAÇÃO"
+                    : "PREVISÃO DE EFETIVAÇÃO"
+                }
+                labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
+                value={
+                  infoHolder.efetivacao.data
+                    ? formatDate(infoHolder.efetivacao.data)
+                    : undefined
+                }
+                handleChange={(value) =>
+                  setInfoHolder((prev) => ({
+                    ...prev,
+                    efetivacao: {
+                      ...prev.efetivacao,
+                      data: new Date(value).toISOString(),
+                    },
+                  }))
+                }
+              />
+              <CheckboxInput
+                checked={infoHolder.efetivacao.efetivado}
+                labelFalse={"NÃO EFETIVADO"}
+                labelTrue={"EFETIVADO"}
+                handleChange={(value) =>
+                  setInfoHolder((prev) => ({
+                    ...prev,
+                    efetivacao: {
+                      ...prev.efetivacao,
+                      efetivado: value,
+                    },
+                  }))
+                }
+              />
+            </div>
+
             <div className="flex flex-col w-full my-2">
               <h1 className="w-full text-center bg-gray-500 text-white font-normal font-raleway text-sm">
                 ITENS

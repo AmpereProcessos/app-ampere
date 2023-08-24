@@ -558,43 +558,43 @@ export const costApportionments = [
   {
     nome: "CUSTOS DIRETOS",
     categorias: [
-      { label: "KIT'S GERADORES", value: "KIT'S GERADORES" },
-      { label: "INSUMOS DE ALMOXARIFADO", value: "INSUMOS DE ALMOXARIFADO" },
-      { label: "OUTROS CUSTOS DIRETOS", value: "OUTROS CUSTOS DIRETOS" }, // outros custos de serviço ou produto
+      { label: "KIT'S GERADORES", value: "KIT'S GERADORES" }, // responsavel = suprimentos
+      { label: "INSUMOS DE ALMOXARIFADO", value: "INSUMOS DE ALMOXARIFADO" }, // responsavel == almoxarifado ou suprimentos
+      { label: "OUTROS CUSTOS DIRETOS", value: "OUTROS CUSTOS DIRETOS" }, // outros custos de serviço ou produto  // responsavel = financeiro ou comercial
     ],
   },
   {
     nome: "DESPESAS COMERCIAIS",
     categorias: [
-      { label: "DESPESAS DE MARKETING", value: "DESPESAS DE MARKETING" },
-      { label: "EQUIPE DE MARKETING", value: "EQUIPE DE MARKETING" },
-      { label: "EQUIPE DE VENDAS", value: "EQUIPE DE VENDAS" },
-      { label: "COMISSÕES DE INTERNOS", value: "COMISSÕES DE INTERNOS" },
-      { label: "COMISSÕES DE TERCEIROS", value: "COMISSÕES DE TERCEIROS" },
-      { label: "AJUDAS DE CUSTO", value: "AJUDAS DE CUSTO" },
-      { label: "PROVISÕES", value: "PROVISÕES" }, // 13°'s, férias e etc
-      { label: "OUTROS CUSTOS COMERCIAIS", value: "OUTROS CUSTOS COMERCIAIS" },
+      { label: "DESPESAS DE MARKETING", value: "DESPESAS DE MARKETING" }, // responsavel = gestão comercial
+      { label: "EQUIPE DE MARKETING", value: "EQUIPE DE MARKETING" }, // responsavel = RH ou gestão comercial
+      { label: "EQUIPE DE VENDAS", value: "EQUIPE DE VENDAS" }, // responsavel = RH ou gestão comercial
+      { label: "COMISSÕES DE INTERNOS", value: "COMISSÕES DE INTERNOS" }, // responsavel = RG ou gestão comercial
+      { label: "COMISSÕES DE TERCEIROS", value: "COMISSÕES DE TERCEIROS" }, // responsavel = RG ou gestão comercial
+      { label: "AJUDAS DE CUSTO", value: "AJUDAS DE CUSTO" }, // responsavel = financeiro ou gestão comercial
+      { label: "PROVISÕES", value: "PROVISÕES" }, // 13°'s, férias e etc // responsavel = RG
+      { label: "OUTROS CUSTOS COMERCIAIS", value: "OUTROS CUSTOS COMERCIAIS" }, // responsavel = gestão comercial
     ],
   },
   {
     nome: "DESPESAS ADMINISTRATIVAS",
     categorias: [
-      { label: "ALUGUEL/CONDOMÍNIO/IPTU", value: "ALUGUEL/CONDOMÍNIO/IPTU" },
-      { label: "MANUTENÇÕES", value: "MANUTENÇÕES" },
-      { label: "ENERGIA/INTERNET/ÁGUA", value: "ENERGIA/INTERNET/ÁGUA" },
-      { label: "ASSINATURAS DE SOFTWARE", value: "ASSINATURAS DE SOFTWARE" },
-      { label: "CONTABILIDADE/SEGUROS", value: "CONTABILIDADE/SEGUROS" },
-      { label: "PRÓ-LABORE", value: "PRÓ-LABORE" },
-      { label: "EQUIPE ADMINISTRATIVA", value: "EQUIPE ADMINISTRATIVA" },
-      { label: "HONORÁRIOS ADVOCATÍCIOS", value: "HONORÁRIOS ADVOCATÍCIOS" },
+      { label: "ALUGUEL/CONDOMÍNIO/IPTU", value: "ALUGUEL/CONDOMÍNIO/IPTU" }, // responsavel = financeiro
+      { label: "MANUTENÇÕES", value: "MANUTENÇÕES" }, // responsavel = financeiro
+      { label: "ENERGIA/INTERNET/ÁGUA", value: "ENERGIA/INTERNET/ÁGUA" }, // responsavel = financeiro
+      { label: "ASSINATURAS DE SOFTWARE", value: "ASSINATURAS DE SOFTWARE" }, // responsavel = financeiro
+      { label: "CONTABILIDADE/SEGUROS", value: "CONTABILIDADE/SEGUROS" }, // responsavel = financeiro
+      { label: "PRÓ-LABORE", value: "PRÓ-LABORE" }, // responsavel = financeiro
+      { label: "EQUIPE ADMINISTRATIVA", value: "EQUIPE ADMINISTRATIVA" }, // responsavel = financeiro ou RG
+      { label: "HONORÁRIOS ADVOCATÍCIOS", value: "HONORÁRIOS ADVOCATÍCIOS" }, // responsavel = financeiro
       {
-        label: "FAXINA/MATERIAIS DO ESCRITÓRIO",
+        label: "FAXINA/MATERIAIS DO ESCRITÓRIO", // responsavel = RH ou suprimentos
         value: "FAXINA/MATERIAIS DO ESCRITÓRIO",
       },
-      { label: "DOAÇÕES", value: "DOAÇÕES" },
-      { label: "PROVISÕES", value: "PROVISÕES" },
+      { label: "DOAÇÕES", value: "DOAÇÕES" }, // responsavel = financeiro
+      { label: "PROVISÕES", value: "PROVISÕES" }, // responsavel = financeiro
       {
-        label: "OUTROS CUSTOS ADMINISTRATIVOS",
+        label: "OUTROS CUSTOS ADMINISTRATIVOS", // responsavel = financeiro
         value: "OUTROS CUSTOS ADMINISTRATIVOS",
       },
     ],
@@ -602,28 +602,28 @@ export const costApportionments = [
   {
     nome: "DESPESAS OBRAS",
     categorias: [
-      { label: "DESPESAS DE OBRAS", value: "DESPESAS DE OBRAS" },
-      { label: "ALUGUEL DE EQUIPAMENTOS", value: "ALUGUEL DE EQUIPAMENTOS" },
-      { label: "EQUIPE DE OBRAS", value: "EQUIPE DE OBRAS" },
-      { label: "TERCEIROS", value: "TERCEIROS" },
-      { label: "COMISSÕES", value: "COMISSÕES" },
-      { label: "PROVISÕES", value: "PROVISÕES" },
+      { label: "DESPESAS DE OBRAS", value: "DESPESAS DE OBRAS" }, // responsavel = obras
+      { label: "ALUGUEL DE EQUIPAMENTOS", value: "ALUGUEL DE EQUIPAMENTOS" }, // responsavel = almoxarifado ou obras
+      { label: "EQUIPE DE OBRAS", value: "EQUIPE DE OBRAS" }, // responsavel = RH ou obras
+      { label: "TERCEIROS", value: "TERCEIROS" }, // responsavel = financeiro
+      { label: "COMISSÕES", value: "COMISSÕES" }, // responsavel = financeiro
+      { label: "PROVISÕES", value: "PROVISÕES" }, // responsavel = financeiro
     ],
   },
   {
     nome: "DESPESAS OPERACIONAIS",
     categorias: [
-      { label: "ALUGUEL DE VEÍCULOS", value: "ALUGUEL DE VEÍCULOS" },
-      { label: "ANUIDADE DO CREA", value: "ANUIDADE DO CREA" },
-      { label: "COMBUSTÍVEL", value: "COMBUSTÍVEL" },
-      { label: "PEDÁGIO E ESTACIONAMENTO", value: "PEDÁGIO E ESTACIONAMENTO" },
-      { label: "LANCHES E REFEIÇÕES", value: "LANCHES E REFEIÇÕES" },
-      { label: "HOSPEDAGEM", value: "HOSPEDAGEM" },
-      { label: "GASTOS COM GYMPASS", value: "GASTOS COM GYMPASS" },
-      { label: "UNIFORMES", value: "UNIFORMES" },
+      { label: "ALUGUEL DE VEÍCULOS", value: "ALUGUEL DE VEÍCULOS" }, // responsavel = financeiro
+      { label: "ANUIDADE DO CREA", value: "ANUIDADE DO CREA" }, // responsavel = financeiro
+      { label: "COMBUSTÍVEL", value: "COMBUSTÍVEL" }, // responsavel = financeiro
+      { label: "PEDÁGIO E ESTACIONAMENTO", value: "PEDÁGIO E ESTACIONAMENTO" }, // responsavel = financeiro
+      { label: "LANCHES E REFEIÇÕES", value: "LANCHES E REFEIÇÕES" }, // responsavel = financeiro
+      { label: "HOSPEDAGEM", value: "HOSPEDAGEM" }, // responsavel = financeiro
+      { label: "GASTOS COM GYMPASS", value: "GASTOS COM GYMPASS" }, // responsavel = financeiro ou RH
+      { label: "UNIFORMES", value: "UNIFORMES" }, // responsavel = financeiro ou RG
       {
         label: "OUTROS CUSTOS OPERACIONAIS",
-        value: "OUTROS CUSTOS OPERACIONAIS",
+        value: "OUTROS CUSTOS OPERACIONAIS", // responsavel = financeiro
       },
     ],
   },
@@ -631,7 +631,7 @@ export const costApportionments = [
     nome: "DEPRECIAÇÃO E AMORTIZAÇÕES",
     categorias: [
       {
-        label: "DEPRECIAÇÃO E AMORTIZAÇÕES",
+        label: "DEPRECIAÇÃO E AMORTIZAÇÕES", // responsavel = financeiro
         value: "DEPRECIAÇÃO E AMORTIZAÇÕES",
       },
     ],
@@ -640,19 +640,19 @@ export const costApportionments = [
     nome: "DESPESAS FINANCEIRAS",
     categorias: [
       {
-        label: "JUROS/AMORTIZAÇÃO DE DÍVIDAS",
+        label: "JUROS/AMORTIZAÇÃO DE DÍVIDAS", // responsavel = financeiro
         value: "JUROS/AMORTIZAÇÃO DE DÍVIDAS",
       },
-      { label: "DESPESAS BANCÁRIAS", value: "DESPESAS BANCÁRIAS" },
+      { label: "DESPESAS BANCÁRIAS", value: "DESPESAS BANCÁRIAS" }, // responsavel = financeiro
       { label: "EMPRÉSTIMOS", value: "EMPRÉSTIMOS" },
       {
-        label: "OUTRAS CUSTOS FINANCEIROS",
+        label: "OUTRAS CUSTOS FINANCEIROS", // responsavel = financeiro
         value: "OUTRAS CUSTOS FINANCEIROS",
       },
     ],
   },
   {
-    nome: "IMPOSTOS",
+    nome: "IMPOSTOS", // responsavel = financeiro
     categorias: [
       { label: "ICMS", value: "ICMS" },
       { label: "ISS", value: "ISS" },
@@ -697,6 +697,64 @@ interface ICosts {
   criterioReferencia: boolean;
   criterioCompetencia: boolean;
   dataInsercao: string; // data de inserção do documento
+}
+
+interface PurchaseRequest {
+  _id: string;
+  requisitante: string;
+  responsavel: string;
+  status: string;
+  telefone: string; // contato do requisitante
+  urgencia: string;
+  motivo: string;
+  projeto: {
+    id: string; // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
+    nome: string; // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
+    identificador: number; // identificador QTDE do projeto no banco de projetos
+    tipo: string; // tipo de projeto (ou tipo de serviço) dentro do banco de projetos
+  };
+  anotacoes: string;
+  itens: {
+    dataCompra: string;
+    dataEntrega: string;
+    descricao: string;
+    grandeza: string;
+    nome: string;
+    qtde: number;
+  }[];
+  dataSolicitacao: string;
+  dataResposta?: string;
+  aprovacao: boolean;
+}
+interface PurchaseRequestReformed {
+  _id: string;
+  requisitante: {
+    nome: string;
+    telefone: string;
+  };
+  responsavel: string;
+  status: string;
+  motivo: string;
+  urgencia: string;
+  anotacoes: string;
+  categoria: string;
+  projeto: {
+    id: string; // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
+    nome: string; // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
+    identificador: number; // identificador QTDE do projeto no banco de projetos
+    tipo: string; // tipo de projeto (ou tipo de serviço) dentro do banco de projetos
+  };
+  itens: {
+    descricao: string;
+    qtde: number;
+    preco: number;
+    grandeza: number;
+    dataCompra: string;
+    dataEntrega: string;
+    anotacoes: string; //
+  }[];
+  dataInsercao: string;
+  dataEfetivacao?: string;
 }
 interface IMaterial {
   _id?: string;

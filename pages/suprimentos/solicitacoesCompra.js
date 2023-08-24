@@ -6,6 +6,7 @@ import LoadingPage from "../../components/utils/LoadingPage";
 import { FaUserAlt } from "react-icons/fa";
 import {
   BsCalendarCheckFill,
+  BsCalendarFill,
   BsFillCartFill,
   BsFillTelephoneFill,
 } from "react-icons/bs";
@@ -18,6 +19,7 @@ import FilterButton from "../../components/utils/Buttons/FilterButton";
 import Select from "react-select";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
+import { formatLongString } from "../../utils/constants";
 
 function getBGColor(status) {
   if (status == true) return "bg-green-100";
@@ -72,7 +74,7 @@ function SolicitacoesCompra() {
     setFilters((prev) => ({ ...prev, search: value }));
     if (value.trim().length > 0) {
       let newArr = solicitations.filter((item) =>
-        item.requisitante.toUpperCase().includes(value.toUpperCase())
+        item.requisitante.nome.toUpperCase().includes(value.toUpperCase())
       );
       setFilteredSolicitations(newArr);
       return;
@@ -346,13 +348,13 @@ function SolicitacoesCompra() {
                     <div className="flex items-center gap-2">
                       <FaUserAlt style={{ color: "#003d5b" }} />
                       <h1 className="text-gray-700 font-medium">
-                        {solicitation.requisitante}
+                        {solicitation.requisitante.nome}
                       </h1>
                     </div>
                     <div className="flex items-center gap-2">
                       <BsFillTelephoneFill style={{ color: "#16B010" }} />
                       <h1 className="text-gray-700 font-medium">
-                        {solicitation.telefone}
+                        {solicitation.requisitante.telefone}
                       </h1>
                     </div>
                   </div>
@@ -391,10 +393,10 @@ function SolicitacoesCompra() {
                         SOLICITAÇÃO
                       </h1>
                       <div className="flex items-center gap-2">
-                        <AiOutlineCalendar style={{ color: "#15599a" }} />
+                        <BsCalendarFill style={{ color: "#15599a" }} />
                         <h1 className="text-gray-700 font-medium text-xs lg:text-base">
-                          {solicitation.dataSolicitacao
-                            ? dayjs(solicitation.dataSolicitacao).format(
+                          {solicitation.dataInsercao
+                            ? dayjs(solicitation.dataInsercao).format(
                                 "DD/MM/YY HH:mm"
                               )
                             : null}
@@ -410,9 +412,7 @@ function SolicitacoesCompra() {
                           style={{ color: "rgb(249,115,22)" }}
                         />
                         <h1 className="text-gray-700 font-medium text-xs lg:text-base">
-                          {solicitation.prazo
-                            ? dayjs(solicitation.prazo).format("DD/MM/YY HH:mm")
-                            : solicitation.urgencia}
+                          {solicitation.urgencia}
                         </h1>
                       </div>
                     </div>
@@ -432,7 +432,7 @@ function SolicitacoesCompra() {
                             className="w-full flex justify-between items-center"
                           >
                             <p className="text-gray-700 text-sm font-light">
-                              {item.nome}
+                              {formatLongString(item.descricao)}
                             </p>
                             <p className="text-gray-700 text-sm font-light">
                               x{item.qtde}

@@ -93,7 +93,7 @@ function PropostaPDFModel({ info }) {
     pdf.addImage(data, "PNG", 0, 0, pdfWidth, pdfHeight);
     pdf.save(`PROPOSTA-${info.nomeCliente}.pdf`);
   };
-
+  console.log(findPrice(info.qtdeModulos));
   return (
     <div
       style={{ width: "210mm", height: "297mm" }}

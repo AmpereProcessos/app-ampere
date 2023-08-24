@@ -19,9 +19,11 @@ function Despesas() {
     search: "",
   });
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
+
   useEffect(() => {
     if (session?.user && !isAuthorized) router.push("/");
   }, [session?.user]);
+
   return (
     <div className="p-6 grow flex flex-col gap-2">
       <div className="flex flex-col w-full pb-1 border-b border-gray-200">

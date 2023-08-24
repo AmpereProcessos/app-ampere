@@ -4,6 +4,7 @@ import { BsCheck } from "react-icons/bs";
 function CheckboxInput({
   labelTrue,
   labelFalse,
+  editable = true,
   checked,
   labelColor,
   widthFit,
@@ -28,13 +29,17 @@ function CheckboxInput({
           className={`flex h-[13px] w-[13px] cursor-pointer items-center justify-center rounded-full border-2 border-[#15599a] ${
             checked ? "bg-[#15599a]" : ""
           }`}
-          onClick={() => handleChange(!checked)}
+          onClick={() => {
+            if (editable) handleChange(!checked);
+          }}
         >
           {checked ? <BsCheck style={{ color: "#fead61" }} /> : null}
         </div>
         <p
           className="cursor-pointer text-xs text-gray-600"
-          onClick={() => handleChange(!checked)}
+          onClick={() => {
+            if (editable) handleChange(!checked);
+          }}
         >
           {checked ? labelTrue : labelFalse}
         </p>

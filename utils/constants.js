@@ -1447,6 +1447,23 @@ export const cities = [
     annualGenFactor: 120.52,
   },
 ];
+export const motivosSolicitacaoCompra = [
+  {
+    label: "REPOSIÇÃO/COMPRA DE ITENS DE ALIMENTAÇÃO",
+    value: "REPOSIÇÃO/COMPRA DE ITENS DE ALIMENTAÇÃO",
+  },
+  {
+    label: "REPOSIÇÃO DE ITENS DE LIMPEZA",
+    value: "REPOSIÇÃO DE ITENS DE LIMPEZA",
+  },
+  {
+    label: "REPOSIÇÃO DE ITENS DE ALMOXARIFADO",
+    value: "REPOSIÇÃO DE ITENS DE ALMOXARIFADO",
+  },
+  { label: "USO EM OBRA DE CLIENTE", value: "USO EM OBRA DE CLIENTE" },
+  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+  { label: "OUTROS", value: "OUTROS" },
+];
 export const ppsSolicitations = [
   "ANÁLISE DE CRÉDITO",
   "ASSINATURA DE CONTRATO",
@@ -2285,6 +2302,13 @@ export function formatPersonalName(value) {
     );
     return formattedNameArr.join(" ");
   } else return "";
+}
+export function formatLongString(str, size = 35) {
+  if (str.length > size) {
+    return str.substring(0, size) + "\u2026";
+  } else {
+    return str;
+  }
 }
 export async function getDistanceBetweenCities(destination, origin) {
   console.log(process.env.DB_KEY);

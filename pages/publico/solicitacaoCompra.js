@@ -11,21 +11,24 @@ import dayjs from "dayjs";
 import { MdCancel, MdSmsFailed } from "react-icons/md";
 import axios from "axios";
 import SelectFoatingInput from "../../components/SelectFloatingInput";
-import { units } from "../../utils/constants";
+import { motivosSolicitacaoCompra, units } from "../../utils/constants";
 
 function SolicitacaoCompra() {
   const [solicitationInfo, setSolicitationInfo] = useState({
-    requisitante: "",
-    telefone: "",
+    requisitante: {
+      nome: "",
+      telefone: "",
+    },
     motivo: "NÃO DEFINIDO",
     urgencia: "NÃO DEFINIDO",
+    anotacoes: "",
     itens: [],
   });
   const [itemHolder, setItemHolder] = useState({
-    nome: "",
+    descricao: "",
     qtde: 0,
     grandeza: "UN",
-    descricao: "",
+    anotacoes: "",
   });
   const [itemsMsg, setItemsMsg] = useState({ text: "", color: "" });
   const [sendMsg, setSendMsg] = useState({
@@ -62,7 +65,7 @@ function SolicitacaoCompra() {
 
   async function sendSolicitation() {
     setSendMsg({ text: "Processando...", color: "text-[#155991]" });
-    if (solicitationInfo.requisitante.trim().length < 5) {
+    if (solicitationInfo.requisitante.nome.trim().length < 5) {
       setSendMsg({
         status: null,
         text: "Por favor, preencha um nome válido.",
@@ -70,7 +73,7 @@ function SolicitacaoCompra() {
       });
       return false;
     }
-    if (solicitationInfo.telefone.trim().length < 10) {
+    if (solicitationInfo.requisitante.telefone.trim().length < 10) {
       setSendMsg({
         status: null,
         text: "Por favor, preencha um telefone para contato.",
@@ -136,7 +139,7 @@ function SolicitacaoCompra() {
   }
 
   function addItens() {
-    if (itemHolder.nome.trim().length < 2) {
+    if (itemHolder.descricao.trim().length < 2) {
       setItemsMsg({
         text: "Por favor, adicione um nome de item válido.",
         color: "text-red-500",
@@ -221,11 +224,14 @@ function SolicitacaoCompra() {
             </h1>
             <TextFloatingInput
               label={"NOME COMPLETO"}
-              value={solicitationInfo.requisitante}
+              value={solicitationInfo.requisitante.nome}
               handleChange={(value) =>
                 setSolicitationInfo((prev) => ({
                   ...prev,
-                  requisitante: value,
+                  requisitante: {
+                    ...prev.requisitante,
+                    nome: value,
+                  },
                 }))
               }
               editable={true}
@@ -233,11 +239,14 @@ function SolicitacaoCompra() {
             />
             <TextFloatingInput
               label={"TELEFONE PARA CONTATO"}
-              value={solicitationInfo.telefone}
+              value={solicitationInfo.requisitante.telefone}
               handleChange={(value) =>
                 setSolicitationInfo((prev) => ({
                   ...prev,
-                  telefone: formatPhone(value),
+                  requisitante: {
+                    ...prev.requisitante,
+                    telefone: formatPhone(value),
+                  },
                 }))
               }
               editable={true}
@@ -247,23 +256,7 @@ function SolicitacaoCompra() {
               label="MOTIVO DA SOLICITAÇÃO"
               value={solicitationInfo.motivo}
               editable={true}
-              options={[
-                { label: "PARA USO EM OBRA", value: "USO EM OBRA" },
-                {
-                  label: "REPOSIÇÃO DO ALMOXARIFADO",
-                  value: "REPOSIÇÃO DO ALMOXARIFADO",
-                },
-                {
-                  label: "REPOSIÇÃO DE ITENS DE LIMPEZA",
-                  value: "REPOSIÇÃO DE ITENS DE LIMPEZA",
-                },
-                {
-                  label: "REPOSIÇÃO/COMPRA DE ITENS DE ALIMENTAÇÃO",
-                  value: "REPOSIÇÃO/COMPRA DE ITENS DE ALIMENTAÇÃO",
-                },
-                { label: "OUTROS", value: "OUTROS" },
-                { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-              ]}
+              options={motivosSolicitacaoCompra}
               handleChange={(value) =>
                 setSolicitationInfo((prev) => ({ ...prev, motivo: value }))
               }
@@ -344,9 +337,9 @@ function SolicitacaoCompra() {
                       label={"NOME DO ITEM"}
                       width={"100%"}
                       editable={true}
-                      value={itemHolder.nome}
+                      value={itemHolder.descricao}
                       handleChange={(value) =>
-                        setItemHolder((prev) => ({ ...prev, nome: value }))
+                        setItemHolder((prev) => ({ ...prev, descricao: value }))
                       }
                     />
                   </div>
@@ -355,7 +348,8 @@ function SolicitacaoCompra() {
                       label={"QUANTIDADE"}
                       width={"100%"}
                       editable={true}
-                      value={itemHolder.qtde.toString()}
+                      value={itemHolder.qtde}
+                      toString={true}
                       handleChange={(value) =>
                         setItemHolder((prev) => ({
                           ...prev,
@@ -381,11 +375,11 @@ function SolicitacaoCompra() {
                   </div>
                 </div>
                 <textarea
-                  value={itemHolder.descricao}
+                  value={itemHolder.anotacoes}
                   onChange={(e) =>
                     setItemHolder((prev) => ({
                       ...prev,
-                      descricao: e.target.value,
+                      anotacoes: e.target.value,
                     }))
                   }
                   placeholder="Descreva aqui a finalidade do item (uso próprio ou venda), características do item, lugares específico pra compra e outras informações relevantes..."
@@ -424,7 +418,7 @@ function SolicitacaoCompra() {
                 {solicitationInfo.itens.map((item, index) => (
                   <div key={index} className="w-full flex items-center gap-2">
                     <h1 className="w-[40%] text-center p-1 font-medium">
-                      {item.nome}
+                      {item.descricao}
                     </h1>
                     <h1 className="w-[20%] text-center p-1 font-medium">
                       {item.qtde}

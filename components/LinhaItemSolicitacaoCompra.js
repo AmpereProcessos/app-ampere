@@ -4,16 +4,17 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { BsArrowsExpand } from "react-icons/bs";
 import { MdCancel } from "react-icons/md";
 import { formatDate } from "../utils/constants";
+import { isEmpty } from "../utils/methods/custom";
 
 function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
+  console.log(item.preco);
   const [showDescription, setShowDescription] = useState(false);
   return (
-    <div className="flex flex-col w-full gap-2 bg-gray-50 rounded-tr-sm rounded-tl-sm">
+    <div className="flex flex-col w-full gap-2 bg-gray-50 rounded-tr-sm rounded-tl-sm border-b border-gray-300 py-1">
       <div className="grid grid-cols-10 items-center w-full">
         <h1 className="col-span-2 w-full text-center text-xs text-gray-700 font-medium p-1">
-          {item.nome && item.grandeza
-            ? `${item.nome} (${item.grandeza})`
-            : item.nome}
+          {item.nome}
+          {item.grandeza ? `(${item.grandeza})` : ""}
         </h1>
         <div className="col-span-1 w-full p-1">
           <input
@@ -29,10 +30,10 @@ function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
         </div>
         <div className="col-span-2 w-full p-1">
           <input
-            value={item.cotacao ? item.cotacao.toString() : null}
+            value={!isEmpty(item.preco) ? item.preco.toString() : ""}
             onChange={(e) => {
               const list = infoHolder.itens;
-              list[index].cotacao = Number(e.target.value);
+              list[index].preco = Number(e.target.value);
               setInfo((prev) => ({ ...prev, itens: list }));
             }}
             type="number"

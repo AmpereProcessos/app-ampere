@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import connectToCRMDatabase from "../../utils/crmDb";
 import connectToRequestsDatabase from "../../utils/solicitacoesDb";
+import connectToWarehouseDatabase from "../../utils/materialDb";
 import { ObjectId } from "mongodb";
 import connectToProjectsDatabase from "../../utils/connectDb";
 import { calculateStringSimilarity } from "../../utils/constants";
@@ -8,60 +9,63 @@ import axios from "axios";
 import { errorHandler } from "../../utils/methods/handlers";
 import connectToDatabase from "../../utils/auxiliaresDb";
 import createHttpError from "http-errors";
-export default async function handler(req, res) {
-  const db = await connectToProjectsDatabase(process.env.DB_KEY, "projetos");
-  const collection = db.collection("dados");
-  const exportInfo = await collection
-    .aggregate([
-      {
-        $match: {
-          "contrato.status": "ASSINADO",
-          $and: [
-            { "contrato.dataAssinatura": { $gte: "2023-06-01T00:00:00.000Z" } },
-            { "contrato.dataAssinatura": { $lte: "2023-08-31T00:00:00.000Z" } },
-          ],
-        },
-      },
-      {
-        $sort: {
-          qtde: 1,
-        },
-      },
-      {
-        $project: {
-          qtde: 1,
-          nomeDoContrato: 1,
-          "contrato.dataAssinatura": 1,
-          "sistema.valorProjeto": 1,
-          "padrao.valor": 1,
-          "estruturaPersonalizada.valor": 1,
-          "oem.valor": 1,
-          tipoDeServico: 1,
-          "obra.saida": 1,
-        },
-      },
-    ])
-    .toArray();
-  const projectsFormatted = exportInfo.map((project) => {
+function formatItens(list) {
+  const formattedItens = list.map((item) => {
     return {
-      QTDE: project.qtde,
-      "NOME DO CONTRATO": project.nomeDoContrato,
-      "DATA DE ASSINATURA": dayjs(project.contrato.dataAssinatura)
-        .add(3, "hour")
-        .format("DD/MM/YYYY"),
-      "VALOR DO PROJETO": project.sistema.valorProjeto,
-      "VALOR DO PADRÃO": project.padrao?.valor,
-      "VALOR DA ESTRUTURA": project.estruturaPersonalizada?.valor
-        ? project.estruturaPersonalizada.valor
-        : 0,
-      "VALOR DE O&M A PARTE": project.oem?.valor,
-      "TIPO DE SERVIÇO": project.tipoDeServico,
-      "SAÍDA DE OBRA": project.obra?.saida
-        ? dayjs(project.obra.saida).add(3, "hour").format("DD/MM/YYYY")
-        : null,
+      descricao: item.nome,
+      qtde: item.qtde,
+      preco: item.cotacao,
+      grandeza: item.grandeza,
+      dataCompra: item.dataCompra,
+      dataEntrega: item.dataEntrega,
+      anotacoes: item.descricao, //
     };
   });
-  res.json(projectsFormatted);
+  return formattedItens;
+}
+
+const reasonFormatting = {
+  "REPOSIÇÃO/COMPRA DE ITENS DE ALIMENTAÇÃO":
+    "REPOSIÇÃO/COMPRA DE ITENS DE ALIMENTAÇÃO",
+  "REPOSIÇÃO DE ITENS DE LIMPEZA": "REPOSIÇÃO DE ITENS DE LIMPEZA",
+  "REPOSIÇÃO DO ALMOXARIFADO": "REPOSIÇÃO DE ITENS DE ALMOXARIFADO",
+  "USO EM OBRA": "USO EM OBRA DE CLIENTE",
+  OUTROS: "OUTROS",
+};
+export default async function handler(req, res) {
+  // const db = await connectToProjectsDatabase(process.env.DB_KEY, "projetos");
+  // const expensesCollection = db.collection("despesas");
+  // const expenses = await expensesCollection.find({}).toArray();
+  // const bulkwriteArr = expenses.map((expense) => {
+  //   var updateObj;
+  //   if (expense.idFormularioAlmoxarifado) {
+  //     updateObj = {
+  //       $set: {
+  //         rateio: "CUSTOS DIRETOS",
+  //         categoria: "INSUMOS DE ALMOXARIFADO",
+  //         descricao: `SAÍDA DE MATERIAL PARA ${expense.categoria}`,
+  //         efetivacao: {
+  //           efetivado: true,
+  //           data: new Date(expense.dataInsercao).toISOString(),
+  //         },
+  //         criterioCompetencia: true,
+  //       },
+  //     };
+  //   } else
+  //     updateObj = {
+  //       $set: {
+  //         dataInsercao: expense.dataInsercao,
+  //       },
+  //     };
+  //   return {
+  //     updateOne: {
+  //       filter: { _id: new ObjectId(expense._id) },
+  //       update: updateObj,
+  //     },
+  //   };
+  // });
+  // const responseDb = await expensesCollection.bulkWrite(bulkwriteArr);
+  res.json("DESATIVADA");
 }
 
 // Update Many example:
@@ -153,7 +157,7 @@ export default async function handler(req, res) {
 //       ? itemFromSVB?.aterramento
 //       : 0,
 //     "SEGURO (SE APLICÁVEL)": itemFromSVB?.seguro ? itemFromSVB?.seguro : 0,
-//   };
+//   },
 // });
 // res.json(newArr);
 

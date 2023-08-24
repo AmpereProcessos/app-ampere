@@ -186,13 +186,15 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
       await insertExpensesFromMaterials({
         warehouseFormId: dados._id,
         user: session?.user,
-        category: dados.servico,
+        description: dados.nomeTerceiro
+          ? `Usado em/por ${dados.nomeTerceiro}.`
+          : "",
         projectId: dados.idPai,
         projectQtde: dados.codigoProjeto,
         projectName:
           dados.nomeDoContrato && dados.nomeDoContrato.trim().length > 0
             ? dados.nomeDoContrato
-            : dados.nomeTerceiro,
+            : null,
         projectType: undefined,
         materialList: dados.materiais,
       });

@@ -1,42 +1,3 @@
-import connectToDatabase from "../../utils/connectDb";
-import dayjs from "dayjs";
-function fixDate(value) {
-  if (isNaN(Date.parse(value)) == true) {
-    return "-";
-  } else {
-    return new Date(value).toLocaleDateString("pt-br");
-  }
-}
-function getContractValue(valorProjeto, valorPadrao, valorEstrutura) {
-  var totalSum = 0;
-
-  let projeto = !isNaN(valorProjeto) ? valorProjeto : 0;
-  let padrao = !isNaN(valorPadrao) ? valorPadrao : 0;
-  let estrutura = !isNaN(valorEstrutura) ? valorEstrutura : 0;
-  totalSum =
-    Number(totalSum) + Number(projeto) + Number(padrao) + Number(estrutura);
-  return totalSum;
-}
-function getContactStatus(dataUltimoContato, jornadaConcluida) {
-  if (jornadaConcluida != true) {
-    if (!isNaN(new Date(dataUltimoContato))) {
-      return dayjs().diff(dayjs(dataUltimoContato)) < 7
-        ? "OK"
-        : "CONTATO PENDENTE";
-    } else {
-      return "CONTATO PENDENTE";
-    }
-  } else {
-    return "OK";
-  }
-}
-function done(value) {
-  if (isNaN(Date.parse(value)) == true) {
-    return true;
-  } else {
-    return false;
-  }
-}
 export default async function handler(req, res) {
   if (req.method === "GET") {
     // const db = await connectToDatabase(process.env.DB_KEY, "projetos");
@@ -259,9 +220,5 @@ export default async function handler(req, res) {
     res.json("DESATIVADA");
   }
 }
-export const config = {
-  api: {
-    responseLimit: "8mb",
-  },
-};
+
 // Case #00106481 na vercel

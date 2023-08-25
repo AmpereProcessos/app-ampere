@@ -527,9 +527,50 @@ const servicesType = [
   },
 ];
 const revenueTypes = [
-  { label: "SISTEMA FOTOVOLTAICO", value: "SISTEMA FOTOVOLTAICO" },
-  { label: "OPERAÇÃO E MANUTENÇÃO", value: "OPERAÇÃO E MANUTENÇÃO" },
-  { label: "SUBESTAÇÕES", value: "SUBESTAÇÕES" },
+  {
+    label: "SISTEMA FOTOVOLTAICO",
+    value: "SISTEMA FOTOVOLTAICO",
+  },
+  {
+    label: "SISTEMA FOTOVOLTAICO (OFF GRID)",
+    value: "SISTEMA FOTOVOLTAICO (OFF GRID)",
+  },
+  {
+    label: "BOMBA SOLAR",
+    value: "BOMBA SOLAR",
+  },
+  {
+    label: "OPERAÇÃO E MANUTENÇÃO",
+    value: "OPERAÇÃO E MANUTENÇÃO",
+  },
+  {
+    label: "TROCA DE PADRÃO",
+    value: "TROCA DE PADRÃO",
+  },
+  {
+    label: "REFORMA DE PADRÃO",
+    value: "REFORMA DE PADRÃO",
+  },
+  {
+    label: "MANUTENÇÃO CORRETIVA",
+    value: "MANUTENÇÃO CORRETIVA",
+  },
+  {
+    label: "MANUTENÇÃO PREVENTIVA",
+    value: "MANUTENÇÃO PREVENTIVA",
+  },
+  {
+    label: "MONTAGEM E DESMONTAGEM",
+    value: "MONTAGEM E DESMONTAGEM",
+  },
+  {
+    label: "TROCA DE STRING BOX",
+    value: "TROCA DE STRING BOX",
+  },
+  {
+    label: "SUBESTAÇÃO DE ENERGIA",
+    value: "SUBESTAÇÃO DE ENERGIA",
+  },
   { label: "OUTRAS RECEITAS", value: "OUTRAS RECEITAS" },
 ] as const;
 interface IRevenues {
@@ -538,6 +579,7 @@ interface IRevenues {
     id: string; // id do usuário que criou o referente registro de custos
     nome: string; // nome do usuário que criou o referente registro de custos
   };
+  descricao: string; // descrição adicional, com detalhes, explicações ou qualquer informação para futura entendimento dos gastos
   projeto: {
     id: string; // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
     nome: string; // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)

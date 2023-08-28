@@ -13,7 +13,7 @@ function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
     <div className="flex flex-col w-full gap-2 bg-gray-50 rounded-tr-sm rounded-tl-sm border-b border-gray-300 py-1">
       <div className="grid grid-cols-10 items-center w-full">
         <h1 className="col-span-2 w-full text-center text-xs text-gray-700 font-medium p-1">
-          {item.nome}
+          {item.descricao}
           {item.grandeza ? `(${item.grandeza})` : ""}
         </h1>
         <div className="col-span-1 w-full p-1">
@@ -103,7 +103,7 @@ function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
           ) : null}
         </div>
         <div className="col-span-1 w-full flex items-center justify-center font-medium p-1 gap-4">
-          {item.descricao ? (
+          {item.anotacoes ? (
             showDescription ? (
               <AiFillEye
                 onClick={() => setShowDescription(false)}
@@ -128,9 +128,9 @@ function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
       </div>
       {showDescription ? (
         <div className="flex flex-col items-center">
-          <p className="text-xs text-[#15599a] font-medium">DESCRIÇÃO</p>
+          <p className="text-xs text-[#15599a] font-medium">ANOTAÇÕES</p>
           <p className="grow w-full text-xs text-center text-gray-600 italic">
-            {item.descricao}
+            {item.anotacoes}
           </p>
         </div>
       ) : null}

@@ -50,9 +50,9 @@ function Configuracoes() {
           <div className="flex flex-col grow overflow-y-auto gap-3 overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 px-2 py-2">
             {apportionmentsFetching ? <LoadingPage /> : null}
             {apportionmentsSuccess
-              ? apportionments?.map((apportionment) => (
+              ? apportionments?.map((apportionment, index) => (
                   <ApportionmentItem
-                    key={apportionment._id}
+                    key={index}
                     apportionment={apportionment}
                   />
                 ))
@@ -71,8 +71,8 @@ function Configuracoes() {
           <div className="flex flex-col grow overflow-y-auto gap-3 overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {receiptAccountsFetching ? <LoadingPage /> : null}
             {receiptAccountsSuccess
-              ? receiptAccounts?.map((account) => (
-                  <div className="flex items-center justify-center">
+              ? receiptAccounts?.map((account, index) => (
+                  <div key={index} className="flex items-center justify-center">
                     <h1 className="text-gray-500 font-bold">{account.nome}</h1>
                   </div>
                 ))

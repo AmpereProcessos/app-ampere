@@ -26,37 +26,65 @@ const OVERLAY_STYLES = {
   backgroundColor: "rgba(0,0,0,.7)",
   zIndex: 1000,
 };
-
+const currentDate = new Date();
+const currentMonth = currentDate.getMonth() + 1;
+const currentYear = currentDate.getFullYear();
+const period = `${currentMonth.toString().padStart(2, "0")}/${currentYear}`;
 function NewApportionment({ closeModal }) {
   const [infoHolder, setInfoHolder] = useState({
     nome: "",
     categorias: [],
-    orcamento: 0,
+    orcamentos: [],
   });
   const [categoryHolder, setCategoryHolder] = useState({
     nome: "",
-    orcamento: 0,
+  });
+  const [budgetHolder, setBudgetHolder] = useState({
+    valor: 0,
+    periodo: period,
   });
   function addCategory() {
-    const { nome, orcamento } = categoryHolder;
+    const { nome } = categoryHolder;
     if (nome.trim().length < 2) {
       toast.error("Preencha um nome válido para a categoria.");
-      return false;
-    }
-    if (orcamento < 0) {
-      toast.error("Preencha um orçamento válido para a categoria.");
       return false;
     }
     const budget = {
       label: nome.toUpperCase(),
       value: nome.toUpperCase(),
-      orcamento: orcamento,
     };
     var categories = [...infoHolder.categorias];
     categories.push(budget);
 
     setInfoHolder((prev) => ({ ...prev, categorias: categories }));
-    setCategoryHolder({ nome: "", orcamento: 0 });
+    setCategoryHolder({ nome: "" });
+  }
+  function addBudget() {
+    const { valor, periodo } = budgetHolder;
+    if (valor <= 0) {
+      toast.error("Preencha um valor válido para orçamento.");
+      return;
+    }
+    if (!periodo) {
+      toast.error("Preencha o período.");
+      return;
+    }
+    var budgets = [...infoHolder.orcamentos];
+    budgets.push({ valor, periodo });
+    // Sorting by period asceding order
+    budgets = budgets.sort((a, b) => {
+      const currentDay = new Date().getDate().toString();
+      const [monthA, yearA] = a.periodo.split("/");
+      const [monthB, yearB] = b.periodo.split("/");
+
+      const dateA = new Date(yearA + "-" + monthA + "-" + currentDay);
+      const dateB = new Date(yearB + "-" + monthB + "-" + currentDay);
+
+      return dateA - dateB;
+    });
+    console.log(budgets);
+    setInfoHolder((prev) => ({ ...prev, orcamentos: budgets }));
+    toast.success("Orçamento adicionado com sucesso.");
   }
   function getBudgetFromCategorias(categories) {
     const total = categories.reduce((acc, current) => {
@@ -65,10 +93,10 @@ function NewApportionment({ closeModal }) {
     }, 0);
     return total;
   }
-  useEffect(() => {
-    const total = getBudgetFromCategorias(infoHolder.categorias);
-    setInfoHolder((prev) => ({ ...prev, orcamento: total }));
-  }, [infoHolder.categorias]);
+  // useEffect(() => {
+  //   const total = getBudgetFromCategorias(infoHolder.categorias);
+  //   setInfoHolder((prev) => ({ ...prev, orcamento: total }));
+  // }, [infoHolder.categorias]);
 
   return (
     <div style={OVERLAY_STYLES}>
@@ -109,7 +137,7 @@ function NewApportionment({ closeModal }) {
               </h1>
               <div className="flex items-end gap-2 w-full mt-2">
                 <div className="flex items-end gap-2 grow">
-                  <div className="w-[80%]">
+                  <div className="w-[100%]">
                     <TextInput
                       label={"NOME DO CATEGORIA"}
                       labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
@@ -123,7 +151,7 @@ function NewApportionment({ closeModal }) {
                       width={"100%"}
                     />
                   </div>
-                  <div className="w-[20%]">
+                  {/* <div className="w-[20%]">
                     <NumberInput
                       label={"ORÇAMENTO"}
                       labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
@@ -139,7 +167,7 @@ function NewApportionment({ closeModal }) {
                       }
                       width={"100%"}
                     />
-                  </div>
+                  </div> */}
                 </div>
                 <button
                   onClick={addCategory}
@@ -154,9 +182,7 @@ function NewApportionment({ closeModal }) {
                     <p className="w-full text-center font-medium text-white lg:flex-[4_4_0%]">
                       NOME
                     </p>
-                    <p className="w-full text-center font-medium text-white lg:flex-[2_2_0%]">
-                      ORÇAMENTO
-                    </p>
+
                     <p className="w-full text-center font-medium text-white lg:flex-[1_1_0%]">
                       AÇÕES
                     </p>
@@ -168,11 +194,6 @@ function NewApportionment({ closeModal }) {
                     >
                       <p className="w-full text-center font-medium lg:flex-[4_4_0%]">
                         {category.value}
-                      </p>
-                      <p className="w-full text-center font-medium lg:flex-[2_2_0%]">
-                        {category.orcamento > 0
-                          ? formatToMoney(category.orcamento)
-                          : "-"}
                       </p>
                       <div className="w-full  flex items-center justify-center gap-2 lg:flex-[1_1_0%]">
                         <button
@@ -198,48 +219,101 @@ function NewApportionment({ closeModal }) {
                 </p>
               )}
             </div>
-            {infoHolder.categorias.length > 0 ? (
-              <>
-                <div className="w-full bg-gray-500 flex items-center gap-2 rounded-md">
-                  <p className="w-full text-center font-medium text-white lg:flex-[4_4_0%]">
-                    ORÇAMENTO GERAL
-                  </p>
+
+            <div className="w-full flex flex-col items-center">
+              <h1 className="w-full bg-gray-500 text-center text-white font-normal font-raleway text-sm">
+                ORÇAMENTOS
+              </h1>
+              <div className="w-full flex items-end gap-2 mt-2">
+                <div className="grow flex gap-2">
+                  <div className="w-[60%]">
+                    <NumberInput
+                      label={"VALOR"}
+                      labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
+                      value={budgetHolder.valor}
+                      handleChange={(value) =>
+                        setBudgetHolder((prev) => ({
+                          ...prev,
+                          valor: value,
+                        }))
+                      }
+                      placeholder={
+                        "Preencha aqui o orçamento a ser a esse rateio de custos."
+                      }
+                      width={"100%"}
+                    />
+                  </div>
+                  <div className="w-[40%]">
+                    <MonthYearPicker
+                      label={"MÊS/ANO"}
+                      labelClassName="text-center text-gray-500 font-normal font-raleway text-sm"
+                      value={budgetHolder.periodo}
+                      width={"100%"}
+                      handleChange={(value) =>
+                        setBudgetHolder((prev) => ({
+                          ...prev,
+                          periodo: value,
+                        }))
+                      }
+                    />
+                  </div>
                 </div>
-                <h1 className="w-full py-2 text-center border-b border-gray-300 border-x px-2 font-black text-lg">
-                  {formatToMoney(
-                    getBudgetFromCategorias(infoHolder.categorias)
-                  )}
-                </h1>
-              </>
-            ) : (
-              <div className="w-full flex items-center">
-                <div className="w-[60%]">
-                  <NumberInput
-                    label={"ORÇAMENTO GERAL"}
-                    labelClassName="w-full bg-gray-500 text-center text-white font-normal font-raleway text-sm"
-                    value={infoHolder.orcamento}
-                    handleChange={(value) =>
-                      setInfoHolder((prev) => ({
-                        ...prev,
-                        orcamento: value,
-                      }))
-                    }
-                    placeholder={
-                      "Preencha aqui o orçamento a ser a esse rateio de custos."
-                    }
-                    width={"100%"}
-                  />
-                </div>
-                <div className="w-[40%]">
-                  <MonthYearPicker
-                    label={"MÊS/ANO"}
-                    value={null}
-                    width={"100%"}
-                    handleChange={(value) => console.log(value)}
-                  />
-                </div>
+                <button
+                  onClick={addBudget}
+                  className="add-center border h-[46px] p-2 w-fit text-xs font-medium border-green-500 text-green-500 hover:text-white hover:bg-green-500 rounded"
+                >
+                  ADICIONAR ITEM
+                </button>
               </div>
-            )}
+              {infoHolder.orcamentos.length > 0 ? (
+                <>
+                  <div className="w-full bg-gray-500 flex items-center gap-2 mt-1 rounded-md">
+                    <p className="w-full text-center font-medium text-white lg:flex-[4_4_0%]">
+                      VALOR
+                    </p>
+                    <p className="w-full text-center font-medium text-white lg:flex-[4_4_0%]">
+                      PERÍODO
+                    </p>
+
+                    <p className="w-full text-center font-medium text-white lg:flex-[1_1_0%]">
+                      AÇÕES
+                    </p>
+                  </div>
+                  {infoHolder.orcamentos.map((budget, index) => (
+                    <div
+                      key={index}
+                      className="w-full p-2 border border-gray-300 flex items-center gap-2 my-1 rounded-md"
+                    >
+                      <p className="w-full text-center font-medium lg:flex-[4_4_0%]">
+                        {budget.valor}
+                      </p>
+                      <p className="w-full text-center font-medium lg:flex-[4_4_0%]">
+                        {budget.periodo}
+                      </p>
+                      <div className="w-full  flex items-center justify-center gap-2 lg:flex-[1_1_0%]">
+                        <button
+                          onClick={() => {
+                            var itensArr = [...infoHolder.orcamentos];
+                            itensArr.splice(index, 1);
+                            setInfoHolder((prev) => ({
+                              ...prev,
+                              orcamentos: itensArr,
+                            }));
+                          }}
+                          className="text-red-300 hover:text-red-500 "
+                        >
+                          <MdDelete />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <p className="w-full text-center text-gray-500 italic py-4">
+                  Nenhum orçamento cadastrada
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>

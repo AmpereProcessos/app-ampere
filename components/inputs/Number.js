@@ -1,5 +1,5 @@
 import React from "react";
-import { isEmpty } from "../../utils/methods/custom";
+import { isEmpty } from "../../utils/methods/shared";
 
 function NumberInput({
   width,

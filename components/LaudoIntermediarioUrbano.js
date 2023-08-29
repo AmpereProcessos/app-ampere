@@ -17,6 +17,7 @@ import {
   CartesianGrid,
   LabelList,
 } from "recharts";
+import { getGenFactorByOrientation } from "../utils/methods/shared";
 function LaudoIntermediarioUrbano({ info }) {
   function getAdditionalCostsSum(custos) {
     var sum = 0;
@@ -26,9 +27,18 @@ function LaudoIntermediarioUrbano({ info }) {
     return sum;
   }
   function getCorrectedGen() {
+    const { cidade, uf } = info;
+    var cityFactor = fatorDeGeracaoPorOrientacao.find(
+      (genFactor) => genFactor.CIDADE == cidade && genFactor.UF == uf
+    );
+    if (!cityFactor) {
+      cityFactor = fatorDeGeracaoPorOrientacao.find(
+        (genFactor) => genFactor.CIDADE == "ITUIUTABA"
+      );
+    }
     let norte = info.modNorte
       ? (
-          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["NORTE"]) *
+          (Number(cityFactor["NORTE"]) *
             info.modNorte *
             getAverageModulePower(info.potModulos)) /
           1000
@@ -36,7 +46,7 @@ function LaudoIntermediarioUrbano({ info }) {
       : 0;
     let nordeste = info.modNordeste
       ? (
-          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["NORDESTE"]) *
+          (Number(cityFactor["NORDESTE"]) *
             info.modNordeste *
             getAverageModulePower(info.potModulos)) /
           1000
@@ -44,7 +54,7 @@ function LaudoIntermediarioUrbano({ info }) {
       : 0;
     let leste = info.modLeste
       ? (
-          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["LESTE"]) *
+          (Number(cityFactor["LESTE"]) *
             info.modLeste *
             getAverageModulePower(info.potModulos)) /
           1000
@@ -52,7 +62,7 @@ function LaudoIntermediarioUrbano({ info }) {
       : 0;
     let sudeste = info.modSudeste
       ? (
-          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["SUDESTE"]) *
+          (Number(cityFactor["SUDESTE"]) *
             info.modSudeste *
             getAverageModulePower(info.potModulos)) /
           1000
@@ -60,7 +70,7 @@ function LaudoIntermediarioUrbano({ info }) {
       : 0;
     let sul = info.modSul
       ? (
-          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["SUL"]) *
+          (Number(cityFactor["SUL"]) *
             info.modSul *
             getAverageModulePower(info.potModulos)) /
           1000
@@ -68,7 +78,7 @@ function LaudoIntermediarioUrbano({ info }) {
       : 0;
     let sudoeste = info.modSudoeste
       ? (
-          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["SUDOESTE"]) *
+          (Number(cityFactor["SUDOESTE"]) *
             info.modSudoeste *
             getAverageModulePower(info.potModulos)) /
           1000
@@ -76,7 +86,7 @@ function LaudoIntermediarioUrbano({ info }) {
       : 0;
     let oeste = info.modOeste
       ? (
-          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["OESTE"]) *
+          (Number(cityFactor["OESTE"]) *
             info.modOeste *
             getAverageModulePower(info.potModulos)) /
           1000
@@ -84,7 +94,7 @@ function LaudoIntermediarioUrbano({ info }) {
       : 0;
     let noroeste = info.modNoroeste
       ? (
-          (Number(fatorDeGeracaoPorOrientacao[info.cidade]["NOROESTE"]) *
+          (Number(cityFactor["NOROESTE"]) *
             info.modNoroeste *
             getAverageModulePower(info.potModulos)) /
           1000
@@ -118,10 +128,6 @@ function LaudoIntermediarioUrbano({ info }) {
       return Number(splittedPower[0]);
     }
   }
-  console.log(
-    getAverageModulePower(info.potModulos),
-    fatorDeGeracaoPorOrientacao[info.cidade]["NOROESTE"]
-  );
   function getTotalModuleQtde(modQtde) {
     const splittedQty = `${modQtde}`.split("/");
 
@@ -139,10 +145,14 @@ function LaudoIntermediarioUrbano({ info }) {
     }
   }
   function getProposedGen() {
+    const factor = getGenFactorByOrientation({
+      city: info.cidade,
+      uf: info.uf,
+    });
     return (
       (getTotalModuleQtde(info.qtdeModulos) *
         getAverageModulePower(info.potModulos) *
-        Number(fatorDeGeracaoPorOrientacao[info.cidade].fatorGen)) /
+        factor) /
       1000
     ).toFixed(2);
   }
@@ -488,11 +498,13 @@ function LaudoIntermediarioUrbano({ info }) {
                   {info.modNorte ? info.modNorte : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modNorte && fatorDeGeracaoPorOrientacao[info.cidade]
+                  {info.modNorte
                     ? `${(
-                        (Number(
-                          fatorDeGeracaoPorOrientacao[info.cidade]["NORTE"]
-                        ) *
+                        (getGenFactorByOrientation({
+                          city: info.cidade,
+                          uf: info.uf,
+                          orientation: "NORTE",
+                        }) *
                           info.modNorte *
                           getAverageModulePower(info.potModulos)) /
                         1000
@@ -508,11 +520,13 @@ function LaudoIntermediarioUrbano({ info }) {
                   {info.modNordeste ? info.modNordeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modNordeste && fatorDeGeracaoPorOrientacao[info.cidade]
+                  {info.modNordeste
                     ? `${(
-                        (Number(
-                          fatorDeGeracaoPorOrientacao[info.cidade]["NORDESTE"]
-                        ) *
+                        (getGenFactorByOrientation({
+                          city: info.cidade,
+                          uf: info.uf,
+                          orientation: "NORDESTE",
+                        }) *
                           info.modNordeste *
                           getAverageModulePower(info.potModulos)) /
                         1000
@@ -528,11 +542,13 @@ function LaudoIntermediarioUrbano({ info }) {
                   {info.modLeste ? info.modLeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modLeste && fatorDeGeracaoPorOrientacao[info.cidade]
+                  {info.modLeste
                     ? `${(
-                        (Number(
-                          fatorDeGeracaoPorOrientacao[info.cidade]["LESTE"]
-                        ) *
+                        (getGenFactorByOrientation({
+                          city: info.cidade,
+                          uf: info.uf,
+                          orientation: "LESTE",
+                        }) *
                           info.modLeste *
                           getAverageModulePower(info.potModulos)) /
                         1000
@@ -548,11 +564,13 @@ function LaudoIntermediarioUrbano({ info }) {
                   {info.modSudeste ? info.modSudeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modSudeste && fatorDeGeracaoPorOrientacao[info.cidade]
+                  {info.modSudeste
                     ? `${(
-                        (Number(
-                          fatorDeGeracaoPorOrientacao[info.cidade]["SUDESTE"]
-                        ) *
+                        (getGenFactorByOrientation({
+                          city: info.cidade,
+                          uf: info.uf,
+                          orientation: "SUDESTE",
+                        }) *
                           info.modSudeste *
                           getAverageModulePower(info.potModulos)) /
                         1000
@@ -581,11 +599,13 @@ function LaudoIntermediarioUrbano({ info }) {
                   {info.modSul ? info.modSul : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modSul && fatorDeGeracaoPorOrientacao[info.cidade]
+                  {info.modSul
                     ? `${(
-                        (Number(
-                          fatorDeGeracaoPorOrientacao[info.cidade]["SUL"]
-                        ) *
+                        (getGenFactorByOrientation({
+                          city: info.cidade,
+                          uf: info.uf,
+                          orientation: "SUL",
+                        }) *
                           info.modSul *
                           getAverageModulePower(info.potModulos)) /
                         1000
@@ -601,11 +621,13 @@ function LaudoIntermediarioUrbano({ info }) {
                   {info.modSudoeste ? info.modSudoeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modSudoeste && fatorDeGeracaoPorOrientacao[info.cidade]
+                  {info.modSudoeste
                     ? `${(
-                        (Number(
-                          fatorDeGeracaoPorOrientacao[info.cidade]["SUDOESTE"]
-                        ) *
+                        (getGenFactorByOrientation({
+                          city: info.cidade,
+                          uf: info.uf,
+                          orientation: "SUDOESTE",
+                        }) *
                           info.modSudoeste *
                           getAverageModulePower(info.potModulos)) /
                         1000
@@ -621,11 +643,13 @@ function LaudoIntermediarioUrbano({ info }) {
                   {info.modOeste ? info.modOeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modOeste && fatorDeGeracaoPorOrientacao[info.cidade]
+                  {info.modOeste
                     ? `${(
-                        (Number(
-                          fatorDeGeracaoPorOrientacao[info.cidade]["OESTE"]
-                        ) *
+                        (getGenFactorByOrientation({
+                          city: info.cidade,
+                          uf: info.uf,
+                          orientation: "OESTE",
+                        }) *
                           info.modOeste *
                           getAverageModulePower(info.potModulos)) /
                         1000
@@ -641,11 +665,13 @@ function LaudoIntermediarioUrbano({ info }) {
                   {info.modNoroeste ? info.modNoroeste : "-"}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modNoroeste && fatorDeGeracaoPorOrientacao[info.cidade]
+                  {info.modNoroeste
                     ? `${(
-                        (Number(
-                          fatorDeGeracaoPorOrientacao[info.cidade]["NOROESTE"]
-                        ) *
+                        (getGenFactorByOrientation({
+                          city: info.cidade,
+                          uf: info.uf,
+                          orientation: "NOROESTE",
+                        }) *
                           info.modNoroeste *
                           getAverageModulePower(info.potModulos)) /
                         1000
@@ -724,7 +750,7 @@ function LaudoIntermediarioUrbano({ info }) {
           <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0">
             DESCRITIVO DO PROJETO
           </h1>
-          <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[60px] text-center p-2">
+          <div className="flex text-xs justify-center items-center border border-black border-t-0 min-h-[60px] text-center p-2">
             {info.descritivo?.length ? (
               info.descritivo?.map((item, index) => (
                 <div

@@ -1322,6 +1322,16 @@ export const sellers = [
   "SETOR O&M",
   "SETOR PROJETOS",
 ];
+export const orientacoes = [
+  "LESTE",
+  "NORDESTE",
+  "NORTE",
+  "NOROESTE",
+  "OESTE",
+  "SUDOESTE",
+  "SUL",
+  "SUDESTE",
+];
 export const sellerPhotos = [
   {
     nome: "RAFAEL FEO",

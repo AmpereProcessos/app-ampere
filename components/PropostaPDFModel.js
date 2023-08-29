@@ -6,7 +6,8 @@ import { FiCheck } from "react-icons/fi";
 import { prices } from "../utils/constants";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import fatoresDeGeracao from "../utils/fatoresDeGeracao.json";
+
+import { getGenFactorByOrientation } from "../utils/methods/shared";
 function PropostaPDFModel({ info }) {
   const pdfRef = useRef();
 
@@ -17,17 +18,12 @@ function PropostaPDFModel({ info }) {
       }
     }
   }
-  function getGenFactor(city, uf, month) {
-    const factor = fatoresDeGeracao[city];
 
-    if (factor) {
-      return factor.fatorGen;
-    } else {
-      return 127;
-    }
-  }
   function getLoses() {
-    const genFactor = getGenFactor(info.cidade, info.uf);
+    const genFactor = getGenFactorByOrientation({
+      city: info.cidade,
+      uf: info.uf,
+    });
     const expectedMonthlyGen =
       ((info.qtdeModulos * info.potModulos) / 1000) * genFactor;
     const expectedAnualGen = expectedMonthlyGen * 12;

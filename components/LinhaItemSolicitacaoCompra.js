@@ -4,7 +4,7 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { BsArrowsExpand } from "react-icons/bs";
 import { MdCancel } from "react-icons/md";
 import { formatDate } from "../utils/constants";
-import { isEmpty } from "../utils/methods/custom";
+import { isEmpty } from "../utils/methods/shared";
 
 function PurchaseSolicitationItemRow({ item, index, infoHolder, setInfo }) {
   console.log(item.preco);

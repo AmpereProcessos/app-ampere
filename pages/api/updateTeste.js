@@ -5,6 +5,7 @@ import connectToWarehouseDatabase from "../../utils/materialDb";
 import { ObjectId } from "mongodb";
 import connectToProjectsDatabase from "../../utils/connectDb";
 import { calculateStringSimilarity } from "../../utils/constants";
+import StatesAndCities from "../../utils/estados_cidades.json";
 import axios from "axios";
 import { errorHandler } from "../../utils/methods/handlers";
 import connectToDatabase from "../../utils/auxiliaresDb";
@@ -48,8 +49,48 @@ function getContractValue(valorProjeto, valorPadrao, valorEstrutura, valorOeM) {
   return totalSum;
 }
 export default async function handler(req, res) {
-  // const db = await connectToProjectsDatabase(process.env.DB_KEY, "projetos");
-  // const projectsCollection = db.collection("dados");
+  const db = await connectToRequestsDatabase(process.env.DB_KEY);
+  const collection = db.collection("visitaTecnica");
+  const requests = await collection
+    .aggregate([
+      {
+        $project: {
+          nomeDoCliente: 1,
+          cidade: 1,
+        },
+      },
+    ])
+    .toArray();
+  var citiesArr = [];
+  StatesAndCities.forEach((state) => {
+    const cities = state.cidades;
+    cities.forEach((city) => {
+      citiesArr.push({ cidade: city, uf: state.sigla });
+    });
+  });
+  const formattedRequests = requests.map((request) => {
+    const correspondentCity = citiesArr.find(
+      (city) =>
+        city.cidade.toUpperCase() == request.cidade.toUpperCase() &&
+        city.uf != "BA" &&
+        city.uf != "SP"
+    );
+    return {
+      ...request,
+      uf: correspondentCity?.uf,
+    };
+  });
+  const bulkwriteArr = formattedRequests.map((request) => {
+    return {
+      updateOne: {
+        filter: { _id: new ObjectId(request._id) },
+        update: {
+          $set: { uf: request.uf },
+        },
+      },
+    };
+  });
+
   // const projects = await projectsCollection
   //   .aggregate([
   //     {
@@ -139,8 +180,8 @@ export default async function handler(req, res) {
   //     },
   //   };
   // });
-  // const responseDb = await expensesCollection.bulkWrite(bulkwriteArr);
-  res.json("DESATIVADA");
+  const responseDb = await collection.bulkWrite(bulkwriteArr);
+  res.json(responseDb);
 }
 
 // Update Many example:

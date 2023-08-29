@@ -16,7 +16,7 @@ import { useClients } from "../utils/methods/query/clients";
 import ProjectVinculationMenu from "../components/identificador/despesas/ProjectVinculationMenu";
 import { formatToMoney, motivosSolicitacaoCompra } from "../utils/constants";
 import CheckboxInput from "./CheckboxInput";
-import { isEmpty } from "../utils/methods/custom";
+import { isEmpty } from "../utils/methods/shared";
 import { insertExpensesFromPurchaseRequests } from "../utils/methods/mutation/expenses";
 import { useSession } from "next-auth/react";
 import { getErrorMessage } from "../utils/methods/handlers";

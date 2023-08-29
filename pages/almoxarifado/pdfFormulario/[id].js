@@ -70,7 +70,8 @@ function PDFFormulario({ info, backTo, type }) {
         <div className="flex flex-col gap-y-2 border border-black w-full mt-4 py-4">
           <div className="flex justify-center">
             <h1 className="font-bold text-xl">
-              {info.nomeDoContrato} - (#{info.codigoProjeto})
+              {info.nomeDoContrato ? info.nomeDoContrato : info.nomeTerceiro}
+              {info.codigoProjeto ? `- (#${info.codigoProjeto}_` : ""}
             </h1>
           </div>
           <div className="flex flex-col px-2">

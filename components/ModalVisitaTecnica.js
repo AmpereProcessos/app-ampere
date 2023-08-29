@@ -10,7 +10,7 @@ import {
   suprimentoOption,
   tiposSolicitacaoVisitaTecnica,
 } from "../utils/constants";
-import fatorDeGeracaoPorOrientacao from "../utils/fatoresDeGeracao.json";
+
 import { storage } from "../utils/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { AiOutlineSearch } from "react-icons/ai";
@@ -21,6 +21,7 @@ import { FiDelete } from "react-icons/fi";
 import axios from "axios";
 import SaveButton from "./utils/Buttons/SaveButton";
 import CustosVisitaPesquisa from "./CustosVisitaPesquisa";
+import { getGenFactorByOrientation } from "../utils/methods/shared";
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
@@ -237,8 +238,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
       .replace(/(-\d{3})\d+?$/, "$1");
     return cep;
   }
-  console.log(fatorDeGeracaoPorOrientacao[dados.cidade]["NOROESTE"]);
-  // 2LaudoIntermediarioUrbano.js:121 590 124.7664020538131
+
   return (
     <div style={OVERLAY_STYLES}>
       <div style={MODAL_STYLES}>
@@ -324,7 +324,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                 />
                 <TextInput
                   label={"CÓDIGO DO PROJETO CRM"}
-                  editable={false}
+                  editable={true}
                   value={dados.codigoSVB ? dados.codigoSVB : ""}
                   handleChange={(value) =>
                     setDados({ ...dados, codigoSVB: value })
@@ -2505,12 +2505,13 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       }
                     />
                     <p className="text-center font-bold text-gray-700">
-                      {dados.modNorte &&
-                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                      {dados.modNorte
                         ? (
-                            (Number(
-                              fatorDeGeracaoPorOrientacao[dados.cidade]["NORTE"]
-                            ) *
+                            (getGenFactorByOrientation({
+                              city: dados.cidade,
+                              uf: dados.uf,
+                              orientation: "NORTE",
+                            }) *
                               dados.modNorte *
                               dados.potModulos) /
                             1000
@@ -2535,14 +2536,13 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       }
                     />
                     <p className="text-center font-bold text-gray-700">
-                      {dados.modNordeste &&
-                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                      {dados.modNordeste
                         ? (
-                            (Number(
-                              fatorDeGeracaoPorOrientacao[dados.cidade][
-                                "NORDESTE"
-                              ]
-                            ) *
+                            (getGenFactorByOrientation({
+                              city: dados.cidade,
+                              uf: dados.uf,
+                              orientation: "NORDESTE",
+                            }) *
                               dados.modNordeste *
                               dados.potModulos) /
                             1000
@@ -2562,12 +2562,13 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       }
                     />
                     <p className="text-center font-bold text-gray-700">
-                      {dados.modLeste &&
-                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                      {dados.modLeste
                         ? (
-                            (Number(
-                              fatorDeGeracaoPorOrientacao[dados.cidade]["LESTE"]
-                            ) *
+                            (getGenFactorByOrientation({
+                              city: dados.cidade,
+                              uf: dados.uf,
+                              orientation: "LESTE",
+                            }) *
                               dados.modLeste *
                               dados.potModulos) /
                             1000
@@ -2592,14 +2593,13 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       }
                     />
                     <p className="text-center font-bold text-gray-700">
-                      {dados.modSudeste &&
-                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                      {dados.modSudeste
                         ? (
-                            (Number(
-                              fatorDeGeracaoPorOrientacao[dados.cidade][
-                                "SUDESTE"
-                              ]
-                            ) *
+                            (getGenFactorByOrientation({
+                              city: dados.cidade,
+                              uf: dados.uf,
+                              orientation: "SUDESTE",
+                            }) *
                               dados.modSudeste *
                               dados.potModulos) /
                             1000
@@ -2619,11 +2619,13 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       }
                     />
                     <p className="text-center font-bold text-gray-700">
-                      {dados.modSul && fatorDeGeracaoPorOrientacao[dados.cidade]
+                      {dados.modSul
                         ? (
-                            (Number(
-                              fatorDeGeracaoPorOrientacao[dados.cidade]["SUL"]
-                            ) *
+                            (getGenFactorByOrientation({
+                              city: dados.cidade,
+                              uf: dados.uf,
+                              orientation: "SUL",
+                            }) *
                               dados.modSul *
                               dados.potModulos) /
                             1000
@@ -2648,14 +2650,13 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       }
                     />
                     <p className="text-center font-bold text-gray-700">
-                      {dados.modSudoeste &&
-                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                      {dados.modSudoeste
                         ? (
-                            (Number(
-                              fatorDeGeracaoPorOrientacao[dados.cidade][
-                                "SUDOESTE"
-                              ]
-                            ) *
+                            (getGenFactorByOrientation({
+                              city: dados.cidade,
+                              uf: dados.uf,
+                              orientation: "SUDOESTE",
+                            }) *
                               dados.modSudoeste *
                               dados.potModulos) /
                             1000
@@ -2675,12 +2676,13 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       }
                     />
                     <p className="text-center font-bold text-gray-700">
-                      {dados.modOeste &&
-                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                      {dados.modOeste
                         ? (
-                            (Number(
-                              fatorDeGeracaoPorOrientacao[dados.cidade]["OESTE"]
-                            ) *
+                            (getGenFactorByOrientation({
+                              city: dados.cidade,
+                              uf: dados.uf,
+                              orientation: "OESTE",
+                            }) *
                               dados.modOeste *
                               dados.potModulos) /
                             1000
@@ -2705,14 +2707,13 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                       }
                     />
                     <p className="text-center font-bold text-gray-700">
-                      {dados.modNoroeste &&
-                      fatorDeGeracaoPorOrientacao[dados.cidade]
+                      {dados.modNoroeste
                         ? (
-                            (Number(
-                              fatorDeGeracaoPorOrientacao[dados.cidade][
-                                "NOROESTE"
-                              ]
-                            ) *
+                            (getGenFactorByOrientation({
+                              city: dados.cidade,
+                              uf: dados.uf,
+                              orientation: "NOROESTE",
+                            }) *
                               dados.modNoroeste *
                               dados.potModulos) /
                             1000

@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import { VscChromeClose } from 'react-icons/vsc'
-import { MdOutlineAddCircle } from 'react-icons/md'
-import Select from 'react-select'
-import { cities, equipesTecnicas, validateAuthorization } from '../utils/constants'
+import React, { useState } from 'react'
 import axios from 'axios'
-import { useClients } from '../utils/methods/query/clients'
-import { useSession } from 'next-auth/react'
-import { useMaterials } from '../utils/methods/query/materials'
-import TextInput from './TextInput'
-import TextFloatingInput from './TextFloatingInput'
-import NumberFloatingInput from './NumberFloatingInput'
-import AddMaterialFormulario from './identificador/almoxarifado/AddMaterialFormulario'
-import { debitMaterials } from '../utils/methods/mutation/materials'
 import createHttpError from 'http-errors'
 import { toast } from 'react-hot-toast'
 import { useMutation } from 'react-query'
+import Select from 'react-select'
+import { useSession } from 'next-auth/react'
+
+import { VscChromeClose } from 'react-icons/vsc'
+
+import { equipesTecnicas } from '../utils/constants'
+import { useClients } from '../utils/methods/query/clients'
+import { useMaterials } from '../utils/methods/query/materials'
+
+import SelectInput from './inputs/Select'
+import AddMaterialFormulario from './identificador/almoxarifado/AddMaterialFormulario'
+import { debitMaterials } from '../utils/methods/mutation/materials'
 import LoadingPage from './utils/LoadingPage'
 
 const MODAL_STYLES = {

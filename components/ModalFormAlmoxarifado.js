@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { VscChromeClose } from 'react-icons/vsc'
-import { MdOutlineAddCircle } from 'react-icons/md'
-import { FaSave } from 'react-icons/fa'
-import Select from 'react-select'
-import SelectInput from '../components/inputs/Select'
-import { cities, equipesTecnicas } from '../utils/constants'
-import axios from 'axios'
-import MaterialItem from './MaterialItem'
-import Link from 'next/link'
-import SaveButton from './utils/Buttons/SaveButton'
-import { debitMaterials, returnMaterials } from '../utils/methods/mutation/materials'
-import { insertExpensesFromMaterials } from '../utils/methods/mutation/expenses'
 import { useSession } from 'next-auth/react'
 import { toast } from 'react-hot-toast'
-import { BsCheckCircleFill } from 'react-icons/bs'
-import { getErrorMessage } from '../utils/methods/handlers'
+import axios from 'axios'
+import Link from 'next/link'
+import { VscChromeClose } from 'react-icons/vsc'
+import { FaSave } from 'react-icons/fa'
+
+import SelectInput from '../components/inputs/Select'
+import MaterialItem from './MaterialItem'
 import AddMaterialFormulario from './identificador/almoxarifado/AddMaterialFormulario'
+import SaveButton from './utils/Buttons/SaveButton'
+
+import { equipesTecnicas } from '../utils/constants'
+import { debitMaterials, returnMaterials } from '../utils/methods/mutation/materials'
+import { insertExpensesFromMaterials } from '../utils/methods/mutation/expenses'
 import { useMaterials } from '../utils/methods/query/materials'
+import { getErrorMessage } from '../utils/methods/handlers'
+
 const MODAL_STYLES = {
   position: 'fixed',
   top: '50%',
@@ -312,7 +312,6 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                     handleChange={(value) => setDados((prev) => ({ ...prev, equipeResp: value }))}
                     width={'100%'}
                   />
-                  {/* <p className="text-gray-600 text-center">{dados.equipeResp ? dados.equipeResp : '-'}</p> */}
                 </div>
               </div>
               <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">

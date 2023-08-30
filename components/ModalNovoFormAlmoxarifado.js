@@ -1,72 +1,68 @@
-import React, { useEffect, useState } from "react";
-import { VscChromeClose } from "react-icons/vsc";
-import { MdOutlineAddCircle } from "react-icons/md";
-import Select from "react-select";
-import { cities, validateAuthorization } from "../utils/constants";
-import axios from "axios";
-import { useClients } from "../utils/methods/query/clients";
-import { useSession } from "next-auth/react";
-import { useMaterials } from "../utils/methods/query/materials";
-import TextInput from "./TextInput";
-import TextFloatingInput from "./TextFloatingInput";
-import NumberFloatingInput from "./NumberFloatingInput";
-import AddMaterialFormulario from "./identificador/almoxarifado/AddMaterialFormulario";
-import { debitMaterials } from "../utils/methods/mutation/materials";
-import createHttpError from "http-errors";
-import { toast } from "react-hot-toast";
-import { useMutation } from "react-query";
-import LoadingPage from "./utils/LoadingPage";
+import React, { useEffect, useState } from 'react'
+import { VscChromeClose } from 'react-icons/vsc'
+import { MdOutlineAddCircle } from 'react-icons/md'
+import Select from 'react-select'
+import { cities, equipesTecnicas, validateAuthorization } from '../utils/constants'
+import axios from 'axios'
+import { useClients } from '../utils/methods/query/clients'
+import { useSession } from 'next-auth/react'
+import { useMaterials } from '../utils/methods/query/materials'
+import TextInput from './TextInput'
+import TextFloatingInput from './TextFloatingInput'
+import NumberFloatingInput from './NumberFloatingInput'
+import AddMaterialFormulario from './identificador/almoxarifado/AddMaterialFormulario'
+import { debitMaterials } from '../utils/methods/mutation/materials'
+import createHttpError from 'http-errors'
+import { toast } from 'react-hot-toast'
+import { useMutation } from 'react-query'
+import LoadingPage from './utils/LoadingPage'
 
 const MODAL_STYLES = {
-  position: "fixed",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%,-50%)",
-  backgroundColor: "#fff",
-  minWidth: "85%",
-  height: "87%",
-  borderRadius: "10px",
-  padding: "10px",
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%,-50%)',
+  backgroundColor: '#fff',
+  minWidth: '85%',
+  height: '87%',
+  borderRadius: '10px',
+  padding: '10px',
   zIndex: 1000,
-};
+}
 const OVERLAY_STYLES = {
-  position: "fixed",
+  position: 'fixed',
   top: 0,
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: "rgba(0,0,0,.7)",
+  backgroundColor: 'rgba(0,0,0,.7)',
   zIndex: 1000,
-};
+}
 function NovoFormulario({ setModalIsOpen, getForms }) {
-  const { data: session } = useSession();
-  const [mutationStatus, setMutationStatus] = useState();
+  const { data: session } = useSession()
+  const [mutationStatus, setMutationStatus] = useState()
   // Getting data from database to enable integration with clients and materials
-  const { data: clients, isFetching: clientsFetching } = useClients(
-    !!session.user
-  );
-  const { data: materials, isFetching: materialsFetching } = useMaterials(
-    !!session.user
-  );
+  const { data: clients, isFetching: clientsFetching } = useClients(!!session.user)
+  const { data: materials, isFetching: materialsFetching } = useMaterials(!!session.user)
   const { mutate, isLoading } = useMutation({
-    mutationKey: ["createWarehouseForm"],
+    mutationKey: ['createWarehouseForm'],
     mutationFn: handleFormCreation,
-  });
+  })
   const [callInfo, setCallInfo] = useState({
     idPai: null,
     codigoProjeto: null,
-    nomeDoContrato: "",
-    uso: "CLIENTE",
+    nomeDoContrato: '',
+    uso: 'CLIENTE',
     cidade: null,
     segmento: null,
     topologia: null,
     equipeResp: null,
-    responsavel: "A DEFINIR",
-    servico: "NÃO DEFINIDO",
+    responsavel: 'A DEFINIR',
+    servico: 'NÃO DEFINIDO',
     materiais: [],
-  });
+  })
 
-  const [materialMsg, setMaterialMsg] = useState("");
+  const [materialMsg, setMaterialMsg] = useState('')
 
   function addMaterial(material) {
     const toAddObj = {
@@ -75,107 +71,90 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
       qtdeSaida: material.qtdeSaida,
       grandeza: material.grandeza,
       precoUnit: material.precoUnit,
-    };
+    }
     if (!material.nome) {
-      toast.error("Prencha/escolha um item.");
-      return false;
+      toast.error('Prencha/escolha um item.')
+      return false
     }
     if (toAddObj.qtdeSaida > material.qtdeEstoque) {
-      toast.error(
-        `Quantidade não permitida. Quantidade atual contabilizada no estoque é de ${material.qtdeEstoque}`
-      );
-      return false;
+      toast.error(`Quantidade não permitida. Quantidade atual contabilizada no estoque é de ${material.qtdeEstoque}`)
+      return false
     }
     if (material.qtdeSaida > 0) {
-      let arr = callInfo.materiais;
-      let index = arr.findIndex((obj) => !!obj.id && obj.id == material.id);
+      let arr = callInfo.materiais
+      let index = arr.findIndex((obj) => !!obj.id && obj.id == material.id)
       if (index != -1) {
-        arr[index].qtdeSaida += material.qtdeSaida;
+        arr[index].qtdeSaida += material.qtdeSaida
         if (arr[index].qtdeSaida > material.qtdeEstoque) {
-          console.log(arr[index].qtdeSaida);
-          toast.error(
-            `Quantidade não permitida. Quantidade atual contabilizada no estoque é de ${material.qtdeEstoque}`
-          );
-          arr[index].qtdeSaida -= material.qtdeSaida;
-          return false;
+          console.log(arr[index].qtdeSaida)
+          toast.error(`Quantidade não permitida. Quantidade atual contabilizada no estoque é de ${material.qtdeEstoque}`)
+          arr[index].qtdeSaida -= material.qtdeSaida
+          return false
         }
       } else {
-        arr.push(toAddObj);
+        arr.push(toAddObj)
       }
-      toast.success("Material adicionado com sucesso!", { duration: 500 });
-      setCallInfo({ ...callInfo, materiais: arr });
-      setMaterialMsg("");
-      return true;
+      toast.success('Material adicionado com sucesso!', { duration: 500 })
+      setCallInfo({ ...callInfo, materiais: arr })
+      setMaterialMsg('')
+      return true
     } else {
-      setMaterialMsg("Quantidade inválida");
-      return false;
+      setMaterialMsg('Quantidade inválida')
+      return false
     }
   }
   function validateFields() {
-    if (
-      callInfo.nomeDoContrato?.trim().length < 3 &&
-      !callInfo.nomeTerceiro &&
-      callInfo.nomeTerceiro?.trim().length < 3
-    ) {
-      toast.error("Nome do contrato/terceiro inválido");
-      return false;
+    if (callInfo.nomeDoContrato?.trim().length < 3 && !callInfo.nomeTerceiro && callInfo.nomeTerceiro?.trim().length < 3) {
+      toast.error('Nome do contrato/terceiro inválido')
+      return false
     }
-    if (callInfo.responsavel == "A DEFINIR") {
-      toast.error("Por favor, defina um responsável.");
-      return false;
+    if (callInfo.responsavel == 'A DEFINIR') {
+      toast.error('Por favor, defina um responsável.')
+      return false
     }
-    if (callInfo.servico == "NÃO DEFINIDO") {
-      toast.error("Por favor, define o tipo de serviço.");
-      return false;
+    if (callInfo.servico == 'NÃO DEFINIDO') {
+      toast.error('Por favor, define o tipo de serviço.')
+      return false
     }
     if (callInfo.materiais.length == 0) {
-      toast.error("Por favor, adicione ao menos um material à lista.");
-      return false;
+      toast.error('Por favor, adicione ao menos um material à lista.')
+      return false
     }
-    return true;
+    return true
   }
   async function updateReferenceProjectSeparationStatus(projectId) {
-    const toastID = toast.loading(
-      "Atualizando status de separação do projeto..."
-    );
+    const toastID = toast.loading('Atualizando status de separação do projeto...')
     try {
       await axios.post(`/api/projects/update/${projectId}`, {
-        "material.statusSeparacao": "SEPARADO",
-      });
-      toast.dismiss(toastID);
+        'material.statusSeparacao': 'SEPARADO',
+      })
+      toast.dismiss(toastID)
     } catch (error) {
-      toast.dismiss(toastID);
-      throw new createHttpError.InternalServerError(
-        "Erro ao atualizar projeto de referência."
-      );
+      toast.dismiss(toastID)
+      throw new createHttpError.InternalServerError('Erro ao atualizar projeto de referência.')
     }
   }
   async function createForm(info) {
-    const toastID = toast.loading("Criando formulário...");
+    const toastID = toast.loading('Criando formulário...')
     try {
-      const { data: createFormResponse } = await axios.post(
-        "/api/almoxarifado/formularios",
-        {
-          ...info,
-          tipo: "RETIRADA",
-          abertura: new Date().toISOString(),
-        }
-      );
-      toast.dismiss(toastID);
-      return createFormResponse.insertedId;
+      const { data: createFormResponse } = await axios.post('/api/almoxarifado/formularios', {
+        ...info,
+        tipo: 'RETIRADA',
+        abertura: new Date().toISOString(),
+      })
+      toast.dismiss(toastID)
+      return createFormResponse.insertedId
     } catch (error) {
-      toast.dismiss(toastID);
-      throw new createHttpError.InternalServerError(
-        "Erro ao criar formulário."
-      );
+      toast.dismiss(toastID)
+      throw new createHttpError.InternalServerError('Erro ao criar formulário.')
     }
   }
   async function handleFormCreation() {
-    if (!validateFields()) return;
+    if (!validateFields()) return
     try {
       // Updating project with SEPARADO for statusSeparacao
       if (callInfo.idPai) {
-        await updateReferenceProjectSeparationStatus(callInfo.idPai);
+        await updateReferenceProjectSeparationStatus(callInfo.idPai)
         // setMessage({
         //   status: "loading",
         //   text: "Atualizando status de separação do materiais...",
@@ -199,59 +178,52 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
       //     abertura: new Date().toISOString(),
       //   }
       // );
-      const insertedId = await createForm(callInfo);
+      const insertedId = await createForm(callInfo)
 
-      const debitMaterialsToastID = toast.loading(
-        "Debitando materiais do estoque..."
-      );
+      const debitMaterialsToastID = toast.loading('Debitando materiais do estoque...')
       await debitMaterials({
         formId: insertedId,
         projectId: callInfo.idPai,
-        identifier: callInfo.nomeDoContrato
-          ? callInfo.nomeDoContrato
-          : callInfo.nomeTerceiro,
+        identifier: callInfo.nomeDoContrato ? callInfo.nomeDoContrato : callInfo.nomeTerceiro,
         changes: callInfo.materiais,
-        tag: "RETIRADA",
-      });
-      toast.dismiss(debitMaterialsToastID);
+        tag: 'RETIRADA',
+      })
+      toast.dismiss(debitMaterialsToastID)
 
       // Resetting state of callInfo for next form
       setCallInfo({
         idPai: null,
         codigoProjeto: null,
-        nomeDoContrato: "",
+        nomeDoContrato: '',
         cidade: null,
         segmento: null,
         topologia: null,
         equipeResp: null,
-        responsavel: "A DEFINIR",
-        servico: "NÃO DEFINIDO",
+        responsavel: 'A DEFINIR',
+        servico: 'NÃO DEFINIDO',
         materiais: [],
-      });
-      toast.success("Formulário criado com sucesso !");
-      getForms();
+      })
+      toast.success('Formulário criado com sucesso !')
+      getForms()
     } catch (error) {
-      if (createHttpError.isHttpError(error) && error.expose)
-        toast.error(error.message);
-      else toast.error("Erro no processo de criação do formulário.");
+      if (createHttpError.isHttpError(error) && error.expose) toast.error(error.message)
+      else toast.error('Erro no processo de criação do formulário.')
     }
   }
-  console.log("FORM INFO", callInfo);
+  console.log('FORM INFO', callInfo)
   return (
     <>
       <div style={OVERLAY_STYLES}>
         <div style={MODAL_STYLES}>
           <div className="flex flex-col h-full">
             <div className="flex justify-between px-2 text-lg pb-2 border-b border-gray-200">
-              <h1 className="text-[#15599a] pl-6 uppercase font-bold">
-                ABERTURA DE REQUISIÇÃO
-              </h1>
+              <h1 className="text-[#15599a] pl-6 uppercase font-bold">ABERTURA DE REQUISIÇÃO</h1>
               <button>
                 <VscChromeClose
                   onClick={() => {
-                    setModalIsOpen(false);
+                    setModalIsOpen(false)
                   }}
-                  style={{ color: "red" }}
+                  style={{ color: 'red' }}
                 />
               </button>
             </div>
@@ -261,12 +233,12 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                   <input
                     id="usoCliente"
                     name="usoCliente"
-                    type={"checkbox"}
-                    checked={callInfo.uso == "CLIENTE"}
+                    type={'checkbox'}
+                    checked={callInfo.uso == 'CLIENTE'}
                     onChange={(e) =>
                       setCallInfo((prev) => ({
                         ...prev,
-                        uso: e.target.checked ? "CLIENTE" : "TERCEIRO",
+                        uso: e.target.checked ? 'CLIENTE' : 'TERCEIRO',
                       }))
                     }
                   />
@@ -278,15 +250,15 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                   <input
                     id="usoTerceiro"
                     name="usoTerceiro"
-                    type={"checkbox"}
-                    checked={callInfo.uso == "TERCEIRO"}
+                    type={'checkbox'}
+                    checked={callInfo.uso == 'TERCEIRO'}
                     onChange={(e) =>
                       setCallInfo((prev) => ({
                         ...prev,
-                        uso: e.target.checked ? "TERCEIRO" : "CLIENTE",
+                        uso: e.target.checked ? 'TERCEIRO' : 'CLIENTE',
                         idPai: null,
                         codigoProjeto: null,
-                        nomeDoContrato: "",
+                        nomeDoContrato: '',
                       }))
                     }
                   />
@@ -295,12 +267,10 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                   </label>
                 </div>
               </div>
-              {callInfo.uso == "CLIENTE" ? (
+              {callInfo.uso == 'CLIENTE' ? (
                 <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-2">
-                  <span className="text-center uppercase font-bold">
-                    CLIENTE
-                  </span>
-                  <div className={"grow"}>
+                  <span className="text-center uppercase font-bold">CLIENTE</span>
+                  <div className={'grow'}>
                     <Select
                       isMulti={false}
                       placeholder="NOME DO CLIENTE"
@@ -319,8 +289,8 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                       styles={{
                         control: (base, state) => ({
                           ...base,
-                          width: "100%",
-                          minHeight: "41px",
+                          width: '100%',
+                          minHeight: '41px',
                         }),
                       }}
                       isLoading={clientsFetching}
@@ -331,26 +301,20 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                             id: cliente._id,
                             qtde: cliente.qtde,
                             nome: cliente.nomeDoContrato,
-                            cidade: cliente.cidade ? cliente.cidade : "-",
-                            segmento: cliente.segmento ? cliente.segmento : "-",
-                            topologia: cliente.sistema.topologia
-                              ? cliente.sistema.topologia
-                              : "-",
-                            equipeResp: cliente.obra.equipeResp
-                              ? cliente.obra.equipeResp
-                              : "-",
+                            cidade: cliente.cidade ? cliente.cidade : '-',
+                            segmento: cliente.segmento ? cliente.segmento : '-',
+                            topologia: cliente.sistema.topologia ? cliente.sistema.topologia : '-',
+                            equipeResp: cliente.obra.equipeResp ? cliente.obra.equipeResp : '-',
                           },
-                        };
+                        }
                       })}
                     />
                   </div>
                 </div>
               ) : null}
-              {callInfo.uso == "TERCEIRO" ? (
+              {callInfo.uso == 'TERCEIRO' ? (
                 <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-2">
-                  <span className="text-center uppercase font-bold">
-                    TERCEIRO
-                  </span>
+                  <span className="text-center uppercase font-bold">TERCEIRO</span>
                   <input
                     value={callInfo.nomeTerceiro}
                     onChange={(e) =>
@@ -365,80 +329,68 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                 </div>
               ) : null}
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">
-                  RESPONSÁVEL
-                </span>
+                <span className="text-center uppercase font-bold">RESPONSÁVEL</span>
                 <select
                   value={callInfo.responsavel}
-                  onChange={(e) =>
-                    setCallInfo({ ...callInfo, responsavel: e.target.value })
-                  }
+                  onChange={(e) => setCallInfo({ ...callInfo, responsavel: e.target.value })}
                   className="text-xs grow text-center outline-none mt-2 lg:mt-0"
                 >
-                  <option value={"A DEFINIR"}>A DEFINIR</option>
-                  <option value={"DANNIEL RODRIGUES"}>DANNIEL RODRIGUES</option>
-                  <option value={"ALEX SANDRO"}>ALEX SANDRO</option>
-                  <option value={"MATHEUS OLIVEIRA"}>MATHEUS OLIVEIRA</option>
-                  <option value={"DIOGO PAULINO"}>DIOGO PAULINO</option>
+                  <option value={'A DEFINIR'}>A DEFINIR</option>
+                  <option value={'DANNIEL RODRIGUES'}>DANNIEL RODRIGUES</option>
+                  <option value={'ALEX SANDRO'}>ALEX SANDRO</option>
+                  <option value={'MATHEUS OLIVEIRA'}>MATHEUS OLIVEIRA</option>
+                  <option value={'DIOGO PAULINO'}>DIOGO PAULINO</option>
                 </select>
+              </div>
+              <div className="flex flex-col lg:items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
+                <span className="text-center uppercase font-bold">EQUIPE RESP</span>
+                <div className={'grow'}>
+                  <SelectInput
+                    showLabel={false}
+                    value={callInfo.equipeResp}
+                    options={equipesTecnicas.map((team, index) => ({ id: index, label: team.label, value: team.value }))}
+                    handleChange={(value) => setCallInfo((prev) => ({ ...prev, equipeResp: value }))}
+                    width={'100%'}
+                  />
+                  {/* <p className="text-gray-600 text-center">{dados.equipeResp ? dados.equipeResp : '-'}</p> */}
+                </div>
               </div>
               <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
                 <span className="text-center uppercase font-bold">SERVIÇO</span>
                 <select
                   value={callInfo.servico}
-                  onChange={(e) =>
-                    setCallInfo({ ...callInfo, servico: e.target.value })
-                  }
+                  onChange={(e) => setCallInfo({ ...callInfo, servico: e.target.value })}
                   className="text-xs grow text-center outline-none mt-2 lg:mt-0"
                 >
-                  <option value={"PADRÃO"}>PADRÃO</option>
-                  <option value={"ESTRUTURA"}>ESTRUTURA</option>
-                  <option value={"MONTAGEM"}>MONTAGEM</option>
-                  <option value={"MANUTENÇÃO CORRETIVA"}>
-                    MANUTENÇÃO CORRETIVA
-                  </option>
-                  <option value={"MANUTENÇÃO PREVENTIVA"}>
-                    MANUTENÇÃO PREVENTIVA
-                  </option>
-                  <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+                  <option value={'PADRÃO'}>PADRÃO</option>
+                  <option value={'ESTRUTURA'}>ESTRUTURA</option>
+                  <option value={'MONTAGEM'}>MONTAGEM</option>
+                  <option value={'MANUTENÇÃO CORRETIVA'}>MANUTENÇÃO CORRETIVA</option>
+                  <option value={'MANUTENÇÃO PREVENTIVA'}>MANUTENÇÃO PREVENTIVA</option>
+                  <option value={'NÃO DEFINIDO'}>NÃO DEFINIDO</option>
                 </select>
               </div>
               <div className="w-full flex flex-col border border-gray-200 p-2 mt-4">
-                <span className="text-center uppercase font-bold">
-                  ADICIONAR MATERIAIS
-                </span>
-                <AddMaterialFormulario
-                  materials={materials}
-                  materialsFetching={materialsFetching}
-                  addMaterial={addMaterial}
-                />
+                <span className="text-center uppercase font-bold">ADICIONAR MATERIAIS</span>
+                <AddMaterialFormulario materials={materials} materialsFetching={materialsFetching} addMaterial={addMaterial} />
               </div>
-              {materialMsg && (
-                <p className="text-sm italic text-red-500 text-center">
-                  {materialMsg}
-                </p>
-              )}
+              {materialMsg && <p className="text-sm italic text-red-500 text-center">{materialMsg}</p>}
               <div className="flex grow flex-col gap-y-2 border border-gray-200 p-2 mt-4">
                 <h1 className="font-bold text-center">SAÍDA</h1>
                 <div className="flex flex-col overflow-y-auto overscroll-y-auto">
                   {callInfo.materiais.map((obj, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between px-2"
-                    >
+                    <div key={index} className="flex items-center justify-between px-2">
                       <p className="list-none text-center text-gray-600 font-bold">
                         {obj.nome} - ({obj.qtdeSaida})
                       </p>
                       <button
                         onClick={() => {
-                          let arr = callInfo.materiais;
-                          arr.splice(index, 1);
-                          setCallInfo({ ...callInfo, materiais: arr });
+                          let arr = callInfo.materiais
+                          arr.splice(index, 1)
+                          setCallInfo({ ...callInfo, materiais: arr })
                         }}
                       >
-                        <VscChromeClose
-                          style={{ color: "red", fontSize: "15px" }}
-                        />
+                        <VscChromeClose style={{ color: 'red', fontSize: '15px' }} />
                       </button>
                     </div>
                   ))}
@@ -446,16 +398,11 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
               </div>
               <div className="flex items-center justify-center w-full max-h-[40px] h-[40px]">
                 {!isLoading ? (
-                  <button
-                    onClick={mutate}
-                    className="w-fit rounded p-2 bg-blue-300 hover:bg-blue-700 text-white font-bold"
-                  >
+                  <button onClick={mutate} className="w-fit rounded p-2 bg-blue-300 hover:bg-blue-700 text-white font-bold">
                     ABRIR FORMULÁRIO
                   </button>
                 ) : (
-                  <div
-                    className={`flex items-center justify-center h-[40px] w-full`}
-                  >
+                  <div className={`flex items-center justify-center h-[40px] w-full`}>
                     <LoadingPage />
                   </div>
                 )}
@@ -465,7 +412,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default NovoFormulario;
+export default NovoFormulario

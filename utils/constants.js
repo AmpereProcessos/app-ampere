@@ -2330,6 +2330,12 @@ export function formatToMoney(value, tag = "R$") {
     maximumFractionDigits: 2,
   })}`;
 }
+export function formatDecimalPlaces(value, minPlaces = 0, maxPlaces = 2) {
+  return Number(value).toLocaleString("pt-br", {
+    minimumFractionDigits: minPlaces,
+    maximumFractionDigits: maxPlaces,
+  });
+}
 export function formatCPFCpnj(value) {
   const cnpjCpf = value.replace(/\D/g, "");
 

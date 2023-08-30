@@ -1,41 +1,32 @@
-import React, { useState } from "react";
-import { FaBox, FaLongArrowAltRight } from "react-icons/fa";
-import { ImPriceTag } from "react-icons/im";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import SelectFoatingInput from "./SelectFloatingInput";
-import SelectInput from "./inputs/Select";
-import NumberFloatingInput from "./NumberFloatingInput";
-import { formatToMoney, units } from "../utils/constants";
-import {
-  addMaterial,
-  handleMaterialEntrance,
-} from "../utils/methods/mutation/materials";
-import { toast } from "react-hot-toast";
-import { getErrorMessage } from "../utils/methods/handlers";
-import { useQueryClient } from "react-query";
-import axios from "axios";
+import React, { useState } from 'react'
+import { useQueryClient } from 'react-query'
+import { toast } from 'react-hot-toast'
+
+import { FaBox, FaLongArrowAltRight } from 'react-icons/fa'
+import { ImPriceTag } from 'react-icons/im'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+
+import { formatToMoney, units } from '../utils/constants'
+import { addMaterial, handleMaterialEntrance } from '../utils/methods/mutation/materials'
+import { getErrorMessage } from '../utils/methods/handlers'
+import SelectFoatingInput from './SelectFloatingInput'
+import SelectInput from './inputs/Select'
+import NumberFloatingInput from './NumberFloatingInput'
 
 function CardEntradaAlmoxarifado({ item, index, items, setItems, materials }) {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const [wareHouseMaterial, setWareHouseMaterial] = useState({
     id: null,
-    nome: "",
+    nome: '',
     preco: 0,
     qtde: 0,
-    grandeza: "",
-  });
-  const [menuIsOpen, setMenuIsOpen] = useState(false);
-  function getNewPrice({
-    warehouseQty,
-    warehousePrice,
-    entranceQty,
-    entrancePrice,
-  }) {
+    grandeza: '',
+  })
+  const [menuIsOpen, setMenuIsOpen] = useState(false)
+  function getNewPrice({ warehouseQty, warehousePrice, entranceQty, entrancePrice }) {
     // Doing weighted average
-    const newPrice =
-      (warehouseQty * warehousePrice + entranceQty * entrancePrice) /
-      (warehouseQty + entranceQty);
-    return Number(newPrice.toFixed(2));
+    const newPrice = (warehouseQty * warehousePrice + entranceQty * entrancePrice) / (warehouseQty + entranceQty)
+    return Number(newPrice.toFixed(2))
   }
   async function handleUpdate() {
     try {
@@ -49,133 +40,119 @@ function CardEntradaAlmoxarifado({ item, index, items, setItems, materials }) {
           entrancePrice: Number(item.preco),
         }),
         diff: Number(item.qtde),
-      });
-      toast.success(response);
+      })
+      toast.success(response)
       // Cleaning items arr for better update flow
-      var itemsArr = [...items];
-      itemsArr.splice(index, 1);
-      setItems((prev) => itemsArr);
-      setMenuIsOpen(false);
-      await queryClient.invalidateQueries({ queryKey: ["materials"] });
+      var itemsArr = [...items]
+      itemsArr.splice(index, 1)
+      setItems((prev) => itemsArr)
+      setMenuIsOpen(false)
+      await queryClient.invalidateQueries({ queryKey: ['materials'] })
     } catch (error) {
-      const msg = getErrorMessage(error);
-      console.log(msg);
-      toast.error(msg);
+      const msg = getErrorMessage(error)
+      console.log(msg)
+      toast.error(msg)
     }
   }
   async function handleAddMaterial() {
     try {
-      const response = await addMaterial(item);
-      toast.success(response);
+      const response = await addMaterial(item)
+      toast.success(response)
       // Cleaning items arr for better update flow
-      var itemsArr = [...items];
-      itemsArr.splice(index, 1);
-      setItems((prev) => itemsArr);
-      setMenuIsOpen(false);
-      await queryClient.invalidateQueries({ queryKey: ["materials"] });
+      var itemsArr = [...items]
+      itemsArr.splice(index, 1)
+      setItems((prev) => itemsArr)
+      setMenuIsOpen(false)
+      await queryClient.invalidateQueries({ queryKey: ['materials'] })
     } catch (error) {
-      const msg = getErrorMessage(error);
-      console.log(msg);
-      toast.error(msg);
+      const msg = getErrorMessage(error)
+      console.log(msg)
+      toast.error(msg)
     }
   }
   return (
     <div className="w-full p-2 rounded border border-200 flex flex-col gap-2">
-      <h1 className="w-full text-center text-[#15599a] font-bold">
-        {item.nome}
-      </h1>
+      <h1 className="w-full text-center text-[#15599a] font-bold">{item.nome}</h1>
       <div className="w-full flex items-center gap-2">
         <div className="flex items-center justify-start gap-2 w-1/3">
           <FaBox color="#fead41" />
           <p className="text-xs text-gray-700 text-center">
             {item.qtde
-              ? Number(item.qtde).toLocaleString("pt-br", {
+              ? Number(item.qtde).toLocaleString('pt-br', {
                   maximumFractionDigits: 2,
                 })
-              : "-"}{" "}
+              : '-'}{' '}
             {item.grandeza}
           </p>
         </div>
         {menuIsOpen ? (
-          <div
-            onClick={() => setMenuIsOpen(false)}
-            className="text-gray-600 hover:text-blue-400 cursor-pointer flex justify-center w-1/3"
-          >
+          <div onClick={() => setMenuIsOpen(false)} className="text-gray-600 hover:text-blue-400 cursor-pointer flex justify-center w-1/3">
             <IoMdArrowDropupCircle />
           </div>
         ) : (
-          <div
-            onClick={() => setMenuIsOpen(true)}
-            className="text-gray-600 hover:text-blue-400 cursor-pointer flex justify-center w-1/3"
-          >
+          <div onClick={() => setMenuIsOpen(true)} className="text-gray-600 hover:text-blue-400 cursor-pointer flex justify-center w-1/3">
             <IoMdArrowDropdownCircle />
           </div>
         )}
 
         <div className="flex items-center justify-end gap-2 w-1/3">
-          <ImPriceTag color={"#15599a"} />
-          <p className="text-xs text-gray-700 text-center">
-            {item.preco ? `R$${item.preco.toFixed(2).replace(".", ",")}` : "-"}
-          </p>
+          <ImPriceTag color={'#15599a'} />
+          <p className="text-xs text-gray-700 text-center">{item.preco ? `R$${item.preco.toFixed(2).replace('.', ',')}` : '-'}</p>
         </div>
       </div>
       {menuIsOpen ? (
         <div className="w-full flex flex-col gap-1">
-          <h1 className="text-center text-[#fead41] font-bold text-sm mb-2">
-            AJUSTES
-          </h1>
+          <h1 className="text-center text-[#fead41] font-bold text-sm mb-2">AJUSTES</h1>
           <NumberFloatingInput
-            label={"QUANTIDADE DE ENTRADA"}
+            label={'QUANTIDADE DE ENTRADA'}
             editable={true}
             value={item.qtde}
             handleChange={(value) => {
-              var currentItemsArr = [...items];
-              currentItemsArr[index].qtde = Number(value);
-              console.log("ITEMS", currentItemsArr);
-              setItems((prev) => currentItemsArr);
+              var currentItemsArr = [...items]
+              currentItemsArr[index].qtde = Number(value)
+              console.log('ITEMS', currentItemsArr)
+              setItems((prev) => currentItemsArr)
             }}
-            width={"100%"}
+            width={'100%'}
           />
           <NumberFloatingInput
-            label={"PREÇO DE ENTRADA"}
+            label={'PREÇO DE ENTRADA'}
             editable={true}
             value={item.preco}
             handleChange={(value) => {
-              var currentItemsArr = [...items];
-              currentItemsArr[index].preco = Number(value);
-              console.log("ITEMS", currentItemsArr);
-              setItems((prev) => currentItemsArr);
+              var currentItemsArr = [...items]
+              currentItemsArr[index].preco = Number(value)
+              console.log('ITEMS', currentItemsArr)
+              setItems((prev) => currentItemsArr)
             }}
-            width={"100%"}
+            width={'100%'}
           />
           <SelectFoatingInput
-            label={"GRANDEZA"}
+            label={'GRANDEZA'}
             editable={true}
             value={item.grandeza}
             options={units}
             handleChange={(value) => {
-              var currentItemsArr = [...items];
-              currentItemsArr[index].grandeza = value;
-              console.log("ITEMS", currentItemsArr);
-              setItems((prev) => currentItemsArr);
+              var currentItemsArr = [...items]
+              currentItemsArr[index].grandeza = value
+              console.log('ITEMS', currentItemsArr)
+              setItems((prev) => currentItemsArr)
             }}
-            width={"100%"}
+            width={'100%'}
           />
           <div className="flex flex-col"></div>
-          <h1 className="text-center text-[#fead41] font-bold text-sm">
-            VINCULE UM ITEM DO ESTOQUE
-          </h1>
+          <h1 className="text-center text-[#fead41] font-bold text-sm">VINCULE UM ITEM DO ESTOQUE</h1>
           <SelectInput
-            label={"ITEM DO ESTOQUE"}
+            label={'ITEM DO ESTOQUE'}
             value={wareHouseMaterial.id}
             options={materials.map((mat, index) => ({
               id: index,
               label: mat.nome,
               value: mat._id,
             }))}
-            selectedItemLabel={"NÃO DEFINIDO"}
+            selectedItemLabel={'NÃO DEFINIDO'}
             handleChange={(value) => {
-              const equivalent = materials.find((x) => x._id == value);
+              const equivalent = materials.find((x) => x._id == value)
               setWareHouseMaterial((prev) => ({
                 ...prev,
                 id: equivalent._id,
@@ -183,28 +160,24 @@ function CardEntradaAlmoxarifado({ item, index, items, setItems, materials }) {
                 preco: equivalent.preco,
                 qtde: equivalent.qtde,
                 grandeza: equivalent.grandeza,
-              }));
+              }))
             }}
             onReset={() =>
               setWareHouseMaterial({
                 id: null,
-                nome: "",
+                nome: '',
                 preco: 0,
                 qtde: 0,
-                grandeza: "",
+                grandeza: '',
               })
             }
-            width={"100%"}
+            width={'100%'}
           />
           {wareHouseMaterial.id ? (
             <div className="flex flex-col w-full">
-              <h1 className="text-center text-green-500 font-bold">
-                ALTERAÇÕES
-              </h1>
+              <h1 className="text-center text-green-500 font-bold">ALTERAÇÕES</h1>
               <div className="w-full flex justify-center items-center gap-2">
-                <p className="font-bold">
-                  {formatToMoney(wareHouseMaterial.preco)}
-                </p>
+                <p className="font-bold">{formatToMoney(wareHouseMaterial.preco)}</p>
                 <FaLongArrowAltRight color="blue" />
                 <p className="font-bold">
                   {formatToMoney(
@@ -247,7 +220,7 @@ function CardEntradaAlmoxarifado({ item, index, items, setItems, materials }) {
         </div>
       ) : null}
     </div>
-  );
+  )
 }
 
-export default CardEntradaAlmoxarifado;
+export default CardEntradaAlmoxarifado

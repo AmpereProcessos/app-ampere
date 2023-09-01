@@ -1,196 +1,175 @@
-import axios from "axios";
-import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
-import ModalCallPPS from "../../components/ModalCallPPS";
-import { AiOutlineSearch, AiOutlineReload } from "react-icons/ai";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import { MdDateRange } from "react-icons/md";
-import Link from "next/link";
-import Select from "react-select";
-import dayjs from "dayjs";
-import { AppContext } from "../../context/AppContext";
-import { AnimatePresence, motion } from "framer-motion";
-import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
-import FilterButton from "../../components/utils/Buttons/FilterButton";
-import { useSession } from "next-auth/react";
-import LoadingPage from "../../components/utils/LoadingPage";
-import { respChamadosPPS } from "../../utils/constants";
-var dateFilterParam = new Date();
-dateFilterParam.setHours(0, 0, 0, 0);
-dateFilterParam.setDate(dateFilterParam.getDate() - 2);
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import React, { useContext, useEffect, useState } from 'react'
+import ModalCallPPS from '../../components/ModalCallPPS'
+import { AiOutlineSearch, AiOutlineReload } from 'react-icons/ai'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { MdDateRange } from 'react-icons/md'
+import Link from 'next/link'
+import Select from 'react-select'
+import dayjs from 'dayjs'
+import { AppContext } from '../../context/AppContext'
+import { AnimatePresence, motion } from 'framer-motion'
+import FetchDataButton from '../../components/utils/Buttons/FetchDataButton'
+import FilterButton from '../../components/utils/Buttons/FilterButton'
+import { useSession } from 'next-auth/react'
+import LoadingPage from '../../components/utils/LoadingPage'
+import { respChamadosPPS } from '../../utils/constants'
+import OpenCalls from '../../components/identificador/chamados/pps/OpenCalls'
+import ClosedCalls from '../../components/identificador/chamados/pps/ClosedCalls'
+var dateFilterParam = new Date()
+dateFilterParam.setHours(0, 0, 0, 0)
+dateFilterParam.setDate(dateFilterParam.getDate() - 2)
 const statusStyles = {
-  "EM ANDAMENTO": {
-    textColor: "text-[#15599a]",
-    borderColor: "border-[#15599a]",
+  'EM ANDAMENTO': {
+    textColor: 'text-[#15599a]',
+    borderColor: 'border-[#15599a]',
   },
-  "AGUARDANDO VENDEDOR": {
-    textColor: "text-orange-400",
-    borderColor: "border-orange-400",
+  'AGUARDANDO VENDEDOR': {
+    textColor: 'text-orange-400',
+    borderColor: 'border-orange-400',
   },
   REALIZADO: {
-    textColor: "text-green-400",
-    borderColor: "border-green-400",
+    textColor: 'text-green-400',
+    borderColor: 'border-green-400',
   },
   PENDENTE: {
-    textColor: "text-red-400",
-    borderColor: "border-red-400",
+    textColor: 'text-red-400',
+    borderColor: 'border-red-400',
   },
-};
+}
 
 function ChamadosPPS() {
   // Context and utils
-  const router = useRouter();
+  const router = useRouter()
 
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/authHome')
     },
-  });
-  const [openCallsDropdownMenuVisible, setOpenCallsDropdownMenuVisible] =
-    useState(false);
-  const [closedCallsDropdownMenuVisible, setClosedCallsDropdownMenuVisible] =
-    useState(false);
+  })
+  const [openCallsDropdownMenuVisible, setOpenCallsDropdownMenuVisible] = useState(false)
+  const [closedCallsDropdownMenuVisible, setClosedCallsDropdownMenuVisible] = useState(false)
 
   // Data Holders
-  const [inProgress, setInProgress] = useState();
-  const [filteredInProgress, setFilteredInProgress] = useState();
-  const [closedCalls, setClosedCalls] = useState();
+  const [inProgress, setInProgress] = useState()
+  const [filteredInProgress, setFilteredInProgress] = useState()
+  const [closedCalls, setClosedCalls] = useState()
 
-  const [stats, setStats] = useState({});
+  const [stats, setStats] = useState({})
   // Modal handlers
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalCall, setModalCall] = useState({});
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [modalCall, setModalCall] = useState({})
   //Filters
   const [closedFilterDate, setClosedFilterDate] = useState({
     after: dateFilterParam,
     before: new Date(),
-  });
+  })
   const [filters, setFilters] = useState({
     respFilter: [],
     statusFilter: [],
-  });
-  const [searchFilter, setSearchFilter] = useState("");
-  const [respFilter, setRespFilter] = useState([]);
-  const [statusFilter, setStatusFilter] = useState([]);
+  })
+  const [searchFilter, setSearchFilter] = useState('')
+  const [respFilter, setRespFilter] = useState([])
+  const [statusFilter, setStatusFilter] = useState([])
   // Functions
   function getCalls() {
-    axios.get("/api/calls/pps/mainData").then((res) => {
-      setStats(res.data.stats);
-      setInProgress(res.data.inProgress);
-      setFilteredInProgress(res.data.inProgress);
-      setClosedCalls(res.data.closedCalls);
-      setRespFilter([]);
-      setStatusFilter([]);
-    });
+    axios.get('/api/calls/pps/mainData').then((res) => {
+      setStats(res.data.stats)
+      setInProgress(res.data.inProgress)
+      setFilteredInProgress(res.data.inProgress)
+      setClosedCalls(res.data.closedCalls)
+      setRespFilter([])
+      setStatusFilter([])
+    })
   }
   function filterOpenCalls() {
-    var newArr;
+    var newArr
     if (filters.statusFilter.length > 0 && filters.respFilter.length > 0) {
-      newArr = inProgress.filter(
-        (call) =>
-          filters.respFilter.includes(call.responsavel) &&
-          filters.statusFilter.includes(call.status)
-      );
+      newArr = inProgress.filter((call) => filters.respFilter.includes(call.responsavel) && filters.statusFilter.includes(call.status))
     } else if (filters.respFilter.length > 0) {
-      newArr = inProgress.filter((call) =>
-        filters.respFilter.includes(call.responsavel)
-      );
+      newArr = inProgress.filter((call) => filters.respFilter.includes(call.responsavel))
     } else if (filters.statusFilter.length > 0) {
-      newArr = inProgress.filter((call) =>
-        filters.statusFilter.includes(call.status)
-      );
+      newArr = inProgress.filter((call) => filters.statusFilter.includes(call.status))
     }
-    if (!newArr) setFilteredInProgress(inProgress);
+    if (!newArr) setFilteredInProgress(inProgress)
     else {
-      setFilteredInProgress(newArr);
+      setFilteredInProgress(newArr)
     }
   }
   function handleSearchFilter(value) {
-    setSearchFilter(value);
-    if (value != "" || " ") {
-      let newArr = inProgress.filter((call) =>
-        call.vendedor.toUpperCase().includes(value.toUpperCase())
-      );
-      setFilteredInProgress(newArr);
+    setSearchFilter(value)
+    if (value != '' || ' ') {
+      let newArr = inProgress.filter((call) => call.vendedor.toUpperCase().includes(value.toUpperCase()))
+      setFilteredInProgress(newArr)
     } else {
-      setFilteredInProgress(inProgress);
+      setFilteredInProgress(inProgress)
     }
   }
   function filterClosedCallsByDate() {
     axios
-      .post("/api/calls/pps/filteredByDate", {
+      .post('/api/calls/pps/filteredByDate', {
         date: closedFilterDate,
       })
-      .then((res) => setClosedCalls(res.data));
+      .then((res) => setClosedCalls(res.data))
   }
   function filterOpenCallsByResp(responsavel, status) {
     if (responsavel) {
       if (respFilter.includes(responsavel)) {
-        let index = respFilter.indexOf(responsavel);
-        respFilter.splice(index, 1);
+        let index = respFilter.indexOf(responsavel)
+        respFilter.splice(index, 1)
       } else {
-        respFilter.push(responsavel);
+        respFilter.push(responsavel)
       }
     }
     if (status) {
       if (statusFilter.includes(status)) {
-        let index = statusFilter.indexOf(status);
-        statusFilter.splice(index, 1);
+        let index = statusFilter.indexOf(status)
+        statusFilter.splice(index, 1)
       } else {
-        statusFilter.push(status);
+        statusFilter.push(status)
       }
     }
-    setRespFilter(respFilter);
-    setStatusFilter(statusFilter);
+    setRespFilter(respFilter)
+    setStatusFilter(statusFilter)
     axios
-      .post("/api/calls/pps/filteredByResp", {
-        responsavel:
-          respFilter.length > 0
-            ? respFilter
-            : ["ADRIANO", "ARTHUR", "MATHEUS", "A DEFINIR", null],
-        status:
-          statusFilter.length > 0 ? statusFilter : ["EM ANDAMENTO", "PENDENTE"],
+      .post('/api/calls/pps/filteredByResp', {
+        responsavel: respFilter.length > 0 ? respFilter : ['ADRIANO', 'ARTHUR', 'MATHEUS', 'A DEFINIR', null],
+        status: statusFilter.length > 0 ? statusFilter : ['EM ANDAMENTO', 'PENDENTE'],
       })
-      .then((res) => setInProgress(res.data));
+      .then((res) => setInProgress(res.data))
   }
   function updateModalInfo(id) {
     axios.get(`/api/calls/getPPS/${id}`).then((res) => {
-      setModalCall(res.data);
-      getCalls();
-    });
+      setModalCall(res.data)
+      getCalls()
+    })
   }
   function handleOpenModal(call) {
-    setModalCall(call);
-    setModalIsOpen(true);
+    setModalCall(call)
+    setModalIsOpen(true)
   }
-  useEffect(() => {
-    if (session?.user.accessibleRoutes.includes("PPS")) {
-      if (!inProgress) {
-        getCalls();
-      }
-    } else {
-      if (session?.user) {
-        router.push("/");
-      }
-    }
-  }, [session]);
-  if (status == "loading") return <LoadingPage />;
-  if (status == "authenticated") {
+  // useEffect(() => {
+  //   if (session?.user.accessibleRoutes.includes("PPS")) {
+  //     if (!inProgress) {
+  //       getCalls();
+  //     }
+  //   } else {
+  //     if (session?.user) {
+  //       router.push("/");
+  //     }
+  //   }
+  // }, [session]);
+  if (status == 'loading') return <LoadingPage />
+  if (status == 'authenticated') {
     return (
       <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
         <div className="flex flex-col lg:flex-row items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
-          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">
-            CHAMADOS DE SUPORTE AO VENDEDOR
-          </p>
-          <FetchDataButton
-            text={"ATUALIZAR"}
-            icon={<AiOutlineReload />}
-            handleClick={getCalls}
-          />
+          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">CHAMADOS DE SUPORTE AO VENDEDOR</p>
+          <FetchDataButton text={'ATUALIZAR'} icon={<AiOutlineReload />} handleClick={getCalls} />
         </div>
-        {/* Abertos */}
-        <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        {/* <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
           <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
@@ -348,49 +327,35 @@ function ChamadosPPS() {
               <LoadingPage />
             )}
           </div>
-        </div>
+        </div> */}
+        <OpenCalls />
         {/* Fechados */}
-        <div className="flex flex-col w-full border h-[1200px] lg:h-[500px] border-gray-200 bg-[#fff] shadow-xl p-4">
+        <ClosedCalls />
+        {/* <div className="flex flex-col w-full border h-[1200px] lg:h-[500px] border-gray-200 bg-[#fff] shadow-xl p-4">
           <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-                <p className="text-center text-[#15599a] font-bold text-xl">
-                  CHAMADOS FINALIZADOS
-                </p>
-                <p className="font-bold text-[#fead61]">
-                  ({closedCalls?.length})
-                </p>
+                <p className="text-center text-[#15599a] font-bold text-xl">CHAMADOS FINALIZADOS</p>
+                <p className="font-bold text-[#fead61]">({closedCalls?.length})</p>
               </div>
               {closedCallsDropdownMenuVisible ? (
                 <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                  <IoMdArrowDropupCircle
-                    style={{ fontSize: "25px" }}
-                    onClick={() => setClosedCallsDropdownMenuVisible(false)}
-                  />
+                  <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
                 <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                  <IoMdArrowDropdownCircle
-                    style={{ fontSize: "25px" }}
-                    onClick={() => setClosedCallsDropdownMenuVisible(true)}
-                  />
+                  <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(true)} />
                 </div>
               )}
             </div>
             <AnimatePresence>
               {closedCallsDropdownMenuVisible ? (
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0.6 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="flex flex-col w-full gap-y-2 mt-4"
-                >
+                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
                   <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
                     <div className="flex flex-wrap gap-x-2 items-center">
                       <p>Entre:</p>
                       <input
-                        value={dayjs(closedFilterDate.after).format(
-                          "YYYY-MM-DD"
-                        )}
+                        value={dayjs(closedFilterDate.after).format('YYYY-MM-DD')}
                         onChange={(e) =>
                           setClosedFilterDate({
                             ...closedFilterDate,
@@ -402,26 +367,18 @@ function ChamadosPPS() {
                       />
                       <p>&</p>
                       <input
-                        value={dayjs(closedFilterDate.before).format(
-                          "YYYY-MM-DD"
-                        )}
+                        value={dayjs(closedFilterDate.before).format('YYYY-MM-DD')}
                         onChange={(e) =>
                           setClosedFilterDate({
                             ...closedFilterDate,
-                            before: new Date(
-                              dayjs(e.target.value).add(22, "hours")
-                            ),
+                            before: new Date(dayjs(e.target.value).add(22, 'hours')),
                           })
                         }
                         type="date"
                         className="border border-gray-200 outline-none p-2"
                       />
                     </div>
-                    <FetchDataButton
-                      handleClick={filterClosedCallsByDate}
-                      text={"BUSCAR"}
-                      icon={<MdDateRange />}
-                    />
+                    <FetchDataButton handleClick={filterClosedCallsByDate} text={'BUSCAR'} icon={<MdDateRange />} />
                   </div>
                 </motion.div>
               ) : null}
@@ -438,9 +395,9 @@ function ChamadosPPS() {
                   <div className="flex justify-between items-center w-full font-semibold">
                     <h1>{call.vendedor}</h1>
                     <p
-                      className={`text-xs font-bold border p-1 rounded-lg ${
-                        statusStyles[call.status].textColor
-                      } ${statusStyles[call.status].borderColor}`}
+                      className={`text-xs font-bold border p-1 rounded-lg ${statusStyles[call.status].textColor} ${
+                        statusStyles[call.status].borderColor
+                      }`}
                     >
                       {call.status}
                     </p>
@@ -454,7 +411,7 @@ function ChamadosPPS() {
               <LoadingPage />
             )}
           </div>
-        </div>
+        </div> */}
         <Link href="/publico/chamadoExternoPPS">
           <div className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
             <p className="uppercase font-bold text-sm">Novo chamado</p>
@@ -471,8 +428,8 @@ function ChamadosPPS() {
           />
         )}
       </div>
-    );
+    )
   }
 }
 
-export default ChamadosPPS;
+export default ChamadosPPS

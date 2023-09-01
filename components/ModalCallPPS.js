@@ -1,424 +1,454 @@
-import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
-import { FaSave } from "react-icons/fa";
-import { VscChromeClose } from "react-icons/vsc";
-import { AppContext } from "../context/AppContext";
-import { respChamadosPPS } from "../utils/constants";
-import { useKey } from "../utils/hooks";
-import PPSModalCallInfo from "./PPSModalCallInfo";
-import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
-import SaveButton from "./utils/Buttons/SaveButton";
+import axios from 'axios'
+import React, { useContext, useEffect, useState } from 'react'
+import { FaCity, FaHandHoldingUsd, FaMobileAlt, FaMoneyBillWave, FaSave, FaSolarPanel, FaUser } from 'react-icons/fa'
+import { VscChromeClose } from 'react-icons/vsc'
+import { AppContext } from '../context/AppContext'
+import { respChamadosPPS } from '../utils/constants'
+import { useKey } from '../utils/hooks'
+import PPSModalCallInfo from './PPSModalCallInfo'
+import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
+import SaveButton from './utils/Buttons/SaveButton'
+import LoadingPage from './utils/LoadingPage'
+import { useSession } from 'next-auth/react'
+import Avatar from './utils/Avatar'
+import { BsCalendarCheckFill, BsCalendarFill, BsCode, BsHouse } from 'react-icons/bs'
+import dayjs from 'dayjs'
+import { usePPSCall } from '../utils/methods/query/ppsCalls'
+import { MdCategory, MdOutlineEmail, MdLocationPin, MdWork } from 'react-icons/md'
+import { HiIdentification, HiOutlineIdentification } from 'react-icons/hi'
+import { TbTopologyFullHierarchy } from 'react-icons/tb'
+import { saveCallChanges } from '../utils/methods/mutation/ppsCalls'
+import { toast } from 'react-hot-toast'
+import { getErrorMessage } from '../utils/methods/handlers'
+import { useQueryClient } from 'react-query'
 const MODAL_STYLES = {
-  position: "fixed",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%,-50%)",
-  backgroundColor: "#fff",
-  minWidth: "40%",
-  height: "87%",
-  borderRadius: "10px",
-  padding: "10px",
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%,-50%)',
+  backgroundColor: '#fff',
+  minWidth: '40%',
+  height: '87%',
+  borderRadius: '10px',
+  padding: '10px',
   zIndex: 1000,
-};
+}
 const OVERLAY_STYLES = {
-  position: "fixed",
+  position: 'fixed',
   top: 0,
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: "rgba(0,0,0,.7)",
+  backgroundColor: 'rgba(0,0,0,.7)',
   zIndex: 1000,
-};
+}
 const statusStyles = {
-  "EM ANDAMENTO": {
-    textColor: "text-[#15599a]",
-    borderColor: "border-[#15599a]",
+  'EM ANDAMENTO': {
+    textColor: 'text-[#15599a]',
+    borderColor: 'border-[#15599a]',
   },
-  "AGUARDANDO VENDEDOR": {
-    textColor: "text-orange-400",
-    borderColor: "border-orange-400",
+  'AGUARDANDO VENDEDOR': {
+    textColor: 'text-orange-400',
+    borderColor: 'border-orange-400',
   },
   REALIZADO: {
-    textColor: "text-green-400",
-    borderColor: "border-green-400",
+    textColor: 'text-green-400',
+    borderColor: 'border-green-400',
   },
   PENDENTE: {
-    textColor: "text-red-400",
-    borderColor: "border-red-400",
+    textColor: 'text-red-400',
+    borderColor: 'border-red-400',
   },
-};
-function ModalCallPPS({
-  open,
-  setModalIsOpen,
-  info,
-  updateModalInfo,
-  modalIsOpen,
-}) {
-  useKey("Escape", () => setModalIsOpen(false));
+}
+const responsibles = [
+  {
+    id: null,
+    nome: 'Adriano Arantes',
+    apelido: 'ADRIANO',
+    ativo: false,
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-adriano.jpg?alt=media&token=a30ec3dd-8a2e-4a24-b330-1f4e9b9f0db6',
+  },
+  {
+    id: null,
+    nome: 'Arthur Alexander',
+    apelido: 'ARTHUR',
+    ativo: false,
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-arthurziin.jpg?alt=media&token=150fd914-04d5-4c0a-bf33-7daccdf81916',
+  },
+  {
+    id: '6318db05929e9f8731d8d9bb',
+    nome: 'Lucas Fernandes',
+    ativo: true,
+    apelido: 'LUCAS',
+    avatar_url: 'https://avatars.githubusercontent.com/u/60222823?s=400&u=d82dbc3d1d666b315b793f1888fd65c92d8ca0a9&v=4',
+  },
+  {
+    id: '632372d90d695bd5256518bb',
+    nome: 'Nathan Peres',
+    apelido: 'NATHAN',
+    ativo: false,
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-nathan_peres?alt=media&token=7f672eea-0b33-4e49-b747-f2de2ee110ad',
+  },
+  {
+    id: '631f832a5ba9ffa2a4cb8369',
+    nome: 'Matheus Oliveira',
+    apelido: 'MATHEUS',
+    ativo: true,
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2FavatarMatheus.jpg?alt=media&token=adb60500-22e6-4c1d-908f-72e3279fc641',
+  },
+  {
+    id: '63a5fb69e6a905a237de81eb',
+    nome: 'Leandro Viali',
+    apelido: 'LEANDRO',
+    ativo: true,
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-leandro_viali?alt=media&token=dffd6966-b6d4-460d-9baa-d467d933a8a7',
+  },
+]
+function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
+  useKey('Escape', () => closeModal())
+  const queryClient = useQueryClient()
+  const { data: session } = useSession()
+  const editor = session?.user?.accessibleRoutes.includes('PPS') && session?.user?.visualizacao == undefined
 
-  const { credentials } = useContext(AppContext);
-  const editor =
-    credentials?.accessibleRoutes.includes("PPS") &&
-    credentials?.visualizacao == undefined;
-  var ultAlteracoes = {
-    anotAlteracoes: {
-      usuario: info.ultAlteracoes?.anotAlteracoes
-        ? info.ultAlteracoes?.anotAlteracoes.usuario
-        : "",
-      antes: info.ultAlteracoes?.anotAlteracoes
-        ? info.ultAlteracoes?.anotAlteracoes.antes
-        : "",
-      depois: info.ultAlteracoes?.anotAlteracoes
-        ? info.ultAlteracoes?.anotAlteracoes.depois
-        : "",
-      data: info.ultAlteracoes?.anotAlteracoes
-        ? info.ultAlteracoes?.anotAlteracoes.data
-        : "",
-    },
-    statusAlteracoes: {
-      usuario: info.ultAlteracoes?.statusAlteracoes
-        ? info.ultAlteracoes?.statusAlteracoes.usuario
-        : "",
-      antes: info.ultAlteracoes?.statusAlteracoes
-        ? info.ultAlteracoes?.statusAlteracoes.antes
-        : "",
-      depois: info.ultAlteracoes?.statusAlteracoes
-        ? info.ultAlteracoes?.statusAlteracoes.depois
-        : "",
-      data: info.ultAlteracoes?.statusAlteracoes
-        ? info.ultAlteracoes?.statusAlteracoes.data
-        : "",
-    },
-  };
-  let initialNote = info.anotacoes ? info.anotacoes : "";
-  // Letter handler
-  // const escPress = useKeyPress("Escape");
-  // State Holders
-  const [responsavel, setResponsavel] = useState(info.responsavel);
-  const [SVBCode, setSVBCode] = useState(info.codigoDoProjeto);
-  const [notes, setNotes] = useState(initialNote);
-  const [selectedStatus, setSelectedStatus] = useState(info.status);
-  const [message, setMessage] = useState({
-    text: "",
-    color: "",
-  });
-  // Functions
-  function saveProject() {
-    if (info.status != selectedStatus) {
-      ultAlteracoes.statusAlteracoes.usuario = credentials?.id;
-      ultAlteracoes.statusAlteracoes.antes = info.status;
-      ultAlteracoes.statusAlteracoes.depois = selectedStatus;
-      ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
-    }
-    if (info.anotacoes != notes) {
-      ultAlteracoes.anotAlteracoes.usuario = credentials?.id;
-      ultAlteracoes.anotAlteracoes.antes = info.anotacoes;
-      ultAlteracoes.anotAlteracoes.depois = notes;
-      ultAlteracoes.anotAlteracoes.data = new Date().toJSON();
+  const { data: call, isLoading: callLoading, isFetched: callFetched } = usePPSCall(callId, !!callId)
+  const [infoHolder, setInfoHolder] = useState(call)
+  const [changes, setChanges] = useState({})
+
+  function renderResponsibles(current) {
+    const filtered = responsibles.filter((resp) => resp.ativo || resp.apelido == current)
+    return filtered.map((resp, index) => (
+      <div
+        key={index}
+        onClick={() => handleChange('responsavel', resp)}
+        className={`${
+          infoHolder.responsavel?.apelido == resp.apelido ? '' : 'opacity-40'
+        } flex gap-2 items-center border border-blue-700 p-2 w-fit rounded-md cursor-pointer`}
+      >
+        <Avatar url={resp.avatar_url} fallback={'R'} height={25} width={25} />
+        <p className="font-medium text-gray-500 text-xs">{resp.apelido}</p>
+      </div>
+    ))
+  }
+
+  function handleChange(key, value) {
+    // Function to update nested keys
+    const updateNestedKey = (obj, keys, newValue) => {
+      const keysArray = keys.split('.')
+      const lastKey = keysArray.pop()
+      const nestedObj = keysArray.reduce((acc, k) => acc[k], obj)
+      nestedObj[lastKey] = newValue
     }
 
-    axios
-      .put("/api/calls/pps/updatePPS", {
-        ...info,
-        status: selectedStatus,
-        anotacoes: notes,
-        codigoDoProjeto: SVBCode,
-        responsavel: responsavel ? responsavel : info.responsavel,
-        ultAlteracoes: ultAlteracoes,
-      })
-      .then((res) => {
-        setMessage({ text: res.data, color: "text-green-500" });
-        updateModalInfo(info._id);
-      });
+    setChanges((prevChanges) => ({ ...prevChanges, [key]: value }))
+
+    // Update the infoHolder with the new changes
+    setInfoHolder((prevInfo) => {
+      const updatedInfo = { ...prevInfo }
+      updateNestedKey(updatedInfo, key, value)
+      return updatedInfo
+    })
   }
-  function closedCall() {
-    if (info.status != "REALIZADO") {
-      ultAlteracoes.statusAlteracoes.usuario = credentials?.id;
-      ultAlteracoes.statusAlteracoes.antes = info.status;
-      ultAlteracoes.statusAlteracoes.depois = "REALIZADO";
-      ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
-    }
-    if (responsavel == undefined || responsavel == "A DEFINIR") {
-      setMessage({
-        text: "Por favor, adicione o responsável.",
-        color: "text-red-500",
-      });
-    } else {
-      axios
-        .post("/api/calls/pps/updatePPS", {
-          ...info,
-          dataDeConclusao: new Date(),
-          status: "REALIZADO",
-          ultAlteracoes: ultAlteracoes,
-        })
-        .then((res) => {
-          setMessage({ text: "", color: "" });
-          updateModalInfo(info._id);
-        });
+  async function handleSaveChanges() {
+    const loadingToastId = toast.loading('Carregando...')
+    try {
+      const response = await saveCallChanges({ id: call._id, changes: changes })
+      toast.dismiss(loadingToastId)
+      toast.success(response)
+      await queryClient.invalidateQueries({ queryKey: ['open-pps-calls'] })
+    } catch (error) {
+      const msg = getErrorMessage(error)
+      toast.dismiss(loadingToastId)
+      toast.error(msg)
     }
   }
-  function reopenCall() {
-    if (info.status != "PENDENTE") {
-      ultAlteracoes.statusAlteracoes.usuario = credentials?.id;
-      ultAlteracoes.statusAlteracoes.antes = info.status;
-      ultAlteracoes.statusAlteracoes.depois = "PENDENTE";
-      ultAlteracoes.statusAlteracoes.data = new Date().toJSON();
+  async function handleCloseCall() {
+    const loadingToastId = toast.loading('Carregando...')
+    try {
+      const currentDate = new Date().toISOString()
+      setInfoHolder((prev) => ({ ...prev, status: 'REALIZADO', dataEfetivacao: currentDate }))
+      const changes = {
+        status: 'REALIZADO',
+        dataEfetivacao: currentDate,
+      }
+      const response = await saveCallChanges({ id: call._id, changes: changes })
+      toast.dismiss(loadingToastId)
+      toast.success(response)
+      await queryClient.invalidateQueries({ queryKey: ['open-pps-calls'] })
+      await queryClient.invalidateQueries({ queryKey: ['closed-pps-calls'] })
+    } catch (error) {
+      const msg = getErrorMessage(error)
+      toast.dismiss(loadingToastId)
+      toast.error(msg)
     }
-    axios
-      .post("/api/calls/pps/updatePPS", {
-        ...info,
-        dataDeConclusao: null,
-        status: "PENDENTE",
-        ultAlteracoes: ultAlteracoes,
-      })
-      .then((res) => updateModalInfo(info._id));
   }
-  // function useKeyPress(targetKey) {
-  //   // State for keeping track of whether key is pressed
-  //   const [keyPressed, setKeyPressed] = useState(false);
-  //   // If pressed key is our target key then set to true
-  //   function downHandler({ key }) {
-  //     if (key === targetKey) {
-  //       setKeyPressed(true);
-  //       setModalIsOpen(false);
-  //     }
-  //   }
-  //   // If released key is our target key then set to false
-  //   const upHandler = ({ key }) => {
-  //     if (key === targetKey) {
-  //       setKeyPressed(false);
-  //     }
-  //   };
-  //   // Add event listeners
-  //   useEffect(() => {
-  //     window.addEventListener("keydown", downHandler);
-  //     window.addEventListener("keyup", upHandler);
-  //     // Remove event listeners on cleanup
-  //     return () => {
-  //       window.removeEventListener("keydown", downHandler);
-  //       window.removeEventListener("keyup", upHandler);
-  //     };
-  //   }, []); // Empty array ensures that effect is only run on mount and unmount
-  //   return keyPressed;
-  // }
-  console.log("TESTE");
-  console.log(SVBCode);
+  async function handleReOpenCall() {
+    const loadingToastId = toast.loading('Carregando...')
+    try {
+      setInfoHolder((prev) => ({ ...prev, status: 'PENDENTE', dataEfetivacao: null }))
+      const changes = {
+        status: 'PENDENTE',
+        dataEfetivacao: null,
+      }
+      const response = await saveCallChanges({ id: call._id, changes: changes })
+      toast.dismiss(loadingToastId)
+      toast.success(response)
+      await queryClient.invalidateQueries({ queryKey: ['open-pps-calls'] })
+      await queryClient.invalidateQueries({ queryKey: ['closed-pps-calls'] })
+    } catch (error) {
+      const msg = getErrorMessage(error)
+      toast.dismiss(loadingToastId)
+      toast.error(msg)
+    }
+  }
+  useEffect(() => {
+    setInfoHolder(call)
+  }, [call])
   return (
     <>
-      <AnimatedModalWrapper
-        modalIsOpen={modalIsOpen}
-        width={"40%"}
-        height={"87%"}
-      >
+      <AnimatedModalWrapper modalIsOpen={modalIsOpen} width={'40%'} height={'87%'}>
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
             <div className="flex flex-col">
-              <h1 className="text-[#15599a] pl-6  font-bold">
-                {info.tipoDeSolicitacao}
-              </h1>
-              <p className="text-gray-500 text-center text-xs">#{info._id}</p>
+              <h1 className="text-[#15599a] pl-6  font-bold">{call?.tipoSolicitacao || '...'}</h1>
+              <p className="text-gray-500 text-center text-xs">#{call?._id || '...'}</p>
             </div>
             <button>
               <VscChromeClose
                 onClick={() => {
-                  setMessage({ text: "", color: "" });
-                  setModalIsOpen(false);
+                  closeModal()
                 }}
-                style={{ color: "red" }}
+                style={{ color: 'red' }}
               />
             </button>
           </div>
-          <div className="overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-            <div className="flex flex-col items-center lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-              <span className="font-bold font-raleway">STATUS</span>
-              <div className="flex gap-x-2 justify-center grow">
-                {info.status == "PENDENTE" ? (
-                  <>
-                    <p
-                      onClick={() => setSelectedStatus("PENDENTE")}
-                      className={`${
-                        selectedStatus != "PENDENTE" && "opacity-30"
-                      } text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg ${
-                        info && statusStyles[info?.status].textColor
-                      } ${info && statusStyles[info.status].borderColor}`}
-                    >
-                      {info?.status}
-                    </p>
-                    <p
-                      onClick={() => setSelectedStatus("EM ANDAMENTO")}
-                      className={`${
-                        selectedStatus != "EM ANDAMENTO" && "opacity-30"
-                      } text-xs font-bold border p-3 w-fit hover:opacity-100 cursor-pointer text-center rounded-lg ${
-                        statusStyles["EM ANDAMENTO"].textColor
-                      } ${statusStyles["EM ANDAMENTO"].borderColor}`}
-                    >
-                      EM ANDAMENTO
-                    </p>
-                  </>
-                ) : (
-                  <p
-                    className={`text-xs font-bold border p-3 w-fit hover:opacity-100 text-center rounded-lg ${
-                      statusStyles[info.status].textColor
-                    } ${statusStyles[info.status].borderColor}`}
-                  >
-                    {info.status}
-                  </p>
-                )}
+          {callFetched && infoHolder ? (
+            <div className="flex flex-col overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 gap-2">
+              <div className="flex w-full items-center justify-center mt-4">
+                <div className="flex gap-x-2 justify-center grow">
+                  {infoHolder.status === 'REALIZADO' ? (
+                    <div className={`text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg text-green-500 border-green-500 `}>
+                      REALIZADO
+                    </div>
+                  ) : (
+                    <>
+                      <div
+                        onClick={() => handleChange('status', 'PENDENTE')}
+                        className={`${
+                          infoHolder.status != 'PENDENTE' && 'opacity-30'
+                        } text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg text-red-500 border-red-500 `}
+                      >
+                        PENDENTE
+                      </div>
+                      <div
+                        onClick={() => handleChange('status', 'EM ANDAMENTO')}
+                        className={`${
+                          infoHolder.status != 'EM ANDAMENTO' && 'opacity-30'
+                        } text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg text-blue-500 border-blue-500 `}
+                      >
+                        EM ANDAMENTO
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-              <span className="text-center font-bold font-raleway">
-                VENDEDOR
-              </span>
-              <span className="grow text-center font-raleway">
-                {info.vendedor}
-              </span>
-            </div>
-            <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-              <span className="text-center font-bold font-raleway">
-                CÓDIGO SOLAR MARKET (SVB)
-              </span>
-              <input
-                type={"text"}
-                value={SVBCode}
-                onChange={(e) => setSVBCode(e.target.value)}
-                className="grow outline-none h-full text-center"
-              />
-              {/* <span className="grow text-center font-raleway">
-                {info.codigoDoProjeto}
-              </span> */}
-            </div>
-            <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-              <span className="text-center font-bold font-raleway">
-                ABERTURA
-              </span>
-              <span className="grow text-center font-raleway">
-                {new Date(info.carimboDataHora).toLocaleString()}
-              </span>
-            </div>
-            {info.dataDeConclusao && (
-              <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-                <span className="text-center font-bold font-raleway">
-                  FECHAMENTO
-                </span>
-                <span className="grow text-center font-raleway">
-                  {new Date(info.dataDeConclusao).toLocaleString()}
-                </span>
-              </div>
-            )}
+              <div className="flex items-center justify-center gap-4 mt-4">
+                <div className="flex items-center gap-2">
+                  <Avatar fallback={'U'} height={25} width={25} url={call.requerente.avatar_url} />
 
-            <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
-              <span className="font-bold text-center font-raleway">
-                OBSERVAÇÕES
-              </span>
-              <span className="grow text-center font-raleway text-sm bg-gray-100 p-4 italic">
-                {info.observacoes ? (
-                  <ul className="text-xs font-bold text-center list-none">
-                    {info.observacoes.split("/ ").map((string, index) => (
-                      <li key={index}>{string}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-center italic text-gray-600">
-                    SEM OBSERVAÇÕES...
-                  </p>
-                )}
-              </span>
-            </div>
-            <div className="flex flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
-              <span className="text-center font-bold">RESPONSÁVEL</span>
-              <select
-                disabled={!editor}
-                value={responsavel ? responsavel : info.responsavel}
-                onChange={(e) => setResponsavel(e.target.value)}
-                className="text-xs grow text-center outline-none mt-2 lg:mt-0"
-              >
-                {respChamadosPPS.map((resp) => (
-                  <option key={resp.value} value={resp.value}>
-                    {resp.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {info.demanda == "EXTERNA" && (
-              <PPSModalCallInfo
-                tipoDeSolicitacao={info.tipoDeSolicitacao}
-                dados={info}
-              />
-            )}
-            <div className="flex flex-col gap-x-2 border border-gray-200 p-2 mt-4">
-              <span className="font-bold text-center font-raleway">
-                ANOTAÇÕES
-              </span>
-              <textarea
-                value={notes}
-                readOnly={!editor}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Digite aqui as anotações do chamado"
-                className="outline-none placeholder:italic mt-1 rounded text-center text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit grow scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
-              />
-            </div>
-            {editor ? (
-              info.dataDeConclusao ? (
-                <div className="text-center">
-                  <button
-                    onClick={reopenCall}
-                    className="p-3 font-raleway mt-4 hover:bg-[#f18701] hover:text-white font-bold rounded-lg bg-yellow-400"
-                  >
-                    REABRIR CHAMADO
-                  </button>
+                  <p className="font-medium text-gray-500 text-xs">{call.requerente?.apelido || 'Requerente não identificado'}</p>
+                </div>
+                <div className="flex items-center gap-2 text-gray-500">
+                  <BsCalendarFill />
+                  <p className="text-xs font-medium">{dayjs(call.dataInsercao).format('DD/MM/YYYY HH:mm')}</p>
+                </div>
+              </div>
+              {call.dataEfetivacao ? (
+                <div className="flex w-full justify-center mt-4 items-center gap-2 text-green-500">
+                  <BsCalendarCheckFill />
+                  <p className="text-xs font-medium">{dayjs(call.dataEfetivacao).format('DD/MM/YYYY HH:mm')}</p>
+                </div>
+              ) : null}
+
+              <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">PROJETO</h1>
+              {call.projeto ? (
+                <div className="flex w-full justify-center gap-4 items-center">
+                  <div className="flex gap-2 items-center">
+                    <BsCode size={'20px'} color="rgb(31,41,55)" />
+                    <p className="font-raleway font-medium text-sm">#{call.projeto.codigo || 'N/A'}</p>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <FaUser size={'20px'} color="rgb(31,41,55)" />
+                    <p className="font-raleway font-medium text-sm">{call.projeto.nome || 'N/A'}</p>
+                  </div>
                 </div>
               ) : (
-                <div className="text-center">
-                  <button
-                    onClick={closedCall}
-                    className="p-3 font-raleway mt-4 hover:bg-[#06d6a0] hover:text-white font-bold rounded-lg bg-green-400"
-                  >
-                    FINALIZAR CHAMADO
-                  </button>
-                </div>
-              )
-            ) : (
-              false
-            )}
-            {/* {info.dataDeConclusao ? (
-                <div className="text-center">
-                  <button
-                    onClick={reopenCall}
-                    className="p-3 font-raleway mt-4 hover:bg-[#f18701] hover:text-white font-bold rounded-lg bg-yellow-400"
-                  >
-                    REABRIR CHAMADO
-                  </button>
+                <p className="py-2 w-full text-center text-gray-500 italic text-sm">Sem informações do projeto...</p>
+              )}
+              <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">CLIENTE</h1>
+              {call.cliente ? (
+                <div className="flex flex-col w-full gap-2 py-2">
+                  <div className="flex w-full justify-center gap-4 items-center">
+                    <div className="flex gap-2 items-center text-gray-800">
+                      <FaUser size={'20px'} color="rgb(31,41,55)" />
+                      <p className="font-raleway font-medium text-sm">{call.cliente.nome || 'N/A'}</p>
+                    </div>
+                    {/* <div className="flex gap-2 items-center">
+                      <MdCategory size={'20px'} color="rgb(31,41,55)" />
+                      <p className="font-raleway font-medium text-sm">{call.cliente.tipo || 'N/A'}</p>
+                    </div> */}
+                    <div className="flex gap-2 items-center">
+                      <HiIdentification size={'20px'} color="rgb(31,41,55)" />
+                      <p className="font-raleway font-medium text-sm">{call.cliente.cpfCnpj || 'N/A'}</p>
+                    </div>
+                  </div>
+                  <div className="flex w-full justify-center gap-4 items-center">
+                    <div className="flex gap-2 items-center">
+                      <FaMobileAlt size={'20px'} color="rgb(31,41,55)" />
+                      <p className="font-raleway font-medium text-sm">{call.cliente.telefone || 'N/A'}</p>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <MdOutlineEmail size={'20px'} color="rgb(31,41,55)" />
+                      <p className="font-raleway font-medium text-sm">{call.cliente.email || 'N/A'}</p>
+                    </div>
+                  </div>
+                  <div className="flex w-full justify-center gap-4 items-center">
+                    <div className="flex gap-2 items-center">
+                      <FaCity size={'20px'} color="rgb(31,41,55)" />
+                      <p className="font-raleway font-medium text-sm">
+                        {call.cliente.uf || 'N/A'} / {call.cliente.cidade || 'N/A'}
+                      </p>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <MdLocationPin size={'20px'} color="rgb(31,41,55)" />
+                      <p className="font-raleway font-medium text-sm">
+                        {call.cliente.endereco
+                          ? `${call.cliente.endereco} - ${call.cliente.numeroOuIdentificador}, ${call.cliente.bairro} - ${call.cliente.cep}`
+                          : 'N/A'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex w-full justify-center gap-4 items-center">
+                    <div className="flex gap-2 items-center">
+                      <FaMoneyBillWave size={'20px'} color="rgb(31,41,55)" />
+                      <p className="font-raleway font-medium text-sm">{call.cliente.renda || 'N/A'}</p>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <MdWork size={'20px'} color="rgb(31,41,55)" />
+                      <p className="font-raleway font-medium text-sm">{call.cliente.profissao || 'N/A'}</p>
+                    </div>
+                  </div>
                 </div>
               ) : (
-                <div className="text-center">
-                  <button
-                    onClick={closedCall}
-                    className="p-3 font-raleway mt-4 hover:bg-[#06d6a0] hover:text-white font-bold rounded-lg bg-green-400"
-                  >
-                    FINALIZAR CHAMADO
-                  </button>
+                <p className="py-2 w-full text-center text-gray-500 italic text-sm">Sem informações do cliente...</p>
+              )}
+              <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">PREMISSAS</h1>
+              {call.premissas ? (
+                <div className="flex w-full justify-center gap-4 items-center">
+                  <div className="flex gap-2 items-center">
+                    <FaSolarPanel size={'20px'} color="rgb(31,41,55)" />
+                    <p className="font-raleway font-medium text-sm">{call.premissas.geracao ? `${call.premissas.geracao} kWh` : 'N;A'}</p>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <TbTopologyFullHierarchy size={'20px'} color="rgb(31,41,55)" />
+                    <p className="font-raleway font-medium text-sm">{call.premissas.topologia || 'N/A'}</p>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <BsHouse size={'20px'} color="rgb(31,41,55)" />
+                    <p className="font-raleway font-medium text-sm">{call.premissas.tipoEstrutura || 'N/A'}</p>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <FaHandHoldingUsd size={'20px'} color="rgb(31,41,55)" />
+                    <p className="font-raleway font-medium text-sm">{call.premissas.valorFinanciamento || 'N/A'}</p>
+                  </div>
                 </div>
-              )} */}
-            {message.text && (
-              <p className={`text-center ${message.color} mt-2 italic`}>
-                {message.text}
-              </p>
-            )}
-            {editor && (
-              <div className="flex items-center justify-center mt-2">
-                <SaveButton
-                  text={"SALVAR"}
-                  icon={<FaSave />}
-                  handleClick={saveProject}
+              ) : (
+                <p className="py-2 w-full text-center text-gray-500 italic text-sm">Sem premissas fornecidas...</p>
+              )}
+              <div className="w-full flex flex-col">
+                <h1 className="w-full p-2 rounded-tr-md rounded-tl-md text-center text-white font-bold bg-gray-800 mt-4">OBSERVAÇÕES</h1>
+                <span className="grow text-center font-raleway text-sm bg-gray-100 p-4 italic rounded-b">
+                  {call.observacoes ? (
+                    <ul className="text-xs font-bold text-center list-none">
+                      {call.observacoes.split('/ ').map((string, index) => (
+                        <li key={index}>{string}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-center italic text-gray-600">SEM OBSERVAÇÕES...</p>
+                  )}
+                </span>
+              </div>
+
+              <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">RESPONSÁVEL</h1>
+              <div className="flex w-full gap-2 justify-around flex-wrap">
+                {/* {responsibles.map((resp, index) => (
+                  <div
+                    key={index}
+                    onClick={() => setInfoHolder((prev) => ({ ...prev, responsavel: resp }))}
+                    className={`${
+                      infoHolder.responsavel?.apelido == resp.apelido ? '' : 'opacity-40'
+                    } flex gap-2 items-center border border-blue-700 p-2 w-fit rounded-md cursor-pointer`}
+                  >
+                    <Avatar url={resp.avatar_url} fallback={'R'} height={25} width={25} />
+                    <p className="font-medium text-gray-500 text-xs">{resp.apelido}</p>
+                  </div>
+                  
+                ))} */}
+                {renderResponsibles(call.responsavel?.apelido)}
+              </div>
+              <div className="flex flex-col w-full">
+                <h1 className="w-full p-2 rounded-tr-md rounded-tl-md text-center text-white font-bold bg-gray-800 mt-4">ANOTAÇÕES</h1>
+
+                <textarea
+                  value={infoHolder.anotacoes}
+                  readOnly={!editor}
+                  onChange={(e) => handleChange('anotacoes', e.target.value)}
+                  placeholder="Digite aqui as anotações do chamado"
+                  className="outline-none placeholder:italic text-center text-sm p-3 resize-none bg-gray-100 min-h-[150px] h-fit grow scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
                 />
               </div>
-            )}
-          </div>
+
+              {editor ? (
+                infoHolder.dataEfetivacao ? (
+                  <div className="text-center">
+                    <button
+                      onClick={() => handleReOpenCall()} // TODO
+                      className="p-3 font-raleway mt-4 hover:bg-[#f18701] hover:text-white font-bold rounded-lg bg-yellow-400"
+                    >
+                      REABRIR CHAMADO
+                    </button>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <button
+                      onClick={() => handleCloseCall()} // TODO
+                      className="p-3 font-raleway mt-4 hover:bg-[#06d6a0] hover:text-white font-bold rounded-lg bg-green-400"
+                    >
+                      FINALIZAR CHAMADO
+                    </button>
+                  </div>
+                )
+              ) : (
+                false
+              )}
+              {editor ? (
+                <div className="flex items-center justify-center mt-2">
+                  <SaveButton text={'SALVAR'} icon={<FaSave />} handleClick={() => handleSaveChanges()} /> {/*TODO*/}
+                </div>
+              ) : null}
+            </div>
+          ) : (
+            <LoadingPage />
+          )}
         </div>
       </AnimatedModalWrapper>
     </>
-  );
+  )
 }
 
-export default ModalCallPPS;
+export default ModalCallPPS

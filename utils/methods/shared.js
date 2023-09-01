@@ -1,21 +1,21 @@
-import { orientacoes } from "../constants";
-import genFactors from "../fatoresDeGeracao.json";
+import { orientacoes } from '../constants'
+import genFactors from '../fatoresDeGeracao.json'
 async function updatingCRMProjectsManually(req, res) {
   // // COnnecting to CRM projects and proposes db/collection
-  const crmDb = await connectToCRMDatabase(process.env.CRM_KEY);
-  const crmProjectsCollection = crmDb.collection("projects");
+  const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
+  const crmProjectsCollection = crmDb.collection('projects')
   const response = await crmProjectsCollection.updateMany(
     {},
     {
       $unset: {
-        contratoSolicitado: "",
-        dataSolicitacaoContrato: "",
-        idSolicitacaoContrato: "",
-        assinado: "",
-        dataAssinatura: "",
+        contratoSolicitado: '',
+        dataSolicitacaoContrato: '',
+        idSolicitacaoContrato: '',
+        assinado: '',
+        dataAssinatura: '',
       },
     }
-  );
+  )
   // const crmProposesCollection = crmDb.collection("proposes");
   // // Connecting to projects db/collection
   // const projectsDb = await connectToProjectsDatabase(
@@ -115,24 +115,26 @@ async function updatingCRMProjectsManually(req, res) {
   // const bulkWriteResponse = await crmProjectsCollection.bulkWrite(bulkWriteArr);
 }
 export function isEmpty(value) {
-  return (
-    value == null || (typeof value === "string" && value.trim().length === 0)
-  );
+  return value == null || (typeof value === 'string' && value.trim().length === 0)
 }
 export function pushToAuthPage(router) {
-  router.push("/auth/authHome");
+  router.push('/auth/authHome')
 }
 export function getGenFactorByOrientation({ city, uf, orientation }) {
-  if (!city || !uf) return 127;
+  if (!city || !uf) return 127
 
-  var cityFactor = genFactors.find(
-    (genFactor) => genFactor.CIDADE == city && genFactor.UF == uf
-  );
-  if (!cityFactor) return 127;
+  var cityFactor = genFactors.find((genFactor) => genFactor.CIDADE == city && genFactor.UF == uf)
+  if (!cityFactor) return 127
 
   // Checking for existing orientations
-  if (orientation && orientacoes.includes(orientation))
-    return cityFactor[orientation];
+  if (orientation && orientacoes.includes(orientation)) return cityFactor[orientation]
   // In case no orientation or invalid orientation is provided, returning annual generation factor
-  else return cityFactor.ANUAL;
+  else return cityFactor.ANUAL
+}
+
+export function getFirstDayOfMonth(year, month) {
+  return new Date(year, month, 1)
+}
+export function getLastDayOfMonth(year, month) {
+  return new Date(year, month + 1, 0)
 }

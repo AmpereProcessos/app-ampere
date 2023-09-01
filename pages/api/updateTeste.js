@@ -1,15 +1,15 @@
-import dayjs from "dayjs";
-import connectToCRMDatabase from "../../utils/crmDb";
-import connectToRequestsDatabase from "../../utils/solicitacoesDb";
-import connectToWarehouseDatabase from "../../utils/materialDb";
-import { ObjectId } from "mongodb";
-import connectToProjectsDatabase from "../../utils/connectDb";
-import { calculateStringSimilarity } from "../../utils/constants";
-import StatesAndCities from "../../utils/estados_cidades.json";
-import axios from "axios";
-import { errorHandler } from "../../utils/methods/handlers";
-import connectToDatabase from "../../utils/auxiliaresDb";
-import createHttpError from "http-errors";
+import dayjs from 'dayjs'
+import connectToCRMDatabase from '../../utils/crmDb'
+import connectToRequestsDatabase from '../../utils/solicitacoesDb'
+import connectToWarehouseDatabase from '../../utils/materialDb'
+import { ObjectId } from 'mongodb'
+import connectToProjectsDatabase from '../../utils/connectDb'
+import { calculateStringSimilarity } from '../../utils/constants'
+import StatesAndCities from '../../utils/estados_cidades.json'
+import axios from 'axios'
+import { errorHandler } from '../../utils/methods/handlers'
+import connectToDatabase from '../../utils/callsDb'
+import createHttpError from 'http-errors'
 function formatItens(list) {
   const formattedItens = list.map((item) => {
     return {
@@ -20,168 +20,156 @@ function formatItens(list) {
       dataCompra: item.dataCompra,
       dataEntrega: item.dataEntrega,
       anotacoes: item.descricao, //
-    };
-  });
-  return formattedItens;
+    }
+  })
+  return formattedItens
 }
 
 const reasonFormatting = {
-  "REPOSIÇÃO/COMPRA DE ITENS DE ALIMENTAÇÃO":
-    "REPOSIÇÃO/COMPRA DE ITENS DE ALIMENTAÇÃO",
-  "REPOSIÇÃO DE ITENS DE LIMPEZA": "REPOSIÇÃO DE ITENS DE LIMPEZA",
-  "REPOSIÇÃO DO ALMOXARIFADO": "REPOSIÇÃO DE ITENS DE ALMOXARIFADO",
-  "USO EM OBRA": "USO EM OBRA DE CLIENTE",
-  OUTROS: "OUTROS",
-};
-function getContractValue(valorProjeto, valorPadrao, valorEstrutura, valorOeM) {
-  var totalSum = 0;
-
-  const projeto = !isNaN(valorProjeto) ? valorProjeto : 0;
-  const padrao = !isNaN(valorPadrao) ? valorPadrao : 0;
-  const estrutura = !isNaN(valorEstrutura) ? valorEstrutura : 0;
-  const oem = !isNaN(valorOeM) ? valorOeM : 0;
-  totalSum =
-    Number(totalSum) +
-    Number(projeto) +
-    Number(padrao) +
-    Number(estrutura) +
-    oem;
-  return totalSum;
+  'REPOSIÇÃO/COMPRA DE ITENS DE ALIMENTAÇÃO': 'REPOSIÇÃO/COMPRA DE ITENS DE ALIMENTAÇÃO',
+  'REPOSIÇÃO DE ITENS DE LIMPEZA': 'REPOSIÇÃO DE ITENS DE LIMPEZA',
+  'REPOSIÇÃO DO ALMOXARIFADO': 'REPOSIÇÃO DE ITENS DE ALMOXARIFADO',
+  'USO EM OBRA': 'USO EM OBRA DE CLIENTE',
+  OUTROS: 'OUTROS',
 }
-export default async function handler(req, res) {
-  const db = await connectToRequestsDatabase(process.env.DB_KEY);
-  const collection = db.collection("visitaTecnica");
-  const requests = await collection
-    .aggregate([
-      {
-        $project: {
-          nomeDoCliente: 1,
-          cidade: 1,
-        },
-      },
-    ])
-    .toArray();
-  var citiesArr = [];
-  StatesAndCities.forEach((state) => {
-    const cities = state.cidades;
-    cities.forEach((city) => {
-      citiesArr.push({ cidade: city, uf: state.sigla });
-    });
-  });
-  const formattedRequests = requests.map((request) => {
-    const correspondentCity = citiesArr.find(
-      (city) =>
-        city.cidade.toUpperCase() == request.cidade.toUpperCase() &&
-        city.uf != "BA" &&
-        city.uf != "SP"
-    );
+const callResponsibles = {
+  ADRIANO: {
+    id: null,
+    nome: 'Adriano Arantes',
+    apelido: 'ADRIANO',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-adriano.jpg?alt=media&token=a30ec3dd-8a2e-4a24-b330-1f4e9b9f0db6',
+  },
+  ARTHUR: {
+    id: null,
+    nome: 'Arthur Alexander',
+    apelido: 'ARTHUR',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-arthurziin.jpg?alt=media&token=150fd914-04d5-4c0a-bf33-7daccdf81916',
+  },
+  LUCAS: {
+    id: '6318db05929e9f8731d8d9bb',
+    nome: 'Lucas Fernandes',
+    apelido: 'LUCAS',
+    avatar_url: 'https://avatars.githubusercontent.com/u/60222823?s=400&u=d82dbc3d1d666b315b793f1888fd65c92d8ca0a9&v=4',
+  },
+  NATHAN: {
+    id: '632372d90d695bd5256518bb',
+    nome: 'Nathan Peres',
+    apelido: 'NATHAN',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-nathan_peres?alt=media&token=7f672eea-0b33-4e49-b747-f2de2ee110ad',
+  },
+  MATHEUS: {
+    id: '631f832a5ba9ffa2a4cb8369',
+    nome: 'Matheus Oliveira',
+    apelido: 'MATHEUS',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2FavatarMatheus.jpg?alt=media&token=adb60500-22e6-4c1d-908f-72e3279fc641',
+  },
+  LEANDRO: {
+    id: '63a5fb69e6a905a237de81eb',
+    nome: 'Leandro Viali',
+    apelido: 'LEANDRO',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-leandro_viali?alt=media&token=dffd6966-b6d4-460d-9baa-d467d933a8a7',
+  },
+}
+function findResponsible(responsibleName) {
+  const respObj = callResponsibles[responsibleName]
+  if (respObj) return respObj
+  else return null
+}
+function findSeller(seller, users) {
+  const userInCRM = users.find((user) => calculateStringSimilarity(user.nome.toUpperCase(), seller) > 80)
+  if (userInCRM)
     return {
-      ...request,
-      uf: correspondentCity?.uf,
-    };
-  });
-  const bulkwriteArr = formattedRequests.map((request) => {
+      idCRM: userInCRM._id,
+      nomeCRM: userInCRM.nome,
+      apelido: seller,
+      avatar_url: userInCRM.avatar_url,
+    }
+  else
     return {
-      updateOne: {
-        filter: { _id: new ObjectId(request._id) },
-        update: {
-          $set: { uf: request.uf },
-        },
-      },
-    };
-  });
+      idCRM: null,
+      nomeCRM: null,
+      apelido: seller,
+      avatar_url: null,
+    }
+}
+function formatCharges(charges) {
+  if (!charges || !Array.isArray(charges)) return
+  const formatted = charges.map((charge) => {
+    return {
+      descricao: charge.nome,
+      horasFuncionamento: charge.horasDiarias,
+      potencia: charge.pot,
+      qtde: charge.qtde,
+    }
+  })
+  return formatted
+}
+function formatStructure(type) {
+  if (type == 'TELHADO') return 'Fibrocimento'
+  if (type === 'SOLO') return 'Solo'
+  if (type === 'CARPORT') return 'Carport'
+  if (type === 'ESTRUTURA PERSONALIZADA') return 'Personalizada'
+}
 
-  // const projects = await projectsCollection
-  //   .aggregate([
-  //     {
-  //       $match: {
-  //         "contrato.status": "ASSINADO",
-  //       },
-  //     },
-  //     {
-  //       $project: {
-  //         qtde: 1,
-  //         nomeDoContrato: 1,
-  //         tipoDeServico: 1,
-  //         contrato: 1,
-  //         "sistema.valorProjeto": 1,
-  //         "padrao.valor": 1,
-  //         "estruturaPersonalizada.valor": 1,
-  //         "oem.valor": 1,
-  //       },
-  //     },
-  //     {
-  //       $sort: {
-  //         qtde: 1,
-  //       },
-  //     },
-  //   ])
-  //   .toArray();
-  // const formattedRevenues = projects.map((project) => {
+export default async function handler(req, res) {
+  // const db = await connectToDatabase(process.env.DB_KEY)
+  // const collection = db.collection('pps')
+
+  // const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
+  // const crmUsersCollection = crmDb.collection('users')
+
+  // const crmUsers = await crmUsersCollection.find({}).toArray()
+  // const calls = await collection.find({}).toArray()
+  // const newPPSCalls = calls.map((call) => {
   //   return {
-  //     tipo: project.tipoDeServico,
-  //     autor: {
-  //       id: "6318db05929e9f8731d8d9bb", // id do usuário que criou o referente registro de custos
-  //       nome: "Lucas Fernandes", // nome do usuário que criou o referente registro de custos
+  //     _id: {
+  //       $oid: call._id,
   //     },
+  //     status: call.status,
+  //     tipoSolicitacao: call.tipoDeSolicitacao,
+  //     responsavel: findResponsible(call.responsavel),
+  //     requerente: findSeller(call.vendedor, crmUsers),
   //     projeto: {
-  //       id: project._id, // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
-  //       nome: project.nomeDoContrato, // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
-  //       identificador: project.qtde, // identificador QTDE do projeto no banco de projetos
+  //       id: undefined,
+  //       nome: call.nomeProjeto,
+  //       codigo: call.codigoDoProjeto,
   //     },
-  //     total: getContractValue(
-  //       project.sistema.valorProjeto,
-  //       project.padrao.valor,
-  //       project.estruturaPersonalizada.valor,
-  //       project.oem?.valor
-  //     ),
-  //     efetivacao: {
-  //       efetivado: true,
-  //       data: project.contrato.dataAssinatura,
+  //     premissas: {
+  //       geracao: call.geracaoEstimada,
+  //       cargas: call.equipamentos ? formatCharges(call.equipamentos) : undefined,
+  //       topologia: call.topologia,
+  //       tipoEstrutura: call.tipoDaEstrutura ? formatStructure(call.tipoDaEstrutura) : undefined,
+  //       valorFinanciamento: call.valorFinanciamento,
   //     },
-  //     dataInsercao:
-  //       project.contrato.dataAssinatura ||
-  //       new ObjectId(project._id).getTimestamp(),
-  //     criterioReferencia: false,
-  //     criterioCompetencia: true,
-  //   };
-  // });
-  // const totalRevenue = formattedRevenues.reduce((acc, current) => {
-  //   const toSum = current.total;
-  //   return acc + toSum;
-  // }, 0);
-  // console.log(totalRevenue);
-  // const expenses = await expensesCollection.find({}).toArray();
-  // const bulkwriteArr = expenses.map((expense) => {
-  //   var updateObj;
-  //   if (expense.idFormularioAlmoxarifado) {
-  //     updateObj = {
-  //       $set: {
-  //         rateio: "CUSTOS DIRETOS",
-  //         categoria: "INSUMOS DE ALMOXARIFADO",
-  //         descricao: `SAÍDA DE MATERIAL PARA ${expense.categoria}`,
-  //         efetivacao: {
-  //           efetivado: true,
-  //           data: new Date(expense.dataInsercao).toISOString(),
-  //         },
-  //         criterioCompetencia: true,
-  //       },
-  //     };
-  //   } else
-  //     updateObj = {
-  //       $set: {
-  //         dataInsercao: expense.dataInsercao,
-  //       },
-  //     };
-  //   return {
-  //     updateOne: {
-  //       filter: { _id: new ObjectId(expense._id) },
-  //       update: updateObj,
+  //     cliente: {
+  //       nome: call.nomeDoCliente,
+  //       tipo: call.tipoDoCliente,
+  //       telefone: call.telefone,
+  //       cep: call.cep,
+  //       uf: call.uf,
+  //       cidade: call.cidade,
+  //       endereco: call.enderecoDoCliente,
+  //       numeroOuIdentificador: call.numeroResidencia,
+  //       cpfCnpj: call.cpf_cnpj,
+  //       dataNascimento: call.dataDeNascimento,
+  //       email: call.email,
+  //       renda: call.rendaDoCliente,
+  //       profissao: call.profissao,
   //     },
-  //   };
-  // });
-  const responseDb = await collection.bulkWrite(bulkwriteArr);
-  res.json(responseDb);
+  //     links: call.links,
+  //     observacoes: call.observacoes,
+  //     anotacoes: call.anotacoes,
+  //     dataInsercao: call.carimboDataHora,
+  //     dataEfetivacao: call.dataDeConclusao,
+  //   }
+  // })
+  // console.log(newPPSCalls.length)
+  res.json('DESATIVADA')
 }
 
 // Update Many example:

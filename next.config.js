@@ -1,13 +1,13 @@
 /** @type {import('next').NextConfig} */
-const withTM = require("next-transpile-modules")([
-  "@fullcalendar/common",
-  "@babel/preset-react",
-  "@fullcalendar/common",
-  "@fullcalendar/daygrid",
-  "@fullcalendar/interaction",
-  "@fullcalendar/react",
-  "@fullcalendar/timegrid",
-]);
+const withTM = require('next-transpile-modules')([
+  '@fullcalendar/common',
+  '@babel/preset-react',
+  '@fullcalendar/common',
+  '@fullcalendar/daygrid',
+  '@fullcalendar/interaction',
+  '@fullcalendar/react',
+  '@fullcalendar/timegrid',
+])
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -16,14 +16,14 @@ const nextConfig = {
       {
         test: /\.svg$/i,
         issuer: /\.[jt]sx?$/,
-        use: ["@svgr/webpack"],
+        use: ['@svgr/webpack'],
       },
     ],
   },
   images: {
-    domains: ["firebasestorage.googleapis.com"],
+    domains: ['firebasestorage.googleapis.com'],
   },
-};
+}
 
 module.exports = withTM({
   reactStrictMode: true,
@@ -36,15 +36,11 @@ module.exports = withTM({
       {
         test: /\.svg$/i,
         issuer: /\.[jt]sx?$/,
-        use: ["@svgr/webpack"],
+        use: ['@svgr/webpack'],
       },
     ],
   },
   images: {
-    domains: [
-      "avatars.githubusercontent.com",
-      "firebasestorage.googleapis.com",
-      "localhost",
-    ],
+    domains: ['avatars.githubusercontent.com', 'firebasestorage.googleapis.com', 'sc-erp.s3.amazonaws.com', 'localhost'],
   },
-});
+})

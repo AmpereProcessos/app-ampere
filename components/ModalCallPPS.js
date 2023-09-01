@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { FaCity, FaHandHoldingUsd, FaMobileAlt, FaMoneyBillWave, FaSave, FaSolarPanel, FaUser } from 'react-icons/fa'
 import { VscChromeClose } from 'react-icons/vsc'
 import { AppContext } from '../context/AppContext'
-import { respChamadosPPS } from '../utils/constants'
+import { formatDecimalPlaces, respChamadosPPS } from '../utils/constants'
 import { useKey } from '../utils/hooks'
 import PPSModalCallInfo from './PPSModalCallInfo'
 import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
@@ -21,6 +21,9 @@ import { saveCallChanges } from '../utils/methods/mutation/ppsCalls'
 import { toast } from 'react-hot-toast'
 import { getErrorMessage } from '../utils/methods/handlers'
 import { useQueryClient } from 'react-query'
+import CallFile from './identificador/chamados/pps/CallFile'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 const MODAL_STYLES = {
   position: 'fixed',
   top: '50%',
@@ -112,6 +115,7 @@ const responsibles = [
 function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal())
   const queryClient = useQueryClient()
+  const router = useRouter()
   const { data: session } = useSession()
   const editor = session?.user?.accessibleRoutes.includes('PPS') && session?.user?.visualizacao == undefined
 
@@ -205,12 +209,24 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
       toast.error(msg)
     }
   }
+  function getChargesTotals(arr) {
+    let sumTotalPot = 0
+    let sumTotalDailyConsumption = 0
+    for (let i = 0; i < arr.length; i++) {
+      sumTotalPot = sumTotalPot + arr[i].qtde * arr[i].potencia
+      sumTotalDailyConsumption = sumTotalDailyConsumption + arr[i].qtde * arr[i].potencia * arr[i].horasFuncionamento
+    }
+    return {
+      totalPot: sumTotalPot / 1000,
+      totalDailyConsumption: sumTotalDailyConsumption,
+    }
+  }
   useEffect(() => {
     setInfoHolder(call)
   }, [call])
   return (
     <>
-      <AnimatedModalWrapper modalIsOpen={modalIsOpen} width={'40%'} height={'87%'}>
+      <AnimatedModalWrapper modalIsOpen={modalIsOpen} width={'60%'} height={'87%'}>
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
             <div className="flex flex-col">
@@ -227,7 +243,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
             </button>
           </div>
           {callFetched && infoHolder ? (
-            <div className="flex flex-col overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 gap-2">
+            <div className="flex flex-col px-2 lg:px-0 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 gap-2">
               <div className="flex w-full items-center justify-center mt-4">
                 <div className="flex gap-x-2 justify-center grow">
                   {infoHolder.status === 'REALIZADO' ? (
@@ -276,10 +292,20 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
 
               <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">PROJETO</h1>
               {call.projeto ? (
-                <div className="flex w-full justify-center gap-4 items-center">
+                <div className="flex flex-col md:flex-row w-full justify-center gap-2 md:gap-4 items-center">
                   <div className="flex gap-2 items-center">
                     <BsCode size={'20px'} color="rgb(31,41,55)" />
-                    <p className="font-raleway font-medium text-sm">#{call.projeto.codigo || 'N/A'}</p>
+                    {call.projeto.id ? (
+                      <Link href={`https://crm.ampereenergias.com.br/projeto/id/${call.projeto.id}`}>
+                        <a className="font-raleway font-medium text-sm hover:text-cyan-300 duration-300 ease-in-out cursor-pointer">
+                          #{call.projeto.codigo || 'N/A'}
+                        </a>
+                      </Link>
+                    ) : (
+                      <p className="font-raleway font-medium text-sm hover:text-blue-300 duration-300 ease-in-out cursor-pointer">
+                        #{call.projeto.codigo || 'N/A'}
+                      </p>
+                    )}
                   </div>
                   <div className="flex gap-2 items-center">
                     <FaUser size={'20px'} color="rgb(31,41,55)" />
@@ -292,7 +318,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
               <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">CLIENTE</h1>
               {call.cliente ? (
                 <div className="flex flex-col w-full gap-2 py-2">
-                  <div className="flex w-full justify-center gap-4 items-center">
+                  <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center">
                     <div className="flex gap-2 items-center text-gray-800">
                       <FaUser size={'20px'} color="rgb(31,41,55)" />
                       <p className="font-raleway font-medium text-sm">{call.cliente.nome || 'N/A'}</p>
@@ -306,7 +332,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                       <p className="font-raleway font-medium text-sm">{call.cliente.cpfCnpj || 'N/A'}</p>
                     </div>
                   </div>
-                  <div className="flex w-full justify-center gap-4 items-center">
+                  <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center">
                     <div className="flex gap-2 items-center">
                       <FaMobileAlt size={'20px'} color="rgb(31,41,55)" />
                       <p className="font-raleway font-medium text-sm">{call.cliente.telefone || 'N/A'}</p>
@@ -316,7 +342,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                       <p className="font-raleway font-medium text-sm">{call.cliente.email || 'N/A'}</p>
                     </div>
                   </div>
-                  <div className="flex w-full justify-center gap-4 items-center">
+                  <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center">
                     <div className="flex gap-2 items-center">
                       <FaCity size={'20px'} color="rgb(31,41,55)" />
                       <p className="font-raleway font-medium text-sm">
@@ -332,7 +358,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                       </p>
                     </div>
                   </div>
-                  <div className="flex w-full justify-center gap-4 items-center">
+                  <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center">
                     <div className="flex gap-2 items-center">
                       <FaMoneyBillWave size={'20px'} color="rgb(31,41,55)" />
                       <p className="font-raleway font-medium text-sm">{call.cliente.renda || 'N/A'}</p>
@@ -348,7 +374,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
               )}
               <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">PREMISSAS</h1>
               {call.premissas ? (
-                <div className="flex w-full justify-center gap-4 items-center">
+                <div className="flex w-full flex-col md:flex-row justify-center gap-2 md:gap-4 items-center">
                   <div className="flex gap-2 items-center">
                     <FaSolarPanel size={'20px'} color="rgb(31,41,55)" />
                     <p className="font-raleway font-medium text-sm">{call.premissas.geracao ? `${call.premissas.geracao} kWh` : 'N;A'}</p>
@@ -369,6 +395,43 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
               ) : (
                 <p className="py-2 w-full text-center text-gray-500 italic text-sm">Sem premissas fornecidas...</p>
               )}
+              {call.premissas?.cargas ? (
+                <div className="flex flex-col text-gray-600 w-full">
+                  <p className="font-bold text-xs text-center">EQUIPAMENTOS</p>
+                  <div className="grid grid-cols-6">
+                    <h1 className="bg-gray-600 text-white text-xs text-center p-1 border-r border-white font-bold">NOME</h1>
+                    <h1 className="bg-gray-600 text-white text-xs text-center p-1 border-r border-white font-bold">POTÊNCIA NOMINAL</h1>
+                    <h1 className="bg-gray-600 text-white text-xs text-center p-1 border-r border-white font-bold">QUANTIDADE</h1>
+                    <h1 className="bg-gray-600 text-white text-xs text-center p-1 border-r border-white font-bold">POTÊNCIA TOTAL</h1>
+                    <h1 className="bg-gray-600 text-white text-xs text-center p-1 border-r border-white font-bold">HORAS DE USO</h1>
+                    <h1 className="bg-gray-600 text-white text-xs text-center p-1 font-bold">Wh DIÁRIO</h1>
+                  </div>
+                  {call.premissas.cargas.map((charge, index) => (
+                    <div key={index} className="grid grid-cols-6 border border-t-0 border-gray-200">
+                      <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.descricao}</h1>
+                      <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.qtde}</h1>
+                      <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.potencia}</h1>
+                      <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.qtde * charge.potencia}</h1>
+                      <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.horasFuncionamento}</h1>
+                      <h1 className="text-gray-600 text-xxs text-center p-2 font-bold">
+                        {charge.qtde * charge.potencia * charge.horasFuncionamento}
+                      </h1>
+                    </div>
+                  ))}
+                  <div className="grid grid-cols-6 border border-t-0 border-gray-200">
+                    <p className="bg-gray-600 text-white text-xs col-span-5 text-center p-1 border-r border-white font-bold">CONSUMO DIÁRIO TOTAL</p>
+                    <p className="text-gray-600 text-xs col-span-1 text-center p-2 font-bold">
+                      {formatDecimalPlaces(getChargesTotals(call.premissas.cargas).totalDailyConsumption, 0, 0)} kWh
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-6 border border-t-0 border-gray-200">
+                    <p className="bg-gray-600 text-white text-xs col-span-5 text-center p-1 border-r border-white font-bold">POTÊNCIA TOTAL</p>
+                    <p className="text-gray-600 text-xs col-span-1 text-center p-2 font-bold">
+                      {formatDecimalPlaces(getChargesTotals(call.premissas.cargas).totalPot, 2, 2)} kWp
+                    </p>
+                  </div>
+                </div>
+              ) : null}
               <div className="w-full flex flex-col">
                 <h1 className="w-full p-2 rounded-tr-md rounded-tl-md text-center text-white font-bold bg-gray-800 mt-4">OBSERVAÇÕES</h1>
                 <span className="grow text-center font-raleway text-sm bg-gray-100 p-4 italic rounded-b">
@@ -385,25 +448,9 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
               </div>
 
               <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">RESPONSÁVEL</h1>
-              <div className="flex w-full gap-2 justify-around flex-wrap">
-                {/* {responsibles.map((resp, index) => (
-                  <div
-                    key={index}
-                    onClick={() => setInfoHolder((prev) => ({ ...prev, responsavel: resp }))}
-                    className={`${
-                      infoHolder.responsavel?.apelido == resp.apelido ? '' : 'opacity-40'
-                    } flex gap-2 items-center border border-blue-700 p-2 w-fit rounded-md cursor-pointer`}
-                  >
-                    <Avatar url={resp.avatar_url} fallback={'R'} height={25} width={25} />
-                    <p className="font-medium text-gray-500 text-xs">{resp.apelido}</p>
-                  </div>
-                  
-                ))} */}
-                {renderResponsibles(call.responsavel?.apelido)}
-              </div>
+              <div className="flex w-full gap-2 justify-around flex-wrap">{renderResponsibles(call.responsavel?.apelido)}</div>
               <div className="flex flex-col w-full">
                 <h1 className="w-full p-2 rounded-tr-md rounded-tl-md text-center text-white font-bold bg-gray-800 mt-4">ANOTAÇÕES</h1>
-
                 <textarea
                   value={infoHolder.anotacoes}
                   readOnly={!editor}
@@ -412,7 +459,18 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                   className="outline-none placeholder:italic text-center text-sm p-3 resize-none bg-gray-100 min-h-[150px] h-fit grow scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
                 />
               </div>
-
+              <h1 className="w-full p-2 rounded-tr-md rounded-tl-md text-center text-white font-bold bg-gray-800 mt-4">ARQUIVOS</h1>
+              <div className="flex flex-col items-center w-full gap-2">
+                {call.links && call.links.length > 0 ? (
+                  call.links.map((link, index) => (
+                    <div key={index} className="w-full lg:w-[70%]">
+                      <CallFile info={link} />
+                    </div>
+                  ))
+                ) : (
+                  <p className="py-2 italic text-sm text-gray-500">Sem arquivos anexados...</p>
+                )}
+              </div>
               {editor ? (
                 infoHolder.dataEfetivacao ? (
                   <div className="text-center">

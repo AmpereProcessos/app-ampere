@@ -1,10 +1,28 @@
 import dayjs from 'dayjs'
 import connectToDatabase from '../../../../utils/callsDb'
-import { formatProjectCode } from '../../../../utils/constants'
+import connectToCRMDatabase from '../../../../utils/crmDb'
+import { calculateStringSimilarity, formatProjectCode } from '../../../../utils/constants'
 import { errorHandler } from '../../../../utils/methods/handlers'
 import { getFirstDayOfMonth, getLastDayOfMonth } from '../../../../utils/methods/shared'
 import { ObjectId } from 'mongodb'
 import createHttpError from 'http-errors'
+function findSellerInCRM(seller, users) {
+  const userInCRM = users.find((user) => calculateStringSimilarity(user.nome.toUpperCase(), seller) > 80)
+  if (userInCRM)
+    return {
+      idCRM: userInCRM._id,
+      nomeCRM: userInCRM.nome,
+      apelido: seller,
+      avatar_url: userInCRM.avatar_url,
+    }
+  else
+    return {
+      idCRM: null,
+      nomeCRM: null,
+      apelido: seller,
+      avatar_url: null,
+    }
+}
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     const { status, after, before } = req.query
@@ -67,18 +85,25 @@ export default async function handler(req, res) {
     }
   }
   if (req.method === 'POST') {
-    let svbCode = formatProjectCode(req.body.codigoDoProjeto)
-    const db = await connectToDatabase(process.env.DB_KEY)
-    const collection = db.collection('pps')
     try {
+      const info = req.body
+      if (!info) throw new createHttpError.BadRequest('Nenhuma informação fornecida.')
+      const db = await connectToDatabase(process.env.DB_KEY)
+      const collection = db.collection('pps')
+      const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
+      const usersCRMCollection = crmDb.collection('users')
+      const crmUsers = await usersCRMCollection.find().toArray()
+      const applicantAlias = info.requerente?.apelido
+      const applicant = findSellerInCRM(applicantAlias, crmUsers)
+      const insertInfo = { ...info, requerente: applicant }
       await collection.insertOne({
-        ...req.body,
-        carimboDataHora: new Date().toJSON(),
-        codigoDoProjeto: svbCode,
+        ...insertInfo,
+        status: 'PENDENTE',
+        dataInsercao: new Date().toISOString(),
       })
       return res.json('Chamado criado!')
     } catch (error) {
-      res.status(500).send('Houve um erro no servidor, por favor tente novamente.')
+      errorHandler(error, res)
     }
   }
   if (req.method === 'PUT') {

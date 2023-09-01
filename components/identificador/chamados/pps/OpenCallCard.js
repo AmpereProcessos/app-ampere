@@ -25,14 +25,15 @@ const statusStyles = {
 function getBarColor(status) {
   if (status == 'EM ANDAMENTO') return 'bg-blue-500'
   if (status == 'REALIZADO') return 'bg-green-500'
-  if (status == 'PENDENTE') return 'bg-black'
+  if (status == 'PENDENTE') return 'bg-red-400'
+  return 'bg-red-400'
 }
 function OpenCallCard({ call, handleOpenModal }) {
   return (
     <div
       key={call._id}
       onClick={() => handleOpenModal(call)}
-      className="flex  gap-2  w-full lg:w-[400px] max-h-[280px] shadow-sm cursor-pointer border border-gray-300  hover:bg-blue-100 rounded-md"
+      className="flex  gap-2  w-full lg:w-[400px] h-[310px] lg:h-[280px] shadow-sm cursor-pointer border border-gray-300  hover:bg-blue-100 rounded-md"
     >
       <div className={`h-full w-[7px] ${getBarColor(call.status)} rounded-tl-md rounded-bl-md`}></div>
       <div className="flex flex-col w-full grow p-6">
@@ -76,9 +77,9 @@ function OpenCallCard({ call, handleOpenModal }) {
           </div>
         </div>
         <div className="w-full flex items-center justify-between">
-          <div className="flex items-center gap-2 text-gray-500">
+          <div className={`flex items-center gap-2 ${call.dataEfetivacao ? 'text-green-500' : 'text-gray-500'}`}>
             <BsCalendarFill />
-            <p className="text-xs font-medium">{dayjs(call.dataInsercao).format('DD/MM/YYYY HH:mm')}</p>
+            <p className="text-xs font-medium">{dayjs(call.dataEfetivacao ? call.dataEfetivacao : call.dataInsercao).format('DD/MM/YYYY HH:mm')}</p>
           </div>
           <div className="flex items-center justify-center gap-2">
             <Avatar fallback={'U'} height={25} width={25} url={call.responsavel?.avatar_url || undefined} />

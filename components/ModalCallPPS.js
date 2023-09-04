@@ -398,18 +398,20 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
               {call.premissas?.cargas ? (
                 <div className="flex flex-col text-gray-600 w-full">
                   <p className="font-bold text-xs text-center">EQUIPAMENTOS</p>
-                  <div className="grid grid-cols-6">
-                    <h1 className="bg-gray-600 text-white text-xs text-center p-1 border-r border-white font-bold">NOME</h1>
-                    <h1 className="bg-gray-600 text-white text-xs text-center p-1 border-r border-white font-bold">POTÊNCIA NOMINAL</h1>
-                    <h1 className="bg-gray-600 text-white text-xs text-center p-1 border-r border-white font-bold">QUANTIDADE</h1>
-                    <h1 className="bg-gray-600 text-white text-xs text-center p-1 border-r border-white font-bold">POTÊNCIA TOTAL</h1>
-                    <h1 className="bg-gray-600 text-white text-xs text-center p-1 border-r border-white font-bold">HORAS DE USO</h1>
-                    <h1 className="bg-gray-600 text-white text-xs text-center p-1 font-bold">Wh DIÁRIO</h1>
+                  <div className="grid grid-cols-5  lg:grid-cols-6">
+                    <h1 className="bg-gray-600 text-white text-xxs lg:text-xs text-center p-1 border-r border-white font-bold">NOME</h1>
+                    <h1 className="bg-gray-600 text-white text-xxs lg:text-xs text-center p-1 border-r border-white font-bold hidden lg:flex">
+                      POTÊNCIA NOMINAL
+                    </h1>
+                    <h1 className="bg-gray-600 text-white text-xxs lg:text-xs text-center p-1 border-r border-white font-bold">QTDE</h1>
+                    <h1 className="bg-gray-600 text-white text-xxs lg:text-xs text-center p-1 border-r border-white font-bold">POTÊNCIA TOTAL</h1>
+                    <h1 className="bg-gray-600 text-white text-xxs lg:text-xs text-center p-1 border-r border-white font-bold">HORAS DE USO</h1>
+                    <h1 className="bg-gray-600 text-white text-xxs lg:text-xs text-center p-1 font-bold">Wh DIÁRIO</h1>
                   </div>
                   {call.premissas.cargas.map((charge, index) => (
-                    <div key={index} className="grid grid-cols-6 border border-t-0 border-gray-200">
+                    <div key={index} className="grid grid-cols-5 lg:grid-cols-6 border border-t-0 border-gray-200">
                       <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.descricao}</h1>
-                      <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.qtde}</h1>
+                      <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold hidden lg:flex">{charge.qtde}</h1>
                       <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.potencia}</h1>
                       <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.qtde * charge.potencia}</h1>
                       <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.horasFuncionamento}</h1>
@@ -418,14 +420,18 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                       </h1>
                     </div>
                   ))}
-                  <div className="grid grid-cols-6 border border-t-0 border-gray-200">
-                    <p className="bg-gray-600 text-white text-xs col-span-5 text-center p-1 border-r border-white font-bold">CONSUMO DIÁRIO TOTAL</p>
+                  <div className="grid grid-cols-5 lg:grid-cols-6 border border-t-0 border-gray-200 items-center">
+                    <p className="bg-gray-600 text-white text-xs col-span-4 lg:col-span-5 text-center p-1 border-r border-white font-bold h-full flex items-center justify-center">
+                      CONSUMO DIÁRIO TOTAL
+                    </p>
                     <p className="text-gray-600 text-xs col-span-1 text-center p-2 font-bold">
                       {formatDecimalPlaces(getChargesTotals(call.premissas.cargas).totalDailyConsumption, 0, 0)} kWh
                     </p>
                   </div>
-                  <div className="grid grid-cols-6 border border-t-0 border-gray-200">
-                    <p className="bg-gray-600 text-white text-xs col-span-5 text-center p-1 border-r border-white font-bold">POTÊNCIA TOTAL</p>
+                  <div className="grid grid-cols-5 lg:grid-cols-6 border border-t-0 border-gray-200 items-center">
+                    <p className="bg-gray-600 text-white text-xs col-span-4 lg:col-span-5 text-center p-1 border-r border-white font-bold h-full flex items-center justify-center">
+                      POTÊNCIA TOTAL
+                    </p>
                     <p className="text-gray-600 text-xs col-span-1 text-center p-2 font-bold">
                       {formatDecimalPlaces(getChargesTotals(call.premissas.cargas).totalPot, 2, 2)} kWp
                     </p>

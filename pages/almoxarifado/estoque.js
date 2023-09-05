@@ -79,11 +79,6 @@ function Estoque() {
 
     setEditModal((prev) => ({ ...prev, info: data }))
   }
-  function handleKeyPress(e) {
-    if (e.key === 'Enter') {
-      handleFilters()
-    }
-  }
   useEffect(() => {
     if (session?.user.accessibleRoutes.includes('Obras') || session?.user.accessibleRoutes.includes('Almoxarifado')) {
       if (!materials) getMateriais()

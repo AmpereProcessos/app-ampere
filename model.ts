@@ -316,6 +316,69 @@ interface IProject {
   // ORDENS DE SERVIÇO É COMUM PARA TODOS OS CONTRATOS
   ordensDeServico: any[]
 }
+interface ServiceOrder {
+  _id?: string
+  categoria: 'MONTAGEM' | 'MANUTANÇÃO CORRETIVA' // etc
+  projeto: {
+    id: string // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
+    nome: string // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
+    identificador: number // identificador QTDE do projeto no banco de projetos
+  }
+  descricao: string // servico executado
+  localizacao: {
+    cep: string
+    uf: string
+    cidade: string
+    bairro: string
+    endereco: string
+    numeroOuIdentificador: string
+  }
+  responsavel: {
+    nome: string
+    tipo: 'INTERNO' | 'EXTERNO'
+  }
+  // configurar: boolean
+  urgencia: 'POUCO URGENTE' | 'URGENTE' | 'EMERGÊNCIA'
+  periodo: {
+    inicio: string
+    fim: string
+  }
+  pagamento: {
+    recebedor: string
+    valor: number
+  }
+  cobranca: {
+    pagador: string
+    valor: number
+  }
+  autor: {
+    id: string
+    nome: string
+    avatar_url: string
+  }
+  equipamentos: {
+    modulos: {
+      modelo: string
+      qtde: number
+      potencia: number
+    }
+    inversor: {
+      modelo: string
+      qtde: number
+      potencia: number
+    }
+  }
+  detalhes: {
+    pontoAgua: string
+    senhaWifi: string
+    configuracaoMonitoramento: boolean
+    possuiTrafo: boolean
+    tipoEstrutura: string
+  }
+  observacoes: string
+  dataEfetivacao?: string
+  dataInsercao: string
+}
 type MaterialListItem = {
   diff: number
   id: string

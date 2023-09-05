@@ -1,69 +1,81 @@
-import axios from "axios";
-import dayjs from "dayjs";
-import { ObjectId } from "mongodb";
-import connectToDatabase from "../../utils/callsDb";
-import connectToISDatabase from "../../utils/insideSalesDb";
+import axios from 'axios'
+import dayjs from 'dayjs'
+import { ObjectId } from 'mongodb'
+import connectToDatabase from '../../utils/connectDb'
+
+function getTotalCosts(costs) {
+  const total = costs.reduce((acc, current) => {
+    const toSum = current.total || 0
+    return acc + toSum
+  }, 0)
+  return total
+}
 export default async function handler(req, res) {
-  if (req.method == "GET") {
-    try {
-      const { authorization } = req.query;
-      const { data } = await axios.post(
-        "https://globalpro.solarmanpv.com/maintain-s/operating/station/v2/search?page=1&size=500&order.direction=ASC&order.property=name",
-        { station: { powerTypeList: ["PV"] } },
+  if (req.method == 'GET') {
+    const projectsDb = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const projectsCollection = projectsDb.collection('dados')
+    const costsCollection = projectsDb.collection('despesas')
+    const projects = await projectsCollection
+      .aggregate([
         {
-          headers: {
-            Authorization: authorization,
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json;charset=UTF-8",
+          $match: {
+            $and: [{ 'obra.saida': { $gte: '2023-06-01T00:00:00.000Z' } }, { 'obra.saida': { $lte: '2023-08-31T18:00:00.000Z' } }],
           },
-        }
-      );
-      res.json(data);
-    } catch (error) {
-      console.log(error);
-      res.json("ERRO");
-    }
-    // const db = await connectToDatabase(process.env.DB_KEY);
-    // const collection = db.collection("suporte");
-    // let arr = await collection.find({}).toArray();
-    // arr = arr.map((item) => {
-    //   return {
-    //     nomeUsina: item.nomeUsina ? item.nomeUsina : "-",
-    //     nomeCliente: item.nomeCliente ? item.nomeCliente : "-",
-    //     abertura: item.abertura
-    //       ? dayjs(item.abertura).format("DD/MM/YYYY")
-    //       : "-",
-    //     fechamento: item.fechamento
-    //       ? dayjs(item.fechamento).format("DD/MM/YYYY")
-    //       : "-",
-    //     tipoChamado: item.tipoChamado ? item.tipoChamado : "-",
-    //     descricao: item.descricaoProblema ? item.descricaoProblema : "-",
-    //     status: item.statusChamado ? item.statusChamado : "-",
-    //     anotacoes: item.anotacoes ? item.anotacoes : "-",
-    //     cidade: item.cidade ? item.cidade : "-",
-    //   };
-    // });
-    // res.json(arr);
-    //UPDATING GESTÃO DE PROJETOS
-    // const dbIS = await connectToISDatabase(process.env.DB_KEY);
-    // const collectionIS = dbIS.collection("leads");
-    // let arr = await collectionIS.find().forEach(function (x) {
-    //   let date = x.dataDeAquisicao
-    //     ? new Date(x.dataDeAquisicao).toISOString()
-    //     : null;
-    //   console.log(date);
-    //   collectionIS.updateOne(
-    //     { _id: ObjectId(x._id) },
-    //     { $set: { dataDeAquisicao: date } }
-    //   );
-    // });
-    // res.json("OK");
-    // res.json("OK");
-    // const dbIS = await connectToISDatabase(process.env.DB_KEY);
-    // const collectionIS = dbIS.collection("leads");
-    // let cod = isNaN(req.query.cod) ? 0 : Number(req.query.cod);
-    // let obj = await collectionIS.findOne({ codigoSVB: cod });
-    // res.json(obj);
+        },
+        {
+          $project: {
+            qtde: 1,
+            nomeDoContrato: 1,
+            cidade: 1,
+            uf: 1,
+            'obra.saida': 1,
+            'contrato.dataAssinatura': 1,
+            'material.previsaoCustos': 1,
+            'material.efetivoCustos': 1,
+            'sistema.potPico': 1,
+            'sistema.topologia': 1,
+            'sistema.inversor': 1,
+          },
+        },
+        {
+          $sort: {
+            qtde: 1,
+          },
+        },
+      ])
+      .toArray()
+    const costs = await costsCollection
+      .aggregate([
+        {
+          $project: {
+            projeto: 1,
+            total: 1,
+          },
+        },
+      ])
+      .toArray()
+    const formatteditems = projects.map((project) => {
+      var totalCost = 0
+      const vinculatedCosts = costs.filter((cost) => cost.projeto?.id == project._id)
+      if (vinculatedCosts) {
+        totalCost = getTotalCosts(vinculatedCosts)
+      }
+      return {
+        QTDE: project.qtde,
+        'NOME DO CONTRATO': project.nomeDoContrato,
+        'DATA ASSINATURA': project.contrato?.dataAssinatura ? dayjs(project.contrato.dataAssinatura).add(3, 'hours').format('DD/MM/YYYY') : null,
+        'SAÍDA DE OBRA': project.obra?.saida ? dayjs(project.obra.saida).add(3, 'hours').format('DD/MM/YYYY') : null,
+        ESTADO: project.uf,
+        CIDADE: project.cidade,
+        'POTÊNCIA PICO': project.sistema?.potPico,
+        TOPOLOGIA: project.sistema?.topologia,
+        INVERSOR: project.sistema?.inversor,
+        'PREVISÃO DE CUSTOS': project.material?.previsaoCustos,
+        'EFETIVO DE CUSTOS (PREENCHIDO)': project.material?.efetivoCustos,
+        'EFETIVO DE CUSTOS (ALMOXARIFADO)': totalCost,
+      }
+    })
+    res.json(formatteditems)
   }
 }
 /*  const cidadesAtendidas = [

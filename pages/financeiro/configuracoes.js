@@ -80,7 +80,7 @@ function Configuracoes() {
           <div className="flex flex-col grow overflow-y-auto gap-3 overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {receiptAccountsFetching ? <LoadingPage /> : null}
             {receiptAccountsSuccess
-              ? receiptAccounts?.map((account, index) => <AccountItem account={account} openEditModal={handleOpenEditAccount} />)
+              ? receiptAccounts?.map((account, index) => <AccountItem key={index} account={account} openEditModal={handleOpenEditAccount} />)
               : null}
           </div>
         </div>

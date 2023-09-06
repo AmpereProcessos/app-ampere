@@ -139,7 +139,7 @@ function Estoque() {
         ) : (
           false
         )}
-        {newItemModalIsOpen && <ModalNovoItemAlmoxarifado closeModal={() => setNewItemModalIsOpen(false)} getMateriais={getMateriais} />}
+        {newItemModalIsOpen && <ModalNovoItemAlmoxarifado closeModal={() => setNewItemModalIsOpen(false)} />}
         {entranceModalIsOpen ? <ModalEntradaAlmoxarifado closeModal={() => setEntranceModalIsOpen((prev) => !prev)} /> : null}
       </div>
     )

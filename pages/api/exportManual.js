@@ -12,24 +12,72 @@ function getTotalCosts(costs) {
 }
 export default async function handler(req, res) {
   if (req.method == 'GET') {
-    const materialDb = await connectToDatabase(process.env.DB_KEY)
-    const materialsCollection = materialDb.collection('material')
-    const materials = await materialsCollection.aggregate([{ $sort: { nome: 1 } }]).toArray()
-    const formatted = materials.map((material) => {
+    const projectsDb = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const projectsCollection = projectsDb.collection('dados')
+    const costsCollection = projectsDb.collection('despesas')
+    const projects = await projectsCollection
+      .aggregate([
+        {
+          $match: {
+            $and: [{ 'obra.saida': { $gte: '2023-06-01T00:00:00.000Z' } }, { 'obra.saida': { $lte: '2023-08-31T18:00:00.000Z' } }],
+          },
+        },
+        {
+          $project: {
+            qtde: 1,
+            nomeDoContrato: 1,
+            cidade: 1,
+            uf: 1,
+            tipoDeServico: 1,
+            'obra.saida': 1,
+            'contrato.dataAssinatura': 1,
+            'material.previsaoCustos': 1,
+            'material.efetivoCustos': 1,
+            'sistema.potPico': 1,
+            'sistema.topologia': 1,
+            'sistema.inversor': 1,
+          },
+        },
+        {
+          $sort: {
+            qtde: 1,
+          },
+        },
+      ])
+      .toArray()
+    const costs = await costsCollection
+      .aggregate([
+        {
+          $project: {
+            projeto: 1,
+            total: 1,
+          },
+        },
+      ])
+      .toArray()
+    const formatteditems = projects.map((project) => {
+      var totalCost = 0
+      const vinculatedCosts = costs.filter((cost) => cost.projeto?.id == project._id)
+      if (vinculatedCosts) {
+        totalCost = getTotalCosts(vinculatedCosts)
+      }
       return {
-        ID: material._id,
-        NOME: material.nome ? material.nome : 'NÃO DEFINIDO',
-        'NOME TÉCNICO': material.nomeTecnico ? material.nomeTecnico : 'NÃO DEFINIDO',
-        QUANTIDADE: material.qtde ? material.qtde : 'NÃO DEFINIDO',
-        'CÓDIGO NEREUS': material.codigo ? material.codigo : '-',
-        'GRANDEZA NEREUS': '',
-        'PREÇO U. NEREUS': '',
-        'GRANDEZA ALMOXARIFADO': material.grandeza ? material.grandeza : '-',
-        'PREÇO ALMOXARIFADO': material.preco ? material.preco : '-',
+        QTDE: project.qtde,
+        'NOME DO CONTRATO': project.nomeDoContrato,
+        'TIPO DE SERVIÇO': project.tipoDeServico,
+        'DATA ASSINATURA': project.contrato?.dataAssinatura ? dayjs(project.contrato.dataAssinatura).add(3, 'hours').format('DD/MM/YYYY') : null,
+        'SAÍDA DE OBRA': project.obra?.saida ? dayjs(project.obra.saida).add(3, 'hours').format('DD/MM/YYYY') : null,
+        ESTADO: project.uf,
+        CIDADE: project.cidade,
+        'POTÊNCIA PICO': project.sistema?.potPico,
+        TOPOLOGIA: project.sistema?.topologia,
+        INVERSOR: project.sistema?.inversor,
+        'PREVISÃO DE CUSTOS': project.material?.previsaoCustos,
+        'EFETIVO DE CUSTOS (PREENCHIDO)': project.material?.efetivoCustos,
+        'EFETIVO DE CUSTOS (ALMOXARIFADO)': totalCost,
       }
     })
-    console.log(formatted.length)
-    res.json(formatted)
+    res.json(formatteditems)
   }
 }
 /*  const cidadesAtendidas = [

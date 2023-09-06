@@ -8,6 +8,7 @@ import { units } from '../utils/constants'
 import TextFloatingInput from './TextFloatingInput'
 import NumberFloatingInput from './NumberFloatingInput'
 import SelectFoatingInput from './SelectFloatingInput'
+import { useQueryClient } from 'react-query'
 
 const MODAL_STYLES = {
   position: 'fixed',
@@ -28,7 +29,8 @@ const OVERLAY_STYLES = {
   backgroundColor: 'rgba(0,0,0,.7)',
   zIndex: 1000,
 }
-function Novoitem({ closeModal, getMateriais }) {
+function Novoitem({ closeModal }) {
+  const queryClient = useQueryClient()
   const [nome, setNome] = useState('')
   const [quantidade, setQuantidade] = useState(0)
   const [quantidadeMinima, setQuantidadeMinima] = useState(0)
@@ -43,7 +45,7 @@ function Novoitem({ closeModal, getMateriais }) {
     color: '',
   })
 
-  function addItem() {
+  async function addItem() {
     let obj = {
       nome: nome,
       qtde: quantidade,
@@ -76,20 +78,19 @@ function Novoitem({ closeModal, getMateriais }) {
       })
       return
     }
-    axios.post('/api/almoxarifado/novoMaterial', obj).then((res) => {
-      console.log(res.data)
-      getMateriais()
-      setMsg({ text: 'Item adicionado!', color: 'text-green-500' })
-      setNome('')
-      setQuantidade(0)
-      setPreco(0)
-      setCodigo('')
-      setLocalizacao('')
-      setAnotacoes('')
-      setTimeout(() => {
-        setMsg({ text: '', color: '' })
-      }, 2000)
-    })
+    await axios.post('/api/almoxarifado/novoMaterial', obj)
+    setMsg({ text: 'Item adicionado!', color: 'text-green-500' })
+    setNome('')
+    setQuantidade(0)
+    setPreco(0)
+    setCodigo('')
+    setLocalizacao('')
+    setAnotacoes('')
+    setTimeout(() => {
+      setMsg({ text: '', color: '' })
+    }, 2000)
+    await queryClient.cancelQueries({ queryKey: ['materials'] })
+    await queryClient.invalidateQueries({ queryKey: ['materials'] })
   }
 
   return (

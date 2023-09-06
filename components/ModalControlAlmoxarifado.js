@@ -67,9 +67,11 @@ function ControleAlmoxarifado({ closeModal, info, credentials, handleUpdates }) 
         console.log(data)
         toast.dismiss(loadingToastID)
         toast.success(data)
+        await queryClient.cancelQueries({ queryKey: ['materialLog'] })
         await queryClient.invalidateQueries({
           queryKey: ['materialLog', materialInfo._id],
         })
+        await queryClient.cancelQueries({ queryKey: ['materials'] })
         await queryClient.invalidateQueries({ queryKey: ['materials'] })
       } catch (error) {
         toast.dismiss(loadingToastID)

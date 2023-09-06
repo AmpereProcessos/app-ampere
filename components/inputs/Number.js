@@ -1,10 +1,10 @@
-import React from "react";
-import { isEmpty } from "../../utils/methods/shared";
+import React from 'react'
+import { isEmpty } from '../../utils/methods/shared'
 
 function NumberInput({
   width,
   label,
-  labelClassName = "font-sans font-bold  text-[#353432]",
+  labelClassName = 'font-sans font-bold  text-[#353432]',
   showLabel = true,
   value,
   min,
@@ -12,11 +12,10 @@ function NumberInput({
   placeholder,
   handleChange,
 }) {
-  const inputIdentifier = label ? label.toLowerCase().replace(" ", "_") : "";
+  console.log('VALOR RECEBIDO', value)
+  const inputIdentifier = label ? label.toLowerCase().replace(' ', '_') : ''
   return (
-    <div
-      className={`flex w-full flex-col gap-1 lg:w-[${width ? width : "350px"}]`}
-    >
+    <div className={`flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
       {showLabel ? (
         <label htmlFor={inputIdentifier} className={labelClassName}>
           {label}
@@ -25,7 +24,7 @@ function NumberInput({
 
       <input
         readOnly={!editable}
-        value={!isEmpty(value) ? value.toString() : ""}
+        value={!isEmpty(value) ? value.toString() : ''}
         onChange={(e) => handleChange(Number(e.target.value))}
         id={inputIdentifier}
         type="number"
@@ -33,7 +32,7 @@ function NumberInput({
         className="w-full rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic"
       />
     </div>
-  );
+  )
 }
 
-export default NumberInput;
+export default NumberInput

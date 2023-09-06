@@ -348,7 +348,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
                   <SelectInput
                     showLabel={false}
                     value={callInfo.equipeResp}
-                    options={equipesTecnicas.map((team, index) => ({ id: index, label: team.label, value: team.value }))}
+                    options={equipesTecnicas.map((team, index) => ({ id: index + 1, label: team.label, value: team.value }))}
                     handleChange={(value) => setCallInfo((prev) => ({ ...prev, equipeResp: value }))}
                     width={'100%'}
                   />

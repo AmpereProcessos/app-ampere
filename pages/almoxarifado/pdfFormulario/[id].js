@@ -1,51 +1,41 @@
-import React from "react";
-import Logo from "../../../utils/empty-logo.png";
-import connectToDatabase from "../../../utils/materialDb";
-import { ObjectId } from "mongodb";
-import Link from "next/link";
-import Image from "next/image";
-import dayjs from "dayjs";
+import React from 'react'
+import Logo from '../../../utils/empty-logo.png'
+import connectToDatabase from '../../../utils/materialDb'
+import { ObjectId } from 'mongodb'
+import Link from 'next/link'
+import Image from 'next/image'
+import dayjs from 'dayjs'
 function PDFFormulario({ info, backTo, type }) {
-  console.log(type);
+  console.log(type)
   function getTotalCost() {
-    var total = 0;
+    var total = 0
     for (let i = 0; i < info.materiais.length; i++) {
       if (info.materiais[i].diff) {
-        total = total + info.materiais[i].diff * info.materiais[i].precoUnit;
+        total = total + info.materiais[i].diff * info.materiais[i].precoUnit
       } else {
-        total =
-          total +
-          getDiff(
-            info.materiais[i].qtdeSaida,
-            info.materiais[i].qtdeDevolucao
-          ) *
-            info.materiais[i].precoUnit;
+        total = total + getDiff(info.materiais[i].qtdeSaida, info.materiais[i].qtdeDevolucao) * info.materiais[i].precoUnit
       }
     }
-    return total.toFixed(2);
+    return total.toFixed(2)
   }
   function getDiff(taken, returned) {
-    const fixedTaken = taken ? taken : 0;
-    const fixedReturned = returned ? returned : 0;
-    return Number((fixedTaken - fixedReturned).toFixed(2));
+    const fixedTaken = taken ? taken : 0
+    const fixedReturned = returned ? returned : 0
+    return Number((fixedTaken - fixedReturned).toFixed(2))
   }
-  if (type == "SIM")
+  if (type == 'SIM')
     return (
       <div className="w-[21cm] h-[29.7cm]  p-4 px-4">
-        <h1 className="text-center font-bold text-xl mb-6">
-          REQUISIÇÃO DE SAÍDA DE MATERIAIS
-        </h1>
+        <h1 className="text-center font-bold text-xl mb-6">REQUISIÇÃO DE SAÍDA DE MATERIAIS</h1>
         <div className="grid grid-cols-2">
           <div className="flex justify-between">
-            <Link href={backTo ? `/${backTo}` : "/almoxarifado/formularios"}>
+            <Link href={backTo ? `/${backTo}` : '/almoxarifado/formularios'}>
               <div className="flex justify-center items-center">
                 <Image height="80px" width="240px" src={Logo} />
               </div>
             </Link>
             <div className="pl-2">
-              <p className="text-center font-bold text-sm">
-                AMPÈRE ENERGENHARIA E CONSULTORIA ELÉTRICA - ME
-              </p>
+              <p className="text-center font-bold text-sm">AMPÈRE ENGENHARIA E CONSULTORIA ELÉTRICA - ME</p>
               <p className="text-center font-bold text-sm">
                 CNPJ <br />
                 27.901.968/0001-45
@@ -59,11 +49,7 @@ function PDFFormulario({ info, backTo, type }) {
             </div>
             <div className="flex justify-between border-black border-b">
               <p className="text-end pr-2 text-sm">DATA DE ABERTURA</p>
-              <p className="text-center pr-2 text-sm">
-                {info.dataEfetivacao
-                  ? dayjs(info.dataEfetivacao).format("DD/MM/YYYY HH:mm")
-                  : "-"}
-              </p>
+              <p className="text-center pr-2 text-sm">{info.dataEfetivacao ? dayjs(info.dataEfetivacao).format('DD/MM/YYYY HH:mm') : '-'}</p>
             </div>
           </div>
         </div>
@@ -71,83 +57,43 @@ function PDFFormulario({ info, backTo, type }) {
           <div className="flex justify-center">
             <h1 className="font-bold text-xl">
               {info.nomeDoContrato ? info.nomeDoContrato : info.nomeTerceiro}
-              {info.codigoProjeto ? `- (#${info.codigoProjeto}_` : ""}
+              {info.codigoProjeto ? `- (#${info.codigoProjeto})` : ''}
             </h1>
           </div>
           <div className="flex flex-col px-2">
             <div className="grid grid-cols-7 gap-x-2 border-b bg-gray-800">
-              <p className="text-sm col-span-2 font-medium text-white px-6 py-4 text-center">
-                PRODUTO
-              </p>
-              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
-                CÓDIGO
-              </p>
-              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
-                RETIRADA
-              </p>
-              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
-                DEVOLUÇÃO
-              </p>
-              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
-                DIFERENÇA
-              </p>
-              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
-                VALOR
-              </p>
+              <p className="text-sm col-span-2 font-medium text-white px-6 py-4 text-center">PRODUTO</p>
+              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">CÓDIGO</p>
+              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">RETIRADA</p>
+              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">DEVOLUÇÃO</p>
+              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">DIFERENÇA</p>
+              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">VALOR</p>
             </div>
             {info.materiais.map((material, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-7 gap-x-2 border-b border-x border-gray-700"
-              >
-                <p className="col-span-2 py-4 text-center whitespace-nowrap text-xs font-medium text-gray-900">
-                  {material.nome}
-                </p>
-                <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
-                  {material.codigo}
-                </p>
-                <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
-                  {material.qtdeSaida}
-                </p>
+              <div key={index} className="grid grid-cols-7 gap-x-2 border-b border-x border-gray-700">
+                <p className="col-span-2 py-4 text-center whitespace-nowrap text-xs font-medium text-gray-900">{material.nome}</p>
+                <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">{material.codigo}</p>
+                <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">{material.qtdeSaida}</p>
                 <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
                   {material.qtdeDevolucao ? material.qtdeDevolucao : 0}
                 </p>
                 <p className="text-sm col-span-1  text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
-                  {material.diff
-                    ? material.diff.toFixed(2)
-                    : getDiff(material.qtdeSaida, material.qtdeDevolucao)}
+                  {material.diff ? material.diff.toFixed(2) : getDiff(material.qtdeSaida, material.qtdeDevolucao)}
                 </p>
                 <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
                   R$
                   {material.diff
-                    ? (material.diff * material.precoUnit)
-                        .toFixed(2)
-                        .replace(".", ",")
-                    : (
-                        getDiff(material.qtdeSaida, material.qtdeDevolucao) *
-                        material.precoUnit
-                      )
-                        .toFixed(2)
-                        .replace(".", ",")}
+                    ? (material.diff * material.precoUnit).toFixed(2).replace('.', ',')
+                    : (getDiff(material.qtdeSaida, material.qtdeDevolucao) * material.precoUnit).toFixed(2).replace('.', ',')}
                 </p>
               </div>
             ))}
             <div className="grid grid-cols-7 gap-x-2  border-b border-x border-gray-700">
-              <p className="px-6 py-4 col-span-2 text-center whitespace-nowrap text-sm font-medium text-gray-900">
-                TOTAL
-              </p>
-              <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
-                -
-              </p>
-              <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
-                -
-              </p>
-              <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
-                -
-              </p>
-              <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
-                -
-              </p>
+              <p className="px-6 py-4 col-span-2 text-center whitespace-nowrap text-sm font-medium text-gray-900">TOTAL</p>
+              <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">-</p>
+              <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">-</p>
+              <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">-</p>
+              <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">-</p>
               <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
                 R$
                 {getTotalCost()}
@@ -240,24 +186,20 @@ function PDFFormulario({ info, backTo, type }) {
           </div>
         </div>
       </div>
-    );
+    )
   else
     return (
       <div className="w-[21cm] h-[29.7cm]  p-4 px-4">
-        <h1 className="text-center font-bold text-xl mb-6">
-          REQUISIÇÃO DE SAÍDA DE MATERIAIS
-        </h1>
+        <h1 className="text-center font-bold text-xl mb-6">REQUISIÇÃO DE SAÍDA DE MATERIAIS</h1>
         <div className="grid grid-cols-2">
           <div className="flex justify-between">
-            <Link href={backTo ? `/${backTo}` : "/almoxarifado/formularios"}>
+            <Link href={backTo ? `/${backTo}` : '/almoxarifado/formularios'}>
               <div className="flex justify-center items-center">
                 <Image height="80px" width="240px" src={Logo} />
               </div>
             </Link>
             <div className="pl-2">
-              <p className="text-center font-bold text-sm">
-                AMPÈRE ENERGENHARIA E CONSULTORIA ELÉTRICA - ME
-              </p>
+              <p className="text-center font-bold text-sm">AMPÈRE ENERGENHARIA E CONSULTORIA ELÉTRICA - ME</p>
               <p className="text-center font-bold text-sm">
                 CNPJ <br />
                 27.901.968/0001-45
@@ -271,42 +213,25 @@ function PDFFormulario({ info, backTo, type }) {
             </div>
             <div className="flex justify-between border-black border-b">
               <p className="text-end pr-2 text-sm">DATA DE ABERTURA</p>
-              <p className="text-center pr-2 text-sm">
-                {info.dataEfetivacao
-                  ? dayjs(info.dataEfetivacao).format("DD/MM/YYYY HH:mm")
-                  : "-"}
-              </p>
+              <p className="text-center pr-2 text-sm">{info.dataEfetivacao ? dayjs(info.dataEfetivacao).format('DD/MM/YYYY HH:mm') : '-'}</p>
             </div>
           </div>
         </div>
         <div className="flex flex-col gap-y-2 border border-black w-full mt-4 py-4">
           <div className="flex justify-center">
             <h1 className="font-bold text-xl">
-              {info.nomeDoContrato
-                ? `${info.nomeDoContrato} - (#${info.codigoProjeto})`
-                : `${info.nomeTerceiro}`}
+              {info.nomeDoContrato ? `${info.nomeDoContrato} - (#${info.codigoProjeto})` : `${info.nomeTerceiro}`}
             </h1>
           </div>
           <div className="flex flex-col px-2">
             <div className="grid grid-cols-3 gap-x-2 border-b bg-gray-800">
-              <p className="text-sm col-span-2 font-medium text-white px-6 py-4 text-center">
-                PRODUTO
-              </p>
-              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">
-                RETIRADA
-              </p>
+              <p className="text-sm col-span-2 font-medium text-white px-6 py-4 text-center">PRODUTO</p>
+              <p className="text-sm col-span-1 font-medium text-white px-6 py-4 text-center">RETIRADA</p>
             </div>
             {info.materiais.map((material, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-3 gap-x-2 border-b border-x border-gray-700"
-              >
-                <p className="col-span-2 py-4 text-center whitespace-nowrap text-xs font-medium text-gray-900">
-                  {material.nome}
-                </p>
-                <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">
-                  {material.qtdeSaida}
-                </p>
+              <div key={index} className="grid grid-cols-3 gap-x-2 border-b border-x border-gray-700">
+                <p className="col-span-2 py-4 text-center whitespace-nowrap text-xs font-medium text-gray-900">{material.nome}</p>
+                <p className="text-sm col-span-1 text-gray-900 font-medium px-6 py-4 text-center whitespace-nowrap">{material.qtdeSaida}</p>
               </div>
             ))}
             <div className="mt-10 flex justify-end">
@@ -402,28 +327,28 @@ function PDFFormulario({ info, backTo, type }) {
           </div>
         </div>
       </div>
-    );
+    )
 }
 
-export default PDFFormulario;
+export default PDFFormulario
 export async function getServerSideProps({ query }) {
   // Fetch data from external API
-  const id = query.id;
-  const backTo = query.backTo ? query.backTo : "";
-  const type = query.efetivado ? query.efetivado : "SIM";
-  const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("formularios");
-  const materialCollection = db.collection("material");
+  const id = query.id
+  const backTo = query.backTo ? query.backTo : ''
+  const type = query.efetivado ? query.efetivado : 'SIM'
+  const db = await connectToDatabase(process.env.DB_KEY)
+  const collection = db.collection('formularios')
+  const materialCollection = db.collection('material')
   let form = await collection.findOne({
     _id: ObjectId(id),
-  });
-  let items = await materialCollection.find({}).toArray();
+  })
+  let items = await materialCollection.find({}).toArray()
   let ajustedMaterials = form.materiais.map((mat) => {
-    const itemInDb = items.find((item) => item._id == mat.id);
-    return { ...mat, codigo: itemInDb?.codigo ? itemInDb.codigo : "N/A" };
-  });
-  form = { ...form, materiais: ajustedMaterials };
-  let info = JSON.parse(JSON.stringify(form));
+    const itemInDb = items.find((item) => item._id == mat.id)
+    return { ...mat, codigo: itemInDb?.codigo ? itemInDb.codigo : 'N/A' }
+  })
+  form = { ...form, materiais: ajustedMaterials }
+  let info = JSON.parse(JSON.stringify(form))
   // Pass data to the page via props
-  return { props: { info, backTo, type } };
+  return { props: { info, backTo, type } }
 }

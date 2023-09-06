@@ -14,6 +14,10 @@ import LoadingPage from '../../components/utils/LoadingPage'
 import FilterButton from '../../components/utils/Buttons/FilterButton'
 import FetchDataButton from '../../components/utils/Buttons/FetchDataButton'
 import ModalEntradaAlmoxarifado from '../../components/ModalEntradaAlmoxarifado'
+import { useMaterialsWithFilters } from '../../utils/methods/query/materials'
+import { TbReportSearch } from 'react-icons/tb'
+import TextInput from '../../components/inputs/Text'
+import NumberInput from '../../components/inputs/Number'
 function Estoque() {
   const router = useRouter()
   const { data: session, status } = useSession({
@@ -22,9 +26,13 @@ function Estoque() {
       router.push('/auth/authHome')
     },
   })
+  const isAuthorized = !!session?.user.accessibleRoutes.includes('Almoxarifado') || !!session?.user.accessibleRoutes.includes('Obras')
+  const [filters, setFilters] = useState({
+    search: '',
+    qtyLessThan: null,
+  })
 
-  const [materials, setMaterials] = useState()
-  const [filteredMaterials, setFilteredMaterials] = useState()
+  const { data: materials } = useMaterialsWithFilters(isAuthorized, filters)
   const [editModal, setEditModal] = useState({
     isOpen: false,
     info: {},
@@ -32,94 +40,44 @@ function Estoque() {
   const [newItemModalIsOpen, setNewItemModalIsOpen] = useState(false)
   const [entranceModalIsOpen, setEntranceModalIsOpen] = useState(false)
 
-  const [filters, setFilters] = useState({
-    search: '',
-    qtde: null,
-  })
-  function getMateriais() {
-    axios.get('/api/almoxarifado/materiais').then((res) => {
-      setFilteredMaterials(res.data)
-      setMaterials(res.data)
-    })
-  }
-  function handleFilters() {
-    var newArr
-    if (filters.search.trim().length > 0) {
-      if (!newArr) newArr = materials
-      console.log(filters.search.length)
-      newArr = newArr.filter((material) => material.nome.toUpperCase().includes(filters.search.toUpperCase()))
-    }
-    if (filters.qtde && filters.qtde >= 0) {
-      if (!newArr) newArr = materials
-      newArr = newArr.filter((material) => material.qtde < Number(filters.qtde))
-    }
-    console.log(newArr)
-    if (!newArr) {
-      setFilteredMaterials(materials)
-      return materials
-    } else {
-      setFilteredMaterials(newArr)
-      return newArr
-    }
-  }
-  function handleSearchFilter(value) {
-    setFilters((prev) => ({ ...prev, search: value }))
-    var filtered = handleFilters()
-    if (value.trim().length > 0) {
-      let newArr = filtered.filter(
-        (item) => item.nome.toUpperCase().includes(value.toUpperCase()) || item.nomeTecnico?.toUpperCase().includes(value.toUpperCase())
-      )
-      setFilteredMaterials(newArr)
-    } else {
-      setFilteredMaterials(materials)
-    }
-  }
   async function handleUpdates(id) {
     let { data } = await axios.get(`/api/almoxarifado/materiais?id=${id}`)
 
     setEditModal((prev) => ({ ...prev, info: data }))
   }
-  useEffect(() => {
-    if (session?.user.accessibleRoutes.includes('Obras') || session?.user.accessibleRoutes.includes('Almoxarifado')) {
-      if (!materials) getMateriais()
-    } else {
-      if (session?.user) {
-        router.push('/')
-      }
-    }
-  }, [session])
 
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
       <div className="p-6 grow flex flex-col">
         <div className="flex flex-col items-center border-b border-gray-200 pb-2">
-          <h1 className="text-[#fead61] font-raleway font-bold text-xl">ESTOQUE ({filteredMaterials?.length})</h1>
-          <div className="flex justify-center gap-2 flex-wrap">
+          <div className="w-full flex items-center justify-between">
+            <h1 className="text-2xl font-bold tracking-tight">ESTOQUE</h1>
             <Link href="/almoxarifado/pdfRelatorioEstoque">
-              <button className="p-2 rounded border border-[#fead61] text-[#fead61] font-medium">RELATÓRIO</button>
+              <a className="font-bold tracking-tight flex items-center gap-1">
+                <p className="text-sm text-gray-600">RELATÓRIO</p>
+                <TbReportSearch />
+              </a>
             </Link>
-            <FetchDataButton text={'ATUALIZAR'} icon={<AiOutlineReload />} handleClick={getMateriais} />
-            <input
-              type={'text'}
-              placeholder="Digite o nome do produto..."
+          </div>
+          <div className="flex items-center gap-1 justify-end w-full">
+            <TextInput
+              showLabel={false}
+              placeholder={'Filtre pelo nome do produto...'}
               value={filters.search}
-              className={'outline-none p-1.5 rounded border border-gray-200 placeholder:italic min-w-[250px]'}
-              onChange={(e) => handleSearchFilter(e.target.value)}
+              handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
             />
-            <input
-              type={'number'}
-              placeholder="Quantidade abaixo de:"
-              value={filters.qtde ? filters.qtde.toString() : null}
-              className={'outline-none p-1.5 rounded border border-gray-200 placeholder:italic min-w-[190px]'}
-              onChange={(e) => setFilters({ ...filters, qtde: Number(e.target.value) })}
+            <NumberInput
+              showLabel={false}
+              placeholder={'Filtre por quantidade de produto menor que...'}
+              value={filters.qtyLessThan}
+              handleChange={(value) => setFilters((prev) => ({ ...prev, qtyLessThan: value }))}
             />
-            <FilterButton text={'FILTRAR'} icon={<AiOutlineSearch />} handleClick={() => handleFilters()} />
           </div>
         </div>
         <div className="flex justify-around gap-3 mt-4 flex-wrap w-full grow">
-          {filteredMaterials ? (
-            filteredMaterials.map((material) => (
+          {materials ? (
+            materials.map((material) => (
               <div
                 onClick={() => {
                   setEditModal({ isOpen: true, info: material })

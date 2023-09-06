@@ -11,6 +11,8 @@ import TextFloatingInput from './TextFloatingInput'
 import NumberFloatingInput from './NumberFloatingInput'
 import SelectFoatingInput from './SelectFloatingInput'
 import MaterialLogs from './identificador/materials/MaterialLogs'
+import { toast } from 'react-hot-toast'
+import { getErrorMessage } from '../utils/methods/handlers'
 
 const MODAL_STYLES = {
   position: 'fixed',
@@ -43,35 +45,37 @@ function ControleAlmoxarifado({ closeModal, info, credentials, handleUpdates }) 
 
   function validateChanges() {
     if (materialInfo.qtde < 0) {
-      setMsg({
-        text: 'Por favor, preencha uma quantidade válida.',
-        color: 'text-red-500',
-      })
+      toast.error('Por favor, preencha uma quantidade válida.')
       return false
     }
     if (materialInfo.preco < 0) {
-      setMsg({
-        text: 'Por favor, preencha um preço válido.',
-        color: 'text-red-500',
-      })
+      toast.error('Por favor, preencha um preço válido.')
       return false
     }
-    setMsg({ text: '', color: '' })
     return true
   }
   async function handleAlteracoes() {
     if (validateChanges()) {
-      let response = await axios.put('/api/almoxarifado/materiais', {
-        id: info._id,
-        changes: {
-          ...materialInfo,
-        },
-      })
-      if (response.status == 201) setMsg({ text: response.data, color: 'text-green-500' })
-      await queryClient.invalidateQueries({
-        queryKey: ['materialLog', materialInfo._id],
-      })
-      handleUpdates(info._id)
+      const loadingToastID = toast.loading('Carregando...')
+      try {
+        const { data } = await axios.put('/api/almoxarifado/materiais', {
+          id: info._id,
+          changes: {
+            ...materialInfo,
+          },
+        })
+        console.log(data)
+        toast.dismiss(loadingToastID)
+        toast.success(data)
+        await queryClient.invalidateQueries({
+          queryKey: ['materialLog', materialInfo._id],
+        })
+        await queryClient.invalidateQueries({ queryKey: ['materials'] })
+      } catch (error) {
+        toast.dismiss(loadingToastID)
+        const msg = getErrorMessage(error)
+        toast.error(msg)
+      }
     }
   }
 
@@ -195,7 +199,6 @@ function ControleAlmoxarifado({ closeModal, info, credentials, handleUpdates }) 
                 </div>
               </div>
               <div className="my-2 flex flex-col items-center w-full gap-1">
-                <p className={`w-full italic text-center ${msg.color} text-center`}>{msg.text}</p>
                 <div>
                   <SaveButton text={'SALVAR'} icon={<FaSave />} handleClick={handleAlteracoes} />
                 </div>

@@ -1,10 +1,10 @@
-import { getSession } from "next-auth/react";
-import connectToDatabase from "../../../utils/materialDb";
-import connectToProjectsDatabase from "../../../utils/connectDb";
-import { ObjectId } from "mongodb";
-import { getNotificationObjByMaterialMinQty } from "../../../utils/methods/mutation/notifications";
-import createHttpError from "http-errors";
-import { errorHandler } from "../../../utils/methods/handlers";
+import { getSession } from 'next-auth/react'
+import connectToDatabase from '../../../utils/materialDb'
+import connectToProjectsDatabase from '../../../utils/connectDb'
+import { ObjectId } from 'mongodb'
+import { getNotificationObjByMaterialMinQty } from '../../../utils/methods/mutation/notifications'
+import createHttpError from 'http-errors'
+import { errorHandler } from '../../../utils/methods/handlers'
 
 export default async function handler(req, res) {
   // Fetching up to date information about the materials
@@ -20,47 +20,36 @@ export default async function handler(req, res) {
             },
           },
         ])
-        .toArray();
-      return currentStateMaterials;
+        .toArray()
+      return currentStateMaterials
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 
   // Automatizations involving other dbs/collections
-  async function handleNotifyingSupplySector(
-    materialList,
-    currentMaterials,
-    notificationCollection
-  ) {
+  async function handleNotifyingSupplySector(materialList, currentMaterials, notificationCollection) {
     var newNotificationsArr = materialList.map((material) => {
-      const materialId = material.id;
-      const correspondentMaterial = currentMaterials?.find(
-        (currentMaterial) => currentMaterial._id == materialId
-      );
-      if (!correspondentMaterial) return null;
-      const newQty = correspondentMaterial.qtde + material.diff;
-      if (
-        !!correspondentMaterial.qtdeMinima &&
-        material.diff < 0 &&
-        newQty < correspondentMaterial.qtdeMinima
-      ) {
+      const materialId = material.id
+      const correspondentMaterial = currentMaterials?.find((currentMaterial) => currentMaterial._id == materialId)
+      if (!correspondentMaterial) return null
+      const newQty = correspondentMaterial.qtde + material.diff
+      if (!!correspondentMaterial.qtdeMinima && material.diff < 0 && newQty < correspondentMaterial.qtdeMinima) {
         const notficiationObject = getNotificationObjByMaterialMinQty({
           materialName: correspondentMaterial.nome,
           materialNewQty: newQty,
           materialMinQty: correspondentMaterial.qtdeMinima,
-        });
-        return notficiationObject;
+        })
+        return notficiationObject
       }
-      return null;
-    });
-    newNotificationsArr = newNotificationsArr.filter((not) => !!not);
+      return null
+    })
+    newNotificationsArr = newNotificationsArr.filter((not) => !!not)
     try {
-      if (newNotificationsArr.length > 0)
-        await notificationCollection.insertMany(newNotificationsArr);
-      return;
+      if (newNotificationsArr.length > 0) await notificationCollection.insertMany(newNotificationsArr)
+      return
     } catch (error) {
-      throw error;
+      throw error
     }
   }
   async function handleStockActivityLogInsertion({
@@ -73,16 +62,12 @@ export default async function handler(req, res) {
     userName,
     userId,
   }) {
-    const filteredMaterialList = materialList.filter(
-      (x) => !!x.diff && x.diff != 0
-    );
+    const filteredMaterialList = materialList.filter((x) => !!x.diff && x.diff != 0)
     const logs = filteredMaterialList.map((material) => {
-      const materialId = material.id;
-      const correspondentMaterial = currentMaterials?.find(
-        (currentMaterial) => currentMaterial._id == materialId
-      );
-      const newQty = correspondentMaterial.qtde + material.diff;
-      const previousQty = correspondentMaterial.qtde;
+      const materialId = material.id
+      const correspondentMaterial = currentMaterials?.find((currentMaterial) => currentMaterial._id == materialId)
+      const newQty = correspondentMaterial.qtde + material.diff
+      const previousQty = correspondentMaterial.qtde
       return {
         idFormulario: formId,
         autor: {
@@ -101,29 +86,20 @@ export default async function handler(req, res) {
           id: projectId,
           nome: projectName,
         },
-        tipo: material.diff > 0 ? "DEVOLUÇÃO" : "RETIRADA",
+        tipo: material.diff > 0 ? 'DEVOLUÇÃO' : 'RETIRADA',
         dataInsercao: new Date().toISOString(),
-      };
-    });
-    if (logs.length > 0) await logCollection.insertMany(logs);
-    return;
+      }
+    })
+    if (logs.length > 0) await logCollection.insertMany(logs)
+    return
   }
-  async function handleManualAlterationLogInsertion({
-    materialId,
-    materialNewQty,
-    userName,
-    userId,
-    currentMaterials,
-    logCollection,
-  }) {
-    console.log("FUI CHAMADO", materialId);
-    const correspondentMaterial = currentMaterials?.find(
-      (currentMaterial) => currentMaterial._id == materialId
-    );
-    console.log("MATERIAL", correspondentMaterial);
-    if (!correspondentMaterial) return null;
-    const previousQty = correspondentMaterial.qtde;
-    const diff = materialNewQty - previousQty;
+  async function handleManualAlterationLogInsertion({ materialId, materialNewQty, userName, userId, currentMaterials, logCollection }) {
+    console.log('FUI CHAMADO', materialId)
+    const correspondentMaterial = currentMaterials?.find((currentMaterial) => currentMaterial._id == materialId)
+    console.log('MATERIAL', correspondentMaterial)
+    if (!correspondentMaterial) return null
+    const previousQty = correspondentMaterial.qtde
+    const diff = materialNewQty - previousQty
     const insertObj = {
       autor: {
         nome: userName,
@@ -137,33 +113,24 @@ export default async function handler(req, res) {
       alteracao: diff,
       qtdeAnterior: previousQty,
       qtdeNovo: materialNewQty,
-      tipo: "ALTERAÇÃO MANUAL",
+      tipo: 'ALTERAÇÃO MANUAL',
       dataInsercao: new Date().toISOString(),
-    };
+    }
     if (diff != 0) {
-      const response = await logCollection.insertOne(insertObj);
-      console.log(response);
+      const response = await logCollection.insertOne(insertObj)
+      console.log(response)
     }
 
-    return;
+    return
   }
-  async function handleMaterialEntranceLogInsertion({
-    materialId,
-    diff,
-    userName,
-    userId,
-    currentMaterials,
-    logCollection,
-  }) {
-    console.log("FUI CHAMADO", materialId);
-    const correspondentMaterial = currentMaterials?.find(
-      (currentMaterial) => currentMaterial._id == materialId
-    );
-    console.log("MATERIAL", correspondentMaterial);
-    if (!correspondentMaterial) return null;
+  async function handleMaterialEntranceLogInsertion({ materialId, diff, userName, userId, currentMaterials, logCollection }) {
+    console.log('FUI CHAMADO', materialId)
+    const correspondentMaterial = currentMaterials?.find((currentMaterial) => currentMaterial._id == materialId)
+    console.log('MATERIAL', correspondentMaterial)
+    if (!correspondentMaterial) return null
     // const diff = materialNewQty - correspondentMaterial.qtde;
-    const materialNewQty = correspondentMaterial.qtde + diff;
-    const previousQty = correspondentMaterial.qtde;
+    const materialNewQty = correspondentMaterial.qtde + diff
+    const previousQty = correspondentMaterial.qtde
     const insertObj = {
       autor: {
         nome: userName,
@@ -177,22 +144,20 @@ export default async function handler(req, res) {
       alteracao: diff,
       qtdeAnterior: previousQty,
       qtdeNovo: materialNewQty,
-      tipo: "ENTRADA",
+      tipo: 'ENTRADA',
       dataInsercao: new Date().toISOString(),
-    };
-    const response = await logCollection.insertOne(insertObj);
-    console.log(response);
-    return;
+    }
+    const response = await logCollection.insertOne(insertObj)
+    console.log(response)
+    return
   }
   // Formatting function to MongoDB BulkWrite operation pattern
   function handleBulkWriteFormatting(materialList) {
-    const filteredMaterialList = materialList.filter(
-      (x) => !!x.diff && x.diff != 0
-    );
+    const filteredMaterialList = materialList.filter((x) => !!x.diff && x.diff != 0)
     const changes = filteredMaterialList.map((mat) => {
-      const materialId = mat.id;
-      const diff = Number(mat.diff);
-      console.log("DIFF", diff);
+      const materialId = mat.id
+      const diff = Number(mat.diff)
+      console.log('DIFF', diff)
       return {
         updateOne: {
           filter: { _id: new ObjectId(materialId) },
@@ -200,81 +165,74 @@ export default async function handler(req, res) {
             $inc: { qtde: diff },
           },
         },
-      };
-    });
-    return changes;
+      }
+    })
+    return changes
   }
-  if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY);
-    const collection = db.collection("material");
+  if (req.method === 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY)
+    const collection = db.collection('material')
     try {
-      const { id } = req.query;
+      const { id } = req.query
       if (id) {
-        let material = await collection.findOne({ _id: ObjectId(id) });
-        res.status(200).json(material);
+        let material = await collection.findOne({ _id: ObjectId(id) })
+        res.status(200).json(material)
       } else {
-        let materials = await collection.find({}).sort({ nome: 1 }).toArray();
-        res.json(materials);
+        let materials = await collection.find({}).sort({ nome: 1 }).toArray()
+        res.json(materials)
       }
     } catch (error) {
-      res.status(500).json("Erro ao comunicar com o servidor.");
+      errorHandler(error, res)
     }
-  } else if (req.method === "POST") {
-    const { user } = await getSession({ req: req });
-    let { changes, idProjeto, idFormulario, identificador, tag } = req.body;
-    // Validating existence of array of changes
-    if (!changes && !Array.isArray(changes))
-      throw new createHttpError.BadRequest(
-        "Array de mudanças não especificado."
-      );
+  } else if (req.method === 'POST') {
+    const { user } = await getSession({ req: req })
+    try {
+      let { changes, idProjeto, idFormulario, identificador, tag } = req.body
+      // Validating existence of array of changes
+      if (!changes && !Array.isArray(changes)) throw new createHttpError.BadRequest('Array de mudanças não especificado.')
 
-    // Getting the material collection
-    const warehouseDb = await connectToDatabase(process.env.DB_KEY);
-    const materialCollection = warehouseDb.collection("material");
-    const logCollection = warehouseDb.collection("alteracoes");
-    // Getting the notification collection
-    const projectsDb = await connectToProjectsDatabase(
-      process.env.DB_KEY,
-      "projetos"
-    );
-    const notificationCollection = projectsDb.collection("notificacoes");
+      // Getting the material collection
+      const warehouseDb = await connectToDatabase(process.env.DB_KEY)
+      const materialCollection = warehouseDb.collection('material')
+      const logCollection = warehouseDb.collection('alteracoes')
+      // Getting the notification collection
+      const projectsDb = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+      const notificationCollection = projectsDb.collection('notificacoes')
 
+      // Getting the current state of materials so to check current quantities
+      const currentStateMaterials = await getCurrentMaterials(materialCollection)
+
+      await handleNotifyingSupplySector(changes, currentStateMaterials, notificationCollection)
+      console.log('CHANGES', changes)
+      // Doing multiple qtde alterations for material items
+      const bulkwriteArr = handleBulkWriteFormatting(changes)
+      console.log('BULKWRITEARR', bulkwriteArr)
+      if (bulkwriteArr.length > 0) await materialCollection.bulkWrite(bulkwriteArr)
+      // Logging stock activity into logs collection
+      await handleStockActivityLogInsertion({
+        currentMaterials: currentStateMaterials,
+        formId: idFormulario,
+        logCollection: logCollection,
+        materialList: changes,
+        projectId: idProjeto,
+        projectName: identificador,
+        userId: user.id,
+        userName: user.name,
+      })
+
+      res.status(200).json(bulkwriteArr)
+    } catch (error) {
+      errorHandler(error, res)
+    }
+  } else if (req.method === 'PUT') {
+    const { user } = await getSession({ req: req })
+    const db = await connectToDatabase(process.env.DB_KEY)
+    const collection = db.collection('material')
+    const logCollection = db.collection('alteracoes')
     // Getting the current state of materials so to check current quantities
-    const currentStateMaterials = await getCurrentMaterials(materialCollection);
-
-    await handleNotifyingSupplySector(
-      changes,
-      currentStateMaterials,
-      notificationCollection
-    );
-    console.log("CHANGES", changes);
-    // Doing multiple qtde alterations for material items
-    const bulkwriteArr = handleBulkWriteFormatting(changes);
-    console.log("BULKWRITEARR", bulkwriteArr);
-    if (bulkwriteArr.length > 0)
-      await materialCollection.bulkWrite(bulkwriteArr);
-    // Logging stock activity into logs collection
-    await handleStockActivityLogInsertion({
-      currentMaterials: currentStateMaterials,
-      formId: idFormulario,
-      logCollection: logCollection,
-      materialList: changes,
-      projectId: idProjeto,
-      projectName: identificador,
-      userId: user.id,
-      userName: user.name,
-    });
-
-    res.status(200).json(bulkwriteArr);
-  } else if (req.method === "PUT") {
-    const { user } = await getSession({ req: req });
-    const db = await connectToDatabase(process.env.DB_KEY);
-    const collection = db.collection("material");
-    const logCollection = db.collection("alteracoes");
-    // Getting the current state of materials so to check current quantities
-    const currentStateMaterials = await getCurrentMaterials(collection);
-    const { id, changes } = req.body;
-    delete changes._id;
+    const currentStateMaterials = await getCurrentMaterials(collection)
+    const { id, changes } = req.body
+    delete changes._id
     try {
       await handleManualAlterationLogInsertion({
         materialId: id,
@@ -283,7 +241,7 @@ export default async function handler(req, res) {
         userName: user.name,
         materialNewQty: changes.qtde,
         logCollection: logCollection,
-      });
+      })
       await collection.updateOne(
         {
           _id: ObjectId(id),
@@ -291,29 +249,24 @@ export default async function handler(req, res) {
         {
           $set: { ...changes },
         }
-      );
-      res.status(201).json("Alterações feitas !");
+      )
+
+      res.status(201).json('Alterações feitas !')
     } catch (error) {
-      console.log(error);
-      res.json("Um erro ocorreu, tente novamente.");
+      errorHandler(error, res)
     }
-  } else if (req.method === "PATCH") {
-    const { user } = await getSession({ req: req });
+  } else if (req.method === 'PATCH') {
+    const { user } = await getSession({ req: req })
     // Used for material entrance
-    const { changes } = req.body;
+    const { changes } = req.body
     try {
-      if (!changes)
-        throw new createHttpError.BadRequest(
-          "Array de mudanças não fornecido.;"
-        );
-      const db = await connectToDatabase(process.env.DB_KEY);
-      const collection = db.collection("material");
-      const logCollection = db.collection("alteracoes");
-      const { id, price, diff } = changes;
-      if (isNaN(diff))
-        throw new createHttpError.BadRequest("Valor de diferença não válido.");
-      if (isNaN(price))
-        throw new createHttpError.BadRequest("Valor de preço inválido.");
+      if (!changes) throw new createHttpError.BadRequest('Array de mudanças não fornecido.;')
+      const db = await connectToDatabase(process.env.DB_KEY)
+      const collection = db.collection('material')
+      const logCollection = db.collection('alteracoes')
+      const { id, price, diff } = changes
+      if (isNaN(diff)) throw new createHttpError.BadRequest('Valor de diferença não válido.')
+      if (isNaN(price)) throw new createHttpError.BadRequest('Valor de preço inválido.')
       const dbResponse = await collection.updateOne(
         {
           _id: ObjectId(id),
@@ -324,8 +277,8 @@ export default async function handler(req, res) {
           },
           $inc: { qtde: diff },
         }
-      );
-      const currentStateMaterials = await getCurrentMaterials(collection);
+      )
+      const currentStateMaterials = await getCurrentMaterials(collection)
       await handleMaterialEntranceLogInsertion({
         materialId: id,
         currentMaterials: currentStateMaterials,
@@ -333,10 +286,10 @@ export default async function handler(req, res) {
         userId: user.id,
         userName: user.name,
         logCollection: logCollection,
-      });
-      res.status(201).json(dbResponse);
+      })
+      res.status(201).json(dbResponse)
     } catch (error) {
-      errorHandler(error, res);
+      errorHandler(error, res)
     }
   }
 }

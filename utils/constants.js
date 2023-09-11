@@ -647,6 +647,13 @@ export const vendedores = [
     ativo: true,
   },
   {
+    nome: 'AMANDA SANTOS',
+    cod: 81,
+    comissaoInside: 0.5,
+    comissaoAtivo: 0.5,
+    ativo: true,
+  },
+  {
     nome: 'NÃO DEFINIDO',
     cod: 999,
   },

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { ObjectId } from 'mongodb'
-import connectToDatabase from '../../utils/materialDb'
+import connectToDatabase from '../../utils/connectDb'
 
 function getTotalCosts(costs) {
   const total = costs.reduce((acc, current) => {

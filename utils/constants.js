@@ -649,6 +649,7 @@ export const vendedores = [
   {
     nome: 'AMANDA SANTOS',
     cod: 81,
+    qualificacao: 'INSIDE JUNIOR',
     comissaoInside: 0.5,
     comissaoAtivo: 0.5,
     ativo: true,

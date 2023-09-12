@@ -4,24 +4,7 @@ import Image from 'next/image'
 import { BsCalendarFill } from 'react-icons/bs'
 import dayjs from 'dayjs'
 import Avatar from '../../../utils/Avatar'
-const statusStyles = {
-  'EM ANDAMENTO': {
-    textColor: 'text-[#15599a]',
-    borderColor: 'border-[#15599a]',
-  },
-  'AGUARDANDO VENDEDOR': {
-    textColor: 'text-orange-400',
-    borderColor: 'border-orange-400',
-  },
-  REALIZADO: {
-    textColor: 'text-green-400',
-    borderColor: 'border-green-400',
-  },
-  PENDENTE: {
-    textColor: 'text-red-400',
-    borderColor: 'border-red-400',
-  },
-}
+
 function getBarColor(status) {
   if (status == 'EM ANDAMENTO') return 'bg-blue-500'
   if (status == 'REALIZADO') return 'bg-green-500'
@@ -43,19 +26,6 @@ function OpenCallCard({ call, handleOpenModal }) {
             {call.requerente ? (
               <div className="flex items-center justify-start w-full gap-2 mt-1">
                 <Avatar fallback={'R'} url={call.requerente?.avatar_url} height={20} width={20} />
-                {/* {call.requerente.avatar_url ? (
-                  <div className="relative h-[20px] w-[20px]">
-                    <Image
-                      src={call.requerente.avatar_url}
-                      alt="USUÁRIO"
-                      title="CONFIGURAÇÕES"
-                      fill={true}
-                      width={20}
-                      height={20}
-                      style={{ borderRadius: '100%' }}
-                    />
-                  </div>
-                ) : null} */}
 
                 <p className="font-medium text-gray-500 text-xs">{call.requerente && call.requerente.apelido}</p>
               </div>

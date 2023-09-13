@@ -1,8 +1,8 @@
-import connectToDatabase from "../../../utils/connectDb";
+import connectToDatabase from '../../../utils/connectDb'
 export default async function handler(req, res) {
-  if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
+  if (req.method === 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
     let suprimentos = await collection
       .aggregate([
         {
@@ -12,14 +12,9 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
-            "compra.statusLiberacao": {
-              $nin: [
-                "NÃO DEFINIDO",
-                null,
-                undefined,
-                "AGUARDAR PARECER DE ACESSO",
-              ],
+            tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
+            'compra.statusLiberacao': {
+              $nin: ['NÃO DEFINIDO', null, undefined],
             },
             // "compra.statusEntrega": {
             //   $in: [
@@ -33,11 +28,8 @@ export default async function handler(req, res) {
             //     "CANCELADO",
             //   ],
             // },
-            $or: [
-              { "contrato.status": "ASSINADO" },
-              { "compra.statusLiberacao": "PREVISÃO DE EQUIPAMENTOS" },
-            ],
-            "obra.statusDaObra": { $ne: "CONCLUIDA" },
+            $or: [{ 'contrato.status': 'ASSINADO' }, { 'compra.statusLiberacao': 'PREVISÃO DE EQUIPAMENTOS' }],
+            'obra.statusDaObra': { $ne: 'CONCLUIDA' },
           },
         },
         {
@@ -47,26 +39,23 @@ export default async function handler(req, res) {
             qtde: 1,
             compra: 1,
             tipoDeServico: 1,
-            "faturamento.previsaoFaturamento": 1,
-            "sistema.potPico": 1,
-            "sistema.qtdeModulos": 1,
-            "pagamento.status": 1,
+            'faturamento.previsaoFaturamento': 1,
+            'sistema.potPico': 1,
+            'sistema.qtdeModulos': 1,
+            'pagamento.status': 1,
             entregue: {
               $cond: {
-                if: { $eq: ["$estruturaPersonalizada.aplicavel", "SIM"] },
+                if: { $eq: ['$estruturaPersonalizada.aplicavel', 'SIM'] },
                 then: {
                   $cond: {
                     if: {
-                      $eq: [
-                        "$estruturaPersonalizada.statusEntrega",
-                        "ENTREGUE",
-                      ],
+                      $eq: ['$estruturaPersonalizada.statusEntrega', 'ENTREGUE'],
                     },
-                    then: "ENTREGUE",
-                    else: "NÃO ENTREGUE",
+                    then: 'ENTREGUE',
+                    else: 'NÃO ENTREGUE',
                   },
                 },
-                else: "$compra.statusEntrega",
+                else: '$compra.statusEntrega',
               },
             },
           },
@@ -74,17 +63,7 @@ export default async function handler(req, res) {
         {
           $match: {
             entregue: {
-              $in: [
-                "NÃO ENTREGUE",
-                "EM ROTA",
-                "AGUARDANDO COMPRA",
-                "",
-                null,
-                undefined,
-                " ",
-                "NÃO DEFINIDO",
-                "CANCELADO",
-              ],
+              $in: ['NÃO ENTREGUE', 'EM ROTA', 'AGUARDANDO COMPRA', '', null, undefined, ' ', 'NÃO DEFINIDO', 'CANCELADO'],
             },
           },
         },
@@ -101,32 +80,23 @@ export default async function handler(req, res) {
         //   },
         // },
       ])
-      .toArray();
-    res.json(suprimentos);
-  } else if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
-    var arr;
+      .toArray()
+    res.json(suprimentos)
+  } else if (req.method === 'POST') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
+    var arr
     switch (req.body.filtrarPor) {
-      case "REGIONAL":
+      case 'REGIONAL':
         arr = await collection
           .aggregate([
             {
               $match: {
                 regional: req.body.parametro,
-                "compra.statusEntrega": {
-                  $in: [
-                    "EM ROTA",
-                    "AGUARDANDO COMPRA",
-                    "",
-                    null,
-                    undefined,
-                    " ",
-                    "NÃO DEFINIDO",
-                    "CANCELADO",
-                  ],
+                'compra.statusEntrega': {
+                  $in: ['EM ROTA', 'AGUARDANDO COMPRA', '', null, undefined, ' ', 'NÃO DEFINIDO', 'CANCELADO'],
                 },
-                "contrato.status": "ASSINADO",
+                'contrato.status': 'ASSINADO',
               },
             },
             {
@@ -135,27 +105,18 @@ export default async function handler(req, res) {
               },
             },
           ])
-          .toArray();
-        break;
-      case "VENDEDOR":
+          .toArray()
+        break
+      case 'VENDEDOR':
         arr = await collection
           .aggregate([
             {
               $match: {
-                "vendedor.nome": req.body.parametro,
-                "compra.statusEntrega": {
-                  $in: [
-                    "EM ROTA",
-                    "AGUARDANDO COMPRA",
-                    "",
-                    null,
-                    undefined,
-                    " ",
-                    "NÃO DEFINIDO",
-                    "CANCELADO",
-                  ],
+                'vendedor.nome': req.body.parametro,
+                'compra.statusEntrega': {
+                  $in: ['EM ROTA', 'AGUARDANDO COMPRA', '', null, undefined, ' ', 'NÃO DEFINIDO', 'CANCELADO'],
                 },
-                "contrato.status": "ASSINADO",
+                'contrato.status': 'ASSINADO',
               },
             },
             {
@@ -164,25 +125,16 @@ export default async function handler(req, res) {
               },
             },
           ])
-          .toArray();
+          .toArray()
       default:
         arr = await collection
           .aggregate([
             {
               $match: {
-                "compra.statusEntrega": {
-                  $in: [
-                    "EM ROTA",
-                    "AGUARDANDO COMPRA",
-                    "",
-                    null,
-                    undefined,
-                    " ",
-                    "NÃO DEFINIDO",
-                    "CANCELADO",
-                  ],
+                'compra.statusEntrega': {
+                  $in: ['EM ROTA', 'AGUARDANDO COMPRA', '', null, undefined, ' ', 'NÃO DEFINIDO', 'CANCELADO'],
                 },
-                "contrato.status": "ASSINADO",
+                'contrato.status': 'ASSINADO',
               },
             },
             {
@@ -191,8 +143,8 @@ export default async function handler(req, res) {
               },
             },
           ])
-          .toArray();
+          .toArray()
     }
-    res.json(arr);
+    res.json(arr)
   }
 }

@@ -69,7 +69,7 @@ export function useNPS(enabled) {
       project[filters.date.field1][filters.date.field2] <= filters.date.before
     )
   }
-  console.log(filters)
+
   function handelModelData(data) {
     var modeledData = data
     return modeledData.filter(

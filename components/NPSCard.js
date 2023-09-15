@@ -9,7 +9,9 @@ import { formatDate } from '../utils/constants'
 import dayjs from 'dayjs'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../utils/methods/handlers'
+import { useQueryClient } from 'react-query'
 function NPSCard({ project, credentials }) {
+  const queryClient = useQueryClient()
   const [nps, setNps] = useState(project.nps)
   const [obsNps, setObsNps] = useState(project.jornada.obsNps)
   const [msg, setMsg] = useState({
@@ -26,6 +28,7 @@ function NPSCard({ project, credentials }) {
       })
       toast.dismiss(loadingToastId)
       toast.success('Alterações feitas com sucesso !')
+      await queryClient.invalidateQueries({ queryKey: ['nps'] })
     } catch (error) {
       toast.dismiss(loadingToastId)
       const msg = getErrorMessage(error)
@@ -79,7 +82,9 @@ function NPSCard({ project, credentials }) {
               </label>
               <select
                 value={nps >= 0 ? Math.round(nps).toString() : undefined}
-                onChange={(e) => setNps(e.target.value)}
+                onChange={(e) => {
+                  setNps(e.target.value != 'N/A' ? Number(e.target.value) : null)
+                }}
                 className="w-full outline-none bg-transparent text-xs text-gray-500"
               >
                 <option value={undefined}>N/A</option>

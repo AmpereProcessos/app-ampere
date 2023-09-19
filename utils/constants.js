@@ -1690,6 +1690,14 @@ export const statusDoParecerDeAcesso = [
     value: 'PARECER DE ACESSO COM OBRAS',
   },
   {
+    label: 'AGUARDANDO ANÁLISE DE CARGA',
+    value: 'AGUARDANDO ANÁLISE DE CARGA',
+  },
+  {
+    label: 'AGUARDANDO CORREÇÃO DE EQUIPAMENTO',
+    value: 'AGUARDANDO CORREÇÃO DE EQUIPAMENTO',
+  },
+  {
     label: 'NÃO DEFINIDO',
     value: 'NÃO DEFINIDO',
   },

@@ -16,32 +16,32 @@ function OSInfo({ info, index }) {
   const [osInfo, setosInfo] = useState(info)
   const [urgency, setUrgency] = useState('NÃO DEFINIDO')
   console.log(data)
-  // if (isLoading) return <LoadingPage />
-  // if (isError)
-  return (
-    <div className="w-full h-full flex flex-col items-center justify-center">
-      <h1 className="w-full text-center text-gray-500 italic">Oops, um erro ocorreu.</h1>
-      <Link href="/">
-        <p className="text-gray-700 font-bold hover:text-cyan-500 cursor-pointer">Voltar à página principal</p>
-      </Link>
-    </div>
-  )
-  // if (isSuccess && data)
-  //   return (
-  //     <>
-  //       {data.categoria == 'PADRÃO' && <PadraoOS order={data} />}
-  //       {data.categoria == 'MONTAGEM' && <ServiceOrderPDF order={data} />}
-  //       {data.categoria == 'MANUTENÇÃO PREVENTIVA' && <PreventivaOS order={data} />}
-  //       {data.categoria == 'ESTRUTURA' && (
-  //         <EstruturaOS
-  //           info={osInfo}
-  //           observacoesOS={osInfo.ordensDeServico[index].observacoes}
-  //           servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
-  //         />
-  //       )}
-  //       {(data.categoria == 'MANUTENÇÃO CORRETIVA' || data.categoria == 'OUTROS') && <OSCorretiva order={data} />}
-  //     </>
-  //   )
+  if (isLoading) return <LoadingPage />
+  if (isError)
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center">
+        <h1 className="w-full text-center text-gray-500 italic">Oops, um erro ocorreu.</h1>
+        <Link href="/">
+          <p className="text-gray-700 font-bold hover:text-cyan-500 cursor-pointer">Voltar à página principal</p>
+        </Link>
+      </div>
+    )
+  if (isSuccess && data)
+    return (
+      <>
+        {data.categoria == 'PADRÃO' && <PadraoOS order={data} />}
+        {data.categoria == 'MONTAGEM' && <ServiceOrderPDF order={data} />}
+        {data.categoria == 'MANUTENÇÃO PREVENTIVA' && <PreventivaOS order={data} />}
+        {data.categoria == 'ESTRUTURA' && (
+          <EstruturaOS
+            info={osInfo}
+            observacoesOS={osInfo.ordensDeServico[index].observacoes}
+            servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
+          />
+        )}
+        {(data.categoria == 'MANUTENÇÃO CORRETIVA' || data.categoria == 'OUTROS') && <OSCorretiva order={data} />}
+      </>
+    )
 }
 
 export default OSInfo

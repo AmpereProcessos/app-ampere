@@ -76,8 +76,8 @@ function TakeMaterialsBlock({ osInfo, setOsInfo }) {
       <div className="mt-2 px-2 flex flex-col grow w-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {osInfo.equipamentos.retirada && osInfo.equipamentos.retirada.length > 0 ? (
           osInfo.equipamentos.retirada.map((equip, index) => (
-            <div className="flex items-center justify-between w-full">
-              <div key={index} className="flex items-center gap-2">
+            <div key={index} className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-2">
                 <BsSuitDiamondFill />
                 <p className="text-xs text-gray-500 tracking-tight">
                   {equip.qtde ? `${equip.qtde}x ` : ''}

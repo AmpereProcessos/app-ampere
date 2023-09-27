@@ -12,8 +12,52 @@ function getTotalCosts(costs) {
 }
 export default async function handler(req, res) {
   if (req.method == 'GET') {
-    // const projectsDb = await connectToDatabase(process.env.DB_KEY, 'projetos')
-    // const projectsCollection = projectsDb.collection('dados')
+    const projectsDb = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const projectsCollection = projectsDb.collection('dados')
+    const projects = await projectsCollection
+      .aggregate([
+        {
+          $match: {
+            'contrato.status': 'ASSINADO',
+            tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
+            'compra.dataPedido': null,
+            'compra.statusLiberacao': { $ne: 'PAGO' },
+          },
+        },
+        {
+          $project: {
+            qtde: 1,
+            nomeDoContrato: 1,
+            tipoDeServico: 1,
+            'contrato.dataAssinatura': 1,
+            sistema: 1,
+            'compra.statusLiberacao': 1,
+            'compra.tipoDoKit': 1,
+          },
+        },
+        {
+          $sort: {
+            'contrato.dataAssinatura': 1,
+          },
+        },
+      ])
+      .toArray()
+    const formatted = projects.map((project) => {
+      return {
+        QTDE: project.qtde,
+        'NOME DO CLIENTE': project.nomeDoContrato,
+        'TIPO DE SERVIÇO': project.tipoDeServico,
+        'DATA DE ASSINATURA': project.contrato?.dataAssinatura ? dayjs(project.contrato.dataAssinatura).add(3, 'hours').format('DD/MM/YYYY') : null,
+        'TIPO DO KIT': project.compra?.tipoDoKit,
+        'STATUS DE COMPRA': project.compra.statusLiberacao,
+        TOPOLOGIA: project.sistema?.topologia,
+        'QTDE MODULOS': project.sistema?.qtdeModulos,
+        'POTÊNCIA DOS MÓDULOS': project.sistema?.potModulos,
+        'POTÊNCIA PICO': project.sistema?.potPico,
+        'VALOR DO PROJETO': project.sistema?.valorProjeto,
+        INVERSOR: project.sistema?.inversor,
+      }
+    })
     // const costsCollection = projectsDb.collection('despesas')
     // const projects = await projectsCollection
     //   .aggregate([
@@ -78,7 +122,7 @@ export default async function handler(req, res) {
     //   }
     // })
     // res.json(formatteditems)
-    res.json('DESATIVADA')
+    res.json(formatted)
   }
 }
 /*  

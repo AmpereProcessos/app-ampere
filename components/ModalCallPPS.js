@@ -275,7 +275,6 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
               <div className="flex items-center justify-center gap-4 mt-4">
                 <div className="flex items-center gap-2">
                   <Avatar fallback={'U'} height={25} width={25} url={call.requerente.avatar_url} />
-
                   <p className="font-medium text-gray-500 text-xs">{call.requerente?.apelido || 'Requerente não identificado'}</p>
                 </div>
                 <div className="flex items-center gap-2 text-gray-500">

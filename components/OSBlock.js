@@ -1,22 +1,20 @@
-import React, { useState } from "react";
-import axios from "axios";
-import Link from "next/link";
-import { TbExternalLink, TbCheckbox } from "react-icons/tb";
-import { FiEdit } from "react-icons/fi";
-import SelectFloatingInput from "./SelectFloatingInput";
-import TextFloatingInput from "./TextFloatingInput";
-import ModalBancoOS from "./ModalBancoOS";
-import dayjs from "dayjs";
+import React, { useState } from 'react'
+import axios from 'axios'
+import Link from 'next/link'
+import { TbExternalLink, TbCheckbox } from 'react-icons/tb'
+import { FiEdit } from 'react-icons/fi'
+import SelectFloatingInput from './SelectFloatingInput'
+import TextFloatingInput from './TextFloatingInput'
+import ModalBancoOS from './ModalOrdemServico'
+import dayjs from 'dayjs'
 function OSBlock({ order, clientName, index, projectID, getOSS }) {
   const [msg, setMsg] = useState({
-    text: "",
-    color: "",
-  });
-  const [closedDateHolder, setClosedDateHolder] = useState(
-    order.dataDeFechamento
-  );
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalInfo, setModalInfo] = useState();
+    text: '',
+    color: '',
+  })
+  const [closedDateHolder, setClosedDateHolder] = useState(order.dataDeFechamento)
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [modalInfo, setModalInfo] = useState()
   // Utils
   // function validateVisibility(categoria, openOnly, closingDate) {
   //   if (openOnly) {
@@ -34,29 +32,25 @@ function OSBlock({ order, clientName, index, projectID, getOSS }) {
       .post(`/api/projects/update/${projectID}`, {
         [`ordensDeServico.${index}.dataDeFechamento`]: new Date().toISOString(),
       })
-      .catch((err) => alert("Houve um erro na comunicação com o servidor."));
+      .catch((err) => alert('Houve um erro na comunicação com o servidor.'))
     if (data) {
-      setClosedDateHolder(new Date().toISOString());
-      setMsg({ text: "Alterações feitas", color: "text-green-500" });
+      setClosedDateHolder(new Date().toISOString())
+      setMsg({ text: 'Alterações feitas', color: 'text-green-500' })
       // setTimeout(() => {
       //   getOSS();
       // }, 1000);
     }
   }
   function handleOpenModal(order) {
-    setModalInfo(order);
-    setModalIsOpen(true);
+    setModalInfo(order)
+    setModalIsOpen(true)
   }
   return (
     <div className="flex flex-col">
-      <div
-        className={`grid items-start grid-cols-4 lg:grid-cols-6  border-b border-gray-200 py-2`}
-      >
+      <div className={`grid items-start grid-cols-4 lg:grid-cols-6  border-b border-gray-200 py-2`}>
         <div className="hidden lg:flex flex-col items-center justify-center">
           <p className="text-gray-500 text-xs">EMISSOR</p>
-          <p className="text-gray-700 text-xs font-bold uppercase">
-            {order.usuarioEmissor}
-          </p>
+          <p className="text-gray-700 text-xs font-bold uppercase">{order.usuarioEmissor}</p>
         </div>
         <div className="hidden lg:flex flex-col items-center justify-center">
           <p className="text-gray-500 text-xs">CATEGORIA</p>
@@ -64,9 +58,7 @@ function OSBlock({ order, clientName, index, projectID, getOSS }) {
         </div>
         <div className="flex flex-col items-center justify-center">
           <p className="text-gray-500 text-xs">SERVIÇO</p>
-          <p className="text-gray-700 text-xxs lg:text-xs font-bold text-center">
-            {order.servicoExecutado}
-          </p>
+          <p className="text-gray-700 text-xxs lg:text-xs font-bold text-center">{order.servicoExecutado}</p>
         </div>
         <div className="flex items-center justify-center">
           <Link href={`/ordemDeServico/pdf/${projectID}?index=${order.index}`}>
@@ -78,12 +70,8 @@ function OSBlock({ order, clientName, index, projectID, getOSS }) {
         <div className="flex items-center justify-center">
           {closedDateHolder ? (
             <div className="flex flex-col items-center justify-center">
-              <p className="text-gray-500 text-xs text-center">
-                DATA DE FECHAMENTO
-              </p>
-              <p className="text-gray-700 text-xxs lg:text-xs font-bold text-center">
-                {dayjs(closedDateHolder).add(4, "hour").format("DD/MM/YYYY")}
-              </p>
+              <p className="text-gray-500 text-xs text-center">DATA DE FECHAMENTO</p>
+              <p className="text-gray-700 text-xxs lg:text-xs font-bold text-center">{dayjs(closedDateHolder).add(4, 'hour').format('DD/MM/YYYY')}</p>
             </div>
           ) : (
             <button
@@ -103,20 +91,12 @@ function OSBlock({ order, clientName, index, projectID, getOSS }) {
           </button>
         </div>
       </div>
-      {msg.text && (
-        <p className={`text-center italic text-xs ${msg.color}`}>{msg.text}</p>
-      )}
+      {msg.text && <p className={`text-center italic text-xs ${msg.color}`}>{msg.text}</p>}
       {modalIsOpen && (
-        <ModalBancoOS
-          info={modalInfo}
-          index={index}
-          clientName={clientName}
-          projectID={projectID}
-          setModalIsOpen={() => setModalIsOpen(false)}
-        />
+        <ModalBancoOS info={modalInfo} index={index} clientName={clientName} projectID={projectID} setModalIsOpen={() => setModalIsOpen(false)} />
       )}
     </div>
-  );
+  )
 }
 
-export default OSBlock;
+export default OSBlock

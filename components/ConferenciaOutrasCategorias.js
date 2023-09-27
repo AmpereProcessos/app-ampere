@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
 function ConferenciaOutrasCategorias({ saveChanges, index }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   async function closeOS() {
-    setLoading(true);
+    setLoading(true)
     let response = await saveChanges({
       [`ordensDeServico.${index}.dataDeFechamento`]: new Date(),
-    });
-    console.log("RESPONSE", response);
-    if (response.success == true) return;
+    })
+    console.log('RESPONSE', response)
+    if (response.success == true) return
     else {
       setTimeout(() => {
-        setLoading(false);
-      }, 2000);
+        setLoading(false)
+      }, 2000)
     }
   }
-  console.log(loading);
+  console.log(loading)
   return (
     <div className="my-2 flex items-center justify-center mt-6">
       {loading ? (
@@ -29,7 +29,7 @@ function ConferenciaOutrasCategorias({ saveChanges, index }) {
         </button>
       )}
     </div>
-  );
+  )
 }
 
-export default ConferenciaOutrasCategorias;
+export default ConferenciaOutrasCategorias

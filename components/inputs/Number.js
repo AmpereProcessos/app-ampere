@@ -12,7 +12,6 @@ function NumberInput({
   placeholder,
   handleChange,
 }) {
-  console.log('VALOR RECEBIDO', value)
   const inputIdentifier = label ? label.toLowerCase().replace(' ', '_') : ''
   return (
     <div className={`flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>

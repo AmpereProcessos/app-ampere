@@ -1,94 +1,51 @@
-import React, { useState } from "react";
-import Link from "next/link";
-import connectToDatabase from "../../../utils/projectsDb";
-import ServiceOrderPDF from "../../../components/OSMontagemPDF";
-import PadraoOS from "../../../components/PadraoOS";
-import PreventivaOS from "../../../components/PreventivaOS";
-import Logo from "../../../utils/whitelogo.png";
-import Image from "next/image";
-import { ObjectId } from "mongodb";
-import EstruturaOS from "../../../components/EstruturaOS";
-import OSCorretiva from "../../../components/OSCorretivaPDF";
+import React, { useState } from 'react'
+import Link from 'next/link'
+import ServiceOrderPDF from '../../../components/OSMontagemPDF'
+import PadraoOS from '../../../components/PadraoOS'
+import PreventivaOS from '../../../components/PreventivaOS'
+import Logo from '../../../utils/whitelogo.png'
+import Image from 'next/image'
+import EstruturaOS from '../../../components/EstruturaOS'
+import OSCorretiva from '../../../components/OSCorretivaPDF'
+import { useRouter } from 'next/router'
+import { useServiceOrderById } from '../../../utils/methods/query/serviceOrders'
+import LoadingPage from '../../../components/utils/LoadingPage'
 function OSInfo({ info, index }) {
-  const [pdfVisible, setPdfVisible] = useState(false);
-  const [osInfo, setosInfo] = useState(info);
-  const [urgency, setUrgency] = useState("NÃO DEFINIDO");
-  console.log(info.ordensDeServico[index]);
+  const router = useRouter()
+  const { data, isLoading, isSuccess, isError } = useServiceOrderById({ id: router?.query?.id, enabled: !!router?.query?.id })
+  const [osInfo, setosInfo] = useState(info)
+  const [urgency, setUrgency] = useState('NÃO DEFINIDO')
+  console.log(data)
+  // if (isLoading) return <LoadingPage />
+  // if (isError)
   return (
-    <>
-      {osInfo.ordensDeServico[index].categoria == "PADRÃO" && (
-        <PadraoOS
-          info={osInfo}
-          observacoesOS={osInfo.ordensDeServico[index].observacoes}
-          servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
-        />
-      )}
-      {osInfo.ordensDeServico[index].categoria == "MONTAGEM" && (
-        <ServiceOrderPDF
-          info={osInfo}
-          openingDate={osInfo.ordensDeServico[index].dataDeAbertura}
-          urgency={osInfo.ordensDeServico[index].grauDeUrgencia}
-          realizarCobranca={osInfo.ordensDeServico[index].realizarCobranca}
-          valorCobranca={osInfo.ordensDeServico[index].valorCobranca}
-          servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
-        />
-      )}
-      {osInfo.ordensDeServico[index].categoria == "MANUTENÇÃO PREVENTIVA" && (
-        <PreventivaOS
-          info={osInfo}
-          openingDate={osInfo.ordensDeServico[index].dataDeAbertura}
-          observacoesOS={osInfo.ordensDeServico[index].observacoes}
-          urgencia={osInfo.ordensDeServico[index].grauDeUrgencia}
-          servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
-          senhaDoWifi={osInfo.ordensDeServico[index].senhaDoWifi}
-          pontoDeAgua={osInfo.ordensDeServico[index].pontoDeAgua}
-          trafo={osInfo.ordensDeServico[index].trafo}
-          configurar={osInfo.ordensDeServico[index].configurar}
-          modeloInversor={osInfo.ordensDeServico[index].inversor}
-        />
-      )}
-      {osInfo.ordensDeServico[index].categoria == "ESTRUTURA" && (
-        <EstruturaOS
-          info={osInfo}
-          observacoesOS={osInfo.ordensDeServico[index].observacoes}
-          servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
-        />
-      )}
-      {(osInfo.ordensDeServico[index].categoria == "MANUTENÇÃO CORRETIVA" ||
-        osInfo.ordensDeServico[index].categoria == "OUTROS") && (
-        <OSCorretiva
-          info={osInfo}
-          categoria={osInfo.ordensDeServico[index].categoria}
-          observacoesOS={osInfo.ordensDeServico[index].observacoes}
-          servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
-        />
-      )}
-      {/*<ServiceOrderPDF
-        info={osInfo}
-        openingDate={osInfo.ordensDeServico[index].dataDeAbertura}
-        urgency={osInfo.ordensDeServico[index].grauDeUrgencia}
-        realizarCobranca={osInfo.ordensDeServico[index].realizarCobranca}
-        valorCobranca={osInfo.ordensDeServico[index].valorCobranca}
-        servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
-  />*/}
-    </>
-  );
-}
-export async function getServerSideProps({ query }) {
-  // Fetch data from external API
-  const id = query.id;
-  const index = query.index;
-  const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("dados");
-  let os = await collection.findOne({
-    _id: ObjectId(id),
-  });
-  let info = JSON.parse(JSON.stringify(os));
-  // Pass data to the page via props
-  return { props: { info, index: index } };
+    <div className="w-full h-full flex flex-col items-center justify-center">
+      <h1 className="w-full text-center text-gray-500 italic">Oops, um erro ocorreu.</h1>
+      <Link href="/">
+        <p className="text-gray-700 font-bold hover:text-cyan-500 cursor-pointer">Voltar à página principal</p>
+      </Link>
+    </div>
+  )
+  // if (isSuccess && data)
+  //   return (
+  //     <>
+  //       {data.categoria == 'PADRÃO' && <PadraoOS order={data} />}
+  //       {data.categoria == 'MONTAGEM' && <ServiceOrderPDF order={data} />}
+  //       {data.categoria == 'MANUTENÇÃO PREVENTIVA' && <PreventivaOS order={data} />}
+  //       {data.categoria == 'ESTRUTURA' && (
+  //         <EstruturaOS
+  //           info={osInfo}
+  //           observacoesOS={osInfo.ordensDeServico[index].observacoes}
+  //           servicoExecutado={osInfo.ordensDeServico[index].servicoExecutado}
+  //         />
+  //       )}
+  //       {(data.categoria == 'MANUTENÇÃO CORRETIVA' || data.categoria == 'OUTROS') && <OSCorretiva order={data} />}
+  //     </>
+  //   )
 }
 
-export default OSInfo;
+export default OSInfo
+
 {
   /**
         <div className="flex flex-col p-6 grow bg-[#fff]">

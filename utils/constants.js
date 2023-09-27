@@ -15,6 +15,18 @@ export const routes = [
   'RH',
   'Almoxarifado',
 ]
+export const tiposDeTelha = [
+  { label: 'PORTUGUESA', value: 'PORTUGUESA' },
+  { label: 'FRANCESA', value: 'FRANCESA' },
+  { label: 'ROMANA', value: 'ROMANA' },
+  { label: 'CIMENTO', value: 'CIMENTO' },
+  { label: 'ETHERNIT', value: 'ETHERNIT' },
+  { label: 'SANDUÍCHE', value: 'SANDUÍCHE' },
+  { label: 'AMERICANA', value: 'AMERICANA' },
+  { label: 'ZINCO', value: 'ZINCO' },
+  { label: 'CAPE E BICA', value: 'CAPE E BICA' },
+  { label: 'LAJE', value: 'LAJE' },
+]
 export const companySignerKeys = [
   {
     key: '8cb69cac-4044-48fd-8ada-1d699f64bd1d',
@@ -1046,6 +1058,26 @@ export const fatorDeGeracaoPorOrientacao = {
     SUDESTE: '108.39',
   },
 }
+export const serviceOrdersCategories = [
+  { id: 1, label: 'PADRÃO', value: 'PADRÃO' },
+  { id: 2, label: 'ESTRUTURA', value: 'ESTRUTURA' },
+  { id: 3, label: 'MONTAGEM', value: 'MONTAGEM' },
+  {
+    id: 4,
+    label: 'MANUTENÇÃO PREVENTIVA',
+    value: 'MANUTENÇÃO PREVENTIVA',
+  },
+  {
+    id: 5,
+    label: 'MANUTENÇÃO CORRETIVA',
+    value: 'MANUTENÇÃO CORRETIVA',
+  },
+  {
+    id: 6,
+    label: 'OUTROS',
+    value: 'OUTROS',
+  },
+]
 export const expenseCategories = [
   { id: 1, label: 'MONTAGEM', value: 'MONTAGEM' },
   { id: 2, label: 'PADRÃO', value: 'PADRÃO' },

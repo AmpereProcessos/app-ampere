@@ -316,13 +316,18 @@ interface IProject {
   // ORDENS DE SERVIÇO É COMUM PARA TODOS OS CONTRATOS
   ordensDeServico: any[]
 }
-interface ServiceOrder {
+export interface ServiceOrder {
   _id?: string
   categoria: 'MONTAGEM' | 'MANUTANÇÃO CORRETIVA' // etc
+  favorecido: {
+    nome: string
+    contato: string
+  }
   projeto: {
     id: string // id do projeto ampère (contrato nosso, seja SFV, O&M, Montagem, Produto avulso, etc),
     nome: string // nome do projeto no sistema (de modo a facilitar a identificação, e não fazer queries extras no sistema)
     identificador: number // identificador QTDE do projeto no banco de projetos
+    tipo: string // tipo do projeto
   }
   descricao: string // servico executado
   localizacao: {
@@ -340,16 +345,16 @@ interface ServiceOrder {
   // configurar: boolean
   urgencia: 'POUCO URGENTE' | 'URGENTE' | 'EMERGÊNCIA'
   periodo: {
-    inicio: string
-    fim: string
+    inicio: string | null
+    fim: string | null
   }
   pagamento: {
-    recebedor: string
-    valor: number
+    recebedor: string | null
+    valor: number | null
   }
   cobranca: {
-    pagador: string
-    valor: number
+    pagador: string | null
+    valor: number | null
   }
   autor: {
     id: string
@@ -358,15 +363,17 @@ interface ServiceOrder {
   }
   equipamentos: {
     modulos: {
-      modelo: string
-      qtde: number
-      potencia: number
+      modelo: string | null
+      qtde: number | null
+      potencia: number | null
     }
     inversor: {
-      modelo: string
-      qtde: number
-      potencia: number
+      modelo: string | null
+      qtde: number | null
+      potencia: number | null
     }
+    disponivel: { qtde: number | null; descricao: string | null }[]
+    retirada: { qtde: number | null; descricao: string | null }[]
   }
   detalhes: {
     pontoAgua: string
@@ -374,7 +381,14 @@ interface ServiceOrder {
     configuracaoMonitoramento: boolean
     possuiTrafo: boolean
     tipoEstrutura: string
+    tipoTelha?: string
+    tipoPadrao?: string
+    tipoSaidaPadrao?: string
+    amperagemPadrao?: string
+    responsabilidadePadrao?: string
+    topologia: string
   }
+  anotacoes: string // to be used by the service responsible executor
   observacoes: string
   dataEfetivacao?: string
   dataInsercao: string

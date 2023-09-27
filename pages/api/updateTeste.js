@@ -117,9 +117,66 @@ function formatStructure(type) {
 }
 
 export default async function handler(req, res) {
-  // const db = await connectToDatabase(process.env.DB_KEY)
-  // const collection = db.collection('pps')
+  const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  const collection = db.collection('dados')
+  const kitInfos = await collection
+    .aggregate([
+      {
+        $project: {
+          'contrato.dataAssinatura': 1,
+          'compra.kitInfo': 1,
+          'material.materialFaltante': 1,
+        },
+      },
+      {
+        $sort: {
+          'contrato.dataAssinatura': -1,
+        },
+      },
+      {
+        $match: {
+          'compra.kitInfo': { $nin: ['', null, 0] },
+          'material.materialFaltante': { $nin: ['', null, 0] },
+        },
+      },
+    ])
+    .toArray()
+  const formatted = kitInfos.map((project) => {
+    const spllited = project.compra.kitInfo.split('\n')
+    const formattedSpllited = spllited.map((i) => {
+      const arr = i.split('-')
+      var qty = null
+      var desc = null
+      if (arr.length > 1) {
+        qty = Number(arr[0].trim())
+        desc = arr[1]
+      } else desc = arr[0]
 
+      return {
+        qtde: qty,
+        descricao: desc,
+      }
+    })
+    return formattedSpllited
+  })
+  const formatted2 = kitInfos.map((project) => {
+    const spllited = project.material.materialFaltante.split('\n')
+    const formattedSpllited = spllited.map((i) => {
+      const arr = i.split('-')
+      var qty = null
+      var desc = null
+      if (arr.length > 1) {
+        qty = Number(arr[0].trim())
+        desc = arr[1]
+      } else desc = arr[0]
+
+      return {
+        qtde: qty,
+        descricao: desc,
+      }
+    })
+    return formattedSpllited
+  })
   // const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
   // const crmUsersCollection = crmDb.collection('users')
 
@@ -169,7 +226,7 @@ export default async function handler(req, res) {
   //   }
   // })
   // console.log(newPPSCalls.length)
-  res.json('DESATIVADA')
+  res.json(formatted2)
 }
 
 // Update Many example:

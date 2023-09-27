@@ -22,14 +22,14 @@ function getEquipmentList({ str, category }) {
   const spllited = str.split('\n')
   const formattedSpllited = spllited.map((i) => {
     const arr = i.split('-')
-    console.log(arr)
+    console.log(i, arr)
     var qty = null
     var desc = null
     if (arr.length > 1) {
       qty = Number(arr[0].trim())
       desc = arr[1]
     } else desc = arr[0]
-    if (qty && desc)
+    if (qty || desc)
       return {
         qtde: qty,
         descricao: desc,
@@ -103,8 +103,8 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
         potencia: project.sistema?.potModulos,
       },
       inversor: getInverterInfoByStr(project.sistema?.inversor || ''),
-      disponivel: getEquipmentList({ str: project.compra?.kitInfo, category: 'MONTAGEM' }),
-      retirada: getEquipmentList({ str: project.material?.materialFaltante, category: 'MONTAGEM' }),
+      disponivel: null,
+      retirada: null,
     },
     detalhes: {
       pontoAgua: '',
@@ -133,6 +133,18 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
       toast.error(msg)
     }
   }
+  function useKitInformation() {
+    setOsInfo((prev) => ({
+      ...prev,
+      equipamentos: { ...prev.equipamentos, disponivel: getEquipmentList({ str: project.compra?.kitInfo, category: 'MONTAGEM' }) },
+    }))
+  }
+  function useMissingMaterialInformation() {
+    setOsInfo((prev) => ({
+      ...prev,
+      equipamentos: { ...prev.equipamentos, retirada: getEquipmentList({ str: project.material?.materialFaltante, category: 'MONTAGEM' }) },
+    }))
+  }
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-[100] bg-[rgba(0,0,0,.85)]">
       <motion.div
@@ -151,7 +163,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
               <VscChromeClose style={{ color: 'red' }} />
             </button>
           </div>
-          <div className="flex flex-col w-full h-full overflow-y-auto overscroll-y-auto py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
+          <div className="flex flex-col px-2 w-full h-full overflow-x-hidden overflow-y-auto overscroll-y-auto py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
             <div className="flex items-center justify-center gap-2 w-full">
               <h1 className="font-bold text-gray-800 text-xs ">AUTOR</h1>
               <div className="h-full w-[1px] bg-gray-500"></div>
@@ -241,6 +253,12 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 )}
               </div>
             </div>
+            <label className={'font-sans font-bold  text-[#353432] mt-2'}>OBSERVAÇÕES</label>
+            <textarea
+              value={osInfo.observacoes}
+              onChange={(e) => setOsInfo((prev) => ({ ...prev, observacoes: e.target.value }))}
+              className="w-full resize-none min-h-[100px] bg-gray-200 text-sm border border-gray-500 rounded-md outline-none p-4"
+            />
             <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">EQUIPAMENTOS</h1>
             <div className="flex w-full items-center gap-2 flex-col lg:flex-row mt-2">
               <div className="w-full lg:w-1/3">
@@ -332,10 +350,10 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
             </div>
             <div className="flex w-full items-start gap-2 flex-col lg:flex-row mt-2">
               <div className="w-full lg:w-[50%] h-full">
-                <TakeMaterialsBlock osInfo={osInfo} setOsInfo={setOsInfo} />
+                <TakeMaterialsBlock osInfo={osInfo} setOsInfo={setOsInfo} useMissingMaterialInformation={useMissingMaterialInformation} />
               </div>
               <div className="w-full lg:w-[50%] h-full">
-                <AvailableMaterialsBlock osInfo={osInfo} setOsInfo={setOsInfo} />
+                <AvailableMaterialsBlock osInfo={osInfo} setOsInfo={setOsInfo} useKitInformation={useKitInformation} />
               </div>
             </div>
             <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">DETALHES</h1>
@@ -472,7 +490,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
                 </div>
               </div>
             ) : null}
-            <div className="py-1 w-full flex items-center justify-end border-t border-gray-200 px-2 mt-2">
+            <div className="py-1 w-full flex items-center justify-end border-t border-gray-200 px-4 mt-2">
               <button
                 onClick={() => handleOrderCreation()}
                 className="text-green-500 font-bold py-1 hover:text-green-500 hover:scale-105 duration-300 ease-in-out"

@@ -21,7 +21,7 @@ function ProjectServiceOrders({ projectId }) {
   return (
     <div className="flex flex-col w-full my-2 gap-2">
       {orders.length > 0 ? (
-        orders.map((order, index) => <ProjectServiceOrderCard key={index} order={order} />)
+        orders.map((order, index) => <ProjectServiceOrderCard key={index} order={order} projectId={projectId} />)
       ) : (
         <div className="h-[60px] flex items-center justify-center">
           <p className="text-center italic text-gray-500 ">Não há ordens de serviço vinculadas a esse projeto...</p>

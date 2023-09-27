@@ -8,7 +8,7 @@ import { IoIosAdd } from 'react-icons/io'
 import toast from 'react-hot-toast'
 import { AiFillDelete } from 'react-icons/ai'
 
-function AvailableMaterialsBlock({ osInfo, setOsInfo }) {
+function AvailableMaterialsBlock({ osInfo, setOsInfo, useKitInformation }) {
   const [equipmentHolder, setEquipmentHolder] = useState({ qtde: null, descricao: null })
   const [addMenuIsOpen, setAddMenuIsOpen] = useState(false)
   function addMaterial() {
@@ -19,7 +19,7 @@ function AvailableMaterialsBlock({ osInfo, setOsInfo }) {
     if (!equipmentHolder.descricao || equipmentHolder.descricao?.trim().length == 0) {
       toast.error('Preencha uma descrição válida.')
     }
-    const currentMaterials = [...osInfo.equipamentos.disponivel]
+    const currentMaterials = osInfo.equipamentos.disponivel ? [...osInfo.equipamentos.disponivel] : []
     currentMaterials.push({ qtde: equipmentHolder.qtde, descricao: equipmentHolder.descricao })
     return setOsInfo((prev) => ({ ...prev, equipamentos: { ...prev.equipamentos, disponivel: currentMaterials } }))
   }
@@ -29,9 +29,9 @@ function AvailableMaterialsBlock({ osInfo, setOsInfo }) {
     return setOsInfo((prev) => ({ ...prev, equipamentos: { ...prev.equipamentos, disponivel: currentMaterials } }))
   }
   return (
-    <div className="w-full flex flex-col border border-cyan-500 p-3 rounded-lg h-full min-h-[200px] max-h-[200px]">
+    <div className="w-full flex flex-col border border-cyan-500 p-3 rounded-lg h-full min-h-[300px] max-h-[300px]">
       <div className="w-full flex items-center justify-between">
-        <h1 className="font-sans font-bold  text-[#353432] text-center">MATERIAIS JÁ DISPONÍVEIS</h1>
+        <h1 className="font-sans font-bold  text-[#353432] text-center">MATERIAIS DISPONÍVEIS</h1>
         {addMenuIsOpen ? (
           <button
             onClick={() => setAddMenuIsOpen(false)}
@@ -46,6 +46,12 @@ function AvailableMaterialsBlock({ osInfo, setOsInfo }) {
           </button>
         )}
       </div>
+      <button
+        onClick={useKitInformation}
+        className="text-xs self-center w-fit text-gray-500 font-medium rounded p-1 hover:bg-blue-50 hover:text-cyan-500  duration-300 ease-in-out"
+      >
+        USAR MATERIAIS DO KIT
+      </button>
       {addMenuIsOpen ? (
         <div className="w-full flex items-center gap-1">
           <div className="w-[70%]">

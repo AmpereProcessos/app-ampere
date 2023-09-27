@@ -140,33 +140,65 @@ function PadraoOSPDF({ order }) {
           </div>
         </div>
       </div>
-      <div className="border border-black mt-3">
+      <div className="flex flex-col border border-black mt-3 min-h-[270px]">
         <h1 className="text-center my-2 font-bold">DADOS DA INSTALAÇÃO</h1>
-        <div className="flex h-full items-center justify-center">
-          <div className="grid grid-cols-2 gap-x-2 px-6 pb-2">
-            <div className="grid grid-rows-4">
-              <div className="row-span-2 grid grid-cols-5">
-                <p className="text-xs text-center col-span-2 font-semibold uppercase">TIPO DO PADRÃO:</p>
-                <p className="text-xs col-span-3 text-center border border-black">{order.detalhes.tipoPadrao}</p>
-              </div>
-              <div className="row-span-2 grid grid-cols-5">
-                <p className="text-xs text-center col-span-2 font-semibold uppercase">SAÍDA DO CLIENTE</p>
-                <p className="text-xs col-span-3 text-center border border-black border-t-0">
-                  {order.detalhes.tipoSaidaPadrao ? order.detalhes.tipoSaidaPadrao : '-'}{' '}
-                </p>
+
+        <div className="grid grid-cols-2 gap-x-2 px-6 pb-2 h-full grow">
+          <div className="grid grid-rows-6 h-full">
+            <div className="row-span-1 grid grid-cols-3 h-full items-center">
+              <p className="text-xs col-span-1 text-center font-semibold uppercase">TIPO DO PADRÃO</p>
+              <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black border-b-0">
+                <div>{order.detalhes.tipoPadrao ? order.detalhes.tipoPadrao : '-'}</div>
               </div>
             </div>
-            <div className="grid grid-rows-4">
-              <div className="row-span-2 grid grid-cols-3 h-full items-center">
-                <p className="text-xs col-span-1 text-center font-semibold uppercase">AMPERAGEM</p>
-                <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black border-b-0">
-                  <div>{order.detalhes.amperagemPadrao ? order.detalhes.amperagemPadrao : '-'}</div>
+            <div className="row-span-1 grid grid-cols-3 h-full items-center">
+              <p className="text-xs col-span-1 text-center font-semibold uppercase">SAÍDA DO PADRÃO</p>
+              <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black">
+                <div>{order.detalhes.tipoSaidaPadrao ? order.detalhes.tipoSaidaPadrao : '-'}</div>
+              </div>
+            </div>
+            <div className="row-span-4 grid grid-cols-3 h-full items-center">
+              <p className="text-xs col-span-1 text-center font-semibold uppercase">MAT.RETIRADA</p>
+              <div className="p-2 text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black border-t-0">
+                <div>
+                  {' '}
+                  {order.equipamentos.retirada
+                    ? order.equipamentos.retirada.map((equip, index) => (
+                        <p key={index} className="w-full text-center text-[0.6rem]">
+                          {equip.qtde ? `${equip.qtde}x ` : ''}
+                          {equip.descricao}
+                        </p>
+                      ))
+                    : 'N/A'}
                 </div>
               </div>
-              <div className="row-span-2 grid grid-cols-3 h-full items-center">
-                <p className="text-xs col-span-1 text-center font-semibold uppercase">RESPONSABILIDADE</p>
-                <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black">
-                  <div>{order.detalhes.responsabilidadePadrao ? order.detalhes.responsabilidadePadrao : '-'}</div>
+            </div>
+          </div>
+          <div className="grid grid-rows-6 h-full">
+            <div className="row-span-1 grid grid-cols-3 h-full items-center">
+              <p className="text-xs col-span-1 text-center font-semibold uppercase">AMPERAGEM</p>
+              <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black border-b-0">
+                <div>{order.detalhes.amperagemPadrao ? order.detalhes.amperagemPadrao : '-'}</div>
+              </div>
+            </div>
+            <div className="row-span-1 grid grid-cols-3 h-full items-center">
+              <p className="text-xs col-span-1 text-center font-semibold uppercase">RESPONSÁVEL</p>
+              <div className="text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black">
+                <div>{order.detalhes.responsabilidadePadrao ? order.detalhes.responsabilidadePadrao : '-'}</div>
+              </div>
+            </div>
+            <div className="row-span-4 grid grid-cols-3 h-full items-center">
+              <p className="text-xs col-span-1 text-center font-semibold uppercase">MAT.DISPONÍVEL</p>
+              <div className="p-2 text-xs col-span-2 w-full px-2 h-full flex items-center justify-center text-center border border-black border-t-0">
+                <div>
+                  {order.equipamentos.disponivel
+                    ? order.equipamentos.disponivel.map((equip, index) => (
+                        <p key={index} className="w-full text-center text-[0.6rem]">
+                          {equip.qtde ? `${equip.qtde}x ` : ''}
+                          {equip.descricao}
+                        </p>
+                      ))
+                    : 'N/A'}
                 </div>
               </div>
             </div>

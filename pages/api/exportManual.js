@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            'contrato.status': 'ASSINADO',
+            'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
             tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
             'compra.dataPedido': null,
             'compra.statusLiberacao': { $ne: 'PAGO' },
@@ -30,6 +30,7 @@ export default async function handler(req, res) {
             nomeDoContrato: 1,
             tipoDeServico: 1,
             'contrato.dataAssinatura': 1,
+            'contrato.status': 1,
             sistema: 1,
             'compra.statusLiberacao': 1,
             'compra.tipoDoKit': 1,
@@ -46,6 +47,7 @@ export default async function handler(req, res) {
       return {
         QTDE: project.qtde,
         'NOME DO CLIENTE': project.nomeDoContrato,
+        'STATUS DO CONTRATO': project.contrato?.status,
         'TIPO DE SERVIÇO': project.tipoDeServico,
         'DATA DE ASSINATURA': project.contrato?.dataAssinatura ? dayjs(project.contrato.dataAssinatura).add(3, 'hours').format('DD/MM/YYYY') : null,
         'TIPO DO KIT': project.compra?.tipoDoKit,

@@ -1,21 +1,18 @@
-import axios from 'axios'
 import React, { useEffect, useState, useContext } from 'react'
+import dayjs from 'dayjs'
 import Select from 'react-select'
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
-import { AiOutlineSearch } from 'react-icons/ai'
-import { MdDateRange } from 'react-icons/md'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
-import OSBlock from '../../components/OSBlock'
+
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+
 import LoadingPage from '../../components/utils/LoadingPage'
 import { AnimatePresence, motion } from 'framer-motion'
-import FetchDataButton from '../../components/utils/Buttons/FetchDataButton'
-import FilterButton from '../../components/utils/Buttons/FilterButton'
-import dayjs from 'dayjs'
-import BancoDeOSCard from '../../components/BancoDeOSCard'
-import { formatDate } from '../../utils/constants'
+
 import { useServiceOrders } from '../../utils/methods/query/serviceOrders'
+import { formatDate } from '../../utils/constants'
+
 import ServiceOrderCard from '../../components/identificador/ordensDeServico/ServiceOrderCard'
 import ModalOrdemServico from '../../components/ModalOrdemServico'
 

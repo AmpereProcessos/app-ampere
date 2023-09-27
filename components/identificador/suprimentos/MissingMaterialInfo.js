@@ -1,37 +1,68 @@
 import React, { useState } from 'react'
 import { BsSuitDiamondFill } from 'react-icons/bs'
-import { VscChromeClose } from 'react-icons/vsc'
-import TextInput from '../../inputs/Text'
-import NumberInput from '../../inputs/Number'
-import { MdOutlineAddCircle } from 'react-icons/md'
 import { IoIosAdd } from 'react-icons/io'
-import toast from 'react-hot-toast'
+import NumberInput from '../../inputs/Number'
+import TextInput from '../../inputs/Text'
 import { AiFillDelete } from 'react-icons/ai'
-
-function TakeMaterialsBlock({ osInfo, setOsInfo, useMissingMaterialInformation }) {
+import toast from 'react-hot-toast'
+import { MdOutlineAddCircle } from 'react-icons/md'
+import { VscChromeClose } from 'react-icons/vsc'
+function getMissingMaterialAsList(str) {
+  if (!str) return []
+  const spllited = str.split('\n')
+  const formattedSpllited = spllited.map((i) => {
+    const arr = i.split('-')
+    console.log(i, arr)
+    var qty = null
+    var desc = null
+    if (arr.length > 1) {
+      qty = Number(arr[0].trim())
+      desc = arr[1]
+    } else desc = arr[0]
+    if (qty || desc)
+      return {
+        qtde: qty,
+        descricao: desc,
+      }
+  })
+  return formattedSpllited.filter((x) => !!x)
+}
+function ProjectMissingMaterialInfo({ infoHolder, setInfoHolder, setChanges }) {
   const [equipmentHolder, setEquipmentHolder] = useState({ qtde: null, descricao: null })
   const [addMenuIsOpen, setAddMenuIsOpen] = useState(false)
   function addMaterial() {
-    if (!equipmentHolder.qtde || equipmentHolder.qtde < 0) {
-      toast.error('Preencha uma quantidade válida.')
-      return
-    }
     if (!equipmentHolder.descricao || equipmentHolder.descricao?.trim().length == 0) {
       toast.error('Preencha uma descrição válida.')
     }
-    const currentMaterials = osInfo.equipamentos.retirada ? [...osInfo.equipamentos.retirada] : []
-    currentMaterials.push({ qtde: equipmentHolder.qtde, descricao: equipmentHolder.descricao })
-    return setOsInfo((prev) => ({ ...prev, equipamentos: { ...prev.equipamentos, retirada: currentMaterials } }))
+    const equipStr = equipmentHolder.qtde ? `${equipmentHolder.qtde}-${equipmentHolder.descricao}` : `${equipmentHolder.descricao}`
+    const newKitInfoStr = infoHolder.material?.materialFaltante ? infoHolder.material.materialFaltante + '\n' + equipStr : equipStr
+
+    setChanges((prev) => ({
+      ...prev,
+      'material.materialFaltante': newKitInfoStr,
+    }))
+    setInfoHolder((prev) => ({ ...prev, material: { ...prev.material, materialFaltante: newKitInfoStr } }))
+    setEquipmentHolder({ qtde: null, descricao: null })
+    return
   }
   function removeMaterial(index) {
-    const currentMaterials = [...osInfo.equipamentos.retirada]
-    currentMaterials.splice(index, 1)
-    return setOsInfo((prev) => ({ ...prev, equipamentos: { ...prev.equipamentos, retirada: currentMaterials } }))
+    const currentMaterialsList = getMissingMaterialAsList(infoHolder.material?.materialFaltante)
+    currentMaterialsList.splice(index, 1)
+    const currentMaterialsAsStrArr = currentMaterialsList.map((item) =>
+      item.qtde ? `${item.qtde}-${item.descricao}` : `${equipmentHolder.descricao}`
+    )
+    const newKitInfoStr = currentMaterialsAsStrArr.join('\n')
+    setChanges((prev) => ({
+      ...prev,
+      'material.materialFaltante': newKitInfoStr,
+    }))
+    setInfoHolder((prev) => ({ ...prev, material: { ...prev.material, materialFaltante: newKitInfoStr } }))
+    return
   }
   return (
     <div className="w-full flex flex-col border border-cyan-500 p-3 rounded-lg h-full min-h-[300px] max-h-[300px]">
       <div className="w-full flex items-center justify-between">
-        <h1 className="font-sans font-bold  text-[#353432] text-center">MATERIAIS PARA RETIDADA</h1>
+        <h1 className="font-sans font-bold  text-[#353432] text-center">MATERIAL FALTANTE</h1>
         {addMenuIsOpen ? (
           <button
             onClick={() => setAddMenuIsOpen(false)}
@@ -46,12 +77,7 @@ function TakeMaterialsBlock({ osInfo, setOsInfo, useMissingMaterialInformation }
           </button>
         )}
       </div>
-      <button
-        onClick={useMissingMaterialInformation}
-        className="text-xs self-center w-fit text-gray-500 font-medium rounded p-1 hover:bg-blue-50 hover:text-cyan-500  duration-300 ease-in-out"
-      >
-        USAR MATERIAIS FALTANTES
-      </button>
+
       {addMenuIsOpen ? (
         <div className="w-full flex items-center gap-1">
           <div className="w-[70%]">
@@ -80,8 +106,8 @@ function TakeMaterialsBlock({ osInfo, setOsInfo, useMissingMaterialInformation }
         </div>
       ) : null}
       <div className="mt-2 px-2 flex flex-col grow w-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-        {osInfo.equipamentos.retirada && osInfo.equipamentos.retirada.length > 0 ? (
-          osInfo.equipamentos.retirada.map((equip, index) => (
+        {getMissingMaterialAsList(infoHolder.material?.materialFaltante).length > 0 ? (
+          getMissingMaterialAsList(infoHolder.material?.materialFaltante).map((equip, index) => (
             <div key={index} className="flex items-center justify-between w-full">
               <div className="flex items-center gap-2">
                 <BsSuitDiamondFill />
@@ -97,7 +123,7 @@ function TakeMaterialsBlock({ osInfo, setOsInfo, useMissingMaterialInformation }
           ))
         ) : (
           <div className="flex items-center justify-center grow">
-            <p className="text-sm italic text-gray-500 text-center">Nenhum material adicionado para retirada...</p>
+            <p className="text-sm italic text-gray-500 text-center">Nenhum material adicionado a lista...</p>
           </div>
         )}
       </div>
@@ -105,4 +131,4 @@ function TakeMaterialsBlock({ osInfo, setOsInfo, useMissingMaterialInformation }
   )
 }
 
-export default TakeMaterialsBlock
+export default ProjectMissingMaterialInfo

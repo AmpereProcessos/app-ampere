@@ -88,8 +88,15 @@ function renderAvatarBySeller(sellerName) {
     )
   }
   return (
-    <div className="w-[50px] h-[50px] self-center">
-      <Image src={existingSellerWithPhoto.avatar_url} width={50} height={50} alt={existingSellerWithPhoto.nome} style={{ borderRadius: '100%' }} />
+    <div className="w-[30px]  lg:w-[50px] h-[30px] lg:h-[50px] max-w-[50px] max-h-[50px] self-center">
+      <Image
+        width={30}
+        height={30}
+        src={existingSellerWithPhoto.avatar_url}
+        alt={existingSellerWithPhoto.nome}
+        style={{ borderRadius: '100%' }}
+        layout="responsive"
+      />
     </div>
   )
 }
@@ -309,8 +316,8 @@ function Home() {
                 <div className="flex items-center w-full justify-center">
                   <div className="flex flex-col items-center w-full mb-2">
                     <h1 className="text-gray-600 uppercase text-xl text-center font-bold">TOP 3 VENDEDORES</h1>
-                    <div className="lg:w-[900px] w-full flex items-end justify-center h-[500px] lg:h-[400px] gap-4 lg:gap-10 p-0 lg:p-6">
-                      <div className="h-full flex flex-col justify-end w-1/5">
+                    <div className="lg:w-[1200px] w-full flex items-end justify-center h-[400px] lg:h-[400px] gap-4 lg:gap-10 p-0 lg:p-6">
+                      <div className="h-full hidden lg:flex flex-col justify-end w-1/5">
                         {renderAvatarBySeller(topSellerData[3]?._id)}
                         <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[3]?._id}</h1>
                         <p className="text-center font-medium text-lg text-green-500">
@@ -318,32 +325,32 @@ function Home() {
                         </p>
                         <div className="h-[30%] w-full bg-gray-500 flex justify-center items-center text-3xl text-white font-bold">4º</div>
                       </div>
-                      <div className="h-full flex flex-col justify-end w-1/5">
+                      <div className="h-full flex flex-col justify-end w-1/3 lg:w-1/5">
                         {renderAvatarBySeller(topSellerData[1]?._id)}
-                        <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[1]?._id}</h1>
-                        <p className="text-center font-medium text-lg text-green-500">
+                        <h1 className="text-center font-bold text-xs lg:text-sm text-gray-500">{topSellerData[1]?._id}</h1>
+                        <p className="text-center font-medium text-xs lg:text-lg text-green-500">
                           {topSellerData[1]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
                         </p>
                         <div className="h-[60%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">2º</div>
                       </div>
-                      <div className="h-full flex flex-col justify-end w-1/5">
+                      <div className="h-full flex flex-col justify-end w-1/3 lg:w-1/5">
                         {renderAvatarBySeller(topSellerData[0]?._id)}
-                        <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[0]?._id}</h1>
-                        <p className="text-center font-medium text-lg text-green-500">
+                        <h1 className="text-center font-bold text-xs lg:text-sm text-gray-500">{topSellerData[0]?._id}</h1>
+                        <p className="text-center font-medium text-xs lg:text-lg text-green-500">
                           {topSellerData[0]?.potenciaVendida.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
                         </p>
                         <div className="grow w-full bg-[#fead41] flex justify-center items-center text-3xl text-white font-bold">1º</div>
                       </div>
-                      <div className="h-full flex flex-col justify-end w-1/5">
+                      <div className="h-full flex flex-col justify-end w-1/3 lg:w-1/5">
                         {renderAvatarBySeller(topSellerData[2]?._id)}
 
-                        <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[2]?._id}</h1>
-                        <p className="text-center font-medium text-lg text-green-500">
+                        <h1 className="text-center font-bold text-xs lg:text-sm text-gray-500">{topSellerData[2]?._id}</h1>
+                        <p className="text-center font-medium text-xs lg:text-lg text-green-500">
                           {topSellerData[2]?.potenciaVendida.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
                         </p>
                         <div className="h-[40%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">3º</div>
                       </div>
-                      <div className="h-full flex flex-col justify-end w-1/5">
+                      <div className="h-full hidden lg:flex flex-col justify-end w-1/5">
                         {renderAvatarBySeller(topSellerData[4]?._id)}
                         <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[4]?._id}</h1>
                         <p className="text-center font-medium text-lg text-green-500">

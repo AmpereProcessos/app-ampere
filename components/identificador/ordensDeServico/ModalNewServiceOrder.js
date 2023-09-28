@@ -119,7 +119,7 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
       responsabilidadePadrao: project.padrao?.respInstalacao,
       topologia: project.sistema?.topologia,
     },
-    observacoes: '',
+    observacoes: project.obra?.observacoes || '',
   })
   async function handleOrderCreation() {
     const loadingToastId = toast.loading('Carregando...')

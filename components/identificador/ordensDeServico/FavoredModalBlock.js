@@ -7,8 +7,28 @@ import TextInput from '../../inputs/Text'
 import { formatToPhone } from '../../../utils/constants'
 import SelectInput from '../../inputs/Select'
 import { estadosECidades } from '../../../utils/estados_cidades'
+const variants = {
+  hidden: {
+    opacity: 0.2,
+    transition: {
+      duration: 0.8, // Adjust the duration as needed
+    },
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.8, // Adjust the duration as needed
+    },
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      duration: 0.01, // Adjust the duration as needed
+    },
+  },
+}
 
-function FavoredModalBlock({ order, infoHolder, setInfoHolder }) {
+function FavoredModalBlock({ infoHolder, setInfoHolder }) {
   const [editEnabled, setEditEnabled] = useState(false)
   return (
     <div className="flex flex-col w-full mt-4">
@@ -20,7 +40,7 @@ function FavoredModalBlock({ order, infoHolder, setInfoHolder }) {
       </div>
       <AnimatePresence>
         {editEnabled ? (
-          <motion.div initial={{ scale: 0.8, opacity: 0.3 }} animate={{ scale: 1, opacity: 1 }} className="w-full flex flex-col gap-1">
+          <motion.div key={'editor'} variants={variants} initial="hidden" animate="visible" exit="exit" className="w-full flex flex-col gap-2 mt-2">
             <div className="flex flex-col lg:flex-row w-full gap-2">
               <div className="w-full lg:w-[50%]">
                 <TextInput
@@ -72,39 +92,59 @@ function FavoredModalBlock({ order, infoHolder, setInfoHolder }) {
               </div>
               <div className="w-full lg:w-[50%]">
                 <TextInput
+                  label={'BAIRRO'}
+                  placeholder={'Preencha o bairro do cliente favorecido...'}
+                  value={infoHolder.localizacao.bairro}
+                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, bairro: value } }))}
+                  width={'100%'}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col lg:flex-row w-full gap-2">
+              <div className="w-full lg:w-[50%]">
+                <TextInput
                   label={'ENDEREÇO'}
                   placeholder={'Preencha o endereço do cliente favorecido...'}
-                  value={infoHolder.localizacao.endereco}
-                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.localizacao, endereco: value } }))}
+                  value={infoHolder.favorecido.endereco}
+                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, favorecido: { ...prev.favorecido, endereco: value } }))}
+                  width={'100%'}
+                />
+              </div>
+              <div className="w-full lg:w-[50%]">
+                <TextInput
+                  label={'NÚMERO OU IDENTIFICADOR'}
+                  placeholder={'Preencha o número ou identificador da residência do cliente favorecido...'}
+                  value={infoHolder.favorecido.numeroOuIdentificador}
+                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, favorecido: { ...prev.favorecido, numeroOuIdentificador: value } }))}
                   width={'100%'}
                 />
               </div>
             </div>
           </motion.div>
         ) : (
-          <motion.div initial={{ scale: 0.8, opacity: 0.3 }} animate={{ scale: 1, opacity: 1 }} className="w-full flex flex-col gap-1">
+          <motion.div key={'readOnly'} variants={variants} initial="hidden" animate="visible" exit="exit" className="w-full flex flex-col gap-1 mt-2">
             <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center mt-2">
               <div className="flex gap-2 items-center text-gray-800">
                 <FaUser size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">{order?.favorecido?.nome || 'N/A'}</p>
+                <p className="font-raleway font-medium text-sm">{infoHolder.favorecido?.nome || 'N/A'}</p>
               </div>
               <div className="flex gap-2 items-center text-gray-800">
                 <AiFillPhone size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">{order?.favorecido?.contato || 'N/A'}</p>
+                <p className="font-raleway font-medium text-sm">{infoHolder.favorecido?.contato || 'N/A'}</p>
               </div>
             </div>
             <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center mt-2">
               <div className="flex gap-2 items-center">
                 <FaCity size={'20px'} color="rgb(31,41,55)" />
                 <p className="font-raleway font-medium text-sm">
-                  {order?.localizacao ? `${order?.localizacao.cidade} - ${order?.localizacao.uf} ` : 'N/A'}
+                  {infoHolder.localizacao ? `${infoHolder.localizacao.cidade} - ${infoHolder.localizacao.uf} ` : 'N/A'}
                 </p>
               </div>
               <div className="flex gap-2 items-center">
                 <MdLocationPin size={'20px'} color="rgb(31,41,55)" />
                 <p className="font-raleway font-medium text-sm">
-                  {order?.localizacao
-                    ? `${order?.localizacao.endereco}, Nº ${order?.localizacao.numeroOuIdentificador}, ${order?.localizacao.bairro} - ${order?.localizacao.cep}`
+                  {infoHolder.localizacao
+                    ? `${infoHolder.localizacao.endereco}, Nº ${infoHolder.localizacao.numeroOuIdentificador}, ${infoHolder.localizacao.bairro} - ${infoHolder.localizacao.cep}`
                     : 'N/A'}
                 </p>
               </div>

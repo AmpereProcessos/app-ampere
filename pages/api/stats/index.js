@@ -158,7 +158,7 @@ export default async function handler(req, res) {
         {
           $match: {
             'contrato.dataAssinatura': { $gte: '2023-07-01T00:00:00.000Z' },
-            'vendedor.nome': { $ne: 'ARTHUR CARVALHO' },
+            'vendedor.nome': { $nin: ['ARTHUR CARVALHO', 'MATHEUS OLIVEIRA'] },
             tipoDeServico: 'SISTEMA FOTOVOLTAICO',
           },
         },

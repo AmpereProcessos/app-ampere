@@ -376,17 +376,17 @@ export interface ServiceOrder {
     retirada: { qtde: number | null; descricao: string | null }[]
   }
   detalhes: {
-    pontoAgua: string
-    senhaWifi: string
-    configuracaoMonitoramento: boolean
-    possuiTrafo: boolean
-    tipoEstrutura: string
+    pontoAgua: string // 
+    senhaWifi: string // 
+    configuracaoMonitoramento: boolean // 
+    possuiTrafo: boolean //
+    tipoEstrutura: string // 
     tipoTelha?: string
     tipoPadrao?: string
     tipoSaidaPadrao?: string
     amperagemPadrao?: string
     responsabilidadePadrao?: string
-    topologia: string
+    topologia: string // 
   }
   anotacoes: string // to be used by the service responsible executor
   observacoes: string

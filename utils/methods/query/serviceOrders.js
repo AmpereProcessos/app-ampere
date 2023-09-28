@@ -79,7 +79,6 @@ async function fetchServiceOrderById({ id }) {
   }
 }
 export function useServiceOrderById({ id, enabled }) {
-  console.log('ID', id)
   return useQuery({
     queryKey: ['service-order', id],
     queryFn: async () => fetchServiceOrderById({ id }),

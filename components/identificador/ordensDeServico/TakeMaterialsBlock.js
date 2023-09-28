@@ -46,12 +46,15 @@ function TakeMaterialsBlock({ osInfo, setOsInfo, useMissingMaterialInformation }
           </button>
         )}
       </div>
-      <button
-        onClick={useMissingMaterialInformation}
-        className="text-xs self-center w-fit text-gray-500 font-medium rounded p-1 hover:bg-blue-50 hover:text-cyan-500  duration-300 ease-in-out"
-      >
-        USAR MATERIAIS FALTANTES
-      </button>
+      {useMissingMaterialInformation ? (
+        <button
+          onClick={useMissingMaterialInformation}
+          className="text-xs self-center w-fit text-gray-500 font-medium rounded p-1 hover:bg-blue-50 hover:text-cyan-500  duration-300 ease-in-out"
+        >
+          USAR MATERIAIS FALTANTES
+        </button>
+      ) : null}
+
       {addMenuIsOpen ? (
         <div className="w-full flex items-center gap-1">
           <div className="w-[70%]">

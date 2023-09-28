@@ -48,7 +48,11 @@ function ObservationModalBlock({ infoHolder, setInfoHolder }) {
           <motion.div key={'readOnly'} variants={variants} initial="hidden" animate="visible" exit="exit" className="w-full flex flex-col gap-2">
             <div className="flex-col  w-full min-h-[80px] rounded-bl-sm rounded-br-sm flex items-center justify-start p-3 bg-gray-200 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               {infoHolder.observacoes ? (
-                infoHolder.observacoes.split('\n').map((obs) => <p className="text-xs text-gray-600 font-medium">{obs}</p>)
+                infoHolder.observacoes.split('\n').map((obs, index) => (
+                  <p key={index} className="text-xs text-gray-600 font-medium">
+                    {obs}
+                  </p>
+                ))
               ) : (
                 <p className="text-xs text-gray-600 font-medium">SEM OBSERVAÇÕES</p>
               )}

@@ -309,112 +309,52 @@ function Home() {
                 <div className="flex items-center w-full justify-center">
                   <div className="flex flex-col items-center w-full mb-2">
                     <h1 className="text-gray-600 uppercase text-xl text-center font-bold">TOP 3 VENDEDORES</h1>
-                    <div className="lg:w-[600px] w-full flex items-end justify-center h-[500px] lg:h-[400px] gap-4 lg:gap-10 p-0 lg:p-6">
-                      <div className="h-full flex flex-col justify-end w-1/3">
+                    <div className="lg:w-[900px] w-full flex items-end justify-center h-[500px] lg:h-[400px] gap-4 lg:gap-10 p-0 lg:p-6">
+                      <div className="h-full flex flex-col justify-end w-1/5">
+                        {renderAvatarBySeller(topSellerData[3]?._id)}
+                        <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[3]?._id}</h1>
+                        <p className="text-center font-medium text-lg text-green-500">
+                          {topSellerData[3]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
+                        </p>
+                        <div className="h-[30%] w-full bg-gray-500 flex justify-center items-center text-3xl text-white font-bold">4º</div>
+                      </div>
+                      <div className="h-full flex flex-col justify-end w-1/5">
                         {renderAvatarBySeller(topSellerData[1]?._id)}
-                        {/* <div className="w-[50px] h-[50px] self-center">
-                          <Image
-                            src={
-                              "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_juliano.jpg?alt=media&token=3893b2ea-9f9a-48ca-8f1c-cc85aa04ecbd"
-                            }
-                            width={50}
-                            height={50}
-                            alt={"LOGO TOP 1º"}
-                            style={{ borderRadius: "100%" }}
-                          />
-                        </div> */}
                         <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[1]?._id}</h1>
                         <p className="text-center font-medium text-lg text-green-500">
                           {topSellerData[1]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
                         </p>
                         <div className="h-[60%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">2º</div>
                       </div>
-                      <div className="h-full flex flex-col justify-end w-1/3">
+                      <div className="h-full flex flex-col justify-end w-1/5">
                         {renderAvatarBySeller(topSellerData[0]?._id)}
-                        {/* <div className="w-[50px] h-[50px] self-center">
-                          <Image
-                            src={
-                              "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar_stenio.jpg?alt=media&token=44eef96f-7f8b-4e1b-95c0-ab609aef50c9"
-                            }
-                            width={50}
-                            height={50}
-                            alt={"LOGO TOP 1º"}
-                            style={{ borderRadius: "100%" }}
-                          />
-                        </div> */}
                         <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[0]?._id}</h1>
                         <p className="text-center font-medium text-lg text-green-500">
                           {topSellerData[0]?.potenciaVendida.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
                         </p>
                         <div className="grow w-full bg-[#fead41] flex justify-center items-center text-3xl text-white font-bold">1º</div>
                       </div>
-                      <div className="h-full flex flex-col justify-end w-1/3">
+                      <div className="h-full flex flex-col justify-end w-1/5">
                         {renderAvatarBySeller(topSellerData[2]?._id)}
-                        {/* <div className="w-[50px] h-[50px] self-center">
-                          <Image
-                            src={
-                              "https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-rafael_feo?alt=media&token=edec02ff-c2df-455d-ad30-8358710dda93"
-                            }
-                            width={50}
-                            height={50}
-                            alt={"LOGO TOP 1º"}
-                            style={{ borderRadius: "100%" }}
-                          />
-                        </div> */}
+
                         <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[2]?._id}</h1>
                         <p className="text-center font-medium text-lg text-green-500">
                           {topSellerData[2]?.potenciaVendida.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
                         </p>
                         <div className="h-[40%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">3º</div>
                       </div>
+                      <div className="h-full flex flex-col justify-end w-1/5">
+                        {renderAvatarBySeller(topSellerData[4]?._id)}
+                        <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[4]?._id}</h1>
+                        <p className="text-center font-medium text-lg text-green-500">
+                          {topSellerData[4]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
+                        </p>
+                        <div className="h-[15%] w-full bg-gray-500 flex justify-center items-center text-3xl text-white font-bold">5º</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               ) : null}
-              {/* {topSellerData ? (
-                <div className="flex items-center w-full justify-center">
-                  <div className="flex flex-col items-center w-full">
-                    <h1 className="text-gray-600 uppercase text-xl text-center font-bold">
-                      TOP 3 VENDEDORES
-                    </h1>
-                    <div className="lg:w-[600px] w-full flex items-end justify-center h-[300px] gap-10 p-6">
-                      <div className="h-full flex flex-col justify-end w-1/3">
-                        <h1 className="text-center font-bold text-sm text-gray-500">
-                          {topSellerData[1]._id}
-                        </h1>
-                        <p className="text-center font-medium text-lg text-green-500">
-                          {topSellerData[1].potenciaVendida} kWp
-                        </p>
-                        <div className="h-[60%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">
-                          2º
-                        </div>
-                      </div>
-                      <div className="h-full flex flex-col justify-end w-1/3">
-                        <h1 className="text-center font-bold text-sm text-gray-500">
-                          {topSellerData[0]._id}
-                        </h1>
-                        <p className="text-center font-medium text-lg text-green-500">
-                          {topSellerData[0].potenciaVendida} kWp
-                        </p>
-                        <div className="h-full w-full bg-[#fead41] flex justify-center items-center text-3xl text-white font-bold">
-                          1º
-                        </div>
-                      </div>
-                      <div className="h-full flex flex-col justify-end w-1/3">
-                        <h1 className="text-center font-bold text-sm text-gray-500">
-                          {topSellerData[2]._id}
-                        </h1>
-                        <p className="text-center font-medium text-lg text-green-500">
-                          {topSellerData[2].potenciaVendida} kWp
-                        </p>
-                        <div className="h-[30%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">
-                          3º
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : null} */}
             </div>
           </div>
           <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">

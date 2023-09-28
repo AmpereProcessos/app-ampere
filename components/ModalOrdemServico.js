@@ -13,6 +13,7 @@ import { PiWaveSineBold } from 'react-icons/pi'
 import { IoMdAlert, IoMdResize, IoMdWater } from 'react-icons/io'
 import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
 import { TbTopologyFullHierarchy } from 'react-icons/tb'
+import FavoredModalBlock from './identificador/ordensDeServico/FavoredModalBlock'
 const MODAL_STYLES = {
   position: 'fixed',
   top: '50%',
@@ -91,33 +92,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
                 <p className="text-xs font-medium">{dayjs(order?.dataEfetivacao).format('DD/MM/YYYY HH:mm')}</p>
               </div>
             ) : null}
-            <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">FAVORECIDO</h1>
-            <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center mt-2">
-              <div className="flex gap-2 items-center text-gray-800">
-                <FaUser size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">{order?.favorecido?.nome || 'N/A'}</p>
-              </div>
-              <div className="flex gap-2 items-center text-gray-800">
-                <AiFillPhone size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">{order?.favorecido?.contato || 'N/A'}</p>
-              </div>
-            </div>
-            <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center mt-2">
-              <div className="flex gap-2 items-center">
-                <FaCity size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">
-                  {order?.localizacao ? `${order?.localizacao.cidade} - ${order?.localizacao.uf} ` : 'N/A'}
-                </p>
-              </div>
-              <div className="flex gap-2 items-center">
-                <MdLocationPin size={'20px'} color="rgb(31,41,55)" />
-                <p className="font-raleway font-medium text-sm">
-                  {order?.localizacao
-                    ? `${order?.localizacao.endereco}, Nº ${order?.localizacao.numeroOuIdentificador}, ${order?.localizacao.bairro} - ${order?.localizacao.cep}`
-                    : 'N/A'}
-                </p>
-              </div>
-            </div>
+            <FavoredModalBlock order={order} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
             <h1 className="w-full p-2 rounded-tr-md rounded-tl-md text-center text-white font-bold bg-gray-800 mt-4">OBSERVAÇÕES</h1>
             <div className="w-full min-h-[80px] rounded-bl-sm rounded-br-sm flex items-center justify-center p-3 bg-gray-200 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               <p className="text-xs text-gray-600 font-medium">{infoHolder.observacoes || 'SEM OBSERVAÇÕES'}</p>

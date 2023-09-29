@@ -46,7 +46,6 @@ export default async function handler(req, res) {
       const collection = db.collection('ordensDeServico')
       const { id } = req.query
       const changes = req.body
-      console.log('MUDANÇAS', req.body)
       if (!id || typeof id != 'string') throw new createHttpError.BadRequest('ID não fornecido ou inválido.')
       if (!changes) throw new createHttpError.BadRequest('Mudanças não fornecidas.')
       delete changes._id

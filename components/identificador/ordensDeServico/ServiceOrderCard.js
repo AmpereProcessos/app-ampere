@@ -47,7 +47,7 @@ function ServiceOrderCard({ order, handleOpenModal }) {
         <div className="w-full p-3 h-[80px] text-xs text-gray-600 bg-gray-100 flex items-center justify-center overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
           <p>{order.observacoes}</p>
         </div>
-        <div className="w-full flex items-center justify-between mt-2">
+        <div className="w-full gap-4 flex-col lg:flex-row flex items-center justify-between mt-2">
           <div className={`flex items-center gap-2 ${order.dataEfetivacao ? 'text-green-500' : 'text-gray-500'}`}>
             <BsCalendarFill />
             <p className="text-xs font-medium">

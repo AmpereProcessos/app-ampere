@@ -167,6 +167,19 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           })
         }
       }
+      if (images.testesCorrenteCAeCC) {
+        for (let i = 0; i < images.testesCorrenteCAeCC.length; i++) {
+          let file = images.testesCorrenteCAeCC.item(i)
+          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/testesCorrenteCAeCC${i + 1}`)
+          let res = await uploadBytes(imageRef, file)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          links.push({
+            title: `TESTES DE CORRENTE CA E CC (${i + 1})`,
+            link: url,
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
+        }
+      }
       if (images.sistemaLigado) {
         for (let i = 0; i < images.sistemaLigado.length; i++) {
           let file = images.sistemaLigado.item(i)
@@ -175,6 +188,136 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
           let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
             title: `SISTEMA LIGADO (${i + 1})`,
+            link: url,
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
+        }
+      }
+      if (images.ordemServicoAssinada) {
+        for (let i = 0; i < images.ordemServicoAssinada.length; i++) {
+          let file = images.ordemServicoAssinada.item(i)
+          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/ordemServicoAssinada${i + 1}`)
+          let res = await uploadBytes(imageRef, file)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          links.push({
+            title: `OS ASSINADA (${i + 1})`,
+            link: url,
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
+        }
+      }
+      if (images.conferenciaCabosSolares) {
+        for (let i = 0; i < images.conferenciaCabosSolares.length; i++) {
+          let file = images.conferenciaCabosSolares.item(i)
+          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/conferenciaCabosSolares${i + 1}`)
+          let res = await uploadBytes(imageRef, file)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          links.push({
+            title: `CONFERÊNCIA DOS CABOS SOLARES (${i + 1})`,
+            link: url,
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
+        }
+      }
+      if (images.conferenciaCabosCA) {
+        for (let i = 0; i < images.conferenciaCabosCA.length; i++) {
+          let file = images.conferenciaCabosCA.item(i)
+          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/conferenciaCabosCA${i + 1}`)
+          let res = await uploadBytes(imageRef, file)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          links.push({
+            title: `CONFERÊNCIA CABOS CA (${i + 1})`,
+            link: url,
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
+        }
+      }
+      if (images.conferenciaConectores) {
+        for (let i = 0; i < images.conferenciaConectores.length; i++) {
+          let file = images.conferenciaConectores.item(i)
+          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/conferenciaConectores${i + 1}`)
+          let res = await uploadBytes(imageRef, file)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          links.push({
+            title: `CONFERÊNCIA CONECTORES (${i + 1})`,
+            link: url,
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
+        }
+      }
+      if (images.reapertoGrampos) {
+        for (let i = 0; i < images.reapertoGrampos.length; i++) {
+          let file = images.reapertoGrampos.item(i)
+          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/reapertoGrampos${i + 1}`)
+          let res = await uploadBytes(imageRef, file)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          links.push({
+            title: `REAPERTO DOS GRAMPOS (${i + 1})`,
+            link: url,
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
+        }
+      }
+      if (images.conferenciaMadeiramento) {
+        for (let i = 0; i < images.conferenciaMadeiramento.length; i++) {
+          let file = images.conferenciaMadeiramento.item(i)
+          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/conferenciaMadeiramento${i + 1}`)
+          let res = await uploadBytes(imageRef, file)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          links.push({
+            title: `CONFERÊNCIA DO MADEIRAMENTO (${i + 1})`,
+            link: url,
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
+        }
+      }
+      if (images.medidorConsumida) {
+        for (let i = 0; i < images.medidorConsumida.length; i++) {
+          let file = images.medidorConsumida.item(i)
+          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/medidorConsumida${i + 1}`)
+          let res = await uploadBytes(imageRef, file)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          links.push({
+            title: `MEDIDOR (03) (${i + 1})`,
+            link: url,
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
+        }
+      }
+      if (images.medidorInjetada) {
+        for (let i = 0; i < images.medidorInjetada.length; i++) {
+          let file = images.medidorInjetada.item(i)
+          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/medidorInjetada${i + 1}`)
+          let res = await uploadBytes(imageRef, file)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          links.push({
+            title: `MEDIDOR (103) (${i + 1})`,
+            link: url,
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
+        }
+      }
+      if (images.testeDAgua) {
+        for (let i = 0; i < images.testeDAgua.length; i++) {
+          let file = images.testeDAgua.item(i)
+          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/testeDAgua${i + 1}`)
+          let res = await uploadBytes(imageRef, file)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          links.push({
+            title: `TESTE D'ÁGUA (${i + 1})`,
+            link: url,
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
+        }
+      }
+      if (images.configuracaoConcluida) {
+        for (let i = 0; i < images.configuracaoConcluida.length; i++) {
+          let file = images.configuracaoConcluida.item(i)
+          var imageRef = ref(storage, `clientes/${order.favorecido.nome}/configuracaoConcluida${i + 1}`)
+          let res = await uploadBytes(imageRef, file)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          links.push({
+            title: `CONFIGURAÇÃO CONCLUIDA (${i + 1})`,
             link: url,
             format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
           })
@@ -495,6 +638,38 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
             </div>
           </div>
           <div className="w-fit flex flex-col items-center">
+            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DOS TESTES DE CORRENTE CC E CA</label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.testesCorrenteCAeCC ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.testesCorrenteCAeCC.length == 1 ? images.testesCorrenteCAeCC[0].name : `${images.testesCorrenteCAeCC[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    testesCorrenteCAeCC: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
             <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DO SISTEMA LIGADO</label>
             <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
               <div className="absolute">
@@ -517,6 +692,38 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
                   setImages({
                     ...images,
                     sistemaLigado: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DA ORDEM ASSINADA</label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.ordemServicoAssinada ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.ordemServicoAssinada.length == 1 ? images.ordemServicoAssinada[0].name : `${images.ordemServicoAssinada[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    ordemServicoAssinada: e.target.files,
                   })
                 }
                 className="h-full w-full opacity-0"
@@ -555,6 +762,298 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
                 type="file"
                 multiple={true}
                 accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO CONFERÊNCIA CABOS SOLARES</label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.conferenciaCabosSolares ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.conferenciaCabosSolares.length == 1
+                        ? images.conferenciaCabosSolares[0].name
+                        : `${images.conferenciaCabosSolares[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    conferenciaCabosSolares: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO CONFERÊNCIA DOS CABOS CA</label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.conferenciaCabosCA ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.conferenciaCabosCA.length == 1 ? images.conferenciaCabosCA[0].name : `${images.conferenciaCabosCA[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    conferenciaCabosCA: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO CONFERÊNCIA DOS MC4</label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.conferenciaConectores ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.conferenciaConectores.length == 1 ? images.conferenciaConectores[0].name : `${images.conferenciaConectores[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    conferenciaConectores: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO REAPERTO DOS GRAMPOS</label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.reapertoGrampos ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.reapertoGrampos.length == 1 ? images.reapertoGrampos[0].name : `${images.reapertoGrampos[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    reapertoGrampos: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO CONFERÊNCIA DO MADEIRAMENTO</label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.conferenciaMadeiramento ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.conferenciaMadeiramento.length == 1
+                        ? images.conferenciaMadeiramento[0].name
+                        : `${images.conferenciaMadeiramento[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    conferenciaMadeiramento: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DO MEDIDOR (03)</label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.medidorConsumida ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.medidorConsumida.length == 1 ? images.medidorConsumida[0].name : `${images.medidorConsumida[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    medidorConsumida: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label className="ml-2 text-center text-[#15599a] font-bold">FOTO DO MEDIDOR (103)</label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.medidorInjetada ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.medidorInjetada.length == 1 ? images.medidorInjetada[0].name : `${images.medidorInjetada[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    medidorInjetada: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .pdf"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label className="ml-2 text-center text-[#15599a] font-bold">VÍDEO TESTE D'ÁGUA</label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.testeDAgua ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.testeDAgua.length == 1 ? images.testeDAgua[0].name : `${images.testeDAgua[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    testeDAgua: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .mp4"
+              />
+            </div>
+          </div>
+          <div className="w-fit flex flex-col items-center">
+            <label className="ml-2 text-center text-[#15599a] font-bold">PRINT DA CONFIGURAÇÃO CONCLUIDA (SE NECESSÁRIA)</label>
+            <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
+              <div className="absolute">
+                {images.configuracaoConcluida ? (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal text-center">
+                      {images.configuracaoConcluida.length == 1 ? images.configuracaoConcluida[0].name : `${images.configuracaoConcluida[0].name}...`}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <i className="fa fa-folder-open fa-4x text-blue-700"></i>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
+                  </div>
+                )}
+              </div>
+              <input
+                onChange={(e) =>
+                  setImages({
+                    ...images,
+                    configuracaoConcluida: e.target.files,
+                  })
+                }
+                className="h-full w-full opacity-0"
+                type="file"
+                multiple={true}
+                accept=".png, .jpeg, .mp4"
               />
             </div>
           </div>

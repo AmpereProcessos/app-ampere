@@ -117,6 +117,10 @@ async function updatingCRMProjectsManually(req, res) {
 export function isEmpty(value) {
   return value == null || (typeof value === 'string' && value.trim().length === 0)
 }
+export function formatDateInputChange(value) {
+  if (!value || new Date('-') == 'Invalid Date') return value
+  return new Date(value).toISOString()
+}
 export function pushToAuthPage(router) {
   router.push('/auth/authHome')
 }

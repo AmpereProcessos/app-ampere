@@ -224,9 +224,9 @@ function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
               {order.categoria == 'PADRÃO' && <ConferenciaPadraoOS order={order} closeModal={closeModal} queryKey={queryKey} />}
               {order.categoria == 'MANUTENÇÃO PREVENTIVA' && <ConferenciaManPreventivaOS order={order} closeModal={closeModal} queryKey={queryKey} />}
               {order.categoria == 'MONTAGEM' && <ConferenciaMontagemOS order={order} closeModal={closeModal} queryKey={queryKey} />}
-              {/* {!['MONTAGEM', 'MANUTENÇÃO PREVENTIVA', 'PADRÃO'].includes(order.categoria) ? (
-                <ConferenciaOutrasCategorias saveChanges={saveChanges} index={info.index} />
-              ) : null} */}
+              {!['MONTAGEM', 'MANUTENÇÃO PREVENTIVA', 'PADRÃO'].includes(order.categoria) ? (
+                <ConferenciaOutrasCategorias order={order} closeModal={closeModal} queryKey={queryKey} />
+              ) : null}
             </div>
           ) : null}
         </div>

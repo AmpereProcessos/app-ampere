@@ -30,6 +30,7 @@ import { useQueryClient } from 'react-query'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../utils/methods/handlers'
 import { getObjectDifference } from '../utils/methods/util/service-order'
+import FinishOrderBlock from './identificador/ordensDeServico/FinishOrderBlock'
 
 function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
   const queryClient = useQueryClient()
@@ -38,9 +39,11 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
   const [infoHolder, setInfoHolder] = useState(order)
   async function handleOrderUpdate() {
     const loadingToastId = toast.loading('Processando...')
+    const changesObject = getObjectDifference(order, infoHolder)
+    console.log(changesObject)
     try {
       const msg = await updateServiceOrder({
-        info: infoHolder,
+        info: changesObject,
         invalidateKey: ['service-order', orderId],
         orderId: orderId,
         queryClient: queryClient,
@@ -53,6 +56,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
       toast.error(msg)
     }
   }
+  console.log(infoHolder)
   useEffect(() => {
     setInfoHolder(order)
   }, [order])
@@ -60,8 +64,8 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
     <AnimatedModalWrapper modalIsOpen={modalIsOpen} width={'90%'} height={'87%'}>
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
-          <div className="flex items-center gap-2">
-            <h1 className="text-[#15599a] pl-6  font-bold">{order?.favorecido?.nome || '...'}</h1>
+          <div className="flex items-center gap-2 flex-col lg:flex-row">
+            <h1 className="text-[#15599a] pl-6 text-xs lg:text-base font-bold">{order?.favorecido?.nome || '...'}</h1>
             <p className="text-gray-500 text-center text-xs">#{order?._id || '...'}</p>
           </div>
           <button>
@@ -105,7 +109,9 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
                   <BsCalendarCheckFill />
                   <p className="text-xs font-medium">{dayjs(order?.dataEfetivacao).format('DD/MM/YYYY HH:mm')}</p>
                 </div>
-              ) : null}
+              ) : (
+                <FinishOrderBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+              )}
               <FavoredModalBlock order={order} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               <ObservationModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               <EquipmentModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

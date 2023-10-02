@@ -129,9 +129,8 @@ function ModalProjetos({ setModalIsOpen, modalIsOpen, project, editor, handleUpd
             <p className={`block lg:hidden text-sm italic text-green-500`}>{msg}</p>
           </div>
           <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
-            </div>
+            <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
+
             <InfoClienteBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
             {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
               <InfoDadosConcessionariaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />

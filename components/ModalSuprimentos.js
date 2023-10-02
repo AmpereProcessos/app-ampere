@@ -1,85 +1,72 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import {
-  vendedores,
-  statusLiberacao,
-  credores,
-  fornecedores,
-} from "../utils/constants";
-import { FaSave } from "react-icons/fa";
-import { IoMdAdd } from "react-icons/io";
-import { VscChromeClose } from "react-icons/vsc";
-import TextInput from "./TextInput";
-import SelectInput from "./SelectInput";
-import DateInput from "./DateInput";
-import NotificationCreationBlock from "./NotificationCreationBlock";
-import NumberInput from "./NumberInput";
-import dayjs from "dayjs";
-import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
-import { useKey } from "../utils/hooks";
-import InfoSistemaBlock from "./blocosInfoProjeto/InfoSistemaBlock";
-import InfoEstruturaBlock from "./blocosInfoProjeto/InfoEstruturaBlock";
-import InfoCompraBlock from "./blocosInfoProjeto/InfoCompraBlock";
-import InfoVisitaTecnicaBlock from "./blocosInfoProjeto/InfoVisitaTecnicaBlock";
-import InfoClienteBlock from "./blocosInfoProjeto/InfoClienteBlock";
-import InfoPagamentoBlock from "./blocosInfoProjeto/InfoPagamentoBlock";
-import InfoArquivosBlock from "./blocosInfoProjeto/InfoArquivosBlock";
-import SaveButton from "./utils/Buttons/SaveButton";
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { vendedores, statusLiberacao, credores, fornecedores } from '../utils/constants'
+import { FaSave } from 'react-icons/fa'
+import { IoMdAdd } from 'react-icons/io'
+import { VscChromeClose } from 'react-icons/vsc'
+import TextInput from './TextInput'
+import SelectInput from './SelectInput'
+import DateInput from './DateInput'
+import NotificationCreationBlock from './NotificationCreationBlock'
+import NumberInput from './NumberInput'
+import dayjs from 'dayjs'
+import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
+import { useKey } from '../utils/hooks'
+import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
+import InfoEstruturaBlock from './blocosInfoProjeto/InfoEstruturaBlock'
+import InfoCompraBlock from './blocosInfoProjeto/InfoCompraBlock'
+import InfoVisitaTecnicaBlock from './blocosInfoProjeto/InfoVisitaTecnicaBlock'
+import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
+import InfoPagamentoBlock from './blocosInfoProjeto/InfoPagamentoBlock'
+import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
+import SaveButton from './utils/Buttons/SaveButton'
 const MODAL_STYLES = {
-  position: "fixed",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%,-50%)",
-  backgroundColor: "#fff",
-  width: "93%",
-  height: "98%",
-  borderRadius: "10px",
-  padding: "10px",
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%,-50%)',
+  backgroundColor: '#fff',
+  width: '93%',
+  height: '98%',
+  borderRadius: '10px',
+  padding: '10px',
   zIndex: 1000,
-};
+}
 const OVERLAY_STYLES = {
-  position: "fixed",
+  position: 'fixed',
   top: 0,
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: "rgba(0,0,0,.7)",
+  backgroundColor: 'rgba(0,0,0,.7)',
   zIndex: 1000,
-};
+}
 function formataCPF(cpf) {
   //retira os caracteres indesejados...
-  cpf = cpf.replace(/[^\d]/g, "");
+  cpf = cpf.replace(/[^\d]/g, '')
   //realizar a formatação...
-  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
 }
 function formataCEP(cep) {
   cep = cep
-    .replace(/\D/g, "")
-    .replace(/(\d{5})(\d)/, "$1-$2")
-    .replace(/(-\d{3})\d+?$/, "$1");
+    .replace(/\D/g, '')
+    .replace(/(\d{5})(\d)/, '$1-$2')
+    .replace(/(-\d{3})\d+?$/, '$1')
 
-  return cep;
+  return cep
 }
-function ModalSuprimentos({
-  setModalIsOpen,
-  modalIsOpen,
-  project,
-  editor,
-  ppsEditor,
-  handleUpdates,
-  credentials,
-}) {
-  useKey("Escape", () => setModalIsOpen(false));
+function ModalSuprimentos({ setModalIsOpen, modalIsOpen, project, editor, ppsEditor, handleUpdates, credentials }) {
+  useKey('Escape', () => setModalIsOpen(false))
 
-  const [infoHolder, setInfo] = useState(project);
-  const [infoVisita, setInfoVisita] = useState({});
-  const [changes, setChanges] = useState({});
-  const [msg, setMsg] = useState({ text: "", color: "" });
+  const [infoHolder, setInfo] = useState(project)
+  const [infoVisita, setInfoVisita] = useState({})
+  const [changes, setChanges] = useState({})
+  const [msg, setMsg] = useState({ text: '', color: '' })
   async function handleChanges() {
     axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
-      setMsg({ text: "Alterações feitas", color: "text-green-400" });
-      handleUpdates(project._id);
-    });
+      setMsg({ text: 'Alterações feitas', color: 'text-green-400' })
+      handleUpdates(project._id)
+    })
     // if (validateChanges().liberar) {
     //   axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
     //     setMsg({ text: "Alterações feitas", color: "text-green-400" });
@@ -90,89 +77,68 @@ function ModalSuprimentos({
     // }
   }
   function validateChanges() {
-    if (
-      infoHolder.compra.statusLiberacao == "PAGO" &&
-      infoHolder.projeto.iniciar != "SIM"
-    ) {
+    if (infoHolder.compra.statusLiberacao == 'PAGO' && infoHolder.projeto.iniciar != 'SIM') {
       return {
         liberar: false,
-        message: "Por favor, preencha iniciar projeto.",
-      };
+        message: 'Por favor, preencha iniciar projeto.',
+      }
     }
-    if (
-      infoHolder.compra.statusLiberacao == "PAGO" &&
-      infoHolder.compra.dataPagamento == undefined
-    ) {
+    if (infoHolder.compra.statusLiberacao == 'PAGO' && infoHolder.compra.dataPagamento == undefined) {
       return {
         liberar: false,
-        message: "Por favor, preencha a data de pagamento.",
-      };
+        message: 'Por favor, preencha a data de pagamento.',
+      }
     }
-    if (
-      infoHolder.compra.statusEntrega == "ENTREGUE" &&
-      infoHolder.compra.dataEntrega == undefined
-    ) {
+    if (infoHolder.compra.statusEntrega == 'ENTREGUE' && infoHolder.compra.dataEntrega == undefined) {
       return {
         liberar: false,
-        message: "Por favor, preencha a data de entrega.",
-      };
+        message: 'Por favor, preencha a data de entrega.',
+      }
     }
-    if (
-      infoHolder.compra.statusEntrega == "EM ROTA" &&
-      infoHolder.compra.previsaoEntrega == undefined
-    ) {
+    if (infoHolder.compra.statusEntrega == 'EM ROTA' && infoHolder.compra.previsaoEntrega == undefined) {
       return {
         liberar: false,
-        message: "Por favor, preencha a previsão de entrega.",
-      };
+        message: 'Por favor, preencha a previsão de entrega.',
+      }
     }
-    if (
-      infoHolder.compra.statusEntrega == "EM ROTA" &&
-      infoHolder.faturamento?.previsaoFaturamento == undefined
-    ) {
+    if (infoHolder.compra.statusEntrega == 'EM ROTA' && infoHolder.faturamento?.previsaoFaturamento == undefined) {
       return {
         liberar: false,
-        message: "Por favor, preencha as informações de faturamento.",
-      };
+        message: 'Por favor, preencha as informações de faturamento.',
+      }
     }
-    if (
-      infoHolder.compra.statusEntrega == "EM ROTA" &&
-      infoHolder.compra.rastreio == undefined
-    ) {
+    if (infoHolder.compra.statusEntrega == 'EM ROTA' && infoHolder.compra.rastreio == undefined) {
       return {
         liberar: false,
-        message: "Por favor, preencha as informações de rastreio.",
-      };
+        message: 'Por favor, preencha as informações de rastreio.',
+      }
     }
-    if (infoHolder.projeto.iniciar == "SIM") {
+    if (infoHolder.projeto.iniciar == 'SIM') {
       if (infoHolder.compra.previsaoEntrega == undefined) {
         return {
           liberar: false,
-          message: "Preencha previsão de entrega",
-        };
+          message: 'Preencha previsão de entrega',
+        }
       } else if (infoHolder.compra.dataPagamento == undefined) {
         return {
           liberar: false,
-          message: "Por favor, preencha a data de pagamento.",
-        };
+          message: 'Por favor, preencha a data de pagamento.',
+        }
       } else if (infoHolder.compra.dataPedido == undefined) {
         return {
           liberar: false,
-          message: "Por favor, preencha a data do pedido.",
-        };
-      } else if (
-        infoHolder.compra.statusEntrega != "EM ROTA" &&
-        infoHolder.compra.statusEntrega != "ENTREGUE"
-      ) {
+          message: 'Por favor, preencha a data do pedido.',
+        }
+      } else if (infoHolder.compra.statusEntrega != 'EM ROTA' && infoHolder.compra.statusEntrega != 'ENTREGUE') {
         return {
           liberar: false,
-          message: "Preencha status de entrega válido",
-        };
+          message: 'Preencha status de entrega válido',
+        }
       } else {
-        return { liberar: true, message: "OK" };
+        return { liberar: true, message: 'OK' }
       }
     } else {
-      return { liberar: true, message: "OK" };
+      return { liberar: true, message: 'OK' }
     }
   }
   function getVisitaInfo(id) {
@@ -182,20 +148,20 @@ function ModalSuprimentos({
         obsSuprimentos: 1,
       })
       .then((res) => {
-        console.log(res.data);
+        console.log(res.data)
         setInfoVisita({
           suprimentos: res.data.suprimentos,
           obsSuprimentos: res.data.obsSuprimentos,
-        });
-      });
+        })
+      })
   }
   useEffect(() => {
     if (infoHolder.idVisitaTecnica?.trim().length > 10) {
-      getVisitaInfo(infoHolder.idVisitaTecnica);
+      getVisitaInfo(infoHolder.idVisitaTecnica)
     }
-  }, []);
-  console.log(infoHolder);
-  console.log(changes);
+  }, [])
+  console.log(infoHolder)
+  console.log(changes)
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
@@ -205,49 +171,21 @@ function ModalSuprimentos({
               <h1 className="text-[#15599a] pl-6  font-bold">
                 {infoHolder.qtde} - {infoHolder.nomeDoContrato}
               </h1>
-              {infoHolder.codigoSVB && (
-                <p className="text-gray-600 text-sm font-bold">
-                  #{infoHolder.codigoSVB}
-                </p>
-              )}
+              {infoHolder.codigoSVB && <p className="text-gray-600 text-sm font-bold">#{infoHolder.codigoSVB}</p>}
             </div>
             <div className="flex gap-x-2 items-center">
-              {msg.text && (
-                <p className={`hidden lg:block text-sm italic ${msg.color}`}>
-                  {msg.text}
-                </p>
-              )}
-              <SaveButton
-                text={"Salvar alterações"}
-                icon={<FaSave />}
-                handleClick={handleChanges}
-              />
+              {msg.text && <p className={`hidden lg:block text-sm italic ${msg.color}`}>{msg.text}</p>}
+              <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={handleChanges} />
               <button>
-                <VscChromeClose
-                  onClick={() => setModalIsOpen(false)}
-                  style={{ color: "red" }}
-                />
+                <VscChromeClose onClick={() => setModalIsOpen(false)} style={{ color: 'red' }} />
               </button>
             </div>
-            <p className={`block lg:hidden text-sm italic ${msg.color}`}>
-              {msg.text}
-            </p>
+            <p className={`block lg:hidden text-sm italic ${msg.color}`}>{msg.text}</p>
           </div>
           <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <NotificationCreationBlock
-                nomeDoProjeto={project.nomeDoContrato}
-                codProjeto={project.qtde}
-              />
-            </div>
-            <InfoClienteBlock
-              editor={false}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-              project={project}
-            />
+            <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
+
+            <InfoClienteBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
             <InfoVisitaTecnicaBlock
               editor={false}
               infoHolder={infoHolder}
@@ -256,19 +194,9 @@ function ModalSuprimentos({
               setChanges={setChanges}
               infoVisita={infoVisita}
             />
-            <InfoSistemaBlock
-              editor={true}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-            />
-            {![
-              "TROCA DE PADRÃO",
-              "REFORMA DE PADRÃO",
-              "SUBESTAÇÃO DE ENERGIA",
-            ].includes(infoHolder.tipoDeServico) &&
-              infoHolder.estruturaPersonalizada.aplicavel == "SIM" && (
+            <InfoSistemaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+            {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(infoHolder.tipoDeServico) &&
+              infoHolder.estruturaPersonalizada.aplicavel == 'SIM' && (
                 <InfoEstruturaBlock
                   comercialEdition={true}
                   technicalEdition={false}
@@ -280,7 +208,7 @@ function ModalSuprimentos({
                   project={project}
                 />
               )}
-            {infoHolder.tipoDeServico != "MONTAGEM E DESMONTAGEM" && (
+            {infoHolder.tipoDeServico != 'MONTAGEM E DESMONTAGEM' && (
               <InfoCompraBlock
                 editor={true}
                 project={project}
@@ -292,21 +220,15 @@ function ModalSuprimentos({
                 showMonetaryValues={true}
               />
             )}
-            <InfoPagamentoBlock
-              editor={true}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-            />
+            <InfoPagamentoBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
             <InfoArquivosBlock
               project={project}
               infoHolder={infoHolder}
               categories={[
-                { label: "DOCUMENTOS", value: "links.documentos" },
-                { label: "EQUIPAMENTOS", value: "links.equipamentos" },
-                { label: "PROJETOS", value: "links.projetos" },
-                { label: "OBRAS", value: "links.obras" },
+                { label: 'DOCUMENTOS', value: 'links.documentos' },
+                { label: 'EQUIPAMENTOS', value: 'links.equipamentos' },
+                { label: 'PROJETOS', value: 'links.projetos' },
+                { label: 'OBRAS', value: 'links.obras' },
               ]}
               handleUpdates={handleUpdates}
             />
@@ -314,7 +236,7 @@ function ModalSuprimentos({
         </div>
       </AnimatedModalWrapper>
     </>
-  );
+  )
 }
 
-export default ModalSuprimentos;
+export default ModalSuprimentos

@@ -165,9 +165,8 @@ function ModalOeM({ open, setModalIsOpen, modalIsOpen, project, editor, handleUp
             </div>
           </div>
           <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
-            </div>
+            <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
+
             <InfoClienteBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
             <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
               <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">PÓS-OBRA</span>

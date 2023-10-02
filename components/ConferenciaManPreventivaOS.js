@@ -994,7 +994,7 @@ function ConferenciaManPreventivaOS({ order, closeModal, queryKey }) {
             </div>
           </div>
           <div className="w-fit flex flex-col items-center">
-            <label className="ml-2 text-center text-[#15599a] font-bold">VÍDEO TESTE D'ÁGUA</label>
+            <label className="ml-2 text-center text-[#15599a] font-bold">VÍDEO TESTE D ÁGUA</label>
             <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
               <div className="absolute">
                 {images.testeDAgua ? (

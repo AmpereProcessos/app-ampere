@@ -17,6 +17,9 @@ import SelectInputWithImages from './inputs/SelectWithImages'
 import { formatNameAsInitials } from '../utils/methods/formatting'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../utils/methods/handlers'
+import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
+import { useQueryClient } from 'react-query'
+import { createNotification } from '../utils/methods/mutation/notifications'
 const variants = {
   hidden: {
     opacity: 0.2,
@@ -38,8 +41,15 @@ const variants = {
   },
 }
 function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
+  const queryClient = useQueryClient()
   const { data: session } = useSession()
   const { data: users } = useUsers({ enabled: !!session.user })
+  const { mutate } = useMutationWithFeedback({
+    mutationKey: ['create-notification'],
+    mutationFn: createNotification,
+    affectedQueryKey: ['notifications'],
+    queryClient: queryClient,
+  })
   const [notifyMenuVisible, setNotifyMenuVisible] = useState(false)
 
   const [notInfo, setNotInfo] = useState({
@@ -51,30 +61,26 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
 
   async function notify() {
     if (validateFields()) {
-      const loadingToastId = toast.loading('Enviando...')
-      try {
-        const notification = {
-          destinatario: notInfo.destinatario,
-          remetente: session?.user?.name,
-          remetenteId: session?.user?.id,
-          mensagem: notInfo.mensagem,
-          projetoReferencia: codProjeto,
-          nomeDoProjeto: nomeDoProjeto,
-        }
-        await axios.post('/api/notificacoes/1', notification)
-        toast.dismiss(loadingToastId)
-        toast.success('Notificação enviada com sucesso !')
-        setNotInfo({
-          destinatario: null,
-          mensagem: '',
-          projetoReferencia: codProjeto,
-          nomeDoProjeto: nomeDoProjeto,
-        })
-      } catch (error) {
-        toast.dismiss(loadingToastId)
-        const msg = getErrorMessage(error)
-        toast.error(msg)
+      // const loadingToastId = toast.loading('Enviando...')
+
+      const notification = {
+        destinatario: notInfo.destinatario,
+        remetente: session?.user?.name,
+        remetenteId: session?.user?.id,
+        mensagem: notInfo.mensagem,
+        projetoReferencia: codProjeto,
+        nomeDoProjeto: nomeDoProjeto,
       }
+      mutate(notification)
+      // await axios.post('/api/notificacoes/1', notification)
+      // toast.dismiss(loadingToastId)
+      // toast.success('Notificação enviada com sucesso !')
+      setNotInfo({
+        destinatario: null,
+        mensagem: '',
+        projetoReferencia: codProjeto,
+        nomeDoProjeto: nomeDoProjeto,
+      })
     }
   }
   function validateFields() {

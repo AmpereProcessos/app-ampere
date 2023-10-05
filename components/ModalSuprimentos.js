@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { vendedores, statusLiberacao, credores, fornecedores } from '../utils/constants'
+import { useQueryClient } from 'react-query'
+
 import { FaSave } from 'react-icons/fa'
-import { IoMdAdd } from 'react-icons/io'
 import { VscChromeClose } from 'react-icons/vsc'
-import TextInput from './TextInput'
-import SelectInput from './SelectInput'
-import DateInput from './DateInput'
+
 import NotificationCreationBlock from './NotificationCreationBlock'
-import NumberInput from './NumberInput'
-import dayjs from 'dayjs'
+
 import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
+import SaveButton from './utils/Buttons/SaveButton'
+import LoadingPage from './utils/LoadingPage'
+import ErrorPage from './utils/ErrorPage'
+
 import { useKey } from '../utils/hooks'
+import { useClientById } from '../utils/methods/query/clients'
+import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
+import { updateProject } from '../utils/methods/mutation/clients'
+
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
 import InfoEstruturaBlock from './blocosInfoProjeto/InfoEstruturaBlock'
 import InfoCompraBlock from './blocosInfoProjeto/InfoCompraBlock'
@@ -19,13 +24,6 @@ import InfoVisitaTecnicaBlock from './blocosInfoProjeto/InfoVisitaTecnicaBlock'
 import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
 import InfoPagamentoBlock from './blocosInfoProjeto/InfoPagamentoBlock'
 import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
-import SaveButton from './utils/Buttons/SaveButton'
-import { useClientById } from '../utils/methods/query/clients'
-import LoadingPage from './utils/LoadingPage'
-import ErrorPage from './utils/ErrorPage'
-import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
-import { updateProject } from '../utils/methods/mutation/clients'
-import { useQueryClient } from 'react-query'
 
 function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   useKey('Escape', () => closeModal())
@@ -61,8 +59,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
     }
     setInfo(project)
   }, [project])
-  console.log('INFO HOLDER', infoHolder)
-  console.log('CHANGES', changes)
+
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
@@ -84,7 +81,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
           {isSuccess && infoHolder ? (
-            <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
+            <div className="flex flex-col grow gap-y-2 overflow-y-auto overscroll-y-auto">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoClienteBlock
                 editor={false}

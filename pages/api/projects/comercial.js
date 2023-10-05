@@ -1,24 +1,15 @@
-import connectToDatabase from "../../../utils/connectDb";
+import connectToDatabase from '../../../utils/connectDb'
 export default async function handler(req, res) {
-  if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
+  if (req.method === 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
     let comercial = await collection
       .aggregate([
         {
           $match: {
-            "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
-            "obra.statusDaObra": {
-              $in: [
-                "AGENDADA",
-                "AGUARDANDO AGENDAMENTO",
-                "EM ANDAMENTO",
-                "NÃO DEFINIDO",
-                "CASA EM CONSTRUÇÃO",
-                "",
-                null,
-                undefined,
-              ],
+            'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+            'obra.statusDaObra': {
+              $in: ['AGENDADA', 'AGUARDANDO AGENDAMENTO', 'EM ANDAMENTO', 'NÃO DEFINIDO', 'CASA EM CONSTRUÇÃO', '', null, undefined],
             },
           },
         },
@@ -27,16 +18,17 @@ export default async function handler(req, res) {
             _id: 1,
             qtde: 1,
             nomeDoContrato: 1,
+            codigoSVB: 1,
             contrato: 1,
             vendedor: 1,
             pagamento: 1,
             tipoDeServico: 1,
-            "sistema.valorProjeto": 1,
-            "padrao.valor": 1,
-            "estruturaPersonalizada.valor": 1,
-            "sistema.potPico": 1,
-            "compra.statusLiberacao": 1,
-            "compra.dataPagamento": 1,
+            'sistema.valorProjeto': 1,
+            'padrao.valor': 1,
+            'estruturaPersonalizada.valor': 1,
+            'sistema.potPico': 1,
+            'compra.status': 1,
+            'compra.dataPagamento': 1,
             insider: 1,
           },
         },
@@ -44,31 +36,22 @@ export default async function handler(req, res) {
           $sort: { qtde: 1 },
         },
       ])
-      .toArray();
-    res.json(comercial);
-  } else if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
-    var arr;
+      .toArray()
+    res.json(comercial)
+  } else if (req.method === 'POST') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
+    var arr
     switch (req.body.filtrarPor) {
-      case "REGIONAL":
+      case 'REGIONAL':
         arr = await collection
           .aggregate([
             {
               $match: {
                 regional: req.body.parametro,
-                "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
-                "obra.statusDaObra": {
-                  $in: [
-                    "AGENDADA",
-                    "AGUARDANDO AGENDAMENTO",
-                    "EM ANDAMENTO",
-                    "NÃO DEFINIDO",
-                    "CASA EM CONSTRUÇÃO",
-                    "",
-                    null,
-                    undefined,
-                  ],
+                'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+                'obra.statusDaObra': {
+                  $in: ['AGENDADA', 'AGUARDANDO AGENDAMENTO', 'EM ANDAMENTO', 'NÃO DEFINIDO', 'CASA EM CONSTRUÇÃO', '', null, undefined],
                 },
               },
             },
@@ -78,26 +61,17 @@ export default async function handler(req, res) {
               },
             },
           ])
-          .toArray();
-        break;
-      case "VENDEDOR":
+          .toArray()
+        break
+      case 'VENDEDOR':
         arr = await collection
           .aggregate([
             {
               $match: {
-                "vendedor.nome": req.body.parametro,
-                "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
-                "obra.statusDaObra": {
-                  $in: [
-                    "AGENDADA",
-                    "AGUARDANDO AGENDAMENTO",
-                    "EM ANDAMENTO",
-                    "NÃO DEFINIDO",
-                    "CASA EM CONSTRUÇÃO",
-                    "",
-                    null,
-                    undefined,
-                  ],
+                'vendedor.nome': req.body.parametro,
+                'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+                'obra.statusDaObra': {
+                  $in: ['AGENDADA', 'AGUARDANDO AGENDAMENTO', 'EM ANDAMENTO', 'NÃO DEFINIDO', 'CASA EM CONSTRUÇÃO', '', null, undefined],
                 },
               },
             },
@@ -107,24 +81,15 @@ export default async function handler(req, res) {
               },
             },
           ])
-          .toArray();
+          .toArray()
       default:
         arr = await collection
           .aggregate([
             {
               $match: {
-                "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
-                "obra.statusDaObra": {
-                  $in: [
-                    "AGENDADA",
-                    "AGUARDANDO AGENDAMENTO",
-                    "EM ANDAMENTO",
-                    "NÃO DEFINIDO",
-                    "CASA EM CONSTRUÇÃO",
-                    "",
-                    null,
-                    undefined,
-                  ],
+                'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+                'obra.statusDaObra': {
+                  $in: ['AGENDADA', 'AGUARDANDO AGENDAMENTO', 'EM ANDAMENTO', 'NÃO DEFINIDO', 'CASA EM CONSTRUÇÃO', '', null, undefined],
                 },
               },
             },
@@ -134,8 +99,8 @@ export default async function handler(req, res) {
               },
             },
           ])
-          .toArray();
+          .toArray()
     }
-    res.json(arr);
+    res.json(arr)
   }
 }

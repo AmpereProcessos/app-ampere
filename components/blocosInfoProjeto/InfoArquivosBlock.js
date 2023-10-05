@@ -4,8 +4,10 @@ import React, { useState } from 'react'
 import { storage } from '../../utils/firebase'
 import AnexoArquivo from '../AnexoArquivo'
 import FileLinkBlock from '../utils/FileLinkBlock'
+import { useQueryClient } from 'react-query'
 
-function InfoArquivosBlock({ project, infoHolder, categories, handleUpdates }) {
+function InfoArquivosBlock({ project, infoHolder, categories }) {
+  const queryClient = useQueryClient()
   const [msg, setMsg] = useState({ text: '', color: '' })
   function clearMsg(time = 1500) {
     setTimeout(() => {
@@ -33,7 +35,7 @@ function InfoArquivosBlock({ project, infoHolder, categories, handleUpdates }) {
           .catch((err) => {
             throw new Error('Erro ao atualizar links do usuário.')
           })
-        handleUpdates(project._id)
+        await queryClient.invalidateQueries({ queryKey: ['project-by-id', project._id] })
         setMsg({
           text: 'Arquivo excluido e informações do cliente atualizadas.',
           color: 'text-green-500',
@@ -61,7 +63,6 @@ function InfoArquivosBlock({ project, infoHolder, categories, handleUpdates }) {
           prevLinks={project.links ? project.links : {}}
           client={`${infoHolder._id}-${infoHolder.nomeDoContrato}-${infoHolder.codigoSVB}`}
           categories={categories}
-          handleUpdates={handleUpdates}
         />
       </div>
       {project.links && (

@@ -12,7 +12,7 @@ export function useMutationWithFeedback({ queryClient, mutationKey, mutationFn, 
       const loadingToast = toast.loading('Processando...')
 
       // Invalidate relevant queries before the mutation
-      await queryClient.invalidateQueries({ queryKey: affectedQueryKey })
+      await queryClient.cancelQueries({ queryKey: affectedQueryKey })
 
       // Return the loading toast to be used for rollback on error
       return { loadingToast }
@@ -23,6 +23,9 @@ export function useMutationWithFeedback({ queryClient, mutationKey, mutationFn, 
       toast.dismiss(loadingToast)
       const msg = typeof data == 'string' ? data : 'Atualização feita com sucesso !'
       toast.success(msg)
+    },
+    onSettled: async (data, error) => {
+      await queryClient.invalidateQueries({ queryKey: affectedQueryKey })
     },
     onError: (error, variables, context) => {
       // Rollback changes if needed

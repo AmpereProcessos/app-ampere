@@ -27,68 +27,52 @@ function getList({ str, category }) {
 export default async function handler(req, res) {
   const projectDb = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
   const projectsCollection = await projectDb.collection('dados')
-  const projects = await projectsCollection
+  const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
+  const crmProposesCollection = crmDb.collection('proposes')
+
+  const projectsWithProposeId = await projectsCollection
     .aggregate([
       {
         $match: {
-          'contrato.status': 'ASSINADO',
-        },
-      },
-      {
-        $sort: {
-          qtde: 1,
+          idPropostaCRM: { $ne: null },
+          tipoDeServico: 'SISTEMA FOTOVOLTAICO',
         },
       },
       {
         $project: {
-          qtde: 1,
           nomeDoContrato: 1,
-          compra: 1,
+          idPropostaCRM: 1,
         },
       },
     ])
     .toArray()
-  const formatted = projects.map((project) => {
-    var eligibleToBuy = false
-    var supplyStatus = 'NÃO DEFINIDO'
-    const status = project.compra.statusLiberacao
-    const deliveryStatus = project.compra.statusEntrega
-    if (status == 'REALIZAR COMPRA') {
-      eligibleToBuy = true
-    }
-    if (status == 'PAGO') {
-      eligibleToBuy = true
-    }
-    if (status == 'PAGO' && deliveryStatus == 'ENTREGUE') {
-      eligibleToBuy = true
-      supplyStatus = 'CONCLUIDA'
-    }
-    if (status == 'AGUARDAR PARECER DE ACESSO') {
-      eligibleToBuy = true
-      supplyStatus = 'AGUARDANDO PARECER DE ACESSO'
-    }
-    if (status == 'AGUARDANDO PAGAMENTO') {
-      eligibleToBuy = true
-      supplyStatus = 'AGUARDANDO PAGAMENTO'
-    }
-    if (status == 'PREVISÃO DE EQUIPAMENTOS') {
-      eligibleToBuy = true
-      supplyStatus = 'PREDEFINIÇÃO DE EQUIPAMENTOS' // QUE NOME UTILIZAR ?
-    }
+  const proposes = await crmProposesCollection
+    .aggregate([
+      {
+        $project: {
+          precificacao: 1,
+        },
+      },
+    ])
+    .toArray()
+  const formatted = projectsWithProposeId.map((project) => {
+    const proposeId = project.idPropostaCRM
+    const equivalentPropose = proposes.find((propose) => propose._id == proposeId)
+    if (!equivalentPropose) return null
+    const kitPrice = equivalentPropose.precificacao.kit?.custo || 0
     return {
       updateOne: {
-        filter: {
-          _id: new ObjectId(project._id),
-        },
+        filter: { _id: new ObjectId(project._id) },
         update: {
           $set: {
-            'compra.status': supplyStatus,
-            'compra.liberacao': eligibleToBuy,
+            'compra.previsaoValorDoKit': Number(Number(kitPrice).toFixed(2)),
           },
         },
       },
     }
   })
-  const bulkwriteResp = await projectsCollection.bulkWrite(formatted)
-  res.json(bulkwriteResp)
+  console.log(formatted.length)
+
+  const dbResponse = await projectsCollection.bulkWrite(formatted)
+  res.json(dbResponse)
 }

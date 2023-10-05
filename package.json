@@ -54,7 +54,8 @@
     "util": "^0.12.5",
     "uuid": "^9.0.0",
     "xlsx": "^0.18.5",
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.4.23",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@svgr/webpack": "^6.5.1",

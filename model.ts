@@ -1,3 +1,4 @@
+import { z } from 'zod'
 interface IProject {
   _id: string
   qtde: number
@@ -41,7 +42,7 @@ interface IProject {
     tecnico: string
     tipoDaTelha: string
   }
-  // CONTRATO É COMUM PARA TODOS OS CONTRATOS
+
   contrato: {
     comissaoPaga: boolean
     comissaoVendedor: number
@@ -51,7 +52,7 @@ interface IProject {
     formaAssinatura: 'FISICO' | 'DIGITAL'
     status: string
   }
-  // COMPRA NÃO SE APLICA A O&M
+
   compra: {
     dataEntrega: string
     dataLiberacao: string
@@ -68,15 +69,16 @@ interface IProject {
     statusLiberacao: string
     tipoDoKit: 'NORMAL' | 'PROMO' | 'NÃO DEFINIDO'
     valorDoKit: number
+    previsaoValorDoKit?: number | null
   }
-  // DADOS CONCESSIONÁRIA NÃO SE APLICA A OFF GRID E BOMBA SOLAR
+
   dadosCemig: {
     distCreditos: 'NÃO' | 'SIM'
     numeroInstalacao: number
     qtdeDistCreditos: number
     titularProjeto: string
   }
-  // PROJETO NÃO SE APLICA A O&M, OFF GRID E BOMBA SOLAR
+
   projeto: {
     acStatus: string
     aumentoDeCarga: 'SIM' | 'NÃO'
@@ -95,7 +97,7 @@ interface IProject {
     }
     projetoConcluido: 'SIM' | 'NÃO'
   }
-  // SISTEMA É COMUM PARA TODOS OS CONTRATOS
+
   sistema: {
     capacidadeBateria: number
     marcaBateria: string
@@ -115,7 +117,7 @@ interface IProject {
     topologia: 'MICRO' | 'INVERSOR' | 'OTIMIZADOR'
     valorProjeto: number
   }
-  // PADRÃO NÃO SE APLICA A O&M, OFF GRID E BOMBA SOLAR
+
   padrao: {
     caixaConjugada: 'SIM' | 'NÃO' | 'NÃO DEFINIDO'
     respInstalacao: 'AMPERE' | 'CLIENTE' | 'NÃO SE APLICA'
@@ -124,7 +126,7 @@ interface IProject {
     tipoEntrega: 'AÉREA' | 'SUBTERRÂNEO'
     valor: number
   }
-  // ESTRUTURA PERSONALIZADA NÃO SE APLICA A O&M, TROCA DE PADRÃO
+
   estruturaPersonalizada: {
     aplicavel: 'SIM' | 'NÃO'
     dataEntrega: string
@@ -136,7 +138,7 @@ interface IProject {
     tipo: string
     valor: number
   }
-  // PAGAMENTO É COMUM PARA TODOS OS CONTRATOS
+
   pagamento: {
     cobrancaFeita: boolean
     pagador: string
@@ -147,7 +149,7 @@ interface IProject {
     retorno: number
     status: string
   }
-  // PARECER NÃO SE APLICA A O&M, OFF GRID E BOMBA SOLAR
+
   parecer: {
     dataParecerDeAcesso: string
     motivoReprova: string
@@ -157,7 +159,7 @@ interface IProject {
     qtdeReprovas: number
     statusDoParecerDeAcesso: string
   }
-  // OBRA NÃO SE APLICA A O&M
+
   obra: {
     checklist: 'SIM' | 'NÃO'
     entrada: string
@@ -169,7 +171,7 @@ interface IProject {
     statusSolicitacao: string
     trafo: 'SIM' | 'NÃO'
   }
-  // VISTORIA NÃO APLICA A O&M, OFF GRID E BOMBA SOLAR
+
   vistoria: {
     dataPedido: string
     equipeDeCampoNecessaria: 'SIM' | 'NÃO'
@@ -178,7 +180,7 @@ interface IProject {
     status: string
     vistoriaReprovada: 'SIM' | 'NÃO'
   }
-  // MATERIAL NÃO SE APLICA A O&M
+
   material: {
     avarias: boolean
     chamadoIrregularidade: boolean
@@ -197,12 +199,12 @@ interface IProject {
     materialFaltante: boolean
     statusSeparacao: 'SEPARADO' | 'NÃO DEFINIDO' | 'INICIAR SEPARAÇÃO'
   }
-  // MEDIDOR NÃO SE APLICA A O&M, OFF GRID E BOMBA SOLAR
+
   medidor: {
     data: string
     status: string
   }
-  // O&M NÃO APLICA A TROCA DE PADRÃO
+
   oem: {
     aplicavel: boolean
     diagnostico: string
@@ -212,19 +214,19 @@ interface IProject {
     qtdeManutencao: number
     valor: number
   }
-  // APP NÃO SE APLICA A TROCA DE PADRÃO
+
   app: {
     login: string
     senha: string
     data: Date | string
   }
-  // COMISSIONAMENTO NÃO SE APLICA A O&M, OFF GRID E BOMBA
+
   comissionamento: {
     comercial: boolean
     projetos: boolean
     suprimentos: boolean
   }
-  // CONFERENCIAS É COMUM PARA TODOS OS CONTRATOS
+
   conferencias: {
     energiaInjetada: {
       data: string
@@ -239,7 +241,7 @@ interface IProject {
       status: 'REALIZADO' | 'NÃO REALIZADO'
     }
   }
-  // RELATORIOS NÃO SE APLICA A O&M, OFF GRID E BOMBA
+
   relatorios: {
     envioUm: {
       data: string
@@ -258,19 +260,19 @@ interface IProject {
       status: 'REALIZADO' | 'NÃO REALIZADO'
     }
   }
-  // FATURAMENTO É COMUM PARA TODOS OS CONTRATOS
+
   faturamento: {
     concluido: boolean
     cnpjFaturamento: string
     empresaFaturamento: 'AMPERE ENERGIAS' | 'ANALISE DO FINANCEIRO' | 'IZAIRA SERVIÇOS'
     previsaoFaturamento: string
   }
-  // INDICACAO É COMUM PARA TODOS OS CONTRATOS
+
   indicacao: {
     contato: string
     quemIndicou: string
   }
-  // JORNADA É COMUM PARA TODOS OS CONTRATOS
+
   jornada: {
     assDocumentacoes: boolean
     boasVindas: boolean
@@ -296,7 +298,7 @@ interface IProject {
     contatos: string
     cuidados: string
   }
-  // LINKS É COMUM PARA TODOS OS CONTRATOS
+
   links: {
     chamadosSuporte: LinksItem[]
     chamadosSuprimentos: LinksItem[]
@@ -308,14 +310,375 @@ interface IProject {
     projetos: LinksItem[]
     visitaTecnica: LinksItem[]
   }
-  // MANUTENCAO PREVENTIVA NÃO SE APLICA A O&M, OFF GRID E BOMBA
+
   manutencaoPreventiva: {
     data: string
     status: string
   }
-  // ORDENS DE SERVIÇO É COMUM PARA TODOS OS CONTRATOS
+
   ordensDeServico: any[]
 }
+const Project = z.object({
+  _id: z.string(),
+  qtde: z.number(),
+  nomeDoContrato: z.string(),
+  nomeDoProjeto: z.string(),
+  codigoSVB: z.union([z.string(), z.number()]),
+  tipoDeServico: z.string(),
+  regional: z.union([z.literal('REGIONAL ITUIUTABA'), z.literal('REGIONAL UBERLÂNDIA')]),
+  vendedor: z.object({
+    nome: z.string(),
+    codigo: z.number(),
+  }),
+  cep: z.string(),
+  uf: z.union([z.literal('MG'), z.literal('GO'), z.string()]),
+  cidade: z.string(),
+  bairro: z.string(),
+  logradouro: z.string(),
+  numeroResidencia: z.string(),
+  cpf_cnpj: z.string(),
+  dataNascimento: z.string(),
+  email: z.string().email(),
+  linkDrive: z.string(),
+  segmento: z.union([z.literal('RESIDENCIAL'), z.literal('RURAL'), z.literal('COMERCIAL'), z.literal('INDUSTRIAL')]),
+  telefone: z.string(),
+  ondeTrabalha: z.string(),
+  possuiaGD: z.boolean(),
+  idVisitaTecnica: z.string(),
+  canalVenda: z.string(),
+  insider: z.string(),
+  obsComercial: z.string(),
+  nps: z.number(),
+  idProjetoCRM: z.string(),
+  idPropostaCRM: z.string(),
+  idSolicitacaoContrato: z.string(),
+  possuiDeficiencia: z.string(),
+  qualDeficiencia: z.string(),
+  visitaTecnica: z.object({
+    amperagem: z.string(),
+    saidaDoCliente: z.union([z.literal('AEREO'), z.literal('SUBTERRANEO')]),
+    status: z.string(),
+    tecnico: z.string(),
+    tipoDaTelha: z.string(),
+  }),
+
+  contrato: z.object({
+    comissaoPaga: z.boolean(),
+    comissaoVendedor: z.number(),
+    dataAssinatura: z.string(),
+    dataLiberacao: z.string(),
+    dataSolicitacao: z.string(),
+    formaAssinatura: z.union([z.literal('FISICO'), z.literal('DIGITAL')]),
+    status: z.string(),
+  }),
+
+  compra: z.object({
+    dataEntrega: z.string(),
+    dataLiberacao: z.string(),
+    dataMaxPagamento: z.string(),
+    dataPagamento: z.string(),
+    dataPedido: z.string(),
+    fornecedor: z.string(),
+    informacoes: z.string(),
+    kitInfo: z.string(),
+    localEntrega: z.string(),
+    previsaoEntrega: z.string(),
+    rastreio: z.string(),
+    statusEntrega: z.string(),
+    statusLiberacao: z.string(),
+    tipoDoKit: z.union([z.literal('NORMAL'), z.literal('PROMO'), z.literal('NÃO DEFINIDO')]),
+    valorDoKit: z.number(),
+    previsaoValorDoKit: z.union([z.number(), z.null()]),
+  }),
+
+  dadosCemig: z.object({
+    distCreditos: z.union([z.literal('NÃO'), z.literal('SIM')]),
+    numeroInstalacao: z.number(),
+    qtdeDistCreditos: z.number(),
+    titularProjeto: z.string(),
+  }),
+
+  projeto: z.object({
+    acStatus: z.string(),
+    aumentoDeCarga: z.union([z.literal('SIM'), z.literal('NÃO')]),
+    dataLiberacaoDocumentacao: z.string(),
+    dataAssDocumentacao: z.string(),
+    dataSolicitacaoAcesso: z.string(),
+    desenhoTelhado: z.string(),
+    diagramaUnifilar: z.string(),
+    mapaDeMicro: z.string(),
+    fechamentoAC: z.string(),
+    formaAssDocumentacao: z.union([z.literal('DIGITAL'), z.literal('FISICA')]),
+    iniciar: z.union([z.literal('SIM'), z.literal('NÃO'), z.literal('NÃO DEFINIDO')]),
+    projetista: z.object({
+      nome: z.string(),
+      codigo: z.string(),
+    }),
+    projetoConcluido: z.union([z.literal('SIM'), z.literal('NÃO')]),
+  }),
+
+  sistema: z.object({
+    capacidadeBateria: z.number(),
+    marcaBateria: z.string(),
+    qtdeBateria: z.number(),
+    tipoBateria: z.string(),
+    marcaBomba: z.string(),
+    potBomba: z.number(),
+    qtdeBomba: z.number(),
+    marcaControlador: z.string(),
+    correnteControlador: z.number(),
+    qtdeControlador: z.number(),
+    tipoControlador: z.string(),
+    inversor: z.string(),
+    potModulos: z.number(),
+    qtdeModulos: z.number(),
+    potPico: z.number(),
+    topologia: z.union([z.literal('MICRO'), z.literal('INVERSOR'), z.literal('OTIMIZADOR')]),
+    valorProjeto: z.number(),
+  }),
+
+  padrao: z.object({
+    caixaConjugada: z.union([z.literal('SIM'), z.literal('NÃO'), z.literal('NÃO DEFINIDO')]),
+    respInstalacao: z.union([z.literal('AMPERE'), z.literal('CLIENTE'), z.literal('NÃO SE APLICA')]),
+    respPagamento: z.string(),
+    tipo: z.string(),
+    tipoEntrega: z.union([z.literal('AÉREA'), z.literal('SUBTERRÂNEO')]),
+    valor: z.number(),
+  }),
+
+  estruturaPersonalizada: z.object({
+    aplicavel: z.union([z.literal('SIM'), z.literal('NÃO')]),
+    dataEntrega: z.string(),
+    statusEntrega: z.string(),
+    dataMontagem: z.string(),
+    pagTerceiro: z.boolean(),
+    respPagamento: z.union([z.literal('CLIENTE'), z.literal('AMPERE'), z.literal('NÃO SE APLICA')]),
+    status: z.union([z.literal('PRONTA'), z.literal('N/A'), z.literal('PENDÊNCIA')]),
+    tipo: z.string(),
+    valor: z.number(),
+  }),
+
+  pagamento: z.object({
+    cobrancaFeita: z.boolean(),
+    pagador: z.string(),
+    contatoPagador: z.string(),
+    credor: z.string(),
+    dataRecebimento: z.string(),
+    forma: z.union([z.literal('FINANCIAMENTO'), z.literal('CAPITAL PRÓPRIO')]),
+    retorno: z.number(),
+    status: z.string(),
+  }),
+
+  parecer: z.object({
+    dataParecerDeAcesso: z.string(),
+    motivoReprova: z.string(),
+    parecerReprovado: z.union([z.literal('SIM'), z.literal('NÃO')]),
+    pendencias: z.string(),
+    qtdeDiasObraDeRede: z.number(),
+    qtdeReprovas: z.number(),
+    statusDoParecerDeAcesso: z.string(),
+  }),
+
+  obra: z.object({
+    checklist: z.union([z.literal('SIM'), z.literal('NÃO')]),
+    entrada: z.string(),
+    saida: z.string(),
+    equipeResp: z.string(),
+    laudo: z.union([z.literal('EMITIDO'), z.literal('EM ESTUDO'), z.literal('NÃO DEFINIDO')]),
+    observacoes: z.string(),
+    statusDaObra: z.string(),
+    statusSolicitacao: z.string(),
+    trafo: z.union([z.literal('SIM'), z.literal('NÃO')]),
+  }),
+
+  vistoria: z.object({
+    dataPedido: z.string(),
+    equipeDeCampoNecessaria: z.union([z.literal('SIM'), z.literal('NÃO')]),
+    motivoReprova: z.string(),
+    qtdeReprovas: z.number(),
+    status: z.string(),
+    vistoriaReprovada: z.union([z.literal('SIM'), z.literal('NÃO')]),
+  }),
+
+  material: z.object({
+    avarias: z.boolean(),
+    chamadoIrregularidade: z.boolean(),
+    conferenciaFeita: z.boolean(),
+    descricaoProblema: z.string(),
+    disjuntores: z.array(
+      z.object({
+        corrente: z.number(),
+        qtde: z.number(),
+        tipo: z.union([z.literal('MONOFÁSICO'), z.literal('BIFÁSICO'), z.literal('TRIFÁSICO')]),
+      })
+    ),
+    previsaoCustos: z.number(),
+    efetivoCustos: z.number(),
+    entregaFaltando: z.boolean(),
+    formularioId: z.string(),
+    lista: z.array(
+      z.object({
+        // Define the schema for MaterialListItem here
+      })
+    ),
+    materialFaltante: z.boolean(),
+    statusSeparacao: z.union([z.literal('SEPARADO'), z.literal('NÃO DEFINIDO'), z.literal('INICIAR SEPARAÇÃO')]),
+  }),
+
+  medidor: z.object({
+    data: z.string(),
+    status: z.string(),
+  }),
+
+  oem: z.object({
+    aplicavel: z.boolean(),
+    diagnostico: z.string(),
+    duracao: z.number(),
+    oemConcluido: z.boolean(),
+    plano: z.string(),
+    qtdeManutencao: z.number(),
+    valor: z.number(),
+  }),
+
+  app: z.object({
+    login: z.string(),
+    senha: z.string(),
+    data: z.union([z.date(), z.string()]),
+  }),
+
+  comissionamento: z.object({
+    comercial: z.boolean(),
+    projetos: z.boolean(),
+    suprimentos: z.boolean(),
+  }),
+
+  conferencias: z.object({
+    energiaInjetada: z.object({
+      data: z.string(),
+      status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]),
+    }),
+    monitoramentoFeito: z.object({
+      data: z.string(),
+      status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]),
+    }),
+    usinaLigada: z.object({
+      data: z.string(),
+      status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]),
+    }),
+  }),
+
+  relatorios: z.object({
+    envioUm: z.object({
+      data: z.string(),
+      status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]),
+    }),
+    envioDois: z.object({
+      data: z.string(),
+      status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]),
+    }),
+    envioTres: z.object({
+      data: z.string(),
+      status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]),
+    }),
+    envioQuatro: z.object({
+      data: z.string(),
+      status: z.union([z.literal('REALIZADO'), z.literal('NÃO REALIZADO')]),
+    }),
+  }),
+
+  faturamento: z.object({
+    concluido: z.boolean(),
+    cnpjFaturamento: z.string(),
+    empresaFaturamento: z.union([z.literal('AMPERE ENERGIAS'), z.literal('ANALISE DO FINANCEIRO'), z.literal('IZAIRA SERVIÇOS')]),
+    previsaoFaturamento: z.string(),
+  }),
+
+  indicacao: z.object({
+    contato: z.string(),
+    quemIndicou: z.string(),
+  }),
+
+  jornada: z.object({
+    assDocumentacoes: z.boolean(),
+    boasVindas: z.boolean(),
+    compraDoKit: z.string(),
+    dataEntregaTecnicaPresencial: z.string(),
+    dataEntregaTecnicaRemota: z.string(),
+    dataNps: z.string(),
+    dataUltimoContato: z.string(),
+    entregaDoKit: z.boolean(),
+    entregaTecnica: z.boolean(),
+    entregaTecnicaPresencial: z.boolean(),
+    instalacaoAgendada: z.boolean(),
+    instalacaoRealizada: z.boolean(),
+    jornadaConcluida: z.boolean(),
+    nfFaturada: z.boolean(),
+    obsJornada: z.string(),
+    obsNps: z.string(),
+    prevChegada: z.boolean(),
+    respConcessionaria: z.boolean(),
+    sistemaLigado: z.boolean(),
+    tipoEntregaTecnica: z.union([z.literal('REMOTO'), z.literal('PRESENCIAL')]),
+    vistoriaConcessionaria: z.boolean(),
+    contatos: z.string(),
+    cuidados: z.string(),
+  }),
+
+  links: z.object({
+    chamadosSuporte: z.array(
+      z.object({
+        // Define the schema for LinksItem here
+      })
+    ),
+    chamadosSuprimentos: z.array(
+      z.object({
+        // Define the schema for LinksItem here
+      })
+    ),
+    contratos: z.array(
+      z.object({
+        // Define the schema for LinksItem here
+      })
+    ),
+    documentos: z.array(
+      z.object({
+        // Define the schema for LinksItem here
+      })
+    ),
+    equipamentos: z.array(
+      z.object({
+        // Define the schema for LinksItem here
+      })
+    ),
+    manutencaoPreventiva: z.array(
+      z.object({
+        // Define the schema for LinksItem here
+      })
+    ),
+    obras: z.array(
+      z.object({
+        // Define the schema for LinksItem here
+      })
+    ),
+    projetos: z.array(
+      z.object({
+        // Define the schema for LinksItem here
+      })
+    ),
+    visitaTecnica: z.array(
+      z.object({
+        // Define the schema for LinksItem here
+      })
+    ),
+  }),
+
+  manutencaoPreventiva: z.object({
+    data: z.string(),
+    status: z.string(),
+  }),
+
+  ordensDeServico: z.array(z.any()), // Define the schema for ordensDeServico here
+})
 export interface ServiceOrder {
   _id?: string
   categoria: 'MONTAGEM' | 'MANUTANÇÃO CORRETIVA' // etc
@@ -376,17 +739,17 @@ export interface ServiceOrder {
     retirada: { qtde: number | null; descricao: string | null }[]
   }
   detalhes: {
-    pontoAgua: string // 
-    senhaWifi: string // 
-    configuracaoMonitoramento: boolean // 
+    pontoAgua: string //
+    senhaWifi: string //
+    configuracaoMonitoramento: boolean //
     possuiTrafo: boolean //
-    tipoEstrutura: string // 
+    tipoEstrutura: string //
     tipoTelha?: string
     tipoPadrao?: string
     tipoSaidaPadrao?: string
     amperagemPadrao?: string
     responsabilidadePadrao?: string
-    topologia: string // 
+    topologia: string //
   }
   anotacoes: string // to be used by the service responsible executor
   observacoes: string

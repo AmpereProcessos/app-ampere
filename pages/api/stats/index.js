@@ -415,10 +415,8 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            'contrato.dataAssinatura': {
-              $gte: '2023-07-01T00:00:00.000Z',
-            },
-            'vendedor.nome': { $ne: 'ARTHUR CARVALHO' },
+            'contrato.dataAssinatura': { $gte: '2023-07-01T00:00:00.000Z' },
+            'vendedor.nome': { $nin: ['ARTHUR CARVALHO', 'MATHEUS OLIVEIRA'] },
             tipoDeServico: 'SISTEMA FOTOVOLTAICO',
           },
         },
@@ -436,7 +434,7 @@ export default async function handler(req, res) {
           },
         },
         {
-          $limit: 3,
+          $limit: 5,
         },
       ])
       .toArray()
@@ -444,9 +442,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            'contrato.dataAssinatura': {
-              $gte: '2023-07-01T00:00:00.000Z',
-            },
+            'contrato.dataAssinatura': { $gte: '2023-07-01T00:00:00.000Z' },
             tipoDeServico: 'SISTEMA FOTOVOLTAICO',
           },
         },

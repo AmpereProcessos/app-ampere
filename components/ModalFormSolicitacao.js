@@ -1,250 +1,228 @@
-import React, { useState } from "react";
-import TextInput from "./TextInput";
-import SelectInput from "./SelectInput";
-import NumberInput from "./NumberInput";
-import DateInput from "./DateInput";
-import { TbExternalLink } from "react-icons/tb";
-import { AiOutlineSearch, AiOutlineCheck } from "react-icons/ai";
-import { MdCheckBoxOutlineBlank, MdOutlineCheckBox } from "react-icons/md";
-import {
-  cidadesAtendidas,
-  credores,
-  customersAcquisitionChannels,
-  fileTypes,
-  tiposDePadrao,
-  tiposDeServico,
-  vendedores,
-} from "../utils/constants";
-import { VscChromeClose } from "react-icons/vsc";
-import { FaSave } from "react-icons/fa";
-import { useRouter } from "next/router";
-import axios from "axios";
-import FileLinkBlock from "./utils/FileLinkBlock";
-import SaveButton from "./utils/Buttons/SaveButton";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
-import { storage } from "../utils/firebase";
-import Link from "next/link";
-import { FiDelete } from "react-icons/fi";
-import CheckboxInput from "./CheckboxInput";
-import { notifySellerInCRM } from "../utils/methods/handlers";
+import React, { useState } from 'react'
+import TextInput from './TextInput'
+import SelectInput from './SelectInput'
+import NumberInput from './NumberInput'
+import DateInput from './DateInput'
+import { TbExternalLink } from 'react-icons/tb'
+import { AiOutlineSearch, AiOutlineCheck } from 'react-icons/ai'
+import { MdCheckBoxOutlineBlank, MdOutlineCheckBox } from 'react-icons/md'
+import { cidadesAtendidas, credores, customersAcquisitionChannels, fileTypes, tiposDePadrao, tiposDeServico, vendedores } from '../utils/constants'
+import { VscChromeClose } from 'react-icons/vsc'
+import { FaSave } from 'react-icons/fa'
+import { useRouter } from 'next/router'
+import axios from 'axios'
+import FileLinkBlock from './utils/FileLinkBlock'
+import SaveButton from './utils/Buttons/SaveButton'
+import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { storage } from '../utils/firebase'
+import Link from 'next/link'
+import { FiDelete } from 'react-icons/fi'
+import CheckboxInput from './CheckboxInput'
+import { notifySellerInCRM } from '../utils/methods/handlers'
 const phoneMask = (value) => {
-  if (!value) return "";
-  value = value.replace(/\D/g, "");
-  value = value.replace(/(\d{2})(\d)/, "($1) $2");
-  value = value.replace(/(\d)(\d{4})$/, "$1-$2");
-  return value;
-};
+  if (!value) return ''
+  value = value.replace(/\D/g, '')
+  value = value.replace(/(\d{2})(\d)/, '($1) $2')
+  value = value.replace(/(\d)(\d{4})$/, '$1-$2')
+  return value
+}
 function formatCnpjCpf(value) {
-  const cnpjCpf = value.replace(/\D/g, "");
+  const cnpjCpf = value.replace(/\D/g, '')
 
   if (cnpjCpf.length === 11) {
-    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, '$1.$2.$3-$4')
   }
 
-  return cnpjCpf.replace(
-    /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
-    "$1.$2.$3/$4-$5"
-  );
+  return cnpjCpf.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g, '$1.$2.$3/$4-$5')
 }
 function formatCEP(cep) {
   cep = cep
-    .replace(/\D/g, "")
-    .replace(/(\d{5})(\d)/, "$1-$2")
-    .replace(/(-\d{3})\d+?$/, "$1");
-  return cep;
+    .replace(/\D/g, '')
+    .replace(/(\d{5})(\d)/, '$1-$2')
+    .replace(/(-\d{3})\d+?$/, '$1')
+  return cep
 }
 const MODAL_STYLES = {
-  position: "fixed",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%,-50%)",
-  backgroundColor: "#fff",
-  width: "93%",
-  height: "98%",
-  borderRadius: "10px",
-  padding: "10px",
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%,-50%)',
+  backgroundColor: '#fff',
+  width: '93%',
+  height: '98%',
+  borderRadius: '10px',
+  padding: '10px',
   zIndex: 1000,
-};
+}
 const OVERLAY_STYLES = {
-  position: "fixed",
+  position: 'fixed',
   top: 0,
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: "rgba(0,0,0,.7)",
+  backgroundColor: 'rgba(0,0,0,.7)',
   zIndex: 1000,
-};
+}
 const validation = {
   nomeDoContrato: {
     test(value) {
-      return value?.trim().length < 10;
+      return value?.trim().length < 10
     },
-    msg: "Por favor, preencha um nome válido.",
+    msg: 'Por favor, preencha um nome válido.',
   },
   nomeDoProjeto: {
     test(value) {
-      return value?.trim().length < 2;
+      return value?.trim().length < 2
     },
-    msg: "Por favor, preencha um nome de projeto válido.",
+    msg: 'Por favor, preencha um nome de projeto válido.',
   },
-  "vendedor.nome": {
+  'vendedor.nome': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha o vendedor do projeto",
+    msg: 'Por favor, preencha o vendedor do projeto',
   },
   codigoSVB: {
     test(value) {
-      return value == 0;
+      return value == 0
     },
-    msg: "Por favor, preencha um código SVB válido",
+    msg: 'Por favor, preencha um código SVB válido',
   },
   cpf_cnpj: {
     test(value) {
-      return value?.toString().length < 10;
+      return value?.toString().length < 10
     },
-    msg: "Por favor, preencha um CPF/CNPJ válido",
+    msg: 'Por favor, preencha um CPF/CNPJ válido',
   },
   telefone: {
     test(value) {
-      return value?.toString().length < 9;
+      return value?.toString().length < 9
     },
-    msg: "Por favor, preencha um Telefone válido",
+    msg: 'Por favor, preencha um Telefone válido',
   },
-  "estruturaPersonaliza.tipo": {
+  'estruturaPersonaliza.tipo': {
     test(value) {
-      return value == "N/A";
+      return value == 'N/A'
     },
-    msg: "Por favor, preencha um tipo de estrutura válido",
+    msg: 'Por favor, preencha um tipo de estrutura válido',
   },
-  "contrato.status": {
+  'contrato.status': {
     test(value) {
-      return value != "AGUARDANDO SOLICITAÇÃO" && value != "SOLICITADO";
+      return value != 'AGUARDANDO SOLICITAÇÃO' && value != 'SOLICITADO'
     },
-    msg: "Por favor, preencha um status válido de contrato",
+    msg: 'Por favor, preencha um status válido de contrato',
   },
-  "pagamento.forma": {
+  'pagamento.forma': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha uma forma de pagamento",
+    msg: 'Por favor, preencha uma forma de pagamento',
   },
-  "pagamento.pagador": {
+  'pagamento.pagador': {
     test(value) {
-      return value?.trim().length < 3;
+      return value?.trim().length < 3
     },
-    msg: "Por favor, preencha o nome do pagador.",
+    msg: 'Por favor, preencha o nome do pagador.',
   },
-  "pagamento.contatoPagador": {
+  'pagamento.contatoPagador': {
     test(value) {
-      return value?.trim().length < 9;
+      return value?.trim().length < 9
     },
-    msg: "Por favor, preencha o contato do pagador.",
+    msg: 'Por favor, preencha o contato do pagador.',
   },
-  "compra.localEntrega": {
+  'compra.localEntrega': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha o local de entrega",
+    msg: 'Por favor, preencha o local de entrega',
   },
-  "compra.tipoDoKit": {
+  'compra.tipoDoKit': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha o tipo do kit",
+    msg: 'Por favor, preencha o tipo do kit',
   },
-  "dadosCemig.titularProjeto": {
+  'dadosCemig.titularProjeto': {
     test(value) {
-      return value == null;
+      return value == null
     },
-    msg: "Por favor, digite o titular do projeto",
+    msg: 'Por favor, digite o titular do projeto',
   },
-  "dadosCemig.distCreditos": {
+  'dadosCemig.distCreditos': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha sobre a necessidade de dist. de créditos",
+    msg: 'Por favor, preencha sobre a necessidade de dist. de créditos',
   },
-  "sistema.qtdeModulos": {
+  'sistema.qtdeModulos': {
     test(value) {
-      return value == 0;
+      return value == 0
     },
-    msg: "Por favor, preencha a quantidade de módulos",
+    msg: 'Por favor, preencha a quantidade de módulos',
   },
-  "sistema.potModulos": {
+  'sistema.potModulos': {
     test(value) {
-      return value == 0;
+      return value == 0
     },
-    msg: "Por favor, preencha a potência dos módulos",
+    msg: 'Por favor, preencha a potência dos módulos',
   },
-  "sistema.topologia": {
+  'sistema.topologia': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha uma topologia válida",
+    msg: 'Por favor, preencha uma topologia válida',
   },
-  "sistema.inversor": {
+  'sistema.inversor': {
     test(value) {
-      return value?.trim().length < 5;
+      return value?.trim().length < 5
     },
-    msg: "Por favor, preencha informacoes sobre os micro/inversor",
+    msg: 'Por favor, preencha informacoes sobre os micro/inversor',
   },
-  "material.previsaoCustos": {
+  'material.previsaoCustos': {
     test(value) {
-      return value == 0;
+      return value == 0
     },
-    msg: "Por favor, preencha um valor válido de previsão de custos de insumo",
+    msg: 'Por favor, preencha um valor válido de previsão de custos de insumo',
   },
-  "obra.laudo": {
+  'obra.laudo': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha o status do laudo",
+    msg: 'Por favor, preencha o status do laudo',
   },
-  "visitaTecnica.tecnico": {
+  'visitaTecnica.tecnico': {
     test(value) {
-      return value?.trim().length < 3;
+      return value?.trim().length < 3
     },
-    msg: "Por favor, preencha o técnico responsável",
+    msg: 'Por favor, preencha o técnico responsável',
   },
-  "visitaTecnica.tipoDaTelha": {
+  'visitaTecnica.tipoDaTelha': {
     test(value) {
-      return value?.trim().length < 3;
+      return value?.trim().length < 3
     },
-    msg: "Por favor, preencha o tipo da telha",
+    msg: 'Por favor, preencha o tipo da telha',
   },
-};
-function ModalFormSolicitacao({
-  solicitacao,
-  setModalIsOpen,
-  editor,
-  financeiroEditor,
-  getFormularios,
-}) {
+}
+function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroEditor, getFormularios }) {
   // Router
-  const router = useRouter();
-  const [dados, setDados] = useState(solicitacao);
+  const router = useRouter()
+  const [dados, setDados] = useState(solicitacao)
   // Messages
-  const [msg, setMessage] = useState({ text: "", color: "" });
-  const [creationMsg, setCreationMsg] = useState({ text: "", color: "" });
-  const [emailMsg, setEmailMsg] = useState({ text: "", color: "" });
-  const [fileMsg, setFileMsg] = useState({ text: "", color: "" });
+  const [msg, setMessage] = useState({ text: '', color: '' })
+  const [creationMsg, setCreationMsg] = useState({ text: '', color: '' })
+  const [emailMsg, setEmailMsg] = useState({ text: '', color: '' })
+  const [fileMsg, setFileMsg] = useState({ text: '', color: '' })
 
-  const [image, setImage] = useState(null);
-  const [fileName, setFileName] = useState("");
+  const [image, setImage] = useState(null)
+  const [fileName, setFileName] = useState('')
 
   // Handling Distribuições
   const [dadosDistribuicao, setDadosDistribuicao] = useState({
-    numInstalacao: "",
+    numInstalacao: '',
     excedente: null,
-  });
+  })
   function adicionarDistribuicao() {
-    const distribuicoesArr = dados.distribuicoes ? dados.distribuicoes : [];
+    const distribuicoesArr = dados.distribuicoes ? dados.distribuicoes : []
     setDados({
       ...dados,
       distribuicoes: [
@@ -254,14 +232,14 @@ function ModalFormSolicitacao({
           excedente: dadosDistribuicao.excedente,
         },
       ],
-    });
-    setDadosDistribuicao({ numInstalacao: "", excedente: 0 });
+    })
+    setDadosDistribuicao({ numInstalacao: '', excedente: 0 })
   }
   // Handling Visita Tecnica Vinculation
-  const [idVisitaTecnica, setIdVisitaTecnica] = useState("");
+  const [idVisitaTecnica, setIdVisitaTecnica] = useState('')
   function vinculateVisitaTecnica() {
     if (idVisitaTecnica.trim().length < 10) {
-      alert("Preencha um ID válido");
+      alert('Preencha um ID válido')
     } else {
       axios
         .post(`/api/solicitacoes/getVisitaTecnica/${idVisitaTecnica}`, {
@@ -272,151 +250,142 @@ function ModalFormSolicitacao({
           tipoTelha: 1,
         })
         .then((res) => {
-          console.log("VISITA TECNICA", res.data);
+          console.log('VISITA TECNICA', res.data)
           setDados({
             ...dados,
             nomeDoProjeto: res.data.nomeDoCliente,
-            visitaTecnica: "REALIZADA",
+            visitaTecnica: 'REALIZADA',
             respVisitaTecnica: res.data.nomeVendedor,
             linksVisita: res.data.links,
             materialEstrutura: res.data.tipoEstrutura,
             tipoDaTelha: res.data.tipoTelha,
             idVisitaTecnica: idVisitaTecnica,
-          });
-        });
+          })
+        })
     }
   }
 
   // Handling Alterations
   function saveChanges() {
-    axios.put("/api/solicitacoes/contrato", dados).then((res) => {
-      setMessage({ text: "Alterações feitas", color: "text-green-500" });
-    });
+    axios.put('/api/solicitacoes/contrato', dados).then((res) => {
+      setMessage({ text: 'Alterações feitas', color: 'text-green-500' })
+    })
   }
   async function rejectSolicitacao() {
-    if (
-      !dados.comentariosAoVendedor ||
-      dados.comentariosAoVendedor.trim().length < 5
-    ) {
+    if (!dados.comentariosAoVendedor || dados.comentariosAoVendedor.trim().length < 5) {
       setCreationMsg({
-        text: "Discorra sobre o motivo da reprova",
-        color: "text-red-500",
-      });
+        text: 'Discorra sobre o motivo da reprova',
+        color: 'text-red-500',
+      })
     } else {
       axios
-        .put("/api/solicitacoes/contrato", {
+        .put('/api/solicitacoes/contrato', {
           _id: solicitacao._id,
           aprovacao: false,
         })
         .then((res) =>
           setCreationMsg({
-            text: "Solicitação rejeitada!",
-            color: "text-red-500",
+            text: 'Solicitação rejeitada!',
+            color: 'text-red-500',
           })
-        );
+        )
     }
   }
   // Utils
   async function notifyCobrancas() {
     try {
-      let data = await axios.post("/api/notificacoes/1", {
-        destinatario: "6353eb83ef4e1a367a877949",
-        remetente: "SISTEMA",
+      let data = await axios.post('/api/notificacoes/1', {
+        destinatario: '6353eb83ef4e1a367a877949',
+        remetente: 'SISTEMA',
         mensagem: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Desde já agradeço, Volts.`,
-      });
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
   async function sendEmail() {
     try {
-      await axios.post("/api/email", {
-        emailTo: "contasareceber@ampereenergias.com.br", // amperecontasareceber@gmail.com
-        subject: "SOLICITAÇÃO DE CONTRATO",
+      await axios.post('/api/email', {
+        emailTo: 'contasareceber@ampereenergias.com.br', // amperecontasareceber@gmail.com
+        subject: 'SOLICITAÇÃO DE CONTRATO',
         message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Formulário disponível no link: https://app.ampereenergias.com.br/comercial/publicoFormulario/${dados._id} . Desde já agradeço, Volts.`,
-        copy: [
-          "comercial@ampereenergias.com.br",
-          "adm02@ampereenergias.com.br",
-        ],
-      });
+        copy: ['comercial@ampereenergias.com.br', 'adm02@ampereenergias.com.br'],
+      })
 
-      setEmailMsg({ text: "Email enviado", color: "text-green-500" });
+      setEmailMsg({ text: 'Email enviado', color: 'text-green-500' })
     } catch (error) {
       setEmailMsg({
         text: `Houve um erro no envio do email - ${error}`,
-        color: "text-red-500",
-      });
+        color: 'text-red-500',
+      })
     }
   }
   function contractMade() {
     axios
-      .put("/api/solicitacoes/contrato", {
+      .put('/api/solicitacoes/contrato', {
         _id: solicitacao._id,
         confeccionado: true,
       })
       .then(() => {
-        getFormularios();
-        setDados({ ...dados, confeccionado: true });
-        setMessage({ text: "Atualização feita!", color: "text-green-500" });
+        getFormularios()
+        setDados({ ...dados, confeccionado: true })
+        setMessage({ text: 'Atualização feita!', color: 'text-green-500' })
       })
       .catch((err) =>
         setMessage({
-          text: "Um erro ocorreu, tente novamente",
-          color: "text-red-500",
+          text: 'Um erro ocorreu, tente novamente',
+          color: 'text-red-500',
         })
-      );
+      )
   }
   function getJoinedInfo({ marca, qtde, pot }) {
-    let splitMarca = marca.split("/");
-    let splitQtde = qtde.split("/");
-    let splitPot = pot.split("/");
-    let holder = [];
+    let splitMarca = marca.split('/')
+    let splitQtde = qtde.split('/')
+    let splitPot = pot.split('/')
+    let holder = []
     for (let i = 0; i < splitMarca.length; i++) {
-      let str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`;
-      holder.push(str);
+      let str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`
+      holder.push(str)
     }
-    return holder.join(" - ");
+    return holder.join(' - ')
   }
   function getSummedValues({ qtde, pot }) {
-    let splitQtde = qtde.split("/");
-    let splitPot = pot.split("/");
-    let totalPot = 0;
+    let splitQtde = qtde.split('/')
+    let splitPot = pot.split('/')
+    let totalPot = 0
     for (let i = 0; i < splitQtde.length; i++) {
-      totalPot = totalPot + (splitQtde[i] * splitPot[i]) / 1000;
+      totalPot = totalPot + (splitQtde[i] * splitPot[i]) / 1000
     }
-    let summedModules = splitQtde.reduce(
-      (partialSum, a) => Number(partialSum) + Number(a),
-      0
-    );
-    return { totalPot, summedModules };
+    let summedModules = splitQtde.reduce((partialSum, a) => Number(partialSum) + Number(a), 0)
+    return { totalPot, summedModules }
   }
   function getOeMInfo({ possuiOEM, plano }) {
-    if (possuiOEM == "SIM") {
-      if (plano == "MANUTENÇÃO SIMPLES" || plano == "MANUTENÇÃO SIMLES") {
-        return { duracao: 0, qtdeManutencoes: 1 };
-      } else if (plano == "PLANO SOL") {
-        return { duracao: 1, qtdeManutencoes: 1 };
-      } else if (plano == "PLANO SOL +") {
-        return { duracao: 1, qtdeManutencoes: 2 };
-      } else if (plano == "NÃO SE APLICA") {
-        return { duracao: 0, qtdeManutencoes: 0 };
+    if (possuiOEM == 'SIM') {
+      if (plano == 'MANUTENÇÃO SIMPLES' || plano == 'MANUTENÇÃO SIMLES') {
+        return { duracao: 0, qtdeManutencoes: 1 }
+      } else if (plano == 'PLANO SOL') {
+        return { duracao: 1, qtdeManutencoes: 1 }
+      } else if (plano == 'PLANO SOL +') {
+        return { duracao: 1, qtdeManutencoes: 2 }
+      } else if (plano == 'NÃO SE APLICA') {
+        return { duracao: 0, qtdeManutencoes: 0 }
       }
     } else {
-      return { duracao: 0, qtdeManutencoes: 0 };
+      return { duracao: 0, qtdeManutencoes: 0 }
     }
   }
   function getObraObs() {
-    if (dados.mudancaLocal == "SIM") {
-      return `HAVERÁ MUDANÇA DE LOCAL. A NOVA INSTALAÇÃO SERÁ FEITA EM: ${dados.enderecoInstalacaoRemontagem},${dados.bairroInstalacaoRemontagem}, Nº ${dados.numeroInstalacaoRemontagem} ${dados.cidadeInstalacaoRemontagem}(${dados.ufInstalacaoRemontagem}).`;
+    if (dados.mudancaLocal == 'SIM') {
+      return `HAVERÁ MUDANÇA DE LOCAL. A NOVA INSTALAÇÃO SERÁ FEITA EM: ${dados.enderecoInstalacaoRemontagem},${dados.bairroInstalacaoRemontagem}, Nº ${dados.numeroInstalacaoRemontagem} ${dados.cidadeInstalacaoRemontagem}(${dados.ufInstalacaoRemontagem}).`
     } else {
-      return `NÃO HAVERÁ MUDANÇA DE LOCAL`;
+      return `NÃO HAVERÁ MUDANÇA DE LOCAL`
     }
   }
 
   // Handling Validations and Project Insert
   var insertObj = {
     nomeDoContrato: dados.nomeDoContrato.toUpperCase(),
-    nomeDoProjeto: dados.nomeDoProjeto ? dados.nomeDoProjeto.toUpperCase() : "",
+    nomeDoProjeto: dados.nomeDoProjeto ? dados.nomeDoProjeto.toUpperCase() : '',
     cpf_cnpj: dados.cpf_cnpj,
     telefone: dados.telefone,
     cidade: dados.cidadeInstalacao,
@@ -425,28 +394,22 @@ function ModalFormSolicitacao({
       nome: dados.nomeVendedor,
       codigo: null,
     },
-    linkDrive: dados.linkDrive ? dados.linkDrive : "",
-    regional: dados.regional ? dados.regional : "NÃO DEFINIDO",
-    tipoDeServico: dados.tipoDeServico
-      ? dados.tipoDeServico
-      : "SISTEMA FOTOVOLTAICO",
+    linkDrive: dados.linkDrive ? dados.linkDrive : '',
+    regional: dados.regional ? dados.regional : 'NÃO DEFINIDO',
+    tipoDeServico: dados.tipoDeServico ? dados.tipoDeServico : 'SISTEMA FOTOVOLTAICO',
     codigoSVB: dados.codigoSVB,
     segmento: dados.segmento,
     obsComercial:
-      dados.tipoDeServico == "MONTAGEM E DESMONTAGEM"
-        ? dados.obsComercial
-          ? dados.obsComercial + getObraObs()
-          : getObraObs()
-        : dados.obsComercial,
+      dados.tipoDeServico == 'MONTAGEM E DESMONTAGEM' ? (dados.obsComercial ? dados.obsComercial + getObraObs() : getObraObs()) : dados.obsComercial,
     visitaTecnica: {
       status: dados.visitaTecnica,
       tecnico: dados.respVisitaTecnica,
-      saidaDoCliente: "",
+      saidaDoCliente: '',
       amperagem: dados.tipoDePadrao,
       tipoDaTelha: dados.tipoDaTelha,
     },
     padrao: {
-      tipo: "NÃO DEFINIDO",
+      tipo: 'NÃO DEFINIDO',
       caixaConjugada: dados.caixaConjugada,
       respPagamento: dados.formaPagamentoPadrao,
       respInstalacao: dados.respTrocaPadrao,
@@ -457,17 +420,17 @@ function ModalFormSolicitacao({
       tipo: dados.tipoEstrutura,
       respPagamento: dados.responsavelEstrutura,
       valor: dados.valorEstrutura,
-      status: dados.estruturaAmpere == "NÃO" ? "PENDÊNCIA" : "N/A",
+      status: dados.estruturaAmpere == 'NÃO' ? 'PENDÊNCIA' : 'N/A',
     },
     contrato: {
-      status: "AGUARDANDO SOLICITAÇÃO",
+      status: 'AGUARDANDO SOLICITAÇÃO',
       dataSolicitacao: null, // formatar como data
       dataLiberacao: null, // formatar como data
       dataAssinatura: null, // formatar como data
       formaAssinatura: dados.formaAssinatura,
     },
     pagamento: {
-      status: "NÃO DEFINIDO",
+      status: 'NÃO DEFINIDO',
       forma: dados.origemRecurso,
       credor: dados.credor,
       pagador: dados.nomePagador,
@@ -478,76 +441,64 @@ function ModalFormSolicitacao({
     faturamento: {
       previsaoFaturamento: 0, // adicionar empresa e cnpj de faturamento
       cnpjFaturamento: 0,
-      empresaFaturamento: "NÃO DEFINIDO",
+      empresaFaturamento: 'NÃO DEFINIDO',
     },
     compra: {
-      statusLiberacao: "NÃO DEFINIDO",
+      statusLiberacao: 'NÃO DEFINIDO',
       dataLiberacao: undefined, // formatar como data
-      tipoDoKit: dados.tipoDoKit ? dados.tipoDoKit : "NÃO DEFINIDO",
+      tipoDoKit: dados.tipoDoKit ? dados.tipoDoKit : 'NÃO DEFINIDO',
       valorDoKit: 0,
-      kitInfo: "",
-      fornecedor: "NÃO DEFINIDO",
+      previsaoValorDoKit: dados.previsaoValorDoKit,
+      kitInfo: '',
+      fornecedor: 'NÃO DEFINIDO',
       dataPedido: undefined, // formatar como data
       dataPagamento: undefined,
       previsaoEntrega: undefined, // formatar como data
-      localEntrega:
-        dados.localEntrega == "MESMO DO PROJETO"
-          ? dados.localEntrega
-          : "DIFERENTE DO PROJETO",
-      informacoes: "",
+      localEntrega: dados.localEntrega == 'MESMO DO PROJETO' ? dados.localEntrega : 'DIFERENTE DO PROJETO',
+      informacoes: '',
       previsaoNotaFiscal: undefined,
-      rastreio: "",
-      statusEntrega:
-        dados.tipoDeServico === "MONTAGEM E DESMONTAGEM"
-          ? "ENTREGUE"
-          : "NÃO DEFINIDO",
+      rastreio: '',
+      statusEntrega: dados.tipoDeServico === 'MONTAGEM E DESMONTAGEM' ? 'ENTREGUE' : 'NÃO DEFINIDO',
     },
     dadosCemig: {
       titularProjeto: dados.nomeTitularProjeto,
       numeroInstalacao: dados.numeroInstalacao,
       distCreditos: dados.possuiDistribuicao,
-      qtdeDistCreditos:
-        dados.distribuicoes?.length != 0 ? dados.distribuicoes?.length : 0,
+      qtdeDistCreditos: dados.distribuicoes?.length != 0 ? dados.distribuicoes?.length : 0,
     },
     sistema: {
       qtdeModulos: getSummedValues({
-        qtde: dados.qtdeModulos ? dados.qtdeModulos?.toString() : "0",
-        pot: dados.potModulos ? dados.potModulos?.toString() : "0",
+        qtde: dados.qtdeModulos ? dados.qtdeModulos?.toString() : '0',
+        pot: dados.potModulos ? dados.potModulos?.toString() : '0',
       }).summedModules,
       potModulos: dados.potModulos,
       potPico: getSummedValues({
-        qtde: dados.qtdeModulos ? dados.qtdeModulos?.toString() : "0",
-        pot: dados.potModulos ? dados.potModulos?.toString() : "0",
+        qtde: dados.qtdeModulos ? dados.qtdeModulos?.toString() : '0',
+        pot: dados.potModulos ? dados.potModulos?.toString() : '0',
       }).totalPot,
       topologia: dados.topologia,
       inversor: getJoinedInfo({
-        marca: dados.marcaInversor
-          ? dados.marcaInversor?.toString().toUpperCase()
-          : "",
-        qtde: dados.qtdeInversor ? dados.qtdeInversor.toString() : "0",
-        pot: dados.potInversor ? dados.potInversor.toString() : "0",
+        marca: dados.marcaInversor ? dados.marcaInversor?.toString().toUpperCase() : '',
+        qtde: dados.qtdeInversor ? dados.qtdeInversor.toString() : '0',
+        pot: dados.potInversor ? dados.potInversor.toString() : '0',
       }),
       tipoControlador: dados.tipoControlador ? dados.tipoControlador : null,
       marcaControlador: dados.marcaControlador ? dados.marcaControlador : null,
       qtdeControlador: dados.qtdeControlador ? dados.qtdeControlador : null,
-      correnteControlador: dados.correnteControlador
-        ? dados.correnteControlador
-        : null,
+      correnteControlador: dados.correnteControlador ? dados.correnteControlador : null,
       tipoBateria: dados.tipoBateria ? dados.tipoBateria : null,
       marcaBateria: dados.marcaBateria ? dados.marcaBateria : null,
       qtdeBateria: dados.qtdeBateria ? dados.qtdeBateria : null,
-      capacidadeBateria: dados.capacidadeBateria
-        ? dados.capacidadeBateria
-        : null,
+      capacidadeBateria: dados.capacidadeBateria ? dados.capacidadeBateria : null,
       marcaBomba: dados.marcaBomba ? dados.marcaBomba : null,
       qtdeBomba: dados.qtdeBomba ? dados.qtdeBomba : null,
       potBomba: dados.potBomba ? dados.potBomba : null,
       valorProjeto: dados.valorContrato,
     },
     projeto: {
-      iniciar: "NÃO DEFINIDO",
+      iniciar: 'NÃO DEFINIDO',
       projetista: {
-        nome: "NÃO DEFINIDO",
+        nome: 'NÃO DEFINIDO',
         codigo: undefined,
       },
       dataLiberacaoDocumentacao: undefined, // formatar como data
@@ -555,36 +506,32 @@ function ModalFormSolicitacao({
       diagramaUnifilar: undefined,
       desenhoTelhado: undefined,
       mapaDeMicro: undefined,
-      aumentoDeCarga:
-        dados.aumentoDeCarga == "SIM" || dados.aumentoDisjuntor == "SIM"
-          ? "SIM"
-          : "NÃO",
-      acStatus: dados.aumentoDeCarga == "SIM" ? "PENDÊNCIA" : "NÃO DEFINIDO",
-      projetoConcluido: "NÃO",
+      aumentoDeCarga: dados.aumentoDeCarga == 'SIM' || dados.aumentoDisjuntor == 'SIM' ? 'SIM' : 'NÃO',
+      acStatus: dados.aumentoDeCarga == 'SIM' ? 'PENDÊNCIA' : 'NÃO DEFINIDO',
+      projetoConcluido: 'NÃO',
       realizarHomologacao: dados.realizarHomologacao,
     },
     parecer: {
-      statusDoParecerDeAcesso: "NÃO DEFINIDO",
+      statusDoParecerDeAcesso: 'NÃO DEFINIDO',
       dataParecerDeAcesso: undefined, // formatar como data
-      parecerReprovado: "NÃO",
+      parecerReprovado: 'NÃO',
       qtdeReprovas: 0,
       motivoReprova: undefined,
     },
     vistoria: {
       dataPedido: undefined, // formatar como data
-      status: "NÃO DEFINIDO",
-      vistoriaReprovada: "NÃO",
+      status: 'NÃO DEFINIDO',
+      vistoriaReprovada: 'NÃO',
       qtdeReprovas: 0,
       motivoReprova: undefined,
     },
     medidor: {
       data: undefined, // formatar como data
-      status: "NÃO DEFINIDO",
+      status: 'NÃO DEFINIDO',
     },
     oem: {
-      aplicavel: dados.possuiOeM == "SIM" ? true : false, // checar se existe campo existente na gestao
-      duracao: getOeMInfo({ possuiOEM: dados.possuiOeM, plano: dados.planoOeM })
-        .duracao,
+      aplicavel: dados.possuiOeM == 'SIM' ? true : false, // checar se existe campo existente na gestao
+      duracao: getOeMInfo({ possuiOEM: dados.possuiOeM, plano: dados.planoOeM }).duracao,
       qtdeManutencoes: getOeMInfo({
         possuiOEM: dados.possuiOeM,
         plano: dados.planoOeM,
@@ -594,41 +541,40 @@ function ModalFormSolicitacao({
       valor: isNaN(Number(dados.valor)) ? 0 : Number(dados.valor),
     },
     obra: {
-      laudo: dados.laudo ? dados.laudo : "NÃO DEFINIDO",
-      observacoes:
-        dados.tipoDeServico == "MONTAGEM E DESMONTAGEM" ? getObraObs() : "", // possibilidade de substituir \n por /, e quebrar textp em pontos
-      statusSolicitacao: "NÃO SOLICITADA",
+      laudo: dados.laudo ? dados.laudo : 'NÃO DEFINIDO',
+      observacoes: dados.tipoDeServico == 'MONTAGEM E DESMONTAGEM' ? getObraObs() : '', // possibilidade de substituir \n por /, e quebrar textp em pontos
+      statusSolicitacao: 'NÃO SOLICITADA',
       entrada: undefined, // formatar como data
       saida: undefined, // formatar como data.
-      statusDaObra: "NÃO DEFINIDO",
-      equipeResp: "NÃO DEFINIDO",
+      statusDaObra: 'NÃO DEFINIDO',
+      equipeResp: 'NÃO DEFINIDO',
       checklist: undefined,
-      trafo: "NÃO",
+      trafo: 'NÃO',
       fotosInstalacao: undefined,
     },
     material: {
-      statusSeparacao: "NÃO DEFINIDO",
+      statusSeparacao: 'NÃO DEFINIDO',
       previsaoCustos: dados.previsaoCustos, // toFixed(2)
       efetivoCustos: 0,
       notaFiscal: undefined,
-      materialFaltante: "",
+      materialFaltante: '',
     },
-    manutencaoPreventiva: { status: "NÃO REALIZADO", data: null },
+    manutencaoPreventiva: { status: 'NÃO REALIZADO', data: null },
     relatorios: {
-      envioUm: { status: "NÃO REALIZADO", data: null },
-      envioDois: { status: "NÃO REALIZADO", data: null },
-      envioTres: { status: "NÃO REALIZADO", data: null },
-      envioQuatro: { status: "NÃO REALIZADO", data: null },
+      envioUm: { status: 'NÃO REALIZADO', data: null },
+      envioDois: { status: 'NÃO REALIZADO', data: null },
+      envioTres: { status: 'NÃO REALIZADO', data: null },
+      envioQuatro: { status: 'NÃO REALIZADO', data: null },
     },
     conferencias: {
-      usinaLigada: { status: "NÃO REALIZADO", data: null },
-      monitoramentoFeito: { status: "NÃO REALIZADO", data: null },
-      energiaInjetada: { status: "NÃO REALIZADO", data: null },
+      usinaLigada: { status: 'NÃO REALIZADO', data: null },
+      monitoramentoFeito: { status: 'NÃO REALIZADO', data: null },
+      energiaInjetada: { status: 'NÃO REALIZADO', data: null },
     },
     app: {
       data: undefined,
-      login: "",
-      senha: "",
+      login: '',
+      senha: '',
     },
     dataNascimento: dados.dataDeNascimento,
     email: dados.email,
@@ -672,237 +618,224 @@ function ModalFormSolicitacao({
       documentos: dados.links,
       visitaTecnica: dados.linksVisita ? dados.linksVisita : undefined,
     },
-  };
+  }
   function validateDocuments() {
     if (!dados.contaDeEnergia) {
       setCreationMsg({
-        text: "Por favor, preencha a conferência da conta de energia",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha a conferência da conta de energia',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (!dados.propostaComercial) {
       setCreationMsg({
-        text: "Por favor, preencha a conferência da proposta comercial",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha a conferência da proposta comercial',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (!dados.visitaTecnicaFeita) {
       setCreationMsg({
-        text: "Por favor, preencha a conferência da visita técnica",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha a conferência da visita técnica',
+        color: 'text-red-500',
+      })
+      return false
     }
-    if (dados.tipoDaInstalacao == "RURAL") {
+    if (dados.tipoDaInstalacao == 'RURAL') {
       if (!dados.car) {
         setCreationMsg({
-          text: "Por favor, preencha a conferência de CAR",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, preencha a conferência de CAR',
+          color: 'text-red-500',
+        })
+        return false
       }
       if (!dados.matricula) {
         setCreationMsg({
-          text: "Por favor, preencha a conferência da matrícula",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, preencha a conferência da matrícula',
+          color: 'text-red-500',
+        })
+        return false
       }
       if (!dados.comprovanteEnderecoCorrespondente) {
         setCreationMsg({
-          text: "Por favor, preencha a conferência do compravante de endereço correspondente",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, preencha a conferência do compravante de endereço correspondente',
+          color: 'text-red-500',
+        })
+        return false
       }
       if (!dados.ramoDeAtividade) {
         setCreationMsg({
-          text: "Por favor, preencha a conferência do ramo de atividade",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, preencha a conferência do ramo de atividade',
+          color: 'text-red-500',
+        })
+        return false
       }
     }
-    if (dados.tipoDaInstalacao == "URBANO") {
+    if (dados.tipoDaInstalacao == 'URBANO') {
       if (!dados.iptu) {
         setCreationMsg({
-          text: "Por favor, preencha a conferência do IPTU",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, preencha a conferência do IPTU',
+          color: 'text-red-500',
+        })
+        return false
       }
     }
-    if (dados.tipoDoTitular == "PESSOA FISICA") {
+    if (dados.tipoDoTitular == 'PESSOA FISICA') {
       if (!dados.documentoComFoto) {
         setCreationMsg({
-          text: "Por favor, preencha a conferência do documento com foto",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, preencha a conferência do documento com foto',
+          color: 'text-red-500',
+        })
+        return false
       }
     }
-    if (dados.tipoDoTitular == "PESSOA JURIDICA") {
+    if (dados.tipoDoTitular == 'PESSOA JURIDICA') {
       if (!dados.contratoSocial) {
         setCreationMsg({
-          text: "Por favor, preencha a conferência do contrato social",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, preencha a conferência do contrato social',
+          color: 'text-red-500',
+        })
+        return false
       }
       if (!dados.cartaoCnpj) {
         setCreationMsg({
-          text: "Por favor, preencha a conferência do cartão CNPJ",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, preencha a conferência do cartão CNPJ',
+          color: 'text-red-500',
+        })
+        return false
       }
       if (!dados.cartaoCnpj) {
         setCreationMsg({
-          text: "Por favor, preencha a conferência do comprovante de endereço do representante legal",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, preencha a conferência do comprovante de endereço do representante legal',
+          color: 'text-red-500',
+        })
+        return false
       }
       if (!dados.documentoComFotoSocios) {
         setCreationMsg({
-          text: "Por favor, preencha a conferência do documento com foto dos sócios",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, preencha a conferência do documento com foto dos sócios',
+          color: 'text-red-500',
+        })
+        return false
       }
     }
-    if (dados.aumentoDeCarga == "SIM" || dados.tipoDaLigacao == "NOVA") {
+    if (dados.aumentoDeCarga == 'SIM' || dados.tipoDaLigacao == 'NOVA') {
       if (!dados.relacaoDeCargas) {
         setCreationMsg({
-          text: "Por favor, preencha a conferência da relação de cargas",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, preencha a conferência da relação de cargas',
+          color: 'text-red-500',
+        })
+        return false
       }
     }
-    if (dados.possuiDistribuicao == "SIM") {
+    if (dados.possuiDistribuicao == 'SIM') {
       if (!dados.faturasRecebedoras) {
         setCreationMsg({
-          text: "Por favor, preencha a conferência das faturas das recebedoras",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, preencha a conferência das faturas das recebedoras',
+          color: 'text-red-500',
+        })
+        return false
       }
     }
-    if (
-      dados.tipoDeServico == "SISTEMA FOTOVOLTAICO" &&
-      dados.idVisitaTecnica?.trim().length < 20
-    ) {
+    if (dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO' && dados.idVisitaTecnica?.trim().length < 20) {
       setCreationMsg({
-        text: "Por favor, vincule um ID de Visita Técnica",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, vincule um ID de Visita Técnica',
+        color: 'text-red-500',
+      })
+      return false
     }
-    return true;
+    return true
   }
   function validateCreation() {
-    var holder;
+    var holder
     // console.log(insertObj);
     // console.log(Object.entries(insertObj));
     Object.entries(insertObj).forEach((entry) => {
-      if (typeof entry[1] == "object" && entry[1] != null) {
-        let tag = entry[0];
+      if (typeof entry[1] == 'object' && entry[1] != null) {
+        let tag = entry[0]
 
         Object.keys(entry[1]).forEach((x) => {
           if (validation[`${tag}.${x}`] != undefined) {
             if (validation[`${tag}.${x}`].test(insertObj[tag][x]) == true) {
-              holder = true;
+              holder = true
               setCreationMsg({
                 text: validation[`${tag}.${x}`].msg,
-                color: "text-red-500",
-              });
+                color: 'text-red-500',
+              })
             }
-          } else return;
-        });
+          } else return
+        })
       } else {
-        let tag = entry[0];
+        let tag = entry[0]
         if (validation[tag] != undefined) {
           if (validation[tag].test(insertObj[tag]) == true) {
-            holder = true;
+            holder = true
             setCreationMsg({
               text: validation[tag].msg,
-              color: "text-red-500",
-            });
+              color: 'text-red-500',
+            })
           }
         }
       }
-    });
+    })
     if (holder == undefined) {
-      setCreationMsg({ text: "", color: "" });
-      addProject();
+      setCreationMsg({ text: '', color: '' })
+      addProject()
     }
   }
   async function addProject() {
-    await axios.put("/api/solicitacoes/contrato", {
+    await axios.put('/api/solicitacoes/contrato', {
       _id: solicitacao._id,
       aprovacao: true,
       dataAprovacao: new Date().toISOString(),
-    });
-    sendEmail();
-    notifyCobrancas();
-    if (dados.idProjetoCRM)
-      await notifySellerInCRM(
-        insertObj.vendedor.nome,
-        dados.idProjetoCRM,
-        "SOLICITAÇÃO DE CONTRATO APROVADA."
-      );
+    })
+    sendEmail()
+    notifyCobrancas()
+    if (dados.idProjetoCRM) await notifySellerInCRM(insertObj.vendedor.nome, dados.idProjetoCRM, 'SOLICITAÇÃO DE CONTRATO APROVADA.')
 
-    axios.post("/api/projects/add", insertObj).then((res) => {
+    axios.post('/api/projects/add', insertObj).then((res) => {
       setCreationMsg({
-        text: "Projeto adicionado!",
-        color: "text-green-500",
-      });
-    });
-    setDados({ ...dados, aprovacao: true });
+        text: 'Projeto adicionado!',
+        color: 'text-green-500',
+      })
+    })
+    setDados({ ...dados, aprovacao: true })
   }
 
   async function uploadFiles() {
     if (fileName.trim().length < 3) {
       setFileMsg({
-        text: "Por favor, preencha um nome de arquivo válido.",
-        color: "text-red-500",
-      });
+        text: 'Por favor, preencha um nome de arquivo válido.',
+        color: 'text-red-500',
+      })
       setTimeout(() => {
-        setFileMsg({ text: "", color: "" });
-      }, 2000);
+        setFileMsg({ text: '', color: '' })
+      }, 2000)
     }
-    var splitNome = fileName.replace("/", "").toLowerCase().split(" ");
-    var fixedNome = splitNome.join("_");
+    var splitNome = fileName.replace('/', '').toLowerCase().split(' ')
+    var fixedNome = splitNome.join('_')
     try {
-      var arr = dados.links ? dados.links : [];
-      setFileMsg({ text: "Enviando arquivo(s)...", color: "text-[#15599a]" });
+      var arr = dados.links ? dados.links : []
+      setFileMsg({ text: 'Enviando arquivo(s)...', color: 'text-[#15599a]' })
       if (image.length > 0) {
         for (let i = 0; i < image.length; i++) {
-          let file = image.item(i);
+          let file = image.item(i)
           let storageName =
-            image.length > 1
-              ? `clientes/${dados.nomeDoContrato}/${fixedNome}-{${i + 1}}`
-              : `clientes/${dados.nomeDoContrato}/${fixedNome}`;
-          var imageRef = ref(storage, storageName);
+            image.length > 1 ? `clientes/${dados.nomeDoContrato}/${fixedNome}-{${i + 1}}` : `clientes/${dados.nomeDoContrato}/${fixedNome}`
+          var imageRef = ref(storage, storageName)
           let res = await uploadBytes(imageRef, file).catch((err) => {
-            throw "Houve um erro no envio das imagens";
-          });
-          var url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-          let name =
-            image.length > 1 ? `${fileName} (${i + 1})` : `${fileName}`;
+            throw 'Houve um erro no envio das imagens'
+          })
+          var url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+          let name = image.length > 1 ? `${fileName} (${i + 1})` : `${fileName}`
           arr = [
             ...arr,
             {
               title: name,
               link: url,
-              format: fileTypes[res.metadata.contentType]
-                ? fileTypes[res.metadata.contentType].title
-                : "INDEFINIDO",
+              format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
             },
-          ];
+          ]
         }
       }
       let apiResponse = await axios
@@ -914,62 +847,59 @@ function ModalFormSolicitacao({
           },
         })
         .catch((err) => {
-          throw "Houve um erro no salvamento dos links";
-        });
-      setDados({ ...dados, links: arr });
+          throw 'Houve um erro no salvamento dos links'
+        })
+      setDados({ ...dados, links: arr })
       setFileMsg({
-        text: "Arquivo(s) salvo(s) com sucesso.",
-        color: "text-green-500",
-      });
+        text: 'Arquivo(s) salvo(s) com sucesso.',
+        color: 'text-green-500',
+      })
       setTimeout(() => {
         setFileMsg({
-          text: "",
-          color: "",
-        });
-      }, 2000);
-      setFileName("");
+          text: '',
+          color: '',
+        })
+      }, 2000)
+      setFileName('')
     } catch (error) {
       setFileMsg({
-        text: "Erro no envio das images.",
-        color: "text-red-500",
-      });
+        text: 'Erro no envio das images.',
+        color: 'text-red-500',
+      })
     }
   }
 
   async function deleteFile(obj) {
     try {
-      let fileRef = ref(storage, obj.link);
+      let fileRef = ref(storage, obj.link)
       let firebaseResponse = await deleteObject(fileRef).catch((err) => {
-        throw new Error("Erro ao excluir arquivo no Firebase.");
-      });
-      const newArr = dados.links.filter((x) => x.link != obj.link);
-      let apiResponse = await axios.put(
-        `/api/solicitacoes/update?id=${dados._id}`,
-        {
-          operation: {
-            $pull: {
-              [`links`]: obj,
-            },
+        throw new Error('Erro ao excluir arquivo no Firebase.')
+      })
+      const newArr = dados.links.filter((x) => x.link != obj.link)
+      let apiResponse = await axios.put(`/api/solicitacoes/update?id=${dados._id}`, {
+        operation: {
+          $pull: {
+            [`links`]: obj,
           },
-        }
-      );
-      console.log("API RESPONSE", apiResponse.data);
-      setDados({ ...dados, links: newArr });
+        },
+      })
+      console.log('API RESPONSE', apiResponse.data)
+      setDados({ ...dados, links: newArr })
       setFileMsg({
-        text: "Arquivo excluído com sucesso.",
-        color: "text-green-500",
-      });
+        text: 'Arquivo excluído com sucesso.',
+        color: 'text-green-500',
+      })
       setTimeout(() => {
         setFileMsg({
-          text: "",
-          color: "",
-        });
-      }, 2000);
+          text: '',
+          color: '',
+        })
+      }, 2000)
     } catch (error) {
-      setFileMsg({ text: "Erro ao exluir arquivo.", color: "text-red-500" });
+      setFileMsg({ text: 'Erro ao exluir arquivo.', color: 'text-red-500' })
     }
   }
-  console.log(dados);
+  console.log(dados)
   return (
     <>
       <div style={OVERLAY_STYLES}>
@@ -977,9 +907,7 @@ function ModalFormSolicitacao({
           <div className="flex flex-col h-full">
             <div className="flex flex-col lg:flex-row gap-2 justify-between items-center px-2 pb-2 border-b border-gray-200">
               <div className="flex items-center justify-center gap-2">
-                <h1 className="text-[#15599a] pl-6  font-bold">
-                  {dados.nomeDoContrato}
-                </h1>
+                <h1 className="text-[#15599a] pl-6  font-bold">{dados.nomeDoContrato}</h1>
                 <p className="text-xxs italic text-gray-600">#{dados._id}</p>
               </div>
               <div className="flex items-center justify-between gap-2 w-full lg:w-fit">
@@ -1000,39 +928,20 @@ function ModalFormSolicitacao({
                   <div></div>
                 )}
                 <div className="flex items-center justify-center lg:justify-end gap-2 grow lg:grow-0">
-                  {msg.text && (
-                    <p className={`hidden lg:block italic ${msg.color}`}>
-                      {msg.text}
-                    </p>
-                  )}
-                  {editor && (
-                    <SaveButton
-                      text={"Salvar alterações"}
-                      icon={<FaSave />}
-                      handleClick={saveChanges}
-                    />
-                  )}
+                  {msg.text && <p className={`hidden lg:block italic ${msg.color}`}>{msg.text}</p>}
+                  {editor && <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={saveChanges} />}
                   <button>
-                    <VscChromeClose
-                      onClick={() => setModalIsOpen(false)}
-                      style={{ color: "red" }}
-                    />
+                    <VscChromeClose onClick={() => setModalIsOpen(false)} style={{ color: 'red' }} />
                   </button>
                 </div>
                 <div className="flex items-center gap-x-2"></div>
               </div>
-              {msg.text && (
-                <p className={`italic block lg:hidden ${msg.color}`}>
-                  {msg.text}
-                </p>
-              )}
+              {msg.text && <p className={`italic block lg:hidden ${msg.color}`}>{msg.text}</p>}
             </div>
             <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
               <>
                 <div className="w-full flex justify-center items-center gap-2 border border-[#15599a] py-2 shadow-lg bg-[#fff]">
-                  <h1 className="text-center w-fit font-bold text-green-500 text-md lg:text-xl">
-                    REVISÃO DAS INFORMAÇÕES
-                  </h1>
+                  <h1 className="text-center w-fit font-bold text-green-500 text-md lg:text-xl">REVISÃO DAS INFORMAÇÕES</h1>
                   <Link href={`/comercial/publicoFormulario/${dados._id}`}>
                     <a className="flex items-center justify-center gap-2 p-2 text-sm rounded font-bold border border-[#fead61] text-[#fead61] hover:text-black hover:bg-[#fead61] ">
                       <TbExternalLink />
@@ -1041,12 +950,10 @@ function ModalFormSolicitacao({
                   </Link>
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    DADOS PARA CONTRATO
-                  </span>
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS PARA CONTRATO</span>
                   <div className="flex gap-2 justify-around flex-wrap">
                     <TextInput
-                      label={"Nome/Razão Social"}
+                      label={'Nome/Razão Social'}
                       editable={editor}
                       value={dados.nomeDoContrato}
                       handleChange={(value) =>
@@ -1057,75 +964,50 @@ function ModalFormSolicitacao({
                       }
                     />
                     <SelectInput
-                      label={"Vendedor"}
+                      label={'Vendedor'}
                       value={dados.nomeVendedor}
                       editable={editor}
                       options={vendedores.map((vendedor) => {
-                        return { label: vendedor.nome, value: vendedor.nome };
+                        return { label: vendedor.nome, value: vendedor.nome }
                       })}
-                      handleChange={(value) =>
-                        setDados({ ...dados, nomeVendedor: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, nomeVendedor: value })}
                     />
                     <CheckboxInput
-                      title={"JÁ É CLIENTE AMPÈRE"}
-                      labelTrue={"SIM"}
-                      labelFalse={"NÃO"}
-                      checked={dados.clienteAmpere == "SIM"}
+                      title={'JÁ É CLIENTE AMPÈRE'}
+                      labelTrue={'SIM'}
+                      labelFalse={'NÃO'}
+                      checked={dados.clienteAmpere == 'SIM'}
                       handleChange={(value) =>
                         setDados({
                           ...dados,
-                          clienteAmpere: value ? "SIM" : "NÃO",
+                          clienteAmpere: value ? 'SIM' : 'NÃO',
                         })
                       }
                     />
                     <SelectInput
-                      label={"TIPO DE SERVIÇO"}
+                      label={'TIPO DE SERVIÇO'}
                       editable={editor}
-                      value={
-                        dados.tipoDeServico
-                          ? dados.tipoDeServico
-                          : "NÃO DEFINIDO"
-                      }
+                      value={dados.tipoDeServico ? dados.tipoDeServico : 'NÃO DEFINIDO'}
                       options={tiposDeServico.map((tipo) => tipo)}
-                      handleChange={(value) =>
-                        setDados({ ...dados, tipoDeServico: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, tipoDeServico: value })}
                     />
                     <TextInput
-                      label={"Telefone"}
+                      label={'Telefone'}
                       editable={editor}
                       value={dados.telefone}
-                      handleChange={(value) =>
-                        setDados({ ...dados, telefone: phoneMask(value) })
-                      }
+                      handleChange={(value) => setDados({ ...dados, telefone: phoneMask(value) })}
                     />
                     <TextInput
-                      label={"CPF/CNPJ"}
+                      label={'CPF/CNPJ'}
                       editable={editor}
                       value={dados.cpf_cnpj}
-                      handleChange={(value) =>
-                        setDados({ ...dados, cpf_cnpj: formatCnpjCpf(value) })
-                      }
+                      handleChange={(value) => setDados({ ...dados, cpf_cnpj: formatCnpjCpf(value) })}
                     />
-                    <TextInput
-                      label={"RG"}
-                      editable={editor}
-                      value={dados.rg}
-                      handleChange={(value) =>
-                        setDados({ ...dados, rg: value })
-                      }
-                    />
+                    <TextInput label={'RG'} editable={editor} value={dados.rg} handleChange={(value) => setDados({ ...dados, rg: value })} />
                     <DateInput
-                      label={"DATA DE NASCIMENTO"}
+                      label={'DATA DE NASCIMENTO'}
                       editable={editor}
-                      value={
-                        dados.dataDeNascimento
-                          ? new Date(dados.dataDeNascimento)
-                              .toISOString()
-                              .slice(0, 10)
-                          : null
-                      }
+                      value={dados.dataDeNascimento ? new Date(dados.dataDeNascimento).toISOString().slice(0, 10) : null}
                       handleChange={(value) =>
                         setDados({
                           ...dados,
@@ -1134,40 +1016,26 @@ function ModalFormSolicitacao({
                       }
                     />
                     <TextInput
-                      label={"CEP"}
+                      label={'CEP'}
                       editable={editor}
                       value={dados.cep}
-                      handleChange={(value) =>
-                        setDados({ ...dados, cep: formatCEP(value) })
-                      }
+                      handleChange={(value) => setDados({ ...dados, cep: formatCEP(value) })}
                     />
-                    <button
-                      onClick={() => findCPF("enderecoCobranca")}
-                      className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-                    >
+                    <button onClick={() => findCPF('enderecoCobranca')} className="flex items-center p-1 h-[30px] bg-[#fead61] rounded">
                       <AiOutlineSearch />
                     </button>
                     <SelectInput
-                      label={"CIDADE"}
+                      label={'CIDADE'}
                       editable={editor}
                       value={dados.cidade}
                       options={cidadesAtendidas.map((cidade) => {
-                        return { label: cidade, value: cidade };
+                        return { label: cidade, value: cidade }
                       })}
-                      handleChange={(value) =>
-                        setDados({ ...dados, cidade: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, cidade: value })}
                     />
+                    <TextInput label={'UF'} editable={editor} value={dados.uf} handleChange={(value) => setDados({ ...dados, uf: value })} />
                     <TextInput
-                      label={"UF"}
-                      editable={editor}
-                      value={dados.uf}
-                      handleChange={(value) =>
-                        setDados({ ...dados, uf: value })
-                      }
-                    />
-                    <TextInput
-                      label={"ENDEREÇO DE COBRANÇA"}
+                      label={'ENDEREÇO DE COBRANÇA'}
                       editable={editor}
                       value={dados.enderecoCobranca}
                       handleChange={(value) =>
@@ -1178,208 +1046,174 @@ function ModalFormSolicitacao({
                       }
                     />
                     <NumberInput
-                      label={"Nº"}
+                      label={'Nº'}
                       editable={editor}
                       value={dados.numeroResCobranca}
-                      handleChange={(value) =>
-                        setDados({ ...dados, numeroResCobranca: Number(value) })
-                      }
+                      handleChange={(value) => setDados({ ...dados, numeroResCobranca: Number(value) })}
                     />
                     <TextInput
-                      label={"BAIRRO"}
+                      label={'BAIRRO'}
                       editable={editor}
                       value={dados.bairro}
-                      handleChange={(value) =>
-                        setDados({ ...dados, bairro: value.toUpperCase() })
-                      }
+                      handleChange={(value) => setDados({ ...dados, bairro: value.toUpperCase() })}
                     />
                     <TextInput
-                      label={"PONTO DE REFERÊNCIA"}
+                      label={'PONTO DE REFERÊNCIA'}
                       editable={editor}
                       value={dados.pontoDeReferencia}
-                      handleChange={(value) =>
-                        setDados({ ...dados, pontoDeReferencia: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, pontoDeReferencia: value })}
                     />
                     <SelectInput
-                      label={"SEGMENTO"}
+                      label={'SEGMENTO'}
                       editable={editor}
                       value={dados.segmento}
                       options={[
                         {
-                          value: "RESIDENCIAL",
-                          label: "RESIDENCIAL",
+                          value: 'RESIDENCIAL',
+                          label: 'RESIDENCIAL',
                         },
                         {
-                          value: "COMERCIAL",
-                          label: "COMERCIAL",
+                          value: 'COMERCIAL',
+                          label: 'COMERCIAL',
                         },
                         {
-                          value: "INDUSTRIAL",
-                          label: "INDUSTRIAL",
+                          value: 'INDUSTRIAL',
+                          label: 'INDUSTRIAL',
                         },
                         {
-                          value: "RURAL",
-                          label: "RURAL",
+                          value: 'RURAL',
+                          label: 'RURAL',
                         },
                       ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, segmento: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, segmento: value })}
                     />
                     <SelectInput
-                      label={"FORMA DE ASSINATURA"}
+                      label={'FORMA DE ASSINATURA'}
                       editable={editor}
                       options={[
                         {
-                          value: "DIGITAL",
-                          label: "DIGITAL",
+                          value: 'DIGITAL',
+                          label: 'DIGITAL',
                         },
                         {
-                          value: "FISICO",
-                          label: "FISICO",
+                          value: 'FISICO',
+                          label: 'FISICO',
                         },
                       ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, formaAssinatura: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, formaAssinatura: value })}
                     />
                     <TextInput
-                      label={"CÓDIGO DO PROJETO"}
+                      label={'CÓDIGO DO PROJETO'}
                       editable={editor}
                       value={dados.codigoSVB}
-                      handleChange={(value) =>
-                        setDados({ ...dados, codigoSVB: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, codigoSVB: value })}
                     />
                     <SelectInput
-                      label={"ESTADO CIVIL"}
+                      label={'ESTADO CIVIL'}
                       editable={editor}
                       options={[
                         {
-                          label: "CASADO(A)",
-                          value: "CASADO(A)",
+                          label: 'CASADO(A)',
+                          value: 'CASADO(A)',
                         },
                         {
-                          label: "SOLTEIRO(A)",
-                          value: "SOLTEIRO(A)",
+                          label: 'SOLTEIRO(A)',
+                          value: 'SOLTEIRO(A)',
                         },
                         {
-                          label: "UNIÃO ESTÁVEL",
-                          value: "UNIÃO ESTÁVEL",
+                          label: 'UNIÃO ESTÁVEL',
+                          value: 'UNIÃO ESTÁVEL',
                         },
                         {
-                          label: "DIVORCIADO(A)",
-                          value: "DIVORCIADO(A)",
+                          label: 'DIVORCIADO(A)',
+                          value: 'DIVORCIADO(A)',
                         },
                         {
-                          label: "VIUVO(A)",
-                          value: "VIUVO(A)",
+                          label: 'VIUVO(A)',
+                          value: 'VIUVO(A)',
                         },
                         {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
+                          label: 'NÃO DEFINIDO',
+                          value: 'NÃO DEFINIDO',
                         },
                       ]}
                       value={dados.estadoCivil}
-                      handleChange={(value) =>
-                        setDados({ ...dados, estadoCivil: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, estadoCivil: value })}
                     />
                     <TextInput
-                      label={"EMAIL"}
+                      label={'EMAIL'}
                       normalCase={true}
                       editable={editor}
                       value={dados.email}
-                      handleChange={(value) =>
-                        setDados({ ...dados, email: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, email: value })}
                     />
                     <TextInput
-                      label={"PROFISSÃO"}
+                      label={'PROFISSÃO'}
                       editable={editor}
                       value={dados.profissao}
-                      handleChange={(value) =>
-                        setDados({ ...dados, profissao: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, profissao: value })}
                     />
                     <TextInput
-                      label={"ONDE TRABALHA"}
+                      label={'ONDE TRABALHA'}
                       editable={editor}
                       value={dados.ondeTrabalha}
-                      handleChange={(value) =>
-                        setDados({ ...dados, ondeTrabalha: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, ondeTrabalha: value })}
                     />
                     <SelectInput
-                      label={"POSSUI ALGUMA DEFICIÊNCIA"}
+                      label={'POSSUI ALGUMA DEFICIÊNCIA'}
                       editable={editor}
                       value={dados.possuiDeficiencia}
-                      handleChange={(value) =>
-                        setDados({ ...dados, possuiDeficiencia: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, possuiDeficiencia: value })}
                       options={[
                         {
-                          label: "SIM",
-                          value: "SIM",
+                          label: 'SIM',
+                          value: 'SIM',
                         },
                         {
-                          label: "NÃO",
-                          value: "NÃO",
+                          label: 'NÃO',
+                          value: 'NÃO',
                         },
                       ]}
                     />
-                    {dados.possuiDeficiencia == "SIM" && (
+                    {dados.possuiDeficiencia == 'SIM' && (
                       <>
                         <TextInput
-                          label={"SE SIM, QUAL ?"}
+                          label={'SE SIM, QUAL ?'}
                           editable={editor}
                           value={dados.qualDeficiencia}
-                          handleChange={(value) =>
-                            setDados({ ...dados, qualDeficiencia: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, qualDeficiencia: value })}
                         />
                       </>
                     )}
                     <SelectInput
-                      label={"CANAL DE VENDA"}
+                      label={'CANAL DE VENDA'}
                       editable={editor}
                       value={dados.canalVenda}
-                      handleChange={(value) =>
-                        setDados({ ...dados, canalVenda: value })
-                      }
-                      options={customersAcquisitionChannels.map(
-                        (value) => value
-                      )}
+                      handleChange={(value) => setDados({ ...dados, canalVenda: value })}
+                      options={customersAcquisitionChannels.map((value) => value)}
                     />
-                    {dados.canalVenda == "INDICAÇÃO DE AMIGO" && (
+                    {dados.canalVenda == 'INDICAÇÃO DE AMIGO' && (
                       <>
                         <TextInput
-                          label={"NOME INDICADOR"}
+                          label={'NOME INDICADOR'}
                           editable={editor}
                           value={dados.nomeIndicador}
-                          handleChange={(value) =>
-                            setDados({ ...dados, nomeIndicador: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, nomeIndicador: value })}
                         />
                         <TextInput
-                          label={"TELEFONE INDICADOR"}
+                          label={'TELEFONE INDICADOR'}
                           editable={editor}
                           value={dados.telefoneIndicador}
-                          handleChange={(value) =>
-                            setDados({ ...dados, telefoneIndicador: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, telefoneIndicador: value })}
                         />
                       </>
                     )}
                   </div>
                   <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      COMO VOCÊ CHEGOU A ESSE CLIENTE?
-                    </span>
+                    <span className="uppercase font-bold font-raleway text-center text-sm">COMO VOCÊ CHEGOU A ESSE CLIENTE?</span>
                     <textarea
                       readOnly={!editor}
-                      placeholder={"Descrição aqui.."}
+                      placeholder={'Descrição aqui..'}
                       value={dados.comoChegouAoCliente}
                       className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                       onChange={(e) =>
@@ -1391,13 +1225,11 @@ function ModalFormSolicitacao({
                     />
                   </div>
                   <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      OBSERVAÇÃO COMERCIAL
-                    </span>
+                    <span className="uppercase font-bold font-raleway text-center text-sm">OBSERVAÇÃO COMERCIAL</span>
                     <textarea
                       readOnly={!editor}
-                      placeholder={"Observações comerciais aqui.."}
-                      value={dados.obsComercial ? dados.obsComercial : ""}
+                      placeholder={'Observações comerciais aqui..'}
+                      value={dados.obsComercial ? dados.obsComercial : ''}
                       onChange={(e) =>
                         setDados({
                           ...dados,
@@ -1407,49 +1239,39 @@ function ModalFormSolicitacao({
                       className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                     />
                   </div>
-                  {["SISTEMA FOTOVOLTAICO (OFF GRID)", "BOMBA SOLAR"].includes(
-                    dados.tipoDeServico
-                  ) && (
+                  {['SISTEMA FOTOVOLTAICO (OFF GRID)', 'BOMBA SOLAR'].includes(dados.tipoDeServico) && (
                     <div className="flex items-center justify-center mt-2">
                       <SelectInput
-                        label={"TIPO DE VENDA"}
-                        value={
-                          dados.tipoVenda ? dados.tipoVenda : "NÃO DEFINIDO"
-                        }
+                        label={'TIPO DE VENDA'}
+                        value={dados.tipoVenda ? dados.tipoVenda : 'NÃO DEFINIDO'}
                         editable={true}
-                        handleChange={(value) =>
-                          setDados({ ...dados, tipoVenda: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, tipoVenda: value })}
                         options={[
                           {
-                            label: "SOMENTE MATERIAL",
-                            value: "SOMENTE MATERIAL",
+                            label: 'SOMENTE MATERIAL',
+                            value: 'SOMENTE MATERIAL',
                           },
                           {
-                            label: "MATERIAL+INSTALAÇÃO",
-                            value: "MATERIAL+INSTALAÇÃO",
+                            label: 'MATERIAL+INSTALAÇÃO',
+                            value: 'MATERIAL+INSTALAÇÃO',
                           },
-                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                          { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                         ]}
                       />
                     </div>
                   )}
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    DADOS PARA CONTATO
-                  </span>
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS PARA CONTATO</span>
                   <div className="flex gap-2 justify-around flex-wrap">
                     <TextInput
-                      label={"NOME DO CONTATO 1"}
+                      label={'NOME DO CONTATO 1'}
                       editable={editor}
                       value={dados.nomeContatoJornadaUm}
-                      handleChange={(value) =>
-                        setDados({ ...dados, nomeContatoJornadaUm: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, nomeContatoJornadaUm: value })}
                     />
                     <TextInput
-                      label={"TELEFONE DO CONTATO 1"}
+                      label={'TELEFONE DO CONTATO 1'}
                       editable={editor}
                       value={dados.telefoneContatoUm}
                       handleChange={(value) =>
@@ -1460,15 +1282,13 @@ function ModalFormSolicitacao({
                       }
                     />
                     <TextInput
-                      label={"NOME DO CONTATO 2"}
+                      label={'NOME DO CONTATO 2'}
                       editable={editor}
                       value={dados.nomeContatoJornadaDois}
-                      handleChange={(value) =>
-                        setDados({ ...dados, nomeContatoJornadaDois: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, nomeContatoJornadaDois: value })}
                     />
                     <TextInput
-                      label={"TELEFONE DO CONTATO 2"}
+                      label={'TELEFONE DO CONTATO 2'}
                       editable={editor}
                       value={dados.telefoneContatoDois}
                       handleChange={(value) =>
@@ -1479,35 +1299,30 @@ function ModalFormSolicitacao({
                       }
                     />
                     <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-                      <span className="uppercase font-bold font-raleway text-center text-sm">
-                        CUIDADOS PARA CONTATO COM O CLIENTE
-                      </span>
+                      <span className="uppercase font-bold font-raleway text-center text-sm">CUIDADOS PARA CONTATO COM O CLIENTE</span>
                       <textarea
                         readOnly={!editor}
                         placeholder={
-                          "Descreva aqui cuidados em relação ao contato do cliente durante a jornada. Melhores horários para contato, texto ou aúdio, etc..."
+                          'Descreva aqui cuidados em relação ao contato do cliente durante a jornada. Melhores horários para contato, texto ou aúdio, etc...'
                         }
                         value={dados.cuidadosContatoJornada}
                         className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                         onChange={(e) =>
                           setDados({
                             ...dados,
-                            cuidadosContatoJornada:
-                              e.target.value.toUpperCase(),
+                            cuidadosContatoJornada: e.target.value.toUpperCase(),
                           })
                         }
                       />
                     </div>
                   </div>
                 </div>
-                {dados.clienteAmpere != "SIM" ? (
+                {dados.clienteAmpere != 'SIM' ? (
                   <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                      DADOS DA INSTALAÇÃO
-                    </span>
+                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS DA INSTALAÇÃO</span>
                     <div className="flex gap-2 justify-around flex-wrap">
                       <TextInput
-                        label={"NOME DO TITULAR DO PROJETO"}
+                        label={'NOME DO TITULAR DO PROJETO'}
                         editable={editor}
                         value={dados.nomeTitularProjeto}
                         handleChange={(value) =>
@@ -1518,77 +1333,67 @@ function ModalFormSolicitacao({
                         }
                       />
                       <SelectInput
-                        label={"TIPO DO TITULAR"}
+                        label={'TIPO DO TITULAR'}
                         editable={editor}
                         value={dados.tipoDoTitular}
-                        handleChange={(value) =>
-                          setDados({ ...dados, tipoDoTitular: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, tipoDoTitular: value })}
                         options={[
                           {
-                            label: "PESSOA FISICA",
-                            value: "PESSOA FISICA",
+                            label: 'PESSOA FISICA',
+                            value: 'PESSOA FISICA',
                           },
                           {
-                            label: "PESSOA JURIDICA",
-                            value: "PESSOA JURIDICA",
+                            label: 'PESSOA JURIDICA',
+                            value: 'PESSOA JURIDICA',
                           },
                           {
-                            label: "NÃO DEFINIDO",
-                            value: "NÃO DEFINIDO",
+                            label: 'NÃO DEFINIDO',
+                            value: 'NÃO DEFINIDO',
                           },
                         ]}
                       />
                       <SelectInput
-                        label={"TIPO DA LIGAÇÃO"}
+                        label={'TIPO DA LIGAÇÃO'}
                         editable={editor}
                         value={dados.tipoDaLigacao}
-                        handleChange={(value) =>
-                          setDados({ ...dados, tipoDaLigacao: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, tipoDaLigacao: value })}
                         options={[
                           {
-                            label: "NOVA",
-                            value: "NOVA",
+                            label: 'NOVA',
+                            value: 'NOVA',
                           },
                           {
-                            label: "EXISTENTE",
-                            value: "EXISTENTE",
+                            label: 'EXISTENTE',
+                            value: 'EXISTENTE',
                           },
                           {
-                            label: "NÃO DEFINIDO",
-                            value: "NÃO DEFINIDO",
+                            label: 'NÃO DEFINIDO',
+                            value: 'NÃO DEFINIDO',
                           },
                         ]}
                       />
                       <SelectInput
-                        label={"TIPO DA INSTALAÇÃO"}
+                        label={'TIPO DA INSTALAÇÃO'}
                         editable={editor}
-                        value={
-                          dados.tipoDaInstalacao
-                            ? dados.tipoDaInstalacao
-                            : "NÃO DEFINIDO"
-                        }
-                        handleChange={(value) =>
-                          setDados({ ...dados, tipoDaInstalacao: value })
-                        }
+                        value={dados.tipoDaInstalacao ? dados.tipoDaInstalacao : 'NÃO DEFINIDO'}
+                        handleChange={(value) => setDados({ ...dados, tipoDaInstalacao: value })}
                         options={[
                           {
-                            label: "RURAL",
-                            value: "RURAL",
+                            label: 'RURAL',
+                            value: 'RURAL',
                           },
                           {
-                            label: "URBANO",
-                            value: "URBANO",
+                            label: 'URBANO',
+                            value: 'URBANO',
                           },
                           {
-                            label: "NÃO DEFINIDO",
-                            value: "NÃO DEFINIDO",
+                            label: 'NÃO DEFINIDO',
+                            value: 'NÃO DEFINIDO',
                           },
                         ]}
                       />
                       <TextInput
-                        label={"CEP INSTALAÇÃO"}
+                        label={'CEP INSTALAÇÃO'}
                         editable={editor}
                         value={dados.cepInstalacao}
                         handleChange={(value) =>
@@ -1600,58 +1405,46 @@ function ModalFormSolicitacao({
                       />
 
                       <TextInput
-                        label={"ENDEREÇO DE INSTALAÇÃO"}
+                        label={'ENDEREÇO DE INSTALAÇÃO'}
                         editable={editor}
                         value={dados.enderecoInstalacao}
-                        handleChange={(value) =>
-                          setDados({ ...dados, enderecoInstalacao: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, enderecoInstalacao: value })}
                       />
                       <NumberInput
-                        label={"Nº"}
+                        label={'Nº'}
                         editable={editor}
                         value={dados.numeroResInstalacao}
-                        handleChange={(value) =>
-                          setDados({ ...dados, numeroResInstalacao: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, numeroResInstalacao: value })}
                       />
                       <NumberInput
-                        label={"Nº DA INSTALAÇÃO"}
+                        label={'Nº DA INSTALAÇÃO'}
                         editable={editor}
                         value={dados.numeroInstalacao}
-                        handleChange={(value) =>
-                          setDados({ ...dados, numeroInstalacao: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, numeroInstalacao: value })}
                       />
                       <TextInput
-                        label={"BAIRRO"}
+                        label={'BAIRRO'}
                         editable={editor}
                         value={dados.bairroInstalacao}
-                        handleChange={(value) =>
-                          setDados({ ...dados, bairroInstalacao: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, bairroInstalacao: value })}
                       />
                       <SelectInput
-                        label={"CIDADE"}
+                        label={'CIDADE'}
                         editable={editor}
                         value={dados.cidadeInstalacao}
                         options={cidadesAtendidas.map((cidade) => {
-                          return { label: cidade, value: cidade };
+                          return { label: cidade, value: cidade }
                         })}
-                        handleChange={(value) =>
-                          setDados({ ...dados, cidadeInstalacao: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, cidadeInstalacao: value })}
                       />
                       <TextInput
-                        label={"UF"}
+                        label={'UF'}
                         editable={editor}
                         value={dados.ufInstalacao}
-                        handleChange={(value) =>
-                          setDados({ ...dados, ufInstalacao: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, ufInstalacao: value })}
                       />
                       <TextInput
-                        label={"PONTO DE REFERÊNCIA"}
+                        label={'PONTO DE REFERÊNCIA'}
                         editable={editor}
                         value={dados.pontoDeReferenciaInstalacao}
                         handleChange={(value) =>
@@ -1662,50 +1455,38 @@ function ModalFormSolicitacao({
                         }
                       />
                       <TextInput
-                        label={"LOGIN(CEMIG ATENDE)"}
+                        label={'LOGIN(CEMIG ATENDE)'}
                         editable={editor}
                         value={dados.loginCemigAtende}
-                        handleChange={(value) =>
-                          setDados({ ...dados, loginCemigAtende: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, loginCemigAtende: value })}
                       />
                       <TextInput
-                        label={"SENHA(CEMIG ATENDE)"}
+                        label={'SENHA(CEMIG ATENDE)'}
                         editable={editor}
                         value={dados.senhaCemigAtende}
-                        handleChange={(value) =>
-                          setDados({ ...dados, senhaCemigAtende: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, senhaCemigAtende: value })}
                       />
                       <TextInput
-                        label={"LATITUDE"}
+                        label={'LATITUDE'}
                         editable={editor}
                         value={dados.latitude}
-                        handleChange={(value) =>
-                          setDados({ ...dados, latitude: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, latitude: value })}
                       />
                       <TextInput
-                        label={"LONGITUDE"}
+                        label={'LONGITUDE'}
                         editable={editor}
                         value={dados.longitude}
-                        handleChange={(value) =>
-                          setDados({ ...dados, longitude: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, longitude: value })}
                       />
                       <NumberInput
-                        label={"POTÊNIA PICO"}
+                        label={'POTÊNIA PICO'}
                         editable={editor}
                         value={
                           dados.potPico
                             ? dados.potPico
                             : getSummedValues({
-                                qtde: dados.qtdeModulos
-                                  ? dados.qtdeModulos.toString()
-                                  : "0",
-                                pot: dados.potModulos
-                                  ? dados.potModulos.toString()
-                                  : "0",
+                                qtde: dados.qtdeModulos ? dados.qtdeModulos.toString() : '0',
+                                pot: dados.potModulos ? dados.potModulos.toString() : '0',
                               }).totalPot
                         }
                         handleChange={(value) =>
@@ -1717,112 +1498,96 @@ function ModalFormSolicitacao({
                         }
                       />
                       <NumberInput
-                        label={"GERAÇÃO PREVISTA"}
+                        label={'GERAÇÃO PREVISTA'}
                         editable={editor}
                         value={
                           dados.geracaoPrevista
                             ? dados.geracaoPrevista
                             : getSummedValues({
-                                qtde: dados.qtdeModulos
-                                  ? dados.qtdeModulos.toString()
-                                  : "0",
-                                pot: dados.potModulos
-                                  ? dados.potModulos.toString()
-                                  : "0",
+                                qtde: dados.qtdeModulos ? dados.qtdeModulos.toString() : '0',
+                                pot: dados.potModulos ? dados.potModulos.toString() : '0',
                               }).totalPot * 126
                         }
-                        handleChange={(value) =>
-                          setDados({ ...dados, geracaoPrevista: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, geracaoPrevista: value })}
                       />
                     </div>
-                    {dados.tipoDeServico == "MONTAGEM E DESMONTAGEM" ? (
+                    {dados.tipoDeServico == 'MONTAGEM E DESMONTAGEM' ? (
                       <div className="flex flex-col border-t border-gray-200 pt-2">
                         <div className="flex items-center justify-center col-span-3">
                           <SelectInput
-                            label={"HAVERÁ MUDANÇA DE LOCAL"}
+                            label={'HAVERÁ MUDANÇA DE LOCAL'}
                             editable={true}
-                            value={
-                              dados.mudancaLocal
-                                ? dados.mudancaLocal
-                                : "NÃO DEFINIDO"
-                            }
+                            value={dados.mudancaLocal ? dados.mudancaLocal : 'NÃO DEFINIDO'}
                             options={[
                               {
-                                label: "SIM",
-                                value: "SIM",
+                                label: 'SIM',
+                                value: 'SIM',
                               },
                               {
-                                label: "NÃO",
-                                value: "NÃO",
+                                label: 'NÃO',
+                                value: 'NÃO',
                               },
                               {
-                                label: "NÃO DEFINIDO",
-                                value: "NÃO DEFINIDO",
+                                label: 'NÃO DEFINIDO',
+                                value: 'NÃO DEFINIDO',
                               },
                             ]}
                             handleChange={(value) => {
-                              if (value == "NÃO") {
+                              if (value == 'NÃO') {
                                 setDados({
                                   ...dados,
                                   mudancaLocal: value.toUpperCase(),
-                                  tipoDaLigacao: "NÃO DEFINIDO",
-                                  tipoDaInstalacaoRemontagem: "NÃO DEFINIDO",
-                                  cepInstalacaoRemontagem: "",
-                                  enderecoInstalacaoRemontagem: "",
-                                  numeroInstalacaoRemontagem: "",
-                                  numeroResInstalacaoRemontagem: "",
-                                  bairroInstalacaoRemontagem: "",
-                                  cidadeInstalacaoRemontagem: "",
-                                  ufInstalacaoRemontagem: "",
-                                  latitudeRemontagem: "",
-                                  longitudeRemontagem: "",
-                                  pontoDeReferenciaInstalacaoRemontagem: "",
-                                });
+                                  tipoDaLigacao: 'NÃO DEFINIDO',
+                                  tipoDaInstalacaoRemontagem: 'NÃO DEFINIDO',
+                                  cepInstalacaoRemontagem: '',
+                                  enderecoInstalacaoRemontagem: '',
+                                  numeroInstalacaoRemontagem: '',
+                                  numeroResInstalacaoRemontagem: '',
+                                  bairroInstalacaoRemontagem: '',
+                                  cidadeInstalacaoRemontagem: '',
+                                  ufInstalacaoRemontagem: '',
+                                  latitudeRemontagem: '',
+                                  longitudeRemontagem: '',
+                                  pontoDeReferenciaInstalacaoRemontagem: '',
+                                })
                               } else {
                                 setDados({
                                   ...dados,
                                   mudancaLocal: value.toUpperCase(),
-                                });
+                                })
                               }
                             }}
                           />
                         </div>
-                        {dados.mudancaLocal == "SIM" ? (
+                        {dados.mudancaLocal == 'SIM' ? (
                           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 p-2">
                             <div className="flex items-center justify-center">
                               <SelectInput
-                                label={"TIPO DA LIGAÇÃO (NOVO LOCAL)"}
+                                label={'TIPO DA LIGAÇÃO (NOVO LOCAL)'}
                                 editable={true}
                                 value={dados.tipoDaLigacao}
-                                handleChange={(value) =>
-                                  setDados({ ...dados, tipoDaLigacao: value })
-                                }
+                                handleChange={(value) => setDados({ ...dados, tipoDaLigacao: value })}
                                 options={[
                                   {
-                                    label: "NOVA",
-                                    value: "NOVA",
+                                    label: 'NOVA',
+                                    value: 'NOVA',
                                   },
                                   {
-                                    label: "EXISTENTE",
-                                    value: "EXISTENTE",
+                                    label: 'EXISTENTE',
+                                    value: 'EXISTENTE',
                                   },
                                   {
-                                    label: "NÃO DEFINIDO",
-                                    value: "NÃO DEFINIDO",
+                                    label: 'NÃO DEFINIDO',
+                                    value: 'NÃO DEFINIDO',
                                   },
                                 ]}
                               />
                             </div>
                             <div className="flex items-center justify-center">
                               <SelectInput
-                                label={"TIPO DA INSTALAÇÃO (NOVO LOCAL)"}
+                                label={'TIPO DA INSTALAÇÃO (NOVO LOCAL)'}
                                 editable={true}
-                                value={
-                                  dados.tipoDaInstalacaoRemontagem
-                                    ? dados.tipoDaInstalacaoRemontagem
-                                    : "NÃO DEFINIDO"
-                                }
+                                value={dados.tipoDaInstalacaoRemontagem ? dados.tipoDaInstalacaoRemontagem : 'NÃO DEFINIDO'}
                                 handleChange={(value) =>
                                   setDados({
                                     ...dados,
@@ -1831,16 +1596,16 @@ function ModalFormSolicitacao({
                                 }
                                 options={[
                                   {
-                                    label: "RURAL",
-                                    value: "RURAL",
+                                    label: 'RURAL',
+                                    value: 'RURAL',
                                   },
                                   {
-                                    label: "URBANO",
-                                    value: "URBANO",
+                                    label: 'URBANO',
+                                    value: 'URBANO',
                                   },
                                   {
-                                    label: "NÃO DEFINIDO",
-                                    value: "NÃO DEFINIDO",
+                                    label: 'NÃO DEFINIDO',
+                                    value: 'NÃO DEFINIDO',
                                   },
                                 ]}
                               />
@@ -1848,7 +1613,7 @@ function ModalFormSolicitacao({
                             <div className="flex items-center justify-center gap-x-2 flex-wrap">
                               <TextInput
                                 editable={true}
-                                label={"CEP INSTALAÇÃO (NOVO LOCAL)"}
+                                label={'CEP INSTALAÇÃO (NOVO LOCAL)'}
                                 value={dados.cepInstalacaoRemontagem}
                                 handleChange={(value) =>
                                   setDados({
@@ -1858,9 +1623,7 @@ function ModalFormSolicitacao({
                                 }
                               />
                               <button
-                                onClick={() =>
-                                  findCPFRemontagem("enderecoInstalacao")
-                                }
+                                onClick={() => findCPFRemontagem('enderecoInstalacao')}
                                 className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
                               >
                                 <AiOutlineSearch />
@@ -1868,21 +1631,20 @@ function ModalFormSolicitacao({
                             </div>
                             <div className="flex items-center justify-center">
                               <TextInput
-                                label={"ENDEREÇO DE INSTALAÇÃO (NOVO LOCAL)"}
+                                label={'ENDEREÇO DE INSTALAÇÃO (NOVO LOCAL)'}
                                 editable={true}
                                 value={dados.enderecoInstalacaoRemontagem}
                                 handleChange={(value) =>
                                   setDados({
                                     ...dados,
-                                    enderecoInstalacaoRemontagem:
-                                      value.toUpperCase(),
+                                    enderecoInstalacaoRemontagem: value.toUpperCase(),
                                   })
                                 }
                               />
                             </div>
                             <div className="flex items-center justify-center">
                               <TextInput
-                                label={"Nº (NOVO LOCAL)"}
+                                label={'Nº (NOVO LOCAL)'}
                                 editable={true}
                                 value={dados.numeroResInstalacaoRemontagem}
                                 handleChange={(value) =>
@@ -1895,7 +1657,7 @@ function ModalFormSolicitacao({
                             </div>
                             <div className="flex items-center justify-center">
                               <NumberInput
-                                label={"Nº DA INSTALAÇÃO (NOVO LOCAL)"}
+                                label={'Nº DA INSTALAÇÃO (NOVO LOCAL)'}
                                 editable={true}
                                 value={dados.numeroInstalacaoRemontagem}
                                 handleChange={(value) =>
@@ -1908,30 +1670,29 @@ function ModalFormSolicitacao({
                             </div>
                             <div className="flex items-center justify-center">
                               <TextInput
-                                label={"BAIRRO (NOVO LOCAL)"}
+                                label={'BAIRRO (NOVO LOCAL)'}
                                 editable={true}
                                 value={dados.bairroInstalacaoRemontagem}
                                 handleChange={(value) =>
                                   setDados({
                                     ...dados,
-                                    bairroInstalacaoRemontagem:
-                                      value.toUpperCase(),
+                                    bairroInstalacaoRemontagem: value.toUpperCase(),
                                   })
                                 }
                               />
                             </div>
                             <div className="flex items-center justify-center">
                               <SelectInput
-                                label={"CIDADE (NOVO LOCAL)"}
+                                label={'CIDADE (NOVO LOCAL)'}
                                 editable={true}
                                 value={dados.cidadeInstalacaoRemontagem}
                                 options={[
                                   {
-                                    label: "NÃO DEFINIDO",
-                                    value: "NÃO DEFINIDO",
+                                    label: 'NÃO DEFINIDO',
+                                    value: 'NÃO DEFINIDO',
                                   },
                                   ...cidadesAtendidas.map((cidade) => {
-                                    return { label: cidade, value: cidade };
+                                    return { label: cidade, value: cidade }
                                   }),
                                 ]}
                                 handleChange={(value) =>
@@ -1944,7 +1705,7 @@ function ModalFormSolicitacao({
                             </div>
                             <div className="flex items-center justify-center">
                               <TextInput
-                                label={"UF (NOVO LOCAL)"}
+                                label={'UF (NOVO LOCAL)'}
                                 editable={true}
                                 value={dados.ufInstalacaoRemontagem}
                                 handleChange={(value) =>
@@ -1957,23 +1718,20 @@ function ModalFormSolicitacao({
                             </div>
                             <div className="flex items-center justify-center">
                               <TextInput
-                                label={"PONTO DE REFERÊNCIA (NOVO LOCAL)"}
+                                label={'PONTO DE REFERÊNCIA (NOVO LOCAL)'}
                                 editable={true}
-                                value={
-                                  dados.pontoDeReferenciaInstalacaoRemontagem
-                                }
+                                value={dados.pontoDeReferenciaInstalacaoRemontagem}
                                 handleChange={(value) =>
                                   setDados({
                                     ...dados,
-                                    pontoDeReferenciaInstalacaoRemontagem:
-                                      value,
+                                    pontoDeReferenciaInstalacaoRemontagem: value,
                                   })
                                 }
                               />
                             </div>
                             <div className="flex items-center justify-center gap-2 flex-wrap col-span-3">
                               <TextInput
-                                label={"LATITUDE (NOVO LOCAL)"}
+                                label={'LATITUDE (NOVO LOCAL)'}
                                 value={dados.latitudeRemontagem}
                                 editable={true}
                                 handleChange={(value) =>
@@ -1984,7 +1742,7 @@ function ModalFormSolicitacao({
                                 }
                               />
                               <TextInput
-                                label={"LONGITUDE (NOVO LOCAL)"}
+                                label={'LONGITUDE (NOVO LOCAL)'}
                                 editable={true}
                                 value={dados.longitudeRemontagem}
                                 handleChange={(value) =>
@@ -2003,185 +1761,131 @@ function ModalFormSolicitacao({
                 ) : null}
 
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    DADOS DO SISTEMA
-                  </span>
-                  {dados.tipoDeServico == "AUMENTO DE SISTEMA FOTOVOLTAICO" ? (
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS DO SISTEMA</span>
+                  {dados.tipoDeServico == 'AUMENTO DE SISTEMA FOTOVOLTAICO' ? (
                     <span className="text-sm text-center font-bold text-[#fead61] uppercase py-2 border-t border-blue-500 mt-1">
                       DADOS DO SISTEMA (AUMENTO)
                     </span>
                   ) : null}
                   <div className="flex justify-center">
                     <SelectInput
-                      label={"TOPOLOGIA"}
+                      label={'TOPOLOGIA'}
                       editable={editor}
                       value={dados.topologia}
-                      handleChange={(value) =>
-                        setDados({ ...dados, topologia: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, topologia: value })}
                       options={[
                         {
-                          label: "MICRO-INVERSOR",
-                          value: "MICRO",
+                          label: 'MICRO-INVERSOR',
+                          value: 'MICRO',
                         },
                         {
-                          label: "INVERSOR",
-                          value: "INVERSOR",
+                          label: 'INVERSOR',
+                          value: 'INVERSOR',
                         },
                         {
-                          label: "OTIMIZADOR",
-                          value: "OTIMIZADOR",
+                          label: 'OTIMIZADOR',
+                          value: 'OTIMIZADOR',
                         },
                         {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
+                          label: 'NÃO DEFINIDO',
+                          value: 'NÃO DEFINIDO',
                         },
                       ]}
                     />
                   </div>
                   <div className="flex gap-2 justify-around flex-wrap mt-2 py-2 border-t border-gray-200">
                     <TextInput
-                      label={
-                        dados.tipoDeServico != "BOMBA SOLAR"
-                          ? "MARCA DO INVERSOR/MICRO"
-                          : " MARCA DO DRIVER"
-                      }
+                      label={dados.tipoDeServico != 'BOMBA SOLAR' ? 'MARCA DO INVERSOR/MICRO' : ' MARCA DO DRIVER'}
                       editable={editor}
                       value={dados.marcaInversor}
-                      handleChange={(value) =>
-                        setDados({ ...dados, marcaInversor: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, marcaInversor: value })}
                     />
                     <TextInput
-                      label={
-                        dados.tipoDeServico != "BOMBA SOLAR"
-                          ? "QTDE INVERSOR/MICRO"
-                          : "QTDE DRIVERS"
-                      }
+                      label={dados.tipoDeServico != 'BOMBA SOLAR' ? 'QTDE INVERSOR/MICRO' : 'QTDE DRIVERS'}
                       editable={editor}
                       value={dados.qtdeInversor}
-                      handleChange={(value) =>
-                        setDados({ ...dados, qtdeInversor: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, qtdeInversor: value })}
                     />
                     <TextInput
-                      label={
-                        dados.tipoDeServico != "BOMBA SOLAR"
-                          ? "POTÊNCIA INVERSOR/MICRO"
-                          : "POTÊNCIA DRIVER"
-                      }
+                      label={dados.tipoDeServico != 'BOMBA SOLAR' ? 'POTÊNCIA INVERSOR/MICRO' : 'POTÊNCIA DRIVER'}
                       editable={editor}
-                      unit={"W"}
+                      unit={'W'}
                       value={dados.potInversor}
-                      handleChange={(value) =>
-                        setDados({ ...dados, potInversor: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, potInversor: value })}
                     />
                   </div>
                   <div className="flex flex-col text-sm lg:text-base  items-center">
                     <span className="uppercase font-bold font-raleway text-center text-sm">
-                      {dados.tipoDeServico != "BOMBA SOLAR"
-                        ? "INFORMAÇÃO MICRO/INVERSOR"
-                        : "INFORMAÇÃO DRIVERS"}
+                      {dados.tipoDeServico != 'BOMBA SOLAR' ? 'INFORMAÇÃO MICRO/INVERSOR' : 'INFORMAÇÃO DRIVERS'}
                     </span>
                     <p className="text-xs w-full text-center  text-gray-600 outline-none">
                       {getJoinedInfo({
-                        marca: dados.marcaInversor
-                          ? dados.marcaInversor?.toString().toUpperCase()
-                          : "",
-                        qtde: dados.qtdeInversor
-                          ? dados.qtdeInversor?.toString()
-                          : "",
-                        pot: dados.potInversor
-                          ? dados.potInversor?.toString()
-                          : "",
+                        marca: dados.marcaInversor ? dados.marcaInversor?.toString().toUpperCase() : '',
+                        qtde: dados.qtdeInversor ? dados.qtdeInversor?.toString() : '',
+                        pot: dados.potInversor ? dados.potInversor?.toString() : '',
                       })}
                     </p>
                   </div>
-                  {dados.topologia == "OTIMIZADOR" && (
+                  {dados.topologia == 'OTIMIZADOR' && (
                     <div className="flex gap-2 justify-around flex-wrap mt-2">
                       <TextInput
-                        label={"MARCA DO OTIMIZADOR"}
+                        label={'MARCA DO OTIMIZADOR'}
                         editable={editor}
-                        value={
-                          dados.marcaOtimizador ? dados.marcaOtimizador : ""
-                        }
-                        handleChange={(value) =>
-                          setDados({ ...dados, marcaOtimizador: value })
-                        }
+                        value={dados.marcaOtimizador ? dados.marcaOtimizador : ''}
+                        handleChange={(value) => setDados({ ...dados, marcaOtimizador: value })}
                       />
                       <NumberInput
-                        label={"QTDE DO OTIMIZADOR"}
+                        label={'QTDE DO OTIMIZADOR'}
                         editable={editor}
-                        value={
-                          dados.qtdeOtimizador ? dados.qtdeOtimizador : null
-                        }
-                        handleChange={(value) =>
-                          setDados({ ...dados, qtdeOtimizador: Number(value) })
-                        }
+                        value={dados.qtdeOtimizador ? dados.qtdeOtimizador : null}
+                        handleChange={(value) => setDados({ ...dados, qtdeOtimizador: Number(value) })}
                       />
                       <NumberInput
-                        label={"POTÊNCIA DO OTIMIZADOR"}
+                        label={'POTÊNCIA DO OTIMIZADOR'}
                         editable={editor}
-                        unit={"W"}
+                        unit={'W'}
                         value={dados.potOtimizador ? dados.potOtimizador : null}
-                        handleChange={(value) =>
-                          setDados({ ...dados, potOtimizador: Number(value) })
-                        }
+                        handleChange={(value) => setDados({ ...dados, potOtimizador: Number(value) })}
                       />
                     </div>
                   )}
                   <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
                     <TextInput
-                      label={"MARCA DOS MÓDULOS"}
+                      label={'MARCA DOS MÓDULOS'}
                       editable={editor}
                       value={dados.marcaModulos}
-                      handleChange={(value) =>
-                        setDados({ ...dados, marcaModulos: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, marcaModulos: value })}
                     />
                     <TextInput
-                      label={"Nº DE MÓDULOS"}
+                      label={'Nº DE MÓDULOS'}
                       editable={editor}
                       value={dados.qtdeModulos}
-                      handleChange={(value) =>
-                        setDados({ ...dados, qtdeModulos: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, qtdeModulos: value })}
                     />
                     <TextInput
-                      label={"POTÊNCIA DOS MÓDULOS"}
+                      label={'POTÊNCIA DOS MÓDULOS'}
                       editable={editor}
-                      unit={"W"}
+                      unit={'W'}
                       value={dados.potModulos}
-                      handleChange={(value) =>
-                        setDados({ ...dados, potModulos: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, potModulos: value })}
                     />
                   </div>
                   <div className="flex flex-col text-sm lg:text-base  items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      INFORMAÇÃO MÓDULOS
-                    </span>
+                    <span className="uppercase font-bold font-raleway text-center text-sm">INFORMAÇÃO MÓDULOS</span>
                     <p className="text-xs w-full text-center  text-gray-600 outline-none">
                       {getJoinedInfo({
-                        marca: dados.marcaModulos
-                          ? dados.marcaModulos.toString().toUpperCase()
-                          : "",
-                        qtde: dados.qtdeModulos
-                          ? dados.qtdeModulos.toString()
-                          : "",
-                        pot: dados.potModulos
-                          ? dados.potModulos.toString()
-                          : "",
+                        marca: dados.marcaModulos ? dados.marcaModulos.toString().toUpperCase() : '',
+                        qtde: dados.qtdeModulos ? dados.qtdeModulos.toString() : '',
+                        pot: dados.potModulos ? dados.potModulos.toString() : '',
                       })}
                     </p>
                   </div>
-                  {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
+                  {dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO (OFF GRID)' && (
                     <>
                       <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200 mt-2">
                         <div className="flex justify-center items-center w-full">
                           <TextInput
-                            label={"MARCA DO CONTROLADOR"}
+                            label={'MARCA DO CONTROLADOR'}
                             editable={true}
                             value={dados.marcaControlador}
                             handleChange={(value) =>
@@ -2194,7 +1898,7 @@ function ModalFormSolicitacao({
                         </div>
                         <div className="flex justify-center items-center w-full">
                           <NumberInput
-                            label={"QTDE DE CONTROLADORES"}
+                            label={'QTDE DE CONTROLADORES'}
                             editable={true}
                             value={dados.qtdeControlador}
                             handleChange={(value) =>
@@ -2207,32 +1911,26 @@ function ModalFormSolicitacao({
                         </div>
                         <div className="flex justify-center items-center w-full">
                           <SelectInput
-                            label={"TIPO DO CONTROLADOR"}
+                            label={'TIPO DO CONTROLADOR'}
                             editable={true}
-                            value={
-                              dados.tipoControlador
-                                ? dados.tipoControlador
-                                : "NÃO DEFINIDO"
-                            }
+                            value={dados.tipoControlador ? dados.tipoControlador : 'NÃO DEFINIDO'}
                             options={[
                               {
-                                label: "INTEGRADO AO INVERSOR",
-                                value: "INTEGRADO AO INVERSOR",
+                                label: 'INTEGRADO AO INVERSOR',
+                                value: 'INTEGRADO AO INVERSOR',
                               },
                               {
-                                label: "COMPRO EM SEPARADO",
-                                value: "SEPARADO",
+                                label: 'COMPRO EM SEPARADO',
+                                value: 'SEPARADO',
                               },
-                              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                              { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                             ]}
-                            handleChange={(value) =>
-                              setDados({ ...dados, tipoControlador: value })
-                            }
+                            handleChange={(value) => setDados({ ...dados, tipoControlador: value })}
                           />
                         </div>
                         <div className="flex justify-center items-center w-full">
                           <NumberInput
-                            label={"CORRENTE DE CARGA (em A)"}
+                            label={'CORRENTE DE CARGA (em A)'}
                             editable={true}
                             value={dados.correnteControlador}
                             handleChange={(value) =>
@@ -2247,7 +1945,7 @@ function ModalFormSolicitacao({
                       <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200">
                         <div className="flex justify-center items-center w-full">
                           <TextInput
-                            label={"MARCA DA BATERIA"}
+                            label={'MARCA DA BATERIA'}
                             editable={true}
                             value={dados.marcaBateria}
                             handleChange={(value) =>
@@ -2260,36 +1958,28 @@ function ModalFormSolicitacao({
                         </div>
                         <div className="flex justify-center items-center w-full">
                           <NumberInput
-                            label={"QTDE DE BATERIAS"}
+                            label={'QTDE DE BATERIAS'}
                             editable={true}
                             value={dados.qtdeBateria}
-                            handleChange={(value) =>
-                              setDados({ ...dados, qtdeBateria: Number(value) })
-                            }
+                            handleChange={(value) => setDados({ ...dados, qtdeBateria: Number(value) })}
                           />
                         </div>
                         <div className="flex justify-center items-center w-full">
                           <SelectInput
-                            label={"TIPO DA BATERIA"}
+                            label={'TIPO DA BATERIA'}
                             editable={true}
-                            value={
-                              dados.tipoBateria
-                                ? dados.tipoBateria
-                                : "NÃO DEFINIDO"
-                            }
+                            value={dados.tipoBateria ? dados.tipoBateria : 'NÃO DEFINIDO'}
                             options={[
-                              { label: "LÍTIO", value: "LÍTIO" },
-                              { label: "ESTACIONÁRIA", value: "ESTACIONÁRIA" },
-                              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                              { label: 'LÍTIO', value: 'LÍTIO' },
+                              { label: 'ESTACIONÁRIA', value: 'ESTACIONÁRIA' },
+                              { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                             ]}
-                            handleChange={(value) =>
-                              setDados({ ...dados, tipoBateria: value })
-                            }
+                            handleChange={(value) => setDados({ ...dados, tipoBateria: value })}
                           />
                         </div>
                         <div className="flex justify-center items-center w-full">
                           <NumberInput
-                            label={"CAPACIDADE (em Ah)"}
+                            label={'CAPACIDADE (em Ah)'}
                             editable={true}
                             value={dados.capacidadeBateria}
                             handleChange={(value) =>
@@ -2303,12 +1993,12 @@ function ModalFormSolicitacao({
                       </div>
                     </>
                   )}
-                  {dados.tipoDeServico == "BOMBA SOLAR" && (
+                  {dados.tipoDeServico == 'BOMBA SOLAR' && (
                     <>
                       <div className="flex flex-col lg:grid lg:grid-cols-3 items-center mt-2 py-2 border-t border-gray-200">
                         <div className="flex items-center justify-center">
                           <TextInput
-                            label={"MARCA BOMBA"}
+                            label={'MARCA BOMBA'}
                             editable={true}
                             value={dados.marcaBomba}
                             handleChange={(value) =>
@@ -2321,29 +2011,25 @@ function ModalFormSolicitacao({
                         </div>
                         <div className="flex items-center justify-center">
                           <NumberInput
-                            label={"QTDE BOMBA"}
+                            label={'QTDE BOMBA'}
                             editable={true}
                             value={dados.qtdeBomba}
-                            handleChange={(value) =>
-                              setDados({ ...dados, qtdeBomba: Number(value) })
-                            }
+                            handleChange={(value) => setDados({ ...dados, qtdeBomba: Number(value) })}
                           />
                         </div>
                         <div className="flex items-center justify-center">
                           <NumberInput
-                            label={"POTÊNCIA BOMBA"}
+                            label={'POTÊNCIA BOMBA'}
                             editable={true}
                             value={dados.potBomba}
-                            handleChange={(value) =>
-                              setDados({ ...dados, potBomba: Number(value) })
-                            }
+                            handleChange={(value) => setDados({ ...dados, potBomba: Number(value) })}
                           />
                         </div>
                       </div>
                       <div className="flex flex-col lg:grid lg:grid-cols-4 items-center py-2 border-t border-gray-200">
                         <div className="flex justify-center items-center w-full">
                           <TextInput
-                            label={"MARCA DA BATERIA"}
+                            label={'MARCA DA BATERIA'}
                             editable={true}
                             value={dados.marcaBateria}
                             handleChange={(value) =>
@@ -2356,36 +2042,28 @@ function ModalFormSolicitacao({
                         </div>
                         <div className="flex justify-center items-center w-full">
                           <NumberInput
-                            label={"QTDE DE BATERIAS"}
+                            label={'QTDE DE BATERIAS'}
                             editable={true}
                             value={dados.qtdeBateria}
-                            handleChange={(value) =>
-                              setDados({ ...dados, qtdeBateria: Number(value) })
-                            }
+                            handleChange={(value) => setDados({ ...dados, qtdeBateria: Number(value) })}
                           />
                         </div>
                         <div className="flex justify-center items-center w-full">
                           <SelectInput
-                            label={"TIPO DA BATERIA"}
+                            label={'TIPO DA BATERIA'}
                             editable={true}
-                            value={
-                              dados.tipoBateria
-                                ? dados.tipoBateria
-                                : "NÃO DEFINIDO"
-                            }
+                            value={dados.tipoBateria ? dados.tipoBateria : 'NÃO DEFINIDO'}
                             options={[
-                              { label: "LÍTIO", value: "LÍTIO" },
-                              { label: "ESTACIONÁRIA", value: "ESTACIONÁRIA" },
-                              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                              { label: 'LÍTIO', value: 'LÍTIO' },
+                              { label: 'ESTACIONÁRIA', value: 'ESTACIONÁRIA' },
+                              { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                             ]}
-                            handleChange={(value) =>
-                              setDados({ ...dados, tipoBateria: value })
-                            }
+                            handleChange={(value) => setDados({ ...dados, tipoBateria: value })}
                           />
                         </div>
                         <div className="flex justify-center items-center w-full">
                           <NumberInput
-                            label={"CAPACIDADE (em Ah)"}
+                            label={'CAPACIDADE (em Ah)'}
                             editable={true}
                             value={dados.capacidadeBateria}
                             handleChange={(value) =>
@@ -2399,111 +2077,76 @@ function ModalFormSolicitacao({
                       </div>
                     </>
                   )}
-                  {dados.clienteAmpere != "SIM" &&
-                  dados.tipoDeServico == "AUMENTO DE SISTEMA FOTOVOLTAICO" ? (
+                  {dados.clienteAmpere != 'SIM' && dados.tipoDeServico == 'AUMENTO DE SISTEMA FOTOVOLTAICO' ? (
                     <>
                       <span className="text-sm text-center font-bold text-[#fead61] uppercase py-2 border-t border-blue-500 mt-1">
                         DADOS DO SISTEMA (ANTERIOR)
                       </span>
                       <div className="flex justify-center">
                         <SelectInput
-                          label={"TOPOLOGIA (ANTERIOR)"}
+                          label={'TOPOLOGIA (ANTERIOR)'}
                           editable={editor}
                           value={dados.topologiaAnterior}
-                          handleChange={(value) =>
-                            setDados({ ...dados, topologiaAnterior: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, topologiaAnterior: value })}
                           options={[
                             {
-                              label: "MICRO-INVERSOR",
-                              value: "MICRO",
+                              label: 'MICRO-INVERSOR',
+                              value: 'MICRO',
                             },
                             {
-                              label: "INVERSOR",
-                              value: "INVERSOR",
+                              label: 'INVERSOR',
+                              value: 'INVERSOR',
                             },
                             {
-                              label: "OTIMIZADOR",
-                              value: "OTIMIZADOR",
+                              label: 'OTIMIZADOR',
+                              value: 'OTIMIZADOR',
                             },
                             {
-                              label: "NÃO DEFINIDO",
-                              value: "NÃO DEFINIDO",
+                              label: 'NÃO DEFINIDO',
+                              value: 'NÃO DEFINIDO',
                             },
                           ]}
                         />
                       </div>
                       <div className="flex gap-2 justify-around flex-wrap mt-2 py-2 border-t border-gray-200">
                         <TextInput
-                          label={
-                            dados.tipoDeServico != "BOMBA SOLAR"
-                              ? "MARCA DO INVERSOR/MICRO (ANTERIOR)"
-                              : " MARCA DO DRIVER (ANTERIOR)"
-                          }
+                          label={dados.tipoDeServico != 'BOMBA SOLAR' ? 'MARCA DO INVERSOR/MICRO (ANTERIOR)' : ' MARCA DO DRIVER (ANTERIOR)'}
                           editable={editor}
                           value={dados.marcaInversorAnterior}
-                          handleChange={(value) =>
-                            setDados({ ...dados, marcaInversorAnterior: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, marcaInversorAnterior: value })}
                         />
                         <TextInput
-                          label={
-                            dados.tipoDeServico != "BOMBA SOLAR"
-                              ? "QTDE INVERSOR/MICRO (ANTERIOR)"
-                              : "QTDE DRIVERS (ANTERIOR)"
-                          }
+                          label={dados.tipoDeServico != 'BOMBA SOLAR' ? 'QTDE INVERSOR/MICRO (ANTERIOR)' : 'QTDE DRIVERS (ANTERIOR)'}
                           editable={editor}
                           value={dados.qtdeInversorAnterior}
-                          handleChange={(value) =>
-                            setDados({ ...dados, qtdeInversorAnterior: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, qtdeInversorAnterior: value })}
                         />
                         <TextInput
-                          label={
-                            dados.tipoDeServico != "BOMBA SOLAR"
-                              ? "POTÊNCIA INVERSOR/MICRO (ANTERIOR)"
-                              : "POTÊNCIA DRIVER (ANTERIOR)"
-                          }
+                          label={dados.tipoDeServico != 'BOMBA SOLAR' ? 'POTÊNCIA INVERSOR/MICRO (ANTERIOR)' : 'POTÊNCIA DRIVER (ANTERIOR)'}
                           editable={editor}
-                          unit={"W"}
+                          unit={'W'}
                           value={dados.potInversorAnterior}
-                          handleChange={(value) =>
-                            setDados({ ...dados, potInversorAnterior: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, potInversorAnterior: value })}
                         />
                       </div>
                       <div className="flex flex-col text-sm lg:text-base  items-center">
                         <span className="uppercase font-bold font-raleway text-center text-sm">
-                          {dados.tipoDeServico != "BOMBA SOLAR"
-                            ? "INFORMAÇÃO MICRO/INVERSOR (ANTERIOR)"
-                            : "INFORMAÇÃO DRIVERS (ANTERIOR)"}
+                          {dados.tipoDeServico != 'BOMBA SOLAR' ? 'INFORMAÇÃO MICRO/INVERSOR (ANTERIOR)' : 'INFORMAÇÃO DRIVERS (ANTERIOR)'}
                         </span>
                         <p className="text-xs w-full text-center  text-gray-600 outline-none">
                           {getJoinedInfo({
-                            marca: dados.marcaInversorAnterior
-                              ? dados.marcaInversorAnterior
-                                  ?.toString()
-                                  .toUpperCase()
-                              : "",
-                            qtde: dados.qtdeInversorAnterior
-                              ? dados.qtdeInversorAnterior?.toString()
-                              : "",
-                            pot: dados.potInversorAnterior
-                              ? dados.potInversorAnterior?.toString()
-                              : "",
+                            marca: dados.marcaInversorAnterior ? dados.marcaInversorAnterior?.toString().toUpperCase() : '',
+                            qtde: dados.qtdeInversorAnterior ? dados.qtdeInversorAnterior?.toString() : '',
+                            pot: dados.potInversorAnterior ? dados.potInversorAnterior?.toString() : '',
                           })}
                         </p>
                       </div>
-                      {dados.topologiaAnterior == "OTIMIZADOR" && (
+                      {dados.topologiaAnterior == 'OTIMIZADOR' && (
                         <div className="flex gap-2 justify-around flex-wrap mt-2">
                           <TextInput
-                            label={"MARCA DO OTIMIZADOR (ANTERIOR)"}
+                            label={'MARCA DO OTIMIZADOR (ANTERIOR)'}
                             editable={editor}
-                            value={
-                              dados.marcaOtimizadorAnterior
-                                ? dados.marcaOtimizadorAnterior
-                                : ""
-                            }
+                            value={dados.marcaOtimizadorAnterior ? dados.marcaOtimizadorAnterior : ''}
                             handleChange={(value) =>
                               setDados({
                                 ...dados,
@@ -2512,13 +2155,9 @@ function ModalFormSolicitacao({
                             }
                           />
                           <NumberInput
-                            label={"QTDE DO OTIMIZADOR (ANTERIOR)"}
+                            label={'QTDE DO OTIMIZADOR (ANTERIOR)'}
                             editable={editor}
-                            value={
-                              dados.qtdeOtimizadorAnterior
-                                ? dados.qtdeOtimizadorAnterior
-                                : null
-                            }
+                            value={dados.qtdeOtimizadorAnterior ? dados.qtdeOtimizadorAnterior : null}
                             handleChange={(value) =>
                               setDados({
                                 ...dados,
@@ -2527,14 +2166,10 @@ function ModalFormSolicitacao({
                             }
                           />
                           <NumberInput
-                            label={"POTÊNCIA DO OTIMIZADOR (ANTERIOR)"}
+                            label={'POTÊNCIA DO OTIMIZADOR (ANTERIOR)'}
                             editable={editor}
-                            unit={"W"}
-                            value={
-                              dados.potOtimizadorAnterior
-                                ? dados.potOtimizadorAnterior
-                                : null
-                            }
+                            unit={'W'}
+                            value={dados.potOtimizadorAnterior ? dados.potOtimizadorAnterior : null}
                             handleChange={(value) =>
                               setDados({
                                 ...dados,
@@ -2546,48 +2181,32 @@ function ModalFormSolicitacao({
                       )}
                       <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
                         <TextInput
-                          label={"MARCA DOS MÓDULOS (ANTERIOR)"}
+                          label={'MARCA DOS MÓDULOS (ANTERIOR)'}
                           editable={editor}
                           value={dados.marcaModulosAnterior}
-                          handleChange={(value) =>
-                            setDados({ ...dados, marcaModulosAnterior: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, marcaModulosAnterior: value })}
                         />
                         <TextInput
-                          label={"Nº DE MÓDULOS (ANTERIOR)"}
+                          label={'Nº DE MÓDULOS (ANTERIOR)'}
                           editable={editor}
                           value={dados.qtdeModulosAnterior}
-                          handleChange={(value) =>
-                            setDados({ ...dados, qtdeModulosAnterior: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, qtdeModulosAnterior: value })}
                         />
                         <TextInput
-                          label={"POTÊNCIA DOS MÓDULOS (ANTERIOR)"}
+                          label={'POTÊNCIA DOS MÓDULOS (ANTERIOR)'}
                           editable={editor}
-                          unit={"W"}
+                          unit={'W'}
                           value={dados.potModulosAnterior}
-                          handleChange={(value) =>
-                            setDados({ ...dados, potModulosAnterior: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, potModulosAnterior: value })}
                         />
                       </div>
                       <div className="flex flex-col text-sm lg:text-base  items-center">
-                        <span className="uppercase font-bold font-raleway text-center text-sm">
-                          INFORMAÇÃO MÓDULOS (ANTERIOR)
-                        </span>
+                        <span className="uppercase font-bold font-raleway text-center text-sm">INFORMAÇÃO MÓDULOS (ANTERIOR)</span>
                         <p className="text-xs w-full text-center  text-gray-600 outline-none">
                           {getJoinedInfo({
-                            marca: dados.marcaModulosAnterior
-                              ? dados.marcaModulosAnterior
-                                  .toString()
-                                  .toUpperCase()
-                              : "",
-                            qtde: dados.qtdeModulosAnterior
-                              ? dados.qtdeModulosAnterior.toString()
-                              : "",
-                            pot: dados.potModulosAnterior
-                              ? dados.potModulosAnterior.toString()
-                              : "",
+                            marca: dados.marcaModulosAnterior ? dados.marcaModulosAnterior.toString().toUpperCase() : '',
+                            qtde: dados.qtdeModulosAnterior ? dados.qtdeModulosAnterior.toString() : '',
+                            pot: dados.potModulosAnterior ? dados.potModulosAnterior.toString() : '',
                           })}
                         </p>
                       </div>
@@ -2595,114 +2214,94 @@ function ModalFormSolicitacao({
                   ) : null}
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    ESTRUTURA DE MONTAGEM
-                  </span>
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">ESTRUTURA DE MONTAGEM</span>
                   <div className="flex gap-2 justify-around flex-wrap">
                     <SelectInput
-                      label={"TIPO DA ESTRUTURA"}
+                      label={'TIPO DA ESTRUTURA'}
                       editable={editor}
                       options={[
                         {
-                          label: "TELHADO",
-                          value: "TELHADO",
+                          label: 'TELHADO',
+                          value: 'TELHADO',
                         },
                         {
-                          label: "CARPORT",
-                          value: "CARPORT",
+                          label: 'CARPORT',
+                          value: 'CARPORT',
                         },
                         {
-                          label: "SOLO",
-                          value: "SOLO",
+                          label: 'SOLO',
+                          value: 'SOLO',
                         },
                         {
-                          label: "ESTRUTURA PERSONALIZADA",
-                          value: "ESTRUTURA PERSONALIZADA",
+                          label: 'ESTRUTURA PERSONALIZADA',
+                          value: 'ESTRUTURA PERSONALIZADA',
                         },
                         {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
+                          label: 'NÃO DEFINIDO',
+                          value: 'NÃO DEFINIDO',
                         },
                       ]}
                       value={dados.tipoEstrutura}
-                      handleChange={(value) =>
-                        setDados({ ...dados, tipoEstrutura: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, tipoEstrutura: value })}
                     />
-                    {dados.tipoDeServico == "MONTAGEM E DESMONTAGEM" ? (
+                    {dados.tipoDeServico == 'MONTAGEM E DESMONTAGEM' ? (
                       <SelectInput
-                        width={"450px"}
-                        label={"TIPO DA ESTRUTURA (REMONTAGEM)"}
+                        width={'450px'}
+                        label={'TIPO DA ESTRUTURA (REMONTAGEM)'}
                         editable={true}
                         options={[
                           {
-                            label: "MESMA ESTRUTURA",
-                            value: "MESMA ESTRUTURA",
+                            label: 'MESMA ESTRUTURA',
+                            value: 'MESMA ESTRUTURA',
                           },
                           {
-                            label: "TELHADO",
-                            value: "TELHADO",
+                            label: 'TELHADO',
+                            value: 'TELHADO',
                           },
                           {
-                            label: "CARPORT",
-                            value: "CARPORT",
+                            label: 'CARPORT',
+                            value: 'CARPORT',
                           },
                           {
-                            label: "SOLO",
-                            value: "SOLO",
+                            label: 'SOLO',
+                            value: 'SOLO',
                           },
                           {
-                            label: "ESTRUTURA PERSONALIZADA",
-                            value: "ESTRUTURA PERSONALIZADA",
+                            label: 'ESTRUTURA PERSONALIZADA',
+                            value: 'ESTRUTURA PERSONALIZADA',
                           },
                           {
-                            label: "NÃO DEFINIDO",
-                            value: "NÃO DEFINIDO",
+                            label: 'NÃO DEFINIDO',
+                            value: 'NÃO DEFINIDO',
                           },
                         ]}
-                        value={
-                          dados.tipoEstruturaRemontagem
-                            ? dados.tipoEstruturaRemontagem
-                            : "NÃO DEFINIDO"
-                        }
-                        handleChange={(value) =>
-                          setDados({ ...dados, tipoEstruturaRemontagem: value })
-                        }
+                        value={dados.tipoEstruturaRemontagem ? dados.tipoEstruturaRemontagem : 'NÃO DEFINIDO'}
+                        handleChange={(value) => setDados({ ...dados, tipoEstruturaRemontagem: value })}
                       />
                     ) : null}
                     <SelectInput
-                      label={"MATERIAL DA ESTRUTURA"}
+                      label={'MATERIAL DA ESTRUTURA'}
                       editable={editor}
                       options={[
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                        { label: "MADEIRA", value: "MADEIRA" },
-                        { label: "FERRO", value: "FERRO" },
+                        { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+                        { label: 'MADEIRA', value: 'MADEIRA' },
+                        { label: 'FERRO', value: 'FERRO' },
                       ]}
-                      value={
-                        dados.materialEstrutura
-                          ? dados.materialEstrutura
-                          : "NÃO DEFINIDO"
-                      }
-                      handleChange={(value) =>
-                        setDados({ ...dados, materialEstrutura: value })
-                      }
+                      value={dados.materialEstrutura ? dados.materialEstrutura : 'NÃO DEFINIDO'}
+                      handleChange={(value) => setDados({ ...dados, materialEstrutura: value })}
                     />
-                    {dados.tipoDeServico == "MONTAGEM E DESMONTAGEM" ? (
+                    {dados.tipoDeServico == 'MONTAGEM E DESMONTAGEM' ? (
                       <SelectInput
-                        label={"MATERIAL DA ESTRUTURA (REMONTAGEM)"}
-                        width={"450px"}
+                        label={'MATERIAL DA ESTRUTURA (REMONTAGEM)'}
+                        width={'450px'}
                         editable={true}
                         options={[
-                          { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                          { label: "MESMO MATERIAL", value: "MESMO MATERIAL" },
-                          { label: "MADEIRA", value: "MADEIRA" },
-                          { label: "FERRO", value: "FERRO" },
+                          { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+                          { label: 'MESMO MATERIAL', value: 'MESMO MATERIAL' },
+                          { label: 'MADEIRA', value: 'MADEIRA' },
+                          { label: 'FERRO', value: 'FERRO' },
                         ]}
-                        value={
-                          dados.materialEstruturaRemontagem
-                            ? dados.materialEstruturaRemontagem
-                            : "NÃO DEFINIDO"
-                        }
+                        value={dados.materialEstruturaRemontagem ? dados.materialEstruturaRemontagem : 'NÃO DEFINIDO'}
                         handleChange={(value) =>
                           setDados({
                             ...dados,
@@ -2712,76 +2311,70 @@ function ModalFormSolicitacao({
                       />
                     ) : null}
                     <SelectInput
-                      label={
-                        "SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"
-                      }
+                      label={'SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?'}
                       editable={editor}
                       options={[
                         {
-                          label: "NÃO",
-                          value: "NÃO",
+                          label: 'NÃO',
+                          value: 'NÃO',
                         },
                         {
-                          label: "SIM",
-                          value: "SIM",
+                          label: 'SIM',
+                          value: 'SIM',
                         },
                         {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
+                          label: 'NÃO DEFINIDO',
+                          value: 'NÃO DEFINIDO',
                         },
                       ]}
                       value={dados.estruturaAmpere}
-                      handleChange={(value) =>
-                        setDados({ ...dados, estruturaAmpere: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, estruturaAmpere: value })}
                     />
                     <SelectInput
-                      label={"RESPONSÁVEL PELA ESTRUTURA"}
+                      label={'RESPONSÁVEL PELA ESTRUTURA'}
                       editable={editor}
                       options={[
                         {
-                          label: "AMPERE",
-                          value: "AMPERE",
+                          label: 'AMPERE',
+                          value: 'AMPERE',
                         },
                         {
-                          label: "CLIENTE",
-                          value: "CLIENTE",
+                          label: 'CLIENTE',
+                          value: 'CLIENTE',
                         },
                         {
-                          label: "NÃO SE APLICA",
-                          value: "NÃO SE APLICA",
+                          label: 'NÃO SE APLICA',
+                          value: 'NÃO SE APLICA',
                         },
                       ]}
                       value={dados.responsavelEstrutura}
-                      handleChange={(value) =>
-                        setDados({ ...dados, responsavelEstrutura: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, responsavelEstrutura: value })}
                     />
-                    {dados.responsavelEstrutura != "NÃO SE APLICA" && (
+                    {dados.responsavelEstrutura != 'NÃO SE APLICA' && (
                       <>
                         <SelectInput
-                          label={"FORMA DE PAGAMENTO"}
+                          label={'FORMA DE PAGAMENTO'}
                           editable={editor}
                           options={[
                             {
-                              label: "INCLUSO NO FINANCIAMENTO",
-                              value: "INCLUSO NO FINANCIAMENTO",
+                              label: 'INCLUSO NO FINANCIAMENTO',
+                              value: 'INCLUSO NO FINANCIAMENTO',
                             },
                             {
-                              label: "DIRETO PRO FORNECEDOR",
-                              value: "DIRETO PRO FORNECEDOR",
+                              label: 'DIRETO PRO FORNECEDOR',
+                              value: 'DIRETO PRO FORNECEDOR',
                             },
                             {
-                              label: "A VISTA PARA AMPÈRE",
-                              value: "A VISTA PARA AMPÈRE",
+                              label: 'A VISTA PARA AMPÈRE',
+                              value: 'A VISTA PARA AMPÈRE',
                             },
                             {
-                              label: "NÃO SE APLICA",
-                              value: "NÃO SE APLICA",
+                              label: 'NÃO SE APLICA',
+                              value: 'NÃO SE APLICA',
                             },
                             {
-                              label: "NÃO DEFINIDO",
-                              value: "NÃO DEFINIDO",
+                              label: 'NÃO DEFINIDO',
+                              value: 'NÃO DEFINIDO',
                             },
                           ]}
                           value={dados.formaPagamentoEstrutura}
@@ -2793,7 +2386,7 @@ function ModalFormSolicitacao({
                           }
                         />
                         <NumberInput
-                          label={"VALOR DA ESTRUTURA"}
+                          label={'VALOR DA ESTRUTURA'}
                           editable={editor}
                           value={dados.valorEstrutura}
                           handleChange={(value) =>
@@ -2808,151 +2401,136 @@ function ModalFormSolicitacao({
                   </div>
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    O&M E SEGURO
-                  </span>
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">O&M E SEGURO</span>
                   <div className="flex gap-2 justify-around flex-wrap">
                     <SelectInput
-                      label={"KIT COM O&M ?"}
+                      label={'KIT COM O&M ?'}
                       editable={editor}
                       options={[
                         {
-                          label: "NÃO",
-                          value: "NÃO",
+                          label: 'NÃO',
+                          value: 'NÃO',
                         },
                         {
-                          label: "SIM",
-                          value: "SIM",
+                          label: 'SIM',
+                          value: 'SIM',
                         },
                         {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
+                          label: 'NÃO DEFINIDO',
+                          value: 'NÃO DEFINIDO',
                         },
                       ]}
                       value={dados.possuiOeM}
-                      handleChange={(value) =>
-                        setDados({ ...dados, possuiOeM: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, possuiOeM: value })}
                     />
-                    {dados.possuiOeM == "SIM" && (
+                    {dados.possuiOeM == 'SIM' && (
                       <>
                         <SelectInput
-                          label={"QUAL PLANO DE O&M?"}
+                          label={'QUAL PLANO DE O&M?'}
                           editable={editor}
                           options={[
                             {
-                              label: "MANUTENÇÃO SIMPLES",
-                              value: "MANUTENÇÃO SIMPLES",
+                              label: 'MANUTENÇÃO SIMPLES',
+                              value: 'MANUTENÇÃO SIMPLES',
                             },
                             {
-                              label: "PLANO SOL",
-                              value: "PLANO SOL",
+                              label: 'PLANO SOL',
+                              value: 'PLANO SOL',
                             },
                             {
-                              label: "PLANO SOL +",
-                              value: "PLANO SOL +",
+                              label: 'PLANO SOL +',
+                              value: 'PLANO SOL +',
                             },
                             {
-                              label: "NÃO SE APLICA",
-                              value: "NÃO SE APLICA",
+                              label: 'NÃO SE APLICA',
+                              value: 'NÃO SE APLICA',
                             },
                           ]}
                           value={dados.planoOeM}
-                          handleChange={(value) =>
-                            setDados({ ...dados, planoOeM: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, planoOeM: value })}
                         />
                       </>
                     )}
                   </div>
                   <div className="flex gap-2 justify-around flex-wrap mt-2">
                     <SelectInput
-                      label={"CLIENTE SEGURADO?"}
+                      label={'CLIENTE SEGURADO?'}
                       editable={editor}
                       options={[
                         {
-                          label: "SIM",
-                          value: "SIM",
+                          label: 'SIM',
+                          value: 'SIM',
                         },
                         {
-                          label: "NÃO",
-                          value: "NÃO",
+                          label: 'NÃO',
+                          value: 'NÃO',
                         },
                         {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
+                          label: 'NÃO DEFINIDO',
+                          value: 'NÃO DEFINIDO',
                         },
                       ]}
-                      value={
-                        dados.clienteSegurado
-                          ? dados.clienteSegurado
-                          : "NÃO DEFINIDO"
-                      }
-                      handleChange={(value) =>
-                        setDados({ ...dados, clienteSegurado: value })
-                      }
+                      value={dados.clienteSegurado ? dados.clienteSegurado : 'NÃO DEFINIDO'}
+                      handleChange={(value) => setDados({ ...dados, clienteSegurado: value })}
                     />
-                    {dados.clienteSegurado == "SIM" && (
+                    {dados.clienteSegurado == 'SIM' && (
                       <>
                         <SelectInput
-                          label={"TEMPO SEGURADO"}
+                          label={'TEMPO SEGURADO'}
                           editable={editor}
                           options={[
                             {
-                              label: "1 ANO",
-                              value: "1 ANO",
+                              label: '1 ANO',
+                              value: '1 ANO',
                             },
                             {
-                              label: "2 ANOS",
-                              value: "2 ANOS",
+                              label: '2 ANOS',
+                              value: '2 ANOS',
                             },
                             {
-                              label: "3 ANOS",
-                              value: "3 ANOS",
+                              label: '3 ANOS',
+                              value: '3 ANOS',
                             },
                             {
-                              label: "4 ANOS",
-                              value: "4 ANOS",
+                              label: '4 ANOS',
+                              value: '4 ANOS',
                             },
                             {
-                              label: "5 ANOS",
-                              value: "5 ANOS",
+                              label: '5 ANOS',
+                              value: '5 ANOS',
                             },
                             {
-                              label: "NÃO SE APLICA",
-                              value: "NÃO SE APLICA",
+                              label: 'NÃO SE APLICA',
+                              value: 'NÃO SE APLICA',
                             },
                           ]}
                           value={dados.tempoSegurado}
-                          handleChange={(value) =>
-                            setDados({ ...dados, tempoSegurado: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, tempoSegurado: value })}
                         />
                       </>
                     )}
                   </div>
-                  {(dados.possuiOeM == "SIM" ||
-                    dados.clienteSegurado == "SIM") && (
+                  {(dados.possuiOeM == 'SIM' || dados.clienteSegurado == 'SIM') && (
                     <div className="flex gap-2 justify-around flex-wrap mt-2">
                       <SelectInput
-                        label={"FORMA de PAGAMENTO"}
+                        label={'FORMA de PAGAMENTO'}
                         editable={editor}
                         options={[
                           {
-                            label: "INCLUSO NO FINANCIAMENTO",
-                            value: "INCLUSO NO FINANCIAMENTO",
+                            label: 'INCLUSO NO FINANCIAMENTO',
+                            value: 'INCLUSO NO FINANCIAMENTO',
                           },
                           {
-                            label: "DIRETO PRO FORNECEDOR",
-                            value: "DIRETO PRO FORNECEDOR",
+                            label: 'DIRETO PRO FORNECEDOR',
+                            value: 'DIRETO PRO FORNECEDOR',
                           },
                           {
-                            label: "A VISTA PARA AMPÈRE",
-                            value: "A VISTA PARA AMPÈRE",
+                            label: 'A VISTA PARA AMPÈRE',
+                            value: 'A VISTA PARA AMPÈRE',
                           },
                           {
-                            label: "NÃO SE APLICA",
-                            value: "NÃO SE APLICA",
+                            label: 'NÃO SE APLICA',
+                            value: 'NÃO SE APLICA',
                           },
                         ]}
                         value={dados.formaPagamentoOeMOuSeguro}
@@ -2964,7 +2542,7 @@ function ModalFormSolicitacao({
                         }
                       />
                       <NumberInput
-                        label={"VALOR O&M+SEGURO (se não incluso)"}
+                        label={'VALOR O&M+SEGURO (se não incluso)'}
                         editable={editor}
                         value={dados.valorOeMOuSeguro}
                         handleChange={(value) =>
@@ -2977,149 +2555,127 @@ function ModalFormSolicitacao({
                     </div>
                   )}
                 </div>
-                {![
-                  "OPERAÇÃO E MANUTENÇÃO",
-                  "BOMBA SOLAR",
-                  "SISTEMA FOTOVOLTAICO (OFF GRID)",
-                ].includes(dados.tipoDeServico) && (
+                {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(dados.tipoDeServico) && (
                   <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                      AUMENTO DE CARGA
-                    </span>
+                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">AUMENTO DE CARGA</span>
                     <div className="flex justify-center">
                       <SelectInput
-                        label={"HAVERÁ TROCA DE PADRÃO?"}
+                        label={'HAVERÁ TROCA DE PADRÃO?'}
                         editable={editor}
                         options={[
                           {
-                            label: "NÃO DEFINIDO",
-                            value: "NÃO DEFINIDO",
+                            label: 'NÃO DEFINIDO',
+                            value: 'NÃO DEFINIDO',
                           },
                           {
-                            label: "NÃO",
-                            value: "NÃO",
+                            label: 'NÃO',
+                            value: 'NÃO',
                           },
                           {
-                            label: "SIM",
-                            value: "SIM",
+                            label: 'SIM',
+                            value: 'SIM',
                           },
                         ]}
                         value={dados.aumentoDeCarga}
-                        handleChange={(value) =>
-                          setDados({ ...dados, aumentoDeCarga: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, aumentoDeCarga: value })}
                       />
                     </div>
-                    {dados.aumentoDeCarga == "SIM" && (
+                    {dados.aumentoDeCarga == 'SIM' && (
                       <div className="flex gap-2 justify-around flex-wrap mt-2">
                         <SelectInput
-                          label={"CAIXA CONJUGADA?"}
+                          label={'CAIXA CONJUGADA?'}
                           editable={true}
                           options={[
                             {
-                              label: "NÃO DEFINIDO",
-                              value: "NÃO DEFINIDO",
+                              label: 'NÃO DEFINIDO',
+                              value: 'NÃO DEFINIDO',
                             },
                             {
-                              label: "NÃO",
-                              value: "NÃO",
+                              label: 'NÃO',
+                              value: 'NÃO',
                             },
                             {
-                              label: "SIM",
-                              value: "SIM",
+                              label: 'SIM',
+                              value: 'SIM',
                             },
                           ]}
                           value={dados.caixaConjugada}
-                          handleChange={(value) =>
-                            setDados({ ...dados, caixaConjugada: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, caixaConjugada: value })}
                         />
                         <SelectInput
                           editable={editor}
-                          label={"TIPO DO PADRÃO"}
+                          label={'TIPO DO PADRÃO'}
                           value={dados.tipoDePadrao}
-                          handleChange={(value) =>
-                            setDados({ ...dados, tipoDePadrao: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, tipoDePadrao: value })}
                           options={tiposDePadrao}
                         />
                         <SelectInput
                           editable={editor}
-                          label={"HAVERÁ AUMENTO DO DISJUNTOR?"}
+                          label={'HAVERÁ AUMENTO DO DISJUNTOR?'}
                           value={dados.aumentoDisjuntor}
-                          handleChange={(value) =>
-                            setDados({ ...dados, aumentoDisjuntor: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, aumentoDisjuntor: value })}
                           options={[
                             {
-                              label: "SIM",
-                              value: "SIM",
+                              label: 'SIM',
+                              value: 'SIM',
                             },
                             {
-                              label: "NÃO",
-                              value: "NÃO",
+                              label: 'NÃO',
+                              value: 'NÃO',
                             },
                           ]}
                         />
                         <SelectInput
-                          label={"RESPONSÁVEL PELA TROCA"}
+                          label={'RESPONSÁVEL PELA TROCA'}
                           editable={editor}
                           value={dados.respTrocaPadrao}
-                          handleChange={(value) =>
-                            setDados({ ...dados, respTrocaPadrao: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, respTrocaPadrao: value })}
                           options={[
                             {
-                              label: "AMPERE",
-                              value: "AMPERE",
+                              label: 'AMPERE',
+                              value: 'AMPERE',
                             },
                             {
-                              label: "CLIENTE",
-                              value: "CLIENTE",
+                              label: 'CLIENTE',
+                              value: 'CLIENTE',
                             },
                             {
-                              label: "NÃO SE APLICA",
-                              value: "NÃO SE APLICA",
+                              label: 'NÃO SE APLICA',
+                              value: 'NÃO SE APLICA',
                             },
                           ]}
                         />
                         <SelectInput
-                          label={"PAGAMENTO DO PADRÃO"}
+                          label={'PAGAMENTO DO PADRÃO'}
                           editable={editor}
-                          value={
-                            dados.formaPagamentoPadrao
-                              ? dados.formaPagamentoPadrao
-                              : "NÃO HAVERA TROCA PADRÃO"
-                          }
+                          value={dados.formaPagamentoPadrao ? dados.formaPagamentoPadrao : 'NÃO HAVERA TROCA PADRÃO'}
                           options={[
                             {
-                              label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                              value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                              label: 'CLIENTE IRÁ COMPRAR EM SEPARADO',
+                              value: 'CLIENTE IRÁ COMPRAR EM SEPARADO',
                             },
                             {
-                              label: "CLIENTE PAGAR POR FORA",
-                              value: "CLIENTE PAGAR POR FORA",
+                              label: 'CLIENTE PAGAR POR FORA',
+                              value: 'CLIENTE PAGAR POR FORA',
                             },
                             {
-                              label: "INCLUSO NO CONTRATO",
-                              value: "INCLUSO NO CONTRATO",
+                              label: 'INCLUSO NO CONTRATO',
+                              value: 'INCLUSO NO CONTRATO',
                             },
                             {
-                              label: "NÃO HAVERA TROCA PADRÃO",
-                              value: "NÃO HAVERA TROCA PADRÃO",
+                              label: 'NÃO HAVERA TROCA PADRÃO',
+                              value: 'NÃO HAVERA TROCA PADRÃO',
                             },
                           ]}
                           handleChange={(value) => {
-                            setDados({ ...dados, formaPagamentoPadrao: value });
+                            setDados({ ...dados, formaPagamentoPadrao: value })
                           }}
                         />
                         <NumberInput
-                          label={"VALOR DO PADRÃO"}
+                          label={'VALOR DO PADRÃO'}
                           editable={editor}
                           value={dados.valorPadrao}
-                          handleChange={(value) =>
-                            setDados({ ...dados, valorPadrao: Number(value) })
-                          }
+                          handleChange={(value) => setDados({ ...dados, valorPadrao: Number(value) })}
                         />
                       </div>
                     )}
@@ -3127,146 +2683,124 @@ function ModalFormSolicitacao({
                 )}
 
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    DADOS FINANCEIROS E NEGOCIAÇÃO
-                  </span>
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS FINANCEIROS E NEGOCIAÇÃO</span>
                   <div className="flex gap-2 justify-around flex-wrap mt-2">
                     <TextInput
-                      label={"NOME DO PAGADOR"}
+                      label={'NOME DO PAGADOR'}
                       editable={editor}
                       value={dados.nomePagador}
-                      handleChange={(value) =>
-                        setDados({ ...dados, nomePagador: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, nomePagador: value })}
                     />
                     <TextInput
-                      label={"CONTATO DO PAGADOR"}
+                      label={'CONTATO DO PAGADOR'}
                       editable={editor}
                       value={dados.contatoPagador}
-                      handleChange={(value) =>
-                        setDados({ ...dados, contatoPagador: phoneMask(value) })
-                      }
+                      handleChange={(value) => setDados({ ...dados, contatoPagador: phoneMask(value) })}
                     />
                     <TextInput
-                      label={"CPF/CNPJ PARA NF"}
+                      label={'CPF/CNPJ PARA NF'}
                       editable={editor}
                       value={dados.cpf_cnpjNF}
-                      handleChange={(value) =>
-                        setDados({ ...dados, cpf_cnpjNF: formatCnpjCpf(value) })
-                      }
+                      handleChange={(value) => setDados({ ...dados, cpf_cnpjNF: formatCnpjCpf(value) })}
                     />
                   </div>
                   <div className="flex gap-2 justify-around flex-wrap mt-2">
                     <SelectInput
-                      label={"NECESSIDADE DE INSCRIÇÃO RURAL NA N.F?"}
+                      label={'NECESSIDADE DE INSCRIÇÃO RURAL NA N.F?'}
                       editable={editor}
                       value={dados.necessidaInscricaoRural}
-                      handleChange={(value) =>
-                        setDados({ ...dados, necessidaInscricaoRural: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, necessidaInscricaoRural: value })}
                       options={[
                         {
-                          label: "NÃO",
-                          value: "NÃO",
+                          label: 'NÃO',
+                          value: 'NÃO',
                         },
                         {
-                          label: "SIM",
-                          value: "SIM",
+                          label: 'SIM',
+                          value: 'SIM',
                         },
                       ]}
                     />
-                    {dados.necessidaInscricaoRural == "SIM" && (
+                    {dados.necessidaInscricaoRural == 'SIM' && (
                       <TextInput
-                        label={"INSCRIÇÃO RURAL"}
+                        label={'INSCRIÇÃO RURAL'}
                         editable={editor}
                         value={dados.inscriçãoRural}
-                        handleChange={(value) =>
-                          setDados({ ...dados, inscriçãoRural: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, inscriçãoRural: value })}
                       />
                     )}
                   </div>
-                  {dados.tipoDeServico != "MONTAGEM E DESMONTAGEM" ? (
+                  {dados.tipoDeServico != 'MONTAGEM E DESMONTAGEM' ? (
                     <div className="flex gap-2 justify-around flex-wrap mt-2">
                       <SelectInput
-                        label={"LOCAL DE ENTREGA"}
+                        label={'LOCAL DE ENTREGA'}
                         editable={editor}
                         options={[
                           {
-                            label: "MESMO DO PROJETO",
-                            value: "MESMO DO PROJETO",
+                            label: 'MESMO DO PROJETO',
+                            value: 'MESMO DO PROJETO',
                           },
                           {
-                            label:
-                              "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
-                            value:
-                              "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
+                            label: 'LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)',
+                            value: 'LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)',
                           },
                           {
-                            label:
-                              "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
-                            value:
-                              "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
+                            label: 'ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)',
+                            value: 'ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)',
                           },
                           {
-                            label: "NÃO DEFINIDO",
-                            value: "NÃO DEFINIDO",
+                            label: 'NÃO DEFINIDO',
+                            value: 'NÃO DEFINIDO',
                           },
                         ]}
                         value={dados.localEntrega}
-                        handleChange={(value) =>
-                          setDados({ ...dados, localEntrega: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, localEntrega: value })}
                       />
                       <SelectInput
-                        label={"END. ENTREGA IGUAL COBRANÇA?"}
+                        label={'END. ENTREGA IGUAL COBRANÇA?'}
                         editable={editor}
                         value={dados.entregaIgualCobranca}
-                        handleChange={(value) =>
-                          setDados({ ...dados, entregaIgualCobranca: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, entregaIgualCobranca: value })}
                         options={[
                           {
-                            label: "SIM",
-                            value: "SIM",
+                            label: 'SIM',
+                            value: 'SIM',
                           },
                           {
-                            label: "NÃO",
-                            value: "NÃO",
+                            label: 'NÃO',
+                            value: 'NÃO',
                           },
                           {
-                            label: "NÃO DEFINIDO",
-                            value: "NÃO DEFINIDO",
+                            label: 'NÃO DEFINIDO',
+                            value: 'NÃO DEFINIDO',
                           },
                         ]}
                       />
                       <SelectInput
-                        label={"HÁ RESTRIÇÕES PARA ENTREGA?"}
+                        label={'HÁ RESTRIÇÕES PARA ENTREGA?'}
                         editable={editor}
                         value={dados.restricoesEntrega}
-                        handleChange={(value) =>
-                          setDados({ ...dados, restricoesEntrega: value })
-                        }
+                        handleChange={(value) => setDados({ ...dados, restricoesEntrega: value })}
                         options={[
                           {
-                            label: "SOMENTE HORARIO COMERCIAL",
-                            value: "SOMENTE HORARIO COMERCIAL",
+                            label: 'SOMENTE HORARIO COMERCIAL',
+                            value: 'SOMENTE HORARIO COMERCIAL',
                           },
                           {
-                            label: "NÃO HÁ RESTRIÇÕES",
-                            value: "NÃO HÁ RESTRIÇÕES",
+                            label: 'NÃO HÁ RESTRIÇÕES',
+                            value: 'NÃO HÁ RESTRIÇÕES',
                           },
                           {
-                            label: "CASA EM CONSTRUÇÃO",
-                            value: "CASA EM CONSTRUÇÃO",
+                            label: 'CASA EM CONSTRUÇÃO',
+                            value: 'CASA EM CONSTRUÇÃO',
                           },
                           {
-                            label: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
-                            value: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
+                            label: 'NÃO PODE RECEBER EM HORARIO COMERCIAL',
+                            value: 'NÃO PODE RECEBER EM HORARIO COMERCIAL',
                           },
                           {
-                            label: "NÃO DEFINIDO",
-                            value: "NÃO DEFINIDO",
+                            label: 'NÃO DEFINIDO',
+                            value: 'NÃO DEFINIDO',
                           },
                         ]}
                       />
@@ -3275,59 +2809,49 @@ function ModalFormSolicitacao({
 
                   <div className="flex gap-2 justify-around flex-wrap mt-2">
                     <NumberInput
-                      label={
-                        "VALOR DO CONTRATO FOTOVOLTAICO(SEM CUSTOS ADICIONAIS)"
-                      }
+                      label={'VALOR DO CONTRATO FOTOVOLTAICO(SEM CUSTOS ADICIONAIS)'}
                       editable={editor}
-                      tag={"R$"}
+                      tag={'R$'}
                       value={dados.valorContrato}
-                      handleChange={(value) =>
-                        setDados({ ...dados, valorContrato: Number(value) })
-                      }
+                      handleChange={(value) => setDados({ ...dados, valorContrato: Number(value) })}
                     />
                     <SelectInput
-                      label={"ORIGEM DO RECURSO"}
+                      label={'ORIGEM DO RECURSO'}
                       editable={editor}
                       value={dados.origemRecurso}
-                      handleChange={(value) =>
-                        setDados({ ...dados, origemRecurso: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, origemRecurso: value })}
                       options={[
                         {
-                          label: "FINANCIAMENTO",
-                          value: "FINANCIAMENTO",
+                          label: 'FINANCIAMENTO',
+                          value: 'FINANCIAMENTO',
                         },
                         {
-                          label: "CAPITAL PRÓPRIO",
-                          value: "CAPITAL PRÓPRIO",
+                          label: 'CAPITAL PRÓPRIO',
+                          value: 'CAPITAL PRÓPRIO',
                         },
                         {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
+                          label: 'NÃO DEFINIDO',
+                          value: 'NÃO DEFINIDO',
                         },
                       ]}
                     />
-                    {dados.origemRecurso == "FINANCIAMENTO" && (
+                    {dados.origemRecurso == 'FINANCIAMENTO' && (
                       <>
                         <SelectInput
-                          label={"CREDOR"}
+                          label={'CREDOR'}
                           value={dados.credor}
                           editable={editor}
                           options={credores.map((credor) => credor)}
-                          handleChange={(value) =>
-                            setDados({ ...dados, credor: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, credor: value })}
                         />
                         <TextInput
-                          label={"NOME DO GERENTE"}
+                          label={'NOME DO GERENTE'}
                           editable={editor}
                           value={dados.nomeGerente}
-                          handleChange={(value) =>
-                            setDados({ ...dados, nomeGerente: value })
-                          }
+                          handleChange={(value) => setDados({ ...dados, nomeGerente: value })}
                         />
                         <TextInput
-                          label={"CONTATO DO GERENTE"}
+                          label={'CONTATO DO GERENTE'}
                           editable={editor}
                           value={dados.contatoGerente}
                           handleChange={(value) =>
@@ -3340,7 +2864,7 @@ function ModalFormSolicitacao({
                       </>
                     )}
                     <NumberInput
-                      label={"SE CARTÃO OU CHEQUE, QUANTAS PARCELAS?"}
+                      label={'SE CARTÃO OU CHEQUE, QUANTAS PARCELAS?'}
                       editable={editor}
                       value={dados.numParcelas}
                       handleChange={(value) =>
@@ -3352,113 +2876,95 @@ function ModalFormSolicitacao({
                       }
                     />
                     <NumberInput
-                      label={"VALOR DA PARCELA"}
+                      label={'VALOR DA PARCELA'}
                       value={dados.valorParcela}
                       editable={editor}
-                      tag={"R$"}
-                      handleChange={(value) =>
-                        setDados({ ...dados, valorParcela: Number(value) })
-                      }
+                      tag={'R$'}
+                      handleChange={(value) => setDados({ ...dados, valorParcela: Number(value) })}
                     />
                     <SelectInput
-                      label={"NECESSIDADE N.F ADIANTADA"}
+                      label={'NECESSIDADE N.F ADIANTADA'}
                       value={dados.necessidadeNFAdiantada}
                       editable={editor}
                       options={[
                         {
-                          label: "NÃO",
-                          value: "NÃO",
+                          label: 'NÃO',
+                          value: 'NÃO',
                         },
                         {
-                          label: "SIM",
-                          value: "SIM",
+                          label: 'SIM',
+                          value: 'SIM',
                         },
                       ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, necessidadeNFAdiantada: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, necessidadeNFAdiantada: value })}
                     />
                     <SelectInput
-                      label={"NECESSIDADE CÓDIGO FINAME?"}
+                      label={'NECESSIDADE CÓDIGO FINAME?'}
                       value={dados.necessidadeCodigoFiname}
                       editable={editor}
                       options={[
                         {
-                          label: "NÃO",
-                          value: "NÃO",
+                          label: 'NÃO',
+                          value: 'NÃO',
                         },
                         {
-                          label: "SIM",
-                          value: "SIM",
+                          label: 'SIM',
+                          value: 'SIM',
                         },
                       ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, necessidadeCodigoFiname: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, necessidadeCodigoFiname: value })}
                     />
                     <SelectInput
-                      label={"FORMA DE PAGAMENTO"}
+                      label={'FORMA DE PAGAMENTO'}
                       editable={editor}
                       options={
-                        dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)"
+                        dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO (OFF GRID)'
                           ? [
                               {
-                                label:
-                                  "70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO",
-                                value:
-                                  "70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO",
+                                label: '70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO',
+                                value: '70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO',
                               },
                               {
-                                label:
-                                  "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
-                                value:
-                                  "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                                label: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
+                                value: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
                               },
                               {
-                                label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
-                                value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                                label: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
+                                value: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
                               },
                               {
-                                label: "NÃO DEFINIDO",
-                                value: "NÃO DEFINIDO",
+                                label: 'NÃO DEFINIDO',
+                                value: 'NÃO DEFINIDO',
                               },
                             ]
                           : [
                               {
-                                label:
-                                  "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
-                                value:
-                                  "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
+                                label: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
+                                value: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
                               },
                               {
-                                label:
-                                  "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
-                                value:
-                                  "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                                label: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
+                                value: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
                               },
                               {
-                                label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
-                                value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                                label: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
+                                value: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
                               },
                               {
-                                label: "NÃO DEFINIDO",
-                                value: "NÃO DEFINIDO",
+                                label: 'NÃO DEFINIDO',
+                                value: 'NÃO DEFINIDO',
                               },
                             ]
                       }
                       value={dados.formaDePagamento}
-                      handleChange={(value) =>
-                        setDados({ ...dados, formaDePagamento: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, formaDePagamento: value })}
                     />
                   </div>
                   <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      DESCRIÇÃO DA NEGOCIAÇÃO
-                    </span>
+                    <span className="uppercase font-bold font-raleway text-center text-sm">DESCRIÇÃO DA NEGOCIAÇÃO</span>
                     <textarea
                       readOnly={!editor}
-                      placeholder={"Descreva aqui a negociação"}
+                      placeholder={'Descreva aqui a negociação'}
                       value={dados.descricaoNegociacao}
                       className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                       onChange={(e) =>
@@ -3471,44 +2977,36 @@ function ModalFormSolicitacao({
                   </div>
                 </div>
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    DISTRIBUIÇÃO DE CRÉDITOS
-                  </span>
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DISTRIBUIÇÃO DE CRÉDITOS</span>
                   <div className="flex justify-center mt-2">
                     <SelectInput
-                      label={"POSSUI DISTRIBUIÇÕES DE CRÉDITOS?"}
+                      label={'POSSUI DISTRIBUIÇÕES DE CRÉDITOS?'}
                       editable={editor}
                       value={dados.possuiDistribuicao}
                       options={[
                         {
-                          label: "NÃO",
-                          value: "NÃO",
+                          label: 'NÃO',
+                          value: 'NÃO',
                         },
                         {
-                          label: "SIM",
-                          value: "SIM",
+                          label: 'SIM',
+                          value: 'SIM',
                         },
                       ]}
-                      handleChange={(value) =>
-                        setDados({ ...dados, possuiDistribuicao: value })
-                      }
+                      handleChange={(value) => setDados({ ...dados, possuiDistribuicao: value })}
                     />
                   </div>
-                  {dados.possuiDistribuicao == "SIM" && (
+                  {dados.possuiDistribuicao == 'SIM' && (
                     <>
                       <div className="flex flex-col gap-2 mt-2">
-                        <h1 className="text-center font-bold font-raleway">
-                          ADICIONAR DISTRIBUIÇÃO:
-                        </h1>
+                        <h1 className="text-center font-bold font-raleway">ADICIONAR DISTRIBUIÇÃO:</h1>
                         <div className="flex flex-col lg:flex-row items-center justify-around">
                           <div className="flex flex-col items-center">
-                            <span className="uppercase font-bold font-raleway text-center text-sm">
-                              Nº DA INSTALAÇÃO
-                            </span>
+                            <span className="uppercase font-bold font-raleway text-center text-sm">Nº DA INSTALAÇÃO</span>
                             <input
                               className={`text-xs text-center text-gray-600 outline-none`}
                               value={dadosDistribuicao.numInstalacao}
-                              placeholder={"INFORMAÇÃO A PREENCHER..."}
+                              placeholder={'INFORMAÇÃO A PREENCHER...'}
                               onChange={(e) =>
                                 setDadosDistribuicao({
                                   ...dadosDistribuicao,
@@ -3519,7 +3017,7 @@ function ModalFormSolicitacao({
                             />
                           </div>
                           <NumberInput
-                            label={"% EXCEDENTE"}
+                            label={'% EXCEDENTE'}
                             editable={editor}
                             value={dadosDistribuicao.excedente}
                             handleChange={(value) =>
@@ -3528,12 +3026,9 @@ function ModalFormSolicitacao({
                                 excedente: Number(value),
                               })
                             }
-                            unit={"%"}
+                            unit={'%'}
                           />
-                          <button
-                            onClick={adicionarDistribuicao}
-                            className="p-1 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold"
-                          >
+                          <button onClick={adicionarDistribuicao} className="p-1 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold">
                             ADICIONAR
                           </button>
                         </div>
@@ -3541,24 +3036,17 @@ function ModalFormSolicitacao({
                       {dados.distribuicoes?.length > 0 && (
                         <div className="flex flex-col gap-2 mt-4">
                           {dados.distribuicoes.map((distribuicao, index) => (
-                            <div
-                              key={index}
-                              className="flex justify-around flex-wrap"
-                            >
-                              <p className="text-sm font-bold text-gray-600 ">
-                                INSTALAÇÃO Nº{distribuicao.numInstalacao}
-                              </p>
-                              <p className="text-sm font-bold text-gray-600">
-                                {distribuicao.excedente}%
-                              </p>
+                            <div key={index} className="flex justify-around flex-wrap">
+                              <p className="text-sm font-bold text-gray-600 ">INSTALAÇÃO Nº{distribuicao.numInstalacao}</p>
+                              <p className="text-sm font-bold text-gray-600">{distribuicao.excedente}%</p>
                               <button
                                 onClick={() => {
-                                  let distribuicoes = dados.distribuicoes;
-                                  distribuicoes.splice(index, 1);
+                                  let distribuicoes = dados.distribuicoes
+                                  distribuicoes.splice(index, 1)
                                   setDados({
                                     ...dados,
                                     distribuicoes: distribuicoes,
-                                  });
+                                  })
                                 }}
                                 className="bg-red-500 p-1 rounded"
                               >
@@ -3573,9 +3061,7 @@ function ModalFormSolicitacao({
                 </div>
                 {dados.links?.length > 0 ? (
                   <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                      DOCUMENTAÇÃO
-                    </span>
+                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DOCUMENTAÇÃO</span>
                     <div className="flex flex-col items-center gap-2">
                       {dados.links.map((x, index) => (
                         // <div key={index} className="flex items-center gap-x-2">
@@ -3587,43 +3073,29 @@ function ModalFormSolicitacao({
                         //     style={{ color: "#49be25", fontSize: "18px" }}
                         //   />
                         // </div>
-                        <FileLinkBlock
-                          key={index}
-                          obj={x}
-                          deleteFile={(obj) => deleteFile(obj)}
-                        />
+                        <FileLinkBlock key={index} obj={x} deleteFile={(obj) => deleteFile(obj)} />
                       ))}
                     </div>
                     {fileMsg.text ? (
-                      <p
-                        className={`text-center italic ${fileMsg.color} text-xs h-[10px] my-1`}
-                      >
-                        {fileMsg.text}
-                      </p>
+                      <p className={`text-center italic ${fileMsg.color} text-xs h-[10px] my-1`}>{fileMsg.text}</p>
                     ) : (
                       <div className="h-[10px] my-1"></div>
                     )}
                     <div className="flex flex-col w-full items-center mt-2">
-                      <h1 className="text-[#fead61] font-medium text-sm">
-                        ANEXO DE ARQUIVOS
-                      </h1>
+                      <h1 className="text-[#fead61] font-medium text-sm">ANEXO DE ARQUIVOS</h1>
                       <div className="relative w-full lg:w-[450px] self-center border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
                         <div className="absolute">
                           {image ? (
                             <div className="flex flex-col items-center">
                               <i className="fa fa-folder-open fa-4x text-blue-700"></i>
                               <span className="block text-gray-400 font-normal text-center">
-                                {image.length == 1
-                                  ? image[0].name
-                                  : `${image[0].name}...`}
+                                {image.length == 1 ? image[0].name : `${image[0].name}...`}
                               </span>
                             </div>
                           ) : (
                             <div className="flex flex-col items-center">
                               <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                              <span className="block text-gray-400 font-normal">
-                                Adicione o arquivo aqui
-                              </span>
+                              <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
                             </div>
                           )}
                         </div>
@@ -3637,16 +3109,11 @@ function ModalFormSolicitacao({
                       </div>
                       <input
                         value={fileName}
-                        onChange={(e) =>
-                          setFileName(e.target.value.toUpperCase())
-                        }
+                        onChange={(e) => setFileName(e.target.value.toUpperCase())}
                         placeholder="Dê um nome para identificação do arquivo."
                         className="outline-none border border-gray-200 p-2 w-full lg:w-[450px] mt-2"
                       />
-                      <button
-                        onClick={uploadFiles}
-                        className="p-2 rounded bg-blue-400 hover:bg-blue-700 text-white font-bold mt-2"
-                      >
+                      <button onClick={uploadFiles} className="p-2 rounded bg-blue-400 hover:bg-blue-700 text-white font-bold mt-2">
                         ANEXAR
                       </button>
                     </div>
@@ -3656,9 +3123,7 @@ function ModalFormSolicitacao({
                 )}
                 {dados.linksVisita?.length > 0 ? (
                   <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                      ARQUIVOS VISITA TÉCNICA
-                    </span>
+                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">ARQUIVOS VISITA TÉCNICA</span>
                     <div className="flex flex-col items-center gap-2">
                       {dados.linksVisita.map((x, index) => (
                         <div key={index} className="flex items-center gap-x-2">
@@ -3666,22 +3131,18 @@ function ModalFormSolicitacao({
                             {x.title}
                             {x.format ? ` - ${x.format}` : false}
                           </a>
-                          <AiOutlineCheck
-                            style={{ color: "#49be25", fontSize: "18px" }}
-                          />
+                          <AiOutlineCheck style={{ color: '#49be25', fontSize: '18px' }} />
                         </div>
                       ))}
                     </div>
                   </div>
                 ) : (
                   <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                      VINCULAR VISITA TÉCNICA
-                    </span>
+                    <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">VINCULAR VISITA TÉCNICA</span>
                     <div className="flex flex-col items-center">
                       <TextInput
                         normalCase={true}
-                        label={"ID DA VISITA TÉCNICA"}
+                        label={'ID DA VISITA TÉCNICA'}
                         editable={true}
                         value={idVisitaTecnica}
                         handleChange={(value) => setIdVisitaTecnica(value)}
@@ -3696,37 +3157,29 @@ function ModalFormSolicitacao({
                   </div>
                 )}
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-                    DADOS ADICIONAIS PARA APROVAÇÃO DO FORMULÁRIO
-                  </span>
+                  <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS ADICIONAIS PARA APROVAÇÃO DO FORMULÁRIO</span>
                   <div className="flex gap-2 justify-around flex-wrap">
                     <TextInput
-                      label={"Nome do Projeto"}
-                      value={dados.nomeDoProjeto ? dados.nomeDoProjeto : ""}
+                      label={'Nome do Projeto'}
+                      value={dados.nomeDoProjeto ? dados.nomeDoProjeto : ''}
                       editable={editor}
                       handleChange={(value) => {
-                        setDados({ ...dados, nomeDoProjeto: value });
+                        setDados({ ...dados, nomeDoProjeto: value })
                       }}
                     />
                     <SelectInput
-                      label={"TIPO DE SERVIÇO"}
+                      label={'TIPO DE SERVIÇO'}
                       editable={editor}
                       options={tiposDeServico.map((tipo) => {
-                        return { label: tipo.label, value: tipo.value };
+                        return { label: tipo.label, value: tipo.value }
                       })}
-                      value={
-                        dados.tipoDeServico
-                          ? dados.tipoDeServico
-                          : "SISTEMA FOTOVOLTAICO"
-                      }
-                      handleChange={(value) =>
-                        setDados({ ...dados, tipoDeServico: value })
-                      }
+                      value={dados.tipoDeServico ? dados.tipoDeServico : 'SISTEMA FOTOVOLTAICO'}
+                      handleChange={(value) => setDados({ ...dados, tipoDeServico: value })}
                     />
                     <CheckboxInput
-                      title={"REALIZAR HOMOLOGAÇÃO"}
-                      labelTrue={"SIM"}
-                      labelFalse={"NÃO"}
+                      title={'REALIZAR HOMOLOGAÇÃO'}
+                      labelTrue={'SIM'}
+                      labelFalse={'NÃO'}
                       checked={dados.realizarHomologacao}
                       handleChange={(value) =>
                         setDados({
@@ -3736,82 +3189,82 @@ function ModalFormSolicitacao({
                       }
                     />
                     <SelectInput
-                      label={"Regional"}
+                      label={'Regional'}
                       editable={editor}
-                      value={dados.regional ? dados.regional : "NÃO DEFINIDO"}
+                      value={dados.regional ? dados.regional : 'NÃO DEFINIDO'}
                       options={[
                         {
-                          label: "REGIONAL ITUIUTABA",
-                          value: "REGIONAL ITUIUTABA",
+                          label: 'REGIONAL ITUIUTABA',
+                          value: 'REGIONAL ITUIUTABA',
                         },
                         {
-                          label: "REGIONAL UBERLÂNDIA",
-                          value: "REGIONAL UBERLÂNDIA",
+                          label: 'REGIONAL UBERLÂNDIA',
+                          value: 'REGIONAL UBERLÂNDIA',
                         },
                         {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
+                          label: 'NÃO DEFINIDO',
+                          value: 'NÃO DEFINIDO',
                         },
                       ]}
                       handleChange={(value) => {
-                        setDados({ ...dados, regional: value });
+                        setDados({ ...dados, regional: value })
                       }}
                     />
                     <TextInput
-                      label={"LINK PASTA NA NUVEM"}
+                      label={'LINK PASTA NA NUVEM'}
                       normalCase={true}
                       editable={editor}
-                      value={dados.linkDrive ? dados.linkDrive : ""}
+                      value={dados.linkDrive ? dados.linkDrive : ''}
                       handleChange={(value) => {
-                        setDados({ ...dados, linkDrive: value });
+                        setDados({ ...dados, linkDrive: value })
                       }}
                     />
                     <NumberInput
-                      tag={"R$"}
-                      label={"Previsão de custos em insumos"}
+                      tag={'R$'}
+                      label={'Previsão de custos em insumos'}
                       editable={editor}
                       value={dados.previsaoCustos ? dados.previsaoCustos : 0}
                       handleChange={(value) => {
-                        setDados({ ...dados, previsaoCustos: Number(value) });
+                        setDados({ ...dados, previsaoCustos: Number(value) })
                       }}
                     />
                     <SelectInput
-                      label={"TIPO DO KIT"}
-                      value={dados.tipoDoKit ? dados.tipoDoKit : "NÃO DEFINIDO"}
+                      label={'TIPO DO KIT'}
+                      value={dados.tipoDoKit ? dados.tipoDoKit : 'NÃO DEFINIDO'}
                       editable={editor}
                       options={[
                         {
-                          label: "NORMAL",
-                          value: "NORMAL",
+                          label: 'NORMAL',
+                          value: 'NORMAL',
                         },
                         {
-                          label: "PROMO",
-                          value: "PROMO",
+                          label: 'PROMO',
+                          value: 'PROMO',
                         },
                         {
-                          label: "NÃO SE APLICA",
-                          value: "NÃO SE APLICA",
+                          label: 'NÃO SE APLICA',
+                          value: 'NÃO SE APLICA',
                         },
                         {
-                          label: "NÃO DEFINIDO",
-                          value: "NÃO DEFINIDO",
+                          label: 'NÃO DEFINIDO',
+                          value: 'NÃO DEFINIDO',
                         },
                       ]}
                       handleChange={(value) => {
-                        setDados({ ...dados, tipoDoKit: value });
+                        setDados({ ...dados, tipoDoKit: value })
                       }}
                     />
                   </div>
                   <div className="flex gap-2 justify-around flex-wrap">
                     <CheckboxInput
-                      title={"VISITA TÉCNICA"}
-                      labelTrue={"REALIZADA"}
-                      labelFalse={"PENDÊNCIA"}
-                      checked={dados.visitaTecnica == "REALIZADA"}
+                      title={'VISITA TÉCNICA'}
+                      labelTrue={'REALIZADA'}
+                      labelFalse={'PENDÊNCIA'}
+                      checked={dados.visitaTecnica == 'REALIZADA'}
                       handleChange={(value) =>
                         setDados({
                           ...dados,
-                          visitaTecnica: value ? "REALIZADA" : "PENDÊNCIA",
+                          visitaTecnica: value ? 'REALIZADA' : 'PENDÊNCIA',
                         })
                       }
                     />
@@ -3838,35 +3291,35 @@ function ModalFormSolicitacao({
                       </label>
                     </div> */}
                     <SelectInput
-                      label={"Laudo"}
-                      value={dados.laudo ? dados.laudo : "NÃO DEFINIDO"}
+                      label={'Laudo'}
+                      value={dados.laudo ? dados.laudo : 'NÃO DEFINIDO'}
                       editable={editor}
                       options={[
-                        { label: "EM ESTUDO", value: "EM ESTUDO" },
-                        { label: "EMITIDO", value: "EMITIDO" },
-                        { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                        { label: 'EM ESTUDO', value: 'EM ESTUDO' },
+                        { label: 'EMITIDO', value: 'EMITIDO' },
+                        { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                       ]}
                       handleChange={(value) => {
-                        setDados({ ...dados, laudo: value });
+                        setDados({ ...dados, laudo: value })
                       }}
                     />
                     <TextInput
-                      label={"TÉCNICO RESPONSÁVEL"}
+                      label={'TÉCNICO RESPONSÁVEL'}
                       editable={editor}
                       value={dados.respVisitaTecnica}
                       handleChange={(value) => {
                         setDados({
                           ...dados,
                           respVisitaTecnica: value.toUpperCase(),
-                        });
+                        })
                       }}
                     />
                     <TextInput
-                      label={"Tipo da telha"}
+                      label={'Tipo da telha'}
                       editable={editor}
                       value={dados.tipoDaTelha}
                       handleChange={(value) => {
-                        setDados({ ...dados, tipoDaTelha: value });
+                        setDados({ ...dados, tipoDaTelha: value })
                       }}
                     />
                   </div>
@@ -4196,12 +3649,10 @@ function ModalFormSolicitacao({
                 </div> */}
                 <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
                   <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">
-                      COMENTÁRIOS AO VENDEDOR
-                    </span>
+                    <span className="uppercase font-bold font-raleway text-center text-sm">COMENTÁRIOS AO VENDEDOR</span>
                     <textarea
                       readOnly={!editor}
-                      placeholder={"Comentários aqui.."}
+                      placeholder={'Comentários aqui..'}
                       value={dados.comentariosAoVendedor}
                       className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                       onChange={(e) =>
@@ -4213,31 +3664,17 @@ function ModalFormSolicitacao({
                     />
                   </div>
                 </div>
-                {creationMsg.text && (
-                  <p className={`text-center italic ${creationMsg.color}`}>
-                    {creationMsg.text}
-                  </p>
-                )}
-                {emailMsg.text && (
-                  <p className={`text-center italic ${emailMsg.color} mt-2`}>
-                    {emailMsg.text}
-                  </p>
-                )}
+                {creationMsg.text && <p className={`text-center italic ${creationMsg.color}`}>{creationMsg.text}</p>}
+                {emailMsg.text && <p className={`text-center italic ${emailMsg.color} mt-2`}>{emailMsg.text}</p>}
                 {editor && !dados.aprovacao && (
                   <div className="flex items-center justify-around w-full">
                     <div className="w-full flex justify-center">
-                      <button
-                        onClick={validateCreation}
-                        className="p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold"
-                      >
+                      <button onClick={validateCreation} className="p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold">
                         ADICIONAR PROJETO
                       </button>
                     </div>
                     <div className="w-full flex justify-center">
-                      <button
-                        onClick={rejectSolicitacao}
-                        className="p-2 rounded bg-red-300 hover:bg-red-500 text-white font-bold"
-                      >
+                      <button onClick={rejectSolicitacao} className="p-2 rounded bg-red-300 hover:bg-red-500 text-white font-bold">
                         REJEITAR SOLICITAÇÃO
                       </button>
                     </div>
@@ -4249,7 +3686,7 @@ function ModalFormSolicitacao({
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default ModalFormSolicitacao;
+export default ModalFormSolicitacao

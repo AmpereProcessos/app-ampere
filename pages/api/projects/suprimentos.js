@@ -13,23 +13,8 @@ export default async function handler(req, res) {
         {
           $match: {
             tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
-            'compra.statusLiberacao': {
-              $nin: ['NÃO DEFINIDO', null, undefined],
-            },
-            // "compra.statusEntrega": {
-            //   $in: [
-            //     "EM ROTA",
-            //     "AGUARDANDO COMPRA",
-            //     "",
-            //     null,
-            //     undefined,
-            //     " ",
-            //     "NÃO DEFINIDO",
-            //     "CANCELADO",
-            //   ],
-            // },
-            $or: [{ 'contrato.status': 'ASSINADO' }, { 'compra.statusLiberacao': 'PREVISÃO DE EQUIPAMENTOS' }],
-            'obra.statusDaObra': { $ne: 'CONCLUIDA' },
+            'compra.liberacao': true,
+            'compra.status': { $ne: 'CONCLUIDA' },
           },
         },
         {
@@ -43,42 +28,8 @@ export default async function handler(req, res) {
             'sistema.potPico': 1,
             'sistema.qtdeModulos': 1,
             'pagamento.status': 1,
-            entregue: {
-              $cond: {
-                if: { $eq: ['$estruturaPersonalizada.aplicavel', 'SIM'] },
-                then: {
-                  $cond: {
-                    if: {
-                      $eq: ['$estruturaPersonalizada.statusEntrega', 'ENTREGUE'],
-                    },
-                    then: 'ENTREGUE',
-                    else: 'NÃO ENTREGUE',
-                  },
-                },
-                else: '$compra.statusEntrega',
-              },
-            },
           },
         },
-        {
-          $match: {
-            entregue: {
-              $in: ['NÃO ENTREGUE', 'EM ROTA', 'AGUARDANDO COMPRA', '', null, undefined, ' ', 'NÃO DEFINIDO', 'CANCELADO'],
-            },
-          },
-        },
-        // {
-        //   $project: {
-        //     _id: 1,
-        //     nomeDoContrato: 1,
-        //     qtde: 1,
-        //     compra: 1,
-        //     tipoDeServico: 1,
-        //     "faturamento.previsaoFaturamento": 1,
-        //     "sistema.potPico": 1,
-        //     "pagamento.status": 1,
-        //   },
-        // },
       ])
       .toArray()
     res.json(suprimentos)

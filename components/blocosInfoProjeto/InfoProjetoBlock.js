@@ -11,9 +11,8 @@ import ProjectServiceOrders from '../identificador/ordensDeServico/ProjectServic
 function InfoProjetoBlock({ editor, infoHolder, setInfo, changes, setChanges, handleUpdates, project }) {
   const { data: session } = useSession()
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-      <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">PROJETO</span>
-
+    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
+      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">INFORMAÇÕES SOBRE O PROJETO</span>
       <div className="flex items-center justify-center">
         <div className="flex flex-col w-[350px] items-center">
           <span className="uppercase font-bold font-raleway text-center text-sm">REALIZAR HOMOLOGAÇÃO</span>

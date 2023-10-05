@@ -96,7 +96,7 @@ function SelectInput({
         onClick={() => {
           if (editable && !selectMenuIsOpen) setSelectMenuIsOpen((prev) => !prev)
         }}
-        className="flex min-h-[41px] cursor-pointer w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm"
+        className="flex min-h-[47px] cursor-pointer w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm"
       >
         {selectMenuIsOpen ? (
           <input

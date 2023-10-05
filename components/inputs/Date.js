@@ -1,19 +1,9 @@
-import React from "react";
+import React from 'react'
 
-function DateInput({
-  width,
-  label,
-  labelClassName = "font-sans font-bold  text-[#353432]",
-  showLabel = true,
-  value,
-  editable = true,
-  handleChange,
-}) {
-  const inputIdentifier = label.toLowerCase().replace(" ", "_");
+function DateInput({ width, label, labelClassName = 'font-sans font-bold text-[#353432]', showLabel = true, value, editable = true, handleChange }) {
+  const inputIdentifier = label.toLowerCase().replace(' ', '_')
   return (
-    <div
-      className={`flex w-full flex-col gap-1 lg:w-[${width ? width : "350px"}]`}
-    >
+    <div className={`flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
       {showLabel ? (
         <label htmlFor={inputIdentifier} className={labelClassName}>
           {label}
@@ -22,17 +12,17 @@ function DateInput({
 
       <input
         readOnly={!editable}
-        value={value ? value : ""}
+        value={value ? value : ''}
         onChange={(e) => {
-          handleChange(e.target.value != "" ? e.target.value : undefined);
+          handleChange(e.target.value != '' ? e.target.value : undefined)
         }}
         id={inputIdentifier}
         onReset={() => handleChange(undefined)}
         type="date"
-        className="w-full rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic"
+        className="w-full h-[47px] rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic"
       />
     </div>
-  );
+  )
 }
 
-export default DateInput;
+export default DateInput

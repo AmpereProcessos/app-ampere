@@ -13,7 +13,7 @@ function TextInput({
 }) {
   const inputIdentifier = label ? label.toLowerCase().replace(' ', '_') : ''
   return (
-    <div className={`flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
+    <div className={`flex h w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
       {showLabel ? (
         <label htmlFor={inputIdentifier} className={labelClassName}>
           {label}
@@ -27,7 +27,7 @@ function TextInput({
         readOnly={!editable}
         type="text"
         placeholder={placeholder}
-        className="w-full rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic"
+        className="w-full h-[47px] rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic"
       />
     </div>
   )

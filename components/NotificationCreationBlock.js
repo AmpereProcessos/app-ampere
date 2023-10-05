@@ -100,7 +100,7 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
     }
     return true
   }
-  console.log(session)
+
   return (
     <>
       <div className="flex items-center justify-center p-2 w-full bg-[#15599a] rounded-md gap-6">

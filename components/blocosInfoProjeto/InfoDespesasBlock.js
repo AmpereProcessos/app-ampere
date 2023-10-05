@@ -1,42 +1,32 @@
-import React from "react";
-import { useProjectExpenses } from "../../utils/methods/query/expenses";
-import { formatToMoney, validateAuthorization } from "../../utils/constants";
-import { useSession } from "next-auth/react";
-import { BsCalendarFill } from "react-icons/bs";
-import LoadingPage from "../utils/LoadingPage";
-import dayjs from "dayjs";
-import { FaUserAlt } from "react-icons/fa";
-import ExpenseItem from "../identificador/despesas/ExpenseItem";
+import React from 'react'
+import { useProjectExpenses } from '../../utils/methods/query/expenses'
+import { formatToMoney, validateAuthorization } from '../../utils/constants'
+import { useSession } from 'next-auth/react'
+import { BsCalendarFill } from 'react-icons/bs'
+import LoadingPage from '../utils/LoadingPage'
+import dayjs from 'dayjs'
+import { FaUserAlt } from 'react-icons/fa'
+import ExpenseItem from '../identificador/despesas/ExpenseItem'
 function InfoDespesasBlock({ projectId }) {
-  const { data: session } = useSession();
-  const {
-    data: expenses,
-    isSuccess,
-    isFetching,
-  } = useProjectExpenses(projectId, validateAuthorization(session, "ADM"));
+  const { data: session } = useSession()
+  const { data: expenses, isSuccess, isFetching } = useProjectExpenses(projectId, validateAuthorization(session, 'ADM'))
   function getTotalExpenses(expensesArr) {
     const total = expensesArr.reduce((accumulator, current) => {
-      const toBeSummed = current.total;
-      return toBeSummed + accumulator;
-    }, 0);
-    return total;
+      const toBeSummed = current.total
+      return toBeSummed + accumulator
+    }, 0)
+    return total
   }
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg w-full">
-      <h1 className="text-sm text-center font-bold text-[#15599a] py-2">
-        DESPESAS DO PROJETO
-      </h1>
+    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg w-full rounded-md">
+      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">DESPESAS DO PROJETO</span>
       <div className="flex w-full grow flex-wrap justify-center gap-2 px-2">
         {isSuccess ? (
           expenses.length > 0 ? (
-            expenses.map((expense, index) => (
-              <ExpenseItem key={expense._id} expense={expense} />
-            ))
+            expenses.map((expense, index) => <ExpenseItem key={expense._id} expense={expense} />)
           ) : (
             <div className="flex items-center justify-center w-full">
-              <p className="text-gray-500 italic">
-                Não há gastos vinculados à esse projeto...
-              </p>
+              <p className="text-gray-500 italic">Não há gastos vinculados à esse projeto...</p>
             </div>
           )
         ) : null}
@@ -44,16 +34,12 @@ function InfoDespesasBlock({ projectId }) {
       </div>
       {isSuccess ? (
         <div className="w-full flex flex-col mt-2">
-          <h1 className="w-full text-center font-bold text-green-500">
-            TOTAL DE DESPESAS DO PROJETO
-          </h1>
-          <h1 className="text-center w-full font-black">
-            {formatToMoney(getTotalExpenses(expenses))}
-          </h1>
+          <h1 className="w-full text-center font-bold text-green-500">TOTAL DE DESPESAS DO PROJETO</h1>
+          <h1 className="text-center w-full font-black">{formatToMoney(getTotalExpenses(expenses))}</h1>
         </div>
       ) : null}
     </div>
-  );
+  )
 }
 
-export default InfoDespesasBlock;
+export default InfoDespesasBlock

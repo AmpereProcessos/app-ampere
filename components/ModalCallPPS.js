@@ -107,7 +107,7 @@ const responsibles = [
     id: '63a5fb69e6a905a237de81eb',
     nome: 'Leandro Viali',
     apelido: 'LEANDRO',
-    ativo: true,
+    ativo: false,
     avatar_url:
       'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-leandro_viali?alt=media&token=dffd6966-b6d4-460d-9baa-d467d933a8a7',
   },

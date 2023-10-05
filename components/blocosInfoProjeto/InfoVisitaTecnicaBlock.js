@@ -4,8 +4,10 @@ import TextInput from '../TextInput'
 import { IoMdAdd } from 'react-icons/io'
 function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChanges, infoVisita }) {
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-      <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">VISITA TÉCNICA</span>
+    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
+      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">
+        INFORMAÇÕES SOBRE A VISITA TÉCNICA
+      </span>
       <div className="flex gap-2 justify-around flex-wrap">
         <div className="flex items-center w-[350px] justify-center">
           <input

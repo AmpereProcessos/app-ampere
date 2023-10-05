@@ -12,7 +12,6 @@ function getMissingMaterialAsList(str) {
   const spllited = str.split('\n')
   const formattedSpllited = spllited.map((i) => {
     const arr = i.split('-')
-    console.log(i, arr)
     var qty = null
     var desc = null
     if (arr.length > 1) {

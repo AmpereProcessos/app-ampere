@@ -1,12 +1,12 @@
 import axios from 'axios'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { BsCheck, BsCheckAll } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 import { IoIosSend } from 'react-icons/io'
 import { AppContext } from '../context/AppContext'
 import { VscChromeClose } from 'react-icons/vsc'
 import dayjs from 'dayjs'
-import { useKey } from '../utils/hooks'
+import { useClickOutside, useKey } from '../utils/hooks'
 const MODAL_STYLES = {
   position: 'fixed',
   top: '230px',
@@ -28,7 +28,8 @@ const OVERLAY_STYLES = {
   zIndex: 1000,
 }
 function NotificationModal({ setNotificationIsOpen }) {
-  useKey('Escape', () => setNotificationIsOpen(false))
+  const ref = useRef(null)
+  useClickOutside(ref, () => setNotificationIsOpen(false))
   const { notificacoes, getNotificacoes, credentials } = useContext(AppContext)
   const [not, setNot] = useState(notificacoes)
   const [info, setInfo] = useState({
@@ -86,7 +87,7 @@ function NotificationModal({ setNotificationIsOpen }) {
   }
   console.log(info)
   return (
-    <div style={MODAL_STYLES}>
+    <div ref={ref} style={MODAL_STYLES}>
       <div className="w-full flex flex-col h-full border border-gray-200 py-2 px-1 shadow-xl">
         <div className="flex items-center justify-between  border-b border-gray-200 pb-2">
           <h1 className="text-center uppercase text-[#15599a] font-bold text-sm">Notificações</h1>

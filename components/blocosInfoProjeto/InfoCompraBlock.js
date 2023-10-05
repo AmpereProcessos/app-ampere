@@ -1,12 +1,16 @@
 import dayjs from 'dayjs'
 import React from 'react'
-import { fornecedores, statusLiberacao } from '../../utils/constants'
+import { formatDate, fornecedores, statusLiberacao } from '../../utils/constants'
 import DateInput from '../DateInput'
 import NumberInput from '../NumberInput'
 import SelectInput from '../SelectInput'
 import TextInput from '../TextInput'
 import ProjectKitInfo from '../identificador/suprimentos/ProjectKitInfo'
 import ProjectMissingMaterialInfo from '../identificador/suprimentos/MissingMaterialInfo'
+import SelectInputPersonalized from '../inputs/Select'
+import { supplementationStatus } from '../../utils/select-options'
+import CheckboxInput from '../inputs/Checkbox'
+import { BsCalendarFill } from 'react-icons/bs'
 
 function InfoCompraBlock({
   editor,
@@ -20,37 +24,247 @@ function InfoCompraBlock({
   showDeliveryInfoOnly = false,
 }) {
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-      <span className="text-sm text-center font-bold text-[#15599a] py-2">INFORMAÇÕES DA COMPRA</span>
-      {!showDeliveryInfoOnly && (
-        <div className="flex gap-2 justify-center flex-wrap pb-2 border-b border-gray-200">
-          <SelectInput
-            label={'STATUS DA LIBERAÇÃO'}
+    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
+      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">INFORMAÇÕES DA COMPRA</span>
+      <div className="w-full flex flex-col items-center justify-center mb-4 gap-2">
+        <div className="flex flex-col items-center">
+          <CheckboxInput
+            labelFalse={'LIBERADO PARA COMPRA'}
+            labelTrue={'LIBERADO PARA COMPRA'}
+            editable={comercialEditionOnly}
+            checked={infoHolder.compra.liberacao}
+            handleChange={(value) => {
+              setChanges((prev) => ({ ...prev, 'compra.liberacao': value }))
+              setInfo((prev) => ({ ...prev, compra: { ...prev.compra, liberacao: value } }))
+            }}
+          />
+          {infoHolder.compra.dataLiberacao && !comercialEditionOnly ? (
+            <div className="flex items-center gap-2 text-gray-500">
+              <BsCalendarFill />
+              <p className="text-xs font-medium">{dayjs(infoHolder.compra.dataLiberacao).add(3, 'hour').format('DD/MM/YYYY')}</p>
+            </div>
+          ) : null}
+        </div>
+
+        {comercialEditionOnly ? (
+          <DateInput
+            label={'Data DE LIBERAÇÃO P/ COMPRA'}
             editable={editor}
-            value={infoHolder.compra?.statusLiberacao ? infoHolder.compra?.statusLiberacao : 'NÃO DEFINIDO'}
-            options={statusLiberacao.map((status) => {
-              return { label: status.label, value: status.value }
-            })}
+            value={infoHolder.compra.dataLiberacao ? new Date(infoHolder.compra.dataLiberacao).toISOString().slice(0, 10) : null}
             handleChange={(value) => {
               setChanges({
                 ...changes,
-                'compra.statusLiberacao': value,
-                'projeto.iniciar': value == 'PAGO' ? 'SIM' : project.projeto.iniciar,
+                'compra.dataLiberacao': dayjs(value).isValid() ? new Date(value).toISOString() : null,
               })
               setInfo({
                 ...infoHolder,
                 compra: {
                   ...infoHolder.compra,
-                  statusLiberacao: value,
-                },
-                projeto: {
-                  ...infoHolder.projeto,
-                  iniciar: value == 'PAGO' ? 'SIM' : project.projeto.iniciar,
+                  dataLiberacao: dayjs(value).isValid() ? new Date(value).toISOString() : null,
                 },
               })
             }}
           />
-          <DateInput
+        ) : null}
+      </div>
+      <div className="w-full flex items-center justify-center mb-4">
+        <SelectInputPersonalized
+          label="STATUS DA SUPLEMENTAÇÃO"
+          labelClassName="uppercase font-bold font-raleway text-center text-sm"
+          selectedItemLabel={'INDEFINIDO'}
+          options={supplementationStatus}
+          value={infoHolder.compra.status}
+          handleChange={(value) => {
+            setChanges((prev) => ({ ...prev, 'compra.status': value }))
+            setInfo((prev) => ({ ...prev, compra: { ...prev.compra, status: value } }))
+          }}
+          onReset={() => {
+            setChanges((prev) => ({ ...prev, 'compra.status': 'NÃO DEFINIDO' }))
+            setInfo((prev) => ({ ...prev, compra: { ...prev.compra, status: 'NÃO DEFINIDO' } }))
+          }}
+        />
+      </div>
+      <div className="w-full flex flex-col lg:flex-row gap-2 justify-around mb-4">
+        <SelectInput
+          label={'TIPO DO KIT'}
+          value={infoHolder.compra?.tipoDoKit != undefined && infoHolder.compra.tipoDoKit != '-' ? infoHolder.compra.tipoDoKit : 'NÃO DEFINIDO'}
+          editable={editor}
+          options={[
+            {
+              label: 'NORMAL',
+              value: 'NORMAL',
+            },
+            {
+              label: 'PROMO',
+              value: 'PROMO',
+            },
+            {
+              label: 'NÃO SE APLICA',
+              value: 'NÃO SE APLICA',
+            },
+            {
+              label: 'NÃO DEFINIDO',
+              value: 'NÃO DEFINIDO',
+            },
+          ]}
+          handleChange={(value) => {
+            setChanges({
+              ...changes,
+              'compra.tipoDoKit': value,
+            })
+            setInfo({
+              ...infoHolder,
+              compra: {
+                ...infoHolder.compra,
+                tipoDoKit: value,
+              },
+            })
+          }}
+        />
+        <SelectInput
+          label={'Fornecedor'}
+          editable={editor}
+          value={infoHolder.compra?.fornecedor != undefined && infoHolder.compra.fornecedor != '-' ? infoHolder.compra.fornecedor : 'NÃO DEFINIDO'}
+          options={fornecedores.map((fornecedor) => fornecedor)}
+          handleChange={(value) => {
+            setChanges({
+              ...changes,
+              'compra.fornecedor': value,
+            })
+            setInfo({
+              ...infoHolder,
+              compra: {
+                ...infoHolder.compra,
+                fornecedor: value,
+              },
+            })
+          }}
+        />
+        {showMonetaryValues && (
+          <NumberInput
+            tag={'R$'}
+            label={'VALOR DO KIT'}
+            editable={editor}
+            value={infoHolder.compra?.valorDoKit != undefined && infoHolder.compra?.valorDoKit != '-' ? infoHolder.compra?.valorDoKit : 0}
+            handleChange={(value) => {
+              setChanges({
+                ...changes,
+                'compra.valorDoKit': Number(value),
+              })
+              setInfo({
+                ...infoHolder,
+                compra: {
+                  ...infoHolder.compra,
+                  valorDoKit: Number(value),
+                },
+              })
+            }}
+          />
+        )}
+        <DateInput
+          label={'Data do pedido'}
+          editable={editor}
+          value={
+            infoHolder.compra.dataPedido != undefined && infoHolder.compra.dataPedido != '-'
+              ? new Date(infoHolder.compra.dataPedido).toISOString().slice(0, 10)
+              : 0
+          }
+          handleChange={(value) => {
+            setChanges({
+              ...changes,
+              'compra.dataPedido': isNaN(value) ? new Date(value).toISOString() : null,
+            })
+            setInfo({
+              ...infoHolder,
+              compra: {
+                ...infoHolder.compra,
+                dataPedido: isNaN(value) ? new Date(value).toISOString() : null,
+              },
+            })
+          }}
+        />
+      </div>
+      <div className="w-full flex flex-col lg:flex-row gap-2 justify-around mb-4">
+        <DateInput
+          label={'Data máx p/ pagamento'}
+          editable={editor}
+          value={infoHolder.compra.dataMaxPagamento ? new Date(infoHolder.compra.dataMaxPagamento).toISOString().slice(0, 10) : null}
+          handleChange={(value) => {
+            setChanges({
+              ...changes,
+              'compra.dataMaxPagamento': dayjs(value).isValid() ? new Date(value).toISOString() : null,
+            })
+            setInfo({
+              ...infoHolder,
+              compra: {
+                ...infoHolder.compra,
+                dataMaxPagamento: dayjs(value).isValid() ? new Date(value).toISOString() : null,
+              },
+            })
+          }}
+        />
+        <DateInput
+          label={'Data do pagamento'}
+          editable={editor}
+          value={
+            infoHolder.compra?.dataPagamento != undefined && infoHolder.compra?.dataPagamento != '-'
+              ? new Date(infoHolder.compra?.dataPagamento).toISOString().slice(0, 10)
+              : 0
+          }
+          handleChange={(value) => {
+            setChanges({
+              ...changes,
+              'compra.dataPagamento': isNaN(value) ? new Date(value).toISOString() : null,
+            })
+            setInfo({
+              ...infoHolder,
+              compra: {
+                ...infoHolder.compra,
+                dataPagamento: isNaN(value) ? new Date(value).toISOString() : null,
+              },
+            })
+          }}
+        />
+        <TextInput
+          label={'Informações faturamento'}
+          editable={editor}
+          value={infoHolder.faturamento?.previsaoFaturamento ? infoHolder.faturamento?.previsaoFaturamento : ''}
+          handleChange={(value) => {
+            setChanges({
+              ...changes,
+              'faturamento.previsaoFaturamento': value,
+            })
+            setInfo({
+              ...infoHolder,
+              faturamento: {
+                ...infoHolder.faturamento,
+                previsaoFaturamento: value,
+              },
+            })
+          }}
+        />
+        <DateInput
+          label="Data de faturamento"
+          editable={editor}
+          value={infoHolder.faturamento?.dataFaturamento ? new Date(infoHolder.faturamento?.dataFaturamento).toISOString().slice(0, 10) : ''}
+          handleChange={(value) => {
+            setChanges({
+              ...changes,
+              'faturamento.dataFaturamento': isNaN(value) ? new Date(value).toISOString() : null,
+            })
+            setInfo({
+              ...infoHolder,
+              faturamento: {
+                ...infoHolder.faturamento,
+                dataFaturamento: isNaN(value) ? new Date(value).toISOString() : null,
+              },
+            })
+          }}
+        />
+      </div>
+      {!showDeliveryInfoOnly && (
+        <div className="flex gap-2 justify-center flex-wrap pb-2 ">
+          {/* <DateInput
             label={'Data de liberação p/ compra'}
             editable={comercialEditionOnly}
             value={
@@ -71,127 +285,8 @@ function InfoCompraBlock({
                 },
               })
             }}
-          />
-          <DateInput
-            label={'Data máx p/ pagamento'}
-            editable={editor}
-            value={infoHolder.compra.dataMaxPagamento ? new Date(infoHolder.compra.dataMaxPagamento).toISOString().slice(0, 10) : null}
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'compra.dataMaxPagamento': dayjs(value).isValid() ? new Date(value).toISOString() : null,
-              })
-              setInfo({
-                ...infoHolder,
-                compra: {
-                  ...infoHolder.compra,
-                  dataMaxPagamento: dayjs(value).isValid() ? new Date(value).toISOString() : null,
-                },
-              })
-            }}
-          />
-          <DateInput
-            label={'Data do pagamento'}
-            editable={editor}
-            value={
-              infoHolder.compra?.dataPagamento != undefined && infoHolder.compra?.dataPagamento != '-'
-                ? new Date(infoHolder.compra?.dataPagamento).toISOString().slice(0, 10)
-                : 0
-            }
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'compra.dataPagamento': isNaN(value) ? new Date(value).toISOString() : null,
-              })
-              setInfo({
-                ...infoHolder,
-                compra: {
-                  ...infoHolder.compra,
-                  dataPagamento: isNaN(value) ? new Date(value).toISOString() : null,
-                },
-              })
-            }}
-          />
-          <SelectInput
-            label={'TIPO DO KIT'}
-            value={infoHolder.compra?.tipoDoKit != undefined && infoHolder.compra.tipoDoKit != '-' ? infoHolder.compra.tipoDoKit : 'NÃO DEFINIDO'}
-            editable={editor}
-            options={[
-              {
-                label: 'NORMAL',
-                value: 'NORMAL',
-              },
-              {
-                label: 'PROMO',
-                value: 'PROMO',
-              },
-              {
-                label: 'NÃO SE APLICA',
-                value: 'NÃO SE APLICA',
-              },
-              {
-                label: 'NÃO DEFINIDO',
-                value: 'NÃO DEFINIDO',
-              },
-            ]}
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'compra.tipoDoKit': value,
-              })
-              setInfo({
-                ...infoHolder,
-                compra: {
-                  ...infoHolder.compra,
-                  tipoDoKit: value,
-                },
-              })
-            }}
-          />
-          {showMonetaryValues && (
-            <NumberInput
-              tag={'R$'}
-              label={'VALOR DO KIT'}
-              editable={editor}
-              value={infoHolder.compra?.valorDoKit != undefined && infoHolder.compra?.valorDoKit != '-' ? infoHolder.compra?.valorDoKit : 0}
-              handleChange={(value) => {
-                setChanges({
-                  ...changes,
-                  'compra.valorDoKit': Number(value),
-                })
-                setInfo({
-                  ...infoHolder,
-                  compra: {
-                    ...infoHolder.compra,
-                    valorDoKit: Number(value),
-                  },
-                })
-              }}
-            />
-          )}
+          /> */}
 
-          <TextInput
-            label={'LOCAL DE ENTREGA'}
-            value={
-              infoHolder.compra?.localEntrega != undefined && infoHolder.compra?.localEntrega != '-'
-                ? infoHolder.compra?.localEntrega
-                : 'NÃO DEFINIDO'
-            }
-            editable={editor}
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'compra.localEntrega': value,
-              })
-              setInfo({
-                ...infoHolder,
-                compra: {
-                  ...infoHolder.compra,
-                  localEntrega: value,
-                },
-              })
-            }}
-          />
           <TextInput
             label={'INFORMAÇÕES'}
             value={infoHolder.compra?.informacoes ? infoHolder.compra?.informacoes : ''}
@@ -206,24 +301,6 @@ function InfoCompraBlock({
                 compra: {
                   ...infoHolder.compra,
                   informacoes: value,
-                },
-              })
-            }}
-          />
-          <TextInput
-            label={'Informações faturamento'}
-            editable={editor}
-            value={infoHolder.faturamento?.previsaoFaturamento ? infoHolder.faturamento?.previsaoFaturamento : ''}
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'faturamento.previsaoFaturamento': value,
-              })
-              setInfo({
-                ...infoHolder,
-                faturamento: {
-                  ...infoHolder.faturamento,
-                  previsaoFaturamento: value,
                 },
               })
             }}
@@ -246,24 +323,7 @@ function InfoCompraBlock({
               })
             }}
           />
-          <DateInput
-            label="Data de faturamento"
-            editable={editor}
-            value={infoHolder.faturamento?.dataFaturamento ? new Date(infoHolder.faturamento?.dataFaturamento).toISOString().slice(0, 10) : ''}
-            handleChange={(value) => {
-              setChanges({
-                ...changes,
-                'faturamento.dataFaturamento': isNaN(value) ? new Date(value).toISOString() : null,
-              })
-              setInfo({
-                ...infoHolder,
-                faturamento: {
-                  ...infoHolder.faturamento,
-                  dataFaturamento: isNaN(value) ? new Date(value).toISOString() : null,
-                },
-              })
-            }}
-          />
+
           <div className="flex flex-col w-[350px] items-center">
             <span className="uppercase font-bold font-raleway text-center text-sm">RELATÓRIO DE COMISS. SUPRIMENTOS</span>
             <div className="flex">
@@ -294,44 +354,23 @@ function InfoCompraBlock({
           </div>
         </div>
       )}
-      <div className="flex gap-2 justify-center flex-wrap py-2 border-b border-gray-200">
-        <SelectInput
-          label={'Fornecedor'}
-          editable={editor}
-          value={infoHolder.compra?.fornecedor != undefined && infoHolder.compra.fornecedor != '-' ? infoHolder.compra.fornecedor : 'NÃO DEFINIDO'}
-          options={fornecedores.map((fornecedor) => fornecedor)}
-          handleChange={(value) => {
-            setChanges({
-              ...changes,
-              'compra.fornecedor': value,
-            })
-            setInfo({
-              ...infoHolder,
-              compra: {
-                ...infoHolder.compra,
-                fornecedor: value,
-              },
-            })
-          }}
-        />
-        <DateInput
-          label={'Data do pedido'}
-          editable={editor}
+      <div className="flex gap-2 justify-center flex-wrap py-2 ">
+        <TextInput
+          label={'LOCAL DE ENTREGA'}
           value={
-            infoHolder.compra.dataPedido != undefined && infoHolder.compra.dataPedido != '-'
-              ? new Date(infoHolder.compra.dataPedido).toISOString().slice(0, 10)
-              : 0
+            infoHolder.compra?.localEntrega != undefined && infoHolder.compra?.localEntrega != '-' ? infoHolder.compra?.localEntrega : 'NÃO DEFINIDO'
           }
+          editable={editor}
           handleChange={(value) => {
             setChanges({
               ...changes,
-              'compra.dataPedido': isNaN(value) ? new Date(value).toISOString() : null,
+              'compra.localEntrega': value,
             })
             setInfo({
               ...infoHolder,
               compra: {
                 ...infoHolder.compra,
-                dataPedido: isNaN(value) ? new Date(value).toISOString() : null,
+                localEntrega: value,
               },
             })
           }}

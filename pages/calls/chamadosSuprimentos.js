@@ -1,213 +1,177 @@
-import axios from "axios";
-import dayjs from "dayjs";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import { AiOutlineReload, AiOutlineSearch } from "react-icons/ai";
-import ModalCallSuprimentos from "../../components/ModalCallSuprimentos";
-import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
-import { AnimatePresence, motion } from "framer-motion";
-import Select from "react-select";
-import { fornecedores } from "../../utils/constants";
-import FilterButton from "../../components/utils/Buttons/FilterButton";
-import { useSession } from "next-auth/react";
-import LoadingPage from "../../components/utils/LoadingPage";
+import axios from 'axios'
+import dayjs from 'dayjs'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { AiOutlineReload, AiOutlineSearch } from 'react-icons/ai'
+import ModalCallSuprimentos from '../../components/ModalCallSuprimentos'
+import FetchDataButton from '../../components/utils/Buttons/FetchDataButton'
+import { AnimatePresence, motion } from 'framer-motion'
+import Select from 'react-select'
+import { fornecedores } from '../../utils/constants'
+import FilterButton from '../../components/utils/Buttons/FilterButton'
+import { useSession } from 'next-auth/react'
+import LoadingPage from '../../components/utils/LoadingPage'
 
 const statusStyles = {
   ABERTO: {
-    text: "text-yellow-500",
-    border: "border-yellow-500",
+    text: 'text-yellow-500',
+    border: 'border-yellow-500',
   },
-  "EM ANDAMENTO": {
-    text: "text-[#15599a]",
-    border: "border-[#15599a]",
+  'EM ANDAMENTO': {
+    text: 'text-[#15599a]',
+    border: 'border-[#15599a]',
   },
-};
+}
 function ChamadosSuprimentos() {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/authHome')
     },
-  });
+  })
 
   //DropDowns
-  const [openCallsDropdownMenuVisible, setOpenCallsDropdownMenuVisible] =
-    useState(false);
-  const [closedCallsDropdownMenuVisible, setClosedCallsDropdownMenuVisible] =
-    useState(false);
+  const [openCallsDropdownMenuVisible, setOpenCallsDropdownMenuVisible] = useState(false)
+  const [closedCallsDropdownMenuVisible, setClosedCallsDropdownMenuVisible] = useState(false)
 
   // Data
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalCall, setModalCall] = useState({});
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [modalCall, setModalCall] = useState({})
 
   const [openCalls, setOpenCalls] = useState({
     general: undefined,
     filtered: undefined,
-  });
+  })
   const [openCallsFilters, setOpenCallsFilters] = useState({
-    search: "",
+    search: '',
     supplier: [],
-  });
+  })
 
   const [closedCalls, setClosedCalls] = useState({
     general: undefined,
     filtered: undefined,
-  });
+  })
   const [closedCallsFilters, setClosedCallsFilters] = useState({
-    search: "",
+    search: '',
     supplier: [],
-  });
+  })
 
   // Fetch Functions
   function getCalls() {
-    axios.get("/api/calls/suprimentos/mainData").then((res) => {
+    axios.get('/api/calls/suprimentos/mainData').then((res) => {
       setOpenCalls({
         general: res.data.abertos,
         filtered: res.data.abertos,
-      });
+      })
       setClosedCalls({
         general: res.data.fechados,
         filtered: res.data.fechados,
-      });
-    });
+      })
+    })
   }
   function filterOpenCalls() {
-    var newArr;
+    var newArr
     if (openCallsFilters.supplier.length > 0) {
-      if (!newArr) newArr = openCalls.general;
-      newArr = newArr.filter((call) =>
-        openCallsFilters.supplier.includes(call.fornecedor)
-      );
+      if (!newArr) newArr = openCalls.general
+      newArr = newArr.filter((call) => openCallsFilters.supplier.includes(call.fornecedor))
     }
 
     if (!newArr) {
-      setOpenCalls({ ...openCalls, filtered: openCalls.general });
-      return openCalls.general;
+      setOpenCalls({ ...openCalls, filtered: openCalls.general })
+      return openCalls.general
     } else {
-      setOpenCalls({ ...openCalls, filtered: newArr });
-      return newArr;
+      setOpenCalls({ ...openCalls, filtered: newArr })
+      return newArr
     }
   }
   function filterClosedCalls() {
-    var newArr;
+    var newArr
     if (closedCallsFilters.supplier.length > 0) {
-      if (!newArr) newArr = closedCalls.general;
-      newArr = newArr.filter((call) =>
-        closedCallsFilters.supplier.includes(call.fornecedor)
-      );
+      if (!newArr) newArr = closedCalls.general
+      newArr = newArr.filter((call) => closedCallsFilters.supplier.includes(call.fornecedor))
     }
 
     if (!newArr) {
-      setClosedCalls({ ...closedCalls, filtered: closedCalls.general });
-      return closedCalls.general;
+      setClosedCalls({ ...closedCalls, filtered: closedCalls.general })
+      return closedCalls.general
     } else {
-      setClosedCalls({ ...closedCalls, filtered: newArr });
-      return newArr;
+      setClosedCalls({ ...closedCalls, filtered: newArr })
+      return newArr
     }
   }
 
   function handleOpenCallsSearchFilter(value) {
-    setOpenCallsFilters({ ...openCallsFilters, search: value });
-    var filtered = filterOpenCalls();
+    setOpenCallsFilters({ ...openCallsFilters, search: value })
+    var filtered = filterOpenCalls()
     if (value.trim().length > 0) {
-      var newArr = [...filtered].filter((call) =>
-        call.nomeDoContrato
-          .toUpperCase()
-          .includes(openCallsFilters.search.toUpperCase())
-      );
-      setOpenCalls({ ...openCalls, filtered: newArr });
+      var newArr = [...filtered].filter((call) => call.nomeDoContrato.toUpperCase().includes(openCallsFilters.search.toUpperCase()))
+      setOpenCalls({ ...openCalls, filtered: newArr })
     } else {
-      setOpenCalls({ ...openCalls, filtered: filtered });
+      setOpenCalls({ ...openCalls, filtered: filtered })
     }
   }
   function handleClosedCallsSearchFilter(value) {
-    setClosedCallsFilters({ ...closedCallsFilters, search: value });
-    var filtered = filterClosedCalls();
+    setClosedCallsFilters({ ...closedCallsFilters, search: value })
+    var filtered = filterClosedCalls()
     if (value.trim().length > 0) {
-      var newArr = [...filtered].filter((call) =>
-        call.nomeDoContrato
-          .toUpperCase()
-          .includes(closedCallsFilters.search.toUpperCase())
-      );
-      setClosedCalls({ ...closedCalls, filtered: newArr });
+      var newArr = [...filtered].filter((call) => call.nomeDoContrato.toUpperCase().includes(closedCallsFilters.search.toUpperCase()))
+      setClosedCalls({ ...closedCalls, filtered: newArr })
     } else {
-      setClosedCalls({ ...closedCalls, filtered: filtered });
+      setClosedCalls({ ...closedCalls, filtered: filtered })
     }
   }
   // Utils functions
   function handleOpenModal(info) {
-    setModalCall(info);
-    setModalIsOpen(true);
+    setModalCall(info)
+    setModalIsOpen(true)
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes("Suprimentos")) {
+    if (session?.user.accessibleRoutes.includes('Suprimentos')) {
       if (!openCalls.general) {
-        getCalls();
+        getCalls()
       }
     } else {
       if (session?.user) {
-        router.push("/");
+        router.push('/')
       }
     }
-  }, [session]);
-  if (status == "loading") return <LoadingPage />;
-  if (status == "authenticated") {
+  }, [session])
+  if (status == 'loading') return <LoadingPage />
+  if (status == 'authenticated') {
     return (
       <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
         <div className="flex items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
-          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">
-            CHAMADOS DE SUPORTE AO VENDEDOR
-          </p>
-          <FetchDataButton
-            text={"ATUALIZAR"}
-            icon={<AiOutlineReload />}
-            handleClick={getCalls}
-          />
+          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">CHAMADOS DE SUPRIMENTOS</p>
+          <FetchDataButton text={'ATUALIZAR'} icon={<AiOutlineReload />} handleClick={getCalls} />
         </div>
         {/**Abertos */}
         <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
           <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-                <p className="text-center uppercase text-[#15599a] font-bold text-xl">
-                  CHAMADOS ABERTOS
-                </p>
-                <p className="font-bold text-[#fead61]">
-                  ({openCalls.filtered?.length})
-                </p>
+                <p className="text-center uppercase text-[#15599a] font-bold text-xl">CHAMADOS ABERTOS</p>
+                <p className="font-bold text-[#fead61]">({openCalls.filtered?.length})</p>
               </div>
               {openCallsDropdownMenuVisible ? (
                 <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                  <IoMdArrowDropupCircle
-                    style={{ fontSize: "25px" }}
-                    onClick={() => setOpenCallsDropdownMenuVisible(false)}
-                  />
+                  <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
                 <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                  <IoMdArrowDropdownCircle
-                    style={{ fontSize: "25px" }}
-                    onClick={() => setOpenCallsDropdownMenuVisible(true)}
-                  />
+                  <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(true)} />
                 </div>
               )}
             </div>
             <AnimatePresence>
               {openCallsDropdownMenuVisible ? (
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0.6 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="flex flex-col w-full gap-y-2 mt-4"
-                >
+                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
                   <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
                     <input
                       type="text"
                       value={openCallsFilters.search}
-                      onChange={(e) =>
-                        handleOpenCallsSearchFilter(e.target.value)
-                      }
+                      onChange={(e) => handleOpenCallsSearchFilter(e.target.value)}
                       className="outline-none p-1.5  w-full lg:w-[350px] h-[41px] rounded border border-gray-200 placeholder:italic"
                       placeholder="DIGITE O NOME DO CONTRATO"
                     />
@@ -218,8 +182,8 @@ function ChamadosSuprimentos() {
                         styles={{
                           control: (base, state) => ({
                             ...base,
-                            width: "100%",
-                            minHeight: "41px",
+                            width: '100%',
+                            minHeight: '41px',
                           }),
                         }}
                         onChange={(e) =>
@@ -233,11 +197,7 @@ function ChamadosSuprimentos() {
                     </div>
                   </div>
                   <div className="flex items-center justify-end">
-                    <FilterButton
-                      text={"FILTRAR"}
-                      icon={<AiOutlineSearch />}
-                      handleClick={filterOpenCalls}
-                    />
+                    <FilterButton text={'FILTRAR'} icon={<AiOutlineSearch />} handleClick={filterOpenCalls} />
                   </div>
                 </motion.div>
               ) : null}
@@ -254,15 +214,10 @@ function ChamadosSuprimentos() {
                   >
                     <div className="flex justify-between gap-3 items-center w-full">
                       <h1 className="uppercase text-base font-bold">
-                        <strong className="text-[#15599a]">
-                          {chamado.codigoProjeto}
-                        </strong>{" "}
-                        {chamado.nomeDoContrato}
+                        <strong className="text-[#15599a]">{chamado.codigoProjeto}</strong> {chamado.nomeDoContrato}
                       </h1>
                       <p
-                        className={`text-xs text-center font-bold border-2 ${
-                          statusStyles[chamado.status].text
-                        } ${
+                        className={`text-xs text-center font-bold border-2 ${statusStyles[chamado.status].text} ${
                           statusStyles[chamado.status].border
                         } p-1 rounded-lg`}
                       >
@@ -270,58 +225,35 @@ function ChamadosSuprimentos() {
                       </p>
                     </div>
                     <div className="flex justify-between mt-3">
-                      <p className="text-gray-500 font-bold text-xs">
-                        FORNECEDOR
-                      </p>
-                      <p className="text-[#fead61] font-bold text-xs">
-                        {chamado.fornecedor}
-                      </p>
+                      <p className="text-gray-500 font-bold text-xs">FORNECEDOR</p>
+                      <p className="text-[#fead61] font-bold text-xs">{chamado.fornecedor}</p>
                     </div>
                     <div className="flex justify-between mt-3">
                       <p className="text-gray-500 font-bold text-xs">AVARIAS</p>
-                      <p className="text-red-500 font-bold text-xs">
-                        {chamado.avarias ? "SIM" : "NÃO"}
-                      </p>
+                      <p className="text-red-500 font-bold text-xs">{chamado.avarias ? 'SIM' : 'NÃO'}</p>
                     </div>
                     <div className="flex justify-between mt-3">
-                      <p className="text-gray-500 font-bold text-xs">
-                        MATERIAL FALTANDO
-                      </p>
-                      <p className="text-red-500 font-bold text-xs">
-                        {chamado.entregaFaltando ? "SIM" : "NÃO"}
-                      </p>
+                      <p className="text-gray-500 font-bold text-xs">MATERIAL FALTANDO</p>
+                      <p className="text-red-500 font-bold text-xs">{chamado.entregaFaltando ? 'SIM' : 'NÃO'}</p>
                     </div>
                     <div className="flex justify-between mt-3">
                       <div className="flex flex-col items-center">
-                        <p className="text-gray-500 font-bold text-xs">
-                          DATA DE ENTREGA
-                        </p>
+                        <p className="text-gray-500 font-bold text-xs">DATA DE ENTREGA</p>
                         <p className="text-red-500 font-bold text-xs">
-                          {chamado.dataEntrega
-                            ? dayjs(chamado.dataEntrega).format("DD/MM/YYYY")
-                            : "-"}
+                          {chamado.dataEntrega ? dayjs(chamado.dataEntrega).format('DD/MM/YYYY') : '-'}
                         </p>
                       </div>
                       <div className="flex flex-col items-center">
+                        <p className="text-gray-500 font-bold text-xs">DIAS DESDE ENTREGA</p>
                         <p className="text-gray-500 font-bold text-xs">
-                          DIAS DESDE ENTREGA
-                        </p>
-                        <p className="text-gray-500 font-bold text-xs">
-                          {chamado.dataEntrega
-                            ? dayjs().diff(
-                                new Date(chamado.dataEntrega),
-                                "days"
-                              )
-                            : "-"}
+                          {chamado.dataEntrega ? dayjs().diff(new Date(chamado.dataEntrega), 'days') : '-'}
                         </p>
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-center italic text-gray-700">
-                  SEM CHAMADOS ABERTOS
-                </p>
+                <p className="text-center italic text-gray-700">SEM CHAMADOS ABERTOS</p>
               )
             ) : (
               <div role="status">
@@ -351,43 +283,27 @@ function ChamadosSuprimentos() {
           <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-                <p className="text-center uppercase text-[#15599a] font-bold text-xl">
-                  CHAMADOS FINALIZADOS
-                </p>
-                <p className="font-bold text-[#fead61]">
-                  ({closedCalls.filtered?.length})
-                </p>
+                <p className="text-center uppercase text-[#15599a] font-bold text-xl">CHAMADOS FINALIZADOS</p>
+                <p className="font-bold text-[#fead61]">({closedCalls.filtered?.length})</p>
               </div>
               {closedCallsDropdownMenuVisible ? (
                 <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                  <IoMdArrowDropupCircle
-                    style={{ fontSize: "25px" }}
-                    onClick={() => setClosedCallsDropdownMenuVisible(false)}
-                  />
+                  <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
                 <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                  <IoMdArrowDropdownCircle
-                    style={{ fontSize: "25px" }}
-                    onClick={() => setClosedCallsDropdownMenuVisible(true)}
-                  />
+                  <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(true)} />
                 </div>
               )}
             </div>
             <AnimatePresence>
               {closedCallsDropdownMenuVisible ? (
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0.6 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="flex flex-col w-full gap-y-2 mt-4"
-                >
+                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
                   <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
                     <input
                       type="text"
                       value={closedCallsFilters.search}
-                      onChange={(e) =>
-                        handleClosedCallsSearchFilter(e.target.value)
-                      }
+                      onChange={(e) => handleClosedCallsSearchFilter(e.target.value)}
                       className="outline-none p-1.5  w-full lg:w-[350px] h-[41px] rounded border border-gray-200 placeholder:italic"
                       placeholder="DIGITE O NOME DO CONTRATO"
                     />
@@ -398,8 +314,8 @@ function ChamadosSuprimentos() {
                         styles={{
                           control: (base, state) => ({
                             ...base,
-                            width: "100%",
-                            minHeight: "41px",
+                            width: '100%',
+                            minHeight: '41px',
                           }),
                         }}
                         onChange={(e) =>
@@ -413,11 +329,7 @@ function ChamadosSuprimentos() {
                     </div>
                   </div>
                   <div className="flex items-center justify-end">
-                    <FilterButton
-                      text={"FILTRAR"}
-                      icon={<AiOutlineSearch />}
-                      handleClick={filterClosedCalls}
-                    />
+                    <FilterButton text={'FILTRAR'} icon={<AiOutlineSearch />} handleClick={filterClosedCalls} />
                   </div>
                 </motion.div>
               ) : null}
@@ -434,55 +346,32 @@ function ChamadosSuprimentos() {
                   >
                     <div className="flex justify-between gap-3 items-center w-full">
                       <h1 className="uppercase text-base font-bold">
-                        <strong className="text-[#15599a]">
-                          {chamado.codigoProjeto}
-                        </strong>{" "}
-                        {chamado.nomeDoContrato}
+                        <strong className="text-[#15599a]">{chamado.codigoProjeto}</strong> {chamado.nomeDoContrato}
                       </h1>
-                      <p
-                        className={`text-xs text-center font-bold border-2 border-green-500 text-green-500 p-1 rounded-lg`}
-                      >
-                        {chamado.status}
-                      </p>
+                      <p className={`text-xs text-center font-bold border-2 border-green-500 text-green-500 p-1 rounded-lg`}>{chamado.status}</p>
                     </div>
                     <div className="flex justify-between mt-3">
-                      <p className="text-gray-500 font-bold text-xs">
-                        FORNECEDOR
-                      </p>
-                      <p className="text-[#15599a] font-bold text-xs">
-                        {chamado.fornecedor}
-                      </p>
+                      <p className="text-gray-500 font-bold text-xs">FORNECEDOR</p>
+                      <p className="text-[#15599a] font-bold text-xs">{chamado.fornecedor}</p>
                     </div>
                     <div className="flex justify-between mt-3">
-                      <p className="text-gray-500 font-bold text-xs">
-                        DATA DE ENTREGA
-                      </p>
+                      <p className="text-gray-500 font-bold text-xs">DATA DE ENTREGA</p>
                       <p className="text-[#15599a] font-bold text-xs">
-                        {chamado.dataEntrega
-                          ? dayjs(chamado.dataEntrega).format("DD/MM/YYYY")
-                          : "-"}
+                        {chamado.dataEntrega ? dayjs(chamado.dataEntrega).format('DD/MM/YYYY') : '-'}
                       </p>
                     </div>
                     <div className="flex justify-between mt-3">
                       <p className="text-gray-500 font-bold text-xs">AVARIAS</p>
-                      <p className="text-red-500 font-bold text-xs">
-                        {chamado.avarias ? "SIM" : "NÃO"}
-                      </p>
+                      <p className="text-red-500 font-bold text-xs">{chamado.avarias ? 'SIM' : 'NÃO'}</p>
                     </div>
                     <div className="flex justify-between mt-3">
-                      <p className="text-gray-500 font-bold text-xs">
-                        MATERIAL FALTANDO
-                      </p>
-                      <p className="text-red-500 font-bold text-xs">
-                        {chamado.entregaFaltando ? "SIM" : "NÃO"}
-                      </p>
+                      <p className="text-gray-500 font-bold text-xs">MATERIAL FALTANDO</p>
+                      <p className="text-red-500 font-bold text-xs">{chamado.entregaFaltando ? 'SIM' : 'NÃO'}</p>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-center italic text-gray-700">
-                  SEM CHAMADOS FINALIZADOS
-                </p>
+                <p className="text-center italic text-gray-700">SEM CHAMADOS FINALIZADOS</p>
               )
             ) : (
               <div role="status">
@@ -508,16 +397,11 @@ function ChamadosSuprimentos() {
           </div>
         </div>
         {modalIsOpen && (
-          <ModalCallSuprimentos
-            info={modalCall}
-            modalIsOpen={modalIsOpen}
-            setModalIsOpen={() => setModalIsOpen(false)}
-            getCalls={getCalls}
-          />
+          <ModalCallSuprimentos info={modalCall} modalIsOpen={modalIsOpen} setModalIsOpen={() => setModalIsOpen(false)} getCalls={getCalls} />
         )}
       </div>
-    );
+    )
   }
 }
 
-export default ChamadosSuprimentos;
+export default ChamadosSuprimentos

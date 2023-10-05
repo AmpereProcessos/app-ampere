@@ -1,79 +1,56 @@
-import axios from "axios";
-import React from "react";
-import { AiOutlineSearch } from "react-icons/ai";
-import {
-  cidadesAtendidas,
-  oemPlans,
-  tiposDeServico,
-  vendedores,
-} from "../../utils/constants";
-import NumberInput from "../NumberInput";
-import SelectInput from "../SelectInput";
-import TextInput from "../TextInput";
-import { useSession } from "next-auth/react";
-import { FaFilePdf } from "react-icons/fa";
-import Link from "next/link";
+import axios from 'axios'
+import React from 'react'
+import { AiOutlineSearch } from 'react-icons/ai'
+import { cidadesAtendidas, oemPlans, tiposDeServico, vendedores } from '../../utils/constants'
+import NumberInput from '../NumberInput'
+import SelectInput from '../SelectInput'
+import TextInput from '../TextInput'
+import { useSession } from 'next-auth/react'
+import { FaFilePdf } from 'react-icons/fa'
+import Link from 'next/link'
 
 function formatCnpjCpf(value) {
-  const cnpjCpf = value.replace(/\D/g, "");
+  const cnpjCpf = value.replace(/\D/g, '')
 
   if (cnpjCpf.length === 11) {
-    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, '$1.$2.$3-$4')
   }
 
-  return cnpjCpf.replace(
-    /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
-    "$1.$2.$3/$4-$5"
-  );
+  return cnpjCpf.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g, '$1.$2.$3/$4-$5')
 }
 function formataCEP(cep) {
   cep = cep
-    .replace(/\D/g, "")
-    .replace(/(\d{5})(\d)/, "$1-$2")
-    .replace(/(-\d{3})\d+?$/, "$1");
+    .replace(/\D/g, '')
+    .replace(/(\d{5})(\d)/, '$1-$2')
+    .replace(/(-\d{3})\d+?$/, '$1')
 
-  return cep;
+  return cep
 }
 
-function InfoClienteBlock({
-  editor,
-  infoHolder,
-  setInfo,
-  changes,
-  setChanges,
-  project,
-}) {
-  const { data: session } = useSession();
+function InfoClienteBlock({ editor, infoHolder, setInfo, changes, setChanges, project }) {
+  const { data: session } = useSession()
   async function findCPF(field) {
-    axios
-      .get(`https://viacep.com.br/ws/${infoHolder.cep.replace("-", "")}/json/`)
-      .then((res) => {
-        if (res.data.erro) {
-          return;
-        } else {
-          console.log(
-            cidadesAtendidas.includes(res.data.localidade.toUpperCase())
-          );
-          setInfo({
-            ...infoHolder,
-            bairro: res.data.bairro,
-            cidade: cidadesAtendidas.includes(res.data.localidade.toUpperCase())
-              ? res.data.localidade.toUpperCase()
-              : "NÃO DEFINIDO",
-            logradouro: res.data.logradouro,
-            uf: res.data.uf,
-          });
-          setChanges({
-            ...changes,
-            bairro: res.data.bairro,
-            cidade: cidadesAtendidas.includes(res.data.localidade.toUpperCase())
-              ? res.data.localidade.toUpperCase()
-              : "NÃO DEFINIDO",
-            logradouro: res.data.logradouro,
-            uf: res.data.uf,
-          });
-        }
-      });
+    axios.get(`https://viacep.com.br/ws/${infoHolder.cep.replace('-', '')}/json/`).then((res) => {
+      if (res.data.erro) {
+        return
+      } else {
+        console.log(cidadesAtendidas.includes(res.data.localidade.toUpperCase()))
+        setInfo({
+          ...infoHolder,
+          bairro: res.data.bairro,
+          cidade: cidadesAtendidas.includes(res.data.localidade.toUpperCase()) ? res.data.localidade.toUpperCase() : 'NÃO DEFINIDO',
+          logradouro: res.data.logradouro,
+          uf: res.data.uf,
+        })
+        setChanges({
+          ...changes,
+          bairro: res.data.bairro,
+          cidade: cidadesAtendidas.includes(res.data.localidade.toUpperCase()) ? res.data.localidade.toUpperCase() : 'NÃO DEFINIDO',
+          logradouro: res.data.logradouro,
+          uf: res.data.uf,
+        })
+      }
+    })
   }
   function getVisitaInfo(id) {
     axios
@@ -81,284 +58,258 @@ function InfoClienteBlock({
         links: 1,
       })
       .then((res) => {
-        console.log(res.data);
+        console.log(res.data)
         if (!project.links?.visitaTecnica) {
-          project.links = { ...project.links, visitaTecnica: res.data.links };
+          project.links = { ...project.links, visitaTecnica: res.data.links }
           setInfo({
             ...infoHolder,
             links: {
               ...infoHolder.links,
               visitaTecnica: res.data.links,
             },
-          });
+          })
           return setChanges({
             ...changes,
-            "links.visitaTecnica": res.data.links,
-          });
+            'links.visitaTecnica': res.data.links,
+          })
         }
-      });
+      })
   }
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-      <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-        INFORMAÇÕES SOBRE O CLIENTE
-      </span>
+    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
+      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">INFORMAÇÕES DO CLIENTE</span>
       <div className="flex gap-2 justify-around flex-wrap">
         <TextInput
-          label={"Nome do contrato"}
-          value={infoHolder.nomeDoContrato ? infoHolder.nomeDoContrato : ""}
+          label={'Nome do contrato'}
+          value={infoHolder.nomeDoContrato ? infoHolder.nomeDoContrato : ''}
           editable={editor}
           handleChange={(value) => {
             setChanges({
               ...changes,
               nomeDoContrato: value.toUpperCase(),
-            });
+            })
             setInfo({
               ...infoHolder,
               nomeDoContrato: value.toUpperCase(),
-            });
+            })
           }}
         />
         <TextInput
-          label={"Nome do Projeto"}
-          value={infoHolder.nomeDoProjeto ? infoHolder.nomeDoProjeto : ""}
+          label={'Nome do Projeto'}
+          value={infoHolder.nomeDoProjeto ? infoHolder.nomeDoProjeto : ''}
           editable={editor}
           handleChange={(value) => {
             setChanges({
               ...changes,
               nomeDoProjeto: value.toUpperCase(),
-            });
+            })
             setInfo({
               ...infoHolder,
               nomeDoProjeto: value.toUpperCase(),
-            });
+            })
           }}
         />
         <TextInput
-          label={"CÓDIGO CRM"}
-          value={infoHolder.codigoSVB ? infoHolder.codigoSVB : ""}
-          editable={session?.user.accessibleRoutes.includes("PPS")}
+          label={'CÓDIGO CRM'}
+          value={infoHolder.codigoSVB ? infoHolder.codigoSVB : ''}
+          editable={session?.user.accessibleRoutes.includes('PPS')}
           handleChange={(value) => {
             setChanges({
               ...changes,
               codigoSVB: value.toUpperCase(),
-            });
+            })
             setInfo({
               ...infoHolder,
               codigoSVB: value.toUpperCase(),
-            });
+            })
           }}
         />
         <TextInput
-          label={"CPF/CNPJ"}
+          label={'CPF/CNPJ'}
           editable={editor}
-          value={
-            infoHolder.cpf_cnpj
-              ? formatCnpjCpf(infoHolder.cpf_cnpj.toString())
-              : ""
-          }
+          value={infoHolder.cpf_cnpj ? formatCnpjCpf(infoHolder.cpf_cnpj.toString()) : ''}
           handleChange={(value) => {
-            setChanges({ ...changes, cpf_cnpj: value });
+            setChanges({ ...changes, cpf_cnpj: value })
             setInfo({
               ...infoHolder,
               cpf_cnpj: value,
-            });
+            })
           }}
         />
         <TextInput
-          label={"Telefone"}
+          label={'Telefone'}
           editable={editor}
-          value={infoHolder.telefone ? infoHolder.telefone : ""}
+          value={infoHolder.telefone ? infoHolder.telefone : ''}
           handleChange={(value) => {
-            setChanges({ ...changes, telefone: value });
-            setInfo({ ...infoHolder, telefone: value });
+            setChanges({ ...changes, telefone: value })
+            setInfo({ ...infoHolder, telefone: value })
           }}
         />
         <SelectInput
-          label={"Cidade"}
+          label={'Cidade'}
           editable={editor}
-          value={
-            cidadesAtendidas.includes(infoHolder.cidade.toUpperCase())
-              ? infoHolder.cidade
-              : "NÃO DEFINIDO"
-          }
+          value={cidadesAtendidas.includes(infoHolder.cidade.toUpperCase()) ? infoHolder.cidade : 'NÃO DEFINIDO'}
           options={[
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+            { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
             ...cidadesAtendidas.map((cidade) => {
-              return { label: cidade, value: cidade };
+              return { label: cidade, value: cidade }
             }),
           ]}
           handleChange={(value) => {
             setChanges({
               ...changes,
               cidade: value,
-            });
+            })
             setInfo({
               ...infoHolder,
               cidade: value,
-            });
+            })
           }}
         />
         <TextInput
-          label={"CEP"}
+          label={'CEP'}
           editable={editor}
-          value={infoHolder.cep ? formataCEP(infoHolder.cep.toString()) : ""}
+          value={infoHolder.cep ? formataCEP(infoHolder.cep.toString()) : ''}
           handleChange={(value) => {
-            setChanges({ ...changes, cep: value });
-            setInfo({ ...infoHolder, cep: value });
+            setChanges({ ...changes, cep: value })
+            setInfo({ ...infoHolder, cep: value })
           }}
         />
         {editor && (
-          <button
-            onClick={() => findCPF()}
-            className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-          >
+          <button onClick={() => findCPF()} className="flex items-center p-1 h-[30px] bg-[#fead61] rounded">
             <AiOutlineSearch />
           </button>
         )}
 
         <TextInput
-          label={"Logradouro"}
+          label={'Logradouro'}
           editable={editor}
-          value={infoHolder.logradouro ? infoHolder.logradouro : ""}
+          value={infoHolder.logradouro ? infoHolder.logradouro : ''}
           handleChange={(value) => {
-            setChanges({ ...changes, logradouro: value });
-            setInfo({ ...infoHolder, logradouro: value });
+            setChanges({ ...changes, logradouro: value })
+            setInfo({ ...infoHolder, logradouro: value })
           }}
         />
         <TextInput
-          label={"Bairro"}
+          label={'Bairro'}
           editable={editor}
-          value={infoHolder.bairro ? infoHolder.bairro : ""}
+          value={infoHolder.bairro ? infoHolder.bairro : ''}
           handleChange={(value) => {
-            setChanges({ ...changes, bairro: value });
-            setInfo({ ...infoHolder, bairro: value });
+            setChanges({ ...changes, bairro: value })
+            setInfo({ ...infoHolder, bairro: value })
           }}
         />
         <TextInput
-          label={"Número da residência"}
+          label={'Número da residência'}
           editable={editor}
           value={infoHolder.numeroResidencia ? infoHolder.numeroResidencia : 0}
           handleChange={(value) => {
             setChanges({
               ...changes,
               numeroResidencia: value,
-            });
+            })
             setInfo({
               ...infoHolder,
               numeroResidencia: value,
-            });
+            })
           }}
         />
         <SelectInput
-          label={"Regional"}
+          label={'Regional'}
           editable={editor}
-          value={infoHolder.regional ? infoHolder.regional : "NÃO DEFINIDO"}
+          value={infoHolder.regional ? infoHolder.regional : 'NÃO DEFINIDO'}
           options={[
             {
-              label: "REGIONAL ITUIUTABA",
-              value: "REGIONAL ITUIUTABA",
+              label: 'REGIONAL ITUIUTABA',
+              value: 'REGIONAL ITUIUTABA',
             },
             {
-              label: "REGIONAL UBERLÂNDIA",
-              value: "REGIONAL UBERLÂNDIA",
+              label: 'REGIONAL UBERLÂNDIA',
+              value: 'REGIONAL UBERLÂNDIA',
             },
             {
-              label: "NÃO DEFINIDO",
-              value: "NÃO DEFINIDO",
+              label: 'NÃO DEFINIDO',
+              value: 'NÃO DEFINIDO',
             },
           ]}
           handleChange={(value) => {
-            setChanges({ ...changes, regional: value });
-            setInfo({ ...infoHolder, regional: value });
+            setChanges({ ...changes, regional: value })
+            setInfo({ ...infoHolder, regional: value })
           }}
         />
         <TextInput
-          label={"EMAIL"}
+          label={'EMAIL'}
           editable={editor}
-          value={infoHolder.email ? infoHolder.email : ""}
+          value={infoHolder.email ? infoHolder.email : ''}
           normalCase={true}
           handleChange={(value) => {
-            setChanges({ ...changes, email: value });
-            setInfo({ ...infoHolder, email: value });
+            setChanges({ ...changes, email: value })
+            setInfo({ ...infoHolder, email: value })
           }}
         />
         <SelectInput
-          label={"Canal de venda"}
-          value={
-            infoHolder.canalVenda != undefined && infoHolder.canalVenda != "-"
-              ? infoHolder.canalVenda
-              : "NÃO DEFINIDO"
-          }
+          label={'Canal de venda'}
+          value={infoHolder.canalVenda != undefined && infoHolder.canalVenda != '-' ? infoHolder.canalVenda : 'NÃO DEFINIDO'}
           editable={editor}
           options={[
-            { label: "EVENTO", value: "EVENTO" },
+            { label: 'EVENTO', value: 'EVENTO' },
             {
-              label: "INDICAÇÃO DE AMIGO",
-              value: "INDICAÇÃO DE AMIGO",
+              label: 'INDICAÇÃO DE AMIGO',
+              value: 'INDICAÇÃO DE AMIGO',
             },
-            { label: "INSIDE SALES", value: "INSIDE SALES" },
-            { label: "PASSIVO", value: "PASSIVO" },
-            { label: "PORTA A PORTA", value: "PORTA A PORTA" },
-            { label: "TELEVENDAS", value: "TELEVENDAS" },
-            { label: "NETWORK", value: "NETWORK" },
-            { label: "OUTRO", value: "OUTRO" },
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+            { label: 'INSIDE SALES', value: 'INSIDE SALES' },
+            { label: 'PASSIVO', value: 'PASSIVO' },
+            { label: 'PORTA A PORTA', value: 'PORTA A PORTA' },
+            { label: 'TELEVENDAS', value: 'TELEVENDAS' },
+            { label: 'NETWORK', value: 'NETWORK' },
+            { label: 'OUTRO', value: 'OUTRO' },
+            { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
           ]}
           handleChange={(value) => {
-            setChanges({ ...changes, canalVenda: value });
-            setInfo({ ...infoHolder, canalVenda: value });
+            setChanges({ ...changes, canalVenda: value })
+            setInfo({ ...infoHolder, canalVenda: value })
           }}
         />
         <div className="flex">
           <SelectInput
-            label={"VENDEDOR"}
-            value={
-              infoHolder.vendedor != undefined &&
-              infoHolder.vendedor.nome != "-"
-                ? infoHolder.vendedor.nome
-                : "NÃO DEFINIDO"
-            }
+            label={'VENDEDOR'}
+            value={infoHolder.vendedor != undefined && infoHolder.vendedor.nome != '-' ? infoHolder.vendedor.nome : 'NÃO DEFINIDO'}
             options={vendedores.map((vendedor) => {
               return {
                 label: vendedor.nome,
                 value: vendedor.nome,
-              };
+              }
             })}
             editable={editor}
             handleChange={(value) => {
               setChanges({
                 ...changes,
-                "vendedor.nome": value,
-                "vendedor.codigo":
-                  vendedores.filter((vendedor) => vendedor.nome == value)[0]
-                    .cod || "-",
-              });
+                'vendedor.nome': value,
+                'vendedor.codigo': vendedores.filter((vendedor) => vendedor.nome == value)[0].cod || '-',
+              })
               setInfo({
                 ...infoHolder,
                 vendedor: {
                   ...infoHolder.vendedor,
                   nome: value,
-                  codigo:
-                    vendedores.filter((vendedor) => vendedor.nome == value)[0]
-                      .cod || "-",
+                  codigo: vendedores.filter((vendedor) => vendedor.nome == value)[0].cod || '-',
                 },
-              });
+              })
             }}
           />
         </div>
         <SelectInput
-          label={"INSIDER"}
-          value={infoHolder.insider ? infoHolder.insider : "NÃO DEFINIDO"}
+          label={'INSIDER'}
+          value={infoHolder.insider ? infoHolder.insider : 'NÃO DEFINIDO'}
           options={[
-            { label: "NÃO DEFINIDO", valor: "NÃO DEFINIDO" },
+            { label: 'NÃO DEFINIDO', valor: 'NÃO DEFINIDO' },
             ...vendedores
-              .filter((x) => x.qualificacao?.includes("INSIDE"))
+              .filter((x) => x.qualificacao?.includes('INSIDE'))
               .map((vendedor) => {
                 return {
                   label: vendedor.nome,
                   value: vendedor.nome,
-                };
+                }
               }),
           ]}
           editable={editor}
@@ -366,47 +317,47 @@ function InfoClienteBlock({
             setChanges({
               ...changes,
               insider: value,
-            });
+            })
             setInfo({
               ...infoHolder,
               insider: value,
-            });
+            })
           }}
         />
         <SelectInput
-          label={"SEGMENTO"}
-          value={infoHolder.segmento ? infoHolder.segmento : "NÃO DEFINIDO"}
+          label={'SEGMENTO'}
+          value={infoHolder.segmento ? infoHolder.segmento : 'NÃO DEFINIDO'}
           editable={editor}
           options={[
-            { label: "COMERCIAL", value: "COMERCIAL" },
-            { label: "INDUSTRIAL", value: "INDUSTRIAL" },
-            { label: "RESIDENCIAL", value: "RESIDENCIAL" },
-            { label: "RURAL", value: "RURAL" },
-            { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+            { label: 'COMERCIAL', value: 'COMERCIAL' },
+            { label: 'INDUSTRIAL', value: 'INDUSTRIAL' },
+            { label: 'RESIDENCIAL', value: 'RESIDENCIAL' },
+            { label: 'RURAL', value: 'RURAL' },
+            { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
           ]}
           handleChange={(value) => {
-            setChanges({ ...changes, segmento: value });
-            setInfo({ ...infoHolder, segmento: value });
+            setChanges({ ...changes, segmento: value })
+            setInfo({ ...infoHolder, segmento: value })
           }}
         />
         <TextInput
-          label={"LINK PASTA DO DRIVE"}
+          label={'LINK PASTA DO DRIVE'}
           editable={editor}
           normalCase={true}
-          value={infoHolder.linkDrive ? infoHolder.linkDrive : ""}
+          value={infoHolder.linkDrive ? infoHolder.linkDrive : ''}
           handleChange={(value) => {
-            setChanges({ ...changes, linkDrive: value });
-            setInfo({ ...infoHolder, linkDrive: value });
+            setChanges({ ...changes, linkDrive: value })
+            setInfo({ ...infoHolder, linkDrive: value })
           }}
         />
         <TextInput
-          label={"ID DA VISITA TÉCNICA"}
+          label={'ID DA VISITA TÉCNICA'}
           editable={true}
           normalCase={true}
-          value={infoHolder.idVisitaTecnica ? infoHolder.idVisitaTecnica : ""}
+          value={infoHolder.idVisitaTecnica ? infoHolder.idVisitaTecnica : ''}
           handleChange={(value) => {
-            setChanges({ ...changes, idVisitaTecnica: value });
-            setInfo({ ...infoHolder, idVisitaTecnica: value });
+            setChanges({ ...changes, idVisitaTecnica: value })
+            setInfo({ ...infoHolder, idVisitaTecnica: value })
           }}
         />
         {!project.links?.visitaTecnica && editor ? (
@@ -424,8 +375,8 @@ function InfoClienteBlock({
           editable={editor}
           options={tiposDeServico.map((tipo) => tipo)}
           handleChange={(value) => {
-            setChanges({ ...changes, tipoDeServico: value });
-            setInfo({ ...infoHolder, tipoDeServico: value });
+            setChanges({ ...changes, tipoDeServico: value })
+            setInfo({ ...infoHolder, tipoDeServico: value })
           }}
         />
         <div>
@@ -435,11 +386,11 @@ function InfoClienteBlock({
               setChanges({
                 ...changes,
                 possuiaGD: e.target.checked,
-              });
+              })
               setInfo({
                 ...infoHolder,
                 possuiaGD: e.target.checked,
-              });
+              })
             }}
             type="checkbox"
             name="possuiaGD"
@@ -456,15 +407,15 @@ function InfoClienteBlock({
             onChange={(e) => {
               setChanges({
                 ...changes,
-                "oem.aplicavel": e.target.checked,
-              });
+                'oem.aplicavel': e.target.checked,
+              })
               setInfo({
                 ...infoHolder,
                 oem: {
                   ...infoHolder.oem,
                   aplicavel: e.target.checked,
                 },
-              });
+              })
             }}
             type="checkbox"
             name="possuiOEM"
@@ -476,67 +427,58 @@ function InfoClienteBlock({
         </div>
         {infoHolder.oem?.aplicavel && (
           <NumberInput
-            label={"Duração O&M (anos)"}
+            label={'Duração O&M (anos)'}
             value={infoHolder.oem?.duracao ? infoHolder.oem?.duracao : 0}
             editable={editor}
             handleChange={(value) => {
               setChanges({
                 ...changes,
-                "oem.duracao": Number(value),
-              });
+                'oem.duracao': Number(value),
+              })
               setInfo({
                 ...infoHolder,
                 oem: {
                   ...infoHolder.oem,
                   duracao: Number(value),
                 },
-              });
+              })
             }}
           />
         )}
         {infoHolder.oem?.aplicavel && (
           <>
             <NumberInput
-              label={"QTDE de manutenções"}
-              value={
-                infoHolder.oem?.qtdeManutencoes
-                  ? infoHolder.oem?.qtdeManutencoes
-                  : 0
-              }
+              label={'QTDE de manutenções'}
+              value={infoHolder.oem?.qtdeManutencoes ? infoHolder.oem?.qtdeManutencoes : 0}
               editable={editor}
               handleChange={(value) => {
                 setChanges({
                   ...changes,
-                  "oem.qtdeManutencoes": Number(value),
-                });
+                  'oem.qtdeManutencoes': Number(value),
+                })
                 setInfo({
                   ...infoHolder,
                   oem: {
                     ...infoHolder.oem,
                     qtdeManutencoes: Number(value),
                   },
-                });
+                })
               }}
             />
             <SelectInput
-              label={"PLANO DE O&M"}
+              label={'PLANO DE O&M'}
               editable={editor}
-              value={
-                infoHolder.oem?.plano ? infoHolder.oem.plano : "NÃO DEFINIDO"
-              }
-              options={[
-                ...oemPlans.map((plan) => plan),
-                { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-              ]}
+              value={infoHolder.oem?.plano ? infoHolder.oem.plano : 'NÃO DEFINIDO'}
+              options={[...oemPlans.map((plan) => plan), { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' }]}
               handleChange={(value) => {
-                setChanges({ ...changes, "oem.plano": value });
+                setChanges({ ...changes, 'oem.plano': value })
                 setInfo({
                   ...infoHolder,
                   oem: {
                     ...infoHolder.oem,
                     plano: value,
                   },
-                });
+                })
               }}
             />
           </>
@@ -546,41 +488,34 @@ function InfoClienteBlock({
         <textarea
           value={infoHolder.obsComercial}
           onChange={(e) => {
-            setChanges({ ...changes, obsComercial: e.target.value });
+            setChanges({ ...changes, obsComercial: e.target.value })
             setInfo({
               ...infoHolder,
               obsComercial: e.target.value,
-            });
+            })
           }}
           className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600 text-xs"
         />
       </div>
       {infoHolder.linkDrive && (
         <div className="w-full py-2 flex items-center justify-center">
-          <a
-            className="text-blue-400 font-medium hover:text-[#15599a]"
-            href={infoHolder.linkDrive}
-          >
+          <a className="text-blue-400 font-medium hover:text-[#15599a]" href={infoHolder.linkDrive}>
             LINK PASTA NA NUVEM
           </a>
         </div>
       )}
       {infoHolder.idSolicitacaoContrato ? (
         <div className="w-full flex items-center justify-center">
-          <Link
-            href={`/comercial/publicoFormulario/${infoHolder.idSolicitacaoContrato}`}
-          >
+          <Link href={`/comercial/publicoFormulario/${infoHolder.idSolicitacaoContrato}`}>
             <a className="hover:bg-orange-200 border border-orange-200 p-2 rounded hover:scale-[1.02] duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
-              <FaFilePdf style={{ color: "#fead41", fontSize: "20px" }} />
-              <p className="pl-3 text-sm text-gray-600 font-medium">
-                SOLICITAÇÃO DE CONTRATO
-              </p>
+              <FaFilePdf style={{ color: '#fead41', fontSize: '20px' }} />
+              <p className="pl-3 text-sm text-gray-600 font-medium">SOLICITAÇÃO DE CONTRATO</p>
             </a>
           </Link>
         </div>
       ) : null}
     </div>
-  );
+  )
 }
 
-export default InfoClienteBlock;
+export default InfoClienteBlock

@@ -20,127 +20,28 @@ import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
 import InfoPagamentoBlock from './blocosInfoProjeto/InfoPagamentoBlock'
 import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
 import SaveButton from './utils/Buttons/SaveButton'
-const MODAL_STYLES = {
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%,-50%)',
-  backgroundColor: '#fff',
-  width: '93%',
-  height: '98%',
-  borderRadius: '10px',
-  padding: '10px',
-  zIndex: 1000,
-}
-const OVERLAY_STYLES = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: 'rgba(0,0,0,.7)',
-  zIndex: 1000,
-}
-function formataCPF(cpf) {
-  //retira os caracteres indesejados...
-  cpf = cpf.replace(/[^\d]/g, '')
-  //realizar a formatação...
-  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
-}
-function formataCEP(cep) {
-  cep = cep
-    .replace(/\D/g, '')
-    .replace(/(\d{5})(\d)/, '$1-$2')
-    .replace(/(-\d{3})\d+?$/, '$1')
+import { useClientById } from '../utils/methods/query/clients'
+import LoadingPage from './utils/LoadingPage'
+import ErrorPage from './utils/ErrorPage'
+import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
+import { updateProject } from '../utils/methods/mutation/clients'
+import { useQueryClient } from 'react-query'
 
-  return cep
-}
-function ModalSuprimentos({ setModalIsOpen, modalIsOpen, project, editor, ppsEditor, handleUpdates, credentials }) {
-  useKey('Escape', () => setModalIsOpen(false))
-
+function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
+  useKey('Escape', () => closeModal())
+  const queryClient = useQueryClient()
+  const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
   const [infoHolder, setInfo] = useState(project)
   const [infoVisita, setInfoVisita] = useState({})
   const [changes, setChanges] = useState({})
   const [msg, setMsg] = useState({ text: '', color: '' })
-  async function handleChanges() {
-    axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
-      setMsg({ text: 'Alterações feitas', color: 'text-green-400' })
-      handleUpdates(project._id)
-    })
-    // if (validateChanges().liberar) {
-    //   axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
-    //     setMsg({ text: "Alterações feitas", color: "text-green-400" });
-    //     handleUpdates(project._id);
-    //   });
-    // } else {
-    //   setMsg({ text: validateChanges().message, color: "text-red-400" });
-    // }
-  }
-  function validateChanges() {
-    if (infoHolder.compra.statusLiberacao == 'PAGO' && infoHolder.projeto.iniciar != 'SIM') {
-      return {
-        liberar: false,
-        message: 'Por favor, preencha iniciar projeto.',
-      }
-    }
-    if (infoHolder.compra.statusLiberacao == 'PAGO' && infoHolder.compra.dataPagamento == undefined) {
-      return {
-        liberar: false,
-        message: 'Por favor, preencha a data de pagamento.',
-      }
-    }
-    if (infoHolder.compra.statusEntrega == 'ENTREGUE' && infoHolder.compra.dataEntrega == undefined) {
-      return {
-        liberar: false,
-        message: 'Por favor, preencha a data de entrega.',
-      }
-    }
-    if (infoHolder.compra.statusEntrega == 'EM ROTA' && infoHolder.compra.previsaoEntrega == undefined) {
-      return {
-        liberar: false,
-        message: 'Por favor, preencha a previsão de entrega.',
-      }
-    }
-    if (infoHolder.compra.statusEntrega == 'EM ROTA' && infoHolder.faturamento?.previsaoFaturamento == undefined) {
-      return {
-        liberar: false,
-        message: 'Por favor, preencha as informações de faturamento.',
-      }
-    }
-    if (infoHolder.compra.statusEntrega == 'EM ROTA' && infoHolder.compra.rastreio == undefined) {
-      return {
-        liberar: false,
-        message: 'Por favor, preencha as informações de rastreio.',
-      }
-    }
-    if (infoHolder.projeto.iniciar == 'SIM') {
-      if (infoHolder.compra.previsaoEntrega == undefined) {
-        return {
-          liberar: false,
-          message: 'Preencha previsão de entrega',
-        }
-      } else if (infoHolder.compra.dataPagamento == undefined) {
-        return {
-          liberar: false,
-          message: 'Por favor, preencha a data de pagamento.',
-        }
-      } else if (infoHolder.compra.dataPedido == undefined) {
-        return {
-          liberar: false,
-          message: 'Por favor, preencha a data do pedido.',
-        }
-      } else if (infoHolder.compra.statusEntrega != 'EM ROTA' && infoHolder.compra.statusEntrega != 'ENTREGUE') {
-        return {
-          liberar: false,
-          message: 'Preencha status de entrega válido',
-        }
-      } else {
-        return { liberar: true, message: 'OK' }
-      }
-    } else {
-      return { liberar: true, message: 'OK' }
-    }
-  }
+  const { mutate } = useMutationWithFeedback({
+    mutationKey: ['update-project'],
+    mutationFn: updateProject,
+    affectedQueryKey: ['supply-projects'],
+    queryClient: queryClient,
+  })
+
   function getVisitaInfo(id) {
     axios
       .post(`/api/solicitacoes/getVisitaTecnica/${id}`, {
@@ -148,7 +49,6 @@ function ModalSuprimentos({ setModalIsOpen, modalIsOpen, project, editor, ppsEdi
         obsSuprimentos: 1,
       })
       .then((res) => {
-        console.log(res.data)
         setInfoVisita({
           suprimentos: res.data.suprimentos,
           obsSuprimentos: res.data.obsSuprimentos,
@@ -156,83 +56,92 @@ function ModalSuprimentos({ setModalIsOpen, modalIsOpen, project, editor, ppsEdi
       })
   }
   useEffect(() => {
-    if (infoHolder.idVisitaTecnica?.trim().length > 10) {
-      getVisitaInfo(infoHolder.idVisitaTecnica)
+    if (project?.idVisitaTecnica?.trim().length > 10) {
+      getVisitaInfo(project.idVisitaTecnica)
     }
-  }, [])
-  console.log(infoHolder)
-  console.log(changes)
+    setInfo(project)
+  }, [project])
+  console.log('INFO HOLDER', infoHolder)
+  console.log('CHANGES', changes)
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
         <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
           <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
             <div className="flex gap-2 items-center">
-              <h1 className="text-[#15599a] pl-6  font-bold">
-                {infoHolder.qtde} - {infoHolder.nomeDoContrato}
-              </h1>
-              {infoHolder.codigoSVB && <p className="text-gray-600 text-sm font-bold">#{infoHolder.codigoSVB}</p>}
+              <h1 className="text-[#15599a] pl-6 font-bold">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
+              {project?.codigoSVB && <p className="text-gray-600 text-sm font-bold">#{project.codigoSVB}</p>}
             </div>
             <div className="flex gap-x-2 items-center">
               {msg.text && <p className={`hidden lg:block text-sm italic ${msg.color}`}>{msg.text}</p>}
-              <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={handleChanges} />
+              <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={() => mutate({ id: projectId, changes: changes })} />
               <button>
-                <VscChromeClose onClick={() => setModalIsOpen(false)} style={{ color: 'red' }} />
+                <VscChromeClose onClick={() => closeModal(false)} style={{ color: 'red' }} />
               </button>
             </div>
             <p className={`block lg:hidden text-sm italic ${msg.color}`}>{msg.text}</p>
           </div>
-          <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
-            <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
-
-            <InfoClienteBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
-            <InfoVisitaTecnicaBlock
-              editor={false}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-              infoVisita={infoVisita}
-            />
-            <InfoSistemaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
-            {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(infoHolder.tipoDeServico) &&
-              infoHolder.estruturaPersonalizada.aplicavel == 'SIM' && (
-                <InfoEstruturaBlock
-                  comercialEdition={true}
-                  technicalEdition={false}
-                  infoHolder={infoHolder}
-                  setInfo={setInfo}
-                  changes={changes}
-                  setChanges={setChanges}
-                  showPaymentInfo={false}
-                  project={project}
-                />
-              )}
-            {infoHolder.tipoDeServico != 'MONTAGEM E DESMONTAGEM' && (
-              <InfoCompraBlock
-                editor={true}
-                project={project}
+          {isLoading ? <LoadingPage /> : null}
+          {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
+          {isSuccess && infoHolder ? (
+            <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
+              <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
+              <InfoClienteBlock
+                editor={false}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
-                showDeliveryInfoOnly={false}
-                showMonetaryValues={true}
+                project={project}
               />
-            )}
-            <InfoPagamentoBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
-            <InfoArquivosBlock
-              project={project}
-              infoHolder={infoHolder}
-              categories={[
-                { label: 'DOCUMENTOS', value: 'links.documentos' },
-                { label: 'EQUIPAMENTOS', value: 'links.equipamentos' },
-                { label: 'PROJETOS', value: 'links.projetos' },
-                { label: 'OBRAS', value: 'links.obras' },
-              ]}
-              handleUpdates={handleUpdates}
-            />
-          </div>
+              <InfoVisitaTecnicaBlock
+                editor={false}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                infoVisita={infoVisita}
+              />
+              <InfoSistemaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(infoHolder.tipoDeServico) &&
+                infoHolder.estruturaPersonalizada.aplicavel == 'SIM' && (
+                  <InfoEstruturaBlock
+                    comercialEdition={true}
+                    technicalEdition={false}
+                    infoHolder={infoHolder}
+                    setInfo={setInfo}
+                    changes={changes}
+                    setChanges={setChanges}
+                    showPaymentInfo={false}
+                    project={project}
+                  />
+                )}
+              {infoHolder.tipoDeServico != 'MONTAGEM E DESMONTAGEM' && (
+                <InfoCompraBlock
+                  editor={true}
+                  project={project}
+                  infoHolder={infoHolder}
+                  setInfo={setInfo}
+                  changes={changes}
+                  setChanges={setChanges}
+                  showDeliveryInfoOnly={false}
+                  showMonetaryValues={true}
+                />
+              )}
+              <InfoPagamentoBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              <InfoArquivosBlock
+                project={project}
+                infoHolder={infoHolder}
+                categories={[
+                  { label: 'DOCUMENTOS', value: 'links.documentos' },
+                  { label: 'EQUIPAMENTOS', value: 'links.equipamentos' },
+                  { label: 'PROJETOS', value: 'links.projetos' },
+                  { label: 'OBRAS', value: 'links.obras' },
+                ]}
+                handleUpdates={handleUpdates}
+              />
+            </div>
+          ) : null}
         </div>
       </AnimatedModalWrapper>
     </>

@@ -148,7 +148,7 @@ function Suprimentos() {
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
-                <p className="text-xs text-gray-500">{Number(getStats({ info: projects }).resultado)}</p>
+                <p className="text-xs text-gray-500">{getStats({ info: projects }).potencia} kWp</p>
               </div>
             </div>
             <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
@@ -196,7 +196,7 @@ function Suprimentos() {
           <AnimatePresence>
             {dropdownMenuVisible ? (
               <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
                   <TextInput
                     label={'NOME DO CONTRATO'}
                     value={filters.search}

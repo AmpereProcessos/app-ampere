@@ -78,7 +78,7 @@ function MultipleSelectInput({ width, label, selected, options, selectedItemLabe
       <label htmlFor={inputIdentifier} className="font-sans font-bold  text-[#353432]">
         {label}
       </label>
-      <div className="flex h-full w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm">
+      <div className="flex min-h-[47px]  w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm">
         {selectMenuIsOpen ? (
           <input
             type="text"

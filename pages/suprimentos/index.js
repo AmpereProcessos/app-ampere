@@ -25,6 +25,7 @@ import TextInput from '../../components/inputs/Text'
 import MultipleSelectInput from '../../components/inputs/MultipleSelect'
 import { useQueryClient } from 'react-query'
 import { TbTruckDelivery } from 'react-icons/tb'
+import { supplementationStatus } from '../../utils/select-options'
 function Suprimentos() {
   const queryClient = useQueryClient()
   const router = useRouter()
@@ -58,19 +59,7 @@ function Suprimentos() {
       return 'border border-gray-200'
     }
   }
-  function getListCumulativePeakPot() {
-    if (!projects) return 0
-    var totalSum = 0
-    for (var i = 0; i < projects.length; i++) {
-      let pot = projects[i].sistema.potPico ? projects[i].sistema.potPico : null
-      if (isNaN(pot)) {
-        totalSum = totalSum
-      } else {
-        totalSum = totalSum + pot
-      }
-    }
-    return totalSum.toFixed(2)
-  }
+
   function getStats({ info }) {
     if (!info)
       return {
@@ -101,7 +90,8 @@ function Suprimentos() {
     }, 0)
     const pendingPurchases = info.reduce((acc, current) => {
       const purchased = !!current.compra?.dataPedido
-      if (purchased) return acc + 1
+      const status = current.compra.status
+      if ((!purchased && status == 'NÃO DEFINIDO') || !status) return acc + 1
       else return acc
     }, 0)
     const onDeliveryRoute = info.reduce((acc, current) => {
@@ -150,7 +140,7 @@ function Suprimentos() {
               </div>
             )}
           </div>
-          <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3">
+          <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
             <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
@@ -158,15 +148,7 @@ function Suprimentos() {
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
-              </div>
-            </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
-              <div className="flex items-center justify-between">
-                <h1 className="text-sm font-medium uppercase tracking-tight">POTÊNCIA PICO NO ESTÁGIO</h1>
-                <AiOutlineThunderbolt />
-              </div>
-              <div className="mt-2 flex w-full flex-col">
-                <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).potencia} kWp</div>
+                <p className="text-xs text-gray-500">{Number(getStats({ info: projects }).resultado)}</p>
               </div>
             </div>
             <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
@@ -254,6 +236,11 @@ function Suprimentos() {
                             label: 'PREVISÃO DE ENTREGA',
                             value: 'compra.previsaoEntrega',
                           },
+                          {
+                            id: 3,
+                            label: 'DATA DO PEDIDO',
+                            value: 'compra.dataPedido',
+                          },
                         ]}
                         selectedItemLabel={'NÃO DEFINIDO'}
                         handleChange={(value) =>
@@ -285,23 +272,7 @@ function Suprimentos() {
                   <MultipleSelectInput
                     label={'STATUS DE SUPLEMENTAÇÃO'}
                     selected={filters.supplyStatus}
-                    options={[
-                      {
-                        id: 1,
-                        label: 'DATA PAGAMENTO',
-                        value: 'compra.dataPagamento',
-                      },
-                      {
-                        id: 2,
-                        label: 'DATA MÁX P/ PAGAMENTO',
-                        value: 'compra.dataMaxPagamento',
-                      },
-                      {
-                        id: 3,
-                        label: 'PREVISÃO DE ENTREGA',
-                        value: 'compra.previsaoEntrega',
-                      },
-                    ]}
+                    options={supplementationStatus}
                     selectedItemLabel={'NÃO DEFINIDO'}
                     handleChange={(value) =>
                       setFilters((prev) => ({
@@ -312,7 +283,7 @@ function Suprimentos() {
                     onReset={() =>
                       setFilters((prev) => ({
                         ...prev,
-                        supplyStatus: null,
+                        supplyStatus: [],
                       }))
                     }
                   />
@@ -374,8 +345,8 @@ function Suprimentos() {
                     <p className="text-xs  text-gray-600 uppercase">{project.compra.informacoes ? project.compra.informacoes : '-'}</p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-xxs">LIBERACÃO DE CRÉDITO</span>
-                    <p className="text-xs text-center text-gray-600">{project.compra.statusLiberacao ? project.compra.statusLiberacao : '-'}</p>
+                    <span className="text-xxs">STATUS</span>
+                    <p className="text-xs text-center text-gray-600">{project.compra.status ? project.compra.status : '-'}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 items-center mt-1">

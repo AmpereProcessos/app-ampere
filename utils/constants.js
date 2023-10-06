@@ -1144,6 +1144,11 @@ export const projetistas = [
     cod: 54,
   },
   {
+    nome: 'LAZARO MARQUES',
+    label: 'LAZARO',
+    cod: 55,
+  },
+  {
     nome: 'NÃO DEFINIDO',
     label: 'NÃO DEFINIDO',
     cod: 0,

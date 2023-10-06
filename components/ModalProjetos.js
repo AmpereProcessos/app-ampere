@@ -70,12 +70,31 @@ function ModalProjetos({ setModalIsOpen, modalIsOpen, project, editor, handleUpd
     color: 'text-red-500',
   })
   const [msg, setMsg] = useState('')
+
+  async function notifyAccessGrantingApproval() {
+    const notifyObj = {
+      destinatario: '64638b6c2071c508968bdf08',
+      remetente: 'SISTEMA',
+      mensagem: `Parecer de acesso aprovado.`,
+      projetoReferencia: infoHolder.qtde,
+      nomeDoProjeto: infoHolder.nomeDoContrato,
+    }
+    await axios.post('/api/notificacoes/1', notifyObj)
+    return
+  }
+
   async function handleChanges() {
+    const previousStatus = project.parecer.statusDoParecerDeAcesso
+    const newStatus = infoHolder.parecer.statusDoParecerDeAcesso
+    if (previousStatus != 'PARECER DE ACESSO APROVADO' && newStatus == 'PARECER DE ACESSO APROVADO') {
+      notifyAccessGrantingApproval()
+    }
     axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
       setMsg('Alterações feitas')
       handleUpdates(project._id)
     })
   }
+
   function getParecerWarning(date1, date2) {
     var timeDiff = Math.abs(date2.getTime() - date1.getTime())
     var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24))

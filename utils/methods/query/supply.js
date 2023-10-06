@@ -14,6 +14,7 @@ export function useSupplyProjects({ enabled }) {
   const [filters, setFilters] = useState({
     supplyStatus: [],
     deliveryStatus: [],
+    accessGrantingStatus: [],
     search: '',
     date: {
       after: null,
@@ -30,6 +31,10 @@ export function useSupplyProjects({ enabled }) {
     if (filters.deliveryStatus.length == 0) return true
     return filters.deliveryStatus.includes(project.compra.statusEntrega)
   }
+  function matchAccessGrantingStatus(project) {
+    if (filters.accessGrantingStatus.length == 0) return true
+    return filters.accessGrantingStatus.includes(project.parecer?.statusDoParecerDeAcesso)
+  }
   function matchDate(project) {
     if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
     return (
@@ -43,7 +48,10 @@ export function useSupplyProjects({ enabled }) {
   }
   function handleModelData(data) {
     var modeledData = data
-    return modeledData.filter((project) => matchSupplyStatus(project) && matchDeliveryStatus(project) && matchDate(project) && matchSearch(project))
+    return modeledData.filter(
+      (project) =>
+        matchSupplyStatus(project) && matchDeliveryStatus(project) && matchAccessGrantingStatus(project) && matchDate(project) && matchSearch(project)
+    )
   }
   return {
     ...useQuery({

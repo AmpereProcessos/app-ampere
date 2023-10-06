@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useQueryClient } from 'react-query'
 
 import { formatDate, formatDecimalPlaces } from '../../utils/constants'
-import { supplementationStatus } from '../../utils/select-options'
+import { accessGrantingStatus, supplementationStatus } from '../../utils/select-options'
 import { useSupplyProjects } from '../../utils/methods/query/supply'
 import { formatDateInputChange } from '../../utils/methods/shared'
 
@@ -313,6 +313,25 @@ function Suprimentos() {
                       setFilters((prev) => ({
                         ...prev,
                         deliveryStatus: [],
+                      }))
+                    }
+                  />
+
+                  <MultipleSelectInput
+                    label={'STATUS DO PARECER'}
+                    selected={filters.accessGrantingStatus}
+                    options={accessGrantingStatus}
+                    selectedItemLabel={'NÃO DEFINIDO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        accessGrantingStatus: value,
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        accessGrantingStatus: [],
                       }))
                     }
                   />

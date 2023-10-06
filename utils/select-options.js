@@ -604,3 +604,76 @@ export const engineeringAnalysts = [
       'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-tulio_medeiros?alt=media&token=233e20b5-520d-473a-9e7e-f603a0b9493c',
   },
 ]
+export const accessGrantingStatus = [
+  {
+    id: 1,
+    label: 'AGUARDANDO ASSINATURA',
+    value: 'AGUARDANDO ASSINATURA',
+  },
+  {
+    id: 2,
+    label: 'AGUARDANDO AUMENTO DE CARGA',
+    value: 'AGUARDANDO AUMENTO DE CARGA',
+  },
+  { id: 3, label: 'INICIAR PROJETO', value: 'INICIAR PROJETO' },
+  {
+    id: 4,
+    label: 'SOLICITAR TROCA DE TITULARIDADE',
+    value: 'SOLICITAR TROCA DE TITULARIDADE',
+  },
+  {
+    id: 5,
+    label: 'AGUARDANDO FATURAMENTO ART',
+    value: 'AGUARDANDO FATURAMENTO ART',
+  },
+  {
+    id: 6,
+    label: 'AGUARDANDO FORMULÁRIOS',
+    value: 'AGUARDANDO FORMULÁRIOS',
+  },
+  {
+    id: 7,
+    label: 'AGUARDANDO RESPOSTA DA CONCESSIONARIA',
+    value: 'AGUARDANDO RESPOSTA DA CONCESSIONARIA',
+  },
+  {
+    id: 8,
+    label: 'AGUARDANDO TROCA DE TITULARIDADE',
+    value: 'AGUARDANDO TROCA DE TITULARIDADE',
+  },
+  { id: 9, label: 'AUMENTO DE CARGA', value: 'AUMENTO DE CARGA' },
+  { id: 10, label: 'CANCELADO', value: 'CANCELADO' },
+  {
+    id: 11,
+    label: 'PARECER DE ACESSO SUSPENSO',
+    value: 'PARECER DE ACESSO SUSPENSO',
+  },
+  {
+    id: 12,
+    label: 'PARECER DE ACESSO APROVADO',
+    value: 'PARECER DE ACESSO APROVADO',
+  },
+  { id: 13, label: 'PENDENCIAS', value: 'PENDENCIAS' },
+  { id: 14, label: 'SOLICITAR ACESSO', value: 'SOLICITAR ACESSO' },
+  {
+    id: 15,
+    label: 'SOLICITAR AUMENTO DE CARGA',
+    value: 'SOLICITAR AUMENTO DE CARGA',
+  },
+  {
+    id: 16,
+    label: 'PARECER DE ACESSO COM OBRAS',
+    value: 'PARECER DE ACESSO COM OBRAS',
+  },
+  {
+    id: 17,
+    label: 'AGUARDANDO ANÁLISE DE CARGA',
+    value: 'AGUARDANDO ANÁLISE DE CARGA',
+  },
+  {
+    id: 18,
+    label: 'AGUARDANDO CORREÇÃO DE EQUIPAMENTO',
+    value: 'AGUARDANDO CORREÇÃO DE EQUIPAMENTO',
+  },
+  { id: 19, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+]

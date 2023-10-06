@@ -46,13 +46,8 @@ function InfoArquivosBlock({ project, infoHolder, categories }) {
     return (
       <div className="w-full flex justify-around gap-3 mt-4 flex-wrap px-2">
         {links.map((link, index) => (
-          <div className="w-full lg:w-[400px]">
-            <FileLinkBlock
-              key={`${link.title} - ${index}`}
-              obj={link}
-              prefix={infoHolder.nomeDoContrato}
-              deleteFile={(link) => deleteFile(link, category)}
-            />{' '}
+          <div key={`${link.title} - ${index}`} className="w-full lg:w-[400px]">
+            <FileLinkBlock obj={link} prefix={infoHolder.nomeDoContrato} deleteFile={(link) => deleteFile(link, category)} />{' '}
           </div>
         ))}
       </div>

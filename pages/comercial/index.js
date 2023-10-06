@@ -149,7 +149,7 @@ function Comercial() {
             )}
           </div>
           <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
                 <VscDiffAdded />
@@ -159,7 +159,7 @@ function Comercial() {
                 <p className="text-xs text-gray-500">{getStats({ info: projects }).potencia} kWp</p>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium uppercase tracking-tight">FATURAMENTO</h1>
                 <MdAttachMoney />
@@ -168,7 +168,7 @@ function Comercial() {
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).vendido} </div>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium uppercase tracking-tight">EM CONFECÇÃO</h1>
                 <MdCreate />
@@ -177,7 +177,7 @@ function Comercial() {
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).confeccionar}</div>
               </div>
             </div>
-            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+            <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium uppercase tracking-tight">PARA ASSINAR</h1>
                 <FaSignature />

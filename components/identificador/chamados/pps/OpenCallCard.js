@@ -53,17 +53,6 @@ function OpenCallCard({ call, handleOpenModal }) {
           </div>
           <div className="flex items-center justify-center gap-2">
             <Avatar fallback={'U'} height={25} width={25} url={call.responsavel?.avatar_url || undefined} />
-            {/* <div className="relative h-[25px] w-[25px]">
-              <Image
-                src={call.responsavel.avatar_url}
-                alt="USUÁRIO"
-                title="CONFIGURAÇÕES"
-                fill={true}
-                width={25}
-                height={25}
-                style={{ borderRadius: '100%' }}
-              />
-            </div> */}
             <p className="font-medium text-gray-500 text-xs">{call.responsavel?.apelido || 'À DEFINIR'}</p>
           </div>
         </div>

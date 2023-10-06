@@ -24,6 +24,7 @@ export default async function handler(req, res) {
             tipoDeSolicitacao: 1,
             dataDeAbertura: 1,
             dataDeConclusao: 1,
+            analista: 1,
             solicitacaoContrato: 1,
           },
         },

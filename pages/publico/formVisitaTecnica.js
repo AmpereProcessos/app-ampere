@@ -1,149 +1,133 @@
-import React, { useState } from "react";
-import Image from "next/image";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../../utils/firebase";
-import Logo from "../../utils/whitelogoHD.png";
-import {
-  vendedores,
-  fileTypes,
-  formatProjectCode,
-} from "../../utils/constants";
-import SelectInput from "../../components/SelectInput";
-import TextInput from "../../components/TextInput";
-import FormVisitaTecnicaUm from "../../components/FormVisitaTecnicaUm";
-import FormVisitaTecnicaDois from "../../components/FormVisitaTecnicaDois";
-import FormVisitaTecnicaTres from "../../components/FormVisitaTecnicaTres";
-import FormVisitaTecnicaQuatro from "../../components/FormVisitaTecnicaQuatro";
-import FormVisitaTecnicaRural from "../../components/FormVisitaTecnicaRural";
-import axios from "axios";
-import FormVisitaTecnicaOrcamentacao from "../../components/FormVisitaTecnicaOrcamentacao";
-import FormVisitaTecnicaDesenho from "../../components/FormVisitaTecnicaDesenho";
+import React, { useState } from 'react'
+import Image from 'next/image'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { storage } from '../../utils/firebase'
+import Logo from '../../utils/whitelogoHD.png'
+import { vendedores, fileTypes, formatProjectCode } from '../../utils/constants'
+import SelectInput from '../../components/SelectInput'
+import TextInput from '../../components/TextInput'
+import FormVisitaTecnicaUm from '../../components/FormVisitaTecnicaUm'
+import FormVisitaTecnicaDois from '../../components/FormVisitaTecnicaDois'
+import FormVisitaTecnicaTres from '../../components/FormVisitaTecnicaTres'
+import FormVisitaTecnicaQuatro from '../../components/FormVisitaTecnicaQuatro'
+import FormVisitaTecnicaRural from '../../components/FormVisitaTecnicaRural'
+import axios from 'axios'
+import FormVisitaTecnicaOrcamentacao from '../../components/FormVisitaTecnicaOrcamentacao'
+import FormVisitaTecnicaDesenho from '../../components/FormVisitaTecnicaDesenho'
 function FormVisitaTecnica() {
-  const [sendStatus, setSendStatus] = useState();
+  const [sendStatus, setSendStatus] = useState()
   function formatPhoneNumber(value) {
-    if (!value) return "";
-    value = value.replace(/\D/g, "");
-    value = value.replace(/(\d{2})(\d)/, "($1) $2");
-    value = value.replace(/(\d)(\d{4})$/, "$1-$2");
-    return value;
+    if (!value) return ''
+    value = value.replace(/\D/g, '')
+    value = value.replace(/(\d{2})(\d)/, '($1) $2')
+    value = value.replace(/(\d)(\d{4})$/, '$1-$2')
+    return value
   }
   function formatCnpjCpf(value) {
-    const cnpjCpf = value.replace(/\D/g, "");
+    const cnpjCpf = value.replace(/\D/g, '')
 
     if (cnpjCpf.length === 11) {
-      return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+      return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, '$1.$2.$3-$4')
     }
 
-    return cnpjCpf.replace(
-      /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
-      "$1.$2.$3/$4-$5"
-    );
+    return cnpjCpf.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g, '$1.$2.$3/$4-$5')
   }
   function formatCEP(cep) {
     cep = cep
-      .replace(/\D/g, "")
-      .replace(/(\d{5})(\d)/, "$1-$2")
-      .replace(/(-\d{3})\d+?$/, "$1");
-    return cep;
+      .replace(/\D/g, '')
+      .replace(/(\d{5})(\d)/, '$1-$2')
+      .replace(/(-\d{3})\d+?$/, '$1')
+    return cep
   }
-  const [estagio, setEstagio] = useState(0);
-  const [images, setImages] = useState({});
+  const [estagio, setEstagio] = useState(0)
+  const [images, setImages] = useState({})
   const [dados, setDados] = useState({
-    nomeVendedor: "NÃO DEFINIDO",
-    telefoneVendedor: "",
-    nomeDoCliente: "",
-    telefoneDoCliente: "",
-    codigoSVB: "",
-    cidade: "NÃO DEFINIDO",
-    cep: "",
-    bairro: "",
-    logradouro: "",
-    numeroResidencia: "",
-    tipoInversor: "NÃO DEFINIDO",
-    qtdeInversor: "",
-    potInversor: "",
-    marcaInversor: "",
-    qtdeModulos: "",
-    potModulos: "",
-    marcaModulos: "",
-    obsVisita: "",
-    tipoDeLaudo: "NÃO DEFINIDO",
-    tipoDeSolicitacao: "NÃO DEFINIDO", // RESETAR PARA NÃO DEFINIDO -  VISITA TÉCNICA REMOTA - RURAL
-    amperagem: "NÃO DEFINIDO",
-    tipoDisjuntor: "NÃO DEFINIDO",
-    ramalEntrada: "NÃO DEFINIDO",
-    ramalSaida: "NÃO DEFINIDO",
-    tipoPadrao: "NÃO DEFINIDO",
-    numeroMedidor: "",
-    estruturaMontagem: "NÃO DEFINIDO",
-    tipoEstrutura: "NÃO DEFINIDO",
-    tipoTelha: "NÃO DEFINIDO",
-    telhasReservas: "NÃO DEFINIDO",
-    orientacaoEstrutura: "",
-    distanciaSistemaQuadro: "NÃO DEFINIDO",
-    distanciaInversorRoteador: "NÃO DEFINIDO",
-    obsInstalacao: "",
-  });
-  const [msg, setMsg] = useState({ text: "", color: "" });
-  var links = [];
+    nomeVendedor: 'NÃO DEFINIDO',
+    telefoneVendedor: '',
+    nomeDoCliente: '',
+    telefoneDoCliente: '',
+    codigoSVB: '',
+    cidade: 'NÃO DEFINIDO',
+    cep: '',
+    bairro: '',
+    logradouro: '',
+    numeroResidencia: '',
+    tipoInversor: 'NÃO DEFINIDO',
+    qtdeInversor: '',
+    potInversor: '',
+    marcaInversor: '',
+    qtdeModulos: '',
+    potModulos: '',
+    marcaModulos: '',
+    obsVisita: '',
+    tipoDeLaudo: 'NÃO DEFINIDO',
+    tipoDeSolicitacao: 'NÃO DEFINIDO', // RESETAR PARA NÃO DEFINIDO -  VISITA TÉCNICA REMOTA - RURAL
+    amperagem: 'NÃO DEFINIDO',
+    tipoDisjuntor: 'NÃO DEFINIDO',
+    ramalEntrada: 'NÃO DEFINIDO',
+    ramalSaida: 'NÃO DEFINIDO',
+    tipoPadrao: 'NÃO DEFINIDO',
+    numeroMedidor: '',
+    estruturaMontagem: 'NÃO DEFINIDO',
+    tipoEstrutura: 'NÃO DEFINIDO',
+    tipoTelha: 'NÃO DEFINIDO',
+    telhasReservas: 'NÃO DEFINIDO',
+    orientacaoEstrutura: '',
+    distanciaSistemaQuadro: 'NÃO DEFINIDO',
+    distanciaInversorRoteador: 'NÃO DEFINIDO',
+    obsInstalacao: '',
+  })
+  const [msg, setMsg] = useState({ text: '', color: '' })
+  var links = []
   async function uploadImages() {
-    setSendStatus("loading");
-    setMsg({ text: "Processando...", color: "text-[#15599a]" });
-    let arrOfImagesKeys = Object.keys(images);
+    setSendStatus('loading')
+    setMsg({ text: 'Processando...', color: 'text-[#15599a]' })
+    let arrOfImagesKeys = Object.keys(images)
     try {
       for (let i = 0; i < arrOfImagesKeys.length; i++) {
-        var imageRef = ref(
-          storage,
-          `clientes/${dados.nomeDoCliente}-${dados.codigoSVB}/${
-            arrOfImagesKeys[i]
-          }${(Math.random() * 10000).toFixed(0)}`
-        );
-        let res = await uploadBytes(
-          imageRef,
-          images[arrOfImagesKeys[i]].file
-        ).catch((err) => {
-          setSendStatus("failure");
-          throw `ERRO AO ENVIAR ${images[arrOfImagesKeys[i]].title}`;
-        });
-        console.log(res.metadata);
-        let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-        console.log(url);
+        var imageRef = ref(storage, `clientes/${dados.nomeDoCliente}-${dados.codigoSVB}/${arrOfImagesKeys[i]}${(Math.random() * 10000).toFixed(0)}`)
+        let res = await uploadBytes(imageRef, images[arrOfImagesKeys[i]].file).catch((err) => {
+          setSendStatus('failure')
+          throw `ERRO AO ENVIAR ${images[arrOfImagesKeys[i]].title}`
+        })
+        console.log(res.metadata)
+        let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+        console.log(url)
         links.push({
           title: images[arrOfImagesKeys[i]].title,
           link: url,
-          format: fileTypes[res.metadata.contentType]
-            ? fileTypes[res.metadata.contentType].title
-            : "INDEFINIDO",
-        });
+          format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+        })
       }
     } catch (error) {
-      setMsg({ text: error, color: "text-red-500" });
+      setMsg({ text: error, color: 'text-red-500' })
     }
-    return sendForm();
+    return sendForm()
   }
   function sendForm() {
     axios
-      .post("/api/solicitacoes/visitaTecnica", {
+      .post('/api/solicitacoes/visitaTecnica', {
         ...dados,
         codigoSVB: formatProjectCode(dados.codigoSVB),
         links: links,
         dataDeAbertura: new Date().toISOString(),
+        status: 'PENDENTE',
       })
       .then((res) => {
-        setMsg({ text: "Solicitação enviada!", color: "text-green-500" });
+        setMsg({ text: 'Solicitação enviada!', color: 'text-green-500' })
 
         setTimeout(() => {
-          location.reload();
-        }, 2800);
-        setSendStatus("success");
+          location.reload()
+        }, 2800)
+        setSendStatus('success')
       })
       .catch((err) => {
-        setSendStatus("failure");
-      });
+        setSendStatus('failure')
+      })
   }
   function renderFirstStage(type) {
     switch (type) {
-      case "VISITA TÉCNICA REMOTA - RURAL":
+      case 'VISITA TÉCNICA REMOTA - RURAL':
         return (
           <FormVisitaTecnicaRural
             dados={dados}
@@ -154,8 +138,8 @@ function FormVisitaTecnica() {
             sendStatus={sendStatus}
             voltar={() => setEstagio((prevStage) => prevStage - 1)}
           />
-        );
-      case "VISITA TÉCNICA REMOTA - URBANA":
+        )
+      case 'VISITA TÉCNICA REMOTA - URBANA':
         return (
           <FormVisitaTecnicaDois
             dados={dados}
@@ -165,8 +149,8 @@ function FormVisitaTecnica() {
             avancar={() => setEstagio((prevStage) => prevStage + 1)}
             voltar={() => setEstagio((prevStage) => prevStage - 1)}
           />
-        );
-      case "DESENHO PERSONALIZADO":
+        )
+      case 'DESENHO PERSONALIZADO':
         return (
           <FormVisitaTecnicaDesenho
             dados={dados}
@@ -176,8 +160,8 @@ function FormVisitaTecnica() {
             uploadImages={uploadImages}
             sendStatus={sendStatus}
           />
-        );
-      case "ORÇAMENTAÇÃO":
+        )
+      case 'ORÇAMENTAÇÃO':
         return (
           <FormVisitaTecnicaOrcamentacao
             dados={dados}
@@ -187,9 +171,9 @@ function FormVisitaTecnica() {
             uploadImages={uploadImages}
             sendStatus={sendStatus}
           />
-        );
+        )
       default:
-        return;
+        return
     }
   }
   return (
@@ -197,29 +181,23 @@ function FormVisitaTecnica() {
       <div className="flex self-center items-center h-[100px] w-[100px]">
         <Image src={Logo} />
       </div>
-      <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">
-        Formulário de Visita Técnica
-      </h1>
+      <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">Formulário de Visita Técnica</h1>
       <div className="flex flex-col items-center gap-y-5">
         <div className="w-full flex flex-wrap justify-around border border-[#15599a] p-2 shadow-lg bg-[#fff]">
           <SelectInput
-            label={"Vendedor"}
+            label={'Vendedor'}
             value={dados.nomeVendedor}
             editable={true}
             options={vendedores.map((vendedor) => {
-              return { label: vendedor.nome, value: vendedor.nome };
+              return { label: vendedor.nome, value: vendedor.nome }
             })}
-            handleChange={(value) =>
-              setDados({ ...dados, nomeVendedor: value })
-            }
+            handleChange={(value) => setDados({ ...dados, nomeVendedor: value })}
           />
           <TextInput
-            label={"Telefone"}
+            label={'Telefone'}
             editable={true}
             value={dados.telefoneVendedor}
-            handleChange={(value) =>
-              setDados({ ...dados, telefoneVendedor: formatPhoneNumber(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, telefoneVendedor: formatPhoneNumber(value) })}
           />
         </div>
         {estagio == 0 && (
@@ -278,11 +256,9 @@ function FormVisitaTecnica() {
           />
         )}
       </div>
-      {msg.text && (
-        <p className={`text-center italic text-sm ${msg.color}`}>{msg.text}</p>
-      )}
+      {msg.text && <p className={`text-center italic text-sm ${msg.color}`}>{msg.text}</p>}
     </div>
-  );
+  )
 }
 
-export default FormVisitaTecnica;
+export default FormVisitaTecnica

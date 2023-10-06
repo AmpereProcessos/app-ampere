@@ -41,7 +41,7 @@ function InfoArquivosBlock({ project, infoHolder, categories }) {
       toast.error(msg)
     }
   }
-  function renderLinks(links) {
+  function renderLinks({ links, category }) {
     if (!links) return null
     return (
       <div className="w-full flex justify-around gap-3 mt-4 flex-wrap px-2">
@@ -71,7 +71,7 @@ function InfoArquivosBlock({ project, infoHolder, categories }) {
               <div key={index} className="flex flex-col w-full">
                 <h1 className="w-full p-1 rounded-tl-md rounded-tr-md bg-cyan-700 text-white font-bold text-center">{category.toUpperCase()}</h1>
 
-                {renderLinks(project.links[category])}
+                {renderLinks({ links: project.links[category], category: category })}
                 {/* {project.links[category].map((obj, index2) => (
                     <div className="w-full lg:w-[50%]">
                       <FileLinkBlock

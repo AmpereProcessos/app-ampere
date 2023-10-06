@@ -588,3 +588,19 @@ export const technicalAnalysisStatus = [
   { id: 5, label: 'REJEITADA', value: 'REJEITADA' },
   { id: 6, label: 'PENDENTE', value: 'PENDENTE' },
 ]
+export const engineeringAnalysts = [
+  {
+    id: 1,
+    nome: 'Andrew Borges Alexander',
+    apelido: 'ANDREW',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-andrew_borges_alexander?alt=media&token=1d9787c0-7fd9-4343-9674-1ee69c03709b',
+  },
+  {
+    id: 2,
+    nome: 'Tulio Medeiros',
+    apelido: 'TULIO',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-tulio_medeiros?alt=media&token=233e20b5-520d-473a-9e7e-f603a0b9493c',
+  },
+]

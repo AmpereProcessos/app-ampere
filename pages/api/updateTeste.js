@@ -75,6 +75,23 @@ const callResponsibles = {
       'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-leandro_viali?alt=media&token=dffd6966-b6d4-460d-9baa-d467d933a8a7',
   },
 }
+const engineeringAnalysts = {
+  ANDREW: {
+    id: 1,
+    nome: 'Andrew Borges Alexander',
+    apelido: 'ANDREW',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-andrew_borges_alexander?alt=media&token=1d9787c0-7fd9-4343-9674-1ee69c03709b',
+  },
+  TULIO: {
+    id: 2,
+    nome: 'Tulio Medeiros',
+    apelido: 'TULIO',
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-tulio_medeiros?alt=media&token=233e20b5-520d-473a-9e7e-f603a0b9493c',
+  },
+}
+
 function findResponsible(responsibleName) {
   const respObj = callResponsibles[responsibleName]
   if (respObj) return respObj
@@ -117,66 +134,24 @@ function formatStructure(type) {
 }
 
 export default async function handler(req, res) {
-  const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  const collection = db.collection('dados')
-  const kitInfos = await collection
-    .aggregate([
-      {
-        $project: {
-          'contrato.dataAssinatura': 1,
-          'compra.kitInfo': 1,
-          'material.materialFaltante': 1,
+  const db = await connectToRequestsDatabase(process.env.DB_KEY)
+  const collection = db.collection('visitaTecnica')
+  const dbResponse = await collection.updateMany(
+    {
+      dataDeConclusao: { $lt: '2023-10-03T00:00:00.000Z' },
+    },
+    {
+      $set: {
+        analista: {
+          id: 2,
+          nome: 'Tulio Medeiros',
+          apelido: 'TULIO',
+          avatar_url:
+            'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-tulio_medeiros?alt=media&token=233e20b5-520d-473a-9e7e-f603a0b9493c',
         },
       },
-      {
-        $sort: {
-          'contrato.dataAssinatura': -1,
-        },
-      },
-      {
-        $match: {
-          'compra.kitInfo': { $nin: ['', null, 0] },
-          'material.materialFaltante': { $nin: ['', null, 0] },
-        },
-      },
-    ])
-    .toArray()
-  const formatted = kitInfos.map((project) => {
-    const spllited = project.compra.kitInfo.split('\n')
-    const formattedSpllited = spllited.map((i) => {
-      const arr = i.split('-')
-      var qty = null
-      var desc = null
-      if (arr.length > 1) {
-        qty = Number(arr[0].trim())
-        desc = arr[1]
-      } else desc = arr[0]
-
-      return {
-        qtde: qty,
-        descricao: desc,
-      }
-    })
-    return formattedSpllited
-  })
-  const formatted2 = kitInfos.map((project) => {
-    const spllited = project.material.materialFaltante.split('\n')
-    const formattedSpllited = spllited.map((i) => {
-      const arr = i.split('-')
-      var qty = null
-      var desc = null
-      if (arr.length > 1) {
-        qty = Number(arr[0].trim())
-        desc = arr[1]
-      } else desc = arr[0]
-
-      return {
-        qtde: qty,
-        descricao: desc,
-      }
-    })
-    return formattedSpllited
-  })
+    }
+  )
   // const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
   // const crmUsersCollection = crmDb.collection('users')
 
@@ -226,7 +201,7 @@ export default async function handler(req, res) {
   //   }
   // })
   // console.log(newPPSCalls.length)
-  res.json(formatted2)
+  res.json(dbResponse)
 }
 
 // Update Many example:

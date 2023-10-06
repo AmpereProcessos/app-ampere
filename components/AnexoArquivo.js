@@ -1,130 +1,165 @@
 import React, { useState } from 'react'
-import { fileTypes } from '../utils/constants'
-import TextInput from './TextInput'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { storage } from '../utils/firebase'
 import axios from 'axios'
 import { useQueryClient } from 'react-query'
-function AnexoArquivo({ categories, client, id, prevLinks, multiple }) {
-  const queryClient = useQueryClient()
-  const [fileName, setFileName] = useState('')
-  const [category, setCategory] = useState('NÃO DEFINIDO')
-  const [image, setImage] = useState(null)
-  const [msg, setMsg] = useState({ text: '', color: '' })
+import toast from 'react-hot-toast'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
-  function clearMsg(time = 1500) {
-    setTimeout(() => {
-      setMsg({ text: '', color: '' })
-    }, time)
+import TextInput from './inputs/Text'
+import SelectInput from './inputs/Select'
+
+import { fileTypes, formatLongString } from '../utils/constants'
+import { storage } from '../utils/firebase'
+
+function renderInputText(files) {
+  if (!files)
+    return (
+      <p className="mb-2 text-sm text-gray-500 dark:text-gray-400 px-2 text-center">
+        <span className="font-semibold">Clique para escolher um arquivo</span> ou o arraste para a àrea demarcada
+      </p>
+    )
+  const filesAsArr = Array.from(files)
+  if (filesAsArr.length > 1) {
+    const str = filesAsArr.map((file) => formatLongString(file.name, 15)).join(', ')
+    return <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">{str}</p>
   }
+  return <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">{filesAsArr[0]?.name}</p>
+}
+
+function AnexoArquivo({ categories, client, id, multiple }) {
+  const queryClient = useQueryClient()
+  const [fileInfo, setFileInfo] = useState({
+    name: '',
+    category: null,
+  })
+  const [files, setFiles] = useState(null)
+  const [loading, setLoading] = useState(false)
   async function uploadFiles() {
-    var splitNome = fileName.replace('/', '').toLowerCase().split(' ')
+    if (fileInfo.name.trim().length < 3) {
+      return toast.error('Preencha o nome do arquivo')
+    }
+    if (!fileInfo.category) {
+      return toast.error('Preencha a categoria do arquivo.')
+    }
+    if (!files) return toast.error('Anexe ao menos um arquivo.')
+
+    var splitNome = fileInfo.name.replace('/', '').toLowerCase().split(' ')
     var fixedNome = splitNome.join('_')
-    if (fileName.trim().length < 3) {
-      setMsg({
-        text: 'Por favor, preencha um nome de arquivo válido',
-        color: 'text-red-500',
-      })
-      clearMsg(2000)
-      return
-    }
-    if (category == 'NÃO DEFINIDO') {
-      setMsg({
-        text: 'Por favor, preencha uma categoria',
-        color: 'text-red-500',
-      })
-      clearMsg(2000)
-      return
-    }
+    const loadingToastID = toast.loading('Enviando arquivos...')
     try {
-      var arr = prevLinks[category.split('.')[1]] ? prevLinks[category.split('.')[1]] : []
-      setMsg({ text: 'Enviando arquivos...', color: 'text-[#15599a]' })
-      if (image.length > 0) {
-        for (let i = 0; i < image.length; i++) {
-          let file = image.item(i)
-          let storageName = image.length > 1 ? `clientes/${client}/${fixedNome}-{${i + 1}}` : `clientes/${client}/${fixedNome}`
-          var imageRef = ref(storage, storageName)
-          let res = await uploadBytes(imageRef, file).catch((err) => {
-            throw 'Houve um erro no envio das imagens'
+      var linkArr = []
+      setLoading(true)
+      if (files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          let file = files.item(i)
+          if (!file) return
+          let storageName = files.length > 1 ? `clientes/${client}/${fixedNome}-{${i + 1}}` : `clientes/${client}/${fixedNome}`
+          var fileRef = ref(storage, storageName)
+          const uploadResult = await uploadBytes(fileRef, file)
+          console.log('UPLOAD RESULT', uploadResult)
+          var url = await getDownloadURL(ref(storage, uploadResult.metadata.fullPath))
+          let name = file.length > 1 ? `${fileInfo.name} (${i + 1})` : `${fileInfo.name}`
+          linkArr.push({
+            title: name,
+            link: url,
+            category: categories.filter((x) => x.value == fileInfo.category)[0].label,
+            format:
+              uploadResult.metadata.contentType && fileTypes[uploadResult.metadata.contentType]
+                ? fileTypes[uploadResult.metadata.contentType].title
+                : 'INDEFINIDO',
           })
-          var url = await getDownloadURL(ref(storage, res.metadata.fullPath))
-          let name = image.length > 1 ? `${fileName} (${i + 1})` : `${fileName}`
-          arr = [
-            ...arr,
-            {
-              title: name,
-              link: url,
-              category: categories.filter((x) => x.value == category)[0].label,
-              format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
-            },
-          ]
         }
       }
-      await axios
-        .post(`/api/projects/update/${id}`, {
-          [`${category}`]: arr,
-        })
-        .catch((err) => {
-          throw 'Houve um erro no salvamento dos links.'
-        })
-      setMsg({
-        text: 'Arquivo(s) salvo(s) com sucesso',
-        color: 'text-green-500',
+      // Updating project files
+      await axios.put(`/api/projects/update/${id}`, {
+        operation: {
+          $push: {
+            [`${fileInfo.category}`]: {
+              $each: linkArr,
+            },
+          },
+        },
       })
-      clearMsg()
-      setFileName('')
-      setCategory('NÃO DEFINIDO')
-      setImage(null)
-      console.log(arr)
+
+      // Giving feedback on success
+      toast.dismiss(loadingToastID)
+      toast.success('Arquivos anexados com sucesso !')
+      setFileInfo({ name: '', category: null })
+      setFiles(null)
+      // Invalidating projects query
       await queryClient.invalidateQueries({ queryKey: ['project-by-id', id] })
+      setLoading(false)
       return
     } catch (error) {
-      console.log('ERRO', error)
-      setMsg({
-        text: 'Erro no envio das imagens.',
-        color: 'text-red-500',
-      })
+      setLoading(false)
+      // Giving feedback on error
+      toast.dismiss(loadingToastID)
+      const msg = getErrorMessage(error)
+      toast.error(msg)
     }
   }
+
   return (
-    <div className="flex flex-col gap-2">
-      <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
-        <div className="absolute">
-          {image ? (
-            <div className="flex flex-col items-center">
-              <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-              <span className="block text-gray-400 font-normal text-center">{image.length == 1 ? image[0].name : `${image[0].name}...`}</span>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center">
-              <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-              <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
-            </div>
-          )}
-        </div>
-        <input
-          onChange={(e) => setImage(e.target.files)}
-          className="h-full w-full opacity-0"
-          multiple={multiple != undefined ? multiple : true}
-          type="file"
-          accept=".png, .jpeg, .jpg, .pdf, .docx, .doc, .mp4"
-        />
+    <div className="flex w-full flex-col gap-2 px-4">
+      <div className="relative flex w-full items-center justify-center">
+        <label
+          htmlFor="dropzone-file"
+          className="dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+        >
+          <div className="flex flex-col items-center justify-center pb-6 pt-5">
+            <svg
+              className="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 16"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+              />
+            </svg>
+
+            {renderInputText(files)}
+          </div>
+          <input
+            onChange={(e) => setFiles(e.target.files)}
+            multiple={multiple != undefined ? multiple : true}
+            id="dropzone-file"
+            type="file"
+            className="absolute h-full w-full opacity-0"
+          />
+        </label>
       </div>
-      <input
-        value={fileName}
-        onChange={(e) => setFileName(e.target.value.toUpperCase())}
-        placeholder="Dê um nome para identificação do arquivo."
-        className="outline-none border border-gray-200 p-2"
-      />
-      <select value={category} onChange={(e) => setCategory(e.target.value)} className="p-2 outline-none border border-gray-200">
-        {[...categories, { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' }].map((opt, index) => (
-          <option key={index} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-      {msg.text ? <p className={`text-center italic ${msg.color} text-xs h-[10px] my-1`}>{msg.text}</p> : <div className="h-[10px] my-1"></div>}
-      <button onClick={uploadFiles} className="p-2 rounded bg-blue-400 hover:bg-blue-700 text-white font-bold">
+      <div className="flex w-full flex-col items-center gap-2 lg:flex-row">
+        <div className="w-full lg:w-[50%]">
+          <TextInput
+            label="NOME DO(S) ARQUIVO(S)"
+            placeholder="Preencha o nome a ser dado ao(s) arquivo(s)."
+            value={fileInfo.name}
+            handleChange={(value) => setFileInfo((prev) => ({ ...prev, name: value }))}
+            width="100%"
+          />
+        </div>
+        <div className="w-full lg:w-[50%]">
+          <SelectInput
+            label="CATEGORIA DO(S) ARQUIVO(S)"
+            value={fileInfo.category}
+            options={categories.map((category, index) => ({ value: category.value, label: category.label, id: index + 1 }))}
+            onReset={() => setFileInfo((prev) => ({ ...prev, category: null }))}
+            selectedItemLabel="NÃO DEFINIDO"
+            handleChange={(value) => setFileInfo((prev) => ({ ...prev, category: value }))}
+            width="100%"
+          />
+        </div>
+      </div>
+      <button
+        disabled={loading}
+        onClick={uploadFiles}
+        className="w-fit self-center rounded-md border border-[#15599a] p-1 text-center font-bold text-[#15599a] duration-300 ease-in-out disabled:bg-gray-500 disabled:text-white enabled:hover:bg-[#15599a] enabled:hover:text-white"
+      >
         ANEXAR
       </button>
     </div>

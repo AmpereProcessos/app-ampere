@@ -5,83 +5,93 @@ import { storage } from '../../utils/firebase'
 import AnexoArquivo from '../AnexoArquivo'
 import FileLinkBlock from '../utils/FileLinkBlock'
 import { useQueryClient } from 'react-query'
+import toast from 'react-hot-toast'
+import { getErrorMessage } from '../../utils/methods/handlers'
 
 function InfoArquivosBlock({ project, infoHolder, categories }) {
   const queryClient = useQueryClient()
-  const [msg, setMsg] = useState({ text: '', color: '' })
-  function clearMsg(time = 1500) {
-    setTimeout(() => {
-      setMsg({ text: '', color: '' })
-    }, time)
-  }
 
   async function deleteFile(obj, category) {
     let ableToDelete = categories.some((item) => item.value == `links.${category}`)
-    if (ableToDelete) {
-      setMsg({ text: 'Processando...', color: 'text-[#15599a]' })
-      try {
-        let fileRef = ref(storage, obj.link)
-        let firebaseResponse = await deleteObject(fileRef).catch((err) => {
-          throw new Error('Erro ao excluir arquivo no Firebase.')
-        })
-        let apiResponse = await axios
-          .put(`/api/projects/update/${project._id}`, {
-            operation: {
-              $pull: {
-                [`links.${category}`]: obj,
-              },
-            },
-          })
-          .catch((err) => {
-            throw new Error('Erro ao atualizar links do usuário.')
-          })
-        await queryClient.invalidateQueries({ queryKey: ['project-by-id', project._id] })
-        setMsg({
-          text: 'Arquivo excluido e informações do cliente atualizadas.',
-          color: 'text-green-500',
-        })
-        clearMsg(2500)
-      } catch (error) {
-        setMsg({ text: 'Erro ao excluir arquivo', color: 'text-red-500' })
-        clearMsg()
-      }
-    } else {
-      setMsg({
-        text: 'Seu usuário não tem permissão pra exclusão de arquivos dessa categoria.',
-        color: 'text-red-500',
+    if (!ableToDelete) return toast.error('Seu usuário não possui permissão para exclusão desse arquivo.')
+
+    const loadingToastId = toast.loading('Processando...')
+    try {
+      let fileRef = ref(storage, obj.link)
+      let firebaseResponse = await deleteObject(fileRef).catch((err) => {
+        throw new Error('Erro ao excluir arquivo no Firebase.')
       })
-      clearMsg(2500)
+      let apiResponse = await axios
+        .put(`/api/projects/update/${project._id}`, {
+          operation: {
+            $pull: {
+              [`links.${category}`]: obj,
+            },
+          },
+        })
+        .catch((err) => {
+          throw new Error('Erro ao atualizar links do usuário.')
+        })
+      await queryClient.invalidateQueries({ queryKey: ['project-by-id', project._id] })
+      toast.dismiss(loadingToastId)
+      toast.success('Arquivo excluido com sucesso !')
+    } catch (error) {
+      toast.dismiss(loadingToastId)
+      const msg = getErrorMessage(error)
+      toast.error(msg)
     }
   }
+  function renderLinks(links) {
+    if (!links) return null
+    return (
+      <div className="w-full flex justify-around gap-3 mt-4 flex-wrap px-2">
+        {links.map((link, index) => (
+          <div className="w-full lg:w-[400px]">
+            <FileLinkBlock
+              key={`${link.title} - ${index}`}
+              obj={link}
+              prefix={infoHolder.nomeDoContrato}
+              deleteFile={(link) => deleteFile(link, category)}
+            />{' '}
+          </div>
+        ))}
+      </div>
+    )
+  }
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
+    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md w-full">
       <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">ARQUIVOS DO PROJETO</span>
-      <div className="flex flex-col items-center">
-        <h1 className="text-xs text-center font-bold text-[#15599a] uppercase py-2">ANEXE ARQUIVOS</h1>
+      <div className="flex flex-col items-center w-full">
         <AnexoArquivo
-          id={infoHolder._id}
+          id={project._id}
           prevLinks={project.links ? project.links : {}}
           client={`${infoHolder._id}-${infoHolder.nomeDoContrato}-${infoHolder.codigoSVB}`}
           categories={categories}
         />
       </div>
       {project.links && (
-        <div className="flex justify-center gap-2 gap-y-4 mt-3 flex-wrap">
+        <div className="w-full grid grid-cols-1 gap-2 mt-4">
           {Object.keys(project.links).map((category, index) =>
             project.links[category]?.length > 0 ? (
-              <div key={index} className="flex flex-col w-full lg:w-[45%] p-1 shadow-sm">
-                <h1 className="font-bold text-center text-green-500">{category.toUpperCase()}</h1>
-                <div className="flex flex-col items-center gap-1">
-                  {project.links[category].map((obj, index2) => (
-                    <FileLinkBlock key={index2} obj={obj} prefix={infoHolder.nomeDoContrato} deleteFile={(obj) => deleteFile(obj, category)} />
-                  ))}
-                </div>
+              <div key={index} className="flex flex-col w-full">
+                <h1 className="w-full p-1 rounded-tl-md rounded-tr-md bg-cyan-700 text-white font-bold text-center">{category.toUpperCase()}</h1>
+
+                {renderLinks(project.links[category])}
+                {/* {project.links[category].map((obj, index2) => (
+                    <div className="w-full lg:w-[50%]">
+                      <FileLinkBlock
+                        key={`${obj.title} - ${index2}`}
+                        obj={obj}
+                        prefix={infoHolder.nomeDoContrato}
+                        deleteFile={(obj) => deleteFile(obj, category)}
+                      />
+                    </div>
+                  ))} */}
               </div>
             ) : null
           )}
         </div>
       )}
-      {msg.text ? <p className={`text-center italic h-[20px] text-sm ${msg.color}`}>{msg.text}</p> : <div className="h-[20px]"></div>}
     </div>
   )
 }

@@ -576,3 +576,15 @@ export const allSellers = [
   },
 ]
 export const insiders = allSellers.filter((s) => s.qualification?.includes('INSIDE'))
+export const technicalAnalysisStatus = [
+  { id: 1, label: 'CONCLUIDO', value: 'CONCLUIDO' },
+  { id: 2, label: 'EM ANÁLISE TÉCNICA', value: 'EM ANÁLISE TÉCNICA' },
+  {
+    id: 3,
+    label: 'PENDÊNCIA COMERCIAL',
+    value: 'PENDÊNCIA COMERCIAL',
+  },
+  { id: 4, label: 'VISITA IN LOCO', value: 'VISITA IN LOCO' },
+  { id: 5, label: 'REJEITADA', value: 'REJEITADA' },
+  { id: 6, label: 'PENDENTE', value: 'PENDENTE' },
+]

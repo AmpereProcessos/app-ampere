@@ -67,6 +67,7 @@ function Comercial() {
         vendido: 0,
         confeccionar: 0,
         assinar: 0,
+        vendidoAssinar: 0,
       }
     const projectsQty = info.length
     const totalPower = info.reduce((acc, current) => {
@@ -93,12 +94,23 @@ function Comercial() {
       if (contractReady && notSigned) return acc + 1
       return acc
     }, 0)
+    const soldToSign = info.reduce((acc, current) => {
+      const contractReady = !!current.contrato.dataLiberacao
+      const notSigned = !current.contrato.dataAssinatura
+      const projectValue = !isNaN(current.sistema?.valorProjeto) ? current.sistema.valorProjeto : 0
+      const paValue = !isNaN(current.padrao?.valor) ? current.padrao?.valor : 0
+      const structureValue = !isNaN(current.estruturaPersonalizada?.valor) ? current.estruturaPersonalizada.valor : 0
+
+      if (contractReady && notSigned) return acc + projectValue + paValue + structureValue
+      return acc
+    }, 0)
     return {
       projetos: projectsQty,
       potencia: formatDecimalPlaces(totalPower, 2),
       vendido: formatToMoney(totalSold),
       confeccionar: contractsToMake,
       assinar: contractsToSign,
+      vendidoAssinar: formatToMoney(soldToSign),
     }
   }
 
@@ -172,6 +184,7 @@ function Comercial() {
               </div>
               <div className="mt-2 flex w-full flex-col">
                 <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).assinar}</div>
+                <p className="text-xs text-gray-500">{getStats({ info: projects }).vendidoAssinar} para assinar</p>
               </div>
             </div>
           </div>
@@ -376,7 +389,7 @@ function Comercial() {
             ) : null}
           </AnimatePresence>
         </div>
-        <div className="flex  justify-around gap-3 mt-4 flex-wrap">
+        <div className="flex justify-around gap-3 mt-4 flex-wrap">
           {projects.map((project, index) => (
             <motion.div
               onClick={() => {

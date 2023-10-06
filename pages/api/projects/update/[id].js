@@ -1,13 +1,14 @@
-import { ObjectId } from "mongodb";
-import connectToDatabase from "../../../../utils/connectDb";
-import { getSession } from "next-auth/react";
+import { ObjectId } from 'mongodb'
+import connectToDatabase from '../../../../utils/connectDb'
+import { getSession } from 'next-auth/react'
+import { errorHandler } from '../../../../utils/methods/handlers'
 export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const session = await getSession({ req: req });
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
-    const logCollection = db.collection("logAlteracoes");
-    delete req.body._id;
+  if (req.method === 'POST') {
+    const session = await getSession({ req: req })
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
+    const logCollection = db.collection('logAlteracoes')
+    delete req.body._id
 
     // logging changes in changes collections
     const logObject = {
@@ -18,42 +19,33 @@ export default async function handler(req, res) {
       idProjetoAlterado: req.query.id,
       alteracoes: req.body,
       dataAlteracao: new Date().toISOString(),
-      dataAlteracaoFormatada: new Date().toLocaleString("pt-br"),
-    };
+      dataAlteracaoFormatada: new Date().toLocaleString('pt-br'),
+    }
     if (session && Object.keys(req.body).length > 0) {
-      await logCollection.insertOne(logObject);
+      await logCollection.insertOne(logObject)
     }
     // let obj = await collection.findOne({ _id: ObjectId(req.query.id) });
-    var newObj = await collection.updateOne(
-      { _id: ObjectId(req.query.id) },
-      { $set: { ...req.body } }
-    );
+    var newObj = await collection.updateOne({ _id: ObjectId(req.query.id) }, { $set: { ...req.body } })
     // var newObj = { ...obj, ...req.body };
-    return res.json(newObj);
-  } else if (req.method == "PUT") {
+    return res.json(newObj)
+  } else if (req.method == 'PUT') {
     try {
-      const db = await connectToDatabase(process.env.DB_KEY, "projetos").catch(
-        (err) => {
-          throw err;
-        }
-      );
-      const collection = db.collection("dados");
-      const id = req.query.id;
-      const operation = req.body.operation;
-      console.log(operation);
+      const db = await connectToDatabase(process.env.DB_KEY, 'projetos').catch((err) => {
+        throw err
+      })
+      const collection = db.collection('dados')
+      const id = req.query.id
+      const operation = req.body.operation
+      console.log(operation)
       var newObj = await collection.updateOne(
         {
           _id: ObjectId(id),
         },
         { ...operation }
-      );
-      res.json(newObj);
+      )
+      res.json(newObj)
     } catch (error) {
-      res
-        .status(500)
-        .send(
-          "Erro na comunicação com o servidor, por favor, tente novamente mais tarde."
-        );
+      errorHandler(error, res)
     }
   }
 }

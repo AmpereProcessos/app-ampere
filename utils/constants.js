@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { BsFiletypeCsv, BsFiletypeDocx, BsFiletypePdf, BsFiletypeXlsx, BsFiletypeXml, BsFillPlayBtnFill, BsImage } from 'react-icons/bs'
 //teste
 export const routes = [
   'Projetos',
@@ -228,42 +229,57 @@ export const fileTypes = {
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': {
     title: 'WORD',
     extension: '.docx',
+    icon: BsFiletypeDocx,
   },
   'image/png': {
     title: 'IMAGEM (.PNG)',
     extension: '.png',
+    icon: BsImage,
   },
   'image/jpeg': {
     title: 'IMAGEM(.JPEG)',
     extension: '.jpeg',
+    icon: BsImage,
   },
   'image/tiff': {
     title: 'IMAGEM(.TIFF)',
     extension: '.tiff',
+    icon: BsImage,
   },
   'application/pdf': {
     title: 'PDF',
     extension: '.pdf',
+    icon: BsFiletypePdf,
   },
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
     title: 'EXCEL',
     extension: '.xlsx',
+    icon: BsFiletypeXlsx,
   },
   'text/xml': {
     title: 'XML',
     extension: '.xml',
+    icon: BsFiletypeXml,
   },
   'video/mp4': {
     title: 'MP4',
     extension: '.mp4',
+    icon: BsFillPlayBtnFill,
   },
   'application/vnd.sealed.tiff': {
     title: 'IMAGEM(.TIFF)',
     extension: '.tiff',
+    icon: BsImage,
   },
   'image/vnd.sealedmedia.softseal.jpg': {
     title: 'IMAGEM(.JPG)',
     extension: '.jpg',
+    icon: BsImage,
+  },
+  'text/csv': {
+    title: 'CSV(.CSV)',
+    extension: '.csv',
+    icon: BsFiletypeCsv,
   },
 }
 export const vendedores = [

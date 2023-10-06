@@ -294,7 +294,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
               <SelectInputWithImages
                 label={'ANALISTA RESPONSÁVEL'}
                 labelClassName="font-bold text-gray-800 text-xs"
-                value={dados.analista.id}
+                value={dados.analista?.id}
                 options={engineeringAnalysts.map((analyst) => ({
                   id: analyst.id,
                   label: analyst.apelido,

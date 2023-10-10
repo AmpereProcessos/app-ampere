@@ -309,7 +309,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
         emailTo: 'contasareceber@ampereenergias.com.br', // amperecontasareceber@gmail.com
         subject: 'SOLICITAÇÃO DE CONTRATO',
         message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Formulário disponível no link: https://app.ampereenergias.com.br/comercial/publicoFormulario/${dados._id} . Desde já agradeço, Volts.`,
-        copy: ['comercial@ampereenergias.com.br', 'adm02@ampereenergias.com.br'],
+        copy: ['comercial@ampereenergias.com.br', 'adm02@ampereenergias.com.br', 'estagioadm@ampereenergias.com.br'],
       })
 
       setEmailMsg({ text: 'Email enviado', color: 'text-green-500' })
@@ -369,7 +369,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
         return { duracao: 1, qtdeManutencoes: 2 }
       } else if (plano == 'NÃO SE APLICA') {
         return { duracao: 0, qtdeManutencoes: 0 }
-      }
+      } else return { duracao: 0, qtdeManutencoes: 0 }
     } else {
       return { duracao: 0, qtdeManutencoes: 0 }
     }

@@ -1,30 +1,34 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 import Link from 'next/link'
 import Image from 'next/image'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import dayjs from 'dayjs'
+import toast from 'react-hot-toast'
+
 import NumberInput from './NumberInput'
 import SelectInput from './SelectInput'
 import TextInput from './TextInput'
-import { cidadesAtendidas, distributionCompanies, suprimentoOption, tiposSolicitacaoVisitaTecnica } from '../utils/constants'
 
+import { cidadesAtendidas, distributionCompanies, suprimentoOption, tiposSolicitacaoVisitaTecnica } from '../utils/constants'
+import { getErrorMessage } from '../utils/methods/handlers'
+import { engineeringAnalysts, technicalAnalysisStatus } from '../utils/select-options'
+import { formatNameAsInitials } from '../utils/methods/formatting'
+import { getGenFactorByOrientation } from '../utils/methods/shared'
 import { storage } from '../utils/firebase'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+
 import { AiOutlineSearch } from 'react-icons/ai'
 import { FaSave } from 'react-icons/fa'
 import { VscChromeClose } from 'react-icons/vsc'
 import { MdOutlineAddCircle } from 'react-icons/md'
-import { FiDelete } from 'react-icons/fi'
-import axios from 'axios'
-import SaveButton from './utils/Buttons/SaveButton'
-import CustosVisitaPesquisa from './CustosVisitaPesquisa'
-import { getGenFactorByOrientation } from '../utils/methods/shared'
-import SelectInputWithImages from './inputs/SelectWithImages'
-import { engineeringAnalysts, technicalAnalysisStatus } from '../utils/select-options'
-import { formatNameAsInitials } from '../utils/methods/formatting'
 import { BsCalendarCheckFill } from 'react-icons/bs'
-import dayjs from 'dayjs'
-import toast from 'react-hot-toast'
-import { getErrorMessage } from '../utils/methods/handlers'
+import { FiDelete } from 'react-icons/fi'
+import SaveButton from './utils/Buttons/SaveButton'
+
+import SelectInputWithImages from './inputs/SelectWithImages'
 import SelectInputPersonalized from './inputs/Select'
+import AdditionalCosts from './identificador/visitasTecnicas/AdditionalCostMenu'
+
 const MODAL_STYLES = {
   position: 'fixed',
   top: '50%',
@@ -1905,177 +1909,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   />
                 </div>
               </div>
-              <div className="flex flex-col">
-                <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">CUSTOS ADICIONAIS</span>
-                <CustosVisitaPesquisa setCustoAdicionalHolder={setCustoAdicionalHolder} />
-                <div className="flex w-full items-center">
-                  <div className="flex items-center w-[90%]">
-                    <div className="grid grid-cols-3 lg:grid-cols-7 gap-2 items-center w-full">
-                      <SelectInput
-                        label={'CATEGORIA'}
-                        editable={true}
-                        value={custoAdicionalHolder.categoria}
-                        handleChange={(value) =>
-                          setCustoAdicionalHolder((prev) => ({
-                            ...prev,
-                            categoria: value,
-                          }))
-                        }
-                        options={[
-                          {
-                            label: 'PADRÃO',
-                            value: 'PADRÃO',
-                          },
-                          {
-                            label: 'ESTRUTURA',
-                            value: 'ESTRUTURA',
-                          },
-                          {
-                            label: 'INSTALAÇÃO',
-                            value: 'INSTALAÇÃO',
-                          },
-                          {
-                            label: 'OUTROS',
-                            value: 'OUTROS',
-                          },
-                        ]}
-                        widthFit={true}
-                      />
-                      <TextInput
-                        label={'DESCRIÇÃO'}
-                        editable={true}
-                        value={custoAdicionalHolder.descricao}
-                        handleChange={(value) =>
-                          setCustoAdicionalHolder({
-                            ...custoAdicionalHolder,
-                            descricao: value,
-                          })
-                        }
-                        widthFit={true}
-                      />
-                      <NumberInput
-                        label={'QUANTIDADE'}
-                        editable={true}
-                        value={custoAdicionalHolder.qtde}
-                        handleChange={(value) =>
-                          setCustoAdicionalHolder({
-                            ...custoAdicionalHolder,
-                            qtde: Number(value),
-                          })
-                        }
-                        widthFit={true}
-                      />
-                      <TextInput
-                        label={'GRANDEZA'}
-                        editable={true}
-                        value={custoAdicionalHolder.grandeza}
-                        handleChange={(value) =>
-                          setCustoAdicionalHolder({
-                            ...custoAdicionalHolder,
-                            grandeza: value,
-                          })
-                        }
-                        widthFit={true}
-                      />
-                      <NumberInput
-                        label={'CUSTO'}
-                        editable={true}
-                        value={custoAdicionalHolder.custo}
-                        handleChange={(value) =>
-                          setCustoAdicionalHolder({
-                            ...custoAdicionalHolder,
-                            custo: Number(value),
-                          })
-                        }
-                        widthFit={true}
-                      />
-                      <NumberInput
-                        label={'VALOR'}
-                        editable={true}
-                        value={custoAdicionalHolder.valor}
-                        handleChange={(value) =>
-                          setCustoAdicionalHolder({
-                            ...custoAdicionalHolder,
-                            valor: Number(value),
-                          })
-                        }
-                        widthFit={true}
-                      />
-                      <div className="flex flex-col items-center">
-                        <p className="font-bold font-raleway">TOTAL</p>
-                        <p className="text-gray-600 text-xs text-center">
-                          R$
-                          {(custoAdicionalHolder.qtde * custoAdicionalHolder.valor).toFixed(2).replace('.', ',')}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-center items-center h-fit p-2 rounded cursor-pointer w-[10%]">
-                    <div onClick={addCost} className="bg-green-300 hover:bg-green-500 text-white p-2 rounded cursor-pointer">
-                      <MdOutlineAddCircle style={{ fontSize: '15px' }} />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col mx-12 mt-2 gap-2">
-                  <div className="flex items-center w-full">
-                    <div className="w-[90%] grid grid-cols-7">
-                      <p className="text-md text-[#fead61] font-bold text-center">CATEGORIA</p>
-                      <p className="text-md text-[#fead61] font-bold text-center">DESCRIÇÃO</p>
-                      <p className="text-md text-[#fead61] font-bold text-center">QUANTIDADE</p>
-                      <p className="text-md text-[#fead61] font-bold text-center">GRANDEZA</p>
-                      <p className="text-md text-[#fead61] font-bold text-center">CUSTO (UN)</p>
-                      <p className="text-md text-[#fead61] font-bold text-center">VALOR</p>
-                      <p className="text-md text-[#fead61] font-bold text-center">VALOR TOTAL</p>
-                    </div>
-                    <p className="text-md text-[#fead61] font-bold text-center w-[10%]">EXCLUIR</p>
-                  </div>
-                  {dados.custosAdicionais?.map((custo, index) => (
-                    <div key={index} className="flex items-center w-full">
-                      <div className="grid grid-cols-7 w-[90%]">
-                        <p className="text-xs text-gray-600 font-bold text-center">{custo.categoria}</p>
-                        <p className="text-xs text-gray-600 font-bold text-center">{custo.descricao}</p>
-                        <p className="text-xs text-gray-600 font-bold text-center">{custo.qtde}</p>
-                        <p className="text-xs text-gray-600 font-bold text-center">{custo.grandeza}</p>
-                        <p className="text-xs text-gray-600 font-bold text-center">
-                          R${' '}
-                          {custo.custo
-                            ? Number(custo.custo).toLocaleString('pt-br', {
-                                minimumFractionDigits: 2,
-                              })
-                            : null}
-                        </p>
-                        <p className="text-xs text-gray-600 font-bold text-center">
-                          R${' '}
-                          {custo.valor
-                            ? Number(custo.valor).toLocaleString('pt-br', {
-                                minimumFractionDigits: 2,
-                              })
-                            : null}
-                        </p>
-                        <p className="text-xs text-gray-600 font-bold text-center">
-                          R${' '}
-                          {(custo.valor * custo.qtde).toLocaleString('pt-br', {
-                            minimumFractionDigits: 2,
-                          })}
-                        </p>
-                      </div>
-                      <div
-                        onClick={() => {
-                          let custos = dados.custosAdicionais
-                          custos.splice(index, 1)
-                          setDados({ ...dados, custosAdicionais: custos })
-                        }}
-                        className="flex items-center justify-center cursor-pointer w-[10%]"
-                      >
-                        <div className="bg-red-500 rounded w-fit p-1">
-                          <FiDelete />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <AdditionalCosts info={dados} setInfo={setDados} />
             </div>
             {dados.tipoDeSolicitacao != 'ORÇAMENTAÇÃO' && (
               <div className="flex flex-col items-center">

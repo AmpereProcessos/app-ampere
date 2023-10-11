@@ -71,7 +71,7 @@ export async function handleCRMProjectUpdatesAutomations({ projectId, idCRMProje
       }),
     }
     if (previousData.email) {
-      const crmResponse = await axios.put('/api/integration/rd-station/opportunities', rdIntegrationObject)
+      const crmResponse = await axios.put('/api/integracao/rd-station/opportunities', rdIntegrationObject)
       console.log('RESPONSE', crmResponse)
     }
     await updateProject({ idCRMProject: idCRMProject, changes: changes })

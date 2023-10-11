@@ -1,118 +1,113 @@
-import Image from "next/image";
-import React, { useState, useEffect } from "react";
-import Logo from "../../utils/whitelogoHD.png";
-import Select from "react-select";
-import axios from "axios";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import LoadingPage from "../../components/utils/LoadingPage";
+import Image from 'next/image'
+import React, { useState, useEffect } from 'react'
+import Logo from '../../utils/whitelogoHD.png'
+import Select from 'react-select'
+import axios from 'axios'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import LoadingPage from '../../components/utils/LoadingPage'
 function AberturaChamadoADM() {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/authHome')
     },
-  });
+  })
 
-  const [clients, setClients] = useState([]);
+  const [clients, setClients] = useState([])
   const [callInfo, setCallInfo] = useState({
     nomeCliente: null,
     codigoProjeto: null,
-    demanda: "NÃO DEFINIDO",
-    servico: "",
-    observacoes: "",
+    demanda: 'NÃO DEFINIDO',
+    servico: '',
+    observacoes: '',
     valor: null,
-  });
+  })
   const [msg, setMsg] = useState({
-    text: "",
-    color: "",
-  });
+    text: '',
+    color: '',
+  })
   function getClients() {
-    axios.get("/api/projects/todos").then((res) => setClients(res.data));
+    axios.get('/api/projects/todos').then((res) => setClients(res.data))
   }
   function getText(value) {
-    if (value == "PAGAMENTO") {
-      return "VALOR A SER PAGO";
-    } else if (value == "COBRANÇA") {
-      return "VALOR A COBRAR";
+    if (value == 'PAGAMENTO') {
+      return 'VALOR A SER PAGO'
+    } else if (value == 'COBRANÇA') {
+      return 'VALOR A COBRAR'
     } else {
-      return "VALOR";
+      return 'VALOR'
     }
   }
   useEffect(() => {
     if (session?.user) {
-      getClients();
+      getClients()
     }
-  }, [session]);
+  }, [session])
   function createCall() {
     if (validateInputs()) {
       axios
-        .post("/api/calls/adm/mainData", {
+        .post('/api/chamados/adm/mainData', {
           ...callInfo,
           usuarioEmissor: session?.user?.name,
         })
         .then((res) => {
           setCallInfo({
             ...callInfo,
-            demanda: "NÃO DEFINIDO",
-            servico: "",
-            observacoes: "",
+            demanda: 'NÃO DEFINIDO',
+            servico: '',
+            observacoes: '',
             valor: 0,
-          });
-          setMsg({ text: "Chamado criado", color: "text-green-500" });
-        });
+          })
+          setMsg({ text: 'Chamado criado', color: 'text-green-500' })
+        })
     }
   }
   function validateInputs() {
     if (!callInfo.nomeCliente) {
       setMsg({
-        text: "Por favor, preencha o nome do cliente",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha o nome do cliente',
+        color: 'text-red-500',
+      })
+      return false
     }
-    if (callInfo.demanda == "NÃO DEFINIDO") {
+    if (callInfo.demanda == 'NÃO DEFINIDO') {
       setMsg({
-        text: "Por favor, preencha o tipo de demanda",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha o tipo de demanda',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (!callInfo.valor) {
-      setMsg({ text: "Por favor, preencha o valor", color: "text-red-500" });
-      return false;
+      setMsg({ text: 'Por favor, preencha o valor', color: 'text-red-500' })
+      return false
     }
     if (callInfo.servico.trim().length < 4) {
       setMsg({
-        text: "Por favor, preencha o serviço prestado",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha o serviço prestado',
+        color: 'text-red-500',
+      })
+      return false
     }
-    if (
-      callInfo.demanda == "PAGAMENTO" &&
-      callInfo.nomeRecebedor.trim().length < 3
-    ) {
+    if (callInfo.demanda == 'PAGAMENTO' && callInfo.nomeRecebedor.trim().length < 3) {
       setMsg({
-        text: "Por favor, preencha o nome do recebedor",
-        color: "text-red-500",
-      });
+        text: 'Por favor, preencha o nome do recebedor',
+        color: 'text-red-500',
+      })
     }
-    return true;
+    return true
   }
-  console.log(callInfo);
-  if (status == "loading") return <LoadingPage />;
-  if (status == "authenticated") {
+  console.log(callInfo)
+  if (status == 'loading') return <LoadingPage />
+  if (status == 'authenticated') {
     return (
       <section className="min-h-[100vh] flex items-center justify-center bg-[#fff]">
         <div className="flex flex-col bg-[#fff] p-4 rounded items-center w-[40%] border border-[#15599a]">
-          <h1 className="text-[#15599a] font-bold text-center mt-2">
-            ABERTURA DE CHAMADOS - FINANCEIRO
-          </h1>
+          <h1 className="text-[#15599a] font-bold text-center mt-2">ABERTURA DE CHAMADOS - FINANCEIRO</h1>
           <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 items-center mt-2 w-full">
             <span className="font-bold">NOME DO CLIENTE</span>
-            <div className={"grow"}>
+            <div className={'grow'}>
               <Select
                 isMulti={false}
                 placeholder="NOME DO CLIENTE"
@@ -130,7 +125,7 @@ function AberturaChamadoADM() {
                       qtde: cliente.qtde,
                       nome: cliente.nomeDoContrato,
                     },
-                  };
+                  }
                 })}
               />
             </div>
@@ -139,9 +134,7 @@ function AberturaChamadoADM() {
             <span className="font-bold">DEMANDA</span>
             <select
               value={callInfo.demanda}
-              onChange={(e) =>
-                setCallInfo({ ...callInfo, demanda: e.target.value })
-              }
+              onChange={(e) => setCallInfo({ ...callInfo, demanda: e.target.value })}
               className="outline-none grow border border-gray-200 h-[36px] text-center"
             >
               <option>PAGAMENTO</option>
@@ -165,7 +158,7 @@ function AberturaChamadoADM() {
           <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 items-center mt-2 w-full">
             <span className="font-bold">{getText(callInfo.demanda)}</span>
             <input
-              type={"number"}
+              type={'number'}
               value={callInfo.valor}
               onChange={(e) =>
                 setCallInfo({
@@ -176,11 +169,11 @@ function AberturaChamadoADM() {
               className="outline-none h-[36px] font-sm border border-gray-200 p-2 text-center"
             />
           </div>
-          {callInfo.demanda == "PAGAMENTO" && (
+          {callInfo.demanda == 'PAGAMENTO' && (
             <div className="grid grid-rows-2 grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 items-center mt-2 w-full">
               <span className="font-bold">NOME DO RECEBEDOR</span>
               <input
-                value={callInfo.nomeRecebedor ? callInfo.nomeRecebedor : ""}
+                value={callInfo.nomeRecebedor ? callInfo.nomeRecebedor : ''}
                 onChange={(e) =>
                   setCallInfo({
                     ...callInfo,
@@ -195,7 +188,7 @@ function AberturaChamadoADM() {
             <span className="font-bold text-center">OBSERVAÇÕES</span>
             <textarea
               value={callInfo.observacoes}
-              placeholder={"OBSERVAÇÕES ADICIONAIS AQUI..."}
+              placeholder={'OBSERVAÇÕES ADICIONAIS AQUI...'}
               onChange={(e) =>
                 setCallInfo({
                   ...callInfo,
@@ -207,17 +200,14 @@ function AberturaChamadoADM() {
           </div>
           {msg.text && <p className={`${msg.color} my-1 italic`}>{msg.text}</p>}
           <div className="flex justify-center mt-2">
-            <button
-              onClick={createCall}
-              className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded"
-            >
+            <button onClick={createCall} className="bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold p-2 rounded">
               ABRIR CHAMADO
             </button>
           </div>
         </div>
       </section>
-    );
+    )
   }
 }
 
-export default AberturaChamadoADM;
+export default AberturaChamadoADM

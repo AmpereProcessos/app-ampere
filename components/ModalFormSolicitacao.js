@@ -305,7 +305,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
   }
   async function sendEmail() {
     try {
-      await axios.post('/api/email', {
+      await axios.post('/api/integracao/email', {
         emailTo: 'contasareceber@ampereenergias.com.br', // amperecontasareceber@gmail.com
         subject: 'SOLICITAÇÃO DE CONTRATO',
         message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Formulário disponível no link: https://app.ampereenergias.com.br/comercial/publicoFormulario/${dados._id} . Desde já agradeço, Volts.`,

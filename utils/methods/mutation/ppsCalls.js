@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export async function saveCallChanges({ id, changes }) {
   try {
-    const { data } = await axios.put(`/api/calls/pps/mainData?id=${id}`, { changes: changes })
+    const { data } = await axios.put(`/api/chamados/pps/mainData?id=${id}`, { changes: changes })
     console.log(data)
     return data
   } catch (error) {
@@ -11,7 +11,7 @@ export async function saveCallChanges({ id, changes }) {
 }
 export async function createCall({ info }) {
   try {
-    const { data } = await axios.post('/api/calls/pps/mainData', info)
+    const { data } = await axios.post('/api/chamados/pps/mainData', info)
     return data
   } catch (error) {
     throw error

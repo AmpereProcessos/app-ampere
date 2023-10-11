@@ -182,7 +182,7 @@ async function getServiceOrderById({ collection, id }) {
 }
 async function insertServiceOrder({ collection, info }) {
   try {
-    const dbResponse = await collection.insertOne(info)
+    const dbResponse = await collection.insertOne({ ...info, dataInsercao: new Date().toISOString() })
     return dbResponse
   } catch (error) {
     throw error

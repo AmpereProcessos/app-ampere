@@ -1,55 +1,50 @@
-import React from "react";
-import { AiOutlineSearch } from "react-icons/ai";
-import TextFloatingInput from "./TextFloatingInput";
-import { useState } from "react";
-import axios from "axios";
-import { MdOutlineAddCircle } from "react-icons/md";
+import React from 'react'
+import { AiOutlineSearch } from 'react-icons/ai'
+import TextInput from '../../inputs/Text'
+import { useState } from 'react'
+import axios from 'axios'
+import { MdOutlineAddCircle } from 'react-icons/md'
 function CustosVisitaPesquisa({ setCustoAdicionalHolder }) {
-  const [searchText, setSearchText] = useState("");
-  const [materials, setMaterials] = useState();
-  const [status, setStatus] = useState("neutral");
+  const [searchText, setSearchText] = useState('')
+  const [materials, setMaterials] = useState()
+  const [status, setStatus] = useState('neutral')
   async function searchItems() {
-    setStatus("loading");
+    setStatus('loading')
     try {
-      const { data } = await axios.get(
-        `/api/almoxarifado/pesquisarMateriais?search=${searchText}`
-      );
-      setMaterials(data);
-      setStatus("success");
+      const { data } = await axios.get(`/api/almoxarifado/pesquisarMateriais?search=${searchText}`)
+      setMaterials(data)
+      setStatus('success')
     } catch (error) {
-      setStatus("failure");
+      setStatus('failureaaa')
     }
   }
   function addItemToHolder(obj) {
     setCustoAdicionalHolder({
       descricao: obj.nome,
       qtde: 0,
-      grandeza: "",
+      grandeza: '',
       custo: obj.preco,
       valor: 0,
-    });
+    })
   }
   return (
     <div className="flex flex-col w-full mb-4 my-2 ">
       <div className="flex w-full items-center gap-2">
         <div className="grow">
-          <TextFloatingInput
-            label={"PESQUISA EM ESTOQUE"}
+          <TextInput
+            label={'PESQUISA EM ESTOQUE'}
             editable={true}
             value={searchText}
             handleChange={(value) => setSearchText(value.toUpperCase())}
-            width={"100%"}
+            width={'100%'}
           />
         </div>
 
-        <button
-          onClick={searchItems}
-          className="p-2 rounded-md bg-[#fead61] text-[#15599a]"
-        >
+        <button onClick={searchItems} className="p-2 rounded-md bg-[#fead61] text-[#15599a]">
           <AiOutlineSearch />
         </button>
       </div>
-      {status == "success" ? (
+      {status == 'success' ? (
         <div className="flex flex-col gap-2 w-full">
           <div className="w-full grid grid-cols-4 items-center px-2">
             <h1 className="text-center text-[#fead61] font-bold">NOME</h1>
@@ -58,31 +53,25 @@ function CustosVisitaPesquisa({ setCustoAdicionalHolder }) {
             <h1 className="text-center text-[#fead61] font-bold">AÇÃO</h1>
           </div>
           {materials.map((item, index) => (
-            <div
-              key={index}
-              className="w-full grid grid-cols-4 items-center px-2"
-            >
+            <div key={index} className="w-full grid grid-cols-4 items-center px-2">
               <h1 className="text-center">{item.nome}</h1>
               <h1 className="text-center">{item.qtde}</h1>
               <h1 className="text-center">
-                R${" "}
+                R${' '}
                 {item.preco
-                  ? Number(item.preco).toLocaleString("pt-br", {
+                  ? Number(item.preco).toLocaleString('pt-br', {
                       minimumFractionDigits: 2,
                     })
-                  : "-"}
+                  : '-'}
               </h1>
-              <button
-                onClick={() => addItemToHolder(item)}
-                className="text-green-500 flex items-center justify-center"
-              >
-                <MdOutlineAddCircle style={{ fontSize: "20px" }} />
+              <button onClick={() => addItemToHolder(item)} className="text-green-500 flex items-center justify-center">
+                <MdOutlineAddCircle style={{ fontSize: '20px' }} />
               </button>
             </div>
           ))}
         </div>
       ) : null}
-      {status == "loading" ? (
+      {status == 'loading' ? (
         <div className="w-full flex items-center justify-center" role="status">
           <svg
             aria-hidden="true"
@@ -104,7 +93,7 @@ function CustosVisitaPesquisa({ setCustoAdicionalHolder }) {
         </div>
       ) : null}
     </div>
-  );
+  )
 }
 
-export default CustosVisitaPesquisa;
+export default CustosVisitaPesquisa

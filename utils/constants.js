@@ -2444,7 +2444,7 @@ export function formatLongString(str, size = 35) {
 export async function getDistanceBetweenCities(destination, origin) {
   console.log(process.env.DB_KEY)
   const proxyurl = 'https://cors-anywhere.herokuapp.com/'
-  const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destination}&departure_time=now&key=${process.env.DISTANCE_API}`
+  const url = `https://maps.googleapis.com/maps/api/integracao/google-apis/distancematrix/json?origins=${origin}&destinations=${destination}&departure_time=now&key=${process.env.DISTANCE_API}`
   try {
     const { data } = await axios.post(url, {})
     console.log(data)

@@ -84,7 +84,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, modalIsOpen }
       ultAlteracoes.anotAlteracoes.data = new Date().toJSON()
     }
     axios
-      .put('/api/calls/suporte/updateSuporte', {
+      .put('/api/chamados/suporte/updateSuporte', {
         ...infoHolder,
         ultAlteracoes: ultAlteracoes,
       })
@@ -102,7 +102,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, modalIsOpen }
         ultAlteracoes.statusAlteracoes.data = new Date().toJSON()
       }
       axios
-        .post('/api/calls/suporte/updateSuporte', {
+        .post('/api/chamados/suporte/updateSuporte', {
           ...infoHolder,
           fechamento: new Date(),
           statusChamado: 'RESOLVIDO',
@@ -126,7 +126,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, modalIsOpen }
       ultAlteracoes.statusAlteracoes.data = new Date().toJSON()
     }
     axios
-      .post('/api/calls/suporte/updateSuporte', {
+      .post('/api/chamados/suporte/updateSuporte', {
         ...infoHolder,
         fechamento: '',
         statusChamado: 'ABERTO',
@@ -143,7 +143,7 @@ function ModalCallSuporte({ setModalIsOpen, info, updateModalInfo, modalIsOpen }
       links: arr,
     })
     await axios
-      .put('/api/calls/suporte/updateSuporte', {
+      .put('/api/chamados/suporte/updateSuporte', {
         ...infoHolder,
         links: arr,
       })

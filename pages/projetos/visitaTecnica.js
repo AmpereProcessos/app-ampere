@@ -113,22 +113,22 @@ function VisitaTecnica() {
       <div className="p-6 grow bg-[#fff] flex flex-col">
         <div className="flex flex-col gap-2 items-center w-full border-b border-gray-200 pb-2">
           <h1 className="pb-2 text-[#fead61] text-xl font-bold w-full text-center">FORMULÁRIOS DE VISITA TÉCNICA ({filteredForms?.length})</h1>
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-2">
             <div className="flex items-center gap-2">
               <div className="w-[10px] h-[10px] bg-green-500 rounded" />
-              <p>CONCLUIDO</p>
+              <p className="text-sm md:text-base">CONCLUIDO</p>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-[10px] h-[10px] bg-yellow-500 rounded" />
-              <p>EM ANÁLISE TÉCNICA</p>
+              <p className="text-sm md:text-base">EM ANÁLISE TÉCNICA</p>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-[10px] h-[10px] bg-cyan-500 rounded" />
-              <p>PENDÊNCIA COMERCIAL</p>
+              <p className="text-sm md:text-base">PENDÊNCIA COMERCIAL</p>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-[10px] h-[10px] bg-indigo-500 rounded" />
-              <p>VISITA IN LOCO</p>
+              <p className="text-sm md:text-base">VISITA IN LOCO</p>
             </div>
           </div>
           <div className="flex flex-col lg:flex-row items-end justify-center gap-2 flex-wrap w-full">

@@ -1,188 +1,173 @@
-import React from "react";
-import AnimatedModalWrapper from "./utils/AnimatedModalWrapper";
-import SaveButton from "./utils/Buttons/SaveButton";
-import { FaSave } from "react-icons/fa";
-import { VscChromeClose } from "react-icons/vsc";
-import { useState } from "react";
-import TextFloatingInput from "./TextFloatingInput";
-import SelectFoatingInput from "./SelectFloatingInput";
-import { cidadesAtendidas, cities, formatToPhone } from "../utils/constants";
-import { vendedores } from "../utils/constants";
-import NumberFloatingInput from "./NumberFloatingInput";
-import { AiOutlineSearch } from "react-icons/ai";
-import axios from "axios";
-import estadosECidades from "../utils/estados_cidades.json";
-import irradiacoes from "../utils/irradiancia.json";
+import React from 'react'
+import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
+import SaveButton from './utils/Buttons/SaveButton'
+import { FaSave } from 'react-icons/fa'
+import { VscChromeClose } from 'react-icons/vsc'
+import { useState } from 'react'
+import TextFloatingInput from './TextFloatingInput'
+import SelectFoatingInput from './SelectFloatingInput'
+import { cidadesAtendidas, cities, formatToPhone } from '../utils/constants'
+import { vendedores } from '../utils/constants'
+import NumberFloatingInput from './NumberFloatingInput'
+import { AiOutlineSearch } from 'react-icons/ai'
+import axios from 'axios'
+import estadosECidades from '../utils/estados_cidades.json'
+import irradiacoes from '../utils/irradiancia.json'
 function ModalNewPropostaOeM({ isOpen, closeModal, getProposes, seller }) {
-  const [msg, setMsg] = useState({ text: "", color: "" });
+  const [msg, setMsg] = useState({ text: '', color: '' })
   const [proposeInfo, setProposeInfo] = useState({
-    nomeCliente: "",
-    uf: "MG",
-    cidade: "ITUIUTABA",
-    vendedor: seller ? seller : "NÃO DEFINIDO",
-    telefoneVendedor: "",
+    nomeCliente: '',
+    uf: 'MG',
+    cidade: 'ITUIUTABA',
+    vendedor: seller ? seller : 'NÃO DEFINIDO',
+    telefoneVendedor: '',
     qtdeModulos: 0,
     potModulos: 0,
     distancia: 0,
     eficienciaAtual: 0,
-  });
+  })
 
   function getIrradiance(city) {
     const uf = {
-      MG: "MINAS GERAIS",
-      GO: "GOIÁS",
-    };
-    const irrad = irradiacoes.filter(
-      (city) =>
-        city.NAME.toUpperCase() == proposeInfo.cidade &&
-        city.STATE == proposeInfo.uf
-    )[0];
-    if (irrad) return Number(((irrad.ANNUAL / 1000) * 30 * 0.81).toFixed(2));
-    else return 0;
+      MG: 'MINAS GERAIS',
+      GO: 'GOIÁS',
+    }
+    const irrad = irradiacoes.filter((city) => city.NAME.toUpperCase() == proposeInfo.cidade && city.STATE == proposeInfo.uf)[0]
+    if (irrad) return Number(((irrad.ANNUAL / 1000) * 30 * 0.81).toFixed(2))
+    else return 0
   }
   function validateFields() {
     if (proposeInfo.nomeCliente.trim().length < 3) {
       setMsg({
         status: null,
-        text: "Por favor, preencha um nome válido.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha um nome válido.',
+        color: 'text-red-500',
+      })
+      return false
     }
-    if (proposeInfo.vendedor == "NÃO DEFINIDO") {
+    if (proposeInfo.vendedor == 'NÃO DEFINIDO') {
       setMsg({
         status: null,
-        text: "Por favor, preencha um vendedor.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha um vendedor.',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (proposeInfo.telefoneVendedor.length < 11) {
       setMsg({
         status: null,
-        text: "Por favor, preencha um telefone válido para o vendedor.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha um telefone válido para o vendedor.',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (proposeInfo.qtdeModulos <= 0) {
       setMsg({
         status: null,
-        text: "Por favor, preencha uma quantidade de módulos.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha uma quantidade de módulos.',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (proposeInfo.potModulos <= 0) {
       setMsg({
         status: null,
-        text: "Por favor, preencha a potência dos módulos.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha a potência dos módulos.',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (proposeInfo.distancia < 0) {
       setMsg({
         status: null,
-        text: "Por favor, preencha uma distância válida ou clica na pesquisa automática.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha uma distância válida ou clica na pesquisa automática.',
+        color: 'text-red-500',
+      })
+      return false
     }
-    setMsg({ status: null, text: "", color: "" });
-    return true;
+    setMsg({ status: null, text: '', color: '' })
+    return true
   }
   async function createPropose() {
     if (validateFields()) {
       try {
         setMsg({
-          status: "loading",
-          text: "Processando...",
-          color: "text-[#15599a]",
-        });
-        const genFactor = getIrradiance(proposeInfo.cidade);
-        const { data } = await axios.post("/api/o&m/proposes", {
+          status: 'loading',
+          text: 'Processando...',
+          color: 'text-[#15599a]',
+        })
+        const genFactor = getIrradiance(proposeInfo.cidade)
+        const { data } = await axios.post('/api/o&m/proposes', {
           ...proposeInfo,
           fatorDeGeracao: genFactor,
-        });
+        })
         if (data.acknowledged) {
           setMsg({
-            status: "success",
-            text: "Proposta gerada com sucesso.",
-            color: "text-green-500",
-          });
+            status: 'success',
+            text: 'Proposta gerada com sucesso.',
+            color: 'text-green-500',
+          })
           setProposeInfo({
-            nomeCliente: "",
-            uf: "MG",
-            cidade: "ITUIUTABA",
-            vendedor: "NÃO DEFINIDO",
-            telefoneVendedor: "",
+            nomeCliente: '',
+            uf: 'MG',
+            cidade: 'ITUIUTABA',
+            vendedor: 'NÃO DEFINIDO',
+            telefoneVendedor: '',
             qtdeModulos: 0,
             potModulos: 0,
             distancia: 0,
             eficienciaAtual: 0,
-          });
+          })
           setTimeout(() => {
-            setMsg({ status: null, text: "", color: "" });
-          }, 2000);
-          getProposes();
-        } else throw "Erro na geração de proposta. Por favor tente novamente.";
+            setMsg({ status: null, text: '', color: '' })
+          }, 2000)
+          getProposes()
+        } else throw 'Erro na geração de proposta. Por favor tente novamente.'
       } catch (error) {
-        console.log(error);
+        console.log(error)
         setMsg({
-          status: "failure",
-          text: "Erro na geração de proposta. Por favor tente novamente.",
-          color: "text-red-500",
-        });
+          status: 'failure',
+          text: 'Erro na geração de proposta. Por favor tente novamente.',
+          color: 'text-red-500',
+        })
         setTimeout(() => {
-          setMsg({ status: null, text: "", color: "" });
-        }, 2000);
+          setMsg({ status: null, text: '', color: '' })
+        }, 2000)
       }
     }
   }
   async function getDistanceBetweenCities(destination, origin) {
     try {
-      const { data } = await axios.get(
-        `/api/distance?destination=${destination}&origin=${origin}`
-      );
-      const distance = (data.rows[0].elements[0].distance.value / 1000).toFixed(
-        2
-      );
-      console.log(distance);
-      setProposeInfo((prev) => ({ ...prev, distancia: Number(distance) }));
+      const { data } = await axios.get(`/api/integracao/google-apis/distance?destination=${destination}&origin=${origin}`)
+      const distance = (data.rows[0].elements[0].distance.value / 1000).toFixed(2)
+      console.log(distance)
+      setProposeInfo((prev) => ({ ...prev, distancia: Number(distance) }))
     } catch (error) {
-      console.log("ERROR", error);
+      console.log('ERROR', error)
     }
   }
   function getCities(uf) {
-    var filteredState = estadosECidades.filter((item) => item.sigla == uf)[0];
-    return filteredState.cidades;
+    var filteredState = estadosECidades.filter((item) => item.sigla == uf)[0]
+    return filteredState.cidades
   }
   return (
     <>
-      <AnimatedModalWrapper modalIsOpen={isOpen} width={"60%"} height={"80%"}>
+      <AnimatedModalWrapper modalIsOpen={isOpen} width={'60%'} height={'80%'}>
         <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
           <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg border-b border-gray-200 pb-2">
             <div className="flex gap-x-2">
-              <h1 className="text-[#15599a] pl-6  font-bold">
-                CRIAÇÃO DE PROPOSTA
-              </h1>
+              <h1 className="text-[#15599a] pl-6  font-bold">CRIAÇÃO DE PROPOSTA</h1>
             </div>
             <div className="flex gap-x-2 items-center">
               <button>
-                <VscChromeClose
-                  onClick={() => closeModal()}
-                  style={{ color: "red" }}
-                />
+                <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
               </button>
             </div>
           </div>
           <div className="flex flex-col px-4 py-4 items-center gap-y-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-            <h1 className="text-center w-full text-lg text-[#fead61] font-medium pb-2">
-              INFORMAÇÕES DA VENDA
-            </h1>
+            <h1 className="text-center w-full text-lg text-[#fead61] font-medium pb-2">INFORMAÇÕES DA VENDA</h1>
             <TextFloatingInput
-              label={"NOME DO CLIENTE"}
+              label={'NOME DO CLIENTE'}
               editable={true}
               value={proposeInfo.nomeCliente}
               handleChange={(value) =>
@@ -191,15 +176,15 @@ function ModalNewPropostaOeM({ isOpen, closeModal, getProposes, seller }) {
                   nomeCliente: value.toUpperCase(),
                 }))
               }
-              width={"50%"}
+              width={'50%'}
             />
             <SelectFoatingInput
-              label={"UF"}
+              label={'UF'}
               editable={true}
               value={proposeInfo.uf}
               options={[
-                { label: "MG", value: "MG" },
-                { label: "GO", value: "GO" },
+                { label: 'MG', value: 'MG' },
+                { label: 'GO', value: 'GO' },
               ]}
               handleChange={(value) =>
                 setProposeInfo((prev) => ({
@@ -208,39 +193,35 @@ function ModalNewPropostaOeM({ isOpen, closeModal, getProposes, seller }) {
                   cidade: getCities(value)[0],
                 }))
               }
-              width={"50%"}
+              width={'50%'}
             />
             <SelectFoatingInput
-              label={"CIDADE"}
+              label={'CIDADE'}
               editable={true}
               value={proposeInfo.cidade}
               options={getCities(proposeInfo.uf).map((city) => ({
                 label: city,
                 value: city,
               }))}
-              handleChange={(value) =>
-                setProposeInfo((prev) => ({ ...prev, cidade: value }))
-              }
-              width={"50%"}
+              handleChange={(value) => setProposeInfo((prev) => ({ ...prev, cidade: value }))}
+              width={'50%'}
             />
             {!seller ? (
               <SelectFoatingInput
-                label={"VENDEDOR"}
+                label={'VENDEDOR'}
                 editable={true}
                 value={proposeInfo.vendedor}
                 options={vendedores.map((seller) => ({
                   label: seller.nome,
                   value: seller.value,
                 }))}
-                handleChange={(value) =>
-                  setProposeInfo((prev) => ({ ...prev, vendedor: value }))
-                }
-                width={"50%"}
+                handleChange={(value) => setProposeInfo((prev) => ({ ...prev, vendedor: value }))}
+                width={'50%'}
               />
             ) : null}
 
             <TextFloatingInput
-              label={"TELEFONE DO VENDEDOR"}
+              label={'TELEFONE DO VENDEDOR'}
               editable={true}
               value={proposeInfo.telefoneVendedor}
               handleChange={(value) =>
@@ -249,13 +230,11 @@ function ModalNewPropostaOeM({ isOpen, closeModal, getProposes, seller }) {
                   telefoneVendedor: formatToPhone(value),
                 }))
               }
-              width={"50%"}
+              width={'50%'}
             />
-            <h1 className="text-center w-full text-lg text-[#fead61] font-medium pb-2">
-              INFORMAÇÕES DO SISTEMA
-            </h1>
+            <h1 className="text-center w-full text-lg text-[#fead61] font-medium pb-2">INFORMAÇÕES DO SISTEMA</h1>
             <NumberFloatingInput
-              label={"QUANTIDADE DE MÓDULOS"}
+              label={'QUANTIDADE DE MÓDULOS'}
               editable={true}
               value={proposeInfo.qtdeModulos}
               handleChange={(value) =>
@@ -264,10 +243,10 @@ function ModalNewPropostaOeM({ isOpen, closeModal, getProposes, seller }) {
                   qtdeModulos: Number(value),
                 }))
               }
-              width={"50%"}
+              width={'50%'}
             />
             <NumberFloatingInput
-              label={"POTÊNCIA DOS MÓDULOS"}
+              label={'POTÊNCIA DOS MÓDULOS'}
               editable={true}
               value={proposeInfo.potModulos}
               handleChange={(value) =>
@@ -276,10 +255,10 @@ function ModalNewPropostaOeM({ isOpen, closeModal, getProposes, seller }) {
                   potModulos: Number(value),
                 }))
               }
-              width={"50%"}
+              width={'50%'}
             />
             <NumberFloatingInput
-              label={"EFICIÊNCIA ATUAL (%)"}
+              label={'EFICIÊNCIA ATUAL (%)'}
               editable={true}
               value={proposeInfo.eficienciaAtual}
               handleChange={(value) =>
@@ -288,12 +267,12 @@ function ModalNewPropostaOeM({ isOpen, closeModal, getProposes, seller }) {
                   eficienciaAtual: Number(value),
                 }))
               }
-              width={"50%"}
+              width={'50%'}
             />
             <div className="w-full flex items-center justify-center gap-2">
               <div className="lg:ml-[24px] ml-0 w-full lg:w-[50%]">
                 <NumberFloatingInput
-                  label={"DISTÂNCIA DE ITBA À CIDADE DE INSTALAÇÃO"}
+                  label={'DISTÂNCIA DE ITBA À CIDADE DE INSTALAÇÃO'}
                   editable={true}
                   value={proposeInfo.distancia}
                   handleChange={(value) =>
@@ -302,16 +281,11 @@ function ModalNewPropostaOeM({ isOpen, closeModal, getProposes, seller }) {
                       distancia: Number(value),
                     }))
                   }
-                  width={"100%"}
+                  width={'100%'}
                 />
               </div>
               <button
-                onClick={() =>
-                  getDistanceBetweenCities(
-                    `${proposeInfo.cidade}, ${proposeInfo.uf}, BRASIL`,
-                    "ITUIUTABA, MG, BRASIL"
-                  )
-                }
+                onClick={() => getDistanceBetweenCities(`${proposeInfo.cidade}, ${proposeInfo.uf}, BRASIL`, 'ITUIUTABA, MG, BRASIL')}
                 className="bg-[#fead61] text-[#15599a] p-1 rounded hover:bg-[#15599a] hover:text-[#fead61]"
               >
                 <AiOutlineSearch />
@@ -320,15 +294,12 @@ function ModalNewPropostaOeM({ isOpen, closeModal, getProposes, seller }) {
           </div>
           <div className="w-full flex items-center justify-end pr-2">
             {!msg.status ? (
-              <button
-                onClick={createPropose}
-                className="bg-green-300 p-2 rounded font-medium hover:bg-green-500 hover:text-white"
-              >
+              <button onClick={createPropose} className="bg-green-300 p-2 rounded font-medium hover:bg-green-500 hover:text-white">
                 CRIAR PROPOSTA
               </button>
             ) : (
               <>
-                {msg.status == "loading" ? (
+                {msg.status == 'loading' ? (
                   <div role="status">
                     <svg
                       aria-hidden="true"
@@ -349,23 +320,19 @@ function ModalNewPropostaOeM({ isOpen, closeModal, getProposes, seller }) {
                     <span className="sr-only">Loading...</span>
                   </div>
                 ) : null}
-                {msg.status == "success" ? (
+                {msg.status == 'success' ? (
                   <>
-                    <p className={`text-xs italic ${msg.color} mr-4`}>
-                      {msg.text}
-                    </p>
+                    <p className={`text-xs italic ${msg.color} mr-4`}>{msg.text}</p>
                   </>
                 ) : null}
-                {msg.status == "failure" ? (
-                  <p className={`text-xs italic ${msg.color}`}>{msg.text}</p>
-                ) : null}
+                {msg.status == 'failure' ? <p className={`text-xs italic ${msg.color}`}>{msg.text}</p> : null}
               </>
             )}
           </div>
         </div>
       </AnimatedModalWrapper>
     </>
-  );
+  )
 }
 
-export default ModalNewPropostaOeM;
+export default ModalNewPropostaOeM

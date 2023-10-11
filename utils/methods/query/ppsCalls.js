@@ -3,7 +3,7 @@ import { useQuery } from 'react-query'
 
 export async function fetchOpenPPSCalls() {
   try {
-    const { data } = await axios.get('/api/calls/pps/mainData?status=ABERTOS')
+    const { data } = await axios.get('/api/chamados/pps/mainData?status=ABERTOS')
     return data
   } catch (error) {
     throw error
@@ -20,7 +20,7 @@ export function useOpenPPSCalls(enabled) {
 }
 export async function fetchClosedPPSCalls() {
   try {
-    const { data } = await axios.get('/api/calls/pps/mainData?status=REALIZADOS')
+    const { data } = await axios.get('/api/chamados/pps/mainData?status=REALIZADOS')
     return data
   } catch (error) {
     throw error
@@ -38,7 +38,7 @@ export function useClosedPPSCalls(enabled) {
 
 export async function fetchPPSCall(id) {
   try {
-    const { data } = await axios.get(`/api/calls/getPPS/${id}`)
+    const { data } = await axios.get(`/api/chamados/getPPS/${id}`)
     return data
   } catch (error) {
     throw error

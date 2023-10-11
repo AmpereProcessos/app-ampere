@@ -1,149 +1,141 @@
-import React, { useState } from "react";
-import Logo from "../../utils/whitelogoHD.png";
-import Image from "next/image";
-import TextFloatingInput from "../../components/TextFloatingInput";
-import SelectFoatingInput from "../../components/SelectFloatingInput";
-import estadosECidades from "../../utils/estados_cidades.json";
-import axios from "axios";
-import NumberFloatingInput from "../../components/NumberFloatingInput";
-import { AiOutlineSearch } from "react-icons/ai";
-import { formatToPhone, vendedores } from "../../utils/constants";
-import irradiacoes from "../../utils/irradiancia.json";
-import PropostaPDFModel from "../../components/PropostaPDFModel";
+import React, { useState } from 'react'
+import Logo from '../../utils/whitelogoHD.png'
+import Image from 'next/image'
+import TextFloatingInput from '../../components/TextFloatingInput'
+import SelectFoatingInput from '../../components/SelectFloatingInput'
+import estadosECidades from '../../utils/estados_cidades.json'
+import axios from 'axios'
+import NumberFloatingInput from '../../components/NumberFloatingInput'
+import { AiOutlineSearch } from 'react-icons/ai'
+import { formatToPhone, vendedores } from '../../utils/constants'
+import irradiacoes from '../../utils/irradiancia.json'
+import PropostaPDFModel from '../../components/PropostaPDFModel'
 function PropostaOeM() {
   const [proposeInfo, setProposeInfo] = useState({
-    nomeCliente: "",
-    uf: "MG",
-    cidade: "ITUIUTABA",
-    vendedor: "NÃO DEFINIDO",
-    telefoneVendedor: "",
+    nomeCliente: '',
+    uf: 'MG',
+    cidade: 'ITUIUTABA',
+    vendedor: 'NÃO DEFINIDO',
+    telefoneVendedor: '',
     qtdeModulos: 0,
     potModulos: 0,
     distancia: 0,
     eficienciaAtual: 0,
-  });
-  const [msg, setMsg] = useState({ status: null, text: "", color: "" });
-  const [pageType, setPageType] = useState("FORM");
+  })
+  const [msg, setMsg] = useState({ status: null, text: '', color: '' })
+  const [pageType, setPageType] = useState('FORM')
 
   function getIrradiance(city) {
-    const irrad = irradiacoes.filter(
-      (city) => city.NAME.toUpperCase() == proposeInfo.cidade
-    )[0];
-    if (irrad) return Number(((irrad.ANNUAL / 1000) * 30 * 0.81).toFixed(2));
-    else return 0;
+    const irrad = irradiacoes.filter((city) => city.NAME.toUpperCase() == proposeInfo.cidade)[0]
+    if (irrad) return Number(((irrad.ANNUAL / 1000) * 30 * 0.81).toFixed(2))
+    else return 0
   }
   function validateFields() {
     if (proposeInfo.nomeCliente.trim().length < 3) {
       setMsg({
         status: null,
-        text: "Por favor, preencha um nome válido.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha um nome válido.',
+        color: 'text-red-500',
+      })
+      return false
     }
-    if (proposeInfo.vendedor == "NÃO DEFINIDO") {
+    if (proposeInfo.vendedor == 'NÃO DEFINIDO') {
       setMsg({
         status: null,
-        text: "Por favor, preencha um vendedor.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha um vendedor.',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (proposeInfo.telefoneVendedor.length < 11) {
       setMsg({
         status: null,
-        text: "Por favor, preencha um telefone válido para o vendedor.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha um telefone válido para o vendedor.',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (proposeInfo.qtdeModulos <= 0) {
       setMsg({
         status: null,
-        text: "Por favor, preencha uma quantidade de módulos.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha uma quantidade de módulos.',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (proposeInfo.potModulos <= 0) {
       setMsg({
         status: null,
-        text: "Por favor, preencha a potência dos módulos.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha a potência dos módulos.',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (proposeInfo.distancia < 0) {
       setMsg({
         status: null,
-        text: "Por favor, preencha uma distância válida ou clica na pesquisa automática.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, preencha uma distância válida ou clica na pesquisa automática.',
+        color: 'text-red-500',
+      })
+      return false
     }
-    setMsg({ status: null, text: "", color: "" });
-    return true;
+    setMsg({ status: null, text: '', color: '' })
+    return true
   }
   async function createPropose() {
     if (validateFields()) {
       try {
         setMsg({
-          status: "loading",
-          text: "Processando...",
-          color: "text-[#15599a]",
-        });
-        const genFactor = getIrradiance(proposeInfo.cidade);
-        const { data } = await axios.post("/api/o&m/proposes", {
+          status: 'loading',
+          text: 'Processando...',
+          color: 'text-[#15599a]',
+        })
+        const genFactor = getIrradiance(proposeInfo.cidade)
+        const { data } = await axios.post('/api/o&m/proposes', {
           ...proposeInfo,
           fatorDeGeracao: genFactor,
-        });
+        })
         if (data.acknowledged)
           setMsg({
-            status: "success",
-            text: "Proposta gerada com sucesso.",
-            color: "text-green-500",
-          });
-        else throw "Erro na geração de proposta. Por favor tente novamente.";
+            status: 'success',
+            text: 'Proposta gerada com sucesso.',
+            color: 'text-green-500',
+          })
+        else throw 'Erro na geração de proposta. Por favor tente novamente.'
       } catch (error) {
         setMsg({
-          status: "failure",
-          text: "Erro na geração de proposta. Por favor tente novamente.",
-          color: "text-red-500",
-        });
+          status: 'failure',
+          text: 'Erro na geração de proposta. Por favor tente novamente.',
+          color: 'text-red-500',
+        })
       }
     }
   }
   async function getDistanceBetweenCities(destination, origin) {
     try {
-      const { data } = await axios.get(
-        `/api/distance?destination=${destination}&origin=${origin}`
-      );
-      const distance = (data.rows[0].elements[0].distance.value / 1000).toFixed(
-        2
-      );
-      console.log(distance);
-      setProposeInfo((prev) => ({ ...prev, distancia: Number(distance) }));
+      const { data } = await axios.get(`/api/integracao/google-apis/distance?destination=${destination}&origin=${origin}`)
+      const distance = (data.rows[0].elements[0].distance.value / 1000).toFixed(2)
+      console.log(distance)
+      setProposeInfo((prev) => ({ ...prev, distancia: Number(distance) }))
     } catch (error) {
-      console.log("ERROR", error);
+      console.log('ERROR', error)
     }
   }
   function getCities(uf) {
-    var filteredState = estadosECidades.filter((item) => item.sigla == uf)[0];
-    return filteredState.cidades;
+    var filteredState = estadosECidades.filter((item) => item.sigla == uf)[0]
+    return filteredState.cidades
   }
-  if (pageType == "FORM")
+  if (pageType == 'FORM')
     return (
       <div className="p-6 grow flex flex-col bg-[#15599a] items-center">
         <div className="w-[90%] bg-[#fff] rounded-lg flex flex-col border border-gray-300 shadow-lg p-2 items-center">
           <div className="flex items-center justify-center h-[80px]">
-            <Image height={"80px"} width={"80px"} src={Logo} objectFit="fill" />
+            <Image height={'80px'} width={'80px'} src={Logo} objectFit="fill" />
           </div>
           <div className="flex flex-col w-full px-4 py-4 items-center gap-y-2">
-            <h1 className="text-center w-full text-lg text-[#fead61] font-medium pb-2">
-              INFORMAÇÕES DA VENDA
-            </h1>
+            <h1 className="text-center w-full text-lg text-[#fead61] font-medium pb-2">INFORMAÇÕES DA VENDA</h1>
             <TextFloatingInput
-              label={"NOME DO CLIENTE"}
+              label={'NOME DO CLIENTE'}
               editable={true}
               value={proposeInfo.nomeCliente}
               handleChange={(value) =>
@@ -152,15 +144,15 @@ function PropostaOeM() {
                   nomeCliente: value.toUpperCase(),
                 }))
               }
-              width={"50%"}
+              width={'50%'}
             />
             <SelectFoatingInput
-              label={"UF"}
+              label={'UF'}
               editable={true}
               value={proposeInfo.uf}
               options={[
-                { label: "MG", value: "MG" },
-                { label: "GO", value: "GO" },
+                { label: 'MG', value: 'MG' },
+                { label: 'GO', value: 'GO' },
               ]}
               handleChange={(value) =>
                 setProposeInfo((prev) => ({
@@ -169,36 +161,32 @@ function PropostaOeM() {
                   cidade: getCities(value)[0],
                 }))
               }
-              width={"50%"}
+              width={'50%'}
             />
             <SelectFoatingInput
-              label={"CIDADE"}
+              label={'CIDADE'}
               editable={true}
               value={proposeInfo.cidade}
               options={getCities(proposeInfo.uf).map((city) => ({
                 label: city,
                 value: city,
               }))}
-              handleChange={(value) =>
-                setProposeInfo((prev) => ({ ...prev, cidade: value }))
-              }
-              width={"50%"}
+              handleChange={(value) => setProposeInfo((prev) => ({ ...prev, cidade: value }))}
+              width={'50%'}
             />
             <SelectFoatingInput
-              label={"VENDEDOR"}
+              label={'VENDEDOR'}
               editable={true}
               value={proposeInfo.vendedor}
               options={vendedores.map((seller) => ({
                 label: seller.nome,
                 value: seller.value,
               }))}
-              handleChange={(value) =>
-                setProposeInfo((prev) => ({ ...prev, vendedor: value }))
-              }
-              width={"50%"}
+              handleChange={(value) => setProposeInfo((prev) => ({ ...prev, vendedor: value }))}
+              width={'50%'}
             />
             <TextFloatingInput
-              label={"TELEFONE DO VENDEDOR"}
+              label={'TELEFONE DO VENDEDOR'}
               editable={true}
               value={proposeInfo.telefoneVendedor}
               handleChange={(value) =>
@@ -207,13 +195,11 @@ function PropostaOeM() {
                   telefoneVendedor: formatToPhone(value),
                 }))
               }
-              width={"50%"}
+              width={'50%'}
             />
-            <h1 className="text-center w-full text-lg text-[#fead61] font-medium pb-2">
-              INFORMAÇÕES DO SISTEMA
-            </h1>
+            <h1 className="text-center w-full text-lg text-[#fead61] font-medium pb-2">INFORMAÇÕES DO SISTEMA</h1>
             <NumberFloatingInput
-              label={"QUANTIDADE DE MÓDULOS"}
+              label={'QUANTIDADE DE MÓDULOS'}
               editable={true}
               value={proposeInfo.qtdeModulos}
               handleChange={(value) =>
@@ -222,10 +208,10 @@ function PropostaOeM() {
                   qtdeModulos: Number(value),
                 }))
               }
-              width={"50%"}
+              width={'50%'}
             />
             <NumberFloatingInput
-              label={"POTÊNCIA DOS MÓDULOS"}
+              label={'POTÊNCIA DOS MÓDULOS'}
               editable={true}
               value={proposeInfo.potModulos}
               handleChange={(value) =>
@@ -234,10 +220,10 @@ function PropostaOeM() {
                   potModulos: Number(value),
                 }))
               }
-              width={"50%"}
+              width={'50%'}
             />
             <NumberFloatingInput
-              label={"EFICIÊNCIA ATUAL (%)"}
+              label={'EFICIÊNCIA ATUAL (%)'}
               editable={true}
               value={proposeInfo.eficienciaAtual}
               handleChange={(value) =>
@@ -246,12 +232,12 @@ function PropostaOeM() {
                   eficienciaAtual: Number(value),
                 }))
               }
-              width={"50%"}
+              width={'50%'}
             />
             <div className="w-full flex items-center justify-center gap-2">
               <div className="lg:ml-[24px] ml-0 w-full lg:w-[50%]">
                 <NumberFloatingInput
-                  label={"DISTÂNCIA DE ITBA À CIDADE DE INSTALAÇÃO"}
+                  label={'DISTÂNCIA DE ITBA À CIDADE DE INSTALAÇÃO'}
                   editable={true}
                   value={proposeInfo.distancia}
                   handleChange={(value) =>
@@ -260,16 +246,11 @@ function PropostaOeM() {
                       distancia: Number(value),
                     }))
                   }
-                  width={"100%"}
+                  width={'100%'}
                 />
               </div>
               <button
-                onClick={() =>
-                  getDistanceBetweenCities(
-                    `${proposeInfo.cidade}, ${proposeInfo.uf}, BRASIL`,
-                    "ITUIUTABA, MG, BRASIL"
-                  )
-                }
+                onClick={() => getDistanceBetweenCities(`${proposeInfo.cidade}, ${proposeInfo.uf}, BRASIL`, 'ITUIUTABA, MG, BRASIL')}
                 className="bg-[#fead61] text-[#15599a] p-1 rounded hover:bg-[#15599a] hover:text-[#fead61]"
               >
                 <AiOutlineSearch />
@@ -278,15 +259,12 @@ function PropostaOeM() {
           </div>
           <div className="w-full flex items-center justify-end pr-2">
             {!msg.status ? (
-              <button
-                onClick={createPropose}
-                className="bg-green-300 p-2 rounded font-medium hover:bg-green-500 hover:text-white"
-              >
+              <button onClick={createPropose} className="bg-green-300 p-2 rounded font-medium hover:bg-green-500 hover:text-white">
                 CRIAR PROPOSTA
               </button>
             ) : (
               <>
-                {msg.status == "loading" ? (
+                {msg.status == 'loading' ? (
                   <div role="status">
                     <svg
                       aria-hidden="true"
@@ -307,29 +285,25 @@ function PropostaOeM() {
                     <span className="sr-only">Loading...</span>
                   </div>
                 ) : null}
-                {msg.status == "success" ? (
+                {msg.status == 'success' ? (
                   <>
-                    <p className={`text-xs italic ${msg.color} mr-4`}>
-                      {msg.text}
-                    </p>
+                    <p className={`text-xs italic ${msg.color} mr-4`}>{msg.text}</p>
                     <button
-                      onClick={() => setPageType("PROPOSE")}
+                      onClick={() => setPageType('PROPOSE')}
                       className="bg-green-300 p-2 rounded font-medium hover:bg-green-500 hover:text-white"
                     >
                       VER PROPOSTA
                     </button>
                   </>
                 ) : null}
-                {msg.status == "failure" ? (
-                  <p className={`text-xs italic ${msg.color}`}>{msg.text}</p>
-                ) : null}
+                {msg.status == 'failure' ? <p className={`text-xs italic ${msg.color}`}>{msg.text}</p> : null}
               </>
             )}
           </div>
         </div>
       </div>
-    );
-  if (pageType == "PROPOSE") return <PropostaPDFModel info={proposeInfo} />;
+    )
+  if (pageType == 'PROPOSE') return <PropostaPDFModel info={proposeInfo} />
 }
 
-export default PropostaOeM;
+export default PropostaOeM

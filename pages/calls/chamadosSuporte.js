@@ -1,178 +1,151 @@
-import axios from "axios";
-import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
-import ModalCallSuporte from "../../components/ModalCallSuporte";
-import CreateModal from "../../components/SuportCallCreation";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import { AiOutlineReload } from "react-icons/ai";
-import { MdDateRange } from "react-icons/md";
-import { BsFillPatchCheckFill } from "react-icons/bs";
-import Link from "next/link";
-import Select from "react-select";
-import { AiOutlineSearch } from "react-icons/ai";
-import {
-  cidadesAtendidas,
-  cities,
-  tiposChamadosSuporte,
-} from "../../utils/constants";
-import { AppContext } from "../../context/AppContext";
-import dayjs from "dayjs";
-import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
-import { AnimatePresence, motion } from "framer-motion";
-import FilterButton from "../../components/utils/Buttons/FilterButton";
-import { useSession } from "next-auth/react";
-import LoadingPage from "../../components/utils/LoadingPage";
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import React, { useContext, useEffect, useState } from 'react'
+import ModalCallSuporte from '../../components/ModalCallSuporte'
+import CreateModal from '../../components/SuportCallCreation'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { AiOutlineReload } from 'react-icons/ai'
+import { MdDateRange } from 'react-icons/md'
+import { BsFillPatchCheckFill } from 'react-icons/bs'
+import Link from 'next/link'
+import Select from 'react-select'
+import { AiOutlineSearch } from 'react-icons/ai'
+import { cidadesAtendidas, cities, tiposChamadosSuporte } from '../../utils/constants'
+import { AppContext } from '../../context/AppContext'
+import dayjs from 'dayjs'
+import FetchDataButton from '../../components/utils/Buttons/FetchDataButton'
+import { AnimatePresence, motion } from 'framer-motion'
+import FilterButton from '../../components/utils/Buttons/FilterButton'
+import { useSession } from 'next-auth/react'
+import LoadingPage from '../../components/utils/LoadingPage'
 
 const statusStyles = {
   ABERTO: {
-    textColor: "text-yellow-500",
-    borderColor: "border-yellow-500",
+    textColor: 'text-yellow-500',
+    borderColor: 'border-yellow-500',
   },
   PENDENTE: {
-    textColor: "text-red-400",
-    borderColor: "border-red-400",
+    textColor: 'text-red-400',
+    borderColor: 'border-red-400',
   },
-  "EM ANDAMENTO": {
-    textColor: "text-[#15599a]",
-    borderColor: "border-[#15599a]",
+  'EM ANDAMENTO': {
+    textColor: 'text-[#15599a]',
+    borderColor: 'border-[#15599a]',
   },
   RESOLVIDO: {
-    textColor: "text-green-400",
-    borderColor: "border-green-400",
+    textColor: 'text-green-400',
+    borderColor: 'border-green-400',
   },
-};
-var dateFilterParam = new Date();
-dateFilterParam.setDate(dateFilterParam.getDate() - 2);
+}
+var dateFilterParam = new Date()
+dateFilterParam.setDate(dateFilterParam.getDate() - 2)
 function ChamadosSuporte() {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/authHome')
     },
-  });
-  const [openCallsDropdownMenuVisible, setOpenCallsDropdownMenuVisible] =
-    useState(false);
-  const [closedCallsDropdownMenuVisible, setClosedCallsDropdownMenuVisible] =
-    useState(false);
+  })
+  const [openCallsDropdownMenuVisible, setOpenCallsDropdownMenuVisible] = useState(false)
+  const [closedCallsDropdownMenuVisible, setClosedCallsDropdownMenuVisible] = useState(false)
 
   // Array com os chamados, filtrados ou não.
-  const [inProgress, setInProgress] = useState();
-  const [filteredInProgress, setFilteredInProgress] = useState();
-  const [closedCalls, setClosedCalls] = useState();
-  const [filteredClosedCalls, setFilteredClosedCalls] = useState();
+  const [inProgress, setInProgress] = useState()
+  const [filteredInProgress, setFilteredInProgress] = useState()
+  const [closedCalls, setClosedCalls] = useState()
+  const [filteredClosedCalls, setFilteredClosedCalls] = useState()
   // Controle booleano da abertura de modais
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [creationModal, setCreationModal] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [creationModal, setCreationModal] = useState(false)
   // Controle do chamado da modal
-  const [modalCall, setModalCall] = useState({});
+  const [modalCall, setModalCall] = useState({})
   // Controle de filtros
   const [inProgressCallsFilters, setInProgressCallsFilters] = useState({
-    searchFilter: "",
+    searchFilter: '',
     respFilter: [],
     statusFilter: [],
     cityFilter: [],
     typeFilter: [],
-  });
+  })
   const [closedCallsFilters, setClosedCallsFilters] = useState({
-    searchFilter: "",
+    searchFilter: '',
     respFilter: [],
     cityFilter: [],
     typeFilter: [],
     afterDateFilter: dateFilterParam,
     beforeDateFilter: new Date(),
-  });
+  })
   function getCalls() {
     axios
-      .get(
-        `/api/calls/suporte/mainData?closedAfter=${closedCallsFilters.afterDateFilter}&closedBefore=${closedCallsFilters.beforeDateFilter}`
-      )
+      .get(`/api/chamados/suporte/mainData?closedAfter=${closedCallsFilters.afterDateFilter}&closedBefore=${closedCallsFilters.beforeDateFilter}`)
       .then((res) => {
-        setInProgress(res.data.openCalls);
-        setFilteredInProgress(res.data.openCalls);
-        setClosedCalls(res.data.closedCalls);
-        setFilteredClosedCalls(res.data.closedCalls);
-      });
+        setInProgress(res.data.openCalls)
+        setFilteredInProgress(res.data.openCalls)
+        setClosedCalls(res.data.closedCalls)
+        setFilteredClosedCalls(res.data.closedCalls)
+      })
   }
   function getClosedCallsByDate() {
     axios
-      .post("/api/calls/suporte/filteredByDate", {
+      .post('/api/chamados/suporte/filteredByDate', {
         date: {
           after: closedCallsFilters.afterDateFilter,
           before: closedCallsFilters.beforeDateFilter,
         },
       })
       .then((res) => {
-        setFilteredClosedCalls(res.data);
-        setClosedCalls(res.data);
-      });
+        setFilteredClosedCalls(res.data)
+        setClosedCalls(res.data)
+      })
   }
   function filterInProgressCalls() {
-    var newArr;
-    if (
-      inProgressCallsFilters.statusFilter.length > 0 &&
-      inProgressCallsFilters.respFilter.length > 0
-    ) {
+    var newArr
+    if (inProgressCallsFilters.statusFilter.length > 0 && inProgressCallsFilters.respFilter.length > 0) {
       newArr = inProgress.filter(
-        (call) =>
-          inProgressCallsFilters.respFilter.includes(call.responsavel) &&
-          inProgressCallsFilters.statusFilter.includes(call.statusChamado)
-      );
+        (call) => inProgressCallsFilters.respFilter.includes(call.responsavel) && inProgressCallsFilters.statusFilter.includes(call.statusChamado)
+      )
     } else if (inProgressCallsFilters.respFilter.length > 0) {
-      newArr = inProgress.filter((call) =>
-        inProgressCallsFilters.respFilter.includes(call.responsavel)
-      );
+      newArr = inProgress.filter((call) => inProgressCallsFilters.respFilter.includes(call.responsavel))
     } else if (inProgressCallsFilters.statusFilter.length > 0) {
-      newArr = inProgress.filter((call) =>
-        inProgressCallsFilters.statusFilter.includes(call.statusChamado)
-      );
+      newArr = inProgress.filter((call) => inProgressCallsFilters.statusFilter.includes(call.statusChamado))
     }
     if (inProgressCallsFilters.cityFilter.length > 0) {
-      if (!newArr) newArr = inProgress;
-      newArr = newArr.filter((call) =>
-        inProgressCallsFilters.cityFilter.includes(call.cidade)
-      );
+      if (!newArr) newArr = inProgress
+      newArr = newArr.filter((call) => inProgressCallsFilters.cityFilter.includes(call.cidade))
     }
     if (inProgressCallsFilters.typeFilter.length > 0) {
-      if (!newArr) newArr = inProgress;
-      newArr = newArr.filter((call) =>
-        inProgressCallsFilters.typeFilter.includes(call.tipoChamado)
-      );
+      if (!newArr) newArr = inProgress
+      newArr = newArr.filter((call) => inProgressCallsFilters.typeFilter.includes(call.tipoChamado))
     }
     if (!newArr) {
-      setFilteredInProgress(inProgress);
-      return inProgress;
+      setFilteredInProgress(inProgress)
+      return inProgress
     } else {
-      setFilteredInProgress(newArr);
-      return newArr;
+      setFilteredInProgress(newArr)
+      return newArr
     }
   }
   function filterClosedCalls() {
-    var newArr;
+    var newArr
     if (closedCallsFilters.cityFilter.length > 0) {
-      if (!newArr) newArr = closedCalls;
-      newArr = newArr.filter((call) =>
-        closedCallsFilters.cityFilter.includes(call.cidade)
-      );
+      if (!newArr) newArr = closedCalls
+      newArr = newArr.filter((call) => closedCallsFilters.cityFilter.includes(call.cidade))
     }
     if (closedCallsFilters.typeFilter.length > 0) {
-      if (!newArr) newArr = closedCalls;
-      newArr = newArr.filter((call) =>
-        closedCallsFilters.typeFilter.includes(call.tipoChamado)
-      );
+      if (!newArr) newArr = closedCalls
+      newArr = newArr.filter((call) => closedCallsFilters.typeFilter.includes(call.tipoChamado))
     }
     if (closedCallsFilters.respFilter.length > 0) {
-      if (!newArr) newArr = closedCalls;
-      newArr = newArr.filter((call) =>
-        closedCallsFilters.respFilter.includes(call.responsavel)
-      );
+      if (!newArr) newArr = closedCalls
+      newArr = newArr.filter((call) => closedCallsFilters.respFilter.includes(call.responsavel))
     }
     if (!newArr) {
-      setFilteredClosedCalls(closedCalls);
-      return closedCalls;
+      setFilteredClosedCalls(closedCalls)
+      return closedCalls
     } else {
-      setFilteredClosedCalls(newArr);
-      return newArr;
+      setFilteredClosedCalls(newArr)
+      return newArr
     }
   }
   // Filtros de pesquisa
@@ -180,149 +153,112 @@ function ChamadosSuporte() {
     setInProgressCallsFilters({
       ...inProgressCallsFilters,
       searchFilter: value,
-    });
-    if (value != "" || " ") {
-      let filteredByOptions = filterInProgressCalls();
+    })
+    if (value != '' || ' ') {
+      let filteredByOptions = filterInProgressCalls()
       let newArr = filteredByOptions.filter((call) =>
-        call.nomeCliente
-          ? call.nomeCliente.toUpperCase().includes(value.toUpperCase())
-          : call.nomeUsina.toUpperCase().includes(value.toUpperCase())
-      );
-      setFilteredInProgress(newArr);
+        call.nomeCliente ? call.nomeCliente.toUpperCase().includes(value.toUpperCase()) : call.nomeUsina.toUpperCase().includes(value.toUpperCase())
+      )
+      setFilteredInProgress(newArr)
     } else {
-      setFilteredInProgress(inProgress);
+      setFilteredInProgress(inProgress)
     }
   }
   function handleClosedCallsSearchFilter(value) {
-    setClosedCallsFilters({ ...closedCallsFilters, searchFilter: value });
-    if (value != "" || " ") {
-      let filteredByOptions = filterClosedCalls();
+    setClosedCallsFilters({ ...closedCallsFilters, searchFilter: value })
+    if (value != '' || ' ') {
+      let filteredByOptions = filterClosedCalls()
       let newArr = filteredByOptions.filter((call) =>
-        call.nomeCliente
-          ? call.nomeCliente.toUpperCase().includes(value.toUpperCase())
-          : call.nomeUsina.toUpperCase().includes(value.toUpperCase())
-      );
-      setFilteredClosedCalls(newArr);
+        call.nomeCliente ? call.nomeCliente.toUpperCase().includes(value.toUpperCase()) : call.nomeUsina.toUpperCase().includes(value.toUpperCase())
+      )
+      setFilteredClosedCalls(newArr)
     } else {
-      setFilteredClosedCalls(inProgress);
+      setFilteredClosedCalls(inProgress)
     }
   }
   function updateModalInfo(id) {
-    axios.get(`/api/calls/getSuporte/${id}`).then((res) => {
-      setModalCall(res.data);
-      getCalls();
-    });
+    axios.get(`/api/chamados/getSuporte/${id}`).then((res) => {
+      setModalCall(res.data)
+      getCalls()
+    })
   }
   function handleOpenModal(id) {
-    axios.get(`/api/calls/getSuporte/${id}`).then((res) => {
-      setModalCall(res.data);
-      setModalIsOpen(true);
-    });
+    axios.get(`/api/chamados/getSuporte/${id}`).then((res) => {
+      setModalCall(res.data)
+      setModalIsOpen(true)
+    })
   }
-  function getDeadlineStatus(
-    tipoDoChamado,
-    plano,
-    statusPlano,
-    abertura,
-    statusChamado
-  ) {
-    if (statusChamado == "ABERTO") {
-      let tipoInfo = tiposChamadosSuporte.filter(
-        (chamado) => chamado.tipo == tipoDoChamado
-      )[0];
-      var grau;
-      if (plano && plano != "MANUTENÇÃO PREVENTIVA" && statusPlano != true) {
-        grau = tipoInfo ? tipoInfo.grauUrgenciaOeM : "B";
+  function getDeadlineStatus(tipoDoChamado, plano, statusPlano, abertura, statusChamado) {
+    if (statusChamado == 'ABERTO') {
+      let tipoInfo = tiposChamadosSuporte.filter((chamado) => chamado.tipo == tipoDoChamado)[0]
+      var grau
+      if (plano && plano != 'MANUTENÇÃO PREVENTIVA' && statusPlano != true) {
+        grau = tipoInfo ? tipoInfo.grauUrgenciaOeM : 'B'
       } else {
-        grau = tipoInfo ? tipoInfo.grauUrgenciaNormal : "B";
+        grau = tipoInfo ? tipoInfo.grauUrgenciaNormal : 'B'
       }
-      let diffTempo = dayjs().diff(dayjs(abertura), "hours");
-      if (grau == "A" && diffTempo > 24) {
-        return "border-red-500";
-      } else if (grau == "B" && diffTempo > 48) {
-        return "border-red-500";
-      } else if (grau == "C" && diffTempo > 72) {
-        return "border-red-500";
-      } else if (grau == "D" && diffTempo > 96) {
-        return "border-red-500";
+      let diffTempo = dayjs().diff(dayjs(abertura), 'hours')
+      if (grau == 'A' && diffTempo > 24) {
+        return 'border-red-500'
+      } else if (grau == 'B' && diffTempo > 48) {
+        return 'border-red-500'
+      } else if (grau == 'C' && diffTempo > 72) {
+        return 'border-red-500'
+      } else if (grau == 'D' && diffTempo > 96) {
+        return 'border-red-500'
       } else {
-        return "border-gray-200";
+        return 'border-gray-200'
       }
     } else {
-      return "border-gray-200";
+      return 'border-gray-200'
     }
   }
   useEffect(() => {
-    if (
-      session?.user.accessibleRoutes.includes("O&M") ||
-      session?.user.accessibleRoutes.includes("Pós-Venda")
-    ) {
+    if (session?.user.accessibleRoutes.includes('O&M') || session?.user.accessibleRoutes.includes('Pós-Venda')) {
       if (!inProgress) {
-        getCalls();
+        getCalls()
       }
     } else {
       if (session?.user) {
-        router.push("/");
+        router.push('/')
       }
     }
-  }, [session]);
-  if (status == "loading") return <LoadingPage />;
-  if (status == "authenticated") {
+  }, [session])
+  if (status == 'loading') return <LoadingPage />
+  if (status == 'authenticated') {
     return (
       <div className="flex flex-col gap-y-2 bg-gray-100 grow p-6 w-full">
         <div className="flex items-center justify-between w-full border border-gray-200 bg-[#fff] shadow-xl p-4">
-          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">
-            CHAMADOS DE SUPORTE TÉCNICO
-          </p>
-          <FetchDataButton
-            text={"ATUALIZAR"}
-            icon={<AiOutlineReload />}
-            handleClick={getCalls}
-          />
+          <p className="font-bold uppercase text-center text-2xl text-[#15599a] font-['Roboto']">CHAMADOS DE SUPORTE TÉCNICO</p>
+          <FetchDataButton text={'ATUALIZAR'} icon={<AiOutlineReload />} handleClick={getCalls} />
         </div>
         <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
           <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-                <p className="text-center uppercase text-[#15599a] font-bold text-xl">
-                  Chamados abertos
-                </p>
-                <p className="font-bold text-[#fead61]">
-                  ({filteredInProgress?.length})
-                </p>
+                <p className="text-center uppercase text-[#15599a] font-bold text-xl">Chamados abertos</p>
+                <p className="font-bold text-[#fead61]">({filteredInProgress?.length})</p>
               </div>
               {openCallsDropdownMenuVisible ? (
                 <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                  <IoMdArrowDropupCircle
-                    style={{ fontSize: "25px" }}
-                    onClick={() => setOpenCallsDropdownMenuVisible(false)}
-                  />
+                  <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
                 <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                  <IoMdArrowDropdownCircle
-                    style={{ fontSize: "25px" }}
-                    onClick={() => setOpenCallsDropdownMenuVisible(true)}
-                  />
+                  <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setOpenCallsDropdownMenuVisible(true)} />
                 </div>
               )}
             </div>
             <AnimatePresence>
               {openCallsDropdownMenuVisible ? (
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0.6 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="flex flex-col w-full gap-y-2 mt-4"
-                >
+                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
                   <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
                     <input
                       type="text"
                       className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
                       placeholder="DIGITE O NOME DO CLIENTE/USINA"
                       value={inProgressCallsFilters.searchFilter}
-                      onChange={(e) =>
-                        handleInProgressCallsSearchFilter(e.target.value)
-                      }
+                      onChange={(e) => handleInProgressCallsSearchFilter(e.target.value)}
                     />
                     <div className="w-full lg:w-[250px]">
                       <Select
@@ -331,8 +267,8 @@ function ChamadosSuporte() {
                         styles={{
                           control: (base, state) => ({
                             ...base,
-                            width: "100%",
-                            minHeight: "41px",
+                            width: '100%',
+                            minHeight: '41px',
                           }),
                         }}
                         onChange={(e) =>
@@ -342,7 +278,7 @@ function ChamadosSuporte() {
                           })
                         }
                         options={tiposChamadosSuporte.map((chamado) => {
-                          return { value: chamado.tipo, label: chamado.tipo };
+                          return { value: chamado.tipo, label: chamado.tipo }
                         })}
                       />
                     </div>
@@ -353,8 +289,8 @@ function ChamadosSuporte() {
                         styles={{
                           control: (base, state) => ({
                             ...base,
-                            width: "100%",
-                            minHeight: "41px",
+                            width: '100%',
+                            minHeight: '41px',
                           }),
                         }}
                         onChange={(e) =>
@@ -364,7 +300,7 @@ function ChamadosSuporte() {
                           })
                         }
                         options={cidadesAtendidas.map((cidade) => {
-                          return { value: cidade, label: cidade };
+                          return { value: cidade, label: cidade }
                         })}
                       />
                     </div>
@@ -375,8 +311,8 @@ function ChamadosSuporte() {
                         styles={{
                           control: (base, state) => ({
                             ...base,
-                            width: "100%",
-                            minHeight: "41px",
+                            width: '100%',
+                            minHeight: '41px',
                           }),
                         }}
                         onChange={(e) =>
@@ -387,12 +323,12 @@ function ChamadosSuporte() {
                         }
                         options={[
                           {
-                            value: "ABERTO",
-                            label: "ABERTO",
+                            value: 'ABERTO',
+                            label: 'ABERTO',
                           },
                           {
-                            value: "EM ANDAMENTO",
-                            label: "EM ANDAMENTO",
+                            value: 'EM ANDAMENTO',
+                            label: 'EM ANDAMENTO',
                           },
                         ]}
                       />
@@ -404,8 +340,8 @@ function ChamadosSuporte() {
                         styles={{
                           control: (base, state) => ({
                             ...base,
-                            width: "100%",
-                            minHeight: "41px",
+                            width: '100%',
+                            minHeight: '41px',
                           }),
                         }}
                         onChange={(e) =>
@@ -416,31 +352,27 @@ function ChamadosSuporte() {
                         }
                         options={[
                           {
-                            value: "GABRIEL MARTINS",
-                            label: "GABRIEL MARTINS",
+                            value: 'GABRIEL MARTINS',
+                            label: 'GABRIEL MARTINS',
                           },
                           {
-                            value: "MARCOS DIAS",
-                            label: "MARCOS DIAS",
+                            value: 'MARCOS DIAS',
+                            label: 'MARCOS DIAS',
                           },
                           {
-                            value: "PÓS-VENDA",
-                            label: "PÓS-VENDA",
+                            value: 'PÓS-VENDA',
+                            label: 'PÓS-VENDA',
                           },
                           {
-                            value: "A DEFINIR",
-                            label: "A DEFINIR",
+                            value: 'A DEFINIR',
+                            label: 'A DEFINIR',
                           },
                         ]}
                       />
                     </div>
                   </div>
                   <div className="flex items-center justify-end">
-                    <FilterButton
-                      text={"FILTRAR"}
-                      icon={<AiOutlineSearch />}
-                      handleClick={filterInProgressCalls}
-                    />
+                    <FilterButton text={'FILTRAR'} icon={<AiOutlineSearch />} handleClick={filterInProgressCalls} />
                   </div>
                 </motion.div>
               ) : null}
@@ -461,64 +393,37 @@ function ChamadosSuporte() {
                   )} p-3 hover:bg-blue-100`}
                 >
                   <div className="grid grid-cols-6 gap-2 items-center w-full">
-                    <h1 className="uppercase text-sm col-span-3 font-semibold">
-                      {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
-                    </h1>
-                    {call.cidade && (
-                      <p className="text-xxs uppercase text-gray-700 col-span-1 text-center font-bold">
-                        {call.cidade}
-                      </p>
-                    )}
+                    <h1 className="uppercase text-sm col-span-3 font-semibold">{call.nomeCliente ? call.nomeCliente : call.nomeUsina}</h1>
+                    {call.cidade && <p className="text-xxs uppercase text-gray-700 col-span-1 text-center font-bold">{call.cidade}</p>}
                     <p
-                      className={`text-xs col-span-2 text-center font-bold border p-1 rounded-lg ${
-                        statusStyles[call.statusChamado].textColor
-                      } ${statusStyles[call.statusChamado].borderColor}`}
+                      className={`text-xs col-span-2 text-center font-bold border p-1 rounded-lg ${statusStyles[call.statusChamado].textColor} ${
+                        statusStyles[call.statusChamado].borderColor
+                      }`}
                     >
                       {call.statusChamado}
                     </p>
                   </div>
                   <div className="flex justify-between mt-2 items-center w-full">
-                    <p className="text-xs text-gray-500 uppercase">
-                      Responsável:
-                    </p>
+                    <p className="text-xs text-gray-500 uppercase">Responsável:</p>
                     <p className="text-xs text-gray-500">{call.responsavel}</p>
                   </div>
                   <div className="hidden lg:flex justify-between mt-2 items-center w-full">
                     <p className="text-xs text-gray-500 uppercase">DEMANDA</p>
-                    <p
-                      className={`text-xs ${
-                        call.demanda == "EXTERNA"
-                          ? "text-red-500"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      {call.demanda ? call.demanda : "-"}
-                    </p>
+                    <p className={`text-xs ${call.demanda == 'EXTERNA' ? 'text-red-500' : 'text-gray-500'}`}>{call.demanda ? call.demanda : '-'}</p>
                   </div>
                   <div className="flex justify-between mt-2 items-center w-full">
-                    <p className="text-xs text-gray-500 uppercase">
-                      Tipo de chamado:
-                    </p>
+                    <p className="text-xs text-gray-500 uppercase">Tipo de chamado:</p>
                     <p className="text-xs text-gray-500">{call.tipoChamado}</p>
                   </div>
                   <div className="flex justify-between mt-2 items-center w-full">
                     <p className="text-xs text-gray-500 uppercase">ABERTURA</p>
-                    <p className="text-xxs text-gray-500 uppercase">
-                      {dayjs().diff(dayjs(call.abertura), "hours")} horas em
-                      aberto
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {new Date(call.abertura).toLocaleString()}
-                    </p>
+                    <p className="text-xxs text-gray-500 uppercase">{dayjs().diff(dayjs(call.abertura), 'hours')} horas em aberto</p>
+                    <p className="text-xs text-gray-500">{new Date(call.abertura).toLocaleString()}</p>
                   </div>
-                  {call.tipoChamado.includes("GARANTIA") &&
-                  call.statusGarantia != "IDENTIFICAÇÃO E TESTES" &&
-                  (!call.ultAtualizacaoCliente ||
-                    dayjs().diff(dayjs(call.ultAtualizacaoCliente), "days") >=
-                      7) ? (
-                    <p className="text-center font-bold text-red-500">
-                      ATUALIZAR CLIENTE
-                    </p>
+                  {call.tipoChamado.includes('GARANTIA') &&
+                  call.statusGarantia != 'IDENTIFICAÇÃO E TESTES' &&
+                  (!call.ultAtualizacaoCliente || dayjs().diff(dayjs(call.ultAtualizacaoCliente), 'days') >= 7) ? (
+                    <p className="text-center font-bold text-red-500">ATUALIZAR CLIENTE</p>
                   ) : (
                     false
                   )}
@@ -533,42 +438,26 @@ function ChamadosSuporte() {
           <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-                <p className="text-center uppercase text-[#15599a] font-bold text-xl">
-                  CHAMADOS FINALIZADOS
-                </p>
-                <p className="font-bold text-[#fead61]">
-                  ({filteredClosedCalls?.length})
-                </p>
+                <p className="text-center uppercase text-[#15599a] font-bold text-xl">CHAMADOS FINALIZADOS</p>
+                <p className="font-bold text-[#fead61]">({filteredClosedCalls?.length})</p>
               </div>
               {closedCallsDropdownMenuVisible ? (
                 <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                  <IoMdArrowDropupCircle
-                    style={{ fontSize: "25px" }}
-                    onClick={() => setClosedCallsDropdownMenuVisible(false)}
-                  />
+                  <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(false)} />
                 </div>
               ) : (
                 <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                  <IoMdArrowDropdownCircle
-                    style={{ fontSize: "25px" }}
-                    onClick={() => setClosedCallsDropdownMenuVisible(true)}
-                  />
+                  <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setClosedCallsDropdownMenuVisible(true)} />
                 </div>
               )}
             </div>
             <AnimatePresence>
               {closedCallsDropdownMenuVisible ? (
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0.6 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="flex flex-col w-full gap-y-2 mt-4"
-                >
+                <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
                   <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
                     <p>Entre:</p>
                     <input
-                      value={dayjs(closedCallsFilters.afterDateFilter).format(
-                        "YYYY-MM-DD"
-                      )}
+                      value={dayjs(closedCallsFilters.afterDateFilter).format('YYYY-MM-DD')}
                       onChange={(e) =>
                         setClosedCallsFilters({
                           ...closedCallsFilters,
@@ -580,9 +469,7 @@ function ChamadosSuporte() {
                     />
                     <p>&</p>
                     <input
-                      value={dayjs(closedCallsFilters.beforeDateFilter).format(
-                        "YYYY-MM-DD"
-                      )}
+                      value={dayjs(closedCallsFilters.beforeDateFilter).format('YYYY-MM-DD')}
                       onChange={(e) =>
                         setClosedCallsFilters({
                           ...closedCallsFilters,
@@ -592,18 +479,12 @@ function ChamadosSuporte() {
                       type="date"
                       className="border border-gray-200 outline-none p-2"
                     />
-                    <FetchDataButton
-                      handleClick={getClosedCallsByDate}
-                      text={"BUSCAR"}
-                      icon={<MdDateRange />}
-                    />
+                    <FetchDataButton handleClick={getClosedCallsByDate} text={'BUSCAR'} icon={<MdDateRange />} />
                   </div>
                   <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
                     <input
                       value={closedCallsFilters.searchFilter}
-                      onChange={(e) =>
-                        handleClosedCallsSearchFilter(e.target.value)
-                      }
+                      onChange={(e) => handleClosedCallsSearchFilter(e.target.value)}
                       placeholder="DIGITE O NOME DO CLIENTE/USINA"
                       className="outline-none p-1.5  w-full lg:w-[350px] h-[41px] rounded border border-gray-200 placeholder:italic"
                     />
@@ -614,8 +495,8 @@ function ChamadosSuporte() {
                         styles={{
                           control: (base, state) => ({
                             ...base,
-                            width: "100%",
-                            minHeight: "41px",
+                            width: '100%',
+                            minHeight: '41px',
                           }),
                         }}
                         onChange={(e) =>
@@ -625,7 +506,7 @@ function ChamadosSuporte() {
                           })
                         }
                         options={tiposChamadosSuporte.map((chamado) => {
-                          return { value: chamado.tipo, label: chamado.tipo };
+                          return { value: chamado.tipo, label: chamado.tipo }
                         })}
                       />
                     </div>
@@ -636,8 +517,8 @@ function ChamadosSuporte() {
                         styles={{
                           control: (base, state) => ({
                             ...base,
-                            width: "100%",
-                            minHeight: "41px",
+                            width: '100%',
+                            minHeight: '41px',
                           }),
                         }}
                         onChange={(e) =>
@@ -647,7 +528,7 @@ function ChamadosSuporte() {
                           })
                         }
                         options={cidadesAtendidas.map((cidade) => {
-                          return { value: cidade, label: cidade };
+                          return { value: cidade, label: cidade }
                         })}
                       />
                     </div>
@@ -658,8 +539,8 @@ function ChamadosSuporte() {
                         styles={{
                           control: (base, state) => ({
                             ...base,
-                            width: "100%",
-                            minHeight: "41px",
+                            width: '100%',
+                            minHeight: '41px',
                           }),
                         }}
                         onChange={(e) =>
@@ -670,31 +551,27 @@ function ChamadosSuporte() {
                         }
                         options={[
                           {
-                            value: "GABRIEL MARTINS",
-                            label: "GABRIEL MARTINS",
+                            value: 'GABRIEL MARTINS',
+                            label: 'GABRIEL MARTINS',
                           },
                           {
-                            value: "MARCOS DIAS",
-                            label: "MARCOS DIAS",
+                            value: 'MARCOS DIAS',
+                            label: 'MARCOS DIAS',
                           },
                           {
-                            value: "PÓS-VENDA",
-                            label: "PÓS-VENDA",
+                            value: 'PÓS-VENDA',
+                            label: 'PÓS-VENDA',
                           },
                           {
-                            value: "A DEFINIR",
-                            label: "A DEFINIR",
+                            value: 'A DEFINIR',
+                            label: 'A DEFINIR',
                           },
                         ]}
                       />
                     </div>
                   </div>
                   <div className="flex items-center justify-end gap-x-2">
-                    <FilterButton
-                      text={"FILTRAR"}
-                      icon={<AiOutlineSearch />}
-                      handleClick={filterClosedCalls}
-                    />
+                    <FilterButton text={'FILTRAR'} icon={<AiOutlineSearch />} handleClick={filterClosedCalls} />
                   </div>
                 </motion.div>
               ) : null}
@@ -709,38 +586,29 @@ function ChamadosSuporte() {
                   className="w-[370px] max-h-[180px] cursor-pointer border border-gray-200 p-3 hover:bg-blue-100"
                 >
                   <div className="flex justify-between items-center w-full gap-2">
-                    {call.feedbackValor != undefined &&
-                    call.feedbackValor != "" ? (
+                    {call.feedbackValor != undefined && call.feedbackValor != '' ? (
                       <BsFillPatchCheckFill
                         style={{
-                          fontSize: "20px",
-                          color: "rgb(21 128 61)",
-                          marginLeft: "3px",
+                          fontSize: '20px',
+                          color: 'rgb(21 128 61)',
+                          marginLeft: '3px',
                         }}
                       />
                     ) : (
                       false
                     )}
-                    <h1 className="uppercase text-sm font-semibold">
-                      {call.nomeCliente ? call.nomeCliente : call.nomeUsina}
-                    </h1>
-                    {call.cidade && (
-                      <p className="text-xs uppercase text-gray-700">
-                        {call.cidade}
-                      </p>
-                    )}
+                    <h1 className="uppercase text-sm font-semibold">{call.nomeCliente ? call.nomeCliente : call.nomeUsina}</h1>
+                    {call.cidade && <p className="text-xs uppercase text-gray-700">{call.cidade}</p>}
                     <p
-                      className={`text-xs font-bold border p-1 rounded-lg ${
-                        statusStyles[call.statusChamado].textColor
-                      } ${statusStyles[call.statusChamado].borderColor}`}
+                      className={`text-xs font-bold border p-1 rounded-lg ${statusStyles[call.statusChamado].textColor} ${
+                        statusStyles[call.statusChamado].borderColor
+                      }`}
                     >
                       {call.statusChamado}
                     </p>
                   </div>
                   <div className="flex justify-between mt-2 items-center w-full">
-                    <p className="text-xs text-gray-500 uppercase">
-                      Responsável:
-                    </p>
+                    <p className="text-xs text-gray-500 uppercase">Responsável:</p>
                     <p className="text-xs text-gray-500">{call.responsavel}</p>
                   </div>
                   {call.demanda && (
@@ -750,9 +618,7 @@ function ChamadosSuporte() {
                     </div>
                   )}
                   <div className="flex justify-between mt-2 items-center w-full">
-                    <p className="text-xs text-gray-500 uppercase">
-                      Tipo de chamado:
-                    </p>
+                    <p className="text-xs text-gray-500 uppercase">Tipo de chamado:</p>
                     <p className="text-xs text-gray-500">{call.tipoChamado}</p>
                   </div>
                 </div>
@@ -768,9 +634,7 @@ function ChamadosSuporte() {
         >
           <p className="uppercase font-bold text-sm">Novo chamado</p>
         </div>
-        {creationModal && (
-          <CreateModal getCalls={getCalls} setModalIsOpen={setCreationModal} />
-        )}
+        {creationModal && <CreateModal getCalls={getCalls} setModalIsOpen={setCreationModal} />}
         {modalIsOpen && (
           <ModalCallSuporte
             modalIsOpen={modalIsOpen}
@@ -781,8 +645,8 @@ function ChamadosSuporte() {
           />
         )}
       </div>
-    );
+    )
   }
 }
 
-export default ChamadosSuporte;
+export default ChamadosSuporte

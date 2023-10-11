@@ -56,7 +56,7 @@ function ChamadosPPS() {
 
   // Functions
   function getCalls() {
-    axios.get('/api/calls/pps/mainData').then((res) => {
+    axios.get('/api/chamados/pps/mainData').then((res) => {
       setStats(res.data.stats)
       setInProgress(res.data.inProgress)
       setFilteredInProgress(res.data.inProgress)
@@ -67,7 +67,7 @@ function ChamadosPPS() {
   }
 
   function updateModalInfo(id) {
-    axios.get(`/api/calls/getPPS/${id}`).then((res) => {
+    axios.get(`/api/chamados/getPPS/${id}`).then((res) => {
       setModalCall(res.data)
       getCalls()
     })

@@ -678,3 +678,36 @@ export const accessGrantingStatus = [
   },
   { id: 19, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
 ]
+export const additionalCostsCategories = [
+  {
+    id: 1,
+    label: 'INSTALAÇÃO',
+    value: 'INSTALAÇÃO',
+  },
+  {
+    id: 2,
+    label: 'PADRÃO',
+    value: 'PADRÃO',
+  },
+  {
+    id: 3,
+    label: 'ESTRUTURA',
+    value: 'ESTRUTURA',
+  },
+  {
+    id: 4,
+    label: 'OUTROS',
+    value: 'OUTROS',
+  },
+]
+export const units = [
+  { id: 1, label: 'UNIDADE (UN)', value: 'UN' },
+  { id: 2, label: 'PACOTE (PC)', value: 'PC' },
+  { id: 3, label: 'QUILO (KG)', value: 'KG' },
+  { id: 4, label: 'CX (CAIXA)', value: 'CX' },
+  { id: 5, label: 'M (METRO)', value: 'M' },
+  { id: 6, label: 'METRO QUADRADO (M²)', value: 'M²' },
+  { id: 7, label: 'METRO CÚBICO (M³)', value: 'M³' },
+  { id: 8, label: 'LITROS (L)', value: 'L' },
+  { id: 9, label: 'MESA', value: 'MESA' },
+]

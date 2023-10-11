@@ -1,15 +1,15 @@
-import { ObjectId } from "mongodb";
-import connectToDatabase from "../../../utils/materialDb";
+import { ObjectId } from 'mongodb'
+import connectToDatabase from '../../../utils/materialDb'
 export default async function handler(req, res) {
-  if (req.method == "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY);
-    const collection = db.collection("material");
-    let { search } = req.query;
+  if (req.method == 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY)
+    const collection = db.collection('material')
+    let { search } = req.query
     const arr = await collection
       .aggregate([
         {
           $match: {
-            nome: { $regex: search },
+            nome: { $regex: search, $options: 'i' },
           },
         },
         {
@@ -20,13 +20,13 @@ export default async function handler(req, res) {
           },
         },
       ])
-      .toArray();
-    res.json(arr);
-  } else if (req.method == "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY);
-    const collection = db.collection("material");
-    const { materials } = req.body;
-    const arrOfIds = materials.map((item) => item.id);
+      .toArray()
+    res.json(arr)
+  } else if (req.method == 'POST') {
+    const db = await connectToDatabase(process.env.DB_KEY)
+    const collection = db.collection('material')
+    const { materials } = req.body
+    const arrOfIds = materials.map((item) => item.id)
     const upToDateItems = await collection
       .aggregate([
         {
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
           },
         },
       ])
-      .toArray();
-    res.json(upToDateItems);
+      .toArray()
+    res.json(upToDateItems)
   }
 }

@@ -1,56 +1,51 @@
-import Image from "next/image";
-import React, { useState } from "react";
-import Logo from "../../utils/whitelogo.png";
-import {
-  cities,
-  sellers,
-  ppsSolicitations,
-  vendedores,
-} from "../../utils/constants";
-import axios from "axios";
-import Link from "next/link";
-import Select from "react-select";
+import Image from 'next/image'
+import React, { useState } from 'react'
+import Logo from '../../utils/whitelogo.png'
+import { cities, sellers, ppsSolicitations, vendedores } from '../../utils/constants'
+import axios from 'axios'
+import Link from 'next/link'
+import Select from 'react-select'
 function ChamadosPPS() {
-  const [vendedorName, setVendedorName] = useState(vendedores[0].nome);
-  const [svbCode, setSvbCode] = useState(0);
-  const [solicitationType, setSolicitationType] = useState(ppsSolicitations[0]);
-  const [solicitationDesc, setSolicitationDesc] = useState("");
-  const [callCreatedMessage, setCreatedMessage] = useState("");
+  const [vendedorName, setVendedorName] = useState(vendedores[0].nome)
+  const [svbCode, setSvbCode] = useState(0)
+  const [solicitationType, setSolicitationType] = useState(ppsSolicitations[0])
+  const [solicitationDesc, setSolicitationDesc] = useState('')
+  const [callCreatedMessage, setCreatedMessage] = useState('')
   const [errorsMessage, setErrorMessage] = useState({
-    errorSvbCode: "",
-    errorDesc: "",
-  });
+    errorSvbCode: '',
+    errorDesc: '',
+  })
   function checkObligatoryFields() {
     if (svbCode == 0) {
-      setErrorMessage({ ...errorsMessage, errorSvbCode: "NÚMERO INVÁLIDO" });
+      setErrorMessage({ ...errorsMessage, errorSvbCode: 'NÚMERO INVÁLIDO' })
     } else if (solicitationDesc.trim().length == 0) {
       setSolicitationDesc({
         ...errorsMessage,
-        errorsMessage: "Por favor, descreva a solicitações com mais palavras.",
-      });
+        errorsMessage: 'Por favor, descreva a solicitações com mais palavras.',
+      })
     } else {
-      return true;
+      return true
     }
   }
   function resetFields() {
-    setSolicitationType(ppsSolicitations[0]);
-    setSvbCode(0);
-    setSolicitationDesc("");
+    setSolicitationType(ppsSolicitations[0])
+    setSvbCode(0)
+    setSolicitationDesc('')
   }
   async function handleOpenCall() {
     let obj = {
-      status: "PENDENTE",
+      status: 'PENDENTE',
       vendedor: vendedorName,
       codigoDoProjeto: svbCode,
       observacoes: solicitationDesc,
       tipoDeSolicitacao: solicitationType,
-      responsavel: "A DEFINIR",
-    };
+      responsavel: 'A DEFINIR',
+    }
     if (checkObligatoryFields()) {
-      axios.post("/api/calls/pps/mainData", obj).then((res) => {
-        setCreatedMessage(res.data);
-        resetFields();
-      });
+      axios.post('/api/chamados/pps/mainData', obj).then((res) => {
+        setCreatedMessage(res.data)
+        resetFields()
+      })
     }
   }
 
@@ -62,9 +57,7 @@ function ChamadosPPS() {
             <Image src={Logo} />
           </div>
         </Link>
-        <h1 className="font-bold text-center font-raleway text-lg uppercase text-[#fead61]">
-          ABERTURA DE CHAMADO
-        </h1>
+        <h1 className="font-bold text-center font-raleway text-lg uppercase text-[#fead61]">ABERTURA DE CHAMADO</h1>
         <div className="flex items-center flex-col lg:flex-row gap-x-2 border border-gray-200 p-2 mt-4">
           <span className="text-center font-bold">VENDEDOR:</span>
           <div className="grow">
@@ -76,7 +69,7 @@ function ChamadosPPS() {
                 return {
                   label: vendedor.nome,
                   value: vendedor.nome,
-                };
+                }
               })}
             />
           </div>
@@ -94,11 +87,7 @@ function ChamadosPPS() {
             <option value={"SETOR PROJETOS"}>SETOR PROJETOS</option>
           </select>*/}
         </div>
-        <div
-          className={`flex flex-col lg:flex-row gap-x-2 border ${
-            errorsMessage.errorSvbCode ? "border-red-400" : "border-gray-200"
-          } p-2 mt-4`}
-        >
+        <div className={`flex flex-col lg:flex-row gap-x-2 border ${errorsMessage.errorSvbCode ? 'border-red-400' : 'border-gray-200'} p-2 mt-4`}>
           <span className="text-center font-bold">CÓDIGO SVB:</span>
           <input
             value={svbCode}
@@ -121,24 +110,16 @@ function ChamadosPPS() {
             ))}
           </select>
         </div>
-        <div
-          className={`flex flex-col gap-x-2 border  ${
-            errorsMessage.errorDesc ? "border-red-400" : "border-gray-200"
-          }  p-2 mt-4`}
-        >
+        <div className={`flex flex-col gap-x-2 border  ${errorsMessage.errorDesc ? 'border-red-400' : 'border-gray-200'}  p-2 mt-4`}>
           <span className="font-bold text-center">OBSERVAÇÕES:</span>
           <textarea
             value={solicitationDesc}
             onChange={(e) => setSolicitationDesc(e.target.value)}
-            placeholder={"Observações sobre a solicitação"}
+            placeholder={'Observações sobre a solicitação'}
             className="outline-none placeholder:italic mt-1 rounded text-sm p-3 resize-none bg-gray-100 min-h-[100px] h-fit text-center grow"
           />
         </div>
-        {callCreatedMessage && (
-          <p className="italic font-bold text-green-500 text-center mt-2">
-            {callCreatedMessage}
-          </p>
-        )}
+        {callCreatedMessage && <p className="italic font-bold text-green-500 text-center mt-2">{callCreatedMessage}</p>}
         <div className="text-center">
           <button
             onClick={handleOpenCall}
@@ -149,7 +130,7 @@ function ChamadosPPS() {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-export default ChamadosPPS;
+export default ChamadosPPS

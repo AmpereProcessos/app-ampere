@@ -60,7 +60,7 @@ function ChamadosSuprimentos() {
 
   // Fetch Functions
   function getCalls() {
-    axios.get('/api/calls/suprimentos/mainData').then((res) => {
+    axios.get('/api/chamados/suprimentos/mainData').then((res) => {
       setOpenCalls({
         general: res.data.abertos,
         filtered: res.data.abertos,

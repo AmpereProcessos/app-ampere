@@ -34,6 +34,7 @@ import LoadingPage from './utils/LoadingPage'
 import ErrorPage from './utils/ErrorPage'
 import toast from 'react-hot-toast'
 import { useEffect } from 'react'
+import { handleComercialProjectUpdate } from '../utils/methods/mutation/comercial'
 function formatCnpjCpf(value) {
   const cnpjCpf = value.replace(/\D/g, '')
 
@@ -64,9 +65,9 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
     text: '',
     color: '',
   })
-  const { mutate } = useMutationWithFeedback({
+  const { mutate: updateProject } = useMutationWithFeedback({
     mutationKey: ['update-project'],
-    mutationFn: updateProject,
+    mutationFn: handleComercialProjectUpdate,
     affectedQueryKey: ['comercial-projects'],
     queryClient: queryClient,
   })
@@ -117,27 +118,6 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
     }
     return true
   }
-  async function handleChanges() {
-    if (handleValidation()) {
-      try {
-        if (project.contrato?.status != 'ASSINADO' && infoHolder.contrato?.status == 'ASSINADO') {
-          notifyContractSigning()
-        }
-        await handleCRMProjectUpdatesAutomations({
-          projectId: project._id,
-          idCRMProject: project.idProjetoCRM,
-          idCRMPropose: project.idPropostaCRM,
-          newData: changes,
-          previousData: project,
-        })
-        mutate({ id: projectId, changes: changes })
-        // const { data } = await axios.post(`/api/projects/update/${project._id}`, changes)
-      } catch (error) {
-        const msg = getErrorMessage(error)
-        toast.error(msg)
-      }
-    }
-  }
   useEffect(() => {
     setInfo(project)
   }, [project])
@@ -152,7 +132,11 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
             </div>
             <div className="flex gap-x-2 items-center">
               {msg.text && <p className={`hidden lg:block text-sm italic ${msg.color}`}>{msg.text}</p>}
-              <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={handleChanges} />
+              <SaveButton
+                text={'Salvar alterações'}
+                icon={<FaSave />}
+                handleClick={() => updateProject({ previousData: project, newData: infoHolder, changes: changes })}
+              />
               <button>
                 <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
               </button>

@@ -1,274 +1,268 @@
-import React, { useEffect, useState } from "react";
-import {
-  cities,
-  cidadesAtendidas,
-  credores,
-  tiposDeServico,
-  equipesTecnicas,
-  oemPlans,
-} from "../../utils/constants";
-import NumberInput from "../../components/NumberInput";
-import SelectInput from "../../components/SelectInput";
-import TextInput from "../../components/TextInput";
-import DateInput from "../../components/DateInput";
-import { vendedores } from "../../utils/constants";
-import { AiOutlineSearch } from "react-icons/ai";
-import { useRouter } from "next/router";
-import axios from "axios";
-import { useSession } from "next-auth/react";
-import LoadingPage from "../../components/utils/LoadingPage";
+import React, { useEffect, useState } from 'react'
+import { cities, cidadesAtendidas, credores, tiposDeServico, equipesTecnicas, oemPlans } from '../../utils/constants'
+import NumberInput from '../../components/NumberInput'
+import SelectInput from '../../components/SelectInput'
+import TextInput from '../../components/TextInput'
+import DateInput from '../../components/DateInput'
+import { vendedores } from '../../utils/constants'
+import { AiOutlineSearch } from 'react-icons/ai'
+import { useRouter } from 'next/router'
+import axios from 'axios'
+import { useSession } from 'next-auth/react'
+import LoadingPage from '../../components/utils/LoadingPage'
+import { contractStatus } from '../../utils/select-options'
 function formataCPF(cpf) {
   //retira os caracteres indesejados...
-  cpf = cpf.replace(/[^\d]/g, "");
+  cpf = cpf.replace(/[^\d]/g, '')
   //realizar a formatação...
-  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
 }
 function formataCEP(cep) {
   cep = cep
-    .replace(/\D/g, "")
-    .replace(/(\d{5})(\d)/, "$1-$2")
-    .replace(/(-\d{3})\d+?$/, "$1");
+    .replace(/\D/g, '')
+    .replace(/(\d{5})(\d)/, '$1-$2')
+    .replace(/(-\d{3})\d+?$/, '$1')
 
-  return cep;
+  return cep
 }
 const validation = {
   nomeDoContrato: {
     test(value) {
-      return value.trim().length < 10;
+      return value.trim().length < 10
     },
-    msg: "Por favor, preencha um nome válido",
+    msg: 'Por favor, preencha um nome válido',
   },
   nomeDoProjeto: {
     test(value) {
-      return value.trim().length < 2;
+      return value.trim().length < 2
     },
-    msg: "Por favor, preencha um nome válido",
+    msg: 'Por favor, preencha um nome válido',
   },
-  "vendedor.nome": {
+  'vendedor.nome': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha o vendedor do projeto",
+    msg: 'Por favor, preencha o vendedor do projeto',
   },
   codigoSVB: {
     test(value) {
-      return value == 0;
+      return value == 0
     },
-    msg: "Por favor, preencha um código SVB válido",
+    msg: 'Por favor, preencha um código SVB válido',
   },
   cpf_cnpj: {
     test(value) {
-      return value.toString().length < 10;
+      return value.toString().length < 10
     },
-    msg: "Por favor, preencha um CPF/CNPJ válido",
+    msg: 'Por favor, preencha um CPF/CNPJ válido',
   },
   telefone: {
     test(value) {
-      return value.toString().length < 9;
+      return value.toString().length < 9
     },
-    msg: "Por favor, preencha um Telefone válido",
+    msg: 'Por favor, preencha um Telefone válido',
   },
   linkDrive: {
     test(value) {
-      return value.trim().length < 5;
+      return value.trim().length < 5
     },
-    msg: "Por favor, preencha o link da pasta no Drive do cliente",
+    msg: 'Por favor, preencha o link da pasta no Drive do cliente',
   },
-  "estruturaPersonaliza.tipo": {
+  'estruturaPersonaliza.tipo': {
     test(value) {
-      return value == "N/A";
+      return value == 'N/A'
     },
-    msg: "Por favor, preencha um tipo de estrutura válido",
+    msg: 'Por favor, preencha um tipo de estrutura válido',
   },
-  "contrato.status": {
+  'contrato.status': {
     test(value) {
-      return value != "AGUARDANDO SOLICITAÇÃO" && value != "SOLICITADO";
+      return value != 'AGUARDANDO SOLICITAÇÃO' && value != 'SOLICITADO'
     },
-    msg: "Por favor, preencha um status válido de contrato",
+    msg: 'Por favor, preencha um status válido de contrato',
   },
-  "pagamento.forma": {
+  'pagamento.forma': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha uma forma de pagamento",
+    msg: 'Por favor, preencha uma forma de pagamento',
   },
-  "pagamento.pagador": {
+  'pagamento.pagador': {
     test(value) {
-      return value.trim().length < 3;
+      return value.trim().length < 3
     },
-    msg: "Por favor, preencha o nome do pagador.",
+    msg: 'Por favor, preencha o nome do pagador.',
   },
-  "pagamento.contatoPagador": {
+  'pagamento.contatoPagador': {
     test(value) {
-      return value.trim().length < 9;
+      return value.trim().length < 9
     },
-    msg: "Por favor, preencha o contato do pagador.",
+    msg: 'Por favor, preencha o contato do pagador.',
   },
-  "compra.localEntrega": {
+  'compra.localEntrega': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha o local de entrega",
+    msg: 'Por favor, preencha o local de entrega',
   },
-  "compra.tipoDoKit": {
+  'compra.tipoDoKit': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha o tipo do kit",
+    msg: 'Por favor, preencha o tipo do kit',
   },
-  "dadosCemig.titularProjeto": {
+  'dadosCemig.titularProjeto': {
     test(value) {
-      return value.trim().length < 5;
+      return value.trim().length < 5
     },
-    msg: "Por favor, digite o titular do projeto",
+    msg: 'Por favor, digite o titular do projeto',
   },
-  "dadosCemig.distCreditos": {
+  'dadosCemig.distCreditos': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha sobre a necessidade de dist. de créditos",
+    msg: 'Por favor, preencha sobre a necessidade de dist. de créditos',
   },
-  "sistema.qtdeModulos": {
+  'sistema.qtdeModulos': {
     test(value) {
-      return value == 0;
+      return value == 0
     },
-    msg: "Por favor, preencha a quantidade de módulos",
+    msg: 'Por favor, preencha a quantidade de módulos',
   },
-  "sistema.potModulos": {
+  'sistema.potModulos': {
     test(value) {
-      return value == 0;
+      return value == 0
     },
-    msg: "Por favor, preencha a potência dos módulos",
+    msg: 'Por favor, preencha a potência dos módulos',
   },
-  "sistema.topologia": {
+  'sistema.topologia': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha uma topologia válida",
+    msg: 'Por favor, preencha uma topologia válida',
   },
-  "sistema.inversor": {
+  'sistema.inversor': {
     test(value) {
-      return value.trim().length < 5;
+      return value.trim().length < 5
     },
-    msg: "Por favor, preencha informacoes sobre os micro/inversor",
+    msg: 'Por favor, preencha informacoes sobre os micro/inversor',
   },
-  "material.previsaoCustos": {
+  'material.previsaoCustos': {
     test(value) {
-      return value == 0;
+      return value == 0
     },
-    msg: "Por favor, preencha um valor válido de previsão de custos de insumo",
+    msg: 'Por favor, preencha um valor válido de previsão de custos de insumo',
   },
-  "obra.laudo": {
+  'obra.laudo': {
     test(value) {
-      return value == "NÃO DEFINIDO";
+      return value == 'NÃO DEFINIDO'
     },
-    msg: "Por favor, preencha o status do laudo",
+    msg: 'Por favor, preencha o status do laudo',
   },
-};
+}
 function NovoProjeto() {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/authHome')
     },
-  });
+  })
 
-  const [msg, setMsg] = useState("");
-  const [error, setError] = useState(false);
+  const [msg, setMsg] = useState('')
+  const [error, setError] = useState(false)
   const [infoHolder, setInfo] = useState({
-    nomeDoContrato: "",
-    nomeDoProjeto: "",
+    nomeDoContrato: '',
+    nomeDoProjeto: '',
     cpf_cnpj: 0,
-    telefone: "",
-    cidade: "ITUIUTABA",
+    telefone: '',
+    cidade: 'ITUIUTABA',
     possuiaGD: false,
-    uf: "MG",
+    uf: 'MG',
     vendedor: {
-      nome: "NÃO DEFINIDO",
+      nome: 'NÃO DEFINIDO',
       codigo: 0,
     },
-    linkDrive: "",
-    regional: "REGIONAL ITUIUTABA",
-    tipoDeServico: "SISTEMA FOTOVOLTAICO",
+    linkDrive: '',
+    regional: 'REGIONAL ITUIUTABA',
+    tipoDeServico: 'SISTEMA FOTOVOLTAICO',
     codigoSVB: 0,
-    segmento: "RESIDENCIAL",
-    obsComercial: "",
+    segmento: 'RESIDENCIAL',
+    obsComercial: '',
     visitaTecnica: {
-      status: "PENDÊNCIA",
-      tecnico: "",
-      saidaDoCliente: "",
-      amperagem: "",
-      tipoDaTelha: "",
+      status: 'PENDÊNCIA',
+      tecnico: '',
+      saidaDoCliente: '',
+      amperagem: '',
+      tipoDaTelha: '',
     },
     padrao: {
-      tipo: "NÃO DEFINIDO",
-      respPagamento: "NÃO HAVERA TROCA PADRÃO",
-      respInstalacao: "NÃO SE APLICA",
+      tipo: 'NÃO DEFINIDO',
+      respPagamento: 'NÃO HAVERA TROCA PADRÃO',
+      respInstalacao: 'NÃO SE APLICA',
       valor: 0,
     },
     estruturaPersonalizada: {
-      aplicavel: "NÃO",
-      tipo: "N/A",
-      respPagamento: "NÃO SE APLICA",
+      aplicavel: 'NÃO',
+      tipo: 'N/A',
+      respPagamento: 'NÃO SE APLICA',
       valor: 0,
-      status: "N/A",
+      status: 'N/A',
     },
     contrato: {
-      status: "NÃO DEFINIDO",
+      status: 'NÃO DEFINIDO',
       dataSolicitacao: null, // formatar como data
       dataLiberacao: null, // formatar como data
       dataAssinatura: null, // formatar como data
-      formaAssinatura: "NÃO DEFINIDO",
+      formaAssinatura: 'NÃO DEFINIDO',
     },
     pagamento: {
-      status: "NÃO DEFINIDO",
-      forma: "NÃO DEFINIDO",
-      credor: "NÃO DEFINIDO",
-      pagador: "",
-      contatoPagador: "",
+      status: 'NÃO DEFINIDO',
+      forma: 'NÃO DEFINIDO',
+      credor: 'NÃO DEFINIDO',
+      pagador: '',
+      contatoPagador: '',
       retorno: 0,
       cobrancaFeita: false,
     },
     faturamento: {
       previsaoFaturamento: 0, // adicionar empresa e cnpj de faturamento
       cnpjFaturamento: 0,
-      empresaFaturamento: "NÃO DEFINIDO",
+      empresaFaturamento: 'NÃO DEFINIDO',
     },
     compra: {
-      statusLiberacao: "NÃO DEFINIDO",
+      statusLiberacao: 'NÃO DEFINIDO',
       dataLiberacao: undefined, // formatar como data
-      tipoDoKit: "NÃO DEFINIDO",
+      tipoDoKit: 'NÃO DEFINIDO',
       valorDoKit: 0,
-      kitInfo: "",
-      fornecedor: "NÃO DEFINIDO",
+      kitInfo: '',
+      fornecedor: 'NÃO DEFINIDO',
       dataPedido: undefined, // formatar como data
       dataPagamento: undefined,
       previsaoEntrega: undefined, // formatar como data
-      localEntrega: "NÃO DEFINIDO",
-      informacoes: "",
+      localEntrega: 'NÃO DEFINIDO',
+      informacoes: '',
       previsaoNotaFiscal: undefined,
-      rastreio: "",
-      statusEntrega: "NÃO DEFINIDO",
+      rastreio: '',
+      statusEntrega: 'NÃO DEFINIDO',
     },
     dadosCemig: {
-      titularProjeto: "",
-      numeroInstalacao: "",
-      distCreditos: "NÃO DEFINIDO",
+      titularProjeto: '',
+      numeroInstalacao: '',
+      distCreditos: 'NÃO DEFINIDO',
       qtdeDistCreditos: 0,
     },
     sistema: {
       qtdeModulos: 0,
       potModulos: 0,
       potPico: 0,
-      topologia: "NÃO DEFINIDO",
-      inversor: "",
+      topologia: 'NÃO DEFINIDO',
+      inversor: '',
       valorProjeto: 0,
     },
     projeto: {
-      iniciar: "NÃO DEFINIDO",
+      iniciar: 'NÃO DEFINIDO',
       projetista: {
-        nome: "NÃO DEFINIDO",
+        nome: 'NÃO DEFINIDO',
         codigo: undefined,
       },
       dataLiberacaoDocumentacao: undefined, // formatar como data
@@ -276,28 +270,28 @@ function NovoProjeto() {
       diagramaUnifilar: undefined,
       desenhoTelhado: undefined,
       mapaDeMicro: undefined,
-      aumentoDeCarga: "NÃO",
+      aumentoDeCarga: 'NÃO',
       acStatus: undefined,
-      projetoConcluido: "NÃO",
+      projetoConcluido: 'NÃO',
       relatorioComissionamento: undefined,
     },
     parecer: {
-      statusDoParecerDeAcesso: "NÃO DEFINIDO",
+      statusDoParecerDeAcesso: 'NÃO DEFINIDO',
       dataParecerDeAcesso: undefined, // formatar como data
-      parecerReprovado: "NÃO",
+      parecerReprovado: 'NÃO',
       qtdeReprovas: 0,
       motivoReprova: undefined,
     },
     vistoria: {
       dataPedido: undefined, // formatar como data
-      status: "NÃO DEFINIDO",
-      vistoriaReprovada: "NÃO",
+      status: 'NÃO DEFINIDO',
+      vistoriaReprovada: 'NÃO',
       qtdeReprovas: 0,
       motivoReprova: undefined,
     },
     medidor: {
       data: undefined, // formatar como data
-      status: "NÃO DEFINIDO",
+      status: 'NÃO DEFINIDO',
     },
     oem: {
       aplicavel: false, // checar se existe campo existente na gestao
@@ -305,56 +299,56 @@ function NovoProjeto() {
       qtdeManutencoes: null,
       oemConcluido: null,
       diagnostico: null,
-      plano: "NÃO DEFINIDO",
+      plano: 'NÃO DEFINIDO',
     },
     obra: {
-      laudo: "NÃO DEFINIDO",
-      observacoes: "", // possibilidade de substituir \n por /, e quebrar textp em pontos
-      statusSolicitacao: "NÃO SOLICITADA",
+      laudo: 'NÃO DEFINIDO',
+      observacoes: '', // possibilidade de substituir \n por /, e quebrar textp em pontos
+      statusSolicitacao: 'NÃO SOLICITADA',
       entrada: undefined, // formatar como data
       saida: undefined, // formatar como data.
-      statusDaObra: "NÃO DEFINIDO",
-      equipeResp: "NÃO DEFINIDO",
+      statusDaObra: 'NÃO DEFINIDO',
+      equipeResp: 'NÃO DEFINIDO',
       checklist: undefined,
-      trafo: "NÃO",
+      trafo: 'NÃO',
       fotosInstalacao: undefined,
     },
     material: {
-      statusSeparacao: "NÃO DEFINIDO",
+      statusSeparacao: 'NÃO DEFINIDO',
       previsaoCustos: 0, // toFixed(2)
       efetivoCustos: 0,
       notaFiscal: undefined,
-      materialFaltante: "",
+      materialFaltante: '',
     },
-    manutencaoPreventiva: { status: "NÃO REALIZADO", data: null },
+    manutencaoPreventiva: { status: 'NÃO REALIZADO', data: null },
     relatorios: {
-      envioUm: { status: "NÃO REALIZADO", data: null },
-      envioDois: { status: "NÃO REALIZADO", data: null },
-      envioTres: { status: "NÃO REALIZADO", data: null },
-      envioQuatro: { status: "NÃO REALIZADO", data: null },
+      envioUm: { status: 'NÃO REALIZADO', data: null },
+      envioDois: { status: 'NÃO REALIZADO', data: null },
+      envioTres: { status: 'NÃO REALIZADO', data: null },
+      envioQuatro: { status: 'NÃO REALIZADO', data: null },
     },
     conferencias: {
-      usinaLigada: { status: "NÃO REALIZADO", data: null },
-      monitoramentoFeito: { status: "NÃO REALIZADO", data: null },
-      energiaInjetada: { status: "NÃO REALIZADO", data: null },
+      usinaLigada: { status: 'NÃO REALIZADO', data: null },
+      monitoramentoFeito: { status: 'NÃO REALIZADO', data: null },
+      energiaInjetada: { status: 'NÃO REALIZADO', data: null },
     },
     app: {
       data: undefined,
-      login: "",
-      senha: "",
+      login: '',
+      senha: '',
     },
     dataNascimento: undefined,
-    email: "",
-    logradouro: "",
+    email: '',
+    logradouro: '',
     numeroResidencia: 0,
-    bairro: "",
-    cep: "",
-    canalVenda: "NÃO DEFINIDO",
+    bairro: '',
+    cep: '',
+    canalVenda: 'NÃO DEFINIDO',
     indicacao: {
-      quemIndicou: "", //add
-      contato: "", //add
+      quemIndicou: '', //add
+      contato: '', //add
     },
-    ondeTrabalha: "",
+    ondeTrabalha: '',
     jornada: {
       dataUltimoContato: undefined,
       boasVindas: false,
@@ -371,100 +365,100 @@ function NovoProjeto() {
       dataNps: undefined,
     },
     nps: undefined,
-  });
+  })
   function resetState() {
     setInfo({
-      nomeDoContrato: "",
-      nomeDoProjeto: "",
+      nomeDoContrato: '',
+      nomeDoProjeto: '',
       cpf_cnpj: 0,
-      telefone: "",
-      cidade: "ITUIUTABA",
-      uf: "MG",
+      telefone: '',
+      cidade: 'ITUIUTABA',
+      uf: 'MG',
       vendedor: {
-        nome: "NÃO DEFINIDO",
+        nome: 'NÃO DEFINIDO',
         codigo: 0,
       },
-      linkDrive: "",
-      regional: "REGIONAL ITUIUTABA",
-      tipoDeServico: "SISTEMA FOTOVOLTAICO",
+      linkDrive: '',
+      regional: 'REGIONAL ITUIUTABA',
+      tipoDeServico: 'SISTEMA FOTOVOLTAICO',
       codigoSVB: 0,
-      segmento: "RESIDENCIAL",
-      obsComercial: "",
+      segmento: 'RESIDENCIAL',
+      obsComercial: '',
       visitaTecnica: {
-        status: "PENDÊNCIA",
-        tecnico: "",
-        saidaDoCliente: "",
-        amperagem: "",
-        tipoDaTelha: "",
+        status: 'PENDÊNCIA',
+        tecnico: '',
+        saidaDoCliente: '',
+        amperagem: '',
+        tipoDaTelha: '',
       },
       padrao: {
-        tipo: "NÃO DEFINIDO",
-        respPagamento: "NÃO HAVERA TROCA PADRÃO",
-        respInstalacao: "NÃO SE APLICA",
+        tipo: 'NÃO DEFINIDO',
+        respPagamento: 'NÃO HAVERA TROCA PADRÃO',
+        respInstalacao: 'NÃO SE APLICA',
         valor: 0,
       },
       estruturaPersonalizada: {
-        aplicavel: "NÃO",
-        tipo: "N/A",
-        respPagamento: "NÃO SE APLICA",
+        aplicavel: 'NÃO',
+        tipo: 'N/A',
+        respPagamento: 'NÃO SE APLICA',
         valor: 0,
-        status: "N/A",
+        status: 'N/A',
       },
       contrato: {
-        status: "NÃO DEFINIDO",
+        status: 'NÃO DEFINIDO',
         dataSolicitacao: null, // formatar como data
         dataLiberacao: null, // formatar como data
         dataAssinatura: null, // formatar como data
-        formaAssinatura: "NÃO DEFINIDO",
+        formaAssinatura: 'NÃO DEFINIDO',
       },
       pagamento: {
-        status: "NÃO DEFINIDO",
-        forma: "NÃO DEFINIDO",
-        credor: "NÃO DEFINIDO",
-        pagador: "",
-        contatoPagador: "",
+        status: 'NÃO DEFINIDO',
+        forma: 'NÃO DEFINIDO',
+        credor: 'NÃO DEFINIDO',
+        pagador: '',
+        contatoPagador: '',
         retorno: 0,
         cobrancaFeita: false,
       },
       faturamento: {
         previsaoFaturamento: 0, // adicionar empresa e cnpj de faturamento
         cnpjFaturamento: 0,
-        empresaFaturamento: "NÃO DEFINIDO",
+        empresaFaturamento: 'NÃO DEFINIDO',
       },
       compra: {
-        statusLiberacao: "NÃO DEFINIDO",
+        statusLiberacao: 'NÃO DEFINIDO',
         dataLiberacao: undefined, // formatar como data
-        tipoDoKit: "NÃO DEFINIDO",
+        tipoDoKit: 'NÃO DEFINIDO',
         valorDoKit: 0,
-        kitInfo: "",
-        fornecedor: "NÃO DEFINIDO",
+        kitInfo: '',
+        fornecedor: 'NÃO DEFINIDO',
         dataPedido: undefined, // formatar como data
         dataPagamento: undefined,
         previsaoEntrega: undefined, // formatar como data
-        localEntrega: "NÃO DEFINIDO",
-        informacoes: "",
+        localEntrega: 'NÃO DEFINIDO',
+        informacoes: '',
         previsaoNotaFiscal: undefined,
-        rastreio: "",
-        statusEntrega: "NÃO DEFINIDO",
+        rastreio: '',
+        statusEntrega: 'NÃO DEFINIDO',
       },
       dadosCemig: {
-        titularProjeto: "",
-        numeroInstalacao: "",
-        distCreditos: "NÃO DEFINIDO",
+        titularProjeto: '',
+        numeroInstalacao: '',
+        distCreditos: 'NÃO DEFINIDO',
         qtdeDistCreditos: 0,
       },
       sistema: {
         qtdeModulos: 0,
         potModulos: 0,
         potPico: 0,
-        topologia: "NÃO DEFINIDO",
-        inversor: "",
+        topologia: 'NÃO DEFINIDO',
+        inversor: '',
         valorProjeto: 0,
       },
       projeto: {
-        iniciar: "NÃO DEFINIDO",
+        iniciar: 'NÃO DEFINIDO',
         projetista: {
-          nome: "NÃO DEFINIDO",
+          nome: 'NÃO DEFINIDO',
           codigo: undefined,
         },
         dataLiberacaoDocumentacao: undefined, // formatar como data
@@ -472,77 +466,77 @@ function NovoProjeto() {
         diagramaUnifilar: undefined,
         desenhoTelhado: undefined,
         mapaDeMicro: undefined,
-        aumentoDeCarga: "NÃO",
+        aumentoDeCarga: 'NÃO',
         acStatus: undefined,
-        projetoConcluido: "NÃO",
+        projetoConcluido: 'NÃO',
         relatorioComissionamento: undefined,
       },
       parecer: {
-        statusDoParecerDeAcesso: "NÃO DEFINIDO",
+        statusDoParecerDeAcesso: 'NÃO DEFINIDO',
         dataParecerDeAcesso: undefined, // formatar como data
-        parecerReprovado: "NÃO",
+        parecerReprovado: 'NÃO',
         qtdeReprovas: 0,
         motivoReprova: undefined,
       },
       vistoria: {
         dataPedido: undefined, // formatar como data
-        status: "NÃO DEFINIDO",
-        vistoriaReprovada: "NÃO",
+        status: 'NÃO DEFINIDO',
+        vistoriaReprovada: 'NÃO',
         qtdeReprovas: 0,
         motivoReprova: undefined,
       },
       medidor: {
         data: undefined, // formatar como data
-        status: "NÃO DEFINIDO",
+        status: 'NÃO DEFINIDO',
       },
       obra: {
-        laudo: "NÃO DEFINIDO",
-        observacoes: "", // possibilidade de substituir \n por /, e quebrar textp em pontos
-        statusSolicitacao: "NÃO SOLICITADA",
+        laudo: 'NÃO DEFINIDO',
+        observacoes: '', // possibilidade de substituir \n por /, e quebrar textp em pontos
+        statusSolicitacao: 'NÃO SOLICITADA',
         entrada: undefined, // formatar como data
         saida: undefined, // formatar como data.
-        statusDaObra: "NÃO DEFINIDO",
-        equipeResp: "NÃO DEFINIDO",
+        statusDaObra: 'NÃO DEFINIDO',
+        equipeResp: 'NÃO DEFINIDO',
         checklist: undefined,
-        trafo: "NÃO",
+        trafo: 'NÃO',
         fotosInstalacao: undefined,
       },
       material: {
-        statusSeparacao: "NÃO DEFINIDO",
+        statusSeparacao: 'NÃO DEFINIDO',
         previsaoCustos: 0, // toFixed(2)
         efetivoCustos: 0,
         notaFiscal: undefined,
-        materialFaltante: "",
+        materialFaltante: '',
       },
-      manutencaoPreventiva: { status: "NÃO REALIZADO", data: null },
+      manutencaoPreventiva: { status: 'NÃO REALIZADO', data: null },
       relatorios: {
-        envioUm: { status: "NÃO REALIZADO", data: null },
-        envioDois: { status: "NÃO REALIZADO", data: null },
-        envioTres: { status: "NÃO REALIZADO", data: null },
-        envioQuatro: { status: "NÃO REALIZADO", data: null },
+        envioUm: { status: 'NÃO REALIZADO', data: null },
+        envioDois: { status: 'NÃO REALIZADO', data: null },
+        envioTres: { status: 'NÃO REALIZADO', data: null },
+        envioQuatro: { status: 'NÃO REALIZADO', data: null },
       },
       conferencias: {
-        usinaLigada: { status: "NÃO REALIZADO", data: null },
-        monitoramentoFeito: { status: "NÃO REALIZADO", data: null },
-        energiaInjetada: { status: "NÃO REALIZADO", data: null },
+        usinaLigada: { status: 'NÃO REALIZADO', data: null },
+        monitoramentoFeito: { status: 'NÃO REALIZADO', data: null },
+        energiaInjetada: { status: 'NÃO REALIZADO', data: null },
       },
       app: {
         data: undefined,
-        login: "",
-        senha: "",
+        login: '',
+        senha: '',
       },
       dataNascimento: undefined,
-      email: "",
-      logradouro: "",
+      email: '',
+      logradouro: '',
       numeroResidencia: 0,
-      bairro: "",
-      cep: "",
-      canalVenda: "NÃO DEFINIDO",
+      bairro: '',
+      cep: '',
+      canalVenda: 'NÃO DEFINIDO',
       indicacao: {
-        quemIndicou: "", //add
-        contato: "", //add
+        quemIndicou: '', //add
+        contato: '', //add
       },
-      ondeTrabalha: "",
+      ondeTrabalha: '',
       jornada: {
         dataUltimoContato: undefined,
         boasVindas: false,
@@ -559,259 +553,230 @@ function NovoProjeto() {
         dataNps: undefined,
       },
       nps: undefined,
-    });
+    })
   }
   function addProject() {
-    axios.post("/api/projects/add", infoHolder).then((res) => {
-      setMsg("Projeto adicionado!");
-      resetState();
-    });
+    axios.post('/api/projects/add', infoHolder).then((res) => {
+      setMsg('Projeto adicionado!')
+      resetState()
+    })
   }
   async function findCPF() {
-    let { data } = await axios.get(
-      `https://viacep.com.br/ws/${infoHolder.cep}/json/`
-    );
+    let { data } = await axios.get(`https://viacep.com.br/ws/${infoHolder.cep}/json/`)
     setInfo({
       ...infoHolder,
       bairro: data.bairro,
       logradouro: data.logradouro,
-    });
+    })
   }
   // adicionar quem indicou e contato de quem indicou
   function validateCreation() {
-    var holder;
+    var holder
     Object.entries(infoHolder).forEach((entry) => {
-      if (typeof entry[1] == "object") {
-        let tag = entry[0];
+      if (typeof entry[1] == 'object') {
+        let tag = entry[0]
         Object.keys(entry[1]).forEach((x) => {
           if (validation[`${tag}.${x}`] != undefined) {
             if (validation[`${tag}.${x}`].test(infoHolder[tag][x]) == true) {
-              holder = true;
-              setMsg(validation[`${tag}.${x}`].msg);
+              holder = true
+              setMsg(validation[`${tag}.${x}`].msg)
             }
-          } else return;
-        });
+          } else return
+        })
       } else {
-        let tag = entry[0];
+        let tag = entry[0]
         if (validation[tag] != undefined) {
           if (validation[tag].test(infoHolder[tag]) == true) {
-            holder = true;
-            setMsg(validation[tag].msg);
+            holder = true
+            setMsg(validation[tag].msg)
           }
         }
       }
-    });
+    })
     if (holder == undefined) {
-      setMsg("");
-      addProject();
+      setMsg('')
+      addProject()
     }
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes("PPS")) {
-      return;
+    if (session?.user.accessibleRoutes.includes('PPS')) {
+      return
     } else {
       if (session?.user) {
-        router.push("/");
+        router.push('/')
       }
     }
-  }, [session]);
-  if (status == "loading") return <LoadingPage />;
-  if (status == "authenticated") {
+  }, [session])
+  if (status == 'loading') return <LoadingPage />
+  if (status == 'authenticated') {
     return (
       <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
         <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              Informações do cliente
-            </span>
+            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">Informações do cliente</span>
             <div className="flex items-center gap-2 justify-around flex-wrap">
               <TextInput
-                label={"Nome do contrato"}
-                value={
-                  infoHolder.nomeDoContrato ? infoHolder.nomeDoContrato : ""
-                }
+                label={'Nome do contrato'}
+                value={infoHolder.nomeDoContrato ? infoHolder.nomeDoContrato : ''}
                 editable={true}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
                     nomeDoContrato: value.toUpperCase(),
-                  });
+                  })
                 }}
               />
               <TextInput
-                label={"Nome do Projeto"}
+                label={'Nome do Projeto'}
                 value={infoHolder.nomeDoProjeto}
                 editable={true}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
                     nomeDoProjeto: value.toUpperCase(),
-                  });
+                  })
                 }}
               />
               <TextInput
-                label={"CPF/CNPJ"}
+                label={'CPF/CNPJ'}
                 editable={true}
-                value={
-                  infoHolder.cpf_cnpj
-                    ? formataCPF(infoHolder.cpf_cnpj.toString())
-                    : "-"
-                }
+                value={infoHolder.cpf_cnpj ? formataCPF(infoHolder.cpf_cnpj.toString()) : '-'}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
                     cpf_cnpj: value,
-                  });
+                  })
                 }}
               />
               <TextInput
-                label={"Telefone"}
+                label={'Telefone'}
                 editable={true}
-                value={infoHolder.telefone ? infoHolder.telefone : ""}
+                value={infoHolder.telefone ? infoHolder.telefone : ''}
                 handleChange={(value) => {
-                  setInfo({ ...infoHolder, telefone: value });
+                  setInfo({ ...infoHolder, telefone: value })
                 }}
               />
               <SelectInput
-                label={"Cidade"}
+                label={'Cidade'}
                 editable={true}
-                value={
-                  infoHolder.cidade ? infoHolder.cidade : cidadesAtendidas[0]
-                }
+                value={infoHolder.cidade ? infoHolder.cidade : cidadesAtendidas[0]}
                 options={cidadesAtendidas.map((cidade) => {
-                  return { label: cidade, value: cidade };
+                  return { label: cidade, value: cidade }
                 })}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
                     cidade: value,
-                  });
+                  })
                 }}
               />
               <NumberInput
-                label={"CEP"}
+                label={'CEP'}
                 editable={true}
                 value={infoHolder.cep ? infoHolder.cep : null}
                 handleChange={(value) => {
-                  setInfo({ ...infoHolder, cep: value });
+                  setInfo({ ...infoHolder, cep: value })
                 }}
               />
-              <button
-                onClick={findCPF}
-                className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-              >
+              <button onClick={findCPF} className="flex items-center p-1 h-[30px] bg-[#fead61] rounded">
                 <AiOutlineSearch />
               </button>
               <TextInput
-                label={"Logradouro"}
+                label={'Logradouro'}
                 editable={true}
-                value={infoHolder.logradouro ? infoHolder.logradouro : ""}
+                value={infoHolder.logradouro ? infoHolder.logradouro : ''}
                 handleChange={(value) => {
-                  setInfo({ ...infoHolder, logradouro: value });
+                  setInfo({ ...infoHolder, logradouro: value })
                 }}
               />
               <TextInput
-                label={"Bairro"}
+                label={'Bairro'}
                 editable={true}
-                value={infoHolder.bairro ? infoHolder.bairro : ""}
+                value={infoHolder.bairro ? infoHolder.bairro : ''}
                 handleChange={(value) => {
-                  setInfo({ ...infoHolder, bairro: value.toUpperCase() });
+                  setInfo({ ...infoHolder, bairro: value.toUpperCase() })
                 }}
               />
               <NumberInput
-                label={"Número da residência"}
+                label={'Número da residência'}
                 editable={true}
-                value={
-                  infoHolder.numeroResidencia ? infoHolder.numeroResidencia : 0
-                }
+                value={infoHolder.numeroResidencia ? infoHolder.numeroResidencia : 0}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
                     numeroResidencia: Number(value),
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"Regional"}
+                label={'Regional'}
                 editable={true}
                 value={infoHolder.regional}
                 options={[
                   {
-                    label: "REGIONAL ITUIUTABA",
-                    value: "REGIONAL ITUIUTABA",
+                    label: 'REGIONAL ITUIUTABA',
+                    value: 'REGIONAL ITUIUTABA',
                   },
                   {
-                    label: "REGIONAL UBERLÂNDIA",
-                    value: "REGIONAL UBERLÂNDIA",
+                    label: 'REGIONAL UBERLÂNDIA',
+                    value: 'REGIONAL UBERLÂNDIA',
                   },
                 ]}
                 handleChange={(value) => {
-                  setInfo({ ...infoHolder, regional: value });
+                  setInfo({ ...infoHolder, regional: value })
                 }}
               />
               <TextInput
-                label={"LINK PASTA DO DRIVE"}
+                label={'LINK PASTA DO DRIVE'}
                 editable={true}
-                value={infoHolder.linkDrive ? infoHolder.linkDrive : ""}
+                value={infoHolder.linkDrive ? infoHolder.linkDrive : ''}
                 handleChange={(value) => {
-                  setInfo({ ...infoHolder, linkDrive: value });
+                  setInfo({ ...infoHolder, linkDrive: value })
                 }}
               />
               <NumberInput
-                label={"CÓDIGO SBV"}
+                label={'CÓDIGO SBV'}
                 editable={true}
                 value={infoHolder.codigoSVB ? infoHolder.codigoSVB : 0}
-                handleChange={(value) =>
-                  setInfo({ ...infoHolder, codigoSVB: value })
-                }
+                handleChange={(value) => setInfo({ ...infoHolder, codigoSVB: value })}
               />
               <TextInput
-                label={"EMAIL"}
+                label={'EMAIL'}
                 editable={true}
-                value={infoHolder.email ? infoHolder.email : ""}
+                value={infoHolder.email ? infoHolder.email : ''}
                 normalCase={true}
                 handleChange={(value) => {
-                  setInfo({ ...infoHolder, email: value });
+                  setInfo({ ...infoHolder, email: value })
                 }}
               />
               <SelectInput
-                label={"Canal de venda"}
-                value={
-                  infoHolder.canalVenda != undefined &&
-                  infoHolder.canalVenda != "-"
-                    ? infoHolder.canalVenda
-                    : "NÃO DEFINIDO"
-                }
+                label={'Canal de venda'}
+                value={infoHolder.canalVenda != undefined && infoHolder.canalVenda != '-' ? infoHolder.canalVenda : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
-                  { label: "EVENTO", value: "EVENTO" },
+                  { label: 'EVENTO', value: 'EVENTO' },
                   {
-                    label: "INDICAÇÃO DE AMIGO",
-                    value: "INDICAÇÃO DE AMIGO",
+                    label: 'INDICAÇÃO DE AMIGO',
+                    value: 'INDICAÇÃO DE AMIGO',
                   },
-                  { label: "INSIDE SALES", value: "INSIDE SALES" },
-                  { label: "PASSIVO", value: "PASSIVO" },
-                  { label: "PORTA A PORTA", value: "PORTA A PORTA" },
-                  { label: "TELEVENDAS", value: "TELEVENDAS" },
-                  { label: "NETWORK", value: "NETWORK" },
-                  { label: "OUTRO", value: "OUTRO" },
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: 'INSIDE SALES', value: 'INSIDE SALES' },
+                  { label: 'PASSIVO', value: 'PASSIVO' },
+                  { label: 'PORTA A PORTA', value: 'PORTA A PORTA' },
+                  { label: 'TELEVENDAS', value: 'TELEVENDAS' },
+                  { label: 'NETWORK', value: 'NETWORK' },
+                  { label: 'OUTRO', value: 'OUTRO' },
+                  { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                 ]}
                 handleChange={(value) => {
-                  setInfo({ ...infoHolder, canalVenda: value });
+                  setInfo({ ...infoHolder, canalVenda: value })
                 }}
               />
               <div className="flex">
                 <SelectInput
-                  label={"VENDEDOR"}
-                  value={
-                    infoHolder.vendedor != undefined &&
-                    infoHolder.vendedor.nome != "-"
-                      ? infoHolder.vendedor.nome
-                      : "NÃO DEFINIDO"
-                  }
+                  label={'VENDEDOR'}
+                  value={infoHolder.vendedor != undefined && infoHolder.vendedor.nome != '-' ? infoHolder.vendedor.nome : 'NÃO DEFINIDO'}
                   options={vendedores.map((vendedor) => {
-                    return { label: vendedor.nome, value: vendedor.nome };
+                    return { label: vendedor.nome, value: vendedor.nome }
                   })}
                   editable={true}
                   handleChange={(value) => {
@@ -820,38 +785,33 @@ function NovoProjeto() {
                       vendedor: {
                         ...infoHolder.vendedor,
                         nome: value,
-                        codigo:
-                          vendedores.filter(
-                            (vendedor) => vendedor.nome == value
-                          )[0].cod || "-",
+                        codigo: vendedores.filter((vendedor) => vendedor.nome == value)[0].cod || '-',
                       },
-                    });
+                    })
                   }}
                 />
               </div>
               <SelectInput
-                label={"SEGMENTO"}
+                label={'SEGMENTO'}
                 value={infoHolder.segmento}
                 editable={true}
                 options={[
-                  { label: "COMERCIAL", value: "COMERCIAL" },
-                  { label: "INDUSTRIAL", value: "INDUSTRIAL" },
-                  { label: "RESIDENCIAL", value: "RESIDENCIAL" },
-                  { label: "RURAL", value: "RURAL" },
+                  { label: 'COMERCIAL', value: 'COMERCIAL' },
+                  { label: 'INDUSTRIAL', value: 'INDUSTRIAL' },
+                  { label: 'RESIDENCIAL', value: 'RESIDENCIAL' },
+                  { label: 'RURAL', value: 'RURAL' },
                 ]}
                 handleChange={(value) => {
-                  setInfo({ ...infoHolder, segmento: value });
+                  setInfo({ ...infoHolder, segmento: value })
                 }}
               />
               <SelectInput
-                label={"TIPO DE SERVIÇO"}
+                label={'TIPO DE SERVIÇO'}
                 editable={true}
                 options={tiposDeServico.map((tipo) => {
-                  return { label: tipo.label, value: tipo.value };
+                  return { label: tipo.label, value: tipo.value }
                 })}
-                handleChange={(value) =>
-                  setInfo({ ...infoHolder, tipoDeServico: value })
-                }
+                handleChange={(value) => setInfo({ ...infoHolder, tipoDeServico: value })}
               />
               <div>
                 <input
@@ -861,7 +821,7 @@ function NovoProjeto() {
                     setInfo({
                       ...infoHolder,
                       possuiaGD: e.target.checked,
-                    });
+                    })
                   }}
                   type="checkbox"
                   name="possuiaGD"
@@ -882,7 +842,7 @@ function NovoProjeto() {
                         ...infoHolder.oem,
                         aplicavel: e.target.checked,
                       },
-                    });
+                    })
                   }}
                   type="checkbox"
                   name="oemAplicavel"
@@ -895,10 +855,8 @@ function NovoProjeto() {
               {infoHolder.oem?.aplicavel && (
                 <>
                   <NumberInput
-                    label={"Duração O&M (anos)"}
-                    value={
-                      infoHolder.oem?.duracao ? infoHolder.oem?.duracao : 0
-                    }
+                    label={'Duração O&M (anos)'}
+                    value={infoHolder.oem?.duracao ? infoHolder.oem?.duracao : 0}
                     editable={true}
                     handleChange={(value) =>
                       setInfo({
@@ -908,12 +866,8 @@ function NovoProjeto() {
                     }
                   />
                   <NumberInput
-                    label={"QTDE de manutenções"}
-                    value={
-                      infoHolder.oem?.qtdeManutencoes
-                        ? infoHolder.oem?.qtdeManutencoes
-                        : 0
-                    }
+                    label={'QTDE de manutenções'}
+                    value={infoHolder.oem?.qtdeManutencoes ? infoHolder.oem?.qtdeManutencoes : 0}
                     editable={true}
                     handleChange={(value) =>
                       setInfo({
@@ -926,17 +880,10 @@ function NovoProjeto() {
                     }
                   />
                   <SelectInput
-                    label={"PLANO DE O&M"}
+                    label={'PLANO DE O&M'}
                     editable={true}
-                    value={
-                      infoHolder.oem?.plano
-                        ? infoHolder.oem.plano
-                        : "NÃO DEFINIDO"
-                    }
-                    options={[
-                      ...oemPlans.map((plan) => plan),
-                      { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                    ]}
+                    value={infoHolder.oem?.plano ? infoHolder.oem.plano : 'NÃO DEFINIDO'}
+                    options={[...oemPlans.map((plan) => plan), { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' }]}
                     handleChange={(value) => {
                       setInfo({
                         ...infoHolder,
@@ -944,11 +891,11 @@ function NovoProjeto() {
                           ...infoHolder.oem,
                           plano: value,
                         },
-                      });
+                      })
                     }}
                   />
                   <NumberInput
-                    label={"VALOR DO PLANO"}
+                    label={'VALOR DO PLANO'}
                     editable={true}
                     value={infoHolder.oem?.valor}
                     handleChange={(value) =>
@@ -966,26 +913,20 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              VISITA TÉCNICA
-            </span>
+            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">VISITA TÉCNICA</span>
             <div className="flex gap-2 justify-around flex-wrap">
               <div>
                 <input
                   disabled={false}
-                  checked={
-                    infoHolder.visitaTecnica?.status === "REALIZADA"
-                      ? true
-                      : false
-                  }
+                  checked={infoHolder.visitaTecnica?.status === 'REALIZADA' ? true : false}
                   onChange={(e) => {
                     setInfo({
                       ...infoHolder,
                       visitaTecnica: {
                         ...infoHolder.visitaTecnica,
-                        status: e.target.checked ? "REALIZADA" : "PENDÊNCIA",
+                        status: e.target.checked ? 'REALIZADA' : 'PENDÊNCIA',
                       },
-                    });
+                    })
                   }}
                   type="checkbox"
                   name="visitaTecnica"
@@ -996,13 +937,9 @@ function NovoProjeto() {
                 </label>
               </div>
               <TextInput
-                label={"TÉCNICO RESPONSÁVEL"}
+                label={'TÉCNICO RESPONSÁVEL'}
                 editable={true}
-                value={
-                  infoHolder.visitaTecnica.tecnico
-                    ? infoHolder.visitaTecnica.tecnico
-                    : ""
-                }
+                value={infoHolder.visitaTecnica.tecnico ? infoHolder.visitaTecnica.tecnico : ''}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
@@ -1010,17 +947,13 @@ function NovoProjeto() {
                       ...infoHolder.visitaTecnica,
                       tecnico: value.toUpperCase(),
                     },
-                  });
+                  })
                 }}
               />
               <TextInput
-                label={"Tipo da telha"}
+                label={'Tipo da telha'}
                 editable={true}
-                value={
-                  infoHolder.visitaTecnica?.tipoDaTelha
-                    ? infoHolder.visitaTecnica?.tipoDaTelha
-                    : ""
-                }
+                value={infoHolder.visitaTecnica?.tipoDaTelha ? infoHolder.visitaTecnica?.tipoDaTelha : ''}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
@@ -1028,140 +961,124 @@ function NovoProjeto() {
                       ...infoHolder.visitaTecnica,
                       tipoDaTelha: value.toUpperCase(),
                     },
-                  });
+                  })
                 }}
               />
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              PADRÃO
-            </span>
+            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">PADRÃO</span>
             <div className="flex gap-2 justify-center flex-wrap">
               <SelectInput
-                label={"TIPO DO PADRÃO"}
+                label={'TIPO DO PADRÃO'}
                 editable={true}
-                value={
-                  infoHolder.padrao.tipo != undefined
-                    ? infoHolder.padrao.tipo
-                    : "NÃO DEFINIDO"
-                }
+                value={infoHolder.padrao.tipo != undefined ? infoHolder.padrao.tipo : 'NÃO DEFINIDO'}
                 options={[
                   {
-                    label: "CONTRA A REDE",
-                    value: "CONTRA A REDE",
+                    label: 'CONTRA A REDE',
+                    value: 'CONTRA A REDE',
                   },
                   {
-                    label: "A FAVOR DA REDE",
-                    value: "A FAVOR DA REDE",
+                    label: 'A FAVOR DA REDE',
+                    value: 'A FAVOR DA REDE',
                   },
                   {
-                    label: "CONSTRUIR",
-                    value: "CONSTRUIR",
+                    label: 'CONSTRUIR',
+                    value: 'CONSTRUIR',
                   },
                   {
-                    label: "SUBESTAÇÃO",
-                    value: "SUBESTAÇÃO",
+                    label: 'SUBESTAÇÃO',
+                    value: 'SUBESTAÇÃO',
                   },
                   {
-                    label: "REFORMA DE PADRÃO",
-                    value: "REFORMA DE PADRÃO",
+                    label: 'REFORMA DE PADRÃO',
+                    value: 'REFORMA DE PADRÃO',
                   },
                   {
-                    label: "N/A",
-                    value: "N/A",
+                    label: 'N/A',
+                    value: 'N/A',
                   },
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                 ]}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
                     padrao: { ...infoHolder.padrao, tipo: value },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"PAGAMENTO DO PADRÃO"}
+                label={'PAGAMENTO DO PADRÃO'}
                 editable={true}
                 value={
-                  infoHolder.padrao?.respPagamento ==
-                    "NÃO HAVERA TROCA DE PADRÃO" ||
-                  infoHolder.padrao?.respPagamento == undefined
-                    ? "NÃO HAVERA TROCA PADRÃO"
+                  infoHolder.padrao?.respPagamento == 'NÃO HAVERA TROCA DE PADRÃO' || infoHolder.padrao?.respPagamento == undefined
+                    ? 'NÃO HAVERA TROCA PADRÃO'
                     : infoHolder.padrao?.respPagamento
                 }
                 options={[
                   {
-                    label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                    value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                    label: 'CLIENTE IRÁ COMPRAR EM SEPARADO',
+                    value: 'CLIENTE IRÁ COMPRAR EM SEPARADO',
                   },
                   {
-                    label: "CLIENTE PAGAR POR FORA",
-                    value: "CLIENTE PAGAR POR FORA",
+                    label: 'CLIENTE PAGAR POR FORA',
+                    value: 'CLIENTE PAGAR POR FORA',
                   },
                   {
-                    label: "INCLUSO NO CONTRATO",
-                    value: "INCLUSO NO CONTRATO",
+                    label: 'INCLUSO NO CONTRATO',
+                    value: 'INCLUSO NO CONTRATO',
                   },
                   {
-                    label: "NÃO HAVERA TROCA PADRÃO",
-                    value: "NÃO HAVERA TROCA PADRÃO",
+                    label: 'NÃO HAVERA TROCA PADRÃO',
+                    value: 'NÃO HAVERA TROCA PADRÃO',
                   },
                 ]}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
                     padrao: { ...infoHolder.padrao, respPagamento: value },
-                  });
+                  })
                 }}
               />
               <NumberInput
-                tag={"R$"}
-                label={"Valor do padrão"}
+                tag={'R$'}
+                label={'Valor do padrão'}
                 editable={true}
                 value={infoHolder.padrao.valor ? infoHolder.padrao.valor : 0}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
                     padrao: { ...infoHolder.padrao, valor: Number(value) },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"RESPONSÁVEL INSTALAÇÃO DO PADRÃO"}
+                label={'RESPONSÁVEL INSTALAÇÃO DO PADRÃO'}
                 editable={true}
-                value={
-                  infoHolder.padrao?.respInstalacao
-                    ? infoHolder.padrao?.respInstalacao
-                    : "NÃO SE APLICA"
-                }
+                value={infoHolder.padrao?.respInstalacao ? infoHolder.padrao?.respInstalacao : 'NÃO SE APLICA'}
                 options={[
-                  { label: "AMPERE", value: "AMPERE" },
-                  { label: "CLIENTE", value: "CLIENTE" },
-                  { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
+                  { label: 'AMPERE', value: 'AMPERE' },
+                  { label: 'CLIENTE', value: 'CLIENTE' },
+                  { label: 'NÃO SE APLICA', value: 'NÃO SE APLICA' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
                     padrao: { ...infoHolder.padrao, respInstalacao: value },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"Saída do cliente"}
+                label={'Saída do cliente'}
                 editable={true}
-                value={
-                  infoHolder.visitaTecnica.saidaDoCliente
-                    ? infoHolder.visitaTecnica.saidaDoCliente
-                    : "N/A"
-                }
+                value={infoHolder.visitaTecnica.saidaDoCliente ? infoHolder.visitaTecnica.saidaDoCliente : 'N/A'}
                 options={[
-                  { label: "SUBTERRANEO", value: "SUBTERRANEO" },
-                  { label: "AEREO", value: "AEREO" },
-                  { label: "N/A", value: "N/A" },
+                  { label: 'SUBTERRANEO', value: 'SUBTERRANEO' },
+                  { label: 'AEREO', value: 'AEREO' },
+                  { label: 'N/A', value: 'N/A' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
@@ -1170,17 +1087,13 @@ function NovoProjeto() {
                       ...infoHolder.visitaTecnica,
                       saidaDoCliente: value,
                     },
-                  });
+                  })
                 }}
               />
               <TextInput
-                label={"Amperagem"}
+                label={'Amperagem'}
                 editable={true}
-                value={
-                  infoHolder.visitaTecnica?.amperagem
-                    ? infoHolder.visitaTecnica.amperagem
-                    : ""
-                }
+                value={infoHolder.visitaTecnica?.amperagem ? infoHolder.visitaTecnica.amperagem : ''}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
@@ -1188,32 +1101,26 @@ function NovoProjeto() {
                       ...infoHolder.visitaTecnica,
                       amperagem: value,
                     },
-                  });
+                  })
                 }}
               />
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              ESTRUTURA PERSONALIZADA
-            </span>
+            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">ESTRUTURA PERSONALIZADA</span>
             <div className="flex gap-2 justify-center flex-wrap">
               <div>
                 <input
                   disabled={false}
-                  checked={
-                    infoHolder.estruturaPersonalizada?.aplicavel === "SIM"
-                      ? true
-                      : false
-                  }
+                  checked={infoHolder.estruturaPersonalizada?.aplicavel === 'SIM' ? true : false}
                   onChange={(e) => {
                     setInfo({
                       ...infoHolder,
                       estruturaPersonalizada: {
                         ...infoHolder.estruturaPersonalizada,
-                        aplicavel: e.target.checked ? "SIM" : "NÃO",
+                        aplicavel: e.target.checked ? 'SIM' : 'NÃO',
                       },
-                    });
+                    })
                   }}
                   type="checkbox"
                   name="visitaTecnica"
@@ -1224,20 +1131,16 @@ function NovoProjeto() {
                 </label>
               </div>
               <SelectInput
-                label={"Tipo da estrutura"}
+                label={'Tipo da estrutura'}
                 editable={true}
-                value={
-                  infoHolder.estruturaPersonalizada?.tipo
-                    ? infoHolder.estruturaPersonalizada?.tipo
-                    : "N/A"
-                }
+                value={infoHolder.estruturaPersonalizada?.tipo ? infoHolder.estruturaPersonalizada?.tipo : 'N/A'}
                 options={[
-                  { label: "INCLINAÇÃO", value: "INCLINAÇÃO" },
-                  { label: "SOLO", value: "SOLO" },
-                  { label: "TELHADO", value: "TELHADO" },
-                  { label: "BARRACÃO", value: "BARRACÃO" },
-                  { label: "CARPORT", value: "CARPORT" },
-                  { label: "N/A", value: "N/A" },
+                  { label: 'INCLINAÇÃO', value: 'INCLINAÇÃO' },
+                  { label: 'SOLO', value: 'SOLO' },
+                  { label: 'TELHADO', value: 'TELHADO' },
+                  { label: 'BARRACÃO', value: 'BARRACÃO' },
+                  { label: 'CARPORT', value: 'CARPORT' },
+                  { label: 'N/A', value: 'N/A' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
@@ -1246,21 +1149,17 @@ function NovoProjeto() {
                       ...infoHolder.estruturaPersonalizada,
                       tipo: value,
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"PAGAMENTO DA ESTRUTURA"}
+                label={'PAGAMENTO DA ESTRUTURA'}
                 editable={true}
-                value={
-                  infoHolder.estruturaPersonalizada?.respPagamento
-                    ? infoHolder.estruturaPersonalizada?.respPagamento
-                    : "NÃO SE APLICA"
-                }
+                value={infoHolder.estruturaPersonalizada?.respPagamento ? infoHolder.estruturaPersonalizada?.respPagamento : 'NÃO SE APLICA'}
                 options={[
-                  { label: "AMPERE", value: "AMPERE" },
-                  { label: "CLIENTE", value: "CLIENTE" },
-                  { label: "NÃO SE APLICA", value: "NÃO SE APLICA" },
+                  { label: 'AMPERE', value: 'AMPERE' },
+                  { label: 'CLIENTE', value: 'CLIENTE' },
+                  { label: 'NÃO SE APLICA', value: 'NÃO SE APLICA' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
@@ -1269,16 +1168,15 @@ function NovoProjeto() {
                       ...infoHolder.estruturaPersonalizada,
                       respPagamento: value,
                     },
-                  });
+                  })
                 }}
               />
               <NumberInput
-                tag={"R$"}
-                label={"Valor da estrutura"}
+                tag={'R$'}
+                label={'Valor da estrutura'}
                 editable={true}
                 value={
-                  infoHolder.estruturaPersonalizada?.valor == "-" ||
-                  infoHolder.estruturaPersonalizada?.valor == undefined
+                  infoHolder.estruturaPersonalizada?.valor == '-' || infoHolder.estruturaPersonalizada?.valor == undefined
                     ? 0
                     : infoHolder.estruturaPersonalizada?.valor
                 }
@@ -1289,24 +1187,24 @@ function NovoProjeto() {
                       ...infoHolder.estruturaPersonalizada,
                       valor: Number(value),
                     },
-                  });
+                  })
                 }}
               />
-              {infoHolder.estruturaPersonalizada.aplicavel == "SIM" && (
+              {infoHolder.estruturaPersonalizada.aplicavel == 'SIM' && (
                 <SelectInput
-                  label={"STATUS da estrutura personalizada"}
+                  label={'STATUS da estrutura personalizada'}
                   editable={true}
                   value={
                     infoHolder.estruturaPersonalizada.aplicavel
                       ? infoHolder.estruturaPersonalizada.status
                         ? infoHolder.estruturaPersonalizada.status
-                        : "N/A"
-                      : "N/A"
+                        : 'N/A'
+                      : 'N/A'
                   }
                   options={[
-                    { label: "PRONTA", value: "PRONTA" },
-                    { label: "PENDÊNCIA", value: "PENDÊNCIA" },
-                    { label: "N/A", value: "N/A" },
+                    { label: 'PRONTA', value: 'PRONTA' },
+                    { label: 'PENDÊNCIA', value: 'PENDÊNCIA' },
+                    { label: 'N/A', value: 'N/A' },
                   ]}
                   handleChange={(value) => {
                     setInfo({
@@ -1315,39 +1213,20 @@ function NovoProjeto() {
                         ...infoHolder.estruturaPersonalizada,
                         status: value,
                       },
-                    });
+                    })
                   }}
                 />
               )}
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              CONTRATO
-            </span>
+            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">CONTRATO</span>
             <div className="flex gap-2 justify-center flex-wrap">
               <SelectInput
-                label={"STATUS"}
+                label={'STATUS'}
                 editable={true}
-                value={
-                  infoHolder.contrato.status
-                    ? infoHolder.contrato.status
-                    : "NÃO DEFINIDO"
-                }
-                options={[
-                  {
-                    label: "AGUARDANDO SOLICITAÇÃO",
-                    value: "AGUARDANDO SOLICITAÇÃO",
-                  },
-                  { label: "ASSINADO", value: "ASSINADO" },
-                  { label: "NÃO ASSINADO", value: "NÃO ASSINADO" },
-                  {
-                    label: "RECISÃO DE CONTRATO",
-                    value: "RECISÃO DE CONTRATO",
-                  },
-                  { label: "SOLICITADO", value: "SOLICITADO" },
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-                ]}
+                value={infoHolder.contrato.status ? infoHolder.contrato.status : 'NÃO DEFINIDO'}
+                options={contractStatus}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
@@ -1355,20 +1234,16 @@ function NovoProjeto() {
                       ...infoHolder.contrato,
                       status: value,
                     },
-                  });
+                  })
                 }}
               />
-              {(infoHolder.contrato.status != "AGUARDANDO SOLICITAÇÃO" ||
-                infoHolder.contrato.status != "NÃO DEFINIDO") && (
+              {(infoHolder.contrato.status != 'AGUARDANDO SOLICITAÇÃO' || infoHolder.contrato.status != 'NÃO DEFINIDO') && (
                 <DateInput
-                  label={"Data de solicitação"}
+                  label={'Data de solicitação'}
                   editable={true}
                   value={
-                    infoHolder.contrato.dataSolicitacao != undefined &&
-                    infoHolder.contrato.dataSolicitacao != "-"
-                      ? new Date(infoHolder.contrato.dataSolicitacao)
-                          .toISOString()
-                          .slice(0, 10)
+                    infoHolder.contrato.dataSolicitacao != undefined && infoHolder.contrato.dataSolicitacao != '-'
+                      ? new Date(infoHolder.contrato.dataSolicitacao).toISOString().slice(0, 10)
                       : 0
                   }
                   handleChange={(value) => {
@@ -1378,19 +1253,16 @@ function NovoProjeto() {
                         ...infoHolder.contrato,
                         dataSolicitacao: new Date(value).toISOString(),
                       },
-                    });
+                    })
                   }}
                 />
               )}
               <DateInput
-                label={"Data de liberação p/ assinatura"}
+                label={'Data de liberação p/ assinatura'}
                 editable={true}
                 value={
-                  infoHolder.contrato.dataLiberacao != undefined &&
-                  infoHolder.contrato.dataLiberacao != "-"
-                    ? new Date(infoHolder.contrato.dataLiberacao)
-                        .toISOString()
-                        .slice(0, 10)
+                  infoHolder.contrato.dataLiberacao != undefined && infoHolder.contrato.dataLiberacao != '-'
+                    ? new Date(infoHolder.contrato.dataLiberacao).toISOString().slice(0, 10)
                     : 0
                 }
                 handleChange={(value) => {
@@ -1400,18 +1272,15 @@ function NovoProjeto() {
                       ...infoHolder.contrato,
                       dataLiberacao: new Date(value).toISOString(),
                     },
-                  });
+                  })
                 }}
               />
               <DateInput
-                label={"Data de assinatura"}
+                label={'Data de assinatura'}
                 editable={true}
                 value={
-                  infoHolder.contrato.dataAssinatura != undefined &&
-                  infoHolder.contrato.dataAssinatura != "-"
-                    ? new Date(infoHolder.contrato.dataAssinatura)
-                        .toISOString()
-                        .slice(0, 10)
+                  infoHolder.contrato.dataAssinatura != undefined && infoHolder.contrato.dataAssinatura != '-'
+                    ? new Date(infoHolder.contrato.dataAssinatura).toISOString().slice(0, 10)
                     : 0
                 }
                 handleChange={(value) => {
@@ -1421,29 +1290,25 @@ function NovoProjeto() {
                       ...infoHolder.contrato,
                       dataAssinatura: new Date(value).toISOString(),
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"FORMA DE ASSINATURA"}
-                value={
-                  infoHolder.contrato.formaAssinatura
-                    ? infoHolder.contrato.formaAssinatura
-                    : "NÃO DEFINIDO"
-                }
+                label={'FORMA DE ASSINATURA'}
+                value={infoHolder.contrato.formaAssinatura ? infoHolder.contrato.formaAssinatura : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
                   {
-                    label: "FISICO",
-                    value: "FISICO",
+                    label: 'FISICO',
+                    value: 'FISICO',
                   },
                   {
-                    label: "DIGITAL",
-                    value: "DIGITAL",
+                    label: 'DIGITAL',
+                    value: 'DIGITAL',
                   },
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                 ]}
                 handleChange={(value) => {
@@ -1453,40 +1318,34 @@ function NovoProjeto() {
                       ...infoHolder.contrato,
                       formaAssinatura: value,
                     },
-                  });
+                  })
                 }}
               />
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              PAGAMENTO
-            </span>
+            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">PAGAMENTO</span>
             <div className="flex gap-2 justify-center flex-wrap">
               <SelectInput
-                label={"STATUS PAGAMENTO"}
-                value={
-                  infoHolder.pagamento.status
-                    ? infoHolder.pagamento.status
-                    : "NÃO DEFINIDO"
-                }
+                label={'STATUS PAGAMENTO'}
+                value={infoHolder.pagamento.status ? infoHolder.pagamento.status : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
                   {
-                    label: "AGUARDANDO PAGAMENTO",
-                    value: "AGUARDANDO PAGAMENTO",
+                    label: 'AGUARDANDO PAGAMENTO',
+                    value: 'AGUARDANDO PAGAMENTO',
                   },
                   {
-                    label: "PAGO",
-                    value: "PAGO",
+                    label: 'PAGO',
+                    value: 'PAGO',
                   },
                   {
-                    label: "RESCISÃO",
-                    value: "RESCISÃO",
+                    label: 'RESCISÃO',
+                    value: 'RESCISÃO',
                   },
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                 ]}
                 handleChange={(value) => {
@@ -1496,29 +1355,25 @@ function NovoProjeto() {
                       ...infoHolder.pagamento,
                       status: value,
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"FORMA DE PAGAMENTO"}
-                value={
-                  infoHolder.pagamento?.forma
-                    ? infoHolder.pagamento?.forma
-                    : "NÃO DEFINIDO"
-                }
+                label={'FORMA DE PAGAMENTO'}
+                value={infoHolder.pagamento?.forma ? infoHolder.pagamento?.forma : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
                   {
-                    label: "CAPITAL PRÓPRIO",
-                    value: "CAPITAL PRÓPRIO",
+                    label: 'CAPITAL PRÓPRIO',
+                    value: 'CAPITAL PRÓPRIO',
                   },
                   {
-                    label: "FINANCIAMENTO",
-                    value: "FINANCIAMENTO",
+                    label: 'FINANCIAMENTO',
+                    value: 'FINANCIAMENTO',
                   },
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                 ]}
                 handleChange={(value) => {
@@ -1528,26 +1383,25 @@ function NovoProjeto() {
                       ...infoHolder.pagamento,
                       forma: value,
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"EMPRESA A FATURAR"}
+                label={'EMPRESA A FATURAR'}
                 value={
-                  infoHolder.faturamento?.empresaFaturamento != undefined &&
-                  infoHolder.faturamento?.empresaFaturamento != "-"
+                  infoHolder.faturamento?.empresaFaturamento != undefined && infoHolder.faturamento?.empresaFaturamento != '-'
                     ? infoHolder.faturamento?.empresaFaturamento
-                    : "NÃO DEFINIDO"
+                    : 'NÃO DEFINIDO'
                 }
                 editable={true}
                 options={[
-                  { label: "AMPERE ENERGIAS", value: "AMPERE ENERGIAS" },
+                  { label: 'AMPERE ENERGIAS', value: 'AMPERE ENERGIAS' },
                   {
-                    label: "ANALISE DO FINANCEIRO",
-                    value: "ANALISE DO FINANCEIRO",
+                    label: 'ANALISE DO FINANCEIRO',
+                    value: 'ANALISE DO FINANCEIRO',
                   },
-                  { label: "IZAIRA SERVIÇOS", value: "IZAIRA SERVIÇOS" },
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: 'IZAIRA SERVIÇOS', value: 'IZAIRA SERVIÇOS' },
+                  { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
@@ -1556,17 +1410,13 @@ function NovoProjeto() {
                       ...infoHolder.faturamento,
                       empresaFaturamento: value,
                     },
-                  });
+                  })
                 }}
               />
               <TextInput
-                label={"Informações faturamento"}
+                label={'Informações faturamento'}
                 editable={true}
-                value={
-                  infoHolder.faturamento?.previsaoFaturamento
-                    ? infoHolder.faturamento?.previsaoFaturamento
-                    : ""
-                }
+                value={infoHolder.faturamento?.previsaoFaturamento ? infoHolder.faturamento?.previsaoFaturamento : ''}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
@@ -1574,22 +1424,22 @@ function NovoProjeto() {
                       ...infoHolder.faturamento,
                       previsaoFaturamento: value,
                     },
-                  });
+                  })
                 }}
               />
-              {infoHolder.pagamento?.forma == "FINANCIAMENTO" && (
+              {infoHolder.pagamento?.forma == 'FINANCIAMENTO' && (
                 <SelectInput
-                  label={"CREDOR"}
+                  label={'CREDOR'}
                   value={
                     infoHolder.pagamento.credor != undefined &&
-                    infoHolder.pagamento.credor != "-----" &&
-                    infoHolder.pagamento.credor != "QUAL CREDOR?"
+                    infoHolder.pagamento.credor != '-----' &&
+                    infoHolder.pagamento.credor != 'QUAL CREDOR?'
                       ? infoHolder.pagamento.credor
-                      : "NÃO DEFINIDO"
+                      : 'NÃO DEFINIDO'
                   }
                   editable={true}
                   options={credores.map((credor) => {
-                    return { label: credor.label, value: credor.value };
+                    return { label: credor.label, value: credor.value }
                   })}
                   handleChange={(value) => {
                     setInfo({
@@ -1598,18 +1448,14 @@ function NovoProjeto() {
                         ...infoHolder.pagamento,
                         credor: value,
                       },
-                    });
+                    })
                   }}
                 />
               )}
               <TextInput
-                label={"Pagador"}
+                label={'Pagador'}
                 editable={true}
-                value={
-                  infoHolder.pagamento?.pagador
-                    ? infoHolder.pagamento.pagador
-                    : ""
-                }
+                value={infoHolder.pagamento?.pagador ? infoHolder.pagamento.pagador : ''}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
@@ -1617,17 +1463,13 @@ function NovoProjeto() {
                       ...infoHolder.pagamento,
                       pagador: value.toUpperCase(),
                     },
-                  });
+                  })
                 }}
               />
               <TextInput
-                label={"Contato pagador"}
+                label={'Contato pagador'}
                 editable={true}
-                value={
-                  infoHolder.pagamento?.contatoPagador
-                    ? infoHolder.pagamento?.contatoPagador
-                    : ""
-                }
+                value={infoHolder.pagamento?.contatoPagador ? infoHolder.pagamento?.contatoPagador : ''}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
@@ -1635,25 +1477,20 @@ function NovoProjeto() {
                       ...infoHolder.pagamento,
                       contatoPagador: value.toUpperCase(),
                     },
-                  });
+                  })
                 }}
               />
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              Informações da compra
-            </span>
+            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">Informações da compra</span>
             <div className="flex gap-2 justify-center flex-wrap">
               <DateInput
-                label={"Data de liberação p/ compra"}
+                label={'Data de liberação p/ compra'}
                 editable={true}
                 value={
-                  infoHolder.compra?.dataLiberacao != undefined &&
-                  infoHolder.compra?.dataLiberacao != "-"
-                    ? new Date(infoHolder.compra.dataLiberacao)
-                        .toISOString()
-                        .slice(0, 10)
+                  infoHolder.compra?.dataLiberacao != undefined && infoHolder.compra?.dataLiberacao != '-'
+                    ? new Date(infoHolder.compra.dataLiberacao).toISOString().slice(0, 10)
                     : 0
                 }
                 handleChange={(value) => {
@@ -1663,18 +1500,15 @@ function NovoProjeto() {
                       ...infoHolder.compra,
                       dataLiberacao: new Date(value).toISOString(),
                     },
-                  });
+                  })
                 }}
               />
               <DateInput
-                label={"Data do pagamento"}
+                label={'Data do pagamento'}
                 editable={true}
                 value={
-                  infoHolder.compra?.dataPagamento != undefined &&
-                  infoHolder.compra?.dataPagamento != "-"
-                    ? new Date(infoHolder.compra?.dataPagamento)
-                        .toISOString()
-                        .slice(0, 10)
+                  infoHolder.compra?.dataPagamento != undefined && infoHolder.compra?.dataPagamento != '-'
+                    ? new Date(infoHolder.compra?.dataPagamento).toISOString().slice(0, 10)
                     : 0
                 }
                 handleChange={(value) => {
@@ -1684,42 +1518,39 @@ function NovoProjeto() {
                       ...infoHolder.compra,
                       dataPagamento: new Date(value).toISOString(),
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"Fornecedor"}
+                label={'Fornecedor'}
                 editable={true}
                 value={
-                  infoHolder.compra?.fornecedor != undefined &&
-                  infoHolder.compra.fornecedor != "-"
-                    ? infoHolder.compra.fornecedor
-                    : "NÃO DEFINIDO"
+                  infoHolder.compra?.fornecedor != undefined && infoHolder.compra.fornecedor != '-' ? infoHolder.compra.fornecedor : 'NÃO DEFINIDO'
                 }
                 options={[
                   {
-                    label: "ALDO",
-                    value: "ALDO",
+                    label: 'ALDO',
+                    value: 'ALDO',
                   },
                   {
-                    label: "AMPÈRE",
-                    value: "AMPÈRE",
+                    label: 'AMPÈRE',
+                    value: 'AMPÈRE',
                   },
                   {
-                    label: "BEL ENERGY",
-                    value: "BEL ENERGY",
+                    label: 'BEL ENERGY',
+                    value: 'BEL ENERGY',
                   },
                   {
-                    label: "SKY SOLAR",
-                    value: "SKY SOLAR",
+                    label: 'SKY SOLAR',
+                    value: 'SKY SOLAR',
                   },
                   {
-                    label: "SOU ENERGY",
-                    value: "SOU ENERGY",
+                    label: 'SOU ENERGY',
+                    value: 'SOU ENERGY',
                   },
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                 ]}
                 handleChange={(value) => {
@@ -1729,34 +1560,29 @@ function NovoProjeto() {
                       ...infoHolder.compra,
                       fornecedor: value,
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"TIPO DO KIT"}
-                value={
-                  infoHolder.compra?.tipoDoKit != undefined &&
-                  infoHolder.compra.tipoDoKit != "-"
-                    ? infoHolder.compra.tipoDoKit
-                    : "NÃO DEFINIDO"
-                }
+                label={'TIPO DO KIT'}
+                value={infoHolder.compra?.tipoDoKit != undefined && infoHolder.compra.tipoDoKit != '-' ? infoHolder.compra.tipoDoKit : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
                   {
-                    label: "NORMAL",
-                    value: "NORMAL",
+                    label: 'NORMAL',
+                    value: 'NORMAL',
                   },
                   {
-                    label: "PROMO",
-                    value: "PROMO",
+                    label: 'PROMO',
+                    value: 'PROMO',
                   },
                   {
-                    label: "NÃO SE APLICA",
-                    value: "NÃO SE APLICA",
+                    label: 'NÃO SE APLICA',
+                    value: 'NÃO SE APLICA',
                   },
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                 ]}
                 handleChange={(value) => {
@@ -1766,19 +1592,14 @@ function NovoProjeto() {
                       ...infoHolder.compra,
                       tipoDoKit: value,
                     },
-                  });
+                  })
                 }}
               />
               <NumberInput
-                tag={"R$"}
-                label={"VALOR DO KIT"}
+                tag={'R$'}
+                label={'VALOR DO KIT'}
                 editable={true}
-                value={
-                  infoHolder.compra?.valorDoKit != undefined &&
-                  infoHolder.compra?.valorDoKit != "-"
-                    ? infoHolder.compra?.valorDoKit
-                    : 0
-                }
+                value={infoHolder.compra?.valorDoKit != undefined && infoHolder.compra?.valorDoKit != '-' ? infoHolder.compra?.valorDoKit : 0}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
@@ -1786,22 +1607,21 @@ function NovoProjeto() {
                       ...infoHolder.compra,
                       valorDoKit: Number(value),
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"LOCAL DE ENTREGA"}
+                label={'LOCAL DE ENTREGA'}
                 value={
-                  infoHolder.compra?.localEntrega != undefined &&
-                  infoHolder.compra?.localEntrega != "-"
+                  infoHolder.compra?.localEntrega != undefined && infoHolder.compra?.localEntrega != '-'
                     ? infoHolder.compra?.localEntrega
-                    : "NÃO DEFINIDO"
+                    : 'NÃO DEFINIDO'
                 }
                 editable={true}
                 options={[
-                  { label: "MESMO DO PROJETO", value: "MESMO DO PROJETO" },
-                  { label: "SEM RESTRIÇÕES", value: "SEM RESTRIÇÕES" },
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: 'MESMO DO PROJETO', value: 'MESMO DO PROJETO' },
+                  { label: 'SEM RESTRIÇÕES', value: 'SEM RESTRIÇÕES' },
+                  { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
@@ -1810,16 +1630,12 @@ function NovoProjeto() {
                       ...infoHolder.compra,
                       localEntrega: value,
                     },
-                  });
+                  })
                 }}
               />
               <TextInput
-                label={"INFORMAÇÕES"}
-                value={
-                  infoHolder.compra?.informacoes
-                    ? infoHolder.compra?.informacoes
-                    : ""
-                }
+                label={'INFORMAÇÕES'}
+                value={infoHolder.compra?.informacoes ? infoHolder.compra?.informacoes : ''}
                 editable={true}
                 handleChange={(value) => {
                   setInfo({
@@ -1828,33 +1644,29 @@ function NovoProjeto() {
                       ...infoHolder.compra,
                       informacoes: value.toUpperCase(),
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"STATUS DA ENTREGA"}
+                label={'STATUS DA ENTREGA'}
                 editable={true}
-                value={
-                  infoHolder.compra?.statusEntrega
-                    ? infoHolder.compra?.statusEntrega
-                    : "NÃO DEFINIDO"
-                }
+                value={infoHolder.compra?.statusEntrega ? infoHolder.compra?.statusEntrega : 'NÃO DEFINIDO'}
                 options={[
                   {
-                    label: "AGUARDANDO COMPRA",
-                    value: "AGUARDANDO COMPRA",
+                    label: 'AGUARDANDO COMPRA',
+                    value: 'AGUARDANDO COMPRA',
                   },
                   {
-                    label: "ENTREGUE",
-                    value: "ENTREGUE",
+                    label: 'ENTREGUE',
+                    value: 'ENTREGUE',
                   },
                   {
-                    label: "CANCELADO",
-                    value: "CANCELADO",
+                    label: 'CANCELADO',
+                    value: 'CANCELADO',
                   },
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                 ]}
                 handleChange={(value) => {
@@ -1864,24 +1676,18 @@ function NovoProjeto() {
                       ...infoHolder.compra,
                       statusEntrega: value,
                     },
-                  });
+                  })
                 }}
               />
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              DADOS INSTALAÇÃO CEMIG
-            </span>
+            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS INSTALAÇÃO CEMIG</span>
             <div className="flex gap-2 justify-center flex-wrap">
               <TextInput
-                label={"Titular do projeto"}
+                label={'Titular do projeto'}
                 editable={true}
-                value={
-                  infoHolder.dadosCemig?.titularProjeto
-                    ? infoHolder.dadosCemig?.titularProjeto
-                    : ""
-                }
+                value={infoHolder.dadosCemig?.titularProjeto ? infoHolder.dadosCemig?.titularProjeto : ''}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
@@ -1889,16 +1695,12 @@ function NovoProjeto() {
                       ...infoHolder.dadosCemig,
                       titularProjeto: value,
                     },
-                  });
+                  })
                 }}
               />
               <TextInput
-                label={"Número da instalação"}
-                value={
-                  infoHolder.dadosCemig?.numeroInstalacao
-                    ? infoHolder.dadosCemig?.numeroInstalacao
-                    : ""
-                }
+                label={'Número da instalação'}
+                value={infoHolder.dadosCemig?.numeroInstalacao ? infoHolder.dadosCemig?.numeroInstalacao : ''}
                 editable={true}
                 handleChange={(value) => {
                   setInfo({
@@ -1907,21 +1709,17 @@ function NovoProjeto() {
                       ...infoHolder.dadosCemig,
                       numeroInstalacao: value,
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"DISTRIBUIÇÃO DE CRÉDITOS"}
-                value={
-                  infoHolder.dadosCemig?.distCreditos
-                    ? infoHolder.dadosCemig?.distCreditos
-                    : "NÃO DEFINIDO"
-                }
+                label={'DISTRIBUIÇÃO DE CRÉDITOS'}
+                value={infoHolder.dadosCemig?.distCreditos ? infoHolder.dadosCemig?.distCreditos : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
-                  { label: "SIM", value: "SIM" },
-                  { label: "NÃO", value: "NÃO" },
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: 'SIM', value: 'SIM' },
+                  { label: 'NÃO', value: 'NÃO' },
+                  { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
@@ -1930,16 +1728,15 @@ function NovoProjeto() {
                       ...infoHolder.dadosCemig,
                       distCreditos: value,
                     },
-                  });
+                  })
                 }}
               />
-              {infoHolder.dadosCemig?.distCreditos == "SIM" && (
+              {infoHolder.dadosCemig?.distCreditos == 'SIM' && (
                 <NumberInput
-                  label={"QTDE DE DISTRIBUIÇÕES"}
+                  label={'QTDE DE DISTRIBUIÇÕES'}
                   editable={true}
                   value={
-                    infoHolder.dadosCemig?.qtdeDistCreditos != undefined &&
-                    infoHolder.dadosCemig?.qtdeDistCreditos != "-"
+                    infoHolder.dadosCemig?.qtdeDistCreditos != undefined && infoHolder.dadosCemig?.qtdeDistCreditos != '-'
                       ? infoHolder.dadosCemig?.qtdeDistCreditos
                       : 0
                   }
@@ -1950,70 +1747,51 @@ function NovoProjeto() {
                         ...infoHolder.dadosCemig,
                         qtdeDistCreditos: Number(value),
                       },
-                    });
+                    })
                   }}
                 />
               )}
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              SISTEMA
-            </span>
+            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">SISTEMA</span>
             <div className="flex gap-2 justify-center flex-wrap">
               <NumberInput
-                label={"NÚMERO DE MÓDULOS"}
+                label={'NÚMERO DE MÓDULOS'}
                 editable={true}
-                value={
-                  infoHolder.sistema?.qtdeModulos != undefined &&
-                  infoHolder.sistema?.qtdeModulos != "-"
-                    ? infoHolder.sistema?.qtdeModulos
-                    : 0
-                }
+                value={infoHolder.sistema?.qtdeModulos != undefined && infoHolder.sistema?.qtdeModulos != '-' ? infoHolder.sistema?.qtdeModulos : 0}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
                     sistema: {
                       ...infoHolder.sistema,
                       qtdeModulos: Number(value),
-                      potPico:
-                        Number(infoHolder.sistema?.potModulos * value) / 1000,
+                      potPico: Number(infoHolder.sistema?.potModulos * value) / 1000,
                     },
-                  });
+                  })
                 }}
               />
               <NumberInput
-                unit={"W"}
-                label={"POTÊNCIA DOS MÓDULOS"}
+                unit={'W'}
+                label={'POTÊNCIA DOS MÓDULOS'}
                 editable={true}
-                value={
-                  infoHolder.sistema?.potModulos != undefined &&
-                  infoHolder.sistema?.potModulos != "-"
-                    ? infoHolder.sistema?.potModulos
-                    : 0
-                }
+                value={infoHolder.sistema?.potModulos != undefined && infoHolder.sistema?.potModulos != '-' ? infoHolder.sistema?.potModulos : 0}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
                     sistema: {
                       ...infoHolder.sistema,
                       potModulos: Number(value),
-                      potPico:
-                        Number(value * infoHolder.sistema?.qtdeModulos) / 1000,
+                      potPico: Number(value * infoHolder.sistema?.qtdeModulos) / 1000,
                     },
-                  });
+                  })
                 }}
               />
               <NumberInput
-                unit={"kWp"}
-                label={"POTÊNCIA PICO"}
+                unit={'kWp'}
+                label={'POTÊNCIA PICO'}
                 editable={true}
-                value={
-                  infoHolder.sistema?.potPico != undefined &&
-                  infoHolder.sistema?.potPico != "-"
-                    ? infoHolder.sistema?.potPico
-                    : 0
-                }
+                value={infoHolder.sistema?.potPico != undefined && infoHolder.sistema?.potPico != '-' ? infoHolder.sistema?.potPico : 0}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
@@ -2021,22 +1799,18 @@ function NovoProjeto() {
                       ...infoHolder.sistema,
                       potPico: Number(value),
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"TOPOLOGIA"}
-                value={
-                  infoHolder.sistema?.topologia
-                    ? infoHolder.sistema?.topologia
-                    : "NÃO DEFINIDO"
-                }
+                label={'TOPOLOGIA'}
+                value={infoHolder.sistema?.topologia ? infoHolder.sistema?.topologia : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
-                  { label: "INVERSOR", value: "INVERSOR" },
-                  { label: "MICRO", value: "MICRO" },
-                  { label: "OUTROS SERV.", value: "OUTROS SERV." },
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: 'INVERSOR', value: 'INVERSOR' },
+                  { label: 'MICRO', value: 'MICRO' },
+                  { label: 'OUTROS SERV.', value: 'OUTROS SERV.' },
+                  { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
@@ -2045,17 +1819,13 @@ function NovoProjeto() {
                       ...infoHolder.sistema,
                       topologia: value,
                     },
-                  });
+                  })
                 }}
               />
               <TextInput
-                label={"QTDE E POTÊNCIA DO(S) INVERSOR(ES)"}
+                label={'QTDE E POTÊNCIA DO(S) INVERSOR(ES)'}
                 editable={true}
-                value={
-                  infoHolder.sistema?.inversor
-                    ? infoHolder.sistema?.inversor
-                    : ""
-                }
+                value={infoHolder.sistema?.inversor ? infoHolder.sistema?.inversor : ''}
                 handleChange={(value) => {
                   setInfo({
                     ...infoHolder,
@@ -2063,18 +1833,15 @@ function NovoProjeto() {
                       ...infoHolder.sistema,
                       inversor: value,
                     },
-                  });
+                  })
                 }}
               />
               <NumberInput
-                tag={"R$"}
-                label={"VALOR DO PROJETO"}
+                tag={'R$'}
+                label={'VALOR DO PROJETO'}
                 editable={true}
                 value={
-                  infoHolder.sistema?.valorProjeto != undefined &&
-                  infoHolder.sistema?.valorProjeto != "-"
-                    ? infoHolder.sistema?.valorProjeto
-                    : 0
+                  infoHolder.sistema?.valorProjeto != undefined && infoHolder.sistema?.valorProjeto != '-' ? infoHolder.sistema?.valorProjeto : 0
                 }
                 handleChange={(value) => {
                   setInfo({
@@ -2083,24 +1850,20 @@ function NovoProjeto() {
                       ...infoHolder.sistema,
                       valorProjeto: Number(value),
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"INICIAR PROJETO"}
-                value={
-                  infoHolder.projeto?.iniciar
-                    ? infoHolder.projeto?.iniciar
-                    : "NÃO DEFINIDO"
-                }
+                label={'INICIAR PROJETO'}
+                value={infoHolder.projeto?.iniciar ? infoHolder.projeto?.iniciar : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
-                  { label: "SIM", value: "SIM" },
+                  { label: 'SIM', value: 'SIM' },
                   {
-                    label: "CONTRATO CANCELADO",
-                    value: "CONTRATO CANCELADO",
+                    label: 'CONTRATO CANCELADO',
+                    value: 'CONTRATO CANCELADO',
                   },
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
@@ -2109,25 +1872,20 @@ function NovoProjeto() {
                       ...infoHolder.projeto,
                       iniciar: value,
                     },
-                  });
+                  })
                 }}
               />
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              PROJETO
-            </span>
+            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">PROJETO</span>
             <div className="flex gap-2 justify-center flex-wrap">
               <DateInput
-                label={"Data de assinatura da documentação"}
+                label={'Data de assinatura da documentação'}
                 editable={true}
                 value={
-                  infoHolder.projeto?.dataAssDocumentacao != undefined &&
-                  infoHolder.projeto?.dataAssDocumentacao != "-"
-                    ? new Date(infoHolder.projeto.dataAssDocumentacao)
-                        .toISOString()
-                        .slice(0, 10)
+                  infoHolder.projeto?.dataAssDocumentacao != undefined && infoHolder.projeto?.dataAssDocumentacao != '-'
+                    ? new Date(infoHolder.projeto.dataAssDocumentacao).toISOString().slice(0, 10)
                     : 0
                 }
                 handleChange={(value) => {
@@ -2137,18 +1895,15 @@ function NovoProjeto() {
                       ...infoHolder.projeto,
                       dataAssDocumentacao: new Date(value).toISOString(),
                     },
-                  });
+                  })
                 }}
               />
               <DateInput
-                label={"Parecer de acesso"}
+                label={'Parecer de acesso'}
                 editable={true}
                 value={
-                  infoHolder.parecer?.dataParecerDeAcesso != undefined &&
-                  infoHolder.parecer?.dataParecerDeAcesso != "-"
-                    ? new Date(infoHolder.parecer?.dataParecerDeAcesso)
-                        .toISOString()
-                        .slice(0, 10)
+                  infoHolder.parecer?.dataParecerDeAcesso != undefined && infoHolder.parecer?.dataParecerDeAcesso != '-'
+                    ? new Date(infoHolder.parecer?.dataParecerDeAcesso).toISOString().slice(0, 10)
                     : 0
                 }
                 handleChange={(value) => {
@@ -2158,49 +1913,45 @@ function NovoProjeto() {
                       ...infoHolder.parecer,
                       dataParecerDeAcesso: new Date(value).toISOString(),
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"Status do parecer de acesso"}
-                value={
-                  infoHolder.parecer?.statusDoParecerDeAcesso
-                    ? infoHolder.parecer?.statusDoParecerDeAcesso
-                    : "NÃO DEFINIDO"
-                }
+                label={'Status do parecer de acesso'}
+                value={infoHolder.parecer?.statusDoParecerDeAcesso ? infoHolder.parecer?.statusDoParecerDeAcesso : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
                   {
-                    label: "AGUARDANDO FATURAMENTO ART",
-                    value: "AGUARDANDO FATURAMENTO ART",
+                    label: 'AGUARDANDO FATURAMENTO ART',
+                    value: 'AGUARDANDO FATURAMENTO ART',
                   },
                   {
-                    label: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
-                    value: "AGUARDANDO RESPOSTA DA CONCESSIONARIA",
+                    label: 'AGUARDANDO RESPOSTA DA CONCESSIONARIA',
+                    value: 'AGUARDANDO RESPOSTA DA CONCESSIONARIA',
                   },
                   {
-                    label: "CANCELADO",
-                    value: "CANCELADO",
+                    label: 'CANCELADO',
+                    value: 'CANCELADO',
                   },
                   {
-                    label: "INICIAR PROJETO",
-                    value: "INICIAR PROJETO",
+                    label: 'INICIAR PROJETO',
+                    value: 'INICIAR PROJETO',
                   },
                   {
-                    label: "PARECER DE ACESSO APROVADO",
-                    value: "PARECER DE ACESSO APROVADO",
+                    label: 'PARECER DE ACESSO APROVADO',
+                    value: 'PARECER DE ACESSO APROVADO',
                   },
                   {
-                    label: "PENDENCIAS",
-                    value: "PENDENCIAS",
+                    label: 'PENDENCIAS',
+                    value: 'PENDENCIAS',
                   },
                   {
-                    label: "SOLICITAR ACESSO",
-                    value: "SOLICITAR ACESSO",
+                    label: 'SOLICITAR ACESSO',
+                    value: 'SOLICITAR ACESSO',
                   },
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                 ]}
                 handleChange={(value) => {
@@ -2210,31 +1961,23 @@ function NovoProjeto() {
                       ...infoHolder.parecer,
                       statusDoParecerDeAcesso: value,
                     },
-                  });
+                  })
                 }}
               />
               <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  DIAGRAMA UNIFILAR
-                </span>
+                <span className="uppercase font-bold font-raleway text-center text-sm">DIAGRAMA UNIFILAR</span>
                 <div className="flex">
                   <input
                     disabled={false}
-                    checked={
-                      infoHolder.projeto?.diagramaUnifilar === "Ok"
-                        ? true
-                        : false
-                    }
+                    checked={infoHolder.projeto?.diagramaUnifilar === 'Ok' ? true : false}
                     onChange={(e) => {
                       setInfo({
                         ...infoHolder,
                         projeto: {
                           ...infoHolder.projeto,
-                          diagramaUnifilar: e.target.checked
-                            ? "Ok"
-                            : "PENDÊNCIA",
+                          diagramaUnifilar: e.target.checked ? 'Ok' : 'PENDÊNCIA',
                         },
-                      });
+                      })
                     }}
                     type="checkbox"
                     name="diagramaunifilar"
@@ -2246,23 +1989,19 @@ function NovoProjeto() {
                 </div>
               </div>
               <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  DESENHO DO TELHADO
-                </span>
+                <span className="uppercase font-bold font-raleway text-center text-sm">DESENHO DO TELHADO</span>
                 <div className="flex">
                   <input
                     disabled={false}
-                    checked={
-                      infoHolder.projeto?.desenhoTelhado === "OK" ? true : false
-                    }
+                    checked={infoHolder.projeto?.desenhoTelhado === 'OK' ? true : false}
                     onChange={(e) => {
                       setInfo({
                         ...infoHolder,
                         projeto: {
                           ...infoHolder.projeto,
-                          desenhoTelhado: e.target.checked ? "OK" : "PENDÊNCIA",
+                          desenhoTelhado: e.target.checked ? 'OK' : 'PENDÊNCIA',
                         },
-                      });
+                      })
                     }}
                     type="checkbox"
                     name="desenhotelhado"
@@ -2274,18 +2013,17 @@ function NovoProjeto() {
                 </div>
               </div>
               <SelectInput
-                label={"MAPA DE MICRO"}
+                label={'MAPA DE MICRO'}
                 editable={true}
                 value={
-                  infoHolder.projeto?.mapaDeMicro != undefined &&
-                  infoHolder.projeto?.mapaDeMicro != "-"
+                  infoHolder.projeto?.mapaDeMicro != undefined && infoHolder.projeto?.mapaDeMicro != '-'
                     ? infoHolder.projeto?.mapaDeMicro
-                    : "NÃO DEFINIDO"
+                    : 'NÃO DEFINIDO'
                 }
                 options={[
-                  { label: "OK", value: "OK" },
+                  { label: 'OK', value: 'OK' },
                   { label: `N\A`, value: `N\A` },
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
@@ -2294,34 +2032,24 @@ function NovoProjeto() {
                       ...infoHolder.projeto,
                       mapaDeMicro: value,
                     },
-                  });
+                  })
                 }}
               />
               <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  AUMENTO DE CARGA
-                </span>
+                <span className="uppercase font-bold font-raleway text-center text-sm">AUMENTO DE CARGA</span>
                 <div className="flex">
                   <input
                     disabled={false}
-                    checked={
-                      infoHolder.projeto?.aumentoDeCarga === "SIM"
-                        ? true
-                        : false
-                    }
+                    checked={infoHolder.projeto?.aumentoDeCarga === 'SIM' ? true : false}
                     onChange={(e) => {
                       setInfo({
                         ...infoHolder,
                         projeto: {
                           ...infoHolder.projeto,
-                          aumentoDeCarga: e.target.checked ? "SIM" : "NÃO",
-                          acStatus:
-                            e.target.checked &&
-                            infoHolder.acstatus != "REALIZADO"
-                              ? "PENDÊNCIA"
-                              : undefined,
+                          aumentoDeCarga: e.target.checked ? 'SIM' : 'NÃO',
+                          acStatus: e.target.checked && infoHolder.acstatus != 'REALIZADO' ? 'PENDÊNCIA' : undefined,
                         },
-                      });
+                      })
                     }}
                     type="checkbox"
                     name="aumentodecarga"
@@ -2332,29 +2060,21 @@ function NovoProjeto() {
                   </label>
                 </div>
               </div>
-              {infoHolder.projeto?.aumentoDeCarga == "SIM" && (
+              {infoHolder.projeto?.aumentoDeCarga == 'SIM' && (
                 <div className="flex flex-col w-[350px] items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">
-                    STATUS AUMENTO DE CARGA
-                  </span>
+                  <span className="uppercase font-bold font-raleway text-center text-sm">STATUS AUMENTO DE CARGA</span>
                   <div className="flex">
                     <input
                       disabled={false}
-                      checked={
-                        infoHolder.projeto?.acStatus === "REALIZADO"
-                          ? true
-                          : false
-                      }
+                      checked={infoHolder.projeto?.acStatus === 'REALIZADO' ? true : false}
                       onChange={(e) => {
                         setInfo({
                           ...infoHolder,
                           projeto: {
                             ...infoHolder.projeto,
-                            acStatus: e.target.checked
-                              ? "REALIZADO"
-                              : "PENDÊNCIA",
+                            acStatus: e.target.checked ? 'REALIZADO' : 'PENDÊNCIA',
                           },
-                        });
+                        })
                       }}
                       type="checkbox"
                       name="acstatus"
@@ -2367,14 +2087,11 @@ function NovoProjeto() {
                 </div>
               )}
               <DateInput
-                label={"DATA DO PEDIDO DE VISTORIA"}
+                label={'DATA DO PEDIDO DE VISTORIA'}
                 editable={true}
                 value={
-                  infoHolder.vistoria?.dataPedido != undefined &&
-                  infoHolder.vistoria?.dataPedido != "-"
-                    ? new Date(infoHolder.vistoria.dataPedido)
-                        .toISOString()
-                        .slice(0, 10)
+                  infoHolder.vistoria?.dataPedido != undefined && infoHolder.vistoria?.dataPedido != '-'
+                    ? new Date(infoHolder.vistoria.dataPedido).toISOString().slice(0, 10)
                     : 0
                 }
                 handleChange={(value) => {
@@ -2384,24 +2101,20 @@ function NovoProjeto() {
                       ...infoHolder.vistoria,
                       dataPedido: new Date(value).toISOString(),
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"STATUS DA VISTORIA"}
-                value={
-                  infoHolder.vistoria?.status
-                    ? infoHolder.vistoria?.status
-                    : "NÃO DEFINIDO"
-                }
+                label={'STATUS DA VISTORIA'}
+                value={infoHolder.vistoria?.status ? infoHolder.vistoria?.status : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
-                  { label: "REALIZADA", value: "REALIZADA" },
+                  { label: 'REALIZADA', value: 'REALIZADA' },
                   {
-                    label: "AGUARDANDO OBRA DE REDE",
-                    value: "AGUARDANDO OBRA DE REDE",
+                    label: 'AGUARDANDO OBRA DE REDE',
+                    value: 'AGUARDANDO OBRA DE REDE',
                   },
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
@@ -2410,18 +2123,15 @@ function NovoProjeto() {
                       ...infoHolder.vistoria,
                       status: value,
                     },
-                  });
+                  })
                 }}
               />
               <DateInput
-                label={"DATA TROCA DO MEDIDOR"}
+                label={'DATA TROCA DO MEDIDOR'}
                 editable={true}
                 value={
-                  infoHolder.medidor?.data != undefined &&
-                  infoHolder.medidor?.data != "-"
-                    ? new Date(infoHolder.medidor.data)
-                        .toISOString()
-                        .slice(0, 10)
+                  infoHolder.medidor?.data != undefined && infoHolder.medidor?.data != '-'
+                    ? new Date(infoHolder.medidor.data).toISOString().slice(0, 10)
                     : 0
                 }
                 handleChange={(value) => {
@@ -2431,24 +2141,20 @@ function NovoProjeto() {
                       ...infoHolder.medidor,
                       data: new Date(value).toISOString(),
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"STATUS DA TROCA DO MEDIDOR"}
-                value={
-                  infoHolder.medidor?.status
-                    ? infoHolder.medidor?.status
-                    : "NÃO DEFINIDO"
-                }
+                label={'STATUS DA TROCA DO MEDIDOR'}
+                value={infoHolder.medidor?.status ? infoHolder.medidor?.status : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
-                  { label: "REALIZADA", value: "REALIZADA" },
+                  { label: 'REALIZADA', value: 'REALIZADA' },
                   {
-                    label: "AGUARDANDO OBRA DE REDE",
-                    value: "AGUARDANDO OBRA DE REDE",
+                    label: 'AGUARDANDO OBRA DE REDE',
+                    value: 'AGUARDANDO OBRA DE REDE',
                   },
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
@@ -2457,29 +2163,23 @@ function NovoProjeto() {
                       ...infoHolder.medidor,
                       status: value,
                     },
-                  });
+                  })
                 }}
               />
               <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  PROJETO CONCLUÍDO
-                </span>
+                <span className="uppercase font-bold font-raleway text-center text-sm">PROJETO CONCLUÍDO</span>
                 <div className="flex">
                   <input
                     disabled={false}
-                    checked={
-                      infoHolder.projeto?.projetoConcluido === "SIM"
-                        ? true
-                        : false
-                    }
+                    checked={infoHolder.projeto?.projetoConcluido === 'SIM' ? true : false}
                     onChange={(e) => {
                       setInfo({
                         ...infoHolder,
                         projeto: {
                           ...infoHolder.projeto,
-                          projetoConcluido: e.target.checked ? "SIM" : "NÃO",
+                          projetoConcluido: e.target.checked ? 'SIM' : 'NÃO',
                         },
-                      });
+                      })
                     }}
                     type="checkbox"
                     name="projetoconcluido"
@@ -2493,22 +2193,16 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              Informações sobre a obra
-            </span>
+            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">Informações sobre a obra</span>
             <div className="flex gap-2 justify-center flex-wrap">
               <SelectInput
-                label={"Laudo"}
-                value={
-                  infoHolder.obra?.laudo
-                    ? infoHolder.obra?.laudo
-                    : "NÃO DEFINIDO"
-                }
+                label={'Laudo'}
+                value={infoHolder.obra?.laudo ? infoHolder.obra?.laudo : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
-                  { label: "EM ESTUDO", value: "EM ESTUDO" },
-                  { label: "EMITIDO", value: "EMITIDO" },
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: 'EM ESTUDO', value: 'EM ESTUDO' },
+                  { label: 'EMITIDO', value: 'EMITIDO' },
+                  { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                 ]}
                 handleChange={(value) => {
                   setInfo({
@@ -2517,31 +2211,23 @@ function NovoProjeto() {
                       ...infoHolder.obra,
                       laudo: value,
                     },
-                  });
+                  })
                 }}
               />
               <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  SOLICITAÇÃO DA OBRA
-                </span>
+                <span className="uppercase font-bold font-raleway text-center text-sm">SOLICITAÇÃO DA OBRA</span>
                 <div className="flex">
                   <input
                     disabled={false}
-                    checked={
-                      infoHolder.obra?.statusSolicitacao === "SOLICITADA"
-                        ? true
-                        : false
-                    }
+                    checked={infoHolder.obra?.statusSolicitacao === 'SOLICITADA' ? true : false}
                     onChange={(e) => {
                       setInfo({
                         ...infoHolder,
                         obra: {
                           ...infoHolder.obra,
-                          statusSolicitacao: e.target.checked
-                            ? "SOLICITADA"
-                            : "NÃO SOLICITADA",
+                          statusSolicitacao: e.target.checked ? 'SOLICITADA' : 'NÃO SOLICITADA',
                         },
-                      });
+                      })
                     }}
                     type="checkbox"
                     name="solicitacaoobra"
@@ -2553,14 +2239,11 @@ function NovoProjeto() {
                 </div>
               </div>
               <DateInput
-                label={"ENTRADA NA OBRA"}
+                label={'ENTRADA NA OBRA'}
                 editable={true}
                 value={
-                  infoHolder.obra?.entrada != undefined &&
-                  infoHolder.obra?.entrada != "-"
-                    ? new Date(infoHolder.obra?.entrada)
-                        .toISOString()
-                        .slice(0, 10)
+                  infoHolder.obra?.entrada != undefined && infoHolder.obra?.entrada != '-'
+                    ? new Date(infoHolder.obra?.entrada).toISOString().slice(0, 10)
                     : 0
                 }
                 handleChange={(value) => {
@@ -2570,18 +2253,15 @@ function NovoProjeto() {
                       ...infoHolder.obra,
                       entrada: new Date(value).toISOString(),
                     },
-                  });
+                  })
                 }}
               />
               <DateInput
-                label={"SAIDA DE OBRA"}
+                label={'SAIDA DE OBRA'}
                 editable={true}
                 value={
-                  infoHolder.obra?.saida != undefined &&
-                  infoHolder.obra?.saida != "-"
-                    ? new Date(infoHolder.obra?.saida)
-                        .toISOString()
-                        .slice(0, 10)
+                  infoHolder.obra?.saida != undefined && infoHolder.obra?.saida != '-'
+                    ? new Date(infoHolder.obra?.saida).toISOString().slice(0, 10)
                     : 0
                 }
                 handleChange={(value) => {
@@ -2591,21 +2271,20 @@ function NovoProjeto() {
                       ...infoHolder.obra,
                       saida: new Date(value).toISOString(),
                     },
-                  });
+                  })
                 }}
               />
               <SelectInput
-                label={"EQUIPE RESPONSÁVEL"}
+                label={'EQUIPE RESPONSÁVEL'}
                 editable={true}
                 value={
-                  infoHolder.obra?.equipeResp != undefined &&
-                  infoHolder.obra?.equipeResp != "-"
-                    ? infoHolder.obra?.equipeResp == "TERCEIROS" ||
-                      infoHolder.obra?.equipeResp == "TERCERIZADOS" ||
-                      infoHolder.obra?.equipeResp == "OUTROS"
-                      ? "OUTROS"
+                  infoHolder.obra?.equipeResp != undefined && infoHolder.obra?.equipeResp != '-'
+                    ? infoHolder.obra?.equipeResp == 'TERCEIROS' ||
+                      infoHolder.obra?.equipeResp == 'TERCERIZADOS' ||
+                      infoHolder.obra?.equipeResp == 'OUTROS'
+                      ? 'OUTROS'
                       : infoHolder.obra?.equipeResp
-                    : "NÃO DEFINIDO"
+                    : 'NÃO DEFINIDO'
                 }
                 options={equipesTecnicas.map((equipe) => equipe)}
                 handleChange={(value) => {
@@ -2615,27 +2294,23 @@ function NovoProjeto() {
                       ...infoHolder.obra,
                       equipeResp: value,
                     },
-                  });
+                  })
                 }}
               />
               <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  CHECKLIST OBRA
-                </span>
+                <span className="uppercase font-bold font-raleway text-center text-sm">CHECKLIST OBRA</span>
                 <div className="flex">
                   <input
                     disabled={false}
-                    checked={
-                      infoHolder.obra?.checklist === "SIM" ? true : false
-                    }
+                    checked={infoHolder.obra?.checklist === 'SIM' ? true : false}
                     onChange={(e) => {
                       setInfo({
                         ...infoHolder,
                         obra: {
                           ...infoHolder.obra,
-                          checklist: e.target.checked ? "SIM" : "NÃO",
+                          checklist: e.target.checked ? 'SIM' : 'NÃO',
                         },
-                      });
+                      })
                     }}
                     type="checkbox"
                     name="checklistobra"
@@ -2647,21 +2322,19 @@ function NovoProjeto() {
                 </div>
               </div>
               <div className="flex flex-col w-[350px] items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  TRAFO
-                </span>
+                <span className="uppercase font-bold font-raleway text-center text-sm">TRAFO</span>
                 <div className="flex">
                   <input
                     disabled={false}
-                    checked={infoHolder.obra?.trafo === "SIM" ? true : false}
+                    checked={infoHolder.obra?.trafo === 'SIM' ? true : false}
                     onChange={(e) => {
                       setInfo({
                         ...infoHolder,
                         obra: {
                           ...infoHolder.obra,
-                          trafo: e.target.checked ? "SIM" : "NÃO",
+                          trafo: e.target.checked ? 'SIM' : 'NÃO',
                         },
-                      });
+                      })
                     }}
                     type="checkbox"
                     name="trafo"
@@ -2673,41 +2346,37 @@ function NovoProjeto() {
                 </div>
               </div>
               <SelectInput
-                label={"STATUS DA OBRA"}
-                value={
-                  infoHolder.obra?.statusDaObra
-                    ? infoHolder.obra?.statusDaObra
-                    : "NÃO DEFINIDO"
-                }
+                label={'STATUS DA OBRA'}
+                value={infoHolder.obra?.statusDaObra ? infoHolder.obra?.statusDaObra : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
                   {
-                    label: "AGENDADA",
-                    value: "AGENDADA",
+                    label: 'AGENDADA',
+                    value: 'AGENDADA',
                   },
                   {
-                    label: "AGUARDANDO AGENDAMENTO",
-                    value: "AGUARDANDO AGENDAMENTO",
+                    label: 'AGUARDANDO AGENDAMENTO',
+                    value: 'AGUARDANDO AGENDAMENTO',
                   },
                   {
-                    label: "CONCLUIDA",
-                    value: "CONCLUIDA",
+                    label: 'CONCLUIDA',
+                    value: 'CONCLUIDA',
                   },
                   {
-                    label: "EM ANDAMENTO",
-                    value: "EM ANDAMENTO",
+                    label: 'EM ANDAMENTO',
+                    value: 'EM ANDAMENTO',
                   },
                   {
-                    label: "OBRA CANCELADA",
-                    value: "OBRA CANCELADA",
+                    label: 'OBRA CANCELADA',
+                    value: 'OBRA CANCELADA',
                   },
                   {
-                    label: "CASA EM CONSTRUÇÃO",
-                    value: "CASA EM CONSTRUÇÃO",
+                    label: 'CASA EM CONSTRUÇÃO',
+                    value: 'CASA EM CONSTRUÇÃO',
                   },
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                 ]}
                 handleChange={(value) => {
@@ -2717,22 +2386,16 @@ function NovoProjeto() {
                       ...infoHolder.obra,
                       statusDaObra: value,
                     },
-                  });
+                  })
                 }}
               />
             </div>
             <div className="flex flex-col w-[450px] self-center mt-2 items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">
-                OBSERVAÇÕES
-              </span>
+              <span className="uppercase font-bold font-raleway text-center text-sm">OBSERVAÇÕES</span>
               <textarea
                 readOnly={false}
-                value={
-                  infoHolder.obra?.observacoes
-                    ? infoHolder.obra.observacoes
-                    : ""
-                }
-                placeholder={"Observações da obra aqui..."}
+                value={infoHolder.obra?.observacoes ? infoHolder.obra.observacoes : ''}
+                placeholder={'Observações da obra aqui...'}
                 onChange={(e) => {
                   setInfo({
                     ...infoHolder,
@@ -2740,22 +2403,18 @@ function NovoProjeto() {
                       ...infoHolder.obra,
                       observacoes: e.target.value,
                     },
-                  });
+                  })
                 }}
                 className="w-full text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
               />
             </div>
             <div className="w-full flex items-center justify-center gap-x-4">
               <div className="flex flex-col w-[450px] self-center mt-2 items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  INFORMAÇÕES DO KIT
-                </span>
+                <span className="uppercase font-bold font-raleway text-center text-sm">INFORMAÇÕES DO KIT</span>
                 <textarea
                   readOnly={false}
-                  value={
-                    infoHolder.compra?.kitInfo ? infoHolder.compra?.kitInfo : ""
-                  }
-                  placeholder={"Observações do material aqui..."}
+                  value={infoHolder.compra?.kitInfo ? infoHolder.compra?.kitInfo : ''}
+                  placeholder={'Observações do material aqui...'}
                   onChange={(e) => {
                     setInfo({
                       ...infoHolder,
@@ -2763,23 +2422,17 @@ function NovoProjeto() {
                         ...infoHolder.compra,
                         kitInfo: e.target.value,
                       },
-                    });
+                    })
                   }}
                   className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                 />
               </div>
               <div className="flex flex-col w-[450px] self-center mt-2 items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  MATERIAL FALTANTE
-                </span>
+                <span className="uppercase font-bold font-raleway text-center text-sm">MATERIAL FALTANTE</span>
                 <textarea
                   readOnly={false}
-                  value={
-                    infoHolder.material?.materialFaltante
-                      ? infoHolder.material?.materialFaltante
-                      : ""
-                  }
-                  placeholder={"Observações do material aqui..."}
+                  value={infoHolder.material?.materialFaltante ? infoHolder.material?.materialFaltante : ''}
+                  placeholder={'Observações do material aqui...'}
                   onChange={(e) => {
                     setInfo({
                       ...infoHolder,
@@ -2787,7 +2440,7 @@ function NovoProjeto() {
                         ...infoHolder.material,
                         materialFaltante: e.target.value,
                       },
-                    });
+                    })
                   }}
                   className="w-full mb-2 text-center h-[150px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
                 />
@@ -2795,30 +2448,24 @@ function NovoProjeto() {
             </div>
           </div>
           <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-              MATERIAL
-            </span>
+            <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">MATERIAL</span>
             <div className="flex gap-2 justify-center flex-wrap">
               <SelectInput
-                label={"Separação do material"}
-                value={
-                  infoHolder.material?.statusSeparacao
-                    ? infoHolder.material?.statusSeparacao
-                    : "NÃO DEFINIDO"
-                }
+                label={'Separação do material'}
+                value={infoHolder.material?.statusSeparacao ? infoHolder.material?.statusSeparacao : 'NÃO DEFINIDO'}
                 editable={true}
                 options={[
                   {
-                    label: "INICIAR SEPARAÇÃO",
-                    value: "INICIAR SEPARAÇÃO",
+                    label: 'INICIAR SEPARAÇÃO',
+                    value: 'INICIAR SEPARAÇÃO',
                   },
                   {
-                    label: "SEPARADO",
-                    value: "SEPARADO",
+                    label: 'SEPARADO',
+                    value: 'SEPARADO',
                   },
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                 ]}
                 handleChange={(value) => {
@@ -2828,16 +2475,15 @@ function NovoProjeto() {
                       ...infoHolder.material,
                       statusSeparacao: value,
                     },
-                  });
+                  })
                 }}
               />
               <NumberInput
-                tag={"R$"}
-                label={"Previsão de custos em insumos"}
+                tag={'R$'}
+                label={'Previsão de custos em insumos'}
                 editable={true}
                 value={
-                  infoHolder.material?.previsaoCustos != undefined &&
-                  infoHolder.material?.previsaoCustos != "#VALUE!"
+                  infoHolder.material?.previsaoCustos != undefined && infoHolder.material?.previsaoCustos != '#VALUE!'
                     ? infoHolder.material?.previsaoCustos
                     : 0
                 }
@@ -2848,16 +2494,15 @@ function NovoProjeto() {
                       ...infoHolder.material,
                       previsaoCustos: Number(value),
                     },
-                  });
+                  })
                 }}
               />
               <NumberInput
-                tag={"R$"}
-                label={"Custos em insumos"}
+                tag={'R$'}
+                label={'Custos em insumos'}
                 editable={true}
                 value={
-                  infoHolder.material?.efetivoCustos != undefined &&
-                  infoHolder.material?.efetivoCustos != "#VALUE!"
+                  infoHolder.material?.efetivoCustos != undefined && infoHolder.material?.efetivoCustos != '#VALUE!'
                     ? infoHolder.material?.efetivoCustos
                     : 0
                 }
@@ -2868,24 +2513,21 @@ function NovoProjeto() {
                       ...infoHolder.material,
                       efetivoCustos: Number(value),
                     },
-                  });
+                  })
                 }}
               />
             </div>
           </div>
           {msg && <p className="italic text-center text-red-500">{msg}</p>}
           <div className="w-full flex items-center justify-center">
-            <button
-              className="p-2 my-2 bg-[#fead61] rounded font-bold hover:bg-[#15599a] hover:text-white"
-              onClick={validateCreation}
-            >
+            <button className="p-2 my-2 bg-[#fead61] rounded font-bold hover:bg-[#15599a] hover:text-white" onClick={validateCreation}>
               ADICIONAR PROJETO
             </button>
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default NovoProjeto;
+export default NovoProjeto

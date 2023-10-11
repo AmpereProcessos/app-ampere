@@ -134,24 +134,18 @@ function formatStructure(type) {
 }
 
 export default async function handler(req, res) {
-  const db = await connectToRequestsDatabase(process.env.DB_KEY)
-  const collection = db.collection('visitaTecnica')
-  const dbResponse = await collection.updateMany(
-    {
-      dataDeConclusao: { $lt: '2023-10-03T00:00:00.000Z' },
-    },
-    {
-      $set: {
-        analista: {
-          id: 2,
-          nome: 'Tulio Medeiros',
-          apelido: 'TULIO',
-          avatar_url:
-            'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-tulio_medeiros?alt=media&token=233e20b5-520d-473a-9e7e-f603a0b9493c',
-        },
-      },
-    }
-  )
+  // const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  // const collection = db.collection('dados')
+  // const dbResponse = await collection.updateMany(
+  //   {
+  //     'contrato.status': 'RECISÃO DE CONTRATO',
+  //   },
+  //   {
+  //     $set: {
+  //       'contrato.status': 'RESCISÃO DE CONTRATO',
+  //     },
+  //   }
+  // )
   // const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
   // const crmUsersCollection = crmDb.collection('users')
 
@@ -201,7 +195,7 @@ export default async function handler(req, res) {
   //   }
   // })
   // console.log(newPPSCalls.length)
-  res.json(dbResponse)
+  res.json('DESATIVADA')
 }
 
 // Update Many example:

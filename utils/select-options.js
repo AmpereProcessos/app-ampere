@@ -51,6 +51,7 @@ export const contractStatus = [
     value: 'ASSINADO',
     label: 'ASSINADO',
   },
+  { id: 5, value: 'RESCISÃO DE CONTRATO', label: 'RESCISÃO DE CONTRATO' },
 ]
 export const serviceTypes = [
   {

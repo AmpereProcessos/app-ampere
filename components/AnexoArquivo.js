@@ -10,6 +10,7 @@ import SelectInput from './inputs/Select'
 import { fileTypes, formatLongString } from '../utils/constants'
 import { storage } from '../utils/firebase'
 import { BiSolidCloudDownload } from 'react-icons/bi'
+import { getErrorMessage } from '../utils/methods/handlers'
 
 function renderInputText(files) {
   if (!files)

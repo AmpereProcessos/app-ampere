@@ -3,6 +3,7 @@ import React from 'react'
 import DateInput from '../DateInput'
 import NumberInput from '../NumberInput'
 import SelectInput from '../SelectInput'
+import { contractStatus } from '../../utils/select-options'
 
 function InfoContratoBlock({ editor, infoHolder, setInfo, changes, setChanges, showPaymentInfo = false, minimalInfo = false }) {
   return (
@@ -43,20 +44,7 @@ function InfoContratoBlock({ editor, infoHolder, setInfo, changes, setChanges, s
           label={'STATUS DO CONTRATO'}
           editable={editor}
           value={infoHolder.contrato?.status ? infoHolder.contrato?.status : 'NÃO DEFINIDO'}
-          options={[
-            {
-              label: 'AGUARDANDO SOLICITAÇÃO',
-              value: 'AGUARDANDO SOLICITAÇÃO',
-            },
-            { label: 'ASSINADO', value: 'ASSINADO' },
-            { label: 'NÃO ASSINADO', value: 'NÃO ASSINADO' },
-            {
-              label: 'RECISÃO DE CONTRATO',
-              value: 'RECISÃO DE CONTRATO',
-            },
-            { label: 'SOLICITADO', value: 'SOLICITADO' },
-            { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
-          ]}
+          options={contractStatus}
           handleChange={(value) => {
             setChanges({
               ...changes,

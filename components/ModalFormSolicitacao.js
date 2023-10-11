@@ -311,7 +311,7 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
         message: `Olá, acabo de aprovar uma solicitação de contrato do cliente ${solicitacao.nomeDoContrato}. Formulário disponível no link: https://app.ampereenergias.com.br/comercial/publicoFormulario/${dados._id} . Desde já agradeço, Volts.`,
         copy: ['comercial@ampereenergias.com.br', 'adm02@ampereenergias.com.br', 'estagioadm@ampereenergias.com.br'],
       })
-
+      console.log('EMAIL ENVIADO')
       setEmailMsg({ text: 'Email enviado', color: 'text-green-500' })
     } catch (error) {
       setEmailMsg({

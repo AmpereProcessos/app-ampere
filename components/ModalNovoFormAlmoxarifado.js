@@ -155,29 +155,7 @@ function NovoFormulario({ setModalIsOpen, getForms }) {
       // Updating project with SEPARADO for statusSeparacao
       if (callInfo.idPai) {
         await updateReferenceProjectSeparationStatus(callInfo.idPai)
-        // setMessage({
-        //   status: "loading",
-        //   text: "Atualizando status de separação do materiais...",
-        //   color: "text-[#15599a]",
-        // });
-        // await axios.post(`/api/projects/update/${callInfo.idPai}`, {
-        //   "material.statusSeparacao": "SEPARADO",
-        // });
       }
-      // Creating a form in database
-      // setMessage({
-      //   status: "loading",
-      //   text: "Criando formulário...",
-      //   color: "text-[#15599a]",
-      // });
-      // const { data: createFormResponse } = await axios.post(
-      //   "/api/almoxarifado/formularios",
-      //   {
-      //     ...callInfo,
-      //     tipo: "RETIRADA",
-      //     abertura: new Date().toISOString(),
-      //   }
-      // );
       const insertedId = await createForm(callInfo)
 
       const debitMaterialsToastID = toast.loading('Debitando materiais do estoque...')

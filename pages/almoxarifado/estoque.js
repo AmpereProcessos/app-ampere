@@ -18,6 +18,7 @@ import { useMaterialsWithFilters } from '../../utils/methods/query/materials'
 import { TbReportSearch } from 'react-icons/tb'
 import TextInput from '../../components/inputs/Text'
 import NumberInput from '../../components/inputs/Number'
+import MaterialCard from '../../components/identificador/almoxarifado/MaterialCard'
 function Estoque() {
   const router = useRouter()
   const { data: session, status } = useSession({
@@ -78,40 +79,7 @@ function Estoque() {
         <div className="flex justify-around gap-3 mt-4 flex-wrap w-full grow">
           {materials ? (
             materials.map((material) => (
-              <div
-                onClick={() => {
-                  setEditModal({ isOpen: true, info: material })
-                }}
-                key={material._id}
-                className="w-[350px] lg:w-[350px] hover:bg-blue-100 bg-[#fff] cursor-pointer border border-gray-200 p-3 flex flex-col gap-2"
-              >
-                <h1 className="font-Poppins text-[#15599a] text-center font-black w-full">{material.nome}</h1>
-                <p className="text-lg text-green-600 text-center font-bold">{material.localizacao ? material.localizacao : '-'}</p>
-                <p className="text-xs text-gray-500 text-center">{material.nomeTecnico ? material.nomeTecnico : 'NÃO DEFINIDO'}</p>
-                <div className="flex items-center justify-around mt-2">
-                  <div className="flex items-center gap-2">
-                    <FaBox color="#fead41" />
-                    <p className="text-xs text-gray-700 text-center">
-                      {material.qtde
-                        ? Number(material.qtde).toLocaleString('pt-br', {
-                            maximumFractionDigits: 2,
-                          })
-                        : '-'}{' '}
-                      {material.grandeza}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <ImPriceTag />
-                    <p className="text-xs text-gray-700 text-center">{material.preco ? `R$${material.preco.toFixed(2).replace('.', ',')}` : '-'}</p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-center gap-2 italic">
-                  <AiFillWarning color="rgb(239,68,68)" />
-                  <p className="text-gray-500 text-xs">
-                    Quantidade mínima definida de: <strong className="text-red-500">{material.qtdeMinima ? material.qtdeMinima : 'N/A'}</strong>{' '}
-                  </p>
-                </div>
-              </div>
+              <MaterialCard key={material._id} material={material} handleClick={() => setEditModal({ isOpen: true, info: material })} />
             ))
           ) : (
             <LoadingPage />

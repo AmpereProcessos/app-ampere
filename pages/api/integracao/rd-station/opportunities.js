@@ -1,5 +1,6 @@
 import axios from 'axios'
 import connectToDatabase from '../../../../utils/crmDb'
+import { errorHandler } from '../../../../utils/methods/handlers'
 
 export default async function handler(req, res) {
   if (req.method == 'PUT') {
@@ -9,29 +10,45 @@ export default async function handler(req, res) {
 
     const crmDb = await connectToDatabase(process.env.CRM_KEY)
     const utilsCollection = crmDb.collection('utils')
+    if (typeof email != 'string') throw new createHttpError.BadRequest('Tipo de email inválido.')
+    if (typeof value != 'number') throw new createHttpError.BadRequest('Tipo de valor inválido.')
 
-    if (operation == 'SALE') {
-      if (typeof email != 'string') throw new createHttpError.BadRequest('Tipo de email inválido.')
-      if (typeof value != 'number') throw new createHttpError.BadRequest('Tipo de valor inválido.')
-      const url = 'https://api.rd.services/platform/events?event_type=sale'
-      const payload = {
-        event_type: 'SALE',
-        event_family: 'CDP',
-        payload: {
-          email: email,
-          funnel_name: 'default',
-          value: value,
-        },
-      }
-      const token = await getToken({ collection: utilsCollection })
+    const url = 'https://api.rd.services/platform/events?event_type=sale'
+    const payload = {
+      event_type: 'SALE',
+      event_family: 'CDP',
+      payload: {
+        email: email,
+        funnel_name: 'default',
+        value: value,
+      },
+    }
 
-      const headers = {
-        accept: 'application/json',
-        'content-type': 'application/json',
-        authorization: `Bearer ${token}`,
+    try {
+      if (operation == 'SALE') {
+        const token = await getToken({ collection: utilsCollection })
+
+        const headers = {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          authorization: `Bearer ${token}`,
+        }
+        console.log('CHEGUEI AQUI')
+        const rdResponse = await axios.post(url, payload, { headers: headers })
+        console.log('RD RESPONSE', rdResponse.status, rdResponse.data)
+        if (rdResponse.status != 200) {
+          const refreshedToken = await getRefreshedToken({ collection: utilsCollection })
+          const newHeaders = {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            authorization: `Bearer ${refreshedToken}`,
+          }
+          await axios.post(url, payload, { headers: newHeaders })
+          return res.status(201).json('Atualização feita com sucesso.')
+        } else return res.status(200).json('Atualização feita com sucesso !')
       }
-      const rdResponse = await axios.post(url, payload, { headers: headers })
-      if (rdResponse.status != 200) {
+    } catch (error) {
+      if (error?.response.status == 401) {
         const refreshedToken = await getRefreshedToken({ collection: utilsCollection })
         const newHeaders = {
           accept: 'application/json',
@@ -40,7 +57,9 @@ export default async function handler(req, res) {
         }
         await axios.post(url, payload, { headers: newHeaders })
         return res.status(201).json('Atualização feita com sucesso.')
-      } else return res.status(200).json('Atualização feita com sucesso !')
+      } else {
+        errorHandler(error, res)
+      }
     }
   }
 }
@@ -64,8 +83,7 @@ async function getRefreshedToken({ collection }) {
     console.log('RD RESPONSE', rdResponse)
     if (rdResponse.status == 200) {
       const { access_token } = rdResponse.data
-      console.log('NOVO ACESS_TOKEN', access_token)
-      await collection.updateOne({ identificador: 'RD_ACCESS_TOKEN' }, { $set: { valor: access_token } })
+      await collection.updateOne({ identificador: 'RD_ACCESS_TOKEN' }, { $set: { valor: access_token, dataAlteracao: new Date().toISOString() } })
       return access_token
     } else throw new createHttpError.InternalServerError('Erro ao buscar acess_token.')
   } catch (error) {

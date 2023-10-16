@@ -3,7 +3,7 @@ import createHttpError from 'http-errors'
 import { getContractValue } from './util/projects'
 
 export function errorHandler(err, res) {
-  console.log('ERRO', err)
+  // console.log('ERRO', err)
   if (createHttpError.isHttpError(err) && err.expose) {
     // Lidar com os erros lançados pelo módulo http-errors
     return res.status(err.statusCode).json({ error: { message: err.message } })

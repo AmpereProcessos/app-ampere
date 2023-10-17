@@ -676,7 +676,12 @@ export const accessGrantingStatus = [
     label: 'AGUARDANDO CORREÇÃO DE EQUIPAMENTO',
     value: 'AGUARDANDO CORREÇÃO DE EQUIPAMENTO',
   },
-  { id: 19, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+  {
+    id: 19,
+    label: 'PARECER APROVADO - NOTURNO',
+    value: 'PARECER APROVADO - NOTURNO',
+  },
+  { id: 20, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
 ]
 export const additionalCostsCategories = [
   {

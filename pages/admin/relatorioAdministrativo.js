@@ -1,730 +1,541 @@
-import axios from "axios";
-import dayjs from "dayjs";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import React, { useContext, useEffect, useState } from "react";
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
-import Select from "react-select";
-import {
-  cidadesAtendidas,
-  tiposDeServico,
-  vendedores,
-} from "../../utils/constants";
-import { AnimatePresence, motion } from "framer-motion";
-import { FaUserAlt } from "react-icons/fa";
+import axios from 'axios'
+import dayjs from 'dayjs'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
+import React, { useContext, useEffect, useState } from 'react'
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
+import Select from 'react-select'
+import { cidadesAtendidas, tiposDeServico, vendedores } from '../../utils/constants'
+import { AnimatePresence, motion } from 'framer-motion'
+import { FaUserAlt } from 'react-icons/fa'
 
 function renderShowClientsButtonStyles(show) {
-  if (!show)
-    return "bg-gray-100 text-gray-300 border border-gray-300 hover:bg-blue-100 hover:text-blue-400";
-  else
-    return "bg-blue-100 text-blue-400 hover:bg-gray-100 hover:text-gray-300 border border-gray-300";
+  if (!show) return 'bg-gray-100 text-gray-300 border border-gray-300 hover:bg-blue-100 hover:text-blue-400'
+  else return 'bg-blue-100 text-blue-400 hover:bg-gray-100 hover:text-gray-300 border border-gray-300'
 }
 
 function Acompanhamento() {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/authHome')
     },
-  });
-  const [showClientsNames, setShowClientsNames] = useState(false);
-  const [info, setInfo] = useState([]);
+  })
+  const [showClientsNames, setShowClientsNames] = useState(false)
+  const [info, setInfo] = useState([])
   const [dateFilter, setDateFilter] = useState({
     after: null,
     before: null,
     field1: null,
     field2: null,
-  });
+  })
   const [filters, setFilters] = useState({
     vendedorFilter: [],
     cidadeFilter: [],
     tipoDeServicoFilter: [],
-    regionalFilter: "GERAL",
-    tipoVendaFilter: "GERAL",
-  });
+    regionalFilter: 'GERAL',
+    tipoVendaFilter: 'GERAL',
+  })
   function getInfo() {
-    axios.get("/api/report").then((res) => setInfo(res.data));
+    axios.get('/api/report').then((res) => setInfo(res.data))
   }
   function getPotenciaVendida() {
-    var filteredArr = info;
-    filteredArr = filteredArr.filter((x) => x.contrato.status == "ASSINADO");
+    var filteredArr = info
+    filteredArr = filteredArr.filter((x) => x.contrato.status == 'ASSINADO')
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!filteredArr) filteredArr = info;
+      if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
-        (x) =>
-          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (x) => x[dateFilter.field1][dateFilter.field2] >= dateFilter.after && x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
-    if (filters.tipoVendaFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
-        filteredArr = filteredArr.filter((item) => !item.insider);
+    if (filters.tipoVendaFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      if (filters.tipoVendaFilter == 'SOMENTE VENDEDOR') {
+        filteredArr = filteredArr.filter((item) => !item.insider)
       }
-      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
-        filteredArr = filteredArr.filter((item) => item.insider != null);
+      if (filters.tipoVendaFilter == 'ATRAVÉS DE INSIDE') {
+        filteredArr = filteredArr.filter((item) => item.insider != null && item.insider != 'NÃO DEFINIDO')
       }
     }
     if (filters.vendedorFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.vendedorFilter.includes(call.vendedor.nome)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.cidadeFilter.includes(call.cidade)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
     }
     if (filters.tipoDeServicoFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((item) =>
-        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((item) => filters.tipoDeServicoFilter.includes(item.tipoDeServico))
     }
-    if (filters.regionalFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter(
-        (x) => x.regional == filters.regionalFilter
-      );
+    if (filters.regionalFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((x) => x.regional == filters.regionalFilter)
     }
-    var sum = 0;
+    var sum = 0
     for (let i = 0; i < filteredArr.length; i++) {
-      let pot = !isNaN(filteredArr[i].sistema?.potPico)
-        ? filteredArr[i].sistema.potPico
-        : 0;
-      sum = sum + Number(pot);
+      let pot = !isNaN(filteredArr[i].sistema?.potPico) ? filteredArr[i].sistema.potPico : 0
+      sum = sum + Number(pot)
     }
-    return sum.toFixed(2);
+    return sum.toFixed(2)
   }
   function getPotenciaHomologada() {
-    var filteredArr = info;
+    var filteredArr = info
     filteredArr = filteredArr.filter(
-      (x) =>
-        x.parecer.dataParecerDeAcesso != null &&
-        x.parecer.dataParecerDeAcesso != undefined &&
-        x.parecer.dataParecerDeAcesso != "-"
-    );
+      (x) => x.parecer.dataParecerDeAcesso != null && x.parecer.dataParecerDeAcesso != undefined && x.parecer.dataParecerDeAcesso != '-'
+    )
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!filteredArr) filteredArr = info;
+      if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
-        (x) =>
-          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (x) => x[dateFilter.field1][dateFilter.field2] >= dateFilter.after && x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
-    if (filters.tipoVendaFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
-        filteredArr = filteredArr.filter((item) => !item.insider);
+    if (filters.tipoVendaFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      if (filters.tipoVendaFilter == 'SOMENTE VENDEDOR') {
+        filteredArr = filteredArr.filter((item) => !item.insider)
       }
-      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
-        filteredArr = filteredArr.filter((item) => item.insider != null);
+      if (filters.tipoVendaFilter == 'ATRAVÉS DE INSIDE') {
+        filteredArr = filteredArr.filter((item) => item.insider != null && item.insider != 'NÃO DEFINIDO')
       }
     }
     if (filters.vendedorFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.vendedorFilter.includes(call.vendedor.nome)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.cidadeFilter.includes(call.cidade)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
     }
     if (filters.tipoDeServicoFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((item) =>
-        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((item) => filters.tipoDeServicoFilter.includes(item.tipoDeServico))
     }
-    if (filters.regionalFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter(
-        (x) => x.regional == filters.regionalFilter
-      );
+    if (filters.regionalFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((x) => x.regional == filters.regionalFilter)
     }
-    var sum = 0;
+    var sum = 0
     for (let i = 0; i < filteredArr.length; i++) {
-      let pot = !isNaN(filteredArr[i].sistema?.potPico)
-        ? filteredArr[i].sistema.potPico
-        : 0;
-      sum = sum + Number(pot);
+      let pot = !isNaN(filteredArr[i].sistema?.potPico) ? filteredArr[i].sistema.potPico : 0
+      sum = sum + Number(pot)
     }
-    return sum.toFixed(2);
+    return sum.toFixed(2)
   }
   function getPotenciaInstalada() {
-    var filteredArr = info;
-    filteredArr = filteredArr.filter(
-      (x) => x.obra?.statusDaObra == "CONCLUIDA"
-    );
+    var filteredArr = info
+    filteredArr = filteredArr.filter((x) => x.obra?.statusDaObra == 'CONCLUIDA')
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!filteredArr) filteredArr = info;
+      if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
-        (x) =>
-          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (x) => x[dateFilter.field1][dateFilter.field2] >= dateFilter.after && x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
-    if (filters.tipoVendaFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
-        filteredArr = filteredArr.filter((item) => !item.insider);
+    if (filters.tipoVendaFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      if (filters.tipoVendaFilter == 'SOMENTE VENDEDOR') {
+        filteredArr = filteredArr.filter((item) => !item.insider)
       }
-      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
-        filteredArr = filteredArr.filter((item) => item.insider != null);
+      if (filters.tipoVendaFilter == 'ATRAVÉS DE INSIDE') {
+        filteredArr = filteredArr.filter((item) => item.insider != null && item.insider != 'NÃO DEFINIDO')
       }
     }
     if (filters.vendedorFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.vendedorFilter.includes(call.vendedor.nome)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.cidadeFilter.includes(call.cidade)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
     }
     if (filters.tipoDeServicoFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((item) =>
-        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((item) => filters.tipoDeServicoFilter.includes(item.tipoDeServico))
     }
-    if (filters.regionalFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter(
-        (x) => x.regional == filters.regionalFilter
-      );
+    if (filters.regionalFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((x) => x.regional == filters.regionalFilter)
     }
-    var sum = 0;
+    var sum = 0
     for (let i = 0; i < filteredArr.length; i++) {
-      let pot = !isNaN(filteredArr[i].sistema?.potPico)
-        ? filteredArr[i].sistema.potPico
-        : 0;
-      sum = sum + Number(pot);
+      let pot = !isNaN(filteredArr[i].sistema?.potPico) ? filteredArr[i].sistema.potPico : 0
+      sum = sum + Number(pot)
     }
-    return sum.toFixed(2);
+    return sum.toFixed(2)
   }
   function getObrasFinalizadas() {
-    var filteredArr = info;
-    filteredArr = filteredArr.filter(
-      (x) => x.obra?.statusDaObra == "CONCLUIDA"
-    );
+    var filteredArr = info
+    filteredArr = filteredArr.filter((x) => x.obra?.statusDaObra == 'CONCLUIDA')
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!filteredArr) filteredArr = info;
+      if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
-        (x) =>
-          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (x) => x[dateFilter.field1][dateFilter.field2] >= dateFilter.after && x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
-    if (filters.tipoVendaFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
-        filteredArr = filteredArr.filter((item) => !item.insider);
+    if (filters.tipoVendaFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      if (filters.tipoVendaFilter == 'SOMENTE VENDEDOR') {
+        filteredArr = filteredArr.filter((item) => !item.insider)
       }
-      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
-        filteredArr = filteredArr.filter((item) => item.insider != null);
+      if (filters.tipoVendaFilter == 'ATRAVÉS DE INSIDE') {
+        filteredArr = filteredArr.filter((item) => item.insider != null && item.insider != 'NÃO DEFINIDO')
       }
     }
     if (filters.vendedorFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.vendedorFilter.includes(call.vendedor.nome)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.cidadeFilter.includes(call.cidade)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
     }
     if (filters.tipoDeServicoFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((item) =>
-        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((item) => filters.tipoDeServicoFilter.includes(item.tipoDeServico))
     }
-    if (filters.regionalFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter(
-        (x) => x.regional == filters.regionalFilter
-      );
+    if (filters.regionalFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((x) => x.regional == filters.regionalFilter)
     }
-    return filteredArr.length;
+    return filteredArr.length
   }
   function getTempoMedioDeAprovacao() {
-    var filteredArr = info;
-    filteredArr = filteredArr.filter(
-      (x) =>
-        x.parecer.statusDoParecerDeAcesso != "CANCELADO" &&
-        x.obra.statusDaObra != "OBRA CANCELADA"
-    );
+    var filteredArr = info
+    filteredArr = filteredArr.filter((x) => x.parecer.statusDoParecerDeAcesso != 'CANCELADO' && x.obra.statusDaObra != 'OBRA CANCELADA')
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!filteredArr) filteredArr = info;
+      if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
-        (x) =>
-          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (x) => x[dateFilter.field1][dateFilter.field2] >= dateFilter.after && x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
-    if (filters.tipoVendaFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
-        filteredArr = filteredArr.filter((item) => !item.insider);
+    if (filters.tipoVendaFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      if (filters.tipoVendaFilter == 'SOMENTE VENDEDOR') {
+        filteredArr = filteredArr.filter((item) => !item.insider)
       }
-      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
-        filteredArr = filteredArr.filter((item) => item.insider != null);
+      if (filters.tipoVendaFilter == 'ATRAVÉS DE INSIDE') {
+        filteredArr = filteredArr.filter((item) => item.insider != null && item.insider != 'NÃO DEFINIDO')
       }
     }
     if (filters.vendedorFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.vendedorFilter.includes(call.vendedor.nome)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.cidadeFilter.includes(call.cidade)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
     }
     if (filters.tipoDeServicoFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((item) =>
-        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((item) => filters.tipoDeServicoFilter.includes(item.tipoDeServico))
     }
-    if (filters.regionalFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter(
-        (x) => x.regional == filters.regionalFilter
-      );
+    if (filters.regionalFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((x) => x.regional == filters.regionalFilter)
     }
-    var sum = 0;
+    var sum = 0
     for (let i = 0; i < filteredArr.length; i++) {
-      let diff = dayjs(filteredArr[i].parecer.dataParecerDeAcesso).diff(
-        filteredArr[i].projeto.dataAssDocumentacao,
-        "day"
-      );
+      let diff = dayjs(filteredArr[i].parecer.dataParecerDeAcesso).diff(filteredArr[i].projeto.dataAssDocumentacao, 'day')
       if (isNaN(diff)) {
-        sum = sum;
+        sum = sum
       } else {
-        sum = sum + diff;
+        sum = sum + diff
       }
     }
 
-    return (sum / filteredArr.length).toFixed(2);
+    return (sum / filteredArr.length).toFixed(2)
   }
   function getTempoMedioDeCompra() {
-    var filteredArr = info;
-    filteredArr = filteredArr.filter(
-      (x) =>
-        x.parecer.statusDoParecerDeAcesso != "CANCELADO" &&
-        x.obra.statusDaObra != "OBRA CANCELADA"
-    );
+    var filteredArr = info
+    filteredArr = filteredArr.filter((x) => x.parecer.statusDoParecerDeAcesso != 'CANCELADO' && x.obra.statusDaObra != 'OBRA CANCELADA')
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!filteredArr) filteredArr = info;
+      if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
-        (x) =>
-          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (x) => x[dateFilter.field1][dateFilter.field2] >= dateFilter.after && x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
     if (filters.vendedorFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.vendedorFilter.includes(call.vendedor.nome)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.cidadeFilter.includes(call.cidade)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
     }
 
-    if (filters.regionalFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter(
-        (x) => x.regional == filters.regionalFilter
-      );
+    if (filters.regionalFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((x) => x.regional == filters.regionalFilter)
     }
-    var sum = 0;
+    var sum = 0
     for (let i = 0; i < filteredArr.length; i++) {
-      let diff = dayjs(filteredArr[i].compra.dataPedido).diff(
-        filteredArr[i].compra.dataLiberacao,
-        "day"
-      );
+      let diff = dayjs(filteredArr[i].compra.dataPedido).diff(filteredArr[i].compra.dataLiberacao, 'day')
       if (isNaN(diff)) {
-        sum = sum;
+        sum = sum
       } else {
-        sum = sum + diff;
+        sum = sum + diff
       }
     }
 
-    return (sum / filteredArr.length).toFixed(2);
+    return (sum / filteredArr.length).toFixed(2)
   }
   function getTempoMedioDeInstalacao() {
-    var filteredArr = info;
-    filteredArr = filteredArr.filter(
-      (x) => x.obra?.statusDaObra == "CONCLUIDA"
-    );
+    var filteredArr = info
+    filteredArr = filteredArr.filter((x) => x.obra?.statusDaObra == 'CONCLUIDA')
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!filteredArr) filteredArr = info;
+      if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
-        (x) =>
-          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (x) => x[dateFilter.field1][dateFilter.field2] >= dateFilter.after && x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
-    if (filters.tipoVendaFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
-        filteredArr = filteredArr.filter((item) => !item.insider);
+    if (filters.tipoVendaFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      if (filters.tipoVendaFilter == 'SOMENTE VENDEDOR') {
+        filteredArr = filteredArr.filter((item) => !item.insider)
       }
-      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
-        filteredArr = filteredArr.filter((item) => item.insider != null);
+      if (filters.tipoVendaFilter == 'ATRAVÉS DE INSIDE') {
+        filteredArr = filteredArr.filter((item) => item.insider != null && item.insider != 'NÃO DEFINIDO')
       }
     }
     if (filters.vendedorFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.vendedorFilter.includes(call.vendedor.nome)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.cidadeFilter.includes(call.cidade)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
     }
     if (filters.tipoDeServicoFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((item) =>
-        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((item) => filters.tipoDeServicoFilter.includes(item.tipoDeServico))
     }
-    if (filters.regionalFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter(
-        (x) => x.regional == filters.regionalFilter
-      );
+    if (filters.regionalFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((x) => x.regional == filters.regionalFilter)
     }
-    var sum = 0;
+    var sum = 0
     for (let i = 0; i < filteredArr.length; i++) {
-      let diff = dayjs(filteredArr[i].obra.saida).diff(
-        filteredArr[i].obra.entrada,
-        "day"
-      );
+      let diff = dayjs(filteredArr[i].obra.saida).diff(filteredArr[i].obra.entrada, 'day')
       if (isNaN(diff)) {
-        sum = sum;
+        sum = sum
       } else {
-        sum = sum + diff;
+        sum = sum + diff
       }
     }
-    return (sum / filteredArr.length).toFixed(2);
+    return (sum / filteredArr.length).toFixed(2)
   }
   function getNps() {
-    var filteredArr = info;
+    var filteredArr = info
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!filteredArr) filteredArr = info;
+      if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
-        (x) =>
-          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (x) => x[dateFilter.field1][dateFilter.field2] >= dateFilter.after && x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
-    if (filters.tipoVendaFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
-        filteredArr = filteredArr.filter((item) => !item.insider);
+    if (filters.tipoVendaFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      if (filters.tipoVendaFilter == 'SOMENTE VENDEDOR') {
+        filteredArr = filteredArr.filter((item) => !item.insider)
       }
-      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
-        filteredArr = filteredArr.filter((item) => item.insider != null);
+      if (filters.tipoVendaFilter == 'ATRAVÉS DE INSIDE') {
+        filteredArr = filteredArr.filter((item) => item.insider != null && item.insider != 'NÃO DEFINIDO')
       }
     }
     if (filters.vendedorFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.vendedorFilter.includes(call.vendedor.nome)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.cidadeFilter.includes(call.cidade)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
     }
     if (filters.tipoDeServicoFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((item) =>
-        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((item) => filters.tipoDeServicoFilter.includes(item.tipoDeServico))
     }
-    if (filters.regionalFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter(
-        (x) => x.regional == filters.regionalFilter
-      );
+    if (filters.regionalFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((x) => x.regional == filters.regionalFilter)
     }
-    let promotores = filteredArr.filter((x) => x.nps >= 9);
-    let detratores = filteredArr.filter((x) => x.nps != null && x.nps <= 6);
-    let consultasTotais = filteredArr.filter(
-      (x) => x.nps != null && x.nps >= 0 && x.nps <= 10
-    );
-    return (
-      ((promotores.length - detratores.length) * 100) /
-      consultasTotais.length
-    ).toFixed(2);
+    let promotores = filteredArr.filter((x) => x.nps >= 9)
+    let detratores = filteredArr.filter((x) => x.nps != null && x.nps <= 6)
+    let consultasTotais = filteredArr.filter((x) => x.nps != null && x.nps >= 0 && x.nps <= 10)
+    return (((promotores.length - detratores.length) * 100) / consultasTotais.length).toFixed(2)
   }
   function getTotalVendido() {
-    var filteredArr = info;
-    filteredArr = filteredArr.filter((x) => x.contrato?.status == "ASSINADO");
+    var filteredArr = info
+    filteredArr = filteredArr.filter((x) => x.contrato?.status == 'ASSINADO')
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!filteredArr) filteredArr = info;
+      if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
-        (x) =>
-          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (x) => x[dateFilter.field1][dateFilter.field2] >= dateFilter.after && x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
-    if (filters.tipoVendaFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
-        filteredArr = filteredArr.filter((item) => !item.insider);
+    if (filters.tipoVendaFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      if (filters.tipoVendaFilter == 'SOMENTE VENDEDOR') {
+        filteredArr = filteredArr.filter((item) => !item.insider)
       }
-      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
-        filteredArr = filteredArr.filter((item) => item.insider != null);
+      if (filters.tipoVendaFilter == 'ATRAVÉS DE INSIDE') {
+        filteredArr = filteredArr.filter((item) => item.insider != null && item.insider != 'NÃO DEFINIDO')
       }
     }
     if (filters.vendedorFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.vendedorFilter.includes(call.vendedor.nome)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.cidadeFilter.includes(call.cidade)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
     }
     if (filters.tipoDeServicoFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((item) =>
-        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((item) => filters.tipoDeServicoFilter.includes(item.tipoDeServico))
     }
-    if (filters.regionalFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter(
-        (x) => x.regional == filters.regionalFilter
-      );
+    if (filters.regionalFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((x) => x.regional == filters.regionalFilter)
     }
-    console.log(
-      "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-    );
-    var totalSum = 0;
+    console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+    var totalSum = 0
     for (var i = 0; i < filteredArr.length; i++) {
-      let projeto = !isNaN(filteredArr[i].sistema?.valorProjeto)
-        ? filteredArr[i].sistema.valorProjeto
-        : 0;
-      let padrao = !isNaN(filteredArr[i].padrao?.valor)
-        ? filteredArr[i].padrao?.valor
-        : 0;
-      let estrutura = !isNaN(filteredArr[i].estruturaPersonalizada?.valor)
-        ? filteredArr[i].estruturaPersonalizada.valor
-        : 0;
-      let oem = !isNaN(filteredArr[i].oem?.valor)
-        ? filteredArr[i].oem.valor
-        : 0;
-      console.log(
-        filteredArr[i].nomeDoContrato,
-        projeto,
-        padrao,
-        estrutura,
-        oem
-      );
-      totalSum =
-        Number(totalSum) +
-        Number(projeto) +
-        Number(padrao) +
-        Number(estrutura) +
-        Number(oem);
+      let projeto = !isNaN(filteredArr[i].sistema?.valorProjeto) ? filteredArr[i].sistema.valorProjeto : 0
+      let padrao = !isNaN(filteredArr[i].padrao?.valor) ? filteredArr[i].padrao?.valor : 0
+      let estrutura = !isNaN(filteredArr[i].estruturaPersonalizada?.valor) ? filteredArr[i].estruturaPersonalizada.valor : 0
+      let oem = !isNaN(filteredArr[i].oem?.valor) ? filteredArr[i].oem.valor : 0
+      console.log(filteredArr[i].nomeDoContrato, projeto, padrao, estrutura, oem)
+      totalSum = Number(totalSum) + Number(projeto) + Number(padrao) + Number(estrutura) + Number(oem)
     }
     return {
       total: totalSum,
       ticketMedio: Number((totalSum / filteredArr.length).toFixed(2)),
       vendas: filteredArr.length,
-    };
+    }
   }
   function getCustos() {
-    var filteredArr = info;
-    filteredArr = filteredArr.filter((x) => x.contrato.status == "ASSINADO");
+    var filteredArr = info
+    filteredArr = filteredArr.filter((x) => x.contrato.status == 'ASSINADO')
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!filteredArr) filteredArr = info;
+      if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
-        (x) =>
-          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (x) => x[dateFilter.field1][dateFilter.field2] >= dateFilter.after && x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
-    if (filters.tipoVendaFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
-        filteredArr = filteredArr.filter((item) => !item.insider);
+    if (filters.tipoVendaFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      if (filters.tipoVendaFilter == 'SOMENTE VENDEDOR') {
+        filteredArr = filteredArr.filter((item) => !item.insider)
       }
-      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
-        filteredArr = filteredArr.filter((item) => item.insider != null);
+      if (filters.tipoVendaFilter == 'ATRAVÉS DE INSIDE') {
+        filteredArr = filteredArr.filter((item) => item.insider != null && item.insider != 'NÃO DEFINIDO')
       }
     }
     if (filters.vendedorFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.vendedorFilter.includes(call.vendedor.nome)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.cidadeFilter.includes(call.cidade)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
     }
     if (filters.tipoDeServicoFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((item) =>
-        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((item) => filters.tipoDeServicoFilter.includes(item.tipoDeServico))
     }
-    if (filters.regionalFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter(
-        (x) => x.regional == filters.regionalFilter
-      );
+    if (filters.regionalFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((x) => x.regional == filters.regionalFilter)
     }
-    var sumValorDoKit = 0;
-    var sumCustoInsumos = 0;
-    var sumPrevInsumos = 0;
-    var countCustoNotInformed = 0;
+    var sumValorDoKit = 0
+    var sumCustoInsumos = 0
+    var sumPrevInsumos = 0
+    var countCustoNotInformed = 0
     for (let i = 0; i < filteredArr.length; i++) {
-      let valorDoKit = !isNaN(filteredArr[i].compra?.valorDoKit)
-        ? filteredArr[i].compra.valorDoKit
-        : 0;
-      let prevInsumos = !isNaN(filteredArr[i].material?.previsaoCustos)
-        ? filteredArr[i].material.previsaoCustos
-        : 0;
-      let custoInsumos = !isNaN(filteredArr[i].material?.efetivoCustos)
-        ? filteredArr[i].material.efetivoCustos
-        : 0;
+      let valorDoKit = !isNaN(filteredArr[i].compra?.valorDoKit) ? filteredArr[i].compra.valorDoKit : 0
+      let prevInsumos = !isNaN(filteredArr[i].material?.previsaoCustos) ? filteredArr[i].material.previsaoCustos : 0
+      let custoInsumos = !isNaN(filteredArr[i].material?.efetivoCustos) ? filteredArr[i].material.efetivoCustos : 0
       // if (isNaN(filteredArr[i].material?.efetivoCustos)) {
       //   countCustoNotInformed = countCustoNotInformed + 1;
       //   console.log(filteredArr[i].material?.efetivoCustos);
       // }
 
-      sumValorDoKit = sumValorDoKit + valorDoKit;
-      sumCustoInsumos = sumCustoInsumos + custoInsumos;
-      sumPrevInsumos = sumPrevInsumos + prevInsumos;
+      sumValorDoKit = sumValorDoKit + valorDoKit
+      sumCustoInsumos = sumCustoInsumos + custoInsumos
+      sumPrevInsumos = sumPrevInsumos + prevInsumos
     }
     return {
       totalValorDoKit: sumValorDoKit,
       totalPrevCustos: sumPrevInsumos,
       totalEfetivoCustos: sumCustoInsumos,
       // porcentagemCustoNaoPreenchido: countCustoNotInformed / filteredArr.length,
-    };
+    }
   }
   function renderClients() {
-    var filteredArr = info;
-    filteredArr = filteredArr.filter(
-      (x) =>
-        x.parecer.statusDoParecerDeAcesso != "CANCELADO" &&
-        x.obra.statusDaObra != "OBRA CANCELADA"
-    );
+    var filteredArr = info
+    filteredArr = filteredArr.filter((x) => x.parecer.statusDoParecerDeAcesso != 'CANCELADO' && x.obra.statusDaObra != 'OBRA CANCELADA')
     if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!filteredArr) filteredArr = info;
+      if (!filteredArr) filteredArr = info
       filteredArr = filteredArr.filter(
-        (x) =>
-          x[dateFilter.field1][dateFilter.field2] >= dateFilter.after &&
-          x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      );
+        (x) => x[dateFilter.field1][dateFilter.field2] >= dateFilter.after && x[dateFilter.field1][dateFilter.field2] <= dateFilter.before
+      )
     }
-    if (filters.tipoVendaFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      if (filters.tipoVendaFilter == "SOMENTE VENDEDOR") {
-        filteredArr = filteredArr.filter((item) => !item.insider);
+    if (filters.tipoVendaFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      if (filters.tipoVendaFilter == 'SOMENTE VENDEDOR') {
+        filteredArr = filteredArr.filter((item) => !item.insider)
       }
-      if (filters.tipoVendaFilter == "ATRAVÉS DE INSIDE") {
-        filteredArr = filteredArr.filter((item) => item.insider != null);
+      if (filters.tipoVendaFilter == 'ATRAVÉS DE INSIDE') {
+        filteredArr = filteredArr.filter((item) => item.insider != null && item.insider != 'NÃO DEFINIDO')
       }
     }
     if (filters.vendedorFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.vendedorFilter.includes(call.vendedor.nome)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
     }
     if (filters.cidadeFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((call) =>
-        filters.cidadeFilter.includes(call.cidade)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
     }
     if (filters.tipoDeServicoFilter.length > 0) {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter((item) =>
-        filters.tipoDeServicoFilter.includes(item.tipoDeServico)
-      );
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((item) => filters.tipoDeServicoFilter.includes(item.tipoDeServico))
     }
-    if (filters.regionalFilter != "GERAL") {
-      if (!filteredArr) filteredArr = info;
-      filteredArr = filteredArr.filter(
-        (x) => x.regional == filters.regionalFilter
-      );
+    if (filters.regionalFilter != 'GERAL') {
+      if (!filteredArr) filteredArr = info
+      filteredArr = filteredArr.filter((x) => x.regional == filters.regionalFilter)
     }
 
     return (
       <div className="w-full flex flex-col">
         <h1 className="text-[#fead61] font-medium text-center">
-          {filteredArr.length > 1
-            ? `${filteredArr.length} CLIENTES`
-            : `${filteredArr.length} CLIENTE`}
+          {filteredArr.length > 1 ? `${filteredArr.length} CLIENTES` : `${filteredArr.length} CLIENTE`}
         </h1>
         {filteredArr.map((item, index) => (
-          <div
-            key={index}
-            className="w-full flex items-center font-medium py-1 gap-2"
-          >
-            <FaUserAlt style={{ color: "#15599a" }} />
+          <div key={index} className="w-full flex items-center font-medium py-1 gap-2">
+            <FaUserAlt style={{ color: '#15599a' }} />
             <h1>{item.nomeDoContrato}</h1>
           </div>
         ))}
       </div>
-    );
+    )
   }
   useEffect(() => {
     if (session?.user.manager == true) {
-      getInfo();
+      getInfo()
     } else {
       if (session?.user) {
-        router.push("/");
+        router.push('/')
       }
     }
-  }, [session]);
+  }, [session])
   if (session?.user?.manager == true)
     return (
       <div className="grow p-6 flex flex-col gap-2">
         <div className="flex flex-col items-center border-b border-gray-200 py-2">
-          <h1 className="text-2xl font-bold text-[#15599a] font-raleway">
-            RESULTADOS AMPÈRE
-          </h1>
+          <h1 className="text-2xl font-bold text-[#15599a] font-raleway">RESULTADOS AMPÈRE</h1>
           <div className="flex items-center justify-around gap-2 py-2">
             <Select
               isMulti
@@ -736,7 +547,7 @@ function Acompanhamento() {
                 })
               }
               options={vendedores.map((vendedor) => {
-                return { label: vendedor.nome, value: vendedor.nome };
+                return { label: vendedor.nome, value: vendedor.nome }
               })}
             />
             <Select
@@ -749,7 +560,7 @@ function Acompanhamento() {
                 })
               }
               options={cidadesAtendidas.map((cidade) => {
-                return { label: cidade, value: cidade };
+                return { label: cidade, value: cidade }
               })}
             />
             <Select
@@ -765,87 +576,69 @@ function Acompanhamento() {
             />
             <select
               value={filters.regionalFilter}
-              onChange={(e) =>
-                setFilters({ ...filters, regionalFilter: e.target.value })
-              }
+              onChange={(e) => setFilters({ ...filters, regionalFilter: e.target.value })}
               className="outline-none h-[36px] p-2 rounded-sm border border-gray-200 text-gray-600 font-semibold text-center"
             >
-              <option value={"GERAL"}>GERAL</option>
-              <option value={"REGIONAL ITUIUTABA"}>REGIONAL ITUIUTABA</option>
-              <option value={"REGIONAL UBERLÂNDIA"}>REGIONAL UBERLÂNDIA</option>
+              <option value={'GERAL'}>GERAL</option>
+              <option value={'REGIONAL ITUIUTABA'}>REGIONAL ITUIUTABA</option>
+              <option value={'REGIONAL UBERLÂNDIA'}>REGIONAL UBERLÂNDIA</option>
             </select>
             <select
               value={filters.tipoVendaFilter}
-              onChange={(e) =>
-                setFilters({ ...filters, tipoVendaFilter: e.target.value })
-              }
+              onChange={(e) => setFilters({ ...filters, tipoVendaFilter: e.target.value })}
               className="outline-none h-[36px] p-2 rounded-sm border border-gray-200 text-gray-600 font-semibold text-center"
             >
-              <option value={"GERAL"}>VENDAS GERAIS</option>
-              <option value={"SOMENTE VENDEDOR"}>SOMENTE VENDEDOR</option>
-              <option value={"ATRAVÉS DE INSIDE"}>ATRAVÉS DE INSIDE</option>
+              <option value={'GERAL'}>VENDAS GERAIS</option>
+              <option value={'SOMENTE VENDEDOR'}>SOMENTE VENDEDOR</option>
+              <option value={'ATRAVÉS DE INSIDE'}>ATRAVÉS DE INSIDE</option>
             </select>
             <div className="hidden lg:flex gap-x-2">
               <div className="flex flex-col w-fit items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  Depois de:
-                </span>
+                <span className="uppercase font-bold font-raleway text-center text-sm">Depois de:</span>
                 <input
                   className="text-xs w-full text-center uppercase text-gray-600 outline-none"
                   type="date"
-                  value={
-                    dateFilter.after &&
-                    new Date(dateFilter.after).toISOString().slice(0, 10)
-                  }
+                  value={dateFilter.after && new Date(dateFilter.after).toISOString().slice(0, 10)}
                   onChange={(e) =>
                     setDateFilter({
                       ...dateFilter,
-                      after: isNaN(e.target.value)
-                        ? new Date(e.target.value).toISOString()
-                        : null,
+                      after: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null,
                     })
                   }
                 />
               </div>
               <div className="flex flex-col w-fit items-center">
-                <span className="uppercase font-bold font-raleway text-center text-sm">
-                  Antes de:
-                </span>
+                <span className="uppercase font-bold font-raleway text-center text-sm">Antes de:</span>
                 <input
                   className="text-xs w-full text-center uppercase text-gray-600 outline-none"
                   type="date"
-                  value={
-                    dateFilter.before &&
-                    new Date(dateFilter.before).toISOString().slice(0, 10)
-                  }
+                  value={dateFilter.before && new Date(dateFilter.before).toISOString().slice(0, 10)}
                   onChange={(e) =>
                     setDateFilter({
                       ...dateFilter,
-                      before: isNaN(e.target.value)
-                        ? new Date(e.target.value).toISOString()
-                        : null,
+                      before: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null,
                     })
                   }
                 />
               </div>
               <Select
                 isMulti={false}
-                placeholder={"CAMPO DE FILTRO"}
+                placeholder={'CAMPO DE FILTRO'}
                 options={[
-                  { label: "SAÍDA DE OBRA", value: "obra.saida" },
+                  { label: 'SAÍDA DE OBRA', value: 'obra.saida' },
                   {
-                    label: "DATA DO PARECER",
-                    value: "parecer.dataParecerDeAcesso",
+                    label: 'DATA DO PARECER',
+                    value: 'parecer.dataParecerDeAcesso',
                   },
-                  { label: "ASS.CONTRATO", value: "contrato.dataAssinatura" },
-                  { label: "DATA DE PAGAMENTO", value: "compra.dataPagamento" },
-                  { label: "NÃO DEFINIDO", value: null },
+                  { label: 'ASS.CONTRATO', value: 'contrato.dataAssinatura' },
+                  { label: 'DATA DE PAGAMENTO', value: 'compra.dataPagamento' },
+                  { label: 'NÃO DEFINIDO', value: null },
                 ]}
                 onChange={(e) =>
                   setDateFilter({
                     ...dateFilter,
-                    field1: e.value != null ? e.value.split(".")[0] : null,
-                    field2: e.value != null ? e.value.split(".")[1] : null,
+                    field1: e.value != null ? e.value.split('.')[0] : null,
+                    field2: e.value != null ? e.value.split('.')[1] : null,
                   })
                 }
               />
@@ -855,9 +648,7 @@ function Acompanhamento() {
         <div className="w-full py-2 flex items-center justify-end">
           <button
             onClick={() => setShowClientsNames((prev) => !prev)}
-            className={`flex items-center gap-2 p-1 rounded font-medium ${renderShowClientsButtonStyles(
-              showClientsNames
-            )}`}
+            className={`flex items-center gap-2 p-1 rounded font-medium ${renderShowClientsButtonStyles(showClientsNames)}`}
           >
             <p>MOSTRAR CLIENTES</p>
             {showClientsNames ? <AiFillEye /> : <AiFillEyeInvisible />}
@@ -880,49 +671,31 @@ function Acompanhamento() {
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">Obras finalizadas</h1>
             </div>
-            <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
-              {getObrasFinalizadas()} obras
-            </p>
+            <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">{getObrasFinalizadas()} obras</p>
           </div>
           <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">
-                Potência Pico instalada
-              </h1>
+              <h1 className="uppercase text-gray-600">Potência Pico instalada</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-              {getPotenciaInstalada()} kWp
-            </p>
+            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">{getPotenciaInstalada()} kWp</p>
           </div>
           <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">
-                Potência Pico homologada
-              </h1>
+              <h1 className="uppercase text-gray-600">Potência Pico homologada</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-              {getPotenciaHomologada()} kWp
-            </p>
+            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">{getPotenciaHomologada()} kWp</p>
           </div>
           <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">
-                TEMPO MÉDIO PARA INSTALAÇÃO
-              </h1>
+              <h1 className="uppercase text-gray-600">TEMPO MÉDIO PARA INSTALAÇÃO</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-              {getTempoMedioDeInstalacao()} dias
-            </p>
+            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">{getTempoMedioDeInstalacao()} dias</p>
           </div>
           <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">
-                TEMPO MÉDIO DE APROVAÇÃO
-              </h1>
+              <h1 className="uppercase text-gray-600">TEMPO MÉDIO DE APROVAÇÃO</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
-              {getTempoMedioDeAprovacao()} dias
-            </p>
+            <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">{getTempoMedioDeAprovacao()} dias</p>
           </div>
         </div>
         <div className="grid grid-rows-5 grid-cols-1  lg:grid-rows-1 lg:grid-cols-5 gap-x-3">
@@ -930,24 +703,20 @@ function Acompanhamento() {
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">Nº DE VENDAS</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
-              {getTotalVendido().vendas}
-            </p>
+            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">{getTotalVendido().vendas}</p>
           </div>
           <div className="flex flex-col col-span- p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">Potência Pico Vendida</h1>
             </div>
-            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
-              {getPotenciaVendida()} kWp
-            </p>
+            <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">{getPotenciaVendida()} kWp</p>
           </div>
           <div className="flex flex-col col-span-1 p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
               <h1 className="uppercase text-gray-600">TOTAL VENDIDO</h1>
             </div>
             <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
-              R$ {getTotalVendido().total.toLocaleString("pt-BR")}
+              R$ {getTotalVendido().total.toLocaleString('pt-BR')}
             </p>
           </div>
           <div className="flex flex-col col-span-1 p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
@@ -955,7 +724,7 @@ function Acompanhamento() {
               <h1 className="uppercase text-gray-600">TICKET MÉDIO</h1>
             </div>
             <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
-              R$ {getTotalVendido().ticketMedio.toLocaleString("pt-BR")}
+              R$ {getTotalVendido().ticketMedio.toLocaleString('pt-BR')}
             </p>
           </div>
           <div className="flex flex-col p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl col-span-1">
@@ -965,9 +734,9 @@ function Acompanhamento() {
                 <CircularProgressbar
                   styles={buildStyles({
                     // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
-                    strokeLinecap: "butt",
+                    strokeLinecap: 'butt',
                     // Text size
-                    textSize: "12px",
+                    textSize: '12px',
                     // How long animation takes to go from one percentage to another, in seconds
                     pathTransitionDuration: 0.5,
 
@@ -976,9 +745,9 @@ function Acompanhamento() {
 
                     // Colors
                     pathColor: `#15599a`,
-                    textColor: "#15599a",
-                    trailColor: "#d6d6d6",
-                    backgroundColor: "#3e98c7",
+                    textColor: '#15599a',
+                    trailColor: '#d6d6d6',
+                    backgroundColor: '#3e98c7',
                   })}
                   value={Number(getNps())}
                   text={`${getNps()}%`}
@@ -994,33 +763,18 @@ function Acompanhamento() {
               <h1 className="uppercase text-gray-600">TOTAL PAGO EM KITS</h1>
             </div>
             <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
-              R$ {getCustos().totalValorDoKit.toLocaleString("pt-BR")}
+              R$ {getCustos().totalValorDoKit.toLocaleString('pt-BR')}
             </p>
           </div>
           <div className="flex flex-col col-span- p-4 h-[300px] border border-gray-200 bg-[#fff] shadow-xl">
             <div className="flex justify-between">
-              <h1 className="uppercase text-gray-600">
-                TOTAL GASTOS EM INSUMOS
-              </h1>
-              <h1
-                className={`font-bold ${
-                  getCustos().totalEfetivoCustos / getCustos().totalPrevCustos >
-                  1
-                    ? "text-red-500"
-                    : "text-green-500"
-                }`}
-              >
-                {(
-                  (getCustos().totalEfetivoCustos * 100) /
-                  getCustos().totalPrevCustos
-                )
-                  .toFixed(2)
-                  .replace(".", ",")}{" "}
-                %
+              <h1 className="uppercase text-gray-600">TOTAL GASTOS EM INSUMOS</h1>
+              <h1 className={`font-bold ${getCustos().totalEfetivoCustos / getCustos().totalPrevCustos > 1 ? 'text-red-500' : 'text-green-500'}`}>
+                {((getCustos().totalEfetivoCustos * 100) / getCustos().totalPrevCustos).toFixed(2).replace('.', ',')} %
               </h1>
             </div>
             <p className="grow text-2xl font-bold text-[#15599a] flex items-center justify-center">
-              R$ {getCustos().totalEfetivoCustos.toLocaleString("pt-BR")}
+              R$ {getCustos().totalEfetivoCustos.toLocaleString('pt-BR')}
             </p>
             <div className="flex flex-col">
               {/* <p>
@@ -1030,16 +784,13 @@ function Acompanhamento() {
                 </strong>
               </p> */}
               <p>
-                TOTAL PREVISTO EM INSUMOS{" "}
-                <strong className="text-[#fead61]">
-                  R$ {getCustos().totalPrevCustos.toLocaleString("pt-BR")}
-                </strong>
+                TOTAL PREVISTO EM INSUMOS <strong className="text-[#fead61]">R$ {getCustos().totalPrevCustos.toLocaleString('pt-BR')}</strong>
               </p>
             </div>
           </div>
         </div>
       </div>
-    );
+    )
 }
 
-export default Acompanhamento;
+export default Acompanhamento

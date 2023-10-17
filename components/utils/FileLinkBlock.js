@@ -8,7 +8,7 @@ import { fileTypes } from '../../utils/constants'
 import { AiFillFile } from 'react-icons/ai'
 import { renderIcon } from '../../utils/methods/rendering'
 import { useClickOutside } from '../../utils/hooks'
-function ArchiveLinkBlock({ obj, deleteFile, prefix }) {
+function ArchiveLinkBlock({ obj, deleteFile, prefix, showDeleteMenu = true }) {
   const divRef = useRef(null)
   useClickOutside(divRef, () => setDeleteMenu(false))
   const [deleteMenu, setDeleteMenu] = useState(false)
@@ -80,29 +80,31 @@ function ArchiveLinkBlock({ obj, deleteFile, prefix }) {
           >
             <TbDownload />
           </div>
-          <div className="grid grid-cols-1 relative">
-            {deleteMenu ? (
-              <div className="flex flex-col items-center justify-center">
-                <div onClick={() => setDeleteMenu(false)} className="w-fit text-red-500 scale-110 cursor-pointer text-[20px]">
-                  <MdDelete />
+          {showDeleteMenu ? (
+            <div className="grid grid-cols-1 relative">
+              {deleteMenu ? (
+                <div className="flex flex-col items-center justify-center">
+                  <div onClick={() => setDeleteMenu(false)} className="w-fit text-red-500 scale-110 cursor-pointer text-[20px]">
+                    <MdDelete />
+                  </div>
+                  <div className="w-fit rounded bg-[#fff] z-2 shadow-lg border border-gray-200 absolute -top-8">
+                    <button onClick={() => deleteFile(obj)} className="text-gray-700 font-bold text-xs hover:bg-red-200 p-2">
+                      EXCLUIR
+                    </button>
+                  </div>
                 </div>
-                <div className="w-fit rounded bg-[#fff] z-2 shadow-lg border border-gray-200 absolute -top-8">
-                  <button onClick={() => deleteFile(obj)} className="text-gray-700 font-bold text-xs hover:bg-red-200 p-2">
-                    EXCLUIR
-                  </button>
+              ) : (
+                <div className="flex items-center justify-center">
+                  <div
+                    onClick={() => setDeleteMenu(true)}
+                    className="w-fit text-red-500 opacity-40 hover:opacity-100 hover:text-red-500 hover:scale-110 duration-300 ease-in cursor-pointer text-[20px]"
+                  >
+                    <MdDelete />
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="flex items-center justify-center">
-                <div
-                  onClick={() => setDeleteMenu(true)}
-                  className="w-fit text-red-500 opacity-40 hover:opacity-100 hover:text-red-500 hover:scale-110 duration-300 ease-in cursor-pointer text-[20px]"
-                >
-                  <MdDelete />
-                </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import NumberInput from '../NumberInput'
 import OSCreationBlock from '../OSCreationBlock'
 import SelectInput from '../SelectInput'
 import ProjectServiceOrders from '../identificador/ordensDeServico/ProjectServiceOrders'
+import { accessGrantingStatus } from '../../utils/select-options'
 
 function InfoProjetoBlock({ editor, infoHolder, setInfo, changes, setChanges, handleUpdates, project }) {
   const { data: session } = useSession()
@@ -280,7 +281,7 @@ function InfoProjetoBlock({ editor, infoHolder, setInfo, changes, setChanges, ha
             label={'Status do parecer de acesso'}
             value={infoHolder.parecer.statusDoParecerDeAcesso ? infoHolder.parecer.statusDoParecerDeAcesso : 'NÃO DEFINIDO'}
             editable={editor}
-            options={statusDoParecerDeAcesso.map((status) => status)}
+            options={accessGrantingStatus.map((status) => status)}
             handleChange={(value) => {
               setChanges({
                 ...changes,

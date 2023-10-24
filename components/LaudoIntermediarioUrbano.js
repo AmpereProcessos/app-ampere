@@ -19,7 +19,7 @@ function LaudoIntermediarioUrbano({ analysis }) {
     return sum
   }
   function getCorrectedGen() {
-    const { cidade, uf } = info
+    const { cidade, uf } = analysis.localizacao
     var cityFactor = fatorDeGeracaoPorOrientacao.find((genFactor) => genFactor.CIDADE == cidade && genFactor.UF == uf)
     if (!cityFactor) {
       cityFactor = fatorDeGeracaoPorOrientacao.find((genFactor) => genFactor.CIDADE == 'ITUIUTABA')

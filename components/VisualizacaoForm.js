@@ -1,150 +1,112 @@
-import React, { useState } from "react";
-import TextInput from "./TextInput";
-import SelectInput from "./SelectInput";
-import NumberInput from "./NumberInput";
-import DateInput from "./DateInput";
-import { FiDelete } from "react-icons/fi";
-import { AiOutlineSearch, AiOutlineCheck } from "react-icons/ai";
-import {
-  cidadesAtendidas,
-  customersAcquisitionChannels,
-  tiposDePadrao,
-  vendedores,
-} from "../utils/constants";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { v4 } from "uuid";
-import { storage } from "../utils/firebase";
-import axios from "axios";
-import { Router, useRouter } from "next/router";
+import React, { useState } from 'react'
+import TextInput from './TextInput'
+import SelectInput from './SelectInput'
+import NumberInput from './NumberInput'
+import DateInput from './DateInput'
+import { FiDelete } from 'react-icons/fi'
+import { AiOutlineSearch, AiOutlineCheck } from 'react-icons/ai'
+import { cidadesAtendidas, customersAcquisitionChannels, tiposDePadrao, vendedores } from '../utils/constants'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { v4 } from 'uuid'
+import { storage } from '../utils/firebase'
+import axios from 'axios'
+import { Router, useRouter } from 'next/router'
 const phoneMask = (value) => {
-  if (!value) return "";
-  value = value.replace(/\D/g, "");
-  value = value.replace(/(\d{2})(\d)/, "($1) $2");
-  value = value.replace(/(\d)(\d{4})$/, "$1-$2");
-  return value;
-};
+  if (!value) return ''
+  value = value.replace(/\D/g, '')
+  value = value.replace(/(\d{2})(\d)/, '($1) $2')
+  value = value.replace(/(\d)(\d{4})$/, '$1-$2')
+  return value
+}
 function formatCnpjCpf(value) {
-  const cnpjCpf = value.replace(/\D/g, "");
+  const cnpjCpf = value.replace(/\D/g, '')
 
   if (cnpjCpf.length === 11) {
-    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, '$1.$2.$3-$4')
   }
 
-  return cnpjCpf.replace(
-    /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
-    "$1.$2.$3/$4-$5"
-  );
+  return cnpjCpf.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g, '$1.$2.$3/$4-$5')
 }
 function formatCEP(cep) {
   cep = cep
-    .replace(/\D/g, "")
-    .replace(/(\d{5})(\d)/, "$1-$2")
-    .replace(/(-\d{3})\d+?$/, "$1");
-  return cep;
+    .replace(/\D/g, '')
+    .replace(/(\d{5})(\d)/, '$1-$2')
+    .replace(/(-\d{3})\d+?$/, '$1')
+  return cep
 }
-function VisualizacaoForm({
-  dados,
-  voltar,
-  setDados,
-  formVisitaId,
-  linksVisita,
-}) {
-  const router = useRouter();
+function VisualizacaoForm({ dados, voltar, setDados, formVisitaId, linksVisita }) {
+  const router = useRouter()
   const [msg, setMsg] = useState({
-    text: "",
-    color: "",
-  });
+    text: '',
+    color: '',
+  })
 
   async function criarSolicitacao() {
     try {
-      setMsg({ text: "Em progresso...", color: "text-[#15599a]" });
-      if (formVisitaId) {
-        await axios.put("/api/solicitacoes/visitaTecnica", {
-          _id: formVisitaId,
-          solicitacaoContrato: true,
-        });
-      }
-      await axios.post("/api/solicitacoes/contrato", {
+      setMsg({ text: 'Em progresso...', color: 'text-[#15599a]' })
+
+      await axios.post('/api/solicitacoes/contrato', {
         ...dados,
         idVisitaTecnica: formVisitaId,
         linksVisita: linksVisita,
-      });
-      setMsg({ text: "Solicitação enviada!", color: "text-green-500" });
+      })
+      setMsg({ text: 'Solicitação enviada!', color: 'text-green-500' })
       setTimeout(() => {
-        location.reload();
-        router.push("/publico/formSolicitacao");
-      }, 2000);
+        location.reload()
+        router.push('/publico/formSolicitacao')
+      }, 2000)
     } catch (error) {
       setMsg({
-        text: "Um erro ocorreu durante a criação do formulário, por favor, tente novamente.",
-        color: "text-red-500",
-      });
+        text: 'Um erro ocorreu durante a criação do formulário, por favor, tente novamente.',
+        color: 'text-red-500',
+      })
       setTimeout(() => {
-        setMsg({ text: "", color: "" });
-      }, 1800);
+        setMsg({ text: '', color: '' })
+      }, 1800)
     }
   }
   function getJoinedInfo({ marca, qtde, pot }) {
-    let splitMarca = marca.split("/");
-    let splitQtde = qtde.split("/");
-    let splitPot = pot.split("/");
-    let holder = [];
+    let splitMarca = marca.split('/')
+    let splitQtde = qtde.split('/')
+    let splitPot = pot.split('/')
+    let holder = []
     for (let i = 0; i < splitMarca.length; i++) {
-      let str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`;
-      holder.push(str);
+      let str = `${splitQtde[i]}x${splitMarca[i]}(${splitPot[i]}W)`
+      holder.push(str)
     }
-    return holder.join(" - ");
+    return holder.join(' - ')
   }
   return (
     <>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-        <h1 className="text-center font-bold text-[#fead61] mt-1 text-xl">
-          REVISÃO DAS INFORMAÇÕES
-        </h1>
+        <h1 className="text-center font-bold text-[#fead61] mt-1 text-xl">REVISÃO DAS INFORMAÇÕES</h1>
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          DADOS PARA CONTRATO
-        </span>
+        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS PARA CONTRATO</span>
         <div className="flex gap-2 justify-around flex-wrap">
           <TextInput
-            label={"Nome/Razão Social"}
+            label={'Nome/Razão Social'}
             editable={true}
             value={dados.nomeDoContrato}
-            handleChange={(value) =>
-              setDados({ ...dados, nomeDoContrato: value.toUpperCase() })
-            }
+            handleChange={(value) => setDados({ ...dados, nomeDoContrato: value.toUpperCase() })}
           />
           <TextInput
-            label={"Telefone"}
+            label={'Telefone'}
             editable={true}
             value={dados.telefone}
-            handleChange={(value) =>
-              setDados({ ...dados, telefone: phoneMask(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, telefone: phoneMask(value) })}
           />
           <TextInput
-            label={"CPF/CNPJ"}
+            label={'CPF/CNPJ'}
             editable={true}
             value={dados.cpf_cnpj}
-            handleChange={(value) =>
-              setDados({ ...dados, cpf_cnpj: formatCnpjCpf(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, cpf_cnpj: formatCnpjCpf(value) })}
           />
-          <TextInput
-            label={"RG"}
-            editable={true}
-            value={dados.rg}
-            handleChange={(value) => setDados({ ...dados, rg: value })}
-          />
+          <TextInput label={'RG'} editable={true} value={dados.rg} handleChange={(value) => setDados({ ...dados, rg: value })} />
           <DateInput
-            label={"DATA DE NASCIMENTO"}
+            label={'DATA DE NASCIMENTO'}
             editable={true}
-            value={
-              dados.dataDeNascimento
-                ? new Date(dados.dataDeNascimento).toISOString().slice(0, 10)
-                : null
-            }
+            value={dados.dataDeNascimento ? new Date(dados.dataDeNascimento).toISOString().slice(0, 10) : null}
             handleChange={(value) =>
               setDados({
                 ...dados,
@@ -152,305 +114,245 @@ function VisualizacaoForm({
               })
             }
           />
-          <TextInput
-            label={"CEP"}
-            editable={true}
-            value={dados.cep}
-            handleChange={(value) =>
-              setDados({ ...dados, cep: formatCEP(value) })
-            }
-          />
-          <button
-            onClick={() => findCPF("enderecoCobranca")}
-            className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-          >
+          <TextInput label={'CEP'} editable={true} value={dados.cep} handleChange={(value) => setDados({ ...dados, cep: formatCEP(value) })} />
+          <button onClick={() => findCPF('enderecoCobranca')} className="flex items-center p-1 h-[30px] bg-[#fead61] rounded">
             <AiOutlineSearch />
           </button>
           <SelectInput
-            label={"CIDADE"}
+            label={'CIDADE'}
             editable={true}
             value={dados.cidade}
             options={[
-              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+              { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
               ...cidadesAtendidas.map((cidade) => {
-                return { label: cidade, value: cidade };
+                return { label: cidade, value: cidade }
               }),
             ]}
             handleChange={(value) => setDados({ ...dados, cidade: value })}
           />
+          <TextInput label={'UF'} editable={true} value={dados.uf} handleChange={(value) => setDados({ ...dados, uf: value })} />
           <TextInput
-            label={"UF"}
-            editable={true}
-            value={dados.uf}
-            handleChange={(value) => setDados({ ...dados, uf: value })}
-          />
-          <TextInput
-            label={"ENDEREÇO DE COBRANÇA"}
+            label={'ENDEREÇO DE COBRANÇA'}
             editable={true}
             value={dados.enderecoCobranca}
-            handleChange={(value) =>
-              setDados({ ...dados, enderecoCobranca: value.toUpperCase() })
-            }
+            handleChange={(value) => setDados({ ...dados, enderecoCobranca: value.toUpperCase() })}
           />
           <TextInput
-            label={"Nº"}
+            label={'Nº'}
             editable={true}
             value={dados.numeroResCobranca}
-            handleChange={(value) =>
-              setDados({ ...dados, numeroResCobranca: Number(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, numeroResCobranca: Number(value) })}
           />
           <TextInput
-            label={"BAIRRO"}
+            label={'BAIRRO'}
             editable={true}
             value={dados.bairro}
-            handleChange={(value) =>
-              setDados({ ...dados, bairro: value.toUpperCase() })
-            }
+            handleChange={(value) => setDados({ ...dados, bairro: value.toUpperCase() })}
           />
           <TextInput
-            label={"PONTO DE REFERÊNCIA"}
+            label={'PONTO DE REFERÊNCIA'}
             editable={true}
             value={dados.pontoDeReferencia}
-            handleChange={(value) =>
-              setDados({ ...dados, pontoDeReferencia: value })
-            }
+            handleChange={(value) => setDados({ ...dados, pontoDeReferencia: value })}
           />
           <SelectInput
-            label={"SEGMENTO"}
+            label={'SEGMENTO'}
             value={dados.segmento}
             editable={true}
             options={[
               {
-                value: "RESIDENCIAL",
-                label: "RESIDENCIAL",
+                value: 'RESIDENCIAL',
+                label: 'RESIDENCIAL',
               },
               {
-                value: "COMERCIAL",
-                label: "COMERCIAL",
+                value: 'COMERCIAL',
+                label: 'COMERCIAL',
               },
               {
-                value: "INDUSTRIAL",
-                label: "INDUSTRIAL",
+                value: 'INDUSTRIAL',
+                label: 'INDUSTRIAL',
               },
               {
-                value: "RURAL",
-                label: "RURAL",
+                value: 'RURAL',
+                label: 'RURAL',
               },
             ]}
             handleChange={(value) => setDados({ ...dados, segmento: value })}
           />
           <SelectInput
-            label={"FORMA DE ASSINATURA"}
+            label={'FORMA DE ASSINATURA'}
             editable={true}
             value={dados.formaAssinatura}
             options={[
               {
-                value: "DIGITAL",
-                label: "DIGITAL",
+                value: 'DIGITAL',
+                label: 'DIGITAL',
               },
               {
-                value: "FISICO",
-                label: "FISICO",
+                value: 'FISICO',
+                label: 'FISICO',
               },
             ]}
-            handleChange={(value) =>
-              setDados({ ...dados, formaAssinatura: value })
-            }
+            handleChange={(value) => setDados({ ...dados, formaAssinatura: value })}
           />
           <TextInput
-            label={"NºPROJETO SVB"}
+            label={'NºPROJETO SVB'}
             editable={true}
             value={dados.codigoSVB}
             handleChange={(value) => setDados({ ...dados, codigoSVB: value })}
           />
           <SelectInput
-            label={"ESTADO CIVIL"}
+            label={'ESTADO CIVIL'}
             editable={true}
             options={[
               {
-                label: "CASADO(A)",
-                value: "CASADO(A)",
+                label: 'CASADO(A)',
+                value: 'CASADO(A)',
               },
               {
-                label: "SOLTEIRO(A)",
-                value: "SOLTEIRO(A)",
+                label: 'SOLTEIRO(A)',
+                value: 'SOLTEIRO(A)',
               },
               {
-                label: "UNIÃO ESTÁVEL",
-                value: "UNIÃO ESTÁVEL",
+                label: 'UNIÃO ESTÁVEL',
+                value: 'UNIÃO ESTÁVEL',
               },
               {
-                label: "DIVORCIADO(A)",
-                value: "DIVORCIADO(A)",
+                label: 'DIVORCIADO(A)',
+                value: 'DIVORCIADO(A)',
               },
               {
-                label: "VIUVO(A)",
-                value: "VIUVO(A)",
+                label: 'VIUVO(A)',
+                value: 'VIUVO(A)',
               },
               {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
+                label: 'NÃO DEFINIDO',
+                value: 'NÃO DEFINIDO',
               },
             ]}
             value={dados.estadoCivil}
             handleChange={(value) => setDados({ ...dados, estadoCivil: value })}
           />
           <TextInput
-            label={"EMAIL"}
+            label={'EMAIL'}
             editable={true}
             normalCase={true}
             value={dados.email}
             handleChange={(value) => setDados({ ...dados, email: value })}
           />
+          <TextInput label={'PROFISSÃO'} editable={true} value={dados.profissao} handleChange={(value) => setDados({ ...dados, profissao: value })} />
           <TextInput
-            label={"PROFISSÃO"}
-            editable={true}
-            value={dados.profissao}
-            handleChange={(value) => setDados({ ...dados, profissao: value })}
-          />
-          <TextInput
-            label={"ONDE TRABALHA"}
+            label={'ONDE TRABALHA'}
             editable={true}
             value={dados.ondeTrabalha}
-            handleChange={(value) =>
-              setDados({ ...dados, ondeTrabalha: value })
-            }
+            handleChange={(value) => setDados({ ...dados, ondeTrabalha: value })}
           />
           <SelectInput
-            label={"POSSUI ALGUMA DEFICIÊNCIA"}
+            label={'POSSUI ALGUMA DEFICIÊNCIA'}
             editable={true}
             value={dados.possuiDeficiencia}
-            handleChange={(value) =>
-              setDados({ ...dados, possuiDeficiencia: value })
-            }
+            handleChange={(value) => setDados({ ...dados, possuiDeficiencia: value })}
             options={[
               {
-                label: "SIM",
-                value: "SIM",
+                label: 'SIM',
+                value: 'SIM',
               },
               {
-                label: "NÃO",
-                value: "NÃO",
+                label: 'NÃO',
+                value: 'NÃO',
               },
             ]}
           />
-          {dados.possuiDeficiencia == "SIM" && (
+          {dados.possuiDeficiencia == 'SIM' && (
             <>
-              {" "}
+              {' '}
               <TextInput
-                label={"SE SIM, QUAL ?"}
+                label={'SE SIM, QUAL ?'}
                 editable={true}
                 value={dados.qualDeficiencia}
-                handleChange={(value) =>
-                  setDados({ ...dados, qualDeficiencia: value })
-                }
+                handleChange={(value) => setDados({ ...dados, qualDeficiencia: value })}
               />
             </>
           )}
           <SelectInput
-            label={"CANAL DE VENDA"}
+            label={'CANAL DE VENDA'}
             editable={true}
             value={dados.canalVenda}
             handleChange={(value) => setDados({ ...dados, canalVenda: value })}
             options={customersAcquisitionChannels.map((value) => value)}
           />
-          {dados.canalVenda == "INDICAÇÃO DE AMIGO" && (
+          {dados.canalVenda == 'INDICAÇÃO DE AMIGO' && (
             <>
               <TextInput
-                label={"NOME INDICADOR"}
+                label={'NOME INDICADOR'}
                 editable={true}
                 value={dados.nomeIndicador}
-                handleChange={(value) =>
-                  setDados({ ...dados, nomeIndicador: value })
-                }
+                handleChange={(value) => setDados({ ...dados, nomeIndicador: value })}
               />
               <TextInput
-                label={"TELEFONE INDICADOR"}
+                label={'TELEFONE INDICADOR'}
                 editable={true}
                 value={dados.telefoneIndicador}
-                handleChange={(value) =>
-                  setDados({ ...dados, telefoneIndicador: value })
-                }
+                handleChange={(value) => setDados({ ...dados, telefoneIndicador: value })}
               />
             </>
           )}
         </div>
         <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-          <span className="uppercase font-bold font-raleway text-center text-sm">
-            COMO VOCÊ CHEGOU A ESSE CLIENTE?
-          </span>
+          <span className="uppercase font-bold font-raleway text-center text-sm">COMO VOCÊ CHEGOU A ESSE CLIENTE?</span>
           <textarea
-            placeholder={"Descrição aqui.."}
+            placeholder={'Descrição aqui..'}
             value={dados.comoChegouAoCliente}
             className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-            onChange={(e) =>
-              setDados({ ...dados, comoChegouAoCliente: e.target.value })
-            }
+            onChange={(e) => setDados({ ...dados, comoChegouAoCliente: e.target.value })}
           />
         </div>
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          DADOS PARA CONTATO
-        </span>
+        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS PARA CONTATO</span>
         <div className="flex gap-2 justify-around flex-wrap">
           <TextInput
-            label={"NOME DO CONTATO 1"}
+            label={'NOME DO CONTATO 1'}
             editable={true}
             value={dados.nomeContatoJornadaUm}
-            handleChange={(value) =>
-              setDados({ ...dados, nomeContatoJornadaUm: value })
-            }
+            handleChange={(value) => setDados({ ...dados, nomeContatoJornadaUm: value })}
           />
           <TextInput
-            label={"TELEFONE DO CONTATO 1"}
+            label={'TELEFONE DO CONTATO 1'}
             editable={true}
             value={dados.telefoneContatoUm}
-            handleChange={(value) =>
-              setDados({ ...dados, telefoneContatoUm: phoneMask(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, telefoneContatoUm: phoneMask(value) })}
           />
           <TextInput
-            label={"NOME DO CONTATO 2"}
+            label={'NOME DO CONTATO 2'}
             editable={true}
             value={dados.nomeContatoJornadaDois}
-            handleChange={(value) =>
-              setDados({ ...dados, nomeContatoJornadaDois: value })
-            }
+            handleChange={(value) => setDados({ ...dados, nomeContatoJornadaDois: value })}
           />
           <TextInput
-            label={"TELEFONE DO CONTATO 2"}
+            label={'TELEFONE DO CONTATO 2'}
             editable={true}
             value={dados.telefoneContatoDois}
-            handleChange={(value) =>
-              setDados({ ...dados, telefoneContatoDois: phoneMask(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, telefoneContatoDois: phoneMask(value) })}
           />
           <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-            <span className="uppercase font-bold font-raleway text-center text-sm">
-              CUIDADOS PARA CONTATO COM O CLIENTE
-            </span>
+            <span className="uppercase font-bold font-raleway text-center text-sm">CUIDADOS PARA CONTATO COM O CLIENTE</span>
             <textarea
               placeholder={
-                "Descreva aqui cuidados em relação ao contato do cliente durante a jornada. Melhores horários para contato, texto ou aúdio, etc..."
+                'Descreva aqui cuidados em relação ao contato do cliente durante a jornada. Melhores horários para contato, texto ou aúdio, etc...'
               }
               value={dados.cuidadosContatoJornada}
               className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-              onChange={(e) =>
-                setDados({ ...dados, cuidadosContatoJornada: e.target.value })
-              }
+              onChange={(e) => setDados({ ...dados, cuidadosContatoJornada: e.target.value })}
             />
           </div>
         </div>
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          DADOS PARA ENTRADA NA CEMIG
-        </span>
+        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS PARA ENTRADA NA CEMIG</span>
         <div className="flex gap-2 justify-around flex-wrap">
           <TextInput
-            label={"NOME DO TITULAR DO PROJETO"}
+            label={'NOME DO TITULAR DO PROJETO'}
             editable={true}
             value={dados.nomeTitularProjeto}
             handleChange={(value) =>
@@ -461,176 +363,132 @@ function VisualizacaoForm({
             }
           />
           <SelectInput
-            label={"TIPO DO TITULAR"}
+            label={'TIPO DO TITULAR'}
             editable={true}
             value={dados.tipoDoTitular}
-            handleChange={(value) =>
-              setDados({ ...dados, tipoDoTitular: value })
-            }
+            handleChange={(value) => setDados({ ...dados, tipoDoTitular: value })}
             options={[
               {
-                label: "PESSOA FISICA",
-                value: "PESSOA FISICA",
+                label: 'PESSOA FISICA',
+                value: 'PESSOA FISICA',
               },
               {
-                label: "PESSOA JURIDICA",
-                value: "PESSOA JURIDICA",
+                label: 'PESSOA JURIDICA',
+                value: 'PESSOA JURIDICA',
               },
               {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
+                label: 'NÃO DEFINIDO',
+                value: 'NÃO DEFINIDO',
               },
             ]}
           />
           <SelectInput
-            label={"TIPO DA LIGAÇÃO"}
+            label={'TIPO DA LIGAÇÃO'}
             editable={true}
             value={dados.tipoDaLigacao}
-            handleChange={(value) =>
-              setDados({ ...dados, tipoDaLigacao: value })
-            }
+            handleChange={(value) => setDados({ ...dados, tipoDaLigacao: value })}
             options={[
               {
-                label: "NOVA",
-                value: "NOVA",
+                label: 'NOVA',
+                value: 'NOVA',
               },
               {
-                label: "EXISTENTE",
-                value: "EXISTENTE",
+                label: 'EXISTENTE',
+                value: 'EXISTENTE',
               },
               {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
+                label: 'NÃO DEFINIDO',
+                value: 'NÃO DEFINIDO',
               },
             ]}
           />
           <SelectInput
-            label={"TIPO DA INSTALAÇÃO"}
+            label={'TIPO DA INSTALAÇÃO'}
             editable={true}
             value={dados.tipoDaInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, tipoDaInstalacao: value })
-            }
+            handleChange={(value) => setDados({ ...dados, tipoDaInstalacao: value })}
             options={[
               {
-                label: "RURAL",
-                value: "RURAL",
+                label: 'RURAL',
+                value: 'RURAL',
               },
               {
-                label: "URBANO",
-                value: "URBANO",
+                label: 'URBANO',
+                value: 'URBANO',
               },
               {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
+                label: 'NÃO DEFINIDO',
+                value: 'NÃO DEFINIDO',
               },
             ]}
           />
           <TextInput
-            label={"CEP INSTALAÇÃO"}
+            label={'CEP INSTALAÇÃO'}
             editable={true}
             value={dados.cepInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, cepInstalacao: formatCEP(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, cepInstalacao: formatCEP(value) })}
           />
-          <button
-            onClick={() => findCPF("enderecoInstalacao")}
-            className="flex items-center p-1 h-[30px] bg-[#fead61] rounded"
-          >
+          <button onClick={() => findCPF('enderecoInstalacao')} className="flex items-center p-1 h-[30px] bg-[#fead61] rounded">
             <AiOutlineSearch />
           </button>
           <TextInput
-            label={"ENDEREÇO DE INSTALAÇÃO"}
+            label={'ENDEREÇO DE INSTALAÇÃO'}
             editable={true}
             value={dados.enderecoInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, enderecoInstalacao: value })
-            }
+            handleChange={(value) => setDados({ ...dados, enderecoInstalacao: value })}
           />
           <TextInput
-            label={"Nº"}
+            label={'Nº'}
             editable={true}
             value={dados.numeroResInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, numeroResInstalacao: value })
-            }
+            handleChange={(value) => setDados({ ...dados, numeroResInstalacao: value })}
           />
           <NumberInput
-            label={"Nº DA INSTALAÇÃO"}
+            label={'Nº DA INSTALAÇÃO'}
             editable={true}
             value={dados.numeroInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, numeroInstalacao: value })
-            }
+            handleChange={(value) => setDados({ ...dados, numeroInstalacao: value })}
           />
           <TextInput
-            label={"BAIRRO"}
+            label={'BAIRRO'}
             editable={true}
             value={dados.bairroInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, bairroInstalacao: value })
-            }
+            handleChange={(value) => setDados({ ...dados, bairroInstalacao: value })}
           />
           <SelectInput
-            label={"CIDADE"}
+            label={'CIDADE'}
             editable={true}
             value={dados.cidadeInstalacao}
             options={cidadesAtendidas.map((cidade) => {
-              return { label: cidade, value: cidade };
+              return { label: cidade, value: cidade }
             })}
-            handleChange={(value) =>
-              setDados({ ...dados, cidadeInstalacao: value })
-            }
+            handleChange={(value) => setDados({ ...dados, cidadeInstalacao: value })}
           />
+          <TextInput label={'UF'} editable={true} value={dados.ufInstalacao} handleChange={(value) => setDados({ ...dados, ufInstalacao: value })} />
           <TextInput
-            label={"UF"}
-            editable={true}
-            value={dados.ufInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, ufInstalacao: value })
-            }
-          />
-          <TextInput
-            label={"PONTO DE REFERÊNCIA"}
+            label={'PONTO DE REFERÊNCIA'}
             editable={true}
             value={dados.pontoDeReferenciaInstalacao}
-            handleChange={(value) =>
-              setDados({ ...dados, pontoDeReferenciaInstalacao: value })
-            }
+            handleChange={(value) => setDados({ ...dados, pontoDeReferenciaInstalacao: value })}
           />
           <TextInput
-            label={"LOGIN(CEMIG ATENDE)"}
+            label={'LOGIN(CEMIG ATENDE)'}
             normalCase={true}
             editable={true}
             value={dados.loginCemigAtende}
-            handleChange={(value) =>
-              setDados({ ...dados, loginCemigAtende: value })
-            }
+            handleChange={(value) => setDados({ ...dados, loginCemigAtende: value })}
           />
           <TextInput
-            label={"SENHA(CEMIG ATENDE)"}
+            label={'SENHA(CEMIG ATENDE)'}
             normalCase={true}
             editable={true}
             value={dados.senhaCemigAtende}
-            handleChange={(value) =>
-              setDados({ ...dados, senhaCemigAtende: value })
-            }
+            handleChange={(value) => setDados({ ...dados, senhaCemigAtende: value })}
           />
-          <TextInput
-            label={"LATITUDE"}
-            editable={true}
-            value={dados.latitude}
-            handleChange={(value) => setDados({ ...dados, latitude: value })}
-          />
-          <TextInput
-            label={"LONGITUDE"}
-            editable={true}
-            value={dados.longitude}
-            handleChange={(value) => setDados({ ...dados, longitude: value })}
-          />
+          <TextInput label={'LATITUDE'} editable={true} value={dados.latitude} handleChange={(value) => setDados({ ...dados, latitude: value })} />
+          <TextInput label={'LONGITUDE'} editable={true} value={dados.longitude} handleChange={(value) => setDados({ ...dados, longitude: value })} />
           <NumberInput
-            label={"POTÊNIA PICO"}
+            label={'POTÊNIA PICO'}
             editable={true}
             value={dados.potPico}
             handleChange={(value) =>
@@ -642,235 +500,180 @@ function VisualizacaoForm({
             }
           />
           <NumberInput
-            label={"GERAÇÃO PREVISTA"}
+            label={'GERAÇÃO PREVISTA'}
             editable={true}
             value={dados.geracaoPrevista}
-            handleChange={(value) =>
-              setDados({ ...dados, geracaoPrevista: value })
-            }
+            handleChange={(value) => setDados({ ...dados, geracaoPrevista: value })}
           />
         </div>
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          DADOS DO SISTEMA
-        </span>
+        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS DO SISTEMA</span>
         <div className="flex justify-center">
           <SelectInput
-            label={"TOPOLOGIA"}
+            label={'TOPOLOGIA'}
             editable={true}
             value={dados.topologia}
             handleChange={(value) => setDados({ ...dados, topologia: value })}
             options={[
               {
-                label: "MICRO-INVERSOR",
-                value: "MICRO",
+                label: 'MICRO-INVERSOR',
+                value: 'MICRO',
               },
               {
-                label: "INVERSOR",
-                value: "INVERSOR",
+                label: 'INVERSOR',
+                value: 'INVERSOR',
               },
               {
-                label: "OTIMIZADOR",
-                value: "OTIMIZADOR",
+                label: 'OTIMIZADOR',
+                value: 'OTIMIZADOR',
               },
               {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
+                label: 'NÃO DEFINIDO',
+                value: 'NÃO DEFINIDO',
               },
             ]}
           />
         </div>
         <div className="flex gap-2 justify-around flex-wrap">
-          {dados.topologia != "NÃO DEFINIDO" && (
+          {dados.topologia != 'NÃO DEFINIDO' && (
             <>
               <TextInput
-                label={"MARCA DO INVERSOR/MICRO"}
+                label={'MARCA DO INVERSOR/MICRO'}
                 editable={true}
                 value={dados.marcaInversor}
-                handleChange={(value) =>
-                  setDados({ ...dados, marcaInversor: value })
-                }
+                handleChange={(value) => setDados({ ...dados, marcaInversor: value })}
               />
               <NumberInput
-                label={"QTDE INVERSOR/MICRO"}
+                label={'QTDE INVERSOR/MICRO'}
                 editable={true}
                 value={dados.qtdeInversor}
-                handleChange={(value) =>
-                  setDados({ ...dados, qtdeInversor: Number(value) })
-                }
+                handleChange={(value) => setDados({ ...dados, qtdeInversor: Number(value) })}
               />
               <NumberInput
-                label={"POTÊNCIA INVERSOR/MICRO"}
+                label={'POTÊNCIA INVERSOR/MICRO'}
                 editable={true}
-                unit={"W"}
+                unit={'W'}
                 value={dados.potInversor}
-                handleChange={(value) =>
-                  setDados({ ...dados, potInversor: Number(value) })
-                }
+                handleChange={(value) => setDados({ ...dados, potInversor: Number(value) })}
               />
             </>
           )}
         </div>
-        {dados.topologia == "OTIMIZADOR" && (
+        {dados.topologia == 'OTIMIZADOR' && (
           <div className="flex gap-2 justify-around flex-wrap mt-2">
             <TextInput
-              label={"MARCA DO OTIMIZADOR"}
+              label={'MARCA DO OTIMIZADOR'}
               editable={true}
-              value={dados.marcaOtimizador ? dados.marcaOtimizador : ""}
-              handleChange={(value) =>
-                setDados({ ...dados, marcaOtimizador: value })
-              }
+              value={dados.marcaOtimizador ? dados.marcaOtimizador : ''}
+              handleChange={(value) => setDados({ ...dados, marcaOtimizador: value })}
             />
             <NumberInput
-              label={"QTDE DO OTIMIZADOR"}
+              label={'QTDE DO OTIMIZADOR'}
               editable={true}
               value={dados.qtdeOtimizador ? dados.qtdeOtimizador : null}
-              handleChange={(value) =>
-                setDados({ ...dados, qtdeOtimizador: Number(value) })
-              }
+              handleChange={(value) => setDados({ ...dados, qtdeOtimizador: Number(value) })}
             />
             <NumberInput
-              label={"POTÊNCIA DO OTIMIZADOR"}
+              label={'POTÊNCIA DO OTIMIZADOR'}
               editable={true}
-              unit={"W"}
+              unit={'W'}
               value={dados.potOtimizador ? dados.potOtimizador : null}
-              handleChange={(value) =>
-                setDados({ ...dados, potOtimizador: Number(value) })
-              }
+              handleChange={(value) => setDados({ ...dados, potOtimizador: Number(value) })}
             />
           </div>
         )}
         <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
           <TextInput
-            label={"MARCA DOS MÓDULOS"}
+            label={'MARCA DOS MÓDULOS'}
             editable={true}
             value={dados.marcaModulos}
-            handleChange={(value) =>
-              setDados({ ...dados, marcaModulos: value })
-            }
+            handleChange={(value) => setDados({ ...dados, marcaModulos: value })}
           />
           <NumberInput
-            label={"Nº DE MÓDULOS"}
+            label={'Nº DE MÓDULOS'}
             editable={true}
             value={dados.qtdeModulos}
-            handleChange={(value) =>
-              setDados({ ...dados, qtdeModulos: Number(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, qtdeModulos: Number(value) })}
           />
           <NumberInput
-            label={"POTÊNCIA DOS MÓDULOS"}
+            label={'POTÊNCIA DOS MÓDULOS'}
             editable={true}
-            unit={"W"}
+            unit={'W'}
             value={dados.potModulos}
-            handleChange={(value) =>
-              setDados({ ...dados, potModulos: Number(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, potModulos: Number(value) })}
           />
         </div>
-        {dados.tipoDeServico == "AUMENTO DE SISTEMA FOTOVOLTAICO" &&
-        dados.clienteAmpere != "SIM" ? (
+        {dados.tipoDeServico == 'AUMENTO DE SISTEMA FOTOVOLTAICO' && dados.clienteAmpere != 'SIM' ? (
           <>
             <span className="text-sm text-center font-bold text-[#fead61] uppercase py-2 border-t border-blue-500 mt-1">
               DADOS DO SISTEMA (ANTERIOR)
             </span>
             <div className="flex justify-center">
               <SelectInput
-                label={"TOPOLOGIA (ANTERIOR)"}
+                label={'TOPOLOGIA (ANTERIOR)'}
                 editable={true}
                 value={dados.topologiaAnterior}
-                handleChange={(value) =>
-                  setDados({ ...dados, topologiaAnterior: value })
-                }
+                handleChange={(value) => setDados({ ...dados, topologiaAnterior: value })}
                 options={[
                   {
-                    label: "MICRO-INVERSOR",
-                    value: "MICRO",
+                    label: 'MICRO-INVERSOR',
+                    value: 'MICRO',
                   },
                   {
-                    label: "INVERSOR",
-                    value: "INVERSOR",
+                    label: 'INVERSOR',
+                    value: 'INVERSOR',
                   },
                   {
-                    label: "OTIMIZADOR",
-                    value: "OTIMIZADOR",
+                    label: 'OTIMIZADOR',
+                    value: 'OTIMIZADOR',
                   },
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                 ]}
               />
             </div>
             <div className="flex gap-2 justify-around flex-wrap mt-2 py-2 border-t border-gray-200">
               <TextInput
-                label={
-                  dados.tipoDeServico != "BOMBA SOLAR"
-                    ? "MARCA DO INVERSOR/MICRO (ANTERIOR)"
-                    : " MARCA DO DRIVER (ANTERIOR)"
-                }
+                label={dados.tipoDeServico != 'BOMBA SOLAR' ? 'MARCA DO INVERSOR/MICRO (ANTERIOR)' : ' MARCA DO DRIVER (ANTERIOR)'}
                 editable={true}
                 value={dados.marcaInversorAnterior}
-                handleChange={(value) =>
-                  setDados({ ...dados, marcaInversorAnterior: value })
-                }
+                handleChange={(value) => setDados({ ...dados, marcaInversorAnterior: value })}
               />
               <TextInput
-                label={
-                  dados.tipoDeServico != "BOMBA SOLAR"
-                    ? "QTDE INVERSOR/MICRO (ANTERIOR)"
-                    : "QTDE DRIVERS (ANTERIOR)"
-                }
+                label={dados.tipoDeServico != 'BOMBA SOLAR' ? 'QTDE INVERSOR/MICRO (ANTERIOR)' : 'QTDE DRIVERS (ANTERIOR)'}
                 editable={true}
                 value={dados.qtdeInversorAnterior}
-                handleChange={(value) =>
-                  setDados({ ...dados, qtdeInversorAnterior: value })
-                }
+                handleChange={(value) => setDados({ ...dados, qtdeInversorAnterior: value })}
               />
               <TextInput
-                label={
-                  dados.tipoDeServico != "BOMBA SOLAR"
-                    ? "POTÊNCIA INVERSOR/MICRO (ANTERIOR)"
-                    : "POTÊNCIA DRIVER (ANTERIOR)"
-                }
+                label={dados.tipoDeServico != 'BOMBA SOLAR' ? 'POTÊNCIA INVERSOR/MICRO (ANTERIOR)' : 'POTÊNCIA DRIVER (ANTERIOR)'}
                 editable={true}
-                unit={"W"}
+                unit={'W'}
                 value={dados.potInversorAnterior}
-                handleChange={(value) =>
-                  setDados({ ...dados, potInversorAnterior: value })
-                }
+                handleChange={(value) => setDados({ ...dados, potInversorAnterior: value })}
               />
             </div>
             <div className="flex flex-col text-sm lg:text-base  items-center">
               <span className="uppercase font-bold font-raleway text-center text-sm">
-                {dados.tipoDeServico != "BOMBA SOLAR"
-                  ? "INFORMAÇÃO MICRO/INVERSOR (ANTERIOR)"
-                  : "INFORMAÇÃO DRIVERS (ANTERIOR)"}
+                {dados.tipoDeServico != 'BOMBA SOLAR' ? 'INFORMAÇÃO MICRO/INVERSOR (ANTERIOR)' : 'INFORMAÇÃO DRIVERS (ANTERIOR)'}
               </span>
               <p className="text-xs w-full text-center  text-gray-600 outline-none">
                 {getJoinedInfo({
-                  marca: dados.marcaInversorAnterior
-                    ? dados.marcaInversorAnterior?.toString().toUpperCase()
-                    : "",
-                  qtde: dados.qtdeInversorAnterior
-                    ? dados.qtdeInversorAnterior?.toString()
-                    : "",
-                  pot: dados.potInversorAnterior
-                    ? dados.potInversorAnterior?.toString()
-                    : "",
+                  marca: dados.marcaInversorAnterior ? dados.marcaInversorAnterior?.toString().toUpperCase() : '',
+                  qtde: dados.qtdeInversorAnterior ? dados.qtdeInversorAnterior?.toString() : '',
+                  pot: dados.potInversorAnterior ? dados.potInversorAnterior?.toString() : '',
                 })}
               </p>
             </div>
-            {dados.topologiaAnterior == "OTIMIZADOR" && (
+            {dados.topologiaAnterior == 'OTIMIZADOR' && (
               <div className="flex gap-2 justify-around flex-wrap mt-2">
                 <TextInput
-                  label={"MARCA DO OTIMIZADOR (ANTERIOR)"}
+                  label={'MARCA DO OTIMIZADOR (ANTERIOR)'}
                   editable={true}
-                  value={
-                    dados.marcaOtimizadorAnterior
-                      ? dados.marcaOtimizadorAnterior
-                      : ""
-                  }
+                  value={dados.marcaOtimizadorAnterior ? dados.marcaOtimizadorAnterior : ''}
                   handleChange={(value) =>
                     setDados({
                       ...dados,
@@ -879,13 +682,9 @@ function VisualizacaoForm({
                   }
                 />
                 <NumberInput
-                  label={"QTDE DO OTIMIZADOR (ANTERIOR)"}
+                  label={'QTDE DO OTIMIZADOR (ANTERIOR)'}
                   editable={true}
-                  value={
-                    dados.qtdeOtimizadorAnterior
-                      ? dados.qtdeOtimizadorAnterior
-                      : null
-                  }
+                  value={dados.qtdeOtimizadorAnterior ? dados.qtdeOtimizadorAnterior : null}
                   handleChange={(value) =>
                     setDados({
                       ...dados,
@@ -894,14 +693,10 @@ function VisualizacaoForm({
                   }
                 />
                 <NumberInput
-                  label={"POTÊNCIA DO OTIMIZADOR (ANTERIOR)"}
+                  label={'POTÊNCIA DO OTIMIZADOR (ANTERIOR)'}
                   editable={true}
-                  unit={"W"}
-                  value={
-                    dados.potOtimizadorAnterior
-                      ? dados.potOtimizadorAnterior
-                      : null
-                  }
+                  unit={'W'}
+                  value={dados.potOtimizadorAnterior ? dados.potOtimizadorAnterior : null}
                   handleChange={(value) =>
                     setDados({
                       ...dados,
@@ -913,46 +708,32 @@ function VisualizacaoForm({
             )}
             <div className="flex gap-2 justify-around flex-wrap mt-2 pt-2 border-t border-gray-200 mx-2">
               <TextInput
-                label={"MARCA DOS MÓDULOS (ANTERIOR)"}
+                label={'MARCA DOS MÓDULOS (ANTERIOR)'}
                 editable={true}
                 value={dados.marcaModulosAnterior}
-                handleChange={(value) =>
-                  setDados({ ...dados, marcaModulosAnterior: value })
-                }
+                handleChange={(value) => setDados({ ...dados, marcaModulosAnterior: value })}
               />
               <TextInput
-                label={"Nº DE MÓDULOS (ANTERIOR)"}
+                label={'Nº DE MÓDULOS (ANTERIOR)'}
                 editable={true}
                 value={dados.qtdeModulosAnterior}
-                handleChange={(value) =>
-                  setDados({ ...dados, qtdeModulosAnterior: value })
-                }
+                handleChange={(value) => setDados({ ...dados, qtdeModulosAnterior: value })}
               />
               <TextInput
-                label={"POTÊNCIA DOS MÓDULOS (ANTERIOR)"}
+                label={'POTÊNCIA DOS MÓDULOS (ANTERIOR)'}
                 editable={true}
-                unit={"W"}
+                unit={'W'}
                 value={dados.potModulosAnterior}
-                handleChange={(value) =>
-                  setDados({ ...dados, potModulosAnterior: value })
-                }
+                handleChange={(value) => setDados({ ...dados, potModulosAnterior: value })}
               />
             </div>
             <div className="flex flex-col text-sm lg:text-base  items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">
-                INFORMAÇÃO MÓDULOS (ANTERIOR)
-              </span>
+              <span className="uppercase font-bold font-raleway text-center text-sm">INFORMAÇÃO MÓDULOS (ANTERIOR)</span>
               <p className="text-xs w-full text-center  text-gray-600 outline-none">
                 {getJoinedInfo({
-                  marca: dados.marcaModulosAnterior
-                    ? dados.marcaModulosAnterior.toString().toUpperCase()
-                    : "",
-                  qtde: dados.qtdeModulosAnterior
-                    ? dados.qtdeModulosAnterior.toString()
-                    : "",
-                  pot: dados.potModulosAnterior
-                    ? dados.potModulosAnterior.toString()
-                    : "",
+                  marca: dados.marcaModulosAnterior ? dados.marcaModulosAnterior.toString().toUpperCase() : '',
+                  qtde: dados.qtdeModulosAnterior ? dados.qtdeModulosAnterior.toString() : '',
+                  pot: dados.potModulosAnterior ? dados.potModulosAnterior.toString() : '',
                 })}
               </p>
             </div>
@@ -960,454 +741,403 @@ function VisualizacaoForm({
         ) : null}
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          ESTRUTURA DE MONTAGEM
-        </span>
+        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">ESTRUTURA DE MONTAGEM</span>
         <div className="flex gap-2 justify-around flex-wrap">
           <SelectInput
-            label={"TIPO DA ESTRUTURA"}
+            label={'TIPO DA ESTRUTURA'}
             editable={true}
             options={[
               {
-                label: "TELHADO",
-                value: "TELHADO",
+                label: 'TELHADO',
+                value: 'TELHADO',
               },
               {
-                label: "CARPORT",
-                value: "CARPORT",
+                label: 'CARPORT',
+                value: 'CARPORT',
               },
               {
-                label: "SOLO",
-                value: "SOLO",
+                label: 'SOLO',
+                value: 'SOLO',
               },
               {
-                label: "ESTRUTURA PERSONALIZADA",
-                value: "ESTRUTURA PERSONALIZADA",
+                label: 'ESTRUTURA PERSONALIZADA',
+                value: 'ESTRUTURA PERSONALIZADA',
               },
               {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
+                label: 'NÃO DEFINIDO',
+                value: 'NÃO DEFINIDO',
               },
             ]}
             value={dados.tipoEstrutura}
-            handleChange={(value) =>
-              setDados({ ...dados, tipoEstrutura: value })
-            }
+            handleChange={(value) => setDados({ ...dados, tipoEstrutura: value })}
           />
-          {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
+          {dados.tipoDeServico != 'OPERAÇÃO E MANUTENÇÃO' ? (
             <SelectInput
-              label={
-                "SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?"
-              }
+              label={'SERÁ NECESSÁRIO QUALQUER ADEQUAÇÃO OU CONSTRUÇÃO DE ESTRUTURA?'}
               editable={true}
               options={[
                 {
-                  label: "NÃO",
-                  value: "NÃO",
+                  label: 'NÃO',
+                  value: 'NÃO',
                 },
                 {
-                  label: "SIM",
-                  value: "SIM",
+                  label: 'SIM',
+                  value: 'SIM',
                 },
                 {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
+                  label: 'NÃO DEFINIDO',
+                  value: 'NÃO DEFINIDO',
                 },
               ]}
               value={dados.estruturaAmpere}
-              handleChange={(value) =>
-                setDados({ ...dados, estruturaAmpere: value })
-              }
+              handleChange={(value) => setDados({ ...dados, estruturaAmpere: value })}
             />
           ) : null}
 
-          {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
+          {dados.tipoDeServico != 'OPERAÇÃO E MANUTENÇÃO' ? (
             <SelectInput
-              label={"RESPONSÁVEL PELA ESTRUTURA"}
+              label={'RESPONSÁVEL PELA ESTRUTURA'}
               editable={true}
               options={[
                 {
-                  label: "AMPERE",
-                  value: "AMPERE",
+                  label: 'AMPERE',
+                  value: 'AMPERE',
                 },
                 {
-                  label: "CLIENTE",
-                  value: "CLIENTE",
+                  label: 'CLIENTE',
+                  value: 'CLIENTE',
                 },
                 {
-                  label: "NÃO SE APLICA",
-                  value: "NÃO SE APLICA",
+                  label: 'NÃO SE APLICA',
+                  value: 'NÃO SE APLICA',
                 },
               ]}
               value={dados.responsavelEstrutura}
-              handleChange={(value) =>
-                setDados({ ...dados, responsavelEstrutura: value })
-              }
+              handleChange={(value) => setDados({ ...dados, responsavelEstrutura: value })}
             />
           ) : null}
 
           <SelectInput
-            label={"MATERIAL DA ESTRUTURA"}
-            width={"450px"}
+            label={'MATERIAL DA ESTRUTURA'}
+            width={'450px'}
             editable={true}
             options={[
-              { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
-              { label: "MADEIRA", value: "MADEIRA" },
-              { label: "FERRO", value: "FERRO" },
+              { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+              { label: 'MADEIRA', value: 'MADEIRA' },
+              { label: 'FERRO', value: 'FERRO' },
             ]}
-            value={
-              dados.materialEstrutura ? dados.materialEstrutura : "NÃO DEFINIDO"
-            }
-            handleChange={(value) =>
-              setDados({ ...dados, materialEstrutura: value })
-            }
+            value={dados.materialEstrutura ? dados.materialEstrutura : 'NÃO DEFINIDO'}
+            handleChange={(value) => setDados({ ...dados, materialEstrutura: value })}
           />
-          {dados.responsavelEstrutura != "NÃO SE APLICA" && (
+          {dados.responsavelEstrutura != 'NÃO SE APLICA' && (
             <>
               <SelectInput
-                label={"FORMA DE PAGAMENTO"}
+                label={'FORMA DE PAGAMENTO'}
                 editable={true}
                 options={[
                   {
-                    label: "INCLUSO NO FINANCIAMENTO",
-                    value: "INCLUSO NO FINANCIAMENTO",
+                    label: 'INCLUSO NO FINANCIAMENTO',
+                    value: 'INCLUSO NO FINANCIAMENTO',
                   },
                   {
-                    label: "DIRETO PRO FORNECEDOR",
-                    value: "DIRETO PRO FORNECEDOR",
+                    label: 'DIRETO PRO FORNECEDOR',
+                    value: 'DIRETO PRO FORNECEDOR',
                   },
                   {
-                    label: "A VISTA PARA AMPÈRE",
-                    value: "A VISTA PARA AMPÈRE",
+                    label: 'A VISTA PARA AMPÈRE',
+                    value: 'A VISTA PARA AMPÈRE',
                   },
                   {
-                    label: "NÃO SE APLICA",
-                    value: "NÃO SE APLICA",
+                    label: 'NÃO SE APLICA',
+                    value: 'NÃO SE APLICA',
                   },
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                 ]}
                 value={dados.formaPagamentoEstrutura}
-                handleChange={(value) =>
-                  setDados({ ...dados, formaPagamentoEstrutura: value })
-                }
+                handleChange={(value) => setDados({ ...dados, formaPagamentoEstrutura: value })}
               />
               <NumberInput
-                label={"VALOR DA ESTRUTURA"}
+                label={'VALOR DA ESTRUTURA'}
                 editable={true}
                 value={dados.valorEstrutura}
-                handleChange={(value) =>
-                  setDados({ ...dados, valorEstrutura: Number(value) })
-                }
+                handleChange={(value) => setDados({ ...dados, valorEstrutura: Number(value) })}
               />
             </>
           )}
         </div>
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          O&M E SEGURO
-        </span>
+        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">O&M E SEGURO</span>
         <div className="flex gap-2 justify-around flex-wrap">
           <SelectInput
-            label={"KIT COM O&M ?"}
+            label={'KIT COM O&M ?'}
             editable={true}
             options={[
               {
-                label: "NÃO",
-                value: "NÃO",
+                label: 'NÃO',
+                value: 'NÃO',
               },
               {
-                label: "SIM",
-                value: "SIM",
+                label: 'SIM',
+                value: 'SIM',
               },
               {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
+                label: 'NÃO DEFINIDO',
+                value: 'NÃO DEFINIDO',
               },
             ]}
             value={dados.possuiOeM}
             handleChange={(value) => setDados({ ...dados, possuiOeM: value })}
           />
-          {dados.possuiOeM == "SIM" && (
+          {dados.possuiOeM == 'SIM' && (
             <>
               <SelectInput
-                label={"QUAL PLANO DE O&M?"}
+                label={'QUAL PLANO DE O&M?'}
                 editable={true}
                 options={[
                   {
-                    label: "MANUTENÇÃO SIMPLES",
-                    value: "MANUTENÇÃO SIMPLES",
+                    label: 'MANUTENÇÃO SIMPLES',
+                    value: 'MANUTENÇÃO SIMPLES',
                   },
                   {
-                    label: "PLANO SOL",
-                    value: "PLANO SOL",
+                    label: 'PLANO SOL',
+                    value: 'PLANO SOL',
                   },
                   {
-                    label: "PLANO SOL +",
-                    value: "PLANO SOL +",
+                    label: 'PLANO SOL +',
+                    value: 'PLANO SOL +',
                   },
                   {
-                    label: "NÃO SE APLICA",
-                    value: "NÃO SE APLICA",
+                    label: 'NÃO SE APLICA',
+                    value: 'NÃO SE APLICA',
                   },
                 ]}
                 value={dados.planoOeM}
-                handleChange={(value) =>
-                  setDados({ ...dados, planoOeM: value })
-                }
+                handleChange={(value) => setDados({ ...dados, planoOeM: value })}
               />
             </>
           )}
         </div>
-        {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
+        {dados.tipoDeServico != 'OPERAÇÃO E MANUTENÇÃO' ? (
           <div className="flex gap-2 justify-around flex-wrap mt-2">
             <SelectInput
-              label={"CLIENTE SEGURADO?"}
+              label={'CLIENTE SEGURADO?'}
               editable={true}
               options={[
                 {
-                  label: "SIM",
-                  value: "SIM",
+                  label: 'SIM',
+                  value: 'SIM',
                 },
                 {
-                  label: "NÃO",
-                  value: "NÃO",
+                  label: 'NÃO',
+                  value: 'NÃO',
                 },
                 {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
+                  label: 'NÃO DEFINIDO',
+                  value: 'NÃO DEFINIDO',
                 },
               ]}
-              value={
-                dados.clienteSegurado ? dados.clienteSegurado : "NÃO DEFINIDO"
-              }
-              handleChange={(value) =>
-                setDados({ ...dados, clienteSegurado: value })
-              }
+              value={dados.clienteSegurado ? dados.clienteSegurado : 'NÃO DEFINIDO'}
+              handleChange={(value) => setDados({ ...dados, clienteSegurado: value })}
             />
-            {dados.clienteSegurado == "SIM" && (
+            {dados.clienteSegurado == 'SIM' && (
               <>
                 <SelectInput
-                  label={"TEMPO SEGURADO"}
+                  label={'TEMPO SEGURADO'}
                   editable={true}
                   options={[
                     {
-                      label: "1 ANO",
-                      value: "1 ANO",
+                      label: '1 ANO',
+                      value: '1 ANO',
                     },
                     {
-                      label: "2 ANOS",
-                      value: "2 ANOS",
+                      label: '2 ANOS',
+                      value: '2 ANOS',
                     },
                     {
-                      label: "3 ANOS",
-                      value: "3 ANOS",
+                      label: '3 ANOS',
+                      value: '3 ANOS',
                     },
                     {
-                      label: "4 ANOS",
-                      value: "4 ANOS",
+                      label: '4 ANOS',
+                      value: '4 ANOS',
                     },
                     {
-                      label: "5 ANOS",
-                      value: "5 ANOS",
+                      label: '5 ANOS',
+                      value: '5 ANOS',
                     },
                     {
-                      label: "NÃO SE APLICA",
-                      value: "NÃO SE APLICA",
+                      label: 'NÃO SE APLICA',
+                      value: 'NÃO SE APLICA',
                     },
                   ]}
                   value={dados.tempoSegurado}
-                  handleChange={(value) =>
-                    setDados({ ...dados, tempoSegurado: value })
-                  }
+                  handleChange={(value) => setDados({ ...dados, tempoSegurado: value })}
                 />
               </>
             )}
           </div>
         ) : null}
 
-        {(dados.possuiOeM == "SIM" || dados.clienteSegurado == "SIM") &&
-        dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
+        {(dados.possuiOeM == 'SIM' || dados.clienteSegurado == 'SIM') && dados.tipoDeServico != 'OPERAÇÃO E MANUTENÇÃO' ? (
           <div className="flex gap-2 justify-around flex-wrap mt-2">
             <SelectInput
-              label={"FORMA de PAGAMENTO"}
+              label={'FORMA de PAGAMENTO'}
               editable={true}
               options={[
                 {
-                  label: "INCLUSO NO FINANCIAMENTO",
-                  value: "INCLUSO NO FINANCIAMENTO",
+                  label: 'INCLUSO NO FINANCIAMENTO',
+                  value: 'INCLUSO NO FINANCIAMENTO',
                 },
                 {
-                  label: "DIRETO PRO FORNECEDOR",
-                  value: "DIRETO PRO FORNECEDOR",
+                  label: 'DIRETO PRO FORNECEDOR',
+                  value: 'DIRETO PRO FORNECEDOR',
                 },
                 {
-                  label: "A VISTA PARA AMPÈRE",
-                  value: "A VISTA PARA AMPÈRE",
+                  label: 'A VISTA PARA AMPÈRE',
+                  value: 'A VISTA PARA AMPÈRE',
                 },
                 {
-                  label: "NÃO SE APLICA",
-                  value: "NÃO SE APLICA",
+                  label: 'NÃO SE APLICA',
+                  value: 'NÃO SE APLICA',
                 },
               ]}
               value={dados.formaPagamentoOeMOuSeguro}
-              handleChange={(value) =>
-                setDados({ ...dados, formaPagamentoOeMOuSeguro: value })
-              }
+              handleChange={(value) => setDados({ ...dados, formaPagamentoOeMOuSeguro: value })}
             />
             <NumberInput
-              label={"VALOR O&M+SEGURO (se não incluso)"}
+              label={'VALOR O&M+SEGURO (se não incluso)'}
               editable={true}
               value={dados.valorOeMOuSeguro}
-              handleChange={(value) =>
-                setDados({ ...dados, valorOeMOuSeguro: Number(value) })
-              }
+              handleChange={(value) => setDados({ ...dados, valorOeMOuSeguro: Number(value) })}
             />
           </div>
         ) : null}
       </div>
-      {dados.tipoDeServico != "OPERAÇÃO E MANUTENÇÃO" ? (
+      {dados.tipoDeServico != 'OPERAÇÃO E MANUTENÇÃO' ? (
         <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-          <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-            AUMENTO DE CARGA
-          </span>
+          <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">AUMENTO DE CARGA</span>
           <div className="flex justify-center">
             <SelectInput
-              label={"HAVERÁ TROCA DE PADRÃO?"}
+              label={'HAVERÁ TROCA DE PADRÃO?'}
               editable={true}
               options={[
                 {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
+                  label: 'NÃO DEFINIDO',
+                  value: 'NÃO DEFINIDO',
                 },
                 {
-                  label: "NÃO",
-                  value: "NÃO",
+                  label: 'NÃO',
+                  value: 'NÃO',
                 },
                 {
-                  label: "SIM",
-                  value: "SIM",
+                  label: 'SIM',
+                  value: 'SIM',
                 },
               ]}
               value={dados.aumentoDeCarga}
-              handleChange={(value) =>
-                setDados({ ...dados, aumentoDeCarga: value })
-              }
+              handleChange={(value) => setDados({ ...dados, aumentoDeCarga: value })}
             />
           </div>
-          {dados.aumentoDeCarga == "SIM" && (
+          {dados.aumentoDeCarga == 'SIM' && (
             <div className="flex gap-2 justify-around flex-wrap mt-2">
               <SelectInput
-                label={"CAIXA CONJUGADA?"}
+                label={'CAIXA CONJUGADA?'}
                 editable={true}
                 options={[
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                   {
-                    label: "NÃO",
-                    value: "NÃO",
+                    label: 'NÃO',
+                    value: 'NÃO',
                   },
                   {
-                    label: "SIM",
-                    value: "SIM",
+                    label: 'SIM',
+                    value: 'SIM',
                   },
                 ]}
                 value={dados.caixaConjugada}
-                handleChange={(value) =>
-                  setDados({ ...dados, caixaConjugada: value })
-                }
+                handleChange={(value) => setDados({ ...dados, caixaConjugada: value })}
               />
               <SelectInput
-                label={"TIPO DO PADRÃO"}
+                label={'TIPO DO PADRÃO'}
                 editable={true}
                 value={dados.tipoDePadrao}
-                handleChange={(value) =>
-                  setDados({ ...dados, tipoDePadrao: value })
-                }
+                handleChange={(value) => setDados({ ...dados, tipoDePadrao: value })}
                 options={tiposDePadrao}
               />
               <SelectInput
-                label={"HAVERÁ AUMENTO DO DISJUNTOR?"}
+                label={'HAVERÁ AUMENTO DO DISJUNTOR?'}
                 editable={true}
                 value={dados.aumentoDisjuntor}
-                handleChange={(value) =>
-                  setDados({ ...dados, aumentoDisjuntor: value })
-                }
+                handleChange={(value) => setDados({ ...dados, aumentoDisjuntor: value })}
                 options={[
                   {
-                    label: "SIM",
-                    value: "SIM",
+                    label: 'SIM',
+                    value: 'SIM',
                   },
                   {
-                    label: "NÃO",
-                    value: "NÃO",
+                    label: 'NÃO',
+                    value: 'NÃO',
                   },
                 ]}
               />
               <SelectInput
-                label={"RESPONSÁVEL PELA TROCA"}
+                label={'RESPONSÁVEL PELA TROCA'}
                 editable={true}
                 value={dados.respTrocaPadrao}
-                handleChange={(value) =>
-                  setDados({ ...dados, respTrocaPadrao: value })
-                }
+                handleChange={(value) => setDados({ ...dados, respTrocaPadrao: value })}
                 options={[
                   {
-                    label: "AMPERE",
-                    value: "AMPERE",
+                    label: 'AMPERE',
+                    value: 'AMPERE',
                   },
                   {
-                    label: "CLIENTE",
-                    value: "CLIENTE",
+                    label: 'CLIENTE',
+                    value: 'CLIENTE',
                   },
                   {
-                    label: "NÃO SE APLICA",
-                    value: "NÃO SE APLICA",
+                    label: 'NÃO SE APLICA',
+                    value: 'NÃO SE APLICA',
                   },
                 ]}
               />
               <SelectInput
-                label={"PAGAMENTO DO PADRÃO"}
+                label={'PAGAMENTO DO PADRÃO'}
                 editable={true}
-                value={
-                  dados.formaPagamentoPadrao
-                    ? dados.formaPagamentoPadrao
-                    : "NÃO HAVERA TROCA PADRÃO"
-                }
+                value={dados.formaPagamentoPadrao ? dados.formaPagamentoPadrao : 'NÃO HAVERA TROCA PADRÃO'}
                 options={[
                   {
-                    label: "CLIENTE IRÁ COMPRAR EM SEPARADO",
-                    value: "CLIENTE IRÁ COMPRAR EM SEPARADO",
+                    label: 'CLIENTE IRÁ COMPRAR EM SEPARADO',
+                    value: 'CLIENTE IRÁ COMPRAR EM SEPARADO',
                   },
                   {
-                    label: "CLIENTE PAGAR POR FORA",
-                    value: "CLIENTE PAGAR POR FORA",
+                    label: 'CLIENTE PAGAR POR FORA',
+                    value: 'CLIENTE PAGAR POR FORA',
                   },
                   {
-                    label: "INCLUSO NO CONTRATO",
-                    value: "INCLUSO NO CONTRATO",
+                    label: 'INCLUSO NO CONTRATO',
+                    value: 'INCLUSO NO CONTRATO',
                   },
                   {
-                    label: "NÃO HAVERA TROCA PADRÃO",
-                    value: "NÃO HAVERA TROCA PADRÃO",
+                    label: 'NÃO HAVERA TROCA PADRÃO',
+                    value: 'NÃO HAVERA TROCA PADRÃO',
                   },
                 ]}
                 handleChange={(value) => {
-                  setDados({ ...dados, formaPagamentoPadrao: value });
+                  setDados({ ...dados, formaPagamentoPadrao: value })
                 }}
               />
               <NumberInput
-                label={"VALOR DO PADRÃO"}
+                label={'VALOR DO PADRÃO'}
                 editable={true}
                 value={dados.valorPadrao}
-                handleChange={(value) =>
-                  setDados({ ...dados, valorPadrao: Number(value) })
-                }
+                handleChange={(value) => setDados({ ...dados, valorPadrao: Number(value) })}
               />
             </div>
           )}
@@ -1415,149 +1145,124 @@ function VisualizacaoForm({
       ) : null}
 
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          DADOS FINANCEIROS E NEGOCIAÇÃO
-        </span>
+        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DADOS FINANCEIROS E NEGOCIAÇÃO</span>
         <div className="flex gap-2 justify-around flex-wrap mt-2">
           <TextInput
-            label={"NOME DO PAGADOR"}
+            label={'NOME DO PAGADOR'}
             editable={true}
             value={dados.nomePagador}
             handleChange={(value) => setDados({ ...dados, nomePagador: value })}
           />
           <TextInput
-            label={"CONTATO DO PAGADOR"}
+            label={'CONTATO DO PAGADOR'}
             editable={true}
             value={dados.contatoPagador}
-            handleChange={(value) =>
-              setDados({ ...dados, contatoPagador: phoneMask(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, contatoPagador: phoneMask(value) })}
           />
           <TextInput
-            label={"CPF/CNPJ PARA NF"}
+            label={'CPF/CNPJ PARA NF'}
             editable={true}
             value={dados.cpf_cnpjNF}
-            handleChange={(value) =>
-              setDados({ ...dados, cpf_cnpjNF: formatCnpjCpf(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, cpf_cnpjNF: formatCnpjCpf(value) })}
           />
         </div>
         <div className="flex gap-2 justify-around flex-wrap mt-2">
           <SelectInput
-            label={"NECESSIDADE DE INSCRIÇÃO RURAL NA N.F?"}
+            label={'NECESSIDADE DE INSCRIÇÃO RURAL NA N.F?'}
             editable={true}
             value={dados.necessidaInscricaoRural}
-            handleChange={(value) =>
-              setDados({ ...dados, necessidaInscricaoRural: value })
-            }
+            handleChange={(value) => setDados({ ...dados, necessidaInscricaoRural: value })}
             options={[
               {
-                label: "NÃO",
-                value: "NÃO",
+                label: 'NÃO',
+                value: 'NÃO',
               },
               {
-                label: "SIM",
-                value: "SIM",
+                label: 'SIM',
+                value: 'SIM',
               },
             ]}
           />
-          {dados.necessidaInscricaoRural == "SIM" && (
+          {dados.necessidaInscricaoRural == 'SIM' && (
             <TextInput
-              label={"INSCRIÇÃO RURAL"}
+              label={'INSCRIÇÃO RURAL'}
               editable={true}
               value={dados.inscriçãoRural}
-              handleChange={(value) =>
-                setDados({ ...dados, inscriçãoRural: value })
-              }
+              handleChange={(value) => setDados({ ...dados, inscriçãoRural: value })}
             />
           )}
         </div>
-        {![
-          "OPERAÇÃO E MANUTENÇÃO",
-          "MANUTENÇÃO CORRETIVA",
-          "MANUTENÇÃO PREVENTIVA",
-          "MONTAGEM E DESMONTAGEM",
-        ].includes(dados.tipoDeServico) ? (
+        {!['OPERAÇÃO E MANUTENÇÃO', 'MANUTENÇÃO CORRETIVA', 'MANUTENÇÃO PREVENTIVA', 'MONTAGEM E DESMONTAGEM'].includes(dados.tipoDeServico) ? (
           <div className="flex gap-2 justify-around flex-wrap mt-2">
             <SelectInput
-              label={"LOCAL DE ENTREGA"}
+              label={'LOCAL DE ENTREGA'}
               editable={true}
               options={[
                 {
-                  label: "MESMO DO PROJETO",
-                  value: "MESMO DO PROJETO",
+                  label: 'MESMO DO PROJETO',
+                  value: 'MESMO DO PROJETO',
                 },
                 {
-                  label:
-                    "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
-                  value:
-                    "LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)",
+                  label: 'LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)',
+                  value: 'LOCAL DIFERENTE DA INSTALAÇÃO (DESCRITO NAS OBSERVAÇÕES)',
                 },
                 {
-                  label:
-                    "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
-                  value:
-                    "ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)",
+                  label: 'ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)',
+                  value: 'ENTREGAR NA AMPÈRE(SOMENTE COM AUTORIZAÇÃO DO GERENTE COMERCIAL)',
                 },
                 {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
+                  label: 'NÃO DEFINIDO',
+                  value: 'NÃO DEFINIDO',
                 },
               ]}
               value={dados.localEntrega}
-              handleChange={(value) =>
-                setDados({ ...dados, localEntrega: value })
-              }
+              handleChange={(value) => setDados({ ...dados, localEntrega: value })}
             />
             <SelectInput
-              label={"END. ENTREGA IGUAL COBRANÇA?"}
+              label={'END. ENTREGA IGUAL COBRANÇA?'}
               editable={true}
               value={dados.entregaIgualCobranca}
-              handleChange={(value) =>
-                setDados({ ...dados, entregaIgualCobranca: value })
-              }
+              handleChange={(value) => setDados({ ...dados, entregaIgualCobranca: value })}
               options={[
                 {
-                  label: "SIM",
-                  value: "SIM",
+                  label: 'SIM',
+                  value: 'SIM',
                 },
                 {
-                  label: "NÃO",
-                  value: "NÃO",
+                  label: 'NÃO',
+                  value: 'NÃO',
                 },
                 {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
+                  label: 'NÃO DEFINIDO',
+                  value: 'NÃO DEFINIDO',
                 },
               ]}
             />
             <SelectInput
-              label={"HÁ RESTRIÇÕES PARA ENTREGA?"}
+              label={'HÁ RESTRIÇÕES PARA ENTREGA?'}
               editable={true}
               value={dados.restricoesEntrega}
-              handleChange={(value) =>
-                setDados({ ...dados, restricoesEntrega: value })
-              }
+              handleChange={(value) => setDados({ ...dados, restricoesEntrega: value })}
               options={[
                 {
-                  label: "SOMENTE HORARIO COMERCIAL",
-                  value: "SOMENTE HORARIO COMERCIAL",
+                  label: 'SOMENTE HORARIO COMERCIAL',
+                  value: 'SOMENTE HORARIO COMERCIAL',
                 },
                 {
-                  label: "NÃO HÁ RESTRIÇÕES",
-                  value: "NÃO HÁ RESTRIÇÕES",
+                  label: 'NÃO HÁ RESTRIÇÕES',
+                  value: 'NÃO HÁ RESTRIÇÕES',
                 },
                 {
-                  label: "CASA EM CONSTRUÇÃO",
-                  value: "CASA EM CONSTRUÇÃO",
+                  label: 'CASA EM CONSTRUÇÃO',
+                  value: 'CASA EM CONSTRUÇÃO',
                 },
                 {
-                  label: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
-                  value: "NÃO PODE RECEBER EM HORARIO COMERCIAL",
+                  label: 'NÃO PODE RECEBER EM HORARIO COMERCIAL',
+                  value: 'NÃO PODE RECEBER EM HORARIO COMERCIAL',
                 },
                 {
-                  label: "NÃO DEFINIDO",
-                  value: "NÃO DEFINIDO",
+                  label: 'NÃO DEFINIDO',
+                  value: 'NÃO DEFINIDO',
                 },
               ]}
             />
@@ -1566,110 +1271,102 @@ function VisualizacaoForm({
 
         <div className="flex gap-2 justify-around flex-wrap mt-2">
           <NumberInput
-            label={"VALOR DO CONTRATO FOTOVOLTAICO(SEM CUSTOS ADICIONAIS)"}
+            label={'VALOR DO CONTRATO FOTOVOLTAICO(SEM CUSTOS ADICIONAIS)'}
             editable={true}
-            tag={"R$"}
+            tag={'R$'}
             value={dados.valorContrato}
-            handleChange={(value) =>
-              setDados({ ...dados, valorContrato: Number(value) })
-            }
+            handleChange={(value) => setDados({ ...dados, valorContrato: Number(value) })}
           />
           <SelectInput
-            label={"ORIGEM DO RECURSO"}
+            label={'ORIGEM DO RECURSO'}
             editable={true}
             value={dados.origemRecurso}
-            handleChange={(value) =>
-              setDados({ ...dados, origemRecurso: value })
-            }
+            handleChange={(value) => setDados({ ...dados, origemRecurso: value })}
             options={[
               {
-                label: "FINANCIAMENTO",
-                value: "FINANCIAMENTO",
+                label: 'FINANCIAMENTO',
+                value: 'FINANCIAMENTO',
               },
               {
-                label: "CAPITAL PRÓPRIO",
-                value: "CAPITAL PRÓPRIO",
+                label: 'CAPITAL PRÓPRIO',
+                value: 'CAPITAL PRÓPRIO',
               },
               {
-                label: "NÃO DEFINIDO",
-                value: "NÃO DEFINIDO",
+                label: 'NÃO DEFINIDO',
+                value: 'NÃO DEFINIDO',
               },
             ]}
           />
-          {dados.origemRecurso == "FINANCIAMENTO" && (
+          {dados.origemRecurso == 'FINANCIAMENTO' && (
             <>
               <SelectInput
-                label={"CREDOR"}
+                label={'CREDOR'}
                 editable={true}
                 options={[
                   {
-                    label: "NÃO DEFINIDO",
-                    value: "NÃO DEFINIDO",
+                    label: 'NÃO DEFINIDO',
+                    value: 'NÃO DEFINIDO',
                   },
                   {
-                    label: "BANCO DO BRASIL",
-                    value: "BANCO DO BRASIL",
+                    label: 'BANCO DO BRASIL',
+                    value: 'BANCO DO BRASIL',
                   },
                   {
-                    label: "BRADESCO",
-                    value: "BRADESCO",
+                    label: 'BRADESCO',
+                    value: 'BRADESCO',
                   },
                   {
-                    label: "BV FINANCEIRA",
-                    value: "BV FINANCEIRA",
+                    label: 'BV FINANCEIRA',
+                    value: 'BV FINANCEIRA',
                   },
                   {
-                    label: "CAIXA",
-                    value: "CAIXA",
+                    label: 'CAIXA',
+                    value: 'CAIXA',
                   },
                   {
-                    label: "COOPACREDI",
-                    value: "COOPACREDI",
+                    label: 'COOPACREDI',
+                    value: 'COOPACREDI',
                   },
                   {
-                    label: "CREDICAMPINA",
-                    value: "CREDICAMPINA",
+                    label: 'CREDICAMPINA',
+                    value: 'CREDICAMPINA',
                   },
                   {
-                    label: "CREDIPONTAL",
-                    value: "CREDIPONTAL",
+                    label: 'CREDIPONTAL',
+                    value: 'CREDIPONTAL',
                   },
                   {
-                    label: "SANTANDER",
-                    value: "SANTANDER",
+                    label: 'SANTANDER',
+                    value: 'SANTANDER',
                   },
                   {
-                    label: "SOL FACIL",
-                    value: "SOL FACIL",
+                    label: 'SOL FACIL',
+                    value: 'SOL FACIL',
                   },
                   {
-                    label: "SICOOB ARACOOP",
-                    value: "SICOOB ARACOOP",
+                    label: 'SICOOB ARACOOP',
+                    value: 'SICOOB ARACOOP',
                   },
                 ]}
                 value={dados.credor}
                 handleChange={(value) => setDados({ ...dados, credor: value })}
               />
               <TextInput
-                label={"NOME DO GERENTE"}
+                label={'NOME DO GERENTE'}
                 editable={true}
                 value={dados.nomeGerente}
-                handleChange={(value) =>
-                  setDados({ ...dados, nomeGerente: value })
-                }
+                handleChange={(value) => setDados({ ...dados, nomeGerente: value })}
               />
               <TextInput
-                label={"CONTATO DO GERENTE"}
+                label={'CONTATO DO GERENTE'}
                 editable={true}
                 value={dados.contatoGerente}
-                handleChange={(value) =>
-                  setDados({ ...dados, contatoGerente: phoneMask(value) })
-                }
+                handleChange={(value) => setDados({ ...dados, contatoGerente: phoneMask(value) })}
               />
             </>
           )}
           <NumberInput
-            label={"SE CARTÃO OU CHEQUE, QUANTAS PARCELAS?"}
+            label={'SE CARTÃO OU CHEQUE, QUANTAS PARCELAS?'}
             editable={true}
             value={dados.numParcelas}
             handleChange={(value) =>
@@ -1681,153 +1378,128 @@ function VisualizacaoForm({
             }
           />
           <NumberInput
-            label={"VALOR DA PARCELA"}
+            label={'VALOR DA PARCELA'}
             editable={true}
             value={dados.valorParcela}
-            tag={"R$"}
-            handleChange={(value) =>
-              setDados({ ...dados, valorParcela: Number(value) })
-            }
+            tag={'R$'}
+            handleChange={(value) => setDados({ ...dados, valorParcela: Number(value) })}
           />
           <SelectInput
-            label={"NECESSIDADE N.F ADIANTADA"}
+            label={'NECESSIDADE N.F ADIANTADA'}
             editable={true}
             value={dados.necessidadeNFAdiantada}
             options={[
               {
-                label: "NÃO",
-                value: "NÃO",
+                label: 'NÃO',
+                value: 'NÃO',
               },
               {
-                label: "SIM",
-                value: "SIM",
+                label: 'SIM',
+                value: 'SIM',
               },
             ]}
-            handleChange={(value) =>
-              setDados({ ...dados, necessidadeNFAdiantada: value })
-            }
+            handleChange={(value) => setDados({ ...dados, necessidadeNFAdiantada: value })}
           />
           <SelectInput
-            label={"NECESSIDADE CÓDIGO FINAME?"}
+            label={'NECESSIDADE CÓDIGO FINAME?'}
             editable={true}
             value={dados.necessidadeCodigoFiname}
             options={[
               {
-                label: "NÃO",
-                value: "NÃO",
+                label: 'NÃO',
+                value: 'NÃO',
               },
               {
-                label: "SIM",
-                value: "SIM",
+                label: 'SIM',
+                value: 'SIM',
               },
             ]}
-            handleChange={(value) =>
-              setDados({ ...dados, necessidadeCodigoFiname: value })
-            }
+            handleChange={(value) => setDados({ ...dados, necessidadeCodigoFiname: value })}
           />
           <SelectInput
-            label={"FORMA DE PAGAMENTO"}
+            label={'FORMA DE PAGAMENTO'}
             editable={true}
             options={
-              dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" ||
-              dados.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO"
+              dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO (OFF GRID)' || dados.tipoDeServico == 'OPERAÇÃO E MANUTENÇÃO'
                 ? [
                     {
-                      label:
-                        "70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO",
-                      value:
-                        "70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO",
+                      label: '70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO',
+                      value: '70% A VISTA NA ENTRADA + 30% NA FINALIZAÇÃO DA INSTALAÇÃO',
                     },
                     {
-                      label: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
-                      value: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                      label: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
+                      value: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
                     },
                     {
-                      label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
-                      value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                      label: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
+                      value: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]
                 : [
                     {
-                      label:
-                        "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
-                      value:
-                        "70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR",
+                      label: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
+                      value: '70% A VISTA NA ENTRADA + 15% NA FINALIZAÇÃO DA INSTALAÇÃO E 15% APÓS TROCA DO MEDIDOR',
                     },
                     {
-                      label: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
-                      value: "100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO",
+                      label: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
+                      value: '100% A VISTA ATRAVÉS DE FINANCIAMENTO BANCÁRIO',
                     },
                     {
-                      label: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
-                      value: "NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)",
+                      label: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
+                      value: 'NEGOCIAÇÃO DIFERENTE (DESCREVE ABAIXO)',
                     },
                     {
-                      label: "NÃO DEFINIDO",
-                      value: "NÃO DEFINIDO",
+                      label: 'NÃO DEFINIDO',
+                      value: 'NÃO DEFINIDO',
                     },
                   ]
             }
             value={dados.formaDePagamento}
-            handleChange={(value) =>
-              setDados({ ...dados, formaDePagamento: value })
-            }
+            handleChange={(value) => setDados({ ...dados, formaDePagamento: value })}
           />
         </div>
         <div className="flex flex-col w-full px-2 self-center mt-2 items-center">
-          <span className="uppercase font-bold font-raleway text-center text-sm">
-            DESCRIÇÃO DA NEGOCIAÇÃO
-          </span>
+          <span className="uppercase font-bold font-raleway text-center text-sm">DESCRIÇÃO DA NEGOCIAÇÃO</span>
           <textarea
-            placeholder={"Descreva aqui a negociação"}
+            placeholder={'Descreva aqui a negociação'}
             value={dados.descricaoNegociacao}
             className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600"
-            onChange={(e) =>
-              setDados({ ...dados, descricaoNegociacao: e.target.value })
-            }
+            onChange={(e) => setDados({ ...dados, descricaoNegociacao: e.target.value })}
           />
         </div>
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          DISTRIBUIÇÃO DE CRÉDITOS
-        </span>
+        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DISTRIBUIÇÃO DE CRÉDITOS</span>
         <div className="flex justify-center mt-2">
           <SelectInput
-            label={"POSSUI DISTRIBUIÇÕES DE CRÉDITOS?"}
+            label={'POSSUI DISTRIBUIÇÕES DE CRÉDITOS?'}
             editable={true}
             value={dados.possuiDistribuicao}
             options={[
               {
-                label: "NÃO",
-                value: "NÃO",
+                label: 'NÃO',
+                value: 'NÃO',
               },
               {
-                label: "SIM",
-                value: "SIM",
+                label: 'SIM',
+                value: 'SIM',
               },
             ]}
-            handleChange={(value) =>
-              setDados({ ...dados, possuiDistribuicao: value })
-            }
+            handleChange={(value) => setDados({ ...dados, possuiDistribuicao: value })}
           />
         </div>
-        {dados.possuiDistribuicao == "SIM" && (
+        {dados.possuiDistribuicao == 'SIM' && (
           <>
             {dados.distribuicoes?.length > 0 && (
               <div className="flex flex-col gap-2 mt-4">
                 {dados.distribuicoes.map((distribuicao, index) => (
                   <div key={index} className="flex justify-around flex-wrap">
-                    <p className="text-sm font-bold text-gray-600 ">
-                      INSTALAÇÃO Nº{distribuicao.numInstalacao}
-                    </p>
-                    <p className="text-sm font-bold text-gray-600">
-                      {distribuicao.excedente}%
-                    </p>
+                    <p className="text-sm font-bold text-gray-600 ">INSTALAÇÃO Nº{distribuicao.numInstalacao}</p>
+                    <p className="text-sm font-bold text-gray-600">{distribuicao.excedente}%</p>
                   </div>
                 ))}
               </div>
@@ -1836,43 +1508,31 @@ function VisualizacaoForm({
         )}
       </div>
       <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          DOCUMENTAÇÃO
-        </span>
+        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DOCUMENTAÇÃO</span>
         <div className="flex flex-col items-center gap-2">
           {dados.links?.length > 0 &&
             dados.links.map((x, index) => (
               <div key={index} className="flex items-center gap-x-2">
                 <p className="text-blue-300">{x.title}</p>
-                <AiOutlineCheck
-                  style={{ color: "#49be25", fontSize: "18px" }}
-                />
+                <AiOutlineCheck style={{ color: '#49be25', fontSize: '18px' }} />
               </div>
             ))}
         </div>
       </div>
       {msg.text ? (
-        <p className={`text-sm text-center font-bold ${msg.color}`}>
-          {msg.text}
-        </p>
+        <p className={`text-sm text-center font-bold ${msg.color}`}>{msg.text}</p>
       ) : (
         <div className="flex justify-center flex-wrap gap-2">
-          <button
-            onClick={voltar}
-            className="bg-[#15599a] rounded p-2 font-bold text-white"
-          >
+          <button onClick={voltar} className="bg-[#15599a] rounded p-2 font-bold text-white">
             VOLTAR
           </button>
-          <button
-            onClick={criarSolicitacao}
-            className="bg-[#fead61] rounded p-2 font-bold"
-          >
+          <button onClick={criarSolicitacao} className="bg-[#fead61] rounded p-2 font-bold">
             CRIAR SOLICITAÇÃO
           </button>
         </div>
       )}
     </>
-  );
+  )
 }
 
-export default VisualizacaoForm;
+export default VisualizacaoForm

@@ -40,7 +40,7 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
   async function handleOrderUpdate() {
     const loadingToastId = toast.loading('Processando...')
     const changesObject = getObjectDifference(order, infoHolder)
-    console.log(changesObject)
+    console.log('CHANGES', changesObject)
     try {
       const msg = await updateServiceOrder({
         info: changesObject,

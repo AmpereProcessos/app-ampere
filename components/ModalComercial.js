@@ -150,7 +150,14 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
 
               <InfoClienteBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
-              <InfoVisitaTecnicaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              <InfoVisitaTecnicaBlock
+                editor={false}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                analysisId={project.idVisitaTecnica}
+              />
               {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
                 <InfoPadraoBlock
                   comercialEdition={true}

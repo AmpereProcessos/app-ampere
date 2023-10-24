@@ -106,7 +106,7 @@ function FormVisitaTecnica() {
   }
   function sendForm() {
     axios
-      .post('/api/solicitacoes/visitaTecnica', {
+      .post('/api/solicitacoes/analisesTecnicas', {
         ...dados,
         codigoSVB: formatProjectCode(dados.codigoSVB),
         links: links,
@@ -176,87 +176,92 @@ function FormVisitaTecnica() {
         return
     }
   }
-  return (
-    <div className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
-      <div className="flex self-center items-center h-[100px] w-[100px]">
-        <Image src={Logo} />
-      </div>
-      <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">Formulário de Visita Técnica</h1>
-      <div className="flex flex-col items-center gap-y-5">
-        <div className="w-full flex flex-wrap justify-around border border-[#15599a] p-2 shadow-lg bg-[#fff]">
-          <SelectInput
-            label={'Vendedor'}
-            value={dados.nomeVendedor}
-            editable={true}
-            options={vendedores.map((vendedor) => {
-              return { label: vendedor.nome, value: vendedor.nome }
-            })}
-            handleChange={(value) => setDados({ ...dados, nomeVendedor: value })}
-          />
-          <TextInput
-            label={'Telefone'}
-            editable={true}
-            value={dados.telefoneVendedor}
-            handleChange={(value) => setDados({ ...dados, telefoneVendedor: formatPhoneNumber(value) })}
-          />
-        </div>
-        {estagio == 0 && (
-          <FormVisitaTecnicaUm
-            dados={dados}
-            setDados={setDados}
-            images={images}
-            setImages={setImages}
-            avancar={() => setEstagio((prevStage) => prevStage + 1)}
-            uploadImages={uploadImages}
-            sendStatus={sendStatus}
-          />
-        )}
-        {estagio == 1 && renderFirstStage(dados.tipoDeSolicitacao)}
-        {/**{estagio == 1 &&
-          dados.tipoDeSolicitacao == "VISITA TÉCNICA REMOTA - RURAL" && (
-            <FormVisitaTecnicaRural
-              dados={dados}
-              setDados={setDados}
-              images={images}
-              setImages={setImages}
-              uploadImages={uploadImages}
-              voltar={() => setEstagio((prevStage) => prevStage - 1)}
-            />
-          )}
-        {estagio == 1 &&
-          dados.tipoDeSolicitacao == "VISITA TÉCNICA REMOTA - URBANA" && (
-            <FormVisitaTecnicaDois
-              dados={dados}
-              setDados={setDados}
-              images={images}
-              setImages={setImages}
-              avancar={() => setEstagio((prevStage) => prevStage + 1)}
-              voltar={() => setEstagio((prevStage) => prevStage - 1)}
-            />
-          )} */}
+  // return (
+  //   <div className="p-6 bg-gray-100 min-h-[100vh] flex flex-col">
+  //     <div className="flex self-center items-center h-[100px] w-[100px]">
+  //       <Image src={Logo} />
+  //     </div>
+  //     <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-xl">Formulário de Visita Técnica</h1>
+  //     <div className="flex flex-col items-center gap-y-5">
+  //       <div className="w-full flex flex-wrap justify-around border border-[#15599a] p-2 shadow-lg bg-[#fff]">
+  //         <SelectInput
+  //           label={'Vendedor'}
+  //           value={dados.nomeVendedor}
+  //           editable={true}
+  //           options={vendedores.map((vendedor) => {
+  //             return { label: vendedor.nome, value: vendedor.nome }
+  //           })}
+  //           handleChange={(value) => setDados({ ...dados, nomeVendedor: value })}
+  //         />
+  //         <TextInput
+  //           label={'Telefone'}
+  //           editable={true}
+  //           value={dados.telefoneVendedor}
+  //           handleChange={(value) => setDados({ ...dados, telefoneVendedor: formatPhoneNumber(value) })}
+  //         />
+  //       </div>
+  //       {estagio == 0 && (
+  //         <FormVisitaTecnicaUm
+  //           dados={dados}
+  //           setDados={setDados}
+  //           images={images}
+  //           setImages={setImages}
+  //           avancar={() => setEstagio((prevStage) => prevStage + 1)}
+  //           uploadImages={uploadImages}
+  //           sendStatus={sendStatus}
+  //         />
+  //       )}
+  //       {estagio == 1 && renderFirstStage(dados.tipoDeSolicitacao)}
+  //       {/**{estagio == 1 &&
+  //         dados.tipoDeSolicitacao == "VISITA TÉCNICA REMOTA - RURAL" && (
+  //           <FormVisitaTecnicaRural
+  //             dados={dados}
+  //             setDados={setDados}
+  //             images={images}
+  //             setImages={setImages}
+  //             uploadImages={uploadImages}
+  //             voltar={() => setEstagio((prevStage) => prevStage - 1)}
+  //           />
+  //         )}
+  //       {estagio == 1 &&
+  //         dados.tipoDeSolicitacao == "VISITA TÉCNICA REMOTA - URBANA" && (
+  //           <FormVisitaTecnicaDois
+  //             dados={dados}
+  //             setDados={setDados}
+  //             images={images}
+  //             setImages={setImages}
+  //             avancar={() => setEstagio((prevStage) => prevStage + 1)}
+  //             voltar={() => setEstagio((prevStage) => prevStage - 1)}
+  //           />
+  //         )} */}
 
-        {estagio == 2 && (
-          <FormVisitaTecnicaTres
-            dados={dados}
-            setDados={setDados}
-            images={images}
-            setImages={setImages}
-            avancar={() => setEstagio((prevStage) => prevStage + 1)}
-            voltar={() => setEstagio((prevStage) => prevStage - 1)}
-          />
-        )}
-        {estagio == 3 && (
-          <FormVisitaTecnicaQuatro
-            dados={dados}
-            setDados={setDados}
-            images={images}
-            sendStatus={sendStatus}
-            setImages={setImages}
-            uploadImages={uploadImages}
-          />
-        )}
-      </div>
-      {msg.text && <p className={`text-center italic text-sm ${msg.color}`}>{msg.text}</p>}
+  //       {estagio == 2 && (
+  //         <FormVisitaTecnicaTres
+  //           dados={dados}
+  //           setDados={setDados}
+  //           images={images}
+  //           setImages={setImages}
+  //           avancar={() => setEstagio((prevStage) => prevStage + 1)}
+  //           voltar={() => setEstagio((prevStage) => prevStage - 1)}
+  //         />
+  //       )}
+  //       {estagio == 3 && (
+  //         <FormVisitaTecnicaQuatro
+  //           dados={dados}
+  //           setDados={setDados}
+  //           images={images}
+  //           sendStatus={sendStatus}
+  //           setImages={setImages}
+  //           uploadImages={uploadImages}
+  //         />
+  //       )}
+  //     </div>
+  //     {msg.text && <p className={`text-center italic text-sm ${msg.color}`}>{msg.text}</p>}
+  //   </div>
+  // )
+  return (
+    <div className="p-6 bg-gray-100 min-h-[100vh] flex flex-col items-center justify-center">
+      <h1 className="text-center text-gray-500 text-xl">FORMULÁRIO DESATIVADO</h1>
     </div>
   )
 }

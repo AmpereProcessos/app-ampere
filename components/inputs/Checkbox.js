@@ -1,6 +1,6 @@
 import React from 'react'
 import { BsCheck } from 'react-icons/bs'
-function CheckboxInput({ labelTrue, labelFalse, editable, checked, handleChange, justify = 'justify-center', padding = '0.75rem', width }) {
+function CheckboxInput({ labelTrue, labelFalse, editable = true, checked, handleChange, justify = 'justify-center', padding = '0.75rem', width }) {
   return (
     <div className={`flex w-full lg:${width ? `w-[${width}]` : 'w-fit'} items-center ${justify} gap-2 ${padding ? `p-[${padding}]` : 'p-3'}`}>
       <div

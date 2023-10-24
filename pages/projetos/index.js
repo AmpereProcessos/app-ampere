@@ -809,7 +809,7 @@ function Projetos() {
               </motion.div>
             ))}
           </div>
-          <Link href={'/projetos/visitaTecnica'}>
+          <Link href={'/projetos/analisesTecnicas'}>
             <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
               <p className="uppercase font-bold text-sm">Visitas técnicas</p>
             </a>

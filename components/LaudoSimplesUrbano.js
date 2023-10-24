@@ -1,181 +1,103 @@
-import React from "react";
-import Image from "next/image";
-import Logo from "../utils/whitelogoHD.png";
-import Assinatura from "../utils/assinatura.jpg";
-import dayjs from "dayjs";
-function LaudoSimplesUrbano({ info }) {
+import React from 'react'
+import Image from 'next/image'
+import Logo from '../utils/whitelogoHD.png'
+import Assinatura from '../utils/assinatura.jpg'
+import dayjs from 'dayjs'
+import { GeneralTechnicalAnalysisSchema } from '../utils/schemas/technical-analysis'
+import { formatToMoney } from '../utils/constants'
+function LaudoSimplesUrbano({ analysis }) {
   function getAdditionalCostsSum(custos) {
-    var sum = 0;
-    for (let i = 0; i < custos.length; i++) {
-      sum = sum + custos[i].qtde * custos[i].valor;
-    }
-    return sum;
+    const sum = custos.reduce((acc, current) => {
+      const total = current.total ? current.total : current.qtde * current.custoUnitario
+      return total + acc
+    }, 0)
+    return sum
   }
   return (
     <div className="w-[21cm] h-[29.7cm]">
       <div className="flex flex-col w-full h-full">
         <div className="w-full flex justify-around items-center border border-t-0 border-black py-2 mt-2">
-          <h1 className="font-bold uppercase text-[#15599a]">
-            LAUDO COMERCIAL - URBANO
-          </h1>
+          <h1 className="font-bold uppercase text-[#15599a]">LAUDO COMERCIAL - URBANO</h1>
           <div className="w-[47px] h-[47px]">
-            <Image style={{ width: "47px", height: "47px" }} src={Logo} />
+            <Image style={{ width: '47px', height: '47px' }} src={Logo} />
           </div>
         </div>
         <div className="flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border-x border-black">
-            CADASTRO
-          </h1>
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border-x border-black">INFORMAÇÕES DO CLIENTE</h1>
           <div className="flex">
-            <div className="grid grid-rows-6 w-[60%]">
+            <div className="grid grid-rows-5 w-[60%]">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  CLIENTE
-                </p>
-                <p className="text-center text-xs border-r border-black">
-                  {info.nomeDoCliente}
-                </p>
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">CLIENTE</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.nome}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  REPRESENTANTE
-                </p>
-                <p className="text-center text-xs border-r border-black">
-                  {info.nomeVendedor}
-                </p>
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">REPRESENTANTE</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.requerente.apelido || analysis.requerente.nomeCRM}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  ENDEREÇO
-                </p>
-                <p className="text-center text-xs border-r border-black">
-                  {info.logradouro}
-                </p>
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">ENDEREÇO</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.localizacao.endereco}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  BAIRRO
-                </p>
-                <p className="text-center text-xs border-r border-black">
-                  {info.bairro}
-                </p>
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">BAIRRO</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.localizacao.bairro}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  DATA DA VISITA
-                </p>
-                <p className="text-center text-xs border-r border-black">
-                  {dayjs().format("DD/MM/YYYY")}
-                </p>
-              </div>
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  TIPO DE SOLICITAÇÃO
-                </p>
-                <p className="text-center text-xs border-r border-black">
-                  {info.tipoDeSolicitacao}
-                </p>
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">DATA DA VISITA</p>
+                <p className="text-center text-xs border-r p-1 border-black">{dayjs().format('DD/MM/YYYY')}</p>
               </div>
             </div>
-            <div className="grid grid-rows-6 w-[40%]">
+            <div className="grid grid-rows-5 w-[40%]">
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  TELEFONE
-                </p>
-                <p className="text-center text-xs border-r border-black">
-                  {info.telefoneDoCliente}
-                </p>
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">TELEFONE</p>
+                <p className="text-center text-xs border-r p-1 border-black">-</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  Nº DE PROJETO
-                </p>
-                <p className="text-center text-xs border-r border-black">
-                  {info.codigoSVB}
-                </p>
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">Nº DE PROJETO</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.projeto.identificador || 'N/A'}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  NÚMERO
-                </p>
-                <p className="text-center text-xs border-r border-black">
-                  {info.numeroResidencia}
-                </p>
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">NÚMERO</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.localizacao.numeroOuIdentificador}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  MUNICÍPIO
-                </p>
-                <p className="text-center text-xs border-r border-black">
-                  {info.cidade}
-                </p>
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">MUNICÍPIO</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.localizacao.cidade}</p>
               </div>
               <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  PRAZO LAUDO
-                </p>
-                <p className="text-center text-xs border-r border-black">
-                  {/\(([^)]+)\)/.exec(info.tipoDeLaudo)[1]}
-                </p>
-              </div>
-              <div className="grid grid-cols-2 border-b border-black">
-                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  TIPO DE LAUDO
-                </p>
-                <p className="text-center text-xs border-r border-black">
-                  {info.tipoDeLaudo.split("(")[0]}
-                </p>
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">TIPO DE SOLICITAÇÃO</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.tipoSolicitacao}</p>
               </div>
             </div>
           </div>
         </div>
         <div className="flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold">
-            ESTRUTURA FOTOVOLTAICA
-          </h1>
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold">EQUIPAMENTOS</h1>
           <div className="flex">
             <div className="w-[20%] h-full flex justify-center items-center bg-[#15599a] text-center text-white font-bold">
               DESCRIÇÃO DO SISTEMA FOTOVOLTAICO
             </div>
             <div className="w-[80%] flex flex-col">
-              <h1 className="bg-[#fead61] text-white text-sm  text-center font-raleway font-bold  border border-black border-b-0">
-                INVERSORES
-              </h1>
+              <h1 className="bg-[#fead61] text-white text-sm  text-center font-raleway font-bold  border border-black border-b-0">INVERSORES</h1>
               <div className="flex border border-black border-b-0">
                 <div className="flex flex-col w-[50%]">
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold">
-                      TOPOLOGIA
-                    </p>
-                    <p className="text-center text-xs font-bold">
-                      {info.tipoInversor}
-                    </p>
+                    <p className="bg-gray-200 text-center text-xs font-bold p-1">TOPOLOGIA</p>
+                    <p className="text-center text-[0.6rem] font-bold p-1">{analysis.detalhes.topologia}</p>
                   </div>
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold">
-                      QUANTIDADE
-                    </p>
-                    <p className="text-center text-xs font-bold">
-                      {info.qtdeInversor}
-                    </p>
+                    <p className="bg-gray-200 text-center text-xs font-bold p-1">QUANTIDADE</p>
+                    <p className="text-center text-[0.6rem] font-bold p-1">{analysis.equipamentos.inversor.qtde}</p>
                   </div>
                 </div>
                 <div className="flex flex-col w-[50%]">
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold">
-                      MARCA DO INVERSOR
-                    </p>
-                    <p className="text-center text-xs font-bold">
-                      {info.marcaInversor}
-                    </p>
+                    <p className="bg-gray-200 text-center text-xs font-bold p-1">MARCA DO INVERSOR</p>
+                    <p className="text-center text-[0.6rem] font-bold p-1">{analysis.equipamentos.inversor.modelo}</p>
                   </div>
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold">
-                      POTÊNCIA
-                    </p>
-                    <p className="text-center text-xs font-bold">
-                      {info.potInversor}
-                    </p>
+                    <p className="bg-gray-200 text-center text-xs font-bold p-1">POTÊNCIA</p>
+                    <p className="text-center text-[0.6rem] font-bold p-1">{analysis.equipamentos.inversor.potencia}</p>
                   </div>
                 </div>
               </div>
@@ -185,88 +107,48 @@ function LaudoSimplesUrbano({ info }) {
               <div className="flex  border border-black border-b-0">
                 <div className="flex flex-col w-[50%]">
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold">
-                      QUANTIDADE
-                    </p>
-                    <p className="text-center text-xs font-bold">
-                      {info.qtdeModulos}
-                    </p>
+                    <p className="bg-gray-200 text-center text-xs font-bold p-1">QUANTIDADE</p>
+                    <p className="text-center text-[0.6rem] font-bold p-1">{analysis.equipamentos.modulos.qtde}</p>
                   </div>
                 </div>
                 <div className="flex flex-col w-[50%]">
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold">
-                      POTÊNCIA
-                    </p>
-                    <p className="text-center text-xs font-bold">
-                      {info.potModulos}
-                    </p>
+                    <p className="bg-gray-200 text-center text-xs font-bold p-1">POTÊNCIA</p>
+                    <p className="text-center text-[0.6rem] font-bold p-1">{analysis.equipamentos.modulos.potencia}</p>
                   </div>
                 </div>
               </div>
               <div className="flex  border border-black">
-                <p className="bg-gray-200 text-center text-xs font-bold w-[50%]">
-                  MARCA DOS MÓDULOS
-                </p>
-                <p className="text-center text-xs font-bold w-[50%]">
-                  {info.marcaModulos}
-                </p>
+                <p className="bg-gray-200 text-center text-xs font-bold p-1 w-[50%]">MARCA DOS MÓDULOS</p>
+                <p className="text-center text-[0.6rem] font-bold p-1 w-[50%]">{analysis.equipamentos.modulos.modelo}</p>
               </div>
             </div>
           </div>
         </div>
         <div className="mt-2 flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-black">
-            CUSTOS ADICIONAIS
-          </h1>
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-black">CUSTOS ADICIONAIS</h1>
           <div className="flex flex-col">
-            <div className="grid grid-cols-10 border-b border-black">
-              <p className="text-center text-xs font-bold col-span-3 border-r border-black">
-                DESCRIÇÃO
-              </p>
-              <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                QUANTIDADE
-              </p>
-              <p className="text-center text-xs font-bold col-span-1 border-r border-black">
-                GRANDEZA
-              </p>
-              <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                VALOR
-              </p>
-              <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                TOTAL
-              </p>
+            <div className="grid grid-cols-10 border-b border-black bg-[#fead61]">
+              <p className="text-center text-xs font-bold col-span-3 border-r border-black p-1 text-white">DESCRIÇÃO</p>
+              <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1 text-white">QUANTIDADE</p>
+              <p className="text-center text-xs font-bold col-span-1 border-r border-black p-1 text-white">GRANDEZA</p>
+              <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1 text-white">VALOR</p>
+              <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1 text-white">TOTAL</p>
             </div>
-            {info.custosAdicionais ? (
-              <div className="flex flex-col">
-                {info.custosAdicionais.map((custo, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-10 border-b border-black"
-                  >
-                    <p className="text-center text-xs font-bold col-span-3 border-r border-black">
-                      {custo.descricao}
-                    </p>
-                    <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                      {custo.qtde}
-                    </p>
-                    <p className="text-center text-xs font-bold col-span-1 border-r border-black">
-                      {custo.grandeza}
-                    </p>
-                    <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                      {custo.valor}
-                    </p>
-                    <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                      R$
-                      {(custo.valor * custo.qtde).toFixed(2).replace(".", ",")}
-                    </p>
-                  </div>
-                ))}
-              </div>
+            {analysis.custos?.length > 0 ? (
+              analysis.custos.map((cost, index) => (
+                <div key={index} className="grid grid-cols-10 border-b border-black">
+                  <p className="text-center text-xs font-bold col-span-3 border-r border-black p-1">{cost.descricao}</p>
+                  <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">{cost.qtde}</p>
+                  <p className="text-center text-xs font-bold col-span-1 border-r border-black p-1">{cost.grandeza}</p>
+                  <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">{formatToMoney(cost.custoUnitario)}</p>
+                  <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">
+                    {cost.total ? formatToMoney(cost.total) : formatToMoney(cost.qtde * cost.custoUnitario)}
+                  </p>
+                </div>
+              ))
             ) : (
-              <div className="flex items-center justify-center h-[50px] border-b border-r border-black italic">
-                SEM CUSTOS ADICIONAIS
-              </div>
+              <div className="flex items-center justify-center h-[50px] border-b border-r border-black italic">SEM CUSTOS ADICIONAIS</div>
             )}
           </div>
           <div className="grid grid-cols-10">
@@ -275,97 +157,53 @@ function LaudoSimplesUrbano({ info }) {
             </div>
             <div className="flex flex-col col-span-7 h-full">
               <div className="grid grid-cols-7  border-b border-black">
-                <div className="col-span-5 bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">
-                  VALOR À VISTA
-                </div>
+                <div className="col-span-5 bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">VALOR À VISTA</div>
                 <div className="col-span-2 bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">
-                  R${" "}
-                  {info.custosAdicionais
-                    ? getAdditionalCostsSum(info.custosAdicionais)
-                        .toFixed(2)
-                        .replace(".", ",")
-                    : "-"}
+                  R$ {analysis.custos ? getAdditionalCostsSum(analysis.custos).toFixed(2).replace('.', ',') : '-'}
                 </div>
               </div>
               <div className="grid grid-cols-7  border-b border-black">
-                <div className="col-span-5 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
-                  VALOR FINANCIAMENTO
-                </div>
+                <div className="col-span-5 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">VALOR FINANCIAMENTO</div>
                 <div className="col-span-2 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
-                  R${" "}
-                  {info.custosAdicionais
-                    ? (getAdditionalCostsSum(info.custosAdicionais) * 1.175)
-                        .toFixed(2)
-                        .replace(".", ",")
-                    : "-"}
+                  R$ {analysis.custos ? (getAdditionalCostsSum(analysis.custos) * 1.175).toFixed(2).replace('.', ',') : '-'}
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div className="mt-2 flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold">
-            RESPOSTA VISITA TÉCNICA
-          </h1>
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold">RESPOSTA DA VISITA TÉCNICA</h1>
           <div className="flex flex-col">
             <div className="grid grid-cols-2">
+              <div className="grid col-span-2 grid-cols-2 border-b border-black">
+                <p className="bg-[#fead61] font-bold text-white text-center text-sm py-1 border-r border-black">ESPAÇO PARA PROJETO</p>
+                <p className="font-bold text-center text-sm py-1 border-r border-black">{analysis.conclusao.espaco ? 'SIM' : 'NÃO'}</p>
+              </div>
               <div className="grid grid-rows-3">
                 <div className="grid grid-cols-2 border-b border-black">
-                  <p className="bg-[#fead61] font-bold text-white text-center text-sm py-1 border-r border-black">
-                    PADRÃO
-                  </p>
+                  <p className="bg-[#fead61] font-bold text-white text-center text-sm py-1 border-r border-black">PADRÃO</p>
                   <p className="font-bold text-center text-sm py-1 border-r border-black">
-                    {info.respostaPadrao ? info.respostaPadrao : "-"}
+                    {analysis.conclusao.padrao ? analysis.conclusao.padrao : '-'}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
-                  <p className="bg-[#fead61] font-bold text-white text-center text-sm py-1 border-r border-black">
-                    ESPAÇO PARA PROJETO
-                  </p>
+                  <p className="bg-[#fead61] font-bold text-white text-center text-sm py-1 border-r border-black">ESTRUTURA DE INCLINAÇÃO</p>
                   <p className="font-bold text-center text-sm py-1 border-r border-black">
-                    {info.respostaEspacoProjeto
-                      ? info.respostaEspacoProjeto
-                      : "-"}
-                  </p>
-                </div>
-                <div className="grid grid-cols-2 border-b border-black">
-                  <p className="bg-[#fead61] font-bold text-white text-center text-sm py-1 border-r border-black">
-                    ESTRUTURA DE INCLINAÇÃO
-                  </p>
-                  <p className="font-bold text-center text-sm py-1 border-r border-black">
-                    {info.respostaEstruturaInclinacao
-                      ? info.respostaEstruturaInclinacao
-                      : "-"}
+                    {analysis.conclusao.inclinacao ? analysis.conclusao.inclinacao : '-'}
                   </p>
                 </div>
               </div>
               <div className="grid grid-rows-3">
                 <div className="grid grid-cols-2 border-b border-black">
-                  <p className="bg-[#fead61] font-bold text-white text-center text-sm py-1 border-r border-black">
-                    POSSUI SOMBRA?
-                  </p>
+                  <p className="bg-[#fead61] font-bold text-white text-center text-sm py-1 border-r border-black">POSSUI SOMBRA?</p>
                   <p className="font-bold text-center text-sm py-1 border-r border-black">
-                    {info.respostaPossuiSombra
-                      ? info.respostaPossuiSombra
-                      : "-"}
+                    {analysis.conclusao.sombreamento ? 'É AFETADO' : 'NÃO É AFETADO'}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 border-b border-black">
-                  <p className="bg-[#fead61] font-bold text-white text-center text-sm py-1 border-r border-black">
-                    MADEIRAMENTO
-                  </p>
+                  <p className="bg-[#fead61] font-bold text-white text-center text-sm py-1 border-r border-black">ESTRUTURA CIVIL</p>
                   <p className="font-bold text-center text-sm py-1 border-r border-black">
-                    {info.respostaMaderamento ? info.respostaMaderamento : "-"}
-                  </p>
-                </div>
-                <div className="grid grid-cols-2 border-b border-black">
-                  <p className="bg-[#fead61] font-bold text-white text-center text-sm py-1 border-r border-black">
-                    EXPLICAÇÃO DETALHADA
-                  </p>
-                  <p className="font-bold text-center text-sm py-1 border-r border-black">
-                    {info.respostaExplicacaoDetalhada
-                      ? info.respostaExplicacaoDetalhada
-                      : "-"}
+                    {analysis.conclusao.estrutura ? analysis.conclusao.estrutura : '-'}
                   </p>
                 </div>
               </div>
@@ -373,16 +211,14 @@ function LaudoSimplesUrbano({ info }) {
           </div>
         </div>
         <div className="flex flex-col mt-2">
-          <h1 className="bg-[#15599a] text-white text-center font-bold border border-black border-t-0">
-            CONCLUSÃO
-          </h1>
+          <h1 className="bg-[#15599a] text-white text-center font-bold border border-black border-t-0">CONCLUSÃO</h1>
           <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[60px] text-center p-2">
-            {info.respostaConclusao ? info.respostaConclusao : "-"}
+            {analysis.conclusao.observacoes ? analysis.conclusao.observacoes : 'OBSERVAÇÕES NÃO PREENCHIDAS.'}
           </div>
         </div>
         <div className="mt-2 grid gap-x-4 grid-cols-2">
           <div className="flex flex-col">
-            <p className="text-xxs text-start ml-2">Autorizado por:</p>
+            <p className="text-xs text-start ml-2">Autorizado por:</p>
             <div className="w-full flex justify-center items-center">
               <div className="w-[97px] flex justify-center  items-center text-center">
                 <Image src={Assinatura} />
@@ -390,21 +226,17 @@ function LaudoSimplesUrbano({ info }) {
             </div>
 
             <hr className="border-t-2 border-black" />
-            <p className="text-xxs text-center">
-              ASSINATURA DIRETOR DE ENGENHARIA
-            </p>
+            <p className="text-xs text-center">ASSINATURA DIRETOR DE ENGENHARIA</p>
           </div>
           <div className="flex flex-col">
-            <p className="text-xxs text-start ml-2">Realizado por:</p>
+            <p className="text-xs text-start ml-2">Realizado por:</p>
             <hr className="mt-8 border-t-2 border-black" />
-            <p className="text-xxs text-center">
-              ASSINATURA TÉCNICO RESPONSÁVEL
-            </p>
+            <p className="text-xs text-center">ASSINATURA TÉCNICO RESPONSÁVEL</p>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default LaudoSimplesUrbano;
+export default LaudoSimplesUrbano

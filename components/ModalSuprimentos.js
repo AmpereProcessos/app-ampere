@@ -30,9 +30,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
   const queryClient = useQueryClient()
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
   const [infoHolder, setInfo] = useState(project)
-  const [infoVisita, setInfoVisita] = useState({})
   const [changes, setChanges] = useState({})
-  const [msg, setMsg] = useState({ text: '', color: '' })
   const { mutate } = useMutationWithFeedback({
     mutationKey: ['update-project'],
     mutationFn: updateProject,
@@ -40,23 +38,10 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
     queryClient: queryClient,
   })
 
-  function getVisitaInfo(id) {
-    axios
-      .post(`/api/solicitacoes/getVisitaTecnica/${id}`, {
-        suprimentos: 1,
-        obsSuprimentos: 1,
-      })
-      .then((res) => {
-        setInfoVisita({
-          suprimentos: res.data.suprimentos,
-          obsSuprimentos: res.data.obsSuprimentos,
-        })
-      })
-  }
   useEffect(() => {
-    if (project?.idVisitaTecnica?.trim().length > 10) {
-      getVisitaInfo(project.idVisitaTecnica)
-    }
+    // if (project?.idVisitaTecnica?.trim().length > 10) {
+    //   getVisitaInfo(project.idVisitaTecnica)
+    // }
     setInfo(project)
   }, [project])
 
@@ -70,13 +55,13 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
               {project?.codigoSVB && <p className="text-gray-600 text-sm font-bold">#{project.codigoSVB}</p>}
             </div>
             <div className="flex gap-x-2 items-center">
-              {msg.text && <p className={`hidden lg:block text-sm italic ${msg.color}`}>{msg.text}</p>}
+              {/* {msg.text && <p className={`hidden lg:block text-sm italic ${msg.color}`}>{msg.text}</p>} */}
               <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={() => mutate({ id: projectId, changes: changes })} />
               <button>
                 <VscChromeClose onClick={() => closeModal(false)} style={{ color: 'red' }} />
               </button>
             </div>
-            <p className={`block lg:hidden text-sm italic ${msg.color}`}>{msg.text}</p>
+            {/* <p className={`block lg:hidden text-sm italic ${msg.color}`}>{msg.text}</p> */}
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
@@ -97,7 +82,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
-                infoVisita={infoVisita}
+                analysisId={project.idVisitaTecnica}
               />
               <InfoSistemaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
               {!['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(infoHolder.tipoDeServico) &&

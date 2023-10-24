@@ -9,6 +9,7 @@ import { AiFillEye } from 'react-icons/ai'
 import OSCreationBlock from './OSCreationBlock'
 import dayjs from 'dayjs'
 import ProjectServiceOrders from './identificador/ordensDeServico/ProjectServiceOrders'
+import { formatDateAsLocale } from '../utils/methods/formatting'
 function PadraoCard({ project, credentials }) {
   const [changes, setChanges] = useState({
     'projeto.fechamentoAC': project.projeto.fechamentoAC,
@@ -33,8 +34,8 @@ function PadraoCard({ project, credentials }) {
         </div>
         <div className="flex flex-wrap gap-2 items-center grow justify-around">
           <div className="flex flex-col items-center">
-            <p className="text-sm uppercase text-[#15599a] font-bold">PAGAMENTO DO KIT</p>
-            <p className="text-xs uppercase text-gray-500">{project.compra.statusLiberacao}</p>
+            <p className="text-sm uppercase text-[#15599a] font-bold">PREVISÃO DE ENTREGA</p>
+            <p className="text-xs uppercase text-gray-500">{formatDateAsLocale(project.compra.previsaoEntrega) || '-'}</p>
           </div>
           <div className="flex flex-col items-center">
             <p className="text-sm uppercase text-[#15599a] font-bold">CIDADE</p>

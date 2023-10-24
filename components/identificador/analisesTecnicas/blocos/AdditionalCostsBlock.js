@@ -1,20 +1,19 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
-import { getErrorMessage } from '../../../utils/methods/handlers'
-import TextInput from '../../inputs/Text'
-import { AiFillDelete, AiOutlineSearch } from 'react-icons/ai'
-import SelectInput from '../../inputs/Select'
-import { additionalCostsCategories, units } from '../../../utils/select-options'
-import NumberInput from '../../inputs/Number'
+import { getErrorMessage } from '../../../../utils/methods/handlers'
+import TextInput from '../../../inputs/Text'
+import { AiFillDelete, AiFillEdit, AiOutlineSearch } from 'react-icons/ai'
+import SelectInput from '../../../inputs/Select'
+import { additionalCostsCategories, units } from '../../../../utils/select-options'
+import NumberInput from '../../../inputs/Number'
 import { IoMdAdd } from 'react-icons/io'
-import { FaBox } from 'react-icons/fa'
+import { FaBox, FaSave } from 'react-icons/fa'
 import { ImPriceTag } from 'react-icons/im'
-import { LuPencilRuler } from 'react-icons/lu'
-import { formatToMoney } from '../../../utils/constants'
-import { MdAttachMoney } from 'react-icons/md'
-function AdditionalCosts({ info, setInfo }) {
-  console.log(info, info.custosAdicionais)
+
+import { formatToMoney } from '../../../../utils/constants'
+
+function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
   // Warehouse materials
   const [warehouseSearchText, setWarehouseSearchText] = useState('')
   const [warehouseMaterials, setWarehouseMaterials] = useState()
@@ -46,6 +45,7 @@ function AdditionalCosts({ info, setInfo }) {
     }
   }
   // Costs holder
+  const [activeCostIndex, setActiveCostIndex] = useState(undefined)
   const [costHolder, setCostHolder] = useState({
     category: 'INSTALAÇÃO',
     description: '',
@@ -74,17 +74,18 @@ function AdditionalCosts({ info, setInfo }) {
       toast.error('Preencha o custo unitário do item de custo.')
       return
     }
-    const costsList = info.custosAdicionais ? [...info.custosAdicionais] : []
+    const costsList = infoHolder.custos ? [...infoHolder.custos] : []
     const newCost = {
       categoria: costHolder.category,
       descricao: costHolder.description,
       grandeza: costHolder.unit,
       qtde: costHolder.qty,
-      custo: costHolder.unitaryCost,
-      valor: costHolder.qty * costHolder.unitaryCost,
+      custoUnitario: costHolder.unitaryCost,
+      total: costHolder.qty * costHolder.unitaryCost,
     }
     costsList.push(newCost)
-    setInfo((prev) => ({ ...prev, custosAdicionais: costsList }))
+    setInfoHolder((prev) => ({ ...prev, custos: costsList }))
+    setChanges((prev) => ({ ...prev, custos: costsList }))
     setCostHolder({
       category: 'INSTALAÇÃO',
       description: '',
@@ -95,15 +96,43 @@ function AdditionalCosts({ info, setInfo }) {
     toast.success('Item adicionado aos custos com sucesso !')
   }
   function removeCost(index) {
-    const costsList = [...info.custosAdicionais]
+    const costsList = [...infoHolder.custos]
     costsList.splice(index, 1)
-    setInfo((prev) => ({ ...prev, custosAdicionais: costsList }))
+    setInfoHolder((prev) => ({ ...prev, custos: costsList }))
+    setChanges((prev) => ({ ...prev, custos: costsList }))
+
     toast.success('Custo removido!')
+  }
+  function saveChanges({ index }) {
+    const costsList = [...infoHolder.custos]
+    const cost = {
+      //
+      categoria: costHolder.category,
+      descricao: costHolder.description,
+      grandeza: costHolder.unit,
+      qtde: costHolder.qty,
+      custoUnitario: costHolder.unitaryCost,
+      total: costHolder.qty * costHolder.unitaryCost,
+    }
+    costsList[index] = cost
+    setInfoHolder((prev) => ({ ...prev, custos: costsList }))
+    setChanges((prev) => ({ ...prev, custos: costsList }))
+    setCostHolder({
+      category: 'INSTALAÇÃO',
+      description: '',
+      unit: null,
+      qty: null,
+      unitaryCost: null,
+    })
+    toast.success('Custo atualizado!')
+    setActiveCostIndex(undefined)
   }
   return (
     <div className="flex flex-col w-full">
-      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">CUSTOS ADICIONAIS</span>
-      <div className="flex flex-col w-full px-2">
+      <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+        <h1 className="font-bold text-white">CUSTOS ADICIONAIS</h1>
+      </div>
+      <div className="mt-2 flex w-full flex-col gap-2">
         <div className="w-full flex flex-col lg:flex-row items-end gap-2 justify-center">
           <div className="w-full lg:w-[350px]">
             <TextInput
@@ -217,23 +246,51 @@ function AdditionalCosts({ info, setInfo }) {
           </div>
         </div>
         <div className="w-full flex items-center justify-end mt-4">
-          <button
-            onClick={() => addCost()}
-            className="flex items-center gap-2 p-1 rounded w-fit border border-green-500 text-green-500 hover:bg-green-500 hover:text-white duration-300 ease-in-out"
-          >
-            <p className="font-bold">ADICIONAR ITEM</p>
-            <IoMdAdd />
-          </button>
+          {activeCostIndex >= 0 ? (
+            <button
+              onClick={() => saveChanges({ index: activeCostIndex })}
+              className="flex items-center gap-2 p-1 rounded w-fit border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white duration-300 ease-in-out"
+            >
+              <p className="font-bold">SALVAR</p>
+              <FaSave />
+            </button>
+          ) : (
+            <button
+              onClick={() => addCost()}
+              className="flex items-center gap-2 p-1 rounded w-fit border border-green-500 text-green-500 hover:bg-green-500 hover:text-white duration-300 ease-in-out"
+            >
+              <p className="font-bold">ADICIONAR ITEM</p>
+              <IoMdAdd />
+            </button>
+          )}
         </div>
-        {info.custosAdicionais?.length > 0 ? (
+        {infoHolder.custos?.length > 0 ? (
           <div className="w-full flex flex-col gap-2 mt-2">
-            {info.custosAdicionais.map((cost, index) => (
+            {infoHolder.custos.map((cost, index) => (
               <div key={index} className="p-3 rounded-md w-full flex flex-col border border-gray-300">
                 <div className="w-full flex justify-between">
                   <h1 className="font-bold leading-none tracking-tight text-start">{cost.categoria}</h1>
-                  <button onClick={() => removeCost(index)} className="text-red-400 hover:text-red-500 duration-300 ease-in-out">
-                    <AiFillDelete />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        const holder = {
+                          category: cost.categoria,
+                          description: cost.descricao,
+                          unit: cost.grandeza,
+                          qty: cost.qtde,
+                          unitaryCost: cost.custo,
+                        }
+                        setActiveCostIndex(index)
+                        setCostHolder(holder)
+                      }}
+                      className="text-red-400 hover:text-red-500 duration-300 ease-in-out"
+                    >
+                      <AiFillEdit />
+                    </button>
+                    <button onClick={() => removeCost(index)} className="text-red-400 hover:text-red-500 duration-300 ease-in-out">
+                      <AiFillDelete />
+                    </button>
+                  </div>
                 </div>
                 <p className="text-sm text-gray-500">{cost.descricao}</p>
                 <div className="w-full flex items-center justify-between">
@@ -241,7 +298,7 @@ function AdditionalCosts({ info, setInfo }) {
                     <div className="flex items-center gap-2">
                       <FaBox color="#fead41" />
                       <p className="text-sm text-gray-500 font-medium">
-                        {cost.qtde} / {cost.grandeza}
+                        {cost.qtde} {cost.grandeza}
                       </p>
                     </div>
                     <div className="flex items-center gap-2 text-green-500">
@@ -253,7 +310,7 @@ function AdditionalCosts({ info, setInfo }) {
                   </div>
                   <div className="flex items-center gap-2">
                     {/* <MdAttachMoney /> */}
-                    <p className="text-lg font-black">{formatToMoney(cost.valor)}</p>
+                    <p className="text-lg font-black">{formatToMoney(cost.total)}</p>
                   </div>
                 </div>
               </div>
@@ -265,4 +322,4 @@ function AdditionalCosts({ info, setInfo }) {
   )
 }
 
-export default AdditionalCosts
+export default AdditionalCostsBlock

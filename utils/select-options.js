@@ -1,3 +1,5 @@
+import { MdEast, MdNorth, MdNorthEast, MdNorthWest, MdSouth, MdSouthEast, MdSouthWest, MdWest } from 'react-icons/md'
+
 export const supplementationStatus = [
   {
     id: 1,
@@ -589,6 +591,41 @@ export const technicalAnalysisStatus = [
   { id: 5, label: 'REJEITADA', value: 'REJEITADA' },
   { id: 6, label: 'PENDENTE', value: 'PENDENTE' },
 ]
+export const technicalAnalysisSolicitationTypes = [
+  {
+    id: 1,
+    label: 'VISITA TÉCNICA REMOTA - URBANA',
+    value: 'VISITA TÉCNICA REMOTA - URBANA',
+  },
+  {
+    id: 2,
+    label: 'VISITA TÉCNICA REMOTA - RURAL',
+    value: 'VISITA TÉCNICA REMOTA - RURAL',
+  },
+  {
+    id: 3,
+    label: 'VISITA TÉCNICA IN LOCO - URBANA',
+    value: 'VISITA TÉCNICA IN LOCO - URBANA',
+  },
+  {
+    id: 4,
+    label: 'VISITA TÉCNICA IN LOCO - RURAL',
+    value: 'VISITA TÉCNICA IN LOCO - RURAL',
+  },
+  {
+    id: 5,
+    label: 'AUMENTO DE SISTEMA',
+    value: 'AUMENTO DE SISTEMA',
+  },
+  { id: 6, label: 'DESENHO PERSONALIZADO', value: 'DESENHO PERSONALIZADO' },
+  { id: 7, label: 'ORÇAMENTAÇÃO', value: 'ORÇAMENTAÇÃO' },
+]
+export const technicalAnalysisPendencyCategories = [
+  { id: 1, label: 'PENDÊNCIA COMERCIAL', value: 'PENDÊNCIA COMERCIAL' },
+  { id: 2, label: 'PENDÊNCIA COM TERCEIROS', value: 'PENDÊNCIA COM TERCEIROS' }, // COTAÇÕES, ETC
+  { id: 3, label: 'PENDÊNCIA CONCESSIONÁRIA', value: 'PENDÊNCIA CONCESSIONÁRIA' },
+  { id: 4, label: 'OUTROS', value: 'OUTROS' },
+]
 export const engineeringAnalysts = [
   {
     id: 1,
@@ -716,3 +753,143 @@ export const units = [
   { id: 8, label: 'LITROS (L)', value: 'L' },
   { id: 9, label: 'MESA', value: 'MESA' },
 ]
+export const inverterFixationOptions = [
+  { id: 1, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+  { id: 2, label: 'ALVENARIA', value: 'ALVENARIA' },
+  { id: 3, label: 'LANCE DE MURO', value: 'LANCE DE MURO' },
+  { id: 4, label: 'PILAR', value: 'PILAR' },
+  { id: 5, label: 'OUTRO(DESCREVA EM OBSERVAÇÕES)', value: 'OUTRO(DESCREVA EM OBSERVAÇÕES)' },
+]
+export const roofTiles = [
+  { id: 1, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+  { id: 2, label: 'PORTUGUESA', value: 'PORTUGUESA' },
+  { id: 3, label: 'FRANCESA', value: 'FRANCESA' },
+  { id: 4, label: 'ROMANA', value: 'ROMANA' },
+  { id: 5, label: 'CIMENTO', value: 'CIMENTO' },
+  { id: 6, label: 'ETHERNIT', value: 'ETHERNIT' },
+  { id: 7, label: 'SANDUÍCHE', value: 'SANDUÍCHE' },
+  { id: 8, label: 'AMERICANA', value: 'AMERICANA' },
+  { id: 9, label: 'ZINCO', value: 'ZINCO' },
+  { id: 10, label: 'CAPE E BICA', value: 'CAPE E BICA' },
+  { id: 11, label: 'LAJE', value: 'LAJE' },
+]
+export const structureTypes = [
+  { id: 1, label: 'INCLINAÇÃO', value: 'INCLINAÇÃO' },
+  { id: 2, label: 'SOLO', value: 'SOLO' },
+  { id: 3, label: 'TELHADO', value: 'TELHADO' },
+  { id: 4, label: 'BARRACÃO', value: 'BARRACÃO' },
+  { id: 5, label: 'CARPORT', value: 'CARPORT' },
+  { id: 6, label: 'ESTRUTURA PERSONALIZADA', value: 'ESTRUTURA PERSONALIZADA' },
+  { id: 7, label: 'N/A', value: 'N/A' },
+]
+export const supplyOptions = {
+  GRAMPO: {
+    tipos: ['FINAL', 'INTERMEDIÁRIO'],
+    grandeza: 'UNIDADE',
+  },
+  TRILHO: {
+    tipos: ['1,85', '2,20', '2,36', '2,40', '2,50', '3,20', '3,30', '4,20', '4,70', '4,80'],
+    grandeza: 'UNIDADE',
+  },
+  'PARAFUSO FIBROCIMENTO': {
+    tipos: ['MADEIRA', 'FERRO'],
+    grandeza: 'UNIDADE',
+  },
+  'PAR DE JUNÇÃO': {
+    tipos: ['TRILHO'],
+    grandeza: 'UNIDADE',
+  },
+  CABO: {
+    tipos: ['SOLAR(VERMELHO)', 'SOLAR(PRETO)'],
+    grandeza: 'METRO',
+  },
+  'CONECTOR MC4': {
+    tipos: ['-'],
+    grandeza: 'UNIDADE',
+  },
+  'ESTRUTURA SOLO': {
+    tipos: ['MESA DUPLA'],
+    grandeza: 'MESA',
+  },
+}
+export const additionalServicesResponsibilityOptions = [
+  { id: 1, label: 'NÃO', value: 'NÃO' },
+  { id: 2, label: 'SIM - RESPONSABILIDADE CLIENTE', value: 'SIM - RESPONSABILIDADE CLIENTE' },
+  { id: 3, label: 'SIM - RESPONSABILIDADE AMPÈRE', value: 'SIM - RESPONSABILIDADE AMPÈRE' },
+]
+export const amperageOptions = [
+  { id: 1, label: '40A', value: '40A' },
+  { id: 2, label: '50A', value: '50A' },
+  { id: 3, label: '60A', value: '60A' },
+  { id: 4, label: '63A', value: '63A' },
+  { id: 5, label: '70A', value: '70A' },
+  { id: 6, label: '90A', value: '90A' },
+  { id: 7, label: '100A', value: '100A' },
+  { id: 8, label: '200A', value: '200A' },
+]
+export const energyPATypes = [
+  { id: 1, label: 'CONTRA À REDE', value: 'CONTRA À REDE' },
+  { id: 2, label: 'À FAVOR DA REDE', value: 'À FAVOR DA REDE' },
+]
+export const energyPAConnectionTypes = [
+  { id: 1, label: 'AÉREO', value: 'AÉREO' },
+  { id: 2, label: 'SUBTERRÂNEO', value: 'SUBTERRÂNEO' },
+]
+export const energyMeterBoxModels = [
+  { id: 1, label: 'CM-1', value: 'CM-1' },
+  { id: 2, label: 'CM-2', value: 'CM-2' },
+  { id: 3, label: 'CM-3', value: 'CM-3' },
+  { id: 4, label: 'CM-4', value: 'CM-4' },
+  { id: 5, label: 'CM-8', value: 'CM-8' },
+  { id: 6, label: 'CM-9', value: 'CM-9' },
+  { id: 7, label: 'CM-13', value: 'CM-13' },
+  { id: 8, label: 'CM-14', value: 'CM-14' },
+  { id: 9, label: 'CM-18', value: 'CM-18' },
+]
+export const technicalAnalysisReportTypes = [
+  {
+    id: 1,
+    label: 'LAUDO TÉCNICO(URBANO)',
+    value: 'LAUDO TÉCNICO(URBANO)',
+  },
+  {
+    id: 2,
+    label: 'LAUDO SIMPLES(URBANO)',
+    value: 'LAUDO SIMPLES(URBANO)',
+  },
+  {
+    id: 3,
+    label: 'LAUDO INTERMEDIÁRIO(URBANO)',
+    value: 'LAUDO INTERMEDIÁRIO(URBANO)',
+  },
+  {
+    id: 4,
+    label: 'LAUDO TÉCNICO(RURAL)',
+    value: 'LAUDO TÉCNICO(RURAL)',
+  },
+  {
+    id: 5,
+    label: 'LAUDO SIMPLES(RURAL)',
+    value: 'LAUDO SIMPLES(RURAL)',
+  },
+  {
+    id: 6,
+    label: 'FORMULÁRIO(URBANO)',
+    value: 'FORMULÁRIO(URBANO)',
+  },
+  {
+    id: 7,
+    label: 'FORMULÁRIO(RURAL)',
+    value: 'FORMULÁRIO(RURAL)',
+  },
+]
+export const orientationIcons = {
+  LESTE: MdEast,
+  NORDESTE: MdNorthEast,
+  NORTE: MdNorth,
+  NOROESTE: MdNorthWest,
+  OESTE: MdWest,
+  SUDOESTE: MdSouthWest,
+  SUL: MdSouth,
+  SUDESTE: MdSouthEast,
+}

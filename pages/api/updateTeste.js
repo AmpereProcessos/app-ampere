@@ -134,8 +134,17 @@ function formatStructure(type) {
 }
 
 export default async function handler(req, res) {
-  // const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  // const collection = db.collection('dados')
+  // const db = await connectToRequestsDatabase(process.env.DB_KEY)
+  // const analysisCollection = db.collection('visitaTecnica')
+  // const crmDb = await connectToCRMDatabase(process.CRM_KEY)
+  // const crmUsersCollection = crmDb.collection('users')
+
+  // const allAnalysis = await analysisCollection.find({}).toArray()
+  // const allUsers = await crmUsersCollection.find({}).toArray()
+
+  // const bulkwriteArr = allAnalysis.map(analysis => {
+  //   const crmUserReference =
+  // })
   // const dbResponse = await collection.updateMany(
   //   {
   //     'contrato.status': 'RECISÃO DE CONTRATO',

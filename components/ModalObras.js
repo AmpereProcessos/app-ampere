@@ -279,7 +279,14 @@ function ModalObras({ open, setModalIsOpen, modalIsOpen, project, editor, handle
               setChanges={setChanges}
               showPaymentInfo={false}
             />
-            <InfoVisitaTecnicaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+            <InfoVisitaTecnicaBlock
+              editor={false}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              analysisId={project.idVisitaTecnica}
+            />
             {Object.keys(infoVisita).length > 0 && (
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
                 <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">INFORMAÇÕES DO FORMULÁRIO DA VISITA</span>

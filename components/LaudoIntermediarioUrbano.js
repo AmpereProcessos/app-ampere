@@ -1,105 +1,75 @@
-import React from "react";
-import Image from "next/image";
-import Logo from "../utils/whitelogoHD.png";
-import fatorDeGeracaoPorOrientacao from "../utils/fatoresDeGeracao.json";
-import Assinatura from "../utils/assinatura.jpg";
-import dayjs from "dayjs";
-import {
-  Bar,
-  BarChart,
-  Legend,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  LabelList,
-} from "recharts";
-import { getGenFactorByOrientation } from "../utils/methods/shared";
-function LaudoIntermediarioUrbano({ info }) {
+import React from 'react'
+import Image from 'next/image'
+import Logo from '../utils/whitelogoHD.png'
+import fatorDeGeracaoPorOrientacao from '../utils/fatoresDeGeracao.json'
+import Assinatura from '../utils/assinatura.jpg'
+import dayjs from 'dayjs'
+import { Bar, BarChart, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, LabelList } from 'recharts'
+import { getGenFactorByOrientation } from '../utils/methods/shared'
+import { GeneralTechnicalAnalysisSchema } from '../utils/schemas/technical-analysis'
+import { formatToMoney } from '../utils/constants'
+import { MdTopic } from 'react-icons/md'
+function LaudoIntermediarioUrbano({ analysis }) {
   function getAdditionalCostsSum(custos) {
-    var sum = 0;
-    for (let i = 0; i < custos.length; i++) {
-      sum = sum + custos[i].qtde * custos[i].valor;
-    }
-    return sum;
+    const sum = custos.reduce((acc, current) => {
+      const total = current.total ? current.total : current.qtde * current.custoUnitario
+      if (total) return acc + total
+      return acc
+    }, 0)
+    return sum
   }
   function getCorrectedGen() {
-    const { cidade, uf } = info;
-    var cityFactor = fatorDeGeracaoPorOrientacao.find(
-      (genFactor) => genFactor.CIDADE == cidade && genFactor.UF == uf
-    );
+    const { cidade, uf } = info
+    var cityFactor = fatorDeGeracaoPorOrientacao.find((genFactor) => genFactor.CIDADE == cidade && genFactor.UF == uf)
     if (!cityFactor) {
-      cityFactor = fatorDeGeracaoPorOrientacao.find(
-        (genFactor) => genFactor.CIDADE == "ITUIUTABA"
-      );
+      cityFactor = fatorDeGeracaoPorOrientacao.find((genFactor) => genFactor.CIDADE == 'ITUIUTABA')
     }
-    let norte = info.modNorte
+    let norte = analysis.alocacaoModulos.norte
       ? (
-          (Number(cityFactor["NORTE"]) *
-            info.modNorte *
-            getAverageModulePower(info.potModulos)) /
+          (Number(cityFactor['NORTE']) * analysis.alocacaoModulos.norte * getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
           1000
         ).toFixed(2)
-      : 0;
-    let nordeste = info.modNordeste
+      : 0
+    let nordeste = analysis.alocacaoModulos.nordeste
       ? (
-          (Number(cityFactor["NORDESTE"]) *
-            info.modNordeste *
-            getAverageModulePower(info.potModulos)) /
+          (Number(cityFactor['NORDESTE']) * analysis.alocacaoModulos.nordeste * getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
           1000
         ).toFixed(2)
-      : 0;
-    let leste = info.modLeste
+      : 0
+    let leste = analysis.alocacaoModulos.leste
       ? (
-          (Number(cityFactor["LESTE"]) *
-            info.modLeste *
-            getAverageModulePower(info.potModulos)) /
+          (Number(cityFactor['LESTE']) * analysis.alocacaoModulos.leste * getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
           1000
         ).toFixed(2)
-      : 0;
-    let sudeste = info.modSudeste
+      : 0
+    let sudeste = analysis.alocacaoModulos.sudeste
       ? (
-          (Number(cityFactor["SUDESTE"]) *
-            info.modSudeste *
-            getAverageModulePower(info.potModulos)) /
+          (Number(cityFactor['SUDESTE']) * analysis.alocacaoModulos.sudeste * getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
           1000
         ).toFixed(2)
-      : 0;
-    let sul = info.modSul
+      : 0
+    let sul = analysis.alocacaoModulos.sul
+      ? ((Number(cityFactor['SUL']) * analysis.alocacaoModulos.sul * getAverageModulePower(analysis.equipamentos.modulos.potencia)) / 1000).toFixed(2)
+      : 0
+    let sudoeste = analysis.alocacaoModulos.sudoeste
       ? (
-          (Number(cityFactor["SUL"]) *
-            info.modSul *
-            getAverageModulePower(info.potModulos)) /
+          (Number(cityFactor['SUDOESTE']) * analysis.alocacaoModulos.sudoeste * getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
           1000
         ).toFixed(2)
-      : 0;
-    let sudoeste = info.modSudoeste
+      : 0
+    let oeste = analysis.alocacaoModulos.oeste
       ? (
-          (Number(cityFactor["SUDOESTE"]) *
-            info.modSudoeste *
-            getAverageModulePower(info.potModulos)) /
+          (Number(cityFactor['OESTE']) * analysis.alocacaoModulos.oeste * getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
           1000
         ).toFixed(2)
-      : 0;
-    let oeste = info.modOeste
+      : 0
+    let noroeste = analysis.alocacaoModulos.noroeste
       ? (
-          (Number(cityFactor["OESTE"]) *
-            info.modOeste *
-            getAverageModulePower(info.potModulos)) /
+          (Number(cityFactor['NOROESTE']) * analysis.alocacaoModulos.noroeste * getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
           1000
         ).toFixed(2)
-      : 0;
-    let noroeste = info.modNoroeste
-      ? (
-          (Number(cityFactor["NOROESTE"]) *
-            info.modNoroeste *
-            getAverageModulePower(info.potModulos)) /
-          1000
-        ).toFixed(2)
-      : 0;
+      : 0
+    console.log(norte, nordeste, leste, sudeste, sul, sudoeste, oeste, noroeste)
     return (
       Number(norte) +
       Number(nordeste) +
@@ -109,223 +79,138 @@ function LaudoIntermediarioUrbano({ info }) {
       Number(sudoeste) +
       Number(oeste) +
       Number(noroeste)
-    ).toFixed(2);
+    ).toFixed(2)
   }
 
   function getAverageModulePower(modPower) {
-    const splittedPower = `${modPower}`.split("/");
+    const splittedPower = `${modPower}`.split('/')
 
     if (splittedPower.length > 1) {
-      var total = 0;
+      var total = 0
       for (let i = 0; i < splittedPower.length; i++) {
-        const powerAsNumber = Number(splittedPower[i]);
-        if (isNaN(powerAsNumber)) total = total;
-        else total = total + powerAsNumber;
+        const powerAsNumber = Number(splittedPower[i])
+        if (isNaN(powerAsNumber)) total = total
+        else total = total + powerAsNumber
       }
 
-      return total / splittedPower.length;
+      return total / splittedPower.length
     } else {
-      return Number(splittedPower[0]);
+      return Number(splittedPower[0])
     }
   }
   function getTotalModuleQtde(modQtde) {
-    const splittedQty = `${modQtde}`.split("/");
+    const splittedQty = `${modQtde}`.split('/')
 
     if (splittedQty.length > 1) {
-      var total = 0;
+      var total = 0
       for (let i = 0; i < splittedQty.length; i++) {
-        const powerAsNumber = Number(splittedQty[i]);
-        if (isNaN(powerAsNumber)) total = total;
-        else total = total + powerAsNumber;
+        const powerAsNumber = Number(splittedQty[i])
+        if (isNaN(powerAsNumber)) total = total
+        else total = total + powerAsNumber
       }
 
-      return total;
+      return total
     } else {
-      return Number(splittedQty[0]);
+      return Number(splittedQty[0])
     }
   }
   function getProposedGen() {
     const factor = getGenFactorByOrientation({
-      city: info.cidade,
-      uf: info.uf,
-    });
+      city: analysis.localizacao.cidade,
+      uf: analysis.localizacao.uf,
+    })
+    console.log('FATOR', factor)
     return (
-      (getTotalModuleQtde(info.qtdeModulos) *
-        getAverageModulePower(info.potModulos) *
-        factor) /
+      (getTotalModuleQtde(analysis.equipamentos.modulos.qtde) * getAverageModulePower(analysis.equipamentos.modulos.potencia) * factor) /
       1000
-    ).toFixed(2);
+    ).toFixed(2)
   }
 
   return (
     <div className="w-[21cm] h-[29.7cm]">
       <div className="flex flex-col w-full h-full">
         <div className="w-full flex justify-around items-center border border-t-0 border-black py-2 mt-2">
-          <h1 className="font-bold uppercase text-[#15599a]">
-            LAUDO TÉCNICO - URBANO
-          </h1>
+          <h1 className="font-bold uppercase text-[#15599a]">LAUDO TÉCNICO - URBANO</h1>
           <div className="w-[47px] h-[47px]">
-            <Image style={{ width: "47px", height: "47px" }} src={Logo} />
+            <Image style={{ width: '47px', height: '47px' }} src={Logo} />
           </div>
         </div>
         <div className="flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border-x border-black">
-            CADASTRO
-          </h1>
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border-x border-black">INFORMAÇÕES DO CLIENTE</h1>
           <div className="flex">
-            <div className="grid grid-rows-6 w-[60%]">
-              <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  CLIENTE
-                </div>
-                <div className="flex justify-center items-center text-xs border-r border-black">
-                  {info.nomeDoCliente}
-                </div>
+            <div className="grid grid-rows-5 w-[60%]">
+              <div className="grid grid-cols-2 border-b border-black">
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">CLIENTE</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.nome}</p>
               </div>
-              <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  REPRESENTANTE
-                </div>
-                <div className="flex justify-center items-center text-xs border-r border-black">
-                  {info.nomeVendedor}
-                </div>
+              <div className="grid grid-cols-2 border-b border-black">
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">REPRESENTANTE</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.requerente.apelido || analysis.requerente.nomeCRM}</p>
               </div>
-              <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  ENDEREÇO
-                </div>
-                <div
-                  className={`flex justify-center items-center ${
-                    info.logradouro.length > 37 ? "text-xxs" : "text-xs"
-                  } border-r border-black`}
-                >
-                  {info.logradouro}
-                </div>
+              <div className="grid grid-cols-2 border-b border-black">
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">ENDEREÇO</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.localizacao.endereco}</p>
               </div>
-              <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  BAIRRO
-                </div>
-                <div className="flex justify-center items-center text-xs border-r border-black">
-                  {info.bairro}
-                </div>
+              <div className="grid grid-cols-2 border-b border-black">
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">BAIRRO</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.localizacao.bairro}</p>
               </div>
-              <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  DATA DA VISITA
-                </div>
-                <div className="flex justify-center items-center text-xs border-r border-black">
-                  {dayjs().format("DD/MM/YYYY")}
-                </div>
-              </div>
-              <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  TIPO DE SOLICITAÇÃO
-                </div>
-                <div className="flex justify-center items-center text-xs border-r border-black">
-                  {info.tipoDeSolicitacao}
-                </div>
+              <div className="grid grid-cols-2 border-b border-black">
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">DATA DA VISITA</p>
+                <p className="text-center text-xs border-r p-1 border-black">{dayjs().format('DD/MM/YYYY')}</p>
               </div>
             </div>
-            <div className="grid grid-rows-6 w-[40%]">
-              <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  TELEFONE
-                </div>
-                <div className="flex justify-center items-center text-xs border-r border-black">
-                  {info.telefoneDoCliente}
-                </div>
+            <div className="grid grid-rows-5 w-[40%]">
+              <div className="grid grid-cols-2 border-b border-black">
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">TELEFONE</p>
+                <p className="text-center text-xs border-r p-1 border-black">-</p>
               </div>
-              <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  Nº DE PROJETO
-                </div>
-                <div className="flex justify-center items-center text-xs border-r border-black">
-                  {info.codigoSVB}
-                </div>
+              <div className="grid grid-cols-2 border-b border-black">
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">Nº DE PROJETO</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.projeto.identificador || 'N/A'}</p>
               </div>
-              <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  NÚMERO
-                </div>
-                <div className="flex justify-center items-center text-xs border-r border-black">
-                  {info.numeroResidencia}
-                </div>
+              <div className="grid grid-cols-2 border-b border-black">
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">NÚMERO</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.localizacao.numeroOuIdentificador}</p>
               </div>
-              <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  MUNICÍPIO
-                </div>
-                <div className="flex justify-center items-center text-xs border-r border-black">
-                  {info.cidade}
-                </div>
+              <div className="grid grid-cols-2 border-b border-black">
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">MUNICÍPIO</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.localizacao.cidade}</p>
               </div>
-              <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  PRAZO LAUDO
-                </div>
-                <div className="flex justify-center items-center text-xs border-r border-black">
-                  {/\(([^)]+)\)/.exec(info.tipoDeLaudo)[1]}
-                </div>
-              </div>
-              <div className="grid grid-cols-2 border-b border-black h-[40px]">
-                <div className="flex justify-center items-center bg-[#fead61] text-white font-bold text-xs border-r border-black">
-                  TIPO DE LAUDO
-                </div>
-                <div className="flex justify-center items-center text-xs border-r border-black">
-                  {info.tipoDeLaudo.split("(")[0]}
-                </div>
+              <div className="grid grid-cols-2 border-b border-black">
+                <p className="text-center bg-[#fead61] text-white font-bold text-xs border-r p-1 border-black">TIPO DE SOLICITAÇÃO</p>
+                <p className="text-center text-xs border-r p-1 border-black">{analysis.tipoSolicitacao}</p>
               </div>
             </div>
           </div>
         </div>
         <div className="flex flex-col mt-6">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold">
-            ESTRUTURA FOTOVOLTAICA
-          </h1>
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold">EQUIPAMENTOS</h1>
           <div className="flex">
             <div className="w-[20%] h-full flex justify-center items-center bg-[#15599a] text-center text-white font-bold">
               DESCRIÇÃO DO SISTEMA FOTOVOLTAICO
             </div>
             <div className="w-[80%] flex flex-col">
-              <h1 className="bg-[#fead61] text-white text-sm  text-center font-raleway font-bold  border border-black border-b-0">
-                INVERSORES
-              </h1>
+              <h1 className="bg-[#fead61] text-white text-sm  text-center font-raleway font-bold  border border-black border-b-0">INVERSORES</h1>
               <div className="flex border border-black border-b-0">
                 <div className="flex flex-col w-[50%]">
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold">
-                      TOPOLOGIA
-                    </p>
-                    <p className="text-center text-xs font-bold">
-                      {info.tipoInversor}
-                    </p>
+                    <p className="bg-gray-200 text-center text-xxs font-bold">TOPOLOGIA</p>
+                    <p className="text-center text-xxs font-bold">{analysis.detalhes.topologia}</p>
                   </div>
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold">
-                      QUANTIDADE
-                    </p>
-                    <p className="text-center text-xs font-bold">
-                      {info.qtdeInversor}
-                    </p>
+                    <p className="bg-gray-200 text-center text-xxs font-bold">QUANTIDADE</p>
+                    <p className="text-center text-xxs font-bold">{analysis.equipamentos.inversor.qtde}</p>
                   </div>
                 </div>
                 <div className="flex flex-col w-[50%]">
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold">
-                      MARCA DO INVERSOR
-                    </p>
-                    <p className="text-center text-xs font-bold">
-                      {info.marcaInversor}
-                    </p>
+                    <p className="bg-gray-200 text-center text-xxs font-bold">MARCA DO INVERSOR</p>
+                    <p className="text-center text-xxs font-bold">{analysis.equipamentos.inversor.modelo}</p>
                   </div>
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold">
-                      POTÊNCIA
-                    </p>
-                    <p className="text-center text-xs font-bold">
-                      {info.potInversor}
-                    </p>
+                    <p className="bg-gray-200 text-center text-xxs font-bold">POTÊNCIA</p>
+                    <p className="text-center text-xxs font-bold">{analysis.equipamentos.inversor.potencia}</p>
                   </div>
                 </div>
               </div>
@@ -335,108 +220,62 @@ function LaudoIntermediarioUrbano({ info }) {
               <div className="flex  border border-black border-b-0">
                 <div className="flex flex-col w-[50%]">
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold">
-                      QUANTIDADE
-                    </p>
-                    <p className="text-center text-xs font-bold">
-                      {info.qtdeModulos}
-                    </p>
+                    <p className="bg-gray-200 text-center text-xxs font-bold">QUANTIDADE</p>
+                    <p className="text-center text-xxs font-bold">{analysis.equipamentos.modulos.qtde}</p>
                   </div>
                 </div>
                 <div className="flex flex-col w-[50%]">
                   <div className="grid grid-cols-2">
-                    <p className="bg-gray-200 text-center text-xs font-bold">
-                      POTÊNCIA
-                    </p>
-                    <p className="text-center text-xs font-bold">
-                      {info.potModulos}
-                    </p>
+                    <p className="bg-gray-200 text-center text-xxs font-bold">POTÊNCIA</p>
+                    <p className="text-center text-xxs font-bold">{analysis.equipamentos.modulos.potencia}</p>
                   </div>
                 </div>
               </div>
               <div className="flex  border border-black">
-                <p className="bg-gray-200 text-center text-xs font-bold w-[50%]">
-                  MARCA DOS MÓDULOS
-                </p>
-                <p className="text-center text-xs font-bold w-[50%]">
-                  {info.marcaModulos}
-                </p>
+                <p className="bg-gray-200 text-center text-xxs font-bold w-[50%]">MARCA DOS MÓDULOS</p>
+                <p className="text-center text-xxs font-bold w-[50%]">{analysis.equipamentos.modulos.modelo}</p>
               </div>
             </div>
           </div>
         </div>
         <div className="flex flex-col mt-6">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-b-0 border-black">
-            VISUALIZAÇÃO DO PROJETO
-          </h1>
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-b-0 border-black">VISUALIZAÇÃO DO PROJETO</h1>
           <div className="h-[600px] flex items-center border border-black">
-            {info.linkVisualizacaoProjeto ? (
+            {analysis.desenho.url ? (
               <div className="w-[793.7px] h-full">
-                <Image
-                  width={"793px"}
-                  height={"560px"}
-                  src={info.linkVisualizacaoProjeto}
-                  objectFit="fill"
-                  alt="Picture of the author"
-                />
+                <Image width={'793px'} height={'560px'} src={analysis.desenho.url} objectFit="fill" alt="Picture of the author" />
               </div>
             ) : (
-              false
+              <div className="w-[793.7px] h-full flex items-center justify-center">
+                <p className="italic font-bold text-gray-500">Oops, parece que não há nenhum desenho vinculado para essa análise...</p>
+              </div>
             )}
           </div>
         </div>
-        <div className="flex flex-col">
-          <h1 className="bg-[#15599a] text-white text-center font-bold border border-black">
-            CUSTOS ADICIONAIS
-          </h1>
+        <div className="mt-2 flex flex-col">
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-black">CUSTOS ADICIONAIS</h1>
           <div className="flex flex-col">
-            <div className="grid grid-cols-10 border-b border-black">
-              <p className="text-center text-xs font-bold col-span-3 border-r border-black">
-                DESCRIÇÃO
-              </p>
-              <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                QUANTIDADE
-              </p>
-              <p className="text-center text-xs font-bold col-span-1 border-r border-black">
-                GRANDEZA
-              </p>
-              <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                VALOR
-              </p>
-              <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                TOTAL
-              </p>
+            <div className="grid grid-cols-10 border-b border-black bg-[#fead61]">
+              <p className="text-center text-xs font-bold col-span-3 border-r border-black p-1 text-white">DESCRIÇÃO</p>
+              <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1 text-white">QUANTIDADE</p>
+              <p className="text-center text-xs font-bold col-span-1 border-r border-black p-1 text-white">GRANDEZA</p>
+              <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1 text-white">VALOR</p>
+              <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1 text-white">TOTAL</p>
             </div>
-            {info.custosAdicionais ? (
-              <div className="flex flex-col">
-                {info.custosAdicionais.map((custo, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-10 border-b border-black"
-                  >
-                    <p className="text-center text-xs font-bold col-span-3 border-r border-black">
-                      {custo.descricao}
-                    </p>
-                    <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                      {custo.qtde}
-                    </p>
-                    <p className="text-center text-xs font-bold col-span-1 border-r border-black">
-                      {custo.grandeza}
-                    </p>
-                    <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                      {custo.valor}
-                    </p>
-                    <p className="text-center text-xs font-bold col-span-2 border-r border-black">
-                      R$
-                      {(custo.valor * custo.qtde).toFixed(2).replace(".", ",")}
-                    </p>
-                  </div>
-                ))}
-              </div>
+            {analysis.custos?.length > 0 ? (
+              analysis.custos.map((cost, index) => (
+                <div key={index} className="grid grid-cols-10 border-b border-black">
+                  <p className="text-center text-xs font-bold col-span-3 border-r border-black p-1">{cost.descricao}</p>
+                  <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">{cost.qtde}</p>
+                  <p className="text-center text-xs font-bold col-span-1 border-r border-black p-1">{cost.grandeza}</p>
+                  <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">{formatToMoney(cost.custoUnitario)}</p>
+                  <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">
+                    {cost.total ? formatToMoney(cost.total) : formatToMoney(cost.qtde * cost.custoUnitario)}
+                  </p>
+                </div>
+              ))
             ) : (
-              <div className="flex items-center justify-center h-[50px] border-b border-r border-black italic">
-                SEM CUSTOS ADICIONAIS
-              </div>
+              <div className="flex items-center justify-center h-[50px] border-b border-r border-black italic">SEM CUSTOS ADICIONAIS</div>
             )}
           </div>
           <div className="grid grid-cols-10">
@@ -444,239 +283,195 @@ function LaudoIntermediarioUrbano({ info }) {
               VALOR PARA AJUSTE NA PROPOSTA COMERCIAL
             </div>
             <div className="flex flex-col col-span-7 h-full">
-              <div className="grid grid-cols-7 border-b border-black">
-                <div className="col-span-5 bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">
-                  VALOR À VISTA
-                </div>
+              <div className="grid grid-cols-7  border-b border-black">
+                <div className="col-span-5 bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">VALOR À VISTA</div>
                 <div className="col-span-2 bg-[#fead61] text-white text-center p-1 font-bold border-r border-black">
-                  R${" "}
-                  {info.custosAdicionais
-                    ? getAdditionalCostsSum(info.custosAdicionais)
-                        .toFixed(2)
-                        .replace(".", ",")
-                    : "-"}
+                  R$ {analysis.custos ? getAdditionalCostsSum(analysis.custos).toFixed(2).replace('.', ',') : '-'}
                 </div>
               </div>
-              <div className="grid grid-cols-7 border-black">
-                <div className="col-span-5 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
-                  VALOR FINANCIAMENTO
-                </div>
+              <div className="grid grid-cols-7  border-b border-black">
+                <div className="col-span-5 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">VALOR FINANCIAMENTO</div>
                 <div className="col-span-2 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
-                  R${" "}
-                  {info.custosAdicionais
-                    ? (getAdditionalCostsSum(info.custosAdicionais) * 1.175)
-                        .toFixed(2)
-                        .replace(".", ",")
-                    : "-"}
+                  R$ {analysis.custos ? (getAdditionalCostsSum(analysis.custos) * 1.175).toFixed(2).replace('.', ',') : '-'}
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div className="flex flex-col mt-6">
-          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border  border-black">
-            ESTUDO DE GERAÇÃO - DESVIO AZIMUTAL
-          </h1>
+          <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border  border-black">ESTUDO DE GERAÇÃO - DESVIO AZIMUTAL</h1>
           <div className="grid grid-cols-2">
             <div className="grid-rows-5">
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#15599a] font-bold text-white text-xs text-center p-1 border-r border-black">
-                  ORIENTAÇÃO
-                </p>
-                <p className="bg-[#15599a] font-bold text-white text-xs text-center p-1 border-r border-black">
-                  QTDE PLACAS
-                </p>
-                <p className="bg-[#15599a] font-bold text-white text-xs text-center p-1 border-r border-black">
-                  GERAÇÃO
-                </p>
+                <p className="bg-[#15599a] font-bold text-white text-xs text-center p-1 border-r border-black">ORIENTAÇÃO</p>
+                <p className="bg-[#15599a] font-bold text-white text-xs text-center p-1 border-r border-black">QTDE PLACAS</p>
+                <p className="bg-[#15599a] font-bold text-white text-xs text-center p-1 border-r border-black">GERAÇÃO</p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">
-                  NORTE
+                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">NORTE</p>
+                <p className="font-bold text-center text-xs border-r border-black">
+                  {analysis.alocacaoModulos.norte ? analysis.alocacaoModulos.norte : '-'}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modNorte ? info.modNorte : "-"}
-                </p>
-                <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modNorte
+                  {analysis.alocacaoModulos.norte
                     ? `${(
                         (getGenFactorByOrientation({
-                          city: info.cidade,
-                          uf: info.uf,
-                          orientation: "NORTE",
+                          city: analysis.localizacao.cidade,
+                          uf: analysis.localizacao.uf,
+                          orientation: 'NORTE',
                         }) *
-                          info.modNorte *
-                          getAverageModulePower(info.potModulos)) /
+                          analysis.alocacaoModulos.norte *
+                          getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
                         1000
                       ).toFixed(2)} kWh`
-                    : " - "}{" "}
+                    : ' - '}{' '}
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">
-                  NORDESTE
+                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">NORDESTE</p>
+                <p className="font-bold text-center text-xs border-r border-black">
+                  {analysis.alocacaoModulos.nordeste ? analysis.alocacaoModulos.nordeste : '-'}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modNordeste ? info.modNordeste : "-"}
-                </p>
-                <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modNordeste
+                  {analysis.alocacaoModulos.nordeste
                     ? `${(
                         (getGenFactorByOrientation({
-                          city: info.cidade,
-                          uf: info.uf,
-                          orientation: "NORDESTE",
+                          city: analysis.localizacao.cidade,
+                          uf: analysis.localizacao.uf,
+                          orientation: 'NORDESTE',
                         }) *
-                          info.modNordeste *
-                          getAverageModulePower(info.potModulos)) /
+                          analysis.alocacaoModulos.nordeste *
+                          getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
                         1000
                       ).toFixed(2)} kWh`
-                    : " - "}{" "}
+                    : ' - '}{' '}
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">
-                  LESTE
+                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">LESTE</p>
+                <p className="font-bold text-center text-xs border-r border-black">
+                  {analysis.alocacaoModulos.leste ? analysis.alocacaoModulos.leste : '-'}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modLeste ? info.modLeste : "-"}
-                </p>
-                <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modLeste
+                  {analysis.alocacaoModulos.leste
                     ? `${(
                         (getGenFactorByOrientation({
-                          city: info.cidade,
-                          uf: info.uf,
-                          orientation: "LESTE",
+                          city: analysis.localizacao.cidade,
+                          uf: analysis.localizacao.uf,
+                          orientation: 'LESTE',
                         }) *
-                          info.modLeste *
-                          getAverageModulePower(info.potModulos)) /
+                          analysis.alocacaoModulos.leste *
+                          getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
                         1000
                       ).toFixed(2)} kWh`
-                    : "-"}{" "}
+                    : '-'}{' '}
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">
-                  SUDESTE
+                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">SUDESTE</p>
+                <p className="font-bold text-center text-xs border-r border-black">
+                  {analysis.alocacaoModulos.sudeste ? analysis.alocacaoModulos.sudeste : '-'}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modSudeste ? info.modSudeste : "-"}
-                </p>
-                <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modSudeste
+                  {analysis.alocacaoModulos.sudeste
                     ? `${(
                         (getGenFactorByOrientation({
-                          city: info.cidade,
-                          uf: info.uf,
-                          orientation: "SUDESTE",
+                          city: analysis.localizacao.cidade,
+                          uf: analysis.localizacao.uf,
+                          orientation: 'SUDESTE',
                         }) *
-                          info.modSudeste *
-                          getAverageModulePower(info.potModulos)) /
+                          analysis.alocacaoModulos.sudeste *
+                          getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
                         1000
                       ).toFixed(2)}`
-                    : "-"}{" "}
+                    : '-'}{' '}
                 </p>
               </div>
             </div>
             <div className="grid-rows-5">
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#15599a] font-bold text-xs text-center text-white p-1 border-r border-black">
-                  ORIENTAÇÃO
+                <p className="bg-[#15599a] font-bold text-xs text-center text-white p-1 border-r border-black">ORIENTAÇÃO</p>
+                <p className="bg-[#15599a] font-bold text-xs text-center text-white p-1 border-r border-black">QTDE PLACAS</p>
+                <p className="bg-[#15599a] font-bold text-xs text-center text-white p-1 border-r border-black">GERAÇÃO</p>
+              </div>
+              <div className="grid grid-cols-3 border-b border-black">
+                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">SUL</p>
+                <p className="font-bold text-center text-xs border-r border-black">
+                  {analysis.alocacaoModulos.sul ? analysis.alocacaoModulos.sul : '-'}
                 </p>
-                <p className="bg-[#15599a] font-bold text-xs text-center text-white p-1 border-r border-black">
-                  QTDE PLACAS
-                </p>
-                <p className="bg-[#15599a] font-bold text-xs text-center text-white p-1 border-r border-black">
-                  GERAÇÃO
+                <p className="font-bold text-center text-xs border-r border-black">
+                  {analysis.alocacaoModulos.sul
+                    ? `${(
+                        (getGenFactorByOrientation({
+                          city: analysis.localizacao.cidade,
+                          uf: analysis.localizacao.uf,
+                          orientation: 'SUL',
+                        }) *
+                          analysis.alocacaoModulos.sul *
+                          getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
+                        1000
+                      ).toFixed(2)} kWh`
+                    : '-'}{' '}
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">
-                  SUL
+                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">SUDOESTE</p>
+                <p className="font-bold text-center text-xs border-r border-black">
+                  {analysis.alocacaoModulos.sudoeste ? analysis.alocacaoModulos.sudoeste : '-'}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modSul ? info.modSul : "-"}
-                </p>
-                <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modSul
+                  {analysis.alocacaoModulos.sudoeste
                     ? `${(
                         (getGenFactorByOrientation({
-                          city: info.cidade,
-                          uf: info.uf,
-                          orientation: "SUL",
+                          city: analysis.localizacao.cidade,
+                          uf: analysis.localizacao.uf,
+                          orientation: 'SUDOESTE',
                         }) *
-                          info.modSul *
-                          getAverageModulePower(info.potModulos)) /
+                          analysis.alocacaoModulos.sudoeste *
+                          getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
                         1000
                       ).toFixed(2)} kWh`
-                    : "-"}{" "}
+                    : '-'}{' '}
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">
-                  SUDOESTE
+                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">OESTE</p>
+                <p className="font-bold text-center text-xs border-r border-black">
+                  {analysis.alocacaoModulos.oeste ? analysis.alocacaoModulos.oeste : '-'}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modSudoeste ? info.modSudoeste : "-"}
-                </p>
-                <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modSudoeste
+                  {analysis.alocacaoModulos.oeste
                     ? `${(
                         (getGenFactorByOrientation({
-                          city: info.cidade,
-                          uf: info.uf,
-                          orientation: "SUDOESTE",
+                          city: analysis.localizacao.cidade,
+                          uf: analysis.localizacao.uf,
+                          orientation: 'OESTE',
                         }) *
-                          info.modSudoeste *
-                          getAverageModulePower(info.potModulos)) /
+                          analysis.alocacaoModulos.oeste *
+                          getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
                         1000
                       ).toFixed(2)} kWh`
-                    : "-"}{" "}
+                    : '-'}{' '}
                 </p>
               </div>
               <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">
-                  OESTE
+                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">NOROESTE</p>
+                <p className="font-bold text-center text-xs border-r border-black">
+                  {analysis.alocacaoModulos.noroeste ? analysis.alocacaoModulos.noroeste : '-'}
                 </p>
                 <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modOeste ? info.modOeste : "-"}
-                </p>
-                <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modOeste
+                  {analysis.alocacaoModulos.noroeste
                     ? `${(
                         (getGenFactorByOrientation({
-                          city: info.cidade,
-                          uf: info.uf,
-                          orientation: "OESTE",
+                          city: analysis.localizacao.cidade,
+                          uf: analysis.localizacao.uf,
+                          orientation: 'NOROESTE',
                         }) *
-                          info.modOeste *
-                          getAverageModulePower(info.potModulos)) /
+                          analysis.alocacaoModulos.noroeste *
+                          getAverageModulePower(analysis.equipamentos.modulos.potencia)) /
                         1000
                       ).toFixed(2)} kWh`
-                    : "-"}{" "}
-                </p>
-              </div>
-              <div className="grid grid-cols-3 border-b border-black">
-                <p className="bg-[#fead61] text-white italic font-bold text-center text-xs border-r border-black">
-                  NOROESTE
-                </p>
-                <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modNoroeste ? info.modNoroeste : "-"}
-                </p>
-                <p className="font-bold text-center text-xs border-r border-black">
-                  {info.modNoroeste
-                    ? `${(
-                        (getGenFactorByOrientation({
-                          city: info.cidade,
-                          uf: info.uf,
-                          orientation: "NOROESTE",
-                        }) *
-                          info.modNoroeste *
-                          getAverageModulePower(info.potModulos)) /
-                        1000
-                      ).toFixed(2)} kWh`
-                    : "-"}{" "}
+                    : '-'}{' '}
                 </p>
               </div>
             </div>
@@ -685,17 +480,13 @@ function LaudoIntermediarioUrbano({ info }) {
             <div className="bg-[#15599a] italic text-white font-bold text-center col-span-4 text-xs border-r border-black py-1">
               GERAÇÃO PROPOSTA COMERCIAL
             </div>
-            <div className="col-span-2 text-xs font-bold text-center border-r border-black py-1">
-              {getProposedGen()} kWh
-            </div>
+            <div className="col-span-2 text-xs font-bold text-center border-r border-black py-1">{getProposedGen()} kWh</div>
           </div>
           <div className="grid grid-cols-6 border-b border-black">
             <div className="bg-[#fead61] italic text-white font-bold text-center col-span-4 text-xs border-r border-black py-1">
               GERAÇÃO PREVISTA TOTAL
             </div>
-            <div className="col-span-2 text-xs font-bold text-center border-r border-black py-1">
-              {getCorrectedGen()} kWh
-            </div>
+            <div className="col-span-2 text-xs font-bold text-center border-r border-black py-1">{getCorrectedGen()} kWh</div>
           </div>
           <div className="grid grid-cols-6 border-b border-black">
             <div className="bg-[#15599a] italic text-white font-bold text-center col-span-4 text-xs border-r border-black py-1">
@@ -703,20 +494,14 @@ function LaudoIntermediarioUrbano({ info }) {
             </div>
             <div className="col-span-2 text-xs font-bold text-center border-r border-black py-1">
               {getProposedGen() / getCorrectedGen() < 1
-                ? ((getCorrectedGen() / getProposedGen()) * 100)
-                    .toFixed(2)
-                    .replace(".", ",")
-                : ((getCorrectedGen() / getProposedGen()) * 100)
-                    .toFixed(2)
-                    .replace(".", ",")}
+                ? ((getCorrectedGen() / getProposedGen()) * 100).toFixed(2).replace('.', ',')
+                : ((getCorrectedGen() / getProposedGen()) * 100).toFixed(2).replace('.', ',')}
               %
             </div>
           </div>
         </div>
         <div className="flex flex-col items-center my-2">
-          <h1 className="text-center font-bold text-[#15599a]">
-            VISUALIZAÇÃO GRÁFICA
-          </h1>
+          <h1 className="text-center font-bold text-[#15599a]">VISUALIZAÇÃO GRÁFICA</h1>
           <div className="w-[600px] h-[300px]">
             <ResponsiveContainer width="100%">
               <BarChart
@@ -724,12 +509,12 @@ function LaudoIntermediarioUrbano({ info }) {
                 height={250}
                 data={[
                   {
-                    name: "PROPOSTA",
+                    name: 'PROPOSTA',
                     PROPOSTO: getProposedGen(),
                     PREVISTO: 0,
                   },
                   {
-                    name: "PREVISTO",
+                    name: 'PREVISTO',
                     PROPOSTO: 0,
                     PREVISTO: getCorrectedGen(),
                   },
@@ -740,48 +525,37 @@ function LaudoIntermediarioUrbano({ info }) {
                 <YAxis unit="kWh" />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="PROPOSTO" fill="#15599a" unit={"kWh"}></Bar>
-                <Bar dataKey="PREVISTO" fill="#fead61" unit={"kWh"}></Bar>
+                <Bar dataKey="PROPOSTO" fill="#15599a" unit={'kWh'}></Bar>
+                <Bar dataKey="PREVISTO" fill="#fead61" unit={'kWh'}></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
         <div className="flex flex-col mt-2">
-          <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0">
-            DESCRITIVO DO PROJETO
-          </h1>
-          <div className="flex text-xs justify-center items-center border border-black border-t-0 min-h-[60px] text-center p-2">
-            {info.descritivo?.length ? (
-              info.descritivo?.map((item, index) => (
-                <div
-                  key={index}
-                  className="grid grid-cols-10 gap-3 w-full items-center py-1 border-b border-gray-200"
-                >
-                  <p className="text-xxs lg:text-xs text-[#15599a] font-bold col-span-3 text-center">
-                    {item.topico}
-                  </p>
-                  <p
-                    className={`${
-                      item.texto.length > 100 ? "text-xxs" : "text-xs"
-                    } text-gray-600 font-bold text-center col-span-7`}
-                  >
-                    {item.texto}
-                  </p>
+          <h1 className="bg-[#fead61] text-white text-center font-bold border border-black border-t-0">DESCRITIVO DO PROJETO</h1>
+          <div className="flex flex-col text-xs justify-center items-center border border-black border-t-0 min-h-[60px] text-center">
+            {analysis.descritivo?.length > 0 ? (
+              analysis.descritivo?.map((item, index) => (
+                <div key={index} className="flex w-full flex-col mb-1">
+                  <div className="flex w-full items-center justify-between">
+                    <div className="w-full flex items-center justify-center gap-2 bg-black text-white">
+                      <MdTopic />
+                      <h1 className=" leading-none tracking-tight font-bold  text-sm">{item.topico}</h1>
+                    </div>
+                  </div>
+
+                  <p className="w-full text-center text-xs text-gray-500 mt-1">{item.descricao}</p>
                 </div>
               ))
             ) : (
-              <div className="flex items-center justify-center text-center h-full italic text-gray-600">
-                SEM DESCRITIVO
-              </div>
+              <div className="flex items-center justify-center text-center h-full italic text-gray-600">SEM DESCRITIVO</div>
             )}
           </div>
         </div>
         <div className="flex flex-col mt-2">
-          <h1 className="bg-[#15599a] text-white text-center font-bold border border-black border-t-0">
-            CONCLUSÃO
-          </h1>
+          <h1 className="bg-[#15599a] text-white text-center font-bold border border-black border-t-0">CONCLUSÃO</h1>
           <div className="flex text-xs justify-center items-center border border-black border-t-0 h-[60px] text-center p-2">
-            {info.respostaConclusao ? info.respostaConclusao : "-"}
+            {analysis.conclusao.observacoes ? analysis.conclusao.observacoes : '-'}
           </div>
         </div>
         <div className="mt-2 grid gap-x-4 grid-cols-2">
@@ -794,21 +568,17 @@ function LaudoIntermediarioUrbano({ info }) {
             </div>
 
             <hr className="border-t-2 border-black" />
-            <p className="text-xxs text-center">
-              ASSINATURA DIRETOR DE ENGENHARIA
-            </p>
+            <p className="text-xxs text-center">ASSINATURA DIRETOR DE ENGENHARIA</p>
           </div>
           <div className="flex flex-col">
             <p className="text-xxs text-start ml-2">Realizado por:</p>
             <hr className="mt-8 border-t-2 border-black" />
-            <p className="text-xxs text-center">
-              ASSINATURA TÉCNICO RESPONSÁVEL
-            </p>
+            <p className="text-xxs text-center">ASSINATURA TÉCNICO RESPONSÁVEL</p>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default LaudoIntermediarioUrbano;
+export default LaudoIntermediarioUrbano

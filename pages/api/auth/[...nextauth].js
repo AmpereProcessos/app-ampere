@@ -13,6 +13,7 @@ export const authOptions = {
     CredentialsProvider({
       type: 'credentials',
       credentials: {},
+
       async authorize(credentials, req) {
         const { email, password } = credentials
         const db = await connectToDatabase(process.env.DB_KEY)
@@ -91,6 +92,7 @@ export const authOptions = {
       return token
     },
   },
+
   secret: process.env.SECRET_NEXT_AUTH,
   pages: {
     signIn: '/auth/authHome',

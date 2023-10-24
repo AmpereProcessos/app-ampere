@@ -577,7 +577,14 @@ function ModalOeM({ open, setModalIsOpen, modalIsOpen, project, editor, handleUp
               />
               <ProjectServiceOrders projectId={project._id} />
             </div>
-            <InfoVisitaTecnicaBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+            <InfoVisitaTecnicaBlock
+              editor={false}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              analysisId={project.idVisitaTecnica}
+            />
             {!['BOMBA SOLAR', 'OPERAÇÃO E MANUTENÇÃO'].includes(project.tipoDeServico) ? (
               <InfoPadraoBlock
                 comercialEdition={false}

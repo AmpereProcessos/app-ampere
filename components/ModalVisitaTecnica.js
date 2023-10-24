@@ -27,7 +27,7 @@ import SaveButton from './utils/Buttons/SaveButton'
 
 import SelectInputWithImages from './inputs/SelectWithImages'
 import SelectInputPersonalized from './inputs/Select'
-import AdditionalCosts from './identificador/visitasTecnicas/AdditionalCostMenu'
+import AdditionalCosts from './identificador/analisesTecnicas/blocos/AdditionalCostsBlock'
 
 const MODAL_STYLES = {
   position: 'fixed',
@@ -93,7 +93,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
   }
   function saveChanges() {
     axios
-      .put('/api/solicitacoes/visitaTecnica', dados)
+      .put('/api/solicitacoes/analisesTecnicas', dados)
       .then((res) => {
         setMessage({ text: 'Alterações feitas', color: 'text-green-500' })
         handleUpdates()
@@ -108,7 +108,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
   function rejectVisita() {
     setDados({ ...dados, status: 'REJEITADA' })
     axios
-      .put('/api/solicitacoes/visitaTecnica', {
+      .put('/api/solicitacoes/analisesTecnicas', {
         _id: dados._id,
         status: 'REJEITADA',
       })
@@ -126,7 +126,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
   async function concludeVisita() {
     const loadingToastId = toast.loading('Finalizando visita...')
     try {
-      await axios.put('/api/solicitacoes/visitaTecnica', {
+      await axios.put('/api/solicitacoes/analisesTecnicas', {
         _id: dados._id,
         status: 'CONCLUIDO',
         dataDeConclusao: new Date().toISOString(),
@@ -143,7 +143,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
   async function reopenAnalysis() {
     const loadingToastId = toast.loading('Carregando...')
     try {
-      await axios.put('/api/solicitacoes/visitaTecnica', {
+      await axios.put('/api/solicitacoes/analisesTecnicas', {
         _id: dados._id,
         status: 'PENDENTE',
         dataDeConclusao: null,
@@ -197,7 +197,7 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
         var imageRef = ref(storage, `clientes/${dados.nomeDoCliente}-${dados.codigoSVB}/visualizacaoProjeto`)
         let res = await uploadBytes(imageRef, images.visualizacaoProjeto.file)
         let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
-        await axios.put('/api/solicitacoes/visitaTecnica', {
+        await axios.put('/api/solicitacoes/analisesTecnicas', {
           _id: dados._id,
           linkVisualizacaoProjeto: url,
         })
@@ -2142,8 +2142,15 @@ function ModalVisitaTecnica({ info, setModalIsOpen, handleUpdates }) {
                   <a href={dados.linkVisualizacaoProjeto} className="text-green-400 font-bold cursor-pointer">
                     IMAGEM ATUAL
                   </a>
-                  <div className="w-[100px] h-[100px]">
-                    <Image width={'100px'} height={'100px'} src={dados.linkVisualizacaoProjeto} objectFit="fill" alt="VISUALIZAÇÃO DO PROJETO" />
+                  <div className="w-[300px] h-[300px] rounded-full border-4 border-black">
+                    <Image
+                      width={'300px'}
+                      height={'300px'}
+                      style={{ borderRadius: '100%' }}
+                      src={dados.linkVisualizacaoProjeto}
+                      objectFit="fill"
+                      alt="VISUALIZAÇÃO DO PROJETO"
+                    />
                   </div>
                 </div>
               )}

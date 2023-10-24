@@ -243,7 +243,14 @@ function ModalProjetos({ setModalIsOpen, modalIsOpen, project, editor, handleUpd
                 </div>
               </div>
             </div>
-            <InfoVisitaTecnicaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+            <InfoVisitaTecnicaBlock
+              editor={false}
+              infoHolder={infoHolder}
+              setInfo={setInfo}
+              changes={changes}
+              setChanges={setChanges}
+              analysisId={project.idVisitaTecnica}
+            />
             {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
               <InfoPadraoBlock
                 comercialEdition={true}

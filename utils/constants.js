@@ -2140,6 +2140,10 @@ export const equipesTecnicas = [
     value: 'EQUIPE EXTERNA - JEFFERSON',
   },
   {
+    label: 'EQUIPE EXTERNA - JAIMIRES',
+    value: 'EQUIPE EXTERNA - JAIMIRES',
+  },
+  {
     label: 'NÃO DEFINIDO',
     value: 'NÃO DEFINIDO',
   },

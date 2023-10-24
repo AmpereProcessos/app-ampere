@@ -26,7 +26,7 @@ export function useComercialProjects({ enabled }) {
       field2: null,
     },
   })
-  console.log(filters)
+
   function matchSearch(project) {
     if (filters.search.trim().length == 0) return true
     else return project.nomeDoContrato.toUpperCase().includes(filters.search.toUpperCase())

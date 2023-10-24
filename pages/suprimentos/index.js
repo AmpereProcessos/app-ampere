@@ -75,7 +75,7 @@ function Suprimentos() {
     const projectsQty = info.length
     const totalPower = info.reduce((acc, current) => {
       const currentPower = current.sistema?.potPico || 0
-      console.log(currentPower)
+
       return acc + currentPower
     }, 0)
     const totalPredictedPayInKits = info.reduce((acc, current) => {
@@ -113,7 +113,6 @@ function Suprimentos() {
   }
 
   function handleOpenModal(id) {
-    console.log('ID ESCOLHIDO', id)
     setModalProject({ projectId: id, isOpen: true })
   }
   useEffect(() => {
@@ -122,7 +121,6 @@ function Suprimentos() {
       if (!userRoutes.includes('Suprimentos')) return router.push('/')
     }
   }, [session])
-  console.log(modalProject)
   if (status != 'authenticated') return <LoadingPage />
   if (projectsSuccess && projects) {
     return (

@@ -165,14 +165,14 @@ function DetailsModalBlock({ infoHolder, setInfoHolder }) {
                 <div className="w-full lg:w-1/4 flex justify-center">
                   <SelectInput
                     label={'RESPONSABILIDADE DO PADRÃO'}
-                    value={infoHolder.detalhes.amperagemPadrao}
+                    value={infoHolder.detalhes.responsabilidadePadrao}
                     options={[
                       { id: 1, label: 'AMPERE', value: 'AMPERE' },
                       { id: 2, label: 'CLIENTE', value: 'CLIENTE' },
                       { id: 3, label: 'NÃO SE APLICA', value: 'NÃO SE APLICA' },
                     ]}
                     selectedItemLabel={'NÃO DEFINIDO'}
-                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, detalhes: { ...prev.detalhes, amperagemPadrao: value } }))}
+                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, detalhes: { ...prev.detalhes, responsabilidadePadrao: value } }))}
                     width={'100%'}
                   />
                 </div>

@@ -17,8 +17,8 @@ function FilesBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
       <div className="mt-2 flex w-full flex-wrap justify-around gap-2">
         {infoHolder.arquivos && infoHolder.arquivos.length > 0 ? (
           infoHolder.arquivos.map((file, index) => (
-            <div className="w-full lg:w-[400px]">
-              <ArchiveLinkBlock key={index} obj={formatFileInfo({ info: file })} showDeleteMenu={false} />
+            <div key={index} className="w-full lg:w-[400px]">
+              <ArchiveLinkBlock obj={formatFileInfo({ info: file })} showDeleteMenu={false} />
             </div>
           ))
         ) : (

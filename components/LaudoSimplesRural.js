@@ -5,6 +5,7 @@ import Assinatura from '../utils/assinatura.jpg'
 import dayjs from 'dayjs'
 import { formatToMoney } from '../utils/constants'
 import { GeneralTechnicalAnalysisSchema } from '../utils/schemas/technical-analysis'
+import { MdTopic } from 'react-icons/md'
 function LaudoSimplesRural({ analysis }) {
   function getAdditionalCostsSum(custos) {
     const sum = custos.reduce((acc, current) => {

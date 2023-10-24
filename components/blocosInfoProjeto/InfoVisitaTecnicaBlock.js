@@ -9,6 +9,8 @@ import Avatar from '../utils/Avatar'
 import { useSession } from 'next-auth/react'
 import { TbRulerMeasure } from 'react-icons/tb'
 import { MdTopic } from 'react-icons/md'
+import { formatDateAsLocale } from '../../utils/methods/formatting'
+import { BsCalendarCheckFill, BsCalendarFill } from 'react-icons/bs'
 function getViewPermissions({ routes }) {
   if (!routes) {
     return {
@@ -121,15 +123,23 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
             <div className="w-full flex flex-wrap justify-around">
               <div className="flex flex-col border border-gray-500 p-3 rounded-md">
                 <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">TIPO DE TELHA</p>
-                <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.tipoTelha}</h1>
+                <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.detalhes.tipoTelha}</h1>
               </div>
               <div className="flex flex-col border border-gray-500 p-3 rounded-md">
                 <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">TIPO DA ESTRUTURA</p>
-                <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.tipoEstrutura}</h1>
+                <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.detalhes.tipoEstrutura}</h1>
+              </div>
+              <div className="flex flex-col border border-gray-500 p-3 rounded-md">
+                <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">MATERIAL DA ESTRUTURA</p>
+                <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.detalhes.materialEstrutura}</h1>
               </div>
               <div className="flex flex-col border border-gray-500 p-3 rounded-md">
                 <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">ORIENTAÇÃO DA ESTRUTURA</p>
-                <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.orientacaoEstrutura}</h1>
+                <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.detalhes.orientacao || '-'}</h1>
+              </div>
+              <div className="flex flex-col border border-gray-500 p-3 rounded-md">
+                <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">CONCESSIONÁRIA</p>
+                <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.detalhes.concessionaria}</h1>
               </div>
             </div>
             {viewPermissions.suprimentos ? (
@@ -145,11 +155,11 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
                   <div key={index} className="w-full flex items-center justify-between">
                     <div className="flex flex-col">
                       <h1 className="text-sm text-gray-500 font-medium">
-                        <strong>{item.qtde}</strong> x {item.insumo} <strong className="text-[#fead41]">({item.tipo})</strong>
+                        <strong>{item.qtde}</strong> x {item.descricao} <strong className="text-[#fead41]">({item.tipo})</strong>
                       </h1>
                       <div className="flex items-center gap-1">
                         <TbRulerMeasure />
-                        <p className="text-xs text-gray-500 italic">{item.medida}</p>
+                        <p className="text-xs text-gray-500 italic">{item.grandeza}</p>
                       </div>
                     </div>
                     <div className="flex items-center justify-end gap-1">
@@ -158,16 +168,16 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
                           setChanges({
                             ...changes,
                             'compra.kitInfo': infoHolder.compra?.kitInfo
-                              ? infoHolder.compra?.kitInfo + '\n' + `${item.qtde}-${item.insumo} ${item.tipo}`
-                              : `${item.qtde}-${item.insumo} ${item.tipo}`,
+                              ? infoHolder.compra?.kitInfo + '\n' + `${item.qtde}-${item.descricao} ${item.tipo}`
+                              : `${item.qtde}-${item.descricao} ${item.tipo}`,
                           })
                           setInfo({
                             ...infoHolder,
                             compra: {
                               ...infoHolder.compra,
                               kitInfo: infoHolder.compra?.kitInfo
-                                ? infoHolder.compra?.kitInfo + '\n' + `${item.qtde}-${item.insumo} ${item.tipo}`
-                                : `${item.qtde}-${item.insumo} ${item.tipo}`,
+                                ? infoHolder.compra?.kitInfo + '\n' + `${item.qtde}-${item.descricao} ${item.tipo}`
+                                : `${item.qtde}-${item.descricao} ${item.tipo}`,
                             },
                           })
                         }}
@@ -181,16 +191,16 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
                           setChanges({
                             ...changes,
                             'material.materialFaltante': infoHolder.material?.materialFaltante
-                              ? infoHolder.material?.materialFaltante + '\n' + `${item.qtde}-${item.insumo} ${item.tipo}`
-                              : `${item.qtde}-${item.insumo} ${item.tipo}`,
+                              ? infoHolder.material?.materialFaltante + '\n' + `${item.qtde}-${item.descricao} ${item.tipo}`
+                              : `${item.qtde}-${item.descricao} ${item.tipo}`,
                           })
                           setInfo({
                             ...infoHolder,
                             material: {
                               ...infoHolder.material,
                               materialFaltante: infoHolder.material?.materialFaltante
-                                ? infoHolder.material?.materialFaltante + '\n' + `${item.qtde}-${item.insumo} ${item.tipo}`
-                                : `${item.qtde}-${item.insumo} ${item.tipo}`,
+                                ? infoHolder.material?.materialFaltante + '\n' + `${item.qtde}-${item.descricao} ${item.tipo}`
+                                : `${item.qtde}-${item.descricao} ${item.tipo}`,
                             },
                           })
                         }}
@@ -207,26 +217,34 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
             {viewPermissions.projetos ? (
               <div className="flex flex-col w-full gap-1">
                 <h1 className="w-full p-1 text-center rounded-sm bg-[#fead41] text-white font-bold">PROJETOS</h1>
-                <div className="flex flex-col gap-1 mt-2">
-                  <h1 className="text-sm leading-none tracking-tight font-medium text-gray-500">OBSERVAÇÕES P/ PROJETOS</h1>
-                  <div className="h-[50px] bg-gray-100 text-gray-500 text-sm rounded-md max-h-[50px] w-full border border-cyan-500 flex items-center justify-center text-center p-3 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                    {analysis.obsProjetos}
-                  </div>
-                </div>
-                <div className="w-full flex flex-wrap justify-around mt-4">
-                  <div className="flex flex-col border border-gray-500 p-3 rounded-md">
-                    <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">CONCESSIONÁRIA</p>
-                    <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.concessionaria}</h1>
-                  </div>
-                  <div className="flex flex-col border border-gray-500 p-3 rounded-md">
-                    <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">CAIXA DO MEDIDOR</p>
-                    <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.modeloCaixa}</h1>
-                  </div>
-                  <div className="flex flex-col border border-gray-500 p-3 rounded-md">
-                    <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">PENDÊNCIAS</p>
-                    <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.pendenciasProjetos}</h1>
-                  </div>
-                </div>
+                {analysis.pendencias && analysis.pendencias.length > 0 ? (
+                  analysis.pendencias.map((pendency, index) => (
+                    <div key={index} className="mt-2 w-full flex flex-col border border-gray-300 p-3 rounded-md shadow-sm">
+                      <h1 className="w-full text-start font-bold tracking-tight leading-none ">{pendency.categoria}</h1>
+                      <div className="flex items-center justify-start w-full gap-2 mt-1">
+                        <Avatar fallback={'R'} url={null} height={20} width={20} />
+                        <p className="font-medium text-gray-500 text-xs">{pendency.responsavel}</p>
+                      </div>
+                      <h1 className="p-2 text-center text-sm text-gray-500 rounded-md bg-gray-100 my-2">{pendency.descricao}</h1>
+                      <div className="w-full flex items-center justify-start">
+                        <div className="flex items-center gap-2">
+                          <div className={`flex items-center gap-2 text-gray-500`}>
+                            <BsCalendarFill />
+                            <p className="text-xs font-medium">{formatDateAsLocale(pendency.dataInsercao)}</p>
+                          </div>
+                          {pendency.dataEfetivacao ? (
+                            <div className={`flex items-center gap-2 text-gray-500`}>
+                              <BsCalendarCheckFill color="rgb(34,197,94)" />
+                              <p className="text-xs font-medium">{formatDateAsLocale(pendency.dataEfetivacao, true)}</p>
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="w-full font-medium text-center text-xs italic text-gray-500 py-2">Nenhum pendência cadastrada.</p>
+                )}
                 <div className="flex flex-col gap-1 mt-2">
                   <h1 className="text-sm leading-none tracking-tight font-medium text-gray-500">DESCRITIVO</h1>
                   {analysis.descritivo?.length ? (
@@ -236,7 +254,7 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
                           <MdTopic />
                           <h1 className="text-sm tracking-tight leading-none">{item.topico}</h1>
                         </div>
-                        <p className="w-full text-center text-gray-500 text-sm">{item.texto}</p>
+                        <p className="w-full text-center text-gray-500 text-sm">{item.descricao}</p>
                       </div>
                     ))
                   ) : (
@@ -247,33 +265,29 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
             ) : null}
             {viewPermissions.obras ? (
               <div className="flex flex-col w-full gap-1">
-                <h1 className="w-full p-1 text-center rounded-sm bg-[#fead41] text-white font-bold">OBRAS</h1>
+                <h1 className="w-full p-1 text-center rounded-sm bg-[#fead41] text-white font-bold">EXECUÇÃO</h1>
                 <div className="flex flex-col gap-1 mt-2">
-                  <h1 className="text-sm leading-none tracking-tight font-medium text-gray-500">OBSERVAÇÕES P/ OBRAS</h1>
+                  <h1 className="text-sm leading-none tracking-tight font-medium text-gray-500">OBSERVAÇÕES P/ EXECUÇÃO</h1>
                   <div className="h-[50px] bg-gray-100 text-gray-500 text-sm rounded-md max-h-[50px] w-full border border-cyan-500 flex items-center justify-center text-center p-3 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                    {analysis.obsObras}
+                    {analysis.execucao?.observacoes}
                   </div>
                 </div>
                 <div className="w-full flex flex-wrap justify-around mt-4">
                   <div className="flex flex-col border border-gray-500 p-3 rounded-md">
-                    <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">ESPAÇO NO QGBT</p>
-                    <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.espacoQGBT}</h1>
+                    <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">LOCAL DE INSTALAÇÃO DO INVERSOR</p>
+                    <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.locais.inversor || '-'}</h1>
                   </div>
                   <div className="flex flex-col border border-gray-500 p-3 rounded-md">
-                    <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">ADAPTAÇÃO NO QGBT</p>
-                    <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.adaptacaoQGBT}</h1>
+                    <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">LOCAL DE INSTALAÇÃO DOS MÓDULOS</p>
+                    <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.locais.modulos || '-'}</h1>
                   </div>
                   <div className="flex flex-col border border-gray-500 p-3 rounded-md">
-                    <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">AVALIAR TELHADO</p>
-                    <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.avaliarTelhado}</h1>
+                    <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">LOCAL DE ATERRAMENTO</p>
+                    <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.locais.aterramento || '-'}</h1>
                   </div>
                   <div className="flex flex-col border border-gray-500 p-3 rounded-md">
-                    <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">DPS NO QGBT</p>
-                    <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.dpsQGBT}</h1>
-                  </div>
-                  <div className="flex flex-col border border-gray-500 p-3 rounded-md">
-                    <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">INFRA - LANÇAMENTO DE CABOS</p>
-                    <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.infraCabos}</h1>
+                    <p className="font-medium text-gray-500 text-[0.6rem] uppercase leading-none tracking-tight">POSSUI ESPAÇO NO QGBT</p>
+                    <h1 className="font-medium text-black text-xs uppercase text-center">{analysis.execucao.espacoQGBT ? 'SIM' : 'NÃO'}</h1>
                   </div>
                 </div>
               </div>
@@ -349,7 +363,7 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
             <div className="flex flex-col mx-12 mt-2 gap-2">
               {infoVisita.suprimentos ? (
                 <div className="grid grid-cols-6 w-full">
-                  <p className="text-md text-[#fead61] font-bold text-center">INSUMO</p>
+                  <p className="text-md text-[#fead61] font-bold text-center">descricao</p>
                   <p className="text-md text-[#fead61] font-bold text-center">TIPO</p>
                   <p className="text-md text-[#fead61] font-bold text-center">QUANTIDADE</p>
                   <p className="text-md text-[#fead61] font-bold text-center">UNIDADE</p>
@@ -359,7 +373,7 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
 
               {infoVisita.suprimentos?.map((suprimento, index) => (
                 <div key={index} className="grid grid-cols-6 w-full">
-                  <p className="text-xs text-gray-600 font-bold text-center">{suprimento.insumo}</p>
+                  <p className="text-xs text-gray-600 font-bold text-center">{suprimento.descricao}</p>
                   <p className="text-xs text-gray-600 font-bold text-center">{suprimento.tipo}</p>
                   <p className="text-xs text-gray-600 font-bold text-center">{suprimento.qtde}</p>
                   <p className="text-xs text-gray-600 font-bold text-center">{suprimento.medida}</p>
@@ -369,16 +383,16 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
                         setChanges({
                           ...changes,
                           'compra.kitInfo': infoHolder.compra?.kitInfo
-                            ? infoHolder.compra?.kitInfo + '\n' + `${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`
-                            : `${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`,
+                            ? infoHolder.compra?.kitInfo + '\n' + `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`
+                            : `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`,
                         })
                         setInfo({
                           ...infoHolder,
                           compra: {
                             ...infoHolder.compra,
                             kitInfo: infoHolder.compra?.kitInfo
-                              ? infoHolder.compra?.kitInfo + '\n' + `${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`
-                              : `${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`,
+                              ? infoHolder.compra?.kitInfo + '\n' + `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`
+                              : `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`,
                           },
                         })
                       }}
@@ -392,16 +406,16 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
                         setChanges({
                           ...changes,
                           'material.materialFaltante': infoHolder.material?.materialFaltante
-                            ? infoHolder.material?.materialFaltante + '\n' + `${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`
-                            : `${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`,
+                            ? infoHolder.material?.materialFaltante + '\n' + `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`
+                            : `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`,
                         })
                         setInfo({
                           ...infoHolder,
                           material: {
                             ...infoHolder.material,
                             materialFaltante: infoHolder.material?.materialFaltante
-                              ? infoHolder.material?.materialFaltante + '\n' + `${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`
-                              : `${suprimento.qtde}-${suprimento.insumo} ${suprimento.tipo}`,
+                              ? infoHolder.material?.materialFaltante + '\n' + `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`
+                              : `${suprimento.qtde}-${suprimento.descricao} ${suprimento.tipo}`,
                           },
                         })
                       }}

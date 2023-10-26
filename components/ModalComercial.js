@@ -72,52 +72,6 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
     queryClient: queryClient,
   })
 
-  async function notifyContractSigning() {
-    const notifyArr = [
-      {
-        destinatario: '6353eb83ef4e1a367a877949',
-        remetente: 'SISTEMA',
-        mensagem: `Contrato atualizado para ASSINADO.`,
-        projetoReferencia: project.qtde,
-        nomeDoProjeto: project.nomeDoContrato,
-      },
-      {
-        destinatario: '64638b6c2071c508968bdf08',
-        remetente: 'SISTEMA',
-        mensagem: `Contrato atualizado para ASSINADO.`,
-        projetoReferencia: project.qtde,
-        nomeDoProjeto: project.nomeDoContrato,
-      },
-    ]
-
-    try {
-      notifyArr.forEach(async (notifyObj) => {
-        let data = await axios.post('/api/notificacoes/1', notifyObj)
-      })
-    } catch (error) {
-      console.log('Erro ao notificar usuários sobre assinatura do contrato.')
-    }
-  }
-  function handleValidation() {
-    if (infoHolder.contrato.status != 'ASSINADO' && infoHolder.pagamento.status == 'PAGO') {
-      setMsg({
-        text: 'Status de contrato e status de pagamento incompatíveis.',
-        color: 'text-red-500',
-      })
-      return false
-    }
-    if (
-      !infoHolder.comissionamento?.comercial &&
-      (infoHolder.compra?.statusLiberacao == 'REALIZAR COMPRA' || infoHolder.compra?.statusLiberacao == 'PAGO')
-    ) {
-      setMsg({
-        text: 'Liberação para compra não permitida sem relatório de comissionamento.',
-        color: 'text-red-500',
-      })
-      return false
-    }
-    return true
-  }
   useEffect(() => {
     setInfo(project)
   }, [project])

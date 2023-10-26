@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 function ProjetosSkeleton() {
   return (
@@ -14,11 +14,8 @@ function ProjetosSkeleton() {
         </div>
       </div>
       <div className="flex  justify-around gap-3 mt-4 flex-wrap">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((project, index) => (
-          <div
-            key={index}
-            className="w-full md:w-[350px] lg:w-[450px] h-[180px]  border border-gray-200"
-          >
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map((project, index) => (
+          <div key={index} className="w-full md:w-[350px] lg:w-[450px] h-[180px]  border border-gray-200">
             <div className="w-full h-[18px] bg-gray-200 animate-pulse rounded-br-lg rounded-bl-lg"></div>
             <div className="flex flex-col p-2">
               <div className="flex items-center justify-between pb-2">
@@ -68,7 +65,7 @@ function ProjetosSkeleton() {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
-export default ProjetosSkeleton;
+export default ProjetosSkeleton

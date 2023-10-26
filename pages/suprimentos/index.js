@@ -447,12 +447,9 @@ function Suprimentos() {
         )}
         {modalProject.isOpen && modalProject.projectId ? (
           <ModalSuprimentos
-            handleUpdates={handleUpdates}
-            modalIsOpen={modalProject.isOpen}
             projectId={modalProject.projectId}
-            editor={session?.user?.accessibleRoutes.includes('Suprimentos') && session?.user?.regional == undefined ? true : false}
-            ppsEditor={session?.user?.accessibleRoutes.includes('PPS') ? true : false}
-            credentials={session?.user}
+            modalIsOpen={modalProject.isOpen}
+            handleUpdates={handleUpdates}
             closeModal={() => setModalProject({ isOpen: false, projectId: null })}
           />
         ) : null}

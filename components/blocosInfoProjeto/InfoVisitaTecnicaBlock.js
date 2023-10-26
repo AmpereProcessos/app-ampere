@@ -217,6 +217,13 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
             {viewPermissions.projetos ? (
               <div className="flex flex-col w-full gap-1">
                 <h1 className="w-full p-1 text-center rounded-sm bg-[#fead41] text-white font-bold">PROJETOS</h1>
+                <div className="flex flex-col gap-1 mt-2">
+                  <h1 className="text-sm leading-none tracking-tight font-medium text-gray-500">OBSERVAÇÕES</h1>
+                  <div className="h-[50px] bg-gray-100 text-gray-500 text-sm rounded-md max-h-[50px] w-full border border-cyan-500 flex items-center justify-center text-center p-3 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                    {analysis.anotacoes || 'SEM OBSERVAÇÕES PREENCHIDAS'}
+                  </div>
+                </div>
+                <h1 className="text-sm leading-none tracking-tight font-medium text-gray-500 mt-2">PENDÊNCIAS</h1>
                 {analysis.pendencias && analysis.pendencias.length > 0 ? (
                   analysis.pendencias.map((pendency, index) => (
                     <div key={index} className="mt-2 w-full flex flex-col border border-gray-300 p-3 rounded-md shadow-sm">
@@ -243,7 +250,7 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
                     </div>
                   ))
                 ) : (
-                  <p className="w-full font-medium text-center text-xs italic text-gray-500 py-2">Nenhum pendência cadastrada.</p>
+                  <p className="w-full font-medium text-center text-xs italic text-gray-500 py-2">Nenhuma pendência cadastrada.</p>
                 )}
                 <div className="flex flex-col gap-1 mt-2">
                   <h1 className="text-sm leading-none tracking-tight font-medium text-gray-500">DESCRITIVO</h1>
@@ -258,7 +265,7 @@ function InfoVisitaTecnicaBlock({ editor, infoHolder, setInfo, changes, setChang
                       </div>
                     ))
                   ) : (
-                    <div className="w-full text-center text-gray-500 italic">SEM DESCRITIVO</div>
+                    <p className="w-full font-medium text-center text-xs italic text-gray-500 py-2">Sem descritivo.</p>
                   )}
                 </div>
               </div>

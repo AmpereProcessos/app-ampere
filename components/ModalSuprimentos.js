@@ -66,7 +66,7 @@ function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates })
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
           {isSuccess && infoHolder ? (
-            <div className="flex flex-col grow gap-y-2 overflow-y-auto overscroll-y-auto">
+            <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
               <InfoClienteBlock
                 editor={false}

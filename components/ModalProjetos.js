@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { equipesTecnicas, projetistas, vendedores } from '../utils/constants'
 import axios from 'axios'
 import { FaSave } from 'react-icons/fa'
@@ -17,6 +17,12 @@ import InfoProjetoBlock from './blocosInfoProjeto/InfoProjetoBlock'
 import InfoObrasBlock from './blocosInfoProjeto/InfoObrasBlock'
 import InfoMaterialBlock from './blocosInfoProjeto/InfoMaterialBlock'
 import SaveButton from './utils/Buttons/SaveButton'
+import { useQueryClient } from 'react-query'
+import { useClientById } from '../utils/methods/query/clients'
+import LoadingPage from './utils/LoadingPage'
+import ErrorPage from './utils/ErrorPage'
+import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
+import { updateProject } from '../utils/methods/mutation/clients'
 const MODAL_STYLES = {
   position: 'fixed',
   top: '50%',
@@ -52,22 +58,17 @@ function formataCEP(cep) {
 
   return cep
 }
-function ModalProjetos({ setModalIsOpen, modalIsOpen, project, editor, handleUpdates, credentials }) {
-  useKey('Escape', () => setModalIsOpen(false))
-
+function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
+  useKey('Escape', () => closeModal())
+  const queryClient = useQueryClient()
+  const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
   const [infoHolder, setInfo] = useState(project)
   const [changes, setChanges] = useState({})
-  const [osInfo, setOsInfo] = useState({
-    servicoExecutado: '',
-    realizarCobranca: false,
-    valorCobranca: 0,
-    usuarioEmissor: '',
-    grauDeUrgencia: 'NÃO DEFINIDO',
-    dataDeAbertura: new Date(),
-  })
-  const [osMsg, setOsMsg] = useState({
-    text: '',
-    color: 'text-red-500',
+  const { mutate } = useMutationWithFeedback({
+    mutationKey: ['update-project'],
+    mutationFn: updateProject,
+    affectedQueryKey: ['engineering-projects'],
+    queryClient: queryClient,
   })
   const [msg, setMsg] = useState('')
 
@@ -89,10 +90,7 @@ function ModalProjetos({ setModalIsOpen, modalIsOpen, project, editor, handleUpd
     if (previousStatus != 'PARECER DE ACESSO APROVADO' && newStatus == 'PARECER DE ACESSO APROVADO') {
       notifyAccessGrantingApproval()
     }
-    axios.post(`/api/projects/update/${project._id}`, changes).then((res) => {
-      setMsg('Alterações feitas')
-      handleUpdates(project._id)
-    })
+    mutate({ id: projectId, changes: changes })
   }
 
   function getParecerWarning(date1, date2) {
@@ -117,24 +115,27 @@ function ModalProjetos({ setModalIsOpen, modalIsOpen, project, editor, handleUpd
       return 'border border-gray-200'
     }
   }
-
+  useEffect(() => {
+    // if (project?.idVisitaTecnica?.trim().length > 10) {
+    //   getVisitaInfo(project.idVisitaTecnica)
+    // }
+    setInfo(project)
+  }, [project])
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
         <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
           <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
             <div className="flex gap-2 items-center">
-              <h1 className="text-[#15599a] pl-6 text-center font-bold">
-                {infoHolder.qtde} - {infoHolder.nomeDoContrato}
-              </h1>
-              {infoHolder.codigoSVB && <p className="text-gray-600 text-sm font-bold">#{infoHolder.codigoSVB}</p>}
-              {infoHolder.parecer.dataParecerDeAcesso != undefined && infoHolder.vistoria.status != 'REALIZADA' && (
+              <h1 className="text-[#15599a] pl-6 font-bold">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
+              {project?.codigoSVB && <p className="text-gray-600 text-sm font-bold">#{project.codigoSVB}</p>}
+              {project?.parecer.dataParecerDeAcesso != undefined && project?.vistoria.status != 'REALIZADA' && (
                 <div
                   className={`p-1 text-xs text-center font-bold italic ${
-                    getParecerWarning(new Date(infoHolder.parecer.dataParecerDeAcesso), new Date()).style
+                    getParecerWarning(new Date(project?.parecer.dataParecerDeAcesso), new Date()).style
                   }`}
                 >
-                  {getParecerWarning(new Date(infoHolder.parecer.dataParecerDeAcesso), new Date()).text}
+                  {getParecerWarning(new Date(project?.parecer.dataParecerDeAcesso), new Date()).text}
                 </div>
               )}
             </div>
@@ -142,178 +143,188 @@ function ModalProjetos({ setModalIsOpen, modalIsOpen, project, editor, handleUpd
               <p className={`hidden lg:block text-sm italic text-green-500`}>{msg}</p>
               <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={handleChanges} />
               <button>
-                <VscChromeClose onClick={() => setModalIsOpen(false)} style={{ color: 'red' }} />
+                <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
               </button>
             </div>
             <p className={`block lg:hidden text-sm italic text-green-500`}>{msg}</p>
           </div>
-          <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y-auto">
-            <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
-
-            <InfoClienteBlock editor={false} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
-            {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
-              <InfoDadosConcessionariaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
-            )}
-            <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-              <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">COMISSIONAMENTO</span>
-              <div className="flex gap-2 justify-center flex-wrap">
-                <div className="flex flex-col w-[350px] items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">COMISSIONAMENTO COMERCIAL</span>
-                  <div className="flex">
-                    <input
-                      disabled={!editor}
-                      checked={infoHolder.comissionamento?.comercial ? true : false}
-                      onChange={(e) => {
-                        setChanges({
-                          ...changes,
-                          'comissionamento.comercial': e.target.checked,
-                        })
-                        setInfo({
-                          ...infoHolder,
-                          comissionamento: {
-                            ...infoHolder.comissionamento,
-                            comercial: e.target.checked,
-                          },
-                        })
-                      }}
-                      type="checkbox"
-                      name="comissionamentoComercial"
-                      id="comissionamentoComercial"
-                    />
-                    <label className="ml-2" htmlFor="comissionamentoComercial">
-                      OK
-                    </label>
+          {isLoading ? <LoadingPage /> : null}
+          {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
+          {isSuccess && infoHolder ? (
+            <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+              <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
+              <InfoClienteBlock
+                editor={false}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                project={project}
+              />
+              {!['BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
+                <InfoDadosConcessionariaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
+              )}
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
+                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">COMISSIONAMENTO</span>
+                <div className="flex gap-2 justify-center flex-wrap">
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">COMISSIONAMENTO COMERCIAL</span>
+                    <div className="flex">
+                      <input
+                        disabled={true}
+                        checked={infoHolder.comissionamento?.comercial ? true : false}
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            'comissionamento.comercial': e.target.checked,
+                          })
+                          setInfo({
+                            ...infoHolder,
+                            comissionamento: {
+                              ...infoHolder.comissionamento,
+                              comercial: e.target.checked,
+                            },
+                          })
+                        }}
+                        type="checkbox"
+                        name="comissionamentoComercial"
+                        id="comissionamentoComercial"
+                      />
+                      <label className="ml-2" htmlFor="comissionamentoComercial">
+                        OK
+                      </label>
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col w-[350px] items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">COMISSIONAMENTO DE SUPRIMENTOS</span>
-                  <div className="flex">
-                    <input
-                      disabled={!editor}
-                      checked={infoHolder.comissionamento?.suprimentos ? true : false}
-                      onChange={(e) => {
-                        setChanges({
-                          ...changes,
-                          'comissionamento.suprimentos': e.target.checked,
-                        })
-                        setInfo({
-                          ...infoHolder,
-                          comissionamento: {
-                            ...infoHolder.comissionamento,
-                            suprimentos: e.target.checked,
-                          },
-                        })
-                      }}
-                      type="checkbox"
-                      name="comissionamentoSuprimentos"
-                      id="comissionamentoSuprimentos"
-                    />
-                    <label className="ml-2" htmlFor="comissionamentoSuprimentos">
-                      OK
-                    </label>
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">COMISSIONAMENTO DE SUPRIMENTOS</span>
+                    <div className="flex">
+                      <input
+                        disabled={true}
+                        checked={infoHolder.comissionamento?.suprimentos ? true : false}
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            'comissionamento.suprimentos': e.target.checked,
+                          })
+                          setInfo({
+                            ...infoHolder,
+                            comissionamento: {
+                              ...infoHolder.comissionamento,
+                              suprimentos: e.target.checked,
+                            },
+                          })
+                        }}
+                        type="checkbox"
+                        name="comissionamentoSuprimentos"
+                        id="comissionamentoSuprimentos"
+                      />
+                      <label className="ml-2" htmlFor="comissionamentoSuprimentos">
+                        OK
+                      </label>
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col w-[350px] items-center">
-                  <span className="uppercase font-bold font-raleway text-center text-sm">COMISSIONAMENTO PROJETOS</span>
-                  <div className="flex">
-                    <input
-                      disabled={!editor}
-                      checked={infoHolder.comissionamento?.projetos ? true : false}
-                      onChange={(e) => {
-                        setChanges({
-                          ...changes,
-                          'comissionamento.projetos': e.target.checked,
-                        })
-                        setInfo({
-                          ...infoHolder,
-                          comissionamento: {
-                            ...infoHolder.comissionamento,
-                            projetos: e.target.checked,
-                          },
-                        })
-                      }}
-                      type="checkbox"
-                      name="comissionamentoProjetos"
-                      id="comissionamentoProjetos"
-                    />
-                    <label className="ml-2" htmlFor="comissionamentoProjetos">
-                      OK
-                    </label>
+                  <div className="flex flex-col w-[350px] items-center">
+                    <span className="uppercase font-bold font-raleway text-center text-sm">COMISSIONAMENTO PROJETOS</span>
+                    <div className="flex">
+                      <input
+                        disabled={!false}
+                        checked={infoHolder.comissionamento?.projetos ? true : false}
+                        onChange={(e) => {
+                          setChanges({
+                            ...changes,
+                            'comissionamento.projetos': e.target.checked,
+                          })
+                          setInfo({
+                            ...infoHolder,
+                            comissionamento: {
+                              ...infoHolder.comissionamento,
+                              projetos: e.target.checked,
+                            },
+                          })
+                        }}
+                        type="checkbox"
+                        name="comissionamentoProjetos"
+                        id="comissionamentoProjetos"
+                      />
+                      <label className="ml-2" htmlFor="comissionamentoProjetos">
+                        OK
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <InfoVisitaTecnicaBlock
-              editor={false}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-              analysisId={project.idVisitaTecnica}
-            />
-            {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
-              <InfoPadraoBlock
-                comercialEdition={true}
-                technicalEdition={true}
+              <InfoVisitaTecnicaBlock
+                editor={false}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
                 changes={changes}
                 setChanges={setChanges}
-                showPaymentInfo={false}
+                analysisId={project.idVisitaTecnica}
               />
-            )}
-            <InfoSistemaBlock
-              editor={true}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-              showPaymentInfo={true}
-            />
-            {infoHolder.tipoDeServico != 'MONTAGEM E DESMONTAGEM' && (
-              <InfoCompraBlock
+              {!['OPERAÇÃO E MANUTENÇÃO', 'BOMBA SOLAR', 'SISTEMA FOTOVOLTAICO (OFF GRID)'].includes(infoHolder.tipoDeServico) && (
+                <InfoPadraoBlock
+                  comercialEdition={true}
+                  technicalEdition={true}
+                  infoHolder={infoHolder}
+                  setInfo={setInfo}
+                  changes={changes}
+                  setChanges={setChanges}
+                  showPaymentInfo={false}
+                />
+              )}
+              <InfoSistemaBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                showPaymentInfo={true}
+              />
+              {infoHolder.tipoDeServico != 'MONTAGEM E DESMONTAGEM' && (
+                <InfoCompraBlock
+                  editor={false}
+                  project={project}
+                  infoHolder={infoHolder}
+                  setInfo={setInfo}
+                  changes={changes}
+                  setChanges={setChanges}
+                  showDeliveryInfoOnly={true}
+                  showMonetaryValues={false}
+                />
+              )}
+              <InfoProjetoBlock
+                editor={true}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                handleUpdates={handleUpdates}
+                project={project}
+              />
+              <InfoObrasBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
+              <InfoMaterialBlock
                 editor={false}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                project={project}
+                showCircuitBreakers={true}
+                circuitBreakerAddition={true}
+              />
+              <InfoArquivosBlock
                 project={project}
                 infoHolder={infoHolder}
-                setInfo={setInfo}
-                changes={changes}
-                setChanges={setChanges}
-                showDeliveryInfoOnly={true}
-                showMonetaryValues={false}
+                categories={[
+                  { label: 'DOCUMENTOS', value: 'links.documentos' },
+                  { label: 'PROJETOS', value: 'links.projetos' },
+                  { label: 'OBRAS', value: 'links.obras' },
+                  { label: 'VISITA TÉCNICA', value: 'links.visitaTecnica' },
+                ]}
+                handleUpdates={handleUpdates}
               />
-            )}
-            <InfoProjetoBlock
-              editor={true}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-              handleUpdates={handleUpdates}
-              project={project}
-            />
-            <InfoObrasBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
-            <InfoMaterialBlock
-              editor={false}
-              infoHolder={infoHolder}
-              setInfo={setInfo}
-              changes={changes}
-              setChanges={setChanges}
-              project={project}
-              showCircuitBreakers={true}
-              circuitBreakerAddition={true}
-            />
-            <InfoArquivosBlock
-              project={project}
-              infoHolder={infoHolder}
-              categories={[
-                { label: 'DOCUMENTOS', value: 'links.documentos' },
-                { label: 'PROJETOS', value: 'links.projetos' },
-                { label: 'OBRAS', value: 'links.obras' },
-                { label: 'VISITA TÉCNICA', value: 'links.visitaTecnica' },
-              ]}
-              handleUpdates={handleUpdates}
-            />
-          </div>
+            </div>
+          ) : null}
         </div>
       </AnimatedModalWrapper>
     </>

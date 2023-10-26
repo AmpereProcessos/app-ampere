@@ -30,6 +30,7 @@ export const GeneralTechnicalAnalysisSchema = z.object({
     .enum(technicalAnalysisSolicitationTypes.map((t) => t.value))
     .nullable()
     .optional(),
+  observacoesSolicitacao: z.string().optional().nullable(), // observacoes da solicitação (por parte do vendedor)
   analista: z
     .object({
       id: z.union([z.string(), z.number()]).optional(),
@@ -151,10 +152,6 @@ export const GeneralTechnicalAnalysisSchema = z.object({
       .union([z.literal('MADEIRA'), z.literal('FERRO')])
       .optional()
       .nullable(),
-    // tipoEstrutura: z
-    //   .enum(structureTypes.map((t) => t.value))
-    //   .optional()
-    //   .nullable(),
     tipoEstrutura: z.string(),
     tipoTelha: z
       .enum(roofTiles.map((t) => t.value))

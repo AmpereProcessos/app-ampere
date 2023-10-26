@@ -3,19 +3,30 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import Select from 'react-select'
 import { AnimatePresence, motion } from 'framer-motion'
-import { AiOutlineSearch } from 'react-icons/ai'
+import { useSession } from 'next-auth/react'
+
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { VscDiffAdded } from 'react-icons/vsc'
+import { FaMoneyBillWaveAlt, FaMoon, FaSignature } from 'react-icons/fa'
+import { BsPatchCheck } from 'react-icons/bs'
+import { TbCheckupList } from 'react-icons/tb'
+
 import ModalProjetos from '../../components/ModalProjetos'
 import ProjetosSkeleton from '../../components/skeletons/ProjetosSkeleton'
-import { projetistas, cidadesAtendidas, vendedores, tiposDeServico, statusDoParecerDeAcesso } from '../../utils/constants'
-import { AppContext } from '../../context/AppContext'
 import TagTipoDeServico from '../../components/TagTipoDeServico'
-import FilterButton from '../../components/utils/Buttons/FilterButton'
-import { useSession } from 'next-auth/react'
 import LoadingPage from '../../components/utils/LoadingPage'
-import { accessGrantingStatus } from '../../utils/select-options'
+
+import TextInput from '../../components/inputs/Text'
+import SelectInput from '../../components/inputs/Select'
+import DateInput from '../../components/inputs/Date'
+import MultipleSelectInput from '../../components/inputs/MultipleSelect'
+
+import { accessGrantingStatus, executionStatus, inspectionStatus, reliabilityAnalysts, serviceTypes } from '../../utils/select-options'
+import { useEngineeringProjects } from '../../utils/methods/query/engineering'
+import { formatDateInputChange } from '../../utils/methods/shared'
+import { cidadesAtendidas, vendedores, formatDecimalPlaces, formatDate } from '../../utils/constants'
+
 function Projetos() {
   const router = useRouter()
   const { data: session, status } = useSession({
@@ -26,158 +37,36 @@ function Projetos() {
   })
 
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
+  const {
+    data: projects,
+    isSuccess: projectsSuccess,
+    isLoading: projectsLoading,
+    isError: projectsError,
+    filters,
+    setFilters,
+  } = useEngineeringProjects({ enabled: status == 'authenticated' })
 
-  const [projects, setProjects] = useState()
-  const [filteredProjects, setFilteredProjects] = useState()
-  const [searchFilter, setSearchFilter] = useState('')
-  const [filters, setFilters] = useState({
-    parecerFilter: [],
-    vistoriaFilter: [],
-    projetistaFilter: [],
-    distribuicaoFilter: [],
-    tipoDeServicoFilter: [],
-    assinFaltando: false,
-    desenhoFilter: false,
-    parecerReprovado: false,
-    vistoriaReprovada: false,
-    realizarHomologacao: false,
-    obraStatusFilter: [],
-    entregaStatusFilter: [],
-    cidadeFilter: [],
-    vendedorFilter: [],
+  // const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [modalProject, setModalProject] = useState({
+    isOpen: false,
+    projectId: null,
   })
-  const [dateFilter, setDateFilter] = useState({
-    after: null,
-    before: null,
-    field1: null,
-    field2: null,
-  })
-  const [modalIsOpen, setModalIsOpen] = useState(false)
-  const [modalProject, setModalProject] = useState({})
-  function getProjects(credenciais) {
-    if (credenciais.visualizacao == 'REGIONAL') {
-      axios
-        .post('/api/projects/projetos', {
-          filtrarPor: credenciais.visualizacao,
-          parametro: credenciais.regional,
-        })
-        .then((res) => {
-          setProjects(res.data)
-          setFilteredProjects(res.data)
-        })
-    } else {
-      axios.get('/api/projects/projetos').then((res) => {
-        setProjects(res.data)
-        setFilteredProjects(res.data)
-      })
-    }
-  }
   function handleUpdates(id) {
     var index = projects.findIndex((x) => x._id == id)
-    var indexFiltered = filteredProjects.findIndex((x) => x._id == id)
+    var indexFiltered = projects.findIndex((x) => x._id == id)
     axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
       var arr = [...projects]
       arr[index] = res.data[0]
-      var arrFiltered = [...filteredProjects]
+      var arrFiltered = [...projects]
       arrFiltered[indexFiltered] = res.data[0]
       setModalProject(res.data[0])
-      setProjects(arr)
-      setFilteredProjects(arrFiltered)
     })
   }
-  function handleSearchFilter(value) {
-    setSearchFilter(value)
-    if (value != '' || ' ') {
-      let filtered = filterProjects()
-      let newArr = filtered.filter((call) => call.nomeDoContrato.toUpperCase().includes(value.toUpperCase()))
-      setFilteredProjects(newArr)
-    } else {
-      setFilteredProjects(projects)
-    }
-  }
-  function filterProjects() {
-    var newArr
-    if (filters.parecerFilter.length > 0) {
-      if (!newArr) newArr = projects
-      newArr = projects.filter((project) => filters.parecerFilter.includes(project.parecer.statusDoParecerDeAcesso))
-    }
-    if (filters.vistoriaFilter.length > 0) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter((call) => filters.vistoriaFilter.includes(call.vistoria?.status))
-    }
-    if (filters.projetistaFilter.length > 0) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter((call) => filters.projetistaFilter.includes(call.projeto.projetista.nome))
-    }
-    if (filters.tipoDeServicoFilter.length > 0) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter((call) => filters.tipoDeServicoFilter.includes(call.tipoDeServico))
-    }
-    if (filters.distribuicaoFilter.length > 0) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter((call) => filters.distribuicaoFilter.includes(call.dadosCemig.distCreditos))
-    }
-    if (filters.obraStatusFilter.length > 0) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter((call) => filters.obraStatusFilter.includes(call.obra.statusDaObra))
-    }
-    if (filters.entregaStatusFilter.length > 0) {
-      if (!newArr) newArr = projects
-      if (filters) newArr = newArr.filter((call) => filters.entregaStatusFilter.includes(call.compra.statusEntrega))
-    }
-    if (filters.cidadeFilter.length > 0) {
-      if (!newArr) newArr = projects
-      if (filters) newArr = newArr.filter((call) => filters.cidadeFilter.includes(call.cidade))
-    }
-    if (filters.vendedorFilter.length > 0) {
-      if (!newArr) newArr = projects
-      if (filters) newArr = newArr.filter((call) => filters.vendedorFilter.includes(call.vendedor.nome))
-    }
-    if (filters.desenhoFilter) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter((call) => call.projeto.desenhoTelhado != 'OK')
-    }
-    if (filters.assinFaltando) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter(
-        (project) =>
-          project.projeto.dataLiberacaoDocumentacao != undefined &&
-          (project.projeto.dataAssDocumentacao == undefined ||
-            project.projeto.dataAssDocumentacao == null ||
-            project.projeto.dataAssDocumentacao == '-')
-      )
-    }
-    if (filters.parecerReprovado) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter((project) => project.parecer.parecerReprovado == 'SIM')
-    }
-    if (filters.vistoriaReprovada) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter((project) => project.vistoria.vistoriaReprovada == 'SIM')
-    }
-    if (filters.realizarHomologacao) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter((project) => project.projeto.realizarHomologacao == true)
-    }
-    if (dateFilter.after && dateFilter.before && dateFilter.field1 != null) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter(
-        (project) =>
-          project[dateFilter.field1][dateFilter.field2] >= dateFilter.after && project[dateFilter.field1][dateFilter.field2] <= dateFilter.before
-      )
-    }
-    if (!newArr) {
-      setFilteredProjects(projects)
-      return projects
-    } else {
-      setFilteredProjects(newArr)
-      return newArr
-    }
-  }
+
   function getListCumulativePeakPot() {
     var totalSum = 0
-    for (var i = 0; i < filteredProjects.length; i++) {
-      let pot = filteredProjects[i].sistema.potPico ? filteredProjects[i].sistema.potPico : null
+    for (var i = 0; i < projects.length; i++) {
+      let pot = projects[i].sistema.potPico ? projects[i].sistema.potPico : null
       if (isNaN(pot)) {
         totalSum = totalSum
       } else {
@@ -205,27 +94,65 @@ function Projetos() {
     return Number(diffInDays).toFixed(0)
   }
   function handleOpenModal(id) {
-    axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
-      setModalProject(res.data[0])
-      setModalIsOpen(true)
-    })
+    setModalProject({ projectId: id, isOpen: true })
   }
-  useEffect(() => {
-    if (session?.user.accessibleRoutes.includes('Projetos') || session?.user.accessibleRoutes.includes('Pós-Venda')) {
-      if (!projects) {
-        getProjects(session.user)
+  function getStats({ info }) {
+    if (!info)
+      return {
+        projetos: 0,
+        potencia: 0,
+        pareceresNoturnos: 0,
+        pendenciasDebitos: 0,
+        pareceresAprovados: 0,
+        assinaturasPendentes: 0,
+        vistoriasPendentes: 0,
       }
-    } else {
-      if (session?.user) {
-        router.push('/')
-      }
+    const projectsQty = info.length
+    const totalPower = info.reduce((acc, current) => {
+      const currentPower = current.sistema?.potPico || 0
+
+      return acc + currentPower
+    }, 0)
+    const withNightlyAccessGrantings = info.reduce((acc, current) => {
+      const hasNigthlyAccessGranting = current.parecer.statusDoParecerDeAcesso == 'PARECER APROVADO - NOTURNO'
+      if (hasNigthlyAccessGranting) return acc + 1
+      return acc
+    }, 0)
+    const withDebitDependencies = info.reduce((acc, current) => {
+      const hasDebitDependencies = current.parecer.statusDoParecerDeAcesso == 'PENDÊNCIAS - DÉBITOS'
+      if (hasDebitDependencies) return acc + 1
+      return acc
+    }, 0)
+    const withAccessGranted = info.reduce((acc, current) => {
+      const hasAccessGranted = current.parecer.statusDoParecerDeAcesso == 'PARECER DE ACESSO APROVADO'
+      if (hasAccessGranted) return acc + 1
+      return acc
+    }, 0)
+    const withMissingSignature = info.reduce((acc, current) => {
+      const hasMissingSignature = current.projeto.dataLiberacaoDocumentacao != undefined && !current.projeto.dataAssDocumentacao
+      if (hasMissingSignature) return acc + 1
+      return acc
+    }, 0)
+    const withInspectionDepency = info.reduce((acc, current) => {
+      const pendantInspection = !!current.vistoria?.dataPedido && current.vistoria.status != 'REALIZADA'
+      if (pendantInspection) return acc + 1
+      return acc
+    }, 0)
+    return {
+      projetos: projectsQty,
+      potencia: formatDecimalPlaces(totalPower),
+      pareceresNoturnos: formatDecimalPlaces(withNightlyAccessGrantings, 0),
+      pendenciasDebitos: formatDecimalPlaces(withDebitDependencies, 0),
+      pareceresAprovados: formatDecimalPlaces(withAccessGranted, 0),
+      assinaturasPendentes: formatDecimalPlaces(withMissingSignature, 0),
+      vistoriasPendentes: formatDecimalPlaces(withInspectionDepency, 0),
     }
-  }, [session])
+  }
   function getTotalCircuitBreakers() {
     var circuitBreakerObj = {}
-    if (filteredProjects) {
-      for (let i = 0; i < filteredProjects.length; i++) {
-        const cbArr = filteredProjects[i].material?.disjuntores
+    if (projects) {
+      for (let i = 0; i < projects.length; i++) {
+        const cbArr = projects[i].material?.disjuntores
         if (cbArr) {
           for (let j = 0; j < cbArr.length; j++) {
             var tag = `${cbArr[j].tipo} ${cbArr[j].corrente}A`
@@ -257,20 +184,21 @@ function Projetos() {
     if (str.includes('BIFÁSICO')) return 'bg-[#15599a] text-white'
     if (str.includes('TRIFÁSICO')) return 'bg-black text-white'
   }
-  // [1462, 1521, 1522, 1523, 1524, 1526, 1527, 1528, 1535, 1537, 1538, 1539, 1540, 1541, 1542, 1546, 1548, 1549, 1550, 1551, 1552, 1553, 1554]
-  // [1462, 1521, 1522, 1523, 1524, 1526, 1527, 1528, 1534, 1535, 1537, 1538, 1539, 1540, 1541, 1542, 1546, 1548, 1549, 1550, 1551, 1552, 1553, 1554]
-
+  useEffect(() => {
+    if (session) {
+      const userRoutes = session.user.accessibleRoutes
+      if (!userRoutes.includes('Projetos')) return router.push('/')
+    }
+  }, [session])
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
-    if (filteredProjects) {
+    if (projectsSuccess && projects) {
       return (
         <div className="p-6 grow">
           <div className="flex flex-col justify-between items-center  gap-2 border-b border-gray-200 p-1">
             <div className="flex items-center justify-between w-full">
-              <div className="flex flex-col lg:flex-row items-center gap-2 font-['Roboto']">
-                <p className="font-bold uppercase text-2xl text-[#15599a] text-center">Projetos no estágio de engenharia</p>
-                <p className="font-bold text-[#fead61]">({filteredProjects.length})</p>
-                {filteredProjects && <p className="font-bold text-[#fead61]">({getListCumulativePeakPot()}kWp)</p>}
+              <div className="flex flex-col lg:flex-row items-center gap-2">
+                <p className="font-black uppercase text-center text-2xl text-[#15599a]">Projetos no estágio de engenharia</p>
               </div>
               {dropdownMenuVisible ? (
                 <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
@@ -282,345 +210,315 @@ function Projetos() {
                 </div>
               )}
             </div>
+            <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+              <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
+                  <VscDiffAdded />
+                </div>
+                <div className="mt-2 flex w-full flex-col">
+                  <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
+                  <p className="text-xs text-gray-500">{getStats({ info: projects }).potencia} kWp</p>
+                </div>
+              </div>
+              <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-sm font-medium uppercase tracking-tight">PARECES APROVADOS</h1>
+                  <BsPatchCheck />
+                </div>
+                <div className="mt-2 flex w-full flex-col">
+                  <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pareceresAprovados}</div>
+                </div>
+              </div>
+              <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-sm font-medium uppercase tracking-tight">PARECES NOTURNOS</h1>
+                  <FaMoon />
+                </div>
+                <div className="mt-2 flex w-full flex-col">
+                  <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pareceresNoturnos} </div>
+                </div>
+              </div>
+              <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-sm font-medium uppercase tracking-tight">AGUARDANDO ASSINATURA</h1>
+                  <FaSignature />
+                </div>
+                <div className="mt-2 flex w-full flex-col">
+                  <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).assinaturasPendentes} </div>
+                </div>
+              </div>
+              <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-sm font-medium uppercase tracking-tight">VISTORIA PENDENTE</h1>
+                  <TbCheckupList />
+                </div>
+                <div className="mt-2 flex w-full flex-col">
+                  <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).vistoriasPendentes} </div>
+                </div>
+              </div>
+              <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/6">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-sm font-medium uppercase tracking-tight">PENDÊNCIAS COM DÉBITOS</h1>
+                  <FaMoneyBillWaveAlt />
+                </div>
+                <div className="mt-2 flex w-full flex-col">
+                  <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).pendenciasDebitos} </div>
+                </div>
+              </div>
+            </div>
             <AnimatePresence>
               {dropdownMenuVisible ? (
                 <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
                   <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
-                    <input
-                      className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
-                      placeholder="DIGITE O NOME DO CONTRATO"
-                      value={searchFilter}
-                      onChange={(e) => handleSearchFilter(e.target.value)}
+                    <TextInput
+                      label={'NOME DO CONTRATO'}
+                      placeholder={'Digite o nome do contrato...'}
+                      value={filters.search}
+                      handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                     />
                     <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
                       <div className="flex items-center gap-x-2 justify-center">
-                        <div className="flex flex-col w-fit items-center">
-                          <span className="uppercase font-bold font-raleway text-center text-sm">Depois de:</span>
-                          <input
-                            className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                            type="date"
-                            value={dateFilter.after && new Date(dateFilter.after).toISOString().slice(0, 10)}
-                            onChange={(e) =>
-                              setDateFilter({
-                                ...dateFilter,
-                                after: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null,
-                              })
-                            }
+                        <div className="w-full lg:w-[250px]">
+                          <DateInput
+                            width={'100%'}
+                            label={'DEPOIS DE'}
+                            value={filters.date.after ? formatDate(filters.date.after) : undefined}
+                            handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value) } }))}
                           />
                         </div>
-                        <div className="flex flex-col w-fit items-center">
-                          <span className="uppercase font-bold font-raleway text-center text-sm">Antes de:</span>
-                          <input
-                            className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                            type="date"
-                            value={dateFilter.before && new Date(dateFilter.before).toISOString().slice(0, 10)}
-                            onChange={(e) =>
-                              setDateFilter({
-                                ...dateFilter,
-                                before: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null,
-                              })
+                        <div className="w-full lg:w-[250px]">
+                          <DateInput
+                            width={'100%'}
+                            label={'ANTES DE'}
+                            value={filters.date.before ? formatDate(filters.date.before) : undefined}
+                            handleChange={(value) =>
+                              setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value) } }))
                             }
                           />
                         </div>
                       </div>
                       <div className="w-full lg:w-[250px]">
-                        <Select
-                          isMulti={false}
-                          placeholder={'CAMPO DE FILTRO'}
-                          styles={{
-                            control: (base, state) => ({
-                              ...base,
-                              width: '100%',
-                              minHeight: '41px',
-                            }),
-                          }}
+                        <SelectInput
+                          width={'100%'}
+                          label={'CAMPO DE FILTRO'}
+                          value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
                           options={[
                             {
+                              id: 1,
                               label: 'DATA DE PAGAMENTO',
                               value: 'compra.dataPagamento',
                             },
-                            {
-                              label: 'DATA ASS.CONTRATO',
-                              value: 'contrato.dataAssinatura',
-                            },
-                            {
-                              label: 'DATA ASS.DOCUMENTAÇÃO',
-                              value: 'projeto.dataAssDocumentacao',
-                            },
-                            {
-                              label: 'TROCA DO MEDIDOR',
-                              value: 'medidor.data',
-                            },
-                            {
-                              label: 'DATA DE SOLICITAÇÃO DO PARECER',
-                              value: 'projeto.dataSolicitacaoAcesso',
-                            },
-                            {
-                              label: 'APROVAÇÃO DO PARECER',
-                              value: 'parecer.dataParecerDeAcesso',
-                            },
-                            {
-                              label: 'PEDIDO DA VISTORIA',
-                              value: 'vistoria.dataPedido',
-                            },
-                            { label: 'NÃO DEFINIDO', value: null },
+                            { id: 2, label: 'DATA ASS.CONTRATO', value: 'contrato.dataAssinatura' },
+                            { id: 3, label: 'DATA ASS.DOCUMENTAÇÃO', value: 'projeto.dataAssDocumentacao' },
+                            { id: 4, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
+                            { id: 5, label: 'DATA DE SOLICITAÇÃO DO PARECER', value: 'projeto.dataSolicitacaoAcesso' },
+                            { id: 6, label: 'APROVAÇÃO DO PARECER', value: 'parecer.dataParecerDeAcesso' },
+                            { id: 7, label: 'PEDIDO DA VISTORIA', value: 'vistoria.dataPedido' },
+                            { id: 8, label: 'NÃO DEFINIDO', value: null },
                           ]}
-                          onChange={(e) =>
-                            setDateFilter({
-                              ...dateFilter,
-                              field1: e.value != null ? e.value.split('.')[0] : null,
-                              field2: e.value != null ? e.value.split('.')[1] : null,
-                            })
+                          selectedItemLabel={'SEM FILTRO'}
+                          handleChange={(value) =>
+                            setFilters((prev) => ({
+                              ...prev,
+                              date: {
+                                ...prev.date,
+                                field1: value != null ? value.split('.')[0] : null,
+                                field2: value != null ? value.split('.')[1] : null,
+                              },
+                            }))
+                          }
+                          onReset={() =>
+                            setFilters((prev) => ({
+                              ...prev,
+                              date: {
+                                after: null,
+                                before: null,
+                                field1: null,
+                                field2: null,
+                              },
+                            }))
                           }
                         />
                       </div>
                     </div>
+
                     <div className="w-full lg:w-[250px]">
-                      <Select
-                        isMulti
-                        placeholder="TIPO DE SERVIÇO"
-                        styles={{
-                          control: (base, state) => ({
-                            ...base,
-                            width: '100%',
-                            minHeight: '41px',
-                          }),
-                        }}
-                        onChange={(e) =>
-                          setFilters({
-                            ...filters,
-                            tipoDeServicoFilter: e.map((x) => x.value),
-                          })
+                      <MultipleSelectInput
+                        width={'100%'}
+                        label={'TIPO DE SERVIÇO'}
+                        selected={filters.serviceType}
+                        options={serviceTypes}
+                        selectedItemLabel={'SEM FILTRO'}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            serviceType: value,
+                          }))
                         }
-                        options={tiposDeServico.map((tipo) => {
-                          return { label: tipo.label, value: tipo.value }
-                        })}
+                        onReset={() =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            serviceType: [],
+                          }))
+                        }
                       />
                     </div>
                   </div>
                   <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
                     <div className="w-full lg:w-[250px]">
-                      <Select
-                        isMulti
-                        styles={{
-                          control: (base, state) => ({
-                            ...base,
-                            width: '100%',
-                            minHeight: '41px',
-                          }),
-                        }}
-                        placeholder="STATUS DA ENTREGA"
-                        onChange={(e) =>
-                          setFilters({
-                            ...filters,
-                            entregaStatusFilter: e.map((x) => x.value),
-                          })
-                        }
+                      <MultipleSelectInput
+                        width={'100%'}
+                        label={'STATUS DE ENTREGA'}
+                        selected={filters.deliveryStatus}
                         options={[
-                          { value: 'EM ROTA', label: 'EM ROTA' },
+                          { id: 1, value: 'EM ROTA', label: 'EM ROTA' },
                           {
+                            id: 2,
                             value: 'AGUARDANDO COMPRA',
                             label: 'AGUARDANDO COMPRA',
                           },
-                          { value: 'ENTREGUE', label: 'ENTREGUE' },
-                          { value: 'NÃO DEFINIDO', label: 'NÃO DEFINIDO' },
-                          { value: 'CANCELADO', label: 'CANCELADO' },
-                          { value: undefined, label: 'VAZIO' },
+                          { id: 3, value: 'CANCELADO', label: 'CANCELADO' },
                         ]}
+                        selectedItemLabel={'SEM FILTRO'}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            deliveryStatus: value,
+                          }))
+                        }
+                        onReset={() =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            deliveryStatus: [],
+                          }))
+                        }
                       />
                     </div>
                     <div className="w-full lg:w-[250px]">
-                      <Select
-                        isMulti
-                        styles={{
-                          control: (base, state) => ({
-                            ...base,
-                            width: '100%',
-                            minHeight: '41px',
-                          }),
-                        }}
-                        placeholder="STATUS DO PARECER"
-                        onChange={(e) =>
-                          setFilters({
-                            ...filters,
-                            parecerFilter: e.map((x) => x.value),
-                          })
-                        }
+                      <MultipleSelectInput
+                        width={'100%'}
+                        label={'STATUS DO PARECER'}
+                        selected={filters.grantingStatus}
                         options={accessGrantingStatus}
+                        selectedItemLabel={'SEM FILTRO'}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            grantingStatus: value,
+                          }))
+                        }
+                        onReset={() =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            grantingStatus: [],
+                          }))
+                        }
                       />
                     </div>
                     <div className="w-full lg:w-[250px]">
-                      <Select
-                        isMulti
-                        styles={{
-                          control: (base, state) => ({
-                            ...base,
-                            width: '100%',
-                            minHeight: '41px',
-                          }),
-                        }}
-                        placeholder="STATUS DA OBRA"
-                        onChange={(e) =>
-                          setFilters({
-                            ...filters,
-                            obraStatusFilter: e.map((x) => x.value),
-                          })
+                      <MultipleSelectInput
+                        width={'100%'}
+                        label={'STATUS DA OBRA'}
+                        selected={filters.executionStatus}
+                        options={executionStatus}
+                        selectedItemLabel={'SEM FILTRO'}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            executionStatus: value,
+                          }))
                         }
-                        options={[
-                          {
-                            label: 'AGENDADA',
-                            value: 'AGENDADA',
-                          },
-                          {
-                            label: 'AGUARDANDO AGENDAMENTO',
-                            value: 'AGUARDANDO AGENDAMENTO',
-                          },
-                          {
-                            label: 'CONCLUIDA',
-                            value: 'CONCLUIDA',
-                          },
-                          {
-                            label: 'EM ANDAMENTO',
-                            value: 'EM ANDAMENTO',
-                          },
-                          {
-                            label: 'OBRA CANCELADA',
-                            value: 'OBRA CANCELADA',
-                          },
-                          {
-                            label: 'NÃO DEFINIDO',
-                            value: 'NÃO DEFINIDO',
-                          },
-                        ]}
+                        onReset={() =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            executionStatus: [],
+                          }))
+                        }
                       />
                     </div>
                     <div className="w-full lg:w-[250px]">
-                      <Select
-                        isMulti
-                        styles={{
-                          control: (base, state) => ({
-                            ...base,
-                            width: '100%',
-                            minHeight: '41px',
-                          }),
-                        }}
-                        placeholder="STATUS DA VISTORIA"
-                        onChange={(e) =>
-                          setFilters({
-                            ...filters,
-                            vistoriaFilter: e.map((x) => x.value),
-                          })
+                      <MultipleSelectInput
+                        width={'100%'}
+                        label={'STATUS DA VISTORIA'}
+                        selected={filters.inspectionStatus}
+                        options={inspectionStatus}
+                        selectedItemLabel={'SEM FILTRO'}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            inspectionStatus: value,
+                          }))
                         }
-                        options={[
-                          { label: 'REALIZADA', value: 'REALIZADA' },
-                          {
-                            label: 'AGUARDANDO OBRA DE REDE',
-                            value: 'AGUARDANDO OBRA DE REDE',
-                          },
-                          {
-                            label: 'AGUARDANDO CONCESSIONARIA',
-                            value: 'AGUARDANDO CONCESSIONARIA',
-                          },
-                          { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
-                        ]}
+                        onReset={() =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            inspectionStatus: [],
+                          }))
+                        }
+                      />
+                    </div>
+                    {/* <div className="w-full lg:w-[250px]">
+                      <MultipleSelectInput
+                        width={'100%'}
+                        label={'PROJETISTA'}
+                        selected={filters.analyst}
+                        options={reliabilityAnalysts}
+                        selectedItemLabel={'SEM FILTRO'}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            analyst: value,
+                          }))
+                        }
+                        onReset={() =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            analyst: [],
+                          }))
+                        }
+                      />
+                    </div> */}
+                    <div className="w-full lg:w-[250px]">
+                      <MultipleSelectInput
+                        width={'100%'}
+                        label={'CIDADE'}
+                        selected={filters.city}
+                        options={cidadesAtendidas.map((city, index) => ({ id: index + 1, label: city, value: city }))}
+                        selectedItemLabel={'SEM FILTRO'}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            city: value,
+                          }))
+                        }
+                        onReset={() =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            city: [],
+                          }))
+                        }
                       />
                     </div>
                     <div className="w-full lg:w-[250px]">
-                      <Select
-                        isMulti
-                        styles={{
-                          control: (base, state) => ({
-                            ...base,
-                            width: '100%',
-                            minHeight: '41px',
-                          }),
-                        }}
-                        placeholder="PROJETISTA"
-                        onChange={(e) =>
-                          setFilters({
-                            ...filters,
-                            projetistaFilter: e.map((x) => x.value),
-                          })
+                      <MultipleSelectInput
+                        width={'100%'}
+                        label={'VENDEDOR'}
+                        selected={filters.sellerName}
+                        options={vendedores.map((seller, index) => ({ id: index + 1, label: seller.nome, value: seller.nome }))}
+                        selectedItemLabel={'SEM FILTRO'}
+                        handleChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            sellerName: value,
+                          }))
                         }
-                        options={projetistas.map((projetista) => {
-                          return {
-                            label: projetista.label,
-                            value: projetista.nome,
-                          }
-                        })}
-                      />
-                    </div>
-                    <div className="w-full lg:w-[250px]">
-                      <Select
-                        isMulti
-                        styles={{
-                          control: (base, state) => ({
-                            ...base,
-                            width: '100%',
-                            minHeight: '41px',
-                          }),
-                        }}
-                        placeholder="CIDADE"
-                        onChange={(e) =>
-                          setFilters({
-                            ...filters,
-                            cidadeFilter: e.map((x) => x.value),
-                          })
+                        onReset={() =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            sellerName: [],
+                          }))
                         }
-                        options={cidadesAtendidas.map((cidade) => {
-                          return {
-                            label: cidade,
-                            value: cidade,
-                          }
-                        })}
-                      />
-                    </div>
-                    <div className="w-full lg:w-[250px]">
-                      <Select
-                        isMulti
-                        styles={{
-                          control: (base, state) => ({
-                            ...base,
-                            width: '100%',
-                            minHeight: '41px',
-                          }),
-                        }}
-                        placeholder="VENDEDOR"
-                        onChange={(e) =>
-                          setFilters({
-                            ...filters,
-                            vendedorFilter: e.map((x) => x.value),
-                          })
-                        }
-                        options={vendedores.map((vendedor) => {
-                          return {
-                            label: vendedor.nome,
-                            value: vendedor.nome,
-                          }
-                        })}
-                      />
-                    </div>
-                    <div className="w-full lg:w-[250px]">
-                      <Select
-                        isMulti
-                        styles={{
-                          control: (base, state) => ({
-                            ...base,
-                            width: '100%',
-                            minHeight: '41px',
-                          }),
-                        }}
-                        placeholder="DIST. CRÉDITOS"
-                        onChange={(e) =>
-                          setFilters({
-                            ...filters,
-                            distribuicaoFilter: e.map((x) => x.value),
-                          })
-                        }
-                        options={[
-                          { label: 'SIM', value: 'SIM' },
-                          { label: 'NÃO', value: 'NÃO' },
-                        ]}
                       />
                     </div>
                   </div>
@@ -629,11 +527,24 @@ function Projetos() {
                       onClick={() =>
                         setFilters({
                           ...filters,
-                          realizarHomologacao: !filters.realizarHomologacao,
+                          necessaryDistribution: !filters.necessaryDistribution,
                         })
                       }
                       className={`${
-                        filters.realizarHomologacao ? 'bg-[#15599a]' : 'bg-blue-300'
+                        filters.necessaryDistribution ? 'bg-[#15599a]' : 'bg-blue-300'
+                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    >
+                      NECESSÁRIO DISTRIBUIÇÃO
+                    </div>
+                    <div
+                      onClick={() =>
+                        setFilters({
+                          ...filters,
+                          necessaryHomologation: !filters.necessaryHomologation,
+                        })
+                      }
+                      className={`${
+                        filters.necessaryHomologation ? 'bg-[#15599a]' : 'bg-blue-300'
                       } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
                     >
                       NECESSÁRIO HOMOLOGAÇÃO
@@ -642,11 +553,11 @@ function Projetos() {
                       onClick={() =>
                         setFilters({
                           ...filters,
-                          desenhoFilter: !filters.desenhoFilter,
+                          missingDraw: !filters.missingDraw,
                         })
                       }
                       className={`${
-                        filters.desenhoFilter ? 'bg-[#15599a]' : 'bg-blue-300'
+                        filters.missingDraw ? 'bg-[#15599a]' : 'bg-blue-300'
                       } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
                     >
                       DESENHO PENDENTE
@@ -655,11 +566,11 @@ function Projetos() {
                       onClick={() =>
                         setFilters({
                           ...filters,
-                          assinFaltando: !filters.assinFaltando,
+                          missingSignature: !filters.missingSignature,
                         })
                       }
                       className={`${
-                        filters.assinFaltando ? 'bg-[#15599a]' : 'bg-blue-300'
+                        filters.missingSignature ? 'bg-[#15599a]' : 'bg-blue-300'
                       } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
                     >
                       FALTANDO ASSINATURA
@@ -668,11 +579,11 @@ function Projetos() {
                       onClick={() =>
                         setFilters({
                           ...filters,
-                          parecerReprovado: !filters.parecerReprovado,
+                          failedGranting: !filters.failedGranting,
                         })
                       }
                       className={`${
-                        filters.parecerReprovado ? 'bg-[#15599a]' : 'bg-blue-300'
+                        filters.failedGranting ? 'bg-[#15599a]' : 'bg-blue-300'
                       } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
                     >
                       PARECER REPROVADO
@@ -681,11 +592,11 @@ function Projetos() {
                       onClick={() =>
                         setFilters({
                           ...filters,
-                          vistoriaReprovada: !filters.vistoriaReprovada,
+                          failedInspection: !filters.failedInspection,
                         })
                       }
                       className={`${
-                        filters.vistoriaReprovada ? 'bg-[#15599a]' : 'bg-blue-300'
+                        filters.failedInspection ? 'bg-[#15599a]' : 'bg-blue-300'
                       } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
                     >
                       VISTORIA REPROVADA
@@ -706,15 +617,12 @@ function Projetos() {
                       </div>
                     </div>
                   ) : null}
-                  <div className="flex items-center justify-end gap-x-2">
-                    <FilterButton text={'FILTRAR'} icon={<AiOutlineSearch />} handleClick={filterProjects} />
-                  </div>
                 </motion.div>
               ) : null}
             </AnimatePresence>
           </div>
           <div className="flex  justify-around gap-3 mt-4 flex-wrap">
-            {filteredProjects.map((project, index) => (
+            {projects.map((project, index) => (
               <motion.div
                 onClick={() => {
                   handleOpenModal(project._id)
@@ -814,14 +722,12 @@ function Projetos() {
               <p className="uppercase font-bold text-sm">Visitas técnicas</p>
             </a>
           </Link>
-          {modalIsOpen && (
+          {modalProject.isOpen && modalProject.projectId && (
             <ModalProjetos
-              credentials={session?.user}
-              modalIsOpen={modalIsOpen}
+              projectId={modalProject.projectId}
+              modalIsOpen={modalProject.isOpen}
               handleUpdates={handleUpdates}
-              project={modalProject}
-              editor={session?.user?.accessibleRoutes.includes('Projetos') && session?.user?.regional == undefined ? true : false}
-              setModalIsOpen={setModalIsOpen}
+              closeModal={() => setModalProject({ isOpen: false, projectId: null })}
             />
           )}
         </div>

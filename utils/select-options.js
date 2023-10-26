@@ -653,72 +653,90 @@ export const accessGrantingStatus = [
     label: 'AGUARDANDO AUMENTO DE CARGA',
     value: 'AGUARDANDO AUMENTO DE CARGA',
   },
-  { id: 3, label: 'INICIAR PROJETO', value: 'INICIAR PROJETO' },
   {
-    id: 4,
+    id: 3,
     label: 'SOLICITAR TROCA DE TITULARIDADE',
     value: 'SOLICITAR TROCA DE TITULARIDADE',
   },
   {
-    id: 5,
+    id: 3,
     label: 'AGUARDANDO FATURAMENTO ART',
     value: 'AGUARDANDO FATURAMENTO ART',
   },
   {
-    id: 6,
-    label: 'AGUARDANDO FORMULÁRIOS',
-    value: 'AGUARDANDO FORMULÁRIOS',
-  },
-  {
-    id: 7,
+    id: 4,
     label: 'AGUARDANDO RESPOSTA DA CONCESSIONARIA',
     value: 'AGUARDANDO RESPOSTA DA CONCESSIONARIA',
   },
   {
-    id: 8,
+    id: 5,
     label: 'AGUARDANDO TROCA DE TITULARIDADE',
     value: 'AGUARDANDO TROCA DE TITULARIDADE',
   },
-  { id: 9, label: 'AUMENTO DE CARGA', value: 'AUMENTO DE CARGA' },
-  { id: 10, label: 'CANCELADO', value: 'CANCELADO' },
   {
-    id: 11,
+    id: 6,
     label: 'PARECER DE ACESSO SUSPENSO',
     value: 'PARECER DE ACESSO SUSPENSO',
   },
   {
-    id: 12,
+    id: 7,
     label: 'PARECER DE ACESSO APROVADO',
     value: 'PARECER DE ACESSO APROVADO',
   },
-  { id: 13, label: 'PENDENCIAS', value: 'PENDENCIAS' },
-  { id: 14, label: 'SOLICITAR ACESSO', value: 'SOLICITAR ACESSO' },
+  { id: 8, label: 'PENDENCIAS', value: 'PENDENCIAS' },
   {
-    id: 15,
-    label: 'SOLICITAR AUMENTO DE CARGA',
-    value: 'SOLICITAR AUMENTO DE CARGA',
-  },
-  {
-    id: 16,
+    id: 9,
     label: 'PARECER DE ACESSO COM OBRAS',
     value: 'PARECER DE ACESSO COM OBRAS',
   },
   {
-    id: 17,
+    id: 10,
     label: 'AGUARDANDO ANÁLISE DE CARGA',
     value: 'AGUARDANDO ANÁLISE DE CARGA',
   },
   {
-    id: 18,
+    id: 11,
     label: 'AGUARDANDO CORREÇÃO DE EQUIPAMENTO',
     value: 'AGUARDANDO CORREÇÃO DE EQUIPAMENTO',
   },
   {
-    id: 19,
+    id: 12,
     label: 'PARECER APROVADO - NOTURNO',
     value: 'PARECER APROVADO - NOTURNO',
   },
-  { id: 20, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+  {
+    id: 13,
+    label: 'PENDÊNCIAS - DÉBITOS',
+    value: 'PENDÊNCIAS - DÉBITOS',
+  },
+  { id: 14, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+]
+export const executionStatus = [
+  { id: 1, label: 'AGENDADA', value: 'AGENDADA' },
+  { id: 2, label: 'AGUARDANDO AGENDAMENTO', value: 'AGUARDANDO AGENDAMENTO' },
+  { id: 3, label: 'CONCLUIDA', value: 'CONCLUIDA' },
+  { id: 4, label: 'EM ANDAMENTO', value: 'EM ANDAMENTO' },
+  { id: 5, label: 'OBRA CANCELADA', value: 'OBRA CANCELADA' },
+  { id: 6, label: 'CASA EM CONSTRUÇÃO', value: 'CASA EM CONSTRUÇÃO' },
+  { id: 7, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+]
+export const inspectionStatus = [
+  { id: 1, label: 'REALIZADA', value: 'REALIZADA' },
+  { id: 2, label: 'AGUARDANDO OBRA DE REDE', value: 'AGUARDANDO OBRA DE REDE' },
+  { id: 3, label: 'AGUARDANDO CONCESSIONARIA', value: 'AGUARDANDO CONCESSIONARIA' },
+  { id: 4, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+]
+export const reliabilityAnalysts = [
+  { id: 1, value: 'POLLIANA CRISTINA DE REZENDE', label: 'POLLIANA', cod: 1 },
+  { id: 2, value: 'ALINE APARECIDA RODRIGUES CARVALHO', label: 'ALINE', cod: 21 },
+  { id: 3, value: 'ANDREW BORGES ALEXANDER', label: 'ANDREW', cod: 44 },
+  { id: 4, value: 'JORDANA ALVES DE FREITAS', label: 'JORDANA', cod: 29 },
+  { id: 5, value: 'ANDRIELLY GARCIA DOS SANTOS MARQUES', label: 'ANDRIELLY', cod: 51 },
+  { id: 6, value: 'GLENDA ELIAS NASCIMENTO SANTOS', label: 'GLENDA', cod: 52 },
+  { id: 7, value: 'TULIO HENRIQUE SILVA MEDEIROS', label: 'TULIO', cod: 53 },
+  { id: 8, value: 'EDUARDO HENRIQUE DOMINGOS DE MORAES', label: 'EDUARDO', cod: 54 },
+  { id: 9, value: 'LAZARO MARQUES', label: 'LAZARO', cod: 55 },
+  { id: 10, value: 'NÃO DEFINIDO', label: 'NÃO DEFINIDO', cod: 0 },
 ]
 export const additionalCostsCategories = [
   {

@@ -1,31 +1,27 @@
-import Image from "next/image";
-import React, { useState } from "react";
-import Logo from "../../utils/whitelogo.png";
-import TextInput from "../../components/TextInput";
-import SelectInput from "../../components/SelectInput";
-import {
-  cidadesAtendidas,
-  tiposDeServico,
-  vendedores,
-} from "../../utils/constants";
-import connectToSolicitacoesDatabase from "../../utils/solicitacoesDb";
-import { ObjectId } from "mongodb";
-import SolicitacaoONGRID from "../../components/SolicitacaoONGRID";
-import SolicitacaoOFFGRID from "../../components/SolicitacaoOFFGRID";
-import SolicitacaoBombaSolar from "../../components/SolicitacaoBombaSolar";
-import SolicitacaoOutrosServicos from "../../components/SolicitacaoOutrosServicos";
-import SolicitacaoOeM from "../../components/SolicitacaoOeM";
-import SolicitacaoManutencao from "../../components/SolicitacaoManutencao";
-import SolicitacaoAlteracaoPadrao from "../../components/SolicitacaoAlteracaoPadrao";
-import SolicitacaoMontagemDesmontagem from "../../components/SolicitacaoMontagemDesmontagem";
-import SolicitacaoAumentoSistema from "../../components/SolicitacaoAumentoSistema";
+import Image from 'next/image'
+import React, { useState } from 'react'
+import Logo from '../../utils/whitelogo.png'
+import TextInput from '../../components/TextInput'
+import SelectInput from '../../components/SelectInput'
+import { cidadesAtendidas, tiposDeServico, vendedores } from '../../utils/constants'
+import connectToSolicitacoesDatabase from '../../utils/solicitacoesDb'
+import { ObjectId } from 'mongodb'
+import SolicitacaoONGRID from '../../components/SolicitacaoONGRID'
+import SolicitacaoOFFGRID from '../../components/SolicitacaoOFFGRID'
+import SolicitacaoBombaSolar from '../../components/SolicitacaoBombaSolar'
+import SolicitacaoOutrosServicos from '../../components/SolicitacaoOutrosServicos'
+import SolicitacaoOeM from '../../components/SolicitacaoOeM'
+import SolicitacaoManutencao from '../../components/SolicitacaoManutencao'
+import SolicitacaoAlteracaoPadrao from '../../components/SolicitacaoAlteracaoPadrao'
+import SolicitacaoMontagemDesmontagem from '../../components/SolicitacaoMontagemDesmontagem'
+import SolicitacaoAumentoSistema from '../../components/SolicitacaoAumentoSistema'
 const phoneMask = (value) => {
-  if (!value) return "";
-  value = value.replace(/\D/g, "");
-  value = value.replace(/(\d{2})(\d)/, "($1) $2");
-  value = value.replace(/(\d)(\d{4})$/, "$1-$2");
-  return value;
-};
+  if (!value) return ''
+  value = value.replace(/\D/g, '')
+  value = value.replace(/(\d{2})(\d)/, '($1) $2')
+  value = value.replace(/(\d)(\d{4})$/, '$1-$2')
+  return value
+}
 function FormularioSolicitacao({ cliente, links, formVisitaId }) {
   // const [estagio, setEstagio] = useState(0);
   // const [info, setInfo] = useState({
@@ -129,46 +125,42 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
   //   distribuicoes: [],
   // });
   const [info, setInfo] = useState({
-    nomeVendedor: "NÃO DEFINIDO",
-    telefoneVendedor: "",
-    tipoDeServico: "SISTEMA FOTOVOLTAICO",
-  });
+    nomeVendedor: 'NÃO DEFINIDO',
+    telefoneVendedor: '',
+    tipoDeServico: 'SISTEMA FOTOVOLTAICO',
+  })
   return (
     <div className="p-6 bg-[#fff] min-h-[100vh] flex flex-col">
       <div className="flex self-center items-center h-[100px] w-[100px]">
         <Image src={Logo} />
       </div>
-      <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-2xl">
-        Formulário de Solicitacão
-      </h1>
+      <h1 className="text-center uppercase font-raleway text-[#15599a] font-bold text-2xl">Formulário de Solicitacão</h1>
       <div className="flex flex-col items-center gap-y-5">
         <div className="w-full flex flex-wrap justify-around border border-[#15599a] p-2 shadow-lg bg-[#fff]">
           <SelectInput
-            label={"Vendedor"}
+            label={'Vendedor'}
             value={info.nomeVendedor}
             editable={true}
             options={vendedores.map((vendedor) => {
-              return { label: vendedor.nome, value: vendedor.nome };
+              return { label: vendedor.nome, value: vendedor.nome }
             })}
             handleChange={(value) => setInfo({ ...info, nomeVendedor: value })}
           />
           <TextInput
-            label={"Telefone"}
+            label={'Telefone'}
             editable={true}
             value={info.telefoneVendedor}
-            handleChange={(value) =>
-              setInfo({ ...info, telefoneVendedor: phoneMask(value) })
-            }
+            handleChange={(value) => setInfo({ ...info, telefoneVendedor: phoneMask(value) })}
           />
           <SelectInput
-            label={"TIPO DE SERVIÇO"}
+            label={'TIPO DE SERVIÇO'}
             editable={true}
             value={info.tipoDeServico}
             handleChange={(value) => setInfo({ ...info, tipoDeServico: value })}
             options={tiposDeServico.map((tipo) => tipo)}
           />
         </div>
-        {info.tipoDeServico == "SISTEMA FOTOVOLTAICO" && (
+        {info.tipoDeServico == 'SISTEMA FOTOVOLTAICO' && (
           <SolicitacaoONGRID
             nomeVendedor={info.nomeVendedor}
             telefoneVendedor={info.telefoneVendedor}
@@ -178,7 +170,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             tipoDeServico={info.tipoDeServico}
           />
         )}
-        {info.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)" && (
+        {info.tipoDeServico == 'SISTEMA FOTOVOLTAICO (OFF GRID)' && (
           <SolicitacaoOFFGRID
             nomeVendedor={info.nomeVendedor}
             telefoneVendedor={info.telefoneVendedor}
@@ -188,7 +180,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             tipoDeServico={info.tipoDeServico}
           />
         )}
-        {info.tipoDeServico == "AUMENTO DE SISTEMA FOTOVOLTAICO" && (
+        {info.tipoDeServico == 'AUMENTO DE SISTEMA FOTOVOLTAICO' && (
           <SolicitacaoAumentoSistema
             nomeVendedor={info.nomeVendedor}
             telefoneVendedor={info.telefoneVendedor}
@@ -198,7 +190,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             tipoDeServico={info.tipoDeServico}
           />
         )}
-        {info.tipoDeServico == "BOMBA SOLAR" && (
+        {info.tipoDeServico == 'BOMBA SOLAR' && (
           <SolicitacaoBombaSolar
             nomeVendedor={info.nomeVendedor}
             telefoneVendedor={info.telefoneVendedor}
@@ -208,7 +200,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             tipoDeServico={info.tipoDeServico}
           />
         )}
-        {info.tipoDeServico == "OPERAÇÃO E MANUTENÇÃO" && (
+        {info.tipoDeServico == 'OPERAÇÃO E MANUTENÇÃO' && (
           <SolicitacaoOeM
             nomeVendedor={info.nomeVendedor}
             telefoneVendedor={info.telefoneVendedor}
@@ -218,8 +210,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             tipoDeServico={info.tipoDeServico}
           />
         )}
-        {info.tipoDeServico == "MANUTENÇÃO PREVENTIVA" ||
-        info.tipoDeServico == "MANUTENÇÃO CORRETIVA" ? (
+        {info.tipoDeServico == 'MANUTENÇÃO PREVENTIVA' || info.tipoDeServico == 'MANUTENÇÃO CORRETIVA' ? (
           <SolicitacaoManutencao
             nomeVendedor={info.nomeVendedor}
             telefoneVendedor={info.telefoneVendedor}
@@ -229,11 +220,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             tipoDeServico={info.tipoDeServico}
           />
         ) : null}
-        {[
-          "TROCA DE PADRÃO",
-          "REFORMA DE PADRÃO",
-          "SUBESTAÇÃO DE ENERGIA",
-        ].includes(info.tipoDeServico) && (
+        {['TROCA DE PADRÃO', 'REFORMA DE PADRÃO', 'SUBESTAÇÃO DE ENERGIA'].includes(info.tipoDeServico) && (
           <SolicitacaoAlteracaoPadrao
             nomeVendedor={info.nomeVendedor}
             telefoneVendedor={info.telefoneVendedor}
@@ -243,7 +230,7 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
             tipoDeServico={info.tipoDeServico}
           />
         )}
-        {info.tipoDeServico == "MONTAGEM E DESMONTAGEM" ? (
+        {info.tipoDeServico == 'MONTAGEM E DESMONTAGEM' ? (
           <SolicitacaoMontagemDesmontagem
             nomeVendedor={info.nomeVendedor}
             telefoneVendedor={info.telefoneVendedor}
@@ -254,17 +241,17 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
           />
         ) : null}
         {![
-          "SISTEMA FOTOVOLTAICO",
-          "SISTEMA FOTOVOLTAICO (OFF GRID)",
-          "AUMENTO DE SISTEMA FOTOVOLTAICO",
-          "OPERAÇÃO E MANUTENÇÃO",
-          "BOMBA SOLAR",
-          "MANUTENÇÃO PREVENTIVA",
-          "MANUTENÇÃO CORRETIVA",
-          "TROCA DE PADRÃO",
-          "REFORMA DE PADRÃO",
-          "SUBESTAÇÃO DE ENERGIA",
-          "MONTAGEM E DESMONTAGEM",
+          'SISTEMA FOTOVOLTAICO',
+          'SISTEMA FOTOVOLTAICO (OFF GRID)',
+          'AUMENTO DE SISTEMA FOTOVOLTAICO',
+          'OPERAÇÃO E MANUTENÇÃO',
+          'BOMBA SOLAR',
+          'MANUTENÇÃO PREVENTIVA',
+          'MANUTENÇÃO CORRETIVA',
+          'TROCA DE PADRÃO',
+          'REFORMA DE PADRÃO',
+          'SUBESTAÇÃO DE ENERGIA',
+          'MONTAGEM E DESMONTAGEM',
         ].includes(info.tipoDeServico) && (
           <SolicitacaoOutrosServicos
             nomeVendedor={info.nomeVendedor}
@@ -277,20 +264,20 @@ function FormularioSolicitacao({ cliente, links, formVisitaId }) {
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export default FormularioSolicitacao;
+export default FormularioSolicitacao
 
 export async function getServerSideProps(ctx) {
-  const cliente = ctx.query.cliente;
-  const formId = ctx.query.id;
+  const cliente = ctx.query.cliente
+  const formId = ctx.query.id
   // The next line will only be logged on the server and never on the browser console even if we make
   // client-side navigation.
   // This confirms that `getServerSideProps` is guaranteed to run on the server and never on the client (or browser).
   if (cliente && formId) {
-    const db = await connectToSolicitacoesDatabase(process.env.DB_KEY);
-    const collection = db.collection("visitaTecnica");
+    const db = await connectToSolicitacoesDatabase(process.env.DB_KEY)
+    const collection = db.collection('analisesTecnicas')
     let obj = await collection.findOne(
       {
         _id: ObjectId(formId),
@@ -300,16 +287,16 @@ export async function getServerSideProps(ctx) {
           links: 1,
         },
       }
-    );
+    )
     return {
       props: {
         cliente,
         links: obj.links,
         formVisitaId: formId,
       },
-    };
+    }
   } else
     return {
       props: {},
-    };
+    }
 }

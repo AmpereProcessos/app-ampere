@@ -10,9 +10,6 @@ import { BsCalendarCheckFill, BsCalendarFill, BsCode } from 'react-icons/bs'
 import SelectInputWithImages from '../../inputs/SelectWithImages'
 import SelectInput from '../../inputs/Select'
 
-import LocationBlock from './blocos/LocationBlock'
-import EquipmentBlock from './blocos/EquipmentBlock'
-import EnergyPABlock from './blocos/EnergyPABlock'
 import { useTechnicalAnalysisById } from '../../../utils/methods/query/techAnalysis'
 import {
   engineeringAnalysts,
@@ -23,9 +20,14 @@ import {
 } from '../../../utils/select-options'
 import LoadingPage from '../../utils/LoadingPage'
 import ErrorComponent from '../../utils/ErrorComponent'
-
 import { formatNameAsInitials } from '../../../utils/methods/formatting'
 import { useKey } from '../../../utils/hooks'
+import { useMutationWithFeedback } from '../../../utils/methods/mutation/general-hook'
+import { updateTechnicalAnalysis } from '../../../utils/methods/mutation/technicalAnalysis'
+
+import LocationBlock from './blocos/LocationBlock'
+import EquipmentBlock from './blocos/EquipmentBlock'
+import EnergyPABlock from './blocos/EnergyPABlock'
 import TransformerBlock from './blocos/TransformerBlock'
 import ExecutionBlock from './blocos/ExecutionBlock'
 import DetailsBlock from './blocos/DetailsBlock'
@@ -38,10 +40,8 @@ import StructureBlock from './blocos/StructureBlock'
 import ModuleOrientationBlock from './blocos/ModuleOrientationBlock'
 import FilesBlock from './blocos/FilesBlock'
 import DrawBlock from './blocos/DrawBlock'
-import { useMutationWithFeedback } from '../../../utils/methods/mutation/general-hook'
-import { updateTechnicalAnalysis } from '../../../utils/methods/mutation/technicalAnalysis'
 import ConclusionBlock from './blocos/ConclusionBlock'
-import { MdSettingsOverscan } from 'react-icons/md'
+
 import Avatar from '../../utils/Avatar'
 
 function ModalAnalysis({ analysisId, modalIsOpen, closeModal }) {
@@ -253,6 +253,22 @@ function ModalAnalysis({ analysisId, modalIsOpen, closeModal }) {
                 ) : (
                   <p className="w-full py-2 text-center text-sm italic text-gray-500">Sem informações do projeto...</p>
                 )}
+                <div className="w-full flex flex-col">
+                  <h1 className="w-full p-1 bg-gray-500 text-white font-bold text-center rounded-tr-sm rounded-tl-sm">COMENTÁRIOS DO REQUERENTE</h1>
+                  <textarea
+                    placeholder="SEM COMENTÁRIOS PREENCHIDOS..."
+                    value={infoHolder.comentarios || ''}
+                    readOnly={true}
+                    onChange={(e) => {
+                      setInfoHolder((prev) => ({
+                        ...prev,
+                        execucao: prev.execucao ? { ...prev.execucao, observacoes: e.target.value } : { observacoes: e.target.value, itens: [] },
+                      }))
+                      setChanges((prev) => ({ ...prev, 'execucao.observacoes': e.target.value }))
+                    }}
+                    className="min-h-[80px] w-full resize-none rounded-bl-sm rounded-br-sm bg-gray-100 p-3 text-center text-xs font-medium text-gray-600 outline-none"
+                  />
+                </div>
                 <PendencyBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} changes={changes} setChanges={setChanges} />
                 <LocationBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} changes={changes} setChanges={setChanges} />
                 <EquipmentBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} changes={changes} setChanges={setChanges} />

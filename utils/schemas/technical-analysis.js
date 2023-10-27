@@ -30,7 +30,7 @@ export const GeneralTechnicalAnalysisSchema = z.object({
     .enum(technicalAnalysisSolicitationTypes.map((t) => t.value))
     .nullable()
     .optional(),
-  observacoesSolicitacao: z.string().optional().nullable(), // observacoes da solicitação (por parte do vendedor)
+  comentarios: z.string().optional().nullable(), // observacoes da solicitação (por parte do vendedor)
   analista: z
     .object({
       id: z.union([z.string(), z.number()]).optional(),

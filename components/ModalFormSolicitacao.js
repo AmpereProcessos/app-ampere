@@ -18,7 +18,8 @@ import { storage } from '../utils/firebase'
 import Link from 'next/link'
 import { FiDelete } from 'react-icons/fi'
 import CheckboxInput from './CheckboxInput'
-import { notifySellerInCRM } from '../utils/methods/handlers'
+import { getErrorMessage, notifySellerInCRM } from '../utils/methods/handlers'
+import toast from 'react-hot-toast'
 const phoneMask = (value) => {
   if (!value) return ''
   value = value.replace(/\D/g, '')
@@ -237,31 +238,33 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
   }
   // Handling Visita Tecnica Vinculation
   const [idVisitaTecnica, setIdVisitaTecnica] = useState('')
-  function vinculateVisitaTecnica() {
-    if (idVisitaTecnica.trim().length < 10) {
-      alert('Preencha um ID válido')
-    } else {
-      axios
-        .post(`/api/solicitacoes/getVisitaTecnica/${idVisitaTecnica}`, {
-          links: 1,
-          nomeDoCliente: 1,
-          nomeVendedor: 1,
-          tipoEstrutura: 1,
-          tipoTelha: 1,
-        })
-        .then((res) => {
-          console.log('VISITA TECNICA', res.data)
-          setDados({
-            ...dados,
-            nomeDoProjeto: res.data.nomeDoCliente,
-            visitaTecnica: 'REALIZADA',
-            respVisitaTecnica: res.data.nomeVendedor,
-            linksVisita: res.data.links,
-            materialEstrutura: res.data.tipoEstrutura,
-            tipoDaTelha: res.data.tipoTelha,
-            idVisitaTecnica: idVisitaTecnica,
-          })
-        })
+  async function vinculateVisitaTecnica() {
+    try {
+      if (idVisitaTecnica.trim().length < 10) {
+        return toast.error('Preencha um ID inválido.')
+      }
+      const { data: technicalAnalysisInfo } = await axios.post(`/api/solicitacoes/getVisitaTecnica/${idVisitaTecnica}`, {
+        nome: 1,
+        requerente: 1,
+        analista: 1,
+        'detalhes.tipoEstrutura': 1,
+        'detalhes.tipoTelha': 1,
+        arquivos: 1,
+      })
+
+      setDados({
+        ...dados,
+        nomeDoProjeto: technicalAnalysisInfo.nome,
+        visitaTecnica: 'REALIZADA',
+        respVisitaTecnica: technicalAnalysisInfo.analista?.apelido,
+        linksVisita: technicalAnalysisInfo.arquivos?.map((f) => ({ title: f.descricao, link: f.url, format: f.formato })),
+        materialEstrutura: technicalAnalysisInfo.detalhes.tipoEstrutura,
+        tipoDaTelha: technicalAnalysisInfo.detalhes.tipoTelha,
+        idVisitaTecnica: idVisitaTecnica,
+      })
+    } catch (error) {
+      const msg = getErrorMessage(error)
+      toast.error(msg)
     }
   }
 
@@ -619,137 +622,8 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
       visitaTecnica: dados.linksVisita ? dados.linksVisita : undefined,
     },
   }
-  function validateDocuments() {
-    if (!dados.contaDeEnergia) {
-      setCreationMsg({
-        text: 'Por favor, preencha a conferência da conta de energia',
-        color: 'text-red-500',
-      })
-      return false
-    }
-    if (!dados.propostaComercial) {
-      setCreationMsg({
-        text: 'Por favor, preencha a conferência da proposta comercial',
-        color: 'text-red-500',
-      })
-      return false
-    }
-    if (!dados.visitaTecnicaFeita) {
-      setCreationMsg({
-        text: 'Por favor, preencha a conferência da visita técnica',
-        color: 'text-red-500',
-      })
-      return false
-    }
-    if (dados.tipoDaInstalacao == 'RURAL') {
-      if (!dados.car) {
-        setCreationMsg({
-          text: 'Por favor, preencha a conferência de CAR',
-          color: 'text-red-500',
-        })
-        return false
-      }
-      if (!dados.matricula) {
-        setCreationMsg({
-          text: 'Por favor, preencha a conferência da matrícula',
-          color: 'text-red-500',
-        })
-        return false
-      }
-      if (!dados.comprovanteEnderecoCorrespondente) {
-        setCreationMsg({
-          text: 'Por favor, preencha a conferência do compravante de endereço correspondente',
-          color: 'text-red-500',
-        })
-        return false
-      }
-      if (!dados.ramoDeAtividade) {
-        setCreationMsg({
-          text: 'Por favor, preencha a conferência do ramo de atividade',
-          color: 'text-red-500',
-        })
-        return false
-      }
-    }
-    if (dados.tipoDaInstalacao == 'URBANO') {
-      if (!dados.iptu) {
-        setCreationMsg({
-          text: 'Por favor, preencha a conferência do IPTU',
-          color: 'text-red-500',
-        })
-        return false
-      }
-    }
-    if (dados.tipoDoTitular == 'PESSOA FISICA') {
-      if (!dados.documentoComFoto) {
-        setCreationMsg({
-          text: 'Por favor, preencha a conferência do documento com foto',
-          color: 'text-red-500',
-        })
-        return false
-      }
-    }
-    if (dados.tipoDoTitular == 'PESSOA JURIDICA') {
-      if (!dados.contratoSocial) {
-        setCreationMsg({
-          text: 'Por favor, preencha a conferência do contrato social',
-          color: 'text-red-500',
-        })
-        return false
-      }
-      if (!dados.cartaoCnpj) {
-        setCreationMsg({
-          text: 'Por favor, preencha a conferência do cartão CNPJ',
-          color: 'text-red-500',
-        })
-        return false
-      }
-      if (!dados.cartaoCnpj) {
-        setCreationMsg({
-          text: 'Por favor, preencha a conferência do comprovante de endereço do representante legal',
-          color: 'text-red-500',
-        })
-        return false
-      }
-      if (!dados.documentoComFotoSocios) {
-        setCreationMsg({
-          text: 'Por favor, preencha a conferência do documento com foto dos sócios',
-          color: 'text-red-500',
-        })
-        return false
-      }
-    }
-    if (dados.aumentoDeCarga == 'SIM' || dados.tipoDaLigacao == 'NOVA') {
-      if (!dados.relacaoDeCargas) {
-        setCreationMsg({
-          text: 'Por favor, preencha a conferência da relação de cargas',
-          color: 'text-red-500',
-        })
-        return false
-      }
-    }
-    if (dados.possuiDistribuicao == 'SIM') {
-      if (!dados.faturasRecebedoras) {
-        setCreationMsg({
-          text: 'Por favor, preencha a conferência das faturas das recebedoras',
-          color: 'text-red-500',
-        })
-        return false
-      }
-    }
-    if (dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO' && dados.idVisitaTecnica?.trim().length < 20) {
-      setCreationMsg({
-        text: 'Por favor, vincule um ID de Visita Técnica',
-        color: 'text-red-500',
-      })
-      return false
-    }
-    return true
-  }
   function validateCreation() {
     var holder
-    // console.log(insertObj);
-    // console.log(Object.entries(insertObj));
     Object.entries(insertObj).forEach((entry) => {
       if (typeof entry[1] == 'object' && entry[1] != null) {
         let tag = entry[0]

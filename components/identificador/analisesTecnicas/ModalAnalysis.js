@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import Link from 'next/link'
 import { useQueryClient } from 'react-query'
 
-import { FaSave, FaUser } from 'react-icons/fa'
+import { FaSave, FaSolarPanel, FaUser } from 'react-icons/fa'
 import { VscChromeClose } from 'react-icons/vsc'
 import { BsCalendarCheckFill, BsCalendarFill, BsCode } from 'react-icons/bs'
 
@@ -43,6 +43,7 @@ import DrawBlock from './blocos/DrawBlock'
 import ConclusionBlock from './blocos/ConclusionBlock'
 
 import Avatar from '../../utils/Avatar'
+import { TbWaveSine } from 'react-icons/tb'
 
 function ModalAnalysis({ analysisId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal())
@@ -250,6 +251,45 @@ function ModalAnalysis({ analysisId, modalIsOpen, closeModal }) {
                       <p className="font-raleway text-sm font-medium">{analysis.projeto.nome || 'N/A'}</p>
                     </div>
                   </div>
+                ) : (
+                  <p className="w-full py-2 text-center text-sm italic text-gray-500">Sem informações do projeto...</p>
+                )}
+                {analysis.aumento ? (
+                  <>
+                    <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
+                      <h1 className="font-bold text-white">PROJETO ANTERIOR</h1>
+                    </div>
+                    <div className="flex w-full flex-col items-center justify-center gap-2 md:flex-row md:gap-4">
+                      <div className="flex items-center gap-2">
+                        <BsCode size={'20px'} color="rgb(31,41,55)" />
+                        {analysis.aumento.id ? (
+                          <a className="font-raleway cursor-pointer text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
+                            #{analysis.aumento.id || 'N/A'}
+                          </a>
+                        ) : null}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <FaUser size={'20px'} color="rgb(31,41,55)" />
+                        <p className="font-raleway text-sm font-medium">{analysis.aumento.nome || 'N/A'}</p>
+                      </div>
+                    </div>
+                    <div className="mt-4 flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+                      <div className="flex items-center gap-2">
+                        <FaSolarPanel size={'20px'} color="rgb(31,41,55)" />
+                        <p className="font-raleway text-sm font-medium">
+                          {analysis.aumento.equipamentos.modulos.qtde}x {analysis.aumento.equipamentos.modulos.modelo || 'N/A'}{' '}
+                          {analysis.aumento.equipamentos.modulos.potencia}W
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <TbWaveSine size={'20px'} color="rgb(31,41,55)" />
+                        <p className="font-raleway text-sm font-medium">
+                          {analysis.aumento.equipamentos?.inversor.qtde}x {analysis.aumento.equipamentos?.inversor.modelo || 'N/A'}{' '}
+                          {analysis.aumento.equipamentos?.inversor.potencia}W
+                        </p>
+                      </div>
+                    </div>
+                  </>
                 ) : (
                   <p className="w-full py-2 text-center text-sm italic text-gray-500">Sem informações do projeto...</p>
                 )}

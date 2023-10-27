@@ -1343,6 +1343,28 @@ export const GeneralTechnicalAnalysisSchema = z.object({
     nome: z.string(),
     identificador: z.string().optional().nullable(),
   }),
+  aumento: z
+    .object({
+      id: z.string().optional().nullable(),
+      nome: z.string(),
+      equipamentos: z
+        .object({
+          modulos: z.object({
+            modelo: z.string().optional().nullable(),
+            qtde: z.string().optional().nullable(),
+            potencia: z.string().optional().nullable(),
+          }),
+          inversor: z.object({
+            modelo: z.string().optional().nullable(),
+            qtde: z.string().optional().nullable(),
+            potencia: z.string().optional().nullable(),
+          }),
+        })
+        .optional()
+        .nullable(),
+    })
+    .optional()
+    .nullable(),
   localizacao: z.object({
     cep: z.string().optional().nullable(),
     uf: z.string().optional().nullable(),

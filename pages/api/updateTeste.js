@@ -134,8 +134,27 @@ function formatStructure(type) {
 }
 
 export default async function handler(req, res) {
-  // const db = await connectToRequestsDatabase(process.env.DB_KEY)
-  // const analysisCollection = db.collection('visitaTecnica')
+  // const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  // const projectsCollection = db.collection('dados')
+  // const paidComissions = await projectsCollection
+  //   .aggregate([
+  //     {
+  //       $match: {
+  //         'contrato.comissaoPaga': { $ne: null },
+  //       },
+  //     },
+  //   ])
+  //   .toArray()
+  // const formatted = paidComissions.map((project) => {
+  //   return {
+  //     updateOne: {
+  //       filter: { _id: new ObjectId(project._id) },
+  //       update: {
+  //         $unset: { 'contrato.comissaoPaga': '', 'contrato.comissaoVendedor': '' },
+  //       },
+  //     },
+  //   }
+  // })
   // const crmDb = await connectToCRMDatabase(process.CRM_KEY)
   // const crmUsersCollection = crmDb.collection('users')
 

@@ -1,310 +1,218 @@
 import React, { useEffect, useState } from 'react'
-import Select from 'react-select'
-import FilterButton from '../../components/utils/Buttons/FilterButton'
-import { AiOutlineSearch } from 'react-icons/ai'
-import FetchDataButton from '../../components/utils/Buttons/FetchDataButton'
-import dayjs from 'dayjs'
-import { cidadesAtendidas, formatDate, formatDecimalPlaces, formatToMoney, vendedores } from '../../utils/constants'
-import { MdDateRange } from 'react-icons/md'
 import { useSession } from 'next-auth/react'
-import axios from 'axios'
+
+import ErrorComponent from '../../components/utils/ErrorComponent'
 import LoadingPage from '../../components/utils/LoadingPage'
-import { BsFillPlusCircleFill } from 'react-icons/bs'
-import { IoMdArrowDropdownCircle } from 'react-icons/io'
-import AnaliseBlock from '../../components/AnaliseBlock'
-import TextInput from '../../components/TextInput'
+
+import AnaliseBlock from '../../components/identificador/comercial/AnaliseBlock'
+
+import TextInput from '../../components/inputs/Text'
+import DateInput from '../../components/inputs/Date'
+import MultipleSelectInput from '../../components/inputs/MultipleSelect'
+
+import { formatDate, formatDecimalPlaces, formatToMoney } from '../../utils/constants'
+import { allSellers } from '../../utils/select-options'
+import { formatDateInputChange } from '../../utils/methods/shared'
+import { useComercialAnalyticalData } from '../../utils/methods/query/comercial'
+import { VscDiffAdded } from 'react-icons/vsc'
+import { MdAttachMoney } from 'react-icons/md'
+import { ImPower } from 'react-icons/im'
+
 const currentDate = new Date()
-
-function getContractValue(valorProjeto, valorPadrao, valorEstrutura) {
-  var totalSum = 0
-
-  let projeto = !isNaN(valorProjeto) ? valorProjeto : 0
-  let padrao = !isNaN(valorPadrao) ? valorPadrao : 0
-  let estrutura = !isNaN(valorEstrutura) ? valorEstrutura : 0
-  totalSum = Number(totalSum) + Number(projeto) + Number(padrao) + Number(estrutura)
-  return totalSum
-}
 
 function Analise() {
   const { data: session } = useSession({ required: true })
-  const [authorization, setAuthorization] = useState('')
-  const [projects, setProjects] = useState()
-  const [filteredProjects, setFilteredProjects] = useState()
-  const [filters, setFilters] = useState({
-    search: '',
-    svbCode: '',
-    seller: [],
-    city: [],
-  })
   const [dateFilter, setDateFilter] = useState({
     after: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, -3).toISOString(),
     before: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1).toISOString(),
   })
+  const {
+    data: projects,
+    isSuccess,
+    isLoading,
+    isError,
+    filters,
+    setFilters,
+  } = useComercialAnalyticalData({
+    after: dateFilter.after,
+    before: dateFilter.before,
+  })
 
-  function filterProjects() {
-    var newArr
-    if (filters.seller.length > 0) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter((project) => filters.seller.includes(project.vendedor.nome))
-    }
-    if (filters.city.length > 0) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter((project) => filters.city.includes(project.cidade))
-    }
-    if (filters.svbCode.length > 0) {
-      if (!newArr) newArr = projects
-      newArr = newArr.filter((project) => Number(project.codigoSVB).toString().includes(filters.svbCode))
-    }
-    if (!newArr) {
-      setFilteredProjects(projects)
-      return projects
-    } else {
-      setFilteredProjects(newArr)
-      return newArr
-    }
-  }
-  function handleSearchFilter(value) {
-    setFilters((prev) => ({ ...prev, search: value }))
-    if (value != '' || value != ' ') {
-      let filtered = filterProjects()
-      let newArr = filtered.filter((project) => project.nomeDoContrato.toUpperCase().includes(value.toUpperCase()))
-      setFilteredProjects(newArr)
-    } else {
-      setFilteredProjects(projects)
-    }
-  }
-  async function fetchDate() {
-    const { data } = await axios.get(
-      `/api/projects/analitico/comercial?after=${dateFilter.after}&before=${dateFilter.before}&field=${'contrato.dataAssinatura'}`
+  function getStats({ info }) {
+    if (!info)
+      return {
+        projetos: {
+          app: 0,
+          crm: 0,
+        },
+        potencia: {
+          app: 0,
+          crm: 0,
+        },
+        vendido: {
+          app: 0,
+          crm: 0,
+        },
+      }
+    const power = info.reduce(
+      (acc, current) => {
+        const appPower = current.potenciaPico || 0
+        const crmPower = current.proposta.potenciaPico || 0
+        acc.app += appPower
+        acc.crm += crmPower
+        return acc
+      },
+      { app: 0, crm: 0 }
     )
-    setProjects(data)
-    setFilteredProjects(data)
-  }
-  async function fetchAcceptedSVB() {
-    if (authorization.length < 15) {
-      alert('Por favor, preencha uma authorization válida.')
-      return
+    const value = info.reduce(
+      (acc, current) => {
+        const appValue = current.valorContrato || 0
+        const crmValue = current.proposta.valor || 0
+        acc.app += appValue
+        acc.crm += crmValue
+        return acc
+      },
+      { app: 0, crm: 0 }
+    )
+    const count = info.reduce(
+      (acc, current) => {
+        const hasVinculatedProject = !!current.proposta.id
+        acc.app += 1
+        if (hasVinculatedProject) acc.crm += 1
+        return acc
+      },
+      { app: 0, crm: 0 }
+    )
+    return {
+      projetos: count,
+      potencia: power,
+      vendido: value,
     }
-    try {
-      const { data } = await axios.get(`/api/utils/aceites?authorization=${authorization}&after=${dateFilter.after}&before=${dateFilter.before}`)
-      var listOfProjects = [...projects]
-      listOfProjects = listOfProjects.map((project) => {
-        const acceptProposeOnSVB = data.find((x) => x.codigoSVB == project.codigoSVB)
-        if (acceptProposeOnSVB) {
-          return {
-            ...project,
-            proposta: {
-              nome: acceptProposeOnSVB.nomeProposta,
-              preco: acceptProposeOnSVB.precoProposta,
-              potencia: acceptProposeOnSVB.potenciaProposta,
-            },
-          }
-        } else return project
-      })
-
-      setFilteredProjects(listOfProjects)
-      setProjects(listOfProjects)
-    } catch (error) {
-      alert('Houve um erro na busca dos aceites. Por favor, confira o código de autenticação e tente novamente.')
-    }
-  }
-
-  function getListCumulativePeakPot() {
-    if (!filteredProjects) return 0
-
-    const total = filteredProjects.reduce((acc, current) => {
-      const peakPower = current.potenciaPico || 0
-      return acc + peakPower
-    }, 0)
-    return formatDecimalPlaces(total)
-  }
-  function getListCumulativeValue() {
-    if (!filteredProjects) return 0
-
-    const total = filteredProjects.reduce((acc, current) => {
-      const contractValue = current.valorContrato || 0
-      return acc + contractValue
-    }, 0)
-    return formatToMoney(total)
-  }
-  function getProposesCumulativePeakPot() {
-    if (!filteredProjects) return 0
-
-    const total = filteredProjects.reduce((acc, current) => {
-      const peakPower = current.proposta.potenciaPico || 0
-      return acc + peakPower
-    }, 0)
-    return formatDecimalPlaces(total)
-  }
-  function getProposesCumulativeValue() {
-    if (!filteredProjects) return 0
-
-    const total = filteredProjects.reduce((acc, current) => {
-      const proposeValue = current.proposta.valor || 0
-      return acc + proposeValue
-    }, 0)
-    return formatToMoney(total)
   }
   useEffect(() => {
-    if (session?.user.accessibleRoutes.includes('PPS') || session?.user.accessibleRoutes.includes('Marketing')) {
-      if (!projects) {
-        fetchDate(session.user)
-      }
-    } else {
-      if (session?.user) {
-        router.push('/')
-      }
+    if (session) {
+      const userRoutes = session.user.accessibleRoutes
+      if (!userRoutes.includes('PPS')) return router.push('/')
     }
   }, [session])
   return (
     <div className="flex flex-col p-6 grow">
-      <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+      <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1 mb-2">
         <div className="flex items-center justify-between w-full">
           <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
             <p className="font-bold uppercase text-center text-2xl text-[#15599a]">ANÁLISE COMERCIAL</p>
-            <p className="font-bold text-[#fead61]">{filteredProjects ? filteredProjects.length : '-'}</p>
-            {filteredProjects && (
-              <div className="flex flex-col">
-                <p className="font-bold text-[#fead61]">({getListCumulativePeakPot()}kWp)</p>
-                {filteredProjects?.some((x) => x.proposta != undefined) ? (
-                  <p className={`font-bold ${getListCumulativePeakPot() == getProposesCumulativePeakPot() ? 'text-green-500' : 'text-red-500'}`}>
-                    ({getProposesCumulativePeakPot()} kWp)
-                  </p>
-                ) : null}
-              </div>
-            )}
-            {filteredProjects && (
-              <div className="flex flex-col">
-                <p className="font-bold text-[#fead61]">(R${getListCumulativeValue()})</p>
-                {filteredProjects?.some((x) => x.proposta != undefined) ? (
-                  <p className={`font-bold ${getListCumulativeValue() == getProposesCumulativeValue() ? 'text-green-500' : 'text-red-500'}`}>
-                    (R$ {getProposesCumulativeValue()})
-                  </p>
-                ) : null}
-              </div>
-            )}
-            {filteredProjects?.some((x) => x.proposta != undefined) ? <></> : null}
-          </div>
-          <div className="flex items-center gap-2">
-            <TextInput label={'AUTHORIZATION'} editable={true} value={authorization} handleChange={(value) => setAuthorization(value)} />
-            <FetchDataButton text={'BUSCAR NO SVB'} icon={<AiOutlineSearch />} handleClick={fetchAcceptedSVB} />
           </div>
         </div>
-        <div className="flex flex-col lg:flex-row items-center lg:justify-between mt-4 gap-2 w-full">
-          <div className="flex flex-col items-start grow gap-2">
-            <div className="flex flex-col lg:flex-row items-center gap-2">
-              <input
-                type={'text'}
-                className="outline-none p-1.5 w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
-                placeholder="Digite o nome do contrato"
-                value={filters.search}
-                onChange={(e) => handleSearchFilter(e.target.value)}
-              />
-              <input
-                type={'text'}
-                className="outline-none p-1.5 w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
-                placeholder="Digite o código SVB"
-                value={filters.svbCode}
-                onChange={(e) => setFilters((prev) => ({ ...prev, svbCode: e.target.value }))}
-              />
+        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">CONTAGEM DE PROJETOS</h1>
+              <VscDiffAdded />
             </div>
-            <div className="flex flex-col justify-start  lg:flex-row items-center flex-wrap gap-2 w-full">
-              <div className="w-full lg:w-[350px]">
-                <Select
-                  isMulti
-                  placeholder="CIDADE"
-                  styles={{
-                    control: (base, state) => ({
-                      ...base,
-                      width: '100%',
-                    }),
-                  }}
-                  onChange={(e) =>
-                    setFilters({
-                      ...filters,
-                      cidadeFilter: e.map((x) => x.value),
-                    })
-                  }
-                  options={cidadesAtendidas.map((cidade) => {
-                    return {
-                      label: cidade,
-                      value: cidade,
-                    }
-                  })}
-                />
-              </div>
-              <div className="w-full lg:w-[350px]">
-                <Select
-                  isMulti
-                  placeholder="VENDEDOR"
-                  styles={{
-                    control: (base, state) => ({
-                      ...base,
-                      width: '100%',
-                    }),
-                  }}
-                  onChange={(e) =>
-                    setFilters({
-                      ...filters,
-                      seller: e.map((x) => x.value),
-                    })
-                  }
-                  options={vendedores.map((vendedor) => {
-                    return {
-                      label: vendedor.nome,
-                      value: vendedor.nome,
-                    }
-                  })}
-                />
-              </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">APP: {getStats({ info: projects }).projetos.app}</div>
+              <p className="text-sm text-gray-500">CRM: {getStats({ info: projects }).projetos.crm}</p>
             </div>
-            <FilterButton text={'FILTRAR'} icon={<AiOutlineSearch />} handleClick={filterProjects} />
           </div>
-          <div className="flex flex-col gap-2">
-            <span className="font-['Roboto'] text-xs h-[38px]">ASSINADO ENTRE:</span>
-            <div className="flex items-center justify-center flex-wrap gap-2">
-              <input
-                value={formatDate(dateFilter.after)}
-                onChange={(e) =>
-                  setDateFilter({
-                    ...dateFilter,
-                    after: dayjs(e.target.value).$d != 'Invalid Date' ? new Date(e.target.value).toISOString() : dateFilterParam,
-                  })
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">VALOR VENDIDO</h1>
+              <MdAttachMoney />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">APP: {formatToMoney(getStats({ info: projects }).vendido.app)}</div>
+              <p className="text-sm text-gray-500">CRM: {formatToMoney(getStats({ info: projects }).vendido.crm)}</p>
+            </div>
+          </div>
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">POTÊNCIA VENDIDA</h1>
+              <ImPower />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">APP: {formatDecimalPlaces(getStats({ info: projects }).potencia.app)}</div>
+              <p className="text-sm text-gray-500">CRM: {formatDecimalPlaces(getStats({ info: projects }).potencia.crm)}</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col w-full gap-y-2 mt-4">
+          <div className="flex flex-col lg:flex-row items-end justify-center gap-2 flex-wrap">
+            <TextInput
+              label={'NOME DO CONTRATO'}
+              value={filters.search}
+              placeholder={'Digite o nome do contrato...'}
+              handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
+            />
+            <div className="w-full lg:w-[250px]">
+              <MultipleSelectInput
+                width={'100%'}
+                label={'VENDEDOR'}
+                selected={filters.sellerName}
+                options={allSellers}
+                selectedItemLabel={'SEM FILTRO'}
+                handleChange={(value) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    sellerName: value,
+                  }))
                 }
-                type="date"
-                className="border border-gray-200 outline-none py-1 px-2"
-              />
-              <p>&</p>
-              <input
-                value={formatDate(dateFilter.before)}
-                onChange={(e) =>
-                  setDateFilter({
-                    ...dateFilter,
-                    before:
-                      dayjs(e.target.value).$d != 'Invalid Date' ? dayjs(e.target.value).add('20', 'hour').toISOString() : new Date().toISOString(),
-                  })
+                onReset={() =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    sellerName: [],
+                  }))
                 }
-                type="date"
-                className="border border-gray-200 outline-none py-1 px-2"
               />
             </div>
-            <div className="flex items-center justify-end gap-2">
-              <FetchDataButton text={'BUSCAR'} icon={<MdDateRange />} handleClick={fetchDate} />
+            <div className="flex items-center gap-x-2 justify-center">
+              <div className="w-full lg:w-[250px]">
+                <DateInput
+                  width={'100%'}
+                  label={'DEPOIS DE'}
+                  value={dateFilter.after ? formatDate(dateFilter.after) : undefined}
+                  handleChange={(value) => setDateFilter((prev) => ({ ...prev, after: formatDateInputChange(value) }))}
+                />
+              </div>
+              <div className="w-full lg:w-[250px]">
+                <DateInput
+                  width={'100%'}
+                  label={'ANTES DE'}
+                  value={dateFilter.before ? formatDate(dateFilter.before) : undefined}
+                  handleChange={(value) => setDateFilter((prev) => ({ ...prev, before: formatDateInputChange(value) }))}
+                />
+              </div>
+            </div>
+            <div
+              onClick={() =>
+                setFilters({
+                  ...filters,
+                  pendingVinculation: !filters.pendingVinculation,
+                })
+              }
+              className={`${
+                filters.pendingVinculation ? 'bg-[#15599a]' : 'bg-blue-300'
+              } rounded h-[47px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+            >
+              SEM VINCULAÇÃO
             </div>
           </div>
         </div>
       </div>
-      <div className="grow flex w-full flex-col gap-1 py-1">
-        {filteredProjects ? (
-          filteredProjects.length > 0 ? (
-            filteredProjects.map((project, index) => <AnaliseBlock key={index} project={project} />)
-          ) : (
-            <p className="text-center w-full italic text-gray-500">Sem projetos no período...</p>
-          )
+      {isLoading ? <LoadingPage /> : null}
+      {isError ? <ErrorComponent msg={'Erro ao carregar informações da análise. Tente novamente.'} /> : null}
+      {isSuccess && projects ? (
+        projects.length > 0 ? (
+          <div className="flex flex-col w-full gap-2">
+            {projects.map((project) => (
+              <AnaliseBlock key={project.id} project={project} />
+            ))}
+          </div>
         ) : (
-          <LoadingPage />
-        )}
-      </div>
+          <div className="grow flex items-center justify-center">
+            <h1 className="text-gray-500 text-lg italic">Nenhuma informação encontrada para o período de análise</h1>
+          </div>
+        )
+      ) : null}
     </div>
   )
 }

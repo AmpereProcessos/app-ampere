@@ -108,7 +108,7 @@ async function notifySellerInCRM(sellerName, idCRMProject, message) {
   })
 }
 
-async function updateCRMProject({ idCRMProject, changes }) {
+export async function updateCRMProject({ idCRMProject, changes }) {
   try {
     const { data } = await axios.post(`/api/crm/updateProjects?projectId=${idCRMProject}`, {
       changes,

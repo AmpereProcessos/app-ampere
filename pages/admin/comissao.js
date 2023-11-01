@@ -1,566 +1,321 @@
-import axios from "axios";
-import Select from "react-select";
-import React, { useContext, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { AiOutlineSearch } from "react-icons/ai";
-import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
-import { AnimatePresence, motion } from "framer-motion";
-import {
-  customersAcquisitionChannels,
-  tiposDeServico,
-  vendedores,
-} from "../../utils/constants";
-import ComissaoGeralView from "../../components/ComissaoGeralView";
-import ComissaoPDFView from "../../components/ComissaoPDFView";
-import ComissaoPDFViewInside from "../../components/ComissaoPDFViewInside";
-import LoadingPage from "../../components/utils/LoadingPage";
-import FetchDataButton from "../../components/utils/Buttons/FetchDataButton";
-import { MdDateRange } from "react-icons/md";
-import FilterButton from "../../components/utils/Buttons/FilterButton";
-import { BsDownload } from "react-icons/bs";
-const currentDate = new Date();
+import React, { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { BsDownload } from 'react-icons/bs'
+
+import ComissionCard from '../../components/identificador/comissoes/ComissionCard'
+import ErrorComponent from '../../components/utils/ErrorComponent'
+import LoadingPage from '../../components/utils/LoadingPage'
+
+import TextInput from '../../components/inputs/Text'
+import DateInput from '../../components/inputs/Date'
+import MultipleSelectInput from '../../components/inputs/MultipleSelect'
+
+import { formatDateInputChange, getFirstDayOfMonth, getLastDayOfMonth } from '../../utils/methods/shared'
+import { formatDate, formatDecimalPlaces, formatToMoney } from '../../utils/constants'
+import { allSellers, serviceTypes } from '../../utils/select-options'
+import { useComissionData } from '../../utils/methods/query/comissions'
+import { MdAttachMoney } from 'react-icons/md'
+import { FaPercentage } from 'react-icons/fa'
+import { BiStats } from 'react-icons/bi'
+import toast from 'react-hot-toast'
+import dayjs from 'dayjs'
+const currentDate = new Date()
 
 function ComissaoPage() {
-  const router = useRouter();
+  const router = useRouter()
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push("/auth/authHome");
+      router.push('/auth/authHome')
     },
-  });
+  })
 
-  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 
-  const [view, setView] = useState("GERAL");
-  const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
-  const [filters, setFilters] = useState({
-    insider: [],
-    vendedor: [],
-    canal: [],
-    tipoDeServico: [],
-  });
   const [dateFilter, setDateFilter] = useState({
-    after: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, -3),
-    before: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1),
-  });
+    after: getFirstDayOfMonth(currentDate.getFullYear(), currentDate.getMonth()).toISOString(),
+    before: getLastDayOfMonth(currentDate.getFullYear(), currentDate.getMonth()).toISOString(),
+  })
+  const {
+    data: projects,
+    isSuccess,
+    isLoading,
+    isError,
+    filters,
+    setFilters,
+  } = useComissionData({ after: dateFilter.after, before: dateFilter.before })
 
-  function getProjects() {
-    axios
-      .get(
-        `/api/projects/comissao?depois=${dateFilter.after}&antes=${dateFilter.before}`
-      )
-      .then((res) => {
-        setFilteredProjects(res.data);
-        setProjects(res.data);
-      });
-  }
-  function filterProjects() {
-    var newArr;
-    if (filters.vendedor.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) =>
-        filters.vendedor.includes(call.vendedor.nome)
-      );
-    }
-    if (filters.insider.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) => filters.insider.includes(call.insider));
-    }
-    if (filters.canal.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) => filters.canal.includes(call.canalVenda));
-    }
-    if (filters.tipoDeServico.length > 0) {
-      if (!newArr) newArr = projects;
-      newArr = newArr.filter((call) =>
-        filters.tipoDeServico.includes(call.tipoDeServico)
-      );
-    }
-    if (!newArr) {
-      setFilteredProjects(projects);
-      return projects;
-    } else {
-      setFilteredProjects([...newArr]);
-      return newArr;
-    }
-  }
-  function getListCumulativePeakPot() {
-    var totalSum = 0;
-    for (var i = 0; i < filteredProjects.length; i++) {
-      if (filteredProjects[i].tipoDeServico == "OPERAÇÃO E MANUTENÇÃO") {
-        totalSum = totalSum;
-      } else {
-        let pot = filteredProjects[i].sistema?.potPico
-          ? filteredProjects[i].sistema.potPico
-          : null;
-        if (isNaN(pot)) {
-          totalSum = totalSum;
-        } else {
-          totalSum = totalSum + pot;
-        }
+  function getStats({ info }) {
+    if (!info)
+      return {
+        totalVendido: 0,
+        potenciaVendida: 0,
+        comissaoTotal: 0,
+        comissaoProjeto: 0,
+        comissaoPadrao: 0,
+        comissaoTimeVendas: 0,
+        comissaoTimeSDR: 0,
       }
+    const sold = info.reduce((acc, current) => {
+      const contractValue = current.valorContrato
+      return acc + contractValue
+    }, 0)
+    const power = info.reduce((acc, current) => {
+      const peakPower = current.potenciaPico
+      return acc + peakPower
+    }, 0)
+    const comissionByTeams = info.reduce(
+      (acc, current) => {
+        const contractValue = current.valorContrato
+        const sellerComissionPercentage = current.comissoes.vendedor || 0
+        const insiderComissionPercentage = current.comissoes.insider || 0
+        acc.seller += contractValue * sellerComissionPercentage
+        acc.insider += contractValue * insiderComissionPercentage
+        return acc
+      },
+      { seller: 0, insider: 0 }
+    )
+    const comissionByItem = info.reduce(
+      (acc, current) => {
+        const contractValue = current.valorContrato
+        const projectValue = current.valorProjeto || 0
+        const energyPaValue = current.valorPadrao || 0
+        const sellerComissionPercentage = current.comissoes.vendedor || 0
+        const insiderComissionPercentage = current.comissoes.insider || 0
+        const totalComissionPercentage = (sellerComissionPercentage + insiderComissionPercentage) / 100
+        acc.total += contractValue * totalComissionPercentage
+        acc.project += projectValue * totalComissionPercentage
+        acc.energyPa += energyPaValue * totalComissionPercentage
+        return acc
+      },
+      { total: 0, project: 0, energyPa: 0 }
+    )
+    return {
+      totalVendido: sold,
+      potenciaVendida: power,
+      comissaoTotal: comissionByItem.total,
+      comissaoProjeto: comissionByItem.project,
+      comissaoPadrao: comissionByItem.energyPa,
+      comissaoTimeVendas: comissionByTeams.seller,
+      comissaoTimeSDR: comissionByTeams.insider,
     }
-    return totalSum.toFixed(2);
-  }
-  function getListCumulativeValue() {
-    var totalSum = 0;
-    for (var i = 0; i < filteredProjects.length; i++) {
-      let projeto = !isNaN(filteredProjects[i].sistema?.valorProjeto)
-        ? filteredProjects[i].sistema.valorProjeto
-        : 0;
-      let padrao = !isNaN(filteredProjects[i].padrao?.valor)
-        ? filteredProjects[i].padrao?.valor
-        : 0;
-      let oem = !isNaN(filteredProjects[i].oem?.valor)
-        ? filteredProjects[i].oem.valor
-        : 0;
-
-      totalSum =
-        Number(totalSum) + Number(projeto) + Number(padrao) + Number(oem);
-    }
-    return totalSum;
   }
   function exportData() {
-    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-      JSON.stringify(filteredProjects)
-    )}`;
-    const link = document.createElement("a");
-    link.href = jsonString;
-    link.download = "data.json";
-
-    link.click();
-  }
-  // Functions used to get the total values
-  function getTotalSold() {
-    var sum = 0;
-    for (let i = 0; i < filteredProjects.length; i++) {
-      let projeto = !isNaN(filteredProjects[i].sistema?.valorProjeto)
-        ? filteredProjects[i].sistema.valorProjeto
-        : 0;
-      let padrao = !isNaN(filteredProjects[i].padrao.valor)
-        ? filteredProjects[i].padrao.valor
-        : 0;
-      sum = sum + padrao + projeto;
-    }
-    return sum;
-  }
-  function getTotalComission() {
-    var sumProjeto = 0;
-    var sumPadrao = 0;
-    var sumOem = 0;
-    var sumInside = 0;
-    for (let i = 0; i < filteredProjects.length; i++) {
-      var comissao = filteredProjects[i].porcentagemComissao
-        ? filteredProjects[i].porcentagemComissao
-        : 0;
-      var valueProjeto =
-        !isNaN(filteredProjects[i].sistema.valorProjeto) &&
-        filteredProjects[i].sistema.valorProjeto != null
-          ? filteredProjects[i].sistema.valorProjeto
-          : 0;
-      var valuePadrao =
-        !isNaN(filteredProjects[i].padrao.valor) &&
-        filteredProjects[i].padrao.valor != null
-          ? filteredProjects[i].padrao.valor
-          : 0;
-      var valueOem =
-        !isNaN(filteredProjects[i].oem?.valor) &&
-        filteredProjects[i].oem.valor != null
-          ? filteredProjects[i].oem.valor
-          : 0;
-      if (
-        filteredProjects[i].insider != null ||
-        filteredProjects[i].insider != undefined
-      ) {
-        sumInside =
-          sumInside +
-          (filteredProjects[i].porcentagemComissaoInsider / 100) *
-            (valueProjeto + valuePadrao + valueOem);
+    if (!projects) return toast.error('Opps, parece que os dados não estão disponíveis para exportação.')
+    const formattedJSON = projects.map((project) => {
+      return {
+        ID: project.id,
+        NOME: project.nome,
+        'TIPO DO SERVIÇO': project.tipoServico,
+        'IDENTIFICADOR APP': project.identificador,
+        'IDENTIFICADOR CRM': project.identificadorCRM,
+        CIDADE: project.cidade,
+        VENDEDOR: project.vendedor,
+        INSIDER: project.insider,
+        'DATA DE ASSINATURA': project.dataAssinatura ? dayjs(project.dataAssinatura).add(3, 'hour').format('DD/MM/YYYY') : null,
+        'DATA RECEBIMENTO PARCIAL': project.dataRecebimentoParcial ? dayjs(project.dataRecebimentoParcial).add(3, 'hour').format('DD/MM/YYYY') : null,
+        'POTÊNCIA PICO': project.potenciaPico,
+        'VALOR DO PROJETO': project.valorProjeto || 0,
+        'VALOR DO PADRÃO': project.valorPadrao || 0,
+        'VALOR TOTAL': project.valorContrato || 0,
+        'COMISSÃO DEFINIDA': project.comissoes.efetivado ? 'SIM' : 'NÃO',
+        'COMISSÃO PAGA': project.comissoes.pagamentoRealizado ? 'SIM' : 'NÃO',
+        'COMISSÃO - VENDEDOR': formatDecimalPlaces((project.comissoes.vendedor || 0) * 100),
+        'COMISSÃO INSIDER': formatDecimalPlaces((project.comissoes.insider || 0) * 100),
       }
-      sumProjeto = sumProjeto + (Number(valueProjeto) * comissao) / 100;
-      sumPadrao = sumPadrao + (Number(valuePadrao) * comissao) / 100;
-      sumOem = sumOem + (Number(valueOem) * comissao) / 100;
-    }
-    sumProjeto = sumProjeto != undefined ? sumProjeto : 0;
-    sumPadrao = sumPadrao != undefined ? sumPadrao : 0;
-    sumOem = sumOem != undefined ? sumOem : 0;
-    sumInside = sumInside != undefined ? sumInside : 0;
+    })
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(JSON.stringify(formattedJSON))}`
+    const link = document.createElement('a')
+    link.href = jsonString
+    link.download = 'data.json'
 
-    return {
-      ativoProjeto: sumProjeto.toFixed(2),
-      ativoPadrao: sumPadrao.toFixed(2),
-      ativoOem: sumOem.toFixed(2),
-      inside: sumInside.toFixed(2),
-      total: (sumProjeto + sumPadrao + sumInside + sumOem).toFixed(2),
-    };
-  }
-  function getTotalPeakPot() {
-    var sum = 0;
-    for (let i = 0; i < filteredProjects.length; i++) {
-      sum = sum + filteredProjects[i].sistema.potPico;
-    }
-    return sum;
+    link.click()
   }
 
-  useEffect(() => {
-    if (session?.user.manager || session?.user.visualizacao == "REGIONAL") {
-      getProjects();
-    } else {
-      if (session?.user) router.push("/");
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   if (session) {
+  //     const isManager = !!session.user?.manager
+  //     if (!isManager) router.push('/')
+  //   }
+  // }, [session])
 
-  if (status == "loading") return <LoadingPage />;
+  if (status == 'loading') return <LoadingPage />
 
-  if (status == "authenticated") {
-    if (session?.user?.manager || session?.user?.visualizacao == "REGIONAL")
-      return (
-        <div className="flex flex-col p-6 grow">
-          <div className="flex flex-col items-center px-1 py-2 border-b border-gray-200">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center gap-2">
-                <h1 className="font-bold uppercase text-center text-2xl text-[#15599a]">
-                  COMISSÕES
-                </h1>
-                {filteredProjects && (
-                  <>
-                    <p className="font-bold text-[#fead61]">
-                      {filteredProjects.length}
-                    </p>
-                    <p className="font-bold text-[#fead61]">
-                      {getListCumulativePeakPot()}kWp
-                    </p>
+  if (status != 'authenticated') return <LoadingPage />
 
-                    <p className="font-bold text-[#fead61]">
-                      R${" "}
-                      {getListCumulativeValue().toLocaleString("pt-br", {
-                        minimumFractionDigits: 2,
-                      })}
-                    </p>
-                  </>
-                )}
-              </div>
-
-              {dropdownMenuVisible ? (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                  <IoMdArrowDropupCircle
-                    style={{ fontSize: "25px" }}
-                    onClick={() => setDropdownMenuVisible(false)}
-                  />
-                </div>
-              ) : (
-                <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
-                  <IoMdArrowDropdownCircle
-                    style={{ fontSize: "25px" }}
-                    onClick={() => setDropdownMenuVisible(true)}
-                  />
-                </div>
-              )}
-            </div>
-            <AnimatePresence>
-              {dropdownMenuVisible ? (
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0.6 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="flex flex-col w-full gap-y-2 mt-4"
-                >
-                  <div className="grid grid-rows-3 grid-cols-1 lg:grid-rows-1 lg:grid-cols-3 gap-3">
-                    <div className="flex flex-col items-center lg:items-start w-full gap-1">
-                      <span className="font-['Roboto'] text-xs">
-                        KITS PAGOS ENTRE:
-                      </span>
-                      <div className="flex flex-col lg:flex-row items-center justify-center flex-wrap gap-2">
-                        <input
-                          value={
-                            dateFilter.after &&
-                            new Date(dateFilter.after)
-                              .toISOString()
-                              .slice(0, 10)
-                          }
-                          onChange={(e) =>
-                            setDateFilter({
-                              ...dateFilter,
-                              after: isNaN(e.target.value)
-                                ? e.target.value
-                                : null,
-                            })
-                          }
-                          type="date"
-                          className="border border-gray-200 outline-none py-1 px-2"
-                        />
-                        <p>&</p>
-                        <input
-                          value={
-                            dateFilter.before &&
-                            new Date(dateFilter.before)
-                              .toISOString()
-                              .slice(0, 10)
-                          }
-                          onChange={(e) =>
-                            setDateFilter({
-                              ...dateFilter,
-                              before: isNaN(e.target.value)
-                                ? e.target.value
-                                : null,
-                            })
-                          }
-                          type="date"
-                          className="border border-gray-200 outline-none py-1 px-2"
-                        />
-                      </div>
-                      <div className="flex items-center justify-between gap-2">
-                        <FetchDataButton
-                          text={"BUSCAR"}
-                          icon={<MdDateRange />}
-                          handleClick={getProjects}
-                        />
-                        <div
-                          onClick={exportData}
-                          className="flex cursor-pointer text-[#15599a] items-center  font-bold p-2 rounded-lg transition duration-300 ease-in-out hover:scale-105"
-                        >
-                          <p className="mr-2 text-sm">BAIXAR DADOS</p>
-                          <BsDownload />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center w-full gap-1">
-                      <button
-                        onClick={() => setView("GERAL")}
-                        className={`p-1 cursor-pointer w-full lg:w-[350px] rounded font-bold ${
-                          view == "GERAL"
-                            ? "bg-[#15599a] text-white hover:bg-[#fead61] hover:text-black"
-                            : "bg-[#fead61] hover:bg-[#15599a] hover:text-white"
-                        }`}
-                      >
-                        VISÃO GERAL
-                      </button>
-                      <button
-                        onClick={() => setView("PDF")}
-                        className={`p-1 cursor-pointer w-full lg:w-[350px] rounded font-bold ${
-                          view == "PDF"
-                            ? "bg-[#0781F2] text-white hover:bg-blue-300 hover:text-black"
-                            : "bg-blue-300 hover:bg-[#0781F2] hover:text-white"
-                        }`}
-                      >
-                        VISÃO PDF
-                      </button>
-                      <button
-                        onClick={() => setView("PDF INSIDE")}
-                        className={`p-1 cursor-pointer w-full lg:w-[350px] rounded font-bold ${
-                          view == "PDF INSIDE"
-                            ? "bg-[#0781F2] text-white hover:bg-blue-300 hover:text-black"
-                            : "bg-blue-300 hover:bg-[#0781F2] hover:text-white"
-                        }`}
-                      >
-                        VISÃO PDF INSIDE
-                      </button>
-                    </div>
-                    <div className="flex flex-col items-end w-full gap-1">
-                      <div className="w-full lg:w-[250px]">
-                        <Select
-                          isMulti
-                          placeholder="CANAL"
-                          styles={{
-                            control: (base, state) => ({
-                              ...base,
-                              width: "100%",
-                              minHeight: "41px",
-                            }),
-                          }}
-                          onChange={(e) =>
-                            setFilters({
-                              ...filters,
-                              canal: e.map((x) => x.value),
-                            })
-                          }
-                          options={customersAcquisitionChannels}
-                        />
-                      </div>
-                      <div className="w-full lg:w-[250px]">
-                        <Select
-                          isMulti
-                          placeholder="VENDEDOR"
-                          styles={{
-                            control: (base, state) => ({
-                              ...base,
-                              width: "100%",
-                              minHeight: "41px",
-                            }),
-                          }}
-                          onChange={(e) =>
-                            setFilters({
-                              ...filters,
-                              vendedor: e.map((x) => x.value),
-                            })
-                          }
-                          options={vendedores.map((vendedor) => {
-                            return {
-                              label: vendedor.nome,
-                              value: vendedor.nome,
-                            };
-                          })}
-                        />
-                      </div>
-                      <div className="w-full lg:w-[250px]">
-                        <Select
-                          isMulti
-                          placeholder="INSIDER"
-                          styles={{
-                            control: (base, state) => ({
-                              ...base,
-                              width: "100%",
-                              minHeight: "41px",
-                            }),
-                          }}
-                          onChange={(e) =>
-                            setFilters({
-                              ...filters,
-                              insider: e.map((x) => x.value),
-                            })
-                          }
-                          options={vendedores
-                            .filter((x) => x.qualificacao?.includes("INSIDE"))
-                            .map((vendedor) => {
-                              return {
-                                label: vendedor.nome,
-                                value: vendedor.nome,
-                              };
-                            })}
-                        />
-                      </div>
-                      <div className="w-full lg:w-[250px]">
-                        <Select
-                          isMulti
-                          placeholder="TIPO DE SERVIÇO"
-                          styles={{
-                            control: (base, state) => ({
-                              ...base,
-                              width: "100%",
-                              minHeight: "41px",
-                            }),
-                          }}
-                          onChange={(e) =>
-                            setFilters({
-                              ...filters,
-                              tipoDeServico: e.map((x) => x.value),
-                            })
-                          }
-                          options={tiposDeServico.map((tipo) => {
-                            return {
-                              label: tipo.label,
-                              value: tipo.value,
-                            };
-                          })}
-                        />
-                      </div>
-                      <FilterButton
-                        text={"FILTRAR"}
-                        icon={<AiOutlineSearch />}
-                        handleClick={filterProjects}
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-3 lg:grid-cols-7 gap-y-2">
-                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
-                        FATURAMENTO TOTAL
-                      </h1>
-                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
-                        R$ {Number(getTotalSold()).toLocaleString("pt-br")}
-                      </p>
-                    </div>
-                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
-                        COMISSÃO TOTAL ATIVO (PROJETO)
-                      </h1>
-                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
-                        R${" "}
-                        {Number(
-                          getTotalComission().ativoProjeto
-                        ).toLocaleString("pt-br")}
-                      </p>
-                    </div>
-                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
-                        COMISSÃO TOTAL ATIVO (PADRÃO)
-                      </h1>
-                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
-                        R${" "}
-                        {Number(getTotalComission().ativoPadrao).toLocaleString(
-                          "pt-br"
-                        )}
-                      </p>
-                    </div>
-                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
-                        COMISSÃO TOTAL ATIVO (OeM)
-                      </h1>
-                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
-                        R${" "}
-                        {Number(getTotalComission().ativoOem).toLocaleString(
-                          "pt-br"
-                        )}
-                      </p>
-                    </div>
-                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
-                        COMISSÃO TOTAL INSIDE
-                      </h1>
-                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
-                        R${" "}
-                        {Number(getTotalComission().inside).toLocaleString(
-                          "pt-br"
-                        )}
-                      </p>
-                    </div>
-                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
-                        COMISSÃO TOTAL SOBRE FATURAMENTO
-                      </h1>
-                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
-                        {(
-                          (getTotalComission().total * 100) /
-                          getTotalSold()
-                        ).toFixed(2)}
-                        %
-                      </p>
-                    </div>
-                    <div className="flex flex-col justify-between border-x border-gray-200 px-2 h-full">
-                      <h1 className="text-[#15599a] font-bold text-center text-xxs md:text-xs lg:text-base">
-                        VALOR DO kWp
-                      </h1>
-                      <p className="text-gray-700 text-center text-xxs md:text-xs lg:text-xs">
-                        R$ {(getTotalSold() / getTotalPeakPot()).toFixed(2)}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
+  return (
+    <div className="flex flex-col p-6 grow">
+      <div className="flex flex-col items-center px-1 py-2 border-b border-gray-200">
+        <div className="flex items-center justify-between w-full">
+          <div className="flex flex-col lg:flex-row items-center gap-2">
+            <p className="font-black uppercase text-center text-2xl text-[#15599a]">Projetos no estágio comercial</p>
           </div>
-          {view == "GERAL" && (
-            <ComissaoGeralView
-              projects={filteredProjects}
-              setProjects={setFilteredProjects}
-            />
-          )}
-          {view == "PDF" && (
-            <ComissaoPDFView
-              projects={filteredProjects}
-              totalComission={getTotalComission()}
-            />
-          )}
-          {view == "PDF INSIDE" && (
-            <ComissaoPDFViewInside
-              projects={filteredProjects}
-              totalComission={getTotalComission()}
-            />
+          {dropdownMenuVisible ? (
+            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
+            </div>
+          ) : (
+            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
+            </div>
           )}
         </div>
-      );
-  }
+        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+          <div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">TOTAL VENDIDO</h1>
+              <MdAttachMoney />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">{formatToMoney(getStats({ info: projects }).totalVendido)}</div>
+              <p className="text-xs text-gray-500">{formatDecimalPlaces(getStats({ info: projects }).potenciaVendida)} kWp</p>
+            </div>
+          </div>
+          <div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">COMISSÃO TOTAL</h1>
+              <FaPercentage />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">{formatToMoney(getStats({ info: projects }).comissaoTotal)}</div>
+              <p className="text-xs text-gray-500">{formatToMoney(getStats({ info: projects }).comissaoTimeVendas)} para o time de vendas</p>
+              <p className="text-xs text-gray-500">{formatToMoney(getStats({ info: projects }).comissaoTimeSDR)} para o time de SDR</p>
+            </div>
+          </div>
+          <div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">COMISSÃO POR ITEM</h1>
+              <FaPercentage />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-gray-500">{formatToMoney(getStats({ info: projects }).comissaoProjeto)} em projeto UFV</div>
+              <p className="text-gray-500">{formatToMoney(getStats({ info: projects }).comissaoPadrao)} em padrão</p>
+            </div>
+          </div>
+          <div className="flex min-h-[130px] w-full flex-col rounded-xl border border-gray-300 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">ANÁLISE</h1>
+              <BiStats />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">
+                {formatDecimalPlaces((getStats({ info: projects }).comissaoTotal * 100) / getStats({ info: projects }).totalVendido)}%
+              </div>
+              <p className="text-sm text-gray-500">
+                {formatDecimalPlaces(getStats({ info: projects }).totalVendido / getStats({ info: projects }).potenciaVendida)} R$/kWp
+              </p>
+            </div>
+          </div>
+        </div>
+        <AnimatePresence>
+          {dropdownMenuVisible ? (
+            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
+              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <TextInput
+                  label={'NOME DO CONTRATO'}
+                  value={filters.search}
+                  placeholder={'Digite o nome do contrato...'}
+                  handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
+                />
+                <div className="w-full lg:w-[250px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'TIPO DE SERVIÇO'}
+                    selected={filters.serviceType}
+                    options={serviceTypes}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        serviceType: value,
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        serviceType: [],
+                      }))
+                    }
+                  />
+                </div>
+                <div className="w-full lg:w-[250px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'VENDEDOR'}
+                    selected={filters.sellerName}
+                    options={allSellers}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        sellerName: value,
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        sellerName: [],
+                      }))
+                    }
+                  />
+                </div>
+                <div className="flex items-center gap-x-2 justify-center">
+                  <div className="w-full lg:w-[250px]">
+                    <DateInput
+                      width={'100%'}
+                      label={'DEPOIS DE'}
+                      value={dateFilter.after ? formatDate(dateFilter.after) : undefined}
+                      handleChange={(value) => setDateFilter((prev) => ({ ...prev, after: formatDateInputChange(value) }))}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <DateInput
+                      width={'100%'}
+                      label={'ANTES DE'}
+                      value={dateFilter.before ? formatDate(dateFilter.before) : undefined}
+                      handleChange={(value) => setDateFilter((prev) => ({ ...prev, before: formatDateInputChange(value) }))}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex w-full items-center justify-end">
+                <div
+                  onClick={exportData}
+                  className="flex cursor-pointer text-[#15599a] items-center  font-bold p-2 rounded-lg transition duration-300 ease-in-out hover:scale-105"
+                >
+                  <p className="mr-2 text-sm">BAIXAR DADOS</p>
+                  <BsDownload />
+                </div>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </div>
+      {isLoading ? <LoadingPage /> : null}
+      {isError ? <ErrorComponent msg={'Erro ao carregar informações da análise. Tente novamente.'} /> : null}
+      {isSuccess && projects ? (
+        projects.length > 0 ? (
+          <div className="flex flex-col w-full gap-2">
+            {projects.map((project) => (
+              <ComissionCard key={project.id} project={project} />
+            ))}
+          </div>
+        ) : (
+          <div className="grow flex items-center justify-center">
+            <h1 className="text-gray-500 text-lg italic">Nenhuma informação encontrada para o período de análise</h1>
+          </div>
+        )
+      ) : null}
+      {/* {view == 'GERAL' && <ComissaoGeralView projects={filteredProjects} setProjects={setFilteredProjects} />}
+      {view == 'PDF' && <ComissaoPDFView projects={filteredProjects} totalComission={getTotalComission()} />}
+      {view == 'PDF INSIDE' && <ComissaoPDFViewInside projects={filteredProjects} totalComission={getTotalComission()} />} */}
+    </div>
+  )
 }
 
-export default ComissaoPage;
+export default ComissaoPage

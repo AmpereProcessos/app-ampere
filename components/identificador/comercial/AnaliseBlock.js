@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle, IoMdDocument, IoMdPower } from 'react-icons/io'
-import { FaSolarPanel } from 'react-icons/fa'
+import { FaSolarPanel, FaUserAlt } from 'react-icons/fa'
 import { ImPower } from 'react-icons/im'
-import FileLinkBlock from '../components/utils/FileLinkBlock'
-import { formatDecimalPlaces, formatLongString, formatToMoney } from '../utils/constants'
+import FileLinkBlock from '../../utils/FileLinkBlock'
+import { formatDecimalPlaces, formatLongString, formatToMoney } from '../../../utils/constants'
 import { MdElectricMeter, MdOutlineAttachMoney, MdRoofing } from 'react-icons/md'
 import { BsHouse } from 'react-icons/bs'
+import ProposeProjectVinculation from './ProposeProjectVinculation'
 
 function getBarColor(project) {
   const contractValue = project.valorContrato
@@ -30,7 +31,7 @@ function AnaliseBlock({ project }) {
     )
   }
   return (
-    <div className="flex gap-2 w-full shadow-sm border border-gray-300   rounded-md">
+    <div className="flex gap-2 w-full shadow-sm border border-gray-300 rounded-md">
       <div className={`h-full w-[7px] ${getBarColor(project)} rounded-tl-md rounded-bl-md`}></div>
       <div className="flex flex-col w-full grow p-3">
         <div className="flex items-center w-full gap-2">
@@ -42,6 +43,10 @@ function AnaliseBlock({ project }) {
             <p className="text-xs text-gray-500">{project.tipoServico}</p>
           </div>
           <div className="grow flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <FaUserAlt />
+              <p className="text-gray-500 font-medium">{project.vendedor}</p>
+            </div>
             <div className="flex items-center gap-2">
               <ImPower />
               <p className="text-gray-500 font-medium">{formatDecimalPlaces(project.potenciaPico)}W</p>
@@ -66,9 +71,11 @@ function AnaliseBlock({ project }) {
         </div>
         {project.proposta.id ? (
           <div className="flex flex-col w-full rounded mt-1 bg-gray-100 p-1">
-            <div className="flex items-center gap-2">
-              <IoMdDocument />
-              <h1 className="text-gray-500 font-medium text-xs">PROPOSTA VINCULADA</h1>
+            <div className="flex items-center w-full justify-between">
+              <div className="flex items-center gap-2">
+                <IoMdDocument />
+                <h1 className="text-gray-500 font-medium text-xs">PROPOSTA VINCULADA</h1>
+              </div>
             </div>
             <div className="flex items-center w-full gap-2">
               <div className="flex flex-col min-w-[350px]">
@@ -91,8 +98,15 @@ function AnaliseBlock({ project }) {
             </div>
           </div>
         ) : (
-          <div className="flex w-full items-center justify-center p-1">
-            <h1 className="p-1 rounded text-[#F31559] font-bold border border-red-500">SEM PROPOSTA VINCULADA</h1>
+          <div className="flex flex-col w-full items-center justify-center p-1">
+            <h1 className="p-1 text-xs rounded text-[#F31559] font-bold border border-red-500">SEM PROPOSTA VINCULADA</h1>
+            <ProposeProjectVinculation
+              idProject={project.id}
+              idSolicitation={project.idSolicitacaoContrato}
+              idProjectCRM={project.idProjetoCRM}
+              signatureDate={project.dataAssinatura}
+              contractRequestDate={project.dataSolicitacao}
+            />
           </div>
         )}
         <div className="w-full flex items-center justify-start mt-1">

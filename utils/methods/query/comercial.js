@@ -45,11 +45,11 @@ export function useComercialProjects({ enabled }) {
     else return filters.serviceType.includes(project.tipoDeServico)
   }
   function matchSellerName(project) {
-    if (filters.sellerName == 0) return true
+    if (filters.sellerName.length == 0) return true
     else return filters.sellerName.includes(project.vendedor?.nome)
   }
   function matchInsiderName(project) {
-    if (filters.insiderName == 0) return true
+    if (filters.insiderName.length == 0) return true
     else return filters.insiderName.includes(project.insider)
   }
   function matchSupplyStatus(project) {
@@ -81,6 +81,48 @@ export function useComercialProjects({ enabled }) {
     ...useQuery({
       queryKey: ['comercial-projects'],
       queryFn: fetchProjects,
+      select: (data) => handleModelData(data),
+    }),
+    filters,
+    setFilters,
+  }
+}
+
+async function fetchComercialAnalyticalData({ after, before }) {
+  try {
+    const { data } = await axios.get(`/api/projects/analitico/comercial?after=${after}&before=${before}&field=${'contrato.dataAssinatura'}`)
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+export function useComercialAnalyticalData({ after, before }) {
+  const [filters, setFilters] = useState({
+    search: '',
+    sellerName: [],
+    pendingVinculation: false,
+  })
+  function matchSearch(project) {
+    if (filters.search.trim().length == 0) return true
+    return project.nome.toUpperCase().includes(filters.search.toUpperCase())
+  }
+  function matchSellerName(project) {
+    if (filters.sellerName.length == 0) return true
+    else return filters.sellerName.includes(project.vendedor)
+  }
+  function matchPendingVinculation(project) {
+    if (!filters.pendingVinculation) return true
+    return !project.proposta.id
+  }
+  function handleModelData(data) {
+    var modeledData = data
+    return modeledData.filter((project) => matchSearch(project) && matchPendingVinculation(project) && matchSellerName(project))
+  }
+  return {
+    ...useQuery({
+      queryKey: ['analytical-comercial', after, before],
+      queryFn: async () => await fetchComercialAnalyticalData({ after, before }),
       select: (data) => handleModelData(data),
     }),
     filters,

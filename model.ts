@@ -52,15 +52,18 @@ interface IProject {
   }
 
   contrato: {
-    comissaoPaga: boolean
-    comissaoVendedor: number
     dataAssinatura: string
     dataLiberacao: string
     dataSolicitacao: string
     formaAssinatura: 'FISICO' | 'DIGITAL'
     status: string
   }
-
+  comissoes: {
+    efetivado?: boolean
+    pagamentoRealizado?: boolean
+    porcentagemVendedor?: number
+    porcentagemInsider?: number
+  }
   compra: {
     dataEntrega: string
     dataLiberacao: string

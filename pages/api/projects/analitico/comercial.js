@@ -17,7 +17,6 @@ export default async function handler(req, res) {
     const collection = db.collection('dados')
     const crmProjectsCollection = crmDb.collection('projects')
     const { after, before, field } = req.query
-    console.log(after, before, field)
     const appProjects = await collection
       .aggregate([
         {
@@ -63,13 +62,16 @@ export default async function handler(req, res) {
         },
       ])
       .toArray()
-    console.log(crmProjects)
+
     const responseFormatted = appProjects.map((project) => {
       const equivalentCRMProject = crmProjects.find((p) => project.idProjetoCRM == p._id)
       const propose = equivalentCRMProject?.proposta[0] ? equivalentCRMProject?.proposta[0] : null
       const proposeValue = propose?.valorProposta || null
       return {
+        id: project._id,
         nome: project.nomeDoContrato,
+        idProjetoCRM: project.idProjetoCRM,
+        vendedor: project.vendedor.nome,
         tipoServico: project.tipoDeServico,
         identificador: project.qtde,
         identificadorCRM: project.codigoSVB,
@@ -79,6 +81,8 @@ export default async function handler(req, res) {
         logradouro: project.logradouro,
         numeroOuIdentificador: project.numeroResidencia,
         potenciaPico: project.sistema?.potPico,
+        dataAssinatura: project.contrato.dataAssinatura,
+        dataSolicitacao: project.contrato.dataSolicitacao,
         valorProjeto: project.sistema?.valorProjeto,
         valorPadrao: project.padrao?.valor,
         valorEstrutura: project.estruturaPersonalizada?.valor,

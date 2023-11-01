@@ -3,7 +3,7 @@ import createHttpError from 'http-errors'
 
 import connectToCRMDatabase from '../../../../utils/services/mongodb/crm/main'
 import { Db, ObjectId } from 'mongodb'
-import { apiHandler } from '@/utils/api'
+import { apiHandler } from '../../../../utils/api'
 type GetResponse = any
 
 const getProjects: NextApiHandler<GetResponse> = async (req, res) => {

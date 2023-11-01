@@ -1,8 +1,5 @@
 import React, { useState } from 'react'
-import Image from 'next/image'
-import { useRouter } from 'next/router'
-import LogoSemTexto from '../utils/images/logo-texto-brancoSemTexto.png'
-import Logo from '../utils/images/logo-texto-branco.png'
+
 import estadosCidades from '../utils/jsons/estados-cidades.json'
 import Select from 'react-select'
 function EstagioDois({ next, infoHolder, setInfoHolder }) {

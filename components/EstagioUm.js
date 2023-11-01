@@ -1,7 +1,4 @@
 import React, { useState } from 'react'
-import Image from 'next/image'
-import LogoSemTexto from '../utils/images/logo-texto-brancoSemTexto.png'
-import Logo from '../utils/images/logo-texto-branco.png'
 
 function EstagioUm({ next, infoHolder, setInfoHolder }) {
   const [err, setErr] = useState('')

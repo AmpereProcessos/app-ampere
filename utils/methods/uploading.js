@@ -1,5 +1,5 @@
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import { storage } from '../firebase'
+import { storage } from '../services/firebase/firebase-storage'
 import { fileTypes } from '../constants'
 function getFileFormat(contentType) {
   const fileFormatInfo = fileTypes[contentType]

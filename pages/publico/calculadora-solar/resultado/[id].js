@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { FaWhatsapp } from 'react-icons/fa'
-import LogoSemTexto from '../../../../utils/images/logo-texto-brancoSemTexto.png'
+import LogoSemTexto from '../../../../utils/images/logo-semtexto-branco.png'
 import Logo from '../../../../utils/images/logo-texto-branco.png'
 import { ObjectId } from 'mongodb'
 import connectToDatabase from '../../../../utils/services/mongodb/inside-sales'

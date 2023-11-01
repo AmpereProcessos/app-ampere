@@ -1,15 +1,15 @@
-import connectToDatabase from "../../../../utils/callsDb";
+import connectToDatabase from '../../../../utils/services/mongodb/calls'
 export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const after = new Date(req.body.date.after).toJSON();
-    const before = new Date(req.body.date.before).toJSON();
-    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
-    const collection = db.collection("suporte");
+  if (req.method === 'POST') {
+    const after = new Date(req.body.date.after).toJSON()
+    const before = new Date(req.body.date.before).toJSON()
+    const db = await connectToDatabase(process.env.DB_KEY, 'chamados')
+    const collection = db.collection('suporte')
     let calls = await collection
       .aggregate([
         {
           $match: {
-            statusChamado: "RESOLVIDO",
+            statusChamado: 'RESOLVIDO',
           },
         },
         {
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
           $sort: { fechamento: -1 },
         },
       ])
-      .toArray();
-    return res.json(calls);
+      .toArray()
+    return res.json(calls)
   }
 }

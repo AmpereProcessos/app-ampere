@@ -1,59 +1,48 @@
-import React, { useState } from "react";
-import { FaFilePdf, FaFileSignature } from "react-icons/fa";
-import SelectFoatingInput from "../SelectFloatingInput";
-import { IoIosSend } from "react-icons/io";
-import { getMetadata, ref } from "firebase/storage";
-import { storage } from "../../utils/firebase";
-import axios from "axios";
-import { BsCheck } from "react-icons/bs";
-function ESigningBlock({
-  projectId,
-  contractName,
-  email,
-  phone_number,
-  documentation,
-  contractLinks,
-  digitalSigningInfo,
-}) {
-  const [showMenu, setShowMenu] = useState();
-  const [toSignFile, setToSignFile] = useState();
+import React, { useState } from 'react'
+import { FaFilePdf, FaFileSignature } from 'react-icons/fa'
+import SelectFoatingInput from '../SelectFloatingInput'
+import { IoIosSend } from 'react-icons/io'
+import { getMetadata, ref } from 'firebase/storage'
+import { storage } from '../../utils/services/firebase/firebase-storage'
+import axios from 'axios'
+import { BsCheck } from 'react-icons/bs'
+function ESigningBlock({ projectId, contractName, email, phone_number, documentation, contractLinks, digitalSigningInfo }) {
+  const [showMenu, setShowMenu] = useState()
+  const [toSignFile, setToSignFile] = useState()
   const [uploadMsg, setUploadMsg] = useState({
     status: null,
-    text: "",
-    color: "",
-  });
+    text: '',
+    color: '',
+  })
   const [downloadMsg, setDownloadMsg] = useState({
     status: null,
-    text: "",
-    color: "",
-  });
+    text: '',
+    color: '',
+  })
   async function handleDownload(documentKey) {
     setDownloadMsg({
-      text: "Carregando",
-      color: "text-[#15599a]",
-      status: "loading",
-    });
+      text: 'Carregando',
+      color: 'text-[#15599a]',
+      status: 'loading',
+    })
     try {
-      const response = await axios.get(
-        `/api/utils/clicksign/downloadSignedFile?documentKey=${documentKey}`,
-        {
-          responseType: "blob",
-        }
-      );
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `ARQUIVO_ASSINADO.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      const response = await axios.get(`/api/utils/clicksign/downloadSignedFile?documentKey=${documentKey}`, {
+        responseType: 'blob',
+      })
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `ARQUIVO_ASSINADO.pdf`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
       setDownloadMsg({
-        text: "Arquivo baixado com sucesso.",
-        color: "text-green-500",
-        status: "success",
-      });
+        text: 'Arquivo baixado com sucesso.',
+        color: 'text-green-500',
+        status: 'success',
+      })
     } catch (error) {
-      alert("Houve um erro no download do arquivo.");
+      alert('Houve um erro no download do arquivo.')
     }
 
     // const xhr = new XMLHttpRequest();
@@ -72,72 +61,71 @@ function ESigningBlock({
   async function send() {
     if (!toSignFile) {
       setUploadMsg({
-        text: "Por favor, escolha o arquivo a ser enviado.",
-        color: "text-red-500",
+        text: 'Por favor, escolha o arquivo a ser enviado.',
+        color: 'text-red-500',
         status: null,
-      });
-      return;
+      })
+      return
     }
     if (!email) {
       setUploadMsg({
-        text: "Nenhum um email vinculado ao projeto. Por favor, atualize o projeto pra dar prosseguimento.",
-        color: "text-red-500",
+        text: 'Nenhum um email vinculado ao projeto. Por favor, atualize o projeto pra dar prosseguimento.',
+        color: 'text-red-500',
         status: null,
-      });
-      return;
+      })
+      return
     }
     if (!phone_number) {
       setUploadMsg({
-        text: "Nenhum um telefone vinculado ao projeto. Por favor, atualize o projeto pra dar prosseguimento.",
-        color: "text-red-500",
+        text: 'Nenhum um telefone vinculado ao projeto. Por favor, atualize o projeto pra dar prosseguimento.',
+        color: 'text-red-500',
         status: null,
-      });
-      return;
+      })
+      return
     }
     if (!documentation) {
       setUploadMsg({
-        text: "Nenhum um telefone vinculado ao projeto. Por favor, atualize o projeto pra dar prosseguimento.",
-        color: "text-red-500",
+        text: 'Nenhum um telefone vinculado ao projeto. Por favor, atualize o projeto pra dar prosseguimento.',
+        color: 'text-red-500',
         status: null,
-      });
-      return;
+      })
+      return
     }
-    let fileRef = ref(storage, toSignFile);
-    const metadata = await getMetadata(fileRef);
-    const md = metadata;
+    let fileRef = ref(storage, toSignFile)
+    const metadata = await getMetadata(fileRef)
+    const md = metadata
 
-    const filePath = fileRef.fullPath;
+    const filePath = fileRef.fullPath
 
     setUploadMsg({
-      text: "Enviando arquivo...",
-      color: "text-[#15599a]",
-      status: "loading",
-    });
-    const { data } = await axios.post(
-      `/api/utils/clicksign/sendDigitalSigning?filePath=${encodeURIComponent(
-        filePath
-      )}`,
-      { projectId, contractName, email, phone_number, documentation }
-    );
-    console.log("RESPOSTA", data);
+      text: 'Enviando arquivo...',
+      color: 'text-[#15599a]',
+      status: 'loading',
+    })
+    const { data } = await axios.post(`/api/utils/clicksign/sendDigitalSigning?filePath=${encodeURIComponent(filePath)}`, {
+      projectId,
+      contractName,
+      email,
+      phone_number,
+      documentation,
+    })
+    console.log('RESPOSTA', data)
     setUploadMsg({
-      text: "Arquivo enviado com sucesso !",
-      color: "text-green-500",
-      status: "success",
-    });
+      text: 'Arquivo enviado com sucesso !',
+      color: 'text-green-500',
+      status: 'success',
+    })
   }
   return (
     <div className="w-full flex flex-col">
       <div className="flex items-center justify-center gap-2">
-        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-          ASSINATURA DIGITAL
-        </span>
+        <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">ASSINATURA DIGITAL</span>
         <div
           onClick={() => setShowMenu((prev) => !prev)}
           className={`${
             showMenu
-              ? "bg-[#15599a] text-white hover:bg-transparent hover:text-[#15599a]"
-              : "text-[#15559a] bg-transparent hover:bg-[#15599a] hover:text-white"
+              ? 'bg-[#15599a] text-white hover:bg-transparent hover:text-[#15599a]'
+              : 'text-[#15559a] bg-transparent hover:bg-[#15599a] hover:text-white'
           } p-2 rounded-full border border-[#15599a] text-xs hover:scale-110 duration-300 ease-in-out cursor-pointer`}
         >
           <FaFileSignature />
@@ -149,7 +137,7 @@ function ESigningBlock({
             <div className="w-full flex flex-col items-center">
               {digitalSigningInfo.documentoFinalizado ? (
                 <>
-                  {downloadMsg.status == "loading" ? (
+                  {downloadMsg.status == 'loading' ? (
                     <div className="grow flex items-center justify-center">
                       <div role="status">
                         <svg
@@ -173,115 +161,70 @@ function ESigningBlock({
                     </div>
                   ) : (
                     <div
-                      onClick={() =>
-                        handleDownload(digitalSigningInfo.documentoKey)
-                      }
+                      onClick={() => handleDownload(digitalSigningInfo.documentoKey)}
                       className="flex w-fit items-center p-2 rounded border border-blue-400 gap-2 cursor-pointer"
                     >
-                      <FaFilePdf style={{ color: "rgb(96,165,250)" }} />
-                      <p className="text-sm text-gray-500 font-medium">
-                        ARQUIVO ASSINADO
-                      </p>
+                      <FaFilePdf style={{ color: 'rgb(96,165,250)' }} />
+                      <p className="text-sm text-gray-500 font-medium">ARQUIVO ASSINADO</p>
                     </div>
                   )}
                 </>
               ) : null}
               <h1 className="text-center text-gray-500 font-medium text-sm">
-                Um documento foi adicionado para assinatura digital. Abaixo,
-                estão os status de assinatura dos signatários vinculados:
+                Um documento foi adicionado para assinatura digital. Abaixo, estão os status de assinatura dos signatários vinculados:
               </h1>
               <div className="flex w-full flex-col items-center">
                 <div className="flex items-center gap-2">
                   <div
                     className={`flex h-[13px] w-[13px] items-center justify-center rounded-full border-2 border-[#15599a] ${
-                      digitalSigningInfo.assinaturaContratante
-                        ? "bg-[#15599a]"
-                        : ""
+                      digitalSigningInfo.assinaturaContratante ? 'bg-[#15599a]' : ''
                     }`}
                   >
-                    {digitalSigningInfo.assinaturaContratante ? (
-                      <BsCheck style={{ color: "#fead61" }} />
-                    ) : null}
+                    {digitalSigningInfo.assinaturaContratante ? <BsCheck style={{ color: '#fead61' }} /> : null}
                   </div>
-                  <span
-                    className={`${
-                      digitalSigningInfo.assinaturaContratante
-                        ? "text-green-500"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    ASSINATURA DO CLIENTE
-                  </span>
+                  <span className={`${digitalSigningInfo.assinaturaContratante ? 'text-green-500' : 'text-gray-500'}`}>ASSINATURA DO CLIENTE</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div
                     className={`flex h-[13px] w-[13px] items-center justify-center rounded-full border-2 border-[#15599a] ${
-                      digitalSigningInfo.assinaturaContratada
-                        ? "bg-[#15599a]"
-                        : ""
+                      digitalSigningInfo.assinaturaContratada ? 'bg-[#15599a]' : ''
                     }`}
                   >
-                    {digitalSigningInfo.assinaturaContratada ? (
-                      <BsCheck style={{ color: "#fead61" }} />
-                    ) : null}
+                    {digitalSigningInfo.assinaturaContratada ? <BsCheck style={{ color: '#fead61' }} /> : null}
                   </div>
-                  <span
-                    className={`${
-                      digitalSigningInfo.assinaturaContratada
-                        ? "text-green-500"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    ASSINATURA DA CONTRATADA
-                  </span>
+                  <span className={`${digitalSigningInfo.assinaturaContratada ? 'text-green-500' : 'text-gray-500'}`}>ASSINATURA DA CONTRATADA</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div
                     className={`flex h-[13px] w-[13px] items-center justify-center rounded-full border-2 border-[#15599a] ${
-                      digitalSigningInfo.assinaturaValidador
-                        ? "bg-[#15599a]"
-                        : ""
+                      digitalSigningInfo.assinaturaValidador ? 'bg-[#15599a]' : ''
                     }`}
                   >
-                    {digitalSigningInfo.assinaturaValidador ? (
-                      <BsCheck style={{ color: "#fead61" }} />
-                    ) : null}
+                    {digitalSigningInfo.assinaturaValidador ? <BsCheck style={{ color: '#fead61' }} /> : null}
                   </div>
-                  <span
-                    className={`${
-                      digitalSigningInfo.assinaturaValidador
-                        ? "text-green-500"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    ASSINATURA DO VALIDADOR
-                  </span>
+                  <span className={`${digitalSigningInfo.assinaturaValidador ? 'text-green-500' : 'text-gray-500'}`}>ASSINATURA DO VALIDADOR</span>
                 </div>
               </div>
             </div>
           ) : contractLinks ? (
             <>
               <SelectFoatingInput
-                label={"ARQUIVO PARA ASSINATURA"}
+                label={'ARQUIVO PARA ASSINATURA'}
                 editable={true}
-                value={toSignFile ? toSignFile : "NÃO DEFINIDO"}
+                value={toSignFile ? toSignFile : 'NÃO DEFINIDO'}
                 options={[
                   ...contractLinks.map((fileObj) => {
                     return {
                       label: fileObj.title,
                       value: fileObj.link,
-                    };
+                    }
                   }),
-                  { label: "NÃO DEFINIDO", value: "NÃO DEFINIDO" },
+                  { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
                 ]}
                 handleChange={(value) => setToSignFile(value)}
               />
-              {uploadMsg.text ? (
-                <p className={`text-sm text-center ${uploadMsg.color} w-full`}>
-                  {uploadMsg.text}
-                </p>
-              ) : null}
-              {uploadMsg.status == "loading" ? (
+              {uploadMsg.text ? <p className={`text-sm text-center ${uploadMsg.color} w-full`}>{uploadMsg.text}</p> : null}
+              {uploadMsg.status == 'loading' ? (
                 <div className="grow flex items-center justify-center">
                   <div role="status">
                     <svg
@@ -304,26 +247,22 @@ function ESigningBlock({
                   </div>
                 </div>
               ) : (
-                <button
-                  onClick={send}
-                  className="bg-blue-200 hover:text-white hover:bg-blue-600 p-1 rounded-lg mt-2 flex items-center gap-1"
-                >
+                <button onClick={send} className="bg-blue-200 hover:text-white hover:bg-blue-600 p-1 rounded-lg mt-2 flex items-center gap-1">
                   <p className="text-xs font-medium">ENVIAR</p>
-                  <IoIosSend style={{ fontSize: "15px", marginTop: "1px" }} />
+                  <IoIosSend style={{ fontSize: '15px', marginTop: '1px' }} />
                 </button>
               )}
             </>
           ) : (
             <p className="text-sm text-gray-500 italic text-center">
-              Nenhum arquivo anexado na categoria de{" "}
-              <strong className="text-[#fead61]">contratos</strong> . Por favor,
-              anexe um arquivo para desbloquear o menu de E-Signing
+              Nenhum arquivo anexado na categoria de <strong className="text-[#fead61]">contratos</strong> . Por favor, anexe um arquivo para
+              desbloquear o menu de E-Signing
             </p>
           )}
         </div>
       ) : null}
     </div>
-  );
+  )
 }
 
-export default ESigningBlock;
+export default ESigningBlock

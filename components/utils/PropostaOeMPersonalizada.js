@@ -1,17 +1,15 @@
-import React from "react";
-import Logo from "../../utils/whitelogoHD.png";
-import Link from "next/link";
-import Image from "next/image";
-import { FiCheck } from "react-icons/fi";
+import React from 'react'
+import Logo from '../../utils//images/logo-texto-azul-vertical.png'
+import Link from 'next/link'
+import Image from 'next/image'
+import { FiCheck } from 'react-icons/fi'
 function PropostaOeMPersonalizada() {
-  const planOption = 2;
+  const planOption = 2
   return (
     <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
       <div className="grid grid-cols-5 w-full items-start">
         <div className="flex flex-col col-span-2">
-          <h1 className="text-xl font-bold text-[#15599b]">
-            RAFAEL LEONEL SILVA
-          </h1>
+          <h1 className="text-xl font-bold text-[#15599b]">RAFAEL LEONEL SILVA</h1>
           <p className="text-xl font-bold">Ituiutaba</p>
           <p className="text-xl font-bold">{new Date().toLocaleDateString()}</p>
         </div>
@@ -30,64 +28,41 @@ function PropostaOeMPersonalizada() {
         </div>
       </div>
       <div className="mt-2 border-2 border-black">
-        <h1 className="text-xl w-full text-center bg-[#15599b] text-white font-semibold">
-          ESCOPO DO PROJETO
-        </h1>
+        <h1 className="text-xl w-full text-center bg-[#15599b] text-white font-semibold">ESCOPO DO PROJETO</h1>
         <div className="grid grid-cols-4 divide-x-2 divide-black">
           <div className="flex flex-col items-center">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
-              Qtd.Módulos - Potência
-            </p>
+            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">Qtd.Módulos - Potência</p>
             <p>92 - 330W</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
-              Potência kWp
-            </p>
+            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">Potência kWp</p>
             <p>30,36 kWp</p>
           </div>
           <div className="flex flex-col items-center">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
-              Eficiência atual
-            </p>
+            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">Eficiência atual</p>
             <p>N/A</p>
           </div>
           <div className="flex flex-col items-center border-r-2 border-black">
-            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">
-              Estimativa de perda financeira anual
-            </p>
+            <p className="flex items-center h-14 text-center text-[#15599b] font-bold">Estimativa de perda financeira anual</p>
             <p>N/A</p>
           </div>
         </div>
       </div>
       <div className="flex flex-col mt-5">
-        <h1 className="w-full text-center text-xl text-[#15599b] font-semibold">
-          CONSEQUÊNCIAS DA FALTA DE MANUTENÇÃO
-        </h1>
+        <h1 className="w-full text-center text-xl text-[#15599b] font-semibold">CONSEQUÊNCIAS DA FALTA DE MANUTENÇÃO</h1>
         <div className="flex justify-center">
           <ul className="font-semibold text-xs">
             <li>1. Perda de geração de energia e eficiência;</li>
-            <li>
-              2. Danificação e perda de vida útil dos modulos por criação de
-              pontos de aquecimento;
-            </li>
+            <li>2. Danificação e perda de vida útil dos modulos por criação de pontos de aquecimento;</li>
             <li>3. Redução da vida útil dos equipamentos elétricos;</li>
-            <li>
-              4. Riscos de falhas elétricas e mecânicas, ocasionando
-              danificações e até possíveis incêndios;
-            </li>
-            <li>
-              5. Falta de monitoramento e consequentemente o sistema ficar
-              desconectado sem gerar energia;
-            </li>
+            <li>4. Riscos de falhas elétricas e mecânicas, ocasionando danificações e até possíveis incêndios;</li>
+            <li>5. Falta de monitoramento e consequentemente o sistema ficar desconectado sem gerar energia;</li>
             <li>6. Perda da garantia de instalação do sistema fotovoltaico.</li>
           </ul>
         </div>
       </div>
       <div className="mt-5">
-        <h1 className="w-full bg-[#15599b] text-white font-bold text-center ">
-          PLANOS E SERVIÇOS DE OPERAÇÃO E MANUTENÇÃO
-        </h1>
+        <h1 className="w-full bg-[#15599b] text-white font-bold text-center ">PLANOS E SERVIÇOS DE OPERAÇÃO E MANUTENÇÃO</h1>
         <div className="flex flex-col">
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full sm:px-6 lg:px-8">
@@ -95,16 +70,10 @@ function PropostaOeMPersonalizada() {
                 <table className="min-w-full border text-center">
                   <thead className="border-b bg-white">
                     <tr>
-                      <th
-                        scope="col"
-                        className="text-sm font-medium text-gray-900 px-6 py-2 border-r"
-                      >
+                      <th scope="col" className="text-sm font-medium text-gray-900 px-6 py-2 border-r">
                         Serviços
                       </th>
-                      <th
-                        scope="col"
-                        className="text-sm font-medium text-gray-900 px-2 py-2 border-r"
-                      >
+                      <th scope="col" className="text-sm font-medium text-gray-900 px-2 py-2 border-r">
                         Com a concorrência
                       </th>
                       {/* <th
@@ -114,10 +83,7 @@ function PropostaOeMPersonalizada() {
                         Manutenção simples
                       </th> */}
 
-                      <th
-                        scope="col"
-                        className="text-sm font-medium text-gray-900 px-2 py-2 border-r"
-                      >
+                      <th scope="col" className="text-sm font-medium text-gray-900 px-2 py-2 border-r">
                         Plano Sol
                       </th>
                       {/* <th
@@ -130,12 +96,8 @@ function PropostaOeMPersonalizada() {
                   </thead>
                   <tbody>
                     <tr className="border-b bg-white">
-                      <td className="px-2 text-xs font-medium text-gray-900 border-r">
-                        MANUTENÇÃO ELÉTRICA INVERSORES + QUADROS ELÉTRICOS
-                      </td>
-                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
-                        X
-                      </td>
+                      <td className="px-2 text-xs font-medium text-gray-900 border-r">MANUTENÇÃO ELÉTRICA INVERSORES + QUADROS ELÉTRICOS</td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">X</td>
                       {/* <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r text-center">
                         <div className="flex justify-center">
                           <FiCheck
@@ -152,8 +114,8 @@ function PropostaOeMPersonalizada() {
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
-                              color: "#23c906",
-                              fontSize: "20px",
+                              color: '#23c906',
+                              fontSize: '20px',
                               margin: 0,
                             }}
                           />
@@ -173,12 +135,8 @@ function PropostaOeMPersonalizada() {
                           </td> */}
                     </tr>
                     <tr className="border-b bg-white">
-                      <td className="px-2 text-xs font-medium text-gray-900 border-r">
-                        REAPERTO CONEXÕES ELÉTRICAS
-                      </td>
-                      <td className="text-xs text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
-                        X
-                      </td>
+                      <td className="px-2 text-xs font-medium text-gray-900 border-r">REAPERTO CONEXÕES ELÉTRICAS</td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">X</td>
                       {/* <td className="text-xs text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
                         <div className="flex justify-center">
                           <FiCheck
@@ -194,8 +152,8 @@ function PropostaOeMPersonalizada() {
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
-                              color: "#23c906",
-                              fontSize: "20px",
+                              color: '#23c906',
+                              fontSize: '20px',
                               margin: 0,
                             }}
                           />
@@ -216,12 +174,9 @@ function PropostaOeMPersonalizada() {
                     </tr>
                     <tr className="border-b bg-white">
                       <td className="px-2 text-xs font-medium text-gray-900 border-r">
-                        ANÁLISE E CONFERÊNCIA DE GRANDEZAS ELÉTRICAS DOS
-                        EQUIPAMENTOS ELÉTRICOS
+                        ANÁLISE E CONFERÊNCIA DE GRANDEZAS ELÉTRICAS DOS EQUIPAMENTOS ELÉTRICOS
                       </td>
-                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                        X
-                      </td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">X</td>
                       {/* <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         <div className="flex justify-center">
                           <FiCheck
@@ -237,8 +192,8 @@ function PropostaOeMPersonalizada() {
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
-                              color: "#23c906",
-                              fontSize: "20px",
+                              color: '#23c906',
+                              fontSize: '20px',
                               margin: 0,
                             }}
                           />
@@ -259,12 +214,9 @@ function PropostaOeMPersonalizada() {
                     </tr>
                     <tr className="border-b bg-white">
                       <td className="px-2 text-xs font-medium text-gray-900 border-r">
-                        CONFIGURAÇÃO E INSTALAÇÃO DE APLICATIVO DE MONITORAMENTO
-                        DE GERAÇÃO DO INVERSOR
+                        CONFIGURAÇÃO E INSTALAÇÃO DE APLICATIVO DE MONITORAMENTO DE GERAÇÃO DO INVERSOR
                       </td>
-                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                        X
-                      </td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">X</td>
                       {/* <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         <div className="flex justify-center">
                           <FiCheck
@@ -280,8 +232,8 @@ function PropostaOeMPersonalizada() {
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
-                              color: "#23c906",
-                              fontSize: "20px",
+                              color: '#23c906',
+                              fontSize: '20px',
                               margin: 0,
                             }}
                           />
@@ -301,15 +253,13 @@ function PropostaOeMPersonalizada() {
                       </td> */}
                     </tr>
                     <tr className="border-b bg-white">
-                      <td className="px-2 text-xs font-medium text-gray-900 border-r">
-                        LIMPEZA NOS MÓDULOS FOTOVOLTAICOS
-                      </td>
+                      <td className="px-2 text-xs font-medium text-gray-900 border-r">LIMPEZA NOS MÓDULOS FOTOVOLTAICOS</td>
                       <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
-                              color: "#23c906",
-                              fontSize: "20px",
+                              color: '#23c906',
+                              fontSize: '20px',
                               margin: 0,
                             }}
                           />
@@ -330,8 +280,8 @@ function PropostaOeMPersonalizada() {
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
-                              color: "#23c906",
-                              fontSize: "20px",
+                              color: '#23c906',
+                              fontSize: '20px',
                               margin: 0,
                             }}
                           />
@@ -353,12 +303,9 @@ function PropostaOeMPersonalizada() {
 
                     <tr className="border-b bg-white">
                       <td className="px-2 text-xs font-medium text-gray-900 border-r">
-                        MONITORAMENTO DA GERAÇÃO DE ENERGIA POR 12 MESES C/
-                        RELATÓRIOS MENSAIS DE GERAÇÃO
+                        MONITORAMENTO DA GERAÇÃO DE ENERGIA POR 12 MESES C/ RELATÓRIOS MENSAIS DE GERAÇÃO
                       </td>
-                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                        X
-                      </td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">X</td>
                       {/* <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         X
                       </td> */}
@@ -366,8 +313,8 @@ function PropostaOeMPersonalizada() {
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
-                              color: "#23c906",
-                              fontSize: "20px",
+                              color: '#23c906',
+                              fontSize: '20px',
                               margin: 0,
                             }}
                           />
@@ -387,12 +334,9 @@ function PropostaOeMPersonalizada() {
                     </tr>
                     <tr className="border-b bg-white">
                       <td className="px-2 text-xs font-medium text-gray-900 border-r">
-                        MANUTENÇÃO CORRETIVA EM CASO DE NECESSIDADE (SEM INSUMOS
-                        ELÉTRICOS)
+                        MANUTENÇÃO CORRETIVA EM CASO DE NECESSIDADE (SEM INSUMOS ELÉTRICOS)
                       </td>
-                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                        X
-                      </td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">X</td>
                       {/* <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
                         X
                       </td> */}
@@ -400,8 +344,8 @@ function PropostaOeMPersonalizada() {
                         <div className="flex justify-center">
                           <FiCheck
                             style={{
-                              color: "#23c906",
-                              fontSize: "20px",
+                              color: '#23c906',
+                              fontSize: '20px',
                               margin: 0,
                             }}
                           />
@@ -421,12 +365,8 @@ function PropostaOeMPersonalizada() {
                       </td> */}
                     </tr>
                     <tr className="border-b bg-white">
-                      <td className="px-2 text-xs font-medium text-gray-900 border-r">
-                        DISTRIBUIÇÃO DE CRÉDITOS
-                      </td>
-                      <td className="text-xs text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
-                        X
-                      </td>
+                      <td className="px-2 text-xs font-medium text-gray-900 border-r">DISTRIBUIÇÃO DE CRÉDITOS</td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">X</td>
                       {/* <td className="text-xs text-gray-900 font-light px-6 py-2 whitespace-nowrap border-r">
                         X
                       </td> */}
@@ -435,8 +375,8 @@ function PropostaOeMPersonalizada() {
                           <p>2x</p>
                           <FiCheck
                             style={{
-                              color: "#23c906",
-                              fontSize: "20px",
+                              color: '#23c906',
+                              fontSize: '20px',
                               margin: 0,
                             }}
                           />
@@ -457,18 +397,12 @@ function PropostaOeMPersonalizada() {
                     </tr>
 
                     <tr className="border-b bg-white">
-                      <td className="px-2 py-1 text-xs font-medium text-gray-900 border-r">
-                        VALOR DO PLANO ANUAL EM ATÉ 10X SEM JUROS
-                      </td>
-                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                        -
-                      </td>
+                      <td className="px-2 py-1 text-xs font-medium text-gray-900 border-r">VALOR DO PLANO ANUAL EM ATÉ 10X SEM JUROS</td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">-</td>
                       {/* <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
                         R$ 3.008,84
                       </td> */}
-                      <td className="text-xs text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
-                        R$ 3.008,84
-                      </td>
+                      <td className="text-xs text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">R$ 3.008,84</td>
                       {/* <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
                         R${" "}
                         {(
@@ -480,18 +414,12 @@ function PropostaOeMPersonalizada() {
                       </td> */}
                     </tr>
                     <tr className="border-b bg-white">
-                      <td className="px-2 py-1 text-xs font-medium text-gray-900 border-r">
-                        VALOR DO PLANO ANUAL A VISTA
-                      </td>
-                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">
-                        -
-                      </td>
+                      <td className="px-2 py-1 text-xs font-medium text-gray-900 border-r">VALOR DO PLANO ANUAL A VISTA</td>
+                      <td className="text-xs text-gray-900 font-light px-6 py-4 whitespace-nowrap border-r">-</td>
                       {/* <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
                         R$ 3.008,84
                       </td> */}
-                      <td className="text-xs text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">
-                        R$ 2.700,00
-                      </td>
+                      <td className="text-xs text-gray-900 font-semibold px-6 py-4 whitespace-nowrap border-r">R$ 2.700,00</td>
                       {/* <td className="text-sm text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
                         R${" "}
                         {(
@@ -510,9 +438,7 @@ function PropostaOeMPersonalizada() {
         </div>
       </div>
       <div>
-        <h1 className="w-full bg-[#15599b] text-white font-bold text-center">
-          ASSINATURA
-        </h1>
+        <h1 className="w-full bg-[#15599b] text-white font-bold text-center">ASSINATURA</h1>
         <div className="mt-10 flex justify-between">
           <div className="w-[35%]">
             <hr className="border-t-2 border-black" />
@@ -525,13 +451,10 @@ function PropostaOeMPersonalizada() {
         </div>
       </div>
       <div className="w-full flex items-center justify-center mt-4">
-        <p className="text-sm text-[#15599a] italic">
-          *Proposta com validade de 30 dias contando de{" "}
-          {new Date().toLocaleDateString()}
-        </p>
+        <p className="text-sm text-[#15599a] italic">*Proposta com validade de 30 dias contando de {new Date().toLocaleDateString()}</p>
       </div>
     </div>
-  );
+  )
 }
 
-export default PropostaOeMPersonalizada;
+export default PropostaOeMPersonalizada

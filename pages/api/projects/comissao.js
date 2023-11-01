@@ -1,16 +1,15 @@
-import { ObjectId } from "mongodb";
-import connectToDatabase from "../../../utils/connectDb";
-import { vendedores } from "../../../utils/constants";
+import { ObjectId } from 'mongodb'
+import connectToDatabase from '../../../utils/services/mongodb/projects'
+import { vendedores } from '../../../utils/constants'
 export default async function handler(req, res) {
   function getComissao(vendedorNome, insider, tipoDeServico) {
-    let vendedorInfo = vendedores.filter((x) => x.nome == vendedorNome)[0];
-    if (tipoDeServico == "OPERAÇÃO E MANUTENÇÃO") {
-      return { porcentagemComissao: 10 };
+    let vendedorInfo = vendedores.filter((x) => x.nome == vendedorNome)[0]
+    if (tipoDeServico == 'OPERAÇÃO E MANUTENÇÃO') {
+      return { porcentagemComissao: 10 }
     } else {
       if (vendedorInfo != undefined) {
-        if (insider)
-          return { porcentagemComissao: vendedorInfo.comissaoInside };
-        else return { porcentagemComissao: vendedorInfo.comissaoAtivo };
+        if (insider) return { porcentagemComissao: vendedorInfo.comissaoInside }
+        else return { porcentagemComissao: vendedorInfo.comissaoAtivo }
 
         // return {
         //   pcAtivo: Number(vendedorInfo.comissaoAtivo),
@@ -19,38 +18,32 @@ export default async function handler(req, res) {
       } else {
         return {
           porcentagemComissao: 0,
-        };
+        }
       }
     }
   }
-  if (req.method == "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
-    var depois = new Date(req.query.depois).toISOString();
-    var antes = new Date(req.query.antes).toISOString();
-    console.log("DEPOIS", depois, "ANTES", antes);
+  if (req.method == 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
+    var depois = new Date(req.query.depois).toISOString()
+    var antes = new Date(req.query.antes).toISOString()
+    console.log('DEPOIS', depois, 'ANTES', antes)
     try {
       var arr = await collection
         .aggregate([
           {
             $match: {
-              "contrato.status": "ASSINADO",
+              'contrato.status': 'ASSINADO',
               $or: [
                 {
-                  tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
-                  $and: [
-                    { "compra.dataPagamento": { $gte: depois } },
-                    { "compra.dataPagamento": { $lte: antes } },
-                  ],
+                  tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
+                  $and: [{ 'compra.dataPagamento': { $gte: depois } }, { 'compra.dataPagamento': { $lte: antes } }],
                 },
                 {
                   tipoDeServico: {
-                    $in: ["OPERAÇÃO E MANUTENÇÃO", "MONTAGEM E DESMONTAGEM"],
+                    $in: ['OPERAÇÃO E MANUTENÇÃO', 'MONTAGEM E DESMONTAGEM'],
                   },
-                  $and: [
-                    { "pagamento.dataRecebimento": { $gte: depois } },
-                    { "pagamento.dataRecebimento": { $lte: antes } },
-                  ],
+                  $and: [{ 'pagamento.dataRecebimento': { $gte: depois } }, { 'pagamento.dataRecebimento': { $lte: antes } }],
                 },
               ],
             },
@@ -63,22 +56,22 @@ export default async function handler(req, res) {
               cidade: 1,
               vendedor: 1,
               tipoDeServico: 1,
-              "contrato.dataAssinatura": 1,
-              "contrato.comissaoVendedor": 1,
-              "contrato.comissaoPaga": 1,
-              "pagamento.dataRecebimento": 1,
-              "sistema.potPico": 1,
-              "sistema.valorProjeto": 1,
-              "padrao.valor": 1,
-              "estruturaPersonalizada.valor": 1,
-              "oem.valor": 1,
-              "compra.dataPagamento": 1,
+              'contrato.dataAssinatura': 1,
+              'contrato.comissaoVendedor': 1,
+              'contrato.comissaoPaga': 1,
+              'pagamento.dataRecebimento': 1,
+              'sistema.potPico': 1,
+              'sistema.valorProjeto': 1,
+              'padrao.valor': 1,
+              'estruturaPersonalizada.valor': 1,
+              'oem.valor': 1,
+              'compra.dataPagamento': 1,
               canalVenda: 1,
               insider: 1,
             },
           },
         ])
-        .toArray();
+        .toArray()
       arr = arr.map((x) => {
         // var valor;
         // var valorEstrutura;
@@ -154,33 +147,32 @@ export default async function handler(req, res) {
           ...x,
           porcentagemComissao: x.contrato.comissaoVendedor
             ? x.contrato.comissaoVendedor
-            : getComissao(x.vendedor.nome, x.insider, x.tipoDeServico)
-                .porcentagemComissao,
+            : getComissao(x.vendedor.nome, x.insider, x.tipoDeServico).porcentagemComissao,
           porcentagemComissaoInsider: 0.3,
           // valorComissaoProjeto: Number(valor),
           // valorComissaoPadrao: Number(valorPadrao),
           // valorComissaoEstrutura: Number(valorEstrutura),
-        };
-      });
-      res.json(arr);
+        }
+      })
+      res.json(arr)
     } catch (error) {
-      res.status(500).send("Erro na comunicação com o servidor.");
+      res.status(500).send('Erro na comunicação com o servidor.')
     }
-  } else if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
+  } else if (req.method === 'POST') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
     let changes = req.body.map((mat) => {
       return {
         updateOne: {
           filter: { _id: ObjectId(mat._id) },
           update: {
-            $set: { "contrato.comissaoVendedor": mat.porcentagemComissao },
+            $set: { 'contrato.comissaoVendedor': mat.porcentagemComissao },
           },
         },
-      };
-    });
-    let output = await collection.bulkWrite(changes);
-    console.log(output);
-    res.json("OK");
+      }
+    })
+    let output = await collection.bulkWrite(changes)
+    console.log(output)
+    res.json('OK')
   }
 }

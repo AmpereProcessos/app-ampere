@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import Logo from '../../../utils/whitelogo.png'
-import connectToDatabase from '../../../utils/connectDb'
+import Logo from '../../../utils/images/logo-texto-azul-vertical.png'
+import connectToDatabase from '../../../utils/services/mongodb/projects'
 import { ObjectId } from 'mongodb'
 function formatCnpjCpf(value) {
   const cnpjCpf = value.replace(/\D/g, '')

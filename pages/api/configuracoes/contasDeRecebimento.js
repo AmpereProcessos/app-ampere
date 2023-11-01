@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import connectToDatabase from '../../../utils/auxiliaresDb'
+import connectToDatabase from '../../../utils/services/mongodb/auxiliaries'
 import createHttpError from 'http-errors'
 import { errorHandler } from '../../../utils/methods/handlers'
 export default async function handler(req, res) {

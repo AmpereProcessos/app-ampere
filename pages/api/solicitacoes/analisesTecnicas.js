@@ -1,6 +1,6 @@
 import createError from 'http-errors'
 import { errorHandler } from '../../../utils/methods/handlers'
-import connectToSolicitacoesDatabase from '../../../utils/solicitacoesDb'
+import connectToSolicitacoesDatabase from '../../../utils/services/mongodb/requests'
 
 import { ObjectId } from 'mongodb'
 import createHttpError from 'http-errors'

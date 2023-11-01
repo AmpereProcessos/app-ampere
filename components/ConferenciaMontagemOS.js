@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { fileTypes } from '../utils/constants'
-import { storage } from '../utils/firebase'
+import { storage } from '../utils/services/firebase/firebase-storage'
 import { parseCookies } from 'nookies'
 import EtapaTelhado from './etapasConferenciaMontagem/EtapaTelhado'
 import EtapaMontagemMecanica from './etapasConferenciaMontagem/EtapaMontagemMecanica'

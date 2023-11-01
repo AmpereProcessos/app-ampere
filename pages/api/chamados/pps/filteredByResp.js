@@ -1,8 +1,8 @@
-import connectToDatabase from "../../../../utils/callsDb";
+import connectToDatabase from '../../../../utils/services/mongodb/calls'
 export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY);
-    const collection = db.collection("pps");
+  if (req.method === 'POST') {
+    const db = await connectToDatabase(process.env.DB_KEY)
+    const collection = db.collection('pps')
     let calls = await collection
       .aggregate([
         {
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
           $sort: { carimboDataHora: -1 },
         },
       ])
-      .toArray();
-    return res.json(calls);
+      .toArray()
+    return res.json(calls)
   }
 }

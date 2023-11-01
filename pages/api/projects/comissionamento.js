@@ -1,15 +1,15 @@
-import connectToDatabase from "../../../utils/connectDb";
+import connectToDatabase from '../../../utils/services/mongodb/projects'
 export default async function handler(req, res) {
-  if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
+  if (req.method === 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
     let arr = await collection
       .aggregate([
         {
           $match: {
-            "comissionamento.projetos": { $ne: true },
-            "contrato.status": "ASSINADO",
-            "compra.statusLiberacao": { $in: ["PAGO", "REALIZAR COMPRA"] },
+            'comissionamento.projetos': { $ne: true },
+            'contrato.status': 'ASSINADO',
+            'compra.statusLiberacao': { $in: ['PAGO', 'REALIZAR COMPRA'] },
           },
         },
         {
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
           },
         },
       ])
-      .toArray();
-    res.json(arr);
+      .toArray()
+    res.json(arr)
   }
 }

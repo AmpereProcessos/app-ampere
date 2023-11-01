@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import axios from "axios";
-import Image from "next/image";
-import Logo from "../../../utils/whitelogoHD.png";
-import Link from "next/link";
-import connectToDatabase from "../../../utils/auxiliaresDb";
-import { FiCheck } from "react-icons/fi";
-import { ObjectId } from "mongodb";
-import PropostaPDFModel from "../../../components/PropostaPDFModel";
+import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import axios from 'axios'
+import Image from 'next/image'
+import Logo from '../../../utils//images/logo-texto-azul-vertical.png'
+import Link from 'next/link'
+import connectToDatabase from '../../../utils/services/mongodb/auxiliaries'
+import { FiCheck } from 'react-icons/fi'
+import { ObjectId } from 'mongodb'
+import PropostaPDFModel from '../../../components/PropostaPDFModel'
 function pdfProposta({ info }) {
   /*const router = useRouter();
   const { id } = router.query;
@@ -17,32 +17,29 @@ function pdfProposta({ info }) {
       .get(`http://localhost:3000/api/${id}`)
       .then((res) => setInfos(res.data));
   }, []);*/
-  const mtPrice = (
-    info.price * info.modulesQty +
-    1.5 * 2 * info.distance
-  ).toFixed(2);
+  const mtPrice = (info.price * info.modulesQty + 1.5 * 2 * info.distance).toFixed(2)
 
   function quotaCreditNumber() {
-    console.log(mtPrice / 250);
+    console.log(mtPrice / 250)
     if (Math.floor(mtPrice / 250) < 1) {
-      return "";
+      return ''
     } else if (mtPrice / 250 > 12) {
-      return "DIVIDIDO EM ATÉ 12x NO CARTÃO";
+      return 'DIVIDIDO EM ATÉ 12x NO CARTÃO'
     } else {
-      return `DIVIDIDO EM ATÉ ${Math.floor(mtPrice / 250)}x NO CARTÃO`;
+      return `DIVIDIDO EM ATÉ ${Math.floor(mtPrice / 250)}x NO CARTÃO`
     }
   }
   function quotaBoletoNumber() {
-    console.log(mtPrice / 250);
+    console.log(mtPrice / 250)
     if (Math.floor(mtPrice / 250) <= 1) {
-      return "";
+      return ''
     } else if (mtPrice / 250 > 12) {
-      return " OU 12x NO BOLETO";
+      return ' OU 12x NO BOLETO'
     } else {
-      return ` OU ${Math.floor(mtPrice / 250)}x NO BOLETO`;
+      return ` OU ${Math.floor(mtPrice / 250)}x NO BOLETO`
     }
   }
-  return <PropostaPDFModel info={info} />;
+  return <PropostaPDFModel info={info} />
   // return (
   //   <div className="w-[21cm] h-[29.7cm] bg-zinc-200 p-4">
   //     <div className="grid grid-cols-5 w-full">
@@ -631,16 +628,16 @@ export async function getStaticProps({ params }) {
 }*/
 export async function getServerSideProps({ query }) {
   // Fetch data from external API
-  const id = query.id;
+  const id = query.id
   /*let res = await axios.get(`/api/${id}`);
   const info = await res.data;*/
-  const db = await connectToDatabase(process.env.DB_KEY);
-  const collection = db.collection("propostas");
+  const db = await connectToDatabase(process.env.DB_KEY)
+  const collection = db.collection('propostas')
   let proposta = await collection.findOne({
     _id: ObjectId(id),
-  });
-  let info = JSON.parse(JSON.stringify(proposta));
+  })
+  let info = JSON.parse(JSON.stringify(proposta))
   // Pass data to the page via props
-  return { props: { info } };
+  return { props: { info } }
 }
-export default pdfProposta;
+export default pdfProposta

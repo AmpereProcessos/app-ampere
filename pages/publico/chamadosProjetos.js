@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
-import Logo from '../../utils/whitelogo.png'
+import Logo from '../../utils/images/logo-texto-azul-vertical.png'
 import { projetistas, projetosSolicitations } from '../../utils/constants'
 import axios from 'axios'
 import Link from 'next/link'

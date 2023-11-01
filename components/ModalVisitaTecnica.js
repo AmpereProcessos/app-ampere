@@ -15,7 +15,7 @@ import { getErrorMessage } from '../utils/methods/handlers'
 import { engineeringAnalysts, technicalAnalysisStatus } from '../utils/select-options'
 import { formatNameAsInitials } from '../utils/methods/formatting'
 import { getGenFactorByOrientation } from '../utils/methods/shared'
-import { storage } from '../utils/firebase'
+import { storage } from '../utils/services/firebase/firebase-storage'
 
 import { AiOutlineSearch } from 'react-icons/ai'
 import { FaSave } from 'react-icons/fa'

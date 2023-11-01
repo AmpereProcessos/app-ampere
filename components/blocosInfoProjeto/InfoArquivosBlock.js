@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { deleteObject, ref } from 'firebase/storage'
 import React, { useState } from 'react'
-import { storage } from '../../utils/firebase'
+import { storage } from '../../utils/services/firebase/firebase-storage'
 import AnexoArquivo from '../AnexoArquivo'
 import FileLinkBlock from '../utils/FileLinkBlock'
 import { useQueryClient } from 'react-query'

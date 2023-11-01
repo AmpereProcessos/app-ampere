@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-import Logo from '../../utils/whitelogoHD.png'
+import Logo from '../../utils//images/logo-texto-azul-vertical.png'
 import Image from 'next/image'
 import TextFloatingInput from '../../components/TextFloatingInput'
 import SelectFoatingInput from '../../components/SelectFloatingInput'
-import estadosECidades from '../../utils/estados_cidades.json'
+import estadosECidades from '../../utils/jsons/estados-cidades.json'
 import axios from 'axios'
 import NumberFloatingInput from '../../components/NumberFloatingInput'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { formatToPhone, vendedores } from '../../utils/constants'
-import irradiacoes from '../../utils/irradiancia.json'
+import irradiacoes from '../../utils/jsons/irradiancia.json'
 import PropostaPDFModel from '../../components/PropostaPDFModel'
 function PropostaOeM() {
   const [proposeInfo, setProposeInfo] = useState({

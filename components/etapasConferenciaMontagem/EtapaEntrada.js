@@ -4,7 +4,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import axios from 'axios'
 import { setCookie } from 'nookies'
 import { fileTypes } from '../../utils/constants'
-import { storage } from '../../utils/firebase'
+import { storage } from '../../utils/services/firebase/firebase-storage'
 import toast from 'react-hot-toast'
 import { getErrorMessage } from '../../utils/methods/handlers'
 function EtapaEntrada({ next, order }) {

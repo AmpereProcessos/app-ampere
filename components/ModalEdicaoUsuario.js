@@ -1,39 +1,39 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { VscChromeClose } from "react-icons/vsc";
-import { storage } from "../utils/firebase";
-import { BsCheckLg } from "react-icons/bs";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import axios from "axios";
-import { equipesTecnicas, routes, vendedores } from "../utils/constants";
-import SaveButton from "./utils/Buttons/SaveButton";
-import { FaSave } from "react-icons/fa";
+import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
+import { VscChromeClose } from 'react-icons/vsc'
+import { storage } from '../utils/services/firebase/firebase-storage'
+import { BsCheckLg } from 'react-icons/bs'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import axios from 'axios'
+import { equipesTecnicas, routes, vendedores } from '../utils/constants'
+import SaveButton from './utils/Buttons/SaveButton'
+import { FaSave } from 'react-icons/fa'
 const MODAL_STYLES = {
-  position: "fixed",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%,-50%)",
-  backgroundColor: "#fff",
-  minWidth: "40%",
-  height: "87%",
-  borderRadius: "5px",
-  padding: "10px",
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%,-50%)',
+  backgroundColor: '#fff',
+  minWidth: '40%',
+  height: '87%',
+  borderRadius: '5px',
+  padding: '10px',
   zIndex: 1000,
-};
+}
 const OVERLAY_STYLES = {
-  position: "fixed",
+  position: 'fixed',
   top: 0,
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: "rgba(0,0,0,.7)",
+  backgroundColor: 'rgba(0,0,0,.7)',
   zIndex: 1000,
-};
+}
 function formatCPF(value) {
-  const cnpjCpf = value.replace(/\D/g, "");
+  const cnpjCpf = value.replace(/\D/g, '')
 
   if (cnpjCpf.length === 11) {
-    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, '$1.$2.$3-$4')
   }
 
   // return cnpjCpf.replace(
@@ -42,20 +42,20 @@ function formatCPF(value) {
   // );
 }
 function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
-  const [msg, setMsg] = useState({ text: "", color: "" });
-  const [info, setInfo] = useState(userInfo);
-  const [image, setImage] = useState();
+  const [msg, setMsg] = useState({ text: '', color: '' })
+  const [info, setInfo] = useState(userInfo)
+  const [image, setImage] = useState()
   async function uploadImage() {
-    var splitNome = info.nome.toLowerCase().split(" ");
-    var fixedNome = splitNome.join("_");
-    var imageRef = ref(storage, `usuarios/avatar-${fixedNome}`);
-    let res = await uploadBytes(imageRef, image);
-    let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
-    return url;
+    var splitNome = info.nome.toLowerCase().split(' ')
+    var fixedNome = splitNome.join('_')
+    var imageRef = ref(storage, `usuarios/avatar-${fixedNome}`)
+    let res = await uploadBytes(imageRef, image)
+    let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
+    return url
   }
   async function saveChanges() {
     if (image) {
-      var url = await uploadImage();
+      var url = await uploadImage()
     }
     axios
       .put(`/api/auth/user`, {
@@ -63,56 +63,54 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
         changes: { ...info, avatar_url: url ? url : info.avatar_url },
       })
       .then((res) => {
-        setMsg({ text: "Alterações feitas!", color: "text-green-500" });
+        setMsg({ text: 'Alterações feitas!', color: 'text-green-500' })
         setTimeout(() => {
-          setMsg({ text: "", color: "" });
-        }, 2500);
-        getUsers();
+          setMsg({ text: '', color: '' })
+        }, 2500)
+        getUsers()
       })
       .catch((err) =>
         setMsg({
-          text: "Um erro ocorreu na alteração de informações.",
-          color: "text-red-500",
+          text: 'Um erro ocorreu na alteração de informações.',
+          color: 'text-red-500',
         })
-      );
+      )
   }
   function addRoute(rota) {
-    let arr = info.accessibleRoutes;
-    arr.push(rota);
-    setInfo({ ...info, accessibleRoutes: [...arr] });
+    let arr = info.accessibleRoutes
+    arr.push(rota)
+    setInfo({ ...info, accessibleRoutes: [...arr] })
   }
   function removeRoute(index) {
-    let arr = info.accessibleRoutes;
-    arr.splice(index, 1);
-    setInfo({ ...info, accessibleRoutes: arr });
+    let arr = info.accessibleRoutes
+    arr.splice(index, 1)
+    setInfo({ ...info, accessibleRoutes: arr })
   }
   useEffect(() => {
     // create the preview
     if (image) {
-      const objectUrl = URL.createObjectURL(image);
-      setInfo({ ...info, avatar_url: objectUrl });
+      const objectUrl = URL.createObjectURL(image)
+      setInfo({ ...info, avatar_url: objectUrl })
 
       // free memory when ever this component is unmounted
-      return () => URL.revokeObjectURL(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl)
     }
-  }, [image]);
-  console.log(info);
-  console.log("IMAGE", image);
+  }, [image])
+  console.log(info)
+  console.log('IMAGE', image)
   return (
     <div style={OVERLAY_STYLES}>
       <div className="w-[90%] lg:w-[40%]" style={MODAL_STYLES}>
         <div className="flex flex-col h-full">
           <div className="flex w-full justify-between pb-2 border-b border-gray-200">
-            <h1 className="text-center font-bold text-[#15599a] self-start">
-              ALTERAÇÃO DE INFORMAÇÕES
-            </h1>
+            <h1 className="text-center font-bold text-[#15599a] self-start">ALTERAÇÃO DE INFORMAÇÕES</h1>
             <div className="self-end flex items-center justify-center h-full">
               <button className="flex items-center justify-center hover:scale-125 transition duration-300 ease-in-out">
                 <VscChromeClose
                   onClick={() => {
-                    closeModal();
+                    closeModal()
                   }}
-                  style={{ color: "red" }}
+                  style={{ color: 'red' }}
                 />
               </button>
             </div>
@@ -126,18 +124,14 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                     // width={96}
                     // height={96}
                     fill={true}
-                    layout={"fill"}
+                    layout={'fill'}
                     style={{
-                      borderRadius: "100%",
-                      objectFit: "cover",
-                      position: "absolute",
+                      borderRadius: '100%',
+                      objectFit: 'cover',
+                      position: 'absolute',
                     }}
                   />
-                  <input
-                    onChange={(e) => setImage(e.target.files[0])}
-                    className="h-full w-full opacity-0"
-                    type="file"
-                  />
+                  <input onChange={(e) => setImage(e.target.files[0])} className="h-full w-full opacity-0" type="file" />
                 </div>
               ) : image ? (
                 <div className="mb-3 rounded-full relative w-[120px] h-[120px] cursor-pointer">
@@ -146,11 +140,11 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                     // width={96}
                     // height={96}
                     fill={true}
-                    layout={"fill"}
+                    layout={'fill'}
                     style={{
-                      borderRadius: "100%",
-                      objectFit: "cover",
-                      position: "absolute",
+                      borderRadius: '100%',
+                      objectFit: 'cover',
+                      position: 'absolute',
                     }}
                   />
                   <input
@@ -164,20 +158,13 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                 <div className="h-[120px] w-[120px] relative rounded-full flex justify-center items-center bg-gray-200 border border-gray-300">
                   {image?.name ? (
                     <div className="absolute flex items-center justify-center">
-                      <BsCheckLg style={{ color: "green", fontSize: "25px" }} />
+                      <BsCheckLg style={{ color: 'green', fontSize: '25px' }} />
                     </div>
                   ) : (
-                    <p className="text-xs absolute text-gray-700 text-center w-full font-bold">
-                      ESCOLHA UMA IMAGEM
-                    </p>
+                    <p className="text-xs absolute text-gray-700 text-center w-full font-bold">ESCOLHA UMA IMAGEM</p>
                   )}
 
-                  <input
-                    onChange={(e) => setImage(e.target.files[0])}
-                    className="h-full w-full opacity-0"
-                    type="file"
-                    accept=".png, .jpeg"
-                  />
+                  <input onChange={(e) => setImage(e.target.files[0])} className="h-full w-full opacity-0" type="file" accept=".png, .jpeg" />
                 </div>
               )}
             </div>
@@ -238,9 +225,7 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
             <div className="relative z-0 w-full mb-6 group">
               <input
                 value={info.cpf}
-                onChange={(e) =>
-                  setInfo({ ...info, cpf: formatCPF(e.target.value) })
-                }
+                onChange={(e) => setInfo({ ...info, cpf: formatCPF(e.target.value) })}
                 type="text"
                 name="cpf"
                 id="cpf"
@@ -289,44 +274,30 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
               </label>
             </div>
             <div className="flex flex-col w-full">
-              <label className="text-gray-500 text-sm">
-                DATA DE NASCIMENTO
-              </label>
+              <label className="text-gray-500 text-sm">DATA DE NASCIMENTO</label>
               <input
-                value={
-                  info.birthday
-                    ? new Date(info.birthday).toISOString().slice(0, 10)
-                    : 0
-                }
+                value={info.birthday ? new Date(info.birthday).toISOString().slice(0, 10) : 0}
                 onChange={(e) =>
                   setInfo({
                     ...info,
-                    birthday: e.target.value
-                      ? new Date(e.target.value).toISOString()
-                      : null,
+                    birthday: e.target.value ? new Date(e.target.value).toISOString() : null,
                   })
                 }
-                type={"date"}
+                type={'date'}
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               />
             </div>
             <div className="flex flex-col w-full">
               <label className="text-gray-500 text-sm">DATA DE ADMISSÃO</label>
               <input
-                value={
-                  info.admission
-                    ? new Date(info.admission).toISOString().slice(0, 10)
-                    : 0
-                }
+                value={info.admission ? new Date(info.admission).toISOString().slice(0, 10) : 0}
                 onChange={(e) =>
                   setInfo({
                     ...info,
-                    admission: e.target.value
-                      ? new Date(e.target.value).toISOString()
-                      : null,
+                    admission: e.target.value ? new Date(e.target.value).toISOString() : null,
                   })
                 }
-                type={"date"}
+                type={'date'}
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               />
             </div>
@@ -344,9 +315,7 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                     </button>
                   ))
                 ) : (
-                  <p className="col-span-4 text-center italic text-gray-600">
-                    SEM ROTAS ADICIONADAS...
-                  </p>
+                  <p className="col-span-4 text-center italic text-gray-600">SEM ROTAS ADICIONADAS...</p>
                 )}
               </div>
             </div>
@@ -379,7 +348,7 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                     })
                   }
                   className={`${
-                    info.visualizacao ? "opacity-30" : ""
+                    info.visualizacao ? 'opacity-30' : ''
                   } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
                 >
                   GERAL
@@ -388,12 +357,12 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                   onClick={() =>
                     setInfo({
                       ...info,
-                      visualizacao: "VENDEDOR",
+                      visualizacao: 'VENDEDOR',
                       regional: undefined,
                     })
                   }
                   className={`${
-                    info.visualizacao == "VENDEDOR" ? "" : "opacity-30"
+                    info.visualizacao == 'VENDEDOR' ? '' : 'opacity-30'
                   } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
                 >
                   VENDEDOR
@@ -402,12 +371,12 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                   onClick={() =>
                     setInfo({
                       ...info,
-                      visualizacao: "REGIONAL",
+                      visualizacao: 'REGIONAL',
                       vendedor: undefined,
                     })
                   }
                   className={`${
-                    info.visualizacao == "REGIONAL" ? "" : "opacity-30"
+                    info.visualizacao == 'REGIONAL' ? '' : 'opacity-30'
                   } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
                 >
                   REGIONAL
@@ -416,12 +385,12 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                   onClick={() =>
                     setInfo({
                       ...info,
-                      visualizacao: "INSIDE",
+                      visualizacao: 'INSIDE',
                       regional: undefined,
                     })
                   }
                   className={`${
-                    info.visualizacao == "INSIDE" ? "" : "opacity-30"
+                    info.visualizacao == 'INSIDE' ? '' : 'opacity-30'
                   } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
                 >
                   INSIDE
@@ -430,27 +399,25 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                   onClick={() =>
                     setInfo({
                       ...info,
-                      visualizacao: "OBRAS",
-                      equipe: "NÃO DEFINIDO",
+                      visualizacao: 'OBRAS',
+                      equipe: 'NÃO DEFINIDO',
                       regional: undefined,
                       vendedor: undefined,
                     })
                   }
                   className={`${
-                    info.visualizacao == "OBRAS" ? "" : "opacity-30"
+                    info.visualizacao == 'OBRAS' ? '' : 'opacity-30'
                   } text-center border border-[#15599a] text-[#15599a] font-bold p-2 rounded w-full`}
                 >
                   OBRAS
                 </button>
               </div>
-              {info.visualizacao == "VENDEDOR" && (
+              {info.visualizacao == 'VENDEDOR' && (
                 <div className="flex flex-col justify-center items-center w-full mt-2">
                   <h1 className="text-center font-bold">VENDEDOR</h1>
                   <select
-                    value={info.vendedor ? info.vendedor : "NÃO DEFINIDO"}
-                    onChange={(e) =>
-                      setInfo({ ...info, vendedor: e.target.value })
-                    }
+                    value={info.vendedor ? info.vendedor : 'NÃO DEFINIDO'}
+                    onChange={(e) => setInfo({ ...info, vendedor: e.target.value })}
                     className="p-2 outline-none text-gray-600"
                   >
                     {vendedores.map((vendedor) => (
@@ -461,22 +428,16 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                   </select>
                 </div>
               )}
-              {info.visualizacao == "INSIDE" && (
+              {info.visualizacao == 'INSIDE' && (
                 <div className="flex flex-col justify-center items-center w-full mt-2">
                   <h1 className="text-center font-bold">INSIDER</h1>
                   <select
-                    value={info.vendedor ? info.vendedor : "NÃO DEFINIDO"}
-                    onChange={(e) =>
-                      setInfo({ ...info, vendedor: e.target.value })
-                    }
+                    value={info.vendedor ? info.vendedor : 'NÃO DEFINIDO'}
+                    onChange={(e) => setInfo({ ...info, vendedor: e.target.value })}
                     className="p-2 outline-none text-gray-600"
                   >
                     {vendedores
-                      .filter(
-                        (x) =>
-                          x.qualificacao?.includes("INSIDE") ||
-                          x.nome == "NÃO DEFINIDO"
-                      )
+                      .filter((x) => x.qualificacao?.includes('INSIDE') || x.nome == 'NÃO DEFINIDO')
                       .map((vendedor) => (
                         <option key={vendedor.nome} value={vendedor.nome}>
                           {vendedor.nome}
@@ -485,34 +446,26 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
                   </select>
                 </div>
               )}
-              {info.visualizacao == "REGIONAL" && (
+              {info.visualizacao == 'REGIONAL' && (
                 <div className="flex flex-col justify-center items-center w-full mt-2">
                   <h1 className="text-center font-bold">REGIONAL</h1>
                   <select
-                    value={info.regional ? info.regional : "NÃO DEFINIDO"}
-                    onChange={(e) =>
-                      setInfo({ ...info, regional: e.target.value })
-                    }
+                    value={info.regional ? info.regional : 'NÃO DEFINIDO'}
+                    onChange={(e) => setInfo({ ...info, regional: e.target.value })}
                     className="p-2 outline-none text-gray-600"
                   >
-                    <option value={"REGIONAL ITUIUTABA"}>
-                      REGIONAL ITUIUTABA
-                    </option>
-                    <option value={"REGIONAL UBERLÂNDIA"}>
-                      REGIONAL UBERLÂNDIA
-                    </option>
-                    <option value={"NÃO DEFINIDO"}>NÃO DEFINIDO</option>
+                    <option value={'REGIONAL ITUIUTABA'}>REGIONAL ITUIUTABA</option>
+                    <option value={'REGIONAL UBERLÂNDIA'}>REGIONAL UBERLÂNDIA</option>
+                    <option value={'NÃO DEFINIDO'}>NÃO DEFINIDO</option>
                   </select>
                 </div>
               )}
-              {info.visualizacao == "OBRAS" ? (
+              {info.visualizacao == 'OBRAS' ? (
                 <div className="flex flex-col justify-center items-center w-full mt-2">
                   <h1 className="text-center font-bold">EQUIPE TÉCNICA</h1>
                   <select
-                    value={info.equipe ? info.equipe : "NÃO DEFINIDO"}
-                    onChange={(e) =>
-                      setInfo({ ...info, equipe: e.target.value })
-                    }
+                    value={info.equipe ? info.equipe : 'NÃO DEFINIDO'}
+                    onChange={(e) => setInfo({ ...info, equipe: e.target.value })}
                     className="p-2 outline-none text-gray-600"
                   >
                     {equipesTecnicas.map((equipe, index) => (
@@ -525,23 +478,17 @@ function ModalEdicaoUsuario({ closeModal, userInfo, getUsers }) {
               ) : null}
             </div>
             {msg.text ? (
-              <p className={`text-center text-xs italic ${msg.color}`}>
-                {msg.text}
-              </p>
+              <p className={`text-center text-xs italic ${msg.color}`}>{msg.text}</p>
             ) : (
               <div className="flex items-center justify-center">
-                <SaveButton
-                  text={"SALVAR"}
-                  icon={<FaSave />}
-                  handleClick={saveChanges}
-                />
+                <SaveButton text={'SALVAR'} icon={<FaSave />} handleClick={saveChanges} />
               </div>
             )}
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default ModalEdicaoUsuario;
+export default ModalEdicaoUsuario

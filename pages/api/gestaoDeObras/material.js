@@ -1,25 +1,25 @@
-import connectToDatabase from "../../../utils/connectDb";
-import { ObjectId } from "mongodb";
+import connectToDatabase from '../../../utils/services/mongodb/projects'
+import { ObjectId } from 'mongodb'
 export default async function handler(req, res) {
-  if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
+  if (req.method === 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
     let arr = await collection
       .aggregate([
         {
           $match: {
-            "compra.statusEntrega": "ENTREGUE",
-            "compra.previsaoEntrega": { $ne: null },
-            "compra.dataEntrega": { $ne: null },
+            'compra.statusEntrega': 'ENTREGUE',
+            'compra.previsaoEntrega': { $ne: null },
+            'compra.dataEntrega': { $ne: null },
           },
         },
         {
           $addFields: {
             tempoPassado: {
               $dateDiff: {
-                startDate: { $toDate: "$compra.dataEntrega" },
+                startDate: { $toDate: '$compra.dataEntrega' },
                 endDate: { $toDate: new Date().toISOString() },
-                unit: "day",
+                unit: 'day',
               },
             },
           },
@@ -35,10 +35,7 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            $and: [
-              { tempoPassado: { $gte: 0 } },
-              { tempoPassado: { $lt: 15 } },
-            ],
+            $and: [{ tempoPassado: { $gte: 0 } }, { tempoPassado: { $lt: 15 } }],
           },
         },
         {
@@ -47,16 +44,13 @@ export default async function handler(req, res) {
           },
         },
       ])
-      .toArray();
-    res.json(arr);
-  } else if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
-    var newObj = await collection.updateOne(
-      { _id: ObjectId(req.body.id) },
-      { $set: { ...req.body.mudancas } }
-    );
-    console.log(req.body);
-    return res.json("OK");
+      .toArray()
+    res.json(arr)
+  } else if (req.method === 'POST') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
+    var newObj = await collection.updateOne({ _id: ObjectId(req.body.id) }, { $set: { ...req.body.mudancas } })
+    console.log(req.body)
+    return res.json('OK')
   }
 }

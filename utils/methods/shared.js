@@ -1,5 +1,5 @@
 import { orientacoes } from '../constants'
-import genFactors from '../fatoresDeGeracao.json'
+import genFactors from '../jsons/fatores-geracao.json'
 async function updatingCRMProjectsManually(req, res) {
   // // COnnecting to CRM projects and proposes db/collection
   const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)

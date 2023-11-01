@@ -1,4 +1,4 @@
-import connectToDatabase from '../../../utils/connectDb'
+import connectToDatabase from '../../../utils/services/mongodb/projects'
 import { ObjectId } from 'mongodb'
 import { errorHandler } from '../../../utils/methods/handlers'
 import createHttpError from 'http-errors'

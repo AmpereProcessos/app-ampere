@@ -1,17 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { fileTypes } from "../utils/constants";
-import { storage } from "../utils/firebase";
-import { AiOutlineCheck } from "react-icons/ai";
-import Image from "next/image";
-function FormSolicitacaoDocumentacaoONGRID({
-  dados,
-  setDados,
-  voltar,
-  avancar,
-  prevLinks,
-}) {
-  const [images, setImages] = useState({});
+import React, { useState, useEffect } from 'react'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { fileTypes } from '../utils/constants'
+import { storage } from '../utils/services/firebase/firebase-storage'
+import { AiOutlineCheck } from 'react-icons/ai'
+import Image from 'next/image'
+function FormSolicitacaoDocumentacaoONGRID({ dados, setDados, voltar, avancar, prevLinks }) {
+  const [images, setImages] = useState({})
   const [checks, setChecks] = useState({
     contaDeEnergiaCheck: false,
     propostaComercialCheck: false,
@@ -26,112 +20,104 @@ function FormSolicitacaoDocumentacaoONGRID({
     documentoComFotoSociosCheck: false,
     relacaoDeCargasCheck: false,
     allChecked: false,
-  });
+  })
   const [imagesMsg, setImagesMsg] = useState({
-    text: "",
-    color: "",
-  });
-  const savingRef = dados.nomeDoProjeto
-    ? `clientes/${dados.nomeDoProjeto}`
-    : `formSolicitacao/${dados.nomeDoContrato}`;
-  console.log(savingRef);
+    text: '',
+    color: '',
+  })
+  const savingRef = dados.nomeDoProjeto ? `clientes/${dados.nomeDoProjeto}` : `formSolicitacao/${dados.nomeDoContrato}`
+  console.log(savingRef)
   function validateDocuments() {
-    if (
-      dados.tipoDeServico == "SISTEMA FOTOVOLTAICO" &&
-      !images.contaDeEnergia
-    ) {
+    if (dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO' && !images.contaDeEnergia) {
       setImagesMsg({
-        text: "Por favor, adicione uma foto ou pdf da conta de energia.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, adicione uma foto ou pdf da conta de energia.',
+        color: 'text-red-500',
+      })
+      return false
     }
-    if (dados.tipoDeServico == "SISTEMA FOTOVOLTAICO" && !images.laudo) {
+    if (dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO' && !images.laudo) {
       setImagesMsg({
-        text: "Por favor, adicione uma foto ou pdf do laudo técnico.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, adicione uma foto ou pdf do laudo técnico.',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (!images.propostaComercial) {
       setImagesMsg({
-        text: "Por favor, adicione uma foto ou pdf da proposta comercial.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, adicione uma foto ou pdf da proposta comercial.',
+        color: 'text-red-500',
+      })
+      return false
     }
     if (!images.comprovanteEnderecoCorrespondente) {
       setImagesMsg({
-        text: "Por favor, adicione uma foto ou pdf do endereço de correspondência.",
-        color: "text-red-500",
-      });
-      return false;
+        text: 'Por favor, adicione uma foto ou pdf do endereço de correspondência.',
+        color: 'text-red-500',
+      })
+      return false
     }
-    if (dados.tipoDaInstalacao == "RURAL") {
+    if (dados.tipoDaInstalacao == 'RURAL') {
       if (!images.car) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou PDF do CAR.",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, adicione uma foto ou PDF do CAR.',
+          color: 'text-red-500',
+        })
+        return false
       }
       if (!images.matricula) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou pdf da matrícula da inscrição rural.",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, adicione uma foto ou pdf da matrícula da inscrição rural.',
+          color: 'text-red-500',
+        })
+        return false
       }
     }
-    if (dados.tipoDaInstalacao == "URBANO") {
+    if (dados.tipoDaInstalacao == 'URBANO') {
       if (!images.iptu) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou PDF do IPTU.",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, adicione uma foto ou PDF do IPTU.',
+          color: 'text-red-500',
+        })
+        return false
       }
     }
-    if (
-      dados.tipoDoTitular == "PESSOA FISICA" ||
-      dados.tipoDeServico != "SISTEMA FOTOVOLTAICO"
-    ) {
+    if (dados.tipoDoTitular == 'PESSOA FISICA' || dados.tipoDeServico != 'SISTEMA FOTOVOLTAICO') {
       if (!images.documentoComFoto) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto do documento com foto.",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, adicione uma foto do documento com foto.',
+          color: 'text-red-500',
+        })
+        return false
       }
     }
-    if (dados.tipoDoTitular == "PESSOA JURIDICA") {
+    if (dados.tipoDoTitular == 'PESSOA JURIDICA') {
       if (!images.contratoSocial) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou pdf do contrato social.",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, adicione uma foto ou pdf do contrato social.',
+          color: 'text-red-500',
+        })
+        return false
       }
       if (!images.cartaoCnpj) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou pdf do cartão CNPJ.",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, adicione uma foto ou pdf do cartão CNPJ.',
+          color: 'text-red-500',
+        })
+        return false
       }
       if (!images.comprovanteEnderecoRepresentante) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou pdf do comprovante de endereço do representante legal.",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, adicione uma foto ou pdf do comprovante de endereço do representante legal.',
+          color: 'text-red-500',
+        })
+        return false
       }
       if (!images.documentoComFotoSocios) {
         setImagesMsg({
-          text: "Por favor, adicione uma foto ou pdf do documento com foto dos sócios.",
-          color: "text-red-500",
-        });
-        return false;
+          text: 'Por favor, adicione uma foto ou pdf do documento com foto dos sócios.',
+          color: 'text-red-500',
+        })
+        return false
       }
     }
     {
@@ -146,293 +132,197 @@ function FormSolicitacaoDocumentacaoONGRID({
     } */
     }
 
-    if (dados.possuiDistribuicao == "SIM") {
+    if (dados.possuiDistribuicao == 'SIM') {
       for (let i = 0; i < dados.distribuicoes.length; i++) {
         if (!images[`recebedora${i + 1}`]) {
           setImagesMsg({
-            text: `Por favor, adicione uma foto ou pdf da recebedora de Nº ${
-              i + 1
-            }`,
-            color: "text-red-500",
-          });
-          return false;
+            text: `Por favor, adicione uma foto ou pdf da recebedora de Nº ${i + 1}`,
+            color: 'text-red-500',
+          })
+          return false
         }
       }
     }
-    setImagesMsg({ text: "", color: "" });
-    return true;
+    setImagesMsg({ text: '', color: '' })
+    return true
   }
   async function uploadImage() {
     if (validateDocuments()) {
-      var holder;
-      var links = [];
+      var holder
+      var links = []
       setImagesMsg({
-        text: "Processando...",
-        color: "text-[#15599a]",
-      });
+        text: 'Processando...',
+        color: 'text-[#15599a]',
+      })
       try {
         if (images.contaDeEnergia) {
-          var imageRef = ref(
-            storage,
-            `${savingRef}/contaDeEnergia${(Math.random() * 10000).toFixed(0)}`
-          );
-          let res = await uploadBytes(imageRef, images.contaDeEnergia);
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          var imageRef = ref(storage, `${savingRef}/contaDeEnergia${(Math.random() * 10000).toFixed(0)}`)
+          let res = await uploadBytes(imageRef, images.contaDeEnergia)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
-            title: "CONTA DE ENERGIA",
+            title: 'CONTA DE ENERGIA',
             link: url,
-            format: fileTypes[res.metadata.contentType]
-              ? fileTypes[res.metadata.contentType].title
-              : "INDEFINIDO",
-          });
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
         }
         if (images.laudo) {
-          var imageRef = ref(
-            storage,
-            `${savingRef}/laudo${(Math.random() * 10000).toFixed(0)}`
-          );
-          let res = await uploadBytes(imageRef, images.laudo);
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          var imageRef = ref(storage, `${savingRef}/laudo${(Math.random() * 10000).toFixed(0)}`)
+          let res = await uploadBytes(imageRef, images.laudo)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
-            title: "LAUDO",
+            title: 'LAUDO',
             link: url,
-            format: fileTypes[res.metadata.contentType]
-              ? fileTypes[res.metadata.contentType].title
-              : "INDEFINIDO",
-          });
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
         }
         if (images.propostaComercial) {
-          var imageRef = ref(
-            storage,
-            `${savingRef}/propostaComercial${(Math.random() * 10000).toFixed(
-              0
-            )}`
-          );
-          let res = await uploadBytes(imageRef, images.propostaComercial);
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+          var imageRef = ref(storage, `${savingRef}/propostaComercial${(Math.random() * 10000).toFixed(0)}`)
+          let res = await uploadBytes(imageRef, images.propostaComercial)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
-            title: "PROPOSTA COMERCIAL",
+            title: 'PROPOSTA COMERCIAL',
             link: url,
-            format: fileTypes[res.metadata.contentType]
-              ? fileTypes[res.metadata.contentType].title
-              : "INDEFINIDO",
-          });
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
         }
         if (images.comprovanteEnderecoCorrespondente) {
           var imageRef = ref(
             storage,
-            `formSolicitacao/${
-              dados.nomeDoContrato
-            }/comprovanteEnderecoCorrespondente${(
-              Math.random() * 10000
-            ).toFixed(0)}`
-          );
-          let res = await uploadBytes(
-            imageRef,
-            images.comprovanteEnderecoCorrespondente
-          );
-          let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+            `formSolicitacao/${dados.nomeDoContrato}/comprovanteEnderecoCorrespondente${(Math.random() * 10000).toFixed(0)}`
+          )
+          let res = await uploadBytes(imageRef, images.comprovanteEnderecoCorrespondente)
+          let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
           links.push({
-            title: "COMPROVANTE DE ENDEREÇO - CORRESPONDÊNCIA",
+            title: 'COMPROVANTE DE ENDEREÇO - CORRESPONDÊNCIA',
             link: url,
-            format: fileTypes[res.metadata.contentType]
-              ? fileTypes[res.metadata.contentType].title
-              : "INDEFINIDO",
-          });
+            format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+          })
         }
-        if (dados.tipoDaInstalacao == "RURAL") {
+        if (dados.tipoDaInstalacao == 'RURAL') {
           if (images.car) {
-            var imageRef = ref(
-              storage,
-              `${savingRef}/car${(Math.random() * 10000).toFixed(0)}`
-            );
-            let res = await uploadBytes(imageRef, images.car);
-            let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+            var imageRef = ref(storage, `${savingRef}/car${(Math.random() * 10000).toFixed(0)}`)
+            let res = await uploadBytes(imageRef, images.car)
+            let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
             links.push({
-              title: "CAR",
+              title: 'CAR',
               link: url,
-              format: fileTypes[res.metadata.contentType]
-                ? fileTypes[res.metadata.contentType].title
-                : "INDEFINIDO",
-            });
+              format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            })
           }
           if (images.matricula) {
-            var imageRef = ref(
-              storage,
-              `${savingRef}/matricula${(Math.random() * 10000).toFixed(0)}`
-            );
-            let res = await uploadBytes(imageRef, images.matricula);
-            let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+            var imageRef = ref(storage, `${savingRef}/matricula${(Math.random() * 10000).toFixed(0)}`)
+            let res = await uploadBytes(imageRef, images.matricula)
+            let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
             links.push({
-              title: "MATRÍCULA",
+              title: 'MATRÍCULA',
               link: url,
-              format: fileTypes[res.metadata.contentType]
-                ? fileTypes[res.metadata.contentType].title
-                : "INDEFINIDO",
-            });
+              format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            })
           }
         }
-        if (dados.tipoDaInstalacao == "URBANO") {
+        if (dados.tipoDaInstalacao == 'URBANO') {
           if (images.iptu) {
-            var imageRef = ref(
-              storage,
-              `${savingRef}/iptu${(Math.random() * 10000).toFixed(0)}`
-            );
-            let res = await uploadBytes(imageRef, images.iptu);
-            let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+            var imageRef = ref(storage, `${savingRef}/iptu${(Math.random() * 10000).toFixed(0)}`)
+            let res = await uploadBytes(imageRef, images.iptu)
+            let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
             links.push({
-              title: "IPTU",
+              title: 'IPTU',
               link: url,
-              format: fileTypes[res.metadata.contentType]
-                ? fileTypes[res.metadata.contentType].title
-                : "INDEFINIDO",
-            });
+              format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            })
           }
         }
-        if (
-          dados.tipoDoTitular == "PESSOA FISICA" ||
-          dados.tipoDeServico == "SISTEMA FOTOVOLTAICO (OFF GRID)"
-        ) {
+        if (dados.tipoDoTitular == 'PESSOA FISICA' || dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO (OFF GRID)') {
           if (images.documentoComFoto) {
-            var imageRef = ref(
-              storage,
-              `${savingRef}/documentoComFoto${(Math.random() * 10000).toFixed(
-                0
-              )}`
-            );
-            let res = await uploadBytes(imageRef, images.documentoComFoto);
-            let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+            var imageRef = ref(storage, `${savingRef}/documentoComFoto${(Math.random() * 10000).toFixed(0)}`)
+            let res = await uploadBytes(imageRef, images.documentoComFoto)
+            let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
             links.push({
-              title: "DOCUMENTO COM FOTO",
+              title: 'DOCUMENTO COM FOTO',
               link: url,
-              format: fileTypes[res.metadata.contentType]
-                ? fileTypes[res.metadata.contentType].title
-                : "INDEFINIDO",
-            });
+              format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            })
           }
         }
-        if (dados.tipoDoTitular == "PESSOA JURIDICA") {
+        if (dados.tipoDoTitular == 'PESSOA JURIDICA') {
           if (images.contratoSocial) {
-            var imageRef = ref(
-              storage,
-              `${savingRef}/contratoSocial${(Math.random() * 10000).toFixed(0)}`
-            );
-            let res = await uploadBytes(imageRef, images.contratoSocial);
-            let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+            var imageRef = ref(storage, `${savingRef}/contratoSocial${(Math.random() * 10000).toFixed(0)}`)
+            let res = await uploadBytes(imageRef, images.contratoSocial)
+            let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
             links.push({
-              title: "CONTRATO SOCIAL",
+              title: 'CONTRATO SOCIAL',
               link: url,
-              format: fileTypes[res.metadata.contentType]
-                ? fileTypes[res.metadata.contentType].title
-                : "INDEFINIDO",
-            });
+              format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            })
           }
           if (images.cartaoCnpj) {
-            var imageRef = ref(
-              storage,
-              `${savingRef}/cartaoCnpj${(Math.random() * 10000).toFixed(0)}`
-            );
-            let res = await uploadBytes(imageRef, images.cartaoCnpj);
-            let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+            var imageRef = ref(storage, `${savingRef}/cartaoCnpj${(Math.random() * 10000).toFixed(0)}`)
+            let res = await uploadBytes(imageRef, images.cartaoCnpj)
+            let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
             links.push({
-              title: "CARTÃO CNPJ",
+              title: 'CARTÃO CNPJ',
               link: url,
-              format: fileTypes[res.metadata.contentType]
-                ? fileTypes[res.metadata.contentType].title
-                : "INDEFINIDO",
-            });
+              format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            })
           }
           if (images.comprovanteEnderecoRepresentante) {
             var imageRef = ref(
               storage,
-              `formSolicitacao/${
-                dados.nomeDoContrato
-              }/comprovanteEnderecoRepresentante${(
-                Math.random() * 10000
-              ).toFixed(0)}`
-            );
-            let res = await uploadBytes(
-              imageRef,
-              images.comprovanteEnderecoRepresentante
-            );
-            let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+              `formSolicitacao/${dados.nomeDoContrato}/comprovanteEnderecoRepresentante${(Math.random() * 10000).toFixed(0)}`
+            )
+            let res = await uploadBytes(imageRef, images.comprovanteEnderecoRepresentante)
+            let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
             links.push({
-              title: "COMPROVANTE DE ENDEREÇO - REPRESENTANTE",
+              title: 'COMPROVANTE DE ENDEREÇO - REPRESENTANTE',
               link: url,
-              format: fileTypes[res.metadata.contentType]
-                ? fileTypes[res.metadata.contentType].title
-                : "INDEFINIDO",
-            });
+              format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            })
           }
           if (images.documentoComFotoSocios) {
-            var imageRef = ref(
-              storage,
-              `${savingRef}/documentoComFotoSocios${(
-                Math.random() * 10000
-              ).toFixed(0)}`
-            );
-            let res = await uploadBytes(
-              imageRef,
-              images.documentoComFotoSocios
-            );
-            let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+            var imageRef = ref(storage, `${savingRef}/documentoComFotoSocios${(Math.random() * 10000).toFixed(0)}`)
+            let res = await uploadBytes(imageRef, images.documentoComFotoSocios)
+            let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
             links.push({
-              title: "DOCUMENTO COM FOTO DOS SÓCIOS",
+              title: 'DOCUMENTO COM FOTO DOS SÓCIOS',
               link: url,
-              format: fileTypes[res.metadata.contentType]
-                ? fileTypes[res.metadata.contentType].title
-                : "INDEFINIDO",
-            });
+              format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            })
           }
         }
-        if (dados.aumentoDeCarga == "SIM" || dados.tipoDaLigacao == "NOVA") {
+        if (dados.aumentoDeCarga == 'SIM' || dados.tipoDaLigacao == 'NOVA') {
           if (images.relacaoDeCargas) {
-            var imageRef = ref(
-              storage,
-              `${savingRef}/relacaoDeCargas${(Math.random() * 10000).toFixed(
-                0
-              )}`
-            );
-            let res = await uploadBytes(imageRef, images.relacaoDeCargas);
-            let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+            var imageRef = ref(storage, `${savingRef}/relacaoDeCargas${(Math.random() * 10000).toFixed(0)}`)
+            let res = await uploadBytes(imageRef, images.relacaoDeCargas)
+            let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
             links.push({
-              title: "RELAÇÃO DE CARGAS",
+              title: 'RELAÇÃO DE CARGAS',
               link: url,
-              format: fileTypes[res.metadata.contentType]
-                ? fileTypes[res.metadata.contentType].title
-                : "INDEFINIDO",
-            });
+              format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            })
           }
         }
-        if (dados.possuiDistribuicao == "SIM") {
+        if (dados.possuiDistribuicao == 'SIM') {
           for (let i = 0; i < dados.distribuicoes.length; i++) {
-            var imageRef = ref(
-              storage,
-              `${savingRef}/recebedora${i + 1}${(Math.random() * 10000).toFixed(
-                0
-              )}`
-            );
-            let res = await uploadBytes(imageRef, images[`recebedora${i + 1}`]);
-            let url = await getDownloadURL(ref(storage, res.metadata.fullPath));
+            var imageRef = ref(storage, `${savingRef}/recebedora${i + 1}${(Math.random() * 10000).toFixed(0)}`)
+            let res = await uploadBytes(imageRef, images[`recebedora${i + 1}`])
+            let url = await getDownloadURL(ref(storage, res.metadata.fullPath))
             links.push({
               title: `RECEBEDORA ${i + 1}`,
               link: url,
-              format: fileTypes[res.metadata.contentType]
-                ? fileTypes[res.metadata.contentType].title
-                : "INDEFINIDO",
-            });
+              format: fileTypes[res.metadata.contentType] ? fileTypes[res.metadata.contentType].title : 'INDEFINIDO',
+            })
           }
         }
       } catch (error) {
         setImagesMsg({
-          text: "Houve um erro no envio das imagens. Por favor, tente novamente.",
-          color: "text-green-500",
-        });
+          text: 'Houve um erro no envio das imagens. Por favor, tente novamente.',
+          color: 'text-green-500',
+        })
       }
       if (holder === undefined) {
-        setChecks({ ...checks, allChecked: true });
-        setDados({ ...dados, links: links });
-        setImagesMsg({ text: "Imagens enviadas!", color: "text-green-500" });
+        setChecks({ ...checks, allChecked: true })
+        setDados({ ...dados, links: links })
+        setImagesMsg({ text: 'Imagens enviadas!', color: 'text-green-500' })
       }
     }
     /*
@@ -456,20 +346,15 @@ function FormSolicitacaoDocumentacaoONGRID({
         })
       );*/
   }
-  console.log(images);
+  console.log(images)
   return (
     <div className="w-full flex flex-col border border-[#15599a] pb-2 shadow-lg bg-[#fff]">
-      <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">
-        DOCUMENTAÇÃO
-      </span>
+      <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">DOCUMENTAÇÃO</span>
       <div className="flex flex-col gap-2 items-center">
         <div className="flex gap-2 justify-around flex-wrap mt-2">
-          {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO" && (
+          {dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO' && (
             <div className="w-fit flex flex-col items-center">
-              <label
-                className="ml-2 text-center text-[#15599a] font-bold"
-                htmlFor="contaDeEnergia"
-              >
+              <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="contaDeEnergia">
                 CONTA DE ENERGIA
               </label>
               <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -477,16 +362,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                   {images.contaDeEnergia ? (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">
-                        {images.contaDeEnergia.name}
-                      </span>
+                      <span className="block text-gray-400 font-normal text-center">{images.contaDeEnergia.name}</span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">
-                        Adicione o arquivo aqui...
-                      </span>
+                      <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
                     </div>
                   )}
                 </div>
@@ -505,12 +386,9 @@ function FormSolicitacaoDocumentacaoONGRID({
             </div>
           )}
 
-          {dados.tipoDeServico == "SISTEMA FOTOVOLTAICO" && (
+          {dados.tipoDeServico == 'SISTEMA FOTOVOLTAICO' && (
             <div className="w-fit flex flex-col items-center">
-              <label
-                className="ml-2 text-center text-[#15599a] font-bold"
-                htmlFor="contaDeEnergia"
-              >
+              <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="contaDeEnergia">
                 LAUDO COMERCIAL
               </label>
               <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -518,16 +396,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                   {images.laudo ? (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal text-center">
-                        {images.laudo.name}
-                      </span>
+                      <span className="block text-gray-400 font-normal text-center">{images.laudo.name}</span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">
                       <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                      <span className="block text-gray-400 font-normal">
-                        Adicione o arquivo aqui...
-                      </span>
+                      <span className="block text-gray-400 font-normal">Adicione o arquivo aqui...</span>
                     </div>
                   )}
                 </div>
@@ -547,10 +421,7 @@ function FormSolicitacaoDocumentacaoONGRID({
           )}
 
           <div className="w-fit flex flex-col items-center">
-            <label
-              className="ml-2 text-center text-[#15599a] font-bold"
-              htmlFor="propostaComercial"
-            >
+            <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
               PROPOSTA COMERCIAL ATUALIZADA
             </label>
             <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -558,16 +429,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                 {images.propostaComercial ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
-                      {images.propostaComercial.name}
-                    </span>
+                    <span className="block text-gray-400 font-normal text-center">{images.propostaComercial.name}</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">
-                      Adicione o arquivo aqui
-                    </span>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
                   </div>
                 )}
               </div>
@@ -585,10 +452,7 @@ function FormSolicitacaoDocumentacaoONGRID({
             </div>
           </div>
           <div className="w-fit flex flex-col items-center">
-            <label
-              className="ml-2 text-center text-[#15599a] font-bold"
-              htmlFor="propostaComercial"
-            >
+            <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
               COMPROVANTE DE ENDEREÇO CORRESPONDENTE
             </label>
             <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -596,16 +460,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                 {images.comprovanteEnderecoCorrespondente ? (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal text-center">
-                      {images.comprovanteEnderecoCorrespondente.name}
-                    </span>
+                    <span className="block text-gray-400 font-normal text-center">{images.comprovanteEnderecoCorrespondente.name}</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                    <span className="block text-gray-400 font-normal">
-                      Adicione o arquivo aqui
-                    </span>
+                    <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
                   </div>
                 )}
               </div>
@@ -622,13 +482,10 @@ function FormSolicitacaoDocumentacaoONGRID({
               />
             </div>
           </div>
-          {dados.tipoDaInstalacao == "RURAL" && (
+          {dados.tipoDaInstalacao == 'RURAL' && (
             <>
               <div className="w-fit flex flex-col items-center">
-                <label
-                  className="ml-2 text-center text-[#15599a] font-bold"
-                  htmlFor="propostaComercial"
-                >
+                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
                   CAR
                 </label>
                 <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -636,16 +493,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                     {images.car ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">
-                          {images.car.name}
-                        </span>
+                        <span className="block text-gray-400 font-normal text-center">{images.car.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">
-                          Adicione o arquivo aqui
-                        </span>
+                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -663,10 +516,7 @@ function FormSolicitacaoDocumentacaoONGRID({
                 </div>
               </div>
               <div className="w-fit flex flex-col items-center">
-                <label
-                  className="ml-2 text-center text-[#15599a] font-bold"
-                  htmlFor="propostaComercial"
-                >
+                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
                   MATRÍCULA
                 </label>
                 <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -674,16 +524,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                     {images.matricula ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">
-                          {images.matricula.name}
-                        </span>
+                        <span className="block text-gray-400 font-normal text-center">{images.matricula.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">
-                          Adicione o arquivo aqui
-                        </span>
+                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -702,13 +548,10 @@ function FormSolicitacaoDocumentacaoONGRID({
               </div>
             </>
           )}
-          {dados.tipoDaInstalacao == "URBANO" && (
+          {dados.tipoDaInstalacao == 'URBANO' && (
             <>
               <div className="w-fit flex flex-col items-center">
-                <label
-                  className="ml-2 text-center text-[#15599a] font-bold"
-                  htmlFor="propostaComercial"
-                >
+                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
                   IPTU
                 </label>
                 <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -716,16 +559,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                     {images.iptu ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">
-                          {images.iptu.name}
-                        </span>
+                        <span className="block text-gray-400 font-normal text-center">{images.iptu.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">
-                          Adicione o arquivo aqui
-                        </span>
+                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -744,14 +583,10 @@ function FormSolicitacaoDocumentacaoONGRID({
               </div>
             </>
           )}
-          {(dados.tipoDoTitular == "PESSOA FISICA" ||
-            dados.tipoDeServico != "SISTEMA FOTOVOLTAICO") && (
+          {(dados.tipoDoTitular == 'PESSOA FISICA' || dados.tipoDeServico != 'SISTEMA FOTOVOLTAICO') && (
             <>
               <div className="w-fit flex flex-col items-center">
-                <label
-                  className="ml-2 text-center text-[#15599a] font-bold"
-                  htmlFor="propostaComercial"
-                >
+                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
                   DOCUMENTO COM FOTO
                 </label>
                 <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -759,16 +594,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                     {images.documentoComFoto ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">
-                          {images.documentoComFoto.name}
-                        </span>
+                        <span className="block text-gray-400 font-normal text-center">{images.documentoComFoto.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">
-                          Adicione o arquivo aqui
-                        </span>
+                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -787,13 +618,10 @@ function FormSolicitacaoDocumentacaoONGRID({
               </div>
             </>
           )}
-          {dados.tipoDoTitular == "PESSOA JURIDICA" && (
+          {dados.tipoDoTitular == 'PESSOA JURIDICA' && (
             <>
               <div className="w-fit flex flex-col items-center">
-                <label
-                  className="ml-2 text-center text-[#15599a] font-bold"
-                  htmlFor="propostaComercial"
-                >
+                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
                   CONTRATO SOCIAL
                 </label>
                 <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -801,16 +629,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                     {images.contratoSocial ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">
-                          {images.contratoSocial.name}
-                        </span>
+                        <span className="block text-gray-400 font-normal text-center">{images.contratoSocial.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">
-                          Adicione o arquivo aqui
-                        </span>
+                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -828,10 +652,7 @@ function FormSolicitacaoDocumentacaoONGRID({
                 </div>
               </div>
               <div className="w-fit flex flex-col items-center">
-                <label
-                  className="ml-2 text-center text-[#15599a] font-bold"
-                  htmlFor="propostaComercial"
-                >
+                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
                   CARTÃO CNPJ
                 </label>
                 <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -839,16 +660,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                     {images.cartaoCnpj ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">
-                          {images.cartaoCnpj.name}
-                        </span>
+                        <span className="block text-gray-400 font-normal text-center">{images.cartaoCnpj.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">
-                          Adicione o arquivo aqui
-                        </span>
+                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -866,10 +683,7 @@ function FormSolicitacaoDocumentacaoONGRID({
                 </div>
               </div>
               <div className="w-fit flex flex-col items-center">
-                <label
-                  className="ml-2 text-center text-[#15599a] font-bold"
-                  htmlFor="propostaComercial"
-                >
+                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
                   COMPROVANTE DE ENDEREÇO - REPRESENTANTE LEGAL
                 </label>
                 <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -877,16 +691,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                     {images.comprovanteEnderecoRepresentante ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">
-                          {images.comprovanteEnderecoRepresentante.name}
-                        </span>
+                        <span className="block text-gray-400 font-normal text-center">{images.comprovanteEnderecoRepresentante.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">
-                          Adicione o arquivo aqui
-                        </span>
+                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -904,10 +714,7 @@ function FormSolicitacaoDocumentacaoONGRID({
                 </div>
               </div>
               <div className="w-fit flex flex-col items-center">
-                <label
-                  className="ml-2 text-center text-[#15599a] font-bold"
-                  htmlFor="propostaComercial"
-                >
+                <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
                   DOCUMENTO COM FOTO DE TODOS OS SÓCIOS
                 </label>
                 <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -915,16 +722,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                     {images.documentoComFotoSocios ? (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal text-center">
-                          {images.documentoComFotoSocios.name}
-                        </span>
+                        <span className="block text-gray-400 font-normal text-center">{images.documentoComFotoSocios.name}</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
                         <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                        <span className="block text-gray-400 font-normal">
-                          Adicione o arquivo aqui
-                        </span>
+                        <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
                       </div>
                     )}
                   </div>
@@ -987,14 +790,11 @@ function FormSolicitacaoDocumentacaoONGRID({
               </>
             ))} */}
 
-          {dados.possuiDistribuicao == "SIM" && (
+          {dados.possuiDistribuicao == 'SIM' && (
             <>
               {dados.distribuicoes.map((dist, index) => (
                 <div key={index} className="w-fit flex flex-col items-center">
-                  <label
-                    className="ml-2 text-center text-[#15599a] font-bold"
-                    htmlFor="propostaComercial"
-                  >
+                  <label className="ml-2 text-center text-[#15599a] font-bold" htmlFor="propostaComercial">
                     RECEBEDORA {index + 1}
                   </label>
                   <div className="relative border-dotted h-fit p-2 rounded-lg border-2 border-blue-700 bg-gray-100 flex justify-center items-center mt-2">
@@ -1002,16 +802,12 @@ function FormSolicitacaoDocumentacaoONGRID({
                       {images[`recebedora${index + 1}`] ? (
                         <div className="flex flex-col items-center">
                           <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                          <span className="block text-gray-400 font-normal text-center">
-                            {images[`recebedora${index + 1}`].name}
-                          </span>
+                          <span className="block text-gray-400 font-normal text-center">{images[`recebedora${index + 1}`].name}</span>
                         </div>
                       ) : (
                         <div className="flex flex-col items-center">
                           <i className="fa fa-folder-open fa-4x text-blue-700"></i>
-                          <span className="block text-gray-400 font-normal">
-                            Adicione o arquivo aqui
-                          </span>
+                          <span className="block text-gray-400 font-normal">Adicione o arquivo aqui</span>
                         </div>
                       )}
                     </div>
@@ -1033,36 +829,23 @@ function FormSolicitacaoDocumentacaoONGRID({
           )}
         </div>
       </div>
-      {imagesMsg.text && (
-        <p className={`text-center italic ${imagesMsg.color}`}>
-          {imagesMsg.text}
-        </p>
-      )}
+      {imagesMsg.text && <p className={`text-center italic ${imagesMsg.color}`}>{imagesMsg.text}</p>}
       <div className="flex justify-center mt-2 gap-2">
-        <button
-          onClick={voltar}
-          className="bg-[#15599a] rounded p-2 font-bold text-white"
-        >
+        <button onClick={voltar} className="bg-[#15599a] rounded p-2 font-bold text-white">
           VOLTAR
         </button>
         {checks.allChecked ? (
-          <button
-            onClick={avancar}
-            className="w-fit text-center p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold "
-          >
+          <button onClick={avancar} className="w-fit text-center p-2 rounded bg-[#fead61] hover:bg-[#15599a] hover:text-white font-bold ">
             PRÓXIMA ETAPA
           </button>
         ) : (
-          <button
-            onClick={uploadImage}
-            className="p-2 bg-[#fead61] hover:bg-[#15599a] hover:text-white rounded font-bold"
-          >
+          <button onClick={uploadImage} className="p-2 bg-[#fead61] hover:bg-[#15599a] hover:text-white rounded font-bold">
             ENVIAR FOTOS
           </button>
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export default FormSolicitacaoDocumentacaoONGRID;
+export default FormSolicitacaoDocumentacaoONGRID

@@ -1,4 +1,4 @@
-import connectToDatabase from '../../../../utils/callsDb'
+import connectToDatabase from '../../../../utils/services/mongodb/calls'
 import { ObjectId } from 'mongodb'
 export default async function handler(req, res) {
   const db = await connectToDatabase(process.env.DB_KEY)

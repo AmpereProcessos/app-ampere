@@ -1,6 +1,6 @@
 import { getSession } from 'next-auth/react'
-import connectToDatabase from '../../../utils/materialDb'
-import connectToProjectsDatabase from '../../../utils/connectDb'
+import connectToDatabase from '../../../utils/services/mongodb/warehouse'
+import connectToProjectsDatabase from '../../../utils/services/mongodb/projects'
 import { ObjectId } from 'mongodb'
 import { getNotificationObjByMaterialMinQty } from '../../../utils/methods/mutation/notifications'
 import createHttpError from 'http-errors'

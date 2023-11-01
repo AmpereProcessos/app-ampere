@@ -1,8 +1,8 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import Assinatura from '../utils/assinatura.jpg'
-import Logo from '../utils/whitelogo.png'
+import Assinatura from '../utils/images/signature-diogo.jpg'
+import Logo from '../utils/images/logo-texto-azul-vertical.png'
 /**
  * @typedef {Object} ServiceOrder
  * @property {string} [_id] - The ID of the service order (optional).

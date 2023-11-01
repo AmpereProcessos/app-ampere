@@ -1,130 +1,120 @@
-import FullCalendar from "@fullcalendar/react";
-import interactionPlugin from "@fullcalendar/interaction";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import { useState } from "react";
-import axios from "axios";
-import connectToDataBase from "../../utils/projectsDb";
-import ModalCronograma from "../../components/ModalCronograma";
-import Select from "react-select";
-import { cidadesAtendidas, equipesTecnicas } from "../../utils/constants";
-import * as dayJS from "dayjs";
+import FullCalendar from '@fullcalendar/react'
+import interactionPlugin from '@fullcalendar/interaction'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import { useState } from 'react'
+import axios from 'axios'
+import connectToDataBase from '../../utils/services/mongodb/projects'
+import ModalCronograma from '../../components/ModalCronograma'
+import Select from 'react-select'
+import { cidadesAtendidas, equipesTecnicas } from '../../utils/constants'
+import * as dayJS from 'dayjs'
 const cidadesCores = [
   {
-    nome: "ITUIUTABA",
-    cor: "#15599a",
+    nome: 'ITUIUTABA',
+    cor: '#15599a',
   },
   {
-    nome: "SANTA VITÓRIA",
-    cor: "#20e83e",
+    nome: 'SANTA VITÓRIA',
+    cor: '#20e83e',
   },
   {
-    nome: "UBERLÂNDIA",
-    cor: "#fead61",
+    nome: 'UBERLÂNDIA',
+    cor: '#fead61',
   },
   {
-    nome: "IPIAÇU",
-    cor: "#1cd9c9",
+    nome: 'IPIAÇU',
+    cor: '#1cd9c9',
   },
-  { nome: "CAMPINA VERDE", cor: "#b515e6" },
-  { nome: "CAPINÓPOLIS", cor: "#ba0627" },
-  { nome: "GURINHATÃ", cor: "#8c7103" },
-];
+  { nome: 'CAMPINA VERDE', cor: '#b515e6' },
+  { nome: 'CAPINÓPOLIS', cor: '#ba0627' },
+  { nome: 'GURINHATÃ', cor: '#8c7103' },
+]
 function getColor(cidade) {
-  let cid = cidadesCores.filter((x) => x.nome == cidade);
+  let cid = cidadesCores.filter((x) => x.nome == cidade)
   if (cid.length > 0) {
-    return cid[0].cor;
+    return cid[0].cor
   } else {
-    return "#ab3580";
+    return '#ab3580'
   }
 }
 const Calendar = ({ arr }) => {
-  const [eventos, setEventos] = useState(arr);
-  const [calendarVisible, setCalendarVisible] = useState(true);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalEvento, setModalEvento] = useState({});
+  const [eventos, setEventos] = useState(arr)
+  const [calendarVisible, setCalendarVisible] = useState(true)
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [modalEvento, setModalEvento] = useState({})
   const [filters, setFilters] = useState({
     cidadeFilter: [],
     equipeResp: [],
-  });
+  })
   function handleResize(e) {
-    console.log("RESIZE");
-    var id = e.event._def.publicId;
-    var inicio = new Date(e.event._instance.range.start).toISOString();
-    var fim = new Date(
-      dayJS(e.event._instance.range.end).subtract(1, "day").$d
-    ).toISOString();
-    var index = e.event._def.extendedProps.index;
-    console.log(index);
+    console.log('RESIZE')
+    var id = e.event._def.publicId
+    var inicio = new Date(e.event._instance.range.start).toISOString()
+    var fim = new Date(dayJS(e.event._instance.range.end).subtract(1, 'day').$d).toISOString()
+    var index = e.event._def.extendedProps.index
+    console.log(index)
     axios
       .post(`/api/projects/update/${id}`, {
         [`ordensDeServico.${index}.inicioServico`]: inicio,
         [`ordensDeServico.${index}.fimServico`]: fim,
       })
-      .then((res) => console.log(res));
+      .then((res) => console.log(res))
   }
   function handleDragDrop(e) {
-    console.log("DROP");
-    var id = e.event._def.publicId;
-    var inicio = new Date(e.event._instance.range.start).toISOString();
-    var fim = new Date(
-      dayJS(e.event._instance.range.end).subtract(1, "day").$d
-    ).toISOString();
-    var index = e.event._def.extendedProps.index;
-    console.log(index);
+    console.log('DROP')
+    var id = e.event._def.publicId
+    var inicio = new Date(e.event._instance.range.start).toISOString()
+    var fim = new Date(dayJS(e.event._instance.range.end).subtract(1, 'day').$d).toISOString()
+    var index = e.event._def.extendedProps.index
+    console.log(index)
     axios
       .post(`/api/projects/update/${id}`, {
         [`ordensDeServico.${index}.inicioServico`]: inicio,
         [`ordensDeServico.${index}.fimServico`]: fim,
       })
-      .then((res) => console.log(res));
+      .then((res) => console.log(res))
   }
   function handleClick(e) {
-    console.log("CLICK");
-    console.log(e);
+    console.log('CLICK')
+    console.log(e)
     setModalEvento({
       nomeDoContrato: e.event._def.title,
       id: e.event._def.publicId,
       data: new Date(e.event._instance.range.start).toISOString(),
       ...e.event._def.extendedProps,
-    });
-    setModalIsOpen(true);
+    })
+    setModalIsOpen(true)
   }
   function handleFilter() {
-    var newArr;
+    var newArr
     if (filters.cidadeFilter.length > 0) {
-      if (!newArr) newArr = arr;
-      newArr = newArr.filter((evento) =>
-        filters.cidadeFilter.includes(evento.cidade)
-      );
+      if (!newArr) newArr = arr
+      newArr = newArr.filter((evento) => filters.cidadeFilter.includes(evento.cidade))
     }
     if (filters.equipeResp.length > 0) {
-      if (!newArr) newArr = arr;
-      newArr = newArr.filter((evento) =>
-        filters.equipeResp.includes(evento.equipe)
-      );
+      if (!newArr) newArr = arr
+      newArr = newArr.filter((evento) => filters.equipeResp.includes(evento.equipe))
     }
     if (!newArr) {
-      setEventos(arr);
-      setCalendarVisible(true);
+      setEventos(arr)
+      setCalendarVisible(true)
     } else {
-      setEventos(newArr);
-      setCalendarVisible(true);
+      setEventos(newArr)
+      setCalendarVisible(true)
     }
   }
   return (
     <div className="p-6 grow">
       <div className="flex items-center z-0 justify-between border-b border-gray-200 pb-2 mb-2">
-        <h1 className="text-xl text-[#15599a] font-bold">
-          CRONOGRAMA DE OBRAS
-        </h1>
+        <h1 className="text-xl text-[#15599a] font-bold">CRONOGRAMA DE OBRAS</h1>
         <div className="flex items-center gap-x-2 z-10">
           <Select
             isMulti={true}
             placeholder="CIDADE"
             className="z-0"
             options={cidadesAtendidas.map((cidade) => {
-              return { label: cidade, value: cidade };
+              return { label: cidade, value: cidade }
             })}
             onChange={(e) =>
               setFilters({
@@ -146,43 +136,40 @@ const Calendar = ({ arr }) => {
             options={equipesTecnicas.map((equipe) => equipe)}
           />
         </div>
-        <button
-          onClick={() => handleFilter()}
-          className="bg-[#fead61] p-2 rounded font-bold hover:bg-[#15599a] hover:text-white"
-        >
+        <button onClick={() => handleFilter()} className="bg-[#fead61] p-2 rounded font-bold hover:bg-[#15599a] hover:text-white">
           FILTRAR CALENDÁRIO
         </button>
       </div>
       <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-2">
-        <div className={"flex items-center gap-x-2"}>
+        <div className={'flex items-center gap-x-2'}>
           <div className={`bg-[#15599a] w-[10px] h-[10px] rounded`}></div>
           <li className="list-none">ITUIUTABA</li>
         </div>
-        <div className={"flex items-center gap-x-2"}>
+        <div className={'flex items-center gap-x-2'}>
           <div className={`bg-[#20e83e] w-[10px] h-[10px] rounded`}></div>
           <li className="list-none">SANTA VITÓRIA</li>
         </div>
-        <div className={"flex items-center gap-x-2"}>
+        <div className={'flex items-center gap-x-2'}>
           <div className={`bg-[#fead61] w-[10px] h-[10px] rounded`}></div>
           <li className="list-none">UBERLÂNDIA</li>
         </div>
-        <div className={"flex items-center gap-x-2"}>
+        <div className={'flex items-center gap-x-2'}>
           <div className={`bg-[#1cd9c9] w-[10px] h-[10px] rounded`}></div>
           <li className="list-none">IPIAÇU</li>
         </div>
-        <div className={"flex items-center gap-x-2"}>
+        <div className={'flex items-center gap-x-2'}>
           <div className={`bg-[#b515e6] w-[10px] h-[10px] rounded`}></div>
           <li className="list-none">CAMPINA VERDE</li>
         </div>
-        <div className={"flex items-center gap-x-2"}>
+        <div className={'flex items-center gap-x-2'}>
           <div className={`bg-[#ba0627] w-[10px] h-[10px] rounded`}></div>
           <li className="list-none">CAPINÓPOLIS</li>
         </div>
-        <div className={"flex items-center gap-x-2"}>
+        <div className={'flex items-center gap-x-2'}>
           <div className={`bg-[#8c7103] w-[10px] h-[10px] rounded`}></div>
           <li className="list-none">GURINHATÃ</li>
         </div>
-        <div className={"flex items-center gap-x-2"}>
+        <div className={'flex items-center gap-x-2'}>
           <div className={`bg-[#ab3580] w-[10px] h-[10px] rounded`}></div>
           <li className="list-none">OUTROS</li>
         </div>
@@ -190,21 +177,21 @@ const Calendar = ({ arr }) => {
       {calendarVisible && (
         <FullCalendar
           buttonText={{
-            today: "HOJE",
-            month: "MÊS",
-            week: "SEMANA",
-            day: "DIA",
+            today: 'HOJE',
+            month: 'MÊS',
+            week: 'SEMANA',
+            day: 'DIA',
           }}
           eventBackgroundColor={true}
-          locale={"pt-br"}
+          locale={'pt-br'}
           plugins={[timeGridPlugin, interactionPlugin, dayGridPlugin]}
-          dayHeaderFormat={{ weekday: "narrow" }}
-          titleFormat={{ year: "numeric", month: "long" }}
+          dayHeaderFormat={{ weekday: 'narrow' }}
+          titleFormat={{ year: 'numeric', month: 'long' }}
           initialView="dayGridMonth"
           headerToolbar={{
-            start: "title",
-            center: "",
-            end: "today prev,next",
+            start: 'title',
+            center: '',
+            end: 'today prev,next',
           }}
           events={eventos}
           editable
@@ -217,25 +204,23 @@ const Calendar = ({ arr }) => {
           height={650}
         />
       )}
-      {modalIsOpen && (
-        <ModalCronograma info={modalEvento} setModalIsOpen={setModalIsOpen} />
-      )}
+      {modalIsOpen && <ModalCronograma info={modalEvento} setModalIsOpen={setModalIsOpen} />}
     </div>
-  );
-};
+  )
+}
 
-export default Calendar;
+export default Calendar
 
 export async function getServerSideProps() {
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
-  const db = await connectToDataBase(process.env.DB_KEY);
-  const collection = db.collection("dados");
+  const db = await connectToDataBase(process.env.DB_KEY, 'projetos')
+  const collection = db.collection('dados')
   var arr = await collection
     .aggregate([
       {
         $match: {
-          "ordensDeServico.agendar": true,
+          'ordensDeServico.agendar': true,
         },
       },
       {
@@ -247,14 +232,14 @@ export async function getServerSideProps() {
           bairro: 1,
           numeroResidencia: 1,
           ordensDeServico: 1,
-          "sistema.qtdeModulos": 1,
-          "sistema.potModulos": 1,
-          "sistema.topologia": 1,
+          'sistema.qtdeModulos': 1,
+          'sistema.potModulos': 1,
+          'sistema.topologia': 1,
         },
       },
     ])
-    .toArray();
-  let eventos = [];
+    .toArray()
+  let eventos = []
   arr.forEach((item) =>
     item.ordensDeServico.forEach((x, index) => {
       if (x.agendar) {
@@ -265,40 +250,38 @@ export async function getServerSideProps() {
           nomeDoContrato: item.nomeDoContrato,
           categoria: x.categoria,
           servicoExecutado: x.servicoExecutado,
-          cidade: item.cidade ? item.cidade : "-",
-          bairro: item.bairro ? item.bairro : "-",
-          logradouro: item.logradouro ? item.logradouro : "-",
-          numeroResidencia: item.numeroResidencia ? item.numeroResidencia : "-",
-          qtdeModulos: item.sistema.qtdeModulos
-            ? item.sistema.qtdeModulos
-            : "-",
-          potModulos: item.sistema.potModulos ? item.sistema.potModulos : "-",
-          topologia: item.sistema.topologia ? item.sistema.topologia : "-",
+          cidade: item.cidade ? item.cidade : '-',
+          bairro: item.bairro ? item.bairro : '-',
+          logradouro: item.logradouro ? item.logradouro : '-',
+          numeroResidencia: item.numeroResidencia ? item.numeroResidencia : '-',
+          qtdeModulos: item.sistema.qtdeModulos ? item.sistema.qtdeModulos : '-',
+          potModulos: item.sistema.potModulos ? item.sistema.potModulos : '-',
+          topologia: item.sistema.topologia ? item.sistema.topologia : '-',
           ...x,
-        });
+        })
       }
     })
-  );
+  )
   eventos = eventos?.map((evento) => {
     return {
       title: evento.nomeDoContrato,
       index: evento.index,
       categoria: evento.categoria,
       servicoExecutado: evento.servicoExecutado,
-      start: dayJS(evento.inicioServico).add(3, "hours").format("YYYY-MM-DD"),
-      end: dayJS(evento.fimServico).add(1, "days").format("YYYY-MM-DD"),
+      start: dayJS(evento.inicioServico).add(3, 'hours').format('YYYY-MM-DD'),
+      end: dayJS(evento.fimServico).add(1, 'days').format('YYYY-MM-DD'),
       id: evento.id.toString(),
       qtde: evento.qtde,
-      equipe: evento.equipe ? evento.equipe : "-",
-      cidade: evento.cidade ? evento.cidade : "-",
-      logradouro: evento.logradouro ? evento.logradouro : "-",
-      bairro: evento.bairro ? evento.bairro : "-",
-      numeroResidencia: evento.numeroResidencia ? evento.numeroResidencia : "-",
-      qtdeModulos: evento.qtdeModulos ? evento.qtdeModulos : "-",
-      topologia: evento.topologia ? evento.topologia : "-",
+      equipe: evento.equipe ? evento.equipe : '-',
+      cidade: evento.cidade ? evento.cidade : '-',
+      logradouro: evento.logradouro ? evento.logradouro : '-',
+      bairro: evento.bairro ? evento.bairro : '-',
+      numeroResidencia: evento.numeroResidencia ? evento.numeroResidencia : '-',
+      qtdeModulos: evento.qtdeModulos ? evento.qtdeModulos : '-',
+      topologia: evento.topologia ? evento.topologia : '-',
       backgroundColor: getColor(evento.cidade),
-    };
-  });
+    }
+  })
 
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
@@ -306,5 +289,5 @@ export async function getServerSideProps() {
     props: {
       arr: eventos,
     },
-  };
+  }
 }

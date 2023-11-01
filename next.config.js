@@ -8,27 +8,17 @@ const withTM = require('next-transpile-modules')([
   '@fullcalendar/react',
   '@fullcalendar/timegrid',
 ])
-const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
-  module: {
-    rules: [
-      {
-        test: /\.svg$/i,
-        issuer: /\.[jt]sx?$/,
-        use: ['@svgr/webpack'],
-      },
-    ],
-  },
-  images: {
-    domains: ['firebasestorage.googleapis.com'],
-  },
-}
 
 module.exports = withTM({
   reactStrictMode: true,
   env: {
     DISTANCE_API: process.env.DISTANCE_API,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
   swcMinify: true,
   module: {

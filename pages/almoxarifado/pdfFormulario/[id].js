@@ -1,6 +1,6 @@
 import React from 'react'
-import Logo from '../../../utils/empty-logo.png'
-import connectToDatabase from '../../../utils/materialDb'
+import Logo from '../../../utils/images/logo-texto-azul.png'
+import connectToDatabase from '../../../utils/services/mongodb/warehouse'
 import { ObjectId } from 'mongodb'
 import Link from 'next/link'
 import Image from 'next/image'

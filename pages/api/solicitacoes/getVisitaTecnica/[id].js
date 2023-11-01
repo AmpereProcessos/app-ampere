@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors'
-import connectToSolicitacoesDatabase from '../../../../utils/solicitacoesDb'
+import connectToSolicitacoesDatabase from '../../../../utils/services/mongodb/requests'
 import { ObjectId } from 'mongodb'
 import { errorHandler } from '../../../../utils/methods/handlers'
 export default async function handler(req, res) {

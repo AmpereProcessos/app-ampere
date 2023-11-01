@@ -438,13 +438,7 @@ function Suprimentos() {
             <p className="uppercase font-bold text-sm">CONFERÊNCIA DE MATERIAIS</p>
           </a>
         </Link>
-        {session?.user?.regional == undefined && (
-          <Link href={'/suprimentos/cotacoes'}>
-            <a className="fixed bg-[#15599a] cursor-pointer ml-[0px] lg:ml-[240px] hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-[7rem] lg:bottom-10 left-150">
-              <p className="uppercase font-bold text-sm">COTAÇÕES</p>
-            </a>
-          </Link>
-        )}
+
         {modalProject.isOpen && modalProject.projectId ? (
           <ModalSuprimentos
             projectId={modalProject.projectId}

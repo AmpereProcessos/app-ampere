@@ -1,8 +1,8 @@
-import connectToDatabase from "../../../utils/connectDb";
+import connectToDatabase from '../../../utils/services/mongodb/projects'
 export default async function handler(req, res) {
-  if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
+  if (req.method === 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
     let projetos = await collection
       .aggregate([
         {
@@ -12,12 +12,9 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
-            "projeto.projetoConcluido": { $ne: "SIM" },
-            $or: [
-              { "compra.statusLiberacao": "PAGO" },
-              { "projeto.iniciar": "SIM" },
-            ],
+            'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+            'projeto.projetoConcluido': { $ne: 'SIM' },
+            $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'projeto.iniciar': 'SIM' }],
           },
         },
         {
@@ -27,46 +24,43 @@ export default async function handler(req, res) {
             nomeDoContrato: 1,
             cidade: 1,
             tipoDeServico: 1,
-            "vendedor.nome": 1,
-            "parecer.statusDoParecerDeAcesso": 1,
-            "parecer.dataParecerDeAcesso": 1,
-            "parecer.parecerReprovado": 1,
-            "parecer.qtdeDiasObraDeRede": 1,
-            "vistoria.status": 1,
-            "vistoria.dataPedido": 1,
-            "vistoria.vistoriaReprovada": 1,
-            "medidor.data": 1,
+            'vendedor.nome': 1,
+            'parecer.statusDoParecerDeAcesso': 1,
+            'parecer.dataParecerDeAcesso': 1,
+            'parecer.parecerReprovado': 1,
+            'parecer.qtdeDiasObraDeRede': 1,
+            'vistoria.status': 1,
+            'vistoria.dataPedido': 1,
+            'vistoria.vistoriaReprovada': 1,
+            'medidor.data': 1,
             projeto: 1,
-            "dadosCemig.distCreditos": 1,
-            "obra.statusDaObra": 1,
-            "compra.statusEntrega": 1,
-            "compra.dataEntrega": 1,
-            "compra.previsaoEntrega": 1,
-            "compra.dataPagamento": 1,
-            "contrato.dataAssinatura": 1,
-            "sistema.potPico": 1,
-            "material.disjuntores": 1,
+            'dadosCemig.distCreditos': 1,
+            'obra.statusDaObra': 1,
+            'compra.statusEntrega': 1,
+            'compra.dataEntrega': 1,
+            'compra.previsaoEntrega': 1,
+            'compra.dataPagamento': 1,
+            'contrato.dataAssinatura': 1,
+            'sistema.potPico': 1,
+            'material.disjuntores': 1,
           },
         },
       ])
-      .toArray();
-    res.json(projetos);
-  } else if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
-    var arr;
+      .toArray()
+    res.json(projetos)
+  } else if (req.method === 'POST') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
+    var arr
     switch (req.body.filtrarPor) {
-      case "REGIONAL":
+      case 'REGIONAL':
         arr = await collection
           .aggregate([
             {
               $match: {
                 regional: req.body.parametro,
-                "projeto.projetoConcluido": { $ne: "SIM" },
-                $or: [
-                  { "compra.statusLiberacao": "PAGO" },
-                  { "projeto.iniciar": "SIM" },
-                ],
+                'projeto.projetoConcluido': { $ne: 'SIM' },
+                $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'projeto.iniciar': 'SIM' }],
               },
             },
             {
@@ -75,19 +69,16 @@ export default async function handler(req, res) {
               },
             },
           ])
-          .toArray();
-        break;
-      case "VENDEDOR":
+          .toArray()
+        break
+      case 'VENDEDOR':
         arr = await collection
           .aggregate([
             {
               $match: {
-                "vendedor.nome": req.body.parametro,
-                "projeto.projetoConcluido": { $ne: "SIM" },
-                $or: [
-                  { "compra.statusLiberacao": "PAGO" },
-                  { "projeto.iniciar": "SIM" },
-                ],
+                'vendedor.nome': req.body.parametro,
+                'projeto.projetoConcluido': { $ne: 'SIM' },
+                $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'projeto.iniciar': 'SIM' }],
               },
             },
             {
@@ -96,17 +87,14 @@ export default async function handler(req, res) {
               },
             },
           ])
-          .toArray();
+          .toArray()
       default:
         arr = await collection
           .aggregate([
             {
               $match: {
-                "projeto.projetoConcluido": { $ne: "SIM" },
-                $or: [
-                  { "compra.statusLiberacao": "PAGO" },
-                  { "projeto.iniciar": "SIM" },
-                ],
+                'projeto.projetoConcluido': { $ne: 'SIM' },
+                $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'projeto.iniciar': 'SIM' }],
               },
             },
             {
@@ -115,8 +103,8 @@ export default async function handler(req, res) {
               },
             },
           ])
-          .toArray();
+          .toArray()
     }
-    res.json(arr);
+    res.json(arr)
   }
 }

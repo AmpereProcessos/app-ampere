@@ -1,65 +1,65 @@
-import connectToDatabase from "../../../utils/connectDb";
+import connectToDatabase from '../../../utils/services/mongodb/projects'
 export default async function handler(req, res) {
-  if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("data");
+  if (req.method === 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('data')
     let comercial = await collection
       .aggregate([
         {
           $match: {
-            statuscontrato: { $ne: "RECISÃO DE CONTRATO" },
-            statuspagamento: { $in: ["AGUARDANDO PAGAMENTO", null] },
+            statuscontrato: { $ne: 'RECISÃO DE CONTRATO' },
+            statuspagamento: { $in: ['AGUARDANDO PAGAMENTO', null] },
           },
         },
       ])
-      .toArray();
+      .toArray()
     let suprimentos = await collection
       .aggregate([
         {
           $match: {
-            statusentrega: { $in: ["EM ROTA", "AGUARDANDO COMPRA", "", null] },
-            statuscontrato: "ASSINADO",
+            statusentrega: { $in: ['EM ROTA', 'AGUARDANDO COMPRA', '', null] },
+            statuscontrato: 'ASSINADO',
           },
         },
       ])
-      .toArray();
+      .toArray()
     let projetos = await collection
       .aggregate([
         {
           $match: {
-            projetoconcluido: { $ne: "SIM" },
-            iniciarprojeto: "SIM",
+            projetoconcluido: { $ne: 'SIM' },
+            iniciarprojeto: 'SIM',
           },
         },
       ])
-      .toArray();
+      .toArray()
     let obras = await collection
       .aggregate([
         {
           $match: {
             statusobra: {
-              $in: ["AGENDADA", "AGUARDANDO AGENDAMENTO", "EM ANDAMENTO"],
+              $in: ['AGENDADA', 'AGUARDANDO AGENDAMENTO', 'EM ANDAMENTO'],
             },
-            statuscontrato: "ASSINADO",
+            statuscontrato: 'ASSINADO',
           },
         },
       ])
-      .toArray();
+      .toArray()
     let posvenda = await collection
       .aggregate([
         {
           $match: {
-            statuscontrato: "ASSINADO",
-            statustrocamedidor: { $ne: "REALIZADA" },
+            statuscontrato: 'ASSINADO',
+            statustrocamedidor: { $ne: 'REALIZADA' },
           },
         },
       ])
-      .toArray();
+      .toArray()
     let oem = await collection
       .aggregate([
         {
           $match: {
-            statusobra: "CONCLUIDA",
+            statusobra: 'CONCLUIDA',
           },
         },
         {
@@ -68,7 +68,7 @@ export default async function handler(req, res) {
           },
         },
       ])
-      .toArray();
+      .toArray()
     //obras - FILTRAR POR CONTRATO ASSINADO E STATUS DE PAGAMENTO PAGO
     res.json({
       comercial,
@@ -77,6 +77,6 @@ export default async function handler(req, res) {
       obras,
       posvenda,
       oem,
-    });
+    })
   }
 }

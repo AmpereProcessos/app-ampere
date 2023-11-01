@@ -1,8 +1,8 @@
-import connectToDatabase from "../../../../utils/callsDb";
+import connectToDatabase from '../../../../utils/services/mongodb/calls'
 export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY, "chamados");
-    const collection = db.collection("suporte");
+  if (req.method === 'POST') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'chamados')
+    const collection = db.collection('suporte')
     let calls = await collection
       .aggregate([
         {
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
           $sort: { abertura: -1 },
         },
       ])
-      .toArray();
-    return res.json(calls);
+      .toArray()
+    return res.json(calls)
   }
 }

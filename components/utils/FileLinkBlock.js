@@ -1,5 +1,5 @@
 import { getBlob, getMetadata, ref } from 'firebase/storage'
-import { storage } from '../../utils/firebase'
+import { storage } from '../../utils/services/firebase/firebase-storage'
 import React, { useEffect, useRef, useState } from 'react'
 import { MdDelete } from 'react-icons/md'
 import { TbDownload } from 'react-icons/tb'

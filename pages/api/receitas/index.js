@@ -1,32 +1,30 @@
-import connectToDatabase from "../../../utils/connectDb";
+import connectToDatabase from '../../../utils/services/mongodb/projects'
 
 export default async function handler(req, res) {
-  if (req.method == "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("receitas");
-    const { projectId } = req.query;
+  if (req.method == 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('receitas')
+    const { projectId } = req.query
     try {
-      if (projectId && typeof projectId == "string") {
+      if (projectId && typeof projectId == 'string') {
         // Project related revenues
         const revenues = await collection
           .aggregate([
             {
               $match: {
-                "projeto.id": projectId,
+                'projeto.id': projectId,
               },
             },
           ])
-          .toArray();
-        res.status(200).json(revenues);
+          .toArray()
+        res.status(200).json(revenues)
       } else {
         // All revenues
-        const revenues = await collection
-          .aggregate([{ $sort: { dataInsercao: -1 } }])
-          .toArray();
-        res.status(200).json(revenues);
+        const revenues = await collection.aggregate([{ $sort: { dataInsercao: -1 } }]).toArray()
+        res.status(200).json(revenues)
       }
     } catch (error) {
-      errorHandler(error, res);
+      errorHandler(error, res)
     }
   }
 }

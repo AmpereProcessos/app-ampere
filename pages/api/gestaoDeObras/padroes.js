@@ -1,4 +1,4 @@
-import connectToDatabase from '../../../utils/connectDb'
+import connectToDatabase from '../../../utils/services/mongodb/projects'
 import { ObjectId } from 'mongodb'
 export default async function handler(req, res) {
   if (req.method === 'GET') {

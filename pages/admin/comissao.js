@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { useSession } from 'next-auth/react'
@@ -19,11 +19,13 @@ import { formatDateInputChange, getFirstDayOfMonth, getLastDayOfMonth } from '..
 import { formatDate, formatDecimalPlaces, formatToMoney } from '../../utils/constants'
 import { allSellers, serviceTypes } from '../../utils/select-options'
 import { useComissionData } from '../../utils/methods/query/comissions'
+import { updateAppProjectsComission } from '../../utils/methods/mutation/comission'
 import { MdAttachMoney } from 'react-icons/md'
 import { FaPercentage } from 'react-icons/fa'
 import { BiStats } from 'react-icons/bi'
 import toast from 'react-hot-toast'
 import dayjs from 'dayjs'
+
 const currentDate = new Date()
 
 function ComissaoPage() {
@@ -34,6 +36,8 @@ function ComissaoPage() {
       router.push('/auth/authHome')
     },
   })
+  const isManager = !!session?.user?.manager
+  const isADM = !!session?.user?.accessibleRoutes.includes('ADM')
 
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 
@@ -136,13 +140,31 @@ function ComissaoPage() {
 
     link.click()
   }
-
-  // useEffect(() => {
-  //   if (session) {
-  //     const isManager = !!session.user?.manager
-  //     if (!isManager) router.push('/')
-  //   }
-  // }, [session])
+  async function handleRegisterPayments(info) {
+    if (!info) return
+    const bulkwriteAppUpdate = info.map((project) => {
+      const projectId = project.id
+      const crmProjectId = project.idProjetoCRM
+      const sellerCommission = project.comissoes?.vendedor
+      const insiderCommission = project.comissoes.insider
+      return {
+        crmProjectId: crmProjectId,
+        appProjectId: projectId,
+        sellerCommission: sellerCommission,
+        insiderCommission: insiderCommission,
+      }
+    })
+    try {
+      await updateAppProjectsComission({ projects: [bulkwriteAppUpdate[0]] })
+    } catch (error) {
+      throw error
+    }
+  }
+  useEffect(() => {
+    if (session) {
+      if (!isManager && !isADM) router.push('/')
+    }
+  }, [session])
 
   if (status == 'loading') return <LoadingPage />
 
@@ -153,7 +175,7 @@ function ComissaoPage() {
       <div className="flex flex-col items-center px-1 py-2 border-b border-gray-200">
         <div className="flex items-center justify-between w-full">
           <div className="flex flex-col lg:flex-row items-center gap-2">
-            <p className="font-black uppercase text-center text-2xl text-[#15599a]">Projetos no estágio comercial</p>
+            <p className="font-black uppercase text-center text-2xl text-[#15599a]">COMISSÃO DE PROJETOS</p>
           </div>
           {dropdownMenuVisible ? (
             <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
@@ -300,9 +322,19 @@ function ComissaoPage() {
       {isError ? <ErrorComponent msg={'Erro ao carregar informações da análise. Tente novamente.'} /> : null}
       {isSuccess && projects ? (
         projects.length > 0 ? (
-          <div className="flex flex-col w-full gap-2">
+          <div className="flex flex-col w-full gap-2 py-2">
+            <div className="w-full flex items-center justify-center">
+              <button
+                disabled={isLoading}
+                onClick={() => handleRegisterPayments(projects)}
+                className="px-2 py-1 rounded border border-green-500 text-green-500 font-medium enabled:hover:bg-green-500 enabled:hover:text-white duration-300 ease-in-out disabled:bg-gray-500 disabled:text-white"
+              >
+                REGISTRAR PAGAMENTOS
+              </button>
+            </div>
+
             {projects.map((project) => (
-              <ComissionCard key={project.id} project={project} />
+              <ComissionCard key={project.id} project={project} userIsManager={isManager} />
             ))}
           </div>
         ) : (

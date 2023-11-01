@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
-import connectToCRMDatabase from '../../utils/crmDb'
-import connectToProjectsDatabase from '../../utils/connectDb'
-import connectToUsersDatabase from '../../utils/usersDb'
+import connectToCRMDatabase from '../../utils/services/mongodb/crm/main'
+import connectToProjectsDatabase from '../../utils/services/mongodb/projects'
+import connectToUsersDatabase from '../../utils/services/mongodb/users'
 import { ObjectId } from 'mongodb'
 
 function getList({ str, category }) {

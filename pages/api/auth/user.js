@@ -1,5 +1,5 @@
 import { errorHandler } from '../../../utils/methods/handlers'
-import connectToDatabase from '../../../utils/usersDb'
+import connectToDatabase from '../../../utils/services/mongodb/users'
 import { ObjectId } from 'mongodb'
 export default async function handler(req, res) {
   if (req.method === 'POST') {

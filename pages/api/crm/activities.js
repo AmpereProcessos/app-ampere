@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
 import { errorHandler } from '../../../utils/methods/handlers'
 import createHttpError from 'http-errors'
-import connectToDatabase from '../../../utils/crmDb'
+import connectToDatabase from '../../../utils/services/mongodb/crm/main'
 
 export default async function handler(req, res) {
   if (req.method == 'POST') {

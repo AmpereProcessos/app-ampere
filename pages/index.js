@@ -10,7 +10,6 @@ import { Fireworks } from 'fireworks-js'
 import DashboardSkeleton from '../components/skeletons/DashboardSkeleton'
 import { useSession } from 'next-auth/react'
 import LoadingPage from '../components/utils/LoadingPage'
-import LogoCampanha from '../utils/images/logoCampanha2023.png'
 import { sellerPhotos } from '../utils/constants'
 const routes = [
   {

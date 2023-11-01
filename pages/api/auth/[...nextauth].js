@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import connectToDatabase from '../../../utils/usersDb'
+import connectToDatabase from '../../../utils/services/mongodb/users'
 export const authOptions = {
   session: {
     strategy: 'jwt',

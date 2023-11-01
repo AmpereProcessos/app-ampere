@@ -1,5 +1,5 @@
 import axios from 'axios'
-import connectToDatabase from '../../../../utils/crmDb'
+import connectToDatabase from '../../../../utils/services/mongodb/crm/main'
 import { errorHandler } from '../../../../utils/methods/handlers'
 
 export default async function handler(req, res) {

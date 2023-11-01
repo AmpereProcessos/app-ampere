@@ -19,7 +19,7 @@ function getBarColor(project) {
   if (comissionsDefined) return 'bg-blue-500'
   return 'bg-red-500'
 }
-function ComissionCard({ project }) {
+function ComissionCard({ project, userIsManager }) {
   const queryClient = useQueryClient()
   const [comissionHolder, setComissionHolder] = useState({
     seller: project.comissoes.vendedor || 0,
@@ -148,15 +148,17 @@ function ComissionCard({ project }) {
             </h1>
           </div>
         </div>
-        <div className="flex items-center justify-end w-full">
-          <button
-            disabled={isLoading}
-            onClick={() => efectivateCommission()}
-            className="px-4 py-2 rounded border border-black font-medium enabled:hover:bg-black enabled:hover:text-white duration-300 ease-in-out disabled:bg-gray-500 disabled:text-white"
-          >
-            EFETIVAR COMISSÕES
-          </button>
-        </div>
+        {userIsManager ? (
+          <div className="flex items-center justify-end w-full">
+            <button
+              disabled={isLoading}
+              onClick={() => efectivateCommission()}
+              className="px-2 py-1 rounded border border-black font-medium enabled:hover:bg-black enabled:hover:text-white duration-300 ease-in-out disabled:bg-gray-500 disabled:text-white"
+            >
+              EFETIVAR COMISSÕES
+            </button>
+          </div>
+        ) : null}
       </div>
     </div>
   )

@@ -11,8 +11,8 @@ import { vendedores } from '../utils/constants'
 import NumberFloatingInput from './NumberFloatingInput'
 import { AiOutlineSearch } from 'react-icons/ai'
 import axios from 'axios'
-import estadosECidades from '../utils/estados_cidades.json'
-import irradiacoes from '../utils/irradiancia.json'
+import estadosECidades from '../utils/jsons/estados-cidades.json'
+import irradiacoes from '../utils/jsons/irradiancia.json'
 function ModalNewPropostaOeM({ isOpen, closeModal, getProposes, seller }) {
   const [msg, setMsg] = useState({ text: '', color: '' })
   const [proposeInfo, setProposeInfo] = useState({

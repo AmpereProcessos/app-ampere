@@ -1,5 +1,5 @@
-import connectToDatabase from '../../../../utils/connectDb'
-import connectToCRMDatabase from '../../../../utils/crmDb'
+import connectToDatabase from '../../../../utils/services/mongodb/projects'
+import connectToCRMDatabase from '../../../../utils/services/mongodb/crm/main'
 function getContractValue(valorProjeto, valorPadrao, valorEstrutura) {
   var totalSum = 0
 

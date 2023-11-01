@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { fileTypes } from '../utils/constants'
-import { storage } from '../utils/firebase'
+import { storage } from '../utils/services/firebase/firebase-storage'
 import toast from 'react-hot-toast'
 import { updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
 import { useQueryClient } from 'react-query'

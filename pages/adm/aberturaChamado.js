@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import React, { useState, useEffect } from 'react'
-import Logo from '../../utils/whitelogoHD.png'
+import Logo from '../../utils//images/logo-texto-azul-vertical.png'
 import Select from 'react-select'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'

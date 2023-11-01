@@ -8,7 +8,7 @@ import { AiOutlineSearch, AiOutlineCheck } from 'react-icons/ai'
 import { cidadesAtendidas, customersAcquisitionChannels, tiposDePadrao, vendedores } from '../utils/constants'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { v4 } from 'uuid'
-import { storage } from '../utils/firebase'
+import { storage } from '../utils/services/firebase/firebase-storage'
 import axios from 'axios'
 import { Router, useRouter } from 'next/router'
 const phoneMask = (value) => {

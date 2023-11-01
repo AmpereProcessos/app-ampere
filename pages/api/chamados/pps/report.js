@@ -1,15 +1,15 @@
-import connectToDatabase from "../../../../utils/callsDb";
+import connectToDatabase from '../../../../utils/services/mongodb/calls'
 export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY);
-    const collection = db.collection("pps");
-    const after = new Date(req.body.date.after).toJSON();
-    const before = new Date(req.body.date.before).toJSON();
+  if (req.method === 'POST') {
+    const db = await connectToDatabase(process.env.DB_KEY)
+    const collection = db.collection('pps')
+    const after = new Date(req.body.date.after).toJSON()
+    const before = new Date(req.body.date.before).toJSON()
     var byType = await collection
       .aggregate([
         {
           $match: {
-            status: "REALIZADO",
+            status: 'REALIZADO',
           },
         },
         {
@@ -22,19 +22,19 @@ export default async function handler(req, res) {
         },
         {
           $group: {
-            _id: "$tipoDeSolicitacao",
+            _id: '$tipoDeSolicitacao',
             contagem: {
               $count: {},
             },
           },
         },
       ])
-      .toArray();
+      .toArray()
     var bySeller = await collection
       .aggregate([
         {
           $match: {
-            status: "REALIZADO",
+            status: 'REALIZADO',
           },
         },
         {
@@ -47,19 +47,19 @@ export default async function handler(req, res) {
         },
         {
           $group: {
-            _id: "$vendedor",
+            _id: '$vendedor',
             contagem: {
               $count: {},
             },
           },
         },
       ])
-      .toArray();
+      .toArray()
     var byAttendant = await collection
       .aggregate([
         {
           $match: {
-            status: "REALIZADO",
+            status: 'REALIZADO',
           },
         },
         {
@@ -72,7 +72,7 @@ export default async function handler(req, res) {
         },
         {
           $group: {
-            _id: "$responsavel",
+            _id: '$responsavel',
             contagem: {
               $count: {},
             },
@@ -80,20 +80,20 @@ export default async function handler(req, res) {
               $avg: {
                 $dateDiff: {
                   startDate: {
-                    $dateFromString: { dateString: "$carimboDataHora" },
+                    $dateFromString: { dateString: '$carimboDataHora' },
                   },
                   endDate: {
-                    $dateFromString: { dateString: "$dataDeConclusao" },
+                    $dateFromString: { dateString: '$dataDeConclusao' },
                   },
-                  unit: "hour",
+                  unit: 'hour',
                 },
               },
             },
           },
         },
       ])
-      .toArray();
+      .toArray()
 
-    res.json({ byType, byAttendant, bySeller });
+    res.json({ byType, byAttendant, bySeller })
   }
 }

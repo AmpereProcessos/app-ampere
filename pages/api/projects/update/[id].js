@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import connectToDatabase from '../../../../utils/connectDb'
+import connectToDatabase from '../../../../utils/services/mongodb/projects'
 import { getSession } from 'next-auth/react'
 import { errorHandler } from '../../../../utils/methods/handlers'
 export default async function handler(req, res) {

@@ -1,88 +1,88 @@
-import React, { useState } from "react";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import EstagioDois from "../../../components/EstagioDois";
-import EstagioTres from "../../../components/EstagioTres";
-import EstagioUm from "../../../components/EstagioUm";
-import Logo from "../../../utils/logoBranco.png";
-import LogoSemTexto from "../../../utils/logoBrancoSemTexto.png";
-import estadosCidades from "../../../utils/estados_cidades.json";
-import Head from "next/head";
-import * as fbq from "../../../utils/fpixel";
-import FacebookPixel from "../../../components/Head/facebook/pixel-1";
-import AnalyticsScripts from "../../../components/Head/analytics";
-import { useRouter } from "next/router";
-import axios from "axios";
-import { formatPersonalName } from "../../../utils/constants";
+import React, { useState } from 'react'
+import Image from 'next/image'
+import { motion } from 'framer-motion'
+import EstagioDois from '../../../components/EstagioDois'
+import EstagioTres from '../../../components/EstagioTres'
+import EstagioUm from '../../../components/EstagioUm'
+import Logo from '../../../utils/images/logo-texto-branco.png'
+import LogoSemTexto from '../../../utils/images/logo-texto-brancoSemTexto.png'
+import estadosCidades from '../../../utils/jsons/estados-cidades.json'
+import Head from 'next/head'
+import * as fbq from '../../../utils/fpixel'
+import FacebookPixel from '../../../components/Head/facebook/pixel-1'
+import AnalyticsScripts from '../../../components/Head/analytics'
+import { useRouter } from 'next/router'
+import axios from 'axios'
+import { formatPersonalName } from '../../../utils/constants'
 function Calculadora() {
-  const router = useRouter();
-  const [submitLoading, setSubmitLoading] = useState(false);
-  const [submitErr, setSubmitErr] = useState({ field: null, text: "" });
-  const [estagio, setEstagio] = useState(1);
+  const router = useRouter()
+  const [submitLoading, setSubmitLoading] = useState(false)
+  const [submitErr, setSubmitErr] = useState({ field: null, text: '' })
+  const [estagio, setEstagio] = useState(1)
   const [infoHolder, setInfoHolder] = useState({
     valorFatura: null,
     uf: null,
     cidade: null,
-    nome: "",
-    email: "",
-    telefone: "",
-  });
+    nome: '',
+    email: '',
+    telefone: '',
+  })
   function validateSubmitFields() {
     if (infoHolder.nome.trim().length < 2) {
       setSubmitErr({
-        field: "NOME",
-        text: "Por favor, preencha um nome válido.",
-      });
-      setSubmitLoading(false);
-      return false;
+        field: 'NOME',
+        text: 'Por favor, preencha um nome válido.',
+      })
+      setSubmitLoading(false)
+      return false
     }
     if (infoHolder.email.trim().length < 11) {
       setSubmitErr({
-        field: "EMAIL",
-        text: "Por favor, preencha um email válido.",
-      });
-      setSubmitLoading(false);
-      return false;
+        field: 'EMAIL',
+        text: 'Por favor, preencha um email válido.',
+      })
+      setSubmitLoading(false)
+      return false
     }
     if (infoHolder.telefone.trim().length < 9) {
       setSubmitErr({
-        field: "TELEFONE",
-        text: "Por favor, preencha um telefone válido.",
-      });
-      setSubmitLoading(false);
-      return false;
+        field: 'TELEFONE',
+        text: 'Por favor, preencha um telefone válido.',
+      })
+      setSubmitLoading(false)
+      return false
     }
-    setSubmitErr({ field: "", text: "" });
-    return true;
+    setSubmitErr({ field: '', text: '' })
+    return true
   }
   let obj = {
     telefone: infoHolder.telefone,
-    nome: infoHolder.nome ? formatPersonalName(infoHolder.nome) : "",
+    nome: infoHolder.nome ? formatPersonalName(infoHolder.nome) : '',
     email: infoHolder.email,
-    responsavel: "NÃO DEFINIDO",
+    responsavel: 'NÃO DEFINIDO',
     uf: infoHolder.uf,
     cidade: infoHolder.cidade,
-    canal: "CALCULADORA SOLAR",
-    campanha: "",
+    canal: 'CALCULADORA SOLAR',
+    campanha: '',
     dataDeAquisicao: new Date(),
     consumo: infoHolder.valorFatura,
-    vendedor: "NÃO DEFINIDO",
+    vendedor: 'NÃO DEFINIDO',
     dataDeEnvio: new Date(),
     codigoSVB: 0,
-    nicho: "NÃO DEFINIDO",
-    leadscoreProduto: "NÃO DEFINIDO",
-    leadscoreBranding: "NÃO DEFINIDO",
-  };
+    nicho: 'NÃO DEFINIDO',
+    leadscoreProduto: 'NÃO DEFINIDO',
+    leadscoreBranding: 'NÃO DEFINIDO',
+  }
   async function createSimulation() {
-    setSubmitLoading(true);
+    setSubmitLoading(true)
     if (validateSubmitFields()) {
-      let response = await axios.post("/api/insideSales/newLead", obj);
-      console.log(response);
+      let response = await axios.post('/api/insideSales/newLead', obj)
+      console.log(response)
       if (response.status == 200) {
-        let id = response.data.insertedId;
-        router.push(`/publico/calculadora-solar/resultado/${id}`);
+        let id = response.data.insertedId
+        router.push(`/publico/calculadora-solar/resultado/${id}`)
       } else {
-        setSubmitLoading(false);
+        setSubmitLoading(false)
       }
     }
   }
@@ -97,12 +97,10 @@ function Calculadora() {
           src="https://www.googletagmanager.com/ns.html?id=GTM-TVBGCSZT"
           height="0"
           width="0"
-          style={{ display: "none", visibility: "hidden" }}
+          style={{ display: 'none', visibility: 'hidden' }}
         ></iframe>
       </noscript>
-      <div
-        className={`bg-white inline-flex flex-col h-full items-start overflow-clip font-['Raleway']`}
-      >
+      <div className={`bg-white inline-flex flex-col h-full items-start overflow-clip font-['Raleway']`}>
         <div className="w-full flex justify-center items-center self-stretch h-[82px] bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)]">
           <div className="w-11 h-[46px]">
             <div className="w-11">
@@ -137,15 +135,9 @@ function Calculadora() {
                   )}
                   <div className="inset-y-0 absolute left-0 font-black w-[30px] right-[90.99%]">
                     <div className="inset-0 absolute rounded-full w-[30px] bg-[rgba(21,89,154,1)]" />
-                    <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">
-                      1
-                    </p>
+                    <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">1</p>
                   </div>
-                  <div
-                    className={`${
-                      estagio > 1 ? "font-black" : ""
-                    } inset-y-0 absolute font-normal left-[45.5%] right-[45.5%] w-[30px]`}
-                  >
+                  <div className={`${estagio > 1 ? 'font-black' : ''} inset-y-0 absolute font-normal left-[45.5%] right-[45.5%] w-[30px]`}>
                     {estagio > 1 ? (
                       <>
                         <motion.div
@@ -154,37 +146,25 @@ function Calculadora() {
                           transition={{ duration: 0.3 }}
                           className="inset-0 absolute rounded-full w-[30px] bg-[rgba(21,89,154,1)]"
                         />
-                        <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">
-                          2
-                        </p>
+                        <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">2</p>
                       </>
                     ) : (
                       <>
                         <div className="inset-0 absolute rounded-full w-[30px] bg-[rgba(79,88,96,1)]" />
-                        <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">
-                          2
-                        </p>
+                        <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">2</p>
                       </>
                     )}
                   </div>
-                  <div
-                    className={`${
-                      estagio > 2 ? "font-black" : ""
-                    } inset-y-0 absolute right-0 font-normal w-[30px] left-[90.99%]`}
-                  >
+                  <div className={`${estagio > 2 ? 'font-black' : ''} inset-y-0 absolute right-0 font-normal w-[30px] left-[90.99%]`}>
                     {estagio > 2 ? (
                       <>
                         <div className="inset-0 absolute rounded-full w-[30px] bg-[rgba(21,89,154,1)]" />
-                        <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">
-                          3
-                        </p>
+                        <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">3</p>
                       </>
                     ) : (
                       <>
                         <div className="inset-0 absolute rounded-full w-[30px] bg-[rgba(79,88,96,1)]" />
-                        <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">
-                          3
-                        </p>
+                        <p className="inset-x-0 absolute inline m-0 top-[20%] bottom-[20%] h-[18.03px] w-[30.05px] text-[15px] leading-[1.2]">3</p>
                       </>
                     )}
                   </div>
@@ -193,17 +173,11 @@ function Calculadora() {
             </div>
             <form
               onSubmit={(e) => {
-                e.preventDefault();
-                createSimulation();
+                e.preventDefault()
+                createSimulation()
               }}
             >
-              {estagio == 1 && (
-                <EstagioUm
-                  infoHolder={infoHolder}
-                  setInfoHolder={setInfoHolder}
-                  next={() => setEstagio((prev) => prev + 1)}
-                />
-              )}
+              {estagio == 1 && <EstagioUm infoHolder={infoHolder} setInfoHolder={setInfoHolder} next={() => setEstagio((prev) => prev + 1)} />}
               {estagio == 2 && (
                 <EstagioDois
                   infoHolder={infoHolder}
@@ -213,12 +187,7 @@ function Calculadora() {
                 />
               )}
               {estagio == 3 && (
-                <EstagioTres
-                  infoHolder={infoHolder}
-                  setInfoHolder={setInfoHolder}
-                  submitLoading={submitLoading}
-                  submitErr={submitErr}
-                />
+                <EstagioTres infoHolder={infoHolder} setInfoHolder={setInfoHolder} submitLoading={submitLoading} submitErr={submitErr} />
               )}
             </form>
           </div>
@@ -229,24 +198,16 @@ function Calculadora() {
           </div>
           <div className="flex flex-col justify-center items-center">
             <div className="w-full leading-none relative">
-              <p className="font-normal text-white inline m-0 text-[15px] leading-[1.2]">
-                A energia que move o mundo
-              </p>
-              <p className="text-xs font-normal text-white inline m-0 leading-[1.2]">
-                {" "}
-              </p>
-              <p className="font-black inline m-0 text-[15px] leading-[1.2] text-[rgba(254,173,65,1)]">
-                vem de você
-              </p>
-              <p className="text-xs font-normal text-white inline m-0 leading-[1.2]">
-                !
-              </p>
+              <p className="font-normal text-white inline m-0 text-[15px] leading-[1.2]">A energia que move o mundo</p>
+              <p className="text-xs font-normal text-white inline m-0 leading-[1.2]"> </p>
+              <p className="font-black inline m-0 text-[15px] leading-[1.2] text-[rgba(254,173,65,1)]">vem de você</p>
+              <p className="text-xs font-normal text-white inline m-0 leading-[1.2]">!</p>
             </div>
           </div>
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default Calculadora;
+export default Calculadora

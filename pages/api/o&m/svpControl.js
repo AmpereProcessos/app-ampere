@@ -1,14 +1,14 @@
-import connectToDatabase from "../../../utils/projectsDb";
+import connectToDatabase from '../../../utils/services/mongodb/projects'
 export default async function handler(req, res) {
-  if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY);
-    const collection = db.collection("dados");
+  if (req.method === 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
     let arr = await collection
       .aggregate([
         {
           $match: {
-            "contrato.dataAssinatura": {
-              $gt: "2021-09-01T08:00:00.000Z",
+            'contrato.dataAssinatura': {
+              $gt: '2021-09-01T08:00:00.000Z',
             },
           },
         },
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
           },
         },
       ])
-      .toArray();
-    res.json(arr);
+      .toArray()
+    res.json(arr)
   }
 }

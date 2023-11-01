@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useRef } from 'react'
-import Logo from '../utils/whitelogoHD.png'
+import Logo from '../utils//images/logo-texto-azul-vertical.png'
 import { FiCheck } from 'react-icons/fi'
 import { prices } from '../utils/constants'
 import jsPDF from 'jspdf'

@@ -11,7 +11,7 @@ import {
   suprimentoOption,
   tiposSolicitacaoVisitaTecnica,
 } from '../utils/constants'
-import { storage } from '../utils/firebase'
+import { storage } from '../utils/services/firebase/firebase-storage'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { FaSave } from 'react-icons/fa'

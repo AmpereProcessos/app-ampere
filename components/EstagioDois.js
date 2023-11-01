@@ -1,37 +1,37 @@
-import React, { useState } from "react";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import LogoSemTexto from "../utils/logoBrancoSemTexto.png";
-import Logo from "../utils/logoBranco.png";
-import estadosCidades from "../utils/estados_cidades.json";
-import Select from "react-select";
+import React, { useState } from 'react'
+import Image from 'next/image'
+import { useRouter } from 'next/router'
+import LogoSemTexto from '../utils/images/logo-texto-brancoSemTexto.png'
+import Logo from '../utils/images/logo-texto-branco.png'
+import estadosCidades from '../utils/jsons/estados-cidades.json'
+import Select from 'react-select'
 function EstagioDois({ next, infoHolder, setInfoHolder }) {
-  const [err, setErr] = useState({ field: null, text: "" });
+  const [err, setErr] = useState({ field: null, text: '' })
   function validateFields() {
     if (!infoHolder.uf) {
       setErr({
-        field: "UF",
-        text: "Oops, o Estado preenchido é inválido. Por favor, preencha um Estado ou UF válido.",
-      });
-      return false;
+        field: 'UF',
+        text: 'Oops, o Estado preenchido é inválido. Por favor, preencha um Estado ou UF válido.',
+      })
+      return false
     }
     if (!infoHolder.cidade) {
       setErr({
-        field: "CIDADE",
-        text: "Oops, a cidade preenchida é inválida. Por favor, preencha uma cidade válida.",
-      });
-      return false;
+        field: 'CIDADE',
+        text: 'Oops, a cidade preenchida é inválida. Por favor, preencha uma cidade válida.',
+      })
+      return false
     } else {
       setErr({
         field: null,
-        text: "",
-      });
-      return true;
+        text: '',
+      })
+      return true
     }
   }
   function goNext() {
     if (validateFields()) {
-      next();
+      next()
     }
   }
   return (
@@ -41,9 +41,7 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
           <div className="gap-1 flex flex-col justify-center items-center w-[300px] lg:w-[350px]">
             <div className="w-full flex items-start self-stretch">
               <div>
-                <p className="m-0 w-[300px] lg:w-[350px] text-[15px] leading-[1.2]">
-                  Selecione seu estado
-                </p>
+                <p className="m-0 w-[300px] lg:w-[350px] text-[15px] leading-[1.2]">Selecione seu estado</p>
               </div>
             </div>
             <div className="w-full">
@@ -52,15 +50,13 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
                 styles={{
                   control: (base, state) => ({
                     ...base,
-                    borderColor: err.field == "UF" ? "red" : "gray",
+                    borderColor: err.field == 'UF' ? 'red' : 'gray',
                   }),
                 }}
                 options={estadosCidades.map((item) => {
-                  return { label: item.nome, value: item.sigla };
+                  return { label: item.nome, value: item.sigla }
                 })}
-                onChange={(item) =>
-                  setInfoHolder({ ...infoHolder, uf: item.value })
-                }
+                onChange={(item) => setInfoHolder({ ...infoHolder, uf: item.value })}
               />
               {/* <select
                 type={"text"}
@@ -91,9 +87,7 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
           <div className="gap-1 flex flex-col justify-center items-center w-[300px] lg:w-[350px]">
             <div className="w-full flex items-start self-stretch">
               <div>
-                <p className="m-0 w-[300px] lg:w-[350px] text-[15px] leading-[1.2]">
-                  Selecione sua cidade
-                </p>
+                <p className="m-0 w-[300px] lg:w-[350px] text-[15px] leading-[1.2]">Selecione sua cidade</p>
               </div>
             </div>
             <div className="w-full">
@@ -102,7 +96,7 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
                 styles={{
                   control: (base, state) => ({
                     ...base,
-                    borderColor: err.field == "CIDADE" ? "red" : "gray",
+                    borderColor: err.field == 'CIDADE' ? 'red' : 'gray',
                   }),
                 }}
                 options={
@@ -110,13 +104,11 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
                     ? estadosCidades
                         .filter((x) => x.sigla == infoHolder.uf)[0]
                         .cidades.map((cidade, index) => {
-                          return { label: cidade, value: cidade };
+                          return { label: cidade, value: cidade }
                         })
                     : []
                 }
-                onChange={(item) =>
-                  setInfoHolder({ ...infoHolder, cidade: item.value })
-                }
+                onChange={(item) => setInfoHolder({ ...infoHolder, cidade: item.value })}
               />
               {/* <select
                 value={infoHolder.cidade}
@@ -149,22 +141,17 @@ function EstagioDois({ next, infoHolder, setInfoHolder }) {
         </div>
       </div>
       <div className="w-full gap-4 flex flex-col justify-center items-center self-stretch text-white text-center font-black h-[100px]">
-        {err.text ? (
-          <p className="text-center italic text-red-500">{err.text}</p>
-        ) : null}
+        {err.text ? <p className="text-center italic text-red-500">{err.text}</p> : null}
         <div className="w-full">
           <div className="flex-1 flex flex-col justify-center items-center flex-grow rounded-lg p-3 bg-gradient-to-l from-[rgba(13,53,92,1)] to-[rgba(21,89,154,1)] hover:scale-[1.02] duration-300">
-            <p
-              onClick={() => goNext()}
-              className="w-full m-0 text-[19px] leading-[1.2] cursor-pointer"
-            >
+            <p onClick={() => goNext()} className="w-full m-0 text-[19px] leading-[1.2] cursor-pointer">
               Próximo
             </p>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default EstagioDois;
+export default EstagioDois

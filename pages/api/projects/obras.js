@@ -1,17 +1,17 @@
-import connectToDatabase from "../../../utils/connectDb";
+import connectToDatabase from '../../../utils/services/mongodb/projects'
 export default async function handler(req, res) {
-  if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
+  if (req.method === 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
     let obras = await collection
       .aggregate([
         {
           $match: {
-            "obra.statusDaObra": {
-              $ne: "CONCLUIDA",
+            'obra.statusDaObra': {
+              $ne: 'CONCLUIDA',
             },
-            "contrato.status": "ASSINADO",
-            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
+            'contrato.status': 'ASSINADO',
+            tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
           },
         },
         {
@@ -22,50 +22,50 @@ export default async function handler(req, res) {
             cidade: 1,
             obra: 1,
             tipoDeServico: 1,
-            "compra.statusEntrega": 1,
-            "compra.previsaoEntrega": 1,
-            "compra.dataEntrega": 1,
-            "compra.statusLiberacao": 1,
-            "visitaTecnica.tecnico": 1,
-            "visitaTecnica.tipoDaTelha": 1,
-            "vistoria.status": 1,
-            "sistema.qtdeModulos": 1,
-            "sistema.potPico": 1,
-            "sistema.topologia": 1,
-            "parecer.dataParecerDeAcesso": 1,
-            "contrato.dataAssinatura": 1,
-            "pagamento.credor": 1,
-            "projeto.aumentoDeCarga": 1,
-            "projeto.acStatus": 1,
-            "estruturaPersonalizada.aplicavel": 1,
-            "estruturaPersonalizada.status": 1,
+            'compra.statusEntrega': 1,
+            'compra.previsaoEntrega': 1,
+            'compra.dataEntrega': 1,
+            'compra.statusLiberacao': 1,
+            'visitaTecnica.tecnico': 1,
+            'visitaTecnica.tipoDaTelha': 1,
+            'vistoria.status': 1,
+            'sistema.qtdeModulos': 1,
+            'sistema.potPico': 1,
+            'sistema.topologia': 1,
+            'parecer.dataParecerDeAcesso': 1,
+            'contrato.dataAssinatura': 1,
+            'pagamento.credor': 1,
+            'projeto.aumentoDeCarga': 1,
+            'projeto.acStatus': 1,
+            'estruturaPersonalizada.aplicavel': 1,
+            'estruturaPersonalizada.status': 1,
             ordensDeServico: 1,
           },
         },
         {
           $sort: {
-            "compra.dataEntrega": 1,
-            "compra.previsaoEntrega": 1,
+            'compra.dataEntrega': 1,
+            'compra.previsaoEntrega': 1,
           },
         },
       ])
-      .toArray();
-    res.json(obras);
-  } else if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
-    var arr;
+      .toArray()
+    res.json(obras)
+  } else if (req.method === 'POST') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
+    var arr
     switch (req.body.filtrarPor) {
-      case "REGIONAL":
+      case 'REGIONAL':
         arr = await collection
           .aggregate([
             {
               $match: {
                 regional: req.body.parametro,
-                "obra.statusDaObra": {
-                  $ne: "CONCLUIDA",
+                'obra.statusDaObra': {
+                  $ne: 'CONCLUIDA',
                 },
-                "contrato.status": "ASSINADO",
+                'contrato.status': 'ASSINADO',
               },
             },
             {
@@ -74,18 +74,18 @@ export default async function handler(req, res) {
               },
             },
           ])
-          .toArray();
-        break;
-      case "VENDEDOR":
+          .toArray()
+        break
+      case 'VENDEDOR':
         arr = await collection
           .aggregate([
             {
               $match: {
-                "vendedor.nome": req.body.parametro,
-                "obra.statusDaObra": {
-                  $ne: "CONCLUIDA",
+                'vendedor.nome': req.body.parametro,
+                'obra.statusDaObra': {
+                  $ne: 'CONCLUIDA',
                 },
-                "contrato.status": "ASSINADO",
+                'contrato.status': 'ASSINADO',
               },
             },
             {
@@ -94,16 +94,16 @@ export default async function handler(req, res) {
               },
             },
           ])
-          .toArray();
+          .toArray()
       default:
         arr = await collection
           .aggregate([
             {
               $match: {
-                "obra.statusDaObra": {
-                  $ne: "CONCLUIDA",
+                'obra.statusDaObra': {
+                  $ne: 'CONCLUIDA',
                 },
-                "contrato.status": "ASSINADO",
+                'contrato.status': 'ASSINADO',
               },
             },
             {
@@ -112,8 +112,8 @@ export default async function handler(req, res) {
               },
             },
           ])
-          .toArray();
+          .toArray()
     }
-    res.json(arr);
+    res.json(arr)
   }
 }

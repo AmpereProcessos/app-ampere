@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import connectToDatabase from '../../../../utils/connectDb'
+import connectToDatabase from '../../../../utils/services/mongodb/projects'
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     let id = req.query.id

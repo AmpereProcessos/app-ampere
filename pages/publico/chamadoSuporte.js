@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
-import Logo from '../../utils/whitelogo.png'
+import Logo from '../../utils/images/logo-texto-azul-vertical.png'
 import { cities } from '../../utils/constants'
 import axios from 'axios'
 function ChamadoSuporte() {

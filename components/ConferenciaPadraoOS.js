@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { fileTypes } from '../utils/constants'
-import { storage } from '../utils/firebase'
+import { storage } from '../utils/services/firebase/firebase-storage'
 import Select from 'react-select'
 import { MdOutlineAddCircle } from 'react-icons/md'
 import { VscChromeClose } from 'react-icons/vsc'

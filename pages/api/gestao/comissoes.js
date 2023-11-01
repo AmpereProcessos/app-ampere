@@ -1,8 +1,10 @@
-import connectToAppDatabase from '../../../utils/connectDb'
+import connectToAppDatabase from '../../../utils/services/mongodb/projects'
 import { calculateStringSimilarity } from '../../../utils/constants'
-import connectToCRMDatabase from '../../../utils/crmDb'
+import connectToCRMDatabase from '../../../utils/services/mongodb/crm/main'
 import { errorHandler } from '../../../utils/methods/handlers'
 import { getContractValue } from '../../../utils/methods/util/projects'
+import createHttpError from 'http-errors'
+import { ObjectId } from 'mongodb'
 export default async function handler(req, res) {
   if (req.method == 'GET') {
     try {
@@ -39,16 +41,15 @@ export default async function handler(req, res) {
         const definedInsiderCommission = project.comissoes?.porcentagemInsider
         // In case one of the commission values is already defined, use them
         if (typeof definedSellerCommission == 'number' && typeof definedInsiderCommission == 'number') {
-          console.log('VIM POR AQUI')
           commission.seller = definedSellerCommission || 0
           commission.insider = definedInsiderCommission || 0
         } else {
           // Else, use commission values defined in CRM for the responsible and representative
           commission = getCRMCommissionValues({ responsibleUserInfo, representativeUserInfo, isFromSDR })
         }
-        console.log(commission)
         return {
           id: project._id,
+          idProjetoCRM: project.idProjetoCRM,
           nome: project.nomeDoContrato,
           tipoServico: project.tipoDeServico,
           identificador: project.qtde,
@@ -77,6 +78,24 @@ export default async function handler(req, res) {
       res.json(commissionInfo)
     } catch (error) {
       console.log(error)
+      errorHandler(error, res)
+    }
+  }
+  if (req.method == 'POST') {
+    try {
+      const { changes } = req.body
+      if (!changes || typeof changes != 'object' || !Array.isArray(changes))
+        throw new createHttpError.BadRequest('Formato das alterações não é compatível.')
+
+      const appDb = await connectToAppDatabase(process.env.DB_KEY, 'projetos')
+      const appProjectsCollection = appDb.collection('dados')
+      const crmDb = await connectToCRMDatabase(process.env.CRM_KEY)
+      const crmProjectsCollection = crmDb.collection('projects')
+      console.log('CHANGES', changes)
+      await updateAppProjectsComission({ collection: appProjectsCollection, changes })
+      await updateCRMProjectsComission({ collection: crmProjectsCollection, changes })
+      res.status(200).json('Atualizações feitas com sucesso !')
+    } catch (error) {
       errorHandler(error, res)
     }
   }
@@ -147,4 +166,52 @@ function getCRMCommissionValues({ representativeUserInfo, responsibleUserInfo, i
     }
   }
   return commission
+}
+
+async function updateAppProjectsComission({ collection, changes }) {
+  try {
+    const bulkwriteAppUpdate = changes.map((project) => {
+      const { crmProjectId, appProjectId, sellerCommission, insiderCommission } = project
+      return {
+        updateOne: {
+          filter: { _id: new ObjectId(appProjectId) },
+          update: {
+            $set: {
+              'comissoes.porcentagemVendedor': sellerCommission,
+              'comissoes.porcentagemInsider': insiderCommission,
+              'comissoes.pagamentoRealizado': true,
+            },
+          },
+        },
+      }
+    })
+    const dbResponse = await collection.bulkWrite(bulkwriteAppUpdate)
+    return
+  } catch (error) {
+    throw error
+  }
+}
+async function updateCRMProjectsComission({ collection, changes }) {
+  try {
+    const bulkwriteCRMUpdate = changes
+      .filter((project) => !!project.crmProjectId)
+      .map((project) => {
+        const { crmProjectId, appProjectId, sellerCommission, insiderCommission } = project
+        return {
+          updateOne: {
+            filter: { _id: new ObjectId(crmProjectId) },
+            update: {
+              $set: {
+                'comissoes.responsavel': sellerCommission,
+                'comissoes.representante': insiderCommission,
+              },
+            },
+          },
+        }
+      })
+    const dbResponse = await collection.bulkWrite(bulkwriteCRMUpdate)
+    return
+  } catch (error) {
+    throw error
+  }
 }

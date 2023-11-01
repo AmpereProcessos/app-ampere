@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import EmptyLogo from "../../utils/empty-logo.png";
-import { signIn } from "next-auth/react";
+import React, { useState, useEffect } from 'react'
+import Image from 'next/image'
+import { useRouter } from 'next/router'
+import EmptyLogo from '../../utils/images/logo-texto-azul.png'
+import { signIn } from 'next-auth/react'
 function Auth() {
-  const router = useRouter();
-  const [user, setUser] = useState("");
-  const [password, setPassword] = useState("");
+  const router = useRouter()
+  const [user, setUser] = useState('')
+  const [password, setPassword] = useState('')
   const [message, setMessage] = useState({
-    text: "",
-    color: "",
-  });
+    text: '',
+    color: '',
+  })
   // function handleLogin() {
   //   axios.post("/api/auth/login", { email: user, password }).then((res) => {
   //     if (res.data.error) {
@@ -33,37 +33,37 @@ function Auth() {
   //   });
   // }
   async function handleSignIn(e) {
-    e.preventDefault();
+    e.preventDefault()
     if (user.trim().length == 0) {
       setMessage({
-        text: "Por favor, preencha um email válido",
-        color: "text-red-500",
-      });
-      return;
+        text: 'Por favor, preencha um email válido',
+        color: 'text-red-500',
+      })
+      return
     } else if (password.trim().length == 0) {
       setMessage({
-        text: "Por favor, preencha uma senha válida",
-        color: "text-red-500",
-      });
-      return;
+        text: 'Por favor, preencha uma senha válida',
+        color: 'text-red-500',
+      })
+      return
     } else {
       setMessage({
-        text: "Aguarde um segundo enquanto validamos suas credenciais.",
-        color: "text-[#15599a]",
-      });
-      let res = await signIn("credentials", {
+        text: 'Aguarde um segundo enquanto validamos suas credenciais.',
+        color: 'text-[#15599a]',
+      })
+      let res = await signIn('credentials', {
         email: user,
         password: password,
         redirect: false,
-      });
+      })
       if (res.status == 200) {
-        setMessage({ text: "Redirecionando...", color: "text-green-500" });
+        setMessage({ text: 'Redirecionando...', color: 'text-green-500' })
         setTimeout(async () => {
-          router.push("/");
-        }, 500);
+          router.push('/')
+        }, 500)
       } else {
-        console.log(res);
-        setMessage({ text: res.error, color: "text-red-500" });
+        console.log(res)
+        setMessage({ text: res.error, color: 'text-red-500' })
       }
     }
   }
@@ -97,16 +97,12 @@ function Auth() {
             >
               Login
             </button>
-            {message.text ? (
-              <p className={`text-lg text-center ${message.color}`}>
-                {message.text}
-              </p>
-            ) : null}
+            {message.text ? <p className={`text-lg text-center ${message.color}`}>{message.text}</p> : null}
           </div>
         </form>
       </div>
     </section>
-  );
+  )
 }
 
-export default Auth;
+export default Auth

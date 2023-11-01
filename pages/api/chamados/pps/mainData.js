@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
-import connectToDatabase from '../../../../utils/callsDb'
-import connectToCRMDatabase from '../../../../utils/crmDb'
+import connectToDatabase from '../../../../utils/services/mongodb/calls'
+import connectToCRMDatabase from '../../../../utils/services/mongodb/crm/main'
 import { calculateStringSimilarity, formatProjectCode } from '../../../../utils/constants'
 import { errorHandler } from '../../../../utils/methods/handlers'
 import { getFirstDayOfMonth, getLastDayOfMonth } from '../../../../utils/methods/shared'

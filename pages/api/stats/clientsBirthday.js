@@ -1,15 +1,15 @@
-import connectToDatabase from "../../../utils/connectDb";
+import connectToDatabase from '../../../utils/services/mongodb/projects'
 export default async function handler(req, res) {
-  const currentMonth = new Date().getMonth() + 1;
-  if (req.method === "GET") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
+  const currentMonth = new Date().getMonth() + 1
+  if (req.method === 'GET') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
     let arr = await collection
       .aggregate([
         {
           $match: {
-            dataNascimento: { $ne: "-" },
-            tipoDeServico: { $ne: "OPERAÇÃO E MANUTENÇÃO" },
+            dataNascimento: { $ne: '-' },
+            tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
           },
         },
         {
@@ -18,43 +18,43 @@ export default async function handler(req, res) {
             dataNascimento: 1,
             data: {
               ano: {
-                $year: { $dateFromString: { dateString: "$dataNascimento" } },
+                $year: { $dateFromString: { dateString: '$dataNascimento' } },
               },
               mes: {
-                $month: { $dateFromString: { dateString: "$dataNascimento" } },
+                $month: { $dateFromString: { dateString: '$dataNascimento' } },
               },
             },
           },
         },
         {
           $match: {
-            "data.mes": Number(currentMonth),
+            'data.mes': Number(currentMonth),
           },
         },
       ])
-      .toArray();
-    res.json(arr);
-  } else if (req.method === "POST") {
-    const db = await connectToDatabase(process.env.DB_KEY, "projetos");
-    const collection = db.collection("dados");
-    var queryKey;
-    var queryValue;
-    if (req.body.filtrarPor == "REGIONAL") {
-      queryKey = "regional";
-      queryValue = req.body.parametro;
-    } else if (req.body.filtrarPor == "VENDEDOR") {
-      queryKey = "vendedor.nome";
-      queryValue = req.body.parametro;
-    } else if (req.body.filtrarPor == "INSIDE") {
-      queryKey = "insider";
-      queryValue = req.body.parametro;
+      .toArray()
+    res.json(arr)
+  } else if (req.method === 'POST') {
+    const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
+    const collection = db.collection('dados')
+    var queryKey
+    var queryValue
+    if (req.body.filtrarPor == 'REGIONAL') {
+      queryKey = 'regional'
+      queryValue = req.body.parametro
+    } else if (req.body.filtrarPor == 'VENDEDOR') {
+      queryKey = 'vendedor.nome'
+      queryValue = req.body.parametro
+    } else if (req.body.filtrarPor == 'INSIDE') {
+      queryKey = 'insider'
+      queryValue = req.body.parametro
     }
     let arr = await collection
       .aggregate([
         {
           $match: {
             [`${queryKey}`]: queryValue,
-            dataNascimento: { $ne: "-" },
+            dataNascimento: { $ne: '-' },
           },
         },
         {
@@ -64,12 +64,12 @@ export default async function handler(req, res) {
             data: {
               ano: {
                 $year: {
-                  $dateFromString: { dateString: "$dataNascimento" },
+                  $dateFromString: { dateString: '$dataNascimento' },
                 },
               },
               mes: {
                 $month: {
-                  $dateFromString: { dateString: "$dataNascimento" },
+                  $dateFromString: { dateString: '$dataNascimento' },
                 },
               },
             },
@@ -77,11 +77,11 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            "data.mes": Number(currentMonth),
+            'data.mes': Number(currentMonth),
           },
         },
       ])
-      .toArray();
-    res.json(arr);
+      .toArray()
+    res.json(arr)
   }
 }

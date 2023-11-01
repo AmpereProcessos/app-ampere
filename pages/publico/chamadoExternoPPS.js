@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
-import Logo from '../../utils/whitelogoHD.png'
+import Logo from '../../utils//images/logo-texto-azul-vertical.png'
 import { fileTypes, formatCPFCpnj, formatToPhone, ppsTiposSolicitacao, tiposDeEstruturas, tiposEstruturaCRM, vendedores } from '../../utils/constants'
 import { estadosECidades } from '../../utils/estados_cidades'
 import SelectInput from '../../components/inputs/Select'
@@ -16,7 +16,7 @@ import { createCall } from '../../utils/methods/mutation/ppsCalls'
 import ChargeMenu from '../../components/identificador/chamados/pps/ChargeMenu'
 import AttachFile from '../../components/identificador/chamados/pps/AttachFile'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import { storage } from '../../utils/firebase'
+import { storage } from '../../utils/services/firebase/firebase-storage'
 const initialInfoHolderState = {
   tipoSolicitacao: null,
   requerente: {

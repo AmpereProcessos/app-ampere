@@ -1,14 +1,14 @@
-import { getSession } from "next-auth/react";
-import connectToDatabase from "../../../utils/materialDb";
-import { ObjectId } from "mongodb";
-import { getServerSession } from "next-auth";
+import { getSession } from 'next-auth/react'
+import connectToDatabase from '../../../utils/services/mongodb/warehouse'
+import { ObjectId } from 'mongodb'
+import { getServerSession } from 'next-auth'
 export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const { user } = await getSession({ req: req });
-    console.log(user);
-    const db = await connectToDatabase(process.env.DB_KEY);
-    const collection = db.collection("material");
-    let { changes } = req.body;
+  if (req.method === 'POST') {
+    const { user } = await getSession({ req: req })
+    console.log(user)
+    const db = await connectToDatabase(process.env.DB_KEY)
+    const collection = db.collection('material')
+    let { changes } = req.body
     // console.log(req.body);
     changes = changes.map((mat) => {
       return {
@@ -37,13 +37,13 @@ export default async function handler(req, res) {
             },
           },
         },
-      };
-    });
+      }
+    })
 
-    const filteredChanges = changes.filter((change) => !!change);
-    console.log(filteredChanges);
-    await collection.bulkWrite(filteredChanges);
+    const filteredChanges = changes.filter((change) => !!change)
+    console.log(filteredChanges)
+    await collection.bulkWrite(filteredChanges)
 
-    res.json("UEPA");
+    res.json('UEPA')
   }
 }

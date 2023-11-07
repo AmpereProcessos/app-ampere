@@ -73,6 +73,7 @@ interface IProject {
     fornecedor: string
     informacoes: string
     kitInfo: string
+    liberacao?: boolean
     localEntrega: string
     previsaoEntrega: string
     rastreio: string

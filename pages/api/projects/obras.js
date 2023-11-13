@@ -26,6 +26,7 @@ export default async function handler(req, res) {
             'compra.previsaoEntrega': 1,
             'compra.dataEntrega': 1,
             'compra.statusLiberacao': 1,
+            'compra.dataPagamento': 1,
             'visitaTecnica.tecnico': 1,
             'visitaTecnica.tipoDaTelha': 1,
             'vistoria.status': 1,

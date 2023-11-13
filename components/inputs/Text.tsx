@@ -1,6 +1,17 @@
 import React from 'react'
 import { isEmpty } from '../../utils/methods/shared'
 
+type TextInputProps = {
+  width?: string
+  label: string
+  labelClassName?: string
+  showLabel?: boolean
+  value: string
+  placeholder: string
+  editable?: boolean
+  handleChange: (value: string) => void
+  handleOnBlur?: () => void
+}
 function TextInput({
   width,
   label,
@@ -10,7 +21,7 @@ function TextInput({
   placeholder,
   editable = true,
   handleChange,
-}) {
+}: TextInputProps) {
   const inputIdentifier = label ? label.toLowerCase().replace(' ', '_') : ''
   return (
     <div className={`flex h w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>

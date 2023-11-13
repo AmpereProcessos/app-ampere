@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 function LoadingPage() {
   return (
@@ -23,7 +23,7 @@ function LoadingPage() {
         <span className="sr-only">Loading...</span>
       </div>
     </div>
-  );
+  )
 }
 
-export default LoadingPage;
+export default LoadingPage

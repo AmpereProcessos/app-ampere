@@ -1,6 +1,17 @@
 import React from 'react'
 import { isEmpty } from '../../utils/methods/shared'
 
+type NumberInputProps = {
+  width?: string
+  label: string
+  labelClassName?: string
+  showLabel?: boolean
+  value: number | null
+  min?: number
+  editable?: boolean
+  placeholder: string
+  handleChange: (value: number) => void
+}
 function NumberInput({
   width,
   label,
@@ -11,7 +22,7 @@ function NumberInput({
   editable = true,
   placeholder,
   handleChange,
-}) {
+}: NumberInputProps) {
   const inputIdentifier = label ? label.toLowerCase().replace(' ', '_') : ''
   return (
     <div className={`flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
@@ -23,7 +34,7 @@ function NumberInput({
 
       <input
         readOnly={!editable}
-        value={!isEmpty(value) ? value.toString() : ''}
+        value={!isEmpty(value) ? value?.toString() : ''}
         onChange={(e) => handleChange(Number(e.target.value))}
         id={inputIdentifier}
         type="number"

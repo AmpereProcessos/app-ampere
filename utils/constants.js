@@ -1634,6 +1634,11 @@ export const cidadesAtendidas = [
   'FRUTAL', // MG
   'CAMPO FLORIDO', // MG
   'SANTA JULIANA', // MG
+  'GOIÂNIA', // GO
+  'APARECIDA DE GOIÂNIA', // GO
+  'JATAÍ', // GO
+  'ANÁPOLIS', // GO
+  'RIO VERDE', // GO
 ]
 export const cidadesGoias = [
   'CALDAS NOVAS', // GO

@@ -385,6 +385,7 @@ const GeneralProjectSchema = z.object({
     codigo: z.number().optional().nullable(),
     nome: z.string(),
   }),
+  tipoDeServico: z.string(),
   visitaTecnica: z.object({
     amperagem: z.string().optional().nullable(),
     saidaDoCliente: z
@@ -412,3 +413,5 @@ const GeneralProjectSchema = z.object({
 })
 
 export type TProject = z.infer<typeof GeneralProjectSchema>
+
+export type TProjectDTO = TProject & { _id: string }

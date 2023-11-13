@@ -3,8 +3,35 @@ import lodash from 'lodash'
 import { HiCheck } from 'react-icons/hi'
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io'
 
-function MultipleSelectInput({ width, label, selected, options, selectedItemLabel, handleChange, onReset }) {
-  function getValueID(selected) {
+type SelectOption<T> = {
+  id: string | number
+  value: any
+  label: string
+}
+type SelectInputProps<T> = {
+  width?: string
+  label: string
+  labelClassName?: string
+  showLabel?: boolean
+  selected: (string | number)[] | null
+  selectedItemLabel: string
+  options: SelectOption<T>[] | null
+  handleChange: (value: T[]) => void
+  onReset: () => void
+}
+
+function MultipleSelectInput<T>({
+  width,
+  label,
+  labelClassName = 'font-sans font-bold  text-[#353432] text-start',
+  showLabel = true,
+  selected,
+  options,
+  selectedItemLabel,
+  handleChange,
+  onReset,
+}: SelectInputProps<T>) {
+  function getValueID(selected: (string | number)[] | null) {
     if (options && selected) {
       const filteredOptions = options?.filter((option) => selected.includes(option.value))
       if (filteredOptions) {
@@ -14,14 +41,14 @@ function MultipleSelectInput({ width, label, selected, options, selectedItemLabe
     } else return null
   }
 
-  const ref = useRef(null)
-  const [items, setItems] = useState(options)
-  const [selectMenuIsOpen, setSelectMenuIsOpen] = useState(false)
-  const [selectedIds, setSelectedIds] = useState(getValueID(selected))
+  const ref = useRef<any>(null)
+  const [items, setItems] = useState<SelectOption<T>[] | null>(options)
+  const [selectMenuIsOpen, setSelectMenuIsOpen] = useState<boolean>(false)
+  const [selectedIds, setSelectedIds] = useState<(string | number)[] | null>(getValueID(selected))
 
-  const [searchFilter, setSearchFilter] = useState('')
+  const [searchFilter, setSearchFilter] = useState<string>('')
   const inputIdentifier = label.toLowerCase().replace(' ', '_')
-  function handleSelect(id, item) {
+  function handleSelect(id: string | number, item: T) {
     var itemsSelected
     var ids = selectedIds ? [...selectedIds] : []
     if (!ids?.includes(id)) {
@@ -34,10 +61,10 @@ function MultipleSelectInput({ width, label, selected, options, selectedItemLabe
       itemsSelected = options?.filter((option) => ids?.includes(option.id))
       itemsSelected = itemsSelected?.map((item) => item.value)
     }
-    handleChange(itemsSelected)
+    handleChange(itemsSelected as T[])
     setSelectedIds(ids)
   }
-  function handleFilter(value) {
+  function handleFilter(value: string) {
     setSearchFilter(value)
     if (!items) return
     if (value.trim().length > 0 && options) {
@@ -63,7 +90,7 @@ function MultipleSelectInput({ width, label, selected, options, selectedItemLabe
     setItems(options)
   }, [options, selected])
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: any) => {
       if (ref.current && !ref.current.contains(event.target)) {
         onClickOutside()
       }
@@ -75,10 +102,13 @@ function MultipleSelectInput({ width, label, selected, options, selectedItemLabe
   }, [onClickOutside])
   return (
     <div ref={ref} className={`relative flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
-      <label htmlFor={inputIdentifier} className="font-sans font-bold  text-[#353432]">
-        {label}
-      </label>
-      <div className="flex min-h-[47px]  w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm">
+      {showLabel ? (
+        <label htmlFor={inputIdentifier} className={labelClassName}>
+          {label}
+        </label>
+      ) : null}
+
+      <div className="flex h-full w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm">
         {selectMenuIsOpen ? (
           <input
             type="text"

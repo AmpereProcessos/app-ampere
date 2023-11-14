@@ -1,114 +1,138 @@
 import React from 'react'
 import Select from 'react-select'
+
 import { cidadesAtendidas, vendedores } from '../../../utils/constants'
+
+import TextInput from '../../inputs/Text'
+import NumberInput from '../../inputs/Number'
+import SelectInput from '../../inputs/Select'
+import DateInput from '../../inputs/Date'
+import MultipleSelectInput from '../../inputs/MultipleSelect'
+import { allSellers } from '../../../utils/select-options'
 
 function NPSFilterBlock({ filters, setFilters }) {
   return (
     <div className="flex flex-col w-full gap-y-2 mt-4">
       <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
-        <input
-          className="outline-none p-1.5 w-[300px] rounded border border-gray-200 placeholder:italic"
-          placeholder="Digite o nome do contrato"
+        <TextInput
+          label="NOME DO CONTRATO"
+          placeholder="Digite o nome do contrato..."
           value={filters.search}
-          onChange={(e) =>
-            setFilters({
-              ...filters,
-              search: e.target.value,
-            })
-          }
+          handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
         />
         <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
           <div className="flex items-center gap-x-2 justify-center">
-            <div className="flex flex-col w-fit items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">Depois de:</span>
-              <input
-                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                type="date"
-                value={filters.date.after ? new Date(filters.date.after).toISOString().slice(0, 10) : undefined}
-                onChange={(e) =>
-                  setFilters((prev) => ({
-                    ...prev,
-                    date: { ...prev.date, after: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null },
-                  }))
-                }
+            <div className="w-full lg:w-[250px]">
+              <DateInput
+                width={'100%'}
+                label={'DEPOIS DE'}
+                value={filters.date.after ? formatDate(filters.date.after) : undefined}
+                handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value) } }))}
               />
             </div>
-            <div className="flex flex-col w-fit items-center">
-              <span className="uppercase font-bold font-raleway text-center text-sm">Antes de:</span>
-              <input
-                className="text-xs w-full text-center uppercase text-gray-600 outline-none"
-                type="date"
-                value={filters.date.before ? new Date(filters.date.before).toISOString().slice(0, 10) : undefined}
-                onChange={(e) =>
-                  setFilters((prev) => ({
-                    ...prev,
-                    date: { ...prev.date, before: isNaN(e.target.value) ? new Date(e.target.value).toISOString() : null },
-                  }))
-                }
+            <div className="w-full lg:w-[250px]">
+              <DateInput
+                width={'100%'}
+                label={'ANTES DE'}
+                value={filters.date.before ? formatDate(filters.date.before) : undefined}
+                handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value) } }))}
               />
             </div>
           </div>
           <div className="w-full lg:w-[250px]">
-            <Select
-              isMulti={false}
-              placeholder={'CAMPO DE FILTRO'}
-              styles={{
-                control: (base, state) => ({
-                  ...base,
-                  width: '100%',
-                  minHeight: '41px',
-                }),
-              }}
+            <SelectInput
+              width={'100%'}
+              label={'CAMPO DE FILTRO'}
+              value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
               options={[
-                { label: 'COLETA DO NPS', value: 'jornada.dataNps' },
-                { label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
-                { label: 'NÃO DEFINIDO', value: null },
+                { id: 1, label: 'COLETA DO NPS', value: 'jornada.dataNps' },
+                { id: 2, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
               ]}
-              onChange={(e) =>
+              selectedItemLabel={'SEM FILTRO'}
+              handleChange={(value) =>
                 setFilters((prev) => ({
                   ...prev,
                   date: {
                     ...prev.date,
-                    field1: e.value != null ? e.value.split('.')[0] : null,
-                    field2: e.value != null ? e.value.split('.')[1] : null,
+                    field1: value != null ? value.split('.')[0] : null,
+                    field2: value != null ? value.split('.')[1] : null,
+                  },
+                }))
+              }
+              onReset={() =>
+                setFilters((prev) => ({
+                  ...prev,
+                  date: {
+                    field1: null,
+                    field2: null,
                   },
                 }))
               }
             />
           </div>
         </div>
-        <Select
-          isMulti
-          placeholder="CIDADE"
-          onChange={(e) =>
-            setFilters({
-              ...filters,
-              city: e.map((x) => x.value),
-            })
-          }
-          options={cidadesAtendidas.map((cidade) => {
-            return {
-              label: cidade,
-              value: cidade,
+        <div className="flex items-center gap-x-2 justify-center">
+          <div className="w-full lg:w-[250px]">
+            <NumberInput
+              label="MAIOR QUE"
+              value={filters.npsRange.min}
+              handleChange={(value) => setFilters((prev) => ({ ...prev, npsRange: { ...prev.npsRange, min: value } }))}
+              width="100%"
+            />
+          </div>
+          <div className="w-full lg:w-[250px]">
+            <NumberInput
+              label="MENOR QUE"
+              value={filters.npsRange.max}
+              handleChange={(value) => setFilters((prev) => ({ ...prev, npsRange: { ...prev.npsRange, max: value } }))}
+              width="100%"
+            />
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+        <div className="w-full lg:w-[250px]">
+          <MultipleSelectInput
+            width={'100%'}
+            label={'CIDADE'}
+            selected={filters.city}
+            options={cidadesAtendidas.map((city, index) => ({ id: index + 1, label: city, value: city }))}
+            selectedItemLabel={'SEM FILTRO'}
+            handleChange={(value) =>
+              setFilters((prev) => ({
+                ...prev,
+                city: value,
+              }))
             }
-          })}
-        />
-        <Select
-          isMulti
-          placeholder="VENDEDOR"
-          onChange={(e) =>
-            setFilters({
-              ...filters,
-              seller: e.map((x) => x.value),
-            })
-          }
-          options={vendedores.map((vendedor) => {
-            return {
-              label: vendedor.nome,
-              value: vendedor.nome,
+            onReset={() =>
+              setFilters((prev) => ({
+                ...prev,
+                city: [],
+              }))
             }
-          })}
-        />
+          />
+        </div>
+        <div className="w-full lg:w-[250px]">
+          <MultipleSelectInput
+            width={'100%'}
+            label={'VENDEDOR'}
+            selected={filters.sellerName}
+            options={allSellers.map((seller, index) => ({ id: index + 1, label: seller.label, value: seller.value }))}
+            selectedItemLabel={'SEM FILTRO'}
+            handleChange={(value) =>
+              setFilters((prev) => ({
+                ...prev,
+                sellerName: value,
+              }))
+            }
+            onReset={() =>
+              setFilters((prev) => ({
+                ...prev,
+                sellerName: [],
+              }))
+            }
+          />
+        </div>
       </div>
       <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
         <div

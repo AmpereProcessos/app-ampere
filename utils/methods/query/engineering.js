@@ -23,6 +23,7 @@ export function useEngineeringProjects({ enabled }) {
     grantingStatus: [],
     serviceType: [],
     necessaryHomologation: false,
+    notNecessaryHomologation: false,
     necessaryDistribution: false,
     failedInspection: false,
     failedGranting: false,
@@ -71,6 +72,10 @@ export function useEngineeringProjects({ enabled }) {
     if (!filters.necessaryHomologation) return true
     else return project.projeto.realizarHomologacao == true
   }
+  function matchNotNecessaryHomologation(project) {
+    if (!filters.notNecessaryHomologation) return true
+    else return !project.projeto.realizarHomologacao
+  }
   function matchNecessaryDistribution(project) {
     if (!filters.necessaryDistribution) return true
     else return project.dadosCemig.distCreditos == 'SIM'
@@ -111,6 +116,7 @@ export function useEngineeringProjects({ enabled }) {
         matchGrantingStatus(project) &&
         matchServiceType(project) &&
         matchNecessaryHomologation(project) &&
+        matchNotNecessaryHomologation(project) &&
         matchNecessaryDistribution(project) &&
         matchFailedInspection(project) &&
         matchFailedGranting(project) &&

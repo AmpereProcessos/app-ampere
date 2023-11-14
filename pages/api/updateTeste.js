@@ -134,18 +134,9 @@ function formatStructure(type) {
 }
 
 export default async function handler(req, res) {
-  const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  const projectsCollection = db.collection('dados')
-  const response = await projectsCollection.updateMany(
-    {
-      'contrato.status': 'RECISÃO DE CONTRATO',
-    },
-    {
-      $set: {
-        'contrato.status': 'RESCISÃO DE CONTRATO',
-      },
-    }
-  )
+  // const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  // const projectsCollection = db.collection('dados')
+
   // const paidComissions = await projectsCollection
   //   .aggregate([
   //     {
@@ -233,7 +224,7 @@ export default async function handler(req, res) {
   //   }
   // })
   // console.log(newPPSCalls.length)
-  res.json(response)
+  res.json('DESATIVADA')
 }
 
 // Update Many example:

@@ -14,7 +14,7 @@ import dayjs from 'dayjs'
 import FilterButton from '../../components/utils/Buttons/FilterButton'
 import { useSession } from 'next-auth/react'
 import LoadingPage from '../../components/utils/LoadingPage'
-import { contractStatus } from '../../utils/select-options'
+import { billableCompanies, contractStatus } from '../../utils/select-options'
 function Administracao() {
   const router = useRouter()
   const { data: session, status } = useSession({
@@ -243,21 +243,7 @@ function Administracao() {
                             empresaAFaturar: e.map((x) => x.value),
                           })
                         }
-                        options={[
-                          {
-                            label: 'AMPERE ENERGIAS',
-                            value: 'AMPERE ENERGIAS',
-                          },
-                          {
-                            label: 'ANALISE DO FINANCEIRO',
-                            value: 'ANALISE DO FINANCEIRO',
-                          },
-                          {
-                            label: 'IZAIRA SERVIÇOS',
-                            value: 'IZAIRA SERVIÇOS',
-                          },
-                          { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
-                        ]}
+                        options={billableCompanies}
                       />
                     </div>
                     <div className="w-full lg:w-[250px]">

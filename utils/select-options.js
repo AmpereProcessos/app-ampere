@@ -579,6 +579,14 @@ export const allSellers = [
   },
 ]
 export const insiders = allSellers.filter((s) => s.qualification?.includes('INSIDE'))
+
+export const billableCompanies = [
+  { id: 1, label: 'AMPERE ENERGIAS', value: 'AMPERE ENERGIAS' },
+  { id: 2, label: 'IZAIRA SERVIÇOS', value: 'IZAIRA SERVIÇOS' },
+  { id: 3, label: 'SYNERGIA', value: 'SYNERGIA' },
+  { id: 4, label: 'ANALISE DO FINANCEIRO', value: 'ANALISE DO FINANCEIRO' },
+  { id: 5, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+]
 export const technicalAnalysisStatus = [
   { id: 1, label: 'CONCLUIDO', value: 'CONCLUIDO' },
   { id: 2, label: 'EM ANÁLISE TÉCNICA', value: 'EM ANÁLISE TÉCNICA' },
@@ -737,6 +745,20 @@ export const reliabilityAnalysts = [
   { id: 8, value: 'EDUARDO HENRIQUE DOMINGOS DE MORAES', label: 'EDUARDO', cod: 54 },
   { id: 9, value: 'LAZARO MARQUES', label: 'LAZARO', cod: 55 },
   { id: 10, value: 'NÃO DEFINIDO', label: 'NÃO DEFINIDO', cod: 0 },
+]
+export const customersAcquisitionChannels = [
+  { id: 1, label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
+  { id: 2, label: 'NETWORK', value: 'NETWORK' },
+  { id: 3, label: 'INSIDE SALES', value: 'INSIDE SALES' },
+  { id: 4, label: 'INDICAÇÃO DE AMIGO', value: 'INDICAÇÃO DE AMIGO' },
+  { id: 5, label: 'CALCULADORA SOLAR', value: 'CALCULADORA SOLAR' },
+  { id: 6, label: 'GOOGLE ADS', value: 'GOOGLE ADS' },
+  { id: 7, label: 'FACEBOOK ADS', value: 'FACEBOOK ADS' },
+  { id: 8, label: 'PORTA A PORTA', value: 'PORTA A PORTA' },
+  { id: 9, label: 'TELEVENDAS', value: 'TELEVENDAS' },
+  { id: 10, label: 'EVENTO', value: 'EVENTO' },
+  { id: 11, label: 'PASSIVO', value: 'PASSIVO' },
+  { id: 12, bel: 'PROSPECÇÃO ATIVA', value: 'PROSPECÇÃO ATIVA' },
 ]
 export const additionalCostsCategories = [
   {

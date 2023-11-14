@@ -24,6 +24,7 @@ import SaveButton from './utils/Buttons/SaveButton'
 import { useSession } from 'next-auth/react'
 import InfoDespesasBlock from './blocosInfoProjeto/InfoDespesasBlock'
 import ProjectServiceOrders from './identificador/ordensDeServico/ProjectServiceOrders'
+import { billableCompanies } from '../utils/select-options'
 const MODAL_STYLES = {
   position: 'fixed',
   top: '50%',
@@ -947,15 +948,7 @@ function ModalDB({ open, setModalIsOpen, project, editor, handleUpdates }) {
                         : 'NÃO DEFINIDO'
                     }
                     editable={editor}
-                    options={[
-                      { label: 'AMPERE ENERGIAS', value: 'AMPERE ENERGIAS' },
-                      {
-                        label: 'ANALISE DO FINANCEIRO',
-                        value: 'ANALISE DO FINANCEIRO',
-                      },
-                      { label: 'IZAIRA SERVIÇOS', value: 'IZAIRA SERVIÇOS' },
-                      { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
-                    ]}
+                    options={billableCompanies}
                     handleChange={(value) => {
                       setChanges({
                         ...changes,

@@ -63,18 +63,6 @@ function Projetos() {
     })
   }
 
-  function getListCumulativePeakPot() {
-    var totalSum = 0
-    for (var i = 0; i < projects.length; i++) {
-      let pot = projects[i].sistema.potPico ? projects[i].sistema.potPico : null
-      if (isNaN(pot)) {
-        totalSum = totalSum
-      } else {
-        totalSum = totalSum + pot
-      }
-    }
-    return totalSum.toFixed(2)
-  }
   function getBorderColorByParecer(date1, date2) {
     var timeDiff = Math.abs(date2.getTime() - date1.getTime())
     var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24))
@@ -171,11 +159,6 @@ function Projetos() {
     }
   }
   function sortTotalCircuitBreakerKeys(arrOfKeys) {
-    // console.log(
-    //   Object.keys(circuitBreakerObj).sort((a, b) =>
-    //     a.localeCompare(b, "pt-br", { numeric: true })
-    //   )
-    // );
     const sortedArr = arrOfKeys.sort((a, b) => a.localeCompare(b, 'pt-br', { numeric: true }))
     return sortedArr
   }
@@ -184,6 +167,7 @@ function Projetos() {
     if (str.includes('BIFÁSICO')) return 'bg-[#15599a] text-white'
     if (str.includes('TRIFÁSICO')) return 'bg-black text-white'
   }
+
   useEffect(() => {
     if (session) {
       const userRoutes = session.user.accessibleRoutes
@@ -458,27 +442,7 @@ function Projetos() {
                         }
                       />
                     </div>
-                    {/* <div className="w-full lg:w-[250px]">
-                      <MultipleSelectInput
-                        width={'100%'}
-                        label={'PROJETISTA'}
-                        selected={filters.analyst}
-                        options={reliabilityAnalysts}
-                        selectedItemLabel={'SEM FILTRO'}
-                        handleChange={(value) =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            analyst: value,
-                          }))
-                        }
-                        onReset={() =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            analyst: [],
-                          }))
-                        }
-                      />
-                    </div> */}
+
                     <div className="w-full lg:w-[250px]">
                       <MultipleSelectInput
                         width={'100%'}
@@ -548,6 +512,19 @@ function Projetos() {
                       } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
                     >
                       NECESSÁRIO HOMOLOGAÇÃO
+                    </div>
+                    <div
+                      onClick={() =>
+                        setFilters({
+                          ...filters,
+                          notNecessaryHomologation: !filters.notNecessaryHomologation,
+                        })
+                      }
+                      className={`${
+                        filters.notNecessaryHomologation ? 'bg-[#15599a]' : 'bg-blue-300'
+                      } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                    >
+                      NÃO NECESSÁRIO HOMOLOGAÇÃO
                     </div>
                     <div
                       onClick={() =>

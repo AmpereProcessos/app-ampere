@@ -12,7 +12,7 @@ async function fetchNPSData() {
 export function useNPS(enabled) {
   const [filters, setFilters] = useState({
     city: [],
-    seller: [],
+    sellerName: [],
     search: '',
     unCollected: false,
     withObs: false,
@@ -27,7 +27,6 @@ export function useNPS(enabled) {
       field1: null,
       field2: null,
     },
-
     npsValue: null,
   })
   function matchCity(project) {
@@ -35,8 +34,8 @@ export function useNPS(enabled) {
     return filters.city.includes(project.cidade)
   }
   function matchSeller(project) {
-    if (filters.seller.length == 0) return true
-    return filters.seller.includes(project.vendedor.nome)
+    if (filters.sellerName.length == 0) return true
+    return filters.sellerName.includes(project.vendedor.nome)
   }
   function matchUnCollected(project) {
     if (!filters.unCollected) return true
@@ -52,7 +51,7 @@ export function useNPS(enabled) {
   }
   function matchNpsRange(project) {
     if (filters.npsRange.min == null || !filters.npsRange.max) return true
-    return project.nps >= min && project.nps <= max
+    return !!project.nps && project.nps >= filters.npsRange.min && project.nps <= filters.npsRange.max
   }
   function matchNpsValue(project) {
     if (filters.npsValue == null) return true

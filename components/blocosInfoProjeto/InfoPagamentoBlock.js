@@ -5,6 +5,7 @@ import SelectInput from '../SelectInput'
 import TextInput from '../TextInput'
 import DateInput from '../DateInput'
 import dayjs from 'dayjs'
+import { billableCompanies } from '../../utils/select-options'
 function formatCnpjCpf(value) {
   const cnpjCpf = value.replace(/\D/g, '')
 
@@ -183,15 +184,7 @@ function InfoPagamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, 
               : 'NÃO DEFINIDO'
           }
           editable={editor}
-          options={[
-            { label: 'AMPERE ENERGIAS', value: 'AMPERE ENERGIAS' },
-            {
-              label: 'ANALISE DO FINANCEIRO',
-              value: 'ANALISE DO FINANCEIRO',
-            },
-            { label: 'IZAIRA SERVIÇOS', value: 'IZAIRA SERVIÇOS' },
-            { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },
-          ]}
+          options={billableCompanies}
           handleChange={(value) => {
             setChanges({
               ...changes,

@@ -245,19 +245,19 @@ function Obras() {
                     <MultipleSelectInput
                       width={'100%'}
                       label={'EQUIPE RESPONSÁVEL'}
-                      selected={filters.city}
+                      selected={filters.technicalTeam}
                       options={equipesTecnicas.map((team, index) => ({ id: index + 1, label: team.label, value: team.value }))}
                       selectedItemLabel={'SEM FILTRO'}
                       handleChange={(value) =>
                         setFilters((prev) => ({
                           ...prev,
-                          city: value as string[],
+                          technicalTeam: value as string[],
                         }))
                       }
                       onReset={() =>
                         setFilters((prev) => ({
                           ...prev,
-                          city: [],
+                          technicalTeam: [],
                         }))
                       }
                     />
@@ -266,19 +266,32 @@ function Obras() {
                     <MultipleSelectInput
                       width={'100%'}
                       label={'STATUS DE ENTREGA'}
-                      selected={filters.topology}
-                      options={equipesTecnicas.map((team, index) => ({ id: index + 1, label: team.label, value: team.value }))}
+                      selected={filters.deliveryStatus}
+                      options={[
+                        { id: 1, value: 'EM ROTA', label: 'EM ROTA' },
+                        {
+                          id: 2,
+                          value: 'AGUARDANDO COMPRA',
+                          label: 'AGUARDANDO COMPRA',
+                        },
+                        {
+                          id: 3,
+                          value: 'ENTREGUE',
+                          label: 'ENTREGUE',
+                        },
+                        { id: 4, value: 'CANCELADO', label: 'CANCELADO' },
+                      ]}
                       selectedItemLabel={'SEM FILTRO'}
                       handleChange={(value) =>
                         setFilters((prev) => ({
                           ...prev,
-                          topology: value as string[],
+                          deliveryStatus: value as string[],
                         }))
                       }
                       onReset={() =>
                         setFilters((prev) => ({
                           ...prev,
-                          topology: [],
+                          deliveryStatus: [],
                         }))
                       }
                     />

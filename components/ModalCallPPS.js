@@ -63,7 +63,7 @@ const statusStyles = {
     borderColor: 'border-red-400',
   },
 }
-const responsibles = [
+export const responsibles = [
   {
     id: null,
     nome: 'Adriano Arantes',
@@ -110,6 +110,14 @@ const responsibles = [
     ativo: false,
     avatar_url:
       'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-leandro_viali?alt=media&token=dffd6966-b6d4-460d-9baa-d467d933a8a7',
+  },
+  {
+    id: '65524e514ca81ebd783bbba1',
+    nome: 'Gabriella Baltazar',
+    apelido: 'GABRIELLA',
+    ativo: true,
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-gabriella_baltazar?alt=media&token=28392bcb-1f54-4dc7-9f31-98f189362231',
   },
 ]
 function ModalCallPPS({ callId, modalIsOpen, closeModal }) {

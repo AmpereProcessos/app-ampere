@@ -12,7 +12,7 @@ import OpenCallCard from './OpenCallCard'
 import { toast } from 'react-hot-toast'
 import { getErrorMessage } from '../../../../utils/methods/handlers'
 import { useSession } from 'next-auth/react'
-import ModalCallPPS from '../../../ModalCallPPS'
+import ModalCallPPS, { responsibles } from '../../../ModalCallPPS'
 const statusStyles = {
   'EM ANDAMENTO': {
     textColor: 'text-[#15599a]',
@@ -102,7 +102,7 @@ function OpenCalls() {
                   <SelectInput
                     showLabel={false}
                     selectedItemLabel={'TODOS OS RESPONSÁVEIS'}
-                    options={respChamadosPPS.map((resp, index) => ({ id: index, label: resp.label, value: resp.value }))}
+                    options={responsibles.map((resp, index) => ({ id: index + 1, label: resp.apelido, value: resp.apelido }))}
                     value={filters.responsible}
                     handleChange={(value) => setFilters((prev) => ({ ...prev, responsible: value }))}
                     width={'100%'}

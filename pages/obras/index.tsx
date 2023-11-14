@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 
@@ -35,8 +34,10 @@ function Obras() {
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
 
   const { data: projects, isSuccess, isLoading, isError, filters, setFilters } = useExecutionProjects()
-  const [modalIsOpen, setModalIsOpen] = useState(false)
-  const [modalProject, setModalProject] = useState({})
+  const [modalProject, setModalProject] = useState<{ isOpen: boolean; projectId: string | null }>({
+    isOpen: false,
+    projectId: null,
+  })
 
   function getBorderColorByParecer(date1: string, date2: string, statusObra: string) {
     const Date1AsDate = new Date(date1)
@@ -56,10 +57,7 @@ function Obras() {
     }
   }
   function handleOpenModal(id: string) {
-    axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
-      setModalProject(res.data[0])
-      setModalIsOpen(true)
-    })
+    setModalProject({ isOpen: true, projectId: id })
   }
   function getStats({ info }: { info: TProjectDTO[] }) {
     if (!info) {
@@ -571,16 +569,14 @@ function Obras() {
             </motion.div>
           ))}
         </div>
-        {/* {modalIsOpen && (
+        {modalProject.isOpen && modalProject.projectId ? (
           <ModalObras
-            credentials={session?.user}
-            modalIsOpen={modalIsOpen}
-            handleUpdates={handleUpdates}
-            project={modalProject}
-            editor={session?.user.accessibleRoutes.includes('Obras') && session?.user.regional == undefined ? true : false}
-            setModalIsOpen={setModalIsOpen}
+            modalIsOpen={modalProject.isOpen}
+            handleUpdates={() => console.log()}
+            projectId={modalProject.projectId}
+            closeModal={() => setModalProject({ isOpen: false, projectId: null })}
           />
-        )} */}
+        ) : null}
       </div>
     )
 }

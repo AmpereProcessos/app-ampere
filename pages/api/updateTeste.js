@@ -134,8 +134,18 @@ function formatStructure(type) {
 }
 
 export default async function handler(req, res) {
-  // const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  // const projectsCollection = db.collection('dados')
+  const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  const projectsCollection = db.collection('dados')
+  const response = await projectsCollection.updateMany(
+    {
+      'contrato.status': 'RECISÃO DE CONTRATO',
+    },
+    {
+      $set: {
+        'contrato.status': 'RESCISÃO DE CONTRATO',
+      },
+    }
+  )
   // const paidComissions = await projectsCollection
   //   .aggregate([
   //     {
@@ -166,7 +176,7 @@ export default async function handler(req, res) {
   // })
   // const dbResponse = await collection.updateMany(
   //   {
-  //     'contrato.status': 'RECISÃO DE CONTRATO',
+  //     'contrato.status': 'RESCISÃO DE CONTRATO',
   //   },
   //   {
   //     $set: {
@@ -223,7 +233,7 @@ export default async function handler(req, res) {
   //   }
   // })
   // console.log(newPPSCalls.length)
-  res.json('DESATIVADA')
+  res.json(response)
 }
 
 // Update Many example:

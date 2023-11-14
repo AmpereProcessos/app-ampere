@@ -338,7 +338,7 @@ export async function getServerSideProps({ query }) {
     .aggregate([
       {
         $match: {
-          'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+          'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
           [`${queryKey}`]: queryValue,
         },
       },
@@ -402,7 +402,7 @@ export async function getServerSideProps({ query }) {
   //     {
   //       $match: {
   //         [`${queryKey}`]: queryValue,
-  //         "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
+  //         "contrato.status": { $ne: "RESCISÃO DE CONTRATO" },
   //         "obra.statusDaObra": {
   //           $in: [
   //             "AGENDADA",

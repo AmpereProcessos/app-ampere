@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+            'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
             tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
             'compra.dataPedido': null,
             'compra.statusLiberacao': { $ne: 'PAGO' },

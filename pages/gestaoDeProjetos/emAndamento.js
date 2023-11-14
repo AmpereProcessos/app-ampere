@@ -299,7 +299,7 @@ export async function getServerSideProps(context) {
     .aggregate([
       {
         $match: {
-          'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+          'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
         },
       },
       {

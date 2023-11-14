@@ -12,7 +12,7 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+            'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
             'projeto.projetoConcluido': { $ne: 'SIM' },
             $or: [{ 'compra.statusLiberacao': 'PAGO' }, { 'projeto.iniciar': 'SIM' }],
           },

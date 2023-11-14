@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     // let arr = await collection
     //   .find(
     //     {
-    //       "contrato.status": { $ne: "RECISÃO DE CONTRATO" },
+    //       "contrato.status": { $ne: "RESCISÃO DE CONTRATO" },
     //     },
     //     {
     //       _id: 1,
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+            'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
           },
         },
         {

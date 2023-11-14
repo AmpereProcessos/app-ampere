@@ -47,7 +47,7 @@ export default async function handler(req, res) {
             {
               $match: {
                 regional: req.body.parametro,
-                'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+                'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
                 'obra.statusDaObra': {
                   $in: ['AGENDADA', 'AGUARDANDO AGENDAMENTO', 'EM ANDAMENTO', 'NÃO DEFINIDO', 'CASA EM CONSTRUÇÃO', '', null, undefined],
                 },
@@ -67,7 +67,7 @@ export default async function handler(req, res) {
             {
               $match: {
                 'vendedor.nome': req.body.parametro,
-                'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+                'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
                 'obra.statusDaObra': {
                   $in: ['AGENDADA', 'AGUARDANDO AGENDAMENTO', 'EM ANDAMENTO', 'NÃO DEFINIDO', 'CASA EM CONSTRUÇÃO', '', null, undefined],
                 },
@@ -85,7 +85,7 @@ export default async function handler(req, res) {
           .aggregate([
             {
               $match: {
-                'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+                'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
                 'obra.statusDaObra': {
                   $in: ['AGENDADA', 'AGUARDANDO AGENDAMENTO', 'EM ANDAMENTO', 'NÃO DEFINIDO', 'CASA EM CONSTRUÇÃO', '', null, undefined],
                 },

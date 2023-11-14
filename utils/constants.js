@@ -1823,8 +1823,8 @@ export const statusLiberacao = [
     label: 'PREVISÃO DE EQUIPAMENTOS',
   },
   {
-    label: 'RECISÃO DE CONTRATO',
-    value: 'RECISÃO DE CONTRATO', //tirar
+    label: 'RESCISÃO DE CONTRATO',
+    value: 'RESCISÃO DE CONTRATO', //tirar
   },
   {
     label: 'NÃO DEFINIDO',

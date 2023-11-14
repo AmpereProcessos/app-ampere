@@ -41,7 +41,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
-            'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+            'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
             tipoDeServico: { $ne: 'OPERAÇÃO E MANUTENÇÃO' },
             'parecer.statusDoParecerDeAcesso': { $ne: 'CANCELADO' },
             'obra.saida': { $ne: '-' },
@@ -300,7 +300,7 @@ export default async function handler(req, res) {
         {
           $match: {
             [`${queryKey}`]: queryValue,
-            'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+            'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
             'parecer.statusDoParecerDeAcesso': { $ne: 'CANCELADO' },
             'obra.saida': { $ne: '-' },
             'obra.statusDaObra': { $ne: 'OBRA CANCELADA' },

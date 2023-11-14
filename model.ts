@@ -819,8 +819,8 @@ const contractStatus = [
   { label: 'ASSINADO', value: 'ASSINADO' },
   { label: 'NÃO ASSINADO', value: 'NÃO ASSINADO' },
   {
-    label: 'RECISÃO DE CONTRATO',
-    value: 'RECISÃO DE CONTRATO',
+    label: 'RESCISÃO DE CONTRATO',
+    value: 'RESCISÃO DE CONTRATO',
   },
   { label: 'SOLICITADO', value: 'SOLICITADO' },
   { label: 'NÃO DEFINIDO', value: 'NÃO DEFINIDO' },

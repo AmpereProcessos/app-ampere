@@ -54,7 +54,7 @@ export default async function handler(req, res) {
         },
         {
           $match: {
-            'contrato.status': { $ne: 'RECISÃO DE CONTRATO' },
+            'contrato.status': { $ne: 'RESCISÃO DE CONTRATO' },
             $and: [{ qtde: { $gt: infLimit } }, { qtde: { $lte: supLimit } }],
           },
         },

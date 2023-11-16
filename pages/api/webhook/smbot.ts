@@ -13,8 +13,7 @@ const runSMBOTTest: NextApiHandler<PostResponse> = async (req, res) => {
   return res.status(201).json({
     type: 'CREATE_CUSTOMER_SERVICE',
     departmentUUID: 'f191433e-0d40-40f4-97ed-2abc52477c36',
-    text: 'Muito  obrigado ! Um dos nossos atendentes logo entrará em contato.',
-    attachments: [],
+    text: '',
   })
 }
 

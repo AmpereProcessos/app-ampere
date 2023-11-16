@@ -286,22 +286,29 @@ function Home() {
                 className="bg-gradient-to-r from-yellow-300 to-[#fead41] w-full h-full flex flex-col items-center justify-center"
               >
                 <p className="text-[#15599a] bg-transparent font-bold text-xxs lg:text-sm">
-                  {((campainPeakPower / 2000) * 100).toLocaleString('pt-br', {
+                  {/* {((campainPeakPower / 2000) * 100).toLocaleString('pt-br', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
-                  %
+                  % */}
+                  70%
                 </p>
                 <p className="w-full text-center font-raleway text-xxs lg:text-sm font-bold text-green-500">
-                  {campainPeakPower.toLocaleString('pt-br', {
+                  {/* {campainPeakPower.toLocaleString('pt-br', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}{' '}
-                  kWp
+                  kWp */}
+                  1.383,85 kWp
                 </p>
               </div>
               <p className="text-xs lg:text-lg text-white font-bold mr-4">
-                {(2000 - campainPeakPower).toLocaleString('pt-br', {
+                {/* {(2000 - campainPeakPower).toLocaleString('pt-br', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{' '}
+                kWp */}
+                {(2000 - 1383.65).toLocaleString('pt-br', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}{' '}

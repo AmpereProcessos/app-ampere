@@ -2137,6 +2137,10 @@ export const equipesTecnicas = [
     value: 'EQUIPE 18 - GABRIEL E DANILO',
   },
   {
+    label: 'EQUIPE 19 - LUIZ PEDRO',
+    value: 'EQUIPE 19 - LUIZ PEDRO',
+  },
+  {
     label: 'EQUIPE EXTERNA - VINICIUS',
     value: 'EQUIPE EXTERNA - VINICIUS',
   },

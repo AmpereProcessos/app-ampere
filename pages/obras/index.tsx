@@ -109,7 +109,7 @@ function Obras() {
     if (session) {
       // @ts-ignore
       const userRoutes = session?.user?.accessibleRoutes
-      if (!userRoutes.includes('PPS')) {
+      if (!userRoutes.includes('Obras') && !userRoutes.includes('Projetos')) {
         router.push('/')
       }
     }

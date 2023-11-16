@@ -16,9 +16,10 @@ import TextInput from '../../components/inputs/Text'
 import LoadingPage from '../../components/utils/LoadingPage'
 import FilterButton from '../../components/utils/Buttons/FilterButton'
 
-import { cidadesAtendidas, customersAcquisitionChannels, equipesTecnicas, vendedores } from '../../utils/constants'
-import { allSellers, insiders } from '../../utils/select-options'
+import { cidadesAtendidas, equipesTecnicas, formatDate, vendedores } from '../../utils/constants'
+import { allSellers, customersAcquisitionChannels, insiders } from '../../utils/select-options'
 import MultipleSelectInput from '../../components/inputs/MultipleSelect'
+import { formatDateInputChange } from '../../utils/methods/shared'
 function BandoDeDados({ data }) {
   const router = useRouter()
   const { data: session, status } = useSession({

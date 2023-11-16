@@ -8,6 +8,7 @@ import TextInput from '../TextInput'
 import { useSession } from 'next-auth/react'
 import { FaFilePdf } from 'react-icons/fa'
 import Link from 'next/link'
+import { allSellers } from '@/utils/select-options'
 
 function formatCnpjCpf(value) {
   const cnpjCpf = value.replace(/\D/g, '')
@@ -274,10 +275,10 @@ function InfoClienteBlock({ editor, infoHolder, setInfo, changes, setChanges, pr
           <SelectInput
             label={'VENDEDOR'}
             value={infoHolder.vendedor != undefined && infoHolder.vendedor.nome != '-' ? infoHolder.vendedor.nome : 'NÃO DEFINIDO'}
-            options={vendedores.map((vendedor) => {
+            options={allSellers.map((vendedor) => {
               return {
-                label: vendedor.nome,
-                value: vendedor.nome,
+                label: vendedor.label,
+                value: vendedor.value,
               }
             })}
             editable={editor}

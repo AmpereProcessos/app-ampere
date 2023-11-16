@@ -20,6 +20,7 @@ import { FiDelete } from 'react-icons/fi'
 import CheckboxInput from './CheckboxInput'
 import { getErrorMessage, notifySellerInCRM } from '../utils/methods/handlers'
 import toast from 'react-hot-toast'
+import { allSellers } from '../utils/select-options'
 const phoneMask = (value) => {
   if (!value) return ''
   value = value.replace(/\D/g, '')
@@ -841,8 +842,8 @@ function ModalFormSolicitacao({ solicitacao, setModalIsOpen, editor, financeiroE
                       label={'Vendedor'}
                       value={dados.nomeVendedor}
                       editable={editor}
-                      options={vendedores.map((vendedor) => {
-                        return { label: vendedor.nome, value: vendedor.nome }
+                      options={allSellers.map((vendedor) => {
+                        return { label: vendedor.label, value: vendedor.value }
                       })}
                       handleChange={(value) => setDados({ ...dados, nomeVendedor: value })}
                     />

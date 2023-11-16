@@ -282,7 +282,7 @@ function Home() {
             <h1 className="text-center w-full text-lg font-extrabold">META GLOBAL</h1>
             <div className="w-full h-[45px] border border-gray-500 bg-[#a8a9aa] self-center flex items-center justify-between">
               <div
-                style={{ width: `${(campainPeakPower / 2000) * 100}%` }}
+                style={{ width: `${(1383.85 / 2000) * 100}%` }}
                 className="bg-gradient-to-r from-yellow-300 to-[#fead41] w-full h-full flex flex-col items-center justify-center"
               >
                 <p className="text-[#15599a] bg-transparent font-bold text-xxs lg:text-sm">

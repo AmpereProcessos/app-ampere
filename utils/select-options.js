@@ -577,6 +577,15 @@ export const allSellers = [
     comissionAsActive: 0.5,
     comissionWithInside: 0.5,
   },
+  {
+    id: 52,
+    active: true,
+    label: 'FELIPE TADEU',
+    value: 'FELIPE TADEU',
+    qualification: undefined,
+    comissionAsActive: 0,
+    comissionWithInside: 0,
+  },
 ]
 export const insiders = allSellers.filter((s) => s.qualification?.includes('INSIDE'))
 

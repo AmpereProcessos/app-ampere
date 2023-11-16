@@ -8,6 +8,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
+            nomeDoContrato: { $not: { $regex: 'CONISUL' } },
             'contrato.status': 'ASSINADO',
             'contrato.dataAssinatura': { $ne: '-' },
             tipoDeServico: {
@@ -77,6 +78,7 @@ export default async function handler(req, res) {
         {
           $match: {
             [`${queryKey}`]: queryValue,
+            nomeDoContrato: { $not: { $regex: 'CONISUL' } },
             'contrato.status': 'ASSINADO',
             'contrato.dataAssinatura': { $ne: '-' },
             tipoDeServico: {

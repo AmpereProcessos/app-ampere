@@ -686,6 +686,15 @@ export const vendedores = [
     ativo: true,
   },
   {
+    id: 52,
+    active: true,
+    label: 'FELIPE TADEU',
+    value: 'FELIPE TADEU',
+    qualification: undefined,
+    comissionAsActive: 0,
+    comissionWithInside: 0,
+  },
+  {
     nome: 'NÃO DEFINIDO',
     cod: 999,
   },

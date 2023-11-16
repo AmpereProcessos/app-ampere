@@ -1,6 +1,9 @@
 import axios from 'axios'
 import { BsFiletypeCsv, BsFiletypeDocx, BsFiletypePdf, BsFiletypeXlsx, BsFiletypeXml, BsFillPlayBtnFill, BsImage } from 'react-icons/bs'
 //teste
+
+export const margemLucro = 0.12
+export const taxaImposto = 0.17
 export const routes = [
   'Projetos',
   'Obras',

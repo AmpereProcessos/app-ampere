@@ -4,12 +4,20 @@ import Logo from '../utils//images/logo-texto-azul-vertical.png'
 import Assinatura from '../utils/images/signature-diogo.jpg'
 import dayjs from 'dayjs'
 import { GeneralTechnicalAnalysisSchema } from '../utils/schemas/technical-analysis'
-import { formatToMoney } from '../utils/constants'
+import { formatToMoney, margemLucro, taxaImposto } from '../utils/constants'
 function LaudoSimplesUrbano({ analysis }) {
-  function getAdditionalCostsSum(custos) {
+  function getAdditionalCostsSum(custos, addTaxes = false) {
     const sum = custos.reduce((acc, current) => {
-      const total = current.total ? current.total : current.qtde * current.custoUnitario
-      return total + acc
+      var total = 0
+      if (addTaxes) {
+        total = current.total
+          ? current.total / (1 - (margemLucro + taxaImposto))
+          : (current.qtde * current.custoUnitario) / (1 - (margemLucro + taxaImposto))
+      } else {
+        total = current.total ? current.total / (1 - margemLucro) : (current.qtde * current.custoUnitario) / (1 - margemLucro)
+      }
+      if (total) return acc + total
+      return acc
     }, 0)
     return sum
   }
@@ -125,7 +133,7 @@ function LaudoSimplesUrbano({ analysis }) {
             </div>
           </div>
         </div>
-        <div className="mt-2 flex flex-col">
+        <div className="mt-4 flex flex-col">
           <h1 className="bg-[#15599a] text-white text-sm text-center font-bold border border-black">CUSTOS ADICIONAIS</h1>
           <div className="flex flex-col">
             <div className="grid grid-cols-10 border-b border-black bg-[#fead61]">
@@ -141,9 +149,11 @@ function LaudoSimplesUrbano({ analysis }) {
                   <p className="text-center text-xs font-bold col-span-3 border-r border-black p-1">{cost.descricao}</p>
                   <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">{cost.qtde}</p>
                   <p className="text-center text-xs font-bold col-span-1 border-r border-black p-1">{cost.grandeza}</p>
-                  <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">{formatToMoney(cost.custoUnitario)}</p>
                   <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">
-                    {cost.total ? formatToMoney(cost.total) : formatToMoney(cost.qtde * cost.custoUnitario)}
+                    {formatToMoney(cost.custoUnitario / (1 - margemLucro))}
+                  </p>
+                  <p className="text-center text-xs font-bold col-span-2 border-r border-black p-1">
+                    {cost.total ? formatToMoney(cost.total / (1 - margemLucro)) : formatToMoney((cost.qtde * cost.custoUnitario) / (1 - margemLucro))}
                   </p>
                 </div>
               ))
@@ -165,7 +175,7 @@ function LaudoSimplesUrbano({ analysis }) {
               <div className="grid grid-cols-7  border-b border-black">
                 <div className="col-span-5 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">VALOR FINANCIAMENTO</div>
                 <div className="col-span-2 bg-[#15599a] text-white text-center p-1 font-bold border-r border-black">
-                  R$ {analysis.custos ? (getAdditionalCostsSum(analysis.custos) * 1.175).toFixed(2).replace('.', ',') : '-'}
+                  R$ {analysis.custos ? getAdditionalCostsSum(analysis.custos, true).toFixed(2).replace('.', ',') : '-'}
                 </div>
               </div>
             </div>

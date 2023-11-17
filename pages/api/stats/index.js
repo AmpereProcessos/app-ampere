@@ -157,8 +157,10 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
+            nomeDoContrato: { $not: { $regex: 'CONISUL' } },
             'contrato.dataAssinatura': { $gte: '2023-07-01T00:00:00.000Z' },
-            'vendedor.nome': { $nin: ['ARTHUR CARVALHO', 'MATHEUS OLIVEIRA'] },
+            // 'vendedor.nome': { $nin: ['ARTHUR CARVALHO', 'MATHEUS OLIVEIRA'] },
+            'vendedor.nome': { $nin: ['ARTHUR CARVALHO'] },
             tipoDeServico: 'SISTEMA FOTOVOLTAICO',
           },
         },

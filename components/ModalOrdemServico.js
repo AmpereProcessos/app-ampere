@@ -31,6 +31,9 @@ import toast from 'react-hot-toast'
 import { getErrorMessage } from '../utils/methods/handlers'
 import { getObjectDifference } from '../utils/methods/util/service-order'
 import FinishOrderBlock from './identificador/ordensDeServico/FinishOrderBlock'
+import Select from './inputs/Select'
+import { equipesTecnicas, serviceOrdersCategories } from '../utils/constants'
+import TextInput from './inputs/Text'
 
 function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
   const queryClient = useQueryClient()
@@ -112,6 +115,79 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
               ) : (
                 <FinishOrderBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               )}
+              <div className="w-full p-2 rounded-md bg-gray-800 flex items-center gap-2 justify-center">
+                <h1 className="text-white font-bold">EXECUÇÃO</h1>
+              </div>
+              <div className="flex w-full items-center gap-2 flex-col lg:flex-row mt-2">
+                <div className="w-full lg:w-[25%]">
+                  <Select
+                    label={'CATEGORIA'}
+                    value={infoHolder.categoria}
+                    options={serviceOrdersCategories}
+                    selectedItemLabel={'NÃO DEFINIDO'}
+                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, categoria: value }))}
+                    width={'100%'}
+                  />
+                </div>
+                <div className="w-full lg:w-[25%]">
+                  <TextInput
+                    label={'DESCRIÇÃO DO SERVIÇO'}
+                    placeholder={'Preencha a descrição do serviço a ser executado...'}
+                    value={infoHolder.descricao}
+                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, descricao: value }))}
+                    width={'100%'}
+                  />
+                </div>
+                <div className="w-full lg:w-[25%]">
+                  <Select
+                    label={'TIPO DE RESPONSÁVEL'}
+                    value={infoHolder.responsavel.tipo}
+                    options={[
+                      { id: 1, label: 'INTERNO', value: 'INTERNO' },
+                      { id: 2, label: 'EXTERNO', value: 'EXTERNO' },
+                    ]}
+                    selectedItemLabel={'NÃO DEFINIDO'}
+                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, tipo: value } }))}
+                    width={'100%'}
+                  />
+                </div>
+                <div className="w-full lg:w-[25%]">
+                  {infoHolder.responsavel.tipo == 'EXTERNO' ? (
+                    <TextInput
+                      label={'NOME DO RESPONSÁVEL'}
+                      placeholder={'Preencha o nome do responsável pela execução...'}
+                      value={infoHolder.responsavel.nome}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: value } }))}
+                      width={'100%'}
+                    />
+                  ) : (
+                    <Select
+                      label={'NOME DE RESPONSÁVEL'}
+                      value={infoHolder.responsavel.nome}
+                      options={equipesTecnicas.map((team, index) => ({ ...team, id: index + 1 }))}
+                      selectedItemLabel={'NÃO DEFINIDO'}
+                      handleChange={(value) => setInfoHolder((prev) => ({ ...prev, responsavel: { ...prev.responsavel, nome: value } }))}
+                      width={'100%'}
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="w-full flex items-center justify-center mt-1">
+                <div className="w-full lg:w-1/2">
+                  <Select
+                    label={'URGÊNCIA'}
+                    value={infoHolder.urgencia}
+                    options={[
+                      { id: 1, label: 'POUCO URGENTE', value: 'POUCO URGENTE' },
+                      { id: 2, label: 'URGENTE', value: 'URGENTE' },
+                      { id: 3, label: 'EMERGÊNCIA', value: 'EMERGÊNCIA' },
+                    ]}
+                    selectedItemLabel={'NÃO DEFINIDO'}
+                    handleChange={(value) => setInfoHolder((prev) => ({ ...prev, urgencia: value }))}
+                    width={'100%'}
+                  />
+                </div>
+              </div>
               <FavoredModalBlock order={order} infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               <ObservationModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               <EquipmentModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />

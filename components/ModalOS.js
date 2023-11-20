@@ -1,49 +1,28 @@
-import axios from 'axios'
-import dayjs from 'dayjs'
 import React, { useState, useEffect } from 'react'
+import dayjs from 'dayjs'
+
 import { VscChromeClose } from 'react-icons/vsc'
 import { BiSolidError } from 'react-icons/bi'
+import { IoMdAlert, IoMdResize, IoMdWater } from 'react-icons/io'
+import { FaCity, FaSolarPanel, FaUser } from 'react-icons/fa'
+import { BsCalendarCheckFill, BsCalendarFill, BsFillGearFill, BsHouse, BsSuitDiamondFill } from 'react-icons/bs'
+import { PiWaveSineBold } from 'react-icons/pi'
+import { TbTopologyFullHierarchy } from 'react-icons/tb'
+import { MdCategory, MdEngineering, MdLocationPin, MdOutlineWifiPassword } from 'react-icons/md'
+
 import ConferenciaManPreventivaOS from './ConferenciaManPreventivaOS'
 import ConferenciaMontagemOS from './ConferenciaMontagemOS'
 import ConferenciaOutrasCategorias from './ConferenciaOutrasCategorias'
 import ConferenciaPadraoOS from './ConferenciaPadraoOS'
+
+import ExecutionDiary from './identificador/ordensDeServico/execucao/ExecutionDiary'
+
 import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
 import { useServiceOrderById } from '../utils/methods/query/serviceOrders'
 import LoadingPage from './utils/LoadingPage'
-import { MdCategory, MdEngineering, MdLocationPin, MdOutlineWifiPassword } from 'react-icons/md'
-import { IoMdAlert, IoMdResize, IoMdWater } from 'react-icons/io'
-import { FaCity, FaSolarPanel, FaUser } from 'react-icons/fa'
-import { AiFillPhone } from 'react-icons/ai'
-import { BsCalendarCheckFill, BsCalendarFill, BsFillGearFill, BsHouse, BsSuitDiamondFill } from 'react-icons/bs'
-import { PiWaveSineBold } from 'react-icons/pi'
-import { TbTopologyFullHierarchy } from 'react-icons/tb'
-const MODAL_STYLES = {
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%,-50%)',
-  backgroundColor: '#fff',
-  width: '93%',
-  height: '98%',
-  borderRadius: '10px',
-  padding: '10px',
-  zIndex: 1000,
-}
-const OVERLAY_STYLES = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: 'rgba(0,0,0,.7)',
-  zIndex: 1000,
-}
+
 function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
   const { data: order, isSuccess, isError, isLoading } = useServiceOrderById({ id: orderId, enabled: !!orderId })
-  const [msg, setMsg] = useState({
-    text: '',
-    color: '',
-  })
   // async function saveChanges(changes) {
   //   try {
   //     let { data, statusCode } = await axios.post(`/api/projects/update/${info.id}`, changes)
@@ -220,6 +199,12 @@ function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
                   <h1 className="font-medium text-gray-500 text-xs uppercase text-center">{order.detalhes.topologia || 'N/A'}</h1>
                 </div>
               </div>
+              <ExecutionDiary
+                orderId={orderId}
+                entryDatetime={order.periodo?.inicio}
+                exitDatetime={order.periodo?.fim}
+                history={order.periodo.historico}
+              />
               <div className="w-full h-[5px] bg-black my-2"></div>
               {order.categoria == 'PADRÃO' && <ConferenciaPadraoOS order={order} closeModal={closeModal} queryKey={queryKey} />}
               {order.categoria == 'MANUTENÇÃO PREVENTIVA' && <ConferenciaManPreventivaOS order={order} closeModal={closeModal} queryKey={queryKey} />}

@@ -1,16 +1,18 @@
 import React from 'react'
-import { FaCity, FaUser } from 'react-icons/fa'
-import { IoMdAlert, IoMdDocument } from 'react-icons/io'
-import { MdCategory } from 'react-icons/md'
-import Avatar from '../../utils/Avatar'
-import { BsCalendarFill } from 'react-icons/bs'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
+import { BsCalendarFill } from 'react-icons/bs'
+import { FaCity, FaUser } from 'react-icons/fa'
+import { IoMdAlert, IoMdDocument } from 'react-icons/io'
+import { MdCategory } from 'react-icons/md'
+
+import Avatar from '../../utils/Avatar'
+
 function ServiceOrderCard({ order, handleOpenModal }) {
   return (
-    <div className="flex w-[450px] items-center rounded-md border border-gray-200">
-      <div className={`h-full w-[5px] rounded-bl-md rounded-tl-md bg-blue-300`}></div>
+    <div className="flex w-full lg:min-w-[500px] lg:w-[500px] items-center rounded-md border border-gray-200">
+      <div className={`h-full min-w-[7px] w-[7px] rounded-bl-md rounded-tl-md bg-blue-300`}></div>
       <div className="flex grow flex-col p-3">
         <div className="w-full flex items-center justify-between">
           <h1

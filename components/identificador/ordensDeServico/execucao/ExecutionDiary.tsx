@@ -1,0 +1,154 @@
+import Datetime from '@/components/inputs/Datetime'
+import { formatDateAsLocale } from '@/utils/methods/formatting'
+import { getErrorMessage } from '@/utils/methods/handlers'
+import { updateServiceOrder } from '@/utils/methods/mutation/serviceOrders'
+import { formatDateInputChange } from '@/utils/methods/shared'
+import dayjs from 'dayjs'
+import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
+import { RxTimer } from 'react-icons/rx'
+import { useQueryClient } from 'react-query'
+import ExecutionDiaryRecord from './ExecutionDiaryRecord'
+type ExecutionDiaryProps = {
+  orderId: string
+  entryDatetime?: string
+  exitDatetime?: string
+  history?: { entrada: string; saida?: string; anotacoes: string }[]
+}
+function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: ExecutionDiaryProps) {
+  const queryClient = useQueryClient()
+
+  const [infoHolder, setInfoHolder] = useState<{
+    entrada: string
+    saida: string | undefined
+    anotacoes: string
+  }>({
+    entrada: new Date().toISOString(),
+    saida: undefined,
+    anotacoes: '',
+  })
+
+  async function initializeOS() {
+    const loadingToastID = toast.loading('Iniciando ordem de serviço...')
+    try {
+      await updateServiceOrder({
+        orderId: orderId,
+        info: { 'periodo.inicio': new Date().toISOString() },
+        queryClient: queryClient,
+        invalidateKey: ['service-order', orderId],
+      })
+      toast.dismiss(loadingToastID)
+      return toast.success('Ordem de serviço iniciada com sucesso !')
+    } catch (error) {
+      toast.dismiss(loadingToastID)
+      const msg = getErrorMessage(error)
+      return toast.error('Erro ao iniciar a ordem de serviço.')
+    }
+  }
+  async function finishOS() {
+    const loadingToastID = toast.loading('Finalizando ordem de serviço...')
+    try {
+      await updateServiceOrder({
+        orderId: orderId,
+        info: { 'periodo.fim': new Date().toISOString() },
+        queryClient: queryClient,
+        invalidateKey: ['service-order', orderId],
+      })
+      toast.dismiss(loadingToastID)
+      return toast.success('Ordem de serviço finalizada com sucesso !')
+    } catch (error) {
+      toast.dismiss(loadingToastID)
+      const msg = getErrorMessage(error)
+      return toast.error('Erro ao finalizar a ordem de serviço.')
+    }
+  }
+
+  async function openExecutionRecord() {
+    // Verifying existent execution open log
+    const historyCopy = history ? [...history] : []
+    const hasOpenLog = historyCopy.some((h) => !!h.entrada && !h.saida)
+    if (hasOpenLog) return toast.error('Finalize o registro em aberto antes de abrir um novo.')
+
+    historyCopy.push({
+      entrada: infoHolder.entrada,
+      saida: infoHolder.saida,
+      anotacoes: infoHolder.anotacoes,
+    })
+
+    const loadingToastID = toast.loading('Abrindo registro de execução...')
+    try {
+      await updateServiceOrder({
+        orderId: orderId,
+        info: { 'periodo.inicio': infoHolder.entrada, 'periodo.historico': historyCopy },
+        queryClient: queryClient,
+        invalidateKey: ['service-order', orderId],
+      })
+      toast.dismiss(loadingToastID)
+      return toast.success('Registro aberto com sucesso !')
+    } catch (error) {
+      toast.dismiss(loadingToastID)
+      const msg = getErrorMessage(error)
+      return toast.error('Erro ao abrir registro de execução.')
+    }
+  }
+
+  return (
+    <div className="w-full flex flex-col">
+      <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-[#15599A] mt-4">DIÁRIO DE EXECUÇÃO</h1>
+      <div className="my-2 flex items-center justify-center">
+        {entryDatetime && !exitDatetime ? (
+          <button
+            onClick={() => finishOS()}
+            className="py-2 px-4 bg-black rounded text-xs text-white font-medium hover:bg-gray-700 duration-300 ease-in-out"
+          >
+            FINALIZAR ORDEM DE SERVIÇO
+          </button>
+        ) : null}
+      </div>
+      <div className="w-full flex items-center justify-center gap-2 mt-2">
+        <div className="w-full lg:w-1/2">
+          <Datetime
+            label="CHECK-IN"
+            labelClassName="font-sans font-bold tracking-tight leading-none text-[#353432]"
+            value={infoHolder.entrada}
+            handleChange={(value) => {
+              localStorage.setItem(`${orderId}-checkin`, JSON.stringify(formatDateInputChange(value)))
+              setInfoHolder((prev) => ({ ...prev, entrada: formatDateInputChange(value) }))
+            }}
+            width="100%"
+          />
+        </div>
+      </div>
+      <div className="w-full flex items-center justify-end my-1">
+        <button
+          onClick={() => openExecutionRecord()}
+          className="py-2 px-4 bg-black rounded text-xs text-white font-medium hover:bg-gray-700 duration-300 ease-in-out"
+        >
+          ABRIR REGISTRO DE EXECUÇÃO
+        </button>
+      </div>
+      {history ? (
+        <div className="w-full flex flex-col gap-1 mt-2">
+          <h1 className="font-bold tracking-tight leading-none">HISTÓRICO</h1>
+          {history.map((item, index) => (
+            <ExecutionDiaryRecord orderId={orderId} item={item} itemIndex={index} history={history} />
+            // <div className="flex flex-col w-full p-3 rounded-md shadow-sm border border-gray-300">
+            //   <div className="flex items-center gap-2">
+            //     <RxTimer />
+            //     <p className="font-thin tracking-tight leading-none">
+            //       <strong className="text-[#fead41] font-bold">{formatDateAsLocale(item.entrada, true)}</strong> até às{' '}
+            //       <strong className="text-[#fead41] font-bold">{formatDateAsLocale(item.saida, true)}</strong>
+            //     </p>
+            //   </div>
+            //   <h1 className="my-1 w-full py-3 bg-gray-100 text-center text-gray-500 text-sm rounded-md tracking-tight leading-none">
+            //     {item.anotacoes}
+            //   </h1>
+            // </div>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+export default ExecutionDiary

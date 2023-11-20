@@ -1,4 +1,5 @@
 import axios from 'axios'
+import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
 
@@ -18,7 +19,11 @@ export function useServiceOrders({ after, before, status, simplified, responsibl
     city: [],
     category: [],
     search: '',
+    urgency: null,
     unfinished: false,
+    inProgress: false,
+    inExecution: false,
+    unassigned: false,
   })
   function matchCity(order) {
     if (filters.city.length == 0) return true
@@ -32,13 +37,44 @@ export function useServiceOrders({ after, before, status, simplified, responsibl
     if (filters.search.trim().length == 0) return true
     return order.favorecido.nome.toUpperCase().includes(filters.search.toUpperCase())
   }
+  function matchUrgency(order) {
+    if (!filters.urgency) return true
+    return order.urgencia == filters.urgency
+  }
   function matchUnfinished(order) {
     if (!filters.unfinished) return true
-    return !!order.dataEfetivacao
+    return !order.dataEfetivacao
+  }
+  function matchInProgress(order) {
+    if (!filters.inProgress) return true
+    return !!order.periodo.inicio && !order.periodo.fim
+  }
+  function matchInExecution(order) {
+    if (!filters.inExecution) return true
+    const currentDayStart = dayjs().set('hour', 0).toDate()
+    const currentDayEnd = dayjs().set('hour', 23).toDate()
+    const hasExecutionLogToday = order.periodo.historico?.some(
+      (h) => new Date(h.entrada) >= currentDayStart && new Date(h.entrada) <= currentDayEnd && !h.saida
+    )
+    return hasExecutionLogToday
+  }
+  function matchUnassigned(order) {
+    if (!filters.unassigned) return true
+    return !order.responsavel.nome
   }
   function handleModelData(data) {
     var modeledData = data
-    return modeledData.filter((order) => matchCity(order) && matchCategory(order) && matchSearch(order) && matchUnfinished(order))
+    return modeledData.filter(
+      (order) =>
+        matchCity(order) &&
+        matchCategory(order) &&
+        matchSearch(order) &&
+        matchUrgency(order) &&
+        matchUnfinished(order) &&
+        matchInProgress(order) &&
+        matchInExecution(order) &&
+        matchUnassigned(order)
+    )
   }
   return {
     ...useQuery({

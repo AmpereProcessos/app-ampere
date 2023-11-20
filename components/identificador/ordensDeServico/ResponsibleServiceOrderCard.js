@@ -7,12 +7,18 @@ import { BsCalendarFill } from 'react-icons/bs'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
+function getBarColor(orderPeriod) {
+  if (!orderPeriod.inicio && !orderPeriod.fim) return 'bg-gray-500'
+  if (orderPeriod.inicio && !orderPeriod.fim) return 'bg-blue-500'
+  return 'bg-green'
+}
 function ResponsibleServiceOrderCard({ order, handleOpenModal }) {
   return (
     <div
       onClick={() => handleOpenModal(order)}
       className="flex w-[450px] cursor-pointer items-center rounded-md border border-gray-200 hover:bg-blue-50"
     >
+      <div className={`h-full min-w-[7px] w-[7px] ${getBarColor(order.periodo)} rounded-tl-md rounded-bl-md`}></div>
       <div className="flex grow flex-col p-3">
         <div className="w-full flex items-center justify-between">
           <h1

@@ -30,7 +30,6 @@ function DesignationCard({ order }) {
       toast.error(msg)
     }
   }
-  console.log(infoHolder)
   return (
     <div className="h-full w-full flex flex-col gap-3 items-center justify-between rounded-md border border-gray-400 shadow-md p-6">
       <div className="flex flex-col gap-1 w-full items-start">

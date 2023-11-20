@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   } else if (req.method === 'GET') {
     try {
       const db = await connectToDatabase(process.env.DB_KEY, 'projetos')
-      console.log(req.query)
+
       const after = req.query.after
       const before = req.query.before
       const simplified = req.query.simplified == 'false' ? false : true
@@ -112,7 +112,7 @@ async function getServiceOrders({ collection, simplified, after, before, openOnl
         dataEfetivacao: null,
       },
     })
-    console.log('FUI CHAMADO', pipeline)
+    // console.log('FUI CHAMADO', pipeline)
   }
   if (responsibleName != 'undefined') {
     pipeline.push({

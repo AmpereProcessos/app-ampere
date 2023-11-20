@@ -588,7 +588,7 @@ export const allSellers = [
   },
 ]
 export const insiders = allSellers.filter((s) => s.qualification?.includes('INSIDE'))
-
+export const allActiveSellers = allSellers.filter((s) => s.active)
 export const billableCompanies = [
   { id: 1, label: 'AMPERE ENERGIAS', value: 'AMPERE ENERGIAS' },
   { id: 2, label: 'IZAIRA SERVIÇOS', value: 'IZAIRA SERVIÇOS' },

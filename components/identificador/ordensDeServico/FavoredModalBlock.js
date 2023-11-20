@@ -114,8 +114,8 @@ function FavoredModalBlock({ infoHolder, setInfoHolder }) {
                 <TextInput
                   label={'NÚMERO OU IDENTIFICADOR'}
                   placeholder={'Preencha o número ou identificador da residência do cliente favorecido...'}
-                  value={infoHolder.endereco.numeroOuIdentificador}
-                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, endereco: { ...prev.endereco, numeroOuIdentificador: value } }))}
+                  value={infoHolder.localizacao.numeroOuIdentificador}
+                  handleChange={(value) => setInfoHolder((prev) => ({ ...prev, localizacao: { ...prev.endereco, numeroOuIdentificador: value } }))}
                   width={'100%'}
                 />
               </div>

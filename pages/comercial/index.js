@@ -22,7 +22,7 @@ import NumberInput from '../../components/inputs/Number'
 import TextInput from '../../components/inputs/Text'
 import DateInput from '../../components/inputs/Date'
 import SelectInput from '../../components/inputs/Select'
-import { allSellers, contractStatus, insiders, sellers, serviceTypes, supplementationStatus } from '../../utils/select-options'
+import { allActiveSellers, allSellers, contractStatus, insiders, sellers, serviceTypes, supplementationStatus } from '../../utils/select-options'
 import MultipleSelectInput from '../../components/inputs/MultipleSelect'
 import { formatDateInputChange } from '../../utils/methods/shared'
 import { VscDiffAdded } from 'react-icons/vsc'
@@ -320,7 +320,7 @@ function Comercial() {
                       width={'100%'}
                       label={'VENDEDOR'}
                       selected={filters.sellerName}
-                      options={allSellers}
+                      options={allActiveSellers}
                       selectedItemLabel={'SEM FILTRO'}
                       handleChange={(value) =>
                         setFilters((prev) => ({

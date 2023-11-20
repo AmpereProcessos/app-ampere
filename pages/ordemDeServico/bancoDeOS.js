@@ -11,14 +11,19 @@ import LoadingPage from '../../components/utils/LoadingPage'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import { useServiceOrders } from '../../utils/methods/query/serviceOrders'
-import { formatDate } from '../../utils/constants'
+import { cidadesAtendidas, formatDate, serviceOrdersCategories } from '../../utils/constants'
 
 import ServiceOrderCard from '../../components/identificador/ordensDeServico/ServiceOrderCard'
 import ModalOrdemServico from '../../components/ModalOrdemServico'
+import TextInput from '../../components/inputs/Text'
+import DateInput from '../../components/inputs/Date'
+import { formatDateInputChange } from '../../utils/methods/shared'
+import MultipleSelectInput from '../../components/inputs/MultipleSelect'
+import SelectInput from '../../components/inputs/Select'
 
 var currentDate = new Date()
 const afterDateParam = new Date(currentDate.setMonth(currentDate.getMonth() - 3)).toISOString()
-const beforeDateParam = currentDate.toISOString()
+const beforeDateParam = new Date().toISOString()
 
 function BancoDeOS() {
   const [dateFilter, setDateFilter] = useState({
@@ -44,16 +49,20 @@ function BancoDeOS() {
     setModalInfo((prev) => ({ ...prev, isOpen: true, orderId: order._id }))
   }
   // Projects array holder
-  const { data: orders, filters, setFilters } = useServiceOrders({ after: afterDateParam, before: currentDate, enabled: status == 'authenticated' })
+  const {
+    data: orders,
+    filters,
+    setFilters,
+  } = useServiceOrders({ after: dateFilter.after, before: dateFilter.before, enabled: status == 'authenticated' })
+  console.log(filters)
   if (status == 'loading') return <LoadingPage />
   if (status == 'authenticated') {
     return (
       <div className="p-6 grow">
         <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
           <div className="flex items-center justify-between w-full">
-            <div className="flex flex-wrap justify-center items-center gap-2 font-raleway font-black">
-              <p className="font-bold uppercase text-center text-2xl text-[#15599a]">BANCO DE ORDENS DE SERVIÇO</p>
-              {orders ? <p className="font-bold text-[#fead61]">({orders?.length})</p> : null}
+            <div className="flex flex-col lg:flex-row items-center gap-2">
+              <p className="font-black uppercase text-center text-2xl text-[#15599a]">BANCO DE ORDENS DE SERVIÇO ({orders?.length || '...'})</p>
             </div>
             {dropdownMenuVisible ? (
               <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
@@ -68,102 +77,139 @@ function BancoDeOS() {
           <AnimatePresence>
             {dropdownMenuVisible ? (
               <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                <div className="flex flex-col lg:flex-row justify-between gap-2">
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="font-['Roboto'] text-xs">ADQUIRIDOS ENTRE:</span>
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-2">
-                      <input
-                        value={formatDate(dateFilter.after)}
-                        onChange={(e) =>
-                          setDateFilter({
-                            ...dateFilter,
-                            after: dayjs(e.target.value).$d != 'Invalid Date' ? new Date(e.target.value).toISOString() : dateFilterParam,
-                          })
-                        }
-                        type="date"
-                        className="border border-gray-200 outline-none py-1 px-2"
-                      />
-                      <p>&</p>
-                      <input
-                        value={formatDate(dateFilter.before)}
-                        onChange={(e) =>
-                          setDateFilter({
-                            ...dateFilter,
-                            before:
-                              dayjs(e.target.value).$d != 'Invalid Date'
-                                ? dayjs(e.target.value).add('20', 'hour').toISOString()
-                                : new Date().toISOString(),
-                          })
-                        }
-                        type="date"
-                        className="border border-gray-200 outline-none py-1 px-2"
-                      />
-                    </div>
-                    <div className="flex items-center justify-between gap-2">
-                      {/* <FetchDataButton text={'BUSCAR'} icon={<MdDateRange />} handleClick={getOSS} /> */}
-                      {/* <div className="flex cursor-pointer text-[#15599a] items-center  font-bold p-2 rounded-lg transition duration-300 ease-in-out hover:scale-105">
-                        <p className="mr-2 text-sm">BAIXAR DADOS</p>
-                        <BsDownload />
-                      </div> */}
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end gap-2 w-full">
-                    <div className="w-full lg:w-[350px]">
-                      <Select
-                        isMulti
-                        placeholder="CATEGORIAS"
-                        styles={{
-                          control: (base, state) => ({
-                            ...base,
-                            width: '100%',
-                            minHeight: '41px',
-                          }),
-                        }}
-                        onChange={(e) =>
-                          setFilters({
-                            ...filters,
-                            category: e.map((x) => x.value),
-                          })
-                        }
-                        options={[
-                          { label: 'PADRÃO', value: 'PADRÃO' },
-                          { label: 'ESTRUTURA', value: 'ESTRUTURA' },
-                          { label: 'MONTAGEM', value: 'MONTAGEM' },
-                          {
-                            label: 'MANUTENÇÃO PREVENTIVA',
-                            value: 'MANUTENÇÃO PREVENTIVA',
-                          },
-                          {
-                            label: 'MANUTENÇÃO CORRETIVA',
-                            value: 'MANUTENÇÃO CORRETIVA',
-                          },
-                          {
-                            label: 'NÃO DEFINIDO',
-                            value: 'NÃO DEFINIDO',
-                          },
-                        ]}
-                      />
-                    </div>
-                    <div
-                      onClick={() => setFilters({ ...filters, unfinished: !filters.unfinished })}
-                      className={`${
-                        filters.unfinished ? 'bg-[#15599a]' : 'bg-blue-300'
-                      } rounded h-[41px] w-full lg:w-[350px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
-                    >
-                      EM ABERTO
-                    </div>
-                    <input
-                      className="outline-none p-1.5  w-full lg:w-[350px] rounded border border-gray-200 placeholder:italic"
-                      placeholder="DIGITE O NOME DO CONTRATO"
-                      value={filters.search}
-                      onChange={(e) =>
-                        setFilters({
-                          ...filters,
-                          search: e.target.value,
-                        })
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <TextInput
+                    label="NOME DO CLIENTE"
+                    placeholder="Filtre por nome do cliente..."
+                    value={filters.search}
+                    handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
+                  />
+                  <div className="w-full lg:w-[250px]">
+                    <MultipleSelectInput
+                      width={'100%'}
+                      label={'CIDADE'}
+                      selected={filters.city}
+                      options={cidadesAtendidas.map((city, index) => ({ id: index + 1, label: city, value: city }))}
+                      selectedItemLabel={'SEM FILTRO'}
+                      handleChange={(value) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          city: value,
+                        }))
+                      }
+                      onReset={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          city: [],
+                        }))
                       }
                     />
-                    {/* <FilterButton text={'FILTRAR'} icon={<AiOutlineSearch />} handleClick={filterOS} /> */}
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <MultipleSelectInput
+                      width={'100%'}
+                      label={'CATEGORIA'}
+                      selected={filters.category}
+                      options={serviceOrdersCategories}
+                      selectedItemLabel={'SEM FILTRO'}
+                      handleChange={(value) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          category: value,
+                        }))
+                      }
+                      onReset={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          category: [],
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <SelectInput
+                      width={'100%'}
+                      label={'URGÊNCIA'}
+                      value={filters.urgency}
+                      options={[
+                        { id: 1, label: 'POUCO URGENTE', value: 'POUCO URGENTE' },
+                        { id: 2, label: 'URGENTE', value: 'URGENTE' },
+                        { id: 3, label: 'EMERGÊNCIA', value: 'EMERGÊNCIA' },
+                      ]}
+                      selectedItemLabel={'SEM FILTRO'}
+                      handleChange={(value) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          urgency: value,
+                        }))
+                      }
+                      onReset={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          urgency: null,
+                        }))
+                      }
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-x-2 justify-center w-full lg:w-fit">
+                    <div className="w-full lg:w-1/2">
+                      <DateInput
+                        width={'100%'}
+                        label={'DEPOIS DE'}
+                        value={dateFilter.after ? formatDate(dateFilter.after) : undefined}
+                        handleChange={(value) => setDateFilter((prev) => ({ ...prev, after: formatDateInputChange(value) }))}
+                      />
+                    </div>
+                    <div className="w-full lg:w-1/2">
+                      <DateInput
+                        width={'100%'}
+                        label={'ANTES DE'}
+                        value={dateFilter.before ? formatDate(dateFilter.before) : undefined}
+                        handleChange={(value) => setDateFilter((prev) => ({ ...prev, before: formatDateInputChange(value) }))}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                  <div
+                    onClick={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        inProgress: !prev.inProgress,
+                      }))
+                    }
+                    className={`${
+                      filters.inProgress ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  >
+                    EM PROCESSO
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        inExecution: !prev.inExecution,
+                      }))
+                    }
+                    className={`${
+                      filters.inExecution ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  >
+                    EM EXECUÇÃO
+                  </div>
+                  <div
+                    onClick={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        unassigned: !prev.unassigned,
+                      }))
+                    }
+                    className={`${
+                      filters.unassigned ? 'bg-[#15599a]' : 'bg-blue-300'
+                    } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                  >
+                    PARA DESIGNAR
                   </div>
                 </div>
               </motion.div>

@@ -259,6 +259,22 @@ function ModalNewServiceOrder({ project, categories, closeModal, session }) {
               onChange={(e) => setOsInfo((prev) => ({ ...prev, observacoes: e.target.value }))}
               className="w-full resize-none min-h-[100px] bg-gray-200 text-sm border border-gray-500 rounded-md outline-none p-4"
             />
+            <div className="w-full flex items-center justify-center">
+              <div className="w-full lg:w-1/2">
+                <Select
+                  label={'URGÊNCIA'}
+                  value={osInfo.urgencia}
+                  options={[
+                    { id: 1, label: 'POUCO URGENTE', value: 'POUCO URGENTE' },
+                    { id: 2, label: 'URGENTE', value: 'URGENTE' },
+                    { id: 3, label: 'EMERGÊNCIA', value: 'EMERGÊNCIA' },
+                  ]}
+                  selectedItemLabel={'NÃO DEFINIDO'}
+                  handleChange={(value) => setOsInfo((prev) => ({ ...prev, urgencia: value }))}
+                  width={'100%'}
+                />
+              </div>
+            </div>
             <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">EQUIPAMENTOS</h1>
             <div className="flex w-full items-center gap-2 flex-col lg:flex-row mt-2">
               <div className="w-full lg:w-1/3">

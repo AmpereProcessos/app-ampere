@@ -15,6 +15,7 @@ export default async function handler(req, res) {
           $project: {
             qtde: 1,
             nomeDoContrato: 1,
+            telefone: 1,
             vendedor: 1,
             cidade: 1,
             nps: 1,

@@ -10,7 +10,7 @@ import Link from 'next/link'
 function getBarColor(orderPeriod) {
   if (!orderPeriod.inicio && !orderPeriod.fim) return 'bg-gray-500'
   if (orderPeriod.inicio && !orderPeriod.fim) return 'bg-blue-500'
-  return 'bg-green'
+  return 'bg-green-500'
 }
 function ResponsibleServiceOrderCard({ order, handleOpenModal }) {
   return (

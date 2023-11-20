@@ -64,14 +64,14 @@ function ModalOS({ orderId, modalIsOpen, closeModal, queryKey }) {
                 <MdCategory />
                 <p className="font-medium text-blue-500 text-lg uppercase">{order?.categoria}</p>
               </div>
-              <div className="flex items-center justify-center gap-2 w-full mt-2">
+              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 w-full mt-2">
                 <div className="flex items-center gap-2">
                   <MdEngineering />
-                  <p className="font-medium text-gray-500 text-lg uppercase">{order?.responsavel?.nome || 'RESPONSÁVEL NÃO DEFINIDO'}</p>
+                  <p className="text-xs font-medium text-gray-500 lg:text-lg uppercase">{order?.responsavel?.nome || 'RESPONSÁVEL NÃO DEFINIDO'}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <IoMdAlert />
-                  <p className="font-medium text-gray-500 text-lg uppercase">{order?.urgencia}</p>
+                  <p className="text-xs font-medium text-gray-500 lg:text-lg uppercase">{order?.urgencia}</p>
                 </div>
               </div>
 

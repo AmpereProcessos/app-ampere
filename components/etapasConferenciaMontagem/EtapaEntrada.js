@@ -89,7 +89,7 @@ function EtapaEntrada({ next, order }) {
     <div className="w-full flex flex-col my-2">
       <div className="flex flex-col bg-[#fead61] text-white items-center justify-between py-2">
         <h1 className="text-center font-bold w-full">ETAPA ENTRADA NA OBRA</h1>
-        <p className="text-xs font-bold text-gray-600 italic">
+        <p className="text-[0.6rem] lg:text-xs font-bold text-gray-600 italic px-2">
           (OBS: TODAS AS FOTOS DEVEM SER TIRADAS ATRAVÉS DO APLICATIVO <strong className="text-[#15599a]">NOTECAM</strong>.)
         </p>
       </div>

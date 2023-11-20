@@ -54,19 +54,19 @@ function ExecutionDiaryRecord({ orderId, item, itemIndex, history }: ExecutionDi
     <div className="flex flex-col w-full p-3 rounded-md shadow-sm border border-gray-300">
       <div className="flex items-center gap-2">
         <RxTimer />
-        <p className="font-thin tracking-tight leading-none">
+        <p className="font-thin tracking-tight leading-none text-sm lg:text-base">
           <strong className="text-[#fead41] font-bold">{formatDateAsLocale(item.entrada, true)}</strong> até às{' '}
           <strong className="text-[#fead41] font-bold">{item.saida ? formatDateAsLocale(item.saida, true) : '?'}</strong>
         </p>
       </div>
       {!item.saida ? (
-        <div className="flex flex-col w-full mt-2">
+        <div className="flex flex-col w-full lg:mt-2 mt-4">
           <h1 className="font-sans font-bold tracking-tight leading-none text-[#353432]">ANOTAÇÕES</h1>
           <textarea
             value={infoHolder.anotacoes}
             placeholder="Preencha aqui anotações sobre o período de execução..."
             onChange={(e) => setInfoHolder((prev) => ({ ...prev, anotacoes: e.target.value }))}
-            className="p-3 w-full resize-none outline-none text-center text-sm text-gray-800 bg-gray-100 rounded border border-gray-300 shadow-sm"
+            className="min-h-[50px] p-3 w-full resize-none outline-none text-center text-sm text-gray-800 bg-gray-100 rounded border border-gray-300 shadow-sm mt-2"
           />
         </div>
       ) : (
@@ -74,7 +74,7 @@ function ExecutionDiaryRecord({ orderId, item, itemIndex, history }: ExecutionDi
       )}
 
       {!item.saida ? (
-        <div className="w-full flex items-end justify-end gap-2 mt-2">
+        <div className="w-full flex flex-col lg:flex-row items-center lg:items-end justify-end gap-2 mt-2">
           <DatetimeInput
             label="CHECK-OUT"
             labelClassName="text-xs font-sans font-bold  text-[#353432]"

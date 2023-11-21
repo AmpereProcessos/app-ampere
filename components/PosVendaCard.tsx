@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
+import { useQueryClient } from 'react-query'
+
 import SelectInput from './SelectInput'
-import dayjs from 'dayjs'
-import axios from 'axios'
-import SaveButton from './utils/Buttons/SaveButton'
-import { FaSave } from 'react-icons/fa'
-import { AiFillInteraction } from 'react-icons/ai'
+
 import { TProjectDTO } from '@/utils/schemas/projects'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
-import { useQueryClient } from 'react-query'
 import { updateProject } from '@/utils/methods/mutation/clients'
-import { BsCalendarFill, BsCheckAll } from 'react-icons/bs'
+
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import CheckboxInput from './inputs/Checkbox'
+
 import { TbTruckDelivery } from 'react-icons/tb'
+import { BsCalendarFill, BsCheckAll } from 'react-icons/bs'
 
 type PosVendaCardProps = {
   projectId: string

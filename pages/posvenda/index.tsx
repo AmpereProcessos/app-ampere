@@ -9,7 +9,7 @@ import LoadingPage from '../../components/utils/LoadingPage'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { BiTime } from 'react-icons/bi'
 import { GoCreditCard } from 'react-icons/go'
-import { TbArrowsDownUp, TbTruckDelivery } from 'react-icons/tb'
+import { TbAlertTriangle, TbArrowsDownUp, TbTruckDelivery } from 'react-icons/tb'
 import { MdOutlineFormatListBulleted } from 'react-icons/md'
 import { FaListCheck } from 'react-icons/fa6'
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
@@ -50,13 +50,22 @@ function Posvenda() {
     if (!info)
       return {
         projetos: 0,
+        contatosPendentes: 0,
         paraConfeccionar: 0,
         paraAssinar: 0,
         entregaHoje: 0,
         entregaSemana: 0,
       }
     const projectsQty = info.length
-
+    const pendingContacts = info.reduce((acc, current) => {
+      const lastContact = current.jornada.dataUltimoContato
+      // In case there's no contact
+      if (!lastContact) return (acc += 1)
+      // In case there's more than 7 days since contact
+      const sinceLastContact = dayjs().diff(lastContact, 'day')
+      if (sinceLastContact > 7) return (acc += 1)
+      return acc
+    }, 0)
     const docsToElaborate = info.reduce((acc, current) => {
       const projectStarted = current.projeto.iniciar == 'SIM'
       const missingDocSigning = !current.projeto.dataAssDocumentacao
@@ -85,6 +94,7 @@ function Posvenda() {
     )
     return {
       projetos: projectsQty,
+      contatosPendentes: pendingContacts,
       paraConfeccionar: docsToElaborate,
       paraAssinar: docsToSign,
       entregaHoje: deliveries.today,
@@ -121,7 +131,7 @@ function Posvenda() {
           )}
         </div>
         <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/5">
             <div className="flex items-center justify-between">
               <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
               <VscDiffAdded />
@@ -130,7 +140,7 @@ function Posvenda() {
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/5">
             <div className="flex items-center justify-between">
               <h1 className="text-sm font-medium uppercase tracking-tight">DOCUMENTAÇÃO A CONFECCIONAR</h1>
               <FaListCheck />
@@ -139,7 +149,7 @@ function Posvenda() {
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).paraConfeccionar}</div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/5">
             <div className="flex items-center justify-between">
               <h1 className="text-sm font-medium uppercase tracking-tight">DOCUMENTAÇÃO A ASSINAR</h1>
               <FaSignature />
@@ -148,7 +158,7 @@ function Posvenda() {
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).paraAssinar}</div>
             </div>
           </div>
-          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/5">
             <div className="flex items-center justify-between">
               <h1 className="text-sm font-medium uppercase tracking-tight">ENTREGAS HOJE</h1>
               <TbTruckDelivery />
@@ -156,6 +166,15 @@ function Posvenda() {
             <div className="mt-2 flex w-full flex-col">
               <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).entregaHoje}</div>
               <p className="text-xs text-gray-500">{getStats({ info: projects }).entregaSemana} essa semana</p>
+            </div>
+          </div>
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/5">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">CONTATOS PENDENTES</h1>
+              <TbAlertTriangle />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).contatosPendentes}</div>
             </div>
           </div>
         </div>
@@ -223,19 +242,17 @@ function Posvenda() {
                       label={'CAMPO DE FILTRO'}
                       value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
                       options={[
-                        {
-                          id: 1,
-                          label: 'DATA DE PAGAMENTO',
-                          value: 'compra.dataPagamento',
-                        },
-                        { id: 3, label: 'PREV. ENTREGA', value: 'compra.previsaoEntrega' },
-                        { id: 4, label: 'DATA ASS.CONTRATO', value: 'contrato.dataAssinatura' },
-                        { id: 5, label: 'DATA ASS.DOCUMENTAÇÃO', value: 'projeto.dataAssDocumentacao' },
-                        { id: 6, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
-                        { id: 7, label: 'DATA DE SOLICITAÇÃO DO PARECER', value: 'projeto.dataSolicitacaoAcesso' },
-                        { id: 8, label: 'APROVAÇÃO DO PARECER', value: 'parecer.dataParecerDeAcesso' },
-                        { id: 9, label: 'PEDIDO DA VISTORIA', value: 'vistoria.dataPedido' },
-                        { id: 10, label: 'NÃO DEFINIDO', value: null },
+                        { id: 1, label: 'DATA ASS.CONTRATO', value: 'contrato.dataAssinatura' },
+                        { id: 2, label: 'DATA DE PAGAMENTO', value: 'compra.dataPagamento' },
+                        { id: 3, label: 'DATA ASS.DOCUMENTAÇÃO', value: 'projeto.dataAssDocumentacao' },
+                        { id: 4, label: 'DATA DE SOLICITAÇÃO DO PARECER', value: 'projeto.dataSolicitacaoAcesso' },
+                        { id: 5, label: 'APROVAÇÃO DO PARECER', value: 'parecer.dataParecerDeAcesso' },
+                        { id: 6, label: 'PREV. ENTREGA', value: 'compra.previsaoEntrega' },
+                        { id: 7, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
+                        { id: 8, label: 'ENTRADA NA OBRA', value: 'obra.entrada' },
+                        { id: 9, label: 'SAIDA DE OBRA', value: 'obra.saida' },
+                        { id: 10, label: 'PEDIDO DA VISTORIA', value: 'vistoria.dataPedido' },
+                        { id: 11, label: 'NÃO DEFINIDO', value: null },
                       ]}
                       selectedItemLabel={'SEM FILTRO'}
                       handleChange={(value) =>
@@ -476,10 +493,10 @@ function Posvenda() {
                 </div>
                 <div
                   onClick={() =>
-                    setFilters({
-                      ...filters,
-                      pendingContact: !filters.pendingContact,
-                    })
+                    setFilters((prev) => ({
+                      ...prev,
+                      pendingContact: !prev.pendingContact,
+                    }))
                   }
                   className={`${
                     filters.pendingContact ? 'bg-[#15599a]' : 'bg-blue-300'

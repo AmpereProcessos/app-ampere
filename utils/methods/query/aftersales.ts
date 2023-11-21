@@ -1,5 +1,6 @@
 import { TProjectDTO } from '@/utils/schemas/projects'
 import axios from 'axios'
+import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
 
@@ -210,6 +211,16 @@ export function useAfterSalesProjects() {
     if (!filters.missingSignature) return true
     else return project.projeto.dataLiberacaoDocumentacao != undefined && !project.projeto.dataAssDocumentacao
   }
+  function matchPendingContact(project: TProjectDTO) {
+    if (!filters.pendingContact) return true
+    const lastContact = project.jornada.dataUltimoContato
+    // In case there's no contact
+    if (!lastContact) return true
+    // In case there's more than 7 days since contact
+    const sinceLastContact = dayjs().diff(lastContact, 'day')
+    if (sinceLastContact > 7) return true
+    return false
+  }
   function matchDate(project: TProjectDTO) {
     if (!filters.date.after || !filters.date.before || !filters.date.field1 || !filters.date.field2) return true
     return (
@@ -227,7 +238,7 @@ export function useAfterSalesProjects() {
       case 'ASC':
         // @ts-ignore
         newArr = filtered.sort((a, b) => new Date(a.jornada.dataUltimoContato) - new Date(b.jornada.dataUltimoContato))
-        return [...newArr, ...nulls]
+        return [...nulls, ...newArr]
       case 'DESC':
         // @ts-ignore
         newArr = filtered.sort((a, b) => new Date(b.jornada.dataUltimoContato) - new Date(a.jornada.dataUltimoContato))
@@ -252,6 +263,7 @@ export function useAfterSalesProjects() {
         matchGrantingStatus(project) &&
         matchNecessaryDistribution(project) &&
         matchMissingSignature(project) &&
+        matchPendingContact(project) &&
         matchDate(project)
     )
   }

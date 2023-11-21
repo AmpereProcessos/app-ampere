@@ -34,20 +34,14 @@ function BandoDeDados({ data }) {
   // Data
   const [projects, setProjects] = useState()
   const [filteredProjects, setFilteredProjects] = useState()
-
-  // Modal Control
-  const [modalIsOpen, setModalIsOpen] = useState(false)
-  const [modalProject, setModalProject] = useState({})
-
-  // Filters
-  const [searchFilter, setSearchFilter] = useState('')
   const [opInProgress, setOpInProgress] = useState(false)
-  const [dateFilter, setDateFilter] = useState({
-    after: null,
-    before: null,
-    field1: null,
-    field2: null,
+  // Modal Control
+
+  const [modalProject, setModalProject] = useState({
+    isOpen: false,
+    projectId: null,
   })
+
   const [currentPage, setCurrentPage] = useState(1)
   const [filters, setFilters] = useState({
     search: '',
@@ -74,7 +68,6 @@ function BandoDeDados({ data }) {
     nps: null,
   })
 
-  // Functions
   function getProjects(page) {
     setOpInProgress(true)
     axios
@@ -86,17 +79,6 @@ function BandoDeDados({ data }) {
       })
       .catch((err) => console.log(err))
   }
-  // function handleSearchFilter(value) {
-  //   setSearchFilter(value);
-  //   if (value != "" || " ") {
-  //     let newArr = projects.filter((call) =>
-  //       call.nomeDoContrato.toUpperCase().includes(value.toUpperCase())
-  //     );
-  //     setFilteredProjects(newArr);
-  //   } else {
-  //     setFilteredProjects(projects);
-  //   }
-  // }
   function handleGetByFilters() {
     var matchObj
     // Initializing query params given selected filters
@@ -134,10 +116,7 @@ function BandoDeDados({ data }) {
     axios.get(`/api/projects/fetchDoc/${id}`).then((res) => setModalProject(res.data[0]))
   }
   function handleOpenModal(id) {
-    axios.get(`/api/projects/fetchDoc/${id}`).then((res) => {
-      setModalProject(res.data[0])
-      setModalIsOpen(true)
-    })
+    setModalProject({ isOpen: true, projectId: id })
   }
   useEffect(() => {
     if (session?.user) {
@@ -521,20 +500,12 @@ function BandoDeDados({ data }) {
             ))
           )}
         </div>
-        {modalIsOpen && (
+        {modalProject.isOpen && modalProject.projectId && (
           <ModalDB
-            project={modalProject}
+            projectId={modalProject.projectId}
             handleUpdates={handleUpdates}
-            editor={
-              session?.user != {} &&
-              !session?.user.visualizacao &&
-              ['Projetos', 'Obras', 'Suprimentos', 'O&M', 'Marketing', 'Vendas', 'Pós-Venda', 'PPS', 'InsideSales', 'Financeiro', 'ADM', 'RH'].every(
-                (el) => session?.user.accessibleRoutes.includes(el)
-              )
-                ? true
-                : false
-            }
-            setModalIsOpen={setModalIsOpen}
+            closeModal={() => setModalProject({ isOpen: false, projectId: null })}
+            modalIsOpen={modalProject.isOpen}
           />
         )}
       </div>

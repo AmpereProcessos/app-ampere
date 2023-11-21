@@ -35,23 +35,7 @@ import ErrorPage from './utils/ErrorPage'
 import toast from 'react-hot-toast'
 import { useEffect } from 'react'
 import { handleComercialProjectUpdate } from '../utils/methods/mutation/comercial'
-function formatCnpjCpf(value) {
-  const cnpjCpf = value.replace(/\D/g, '')
 
-  if (cnpjCpf.length === 11) {
-    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, '$1.$2.$3-$4')
-  }
-
-  return cnpjCpf.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g, '$1.$2.$3/$4-$5')
-}
-function formataCEP(cep) {
-  cep = cep
-    .replace(/\D/g, '')
-    .replace(/(\d{5})(\d)/, '$1-$2')
-    .replace(/(-\d{3})\d+?$/, '$1')
-
-  return cep
-}
 function ModalComercial({ projectId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal(false))
   const queryClient = useQueryClient()

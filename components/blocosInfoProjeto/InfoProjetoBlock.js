@@ -9,7 +9,7 @@ import SelectInput from '../SelectInput'
 import ProjectServiceOrders from '../identificador/ordensDeServico/ProjectServiceOrders'
 import { accessGrantingStatus } from '../../utils/select-options'
 
-function InfoProjetoBlock({ editor, infoHolder, setInfo, changes, setChanges, handleUpdates, project }) {
+function InfoProjetoBlock({ editor, infoHolder, setInfo, changes, setChanges, project }) {
   const { data: session } = useSession()
   return (
     <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">

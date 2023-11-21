@@ -6,12 +6,14 @@ import SelectInput from './SelectInput'
 import { TProjectDTO } from '@/utils/schemas/projects'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { updateProject } from '@/utils/methods/mutation/clients'
+import ModalDB from './ModalDB'
 
 import { formatDateAsLocale } from '@/utils/methods/formatting'
 import CheckboxInput from './inputs/Checkbox'
 
 import { TbTruckDelivery } from 'react-icons/tb'
 import { BsCalendarFill, BsCheckAll } from 'react-icons/bs'
+import { FaExpandArrowsAlt } from 'react-icons/fa'
 
 type PosVendaCardProps = {
   projectId: string
@@ -21,7 +23,7 @@ type PosVendaCardProps = {
 function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
   const queryClient = useQueryClient()
   const [infoHolder, setInfo] = useState(project)
-
+  const [modalProjectIsOpen, setModalProjectIsOpen] = useState<boolean>(false)
   function getDateDiff(date1: Date, date2: Date) {
     //@ts-ignore
     const diffInMs = date1 - date2
@@ -267,7 +269,14 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
               onChange={(e) => setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, obsJornada: e.target.value } }))}
               className="min-h-[50px] p-3 w-full resize-none outline-none text-center text-sm text-gray-800 bg-gray-100 rounded border border-gray-300 shadow-sm mt-2"
             />
-            <div className="w-full mt-1 flex items-center justify-end">
+            <div className="w-full mt-1 flex items-center justify-between">
+              <button
+                onClick={() => setModalProjectIsOpen(true)}
+                className="flex py-1 px-4 items-center gap-1 border border-[#fead41] text-[#fead41] rounded text-xs font-medium hover:bg-[#fead41] hover:text-white duration-300 ease-in-out"
+              >
+                <p>EXPANDIR</p>
+                <FaExpandArrowsAlt />
+              </button>
               <button
                 disabled={isLoading}
                 onClick={() => {
@@ -281,6 +290,14 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
             </div>
           </div>
         </div>
+        {modalProjectIsOpen ? (
+          <ModalDB
+            projectId={projectId}
+            handleUpdates={() => console.log()}
+            closeModal={() => setModalProjectIsOpen(false)}
+            modalIsOpen={modalProjectIsOpen}
+          />
+        ) : null}
       </div>
     )
   if (mode == 'SIMPLIFIED')

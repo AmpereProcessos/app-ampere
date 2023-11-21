@@ -1,10 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react'
-import lodash from 'lodash'
+
 import { HiCheck } from 'react-icons/hi'
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io'
-import { FixedSizeList } from 'react-window'
 
-function SelectInput({
+type SelectOption<T> = {
+  id: string | number
+  value: any
+  label: string
+}
+type SelectInputProps<T> = {
+  width?: string
+  label: string
+  labelClassName?: string
+  showLabel?: boolean
+  value: T | null
+  editable?: boolean
+  selectedItemLabel: string
+  options: SelectOption<T>[] | null
+  handleChange: (value: T) => void
+  onReset: () => void
+}
+
+function SelectInput<T>({
   width,
   label,
   labelClassName = 'font-sans font-bold  text-[#353432] text-start',
@@ -15,8 +32,8 @@ function SelectInput({
   selectedItemLabel,
   handleChange,
   onReset,
-}) {
-  function getValueID(value) {
+}: SelectInputProps<T>) {
+  function getValueID(value: T | null) {
     if (options && value) {
       // console.log("OPTIONS", options);
       // console.log("VALUE", value);
@@ -26,19 +43,19 @@ function SelectInput({
     } else return null
   }
 
-  const ref = useRef(null)
-  const [items, setItems] = useState(options)
-  const [selectMenuIsOpen, setSelectMenuIsOpen] = useState(false)
-  const [selectedId, setSelectedId] = useState(getValueID(value))
+  const ref = useRef<any>(null)
+  const [items, setItems] = useState<SelectOption<T>[] | null>(options)
+  const [selectMenuIsOpen, setSelectMenuIsOpen] = useState<boolean>(false)
+  const [selectedId, setSelectedId] = useState<number | string | null>(getValueID(value))
 
-  const [searchFilter, setSearchFilter] = useState('')
-  const inputIdentifier = label ? label.toLowerCase().replace(' ', '_') : ''
-  function handleSelect(id, item) {
+  const [searchFilter, setSearchFilter] = useState<string>('')
+  const inputIdentifier = label.toLowerCase().replace(' ', '_')
+  function handleSelect(id: string | number, item: T) {
     handleChange(item)
     setSelectedId(id)
     setSelectMenuIsOpen(false)
   }
-  function handleFilter(value) {
+  function handleFilter(value: string) {
     setSearchFilter(value)
     if (!items || !options) return
     if (value.trim().length > 0) {
@@ -64,7 +81,7 @@ function SelectInput({
     setItems(options)
   }, [options, value])
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: any) => {
       if (ref.current && !ref.current.contains(event.target)) {
         onClickOutside()
       }
@@ -74,16 +91,6 @@ function SelectInput({
       document.removeEventListener('click', (e) => handleClickOutside(e), true)
     }
   }, [onClickOutside])
-  const Item = ({ index, style }) => (
-    <div
-      onClick={() => handleSelect(items[index].id, items[index].value)}
-      key={items[index].id ? items[index].id : index}
-      className={`flex w-full cursor-pointer items-center rounded p-1 px-2 hover:bg-gray-100 ${selectedId == items[index].id ? 'bg-gray-100' : ''}`}
-    >
-      <p className="grow font-medium text-[#353432]">{items[index].label}</p>
-      {selectedId == items[index].id ? <HiCheck style={{ color: '#fead61', fontSize: '20px' }} /> : null}
-    </div>
-  )
   return (
     <div ref={ref} className={`relative flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
       {showLabel ? (
@@ -91,8 +98,7 @@ function SelectInput({
           {label}
         </label>
       ) : null}
-
-      <div className="flex min-h-[47px] w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm">
+      <div className="flex h-full min-h-[46.6px] w-full items-center justify-between rounded-md border border-gray-200 bg-[#fff] p-3 text-sm shadow-sm">
         {selectMenuIsOpen ? (
           <input
             type="text"
@@ -105,25 +111,25 @@ function SelectInput({
         ) : (
           <p
             onClick={() => {
-              if (editable && !selectMenuIsOpen) setSelectMenuIsOpen((prev) => !prev)
+              if (editable) setSelectMenuIsOpen((prev) => !prev)
             }}
-            className="grow text-[#353432] cursor-pointer"
+            className="grow cursor-pointer text-[#353432]"
           >
-            {selectedId && options ? options.filter((item) => item.id == selectedId)[0]?.label : selectedItemLabel}
+            {selectedId && options ? options.filter((item) => item.id == selectedId)[0].label : selectedItemLabel}
           </p>
         )}
         {selectMenuIsOpen ? (
           <IoMdArrowDropup
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              if (editable) setSelectMenuIsOpen(false)
+              if (editable) setSelectMenuIsOpen((prev) => !prev)
             }}
           />
         ) : (
           <IoMdArrowDropdown
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              if (editable) setSelectMenuIsOpen(true)
+              if (editable) setSelectMenuIsOpen((prev) => !prev)
             }}
           />
         )}
@@ -145,7 +151,7 @@ function SelectInput({
                 key={item.id ? item.id : index}
                 className={`flex w-full cursor-pointer items-center rounded p-1 px-2 hover:bg-gray-100 ${selectedId == item.id ? 'bg-gray-100' : ''}`}
               >
-                <p className="grow font-medium text-[#353432]">{item.label}</p>
+                <p className="grow text-sm font-medium text-[#353432]">{item.label}</p>
                 {selectedId == item.id ? <HiCheck style={{ color: '#fead61', fontSize: '20px' }} /> : null}
               </div>
             ))

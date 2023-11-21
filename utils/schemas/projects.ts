@@ -61,7 +61,7 @@ const GeneralProjectSchema = z.object({
   }),
   cpf_cnpj: z.union([z.string(), z.number()]),
   dadosCemig: z.object({
-    distCreditos: z.union([z.literal('NÃO'), z.literal('SIM '), z.literal('NÃO DEFINIDO')]),
+    distCreditos: z.union([z.literal('NÃO'), z.literal('SIM'), z.literal('NÃO DEFINIDO')]),
     numeroInstalacao: z.union([z.string(), z.number()]),
     qtdeDistCreditos: z.number().optional().nullable(),
     titularProjeto: z.string(),
@@ -104,7 +104,7 @@ const GeneralProjectSchema = z.object({
   jornada: z.object({
     assDocumentacoes: z.boolean().optional().nullable(),
     boasVindas: z.boolean().optional().nullable(),
-    compraDoKit: z.string(),
+    compraDoKit: z.boolean().optional().nullable(),
     dataEntregaTecnicaPresencial: z.string(),
     dataEntregaTecnicaRemota: z.string(),
     dataNps: z.string().optional().nullable(),

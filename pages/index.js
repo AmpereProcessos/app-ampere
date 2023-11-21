@@ -234,11 +234,7 @@ function Home() {
 
     setClientsBirthday({ ...clientBirthday, filtered: newArr })
   }
-  function getDataByRegional(value) {
-    setRegional(value)
-    getGraphDataByYear(2023, { visualizacao: 'REGIONAL', regional: value })
-    getStats({ visualizacao: 'REGIONAL', regional: value })
-  }
+
   function validateStatsMonth(obj) {
     let currentMonth = new Date().getMonth() + 1
     let currentYear = new Date().getFullYear()
@@ -268,21 +264,11 @@ function Home() {
     if (statsData.graphData) {
       return (
         <div className="p-6 grow">
-          {/* <div className="flex items-center justify-center w-full">
-            <div className="w-[350px]">
-              <Image
-                src={LogoCampanha}
-                fill={true}
-                alt={"LOGO DA CAMPANHA 2023"}
-                style={{ borderRadius: "100%", objectFit: "cover" }}
-              />
-            </div>
-          </div> */}
           <div className="flex flex-col w-full mb-2">
             <h1 className="text-center w-full text-lg font-extrabold">META GLOBAL</h1>
             <div className="w-full h-[45px] border border-gray-500 bg-[#a8a9aa] self-center flex items-center justify-between">
               <div
-                style={{ width: `${(1383.85 / 2000) * 100}%` }}
+                style={{ width: `${(1783.5 / 2000) * 100}%` }}
                 className="bg-gradient-to-r from-yellow-300 to-[#fead41] w-full h-full flex flex-col items-center justify-center"
               >
                 <p className="text-[#15599a] bg-transparent font-bold text-xxs lg:text-sm">
@@ -291,7 +277,7 @@ function Home() {
                     maximumFractionDigits: 2,
                   })}
                   % */}
-                  70%
+                  89,17%
                 </p>
                 <p className="w-full text-center font-raleway text-xxs lg:text-sm font-bold text-green-500">
                   {/* {campainPeakPower.toLocaleString('pt-br', {
@@ -299,7 +285,7 @@ function Home() {
                     maximumFractionDigits: 2,
                   })}{' '}
                   kWp */}
-                  1.383,85 kWp
+                  1.783,50 kWp
                 </p>
               </div>
               <p className="text-xs lg:text-lg text-white font-bold mr-4">
@@ -308,7 +294,7 @@ function Home() {
                   maximumFractionDigits: 2,
                 })}{' '}
                 kWp */}
-                {(2000 - 1383.65).toLocaleString('pt-br', {
+                {(2000 - 1783.5).toLocaleString('pt-br', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}{' '}
@@ -324,43 +310,55 @@ function Home() {
                     <h1 className="text-gray-600 uppercase text-xl text-center font-bold">TOP 3 VENDEDORES</h1>
                     <div className="lg:w-[1200px] w-full flex items-end justify-center h-[400px] lg:h-[400px] gap-4 lg:gap-10 p-0 lg:p-6">
                       <div className="h-full hidden lg:flex flex-col justify-end w-1/5">
-                        {renderAvatarBySeller(topSellerData[3]?._id)}
-                        <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[3]?._id}</h1>
+                        {renderAvatarBySeller(topSellerData[2]?._id)}
+                        <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[2]?._id}</h1>
                         <p className="text-center font-medium text-lg text-green-500">
-                          {topSellerData[3]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
+                          {topSellerData[2]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
                         </p>
                         <div className="h-[30%] w-full bg-gray-500 flex justify-center items-center text-3xl text-white font-bold">4º</div>
-                      </div>
-                      <div className="h-full flex flex-col justify-end w-1/3 lg:w-1/5">
-                        {renderAvatarBySeller(topSellerData[1]?._id)}
-                        <h1 className="text-center font-bold text-xs lg:text-sm text-gray-500">{topSellerData[1]?._id}</h1>
-                        <p className="text-center font-medium text-xs lg:text-lg text-green-500">
-                          {topSellerData[1]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
-                        </p>
-                        <div className="h-[60%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">2º</div>
                       </div>
                       <div className="h-full flex flex-col justify-end w-1/3 lg:w-1/5">
                         {renderAvatarBySeller(topSellerData[0]?._id)}
                         <h1 className="text-center font-bold text-xs lg:text-sm text-gray-500">{topSellerData[0]?._id}</h1>
                         <p className="text-center font-medium text-xs lg:text-lg text-green-500">
-                          {topSellerData[0]?.potenciaVendida.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
+                          {topSellerData[0]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
+                        </p>
+                        <div className="h-[60%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">2º</div>
+                      </div>
+                      <div className="h-full flex flex-col justify-end w-1/3 lg:w-1/5">
+                        {/* {renderAvatarBySeller(topSellerData[0]?._id)} */}
+                        <div className="w-[30px]  lg:w-[50px] h-[30px] lg:h-[50px] max-w-[50px] max-h-[50px] self-center">
+                          <Image
+                            width={30}
+                            height={30}
+                            src={
+                              'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2FavatarMatheus.jpg?alt=media&token=adb60500-22e6-4c1d-908f-72e3279fc641'
+                            }
+                            alt={'MATHEUS OLIVEIRA'}
+                            style={{ borderRadius: '100%' }}
+                            layout="responsive"
+                          />
+                        </div>
+                        <h1 className="text-center font-bold text-xs lg:text-sm text-gray-500">MATHEUS OLIVEIRA</h1>
+                        <p className="text-center font-medium text-xs lg:text-lg text-green-500">
+                          {/* {topSellerData[0]?.potenciaVendida.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp */}
+                          636,8 kWp
                         </p>
                         <div className="grow w-full bg-[#fead41] flex justify-center items-center text-3xl text-white font-bold">1º</div>
                       </div>
                       <div className="h-full flex flex-col justify-end w-1/3 lg:w-1/5">
-                        {renderAvatarBySeller(topSellerData[2]?._id)}
-
-                        <h1 className="text-center font-bold text-xs lg:text-sm text-gray-500">{topSellerData[2]?._id}</h1>
+                        {renderAvatarBySeller(topSellerData[1]?._id)}
+                        <h1 className="text-center font-bold text-xs lg:text-sm text-gray-500">{topSellerData[1]?._id}</h1>
                         <p className="text-center font-medium text-xs lg:text-lg text-green-500">
-                          {topSellerData[2]?.potenciaVendida.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
+                          {topSellerData[1]?.potenciaVendida.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
                         </p>
                         <div className="h-[40%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">3º</div>
                       </div>
                       <div className="h-full hidden lg:flex flex-col justify-end w-1/5">
-                        {renderAvatarBySeller(topSellerData[4]?._id)}
-                        <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[4]?._id}</h1>
+                        {renderAvatarBySeller(topSellerData[3]?._id)}
+                        <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[3]?._id}</h1>
                         <p className="text-center font-medium text-lg text-green-500">
-                          {topSellerData[4]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
+                          {topSellerData[3]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
                         </p>
                         <div className="h-[15%] w-full bg-gray-500 flex justify-center items-center text-3xl text-white font-bold">5º</div>
                       </div>

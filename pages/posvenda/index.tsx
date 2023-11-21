@@ -1,0 +1,504 @@
+import React, { useContext, useEffect, useState } from 'react'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import { AnimatePresence, motion } from 'framer-motion'
+
+import PosVendaCard from '../../components/PosVendaCard'
+import LoadingPage from '../../components/utils/LoadingPage'
+
+import { AiOutlineSearch } from 'react-icons/ai'
+import { BiTime } from 'react-icons/bi'
+import { GoCreditCard } from 'react-icons/go'
+import { TbArrowsDownUp, TbTruckDelivery } from 'react-icons/tb'
+import { MdOutlineFormatListBulleted } from 'react-icons/md'
+import { FaListCheck } from 'react-icons/fa6'
+import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
+import { cidadesAtendidas, formatDate, vendedores } from '../../utils/constants'
+
+import { useSession } from 'next-auth/react'
+import { useAfterSalesProjects } from '@/utils/methods/query/aftersales'
+import TextInput from '@/components/inputs/Text'
+import DateInput from '@/components/inputs/Date'
+import { formatDateInputChange } from '@/utils/methods/shared'
+import SelectInput from '@/components/inputs/Select'
+import MultipleSelectInput from '@/components/inputs/MultipleSelect'
+import { accessGrantingStatus, contractStatus, executionStatus, inspectionStatus } from '@/utils/select-options'
+import ErrorComponent from '@/components/utils/ErrorComponent'
+import { VscDiffAdded } from 'react-icons/vsc'
+import { TProjectDTO } from '@/utils/schemas/projects'
+import ProjectServiceOrderCard from '@/components/identificador/ordensDeServico/ProjectServiceOrderCard'
+import { FaSignature } from 'react-icons/fa'
+import NumberInput from '@/components/inputs/Number'
+import dayjs from 'dayjs'
+
+function Posvenda() {
+  const router = useRouter()
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push('/auth/authHome')
+    },
+  })
+
+  const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
+
+  const { data: projects, isSuccess, isLoading, isError, filters, setFilters } = useAfterSalesProjects()
+
+  const [mode, setMode] = useState<'CARD' | 'SIMPLIFIED'>('CARD')
+
+  function getStats({ info }: { info: TProjectDTO[] | undefined }) {
+    if (!info)
+      return {
+        projetos: 0,
+        paraConfeccionar: 0,
+        paraAssinar: 0,
+        entregaHoje: 0,
+        entregaSemana: 0,
+      }
+    const projectsQty = info.length
+
+    const docsToElaborate = info.reduce((acc, current) => {
+      const projectStarted = current.projeto.iniciar == 'SIM'
+      const missingDocSigning = !current.projeto.dataAssDocumentacao
+      const notWaitingStatus = current.parecer.statusDoParecerDeAcesso != 'AGUARDANDO ASSINATURA'
+      if (projectStarted && missingDocSigning && notWaitingStatus) return acc + 1
+      return acc
+    }, 0)
+    const docsToSign = info.reduce((acc, current) => {
+      const missingDocSigning = !current.projeto.dataAssDocumentacao
+      const waitingStatus = current.parecer.statusDoParecerDeAcesso == 'AGUARDANDO ASSINATURA'
+      if (missingDocSigning && waitingStatus) return acc + 1
+      return acc
+    }, 0)
+    const deliveries = info.reduce(
+      (acc, current) => {
+        if (!current.compra.previsaoEntrega) return acc
+        const deliveryPrevision = dayjs(current.compra.previsaoEntrega).add(3, 'hour')
+
+        const isToday = dayjs().isSame(deliveryPrevision, 'day')
+        const isThisWeek = dayjs().isSame(deliveryPrevision, 'week')
+        if (isToday) acc.today += 1
+        if (isThisWeek) acc.thisWeek += 1
+        return acc
+      },
+      { today: 0, thisWeek: 0 }
+    )
+    return {
+      projetos: projectsQty,
+      paraConfeccionar: docsToElaborate,
+      paraAssinar: docsToSign,
+      entregaHoje: deliveries.today,
+      entregaSemana: deliveries.thisWeek,
+    }
+  }
+
+  useEffect(() => {
+    const validateAccess = async () => {
+      if (session) {
+        const userRoutes = session.user.accessibleRoutes
+        if (!userRoutes?.includes('Pós-Venda')) router.push('/')
+      }
+    }
+    validateAccess()
+  }, [session])
+  if (status != 'authenticated') return <LoadingPage />
+
+  return (
+    <div className="p-6 grow">
+      <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
+        <div className="flex items-center justify-between w-full">
+          <div className="flex flex-col lg:flex-row items-center gap-2">
+            <p className="font-black uppercase text-center text-2xl text-[#15599a]">PROJETOS EM JORNADA</p>
+          </div>
+          {dropdownMenuVisible ? (
+            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
+            </div>
+          ) : (
+            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
+            </div>
+          )}
+        </div>
+        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
+              <VscDiffAdded />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).projetos}</div>
+            </div>
+          </div>
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">DOCUMENTAÇÃO A CONFECCIONAR</h1>
+              <FaListCheck />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).paraConfeccionar}</div>
+            </div>
+          </div>
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/3">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">DOCUMENTAÇÃO A ASSINAR</h1>
+              <FaSignature />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).paraAssinar}</div>
+            </div>
+          </div>
+          <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-sm font-medium uppercase tracking-tight">ENTREGAS HOJE</h1>
+              <TbTruckDelivery />
+            </div>
+            <div className="mt-2 flex w-full flex-col">
+              <div className="text-2xl font-bold text-[#15599a]">{getStats({ info: projects }).entregaHoje}</div>
+              <p className="text-xs text-gray-500">{getStats({ info: projects }).entregaSemana} essa semana</p>
+            </div>
+          </div>
+        </div>
+        <AnimatePresence>
+          {dropdownMenuVisible ? (
+            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
+              {/* <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <button
+                  onClick={() => setCardMode(!cardMode)}
+                  className="font-bold flex items-center gap-2 justify-center w-full lg:w-[250px] bg-[#15599a] h-[46px] text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+                >
+                  {cardMode ? <GoCreditCard /> : <MdOutlineFormatListBulleted />}
+                  {cardMode ? 'MODO CARD' : 'MODO LISTA'}
+                </button>
+                <button
+                  onClick={() => filterByNoRecentContact(!filters.noContactFilter)}
+                  className="font-bold flex items-center gap-2 justify-center w-full lg:w-[250px] bg-[#15599a] h-[46px] text-white hover:bg-[#fead61] hover:text-black p-2 rounded"
+                >
+                  <BiTime />
+                  SEM CONTATO RECENTE
+                </button>
+                <button
+                  onClick={ordenate}
+                  className="font-bold flex items-center gap-2 justify-center w-full lg:w-[250px] bg-[#15599a] h-[46px] text-white hover:bg-[#fead61] hover:text-black rounded"
+                >
+                  <TbArrowsDownUp />
+                  ORDERNAR
+                </button>
+              </div> */}
+              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <TextInput
+                  label="NOME DO CONTRATO"
+                  placeholder="Digite o nome do contrato..."
+                  value={filters.search}
+                  handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
+                />
+                <NumberInput
+                  label="NÚMERO DE MÓDULOS"
+                  value={filters.moduleQty}
+                  handleChange={(value) => setFilters((prev) => ({ ...prev, moduleQty: value }))}
+                  placeholder="Digite o número de módulos..."
+                />
+                <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
+                  <div className="flex items-center gap-x-2 justify-center">
+                    <div className="w-full lg:w-[250px]">
+                      <DateInput
+                        width={'100%'}
+                        label={'DEPOIS DE'}
+                        value={filters.date.after ? formatDate(filters.date.after) : undefined}
+                        handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, after: formatDateInputChange(value) } }))}
+                      />
+                    </div>
+                    <div className="w-full lg:w-[250px]">
+                      <DateInput
+                        width={'100%'}
+                        label={'ANTES DE'}
+                        value={filters.date.before ? formatDate(filters.date.before) : undefined}
+                        handleChange={(value) => setFilters((prev) => ({ ...prev, date: { ...prev.date, before: formatDateInputChange(value) } }))}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-full lg:w-[250px]">
+                    <SelectInput
+                      width={'100%'}
+                      label={'CAMPO DE FILTRO'}
+                      value={filters.date.field1 && filters.date.field2 ? `${filters.date.field1}.${filters.date.field2}` : null}
+                      options={[
+                        {
+                          id: 1,
+                          label: 'DATA DE PAGAMENTO',
+                          value: 'compra.dataPagamento',
+                        },
+                        { id: 3, label: 'PREV. ENTREGA', value: 'compra.previsaoEntrega' },
+                        { id: 4, label: 'DATA ASS.CONTRATO', value: 'contrato.dataAssinatura' },
+                        { id: 5, label: 'DATA ASS.DOCUMENTAÇÃO', value: 'projeto.dataAssDocumentacao' },
+                        { id: 6, label: 'TROCA DO MEDIDOR', value: 'medidor.data' },
+                        { id: 7, label: 'DATA DE SOLICITAÇÃO DO PARECER', value: 'projeto.dataSolicitacaoAcesso' },
+                        { id: 8, label: 'APROVAÇÃO DO PARECER', value: 'parecer.dataParecerDeAcesso' },
+                        { id: 9, label: 'PEDIDO DA VISTORIA', value: 'vistoria.dataPedido' },
+                        { id: 10, label: 'NÃO DEFINIDO', value: null },
+                      ]}
+                      selectedItemLabel={'SEM FILTRO'}
+                      handleChange={(value) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          date: {
+                            ...prev.date,
+                            field1: value != null ? value.split('.')[0] : null,
+                            field2: value != null ? value.split('.')[1] : null,
+                          },
+                        }))
+                      }
+                      onReset={() =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          date: {
+                            after: null,
+                            before: null,
+                            field1: null,
+                            field2: null,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div className={`flex h flex-col gap-1`}>
+                  <label htmlFor={'ordenation'} className={'font-sans font-bold  text-[#353432]'}>
+                    ORDERNAR POR CONTATO
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setFilters((prev) => ({ ...prev, contactOrder: prev.contactOrder != 'ASC' ? 'ASC' : null }))}
+                      className={`py-1 rounded  font-bold border border-[#15599a] ${
+                        filters.contactOrder == 'ASC' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'
+                      } px-3`}
+                    >
+                      CRESCENTE
+                    </button>
+                    <button
+                      onClick={() => setFilters((prev) => ({ ...prev, contactOrder: prev.contactOrder != 'DESC' ? 'DESC' : null }))}
+                      className={`py-1 rounded  font-bold border border-[#15599a] ${
+                        filters.contactOrder == 'DESC' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'
+                      } px-3`}
+                    >
+                      DECRESCENTE
+                    </button>
+                  </div>
+                </div>
+                <div className={`flex h flex-col gap-1`}>
+                  <label htmlFor={'ordenation'} className={'font-sans font-bold  text-[#353432]'}>
+                    MODO DE VISUALIZAÇÃO
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setMode('CARD')}
+                      className={`py-1 rounded  font-bold border border-[#15599a] ${
+                        mode == 'CARD' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'
+                      } px-3`}
+                    >
+                      CARD
+                    </button>
+                    <button
+                      onClick={() => setMode('SIMPLIFIED')}
+                      className={`py-1 rounded  font-bold border border-[#15599a] ${
+                        mode == 'SIMPLIFIED' ? 'bg-[#15599a] text-white' : 'bg-transparent text-[#15599a]'
+                      } px-3`}
+                    >
+                      SIMPLIFICADO
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div className="w-full lg:w-[250px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'CIDADE'}
+                    selected={filters.city}
+                    options={cidadesAtendidas.map((city, index) => ({ id: index + 1, label: city, value: city }))}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        city: value as string[],
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        city: [],
+                      }))
+                    }
+                  />
+                </div>
+                <div className="w-full lg:w-[250px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'VENDEDOR'}
+                    selected={filters.sellerName}
+                    options={vendedores.map((seller, index) => ({ id: index + 1, label: seller.nome || '', value: seller.nome || '' }))}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        sellerName: value as string[],
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        sellerName: [],
+                      }))
+                    }
+                  />
+                </div>
+                <div className="w-full lg:w-[250px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'STATUS DE ENTREGA'}
+                    selected={filters.deliveryStatus}
+                    options={[
+                      { id: 1, value: 'EM ROTA', label: 'EM ROTA' },
+                      {
+                        id: 2,
+                        value: 'AGUARDANDO COMPRA',
+                        label: 'AGUARDANDO COMPRA',
+                      },
+                      { id: 3, value: 'CANCELADO', label: 'CANCELADO' },
+                    ]}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        deliveryStatus: value as string[],
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        deliveryStatus: [],
+                      }))
+                    }
+                  />
+                </div>
+                <div className="w-full lg:w-[250px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'STATUS DO PARECER'}
+                    selected={filters.grantingStatus}
+                    options={accessGrantingStatus}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        grantingStatus: value as string[],
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        grantingStatus: [],
+                      }))
+                    }
+                  />
+                </div>
+                <div className="w-full lg:w-[250px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'STATUS DA OBRA'}
+                    selected={filters.executionStatus}
+                    options={executionStatus}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        executionStatus: value as string[],
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        executionStatus: [],
+                      }))
+                    }
+                  />
+                </div>
+                <div className="w-full lg:w-[250px]">
+                  <MultipleSelectInput
+                    width={'100%'}
+                    label={'STATUS DA VISTORIA'}
+                    selected={filters.inspectionStatus}
+                    options={inspectionStatus}
+                    selectedItemLabel={'SEM FILTRO'}
+                    handleChange={(value) =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        inspectionStatus: value as string[],
+                      }))
+                    }
+                    onReset={() =>
+                      setFilters((prev) => ({
+                        ...prev,
+                        inspectionStatus: [],
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+                <div
+                  onClick={() =>
+                    setFilters({
+                      ...filters,
+                      necessaryDistribution: !filters.necessaryDistribution,
+                    })
+                  }
+                  className={`${
+                    filters.necessaryDistribution ? 'bg-[#15599a]' : 'bg-blue-300'
+                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                >
+                  NECESSÁRIO DISTRIBUIÇÃO
+                </div>
+                <div
+                  onClick={() =>
+                    setFilters({
+                      ...filters,
+                      missingSignature: !filters.missingSignature,
+                    })
+                  }
+                  className={`${
+                    filters.missingSignature ? 'bg-[#15599a]' : 'bg-blue-300'
+                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                >
+                  FALTANDO ASSINATURA
+                </div>
+                <div
+                  onClick={() =>
+                    setFilters({
+                      ...filters,
+                      pendingContact: !filters.pendingContact,
+                    })
+                  }
+                  className={`${
+                    filters.pendingContact ? 'bg-[#15599a]' : 'bg-blue-300'
+                  } rounded h-[36px] flex justify-center cursor-pointer items-center font-bold px-2 text-white`}
+                >
+                  CONTATO PENDENTE
+                </div>
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </div>
+      <div className="flex overflow-y-auto overscroll-y-auto justify-around gap-3 mt-4 flex-wrap">
+        {isLoading ? <LoadingPage /> : null}
+        {isError ? <ErrorComponent msg={'Erro ao buscar projetos em jornada.'} /> : null}
+        {isSuccess ? projects.map((project) => <PosVendaCard key={project._id} projectId={project._id} project={project} mode={mode} />) : null}
+      </div>
+    </div>
+  )
+}
+
+export default Posvenda

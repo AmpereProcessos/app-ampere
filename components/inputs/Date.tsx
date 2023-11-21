@@ -1,6 +1,23 @@
 import React from 'react'
 
-function DateInput({ width, label, labelClassName = 'font-sans font-bold text-[#353432]', showLabel = true, value, editable = true, handleChange }) {
+type DateInputProps = {
+  width?: string
+  label: string
+  labelClassName?: string
+  showLabel?: boolean
+  value: string | undefined
+  editable?: boolean
+  handleChange: (value: string | undefined) => void
+}
+function DateInput({
+  width,
+  label,
+  labelClassName = 'font-sans font-bold text-[#353432]',
+  showLabel = true,
+  value,
+  editable = true,
+  handleChange,
+}: DateInputProps) {
   const inputIdentifier = label.toLowerCase().replace(' ', '_')
   return (
     <div className={`flex w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>

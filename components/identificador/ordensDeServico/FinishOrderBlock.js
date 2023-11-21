@@ -29,7 +29,7 @@ function FinishOrderBlock({ infoHolder, setInfoHolder }) {
           <div className="flex self-center justify-center mt-4 items-center gap-2 text-gray-600 border border-gray-600 p-1 rounded w-fit">
             <p className="text-xs font-medium">EM ANDAMENTO</p>
           </div>
-          <button onClick={() => setMenuIsOpen(true)} className="text-green-500 text-xs font-medium">
+          <button onClick={() => setMenuIsOpen(true)} className="text-green-500 text-sm font-medium mb-4">
             FINALIZAR
           </button>
         </>

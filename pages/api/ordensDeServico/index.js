@@ -97,6 +97,7 @@ async function getServiceOrders({ collection, simplified, after, before, openOnl
         urgencia: 1,
         'favorecido.nome': 1,
         'projeto.identificador': 1,
+        periodo: 1,
         localizacao: 1,
         responsavel: 1,
         autor: 1,

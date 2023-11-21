@@ -1,38 +1,33 @@
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
-import { VscChromeClose } from 'react-icons/vsc'
-import { FaCity, FaSave, FaSolarPanel, FaUser } from 'react-icons/fa'
+import { useQueryClient } from 'react-query'
+import toast from 'react-hot-toast'
 
-import { useServiceOrderById } from '../utils/methods/query/serviceOrders'
-import LoadingPage from './utils/LoadingPage'
-import Avatar from './utils/Avatar'
-import { BsArrowDownUp, BsCalendarCheckFill, BsCalendarFill, BsFillGearFill, BsHouse, BsSuitDiamondFill } from 'react-icons/bs'
-import { AiFillPhone } from 'react-icons/ai'
-import {
-  MdElectricMeter,
-  MdEngineering,
-  MdLocationPin,
-  MdOutlineSettingsInputComponent,
-  MdOutlineWifiPassword,
-  MdOutput,
-  MdRoofing,
-} from 'react-icons/md'
-import { PiWaveSineBold } from 'react-icons/pi'
-import { IoMdAlert, IoMdResize, IoMdWater } from 'react-icons/io'
-import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
-import { TbTopologyFullHierarchy } from 'react-icons/tb'
+import { VscChromeClose } from 'react-icons/vsc'
+
+import { BsCalendarCheckFill, BsCalendarFill } from 'react-icons/bs'
+import { MdEngineering } from 'react-icons/md'
+import { IoMdAlert } from 'react-icons/io'
+
 import FavoredModalBlock from './identificador/ordensDeServico/FavoredModalBlock'
 import ObservationModalBlock from './identificador/ordensDeServico/ObservationModalBlock'
 import EquipmentModalBlock from './identificador/ordensDeServico/EquipmentModalBlock'
 import DetailsModalBlock from './identificador/ordensDeServico/DetailsModalBlock'
-import { updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
-import { useQueryClient } from 'react-query'
-import toast from 'react-hot-toast'
+import FinishOrderBlock from './identificador/ordensDeServico/FinishOrderBlock'
+import ExecutionDiary from './identificador/ordensDeServico/execucao/ExecutionDiary'
+
+import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
+import LoadingPage from './utils/LoadingPage'
+import Avatar from './utils/Avatar'
+
 import { getErrorMessage } from '../utils/methods/handlers'
 import { getObjectDifference } from '../utils/methods/util/service-order'
-import FinishOrderBlock from './identificador/ordensDeServico/FinishOrderBlock'
-import Select from './inputs/Select'
+import { useServiceOrderById } from '../utils/methods/query/serviceOrders'
+import { updateServiceOrder } from '../utils/methods/mutation/serviceOrders'
+
 import { equipesTecnicas, serviceOrdersCategories } from '../utils/constants'
+
+import Select from './inputs/Select'
 import TextInput from './inputs/Text'
 
 function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
@@ -192,6 +187,12 @@ function ModalOrdemServico({ orderId, closeModal, modalIsOpen }) {
               <ObservationModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               <EquipmentModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
               <DetailsModalBlock infoHolder={infoHolder} setInfoHolder={setInfoHolder} />
+              <ExecutionDiary
+                orderId={orderId}
+                entryDatetime={order.periodo?.inicio}
+                exitDatetime={order.periodo?.fim}
+                history={order.periodo.historico}
+              />
             </div>
             <div className="py-1 w-full flex items-center justify-end border-t border-gray-200 px-4 mt-2">
               <button

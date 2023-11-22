@@ -23,8 +23,11 @@ import InfoDadosConcessionariaBlock from './blocosInfoProjeto/InfoDadosConcessio
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
 import InfoProjetoBlock from './blocosInfoProjeto/InfoProjetoBlock'
 import InfoObrasBlock from './blocosInfoProjeto/InfoObrasBlock'
+import InfoComissionamentoBlock from './blocosInfoProjeto/InfoComissionamentoBlock'
+import InfoOeMBlock from './blocosInfoProjeto/InfoOeMBlock'
 import InfoMaterialBlock from './blocosInfoProjeto/InfoMaterialBlock'
 import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
+
 import { useClientById } from '../utils/methods/query/clients'
 import { updateProject } from '../utils/methods/mutation/clients'
 import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
@@ -184,6 +187,22 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
               ) : null}
 
               <InfoObrasBlock
+                editor={userHasOverallAccess}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                project={project}
+              />
+              <InfoComissionamentoBlock
+                editor={userHasOverallAccess}
+                infoHolder={infoHolder}
+                setInfo={setInfo}
+                changes={changes}
+                setChanges={setChanges}
+                project={project}
+              />
+              <InfoOeMBlock
                 editor={userHasOverallAccess}
                 infoHolder={infoHolder}
                 setInfo={setInfo}

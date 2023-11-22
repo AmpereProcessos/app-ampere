@@ -26,12 +26,12 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
       suprimentos: prev.suprimentos ? { ...prev.suprimentos, itens: itemsList } : { observacoes: '', itens: itemsList },
     }))
     setChanges((prev) => ({ ...prev, 'suprimentos.itens': itemsList }))
-    setSupplyHolder({
-      descricao: firstOption,
-      qtde: 0,
-      grandeza: supplyOptions[firstOption].grandeza,
-      tipo: supplyOptions[firstOption].tipos[0],
-    })
+    // setSupplyHolder({
+    //   descricao: firstOption,
+    //   qtde: 0,
+    //   grandeza: supplyOptions[firstOption].grandeza,
+    //   tipo: supplyOptions[firstOption].tipos[0],
+    // })
 
     return toast.success('Item adicionado com sucesso.')
   }
@@ -45,6 +45,7 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
     setChanges((prev) => ({ ...prev, 'suprimentos.itens': itemsList }))
     return toast.success('Item removido com sucesso.')
   }
+  console.log('SUPPLY HOLDER', supplyHolder)
   return (
     <div className="mt-4 flex w-full flex-col">
       <div className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-800 p-2">
@@ -91,7 +92,7 @@ function SupplyBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
           <div className="w-full lg:w-1/4">
             <SelectInput
               label="TIPO"
-              options={supplyOptions[supplyHolder.descricao].tipos.map((option, index) => ({
+              options={supplyOptions[supplyHolder.descricao || firstOption].tipos.map((option, index) => ({
                 id: index + 1,
                 label: option,
                 value: option,

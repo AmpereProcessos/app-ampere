@@ -101,7 +101,7 @@ function DetailsBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
           </div>
         </div> */}
         <div className="flex w-full flex-col gap-2 lg:flex-row">
-          <div className="w-full lg:w-1/4">
+          <div className="flex items-center justify-center w-full lg:w-1/4">
             <CheckboxInput
               labelFalse="IMAGENS DE DRONE DISPONÍVEIS"
               labelTrue="IMAGENS DE DRONE DISPONÍVEIS"
@@ -115,7 +115,7 @@ function DetailsBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
             />
           </div>
 
-          <div className="w-full lg:w-1/4">
+          <div className="flex items-center justify-center w-full lg:w-1/4">
             <CheckboxInput
               labelFalse="IMAGENS DA FACHADA DISPONÍVEIS"
               labelTrue="IMAGENS DA FACHADA DISPONÍVEIS"
@@ -129,7 +129,7 @@ function DetailsBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
             />
           </div>
 
-          <div className="w-full lg:w-1/4">
+          <div className="flex items-center justify-center w-full lg:w-1/4">
             <CheckboxInput
               labelFalse="IMAGENS DE SATÉLITE DISPONÍVEIS"
               labelTrue="IMAGENS DE SATÉLITE DISPONÍVEIS"
@@ -142,7 +142,7 @@ function DetailsBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
               width={'100%'}
             />
           </div>
-          <div className="w-full lg:w-1/4">
+          <div className="flex items-center justify-center w-full lg:w-1/4">
             <CheckboxInput
               labelFalse="MEDIÇÕES DISPONÍVEIS"
               labelTrue="MEDIÇÕES DISPONÍVEIS"

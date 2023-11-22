@@ -90,8 +90,8 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
                 showMaterialInfo={true}
               />
 
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg px-2">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">ORDENS DE SERVIÇO</span>
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
+                <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">ORDENS DE SERVIÇO</span>
                 <ProjectServiceOrders projectId={project._id} />
                 <OSCreationBlock project={infoHolder} />
               </div>

@@ -32,6 +32,8 @@ import { useClientById } from '../utils/methods/query/clients'
 import { updateProject } from '../utils/methods/mutation/clients'
 import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
 import { useQueryClient } from 'react-query'
+import ProjectServiceOrders from './identificador/ordensDeServico/ProjectServiceOrders'
+import OSCreationBlock from './OSCreationBlock'
 
 function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   const queryClient = useQueryClient()
@@ -93,7 +95,6 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
           {isSuccess && infoHolder ? (
             <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
-
               <InfoClienteBlock
                 editor={userHasOverallAccess}
                 infoHolder={infoHolder}
@@ -185,7 +186,6 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                   project={project}
                 />
               ) : null}
-
               <InfoObrasBlock
                 editor={userHasOverallAccess}
                 infoHolder={infoHolder}
@@ -194,6 +194,11 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 setChanges={setChanges}
                 project={project}
               />
+              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
+                <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">ORDENS DE SERVIÇO</span>
+                <ProjectServiceOrders projectId={project._id} />
+                <OSCreationBlock project={infoHolder} />
+              </div>
               <InfoComissionamentoBlock
                 editor={userHasOverallAccess}
                 infoHolder={infoHolder}

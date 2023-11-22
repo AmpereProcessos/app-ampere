@@ -28,6 +28,7 @@ import { formatDateInputChange } from '../../utils/methods/shared'
 import { VscDiffAdded } from 'react-icons/vsc'
 import { FaSignature } from 'react-icons/fa'
 import { MdAttachMoney, MdCreate, MdOutlineAttachMoney } from 'react-icons/md'
+import { getContractValue } from '../../utils/methods/util/projects'
 
 const statusStyles = {
   ASSINADO: {
@@ -407,7 +408,7 @@ function Comercial() {
               className="w-full md:w-[350px] lg:w-[450px]  cursor-pointer border border-gray-200 hover:bg-blue-100"
             >
               <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
-              <div className="flex flex-col p-2">
+              <div className="flex flex-col p-2 pb-3">
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-gray-700 font-bold">{project.nomeDoContrato}</p>
                   <p className="text-xs text-[#15599a] font-bold">#{project.qtde}</p>
@@ -426,40 +427,38 @@ function Comercial() {
                 </div>
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex flex-col items-start">
-                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">TIPO DE PAGAMENTO</span>
+                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">FORMA DE PAGAMENTO</span>
                     <p className="text-xs font-medium tracking-tight">{project.pagamento?.forma && project.pagamento.forma}</p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">PAGAMENTO</span>
-                    <p className="text-xs font-medium tracking-tight">{project.pagamento?.status ? project.pagamento.status : '-'}</p>
+                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">VALOR TOTAL</span>
+                    <p className="text-xs font-medium tracking-tight text-green-500">
+                      {formatToMoney(
+                        getContractValue({
+                          projectValue: project.sistema.valorProjeto,
+                          paValue: project.padrao.valor,
+                          structureValue: project.estruturaPersonalizada.valor,
+                        })
+                      )}
+                    </p>
                   </div>
                 </div>
-                <div className="flex items-center justify-center">
-                  <div>
-                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">DESDE ASS.CONTRATO</span>
-                    <p className={`text-xs font-medium tracking-tight uppercase text-red-500 text-center`}>
-                      {project.contrato.dataAssinatura ? `${getDateDiff(new Date(), new Date(project.contrato.dataAssinatura))} DIAS` : '-'}
+                <div className="mt-2 flex items-center justify-between">
+                  <div className="flex flex-col items-start">
+                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">STATUS DO PARECER</span>
+                    <p className="text-xs font-medium tracking-tight text-green-500">
+                      {project.parecer.dataParecerDeAcesso ? 'LIBERADO' : 'NÃO LIBERADO'}
                     </p>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">STATUS DA COMPRA</span>
+                    <p className="text-xs font-medium tracking-tight">{project.compra.liberacao ? project.compra.status : 'NÃO LIBERADA'}</p>
                   </div>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
-        {/* {session.user?.regional == undefined && (
-            <Link href={"/comercial/addProjeto"}>
-              <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-                <p className="uppercase font-bold text-sm">Novo projeto</p>
-              </a>
-            </Link>
-          )} */}
-        {session.user?.regional == undefined && (
-          <Link href={'/comercial/cadastrosFenesc'}>
-            <a className="fixed bg-[#15599a] cursor-pointer hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-              <p className="uppercase font-bold text-sm">CAD.FENESC</p>
-            </a>
-          </Link>
-        )}
         {session.user?.regional == undefined && (
           <Link href={'/comercial/formulariosSolicitacao'}>
             <a className="fixed bg-[#15599a] cursor-pointer ml-36 hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">

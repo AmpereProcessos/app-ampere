@@ -4,12 +4,13 @@ import connectToRequestsDatabase from '../../utils/services/mongodb/requests'
 import connectToWarehouseDatabase from '../../utils/services/mongodb/warehouse'
 import { ObjectId } from 'mongodb'
 import connectToProjectsDatabase from '../../utils/services/mongodb/projects'
-import { calculateStringSimilarity } from '../../utils/constants'
+import { calculateStringSimilarity, formatDate } from '../../utils/constants'
 import StatesAndCities from '../../utils/jsons/estados-cidades.json'
 import axios from 'axios'
 import { errorHandler } from '../../utils/methods/handlers'
 import connectToDatabase from '../../utils/services/mongodb/calls'
 import createHttpError from 'http-errors'
+import { formatDateAsLocale } from '../../utils/methods/formatting'
 function formatItens(list) {
   const formattedItens = list.map((item) => {
     return {
@@ -134,9 +135,32 @@ function formatStructure(type) {
 }
 
 export default async function handler(req, res) {
-  // const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
-  // const projectsCollection = db.collection('dados')
+  const db = await connectToProjectsDatabase(process.env.DB_KEY, 'projetos')
+  const projectsCollection = db.collection('dados')
 
+  const pendingDeliveries = await projectsCollection
+    .find({
+      tipoDeServico: 'SISTEMA FOTOVOLTAICO',
+      'contrato.status': 'ASSINADO',
+      'compra.dataEntrega': null,
+      'obra.statusDaObra': { $ne: 'CONCLUIDA' },
+      'compra.dataPedido': { $ne: null },
+    })
+    .toArray()
+  const formatted = pendingDeliveries.map((p) => {
+    return {
+      NOME: p.nomeDoContrato,
+      'ASSINATURA DO CONTRATO': p.contrato.dataAssinatura ? formatDateAsLocale(p.contrato.dataAssinatura) : '',
+      CIDADE: p.cidade,
+      'DATA DO PEDIDO': p.compra?.dataPedido ? formatDateAsLocale(p.compra.dataPedido) : '',
+      'PREVISÃO DE ENTREGA': p.compra?.previsaoEntrega ? formatDateAsLocale(p.compra.previsaoEntrega) : '',
+      'STATUS DA ENTREGA': p.compra.statusEntrega,
+      CREDOR: p.pagamento.credor || 'NÃO POSSUI',
+      TOPOLOGIA: p.sistema.topologia,
+      MÓDULOS: `${p.sistema.qtdeModulos} x ${p.sistema.potModulos}W`,
+      INVERSOR: p.sistema.inversor,
+    }
+  })
   // const paidComissions = await projectsCollection
   //   .aggregate([
   //     {
@@ -224,7 +248,7 @@ export default async function handler(req, res) {
   //   }
   // })
   // console.log(newPPSCalls.length)
-  res.json('DESATIVADA')
+  res.json(formatted)
 }
 
 // Update Many example:

@@ -278,7 +278,7 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
                           description: cost.descricao,
                           unit: cost.grandeza,
                           qty: cost.qtde,
-                          unitaryCost: cost.custo,
+                          unitaryCost: cost.custoUnitario,
                         }
                         setActiveCostIndex(index)
                         setCostHolder(holder)
@@ -304,7 +304,7 @@ function AdditionalCostsBlock({ infoHolder, setInfoHolder, changes, setChanges }
                     <div className="flex items-center gap-2 text-green-500">
                       <ImPriceTag color="rgb(34,197,94)" />
                       <p className="text-sm text-gray-500 font-medium">
-                        {cost.custo ? formatToMoney(cost.custo) : 'R$ 0,00'} / {cost.grandeza}
+                        {cost.custoUnitario ? formatToMoney(cost.custoUnitario) : 'R$ 0,00'} / {cost.grandeza}
                       </p>
                     </div>
                   </div>

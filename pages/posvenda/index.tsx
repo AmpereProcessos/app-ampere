@@ -85,7 +85,8 @@ function Posvenda() {
         const deliveryPrevision = dayjs(current.compra.previsaoEntrega).add(3, 'hour')
 
         const isToday = dayjs().isSame(deliveryPrevision, 'day')
-        const isThisWeek = dayjs().isSame(deliveryPrevision, 'week')
+        const isThisWeek = dayjs().isSame(deliveryPrevision, 'week') && dayjs(deliveryPrevision).isAfter(new Date())
+
         if (isToday) acc.today += 1
         if (isThisWeek) acc.thisWeek += 1
         return acc

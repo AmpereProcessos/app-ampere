@@ -6,6 +6,7 @@ import { updateServiceOrder } from '@/utils/methods/mutation/serviceOrders'
 import { formatDateInputChange } from '@/utils/methods/shared'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
+import { AiFillDelete } from 'react-icons/ai'
 import { RxTimer } from 'react-icons/rx'
 import { useQueryClient } from 'react-query'
 
@@ -47,18 +48,42 @@ function ExecutionDiaryRecord({ orderId, item, itemIndex, history }: ExecutionDi
       toast.success('Registro atualizado com sucesso !')
     } catch (error) {
       toast.dismiss(loadingToastId)
-      return toast.success('Houve um erro na atualização do registro.')
+      return toast.error('Houve um erro na atualização do registro.')
+    }
+  }
+  async function handleRecordDelete(index: number) {
+    const historyCopy = [...history]
+    historyCopy.splice(index, 1)
+    const loadingToastId = toast.loading('Processando...')
+    try {
+      await updateServiceOrder({
+        orderId: orderId,
+        info: { 'periodo.historico': historyCopy },
+        queryClient: queryClient,
+        invalidateKey: ['service-order', orderId],
+      })
+      toast.dismiss(loadingToastId)
+      toast.success('Registro excluído com sucesso !')
+    } catch (error) {
+      toast.dismiss(loadingToastId)
+      return toast.error('Houve um erro na atualização do registro.')
     }
   }
   return (
     <div className="flex flex-col w-full p-3 rounded-md shadow-sm border border-gray-300">
-      <div className="flex items-center gap-2">
-        <RxTimer />
-        <p className="font-thin tracking-tight leading-none text-sm lg:text-base">
-          <strong className="text-[#fead41] font-bold">{formatDateAsLocale(item.entrada, true)}</strong> até às{' '}
-          <strong className="text-[#fead41] font-bold">{item.saida ? formatDateAsLocale(item.saida, true) : '?'}</strong>
-        </p>
+      <div className="w-full flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <RxTimer />
+          <p className="font-thin tracking-tight leading-none text-sm lg:text-base">
+            <strong className="text-[#fead41] font-bold">{formatDateAsLocale(item.entrada, true)}</strong> até às{' '}
+            <strong className="text-[#fead41] font-bold">{item.saida ? formatDateAsLocale(item.saida, true) : '?'}</strong>
+          </p>
+        </div>
+        <button onClick={() => handleRecordDelete(itemIndex)} className="text-red-400 hover:text-red-500 duration-300 ease-in-out">
+          <AiFillDelete />
+        </button>
       </div>
+
       {!item.saida ? (
         <div className="flex flex-col w-full lg:mt-2 mt-4">
           <h1 className="font-sans font-bold tracking-tight leading-none text-[#353432]">ANOTAÇÕES</h1>

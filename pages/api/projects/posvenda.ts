@@ -31,6 +31,7 @@ const getProjects: NextApiHandler<GetResponse> = async (req, res) => {
           'contrato.status': 1,
           'contrato.dataAssinatura': 1,
           'vendedor.nome': 1,
+          'dadosCemig.distCreditos': 1,
           'parecer.statusDoParecerDeAcesso': 1,
           'parecer.dataParecerDeAcesso': 1,
           'projeto.iniciar': 1,

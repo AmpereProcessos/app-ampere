@@ -306,6 +306,7 @@ function FormularioAlmoxarifado({ setModalIsOpen, info, getForms }) {
                 <span className="text-center uppercase font-bold">EQUIPE RESP</span>
                 <div className={'grow'}>
                   <SelectInput
+                    label="EQUIPE"
                     showLabel={false}
                     value={dados.equipeResp}
                     options={equipesTecnicas.map((team, index) => ({ id: index + 1, label: team.label, value: team.value }))}

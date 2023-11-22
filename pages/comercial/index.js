@@ -40,6 +40,11 @@ const statusStyles = {
     textColor: 'text-yellow-500',
   },
 }
+function getContractTagColor(status) {
+  const equivalentColor = statusStyles[status]
+  if (!equivalentColor) return 'text-black'
+  return equivalentColor
+}
 
 function Comercial() {
   const queryClient = useQueryClient()
@@ -404,35 +409,35 @@ function Comercial() {
               <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
               <div className="flex flex-col p-2">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-gray-700">{project.nomeDoContrato}</p>
-                  <p className="text-xs text-[#15599a]">#{project.qtde}</p>
+                  <p className="text-xs text-gray-700 font-bold">{project.nomeDoContrato}</p>
+                  <p className="text-xs text-[#15599a] font-bold">#{project.qtde}</p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="hidden lg:flex lg:flex-col">
-                    <span className="text-xxs">CONTRATO</span>
-                    <p className={`text-xs ${statusStyles[project.contrato?.status] ? statusStyles[project.contrato.status].textColor : ''}`}>
+                <div className="mt-2 flex items-center justify-between">
+                  <div className="flex flex-col items-start">
+                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">CONTRATO</span>
+                    <p className={`text-xs font-medium ${getContractTagColor(project.contrato.status)}`}>
                       {project.contrato?.status && project.contrato?.status}
                     </p>
                   </div>
-                  <div>
-                    <span className="text-xxs">VENDEDOR</span>
-                    <p className="text-xs text-[#15599a]">{project.vendedor && project.vendedor.nome}</p>
+                  <div className="flex flex-col items-end">
+                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">VENDEDOR</span>
+                    <p className="text-xs font-medium tracking-tight text-[#15599a]">{project.vendedor && project.vendedor.nome}</p>
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-xxs">TIPO DE PAGAMENTO</span>
-                    <p className="text-xs text-gray-600">{project.pagamento?.forma && project.pagamento.forma}</p>
+                <div className="mt-2 flex items-center justify-between">
+                  <div className="flex flex-col items-start">
+                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">TIPO DE PAGAMENTO</span>
+                    <p className="text-xs font-medium tracking-tight">{project.pagamento?.forma && project.pagamento.forma}</p>
                   </div>
-                  <div>
-                    <span className="text-xxs">PAGAMENTO</span>
-                    <p className="text-xs text-gray-600">{project.pagamento?.status ? project.pagamento.status : '-'}</p>
+                  <div className="flex flex-col items-end">
+                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">PAGAMENTO</span>
+                    <p className="text-xs font-medium tracking-tight">{project.pagamento?.status ? project.pagamento.status : '-'}</p>
                   </div>
                 </div>
                 <div className="flex items-center justify-center">
                   <div>
-                    <span className="text-xxs">DESDE ASS.CONTRATO</span>
-                    <p className={`text-xs uppercase text-red-500 text-center`}>
+                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">DESDE ASS.CONTRATO</span>
+                    <p className={`text-xs font-medium tracking-tight uppercase text-red-500 text-center`}>
                       {project.contrato.dataAssinatura ? `${getDateDiff(new Date(), new Date(project.contrato.dataAssinatura))} DIAS` : '-'}
                     </p>
                   </div>

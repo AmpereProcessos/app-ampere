@@ -50,13 +50,13 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
-        <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
-          <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
-            <div className="flex gap-2 items-center">
-              <h1 className="text-[#15599a] pl-6 font-bold">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
-              {project?.codigoSVB && <p className="text-gray-600 text-sm font-bold">#{project.codigoSVB}</p>}
+        <div className="flex h-full flex-col overflow-y-auto overscroll-y-auto">
+          <div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
+            <div className="flex items-center gap-2">
+              <h1 className="pl-6 font-bold text-[#15599a]">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
+              {project?.codigoSVB && <p className="text-sm font-bold text-gray-600">#{project.codigoSVB}</p>}
             </div>
-            <div className="flex gap-x-2 items-center">
+            <div className="flex items-center gap-x-2">
               {/* {msg.text && <p className={`hidden lg:block text-sm italic ${msg.color}`}>{msg.text}</p>} */}
               <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={() => mutate({ id: projectId, changes: changes })} />
               <button>
@@ -68,9 +68,9 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
           {isSuccess && infoHolder ? (
-            <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
-
+              <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
               <InfoClienteBlock
                 editor={false}
                 infoHolder={infoHolder}
@@ -90,8 +90,8 @@ function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
                 showMaterialInfo={true}
               />
 
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
-                <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">ORDENS DE SERVIÇO</span>
+              <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">ORDENS DE SERVIÇO</span>
                 <ProjectServiceOrders projectId={project._id} />
                 <OSCreationBlock project={infoHolder} />
               </div>

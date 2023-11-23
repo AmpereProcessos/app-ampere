@@ -73,14 +73,14 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
-        <div className="flex flex-col h-full ">
-          <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg border-b border-gray-200 pb-2">
+        <div className="flex h-full flex-col ">
+          <div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
             <div className="flex gap-x-2">
-              <h1 className="text-[#15599a] pl-6 font-bold">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
-              {project?.codigoSVB && <p className="text-gray-600 text-sm font-bold">#{project.codigoSVB}</p>}
+              <h1 className="pl-6 font-bold text-[#15599a]">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
+              {project?.codigoSVB && <p className="text-sm font-bold text-gray-600">#{project.codigoSVB}</p>}
             </div>
-            <div className="flex gap-x-2 items-center">
-              {msg.text && <p className={`hidden lg:block text-sm italic ${msg.color}`}>{msg.text}</p>}
+            <div className="flex items-center gap-x-2">
+              {msg.text && <p className={`hidden text-sm italic lg:block ${msg.color}`}>{msg.text}</p>}
               {userHasOverallAccess ? (
                 <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={() => mutate({ id: projectId, changes: changes })} />
               ) : null}
@@ -89,13 +89,14 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
               </button>
             </div>
-            {msg.text && <p className={`block lg:hidden text-sm italic ${msg.color}`}>{msg.text}</p>}
+            {msg.text && <p className={`block text-sm italic lg:hidden ${msg.color}`}>{msg.text}</p>}
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
           {isSuccess && infoHolder ? (
-            <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
+              <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
               <InfoClienteBlock
                 editor={userHasOverallAccess}
                 infoHolder={infoHolder}
@@ -196,8 +197,8 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 setChanges={setChanges}
                 project={project}
               />
-              <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
-                <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">ORDENS DE SERVIÇO</span>
+              <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+                <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">ORDENS DE SERVIÇO</span>
                 <ProjectServiceOrders projectId={project._id} />
                 <OSCreationBlock project={infoHolder} />
               </div>

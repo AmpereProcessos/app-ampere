@@ -124,14 +124,14 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
-        <div className="flex flex-col h-full overflow-y-auto overscroll-y-auto">
-          <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
-            <div className="flex gap-2 items-center">
-              <h1 className="text-[#15599a] pl-6 font-bold">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
-              {project?.codigoSVB && <p className="text-gray-600 text-sm font-bold">#{project.codigoSVB}</p>}
+        <div className="flex h-full flex-col overflow-y-auto overscroll-y-auto">
+          <div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
+            <div className="flex items-center gap-2">
+              <h1 className="pl-6 font-bold text-[#15599a]">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
+              {project?.codigoSVB && <p className="text-sm font-bold text-gray-600">#{project.codigoSVB}</p>}
               {project?.parecer.dataParecerDeAcesso != undefined && project?.vistoria.status != 'REALIZADA' && (
                 <div
-                  className={`p-1 text-xs text-center font-bold italic ${
+                  className={`p-1 text-center text-xs font-bold italic ${
                     getParecerWarning(new Date(project?.parecer.dataParecerDeAcesso), new Date()).style
                   }`}
                 >
@@ -139,20 +139,21 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 </div>
               )}
             </div>
-            <div className="flex gap-x-2 items-center">
-              <p className={`hidden lg:block text-sm italic text-green-500`}>{msg}</p>
+            <div className="flex items-center gap-x-2">
+              <p className={`hidden text-sm italic text-green-500 lg:block`}>{msg}</p>
               <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={handleChanges} />
               <button>
                 <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
               </button>
             </div>
-            <p className={`block lg:hidden text-sm italic text-green-500`}>{msg}</p>
+            <p className={`block text-sm italic text-green-500 lg:hidden`}>{msg}</p>
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
           {isSuccess && infoHolder ? (
-            <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
+              <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
               <InfoClienteBlock
                 editor={false}
                 infoHolder={infoHolder}
@@ -165,10 +166,10 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 <InfoDadosConcessionariaBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} />
               )}
               <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg">
-                <span className="text-sm text-center font-bold text-[#15599a] uppercase py-2">COMISSIONAMENTO</span>
-                <div className="flex gap-2 justify-center flex-wrap">
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">COMISSIONAMENTO COMERCIAL</span>
+                <span className="py-2 text-center text-sm font-bold uppercase text-[#15599a]">COMISSIONAMENTO</span>
+                <div className="flex flex-wrap justify-center gap-2">
+                  <div className="flex w-[350px] flex-col items-center">
+                    <span className="text-center font-raleway text-sm font-bold uppercase">COMISSIONAMENTO COMERCIAL</span>
                     <div className="flex">
                       <input
                         disabled={true}
@@ -195,8 +196,8 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                       </label>
                     </div>
                   </div>
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">COMISSIONAMENTO DE SUPRIMENTOS</span>
+                  <div className="flex w-[350px] flex-col items-center">
+                    <span className="text-center font-raleway text-sm font-bold uppercase">COMISSIONAMENTO DE SUPRIMENTOS</span>
                     <div className="flex">
                       <input
                         disabled={true}
@@ -223,8 +224,8 @@ function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                       </label>
                     </div>
                   </div>
-                  <div className="flex flex-col w-[350px] items-center">
-                    <span className="uppercase font-bold font-raleway text-center text-sm">COMISSIONAMENTO PROJETOS</span>
+                  <div className="flex w-[350px] flex-col items-center">
+                    <span className="text-center font-raleway text-sm font-bold uppercase">COMISSIONAMENTO PROJETOS</span>
                     <div className="flex">
                       <input
                         disabled={!false}

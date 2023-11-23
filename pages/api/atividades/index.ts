@@ -47,10 +47,11 @@ const getActivities: NextApiHandler<GetResponse> = async (req, res) => {
     const activities = await collection.find({ 'projeto.id': projectId }).toArray()
     return res.status(200).json({ data: activities })
   }
+  console.log(responsibleId)
   // In case query is for activities from a given project
   if (responsibleId) {
     if (typeof responsibleId != 'string' || !ObjectId.isValid(responsibleId)) throw new createHttpError.BadRequest('ID inválido.')
-    const activities = await collection.find({ 'responsaveis.id': projectId }).toArray()
+    const activities = await collection.find({ 'responsaveis.id': responsibleId }).toArray()
 
     return res.status(200).json({ data: activities })
   }

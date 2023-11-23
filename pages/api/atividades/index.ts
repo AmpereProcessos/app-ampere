@@ -51,7 +51,7 @@ const getActivities: NextApiHandler<GetResponse> = async (req, res) => {
   // In case query is for activities from a given project
   if (responsibleId) {
     if (typeof responsibleId != 'string' || !ObjectId.isValid(responsibleId)) throw new createHttpError.BadRequest('ID inválido.')
-    const activities = await collection.find({ 'responsaveis.id': responsibleId }).toArray()
+    const activities = await collection.find({ 'responsaveis.id': responsibleId }, { sort: { dataConclusao: 1, dataInsercao: 1 } }).toArray()
 
     return res.status(200).json({ data: activities })
   }

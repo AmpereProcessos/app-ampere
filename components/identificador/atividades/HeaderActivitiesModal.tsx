@@ -14,7 +14,7 @@ function HeaderActivitiesModal({ activities, userId, closeModal }: HeaderActivit
   return (
     <div
       ref={ref}
-      className="absolute top-[35px] -left-[190px] z-[200] flex h-[300px] w-[300px] flex-col border border-gray-200 bg-[#fff] p-2 shadow-md"
+      className="absolute top-[35px] -left-[270px] z-[200] flex h-[300px] w-[300px] flex-col border border-gray-200 bg-[#fff] p-2 shadow-md lg:-left-[190px]"
     >
       <div className="flex w-full items-center justify-between border-b border-gray-200 pb-1">
         <h1 className="text-sm font-bold leading-none tracking-tight">SUAS ATIVIDADES</h1>
@@ -22,7 +22,7 @@ function HeaderActivitiesModal({ activities, userId, closeModal }: HeaderActivit
           <VscChromeClose size={15} />
         </button>
       </div>
-      <div className="flex w-full grow flex-col gap-1">
+      <div className="flex w-full flex-col gap-1 overflow-y-auto overscroll-y-auto py-1 pr-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
         {activities.map((activity) => (
           <ResponsibleActivityCard key={activity._id} activity={activity} userId={userId} />
         ))}

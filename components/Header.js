@@ -48,7 +48,7 @@ function Header({ toggleSidebar }) {
         </Link>
       </div>
 
-      <div className="flex items-center justify-end gap-3">
+      <div className="flex items-center justify-end gap-1 lg:gap-3">
         <p className="hidden lg:block">
           Seja bem vindo, <strong className="text-[#15599a]">{session?.user.name}</strong> !
         </p>

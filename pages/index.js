@@ -64,8 +64,8 @@ const routes = [
 function renderAvatarBySeller(sellerName) {
   if (!sellerName) {
     return (
-      <div className="w-[50px] h-[50px] self-center bg-gray-700 rounded-full flex items-center justify-center">
-        <p className="text-center font-bold text-lg text-white">V</p>
+      <div className="flex h-[50px] w-[50px] items-center justify-center self-center rounded-full bg-gray-700">
+        <p className="text-center text-lg font-bold text-white">V</p>
       </div>
     )
   }
@@ -78,8 +78,8 @@ function renderAvatarBySeller(sellerName) {
     else secondLetter = splittedName[1] ? splittedName[1][0] : ''
 
     return (
-      <div className="w-[50px] h-[50px] self-center bg-gray-700 rounded-full flex items-center justify-center">
-        <p className="text-center font-bold text-lg uppercase text-white">
+      <div className="flex h-[50px] w-[50px] items-center justify-center self-center rounded-full bg-gray-700">
+        <p className="text-center text-lg font-bold uppercase text-white">
           {firstLetter}
           {secondLetter}
         </p>
@@ -87,7 +87,7 @@ function renderAvatarBySeller(sellerName) {
     )
   }
   return (
-    <div className="w-[30px]  lg:w-[50px] h-[30px] lg:h-[50px] max-w-[50px] max-h-[50px] self-center">
+    <div className="h-[30px]  max-h-[50px] w-[30px] max-w-[50px] self-center lg:h-[50px] lg:w-[50px]">
       <Image
         width={30}
         height={30}
@@ -263,15 +263,15 @@ function Home() {
     }
     if (statsData.graphData) {
       return (
-        <div className="p-6 grow">
-          <div className="flex flex-col w-full mb-2">
-            <h1 className="text-center w-full text-lg font-extrabold">META GLOBAL</h1>
-            <div className="w-full h-[45px] border border-gray-500 bg-[#a8a9aa] self-center flex items-center justify-between">
+        <div className="grow p-6">
+          <div className="mb-2 flex w-full flex-col">
+            <h1 className="w-full text-center text-lg font-extrabold">META GLOBAL</h1>
+            <div className="flex h-[45px] w-full items-center justify-between self-center border border-gray-500 bg-[#a8a9aa]">
               <div
                 style={{ width: `${(1783.5 / 2000) * 100}%` }}
-                className="bg-gradient-to-r from-yellow-300 to-[#fead41] w-full h-full flex flex-col items-center justify-center"
+                className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-r from-yellow-300 to-[#fead41]"
               >
-                <p className="text-[#15599a] bg-transparent font-bold text-xxs lg:text-sm">
+                <p className="bg-transparent text-xxs font-bold text-[#15599a] lg:text-sm">
                   {/* {((campainPeakPower / 2000) * 100).toLocaleString('pt-br', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -279,7 +279,7 @@ function Home() {
                   % */}
                   89,17%
                 </p>
-                <p className="w-full text-center font-raleway text-xxs lg:text-sm font-bold text-green-500">
+                <p className="w-full text-center font-raleway text-xxs font-bold text-green-500 lg:text-sm">
                   {/* {campainPeakPower.toLocaleString('pt-br', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
@@ -288,7 +288,7 @@ function Home() {
                   1.783,50 kWp
                 </p>
               </div>
-              <p className="text-xs lg:text-lg text-white font-bold mr-4">
+              <p className="mr-4 text-xs font-bold text-white lg:text-lg">
                 {/* {(2000 - campainPeakPower).toLocaleString('pt-br', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
@@ -302,65 +302,53 @@ function Home() {
               </p>
             </div>
           </div>
-          <div className="w-full flex gap-2 justify-center">
-            <div className="w-full lg:w-[70%] flex justify-center items-center">
+          <div className="flex w-full justify-center gap-2">
+            <div className="flex w-full items-center justify-center lg:w-[70%]">
               {topSellerData ? (
-                <div className="flex items-center w-full justify-center">
-                  <div className="flex flex-col items-center w-full mb-2">
-                    <h1 className="text-gray-600 uppercase text-xl text-center font-bold">TOP 3 VENDEDORES</h1>
-                    <div className="lg:w-[1200px] w-full flex items-end justify-center h-[400px] lg:h-[400px] gap-4 lg:gap-10 p-0 lg:p-6">
-                      <div className="h-full hidden lg:flex flex-col justify-end w-1/5">
-                        {renderAvatarBySeller(topSellerData[2]?._id)}
-                        <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[2]?._id}</h1>
-                        <p className="text-center font-medium text-lg text-green-500">
-                          {topSellerData[2]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
-                        </p>
-                        <div className="h-[30%] w-full bg-gray-500 flex justify-center items-center text-3xl text-white font-bold">4º</div>
-                      </div>
-                      <div className="h-full flex flex-col justify-end w-1/3 lg:w-1/5">
-                        {renderAvatarBySeller(topSellerData[0]?._id)}
-                        <h1 className="text-center font-bold text-xs lg:text-sm text-gray-500">{topSellerData[0]?._id}</h1>
-                        <p className="text-center font-medium text-xs lg:text-lg text-green-500">
-                          {topSellerData[0]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
-                        </p>
-                        <div className="h-[60%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">2º</div>
-                      </div>
-                      <div className="h-full flex flex-col justify-end w-1/3 lg:w-1/5">
-                        {/* {renderAvatarBySeller(topSellerData[0]?._id)} */}
-                        <div className="w-[30px]  lg:w-[50px] h-[30px] lg:h-[50px] max-w-[50px] max-h-[50px] self-center">
-                          <Image
-                            width={30}
-                            height={30}
-                            src={
-                              'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2FavatarMatheus.jpg?alt=media&token=adb60500-22e6-4c1d-908f-72e3279fc641'
-                            }
-                            alt={'MATHEUS OLIVEIRA'}
-                            style={{ borderRadius: '100%' }}
-                            layout="responsive"
-                          />
-                        </div>
-                        <h1 className="text-center font-bold text-xs lg:text-sm text-gray-500">MATHEUS OLIVEIRA</h1>
-                        <p className="text-center font-medium text-xs lg:text-lg text-green-500">
-                          {/* {topSellerData[0]?.potenciaVendida.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp */}
-                          636,8 kWp
-                        </p>
-                        <div className="grow w-full bg-[#fead41] flex justify-center items-center text-3xl text-white font-bold">1º</div>
-                      </div>
-                      <div className="h-full flex flex-col justify-end w-1/3 lg:w-1/5">
-                        {renderAvatarBySeller(topSellerData[1]?._id)}
-                        <h1 className="text-center font-bold text-xs lg:text-sm text-gray-500">{topSellerData[1]?._id}</h1>
-                        <p className="text-center font-medium text-xs lg:text-lg text-green-500">
-                          {topSellerData[1]?.potenciaVendida.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
-                        </p>
-                        <div className="h-[40%] w-full bg-[#15599a] flex justify-center items-center text-3xl text-white font-bold">3º</div>
-                      </div>
-                      <div className="h-full hidden lg:flex flex-col justify-end w-1/5">
+                <div className="flex w-full items-center justify-center">
+                  <div className="mb-2 flex w-full flex-col items-center">
+                    <h1 className="text-center text-xl font-bold uppercase text-gray-600">TOP 3 VENDEDORES</h1>
+                    <div className="flex h-[400px] w-full items-end justify-center gap-4 p-0 lg:h-[400px] lg:w-[1200px] lg:gap-10 lg:p-6">
+                      <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
                         {renderAvatarBySeller(topSellerData[3]?._id)}
-                        <h1 className="text-center font-bold text-sm text-gray-500">{topSellerData[3]?._id}</h1>
-                        <p className="text-center font-medium text-lg text-green-500">
+                        <h1 className="text-center text-sm font-bold text-gray-500">{topSellerData[3]?._id}</h1>
+                        <p className="text-center text-lg font-medium text-green-500">
                           {topSellerData[3]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
                         </p>
-                        <div className="h-[15%] w-full bg-gray-500 flex justify-center items-center text-3xl text-white font-bold">5º</div>
+                        <div className="flex h-[30%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">4º</div>
+                      </div>
+                      <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
+                        {renderAvatarBySeller(topSellerData[1]?._id)}
+                        <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{topSellerData[1]?._id}</h1>
+                        <p className="text-center text-xs font-medium text-green-500 lg:text-lg">
+                          {topSellerData[1]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
+                        </p>
+                        <div className="flex h-[60%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">2º</div>
+                      </div>
+                      <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
+                        {renderAvatarBySeller(topSellerData[0]?._id)}
+
+                        <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{topSellerData[0]?._id}</h1>
+                        <p className="text-center text-xs font-medium text-green-500 lg:text-lg">
+                          {topSellerData[0]?.potenciaVendida.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
+                        </p>
+                        <div className="flex w-full grow items-center justify-center bg-[#fead41] text-3xl font-bold text-white">1º</div>
+                      </div>
+                      <div className="flex h-full w-1/3 flex-col justify-end lg:w-1/5">
+                        {renderAvatarBySeller(topSellerData[2]?._id)}
+                        <h1 className="text-center text-xs font-bold text-gray-500 lg:text-sm">{topSellerData[2]?._id}</h1>
+                        <p className="text-center text-xs font-medium text-green-500 lg:text-lg">
+                          {topSellerData[2]?.potenciaVendida.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
+                        </p>
+                        <div className="flex h-[40%] w-full items-center justify-center bg-[#15599a] text-3xl font-bold text-white">3º</div>
+                      </div>
+                      <div className="hidden h-full w-1/5 flex-col justify-end lg:flex">
+                        {renderAvatarBySeller(topSellerData[4]?._id)}
+                        <h1 className="text-center text-sm font-bold text-gray-500">{topSellerData[4]?._id}</h1>
+                        <p className="text-center text-lg font-medium text-green-500">
+                          {topSellerData[4]?.potenciaVendida?.toLocaleString('pt-br', { maximumFractionDigits: 2 })} kWp
+                        </p>
+                        <div className="flex h-[15%] w-full items-center justify-center bg-gray-500 text-3xl font-bold text-white">5º</div>
                       </div>
                     </div>
                   </div>
@@ -368,25 +356,25 @@ function Home() {
               ) : null}
             </div>
           </div>
-          <div className="grid grid-rows-10 grid-cols-1 gap-y-2 lg:grid-cols-10 lg:grid-rows-1  lg:gap-x-3 w-full">
-            <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+          <div className="grid-rows-10 grid w-full grid-cols-1 gap-y-2 lg:grid-cols-10  lg:grid-rows-1 lg:gap-x-3">
+            <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
               <div className="flex justify-between">
-                <h1 className="uppercase text-gray-600 text-center w-full">Obras finalizadas no mês</h1>
+                <h1 className="w-full text-center uppercase text-gray-600">Obras finalizadas no mês</h1>
                 {installedData[0] ? validateStatsMonth(installedData[0]._id) : null}
               </div>
-              <p className="grow text-center text-2xl font-bold text-[#fead61] flex items-center justify-center">
+              <p className="flex grow items-center justify-center text-center text-2xl font-bold text-[#fead61]">
                 {installedData.length > 0 ? installedData[0]?.count : '-'} obras
               </p>
               <p className="text-center text-xs text-gray-600">
                 Último mês: <strong>{installedData.length > 0 && installedData[1]?.count ? `${installedData[1]?.count} obras` : 'N/A'} </strong>
               </p>
             </div>
-            <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
               <div className="flex justify-between">
-                <h1 className="uppercase text-gray-600 text-center w-full">Potência Pico instalada no mês</h1>
+                <h1 className="w-full text-center uppercase text-gray-600">Potência Pico instalada no mês</h1>
                 {installedData[0] ? validateStatsMonth(installedData[0]._id) : null}
               </div>
-              <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
+              <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">
                 {installedData.length > 0 ? installedData[0]?.total.toFixed(2) : '-'} kWp
               </p>
               <p className="text-center text-xs text-gray-600">
@@ -394,12 +382,12 @@ function Home() {
                 <strong>{installedData.length > 0 && installedData[1]?.total ? `${installedData[1]?.total.toFixed(2)} kWp` : 'N/A'} </strong>
               </p>
             </div>
-            <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
               <div className="flex justify-between">
-                <h1 className="uppercase text-gray-600 text-center w-full">Potência Pico homologada no mês</h1>
+                <h1 className="w-full text-center uppercase text-gray-600">Potência Pico homologada no mês</h1>
                 {averageHomoData[0] ? validateStatsMonth(averageHomoData[0]._id) : null}
               </div>
-              <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
+              <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">
                 {averageHomoData.length > 0 ? averageHomoData[0]?.homoPeakPot?.toFixed(2) : '-'} kWp
               </p>
               <p className="text-center text-xs text-gray-600">
@@ -409,12 +397,12 @@ function Home() {
                 </strong>
               </p>
             </div>
-            <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
               <div className="flex justify-between">
-                <h1 className="uppercase text-gray-600 text-center w-full">TEMPO MÉDIO PARA COMPRA</h1>
+                <h1 className="w-full text-center uppercase text-gray-600">TEMPO MÉDIO PARA COMPRA</h1>
                 {averageBuyTime[0] ? validateStatsMonth(averageBuyTime[0]._id) : null}
               </div>
-              <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
+              <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">
                 {averageBuyTime.length > 0 ? `${averageBuyTime[0].tempoMedio?.toFixed(2)} dias` : '-'}{' '}
               </p>
               <p className="text-center text-xs text-gray-600">
@@ -424,12 +412,12 @@ function Home() {
                 </strong>
               </p>
             </div>
-            <div className="flex flex-col col-span-2 p-4 h-[250px] border border-gray-200 bg-[#fff] shadow-xl">
+            <div className="col-span-2 flex h-[250px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
               <div className="flex justify-between">
-                <h1 className="uppercase text-gray-600 text-center w-full">TEMPO MÉDIO DE APROVAÇÃO</h1>
+                <h1 className="w-full text-center uppercase text-gray-600">TEMPO MÉDIO DE APROVAÇÃO</h1>
                 {averageHomoData[0] ? validateStatsMonth(averageHomoData[0]._id) : null}
               </div>
-              <p className="grow text-2xl font-bold text-[#fead61] flex items-center justify-center">
+              <p className="flex grow items-center justify-center text-2xl font-bold text-[#fead61]">
                 {averageHomoData.length > 0 && averageHomoData[0]?.averageTime ? `${averageHomoData[0]?.averageTime?.toFixed(0)} dias` : 'N/A'}{' '}
               </p>
               <p className="text-center text-xs text-gray-600">
@@ -440,11 +428,11 @@ function Home() {
               </p>
             </div>
           </div>
-          <div className="grid grid-rows-2 grid-cols-1 gap-y-2 mt-4 lg:grid-cols-10 lg:grid-rows-1 lg:gap-x-3">
-            <div className="flex flex-col p-4 h-[425px] border border-gray-200 bg-[#fff] shadow-xl col-span-2">
-              <h1 className="text-gray-600 text-xl text-center">NPS</h1>
+          <div className="mt-4 grid grid-cols-1 grid-rows-2 gap-y-2 lg:grid-cols-10 lg:grid-rows-1 lg:gap-x-3">
+            <div className="col-span-2 flex h-[425px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl">
+              <h1 className="text-center text-xl text-gray-600">NPS</h1>
               <div className="flex grow items-center justify-center">
-                <div className="w-[150px] h-[150px]">
+                <div className="h-[150px] w-[150px]">
                   <CircularProgressbar
                     styles={buildStyles({
                       // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
@@ -470,10 +458,10 @@ function Home() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col p-4 h-[600px] lg:h-[425px] border border-gray-200 bg-[#fff] shadow-xl col-span-8">
-              <div className="grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 py-2">
-                <h1 className="text-gray-600 uppercase text-xl text-center">Potência pico vendida</h1>
-                <div className="flex items-center gap-x-2 justify-center">
+            <div className="col-span-8 flex h-[600px] flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl lg:h-[425px]">
+              <div className="grid grid-cols-1 grid-rows-2 py-2 lg:grid-cols-2 lg:grid-rows-1">
+                <h1 className="text-center text-xl uppercase text-gray-600">Potência pico vendida</h1>
+                <div className="flex items-center justify-center gap-x-2">
                   <p
                     onClick={() => {
                       if (regional != undefined && regional != 'GERAL') {
@@ -485,8 +473,8 @@ function Home() {
                         getGraphDataByYear(2020, session.user)
                       }
                     }}
-                    className={`border cursor-pointer border-gray-200 hover:scale-105 duration-500 ease-in-out ${
-                      selectedYear == 2020 ? 'bg-blue-200 hover:bg-transparent' : 'hover:bg-blue-200 bg-transparent'
+                    className={`cursor-pointer border border-gray-200 duration-500 ease-in-out hover:scale-105 ${
+                      selectedYear == 2020 ? 'bg-blue-200 hover:bg-transparent' : 'bg-transparent hover:bg-blue-200'
                     } p-2 text-xs text-gray-600`}
                   >
                     2020
@@ -502,8 +490,8 @@ function Home() {
                         getGraphDataByYear(2021, session.user)
                       }
                     }}
-                    className={`border cursor-pointer border-gray-200 hover:scale-105 duration-500 ease-in-out ${
-                      selectedYear == 2021 ? 'bg-blue-200 hover:bg-transparent' : 'hover:bg-blue-200 bg-transparent'
+                    className={`cursor-pointer border border-gray-200 duration-500 ease-in-out hover:scale-105 ${
+                      selectedYear == 2021 ? 'bg-blue-200 hover:bg-transparent' : 'bg-transparent hover:bg-blue-200'
                     } p-2 text-xs text-gray-600`}
                   >
                     2021
@@ -519,8 +507,8 @@ function Home() {
                         getGraphDataByYear(2022, session.user)
                       }
                     }}
-                    className={`border cursor-pointer border-gray-200 hover:scale-105 duration-500 ease-in-out ${
-                      selectedYear == 2022 ? 'bg-blue-200 hover:bg-transparent' : 'hover:bg-blue-200 bg-transparent'
+                    className={`cursor-pointer border border-gray-200 duration-500 ease-in-out hover:scale-105 ${
+                      selectedYear == 2022 ? 'bg-blue-200 hover:bg-transparent' : 'bg-transparent hover:bg-blue-200'
                     } p-2 text-xs text-gray-600`}
                   >
                     2022
@@ -536,8 +524,8 @@ function Home() {
                         getGraphDataByYear(2023, session.user)
                       }
                     }}
-                    className={`border cursor-pointer border-gray-200 hover:scale-105 duration-500 ease-in-out ${
-                      selectedYear == 2023 ? 'bg-blue-200 hover:bg-transparent' : 'hover:bg-blue-200 bg-transparent'
+                    className={`cursor-pointer border border-gray-200 duration-500 ease-in-out hover:scale-105 ${
+                      selectedYear == 2023 ? 'bg-blue-200 hover:bg-transparent' : 'bg-transparent hover:bg-blue-200'
                     } p-2 text-xs text-gray-600`}
                   >
                     2023
@@ -561,22 +549,22 @@ function Home() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="flex mt-4 grow flex-col p-4  border border-gray-200 bg-[#fff] shadow-xl">
-            <div className="flex flex-col lg:flex-row w-full items-center justify-between">
-              <h1 className="text-gray-600 uppercase">ANIVERSARIANTES DO MÊS</h1>
+          <div className="mt-4 flex grow flex-col border  border-gray-200 bg-[#fff] p-4 shadow-xl">
+            <div className="flex w-full flex-col items-center justify-between lg:flex-row">
+              <h1 className="uppercase text-gray-600">ANIVERSARIANTES DO MÊS</h1>
               <button
                 onClick={() => filterBirthday(!filters.birthdayToday)}
-                className="p-2 rounded font-bold border border-[#fead61] text-[#fead61] hover:scale-105 duration-500 ease-in-out hover:text-black hover:bg-[#fead61]"
+                className="rounded border border-[#fead61] p-2 font-bold text-[#fead61] duration-500 ease-in-out hover:scale-105 hover:bg-[#fead61] hover:text-black"
               >
                 ANIVERSARIANDO HOJE
               </button>
             </div>
-            <div className="w-full grow flex flex-wrap justify-center lg:justify-between gap-y-2 mt-2">
+            <div className="mt-2 flex w-full grow flex-wrap justify-center gap-y-2 lg:justify-between">
               {clientBirthday.filtered.length > 0 &&
                 clientBirthday.filtered?.map((client, index) => (
-                  <div key={index} className="w-[350px] text-xs text-center bg-[#fff] border border-gray-200 p-2">
+                  <div key={index} className="w-[350px] border border-gray-200 bg-[#fff] p-2 text-center text-xs">
                     <p>{client.nomeDoContrato}</p>
-                    <p className="text-[#15599a] font-bold">
+                    <p className="font-bold text-[#15599a]">
                       {client.dataNascimento != undefined && new Date(client.dataNascimento).toLocaleDateString()}
                     </p>
                   </div>

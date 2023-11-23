@@ -133,9 +133,10 @@ function BandoDeDados({ data }) {
       <div className="p-6 grow">
         <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
           <div className="flex items-center justify-between w-full">
-            <div className="flex flex-wrap justify-center items-center gap-2 font-['Roboto']">
-              <p className="font-bold uppercase text-center text-2xl text-[#15599a]">BANCO DE DADOS</p>
-              {filteredProjects && <p className="font-bold text-[#fead61]">({filteredProjects?.length})</p>}
+            <div className="flex flex-col lg:flex-row items-center gap-2">
+              <p className="font-black uppercase text-center text-2xl text-[#15599a]">
+                BANCO DE DADOS <strong className="text-[#fead41]">({filteredProjects?.length || '...'})</strong>
+              </p>
             </div>
             {dropdownMenuVisible ? (
               <div className="text-gray-600 hover:text-blue-400 cursor-pointer">

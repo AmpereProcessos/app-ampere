@@ -9,6 +9,7 @@ import { FaSave } from 'react-icons/fa'
 import { VscChromeClose } from 'react-icons/vsc'
 
 import NotificationCreationBlock from './NotificationCreationBlock'
+import InfoAtividadesBlock from './blocosInfoProjeto/InfoAtividadesBlock'
 import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
 import InfoPadraoBlock from './blocosInfoProjeto/InfoPadraoBlock'
@@ -35,9 +36,11 @@ import ErrorPage from './utils/ErrorPage'
 import toast from 'react-hot-toast'
 import { useEffect } from 'react'
 import { handleComercialProjectUpdate } from '../utils/methods/mutation/comercial'
+import { useSession } from 'next-auth/react'
 
 function ModalComercial({ projectId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal(false))
+  const { data: session } = useSession()
   const queryClient = useQueryClient()
 
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
@@ -62,14 +65,14 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen}>
-        <div className="flex flex-col h-full ">
-          <div className="flex flex-col lg:flex-row items-center justify-between px-2 text-lg border-b border-gray-200 pb-2">
+        <div className="flex h-full flex-col ">
+          <div className="flex flex-col items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg lg:flex-row">
             <div className="flex gap-x-2">
-              <h1 className="text-[#15599a] pl-6 font-bold">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
-              {project?.codigoSVB && <p className="text-gray-600 text-sm font-bold">#{project.codigoSVB}</p>}
+              <h1 className="pl-6 font-bold text-[#15599a]">{project ? `${project.qtde} - ${project.nomeDoContrato}` : 'CARREGANDO...'}</h1>
+              {project?.codigoSVB && <p className="text-sm font-bold text-gray-600">#{project.codigoSVB}</p>}
             </div>
-            <div className="flex gap-x-2 items-center">
-              {msg.text && <p className={`hidden lg:block text-sm italic ${msg.color}`}>{msg.text}</p>}
+            <div className="flex items-center gap-x-2">
+              {msg.text && <p className={`hidden text-sm italic lg:block ${msg.color}`}>{msg.text}</p>}
               <SaveButton
                 text={'Salvar alterações'}
                 icon={<FaSave />}
@@ -79,14 +82,14 @@ function ModalComercial({ projectId, modalIsOpen, closeModal }) {
                 <VscChromeClose onClick={() => closeModal()} style={{ color: 'red' }} />
               </button>
             </div>
-            {msg.text && <p className={`block lg:hidden text-sm italic ${msg.color}`}>{msg.text}</p>}
+            {msg.text && <p className={`block text-sm italic lg:hidden ${msg.color}`}>{msg.text}</p>}
           </div>
           {isLoading ? <LoadingPage /> : null}
           {isError ? <ErrorPage msg={'Erro ao carregar informações do projeto. Tente novamente.'} /> : null}
           {isSuccess && infoHolder ? (
-            <div className="flex flex-col gap-y-2 h-full overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            <div className="overscroll-y flex h-full flex-col gap-y-2 overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
               <NotificationCreationBlock nomeDoProjeto={project.nomeDoContrato} codProjeto={project.qtde} />
-
+              <InfoAtividadesBlock projectId={projectId} projectName={project.nomeDoContrato} projectIdentifier={project.qtde} session={session} />
               <InfoClienteBlock editor={true} infoHolder={infoHolder} setInfo={setInfo} changes={changes} setChanges={setChanges} project={project} />
               <InfoVisitaTecnicaBlock
                 editor={false}

@@ -118,58 +118,59 @@ function NotificationCreationBlock({ codProjeto, nomeDoProjeto }) {
           </div>
         )}
       </div>
-      <AnimatePresence></AnimatePresence>
-      {notifyMenuVisible ? (
-        <motion.div variants={variants} initial="hidden" animate="visible" exit="exit" className="w-full flex flex-col p-2">
-          <div className="w-full lg:w-[50%] flex flex-col self-center">
-            <div className="flex items-center justify-center gap-2 w-full">
-              <h1 className="font-bold text-gray-800 text-xs">REMETENTE</h1>
-              <div className="h-full w-[1px] bg-gray-500"></div>
-              <div className="flex items-center gap-2  justify-center">
-                <Avatar fallback={'U'} height={25} width={25} url={session?.user?.image} />
-                <p className="font-medium text-gray-500 text-xs">{session?.user?.name || 'Autor não identificado'}</p>
+      <AnimatePresence>
+        {notifyMenuVisible ? (
+          <motion.div variants={variants} initial="hidden" animate="visible" exit="exit" className="w-full flex flex-col p-2">
+            <div className="w-full lg:w-[50%] flex flex-col self-center">
+              <div className="flex items-center justify-center gap-2 w-full">
+                <h1 className="font-bold text-gray-800 text-xs">REMETENTE</h1>
+                <div className="h-full w-[1px] bg-gray-500"></div>
+                <div className="flex items-center gap-2  justify-center">
+                  <Avatar fallback={'U'} height={25} width={25} url={session?.user?.image} />
+                  <p className="font-medium text-gray-500 text-xs">{session?.user?.name || 'Autor não identificado'}</p>
+                </div>
+              </div>
+              <SelectInputWithImages
+                label="DESTINATÁRIO"
+                labelClassName="font-bold text-gray-800 text-xs"
+                editable={true}
+                options={
+                  users?.map((resp) => ({
+                    id: resp._id,
+                    label: resp.nome,
+                    value: resp,
+                    url: resp.avatar_url,
+                    fallback: formatNameAsInitials(resp.nome),
+                  })) || []
+                }
+                value={notInfo.destinatario}
+                handleChange={(value) => {
+                  setNotInfo((prev) => ({ ...prev, destinatario: value._id }))
+                }}
+                onReset={() => setNotInfo((prev) => ({ ...prev, destinatario: null }))}
+                selectedItemLabel="NÃO DEFINIDO"
+                width="100%"
+              />
+              <h1 className="font-bold text-gray-800 text-xs mt-4">MENSAGEM</h1>
+              <textarea
+                className="mt-1 w-full outline-none rounded-md border border-gray-300 bg-gray-200 text-center text-sm p-3 resize-none"
+                value={notInfo.mensagem}
+                onChange={(e) => setNotInfo((prev) => ({ ...prev, mensagem: e.target.value }))}
+              />
+              <div className="w-full flex items-center justify-end">
+                <button
+                  onClick={notify}
+                  className="bg-blue-200 hover:text-white hover:bg-blue-600  rounded-lg mt-2 hover:scale-110 ease-in duration-300 text-[25px]"
+                >
+                  <div className="ease-in duration-300 -translate-x-1 p-2 rotate-45 hover:translate-x-0 hover:rotate-0 w-full h-hull">
+                    <IoIosSend />
+                  </div>
+                </button>
               </div>
             </div>
-            <SelectInputWithImages
-              label="DESTINATÁRIO"
-              labelClassName="font-bold text-gray-800 text-xs"
-              editable={true}
-              options={
-                users?.map((resp) => ({
-                  id: resp._id,
-                  label: resp.nome,
-                  value: resp,
-                  url: resp.avatar_url,
-                  fallback: formatNameAsInitials(resp.nome),
-                })) || []
-              }
-              value={notInfo.destinatario}
-              handleChange={(value) => {
-                setNotInfo((prev) => ({ ...prev, destinatario: value._id }))
-              }}
-              onReset={() => setNotInfo((prev) => ({ ...prev, destinatario: null }))}
-              selectedItemLabel="NÃO DEFINIDO"
-              width="100%"
-            />
-            <h1 className="font-bold text-gray-800 text-xs mt-4">MENSAGEM</h1>
-            <textarea
-              className="mt-1 w-full outline-none rounded-md border border-gray-300 bg-gray-200 text-center text-sm p-3 resize-none"
-              value={notInfo.mensagem}
-              onChange={(e) => setNotInfo((prev) => ({ ...prev, mensagem: e.target.value }))}
-            />
-            <div className="w-full flex items-center justify-end">
-              <button
-                onClick={notify}
-                className="bg-blue-200 hover:text-white hover:bg-blue-600  rounded-lg mt-2 hover:scale-110 ease-in duration-300 text-[25px]"
-              >
-                <div className="ease-in duration-300 -translate-x-1 p-2 rotate-45 hover:translate-x-0 hover:rotate-0 w-full h-hull">
-                  <IoIosSend />
-                </div>
-              </button>
-            </div>
-          </div>
-        </motion.div>
-      ) : null}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </>
   )
 }

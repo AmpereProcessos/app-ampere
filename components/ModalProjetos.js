@@ -25,6 +25,7 @@ import LoadingPage from './utils/LoadingPage'
 import ErrorPage from './utils/ErrorPage'
 import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
 import { updateProject } from '../utils/methods/mutation/clients'
+import { useSession } from 'next-auth/react'
 const MODAL_STYLES = {
   position: 'fixed',
   top: '50%',
@@ -62,6 +63,7 @@ function formataCEP(cep) {
 }
 function ModalProjetos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   useKey('Escape', () => closeModal())
+    const { data: session } = useSession()
   const queryClient = useQueryClient()
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
   const [infoHolder, setInfo] = useState(project)

@@ -25,9 +25,11 @@ import InfoVisitaTecnicaBlock from './blocosInfoProjeto/InfoVisitaTecnicaBlock'
 import InfoClienteBlock from './blocosInfoProjeto/InfoClienteBlock'
 import InfoPagamentoBlock from './blocosInfoProjeto/InfoPagamentoBlock'
 import InfoArquivosBlock from './blocosInfoProjeto/InfoArquivosBlock'
+import { useSession } from 'next-auth/react'
 
 function ModalSuprimentos({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   useKey('Escape', () => closeModal())
+    const { data: session } = useSession()
   const queryClient = useQueryClient()
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
   const [infoHolder, setInfo] = useState(project)

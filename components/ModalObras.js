@@ -27,9 +27,11 @@ import ErrorPage from './utils/ErrorPage'
 import { useClientById } from '../utils/methods/query/clients'
 import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { updateProject } from '@/utils/methods/mutation/clients'
+import { useSession } from 'next-auth/react'
 
 function ModalObras({ projectId, modalIsOpen, handleUpdates, closeModal }) {
   useKey('Escape', () => closeModal())
+    const { data: session } = useSession()
   const queryClient = useQueryClient()
   const { data: project, isSuccess, isLoading, isError } = useClientById({ id: projectId, enabled: !!projectId })
   const [infoHolder, setInfo] = useState(project)

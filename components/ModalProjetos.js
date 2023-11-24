@@ -6,6 +6,8 @@ import { VscChromeClose } from 'react-icons/vsc'
 import NotificationCreationBlock from './NotificationCreationBlock'
 import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
 import { useKey } from '../utils/hooks'
+
+import InfoAtividadesBlock from './blocosInfoProjeto/InfoAtividadesBlock'
 import InfoPadraoBlock from './blocosInfoProjeto/InfoPadraoBlock'
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
 import InfoCompraBlock from './blocosInfoProjeto/InfoCompraBlock'

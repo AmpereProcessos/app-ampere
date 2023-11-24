@@ -18,6 +18,7 @@ import { useMutationWithFeedback } from '../utils/methods/mutation/general-hook'
 import { updateProject } from '../utils/methods/mutation/clients'
 
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'
+import InfoAtividadesBlock from './blocosInfoProjeto/InfoAtividadesBlock'
 import InfoEstruturaBlock from './blocosInfoProjeto/InfoEstruturaBlock'
 import InfoCompraBlock from './blocosInfoProjeto/InfoCompraBlock'
 import InfoVisitaTecnicaBlock from './blocosInfoProjeto/InfoVisitaTecnicaBlock'

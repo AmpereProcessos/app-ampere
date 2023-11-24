@@ -9,7 +9,7 @@ import NotificationCreationBlock from './NotificationCreationBlock'
 import OSCreationBlock from './OSCreationBlock'
 import AnimatedModalWrapper from './utils/AnimatedModalWrapper'
 import SaveButton from './utils/Buttons/SaveButton'
-
+import InfoAtividadesBlock from './blocosInfoProjeto/InfoAtividadesBlock'
 import InfoPadraoBlock from './blocosInfoProjeto/InfoPadraoBlock'
 import InfoEstruturaBlock from './blocosInfoProjeto/InfoEstruturaBlock'
 import InfoSistemaBlock from './blocosInfoProjeto/InfoSistemaBlock'

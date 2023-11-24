@@ -5,6 +5,7 @@ import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
 import { TActivityDTO } from '@/utils/schemas/activities'
 import React from 'react'
 import { BsCalendar4Event, BsCalendarCheck, BsCalendarPlus, BsCheck } from 'react-icons/bs'
+import { MdDashboard } from 'react-icons/md'
 import { useQueryClient } from 'react-query'
 type ResponsibleActivityCardProps = {
   userId: string | null
@@ -17,6 +18,7 @@ function ResponsibleActivityCard({ userId, activity }: ResponsibleActivityCardPr
     mutationFn: updateActivity,
     queryClient: queryClient,
     affectedQueryKey: ['activities-by-responsible', userId],
+    callbackFn: () => console.log(),
   })
   return (
     <div className="flex w-full flex-col rounded border border-gray-200 p-3 shadow-sm">
@@ -56,7 +58,13 @@ function ResponsibleActivityCard({ userId, activity }: ResponsibleActivityCardPr
           </div>
         ) : null}
       </div>
-      <h1 className="my-2 w-full rounded-md bg-gray-100 p-2 py-1 text-center text-xs font-medium text-gray-500">{activity.descricao}</h1>
+      {activity.projeto.id ? (
+        <div className="mt-2 mb-1 flex w-full items-center justify-center gap-2 text-cyan-500">
+          <MdDashboard color="rgb(6,182,212)" />
+          <p className="text-xxs font-medium text-gray-500">{activity.projeto.nome}</p>
+        </div>
+      ) : null}
+      <h1 className="mb-2 w-full rounded-md bg-gray-100 p-2 py-1 text-center text-xs font-medium text-gray-500">{activity.descricao}</h1>
       <div className="flex w-full items-center justify-end gap-2">
         <div className="flex items-center gap-1">
           <BsCalendarPlus />

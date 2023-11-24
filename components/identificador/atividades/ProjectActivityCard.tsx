@@ -59,7 +59,7 @@ function ProjectActivityCard({ projectId, activity, mutateCallback }: ProjectAct
         </div>
       </div>
       <h1 className="my-2 w-full rounded-md bg-gray-100 p-2 py-1 text-center text-xs font-medium text-gray-500">{activity.descricao}</h1>
-      <div className="flex w-full items-center justify-between gap-2">
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex grow items-center gap-1">
           <h1 className="mr-2 text-sm leading-none tracking-tight text-gray-500">RESPONSÁVEIS</h1>
           <div className="flex grow items-center gap-2">
@@ -71,10 +71,10 @@ function ProjectActivityCard({ projectId, activity, mutateCallback }: ProjectAct
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex w-full items-center justify-end gap-1 lg:w-fit">
           <BsCalendarPlus />
           <h1 className="mr-2 text-xs font-medium tracking-tight text-gray-500">{formatDateAsLocale(activity.dataInsercao, true)}</h1>
-          <h1 className="text-sm leading-none tracking-tight text-gray-500">CRIADO POR</h1>
+          <h1 className="hidden text-sm leading-none tracking-tight text-gray-500 lg:flex">CRIADO POR</h1>
           <Avatar width={20} height={20} url={activity.autor.avatar_url} fallback={formatNameAsInitials(activity.autor.nome)} />
           <h1 className="text-xs font-medium tracking-tight text-gray-500">{activity.autor.nome}</h1>
         </div>

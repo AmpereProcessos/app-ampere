@@ -9,11 +9,18 @@ import toast from 'react-hot-toast'
 import { RxTimer } from 'react-icons/rx'
 import { useQueryClient } from 'react-query'
 import ExecutionDiaryRecord from './ExecutionDiaryRecord'
+import TextInput from '@/components/inputs/Text'
 type ExecutionDiaryProps = {
   orderId: string
   entryDatetime?: string
   exitDatetime?: string
   history?: { entrada: string; saida?: string; anotacoes: string }[]
+}
+
+function getEarliestDate(history:{ entrada: string; saida?: string; anotacoes: string }[] ) {
+  const dateArr = history.map(h => Number(new Date(h.entrada)) )
+  const minDate=new Date(Math.min.apply(null,dateArr));
+  return minDate.toISOString()
 }
 function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: ExecutionDiaryProps) {
   const queryClient = useQueryClient()
@@ -77,9 +84,12 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
 
     const loadingToastID = toast.loading('Abrindo registro de execução...')
     try {
+      const earliestDate = getEarliestDate(historyCopy)
+      // Create update object
+      var updateObj:any = {'periodo.historico': historyCopy, 'periodo.inicio': earliestDate}
       await updateServiceOrder({
         orderId: orderId,
-        info: { 'periodo.inicio': infoHolder.entrada, 'periodo.historico': historyCopy },
+        info: updateObj,
         queryClient: queryClient,
         invalidateKey: ['service-order', orderId],
       })
@@ -105,11 +115,11 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
           </button>
         ) : null}
       </div>
-      <div className="w-full flex items-center justify-center gap-2 mt-2">
+      <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-2 mt-2">
         <div className="w-full lg:w-1/2">
           <Datetime
             label="CHECK-IN"
-            labelClassName="font-sans font-bold tracking-tight leading-none text-[#353432]"
+            
             value={infoHolder.entrada}
             handleChange={(value) => {
               localStorage.setItem(`${orderId}-checkin`, JSON.stringify(formatDateInputChange(value)))
@@ -117,6 +127,9 @@ function ExecutionDiary({ orderId, entryDatetime, exitDatetime, history }: Execu
             }}
             width="100%"
           />
+        </div>
+        <div className='w-full lg:w-1/2'>
+          <TextInput label='ANOTAÇÕES' placeholder='Preencha aqui anotações sobre o registro de execução...' value={infoHolder.anotacoes} handleChange={(value)=> setInfoHolder(prev=> ({...prev, anotacoes: value}))} width='100%'/>
         </div>
       </div>
       <div className="w-full flex items-center justify-end my-1">

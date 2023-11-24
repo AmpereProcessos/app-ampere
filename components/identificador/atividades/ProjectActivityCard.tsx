@@ -9,14 +9,16 @@ import { useQueryClient } from 'react-query'
 type ProjectActivityCardProps = {
   projectId: string | null
   activity: TActivityDTO
+  mutateCallback: () => void
 }
-function ProjectActivityCard({ projectId, activity }: ProjectActivityCardProps) {
+function ProjectActivityCard({ projectId, activity, mutateCallback }: ProjectActivityCardProps) {
   const queryClient = useQueryClient()
   const { mutate: handleUpdateActivity } = useMutationWithFeedback({
     mutationKey: ['update-activity', activity._id],
     mutationFn: updateActivity,
     queryClient: queryClient,
     affectedQueryKey: ['activities-by-project', projectId],
+    callbackFn: mutateCallback,
   })
   return (
     <div className="flex w-full flex-col rounded border border-gray-200 p-3 shadow-sm">

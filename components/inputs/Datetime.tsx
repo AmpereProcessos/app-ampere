@@ -1,4 +1,4 @@
-import dayjs from 'dayjs'
+import dayjs from 'dayjs' 
 import React from 'react'
 type DatetimeProps = {
   width?: string
@@ -36,7 +36,7 @@ function DatetimeInput({
         onReset={() => handleChange(undefined)}
         id={inputIdentifier}
         type="datetime-local"
-        className="w-full rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic"
+        className="w-full h-[47px] rounded-md border border-gray-200 p-3 text-sm outline-none placeholder:italic"
       />
     </div>
   )

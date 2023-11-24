@@ -24,7 +24,7 @@ function TextInput({
 }: TextInputProps) {
   const inputIdentifier = label ? label.toLowerCase().replace(' ', '_') : ''
   return (
-    <div className={`flex h w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
+    <div className={`flex  w-full flex-col gap-1 lg:w-[${width ? width : '350px'}]`}>
       {showLabel ? (
         <label htmlFor={inputIdentifier} className={labelClassName}>
           {label}

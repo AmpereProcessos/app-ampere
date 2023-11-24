@@ -24,43 +24,43 @@ function getHourDiff({ insertDate, conclusionDate }) {
 }
 function AnalysisCard({ analysis, handleOpenModal }) {
   return (
-    <div key={analysis._id} className="flex  gap-2  w-full lg:w-[400px] h-[180px] lg:h-[180px] shadow-sm border border-gray-300   rounded-md">
+    <div key={analysis._id} className="flex  h-[180px]  w-full gap-2 rounded-md border border-gray-300 shadow-sm lg:h-[180px]   lg:w-[400px]">
       <div className={`h-full w-[7px] ${getBarColor(analysis.status)} rounded-tl-md rounded-bl-md`}></div>
-      <div className="flex flex-col w-full grow p-6">
-        <div className="flex flex-col w-full grow">
-          <div className="flex flex-col w-full">
+      <div className="flex w-full grow flex-col p-6">
+        <div className="flex w-full grow flex-col">
+          <div className="flex w-full flex-col">
             <h1
               onClick={() => handleOpenModal(analysis._id)}
               className="w-full cursor-pointer text-center text-sm font-bold leading-none tracking-tight duration-300 ease-in-out hover:text-cyan-500 lg:text-start"
             >
               {analysis.nome}
             </h1>
-            <p className="font-medium text-gray-500 text-xs">{analysis.tipoSolicitacao}</p>
-            <div className="flex items-center justify-start w-full gap-2 mt-1">
+            <p className="text-xs font-medium text-gray-500">{analysis.tipoSolicitacao}</p>
+            <div className="mt-1 flex w-full items-center justify-start gap-2">
               <Avatar fallback={'R'} url={analysis.requerente?.avatar_url} height={20} width={20} />
-              <p className="font-medium text-gray-500 text-xs">{analysis.requerente.apelido || analysis.requerente.nomeCRM}</p>
+              <p className="text-xs font-medium text-gray-500">{analysis.requerente.nomeCRM || analysis.requerente.apelido}</p>
             </div>
           </div>
-          <div className="w-full flex items-center justify-center gap-2 mt-2">
+          <div className="mt-2 flex w-full items-center justify-center gap-2">
             {analysis.projeto.identificador ? (
-              <p className="tracking-tight leading-none text-xs font-bold text-[#fead41]">({analysis.projeto.identificador})</p>
+              <p className="text-xs font-bold leading-none tracking-tight text-[#fead41]">({analysis.projeto.identificador})</p>
             ) : null}
-            <p className="tracking-tight leading-none text-xs font-semibold text-gray-500">
+            <p className="text-xs font-semibold leading-none tracking-tight text-gray-500">
               {analysis.projeto.nome ? analysis.projeto.nome : analysis.cliente.nome}
             </p>
           </div>
-          <div className="w-full flex items-center justify-between gap-2 mt-2">
+          <div className="mt-2 flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <FaCity />
-              <p className="text-[0.6rem] lg:text-xs text-gray-500 tracking-tight leading-none">{analysis.localizacao.cidade}</p>
+              <p className="text-[0.6rem] leading-none tracking-tight text-gray-500 lg:text-xs">{analysis.localizacao.cidade}</p>
             </div>
             <div className="flex items-center gap-2">
               <IoMdAlert />
-              <p className="text-[0.6rem] lg:text-xs text-gray-500 tracking-tight leading-none">{analysis.complexidade}</p>
+              <p className="text-[0.6rem] leading-none tracking-tight text-gray-500 lg:text-xs">{analysis.complexidade}</p>
             </div>
           </div>
         </div>
-        <div className="w-full flex items-center justify-between">
+        <div className="flex w-full items-center justify-between">
           <div className={`flex items-center gap-2`}>
             {analysis.dataEfetivacao ? <BsFillCalendarCheckFill color="rgb(34,197,94)" /> : <BsCalendarFill />}
             <p className={`text-xs font-medium ${analysis.dataEfetivacao ? 'text-green-500' : 'text-gray-500'}`}>
@@ -69,7 +69,7 @@ function AnalysisCard({ analysis, handleOpenModal }) {
           </div>
           <div className="flex items-center justify-center gap-2">
             <Avatar fallback={'U'} height={25} width={25} url={analysis.analista?.avatar_url || undefined} />
-            <p className="font-medium text-gray-500 text-xs">{analysis.analista?.apelido || 'À DEFINIR'}</p>
+            <p className="text-xs font-medium text-gray-500">{analysis.analista?.apelido || 'À DEFINIR'}</p>
           </div>
         </div>
       </div>

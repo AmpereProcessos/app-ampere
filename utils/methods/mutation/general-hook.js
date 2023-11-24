@@ -2,7 +2,7 @@ import toast from 'react-hot-toast'
 import { useMutation } from 'react-query'
 import { getErrorMessage } from '../handlers'
 
-export function useMutationWithFeedback({ queryClient, mutationKey, mutationFn, affectedQueryKey, options = {} }) {
+export function useMutationWithFeedback({ queryClient, mutationKey, mutationFn, callbackFn, affectedQueryKey, options = {} }) {
   const mutation = useMutation({
     mutationKey: mutationKey,
     mutationFn: mutationFn,
@@ -25,6 +25,7 @@ export function useMutationWithFeedback({ queryClient, mutationKey, mutationFn, 
       toast.success(msg)
     },
     onSettled: async (data, error) => {
+      if (callbackFn) callbackFn()
       await queryClient.invalidateQueries({ queryKey: affectedQueryKey })
     },
     onError: (error, variables, context) => {

@@ -14,6 +14,8 @@ import CheckboxInput from './inputs/Checkbox'
 import { TbTruckDelivery } from 'react-icons/tb'
 import { BsCalendarFill, BsCheckAll } from 'react-icons/bs'
 import { FaExpandArrowsAlt } from 'react-icons/fa'
+import { MdOutlineCheckBox } from 'react-icons/md'
+import ProjectActivityCard from './identificador/atividades/ProjectActivityCard'
 
 type PosVendaCardProps = {
   projectId: string
@@ -23,7 +25,10 @@ type PosVendaCardProps = {
 function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
   const queryClient = useQueryClient()
   const [infoHolder, setInfo] = useState(project)
+
+  const [activitiesMenuIsOpen, setActivitiesMenuIsOpen] = useState<boolean>(false)
   const [modalProjectIsOpen, setModalProjectIsOpen] = useState<boolean>(false)
+
   function getDateDiff(date1: Date, date2: Date) {
     //@ts-ignore
     const diffInMs = date1 - date2
@@ -41,18 +46,20 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
     mutationFn: updateProject,
     affectedQueryKey: ['after-sales-projects'],
     queryClient: queryClient,
+    callbackFn: () => console.log(),
   })
+  const openActivitiesCount = project.atividades ? project.atividades.filter((a) => !a.dataConclusao).length : 0
 
   if (mode == 'CARD')
     return (
-      <div className="flex font gap-2 w-full shadow-sm border border-gray-300 rounded-md">
+      <div className="font flex w-full gap-2 rounded-md border border-gray-300 shadow-sm">
         <div className={`h-full w-[7px] ${getBarColor(infoHolder.jornada.dataUltimoContato)} rounded-tl-md rounded-bl-md`}></div>
-        <div className="flex flex-col w-full grow p-3">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between w-full">
-            <h1 className="font-bold tracking-tight leading-none">
+        <div className="flex w-full grow flex-col p-3">
+          <div className="flex w-full flex-col items-start justify-between lg:flex-row lg:items-center">
+            <h1 className="font-bold leading-none tracking-tight">
               <strong className="text-[#fead41]">#{project.qtde}</strong> {project.nomeDoContrato}
             </h1>
-            <div className="flex w-full lg:w-fit items-center justify-center lg:justify-end gap-2 mt-2 lg:mt-0">
+            <div className="mt-2 flex w-full items-center justify-center gap-2 lg:mt-0 lg:w-fit lg:justify-end">
               <div className="flex items-center gap-2 text-gray-500">
                 <BsCalendarFill />
                 <p className="text-xs font-medium">
@@ -65,82 +72,82 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
                   handleUpdateProject({ id: projectId, changes: { 'jornada.dataUltimoContato': new Date().toISOString() } })
                   setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, dataUltimoContato: new Date().toISOString() } }))
                 }}
-                className="flex items-center gap-1 py-2 px-4 bg-black rounded text-xs text-white font-medium hover:bg-gray-700 duration-300 ease-in-out"
+                className="flex items-center gap-1 rounded bg-black py-2 px-4 text-xs font-medium text-white duration-300 ease-in-out hover:bg-gray-700"
               >
                 <p>CONTATO RECENTE</p>
                 <BsCheckAll size={18} />
               </button>
             </div>
           </div>
-          <div className="flex flex-col w-full">
-            <h1 className="mt-1 w-full text-start font-bold text-xs text-cyan-500 tracking-tight leading-none">INFORMAÇÕES GERAIS</h1>
-            <div className="mt-1 w-full flex-col md:flex-row flex items-center justify-between flex-wrap gap-2">
+          <div className="flex w-full flex-col">
+            <h1 className="mt-1 w-full text-start text-xs font-bold leading-none tracking-tight text-cyan-500">INFORMAÇÕES GERAIS</h1>
+            <div className="mt-1 flex w-full flex-col flex-wrap items-center justify-between gap-2 md:flex-row">
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">TELEFONE</h1>
-                <h1 className="text-[0.65rem] lg:text-sm font-medium text-center">{project.telefone}</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.telefone}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">VENDEDOR</h1>
-                <h1 className="text-[0.65rem] lg:text-sm font-medium text-center">{project.vendedor.nome}</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.vendedor.nome}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">TIPO DE SERVIÇO</h1>
-                <h1 className="text-[0.65rem] lg:text-sm font-medium text-center">{project.tipoDeServico}</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.tipoDeServico}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">STATUS DO PARECER</h1>
-                <h1 className="text-[0.65rem] lg:text-sm font-medium text-center">{project.parecer.statusDoParecerDeAcesso || 'NÃO DEFINIDO'}</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.parecer.statusDoParecerDeAcesso || 'NÃO DEFINIDO'}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">LIBERAÇÃO DA DOCUMENTAÇÃO</h1>
-                <h1 className="text-[0.65rem] lg:text-sm font-medium text-center">
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.projeto.dataLiberacaoDocumentacao ? formatDateAsLocale(project.projeto.dataLiberacaoDocumentacao) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">ASSINATURA DA DOCUMENTAÇÃO</h1>
-                <h1 className="text-[0.65rem] lg:text-sm font-medium text-center">
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.projeto.dataAssDocumentacao ? formatDateAsLocale(project.projeto.dataAssDocumentacao) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">STATUS DE SUPLEMENTAÇÃO</h1>
-                <h1 className="text-[0.65rem] lg:text-sm font-medium text-center">{project.compra.status || 'NÃO DEFINIDO'}</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.compra.status || 'NÃO DEFINIDO'}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">PREVISÃO DE ENTREGA</h1>
-                <h1 className="text-[0.65rem] lg:text-sm font-medium text-center">
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.compra.previsaoEntrega ? formatDateAsLocale(project.compra.previsaoEntrega) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">DATA DE FATURAMENTO</h1>
-                <h1 className="text-[0.65rem] lg:text-sm font-medium text-center">
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">
                   {project.faturamento?.dataFaturamento ? formatDateAsLocale(project.faturamento.dataFaturamento) : 'NÃO DEFINIDO'}
                 </h1>
               </div>
             </div>
-            <h1 className="mt-1 w-full text-start font-bold text-xs text-cyan-500 tracking-tight leading-none">INFORMAÇÕES DA JORNADA</h1>
-            <div className="w-full flex items-center justify-around flex-wrap">
+            <h1 className="mt-1 w-full text-start text-xs font-bold leading-none tracking-tight text-cyan-500">INFORMAÇÕES DA JORNADA</h1>
+            <div className="flex w-full flex-wrap items-center justify-around">
               {project.possuiDeficiencia == 'SIM' ? (
                 <>
                   <div className="flex flex-col items-center lg:items-start">
                     <h1 className="text-[0.6rem] text-gray-500">PESSOA COM DEFICIÊNCIA</h1>
-                    <h1 className="text-[0.65rem] lg:text-sm font-medium text-center">{project.qualDeficiencia}</h1>
+                    <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.qualDeficiencia}</h1>
                   </div>
                 </>
               ) : null}
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">CONTATOS DA JORNADA</h1>
-                <h1 className="text-[0.65rem] lg:text-sm font-medium text-center">{project.jornada.contatos || 'NÃO DEFINIDO'}</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.jornada.contatos || 'NÃO DEFINIDO'}</h1>
               </div>
               <div className="flex flex-col items-center lg:items-start">
                 <h1 className="text-[0.6rem] text-gray-500">CUIDADOS NA JORNADA</h1>
-                <h1 className="text-[0.65rem] lg:text-sm font-medium text-center">{project.jornada.cuidados || 'NÃO DEFINIDO'}</h1>
+                <h1 className="text-center text-[0.65rem] font-medium lg:text-sm">{project.jornada.cuidados || 'NÃO DEFINIDO'}</h1>
               </div>
             </div>
-            <div className="w-full flex items-center justify-around flex-wrap gap-3 mt-3 p-2 border border-cyan-500">
-              <h1 className="w-full text-start font-bold text-xs text-cyan-500 tracking-tight leading-none">JORNADA DO CLIENTE</h1>
+            <div className="mt-3 flex w-full flex-wrap items-center justify-around gap-3 border border-cyan-500 p-2">
+              <h1 className="w-full text-start text-xs font-bold leading-none tracking-tight text-cyan-500">JORNADA DO CLIENTE</h1>
               <CheckboxInput
                 labelFalse={'BOAS VINDAS'}
                 labelTrue={'BOAS VINDAS'}
@@ -262,32 +269,66 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
                 }}
               />
             </div>
-            <h1 className="mt-1 w-full text-start font-bold text-xs text-cyan-500 tracking-tight leading-none">ANOTAÇÕES</h1>
+            <h1 className="mt-1 w-full text-start text-xs font-bold leading-none tracking-tight text-cyan-500">ANOTAÇÕES</h1>
             <textarea
               value={infoHolder.jornada.obsJornada || undefined}
               placeholder="Preencha aqui anotações da jornada do cliente..."
               onChange={(e) => setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, obsJornada: e.target.value } }))}
-              className="min-h-[50px] p-3 w-full resize-none outline-none text-center text-sm text-gray-800 bg-gray-100 rounded border border-gray-300 shadow-sm mt-2"
+              className="mt-2 min-h-[50px] w-full resize-none rounded border border-gray-300 bg-gray-100 p-3 text-center text-sm text-gray-800 shadow-sm outline-none"
             />
-            <div className="w-full mt-1 flex items-center justify-between">
-              <button
-                onClick={() => setModalProjectIsOpen(true)}
-                className="flex py-1 px-4 items-center gap-1 border border-[#fead41] text-[#fead41] rounded text-xs font-medium hover:bg-[#fead41] hover:text-white duration-300 ease-in-out"
-              >
-                <p>EXPANDIR</p>
-                <FaExpandArrowsAlt />
-              </button>
+            <div className="mt-1 flex w-full items-center justify-between">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setModalProjectIsOpen(true)}
+                  className="flex items-center gap-1 rounded border border-[#fead41] py-1 px-4 text-xs font-medium text-[#fead41] duration-300 ease-in-out hover:bg-[#fead41] hover:text-white"
+                >
+                  <p>EXPANDIR</p>
+                  <FaExpandArrowsAlt />
+                </button>
+                <div className="relative">
+                  {openActivitiesCount > 0 ? (
+                    <div className="absolute -top-1 -left-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 p-1">
+                      <p className="text-xxs font-medium text-white">{openActivitiesCount}</p>
+                    </div>
+                  ) : null}
+                  <button
+                    onClick={() => setActivitiesMenuIsOpen((prev) => !prev)}
+                    className={`${
+                      openActivitiesCount > 0 ? 'border-red-500 text-red-500 hover:bg-red-500' : 'border-blue-500 text-blue-500 hover:bg-blue-500'
+                    } flex items-center gap-1 rounded border py-1 px-4 text-xs font-medium duration-300 ease-in-out hover:text-white`}
+                  >
+                    <p>ATIVIDADES</p>
+                    <MdOutlineCheckBox size={18} />
+                  </button>
+                </div>
+              </div>
               <button
                 disabled={isLoading}
                 onClick={() => {
                   // @ts-ignore
                   handleUpdateProject({ id: projectId, changes: { 'jornada.obsJornada': infoHolder.jornada.obsJornada } })
                 }}
-                className="py-1 px-4 bg-black rounded text-xs disabled:bg-gray-500 text-white font-medium enabled:hover:bg-gray-700 duration-300 ease-in-out"
+                className="rounded bg-black py-1 px-4 text-xs font-medium text-white duration-300 ease-in-out disabled:bg-gray-500 enabled:hover:bg-gray-700"
               >
                 SALVAR ANOTAÇÕES
               </button>
             </div>
+            {activitiesMenuIsOpen ? (
+              project.atividades && project.atividades.length > 0 ? (
+                <div className="mt-1 flex w-full flex-col gap-1">
+                  {project.atividades.map((activity) => (
+                    <ProjectActivityCard
+                      key={activity._id}
+                      activity={activity}
+                      projectId={projectId}
+                      mutateCallback={() => queryClient.invalidateQueries({ queryKey: ['after-sales-projects'] })}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <h1 className="w-full py-1 text-center text-sm italic text-gray-500">Nenhuma atividade cadastrada...</h1>
+              )
+            ) : null}
           </div>
         </div>
         {modalProjectIsOpen ? (
@@ -302,13 +343,13 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
     )
   if (mode == 'SIMPLIFIED')
     return (
-      <div className="flex font gap-2 w-full shadow-sm border border-gray-300 rounded-md">
+      <div className="font flex w-full gap-2 rounded-md border border-gray-300 shadow-sm">
         <div className={`h-full w-[7px] ${getBarColor(project.jornada.dataUltimoContato)} rounded-tl-md rounded-bl-md`}></div>
-        <div className="flex flex-col items-start lg:flex-row lg:items-center justify-between w-full grow p-3">
-          <h1 className="font-bold tracking-tight leading-none">
+        <div className="flex w-full grow flex-col items-start justify-between p-3 lg:flex-row lg:items-center">
+          <h1 className="font-bold leading-none tracking-tight">
             <strong className="text-[#fead41]">#{project.qtde}</strong> {project.nomeDoContrato}
           </h1>
-          <div className="flex items-center gap-3 mt-2 lg:mt-0">
+          <div className="mt-2 flex items-center gap-3 lg:mt-0">
             <div className="flex items-center gap-2 text-gray-500">
               <TbTruckDelivery />
               <p className="text-sm font-medium">

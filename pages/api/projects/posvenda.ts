@@ -20,6 +20,19 @@ const getProjects: NextApiHandler<GetResponse> = async (req, res) => {
         },
       },
       {
+        $addFields: {
+          idString: { $toString: '$_id' },
+        },
+      },
+      {
+        $lookup: {
+          from: 'atividades',
+          localField: 'idString',
+          foreignField: 'projeto.id',
+          as: 'atividades',
+        },
+      },
+      {
         $project: {
           _id: 1,
           qtde: 1,
@@ -51,6 +64,7 @@ const getProjects: NextApiHandler<GetResponse> = async (req, res) => {
           possuiDeficiencia: 1,
           qualDeficiencia: 1,
           nps: 1,
+          atividades: 1,
         },
       },
       {

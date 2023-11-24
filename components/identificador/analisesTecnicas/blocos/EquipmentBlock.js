@@ -39,6 +39,7 @@ const variants = {
 }
 
 function EquipmentBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
+  console.log(infoHolder)
   const [editEnabled, setEditEnabled] = useState(false)
   return (
     <div className="mt-4 flex w-full flex-col">
@@ -92,7 +93,7 @@ function EquipmentBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
                       ...prev,
                       equipamentos: { ...prev.equipamentos, inversor: { ...prev.equipamentos.inversor, potencia: value } },
                     }))
-                    setChanges((prev) => ({ ...prev, 'equipamentos.potencia.qtde': value }))
+                    setChanges((prev) => ({ ...prev, 'equipamentos.inversor.potencia': value }))
                   }}
                   width={'100%'}
                 />
@@ -109,7 +110,7 @@ function EquipmentBlock({ infoHolder, setInfoHolder, changes, setChanges }) {
                       ...prev,
                       equipamentos: { ...prev.equipamentos, modulos: { ...prev.equipamentos.modulos, modelo: value } },
                     }))
-                    setChanges((prev) => ({ ...prev, 'equipamentos.potencia.modelo': value }))
+                    setChanges((prev) => ({ ...prev, 'equipamentos.modulos.modelo': value }))
                   }}
                   width={'100%'}
                 />

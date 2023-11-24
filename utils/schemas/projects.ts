@@ -1,4 +1,5 @@
 import z from 'zod'
+import { TActivityDTO } from './activities'
 const GeneralProjectSchema = z.object({
   app: z.object({
     data: z.string().optional().nullable(),
@@ -414,4 +415,4 @@ const GeneralProjectSchema = z.object({
 
 export type TProject = z.infer<typeof GeneralProjectSchema>
 
-export type TProjectDTO = TProject & { _id: string }
+export type TProjectDTO = TProject & { _id: string; atividades?: TActivityDTO[] }

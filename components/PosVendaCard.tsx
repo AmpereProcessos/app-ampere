@@ -259,6 +259,16 @@ function PosVendaCard({ projectId, project, mode }: PosVendaCardProps) {
                 }}
               />
               <CheckboxInput
+                labelFalse={'ENTREGA TÉCNICA'}
+                labelTrue={'ENTREGA TÉCNICA'}
+                checked={!!infoHolder.jornada.entregaTecnica}
+                handleChange={(value) => {
+                  // @ts-ignore
+                  handleUpdateProject({ id: projectId, changes: { 'jornada.entregaTecnica': value } })
+                  setInfo((prev) => ({ ...prev, jornada: { ...prev.jornada, entregaTecnica: value } }))
+                }}
+              />
+              <CheckboxInput
                 labelFalse={'JORNADA CONCLUIDA'}
                 labelTrue={'JORNADA CONCLUIDA'}
                 checked={!!infoHolder.jornada.jornadaConcluida}

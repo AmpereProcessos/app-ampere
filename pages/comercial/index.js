@@ -138,23 +138,23 @@ function Comercial() {
   if (status != 'authenticated') return <LoadingPage />
   if (projectsSuccess && projects) {
     return (
-      <div className="p-6 grow">
+      <div className="grow p-6">
         <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-col lg:flex-row items-center gap-2">
-              <p className="font-black uppercase text-center text-2xl text-[#15599a]">Projetos no estágio comercial</p>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex flex-col items-center gap-2 lg:flex-row">
+              <p className="text-center text-2xl font-black uppercase text-[#15599a]">Projetos no estágio comercial</p>
             </div>
             {dropdownMenuVisible ? (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(false)} />
               </div>
             ) : (
-              <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+              <div className="cursor-pointer text-gray-600 hover:text-blue-400">
                 <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setDropdownMenuVisible(true)} />
               </div>
             )}
           </div>
-          <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-3 my-2">
+          <div className="my-2 flex w-full flex-col items-center justify-center gap-3 lg:flex-row">
             <div className="flex min-h-[110px] w-full flex-col rounded-xl border border-gray-200 bg-[#fff] p-3 shadow-sm lg:w-1/4">
               <div className="flex items-center justify-between">
                 <h1 className="text-sm font-medium uppercase tracking-tight">PROJETOS NO ESTÁGIO</h1>
@@ -196,8 +196,8 @@ function Comercial() {
           </div>
           <AnimatePresence>
             {dropdownMenuVisible ? (
-              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+              <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+                <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                   <TextInput
                     label={'CÓDIGO CRM'}
                     value={filters.identifier}
@@ -211,8 +211,8 @@ function Comercial() {
                     handleChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
                   />
 
-                  <div className="flex flex-col lg:flex-row gap-2 w-full lg:w-fit">
-                    <div className="flex items-center gap-x-2 justify-center">
+                  <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+                    <div className="flex items-center justify-center gap-x-2">
                       <div className="w-full lg:w-[250px]">
                         <DateInput
                           width={'100%'}
@@ -299,7 +299,7 @@ function Comercial() {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
                   <div className="w-full lg:w-[250px]">
                     <MultipleSelectInput
                       width={'100%'}
@@ -387,7 +387,7 @@ function Comercial() {
                 </div>
                 <div className="flex items-center justify-between gap-x-2">
                   <Link href="/comercial/analise">
-                    <a className="p-1 border border-[#fead61] text-[#fead61] font-medium rounded">ANALÍTICO</a>
+                    <a className="rounded border border-[#fead61] p-1 font-medium text-[#fead61]">ANALÍTICO</a>
                   </Link>
                   {/* <FilterButton text={'FILTRAR'} icon={<AiOutlineSearch />} handleClick={filterProjects} /> */}
                 </div>
@@ -395,7 +395,7 @@ function Comercial() {
             ) : null}
           </AnimatePresence>
         </div>
-        <div className="flex justify-around gap-3 mt-4 flex-wrap">
+        <div className="mt-4 flex flex-wrap justify-around gap-3">
           {projects.map((project, index) => (
             <motion.div
               onClick={() => {
@@ -405,33 +405,33 @@ function Comercial() {
               animate={{ opacity: 1, translateX: 0 }}
               transition={{ duration: 0.3, delay: 0.01 * index }}
               key={project._id}
-              className="w-full md:w-[350px] lg:w-[450px]  cursor-pointer border border-gray-200 hover:bg-blue-100"
+              className="w-full cursor-pointer border  border-gray-200 hover:bg-blue-100 md:w-[350px] lg:w-[450px]"
             >
               <TagTipoDeServico tipoDeServico={project.tipoDeServico} />
               <div className="flex flex-col p-2 pb-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-gray-700 font-bold">{project.nomeDoContrato}</p>
-                  <p className="text-xs text-[#15599a] font-bold">#{project.qtde}</p>
+                  <p className="text-xs font-bold text-gray-700">{project.nomeDoContrato}</p>
+                  <p className="text-xs font-bold text-[#15599a]">#{project.qtde}</p>
                 </div>
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex flex-col items-start">
-                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">CONTRATO</span>
+                    <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">CONTRATO</span>
                     <p className={`text-xs font-medium ${getContractTagColor(project.contrato.status)}`}>
                       {project.contrato?.status && project.contrato?.status}
                     </p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">VENDEDOR</span>
+                    <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">VENDEDOR</span>
                     <p className="text-xs font-medium tracking-tight text-[#15599a]">{project.vendedor && project.vendedor.nome}</p>
                   </div>
                 </div>
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex flex-col items-start">
-                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">FORMA DE PAGAMENTO</span>
+                    <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">FORMA DE PAGAMENTO</span>
                     <p className="text-xs font-medium tracking-tight">{project.pagamento?.forma && project.pagamento.forma}</p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">VALOR TOTAL</span>
+                    <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">VALOR TOTAL</span>
                     <p className="text-xs font-medium tracking-tight text-green-500">
                       {formatToMoney(
                         getContractValue({
@@ -445,14 +445,16 @@ function Comercial() {
                 </div>
                 <div className="mt-2 flex items-center justify-between">
                   <div className="flex flex-col items-start">
-                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">STATUS DO PARECER</span>
+                    <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DO PARECER</span>
                     <p className="text-xs font-medium tracking-tight text-green-500">
                       {project.parecer.dataParecerDeAcesso ? 'LIBERADO' : 'NÃO LIBERADO'}
                     </p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-[0.6rem] tracking-tight text-gray-500 leading-none">STATUS DA COMPRA</span>
-                    <p className="text-xs font-medium tracking-tight">{project.compra.liberacao ? project.compra.status : 'NÃO LIBERADA'}</p>
+                    <span className="text-[0.6rem] leading-none tracking-tight text-gray-500">STATUS DA COMPRA</span>
+                    <p className="text-xs font-medium tracking-tight">
+                      {project.compra.liberacao ? project.compra.status || 'NÃO DEFINIDO' : 'NÃO LIBERADA'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -461,8 +463,8 @@ function Comercial() {
         </div>
         {session.user?.regional == undefined && (
           <Link href={'/comercial/formulariosSolicitacao'}>
-            <a className="fixed bg-[#15599a] cursor-pointer ml-36 hover:bg-[#fead61] text-white hover:text-[#15599a] p-3 rounded-lg bottom-10 left-150">
-              <p className="uppercase font-bold text-sm">Formulários</p>
+            <a className="left-150 fixed bottom-10 ml-36 cursor-pointer rounded-lg bg-[#15599a] p-3 text-white hover:bg-[#fead61] hover:text-[#15599a]">
+              <p className="text-sm font-bold uppercase">Formulários</p>
             </a>
           </Link>
         )}

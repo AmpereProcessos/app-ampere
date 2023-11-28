@@ -4,6 +4,11 @@ import { getContractValue } from '../util/projects'
 
 export async function handleComercialProjectUpdate({ previousData, newData, changes }) {
   try {
+    if (previousData.contrato.status == 'ASSINADO' && previousData.tipoDeServico == 'SISTEMA FOTOVOLTAICO' && !previousData.compra?.liberacao) {
+      console.log('PASSEI AUQI')
+      throw new Error('Confira a liberação para compra.')
+    }
+
     const wasUnsigned = previousData.contrato.status != 'ASSINADO'
     const isSigned = newData.contrato.status == 'ASSINADO'
     if (wasUnsigned && isSigned) await notifySigning({ projectIdentifier: newData.qtde, projectName: newData.nomeDoContrato })

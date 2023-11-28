@@ -23,6 +23,10 @@ export function getErrorMessage(error) {
     if (personalizedHttpError) return personalizedHttpError.message
     else return error.message
   }
+  if (error instanceof Error) {
+    const msg = error.message
+    return msg
+  }
   return 'Houve um erro desconhecido, por favor, comunique o setor de tecnologia.'
 }
 async function updateProject({ idCRMProject, changes }) {

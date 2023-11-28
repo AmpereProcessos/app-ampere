@@ -1161,6 +1161,11 @@ export const projetistas = [
     cod: 55,
   },
   {
+    nome: 'THAYNA DANTAS',
+    label: 'THAYNA',
+    cod: 55,
+  },
+  {
     nome: 'NÃO DEFINIDO',
     label: 'NÃO DEFINIDO',
     cod: 0,

@@ -50,7 +50,7 @@ function Header({ toggleSidebar }) {
 
       <div className="flex items-center justify-end gap-1 lg:gap-3">
         <p className="hidden lg:block">
-          Seja bem vindo, <strong className="text-[#15599a]">{session?.user.name}</strong> !
+          Bem vindo, <strong className="text-[#15599a]">{session?.user.name}</strong> !
         </p>
         <div onClick={() => setConfigDropDown((prev) => !prev)}>
           <Avatar url={session.user?.image} fallback={formatNameAsInitials(session.user?.nome || 'USER')} height={40} width={40} />

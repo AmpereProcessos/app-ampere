@@ -184,6 +184,7 @@ export default async function handler(req, res) {
       .aggregate([
         {
           $match: {
+            'contrato.status': 'ASSINADO',
             'contrato.dataAssinatura': { $gte: '2023-07-01T00:00:00.000Z' },
             tipoDeServico: 'SISTEMA FOTOVOLTAICO',
           },

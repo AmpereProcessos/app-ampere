@@ -54,6 +54,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
     'ADM',
     'RH',
   ].every((el) => session?.user.accessibleRoutes.includes(el))
+  const userHasOeMAccess = session?.user.accessibleRoutes.includes('O&M')
   const { data: project, isLoading, isSuccess, isError } = useClientById({ id: projectId, enabled: !!projectId })
 
   const [infoHolder, setInfo] = useState(project)
@@ -65,7 +66,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   const { mutate } = useMutationWithFeedback({
     mutationKey: ['update-project'],
     mutationFn: updateProject,
-    affectedQueryKey: ['comercial-projects'],
+    affectedQueryKey: ['project-by-id', id],
     queryClient: queryClient,
   })
   useEffect(() => {
@@ -82,7 +83,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
             </div>
             <div className="flex items-center gap-x-2">
               {msg.text && <p className={`hidden text-sm italic lg:block ${msg.color}`}>{msg.text}</p>}
-              {userHasOverallAccess ? (
+              {userHasOverallAccess || userHasOeMAccess ? (
                 <SaveButton text={'Salvar alterações'} icon={<FaSave />} handleClick={() => mutate({ id: projectId, changes: changes })} />
               ) : null}
 
@@ -212,7 +213,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
                 project={project}
               />
               <InfoOeMBlock
-                editor={userHasOverallAccess}
+                editor={userHasOeMAccess}
                 infoHolder={infoHolder}
                 setInfo={setInfo}
                 changes={changes}

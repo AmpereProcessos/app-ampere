@@ -5,14 +5,13 @@ import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from 'react-icons/io'
 
 import TextInput from '../../../inputs/Text'
 import SelectInput from '../../../inputs/Select'
-import { formatLongString, respChamadosPPS } from '../../../../utils/constants'
-import { fetchPPSCall, useOpenPPSCalls, usePPSCall } from '../../../../utils/methods/query/ppsCalls'
+import MultipleSelectInput from '../../../inputs/MultipleSelect'
 import LoadingPage from '../../../utils/LoadingPage'
 import OpenCallCard from './OpenCallCard'
-import { toast } from 'react-hot-toast'
-import { getErrorMessage } from '../../../../utils/methods/handlers'
-import { useSession } from 'next-auth/react'
 import ModalCallPPS, { responsibles } from '../../../ModalCallPPS'
+
+import { useOpenPPSCalls, usePPSCall } from '../../../../utils/methods/query/ppsCalls'
+import { ppsCallStatus } from '../../../../utils/select-options'
 const statusStyles = {
   'EM ANDAMENTO': {
     textColor: 'text-[#15599a]',
@@ -33,78 +32,64 @@ const statusStyles = {
 }
 
 function OpenCalls() {
-  const { data: calls, isLoading, isFetched } = useOpenPPSCalls(true)
+  const { data: calls, isLoading, isFetched, filters, setFilters } = useOpenPPSCalls(true)
 
   const [modalCallIsOpen, setModalCallIsOpen] = useState(false)
   const [modalCallId, setModalCallId] = useState()
   const [filterMenuVisible, setFilterMenuVisible] = useState(false)
-  const [filters, setFilters] = useState({
-    seller: '',
-    status: null,
-    responsible: null,
-  })
+
   async function handleOpenModal(id) {
     setModalCallId(id)
     setModalCallIsOpen(true)
   }
+  console.log(filters)
   return (
-    <div className="flex flex-col w-full border h-[1200px] lg:h-[720px] border-gray-200 bg-[#fff] shadow-xl p-4">
+    <div className="flex h-[1200px] w-full flex-col border border-gray-200 bg-[#fff] p-4 shadow-xl lg:h-[720px]">
       <div className="flex flex-col items-center justify-between border-b border-gray-200 p-1">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-wrap justify-center items-center gap-2 font-Raleway">
-            <p className="text-center uppercase text-[#15599a] font-bold text-xl">Chamados abertos</p>
+        <div className="flex w-full items-center justify-between">
+          <div className="font-Raleway flex flex-wrap items-center justify-center gap-2">
+            <p className="text-center text-xl font-bold uppercase text-[#15599a]">Chamados abertos</p>
             <p className="font-bold text-[#fead61]">({isFetched ? calls.length : '...'})</p>
           </div>
           {filterMenuVisible ? (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
               <IoMdArrowDropupCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuVisible(false)} />
             </div>
           ) : (
-            <div className="text-gray-600 hover:text-blue-400 cursor-pointer">
+            <div className="cursor-pointer text-gray-600 hover:text-blue-400">
               <IoMdArrowDropdownCircle style={{ fontSize: '25px' }} onClick={() => setFilterMenuVisible(true)} />
             </div>
           )}
         </div>
         <AnimatePresence>
           {filterMenuVisible ? (
-            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col w-full gap-y-2 mt-4">
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-2 flex-wrap">
+            <motion.div initial={{ scale: 0.8, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 flex w-full flex-col gap-y-2">
+              <div className="flex flex-col flex-wrap items-center justify-center gap-2 lg:flex-row">
                 <TextInput
-                  showLabel={false}
+                  label="NOME DO VENDEDOR"
                   placeholder={'Digite aqui o nome do vendedor...'}
-                  value={filters.seller}
-                  handleChange={(value) => setFilters((prev) => ({ ...prev, seller: value }))}
+                  value={filters.sellerName}
+                  handleChange={(value) => setFilters((prev) => ({ ...prev, sellerName: value }))}
                 />
                 <div className="w-full lg:w-[250px]">
-                  <SelectInput
-                    showLabel={false}
+                  <MultipleSelectInput
+                    label="STATUS DO CHAMADO"
                     selectedItemLabel={'TODOS OS STATUS'}
-                    options={[
-                      [
-                        {
-                          id: 1,
-                          value: 'PENDENTE',
-                          label: 'PENDENTE',
-                        },
-                        {
-                          id: 2,
-                          value: 'EM ANDAMENTO',
-                          label: 'EM ANDAMENTO',
-                        },
-                      ],
-                    ]}
-                    value={filters.status}
+                    options={ppsCallStatus}
+                    selected={filters.status}
                     handleChange={(value) => setFilters((prev) => ({ ...prev, status: value }))}
+                    onReset={(value) => setFilters((prev) => ({ ...prev, status: [] }))}
                     width={'100%'}
                   />
                 </div>
                 <div className="w-full lg:w-[250px]">
-                  <SelectInput
-                    showLabel={false}
+                  <MultipleSelectInput
+                    label="RESPONSÁVEL"
                     selectedItemLabel={'TODOS OS RESPONSÁVEIS'}
                     options={responsibles.map((resp, index) => ({ id: index + 1, label: resp.apelido, value: resp.apelido }))}
-                    value={filters.responsible}
+                    selected={filters.responsible}
                     handleChange={(value) => setFilters((prev) => ({ ...prev, responsible: value }))}
+                    onReset={() => setFilters((prev) => ({ ...prev, responsible: [] }))}
                     width={'100%'}
                   />
                 </div>
@@ -114,15 +99,15 @@ function OpenCalls() {
           ) : null}
         </AnimatePresence>
       </div>
-      <div className="flex grow px-2 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 flex-wrap gap-2 justify-around">
+      <div className="overscroll-y mt-2 flex grow flex-wrap justify-around gap-2 overflow-y-auto px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300">
         {isLoading ? <LoadingPage /> : null}
         {isFetched ? (
           calls?.length > 0 ? (
             calls.map((call) => <OpenCallCard key={call._id} call={call} handleOpenModal={(call) => handleOpenModal(call._id)} />)
           ) : (
-            <div className="w-full flex grow flex-col items-center justify-center">
-              <p className="font-black text-[#fead41] text-lg">EBA !!!</p>
-              <p className="font-medium italic text-gray-500 text-md">Não há chamados em aberto...</p>
+            <div className="flex w-full grow flex-col items-center justify-center">
+              <p className="text-lg font-black text-[#fead41]">EBA !!!</p>
+              <p className="text-md font-medium italic text-gray-500">Não há chamados em aberto...</p>
             </div>
           )
         ) : null}

@@ -49,7 +49,7 @@ function SelectInput<T>({
   const [selectedId, setSelectedId] = useState<number | string | null>(getValueID(value))
 
   const [searchFilter, setSearchFilter] = useState<string>('')
-  const inputIdentifier = label.toLowerCase().replace(' ', '_')
+  const inputIdentifier = label ? label.toLowerCase().replace(' ', '_') : 'select-input'
   function handleSelect(id: string | number, item: T) {
     handleChange(item)
     setSelectedId(id)

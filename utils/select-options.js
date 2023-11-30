@@ -1,5 +1,22 @@
 import { MdEast, MdNorth, MdNorthEast, MdNorthWest, MdSouth, MdSouthEast, MdSouthWest, MdWest } from 'react-icons/md'
 
+export const ppsCallStatus = [
+  {
+    id: 1,
+    label: 'PENDENTE',
+    value: 'PENDENTE',
+  },
+  {
+    id: 2,
+    label: 'EM ANDAMENTO',
+    value: 'EM ANDAMENTO',
+  },
+  {
+    id: 3,
+    label: 'REALIZADO',
+    value: 'REALIZADO',
+  },
+]
 export const supplementationStatus = [
   {
     id: 1,

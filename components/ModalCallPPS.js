@@ -119,6 +119,14 @@ export const responsibles = [
     avatar_url:
       'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Favatar-gabriella_baltazar?alt=media&token=28392bcb-1f54-4dc7-9f31-98f189362231',
   },
+  {
+    id: '6537c52474d5eecc1b67f1ee',
+    nome: 'Felipe Tadeu',
+    apelido: 'FELIPE',
+    ativo: true,
+    avatar_url:
+      'https://firebasestorage.googleapis.com/v0/b/sistemaampere.appspot.com/o/usuarios%2Fcrm%2Favatar-felipe_tadeu?alt=media&token=a1f97754-8a51-43fc-b9c9-72e35d80180e',
+  },
 ]
 function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
   useKey('Escape', () => closeModal())
@@ -139,10 +147,10 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
         onClick={() => handleChange('responsavel', resp)}
         className={`${
           infoHolder.responsavel?.apelido == resp.apelido ? '' : 'opacity-40'
-        } flex gap-2 items-center border border-blue-700 p-2 w-fit rounded-md cursor-pointer`}
+        } flex w-fit cursor-pointer items-center gap-2 rounded-md border border-blue-700 p-2`}
       >
         <Avatar url={resp.avatar_url} fallback={'R'} height={25} width={25} />
-        <p className="font-medium text-gray-500 text-xs">{resp.apelido}</p>
+        <p className="text-xs font-medium text-gray-500">{resp.apelido}</p>
       </div>
     ))
   }
@@ -235,11 +243,11 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
   return (
     <>
       <AnimatedModalWrapper modalIsOpen={modalIsOpen} width={'60%'} height={'87%'}>
-        <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between px-2 text-lg pb-2 border-b border-gray-200">
+        <div className="flex h-full flex-col">
+          <div className="flex items-center justify-between border-b border-gray-200 px-2 pb-2 text-lg">
             <div className="flex flex-col">
-              <h1 className="text-[#15599a] pl-6  font-bold">{call?.tipoSolicitacao || '...'}</h1>
-              <p className="text-gray-500 text-center text-xs">#{call?._id || '...'}</p>
+              <h1 className="pl-6 font-bold  text-[#15599a]">{call?.tipoSolicitacao || '...'}</h1>
+              <p className="text-center text-xs text-gray-500">#{call?._id || '...'}</p>
             </div>
             <button>
               <VscChromeClose
@@ -251,11 +259,11 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
             </button>
           </div>
           {callFetched && infoHolder ? (
-            <div className="flex flex-col px-2 lg:px-0 overflow-y-auto overscroll-y scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 gap-2">
-              <div className="flex w-full items-center justify-center mt-4">
-                <div className="flex gap-x-2 justify-center grow">
+            <div className="overscroll-y flex flex-col gap-2 overflow-y-auto px-2 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 lg:px-0">
+              <div className="mt-4 flex w-full items-center justify-center">
+                <div className="flex grow justify-center gap-x-2">
                   {infoHolder.status === 'REALIZADO' ? (
-                    <div className={`text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg text-green-500 border-green-500 `}>
+                    <div className={`w-fit cursor-pointer rounded-lg border border-green-500 p-3 text-center text-xs font-bold text-green-500 `}>
                       REALIZADO
                     </div>
                   ) : (
@@ -264,7 +272,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                         onClick={() => handleChange('status', 'PENDENTE')}
                         className={`${
                           infoHolder.status != 'PENDENTE' && 'opacity-30'
-                        } text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg text-red-500 border-red-500 `}
+                        } w-fit cursor-pointer rounded-lg border border-red-500 p-3 text-center text-xs font-bold text-red-500 `}
                       >
                         PENDENTE
                       </div>
@@ -272,7 +280,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                         onClick={() => handleChange('status', 'EM ANDAMENTO')}
                         className={`${
                           infoHolder.status != 'EM ANDAMENTO' && 'opacity-30'
-                        } text-xs cursor-pointer font-bold border p-3 w-fit text-center rounded-lg text-blue-500 border-blue-500 `}
+                        } w-fit cursor-pointer rounded-lg border border-blue-500 p-3 text-center text-xs font-bold text-blue-500 `}
                       >
                         EM ANDAMENTO
                       </div>
@@ -280,10 +288,10 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                   )}
                 </div>
               </div>
-              <div className="flex items-center justify-center gap-4 mt-4">
+              <div className="mt-4 flex items-center justify-center gap-4">
                 <div className="flex items-center gap-2">
                   <Avatar fallback={'U'} height={25} width={25} url={call.requerente.avatar_url} />
-                  <p className="font-medium text-gray-500 text-xs">{call.requerente?.apelido || 'Requerente não identificado'}</p>
+                  <p className="text-xs font-medium text-gray-500">{call.requerente?.apelido || 'Requerente não identificado'}</p>
                 </div>
                 <div className="flex items-center gap-2 text-gray-500">
                   <BsCalendarFill />
@@ -291,165 +299,165 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                 </div>
               </div>
               {call.dataEfetivacao ? (
-                <div className="flex w-full justify-center mt-4 items-center gap-2 text-green-500">
+                <div className="mt-4 flex w-full items-center justify-center gap-2 text-green-500">
                   <BsCalendarCheckFill />
                   <p className="text-xs font-medium">{dayjs(call.dataEfetivacao).format('DD/MM/YYYY HH:mm')}</p>
                 </div>
               ) : null}
 
-              <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">PROJETO</h1>
+              <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">PROJETO</h1>
               {call.projeto ? (
-                <div className="flex flex-col md:flex-row w-full justify-center gap-2 md:gap-4 items-center">
-                  <div className="flex gap-2 items-center">
+                <div className="flex w-full flex-col items-center justify-center gap-2 md:flex-row md:gap-4">
+                  <div className="flex items-center gap-2">
                     <BsCode size={'20px'} color="rgb(31,41,55)" />
                     {call.projeto.id ? (
                       <Link href={`https://crm.ampereenergias.com.br/projeto/id/${call.projeto.id}`}>
-                        <a className="font-raleway font-medium text-sm hover:text-cyan-300 duration-300 ease-in-out cursor-pointer">
+                        <a className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-cyan-300">
                           #{call.projeto.codigo || 'N/A'}
                         </a>
                       </Link>
                     ) : (
-                      <p className="font-raleway font-medium text-sm hover:text-blue-300 duration-300 ease-in-out cursor-pointer">
+                      <p className="cursor-pointer font-raleway text-sm font-medium duration-300 ease-in-out hover:text-blue-300">
                         #{call.projeto.codigo || 'N/A'}
                       </p>
                     )}
                   </div>
-                  <div className="flex gap-2 items-center">
+                  <div className="flex items-center gap-2">
                     <FaUser size={'20px'} color="rgb(31,41,55)" />
-                    <p className="font-raleway font-medium text-sm">{call.projeto.nome || 'N/A'}</p>
+                    <p className="font-raleway text-sm font-medium">{call.projeto.nome || 'N/A'}</p>
                   </div>
                 </div>
               ) : (
-                <p className="py-2 w-full text-center text-gray-500 italic text-sm">Sem informações do projeto...</p>
+                <p className="w-full py-2 text-center text-sm italic text-gray-500">Sem informações do projeto...</p>
               )}
-              <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">CLIENTE</h1>
+              <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">CLIENTE</h1>
               {call.cliente ? (
-                <div className="flex flex-col w-full gap-2 py-2">
-                  <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center">
-                    <div className="flex gap-2 items-center text-gray-800">
+                <div className="flex w-full flex-col gap-2 py-2">
+                  <div className="flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+                    <div className="flex items-center gap-2 text-gray-800">
                       <FaUser size={'20px'} color="rgb(31,41,55)" />
-                      <p className="font-raleway font-medium text-sm">{call.cliente.nome || 'N/A'}</p>
+                      <p className="font-raleway text-sm font-medium">{call.cliente.nome || 'N/A'}</p>
                     </div>
                     {/* <div className="flex gap-2 items-center">
                       <MdCategory size={'20px'} color="rgb(31,41,55)" />
                       <p className="font-raleway font-medium text-sm">{call.cliente.tipo || 'N/A'}</p>
                     </div> */}
-                    <div className="flex gap-2 items-center">
+                    <div className="flex items-center gap-2">
                       <HiIdentification size={'20px'} color="rgb(31,41,55)" />
-                      <p className="font-raleway font-medium text-sm">{call.cliente.cpfCnpj || 'N/A'}</p>
+                      <p className="font-raleway text-sm font-medium">{call.cliente.cpfCnpj || 'N/A'}</p>
                     </div>
                   </div>
-                  <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center">
-                    <div className="flex gap-2 items-center">
+                  <div className="flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+                    <div className="flex items-center gap-2">
                       <FaMobileAlt size={'20px'} color="rgb(31,41,55)" />
-                      <p className="font-raleway font-medium text-sm">{call.cliente.telefone || 'N/A'}</p>
+                      <p className="font-raleway text-sm font-medium">{call.cliente.telefone || 'N/A'}</p>
                     </div>
-                    <div className="flex gap-2 items-center">
+                    <div className="flex items-center gap-2">
                       <MdOutlineEmail size={'20px'} color="rgb(31,41,55)" />
-                      <p className="font-raleway font-medium text-sm">{call.cliente.email || 'N/A'}</p>
+                      <p className="font-raleway text-sm font-medium">{call.cliente.email || 'N/A'}</p>
                     </div>
                   </div>
-                  <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center">
-                    <div className="flex gap-2 items-center">
+                  <div className="flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+                    <div className="flex items-center gap-2">
                       <FaCity size={'20px'} color="rgb(31,41,55)" />
-                      <p className="font-raleway font-medium text-sm">
+                      <p className="font-raleway text-sm font-medium">
                         {call.cliente.uf || 'N/A'} / {call.cliente.cidade || 'N/A'}
                       </p>
                     </div>
-                    <div className="flex gap-2 items-center">
+                    <div className="flex items-center gap-2">
                       <MdLocationPin size={'20px'} color="rgb(31,41,55)" />
-                      <p className="font-raleway font-medium text-sm">
+                      <p className="font-raleway text-sm font-medium">
                         {call.cliente.endereco
                           ? `${call.cliente.endereco} - ${call.cliente.numeroOuIdentificador}, ${call.cliente.bairro} - ${call.cliente.cep}`
                           : 'N/A'}
                       </p>
                     </div>
                   </div>
-                  <div className="flex w-full justify-center gap-2 lg:gap-4 flex-col md:flex-row items-center">
-                    <div className="flex gap-2 items-center">
+                  <div className="flex w-full flex-col items-center justify-center gap-2 md:flex-row lg:gap-4">
+                    <div className="flex items-center gap-2">
                       <FaMoneyBillWave size={'20px'} color="rgb(31,41,55)" />
-                      <p className="font-raleway font-medium text-sm">{call.cliente.renda || 'N/A'}</p>
+                      <p className="font-raleway text-sm font-medium">{call.cliente.renda || 'N/A'}</p>
                     </div>
-                    <div className="flex gap-2 items-center">
+                    <div className="flex items-center gap-2">
                       <MdWork size={'20px'} color="rgb(31,41,55)" />
-                      <p className="font-raleway font-medium text-sm">{call.cliente.profissao || 'N/A'}</p>
+                      <p className="font-raleway text-sm font-medium">{call.cliente.profissao || 'N/A'}</p>
                     </div>
                   </div>
                 </div>
               ) : (
-                <p className="py-2 w-full text-center text-gray-500 italic text-sm">Sem informações do cliente...</p>
+                <p className="w-full py-2 text-center text-sm italic text-gray-500">Sem informações do cliente...</p>
               )}
-              <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">PREMISSAS</h1>
+              <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">PREMISSAS</h1>
               {call.premissas ? (
-                <div className="flex w-full flex-col md:flex-row justify-center gap-2 md:gap-4 items-center">
-                  <div className="flex gap-2 items-center">
+                <div className="flex w-full flex-col items-center justify-center gap-2 md:flex-row md:gap-4">
+                  <div className="flex items-center gap-2">
                     <FaSolarPanel size={'20px'} color="rgb(31,41,55)" />
-                    <p className="font-raleway font-medium text-sm">{call.premissas.geracao ? `${call.premissas.geracao} kWh` : 'N;A'}</p>
+                    <p className="font-raleway text-sm font-medium">{call.premissas.geracao ? `${call.premissas.geracao} kWh` : 'N;A'}</p>
                   </div>
-                  <div className="flex gap-2 items-center">
+                  <div className="flex items-center gap-2">
                     <TbTopologyFullHierarchy size={'20px'} color="rgb(31,41,55)" />
-                    <p className="font-raleway font-medium text-sm">{call.premissas.topologia || 'N/A'}</p>
+                    <p className="font-raleway text-sm font-medium">{call.premissas.topologia || 'N/A'}</p>
                   </div>
-                  <div className="flex gap-2 items-center">
+                  <div className="flex items-center gap-2">
                     <BsHouse size={'20px'} color="rgb(31,41,55)" />
-                    <p className="font-raleway font-medium text-sm">{call.premissas.tipoEstrutura || 'N/A'}</p>
+                    <p className="font-raleway text-sm font-medium">{call.premissas.tipoEstrutura || 'N/A'}</p>
                   </div>
-                  <div className="flex gap-2 items-center">
+                  <div className="flex items-center gap-2">
                     <FaHandHoldingUsd size={'20px'} color="rgb(31,41,55)" />
-                    <p className="font-raleway font-medium text-sm">{call.premissas.valorFinanciamento || 'N/A'}</p>
+                    <p className="font-raleway text-sm font-medium">{call.premissas.valorFinanciamento || 'N/A'}</p>
                   </div>
                 </div>
               ) : (
-                <p className="py-2 w-full text-center text-gray-500 italic text-sm">Sem premissas fornecidas...</p>
+                <p className="w-full py-2 text-center text-sm italic text-gray-500">Sem premissas fornecidas...</p>
               )}
               {call.premissas?.cargas ? (
-                <div className="flex flex-col text-gray-600 w-full">
-                  <p className="font-bold text-xs text-center">EQUIPAMENTOS</p>
+                <div className="flex w-full flex-col text-gray-600">
+                  <p className="text-center text-xs font-bold">EQUIPAMENTOS</p>
                   <div className="grid grid-cols-5  lg:grid-cols-6">
-                    <h1 className="bg-gray-600 text-white text-xxs lg:text-xs text-center p-1 border-r border-white font-bold">NOME</h1>
-                    <h1 className="bg-gray-600 text-white text-xxs lg:text-xs text-center p-1 border-r border-white font-bold hidden lg:flex">
+                    <h1 className="border-r border-white bg-gray-600 p-1 text-center text-xxs font-bold text-white lg:text-xs">NOME</h1>
+                    <h1 className="hidden border-r border-white bg-gray-600 p-1 text-center text-xxs font-bold text-white lg:flex lg:text-xs">
                       POTÊNCIA NOMINAL
                     </h1>
-                    <h1 className="bg-gray-600 text-white text-xxs lg:text-xs text-center p-1 border-r border-white font-bold">QTDE</h1>
-                    <h1 className="bg-gray-600 text-white text-xxs lg:text-xs text-center p-1 border-r border-white font-bold">POTÊNCIA TOTAL</h1>
-                    <h1 className="bg-gray-600 text-white text-xxs lg:text-xs text-center p-1 border-r border-white font-bold">HORAS DE USO</h1>
-                    <h1 className="bg-gray-600 text-white text-xxs lg:text-xs text-center p-1 font-bold">Wh DIÁRIO</h1>
+                    <h1 className="border-r border-white bg-gray-600 p-1 text-center text-xxs font-bold text-white lg:text-xs">QTDE</h1>
+                    <h1 className="border-r border-white bg-gray-600 p-1 text-center text-xxs font-bold text-white lg:text-xs">POTÊNCIA TOTAL</h1>
+                    <h1 className="border-r border-white bg-gray-600 p-1 text-center text-xxs font-bold text-white lg:text-xs">HORAS DE USO</h1>
+                    <h1 className="bg-gray-600 p-1 text-center text-xxs font-bold text-white lg:text-xs">Wh DIÁRIO</h1>
                   </div>
                   {call.premissas.cargas.map((charge, index) => (
-                    <div key={index} className="grid grid-cols-5 lg:grid-cols-6 border border-t-0 border-gray-200">
-                      <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.descricao}</h1>
-                      <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold hidden lg:flex">{charge.qtde}</h1>
-                      <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.potencia}</h1>
-                      <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.qtde * charge.potencia}</h1>
-                      <h1 className="text-gray-600 text-xxs text-center border-r p-2 border-gray-200 font-bold">{charge.horasFuncionamento}</h1>
-                      <h1 className="text-gray-600 text-xxs text-center p-2 font-bold">
+                    <div key={index} className="grid grid-cols-5 border border-t-0 border-gray-200 lg:grid-cols-6">
+                      <h1 className="border-r border-gray-200 p-2 text-center text-xxs font-bold text-gray-600">{charge.descricao}</h1>
+                      <h1 className="hidden border-r border-gray-200 p-2 text-center text-xxs font-bold text-gray-600 lg:flex">{charge.qtde}</h1>
+                      <h1 className="border-r border-gray-200 p-2 text-center text-xxs font-bold text-gray-600">{charge.potencia}</h1>
+                      <h1 className="border-r border-gray-200 p-2 text-center text-xxs font-bold text-gray-600">{charge.qtde * charge.potencia}</h1>
+                      <h1 className="border-r border-gray-200 p-2 text-center text-xxs font-bold text-gray-600">{charge.horasFuncionamento}</h1>
+                      <h1 className="p-2 text-center text-xxs font-bold text-gray-600">
                         {charge.qtde * charge.potencia * charge.horasFuncionamento}
                       </h1>
                     </div>
                   ))}
-                  <div className="grid grid-cols-5 lg:grid-cols-6 border border-t-0 border-gray-200 items-center">
-                    <p className="bg-gray-600 text-white text-xs col-span-4 lg:col-span-5 text-center p-1 border-r border-white font-bold h-full flex items-center justify-center">
+                  <div className="grid grid-cols-5 items-center border border-t-0 border-gray-200 lg:grid-cols-6">
+                    <p className="col-span-4 flex h-full items-center justify-center border-r border-white bg-gray-600 p-1 text-center text-xs font-bold text-white lg:col-span-5">
                       CONSUMO DIÁRIO TOTAL
                     </p>
-                    <p className="text-gray-600 text-xs col-span-1 text-center p-2 font-bold">
+                    <p className="col-span-1 p-2 text-center text-xs font-bold text-gray-600">
                       {formatDecimalPlaces(getChargesTotals(call.premissas.cargas).totalDailyConsumption, 0, 0)} kWh
                     </p>
                   </div>
-                  <div className="grid grid-cols-5 lg:grid-cols-6 border border-t-0 border-gray-200 items-center">
-                    <p className="bg-gray-600 text-white text-xs col-span-4 lg:col-span-5 text-center p-1 border-r border-white font-bold h-full flex items-center justify-center">
+                  <div className="grid grid-cols-5 items-center border border-t-0 border-gray-200 lg:grid-cols-6">
+                    <p className="col-span-4 flex h-full items-center justify-center border-r border-white bg-gray-600 p-1 text-center text-xs font-bold text-white lg:col-span-5">
                       POTÊNCIA TOTAL
                     </p>
-                    <p className="text-gray-600 text-xs col-span-1 text-center p-2 font-bold">
+                    <p className="col-span-1 p-2 text-center text-xs font-bold text-gray-600">
                       {formatDecimalPlaces(getChargesTotals(call.premissas.cargas).totalPot, 2, 2)} kWp
                     </p>
                   </div>
                 </div>
               ) : null}
-              <div className="w-full flex flex-col">
-                <h1 className="w-full p-2 rounded-tr-md rounded-tl-md text-center text-white font-bold bg-gray-800 mt-4">OBSERVAÇÕES</h1>
-                <span className="grow text-center font-raleway text-sm bg-gray-100 p-4 italic rounded-b">
+              <div className="flex w-full flex-col">
+                <h1 className="mt-4 w-full rounded-tr-md rounded-tl-md bg-gray-800 p-2 text-center font-bold text-white">OBSERVAÇÕES</h1>
+                <span className="grow rounded-b bg-gray-100 p-4 text-center font-raleway text-sm italic">
                   {call.observacoes ? (
-                    <ul className="text-xs font-bold text-center list-none">
+                    <ul className="list-none text-center text-xs font-bold">
                       {call.observacoes.split('/ ').map((string, index) => (
                         <li key={index}>{string}</li>
                       ))}
@@ -460,20 +468,20 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                 </span>
               </div>
 
-              <h1 className="w-full p-2 rounded-md text-center text-white font-bold bg-gray-800 mt-4">RESPONSÁVEL</h1>
-              <div className="flex w-full gap-2 justify-around flex-wrap">{renderResponsibles(call.responsavel?.apelido)}</div>
-              <div className="flex flex-col w-full">
-                <h1 className="w-full p-2 rounded-tr-md rounded-tl-md text-center text-white font-bold bg-gray-800 mt-4">ANOTAÇÕES</h1>
+              <h1 className="mt-4 w-full rounded-md bg-gray-800 p-2 text-center font-bold text-white">RESPONSÁVEL</h1>
+              <div className="flex w-full flex-wrap justify-around gap-2">{renderResponsibles(call.responsavel?.apelido)}</div>
+              <div className="flex w-full flex-col">
+                <h1 className="mt-4 w-full rounded-tr-md rounded-tl-md bg-gray-800 p-2 text-center font-bold text-white">ANOTAÇÕES</h1>
                 <textarea
                   value={infoHolder.anotacoes}
                   readOnly={!editor}
                   onChange={(e) => handleChange('anotacoes', e.target.value)}
                   placeholder="Digite aqui as anotações do chamado"
-                  className="outline-none placeholder:italic text-center text-sm p-3 resize-none bg-gray-100 min-h-[150px] h-fit grow scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+                  className="h-fit min-h-[150px] grow resize-none bg-gray-100 p-3 text-center text-sm outline-none scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-300 placeholder:italic"
                 />
               </div>
-              <h1 className="w-full p-2 rounded-tr-md rounded-tl-md text-center text-white font-bold bg-gray-800 mt-4">ARQUIVOS</h1>
-              <div className="flex flex-col items-center w-full gap-2">
+              <h1 className="mt-4 w-full rounded-tr-md rounded-tl-md bg-gray-800 p-2 text-center font-bold text-white">ARQUIVOS</h1>
+              <div className="flex w-full flex-col items-center gap-2">
                 {call.links && call.links.length > 0 ? (
                   call.links.map((link, index) => (
                     <div key={index} className="w-full lg:w-[70%]">
@@ -481,7 +489,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                     </div>
                   ))
                 ) : (
-                  <p className="py-2 italic text-sm text-gray-500">Sem arquivos anexados...</p>
+                  <p className="py-2 text-sm italic text-gray-500">Sem arquivos anexados...</p>
                 )}
               </div>
               {editor ? (
@@ -489,7 +497,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                   <div className="text-center">
                     <button
                       onClick={() => handleReOpenCall()} // TODO
-                      className="p-3 font-raleway mt-4 hover:bg-[#f18701] hover:text-white font-bold rounded-lg bg-yellow-400"
+                      className="mt-4 rounded-lg bg-yellow-400 p-3 font-raleway font-bold hover:bg-[#f18701] hover:text-white"
                     >
                       REABRIR CHAMADO
                     </button>
@@ -498,7 +506,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                   <div className="text-center">
                     <button
                       onClick={() => handleCloseCall()} // TODO
-                      className="p-3 font-raleway mt-4 hover:bg-[#06d6a0] hover:text-white font-bold rounded-lg bg-green-400"
+                      className="mt-4 rounded-lg bg-green-400 p-3 font-raleway font-bold hover:bg-[#06d6a0] hover:text-white"
                     >
                       FINALIZAR CHAMADO
                     </button>
@@ -508,7 +516,7 @@ function ModalCallPPS({ callId, modalIsOpen, closeModal }) {
                 false
               )}
               {editor ? (
-                <div className="flex items-center justify-center mt-2">
+                <div className="mt-2 flex items-center justify-center">
                   <SaveButton text={'SALVAR'} icon={<FaSave />} handleClick={() => handleSaveChanges()} /> {/*TODO*/}
                 </div>
               ) : null}

@@ -11,56 +11,11 @@ import DashboardSkeleton from '../components/skeletons/DashboardSkeleton'
 import { useSession } from 'next-auth/react'
 import LoadingPage from '../components/utils/LoadingPage'
 import { sellerPhotos } from '../utils/constants'
-const routes = [
-  {
-    title: 'Projetos',
-    url: 'projetos',
-  },
-  {
-    title: 'Obras',
-    url: 'obras',
-  },
-  {
-    title: 'Suprimentos',
-    url: 'suprimentos',
-  },
-  {
-    title: 'O&M',
-    url: 'o&m',
-  },
-  {
-    title: 'Marketing',
-    url: 'marketing',
-  },
-  {
-    title: 'Vendas',
-    url: 'vendas',
-  },
-  {
-    title: 'Pós-Venda',
-    url: 'pos-venda',
-  },
-  {
-    title: 'PPS',
-    url: 'pps',
-  },
-  {
-    title: 'InsideSales',
-    url: 'insidesales',
-  },
-  {
-    title: 'Financeiro',
-    url: 'financeiro',
-  },
-  {
-    title: 'ADM',
-    url: 'adm',
-  },
-  {
-    title: 'RH',
-    url: 'rh',
-  },
-]
+import { FaBirthdayCake } from 'react-icons/fa'
+
+import dayjs from 'dayjs'
+import { BsFillCalendarEventFill } from 'react-icons/bs'
+
 function renderAvatarBySeller(sellerName) {
   if (!sellerName) {
     return (
@@ -555,11 +510,20 @@ function Home() {
             <div className="mt-2 flex w-full grow flex-wrap justify-center gap-y-2 lg:justify-between">
               {clientBirthday.filtered.length > 0 &&
                 clientBirthday.filtered?.map((client, index) => (
-                  <div key={index} className="w-[350px] border border-gray-200 bg-[#fff] p-2 text-center text-xs">
-                    <p>{client.nomeDoContrato}</p>
-                    <p className="font-bold text-[#15599a]">
-                      {client.dataNascimento != undefined && new Date(client.dataNascimento).toLocaleDateString()}
-                    </p>
+                  <div
+                    key={index}
+                    className="flex w-full flex-col gap-2 rounded-md border border-gray-200 bg-[#fff] p-3 text-center text-xs shadow-sm lg:w-[450px]"
+                  >
+                    <div className="flex w-full items-center justify-between">
+                      <h1 className="font-bold leading-none tracking-tight">{client.nomeDoContrato}</h1>
+                      {new Date(client.dataNascimento).getDate() == new Date().getDate() ? <FaBirthdayCake color="DA0C81" size={20} /> : null}
+                    </div>
+                    <div className="flex items-center justify-center gap-2 ">
+                      <BsFillCalendarEventFill color="rgb(107,114,128)" />
+                      <p className="font-bold text-[#DA0C81]">
+                        {client.dataNascimento != undefined && new Date(client.dataNascimento).toLocaleDateString()}
+                      </p>
+                    </div>
                   </div>
                 ))}
             </div>

@@ -9,6 +9,10 @@ import { useSession } from 'next-auth/react'
 import { FaFilePdf } from 'react-icons/fa'
 import Link from 'next/link'
 import { allSellers } from '@/utils/select-options'
+import toast from 'react-hot-toast'
+import { useMutationWithFeedback } from '@/utils/methods/mutation/general-hook'
+import { updateProject } from '@/utils/methods/mutation/clients'
+import { useQueryClient } from 'react-query'
 
 function formatCnpjCpf(value) {
   const cnpjCpf = value.replace(/\D/g, '')
@@ -30,6 +34,14 @@ function formataCEP(cep) {
 
 function InfoClienteBlock({ editor, infoHolder, setInfo, changes, setChanges, project }) {
   const { data: session } = useSession()
+  const queryClient = useQueryClient()
+  const { mutate } = useMutationWithFeedback({
+    mutationKey: ['update-project'],
+    mutationFn: updateProject,
+    affectedQueryKey: ['project-by-id', infoHolder._id],
+    queryClient: queryClient,
+  })
+
   async function findCPF(field) {
     axios.get(`https://viacep.com.br/ws/${infoHolder.cep.replace('-', '')}/json/`).then((res) => {
       if (res.data.erro) {
@@ -53,33 +65,32 @@ function InfoClienteBlock({ editor, infoHolder, setInfo, changes, setChanges, pr
       }
     })
   }
-  function getVisitaInfo(id) {
-    axios
-      .post(`/api/solicitacoes/getVisitaTecnica/${id}`, {
-        links: 1,
-      })
-      .then((res) => {
-        console.log(res.data)
-        if (!project.links?.visitaTecnica) {
-          project.links = { ...project.links, visitaTecnica: res.data.links }
-          setInfo({
-            ...infoHolder,
-            links: {
-              ...infoHolder.links,
-              visitaTecnica: res.data.links,
-            },
-          })
-          return setChanges({
-            ...changes,
-            'links.visitaTecnica': res.data.links,
-          })
-        }
-      })
+  async function getVisitaInfo(id) {
+    const { data } = await axios.post(`/api/solicitacoes/getVisitaTecnica/${id}`, {
+      arquivos: 1,
+    })
+
+    const analysisFiles = data.arquivos
+    if (analysisFiles.length == 0) return toast.error('Visita não possui arquivos vinculados.')
+    const formattedFiles = analysisFiles.map((f) => ({ title: f.descricao, link: f.url, category: 'VISITA TÉCNICA', format: f.formato }))
+    setInfo((prev) => ({
+      ...prev,
+      links: {
+        ...prev.links,
+        visitaTecnica: formattedFiles,
+      },
+    }))
+    setChanges((prev) => ({
+      ...prev,
+      'links.visitaTecnica': formattedFiles,
+    }))
+    mutate({ id: infoHolder._id, changes: changes })
   }
+
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
-      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">INFORMAÇÕES DO CLIENTE</span>
-      <div className="flex gap-2 justify-around flex-wrap">
+    <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">INFORMAÇÕES DO CLIENTE</span>
+      <div className="flex flex-wrap justify-around gap-2">
         <TextInput
           label={'Nome do contrato'}
           value={infoHolder.nomeDoContrato ? infoHolder.nomeDoContrato : ''}
@@ -177,7 +188,7 @@ function InfoClienteBlock({ editor, infoHolder, setInfo, changes, setChanges, pr
           }}
         />
         {editor && (
-          <button onClick={() => findCPF()} className="flex items-center p-1 h-[30px] bg-[#fead61] rounded">
+          <button onClick={() => findCPF()} className="flex h-[30px] items-center rounded bg-[#fead61] p-1">
             <AiOutlineSearch />
           </button>
         )}
@@ -364,7 +375,7 @@ function InfoClienteBlock({ editor, infoHolder, setInfo, changes, setChanges, pr
         {!project.links?.visitaTecnica && editor ? (
           <button
             onClick={() => getVisitaInfo(infoHolder.idVisitaTecnica)}
-            className="flex items-center p-1 h-[30px] bg-[#15599a] rounded text-white"
+            className="flex h-[30px] items-center rounded bg-[#15599a] p-1 text-white"
           >
             <AiOutlineSearch />
           </button>
@@ -485,7 +496,7 @@ function InfoClienteBlock({ editor, infoHolder, setInfo, changes, setChanges, pr
           </>
         )}
       </div>
-      <div className="w-full flex items-center my-1 px-2">
+      <div className="my-1 flex w-full items-center px-2">
         <textarea
           value={infoHolder.obsComercial}
           onChange={(e) => {
@@ -495,22 +506,22 @@ function InfoClienteBlock({ editor, infoHolder, setInfo, changes, setChanges, pr
               obsComercial: e.target.value,
             })
           }}
-          className="w-full text-center h-[80px] bg-gray-200 resize-none p-2 outline-none border border-gray-600 text-xs"
+          className="h-[80px] w-full resize-none border border-gray-600 bg-gray-200 p-2 text-center text-xs outline-none"
         />
       </div>
       {infoHolder.linkDrive && (
-        <div className="w-full py-2 flex items-center justify-center">
-          <a className="text-blue-400 font-medium hover:text-[#15599a]" href={infoHolder.linkDrive}>
+        <div className="flex w-full items-center justify-center py-2">
+          <a className="font-medium text-blue-400 hover:text-[#15599a]" href={infoHolder.linkDrive}>
             LINK PASTA NA NUVEM
           </a>
         </div>
       )}
       {infoHolder.idSolicitacaoContrato ? (
-        <div className="w-full flex items-center justify-center">
+        <div className="flex w-full items-center justify-center">
           <Link href={`/comercial/publicoFormulario/${infoHolder.idSolicitacaoContrato}`}>
-            <a className="hover:bg-orange-200 border border-orange-200 p-2 rounded hover:scale-[1.02] duration-300 ease-in py-2 pl-2 cursor-pointer flex items-center mt-2">
+            <a className="mt-2 flex cursor-pointer items-center rounded border border-orange-200 p-2 py-2 pl-2 duration-300 ease-in hover:scale-[1.02] hover:bg-orange-200">
               <FaFilePdf style={{ color: '#fead41', fontSize: '20px' }} />
-              <p className="pl-3 text-sm text-gray-600 font-medium">SOLICITAÇÃO DE CONTRATO</p>
+              <p className="pl-3 text-sm font-medium text-gray-600">SOLICITAÇÃO DE CONTRATO</p>
             </a>
           </Link>
         </div>

@@ -6,9 +6,9 @@ import dayjs from 'dayjs'
 
 function InfoComissionamentoBlock({ editor, infoHolder, setInfo, changes, setChanges, project }) {
   return (
-    <div className="flex flex-col border border-[#15599a] pb-2 shadow-lg rounded-md">
-      <span className="w-full bg-[#15599a] text-white text-center font-bold py-2 rounded-tr-md rounded-tl-md mb-2">COMISSIONAMENTO PÓS-BRA</span>
-      <div className="flex gap-2 justify-around flex-wrap">
+    <div className="flex flex-col rounded-md border border-[#15599a] pb-2 shadow-lg">
+      <span className="mb-2 w-full rounded-tr-md rounded-tl-md bg-[#15599a] py-2 text-center font-bold text-white">COMISSIONAMENTO PÓS-BRA</span>
+      <div className="flex flex-wrap justify-around gap-2">
         <SelectInput
           label={'DIAGNÓSTICO'}
           value={infoHolder.oem?.diagnostico ? infoHolder.oem?.diagnostico : 'NÃO DEFINIDO'}
@@ -148,7 +148,7 @@ function InfoComissionamentoBlock({ editor, infoHolder, setInfo, changes, setCha
           label={'LOGIN NO APP'}
           value={infoHolder.app.login ? infoHolder.app.login : ''}
           normalCase={true}
-          editable={editor}
+          editable={true}
           handleChange={(value) => {
             setChanges({
               ...changes,
@@ -167,7 +167,7 @@ function InfoComissionamentoBlock({ editor, infoHolder, setInfo, changes, setCha
           label={'SENHA NO APP'}
           value={infoHolder.app.senha}
           normalCase={true}
-          editable={editor}
+          editable={true}
           handleChange={(value) => {
             setChanges({
               ...changes,

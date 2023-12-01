@@ -66,7 +66,7 @@ function ModalDB({ projectId, modalIsOpen, closeModal, handleUpdates }) {
   const { mutate } = useMutationWithFeedback({
     mutationKey: ['update-project'],
     mutationFn: updateProject,
-    affectedQueryKey: ['project-by-id', id],
+    affectedQueryKey: ['project-by-id', projectId],
     queryClient: queryClient,
   })
   useEffect(() => {

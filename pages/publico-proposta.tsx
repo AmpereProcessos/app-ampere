@@ -170,7 +170,6 @@ function ProposePage() {
             <h1 className="w-full text-center text-[0.75rem] font-bold text-white">RESPONSABILIDADES</h1>
           </div>
           <div className="flex flex-col px-2">
-            {groupResponsabilities(info.responsabilidades).CONTRATADA.map(resp =>)}
             <div className="mt-2 flex items-center gap-2">
               <BsSuitDiamondFill size={10} />
               <h1 className="text-[0.6rem] leading-none tracking-tight text-gray-500">EXECUTAR OS SERVIÇOS PROPOSTOS CONFORME PROJETO APROVADO</h1>

@@ -297,14 +297,12 @@ function InfoClienteBlock({ editor, infoHolder, setInfo, changes, setChanges, pr
               setChanges({
                 ...changes,
                 'vendedor.nome': value,
-                'vendedor.codigo': vendedores.filter((vendedor) => vendedor.nome == value)[0].cod || '-',
               })
               setInfo({
                 ...infoHolder,
                 vendedor: {
                   ...infoHolder.vendedor,
                   nome: value,
-                  codigo: vendedores.filter((vendedor) => vendedor.nome == value)[0].cod || '-',
                 },
               })
             }}

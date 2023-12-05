@@ -223,26 +223,34 @@ function Home() {
             <h1 className="w-full text-center text-lg font-extrabold">META GLOBAL</h1>
             <div className="flex h-[45px] w-full items-center justify-between self-center border border-gray-500 bg-[#a8a9aa]">
               <div
-                style={{ width: `${(campainPeakPower / 2000) * 100}%` }}
+                // style={{ width: `${(campainPeakPower / 2000) * 100}%` }}
+                style={{ width: `${(1995.5 / 2000) * 100}%` }}
                 className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-r from-yellow-300 to-[#fead41]"
               >
                 <p className="bg-transparent text-xxs font-bold text-[#15599a] lg:text-sm">
-                  {((campainPeakPower / 2000) * 100).toLocaleString('pt-br', {
+                  {/* {((campainPeakPower / 2000) * 100).toLocaleString('pt-br', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
-                  %
+                  % */}
+                  99,77 %
                 </p>
                 <p className="w-full text-center font-raleway text-xxs font-bold text-green-500 lg:text-sm">
-                  {campainPeakPower.toLocaleString('pt-br', {
+                  {/* {campainPeakPower.toLocaleString('pt-br', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}{' '}
-                  kWp
+                  kWp */}
+                  1995.5 kWp
                 </p>
               </div>
               <p className="mr-4 text-xs font-bold text-white lg:text-lg">
-                {(2000 - campainPeakPower).toLocaleString('pt-br', {
+                {/* {(2000 - campainPeakPower).toLocaleString('pt-br', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{' '}
+                kWp */}
+                {(2000 - 1995.5).toLocaleString('pt-br', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}{' '}

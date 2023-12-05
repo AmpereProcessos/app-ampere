@@ -4,7 +4,12 @@ import { getContractValue } from '../util/projects'
 
 export async function handleComercialProjectUpdate({ previousData, newData, changes }) {
   try {
-    if (previousData.contrato.status == 'ASSINADO' && previousData.tipoDeServico == 'SISTEMA FOTOVOLTAICO' && !previousData.compra?.liberacao) {
+    if (
+      previousData.contrato.status == 'ASSINADO' &&
+      previousData.tipoDeServico == 'SISTEMA FOTOVOLTAICO' &&
+      !previousData.compra?.liberacao &&
+      !newData.compra?.liberacao
+    ) {
       console.log('PASSEI AUQI')
       throw new Error('Confira a liberação para compra.')
     }
